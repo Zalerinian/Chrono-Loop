@@ -1,7 +1,7 @@
-/Debug
-/ipch
-/Release
-/x64
+/_Debug x86
+/_Debug x64
+/_Release x86
+/_Release x64
 /ipch
 /UnitTest++/obj/
 /*/Debug
