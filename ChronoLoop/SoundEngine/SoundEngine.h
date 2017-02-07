@@ -1,7 +1,5 @@
 #pragma once
 
-#pragma comment(lib, "ObjectEngine.lib")
-
 #include "../ObjectEngine/Components.h"
 #include <vector>
 
