@@ -53,7 +53,7 @@ struct vec4f {
 	float  Magnitude() const;
 	float  SquaredMagnitude() const;
 	vec4f  Normalize() const;
-	vec4f  Reflect(const vec4f& other);
+	vec4f  Reflect(vec4f const& other);
 };
 
 struct matrix4 {

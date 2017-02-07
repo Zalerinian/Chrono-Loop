@@ -3,6 +3,7 @@
 //Author: Chris Burt
 ///////////////////////////////////////
 
+#include "stdafx.h"
 #include "Math.h"
 
 #pragma region VECTOR_MATH
@@ -198,26 +199,26 @@ float vec4f::Dot(vec4f const & _other)
 	return *this * _other;
 }
 
-float vec4f::Magnitude()
+float vec4f::Magnitude() const
 {
 	return (float)sqrt(powf(data.x, 2.0f) + powf(data.y, 2.0f) + powf(data.z, 2.0f) + powf(data.w, 2.0f));
 }
 
-float vec4f::SquaredMagnitude()
+float vec4f::SquaredMagnitude() const
 {
 	return powf(Magnitude(), 2.0f);
 }
 
-vec4f vec4f::Normalize()
+vec4f vec4f::Normalize() const
 {
 	vec4f temp;
 	float norm = 1 / Magnitude();
 	for(int i = 0; i < 4; ++i)
-		temp.data.xyzw[i] = data.xyzw[i] *= norm;
+		temp.data.xyzw[i] = data.xyzw[i] * norm;
 	return temp;
 }
 
-vec4f vec4f::Reflect(vec4f _other)
+vec4f vec4f::Reflect(vec4f const& _other)
 {
 	vec4f temp, N;
 	N = _other.Normalize();
