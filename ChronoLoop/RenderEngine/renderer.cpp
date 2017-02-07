@@ -1,11 +1,12 @@
 //#include "Code\Header\renderer.h"
-#include "..\Header\Mesh.h"
-#include "..\Header\DDSTextureLoader.h"
-#include "..\Header\renderer.h"
-#include "..\Header\Scene.h"
+#include "stdafx.h"
+#include "renderer.h"
 #include <fstream>
 
-Renderer::Node::Node(Mesh * _m, char* vertexShader, char* pixelShader, bool pushback)//Old UpdateGraphics()
+
+using namespace DirectX;
+
+Renderer::Node::Node(Mesh * _m, char* vertexShader, char* pixelShader, bool pushback)
 {
 	m_vertexShader = nullptr;
 	m_inputLayout = nullptr;

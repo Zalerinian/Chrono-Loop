@@ -4,66 +4,61 @@
 #pragma comment (lib, "dxgi.lib")
 #pragma comment (lib, "d3dcompiler.lib")
 
-#include <d3D11.h>
-#include <directxmath.h>
 #include <vector>
-#include "../Header/Mesh.h"
 
 #define VR 1
-#define DEBUG 0
+#define VRDEBUG 0
 #if VR
 #include <openvr.h>
 #endif // VR
 
-using namespace DirectX;
-
 class Mesh;
-struct Interpolator
-{
-	unsigned int PreviousFrame;
-	unsigned int nextFrame;
-	float frameTime = 0.0f;
-	Bone* bonePtr;
-	KeyFrame* betweenKeyFrame;
-	KeyFrame* Interpolate(KeyFrame* _prev, KeyFrame* _next, float _deltaTime)
-	{
-
-		XMVECTOR cScal, cRot, cPos;
-		XMVECTOR nScal, nRot, nPos;
-		XMMatrixDecompose(&cScal, &cRot, &cPos, XMLoadFloat4x4(&_prev->transform));
-		XMMatrixDecompose(&nScal, &nRot, &nPos, XMLoadFloat4x4(&_next->transform));
-		//DO THIS IN THE INITIALZE 
-		//**DO NOT LOOP THIS EVERYTIME**//
-
-		XMVECTOR rotNow, scalNow, posNow;
-		XMMATRIX MatrixNow;
-		rotNow = XMQuaternionSlerp(cRot, nRot, _deltaTime);
-		posNow = XMVectorLerp(cPos, nPos, _deltaTime);
-		scalNow.m128_f32[0] = 1.0f;
-		scalNow.m128_f32[1] = 1.0f;
-		scalNow.m128_f32[2] = 1.0f;
-		scalNow.m128_f32[3] = 1.0f;
-		MatrixNow = XMMatrixAffineTransformation(scalNow, XMVectorZero(), rotNow, posNow);
-		KeyFrame* newFrame = new KeyFrame();
-		XMStoreFloat4x4(&newFrame->transform, MatrixNow);
-		return newFrame;
-	}
-	void Process(float _timeToAdd)
-	{
-
-		frameTime += _timeToAdd;
-		while (frameTime > bonePtr->keyframes->at(PreviousFrame)->keyTime) {
-			frameTime -= bonePtr->keyframes->at(PreviousFrame)->keyTime;
-			if (nextFrame == bonePtr->keyframes->size())
-				break;
-			PreviousFrame = nextFrame + 1;
-		}
-		float delta = frameTime / bonePtr->keyframes->at(PreviousFrame)->keyTime;
-		if (nextFrame == bonePtr->keyframes->size())
-			nextFrame = 0;
-		betweenKeyFrame = Interpolate(bonePtr->keyframes->at(PreviousFrame), bonePtr->keyframes->at(nextFrame), delta);
-	}
-};
+//struct Interpolator
+//{
+//	unsigned int PreviousFrame;
+//	unsigned int nextFrame;
+//	float frameTime = 0.0f;
+//	Bone* bonePtr;
+//	KeyFrame* betweenKeyFrame;
+//	KeyFrame* Interpolate(KeyFrame* _prev, KeyFrame* _next, float _deltaTime)
+//	{
+//
+//		XMVECTOR cScal, cRot, cPos;
+//		XMVECTOR nScal, nRot, nPos;
+//		XMMatrixDecompose(&cScal, &cRot, &cPos, XMLoadFloat4x4(&_prev->transform));
+//		XMMatrixDecompose(&nScal, &nRot, &nPos, XMLoadFloat4x4(&_next->transform));
+//		//DO THIS IN THE INITIALZE 
+//		//**DO NOT LOOP THIS EVERYTIME**//
+//
+//		XMVECTOR rotNow, scalNow, posNow;
+//		XMMATRIX MatrixNow;
+//		rotNow = XMQuaternionSlerp(cRot, nRot, _deltaTime);
+//		posNow = XMVectorLerp(cPos, nPos, _deltaTime);
+//		scalNow.m128_f32[0] = 1.0f;
+//		scalNow.m128_f32[1] = 1.0f;
+//		scalNow.m128_f32[2] = 1.0f;
+//		scalNow.m128_f32[3] = 1.0f;
+//		MatrixNow = XMMatrixAffineTransformation(scalNow, XMVectorZero(), rotNow, posNow);
+//		KeyFrame* newFrame = new KeyFrame();
+//		XMStoreFloat4x4(&newFrame->transform, MatrixNow);
+//		return newFrame;
+//	}
+//	void Process(float _timeToAdd)
+//	{
+//
+//		frameTime += _timeToAdd;
+//		while (frameTime > bonePtr->keyframes->at(PreviousFrame)->keyTime) {
+//			frameTime -= bonePtr->keyframes->at(PreviousFrame)->keyTime;
+//			if (nextFrame == bonePtr->keyframes->size())
+//				break;
+//			PreviousFrame = nextFrame + 1;
+//		}
+//		float delta = frameTime / bonePtr->keyframes->at(PreviousFrame)->keyTime;
+//		if (nextFrame == bonePtr->keyframes->size())
+//			nextFrame = 0;
+//		betweenKeyFrame = Interpolate(bonePtr->keyframes->at(PreviousFrame), bonePtr->keyframes->at(nextFrame), delta);
+//	}
+//};
 class Renderer
 {
 public:
