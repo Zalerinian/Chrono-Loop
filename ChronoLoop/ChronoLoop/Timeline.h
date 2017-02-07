@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <unordered_map>
+#include "Objects/BaseObject.h"
 
 //Extracted values from BaseObjects and its componets
 struct SnapInfo
@@ -14,6 +15,7 @@ struct SnapInfo
 
 	
 };
+
 //If you rewind time and there is no snapshot for your object that means nothing changed from the last 
 struct Snapshot
 {
@@ -23,7 +25,8 @@ struct Snapshot
 
 	bool IsObjectStored(short _id);
 };
-static class Timeline
+
+class Timeline
 {
 	static std::vector<float> mSnaptimes;
 	static std::unordered_map<float, Snapshot> mSnapshots;		//The key will be the time they were taken (mSnapTimes)
@@ -33,8 +36,8 @@ public:
 	Timeline();
 	~Timeline();
 
-	void AddSnapshot(float _snaptime, Snapshot _snapshot);
-	SnapInfo GenerateSnapInfo();							//Error check agianst the BaseObject* if it is null or not
-	Snapshot GenerateSnapShot();
+	static void AddSnapshot(float _snaptime, Snapshot _snapshot);
+	static SnapInfo GenerateSnapInfo();							//Error check agianst the BaseObject* if it is null or not
+	static Snapshot GenerateSnapShot();
 };
 
