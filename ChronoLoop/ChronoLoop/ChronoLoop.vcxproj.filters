@@ -9,9 +9,68 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Input">
+      <UniqueIdentifier>{f0180cee-1bc3-4ecd-8203-5f9856e93fdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{5d335f0c-3f3b-439f-b8d5-cfc4d9d423a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{6ce0a120-62d1-45a3-a2ef-5a3c2c378294}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{540a829b-4878-4645-afaa-947a1a7ae2b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound">
+      <UniqueIdentifier>{eae951e6-7e90-499b-9be0-96789c656790}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{bf92f6b6-ef33-4343-b556-a2be8e0f0bce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{c5141bd8-8c74-4bee-9186-a68cdc829d07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input\Header Files">
+      <UniqueIdentifier>{266df7ef-8a9f-4e92-9e58-6880fcba06d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input\Source Files">
+      <UniqueIdentifier>{1b0c1cc2-8905-40e6-9615-423009dcb165}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Header Files">
+      <UniqueIdentifier>{4a4608d5-c13c-4309-8d3d-2898cc3b1219}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Source Files">
+      <UniqueIdentifier>{72f9a024-3f4f-4db5-a6de-460380b3b4f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Header Files">
+      <UniqueIdentifier>{264e0f99-edf8-4b4a-bd07-a7c4ac29f8e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Source Files">
+      <UniqueIdentifier>{0c2649d7-ce08-4584-91e2-26156eddde0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound\Header Files">
+      <UniqueIdentifier>{5978beda-7256-4b92-9a6e-c318dc44f579}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound\Source Files">
+      <UniqueIdentifier>{27899e4f-d835-4ef5-b314-336af5bc2fcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Header Files">
+      <UniqueIdentifier>{ee7d5d3b-d0a4-4deb-974a-c1fa0bbe02ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Source Files">
+      <UniqueIdentifier>{a5ac6321-5fc7-4e54-a730-67aafdee4509}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Header Files">
+      <UniqueIdentifier>{e9d5488a-51ea-4b41-8ef0-8dffda664eb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Source Files">
+      <UniqueIdentifier>{9cd40d39-0379-4494-8280-87372b4afbe5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Header Files">
+      <UniqueIdentifier>{8c587e14-d881-4ce2-af6d-02319bed4de7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Source Files">
+      <UniqueIdentifier>{d6d439c6-9c90-4057-b173-43048dd5640b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -21,13 +80,52 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Objects\BaseObject.h">
+      <Filter>Objects\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Component.h">
+      <Filter>Objects\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Components.h">
+      <Filter>Objects\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Transform.h">
+      <Filter>Objects\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\renderer.h">
+      <Filter>Rendering\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Shader.h">
+      <Filter>Rendering\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Math.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ChronoLoop.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\BaseObject.cpp">
+      <Filter>Objects\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Component.cpp">
+      <Filter>Objects\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Transform.cpp">
+      <Filter>Objects\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\renderer.cpp">
+      <Filter>Rendering\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Shader.cpp">
+      <Filter>Rendering\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Math.cpp">
+      <Filter>Common\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChronoLoop.cpp">
+      <Filter>Core\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
