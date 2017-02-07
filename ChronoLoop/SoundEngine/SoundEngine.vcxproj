@@ -110,6 +110,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;SOUNDENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\College\NthDimension\ChronoLoop\SoundEngine\Sound\SoundEngine\Win32;D:\College\NthDimension\ChronoLoop\SoundEngine\Sound\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -117,6 +118,7 @@
       <AdditionalDependencies>$(outputpath)Lib\ObjectEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(OutDir)Lib\$(TargetName).lib</ImportLibrary>
       <ProgramDatabaseFile>$(OutDir)PDB Files\$(TargetName).pdb</ProgramDatabaseFile>
+      <AdditionalLibraryDirectories>D:\College\NthDimension\ChronoLoop\SoundEngine\Sound\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
