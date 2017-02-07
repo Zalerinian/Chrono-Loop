@@ -7,6 +7,7 @@
 
 #include "targetver.h"
 
+/// Render Engine
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 // Windows Header Files:
 #include <windows.h>
@@ -17,6 +18,3 @@
 
 #include <d3d11.h>
 #include <DirectXMath.h>
-
-#include "../Common/vec4f.h"
-#include "../Common/matrix4.h"
