@@ -1,6 +1,7 @@
 #pragma once
-//#include "..\SoundEngine\SoundEngine.h"
+#include "..\SoundEngine\SoundEngine.h"
 
+template<class... Args>
 struct Message;
 
 class Messager
@@ -15,28 +16,7 @@ private:
 
 
 public:
-	enum messageTypes{	NONE = -1,
-						//SoundEngine
-						INITAILIZE_Audio,
-						SHUTDOWN_Audio,
-						UPDATE_Audio,
-						ADD_Listener,
-						REMOVE_Listener,
-						ADD_Emitter, 
-						REMOVE_Emitter,
-						SET_BasePath,
-						ADD_Soundbank,
-						REMOVE_Soundbank,
-						
-						
-						
-						
-						
-						
-						
-						
-							
-								};
+	
 
 	Messager();
 	~Messager();
@@ -49,5 +29,6 @@ public:
 	void Process();
 
 private:
-	void ProcessMessage(Message _msg);
+	template<class... Args>
+	void ProcessMessage(Message<Args...> _msg);
 };

@@ -16,7 +16,7 @@ typedef __w64 unsigned int AudioEvent;			///< Integer (unsigned) type for pointe
 #endif
 extern "C"
 {
-	class DLL AudioWrapper
+	class AudioWrapper
 	{
 		static AudioWrapper* audioSystem;
 

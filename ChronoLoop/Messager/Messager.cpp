@@ -4,13 +4,13 @@
 #include "stdafx.h"
 #include "Messager.h"
 #include "Message.h"
-#include "..\SoundEngine\SoundEngine.h"
+//#include "..\SoundEngine\SoundEngine.h"
 #include <thread>
-
 
 Messager::Messager()
 {
-	std::thread thrd (&Process);
+	std::thread thrd (&Messager::Process, this);
+	thrd.detach();
 }
 Messager::~Messager()
 {
@@ -27,12 +27,13 @@ void Messager::SendOutMessage()
 
 }
 
-void Messager::Process()
+template<class... Args>
+void Messager::ProcessMessage(Message<Args...> _msg)
 {
 
 }
 
-void Messager::ProcessMessage(Message _msg)
+void Messager::Process()
 {
-
+	//While alive, process messages in the queue
 }
