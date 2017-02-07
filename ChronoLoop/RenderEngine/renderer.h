@@ -59,11 +59,10 @@ class Mesh;
 //		betweenKeyFrame = Interpolate(bonePtr->keyframes->at(PreviousFrame), bonePtr->keyframes->at(nextFrame), delta);
 //	}
 //};
-class Renderer
-{
+
+class Renderer {
 public:
-	class Node
-	{
+	class Node {
 		friend class Renderer;
 	private:
 		ID3D11VertexShader*			m_vertexShader;
@@ -78,8 +77,8 @@ public:
 		ID3D11Texture2D*			m_Texture = nullptr;
 		ID3D11ShaderResourceView*	m_TextureSRV = nullptr;
 		ID3D11SamplerState*			m_SamplerState;
-		ModelViewProjectionConstantBuffer* m_constantBufferData;
-		BoneConstantBuffer			m_boneData;
+		//ModelViewProjectionConstantBuffer* m_constantBufferData;
+		//BoneConstantBuffer			m_boneData;
 		DirectX::XMFLOAT4X4			m_matrix;
 		std::vector<ID3D11Buffer*>	m_buffers;
 		bool isWireFrame = false;
@@ -91,22 +90,16 @@ public:
 		void Wireframe(bool toggle) { isWireFrame = toggle; };
 		DirectX::XMFLOAT4X4& GetMatrix() { return m_matrix; }
 		void AddBuffer(ID3D11Buffer* buffer) { m_buffers.push_back(buffer); };
-		void SetConstantBuffer(ModelViewProjectionConstantBuffer* cb) { m_constantBufferData = cb; };
+		//void SetConstantBuffer(ModelViewProjectionConstantBuffer* cb) { m_constantBufferData = cb; };
 		void Translate(float x, float y, float z) { m_matrix._14 += x; m_matrix._24 += y; m_matrix._34 += z; };
 		void Position(float x, float y, float z) { m_matrix._14 = x; m_matrix._24 = y; m_matrix._34 = z; };
-		void Scale(float x, float y, float z) { m_matrix._11 *= x; m_matrix._22 *= y; m_matrix._33 *= z; m_scale = XMFLOAT4(x, y, z,1.0f); };
+		void Scale(float x, float y, float z) { m_matrix._11 *= x; m_matrix._22 *= y; m_matrix._33 *= z; m_scale = XMFLOAT4(x, y, z, 1.0f); };
 		void Rotate(float x, float y, float z);
 		void ToggleRender() { m_render = !m_render; };
-		void SetKeyframe(Animation *anim, int frame);
-		void SetKeyframe1(Animation *anim, int frame);
-
+		
 	};
 private:
 	static Renderer* s_instance;
-	float cnt = 0.0f;
-	bool m_vsync_enabled;
-	int m_videoCardMemory;
-	char m_videoCardDescription[128];
 	IDXGISwapChain* m_swapChain;
 	ID3D11Device* m_device;
 	ID3D11DeviceContext* m_deviceContext;
@@ -115,7 +108,6 @@ private:
 	ID3D11DepthStencilView* m_depthStencilView;
 	ID3D11RasterizerState* m_rasterState;
 	D3D11_VIEWPORT m_viewport;
-	LightSource Lights[NumofLights];
 	XMMATRIX m_projectionMatrix;
 	XMMATRIX m_worldMatrix;
 	XMMATRIX m_orthoMatrix;
@@ -147,7 +139,7 @@ private:
 	void m_GetProjectionMatrix(XMMATRIX& projMatrix) { projMatrix = m_projectionMatrix; };
 	void m_GetWorldMatrix(XMMATRIX& worldMatrix) { worldMatrix = m_worldMatrix; };
 	void m_GetOrientationMatrix(XMMATRIX& oriMatrix) { oriMatrix = m_orthoMatrix; };
-	bool m_CreateLight(int _index,XMFLOAT4 _pos,XMFLOAT4 _direction, XMFLOAT4 _color);
+	bool m_CreateLight(int _index, XMFLOAT4 _pos, XMFLOAT4 _direction, XMFLOAT4 _color);
 
 public:
 	Renderer();
