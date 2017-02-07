@@ -14,5 +14,4 @@
 
 
 // TODO: reference additional headers your program requires here
-#include "../Common/vec4f.h"
-#include "../Common/matrix4.h"
+#include "../Common/Math.h"
