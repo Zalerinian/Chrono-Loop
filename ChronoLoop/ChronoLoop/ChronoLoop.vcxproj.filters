@@ -72,6 +72,15 @@
     <Filter Include="Objects\Source Files">
       <UniqueIdentifier>{d6d439c6-9c90-4057-b173-43048dd5640b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Messanger">
+      <UniqueIdentifier>{6061d8dd-4ace-4cac-a567-88b8ca29d583}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Messanger\Header Files">
+      <UniqueIdentifier>{9c504c6c-6102-41fd-a7c5-a3a61e77b31e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Messanger\Source Files">
+      <UniqueIdentifier>{36d90c6f-1459-46c7-850e-c2671a0bc2fc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -101,6 +110,21 @@
     <ClInclude Include="Common\Math.h">
       <Filter>Common\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Rendering\Mesh.h">
+      <Filter>Rendering\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Structures.h">
+      <Filter>Rendering\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Messager\Message.h">
+      <Filter>Messanger\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Messager\Messager.h">
+      <Filter>Messanger\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\SoundEngine.h">
+      <Filter>Sound\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -126,6 +150,15 @@
     </ClCompile>
     <ClCompile Include="ChronoLoop.cpp">
       <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Mesh.cpp">
+      <Filter>Rendering\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Messager\Messager.cpp">
+      <Filter>Messanger\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound\SoundEngine.cpp">
+      <Filter>Sound\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
