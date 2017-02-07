@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PhysicsEngine", "PhysicsEng
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ObjectEngine", "ObjectEngine\ObjectEngine.vcxproj", "{48DAEEE4-E9E8-4597-855F-8C9E22B767F1}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SoundEngine", "SoundEngine\SoundEngine.vcxproj", "{C2C9C8BB-0CF6-47C8-858B-BF2C690A302C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -67,6 +69,14 @@ Global
 		{48DAEEE4-E9E8-4597-855F-8C9E22B767F1}.Release|x64.Build.0 = Release|x64
 		{48DAEEE4-E9E8-4597-855F-8C9E22B767F1}.Release|x86.ActiveCfg = Release|Win32
 		{48DAEEE4-E9E8-4597-855F-8C9E22B767F1}.Release|x86.Build.0 = Release|Win32
+		{C2C9C8BB-0CF6-47C8-858B-BF2C690A302C}.Debug|x64.ActiveCfg = Debug|x64
+		{C2C9C8BB-0CF6-47C8-858B-BF2C690A302C}.Debug|x64.Build.0 = Debug|x64
+		{C2C9C8BB-0CF6-47C8-858B-BF2C690A302C}.Debug|x86.ActiveCfg = Debug|Win32
+		{C2C9C8BB-0CF6-47C8-858B-BF2C690A302C}.Debug|x86.Build.0 = Debug|Win32
+		{C2C9C8BB-0CF6-47C8-858B-BF2C690A302C}.Release|x64.ActiveCfg = Release|x64
+		{C2C9C8BB-0CF6-47C8-858B-BF2C690A302C}.Release|x64.Build.0 = Release|x64
+		{C2C9C8BB-0CF6-47C8-858B-BF2C690A302C}.Release|x86.ActiveCfg = Release|Win32
+		{C2C9C8BB-0CF6-47C8-858B-BF2C690A302C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
