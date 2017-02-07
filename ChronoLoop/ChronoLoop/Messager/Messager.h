@@ -1,5 +1,5 @@
 #pragma once
-#include "..\..\SoundEngine\SoundEngine.h"
+#include "..\Sound\SoundEngine.h"
 
 template<class... Args>
 struct Message;

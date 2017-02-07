@@ -3,7 +3,7 @@
 #include <vector>
 #include <map>
 
-#include "../../ObjectEngine/Component.h"
+#include "../Objects/Component.h"
 #include "AkSoundEngineDLL.h"
 
 #define DLL __declspec(dllexport)
