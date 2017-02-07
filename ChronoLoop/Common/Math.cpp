@@ -27,7 +27,7 @@ DirectX::XMVECTOR vec4f::GetUnderlyingType()
 	return data.vector;
 }
 
-bool vec4f::operator==(vec4f & _other)
+bool vec4f::operator==(const vec4f & _other)
 {
 	for (int i = 0; i < 4; ++i)
 		if (data.xyzw[i] != _other.data.xyzw[i])
@@ -36,7 +36,7 @@ bool vec4f::operator==(vec4f & _other)
 	return true;
 }
 
-vec4f& vec4f::operator=(vec4f& _other)
+vec4f& vec4f::operator=(const vec4f& _other)
 {
 	if (!(*this == _other))
 	{
@@ -47,7 +47,7 @@ vec4f& vec4f::operator=(vec4f& _other)
 	return *this;
 }
 
-vec4f vec4f::operator^(vec4f _other)
+vec4f vec4f::operator^(const vec4f& _other)
 {
 	vec4f temp;
 	temp.data.x = (data.y * _other.data.z) - (data.z * _other.data.y);
@@ -57,7 +57,7 @@ vec4f vec4f::operator^(vec4f _other)
 	return temp;
 }
 
-vec4f vec4f::operator*(matrix4 _other)
+vec4f vec4f::operator*(const matrix4& _other)
 {
 	vec4f temp;
 	for(int i = 0; i < 3; ++i)

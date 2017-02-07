@@ -22,32 +22,32 @@ struct vec4f {
 	vec4f(vec4f& _copy);
 
 	DirectX::XMVECTOR GetUnderlyingType();
-	bool   vec4f::operator==(vec4f& _other);
-	vec4f& vec4f::operator=(vec4f& _other);
-	vec4f  vec4f::operator^(vec4f _other);
-	vec4f  vec4f::operator*(matrix4 _other);
-	vec4f& vec4f::operator*=(matrix4 _other);
-	float  vec4f::operator*(vec4f _other);
+	bool   vec4f::operator==(const vec4f& _other);
+	vec4f& vec4f::operator=(const vec4f& _other);
+	vec4f  vec4f::operator^(const vec4f& _other);
+	vec4f  vec4f::operator*(const matrix4& _other);
+	vec4f& vec4f::operator*=(const matrix4& _other);
+	float  vec4f::operator*(const vec4f& _other);
 	vec4f  vec4f::operator*(float _other);
 	vec4f& vec4f::operator*=(float _other);
 	vec4f  vec4f::operator/(float _other);
 	vec4f& vec4f::operator/=(float _other);
 	vec4f  vec4f::operator-();
-	vec4f  vec4f::operator-(vec4f _other);
+	vec4f  vec4f::operator-(const vec4f& _other);
 	vec4f  vec4f::operator-(float _other);
-	vec4f& vec4f::operator-=(vec4f _other);
+	vec4f& vec4f::operator-=(const vec4f& _other);
 	vec4f& vec4f::operator-=(float _other);
 	vec4f  vec4f::operator+(float _other);
-	vec4f  vec4f::operator+(vec4f _other);
+	vec4f  vec4f::operator+(const vec4f& _other);
 	vec4f& vec4f::operator+=(float _other);
-	vec4f& vec4f::operator+=(vec4f _other);
+	vec4f& vec4f::operator+=(const vec4f& _other);
 	float& vec4f::operator[](unsigned int _index);
-	vec4f  Cross(vec4f _other);
-	float  Dot(vec4f _other);
+	vec4f  Cross(const vec4f& _other);
+	float  Dot(const vec4f& _other);
 	float  Magnitude();
 	float  SquaredMagnitude();
 	vec4f  Normalize();
-	vec4f  Reflect(vec4f other);
+	vec4f  Reflect(const vec4f& other);
 };
 
 struct matrix4 {
