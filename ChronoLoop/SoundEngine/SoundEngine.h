@@ -3,7 +3,7 @@
 #include <vector>
 #include <map>
 
-#include "../ObjectEngine/Components.h"
+#include "../ObjectEngine/Component.h"
 #include "AkSoundEngineDLL.h"
 
 #define DLL __declspec(dllexport)
@@ -14,42 +14,46 @@ typedef unsigned __int64 AudioEvent;				///< Integer (unsigned) type for pointer
 #else
 typedef __w64 unsigned int AudioEvent;			///< Integer (unsigned) type for pointers
 #endif
-
-class AudioWrapper
+extern "C"
 {
-	static AudioWrapper* audioSystem;
+	class DLL AudioWrapper
+	{
+		static AudioWrapper* audioSystem;
 
-private:
-	std::vector<Emitter> emitters;
-	std::vector<Listener> listeners;
-	std::map<std::wstring, AkBankID> RegisteredSoundBanks;
+	private:
+		std::vector<Emitter> mEmitters;
+		std::vector<Listener> mListeners;
+		std::map<std::wstring, AkBankID> mRegisteredSoundBanks;
 
-	bool isInitialize = false;
-	float worldScale;
-public:
-	DLL AudioWrapper();
-	DLL ~AudioWrapper();
+		bool mIsInitialize = false;
+		float mWorldScale;
+	public:
+		AudioWrapper* GetInstance() { return audioSystem; }
 
-	DLL bool initialize();
-	DLL void shutdown();
-	DLL void update();
+		AudioWrapper();
+		~AudioWrapper();
 
-	DLL void setWorldScale(float _scale);
-	DLL bool isInitialized() { return isInitialize; }
+		bool Initialize();
+		void Shutdown();
+		void Update();
 
-	DLL bool addListener(const Listener * _listener, const char* _name);
-	DLL bool removeListener(const Listener * _listener);
-	DLL bool addEmitter(const Emitter * _emitter, const char* _name);
-	DLL bool removeEmitter(const Emitter * _emitter);
+		void SetWorldScale(float _scale);
+		bool IsInitialized() { return mIsInitialize; }
 
-	//Posts an event at a pos, emitter location, or near a listener.
-	DLL bool makeEvent(AudioEvent _id, float* _pos);
-	DLL bool makeEvent(AudioEvent _id, const Emitter * _emitter);
-	DLL bool makeEvent(AudioEvent _id, unsigned int _listenerID = 0);
+		bool AddListener(const Listener * _listener, const char* _name);
+		bool RemoveListener(const Listener * _listener);
+		bool AddEmitter(const Emitter * _emitter, const char* _name);
+		bool RemoveEmitter(const Emitter * _emitter);
 
-	//Set soundbank path(s)
-	DLL void setBasePath(const wchar_t* _strPath);
-	DLL bool loadSoundBank(const wchar_t* _BankName);
-	DLL bool unloadSoundBank(const wchar_t* _BankName);
+		//Posts an event at a pos, emitter location, or near a listener.
+		bool MakeEvent(AudioEvent _id, float* _pos);
+		bool MakeEvent(AudioEvent _id, const Emitter * _emitter);
+		bool MakeEvent(AudioEvent _id, unsigned int _listenerID = 0);
 
-};
+		//Set soundbank path(s)
+		void SetBasePath(const wchar_t* _strPath);
+		bool LoadSoundBank(const wchar_t* _BankName);
+		bool UnloadSoundBank(const wchar_t* _BankName);
+
+	};
+}

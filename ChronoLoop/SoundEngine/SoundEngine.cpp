@@ -18,75 +18,96 @@ AudioWrapper::~AudioWrapper()
 
 }
 //-------Initialize-Shutdown-Update------------------------------------
-bool AudioWrapper::initialize()
+bool AudioWrapper::Initialize()
+{
+
+
+
+
+	return true;
+}
+
+void AudioWrapper::Shutdown()
 {
 
 }
 
-void AudioWrapper::shutdown()
-{
-
-}
-
-void AudioWrapper::update()
+void AudioWrapper::Update()
 {
 
 }
 //----------------------------------------------------
-void AudioWrapper::setWorldScale(float _scale)
+void AudioWrapper::SetWorldScale(float _scale)
 {
 
 }
 
 //------------Add/Remove-Listeners/Emitters-----------------------------------------
-bool AudioWrapper::addListener(const Listener* _listener, const char * _name)
+bool AudioWrapper::AddListener(const Listener* _listener, const char * _name)
 {
 
+
+	return true;
 }
 
-bool AudioWrapper::removeListener(const Listener* _listener)
+bool AudioWrapper::RemoveListener(const Listener* _listener)
 {
 
+
+	return true;
 }
 
-bool AudioWrapper::addEmitter(const Emitter * _emitter, const char * _name)
+bool AudioWrapper::AddEmitter(const Emitter * _emitter, const char * _name)
 {
 
+
+	return true;
 }
 
-bool AudioWrapper::removeEmitter(const Emitter * _emitter)
+bool AudioWrapper::RemoveEmitter(const Emitter * _emitter)
 {
 
+
+	return true;
 }
 
 //-------------EVENTS-----------------------------------------------
-bool AudioWrapper::makeEvent(AudioEvent _id, float * _pos)
+bool AudioWrapper::MakeEvent(AudioEvent _id, float * _pos)
 {
 
+
+	return true;
 }
 
-bool AudioWrapper::makeEvent(AudioEvent _id, const Emitter * _emitter)
+bool AudioWrapper::MakeEvent(AudioEvent _id, const Emitter * _emitter)
 {
 
+	return true;
 }
 
-bool AudioWrapper::makeEvent(AudioEvent _id, unsigned int _listenerID)
+bool AudioWrapper::MakeEvent(AudioEvent _id, unsigned int _listenerID)
 {
 
+
+	return true;
 }
 //------------Soundbank-Stuff---------------------------------------------
 
-void AudioWrapper::setBasePath(const wchar_t* _strPath)
+void AudioWrapper::SetBasePath(const wchar_t* _strPath)
 {
 
 }
 
-bool AudioWrapper::loadSoundBank(const wchar_t* _BankName)
+bool AudioWrapper::LoadSoundBank(const wchar_t* _BankName)
 {
 
+
+	return true;
 }
 
-bool AudioWrapper::unloadSoundBank(const wchar_t* _BankName)
+bool AudioWrapper::UnloadSoundBank(const wchar_t* _BankName)
 {
 
+
+	return true;
 }
