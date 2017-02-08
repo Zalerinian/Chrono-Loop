@@ -174,6 +174,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BlendManager.h" />
     <ClInclude Include="Common\Math.h" />
     <ClInclude Include="Messager\Message.h" />
     <ClInclude Include="Messager\Messager.h" />
@@ -181,6 +182,7 @@
     <ClInclude Include="Objects\Component.h" />
     <ClInclude Include="Objects\Components.h" />
     <ClInclude Include="Objects\Transform.h" />
+    <ClInclude Include="RasterizerStateManager.h" />
     <ClInclude Include="RenderContext.h" />
     <ClInclude Include="Rendering\Mesh.h" />
     <ClInclude Include="Rendering\renderer.h" />
@@ -199,6 +201,7 @@
     <ClCompile Include="Objects\BaseObject.cpp" />
     <ClCompile Include="Objects\Component.cpp" />
     <ClCompile Include="Objects\Transform.cpp" />
+    <ClCompile Include="RasterizerStateManager.cpp" />
     <ClCompile Include="Rendering\Mesh.cpp" />
     <ClCompile Include="Rendering\renderer.cpp" />
     <ClCompile Include="Rendering\Shader.cpp" />

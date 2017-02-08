@@ -15,7 +15,7 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	}
 
 	// Initialize Renderer / VR
-	if (!Renderer::Initialize(hwnd, 800, 600, false, 60, false, 1000, 0.1f, nullptr)) {
+	if (!RenderEngine::Renderer::Initialize(hwnd, 800, 600, false, 60, false, 1000, 0.1f, nullptr)) {
 		return 1;
 	}
 
@@ -23,7 +23,7 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	Update();
 
 	// Cleanup
-	Renderer::DestroyInstance();
+	RenderEngine::Renderer::DestroyInstance();
 
 	return 0;
 }
@@ -114,7 +114,7 @@ void Update() {
 		} else {
 			// Input.Update();
 			// Logic.Update();
-			 Renderer::Instance()->Render();
+			 RenderEngine::Renderer::Instance()->Render();
 		}
 	}
 }

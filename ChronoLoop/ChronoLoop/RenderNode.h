@@ -1,14 +1,18 @@
 #pragma once
 
-struct RenderNode {
-	typedef void(*NodeFunc)(RenderNode& n);
-	NodeFunc mNodeFunction;
+namespace RenderEngine {
 
-	RenderNode();
-	RenderNode(NodeFunc _function);
+	struct RenderNode {
+		typedef void(*NodeFunc)(RenderNode& n);
+		NodeFunc mNodeFunction;
+	
+		RenderNode();
+		RenderNode(NodeFunc _function);
+	
+		inline RenderNode* GetNext() { return mNext; }
+		inline RenderNode& SetNext(RenderNode* n) { mNext = n; return *this; }
+	protected:
+		RenderNode* mNext;
+	};
 
-	inline RenderNode* GetNext() { return mNext; }
-	inline RenderNode& SetNext(RenderNode* n) { mNext = n; return *this; }
-protected:
-	RenderNode* mNext;
-};
+}

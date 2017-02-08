@@ -4,13 +4,13 @@
 #include <vector>
 #include <openvr.h>
 
-struct RenderNode;
+namespace RenderEngine {
 
-class Renderer {
-
-	class RendererInstance {
-		friend Renderer;
-
+	struct RenderNode;
+	
+	class Renderer {
+		static Renderer* sInstance;
+	
 		// D3D11 Variables
 		std::shared_ptr<ID3D11Device*> mDevice;
 		std::shared_ptr<ID3D11DeviceContext*> mContext;
@@ -22,27 +22,26 @@ class Renderer {
 		D3D11_VIEWPORT mViewport;
 		std::shared_ptr<HWND> mWindow;
 		std::vector<RenderNode*> mNodes;
-		RendererInstance();
-		~RendererInstance();
-
+	
+		static void InitializeD3DDevice();
+		static void InitializeDXGIFactory();
+		static void InitializeDXGISwapChain(HWND &_win, bool _fullscreen, int _fps,
+																				int _width, int _height);
+		static void InitializeViews(int _width, int _height);
+		static void ThrowIfFailed(HRESULT hr);
+	
+		Renderer();
+		~Renderer();
 	public:
+		static Renderer* Instance();
+		static void DestroyInstance();
+		static bool Initialize(HWND Window, unsigned int width, unsigned int height,
+													 bool vsync, int fps, bool fullscreen, float farPlane, float nearPlane,
+													 vr::IVRSystem* vrsys);
+	
+	
+		// Instance Functions
 		void Render();
 	};
-	static RendererInstance* sInstance;
 
-	static void InitializeD3DDevice();
-	static void InitializeDXGIFactory();
-	static void InitializeDXGISwapChain(HWND &_win, bool _fullscreen, int _fps,
-																			int _width, int _height);
-	static void InitializeViews(int _width, int _height);
-	static void ThrowIfFailed(HRESULT hr);
-
-	Renderer();
-	~Renderer();
-public:
-	static RendererInstance* Instance();
-	static void DestroyInstance();
-	static bool Initialize(HWND Window, unsigned int width, unsigned int height,
-												 bool vsync, int fps, bool fullscreen, float farPlane, float nearPlane,
-												 vr::IVRSystem* vrsys);
-};
+}
