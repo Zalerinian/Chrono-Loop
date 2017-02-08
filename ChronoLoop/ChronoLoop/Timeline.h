@@ -28,16 +28,16 @@ struct Snapshot
 
 class Timeline
 {
-	static std::vector<float> mSnaptimes;
-	static std::unordered_map<float, Snapshot> mSnapshots;		//The key will be the time they were taken (mSnapTimes)
-	static std::unordered_map<short, BaseObject> mLiveObjects;  
+	std::vector<float> mSnaptimes;
+	std::unordered_map<float, Snapshot> mSnapshots;		//The key will be the time they were taken (mSnapTimes)
+	std::unordered_map<short, BaseObject> mLiveObjects;  
 
 public:
 	Timeline();
 	~Timeline();
 
-	static void AddSnapshot(float _snaptime, Snapshot _snapshot);
-	static SnapInfo GenerateSnapInfo();							//Error check agianst the BaseObject* if it is null or not
-	static Snapshot GenerateSnapShot();
+	void AddSnapshot(float _snaptime, Snapshot _snapshot);
+	SnapInfo GenerateSnapInfo();							//Error check agianst the BaseObject* if it is null or not
+	Snapshot GenerateSnapShot();
 };
 
