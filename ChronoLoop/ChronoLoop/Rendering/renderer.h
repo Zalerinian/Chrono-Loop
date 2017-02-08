@@ -4,8 +4,9 @@
 #include <vector>
 #include <openvr.h>
 
-namespace RenderEngine {
 class InputLayoutManager;
+
+namespace RenderEngine {
 
 	struct RenderNode;
 	

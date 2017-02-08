@@ -1,33 +1,24 @@
 #pragma once
 #include "stdafx.h"
+#include "RendererDefines.h"
 
-enum VertFormat
-{
-	POS = 0,
-	POSCOLOR,
-	POSTEX,
-	POSNORMTEX,
-	POSNORMTANTEX,
-	POSBONEWEIGHT,
-	POSBONEWEIGHTNORMTEX,
-	POSBONEWEIGHTNORMTANTEX,
-	MAX
-};
+struct ID3D11InputLayout;
 
-class ID3D11InputLayout;
+namespace RenderEngine {
 
-class InputLayoutManager
-{
-private:
-	static InputLayoutManager* sInstance;
+	class InputLayoutManager
+	{
+	private:
+		static InputLayoutManager* sInstance;
+	
+		InputLayoutManager();
+		void Initialize();
+		ID3D11InputLayout* mInputLayouts[VertFormat::MAX];
+	public:
+		~InputLayoutManager();
+		static InputLayoutManager &Instance();
+		static void DestroyInstance();
+		ID3D11InputLayout *GetInputLayout(VertFormat _index) { return mInputLayouts[_index]; };
+	};
 
-	InputLayoutManager();
-	void Initialize();
-	ID3D11InputLayout* InputLayouts[VertFormat::MAX];
-public:
-	~InputLayoutManager();
-	static InputLayoutManager &Instance();
-	static void DestroyInstance();
-	ID3D11InputLayout *GetInputLayout(VertFormat _index) { return InputLayouts[_index]; };
-};
-
+}
