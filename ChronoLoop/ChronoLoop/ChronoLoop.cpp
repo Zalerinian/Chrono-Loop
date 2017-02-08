@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Rendering\SystemInitializer.h"
 #include "Rendering\renderer.h"
+#include "Rendering\InputLayoutManager.h"
 
 HWND hwnd;
 LPCTSTR WndClassName = L"ChronoWindow";
