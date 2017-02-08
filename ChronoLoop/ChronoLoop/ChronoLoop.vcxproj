@@ -72,22 +72,24 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)_$(Configuration) $(PlatformShortName)\</OutDir>
-    <LibraryPath>$(outputpath)Lib\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(outputpath)Lib\;$(solutiondir)openvr\lib\win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)_$(Configuration) $(PlatformShortName)\</OutDir>
-    <LibraryPath>$(outputpath)Lib\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(outputpath)Lib\;$(solutiondir)openvr\lib\win64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)openvr\headers;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)_$(Configuration) $(PlatformShortName)\</OutDir>
-    <LibraryPath>$(outputpath)Lib\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(outputpath)Lib\;$(solutiondir)openvr\lib\win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)_$(Configuration) $(PlatformShortName)\</OutDir>
-    <LibraryPath>$(outputpath)Lib\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(outputpath)Lib\;$(solutiondir)openvr\lib\win64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)openvr\headers;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
