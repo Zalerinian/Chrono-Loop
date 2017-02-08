@@ -269,14 +269,20 @@ matrix4& matrix4::operator=(matrix4 const& _other)
 matrix4 matrix4::operator*(matrix4 const& _other)
 {
 	matrix4 temp;
+	DirectX::XMMATRIX temp1, temp2, temp3;
+	for (int i = 0; i < 4; ++i)
+	{
+		for (int j = 0; j < 4; ++j)
+		{
+			temp1.r[i].m128_f32[j] = data.tiers[i].data.xyzw[j];
+			temp2.r[i].m128_f32[j] = _other.data.tiers[i].data.xyzw[j];
+		}
+	}
+	
+	temp3 = temp1 * temp2;
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 4; ++j)
-			data.tiers[i].data.xyzw[j] = 0;
-
-	for (int i = 0; i < 4; ++i)
-		for (int j = 0; j < 4; ++j)
-			for (int k = 0; k < 4; ++k)
-				temp.data.tiers[i].data.xyzw[j] += data.tiers[i].data.xyzw[k] * _other.data.tiers[k].data.xyzw[j];
+			temp.data.tiers[i].data.xyzw[j] = temp1.r[i].m128_f32[j];
 	
 	return temp;
 }
@@ -286,4 +292,55 @@ matrix4& matrix4::operator*=(matrix4 const& _other)
 	*this = *this * _other;
 	return *this;
 }
+
+matrix4 matrix4::operator*(float _other)
+{
+	for (int i = 0; i < 4; ++i)
+		for (int j = 0; j < 4; ++j)
+			data.tiers[i].data.xyzw[j] *= _other;
+}
+
+matrix4& matrix4::operator*=(float _other)
+{
+	*this = *this * _other;
+	return *this;
+}
+
+matrix4 matrix4::operator+(matrix4 const& _other)
+{
+	for (int i = 0; i < 4; ++i)
+		for (int j = 0; j < 4; ++j)
+			data.tiers[i].data.xyzw[j] += _other.data.tiers[i].data.xyzw[j];
+}
+
+matrix4& matrix4::operator+=(matrix4 const& _other)
+{
+	*this = *this + _other;
+	return *this;
+}
+
+vec4f& matrix4::operator[](unsigned int _index)
+{
+	if (_index < 4)
+		return data.tiers[_index];
+	return data.tiers[0];
+}
+
+matrix4 matrix4::Inverse()
+{
+	matrix4 temp;
+	DirectX::XMMATRIX temp1, temp2;
+	for (int i = 0; i < 4; ++i)
+		for (int j = 0; j < 4; ++j)
+			temp1.r[i].m128_f32[j] = data.tiers[i].data.xyzw[j];
+
+	temp2 = DirectX::XMMatrixInverse(&DirectX::XMMatrixDeterminant(temp1), temp1);
+
+	for (int i = 0; i < 4; ++i)
+		for (int j = 0; j < 4; ++j)
+			temp.data.tiers[i].data.xyzw[j] = temp1.r[i].m128_f32[j];
+	return temp;
+}
+
+#pragma endregion
 
