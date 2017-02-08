@@ -6,6 +6,7 @@
 #include "stdafx.h"
 #include "Math.h"
 
+
 #pragma region VECTOR_MATH
 
 vec4f::vec4f()
@@ -229,6 +230,7 @@ vec4f vec4f::Reflect(vec4f const& _other)
 
 #pragma endregion
 
+
 #pragma region MATRIX_MATH
 
 matrix4::matrix4()
@@ -344,3 +346,91 @@ matrix4 matrix4::Inverse()
 
 #pragma endregion
 
+
+matrix4 Math::MatrixRotateAxis(vec4f _axis, float _rads)
+{
+	matrix4 temp;
+	DirectX::XMMATRIX temp1;
+	DirectX::XMVECTOR vec;
+
+	for (int i = 0; i < 4; ++i)
+		vec.m128_f32[i] = _axis.data.xyzw[i];
+
+	temp1 = DirectX::XMMatrixRotationAxis(vec, _rads);
+
+	for (int i = 0; i < 4; ++i)
+		for (int j = 0; j < 4; ++j)
+			temp.data.tiers[i].data.xyzw[j] = temp1.r[i].m128_f32[j];
+	return temp;
+}
+
+matrix4 Math::MatrixRotateX(float _rads)
+{
+	matrix4 temp;
+	DirectX::XMMATRIX temp1 = DirectX::XMMatrixIdentity();
+	DirectX::XMMatrixRotationX(_rads);
+
+	for (int i = 0; i < 4; ++i)
+		for (int j = 0; j < 4; ++j)
+			temp.data.tiers[i].data.xyzw[j] = temp1.r[i].m128_f32[j];
+	return temp;
+}
+
+matrix4 Math::MatrixRotateY(float _rads)
+{
+	matrix4 temp;
+	DirectX::XMMATRIX temp1 = DirectX::XMMatrixIdentity();
+	DirectX::XMMatrixRotationY(_rads);
+
+	for (int i = 0; i < 4; ++i)
+		for (int j = 0; j < 4; ++j)
+			temp.data.tiers[i].data.xyzw[j] = temp1.r[i].m128_f32[j];
+	return temp;
+}
+
+matrix4 Math::MatrixRotateZ(float _rads)
+{
+	matrix4 temp;
+	DirectX::XMMATRIX temp1 = DirectX::XMMatrixIdentity();
+	DirectX::XMMatrixRotationZ(_rads);
+
+	for (int i = 0; i < 4; ++i)
+		for (int j = 0; j < 4; ++j)
+			temp.data.tiers[i].data.xyzw[j] = temp1.r[i].m128_f32[j];
+	return temp;
+}
+
+matrix4 Math::MatrixTranslation(float _x, float _y, float _z)
+{
+	matrix4 temp;
+	DirectX::XMMATRIX temp1 = DirectX::XMMatrixIdentity();
+	DirectX::XMMatrixTranslation(_x, _y, _z);
+
+	for (int i = 0; i < 4; ++i)
+		for (int j = 0; j < 4; ++j)
+			temp.data.tiers[i].data.xyzw[j] = temp1.r[i].m128_f32[j];
+	return temp;
+}
+
+matrix4 Math::FromMatrix(vr::HmdMatrix44_t _mat)
+{
+	matrix4 temp;
+	for (int i = 0; i < 4; ++i)
+		for (int j = 0; j < 3; ++j)
+			temp.data.tiers[i].data.xyzw[j] = _mat.m[i][j];
+
+	temp.data.tiers[0].data.xyzw[3] = 0;
+	temp.data.tiers[1].data.xyzw[3] = 0;
+	temp.data.tiers[2].data.xyzw[3] = 0;
+	temp.data.tiers[3].data.xyzw[3] = 1;
+	return temp;
+}
+
+matrix4 Math::FromMatrix(vr::HmdMatrix34_t _mat)
+{
+	matrix4 temp;
+	for (int i = 0; i < 4; ++i)
+		for (int j = 0; j < 4; ++j)
+			temp.data.tiers[i].data.xyzw[j] = _mat.m[i][j];
+	return temp;
+}
