@@ -7,9 +7,11 @@ class BaseObject
 {
 private:
 	std::string name;
-	//uint32 id;
+	short id;
 	Transform transform;
 	std::list<BaseObject> children;
 public:
+	short GetUniqueId();
+	Transform& GetTransform();
 
 };
