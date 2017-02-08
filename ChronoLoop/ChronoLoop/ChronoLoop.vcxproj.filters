@@ -102,9 +102,6 @@
     <ClInclude Include="Rendering\Structures.h">
       <Filter>Rendering\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Messager\Message.h">
-      <Filter>Messanger\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Messager\Messager.h">
       <Filter>Messanger\Header Files</Filter>
     </ClInclude>
@@ -119,6 +116,9 @@
     </ClInclude>
     <ClInclude Include="Timeline.h">
       <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Messager.hpp">
+      <Filter>Messanger</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -146,9 +146,6 @@
     <ClCompile Include="Rendering\Mesh.cpp">
       <Filter>Rendering\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Messager\Messager.cpp">
-      <Filter>Messanger\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Sound\SoundEngine.cpp">
       <Filter>Sound\Source Files</Filter>
     </ClCompile>
@@ -157,6 +154,9 @@
     </ClCompile>
     <ClCompile Include="Timeline.cpp">
       <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Messager\Messager.cpp">
+      <Filter>Messanger\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
