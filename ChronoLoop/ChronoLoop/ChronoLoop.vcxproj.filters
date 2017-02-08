@@ -117,8 +117,8 @@
     <ClInclude Include="Timeline.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Input\KeyboardInput.h">
-      <Filter>Input\Header Files</Filter>
+    <ClInclude Include="Physics.h">
+      <Filter>Physics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Messager.hpp">
       <Filter>Messanger</Filter>
@@ -158,8 +158,8 @@
     <ClCompile Include="Timeline.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Input\KeyboardInput.cpp">
-      <Filter>Input\Source Files</Filter>
+    <ClCompile Include="Physics.cpp">
+      <Filter>Physics\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Messager\Messager.cpp">
       <Filter>Messanger\Source Files</Filter>
