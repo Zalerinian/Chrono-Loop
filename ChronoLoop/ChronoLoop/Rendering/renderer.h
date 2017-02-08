@@ -5,11 +5,13 @@
 #include <openvr.h>
 
 struct RenderNode;
+class InputLayoutManager;
 
 class Renderer {
 
 	class RendererInstance {
 		friend Renderer;
+		friend InputLayoutManager;
 
 		// D3D11 Variables
 		std::shared_ptr<ID3D11Device*> mDevice;

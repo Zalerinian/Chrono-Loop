@@ -8,6 +8,51 @@
 
 struct matrix4;
 
+struct vec4i {
+	union {
+		struct {
+			friend vec4i;
+		private:
+			DirectX::XMINT4 vector;
+		public:
+			struct {
+				int x, y, z, w;
+			};
+			float xyzw[4];
+		} data;
+	};
+};
+
+struct vec2f {
+	union {
+		struct {
+			friend vec2f;
+		private:
+			DirectX::XMFLOAT2 vector;
+		public:
+			struct {
+				float x, y;
+			};
+			float xy[2];
+		} data;
+	};
+};
+
+struct vec3f {
+	union {
+		struct {
+			friend vec3f;
+		private:
+			DirectX::XMFLOAT3 vector;
+		public:
+			struct {
+				float x, y, z;
+			};
+			float xyz[3];
+		} data;
+	};
+};
+
 struct vec4f {
 	union {
 		struct {
