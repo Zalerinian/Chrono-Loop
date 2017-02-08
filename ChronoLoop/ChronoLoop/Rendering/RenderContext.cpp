@@ -2,9 +2,10 @@
 #include "RenderContext.h"
 
 bool RenderEngine::RenderContext::operator==(RenderContext & other) {
-	/*if() {
-		return false
-	}*/
+	if(mRasterState != other.mRasterState ||
+		 mVertexFormat != other.mVertexFormat) {
+		return false;
+	}
 
 	return true;
 }

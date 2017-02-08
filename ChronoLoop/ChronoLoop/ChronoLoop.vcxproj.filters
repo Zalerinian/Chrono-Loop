@@ -150,6 +150,9 @@
     <ClInclude Include="Rendering\RendererDefines.h">
       <Filter>Rendering\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Rendering\InputLayoutManager.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -194,6 +197,11 @@
     <ClCompile Include="Rendering\RenderNode.cpp">
       <Filter>Rendering\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rendering\RenderContext.cpp" />
+    <ClCompile Include="Rendering\RenderContext.cpp">
+      <Filter>Rendering\Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\InputLayoutManager.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
