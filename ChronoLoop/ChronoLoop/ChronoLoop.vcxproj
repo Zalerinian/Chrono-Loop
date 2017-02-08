@@ -175,6 +175,7 @@
     <ClInclude Include="Objects\Component.h" />
     <ClInclude Include="Objects\Components.h" />
     <ClInclude Include="Objects\Transform.h" />
+    <ClInclude Include="Physics.h" />
     <ClInclude Include="Rendering\Mesh.h" />
     <ClInclude Include="Rendering\renderer.h" />
     <ClInclude Include="Rendering\Shader.h" />
@@ -191,6 +192,7 @@
     <ClCompile Include="Objects\BaseObject.cpp" />
     <ClCompile Include="Objects\Component.cpp" />
     <ClCompile Include="Objects\Transform.cpp" />
+    <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Rendering\Mesh.cpp" />
     <ClCompile Include="Rendering\renderer.cpp" />
     <ClCompile Include="Rendering\Shader.cpp" />
