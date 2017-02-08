@@ -2,6 +2,7 @@
 #include "Rendering\SystemInitializer.h"
 #include "Rendering\renderer.h"
 #include "Rendering\InputLayoutManager.h"
+#include <openvr.h>
 
 HWND hwnd;
 LPCTSTR WndClassName = L"ChronoWindow";
@@ -20,6 +21,9 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	if (!RenderEngine::InitializeSystems(hwnd, 800, 600, false, 60, false, 1000, 0.1f, nullptr)) {
 		return 1;
 	}
+
+	vr::HmdError *pError = new vr::HmdError;
+	vr::VR_Init(pError, vr::VRApplication_Utility);
 
 	// Update everything
 	Update();
