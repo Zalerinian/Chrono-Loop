@@ -9,9 +9,9 @@ namespace RenderEngine {
 	struct RenderNode;
 	
 	class Renderer {
-		static Renderer* sInstance;
 	
 		// D3D11 Variables
+		// Instance members
 		std::shared_ptr<ID3D11Device*> mDevice;
 		std::shared_ptr<ID3D11DeviceContext*> mContext;
 		std::shared_ptr<IDXGISwapChain*> mChain;
@@ -23,6 +23,8 @@ namespace RenderEngine {
 		std::shared_ptr<HWND> mWindow;
 		std::vector<RenderNode*> mNodes;
 	
+		// Static members
+		static Renderer* sInstance;
 		static void InitializeD3DDevice();
 		static void InitializeDXGIFactory();
 		static void InitializeDXGISwapChain(HWND &_win, bool _fullscreen, int _fps,
@@ -42,6 +44,12 @@ namespace RenderEngine {
 	
 		// Instance Functions
 		void Render();
+		std::shared_ptr<ID3D11Device*> GetDevice();
+		std::shared_ptr<ID3D11DeviceContext*> GetContext();
+		std::shared_ptr<IDXGISwapChain*> GetChain();
+		std::shared_ptr<IDXGIFactory1*> GetFactory();
+		std::shared_ptr<ID3D11RenderTargetView*> GetRTView();
+		std::shared_ptr<ID3D11DepthStencilView*> GetDSView();
 	};
 
 }

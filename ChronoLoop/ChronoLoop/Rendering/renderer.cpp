@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "renderer.h"
 #include <d3d11.h>
-#include <iostream>
 
 using namespace std;
 
@@ -167,7 +166,6 @@ namespace RenderEngine {
 		InitializeDXGIFactory();
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, _width, _height);
 		InitializeViews(_width, _height);
-	
 		return true;
 	}
 	
@@ -180,6 +178,30 @@ namespace RenderEngine {
 		(*mContext)->ClearRenderTargetView((*mRTView), color);
 
 		(*mChain)->Present(0, 0);
+	}
+
+	std::shared_ptr<ID3D11Device*> Renderer::GetDevice() {
+		return mDevice;
+	}
+
+	std::shared_ptr<ID3D11DeviceContext*> Renderer::GetContext() {
+		return mContext;
+	}
+
+	std::shared_ptr<IDXGISwapChain*> Renderer::GetChain() {
+		return mChain;
+	}
+
+	std::shared_ptr<IDXGIFactory1*> Renderer::GetFactory() {
+		return mFactory;
+	}
+
+	std::shared_ptr<ID3D11RenderTargetView*> Renderer::GetRTView() {
+		return mRTView;
+	}
+
+	std::shared_ptr<ID3D11DepthStencilView*> Renderer::GetDSView() {
+		return mDSView;
 	}
 
 	#pragma endregion Instance Functions

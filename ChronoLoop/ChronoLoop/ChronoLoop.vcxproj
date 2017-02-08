@@ -174,7 +174,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BlendManager.h" />
     <ClInclude Include="Common\Math.h" />
     <ClInclude Include="Messager\Message.h" />
     <ClInclude Include="Messager\Messager.h" />
@@ -182,13 +181,16 @@
     <ClInclude Include="Objects\Component.h" />
     <ClInclude Include="Objects\Components.h" />
     <ClInclude Include="Objects\Transform.h" />
-    <ClInclude Include="RasterizerStateManager.h" />
-    <ClInclude Include="RenderContext.h" />
+    <ClInclude Include="Rendering\BlendManager.h" />
     <ClInclude Include="Rendering\Mesh.h" />
+    <ClInclude Include="Rendering\RasterizerStateManager.h" />
+    <ClInclude Include="Rendering\RenderContext.h" />
     <ClInclude Include="Rendering\renderer.h" />
+    <ClInclude Include="Rendering\RendererDefines.h" />
+    <ClInclude Include="Rendering\RenderNode.h" />
     <ClInclude Include="Rendering\Shader.h" />
     <ClInclude Include="Rendering\Structures.h" />
-    <ClInclude Include="RenderNode.h" />
+    <ClInclude Include="Rendering\SystemInitializer.h" />
     <ClInclude Include="Sound\SoundEngine.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -201,11 +203,12 @@
     <ClCompile Include="Objects\BaseObject.cpp" />
     <ClCompile Include="Objects\Component.cpp" />
     <ClCompile Include="Objects\Transform.cpp" />
-    <ClCompile Include="RasterizerStateManager.cpp" />
     <ClCompile Include="Rendering\Mesh.cpp" />
+    <ClCompile Include="Rendering\RasterizerStateManager.cpp" />
+    <ClCompile Include="Rendering\RenderContext.cpp" />
     <ClCompile Include="Rendering\renderer.cpp" />
+    <ClCompile Include="Rendering\RenderNode.cpp" />
     <ClCompile Include="Rendering\Shader.cpp" />
-    <ClCompile Include="RenderNode.cpp" />
     <ClCompile Include="Sound\SoundEngine.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

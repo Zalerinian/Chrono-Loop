@@ -132,17 +132,23 @@
     <ClInclude Include="Timeline.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RenderNode.h">
+    <ClInclude Include="Rendering\BlendManager.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RenderNode.h">
       <Filter>Rendering\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RenderContext.h">
+    <ClInclude Include="Rendering\RenderContext.h">
       <Filter>Rendering\Header Files\Nodes</Filter>
     </ClInclude>
-    <ClInclude Include="BlendManager.h">
+    <ClInclude Include="Rendering\RasterizerStateManager.h">
       <Filter>Rendering\Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="RasterizerStateManager.h">
-      <Filter>Rendering\Header Files\Managers</Filter>
+    <ClInclude Include="Rendering\SystemInitializer.h">
+      <Filter>Rendering\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RendererDefines.h">
+      <Filter>Rendering\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -182,11 +188,12 @@
     <ClCompile Include="Timeline.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RenderNode.cpp">
-      <Filter>Rendering\Source Files\Nodes</Filter>
-    </ClCompile>
-    <ClCompile Include="RasterizerStateManager.cpp">
+    <ClCompile Include="Rendering\RasterizerStateManager.cpp">
       <Filter>Rendering\Source Files\Managers</Filter>
     </ClCompile>
+    <ClCompile Include="Rendering\RenderNode.cpp">
+      <Filter>Rendering\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\RenderContext.cpp" />
   </ItemGroup>
 </Project>
