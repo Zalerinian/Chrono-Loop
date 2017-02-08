@@ -73,6 +73,12 @@
     <Filter Include="Messanger\Source Files">
       <UniqueIdentifier>{36d90c6f-1459-46c7-850e-c2671a0bc2fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Rendering\Header Files\Nodes">
+      <UniqueIdentifier>{d40797e6-0a44-4be6-97cc-45a99293c61e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Source Files\Nodes">
+      <UniqueIdentifier>{654f6dd3-285a-4896-b914-82fd78f6bb40}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\BaseObject.h">
@@ -120,6 +126,12 @@
     <ClInclude Include="Timeline.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RenderNode.h">
+      <Filter>Rendering\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderContext.h">
+      <Filter>Rendering\Header Files\Nodes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -157,6 +169,9 @@
     </ClCompile>
     <ClCompile Include="Timeline.cpp">
       <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderNode.cpp">
+      <Filter>Rendering\Source Files\Nodes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

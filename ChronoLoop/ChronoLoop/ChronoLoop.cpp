@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Rendering\renderer.h"
 
 HWND hwnd;
 LPCTSTR WndClassName = L"ChronoWindow";
@@ -14,11 +15,15 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	}
 
 	// Initialize Renderer / VR
+	if (!Renderer::Initialize(hwnd, 800, 600, false, 60, false, 1000, 0.1f, nullptr)) {
+		return 1;
+	}
 
 	// Update everything
 	Update();
 
 	// Cleanup
+	Renderer::DestroyInstance();
 
 	return 0;
 }
@@ -109,7 +114,7 @@ void Update() {
 		} else {
 			// Input.Update();
 			// Logic.Update();
-			// Renderer.Render();
+			 Renderer::Instance()->Render();
 		}
 	}
 }
