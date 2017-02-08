@@ -169,7 +169,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Common\Math.h" />
-    <ClInclude Include="Messager.hpp" />
+    <ClInclude Include="Input\KeyboardInput.h" />
+    <ClInclude Include="Messager\Message.h" />
     <ClInclude Include="Messager\Messager.h" />
     <ClInclude Include="Objects\BaseObject.h" />
     <ClInclude Include="Objects\Component.h" />
@@ -187,6 +188,7 @@
   <ItemGroup>
     <ClCompile Include="ChronoLoop.cpp" />
     <ClCompile Include="Common\Math.cpp" />
+    <ClCompile Include="Input\KeyboardInput.cpp" />
     <ClCompile Include="Messager\Messager.cpp" />
     <ClCompile Include="Objects\BaseObject.cpp" />
     <ClCompile Include="Objects\Component.cpp" />
