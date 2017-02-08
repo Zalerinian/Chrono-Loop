@@ -74,7 +74,6 @@ struct matrix4 {
 	matrix4(matrix4 const& _copy);
 	DirectX::XMMATRIX matrix4::GetUnderlyingType() { return data.matrix; }
 
-	matrix4  matrix4::FromRotation(vec4f, float);
 	bool     matrix4::operator==(matrix4 const& _other);
 	matrix4& matrix4::operator=(matrix4 const& _other);
 	matrix4  matrix4::operator*(matrix4 const& _other);
