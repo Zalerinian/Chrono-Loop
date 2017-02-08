@@ -5,6 +5,7 @@
 
 #pragma once
 #include <DirectXMath.h>
+#include <openvr.h>
 
 struct matrix4;
 
@@ -25,8 +26,8 @@ struct vec4f {
 	vec4f();
 	vec4f(float _x, float _y, float _z, float _w);
 	vec4f(vec4f const& _copy);
+	DirectX::XMVECTOR GetUnderlyingType() { return data.vector; }
 
-	DirectX::XMVECTOR GetUnderlyingType();
 	bool   vec4f::operator==(vec4f const& _other);
 	vec4f& vec4f::operator=(vec4f const& _other);
 	vec4f  vec4f::operator^(vec4f const& _other);
@@ -52,12 +53,13 @@ struct vec4f {
 	float  Magnitude() const;
 	float  SquaredMagnitude() const;
 	vec4f  Normalize() const;
-	vec4f  Reflect(const vec4f& other);
+	vec4f  Reflect(vec4f const& other);
 };
 
 struct matrix4 {
 	union {
 		struct {
+			friend matrix4;
 		private:
 			DirectX::XMMATRIX matrix;
 		public:
@@ -67,5 +69,31 @@ struct matrix4 {
 			};
 		} data;
 	};
+
+	matrix4();
+	matrix4(matrix4 const& _copy);
+	DirectX::XMMATRIX matrix4::GetUnderlyingType() { return data.matrix; }
+
+	bool     matrix4::operator==(matrix4 const& _other);
+	matrix4& matrix4::operator=(matrix4 const& _other);
+	matrix4  matrix4::operator*(matrix4 const& _other);
+	matrix4& matrix4::operator*=(matrix4 const& _other);
+	matrix4  matrix4::operator*(float _other);
+	matrix4& matrix4::operator*=(float _other);
+	matrix4  matrix4::operator+(matrix4 const& _other);
+	matrix4& matrix4::operator+=(matrix4 const& _other);
+	vec4f&   matrix4::operator[](unsigned int _index);
+	matrix4  Inverse();
+	float*   AsArray() { return reinterpret_cast<float*>(data.matrix.r); }
 };
 
+namespace Math
+{
+	matrix4 MatrixRotateAxis(vec4f _axis, float _rads);
+	matrix4 MatrixRotateX(float _rads);
+	matrix4 MatrixRotateY(float _rads);
+	matrix4 MatrixRotateZ(float _rads);
+	matrix4 MatrixTranslation(float _x, float _y, float _z);
+	matrix4 FromMatrix(vr::HmdMatrix44_t _mat);
+	matrix4 FromMatrix(vr::HmdMatrix34_t _mat);
+}
