@@ -73,6 +73,12 @@
     <Filter Include="Messanger\Source Files">
       <UniqueIdentifier>{36d90c6f-1459-46c7-850e-c2671a0bc2fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Objects\Header Files\Levels">
+      <UniqueIdentifier>{8bab4a2d-1234-4a1a-8916-32d9c0732197}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Source Files\Levels">
+      <UniqueIdentifier>{1c1a8ba2-e292-40db-9477-212db17409e3}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Rendering\Header Files\Nodes">
       <UniqueIdentifier>{d40797e6-0a44-4be6-97cc-45a99293c61e}</UniqueIdentifier>
     </Filter>
@@ -138,6 +144,8 @@
     <ClInclude Include="Timeline.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Input\KeyboardInput.h" />
+    <ClInclude Include="Physics\Physics.h">
     <ClInclude Include="Rendering\BlendManager.h">
       <Filter>Rendering\Header Files\Managers</Filter>
     </ClInclude>
@@ -161,6 +169,12 @@
     </ClInclude>
     <ClInclude Include="Physics\Physics.h">
       <Filter>Physics\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelManager.h">
+      <Filter>Objects\Source Files\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLevel.h">
+      <Filter>Objects\Source Files\Levels</Filter>
     </ClInclude>
     <ClInclude Include="Input\KeyboardInput.h" />
   </ItemGroup>
@@ -214,11 +228,28 @@
       <Filter>Rendering\Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="Physics\Physics.cpp">
+    <ClCompile Include="Input\KeyboardInput.cpp" />
+    <ClCompile Include="Physics\Physics.cpp">
       <Filter>Physics\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelManager.cpp">
+      <Filter>Objects\Header Files\Levels</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLevel.cpp">
+      <Filter>Objects\Header Files\Levels</Filter>
     </ClCompile>
     <ClCompile Include="Input\KeyboardInput.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHTNORMTANTEX_VS.hlsl" />
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHTNORMTEX_VS.hlsl" />
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHT_VS.hlsl" />
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSCOLOR_VS.hlsl" />
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSNORMTANTEX_VS.hlsl" />
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSNORMTEX_VS.hlsl" />
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSTEX_VS.hlsl" />
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl" />
+    <FxCompile Include="Rendering\Shaders\VertexLayout_VS.hlsl" />
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
       <Filter>Rendering\Shaders\Layout Shaders</Filter>
     </FxCompile>
