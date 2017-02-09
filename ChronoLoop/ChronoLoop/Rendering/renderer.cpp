@@ -275,9 +275,13 @@ namespace RenderEngine {
 		}
 
 
-		matrix4 temp = Math::Identity();
+		matrix4 temp;
+		if (mVrSystem) {
+			temp = Math::FromMatrix(mVrSystem->GetEyeToHeadTransform(vr::EVREye::Eye_Left));
+		} else {
+			temp = Math::Identity();
+		}
 
-		//matrix4 temp = Math::FromMatrix(mVrSystem->GetEyeToHeadTransform(vr::EVREye::Eye_Left));
 		constantData.eye.matrix = temp.Inverse().matrix;
 		(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
 		(*mContext)->OMSetRenderTargets(1, mDebugScreen.get(), (*mDSView));
@@ -295,23 +299,22 @@ namespace RenderEngine {
 		/// Pixel Shader(s)
 		(*mContext)->PSSetShader(mMeshes[0].pShader, nullptr, 0);
 
-
 		(*mContext)->DrawIndexed((UINT)mMeshes[0].IndicieSize(), 0, 0);
 
-		/*(*mContext)->OMSetRenderTargets(1, mLeftEye.get(), (*mVRDSView));
-		(*mContext)->ClearDepthStencilView((*mVRDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-		(*mContext)->DrawIndexed((UINT)mMeshes[0].IndicieSize(), 0, 0);*/
-
-		//temp = Math::FromMatrix(mVrSystem->GetEyeToHeadTransform(vr::EVREye::Eye_Left));
-		/*constantData.eye.matrix = temp.Inverse().matrix;
-		(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
-		(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
-		(*mContext)->OMSetRenderTargets(1, mRightEye.get(), (*mVRDSView));
-		(*mContext)->ClearDepthStencilView((*mVRDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-		(*mContext)->DrawIndexed((UINT)mMeshes[0].IndicieSize(), 0, 0);*/
-
 		if (mVrSystem != nullptr) {
+			if (mVrSystem) {
+				(*mContext)->OMSetRenderTargets(1, mLeftEye.get(), (*mVRDSView));
+				(*mContext)->ClearDepthStencilView((*mVRDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+				(*mContext)->DrawIndexed((UINT)mMeshes[0].IndicieSize(), 0, 0);
 
+				temp = Math::FromMatrix(mVrSystem->GetEyeToHeadTransform(vr::EVREye::Eye_Left));
+				constantData.eye.matrix = temp.Inverse().matrix;
+				(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
+				(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
+				(*mContext)->OMSetRenderTargets(1, mRightEye.get(), (*mVRDSView));
+				(*mContext)->ClearDepthStencilView((*mVRDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+				(*mContext)->DrawIndexed((UINT)mMeshes[0].IndicieSize(), 0, 0);
+			}
 
 
 			vr::TrackedDevicePose_t pose;
