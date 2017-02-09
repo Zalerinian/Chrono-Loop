@@ -7,6 +7,7 @@
 #include "../ChronoLoop/Rendering/renderer.h"
 #include <iterator>
 //#include "../ChronoLoop/TimeManager.h"
+using namespace RenderEngine;
 class BaseLevel
 {
 private:

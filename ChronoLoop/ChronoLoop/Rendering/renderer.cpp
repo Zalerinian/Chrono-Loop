@@ -261,11 +261,11 @@ namespace RenderEngine {
 		CD3D11_BUFFER_DESC desc(sizeof(MyBuffer), D3D11_BIND_CONSTANT_BUFFER);
 		(*mDevice)->CreateBuffer(&desc, nullptr, &constantBluffer);
 
-		desc = CD3D11_BUFFER_DESC(sizeof(VertexPos) * mMeshes[0].VertSize(), D3D11_BIND_VERTEX_BUFFER);
+		desc = CD3D11_BUFFER_DESC(sizeof(VertexPos) * (UINT)mMeshes[0].VertSize(), D3D11_BIND_VERTEX_BUFFER);
 		(*mDevice)->CreateBuffer(&desc, nullptr, &boxVertex);
 		(*mContext)->UpdateSubresource(boxVertex, 0, NULL, mMeshes[0].GetVerts(), 0, 0);
 
-		desc = CD3D11_BUFFER_DESC(sizeof(unsigned short) * mMeshes[0].IndicieSize(), D3D11_BIND_INDEX_BUFFER);
+		desc = CD3D11_BUFFER_DESC(sizeof(unsigned short) * (UINT)mMeshes[0].IndicieSize(), D3D11_BIND_INDEX_BUFFER);
 		(*mDevice)->CreateBuffer(&desc, nullptr, &boxIndex);
 		(*mContext)->UpdateSubresource(boxIndex, 0, NULL, mMeshes[0].GetIndicies(), 0, 0);
 

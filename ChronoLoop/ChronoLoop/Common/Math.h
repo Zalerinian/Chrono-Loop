@@ -29,6 +29,7 @@ struct vec2f {
 	};
 };
 
+struct vec4f;
 struct vec3f {
 	union {
 		DirectX::XMVECTOR vector;
@@ -155,6 +156,7 @@ namespace Math
 	matrix4 MatrixRotateZ(float _rads);
 	matrix4 MatrixTranslation(float _x, float _y, float _z);
 	matrix4 MatrixTranspose(matrix4 & other);
+	matrix4 MatrixScale(float _x, float _y, float _z);
 	matrix4 Projection(float _aspect, float _fov, float _near, float _far);
 	matrix4 FromMatrix(vr::HmdMatrix44_t _mat);
 	matrix4 FromMatrix(vr::HmdMatrix34_t _mat);
