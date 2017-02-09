@@ -1,8 +1,7 @@
 cbuffer MVEP : register(b0) {
 	matrix model;
 	matrix view;
-	matrix eye;
-	matrix projection;
+	matrix proj;
 }
 
 struct VertexShaderInput {
@@ -18,8 +17,7 @@ PixelShaderInput main(VertexShaderInput input) {
 	float4 pos = input.pos;
 	pos = mul(pos, model);
 	pos = mul(pos, view);
-	pos = mul(pos, eye);
-	pos = mul(pos, projection);
+	pos = mul(pos, proj);
 	output.pos = pos;
 	return output;
 }

@@ -15,7 +15,7 @@ namespace RenderEngine {
 	class Renderer {
 	private:
 		struct MyBuffer {
-			matrix4 model, view, eye, projection;
+			matrix4 model, view, projection;
 		} constantData;
 
 		friend InputLayoutManager;
@@ -49,6 +49,11 @@ namespace RenderEngine {
 
 		void DoAllTheBootlegThingsForTheDemo();
 
+		matrix4 mEyePosLeft, mEyePosRight, mEyeProjLeft, mEyeProjRight, mHMDPos;
+
+		matrix4 GetEye(vr::EVREye e);
+		matrix4 GetProjection(vr::EVREye e);
+		void GetMVP(vr::EVREye e, MyBuffer &data);
 
 		Renderer();
 		~Renderer();

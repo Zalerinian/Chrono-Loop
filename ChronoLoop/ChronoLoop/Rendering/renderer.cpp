@@ -44,6 +44,50 @@ namespace RenderEngine {
 		
 	}
 
+	matrix4 Renderer::GetEye(vr::EVREye e) {
+		vr::HmdMatrix34_t matEyeRight = mVrSystem->GetEyeToHeadTransform(e);
+		matrix4 matrixObj(
+			matEyeRight.m[0][0], matEyeRight.m[1][0], matEyeRight.m[2][0], 0.0,
+			matEyeRight.m[0][1], matEyeRight.m[1][1], matEyeRight.m[2][1], 0.0,
+			matEyeRight.m[0][2], matEyeRight.m[1][2], matEyeRight.m[2][2], 0.0,
+			matEyeRight.m[0][3], matEyeRight.m[1][3], matEyeRight.m[2][3], 1.0f
+		);
+
+		return Math::MatrixTranspose(matrixObj).Inverse();
+	}
+
+	matrix4 Renderer::GetProjection(vr::EVREye e) {
+		
+		vr::HmdMatrix44_t mat = mVrSystem->GetProjectionMatrix(e, 0.1f, 1000);
+
+		return Math::MatrixTranspose(matrix4(
+			mat.m[0][0], mat.m[1][0], mat.m[2][0], mat.m[3][0],
+			mat.m[0][1], mat.m[1][1], mat.m[2][1], mat.m[3][1],
+			mat.m[0][2], mat.m[1][2], mat.m[2][2], mat.m[3][2],
+			mat.m[0][3], mat.m[1][3], mat.m[2][3], mat.m[3][3]
+		));
+	}
+
+	void Renderer::GetMVP(vr::EVREye e, MyBuffer &data) {
+		
+
+		vr::TrackedDevicePose_t poses[vr::k_unMaxTrackedDeviceCount];
+		vr::VRCompositor()->WaitGetPoses(poses, vr::k_unMaxTrackedDeviceCount, NULL, 0);
+
+		matrix4 hmd = (Math::FromMatrix(poses[0].mDeviceToAbsoluteTracking));
+
+		matrix4 hmdPos = hmd.Inverse();
+		if (e == vr::EVREye::Eye_Left) {
+			data.model = Math::MatrixTranslation(0, 0, 0);
+			data.view = hmdPos * mEyePosLeft;
+			data.projection = mEyeProjLeft;
+		} else {
+			data.model = Math::MatrixTranslation(0, 0, 0);
+			data.view = hmdPos * mEyePosRight;
+			data.projection = mEyeProjRight;
+		}
+	}
+
 	Renderer::Renderer() {}
 
 	Renderer::Renderer::~Renderer() {
@@ -252,9 +296,14 @@ namespace RenderEngine {
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, _width, _height);
 		InitializeViews(_width, _height);
 
-		constantData.projection = Math::MatrixTranspose(Math::Projection((float)_width / (float)_height, 180, _nearPlane, _farPlane));
-		constantData.view = Math::MatrixTranspose(Math::MatrixTranslation(0, -1, 5)).Inverse();
-		constantData.model.matrix = DirectX::XMMatrixIdentity();
+		mEyePosLeft = GetEye(vr::EVREye::Eye_Left);
+		mEyePosRight = GetEye(vr::EVREye::Eye_Right);
+		mEyeProjLeft = GetProjection(vr::EVREye::Eye_Left);
+		mEyeProjRight = GetProjection(vr::EVREye::Eye_Right);
+
+
+
+
 		// Eye gets changd per render
 		RenderShape *box = new RenderShape(Mesh("../Resources/Box.obj"));
 		box->LoadShaders("BasicVertexShader.cso", "BasicPixelShader.cso");
@@ -279,14 +328,7 @@ namespace RenderEngine {
 		}
 
 
-		matrix4 temp;
-		if (mVrSystem) {
-			temp = Math::FromMatrix(mVrSystem->GetEyeToHeadTransform(vr::EVREye::Eye_Left));
-		} else {
-			temp = Math::Identity();
-		}
-
-		constantData.eye.matrix = temp.Inverse().matrix;
+		GetMVP(vr::EVREye::Eye_Left, constantData);
 		(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
 		(*mContext)->OMSetRenderTargets(1, mDebugScreen.get(), (*mDSView));
 		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -306,19 +348,16 @@ namespace RenderEngine {
 		(*mContext)->DrawIndexed((UINT)((RenderShape*)mRenderSet.GetHead())->mIndexCount, 0, 0);
 
 		if (mVrSystem != nullptr) {
-			if (mVrSystem) {
 				(*mContext)->OMSetRenderTargets(1, mLeftEye.get(), (*mVRDSView));
 				(*mContext)->ClearDepthStencilView((*mVRDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 				(*mContext)->DrawIndexed((UINT)((RenderShape*)mRenderSet.GetHead())->mIndexCount, 0, 0);
 
-				temp = Math::FromMatrix(mVrSystem->GetEyeToHeadTransform(vr::EVREye::Eye_Left));
-				constantData.eye.matrix = temp.Inverse().matrix;
+				GetMVP(vr::EVREye::Eye_Right, constantData);
 				(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
 				(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
 				(*mContext)->OMSetRenderTargets(1, mRightEye.get(), (*mVRDSView));
 				(*mContext)->ClearDepthStencilView((*mVRDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 				(*mContext)->DrawIndexed((UINT)((RenderShape*)mRenderSet.GetHead())->mIndexCount, 0, 0);
-			}
 
 
 			vr::TrackedDevicePose_t pose;
@@ -332,7 +371,7 @@ namespace RenderEngine {
 			auto e = vr::VRCompositor()->WaitGetPoses(m_rTrackedDevicePose, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
 			for (int i = 0; i < 2; i++) {
 				vr::Texture_t tex = { i == 0 ? (void*)(*mLeftTexture) : (void*)(*mRightTexture), vr::TextureType_DirectX, vr::ColorSpace_Auto };
-				vr::VRCompositor()->Submit(i == 0 ? vr::EVREye::Eye_Left : vr::EVREye::Eye_Right, &tex);
+				e = vr::VRCompositor()->Submit(i == 0 ? vr::EVREye::Eye_Left : vr::EVREye::Eye_Right, &tex);
 			}
 		}
 

@@ -473,6 +473,25 @@ matrix4::matrix4(matrix4& _copy)
 			tiers[i].xyzw[j] = _copy.tiers[i].xyzw[j];
 }
 
+matrix4::matrix4(float _11, float _12, float _13, float _14, float _21, float _22, float _23, float _24, float _31, float _32, float _33, float _34, float _41, float _42, float _43, float _44) {
+	tiers[0][0] = _11;
+	tiers[0][1] = _12;
+	tiers[0][2] = _13;
+	tiers[0][3] = _14;
+	tiers[1][0] = _21;
+	tiers[1][1] = _22;
+	tiers[1][2] = _23;
+	tiers[1][3] = _24;
+	tiers[2][0] = _31;
+	tiers[2][1] = _32;
+	tiers[2][2] = _33;
+	tiers[2][3] = _34;
+	tiers[3][0] = _41;
+	tiers[3][1] = _42;
+	tiers[3][2] = _43;
+	tiers[3][3] = _44;
+}
+
 bool matrix4::operator==(matrix4 const& _other)
 {
 	for (int i = 0; i < 4; ++i)
@@ -659,23 +678,19 @@ matrix4 Math::FromMatrix(vr::HmdMatrix44_t _mat)
 {
 	matrix4 temp;
 	for (int i = 0; i < 4; ++i)
-		for (int j = 0; j < 3; ++j)
+		for (int j = 0; j < 4; ++j)
 			temp.tiers[i].xyzw[j] = _mat.m[i][j];
 
-	temp.tiers[0].xyzw[3] = 0;
-	temp.tiers[1].xyzw[3] = 0;
-	temp.tiers[2].xyzw[3] = 0;
-	temp.tiers[3].xyzw[3] = 1;
 	return temp;
 }
 
 matrix4 Math::FromMatrix(vr::HmdMatrix34_t _mat)
 {
-	matrix4 temp;
-	for (int i = 0; i < 3; ++i)
-		for (int j = 0; j < 4; ++j)
-			temp.tiers[i].xyzw[j] = _mat.m[i][j];
-	memset(temp.tiers[3].xyzw, 0, sizeof(float) * 4);
-	temp.tiers[3].xyzw[3] = 1;
-	return temp;
+	matrix4 matrixObj(
+		_mat.m[0][0], _mat.m[1][0], _mat.m[2][0], 0.0,
+		_mat.m[0][1], _mat.m[1][1], _mat.m[2][1], 0.0,
+		_mat.m[0][2], _mat.m[1][2], _mat.m[2][2], 0.0,
+		_mat.m[0][3], _mat.m[1][3], _mat.m[2][3], 1.0f
+	);
+	return matrixObj;
 }
