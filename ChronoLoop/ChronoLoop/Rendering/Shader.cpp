@@ -25,8 +25,4 @@ PixelShader::PixelShader(const char * _path)  {
 		bytecode.push_back(*bite);
 	}
 	delete bite;
-
-
-
-
 }

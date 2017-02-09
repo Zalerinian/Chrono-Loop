@@ -13,7 +13,7 @@ namespace RenderEngine {
 	
 		InputLayoutManager();
 		void Initialize();
-		ID3D11InputLayout* mInputLayouts[VertFormat::MAX];
+		ID3D11InputLayout* mInputLayouts[VertFormat::eVERT_MAX];
 	public:
 		~InputLayoutManager();
 		static InputLayoutManager &Instance();

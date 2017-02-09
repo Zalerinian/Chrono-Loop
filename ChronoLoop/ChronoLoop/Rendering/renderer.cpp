@@ -3,6 +3,8 @@
 #include <d3d11.h>
 #include <openvr.h>
 #include <iostream>
+#include "Mesh.h"
+#include "InputLayoutManager.h"
 
 using namespace std;
 
@@ -34,6 +36,11 @@ namespace RenderEngine {
 		if (FAILED(hr)) {
 			throw "Something has gone catastrophically wrong!";
 		}
+	}
+
+	void Renderer::DoAllTheBootlegThingsForTheDemo()
+	{
+		
 	}
 
 	Renderer::Renderer() {}
@@ -230,13 +237,33 @@ namespace RenderEngine {
 	void Renderer::Render() {
 		float color[4] = { 0.3f, 0.3f, 1, 1 };
 		(*mContext)->ClearRenderTargetView((*mDebugScreen), color);
+		(*mContext)->ClearRenderTargetView((*mLeftEye), color);
+		(*mContext)->ClearRenderTargetView((*mRightEye), color);
 
-		vr::VRCompositor()->CompositorBringToFront();
-		vr::TrackedDevicePose_t m_rTrackedDevicePose[vr::k_unMaxTrackedDeviceCount];
-		auto e = vr::VRCompositor()->WaitGetPoses(m_rTrackedDevicePose, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
-		for (int i = 0; i < 2; i++) {
-			vr::Texture_t tex = { i == 0 ? (void*)(*mLeftTexture) : (void*)(*mRightTexture), vr::TextureType_DirectX, vr::ColorSpace_Auto };
-			vr::VRCompositor()->Submit(i == 0 ? vr::EVREye::Eye_Left : vr::EVREye::Eye_Right, &tex);
+		if (mVrSystem != nullptr) {
+
+			vr::TrackedDevicePose_t pose;
+			mVrSystem->GetDeviceToAbsoluteTrackingPose(vr::ETrackingUniverseOrigin::TrackingUniverseStanding,
+				0,
+				&pose,
+				1);
+
+			/*std::cout << "[";
+			for (int r = 0; r < 12; ++r) {
+				std::cout << pose.mDeviceToAbsoluteTracking.m[r / 3][r % 4] << " ";
+				if (r == 11) {
+					std::cout << std::endl;
+				}
+			}*/
+
+
+			vr::VRCompositor()->CompositorBringToFront();
+			vr::TrackedDevicePose_t m_rTrackedDevicePose[vr::k_unMaxTrackedDeviceCount];
+			auto e = vr::VRCompositor()->WaitGetPoses(m_rTrackedDevicePose, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
+			for (int i = 0; i < 2; i++) {
+				vr::Texture_t tex = { i == 0 ? (void*)(*mLeftTexture) : (void*)(*mRightTexture), vr::TextureType_DirectX, vr::ColorSpace_Auto };
+				vr::VRCompositor()->Submit(i == 0 ? vr::EVREye::Eye_Left : vr::EVREye::Eye_Right, &tex);
+			}
 		}
 
 		(*mChain)->Present(0, 0);

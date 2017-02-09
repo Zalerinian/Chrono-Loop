@@ -3,12 +3,13 @@
 #include <memory>
 #include <vector>
 #include <openvr.h>
+#include "RenderContext.h"
+#include "Mesh.h"
+#include "../Common/Math.h"
 
 class InputLayoutManager;
 
 namespace RenderEngine {
-
-	struct RenderNode;
 	
 	class Renderer {
 		friend InputLayoutManager;
@@ -25,28 +26,36 @@ namespace RenderEngine {
 		D3D11_VIEWPORT mViewport;
 		vr::IVRSystem* mVrSystem;
 		std::shared_ptr<HWND> mWindow;
+		RenderContext mCurrentContext;
 		std::vector<RenderNode*> mNodes;
+		std::vector<Mesh> mMeshes;
+		matrix4 view, projection, eye;
 	
-		// Static members
 		static Renderer* sInstance;
+
 		void InitializeD3DDevice();
 		void InitializeDXGIFactory();
 		void InitializeDXGISwapChain(HWND &_win, bool _fullscreen, int _fps,
 																	int _width, int _height);
 		void InitializeViews(int _width, int _height);
 		void ThrowIfFailed(HRESULT hr);
+
+
+		void DoAllTheBootlegThingsForTheDemo();
+
 	
 		Renderer();
 		~Renderer();
 	public:
 		static Renderer* Instance();
 		static void DestroyInstance();
-		bool Initialize(HWND Window, unsigned int width, unsigned int height,
-													 bool vsync, int fps, bool fullscreen, float farPlane, float nearPlane,
-													 vr::IVRSystem* vrsys);
 	
 	
 		// Instance Functions
+		bool Initialize(HWND Window, unsigned int width, unsigned int height,
+			bool vsync, int fps, bool fullscreen, float farPlane, float nearPlane,
+			vr::IVRSystem* vrsys);
+
 		void Render();
 		std::shared_ptr<ID3D11Device*> GetDevice();
 		std::shared_ptr<ID3D11DeviceContext*> GetContext();

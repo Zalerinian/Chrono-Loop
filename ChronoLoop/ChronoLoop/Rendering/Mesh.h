@@ -21,23 +21,29 @@ class Mesh
 {
 private:
 	std::vector<Triangle> mTriangles;
-	std::vector<VertexPosNormTex> mUniqueVerts;
+	std::vector<VertexPos> mUniqueVerts;
 	std::vector<unsigned short> mIndicies;
 	wchar_t *mImage;
 public:
+	// Super temporary shit
+	ID3D11PixelShader *pShader;
+	ID3D11VertexShader *vShader;
+
+
 	Mesh();
 	Mesh(char *path);
 	Mesh(char *path, wchar_t *path2);
 	virtual ~Mesh();
+	void loadShaders(char *pixel, char* vertex);
 	bool Load(char *path);
 	Triangle *GetTriangles();
-	size_t GetNumTriangles() { return mTriangles.size(); };
+	inline size_t GetNumTriangles() { return mTriangles.size(); };
 	//bool LoadBin(char *path);
 	void Clear();
 	void Invert();
 	//void MakePlane();
 	//void MakeViewPlane();
-	VertexPosNormTex *GetVerts();
+	VertexPos *GetVerts();
 	size_t VertSize();
 	unsigned short *GetIndicies();
 	size_t IndicieSize();

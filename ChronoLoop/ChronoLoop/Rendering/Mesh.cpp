@@ -4,6 +4,7 @@
 #include <fstream>
 #include <string>
 #include "renderer.h"
+#include "InputLayoutManager.h"
 
 using namespace Concurrency;
 
@@ -29,10 +30,21 @@ Mesh::~Mesh()
 	this->Clear();
 }
 
+void Mesh::loadShaders(char * pixel, char * vertex)
+{
+	char *bytecode = nullptr;
+	int bytelength;
+	RenderEngine::InputLayoutManager::LoadShader(pixel, bytecode, bytelength);
+	(*RenderEngine::Renderer::Instance()->GetDevice())->CreatePixelShader(bytecode, bytelength, nullptr, &pShader);
+	delete[] bytecode;
+	RenderEngine::InputLayoutManager::LoadShader(vertex, bytecode, bytelength);
+	(*RenderEngine::Renderer::Instance()->GetDevice())->CreateVertexShader(bytecode, bytelength, nullptr, &vShader);
+}
+
 bool Mesh::Load(char * path)
 {
 	this->Clear();
-	std::vector<VertexPosNormTex> Verts;
+	std::vector<VertexPos> Verts;
 	std::vector<unsigned short> Ind;
 	int index = 1;
 	std::ifstream file;
@@ -72,13 +84,13 @@ bool Mesh::Load(char * path)
 			}
 			for (int i = 0; i < 3; i++)
 			{
-				VertexPosNormTex temp;
+				VertexPos temp;
 				temp.Position = verts[vertexIndex[i] - 1];
 				temp.Position.data.w = 1;
 				//temp.color = DirectX::XMFLOAT4(i == 0, i == 1, i == 3);
-				temp.Normal = norms[normalIndex[i] - 1];
+				/*temp.Normal = norms[normalIndex[i] - 1];
 				temp.UV = uvs[uvIndex[i] - 1];
-				temp.UV.data.z = 0;
+				temp.UV.data.z = 0;*/
 				Ind.push_back((unsigned short)Verts.size());
 				Verts.push_back(temp);
 			}
@@ -97,7 +109,7 @@ Triangle * Mesh::GetTriangles()
 		for (int i = 0; i < mIndicies.size() / 3; i++)
 		{
 			Triangle temp;
-			temp.Normal = (mUniqueVerts[mIndicies[(i * 3) + 0]].Normal + mUniqueVerts[mIndicies[(i * 3) + 1]].Normal + mUniqueVerts[mIndicies[(i * 3) + 2]].Normal) / 2;
+			//temp.Normal = (mUniqueVerts[mIndicies[(i * 3) + 0]].Normal + mUniqueVerts[mIndicies[(i * 3) + 1]].Normal + mUniqueVerts[mIndicies[(i * 3) + 2]].Normal) / 2;
 			temp.Vertex[0] = &mUniqueVerts[mIndicies[(i * 3) + 0]].Position;
 			temp.Vertex[1] = &mUniqueVerts[mIndicies[(i * 3) + 1]].Position;
 			temp.Vertex[2] = &mUniqueVerts[mIndicies[(i * 3) + 2]].Position;
@@ -347,7 +359,7 @@ void Mesh::Invert()
 //	totalVerts = Indicies.size();
 //}
 
-VertexPosNormTex * Mesh::GetVerts()
+VertexPos * Mesh::GetVerts()
 {
 	return mUniqueVerts.data();
 }

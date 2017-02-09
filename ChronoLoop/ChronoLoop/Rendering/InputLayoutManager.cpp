@@ -99,7 +99,7 @@ namespace RenderEngine {
 	
 	InputLayoutManager::~InputLayoutManager()
 	{
-		for (int i = 0; i < VertFormat::MAX; i++)
+		for (int i = 0; i < VertFormat::eVERT_MAX; i++)
 		{
 			mInputLayouts[i]->Release();
 		}
@@ -119,8 +119,13 @@ namespace RenderEngine {
 	{
 		std::ifstream load;
 		load.open(_fileName, std::ios_base::binary);
+		if (!load.is_open()) {
+			_output = nullptr;
+			_outputSize = 0;
+			return;
+		}
 		load.seekg(0, std::ios_base::end);
-		_outputSize = size_t(load.tellg());
+		_outputSize = int(load.tellg());
 		_output = new char[_outputSize];
 		load.seekg(0, std::ios_base::beg);
 		load.read(_output, _outputSize);
