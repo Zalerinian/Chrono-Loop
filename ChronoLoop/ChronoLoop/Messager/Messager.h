@@ -4,6 +4,34 @@
 #include <vector>
 #include <cstdarg>
 
+//TUPLE voodoo
+namespace TupleSplitter {
+	template<typename F, typename Tuple, size_t ...S >
+	decltype(auto) apply_tuple_impl(F&& fn, Tuple&& t, std::index_sequence<S...>) {
+		return std::forward<F>(fn)(std::get<S>(std::forward<Tuple>(t))...);
+	}
+
+	template<typename F, typename Tuple>
+	decltype(auto) apply(F&& fn, Tuple&& t) {
+		std::size_t constexpr tSize
+			= std::tuple_size<typename std::remove_reference<Tuple>::type>::value;
+		return apply_tuple_impl(std::forward<F>(fn),
+			std::forward<Tuple>(t),
+			std::make_index_sequence<tSize>());
+		// I'm at least 15% sure that the make_index_sequence bit is for making the
+		// third template argument valid, as technically the value itself is never
+		// used in the function, but it is used as part of the template.
+
+		// std::forward makes a regular lvalue into an rvalue, but an lvalue reference
+		// is unchanged.
+
+		// std::get is used to get a value from a tuple. Since it can hold any number
+		// of any number of types, you can't index into it like a regular array or
+		// anything. std::get expects an index as a template argument for which
+		// value to get.
+	}
+}
+
 enum messageTypes {
 	NONE = -1,
 	SoundEngine,
@@ -136,7 +164,6 @@ private:
 
 
 public:
-	template<class... Args>
 	Messager();
 	~Messager();
 
@@ -146,6 +173,9 @@ public:
 	void SendInMessage(Message<Args...> _msg);
 	template<class... Args>
 	void SendOutMessage(Message<Args...> _msg);
+
+	template<class... Args>
+	void Initialize();
 
 	template<class... Args>
 	void Process();

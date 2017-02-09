@@ -1,8 +1,10 @@
 #include "stdafx.h"
+#include "Messager\Messager.h"
 
 HWND hwnd;
 LPCTSTR WndClassName = L"ChronoWindow";
 HINSTANCE hInst;
+Messager theBUS;
 
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
