@@ -1,12 +1,19 @@
 #include "stdafx.h"
+#include <chrono>
+
 
 HWND hwnd;
 LPCTSTR WndClassName = L"ChronoWindow";
 HINSTANCE hInst;
 
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed);
+std::chrono::steady_clock::time_point lastTime = std::chrono::steady_clock::now();
+static float timeFrame = 0.0f;
+static float deltaTime;
+TimeManager* TManager; 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void Update();
+bool FrameCheck();
 
 int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	if (!InitializeWindow(hInstance, nCmdShow, 800, 600, true)) {
@@ -14,7 +21,7 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	}
 
 	// Initialize Renderer / VR
-
+	TManager->Instance();
 	// Update everything
 	Update();
 
@@ -97,6 +104,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 
 void Update() {
 	MSG msg;
+	
 	ZeroMemory(&msg, sizeof(MSG));
 	while (true) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
@@ -107,11 +115,31 @@ void Update() {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		} else {
-			// Input.Update();
-			// Logic.Update();
-			// Renderer.Render();
+
+			// Input.Update(float deltaTime);
+			// Logic.Update(float deltaTime);
+			TManager->Update(deltaTime);
+			if (FrameCheck())
+			{
+				// Renderer.Render();
+			}
 		}
 	}
+}
+bool FrameCheck()
+{
+	static float fps = 1 / 90.0f;
+
+	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count() - lastTime.time_since_epoch().count()) / 1000.0f / 1000.0f / 1000.0f;
+	lastTime = std::chrono::steady_clock::now();
+	timeFrame += deltaTime;
+	if (timeFrame > fps)
+	{
+		timeFrame = 0;
+		return true;
+	}
+
+	return false;
 }
 
 

@@ -3,6 +3,7 @@
 #include <list>
 #include "Transform.h"
 
+
 class BaseObject
 {
 private:
@@ -10,8 +11,13 @@ private:
 	short id;
 	Transform transform;
 	std::list<BaseObject> children;
+	
 public:
-	short GetUniqueId();
+	BaseObject();
+	~BaseObject();
+	BaseObject(BaseObject const & _copy);
+	BaseObject& operator=(const BaseObject);
+	short& GetUniqueId();
 	Transform& GetTransform();
 
 };

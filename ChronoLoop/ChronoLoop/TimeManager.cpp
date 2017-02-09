@@ -1,9 +1,12 @@
 #include "stdafx.h"
 #include "TimeManager.h"
 
+TimeManager* TimeManager::instanceTimemanager = nullptr;
+Timeline* TimeManager::mTimeline = nullptr;
 
 TimeManager::TimeManager()
 {
+	mTimeline = new Timeline();
 }
 
 
@@ -18,7 +21,29 @@ void TimeManager::Update(float _delta)
 	if (mLevelTime - mlastRecordedTime > mRecordingTime)
 	{
 		mlastRecordedTime = mLevelTime + mRecordingTime;
-		Snapshot s = mTimeline.GenerateSnapShot;
-		mTimeline.AddSnapshot(s.mTime,s);
+		Snapshot s = mTimeline->GenerateSnapShot();
+		mTimeline->AddSnapshot(s.mTime,s);
 	}
+}
+
+TimeManager * TimeManager::Instance()
+{
+	if (!instanceTimemanager)
+		instanceTimemanager = new TimeManager();
+	
+	return instanceTimemanager;
+}
+
+Timeline * TimeManager::GetTimeLine()
+{
+	if(!mTimeline)
+	{
+		mTimeline = new Timeline();
+	};
+	return mTimeline;
+}
+
+void TimeManager::Destroy()
+{
+	delete instanceTimemanager;
 }

@@ -1,6 +1,20 @@
 #include "stdafx.h"
 #include "Timeline.h"
 
+SnapInfo::SnapInfo()
+{
+}
+
+SnapInfo::~SnapInfo()
+{
+}
+
+SnapInfo::SnapInfo(SnapInfo const & _copy)
+{
+	//TODO PAT: COPY ALL DATA ONCE STRUCT IS FINAL
+	this->id = _copy.id;
+	this->mTransform = _copy.mTransform;
+}
 
 bool Snapshot::IsObjectStored(short _id)
 {
@@ -28,20 +42,19 @@ Timeline::~Timeline()
 
 void Timeline::AddBaseObject(BaseObject& _object, short _id)
 {
-	
+	mLiveObjects[_id] = _object;
 }
 
 void Timeline::AddSnapshot(float _snaptime,Snapshot _snapshot)
 {
 	mSnaptimes.push_back(_snaptime);
 	mSnapshots[_snaptime] = _snapshot;
-	
 }
 
-SnapInfo Timeline::GenerateSnapInfo(BaseObject& _object)
+SnapInfo& Timeline::GenerateSnapInfo(BaseObject& _object)
 {
 	SnapInfo info;
-	info.mTransform = _object.GetTransform();
+	info.id = _object.GetUniqueId();
 
 	//Add alot more componet data when componets get made
 	return info;
@@ -57,23 +70,24 @@ Snapshot Timeline::GenerateSnapShot()
 	{
 		for (int i = 0; i < mLiveObjects.size(); i++)
 		{
-			float id = mLiveObjects[i].GetUniqueId();
+			short id = mLiveObjects[i].GetUniqueId();
 			snap.mSnapinfos[id] = GenerateSnapInfo(mLiveObjects[i]);
 			snap.mUpdatedtimes[id] = TakenTime;
 		}
 	}
 	else
 	{
-		snap.mUpdatedtimes = mSnapshots[mSnaptimes.size() - 1].mUpdatedtimes;
+		snap.mUpdatedtimes = mSnapshots[(float)(mSnaptimes.size() - 1)].mUpdatedtimes;
 		for (int i = 0; i < mLiveObjects.size(); i++)
 		{
 			//TODO PAT: Do somesort of duplicate infomation checking to decide to add it or not
 			//If change add to mSnapinfos and Updatetime
-			float id = mLiveObjects[i].GetUniqueId();
+			short id = mLiveObjects[i].GetUniqueId();
 			snap.mSnapinfos[id] = GenerateSnapInfo(mLiveObjects[i]);
 			snap.mUpdatedtimes[id] = TakenTime;
 		}
 	}
 	return snap;
 }
+
 

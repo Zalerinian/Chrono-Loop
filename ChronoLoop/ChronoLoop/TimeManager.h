@@ -6,13 +6,20 @@
 
 class TimeManager
 {
-	Timeline mTimeline;
+	static TimeManager* instanceTimemanager;
+
+	static Timeline* mTimeline;
 	float mRecordingTime = 100;			// 1/10th of a second in milliseconds 
 	float mLevelTime = 0;
 	float mlastRecordedTime = mLevelTime;
-public:
+
 	TimeManager();
 	~TimeManager();
+public:
+	
 	void Update(float _delta);
+	static TimeManager* Instance();
+	static Timeline* GetTimeLine();
+	static void Destroy();
 };
 

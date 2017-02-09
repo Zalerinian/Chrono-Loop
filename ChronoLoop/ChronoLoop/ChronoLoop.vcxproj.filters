@@ -120,7 +120,9 @@
     <ClInclude Include="Timeline.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TimeManager.h" />
+    <ClInclude Include="TimeManager.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -159,6 +161,8 @@
     <ClCompile Include="Timeline.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TimeManager.cpp" />
+    <ClCompile Include="TimeManager.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
