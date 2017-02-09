@@ -40,6 +40,11 @@ bool vec4f::operator==(vec4f const& _other)
 	return true;
 }
 
+bool vec4f::operator!=(vec4f const& _other)
+{
+	return !(*this == _other);
+}
+
 vec4f& vec4f::operator=(vec4f const& _other)
 {
 	if (!(*this == _other))
@@ -256,6 +261,11 @@ bool matrix4::operator==(matrix4 const& _other)
 	return true;
 }
 
+bool matrix4::operator!=(matrix4 const& _other)
+{
+	return !(*this == _other);
+}
+
 matrix4& matrix4::operator=(matrix4 const& _other)
 {
 	if (!(*this == _other))
@@ -264,7 +274,6 @@ matrix4& matrix4::operator=(matrix4 const& _other)
 			for (int j = 0; j < 4; ++j)
 				data.tiers[i].data.xyzw[j] = _other.data.tiers[i].data.xyzw[j];
 	}
-
 	return *this;
 }
 
