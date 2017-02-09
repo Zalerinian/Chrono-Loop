@@ -1,246 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Input">
-      <UniqueIdentifier>{f0180cee-1bc3-4ecd-8203-5f9856e93fdf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Objects">
-      <UniqueIdentifier>{5d335f0c-3f3b-439f-b8d5-cfc4d9d423a7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Physics">
-      <UniqueIdentifier>{6ce0a120-62d1-45a3-a2ef-5a3c2c378294}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rendering">
-      <UniqueIdentifier>{540a829b-4878-4645-afaa-947a1a7ae2b9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sound">
-      <UniqueIdentifier>{eae951e6-7e90-499b-9be0-96789c656790}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core">
-      <UniqueIdentifier>{bf92f6b6-ef33-4343-b556-a2be8e0f0bce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Common">
-      <UniqueIdentifier>{c5141bd8-8c74-4bee-9186-a68cdc829d07}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Input\Header Files">
-      <UniqueIdentifier>{266df7ef-8a9f-4e92-9e58-6880fcba06d5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Input\Source Files">
-      <UniqueIdentifier>{1b0c1cc2-8905-40e6-9615-423009dcb165}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Header Files">
-      <UniqueIdentifier>{4a4608d5-c13c-4309-8d3d-2898cc3b1219}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Source Files">
-      <UniqueIdentifier>{72f9a024-3f4f-4db5-a6de-460380b3b4f0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Common\Header Files">
-      <UniqueIdentifier>{264e0f99-edf8-4b4a-bd07-a7c4ac29f8e4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Common\Source Files">
-      <UniqueIdentifier>{0c2649d7-ce08-4584-91e2-26156eddde0b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sound\Header Files">
-      <UniqueIdentifier>{5978beda-7256-4b92-9a6e-c318dc44f579}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sound\Source Files">
-      <UniqueIdentifier>{27899e4f-d835-4ef5-b314-336af5bc2fcb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rendering\Header Files">
-      <UniqueIdentifier>{ee7d5d3b-d0a4-4deb-974a-c1fa0bbe02ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rendering\Source Files">
-      <UniqueIdentifier>{a5ac6321-5fc7-4e54-a730-67aafdee4509}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Physics\Header Files">
-      <UniqueIdentifier>{e9d5488a-51ea-4b41-8ef0-8dffda664eb7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Physics\Source Files">
-      <UniqueIdentifier>{9cd40d39-0379-4494-8280-87372b4afbe5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Objects\Header Files">
-      <UniqueIdentifier>{8c587e14-d881-4ce2-af6d-02319bed4de7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Objects\Source Files">
-      <UniqueIdentifier>{d6d439c6-9c90-4057-b173-43048dd5640b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Messanger">
-      <UniqueIdentifier>{6061d8dd-4ace-4cac-a567-88b8ca29d583}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Messanger\Header Files">
-      <UniqueIdentifier>{9c504c6c-6102-41fd-a7c5-a3a61e77b31e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Messanger\Source Files">
-      <UniqueIdentifier>{36d90c6f-1459-46c7-850e-c2671a0bc2fc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Objects\Header Files\Levels">
-      <UniqueIdentifier>{8bab4a2d-1234-4a1a-8916-32d9c0732197}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Objects\Source Files\Levels">
-      <UniqueIdentifier>{1c1a8ba2-e292-40db-9477-212db17409e3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rendering\Header Files\Nodes">
-      <UniqueIdentifier>{d40797e6-0a44-4be6-97cc-45a99293c61e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rendering\Source Files\Nodes">
-      <UniqueIdentifier>{654f6dd3-285a-4896-b914-82fd78f6bb40}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rendering\Header Files\Managers">
-      <UniqueIdentifier>{e3b0ba0e-ff95-44ac-a559-ff7762c8f922}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rendering\Source Files\Managers">
-      <UniqueIdentifier>{2a4c5fa0-c9f7-4079-baa0-cc8cf6b526dc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rendering\Shaders">
-      <UniqueIdentifier>{0fa54450-647f-49e8-a7cd-3550b1847640}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rendering\Shaders\Layout Shaders">
-      <UniqueIdentifier>{b560e4df-5975-4c40-95c5-ed2ffde9c69a}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Objects\BaseObject.h">
-      <Filter>Objects\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\Component.h">
-      <Filter>Objects\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\Components.h">
-      <Filter>Objects\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\Transform.h">
-      <Filter>Objects\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\renderer.h">
-      <Filter>Rendering\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\Shader.h">
-      <Filter>Rendering\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\Math.h">
-      <Filter>Common\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\Mesh.h">
-      <Filter>Rendering\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\Structures.h">
-      <Filter>Rendering\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Messager\Message.h">
-      <Filter>Messanger\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Messager\Messager.h">
-      <Filter>Messanger\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Sound\SoundEngine.h">
-      <Filter>Sound\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Timeline.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Input\KeyboardInput.h" />
-    <ClInclude Include="Physics\Physics.h">
-    <ClInclude Include="Rendering\BlendManager.h">
-      <Filter>Rendering\Header Files\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\RenderNode.h">
-      <Filter>Rendering\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\RenderContext.h">
-      <Filter>Rendering\Header Files\Nodes</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\RasterizerStateManager.h">
-      <Filter>Rendering\Header Files\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\SystemInitializer.h">
-      <Filter>Rendering\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\RendererDefines.h">
-      <Filter>Rendering\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\InputLayoutManager.h">
-      <Filter>Rendering\Header Files\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\Physics.h">
-      <Filter>Physics\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LevelManager.h">
-      <Filter>Objects\Source Files\Levels</Filter>
-    </ClInclude>
-    <ClInclude Include="BaseLevel.h">
-      <Filter>Objects\Source Files\Levels</Filter>
-    </ClInclude>
-    <ClInclude Include="Input\KeyboardInput.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Objects\BaseObject.cpp">
-      <Filter>Objects\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\Component.cpp">
-      <Filter>Objects\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\Transform.cpp">
-      <Filter>Objects\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\renderer.cpp">
-      <Filter>Rendering\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\Shader.cpp">
-      <Filter>Rendering\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\Math.cpp">
-      <Filter>Common\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ChronoLoop.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\Mesh.cpp">
-      <Filter>Rendering\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Messager\Messager.cpp">
-      <Filter>Messanger\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Sound\SoundEngine.cpp">
-      <Filter>Sound\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Timeline.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\RasterizerStateManager.cpp">
-      <Filter>Rendering\Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\RenderNode.cpp">
-      <Filter>Rendering\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\RenderContext.cpp">
-      <Filter>Rendering\Source Files\Nodes</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\InputLayoutManager.cpp">
-      <Filter>Rendering\Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Physics\Physics.cpp">
-    <ClCompile Include="Input\KeyboardInput.cpp" />
-    <ClCompile Include="Physics\Physics.cpp">
-      <Filter>Physics\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LevelManager.cpp">
-      <Filter>Objects\Header Files\Levels</Filter>
-    </ClCompile>
-    <ClCompile Include="BaseLevel.cpp">
-      <Filter>Objects\Header Files\Levels</Filter>
-    </ClCompile>
-    <ClCompile Include="Input\KeyboardInput.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHTNORMTANTEX_VS.hlsl" />
     <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHTNORMTEX_VS.hlsl" />
     <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHT_VS.hlsl" />
@@ -250,75 +10,231 @@
     <FxCompile Include="Rendering\Shaders\VertexLayout_POSTEX_VS.hlsl" />
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl" />
     <FxCompile Include="Rendering\Shaders\VertexLayout_VS.hlsl" />
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
-      <Filter>Rendering\Shaders\Layout Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHT_VS.hlsl">
-      <Filter>Rendering\Shaders\Layout Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHTNORMTANTEX_VS.hlsl">
-      <Filter>Rendering\Shaders\Layout Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHTNORMTEX_VS.hlsl">
-      <Filter>Rendering\Shaders\Layout Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POSCOLOR_VS.hlsl">
-      <Filter>Rendering\Shaders\Layout Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POSNORMTANTEX_VS.hlsl">
-      <Filter>Rendering\Shaders\Layout Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POSNORMTEX_VS.hlsl">
-      <Filter>Rendering\Shaders\Layout Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POSTEX_VS.hlsl">
-      <Filter>Rendering\Shaders\Layout Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\VertexLayout_VS.hlsl">
-      <Filter>Rendering\Shaders\Layout Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\BasicPixelShader.hlsl">
-      <Filter>Rendering\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\BasicVertexShader.hlsl">
-      <Filter>Rendering\Shaders</Filter>
-    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
-      <Filter>Rendering\Shaders\Layout Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHT_VS.hlsl">
-      <Filter>Rendering\Shaders\Layout Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHTNORMTANTEX_VS.hlsl">
-      <Filter>Rendering\Shaders\Layout Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHTNORMTEX_VS.hlsl">
-      <Filter>Rendering\Shaders\Layout Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POSCOLOR_VS.hlsl">
-      <Filter>Rendering\Shaders\Layout Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POSNORMTANTEX_VS.hlsl">
-      <Filter>Rendering\Shaders\Layout Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POSNORMTEX_VS.hlsl">
-      <Filter>Rendering\Shaders\Layout Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POSTEX_VS.hlsl">
-      <Filter>Rendering\Shaders\Layout Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\VertexLayout_VS.hlsl">
-      <Filter>Rendering\Shaders\Layout Shaders</Filter>
-    </FxCompile>
+    <ClCompile Include="Common\Math.cpp">
+      <Filter>Common\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Physics.cpp">
+      <Filter>Physics\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Messager\Messager.cpp">
+      <Filter>Messager\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\BaseObject.cpp">
+      <Filter>Objects\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Component.cpp">
+      <Filter>Objects\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="ChronoLoop.cpp">
+      <Filter>Core\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Core\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Timeline.cpp">
+      <Filter>Core\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Transform.cpp">
+      <Filter>Objects\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\KeyboardInput.cpp">
+      <Filter>Input\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound\SoundEngine.cpp">
+      <Filter>Sound\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLevel.cpp">
+      <Filter>Levels\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelManager.cpp">
+      <Filter>Levels\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Mesh.cpp">
+      <Filter>Rendering\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\InputLayoutManager.cpp">
+      <Filter>Rendering\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\RasterizerStateManager.cpp">
+      <Filter>Rendering\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\RenderContext.cpp">
+      <Filter>Rendering\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\renderer.cpp">
+      <Filter>Rendering\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\RenderNode.cpp">
+      <Filter>Rendering\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Shader.cpp">
+      <Filter>Rendering\Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Rendering\Shaders\VertexLayouts.hlsli">
-      <Filter>Rendering\Shaders\Layout Shaders</Filter>
-    </None>
-    <None Include="Rendering\Shaders\VertexLayouts.hlsli">
-      <Filter>Rendering\Shaders\Layout Shaders</Filter>
-    </None>
+    <ClInclude Include="Rendering\BlendManager.h" />
+    <ClInclude Include="Common\Math.h">
+      <Filter>Common\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Physics.h">
+      <Filter>Physics\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Messager\Message.h">
+      <Filter>Messager\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Messager\Messager.h">
+      <Filter>Messager\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Component.h">
+      <Filter>Objects\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Components.h">
+      <Filter>Objects\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\BaseObject.h">
+      <Filter>Objects\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Core\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Core\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Timeline.h">
+      <Filter>Core\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Transform.h">
+      <Filter>Objects\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\KeyboardInput.h">
+      <Filter>Input\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\SoundEngine.h">
+      <Filter>Sound\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLevel.h">
+      <Filter>Levels\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelManager.h">
+      <Filter>Levels\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\InputLayoutManager.h">
+      <Filter>Rendering\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Mesh.h">
+      <Filter>Rendering\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RasterizerStateManager.h">
+      <Filter>Rendering\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RenderContext.h">
+      <Filter>Rendering\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\renderer.h">
+      <Filter>Rendering\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RendererDefines.h">
+      <Filter>Rendering\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RenderNode.h">
+      <Filter>Rendering\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Shader.h">
+      <Filter>Rendering\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Structures.h">
+      <Filter>Rendering\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\SystemInitializer.h">
+      <Filter>Rendering\Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Rendering\Shaders\VertexLayouts.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{d90d8b89-2dc4-455b-961b-afd0db51dbb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Headers">
+      <UniqueIdentifier>{1ab471eb-220d-49ae-944e-c76b62175ff4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Sources">
+      <UniqueIdentifier>{8b5b7741-6522-4405-9982-882dfb52a50d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{22d8f4f9-d4f3-4506-8872-235fafff725c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Messager">
+      <UniqueIdentifier>{1053f7e8-529a-46dd-9489-e3a35cca60a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{b530806c-e978-4ced-8484-6bd7392b1848}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{dc7d7850-9c0f-4730-8307-92ba3a5f44b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{96c25831-9c98-4dad-9372-c1f016a76057}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound">
+      <UniqueIdentifier>{dfe89f07-aaf7-4796-ac2a-ee603ba2f09c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input\Headers">
+      <UniqueIdentifier>{18eda305-547a-47a5-a236-ee0753351519}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input\Sources">
+      <UniqueIdentifier>{628bc911-c382-439b-bf2e-67c15185451b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Messager\Headers">
+      <UniqueIdentifier>{fa6b17b3-81c5-4d7f-834e-69f6929b1713}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Messager\Sources">
+      <UniqueIdentifier>{744c80e9-c39f-45d0-9136-8985852aee4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound\Headers">
+      <UniqueIdentifier>{7d4cfd44-6523-4079-ab58-ac980a95b8ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound\Sources">
+      <UniqueIdentifier>{58313b11-e057-4b40-a68c-6977929b12c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Headers">
+      <UniqueIdentifier>{9308f722-df66-45e3-9ecb-8f35e31a7d68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Sources">
+      <UniqueIdentifier>{f61c5277-7e08-47f4-a478-57cd7a4c9995}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Headers">
+      <UniqueIdentifier>{b3ba5eb0-f031-4f36-a1b8-081ac0ebdfe9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Sources">
+      <UniqueIdentifier>{a6e92985-d414-4e5a-81ee-c0a378802bc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Headers">
+      <UniqueIdentifier>{9ce5b756-a7b5-470b-8f0f-fc28bd754eaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Sources">
+      <UniqueIdentifier>{6b0b9f5e-35fd-44a3-baac-fb2a9ff5e0de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{16af24a7-a117-4c03-87a7-b1ccb00b9fbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Headers">
+      <UniqueIdentifier>{4860edd1-8f0b-4dad-af80-42cac98966f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Sources">
+      <UniqueIdentifier>{de18f95b-36c7-4141-b092-ca2fac30bb73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Levels">
+      <UniqueIdentifier>{5f5d2e0e-4378-439c-9b11-cfb25b4cd680}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Levels\Headers">
+      <UniqueIdentifier>{9ba0764f-cb96-4cfc-9719-c2a8e820ac11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Levels\Sources">
+      <UniqueIdentifier>{0ce38396-2768-48d0-9ad7-3189491c414b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

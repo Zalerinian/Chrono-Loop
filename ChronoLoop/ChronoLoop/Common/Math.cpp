@@ -636,7 +636,16 @@ matrix4 Math::MatrixTranspose(matrix4& other)
 			_new[r][c] = other[c][r];
 	return _new;
 }
+matrix4 Math::MatrixScale(float _x, float _y, float _z)
+{
+	matrix4 temp;
+	DirectX::XMMATRIX temp1 = DirectX::XMMatrixScaling(_x, _y, _z);
 
+	for (int i = 0; i < 4; ++i)
+		for (int j = 0; j < 4; ++j)
+			temp.tiers[i].xyzw[j] = temp1.r[i].m128_f32[j];
+	return temp;
+}
 matrix4 Math::Projection(float _aspect, float _fov, float _near, float _far)
 {
 	matrix4 _new;
