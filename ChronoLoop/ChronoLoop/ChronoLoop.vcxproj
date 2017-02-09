@@ -182,17 +182,19 @@
       <AdditionalDependencies>d3d11.lib;dxgi.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outputpath)openvr_api.dll"</Command>
+      <Command>echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outputpath)openvr_api.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Common\Math.h" />
+    <ClInclude Include="Input\KeyboardInput.h" />
     <ClInclude Include="Messager\Message.h" />
     <ClInclude Include="Messager\Messager.h" />
     <ClInclude Include="Objects\BaseObject.h" />
     <ClInclude Include="Objects\Component.h" />
     <ClInclude Include="Objects\Components.h" />
     <ClInclude Include="Objects\Transform.h" />
+    <ClInclude Include="Physics\Physics.h" />
     <ClInclude Include="Rendering\BlendManager.h" />
     <ClInclude Include="Rendering\InputLayoutManager.h" />
     <ClInclude Include="Rendering\Mesh.h" />
@@ -212,10 +214,12 @@
   <ItemGroup>
     <ClCompile Include="ChronoLoop.cpp" />
     <ClCompile Include="Common\Math.cpp" />
+    <ClCompile Include="Input\KeyboardInput.cpp" />
     <ClCompile Include="Messager\Messager.cpp" />
     <ClCompile Include="Objects\BaseObject.cpp" />
     <ClCompile Include="Objects\Component.cpp" />
     <ClCompile Include="Objects\Transform.cpp" />
+    <ClCompile Include="Physics\Physics.cpp" />
     <ClCompile Include="Rendering\InputLayoutManager.cpp" />
     <ClCompile Include="Rendering\Mesh.cpp" />
     <ClCompile Include="Rendering\RasterizerStateManager.cpp" />

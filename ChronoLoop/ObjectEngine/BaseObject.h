@@ -26,4 +26,5 @@ public:
 	BaseObject Clone();
 	BaseObject Clone(BaseObject _clone);
 	BaseObject const* operator=(BaseObject _equals);
+
 };
