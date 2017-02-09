@@ -5,6 +5,7 @@
 #include "SoundEngine.h"
 #include <iostream>
 
+#pragma comment(lib, "AkSoundEngineDLL.lib")
 using namespace AK;
 
 AudioWrapper * AudioWrapper::audioSystem = nullptr;
