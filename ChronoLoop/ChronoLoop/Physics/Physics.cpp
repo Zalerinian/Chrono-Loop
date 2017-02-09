@@ -17,7 +17,7 @@ bool SameSign(float _f1, float _f2)
 
 bool Physics::IntersectRayToTriangle(vec4f& _vert0, vec4f& _vert1, vec4f& _vert2, vec4f& _normal, vec4f& _start, vec4f& _dir, float& _time)
 {
-	if (((_normal * _dir) > 0 || (_vert0 - _start) * _normal) > 0)
+	if (((_normal * _dir) > 0) || ((_vert0 - _start) * _normal) > 0)
 		return false;
 
 	vec4f sa = _vert0 - _start;
@@ -59,7 +59,7 @@ bool Physics::IntersectRayToSphere(vec4f& _pos, vec4f& _dir, vec4f& _center, flo
 	if (dis < 0.0f)
 		return false;
 
-	_time = -b - sqrt(dis);
+	_time = -b - (float)sqrt(dis);
 	if (_time < 0.0f)
 	{
 		_time = 0.0f;
@@ -89,14 +89,14 @@ bool Physics::IntersectRayToCylinder(vec4f& _start, vec4f& _normal, vec4f& _poin
 	float b = dd * mn - nd * md;
 	float c = dd * (mm - _radius * _radius) - md * md;
 
-	if (abs(a) < FLT_EPSILON)
+	if (fabsf(a) < FLT_EPSILON)
 		return false;
 
 	float dis = b*b - a*c;
 	if (dis < 0)
 		return false;
 
-	_time = (-b - sqrt(dis)) / a;
+	_time = (-b - (float)sqrt(dis)) / a;
 
 	if (_time < 0)
 		return false;

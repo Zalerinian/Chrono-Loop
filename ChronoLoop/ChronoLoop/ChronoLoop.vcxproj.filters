@@ -73,6 +73,12 @@
     <Filter Include="Messanger\Source Files">
       <UniqueIdentifier>{36d90c6f-1459-46c7-850e-c2671a0bc2fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Objects\Header Files\Levels">
+      <UniqueIdentifier>{8bab4a2d-1234-4a1a-8916-32d9c0732197}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Source Files\Levels">
+      <UniqueIdentifier>{1c1a8ba2-e292-40db-9477-212db17409e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\BaseObject.h">
@@ -120,8 +126,15 @@
     <ClInclude Include="Timeline.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Physics.h">
+    <ClInclude Include="Input\KeyboardInput.h" />
+    <ClInclude Include="Physics\Physics.h">
       <Filter>Physics\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelManager.h">
+      <Filter>Objects\Source Files\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLevel.h">
+      <Filter>Objects\Source Files\Levels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -161,8 +174,15 @@
     <ClCompile Include="Timeline.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Physics.cpp">
+    <ClCompile Include="Input\KeyboardInput.cpp" />
+    <ClCompile Include="Physics\Physics.cpp">
       <Filter>Physics\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelManager.cpp">
+      <Filter>Objects\Header Files\Levels</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLevel.cpp">
+      <Filter>Objects\Header Files\Levels</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

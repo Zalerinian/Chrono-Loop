@@ -4,7 +4,7 @@
 ///////////////////////////////////////
 #pragma once
 
-#include "..\ChronoLoop\Common\Math.h"
+#include "..\Common\Math.h"
 
 struct Plane
 {

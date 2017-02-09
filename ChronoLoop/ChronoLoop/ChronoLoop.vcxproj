@@ -168,15 +168,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BaseLevel.h" />
     <ClInclude Include="Common\Math.h" />
     <ClInclude Include="Input\KeyboardInput.h" />
+    <ClInclude Include="LevelManager.h" />
     <ClInclude Include="Messager\Message.h" />
     <ClInclude Include="Messager\Messager.h" />
     <ClInclude Include="Objects\BaseObject.h" />
     <ClInclude Include="Objects\Component.h" />
     <ClInclude Include="Objects\Components.h" />
     <ClInclude Include="Objects\Transform.h" />
-    <ClInclude Include="Physics.h" />
+    <ClInclude Include="Physics\Physics.h" />
     <ClInclude Include="Rendering\Mesh.h" />
     <ClInclude Include="Rendering\renderer.h" />
     <ClInclude Include="Rendering\Shader.h" />
@@ -187,14 +189,16 @@
     <ClInclude Include="Timeline.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BaseLevel.cpp" />
     <ClCompile Include="ChronoLoop.cpp" />
     <ClCompile Include="Common\Math.cpp" />
     <ClCompile Include="Input\KeyboardInput.cpp" />
+    <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="Messager\Messager.cpp" />
     <ClCompile Include="Objects\BaseObject.cpp" />
     <ClCompile Include="Objects\Component.cpp" />
     <ClCompile Include="Objects\Transform.cpp" />
-    <ClCompile Include="Physics.cpp" />
+    <ClCompile Include="Physics\Physics.cpp" />
     <ClCompile Include="Rendering\Mesh.cpp" />
     <ClCompile Include="Rendering\renderer.cpp" />
     <ClCompile Include="Rendering\Shader.cpp" />
