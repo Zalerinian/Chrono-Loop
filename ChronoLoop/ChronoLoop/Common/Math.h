@@ -122,6 +122,7 @@ struct matrix4 {
 	vec4f&   matrix4::operator[](unsigned int _index);
 	
 	matrix4  Inverse();
+	matrix4  Identity();
 	float*   AsArray() { return reinterpret_cast<float*>(matrix.r); }
 };
 
@@ -136,4 +137,5 @@ namespace Math
 	matrix4 Projection(float _aspect, float _fov, float _near, float _far);
 	matrix4 FromMatrix(vr::HmdMatrix44_t _mat);
 	matrix4 FromMatrix(vr::HmdMatrix34_t _mat);
+	matrix4 Identity();
 }

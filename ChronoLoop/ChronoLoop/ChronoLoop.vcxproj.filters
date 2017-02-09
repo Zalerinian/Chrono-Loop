@@ -246,6 +246,12 @@
     <FxCompile Include="Rendering\Shaders\VertexLayout_VS.hlsl">
       <Filter>Rendering\Shaders\Layout Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Rendering\Shaders\BasicPixelShader.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\BasicVertexShader.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
@@ -274,12 +280,6 @@
     </FxCompile>
     <FxCompile Include="Rendering\Shaders\VertexLayout_VS.hlsl">
       <Filter>Rendering\Shaders\Layout Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="BasicVertexShader.hlsl">
-      <Filter>Rendering\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="BasicPixelShader.hlsl">
-      <Filter>Rendering\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

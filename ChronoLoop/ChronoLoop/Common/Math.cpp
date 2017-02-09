@@ -36,7 +36,6 @@ bool vec4f::operator==(vec4f const& _other)
 	for (int i = 0; i < 4; ++i)
 		if (xyzw[i] != _other.xyzw[i])
 			return false;
-
 	return true;
 }
 
@@ -47,12 +46,9 @@ bool vec4f::operator!=(vec4f const& _other)
 
 vec4f& vec4f::operator=(vec4f const& _other)
 {
-	if (!(*this == _other))
-	{
+	if (*this != _other)
 		for (int i = 0; i < 4; ++i)
 			xyzw[i] = _other.xyzw[i];
-	}
-
 	return *this;
 }
 
@@ -71,8 +67,8 @@ vec4f vec4f::operator*(matrix4 const& _other)
 	vec4f temp;
 	for(int i = 0; i < 3; ++i)
 		temp.xyzw[i] = (xyzw[0] * _other.first.xyzw[i]) + 
-							(xyzw[1] * _other.second.xyzw[i]) - 
-							(xyzw[2] * _other.third.xyzw[i]);
+					   (xyzw[1] * _other.second.xyzw[i]) - 
+					   (xyzw[2] * _other.third.xyzw[i]);
 
 	temp.w = 1;
 	return temp;
@@ -89,7 +85,7 @@ float vec4f::operator*(vec4f const& _other)
 	return x * _other.x + y * _other.y + z + _other.z;
 }
 
-vec4f vec4f::operator*(float const & _other)
+vec4f vec4f::operator*(float const& _other)
 {
 	vec4f temp;
 	for (int i = 0; i < 3; ++i)
@@ -98,13 +94,13 @@ vec4f vec4f::operator*(float const & _other)
 	return temp;
 }
 
-vec4f& vec4f::operator*=(float const & _other)
+vec4f& vec4f::operator*=(float const& _other)
 {
 	*this = *this * _other;
 	return *this;
 }
 
-vec4f vec4f::operator/(float const & _other)
+vec4f vec4f::operator/(float const& _other)
 {
 	vec4f temp;
 	for (int i = 0; i < 3; ++i)
@@ -113,7 +109,7 @@ vec4f vec4f::operator/(float const & _other)
 	return temp;
 }
 
-vec4f& vec4f::operator/=(float const & _other)
+vec4f& vec4f::operator/=(float const& _other)
 {
 	*this = *this / _other;
 	return *this;
@@ -128,7 +124,7 @@ vec4f vec4f::operator-()
 	return temp;
 }
 
-vec4f vec4f::operator-(vec4f const & _other)
+vec4f vec4f::operator-(vec4f const& _other)
 {
 	vec4f temp;
 	for(int i = 0; i < 3; ++i)
@@ -137,7 +133,7 @@ vec4f vec4f::operator-(vec4f const & _other)
 	return temp;
 }
 
-vec4f vec4f::operator-(float const & _other)
+vec4f vec4f::operator-(float const& _other)
 {
 	vec4f temp;
 	for (int i = 0; i < 3; ++i)
@@ -146,19 +142,19 @@ vec4f vec4f::operator-(float const & _other)
 	return temp;
 }
 
-vec4f& vec4f::operator-=(vec4f const & _other)
+vec4f& vec4f::operator-=(vec4f const& _other)
 {
 	*this = *this - _other;
 	return *this;
 }
 
-vec4f& vec4f::operator-=(float const & _other)
+vec4f& vec4f::operator-=(float const& _other)
 {
 	*this = *this - _other;
 	return *this;
 }
 
-vec4f vec4f::operator+(float const & _other)
+vec4f vec4f::operator+(float const& _other)
 {
 	vec4f temp;
 	for (int i = 0; i < 3; ++i)
@@ -167,7 +163,7 @@ vec4f vec4f::operator+(float const & _other)
 	return temp;
 }
 
-vec4f vec4f::operator+(vec4f const & _other)
+vec4f vec4f::operator+(vec4f const& _other)
 {
 	vec4f temp;
 	for (int i = 0; i < 3; ++i)
@@ -207,7 +203,7 @@ float vec4f::Dot(vec4f const & _other)
 
 float vec4f::Magnitude() const
 {
-	return (float)sqrt(powf(x, 2.0f) + powf(y, 2.0f) + powf(z, 2.0f) + powf(w, 2.0f));
+	return sqrtf(powf(x, 2.0f) + powf(y, 2.0f) + powf(z, 2.0f) + powf(w, 2.0f));
 }
 
 float vec4f::SquaredMagnitude() const
@@ -266,7 +262,7 @@ bool matrix4::operator!=(matrix4 const& _other)
 
 matrix4& matrix4::operator=(matrix4 const& _other)
 {
-	if (!(*this == _other))
+	if (*this != _other)
 	{
 		for (int i = 0; i < 4; ++i)
 			for (int j = 0; j < 4; ++j)
@@ -332,6 +328,20 @@ matrix4 matrix4::Inverse()
 	return m;
 }
 
+matrix4 matrix4::Identity()
+{
+	matrix4 temp;
+	for (int i = 0; i < 4; ++i)
+		for (int j = 0; j < 4; ++j)
+		{
+			if (i == j)
+				temp.tiers[i].xyzw[j] = 1;
+			else
+				temp.tiers[i].xyzw[j] = 0;
+		}
+	return temp;
+}
+
 #pragma endregion
 
 
@@ -355,8 +365,7 @@ matrix4 Math::MatrixRotateAxis(vec4f const& _axis, float _rads)
 matrix4 Math::MatrixRotateX(float _rads)
 {
 	matrix4 temp;
-	DirectX::XMMATRIX temp1 = DirectX::XMMatrixIdentity();
-	DirectX::XMMatrixRotationX(_rads);
+	DirectX::XMMATRIX temp1 = DirectX::XMMatrixRotationX(_rads);
 
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 4; ++j)
@@ -367,8 +376,7 @@ matrix4 Math::MatrixRotateX(float _rads)
 matrix4 Math::MatrixRotateY(float _rads)
 {
 	matrix4 temp;
-	DirectX::XMMATRIX temp1 = DirectX::XMMatrixIdentity();
-	DirectX::XMMatrixRotationY(_rads);
+	DirectX::XMMATRIX temp1 = DirectX::XMMatrixRotationY(_rads);
 
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 4; ++j)
@@ -379,8 +387,7 @@ matrix4 Math::MatrixRotateY(float _rads)
 matrix4 Math::MatrixRotateZ(float _rads)
 {
 	matrix4 temp;
-	DirectX::XMMATRIX temp1 = DirectX::XMMatrixIdentity();
-	DirectX::XMMatrixRotationZ(_rads);
+	DirectX::XMMATRIX temp1 = DirectX::XMMatrixRotationZ(_rads);
 
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 4; ++j)
@@ -402,11 +409,9 @@ matrix4 Math::MatrixTranslation(float _x, float _y, float _z)
 matrix4 Math::MatrixTranspose(matrix4& other)
 {
 	matrix4 _new;
-	for (int r = 0; r < 4; ++r) {
-		for (int c = 0; c < 4; ++c) {
+	for (int r = 0; r < 4; ++r) 
+		for (int c = 0; c < 4; ++c) 
 			_new[r][c] = other[c][r];
-		}
-	}
 	return _new;
 }
 
@@ -415,6 +420,12 @@ matrix4 Math::Projection(float _aspect, float _fov, float _near, float _far)
 	matrix4 _new;
 	_new.matrix = DirectX::XMMatrixPerspectiveFovRH(_fov, _aspect, _near, _far);
 	return _new;
+}
+
+matrix4 Math::Identity() {
+	matrix4 m;
+	m.matrix = DirectX::XMMatrixIdentity();
+	return m;
 }
 
 matrix4 Math::FromMatrix(vr::HmdMatrix44_t _mat)

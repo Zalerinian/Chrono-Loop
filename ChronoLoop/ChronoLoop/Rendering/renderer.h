@@ -22,8 +22,10 @@ namespace RenderEngine {
 			unsigned int				mIndexCount;
 		public:
 			NodeObject();
-			NodeObject(Mesh _mesh);
+			NodeObject(Mesh& _mesh);
 			~NodeObject();
+
+			void Load(Mesh& _mesh);
 		};
 	private:
 		struct MyBuffer {
@@ -47,7 +49,9 @@ namespace RenderEngine {
 		RenderContext mCurrentContext;
 		std::vector<RenderNode*> mNodes;
 		std::vector<Mesh> mMeshes;
-		ID3D11Buffer* constantBluffer, *boxVertex, *boxIndex;
+		ID3D11Buffer* constantBluffer;
+		NodeObject mTempBox;
+
 	
 		static Renderer* sInstance;
 
