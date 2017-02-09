@@ -1,20 +1,7 @@
 #include "stdafx.h"
 #include "Timeline.h"
 
-SnapInfo::SnapInfo()
-{
-}
 
-SnapInfo::~SnapInfo()
-{
-}
-
-SnapInfo::SnapInfo(SnapInfo const & _copy)
-{
-	//TODO PAT: COPY ALL DATA ONCE STRUCT IS FINAL
-	this->id = _copy.id;
-	this->mTransform = _copy.mTransform;
-}
 
 bool Snapshot::IsObjectStored(short _id)
 {
@@ -51,7 +38,7 @@ void Timeline::AddSnapshot(float _snaptime,Snapshot _snapshot)
 	mSnapshots[_snaptime] = _snapshot;
 }
 
-SnapInfo& Timeline::GenerateSnapInfo(BaseObject& _object)
+SnapInfo Timeline::GenerateSnapInfo(BaseObject& _object)
 {
 	SnapInfo info;
 	info.id = _object.GetUniqueId();

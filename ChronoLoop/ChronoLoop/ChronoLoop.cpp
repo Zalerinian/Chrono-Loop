@@ -1,4 +1,8 @@
 #include "stdafx.h"
+#include "Rendering\SystemInitializer.h"
+#include "Rendering\renderer.h"
+#include "Rendering\InputLayoutManager.h"
+#include <openvr.h>
 #include <chrono>
 
 
@@ -20,12 +24,19 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 		MessageBox(NULL, L"Kablamo.", L"The window broked.", MB_ICONERROR | MB_OK);
 	}
 
-	// Initialize Renderer / VR
+	// Initialize Rendering systems and VR
+	if (!RenderEngine::InitializeSystems(hwnd, 800, 600, false, 60, false, 1000, 0.1f, nullptr)) {
+		return 1;
+	}
 	TManager->Instance();
+	vr::HmdError *pError = new vr::HmdError;
+	vr::VR_Init(pError, vr::VRApplication_Utility);
+
 	// Update everything
 	Update();
 
 	// Cleanup
+	RenderEngine::ShutdownSystems();
 
 	return 0;
 }
@@ -121,7 +132,7 @@ void Update() {
 			TManager->Update(deltaTime);
 			if (FrameCheck())
 			{
-				// Renderer.Render();
+				 RenderEngine::Renderer::Instance()->Render();
 			}
 		}
 	}

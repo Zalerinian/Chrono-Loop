@@ -4,26 +4,20 @@
 #include <vector>
 #include "Transform.h"
 #include "Component.h"
-#include "../TimeManager.h"
-
-class Component;
 
 class BaseObject
 {
 private:
 	std::string name;
-	short id;
+	//uint32 id;
 	std::vector<Component*> components;
 	Component* parent;
 	Transform transform;
 	std::list<BaseObject*> children;
-	std::list<Component> mComponets;
 public:
 	BaseObject();
 	BaseObject(std::string _name, Transform _transform);
 	~BaseObject();
-	short& GetUniqueId();
-	Transform& GetTransform();
 	void Destroy() { delete this; };
 	void AddComponent(Component* _comp) { components.push_back(_comp); };
 	//void RemoveComponent(Component _comp) { components.remove(_comp); };
@@ -32,4 +26,5 @@ public:
 	BaseObject Clone();
 	BaseObject Clone(BaseObject _clone);
 	BaseObject const* operator=(BaseObject _equals);
+
 };

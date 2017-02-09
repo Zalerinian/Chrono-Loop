@@ -7,9 +7,7 @@
 struct SnapInfo
 {
 	//IF ANY THING IS ADDED, ALSO ADD IT TO COPY CONTRUCTOR
-	SnapInfo();
-	~SnapInfo();
-	SnapInfo(SnapInfo const& _copy);
+
 	Transform mTransform;
 	short id;
 	//Componet info needed
@@ -37,7 +35,7 @@ public:
 	void AddBaseObject(BaseObject& _object, short _id);						//add to the list of recorded objects. This func should be called constructer
 	//TODO PAT: add a remove base object func that says the object has been removed in the next snap recording
 	void AddSnapshot(float _snaptime, Snapshot _snapshot);
-	SnapInfo& GenerateSnapInfo(BaseObject& _object);							//Error check agianst the BaseObject* if it is null or not
+	SnapInfo GenerateSnapInfo(BaseObject& _object);							//Error check agianst the BaseObject* if it is null or not
 	Snapshot GenerateSnapShot();
 };
 

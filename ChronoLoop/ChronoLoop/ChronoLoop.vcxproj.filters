@@ -73,6 +73,18 @@
     <Filter Include="Messanger\Source Files">
       <UniqueIdentifier>{36d90c6f-1459-46c7-850e-c2671a0bc2fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Rendering\Header Files\Nodes">
+      <UniqueIdentifier>{d40797e6-0a44-4be6-97cc-45a99293c61e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Source Files\Nodes">
+      <UniqueIdentifier>{654f6dd3-285a-4896-b914-82fd78f6bb40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Header Files\Managers">
+      <UniqueIdentifier>{e3b0ba0e-ff95-44ac-a559-ff7762c8f922}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Source Files\Managers">
+      <UniqueIdentifier>{2a4c5fa0-c9f7-4079-baa0-cc8cf6b526dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\BaseObject.h">
@@ -123,6 +135,30 @@
     <ClInclude Include="TimeManager.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Rendering\BlendManager.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RenderNode.h">
+      <Filter>Rendering\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RenderContext.h">
+      <Filter>Rendering\Header Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RasterizerStateManager.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\SystemInitializer.h">
+      <Filter>Rendering\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RendererDefines.h">
+      <Filter>Rendering\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\InputLayoutManager.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Physics.h">
+      <Filter>Physics\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -164,5 +200,34 @@
     <ClCompile Include="TimeManager.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Rendering\RasterizerStateManager.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\RenderNode.cpp">
+      <Filter>Rendering\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\RenderContext.cpp">
+      <Filter>Rendering\Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\InputLayoutManager.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Physics.cpp">
+      <Filter>Physics\Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHTNORMTANTEX_VS.hlsl" />
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHTNORMTEX_VS.hlsl" />
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHT_VS.hlsl" />
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSCOLOR_VS.hlsl" />
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSNORMTANTEX_VS.hlsl" />
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSNORMTEX_VS.hlsl" />
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSTEX_VS.hlsl" />
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl" />
+    <FxCompile Include="Rendering\Shaders\VertexLayout_VS.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Rendering\Shaders\VertexLayouts.hlsli" />
   </ItemGroup>
 </Project>

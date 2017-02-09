@@ -28,7 +28,3 @@
 //		return true;
 //	return false;
 //}
-matrix4& Transform::GetMatrix()
-{
-	return m_matrix;
-}
