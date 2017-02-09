@@ -1,8 +1,3 @@
-///////////////////////////////////////
-//Written: 2/7/2017
-//Author: Chris Burt
-///////////////////////////////////////
-
 #pragma once
 #include <DirectXMath.h>
 #include <openvr.h>

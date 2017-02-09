@@ -1,8 +1,3 @@
-///////////////////////////////////////
-//Written: 2/7/2017
-//Author: Chris Burt
-///////////////////////////////////////
-
 #include "stdafx.h"
 #include "Math.h"
 #include <memory>
