@@ -53,24 +53,23 @@ namespace RenderEngine {
 			matEyeRight.m[0][3], matEyeRight.m[1][3], matEyeRight.m[2][3], 1.0f
 		);
 
-		return Math::MatrixTranspose(matrixObj).Inverse();
+		return matrixObj.Inverse();
 	}
 
 	matrix4 Renderer::GetProjection(vr::EVREye e) {
 		
 		vr::HmdMatrix44_t mat = mVrSystem->GetProjectionMatrix(e, 0.1f, 1000);
 
-		return Math::MatrixTranspose(matrix4(
+		return matrix4(
 			mat.m[0][0], mat.m[1][0], mat.m[2][0], mat.m[3][0],
 			mat.m[0][1], mat.m[1][1], mat.m[2][1], mat.m[3][1],
 			mat.m[0][2], mat.m[1][2], mat.m[2][2], mat.m[3][2],
 			mat.m[0][3], mat.m[1][3], mat.m[2][3], mat.m[3][3]
-		));
+		);
 	}
 
 	void Renderer::GetMVP(vr::EVREye e, MyBuffer &data) {
 		
-
 		vr::TrackedDevicePose_t poses[vr::k_unMaxTrackedDeviceCount];
 		vr::VRCompositor()->WaitGetPoses(poses, vr::k_unMaxTrackedDeviceCount, NULL, 0);
 
@@ -78,13 +77,13 @@ namespace RenderEngine {
 
 		matrix4 hmdPos = hmd.Inverse();
 		if (e == vr::EVREye::Eye_Left) {
-			data.model = Math::MatrixTranslation(0, 0, 0);
-			data.view = hmdPos * mEyePosLeft;
-			data.projection = mEyeProjLeft;
+			data.model = Math::MatrixTranspose(Math::MatrixTranslation(0, 0, 0));
+			data.view = Math::MatrixTranspose(mEyePosLeft * hmdPos);
+			data.projection = Math::MatrixTranspose(mEyeProjLeft);
 		} else {
-			data.model = Math::MatrixTranslation(0, 0, 0);
-			data.view = hmdPos * mEyePosRight;
-			data.projection = mEyeProjRight;
+			data.model = Math::MatrixTranspose(Math::MatrixTranslation(0, 0, 0));
+			data.view = Math::MatrixTranspose(mEyePosRight * hmdPos);
+			data.projection = Math::MatrixTranspose(mEyeProjRight);
 		}
 	}
 
