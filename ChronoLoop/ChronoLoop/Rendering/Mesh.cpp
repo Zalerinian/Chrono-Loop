@@ -106,7 +106,7 @@ Triangle * Mesh::GetTriangles()
 {
 	if (mTriangles.size() != mIndicies.size() / 3)
 	{
-		for (int i = 0; i < mIndicies.size() / 3; i++)
+		for (unsigned int i = 0; i < mIndicies.size() / 3; i++)
 		{
 			Triangle temp;
 			//temp.Normal = (mUniqueVerts[mIndicies[(i * 3) + 0]].Normal + mUniqueVerts[mIndicies[(i * 3) + 1]].Normal + mUniqueVerts[mIndicies[(i * 3) + 2]].Normal) / 2;
@@ -301,7 +301,7 @@ void Mesh::Clear()
 
 void Mesh::Invert()
 {
-	for (int i = 0; i < mIndicies.size() / 3; i++)
+	for (unsigned int i = 0; i < mIndicies.size() / 3; i++)
 	{
 		int temp = mIndicies[(i * 3)];
 		mIndicies[(i * 3)] = mIndicies[(i * 3) + 2];

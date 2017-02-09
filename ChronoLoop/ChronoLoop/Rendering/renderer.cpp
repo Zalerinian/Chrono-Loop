@@ -239,7 +239,7 @@ namespace RenderEngine {
 		mVrSystem = _vrsys;
 
 		if (_vrsys) {
-			for (int i = 0; i < vr::VRRenderModels()->GetRenderModelCount(); ++i) {
+			for (unsigned int i = 0; i < vr::VRRenderModels()->GetRenderModelCount(); ++i) {
 				char name[1024];
 				vr::VRRenderModels()->GetRenderModelName(i, name, 1024);
 				std::cout << "We've got a nice little " << name << " model here (" << i << ")" << std::endl;

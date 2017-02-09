@@ -122,6 +122,7 @@ struct matrix4 {
 	vec4f&   matrix4::operator[](unsigned int _index);
 	
 	matrix4  Inverse();
+	matrix4  Identity();
 	float*   AsArray() { return reinterpret_cast<float*>(matrix.r); }
 };
 
