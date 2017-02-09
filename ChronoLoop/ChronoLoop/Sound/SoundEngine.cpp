@@ -1,16 +1,18 @@
 // SoundEngine.cpp : Defines the exported functions for the DLL application.
-//
+//Again -> Credit to John Murphy
 
 #include "stdafx.h"
 #include "SoundEngine.h"
+#include <iostream>
 
 using namespace AK;
 
 AudioWrapper * AudioWrapper::audioSystem = nullptr;
 
-AudioWrapper::AudioWrapper()
+AudioWrapper::AudioWrapper() : mWorldScale(1.f), mIsInitialize(false)
 {
-
+	if (!audioSystem)
+		audioSystem = this;
 }
 
 AudioWrapper::~AudioWrapper()
@@ -20,16 +22,47 @@ AudioWrapper::~AudioWrapper()
 //-------Initialize-Shutdown-Update------------------------------------
 bool AudioWrapper::Initialize()
 {
+	AkMemSettings memorySettings;
+	memorySettings.uMaxNumPools = 40;
 
+	AkStreamMgrSettings streamSettings;
+	StreamMgr::GetDefaultSettings(streamSettings);
+	AkDeviceSettings deviceSettings;
+	StreamMgr::GetDefaultDeviceSettings(deviceSettings);
 
+	AkInitSettings InitSettings;
+	AkPlatformInitSettings platInitSetings;
+	SoundEngine::GetDefaultInitSettings(InitSettings);
+	SoundEngine::GetDefaultPlatformInitSettings(platInitSetings);
 
+	//TODO: Set pool sizes
 
+	AkMusicSettings musicInitialize;
+	MusicEngine::GetDefaultInitSettings(musicInitialize);
+	musicInitialize.fStreamingLookAheadRatio = 100;
+
+	AKRESULT eResult = SOUNDENGINE_DLL::Init(&memorySettings, &streamSettings, &deviceSettings, &InitSettings, &platInitSetings, &musicInitialize);
+
+	//More error checking?
+	/*switch (eResult) {}*/
+
+	if (eResult != AK_Success)
+	{
+		std::cout << "Initializing sound failed. Game will now run without sound" << std::endl;
+		SOUNDENGINE_DLL::Term();
+		return false;
+	}
+
+	mIsInitialize = true;
 	return true;
 }
 
 void AudioWrapper::Shutdown()
 {
-
+	//Un-register everything and terminate
+	SoundEngine::UnregisterAllGameObj();
+	SOUNDENGINE_DLL::Term();
+	mIsInitialize = false;
 }
 
 void AudioWrapper::Update()
@@ -39,6 +72,9 @@ void AudioWrapper::Update()
 //----------------------------------------------------
 void AudioWrapper::SetWorldScale(float _scale)
 {
+	mWorldScale = _scale;
+	for (unsigned int index = 0; index < mListeners.size(); index++)
+		SoundEngine::SetListenerScalingFactor(index, mWorldScale);
 
 }
 

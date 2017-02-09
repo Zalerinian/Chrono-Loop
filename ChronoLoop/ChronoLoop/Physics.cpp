@@ -89,7 +89,7 @@ bool Physics::IntersectRayToCylinder(vec4f& _start, vec4f& _normal, vec4f& _poin
 	float b = dd * mn - nd * md;
 	float c = dd * (mm - _radius * _radius) - md * md;
 
-	if (abs(a) < FLT_EPSILON)
+	if (fabsf(a) < FLT_EPSILON)
 		return false;
 
 	float dis = b*b - a*c;

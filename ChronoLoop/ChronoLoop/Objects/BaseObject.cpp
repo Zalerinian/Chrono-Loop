@@ -43,7 +43,7 @@ BaseObject const* BaseObject::operator=(BaseObject _equals)
 	if (this->name != _equals.name) this->name = _equals.name;
 	if (this->parent != _equals.parent) this->parent = _equals.parent;
 	if (this->children != _equals.children) this->children = _equals.children;
-	if (this->transform != _equals.transform) this->transform = _equals.transform;
+	//if (this->transform != _equals.transform) this->transform = _equals.transform;
 	if (this->components != _equals.components) this->components = _equals.components;
 	return this;
 }
