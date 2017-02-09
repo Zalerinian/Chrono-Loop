@@ -4,6 +4,7 @@
 #include <fstream>
 #include <string>
 #include "renderer.h"
+#include "InputLayoutManager.h"
 
 using namespace Concurrency;
 
@@ -29,10 +30,21 @@ Mesh::~Mesh()
 	this->Clear();
 }
 
+void Mesh::loadShaders(char * pixel, char * vertex)
+{
+	char *bytecode = nullptr;
+	int bytelength;
+	RenderEngine::InputLayoutManager::LoadShader(pixel, &bytecode, bytelength);
+	(*RenderEngine::Renderer::Instance()->GetDevice())->CreatePixelShader(bytecode, bytelength, nullptr, &pShader);
+	delete[] bytecode;
+	RenderEngine::InputLayoutManager::LoadShader(vertex, &bytecode, bytelength);
+	(*RenderEngine::Renderer::Instance()->GetDevice())->CreateVertexShader(bytecode, bytelength, nullptr, &vShader);
+}
+
 bool Mesh::Load(char * path)
 {
 	this->Clear();
-	std::vector<VertexPosNormTex> Verts;
+	std::vector<VertexPos> Verts;
 	std::vector<unsigned short> Ind;
 	int index = 1;
 	std::ifstream file;
@@ -48,18 +60,18 @@ bool Mesh::Load(char * path)
 		if (line[0] == 'v') {
 			if (line[1] == 't') {
 				vec4f uv;
-				sscanf_s(line.c_str(), "vt %f %f\n", &uv.data.x, &uv.data.y);
-				uv.data.y = 1 - uv.data.y;
+				sscanf_s(line.c_str(), "vt %f %f\n", &uv.x, &uv.y);
+				uv.y = 1 - uv.y;
 				uvs.push_back(uv);
 			}
 			else if (line[1] == 'n') {
 				vec4f normal;
-				sscanf_s(line.c_str(), "vn %f %f %f\n", &normal.data.x, &normal.data.y, &normal.data.z);
+				sscanf_s(line.c_str(), "vn %f %f %f\n", &normal.x, &normal.y, &normal.z);
 				norms.push_back(normal);
 			}
 			else if(line[1] == ' ') {
 				vec4f vertex;
-				sscanf_s(line.c_str(), "v %f %f %f\n", &vertex.data.x, &vertex.data.y, &vertex.data.z);
+				sscanf_s(line.c_str(), "v %f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
 				verts.push_back(vertex);
 			}
 		}
@@ -72,13 +84,13 @@ bool Mesh::Load(char * path)
 			}
 			for (int i = 0; i < 3; i++)
 			{
-				VertexPosNormTex temp;
+				VertexPos temp;
 				temp.Position = verts[vertexIndex[i] - 1];
-				temp.Position.data.w = 1;
+				temp.Position.w = 1;
 				//temp.color = DirectX::XMFLOAT4(i == 0, i == 1, i == 3);
-				temp.Normal = norms[normalIndex[i] - 1];
+				/*temp.Normal = norms[normalIndex[i] - 1];
 				temp.UV = uvs[uvIndex[i] - 1];
-				temp.UV.data.z = 0;
+				temp.UV.z = 0;*/
 				Ind.push_back((unsigned short)Verts.size());
 				Verts.push_back(temp);
 			}
@@ -94,10 +106,10 @@ Triangle * Mesh::GetTriangles()
 {
 	if (mTriangles.size() != mIndicies.size() / 3)
 	{
-		for (int i = 0; i < mIndicies.size() / 3; i++)
+		for (unsigned int i = 0; i < mIndicies.size() / 3; i++)
 		{
 			Triangle temp;
-			temp.Normal = (mUniqueVerts[mIndicies[(i * 3) + 0]].Normal + mUniqueVerts[mIndicies[(i * 3) + 1]].Normal + mUniqueVerts[mIndicies[(i * 3) + 2]].Normal) / 2;
+			//temp.Normal = (mUniqueVerts[mIndicies[(i * 3) + 0]].Normal + mUniqueVerts[mIndicies[(i * 3) + 1]].Normal + mUniqueVerts[mIndicies[(i * 3) + 2]].Normal) / 2;
 			temp.Vertex[0] = &mUniqueVerts[mIndicies[(i * 3) + 0]].Position;
 			temp.Vertex[1] = &mUniqueVerts[mIndicies[(i * 3) + 1]].Position;
 			temp.Vertex[2] = &mUniqueVerts[mIndicies[(i * 3) + 2]].Position;
@@ -289,7 +301,7 @@ void Mesh::Clear()
 
 void Mesh::Invert()
 {
-	for (int i = 0; i < mIndicies.size() / 3; i++)
+	for (unsigned int i = 0; i < mIndicies.size() / 3; i++)
 	{
 		int temp = mIndicies[(i * 3)];
 		mIndicies[(i * 3)] = mIndicies[(i * 3) + 2];
@@ -347,7 +359,7 @@ void Mesh::Invert()
 //	totalVerts = Indicies.size();
 //}
 
-VertexPosNormTex * Mesh::GetVerts()
+VertexPos * Mesh::GetVerts()
 {
 	return mUniqueVerts.data();
 }

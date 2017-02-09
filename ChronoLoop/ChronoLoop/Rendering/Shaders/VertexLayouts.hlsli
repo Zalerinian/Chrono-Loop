@@ -9,7 +9,7 @@
 
 struct VERTEX_POS
 {
-	float3 position :	POSITION0;
+	float4 position :	POSITION0;
 };
 
 struct VERTEX_POSCOLOR

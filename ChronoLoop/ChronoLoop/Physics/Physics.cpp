@@ -1,23 +1,18 @@
 ///////////////////////////////////////
 //Written: 2/8/2017
-//Author: Chris Burt
+//Author: Chris Burtvec4f &
 ///////////////////////////////////////
 
 #include "stdafx.h"
 #include "Physics.h"
+#include "..\Rendering\Mesh.h"
 
 
+#pragma region RAY_CASTING
 
-bool SameSign(float _f1, float _f2)
+bool Physics::RayToTriangle(vec4f& _vert0, vec4f& _vert1, vec4f& _vert2, vec4f& _normal, vec4f& _start, vec4f& _dir, float& _time)
 {
-	if ((_f1 > 0 && _f2 > 0) || (_f1 < 0 && _f2 < 0))
-		return true;
-	return false;
-}
-
-bool Physics::IntersectRayToTriangle(vec4f& _vert0, vec4f& _vert1, vec4f& _vert2, vec4f& _normal, vec4f& _start, vec4f& _dir, float& _time)
-{
-	if (((_normal * _dir) > 0) || ((_vert0 - _start) * _normal) > 0)
+	if ((_normal * _dir) > 0 || ((_vert0 - _start) * _normal) > 0)
 		return false;
 
 	vec4f sa = _vert0 - _start;
@@ -43,9 +38,10 @@ bool Physics::IntersectRayToTriangle(vec4f& _vert0, vec4f& _vert1, vec4f& _vert2
 		_time = ((offset - (_start * _normal)) / (_normal * _dir));
 		return true;
 	}
+	return false;
 }
 
-bool Physics::IntersectRayToSphere(vec4f& _pos, vec4f& _dir, vec4f& _center, float _radius, float& _time, vec4f& _out)
+bool Physics::RayToSphere(vec4f & _pos, vec4f & _dir, vec4f & _center, float _radius, float & _time, vec4f & _out)
 {
 	vec4f check = _pos - _center;
 
@@ -59,18 +55,18 @@ bool Physics::IntersectRayToSphere(vec4f& _pos, vec4f& _dir, vec4f& _center, flo
 	if (dis < 0.0f)
 		return false;
 
-	_time = -b - (float)sqrt(dis);
+	_time = -b - sqrtf(dis);
 	if (_time < 0.0f)
 	{
 		_time = 0.0f;
-		vec4f np = { _pos.data.x + _time, _pos.data.y + _time, _pos.data.z + _time, 1.0f };
+		vec4f np = { _pos.x + _time, _pos.y + _time, _pos.z + _time, 1.0f };
 		_out = np ^ _dir;
 	}
 
 	return true;
 }
 
-bool Physics::IntersectRayToCylinder(vec4f& _start, vec4f& _normal, vec4f& _point1, vec4f& _point2, float _radius, float& _time)
+bool Physics::RayToCylinder(vec4f & _start, vec4f & _normal, vec4f & _point1, vec4f & _point2, float _radius, float & _time)
 {
 	vec4f d = _point2 - _point1;
 	vec4f od = _point1 - _point2;
@@ -96,7 +92,7 @@ bool Physics::IntersectRayToCylinder(vec4f& _start, vec4f& _normal, vec4f& _poin
 	if (dis < 0)
 		return false;
 
-	_time = (-b - (float)sqrt(dis)) / a;
+	_time = (-b - sqrtf(dis)) / a;
 
 	if (_time < 0)
 		return false;
@@ -109,37 +105,42 @@ bool Physics::IntersectRayToCylinder(vec4f& _start, vec4f& _normal, vec4f& _poin
 	return true;
 }
 
-bool Physics::IntersectRayToCapsule(vec4f& _start, vec4f& _normal, vec4f& _point1, vec4f& _point2, float _radius, float& _time)
+bool Physics::RayToCapsule(vec4f & _start, vec4f & _normal, vec4f & _point1, vec4f & _point2, float _radius, float & _time)
 {
 	float fTime = FLT_MAX;
 	_time = FLT_MAX;
 	bool bReturn = false;
 
-	if (IntersectRayToCylinder(_start, _normal, _point1, _point2, _radius, _time))
+	if (RayToCylinder(_start, _normal, _point1, _point2, _radius, _time))
 	{
-		fTime = min(_time, fTime);
+		fTime = MIN(_time, fTime);
 		_time = fTime;
 		bReturn = true;
 	}
 
 	vec4f pcol, qcol;
-	if (IntersectRayToSphere(_start, _normal, _point1, _radius, _time, pcol))
+	if (RayToSphere(_start, _normal, _point1, _radius, _time, pcol))
 	{
-		fTime = min(_time, fTime);
+		fTime = MIN(_time, fTime);
 		_time = fTime;
 		bReturn = true;
 	}
 
-	if (IntersectRayToSphere(_start, _normal, _point2, _radius, _time, qcol))
+	if (RayToSphere(_start, _normal, _point2, _radius, _time, qcol))
 	{
-		fTime = min(_time, fTime);
+		fTime = MIN(_time, fTime);
 		_time = fTime;
 		bReturn = true;
 	}
 	return bReturn;
 }
 
-bool Physics::IntersectMovingSphereToTriangle(vec4f& _vert0, vec4f& _vert1, vec4f& _vert2, vec4f& _normal, vec4f& _start, vec4f& _dir, float _radius, float& _time, vec4f& _outNormal)
+#pragma endregion
+
+
+#pragma region MOVING_SPHERE
+
+bool Physics::MovingSphereToTriangle(vec4f & _vert0, vec4f & _vert1, vec4f & _vert2, vec4f & _normal, vec4f & _start, vec4f & _dir, float _radius, float & _time, vec4f & _outNormal)
 {
 	bool bReturn = false;
 	float fTime = FLT_MAX;
@@ -150,18 +151,18 @@ bool Physics::IntersectMovingSphereToTriangle(vec4f& _vert0, vec4f& _vert1, vec4
 	vec4f offset1 = _vert1 + (_normal * _radius);
 	vec4f offset2 = _vert2 + (_normal * _radius);
 
-	if (IntersectRayToTriangle(offset0, offset1, offset2, _normal, _start, _dir, _time))
+	if (RayToTriangle(offset0, offset1, offset2, _normal, _start, _dir, _time))
 	{
-		fTime = min(_time, fTime);
+		fTime = MIN(_time, fTime);
 		_time = fTime;
 		_outNormal = _normal;
 		bReturn = true;
 	}
 	else
 	{
-		if (IntersectRayToCapsule(_start, _dir, _vert0, _vert1, _radius, _time))
+		if (RayToCapsule(_start, _dir, _vert0, _vert1, _radius, _time))
 		{
-			fTime = min(_time, fTime);
+			fTime = MIN(_time, fTime);
 			_time = fTime;
 			vec4f temp1 = _dir * _time + _start;
 			vec4f temp2 = (_vert1 - _vert0) * _time + _vert0;
@@ -169,9 +170,9 @@ bool Physics::IntersectMovingSphereToTriangle(vec4f& _vert0, vec4f& _vert1, vec4
 			bReturn = true;
 		}
 
-		if (IntersectRayToCapsule(_start, _dir, _vert1, _vert2, _radius, _time))
+		if (RayToCapsule(_start, _dir, _vert1, _vert2, _radius, _time))
 		{
-			fTime = min(_time, fTime);
+			fTime = MIN(_time, fTime);
 			_time = fTime;
 			vec4f temp1 = _dir * _time + _start;
 			vec4f temp2 = (_vert1 - _vert0) * _time + _vert0;
@@ -179,9 +180,9 @@ bool Physics::IntersectMovingSphereToTriangle(vec4f& _vert0, vec4f& _vert1, vec4
 			bReturn = true;
 		}
 
-		if (IntersectRayToCapsule(_start, _dir, _vert2, _vert0, _radius, _time))
+		if (RayToCapsule(_start, _dir, _vert2, _vert0, _radius, _time))
 		{
-			fTime = min(_time, fTime);
+			fTime = MIN(_time, fTime);
 			_time = fTime;
 			vec4f temp1 = _dir * _time + _start;
 			vec4f temp2 = (_vert1 - _vert0) * _time + _vert0;
@@ -193,52 +194,38 @@ bool Physics::IntersectMovingSphereToTriangle(vec4f& _vert0, vec4f& _vert1, vec4
 	return bReturn;
 }
 
-//bool Physics::IntersectMovingSphereToMesh(vec4f& _start, vec4f& _dir, float _radius, ED2Mesh* _mesh, float& _time, vec4f& _outNormal)
-//{
-//	bool bCollision = false;
-//	_time = FLT_MAX;
-//	float fTime = FLT_MAX;
-//	
-//	unsigned int tempSortedIndicies[3] = { 0,0,0 };
-//
-//	for (unsigned int i = 0; i < mesh->m_Triangles.size(); i++) {
-//
-//		ED2Triangle currTri = mesh->m_Triangles[i];
-//		vec4f currNorm = mesh->m_TriNorms[i];
-//
-//		for (unsigned int x = 0; x < 3; x++) {
-//			tempSortedIndicies[x] = currTri.indices[x];
-//		}
-//
-//		unsigned int temp = 0;
-//		for (unsigned int i = 1; i < 4; i++) {
-//			for (unsigned int j = 0; j < 3; j++) {
-//				if (tempSortedIndicies[j + 1] < tempSortedIndicies[j]) {
-//					temp = tempSortedIndicies[j];
-//					tempSortedIndicies[j] = tempSortedIndicies[j + 1];
-//					tempSortedIndicies[j + 1] = temp;
-//					break;
-//				}
-//			}
-//		}
-//
-//		if (IntersectMovingSphereToTriangle(
-//			mesh->m_Vertices[tempSortedIndicies[0]].pos,
-//			mesh->m_Vertices[tempSortedIndicies[1]].pos,
-//			mesh->m_Vertices[tempSortedIndicies[2]].pos,
-//			currNorm, _start, _dir, _radius, fTime, _outNormal))
-//		{
-//			_time = fminf(_time, fTime);
-//			_outNormal = currNorm;
-//			bCollision = true;
-//		}
-//	}
-//
-//	return bCollision;
-//}
+bool Physics::MovingSphereToMesh(vec4f & _start, vec4f & _dir, float _radius, Mesh* _mesh, float & _time, vec4f & _outNormal)
+{
+	bool bCollision = false;
+	_time = FLT_MAX;
+	float fTime = FLT_MAX;
+	
+	for (unsigned int i = 0; i < _mesh->GetNumTriangles(); i++) 
+	{
+		Triangle currTri = _mesh->GetTriangles()[i];
+		vec4f currNorm = _mesh->GetTriangles()[i].Normal;
+
+		if (MovingSphereToTriangle(
+			*currTri.Vertex[0],
+			*currTri.Vertex[1],
+			*currTri.Vertex[2],
+			currNorm, _start, _dir, _radius, fTime, _outNormal))
+		{
+			_time = fminf(_time, fTime);
+			_outNormal = currNorm;
+			bCollision = true;
+		}
+	}
+
+	return bCollision;
+}
+
+#pragma endregion
 
 
-void Physics::BuildPlane(Plane& _plane, vec4f _pointA, vec4f& _pointB, vec4f& _pointC)
+#pragma region PLANE_COLISION
+
+void Physics::BuildPlane(Plane& _plane, vec4f& _pointA, vec4f& _pointB, vec4f& _pointC)
 {
 	_plane.mNormal = (_pointA - _pointC) ^ (_pointB - _pointA);
 	_plane.mNormal.Normalize();
@@ -247,7 +234,7 @@ void Physics::BuildPlane(Plane& _plane, vec4f _pointA, vec4f& _pointB, vec4f& _p
 
 //Returns 1 if on or in front of plane
 //Returns 2 if behind plane
-int Physics::ClassifyPointToPlane(Plane& _plane, vec4f& _point)
+int Physics::PointToPlane(Plane& _plane, vec4f& _point)
 {
 	float pOffset = _point * _plane.mNormal;
 	if (pOffset >= _plane.mOffset)
@@ -258,7 +245,7 @@ int Physics::ClassifyPointToPlane(Plane& _plane, vec4f& _point)
 //Returns 1 if in front of plane
 //Returns 2 if behind plane
 //Returns 3 if intersecting plane
-int Physics::ClassifySphereToPlane(Plane& _plane, Sphere& _sphere)
+int Physics::SphereToPlane(Plane& _plane, Sphere& _sphere)
 {
 	float pOffset = _sphere.mPosition * _plane.mNormal;
 	if (pOffset - _plane.mOffset > _sphere.mRadius)
@@ -268,30 +255,164 @@ int Physics::ClassifySphereToPlane(Plane& _plane, Sphere& _sphere)
 	return 3;
 }
 
-//void Physics::BuildFrustum(Frustum& _frustum, float _fov, float _nearDist, float _farDist, float _ratio, matrix4& _camXform)
-//{
-//	vec4f fc = _camXform.axis_pos - _camXform.axis_z * _farDist;
-//	vec4f nc = _camXform.axis_pos - _camXform.axis_z * _nearDist;
-//	float Hnear = 2 * tan(_fov / 2) * _nearDist;
-//	float Hfar = 2 * tan(_fov / 2) * _farDist;
-//	float Wnear = Hnear * _ratio;
-//	float Wfar = Hfar * _ratio;
-//
-//	_frustum.mPoints[0] = fc + _camXform.axis_y * (Hfar * 0.5f) - _camXform.axis_x * (Wfar * 0.5f);
-//	_frustum.mPoints[3] = fc + _camXform.axis_y * (Hfar * 0.5f) + _camXform.axis_x * (Wfar * 0.5f);
-//	_frustum.mPoints[1] = fc - _camXform.axis_y * (Hfar * 0.5f) - _camXform.axis_x * (Wfar * 0.5f);
-//	_frustum.mPoints[2] = fc - _camXform.axis_y * (Hfar * 0.5f) + _camXform.axis_x * (Wfar * 0.5f);
-//			   
-//	_frustum.mPoints[4] = nc + _camXform.axis_y * (Hnear * 0.5f) - _camXform.axis_x * (Wnear * 0.5f);
-//	_frustum.mPoints[5] = nc + _camXform.axis_y * (Hnear * 0.5f) + _camXform.axis_x * (Wnear * 0.5f);
-//	_frustum.mPoints[7] = nc - _camXform.axis_y * (Hnear * 0.5f) - _camXform.axis_x * (Wnear * 0.5f);
-//	_frustum.mPoints[6] = nc - _camXform.axis_y * (Hnear * 0.5f) + _camXform.axis_x * (Wnear * 0.5f);
-//
-//	BuildPlane(_frustum.mFaces[0], _frustum.mPoints[6], _frustum.mPoints[7], _frustum.mPoints[4]);
-//	BuildPlane(_frustum.mFaces[1], _frustum.mPoints[1], _frustum.mPoints[2], _frustum.mPoints[3]);
-//	BuildPlane(_frustum.mFaces[2], _frustum.mPoints[7], _frustum.mPoints[1], _frustum.mPoints[0]);
-//	BuildPlane(_frustum.mFaces[3], _frustum.mPoints[2], _frustum.mPoints[6], _frustum.mPoints[5]);
-//	BuildPlane(_frustum.mFaces[4], _frustum.mPoints[5], _frustum.mPoints[4], _frustum.mPoints[0]);
-//	BuildPlane(_frustum.mFaces[5], _frustum.mPoints[7], _frustum.mPoints[6], _frustum.mPoints[2]);
-//}
+//Returns 1 if in front of plane.
+//Returns 2 if behind plane.
+//Returns 3 if intersecting plane.
+int Physics::AabbToPlane(Plane& _plane, AABB& _aabb)
+{
+	vec4f center = (_aabb.mMax + _aabb.mMin) * 0.5f;
+	float pOffset = center * _plane.mNormal - _plane.mOffset;
+	vec4f E = _aabb.mMax - center;
+	float r = E.x * fabsf(_plane.mNormal.x) + E.y * fabsf(_plane.mNormal.y) + E.z * fabsf(_plane.mNormal.z);
 
+	if (pOffset > r)
+		return 1;
+	else if (pOffset < -r)
+		return 2;
+	return 3;
+}
+
+#pragma endregion
+
+
+#pragma region FRUSTUM_COLLISION
+/*
+void Physics::BuildFrustum(Frustum& _frustum, float _fov, float _nearDist, float _farDist, float _ratio, matrix4& _camXform)
+{
+	vec4f fc = _camXform.axis_pos - _camXform.axis_z * _farDist;
+	vec4f nc = _camXform.axis_pos - _camXform.axis_z * _nearDist;
+	float Hnear = 2 * tan(_fov / 2) * _nearDist;
+	float Hfar = 2 * tan(_fov / 2) * _farDist;
+	float Wnear = Hnear * _ratio;
+	float Wfar = Hfar * _ratio;
+
+	_frustum.mPoints[0] = fc + _camXform.axis_y * (Hfar * 0.5f) - _camXform.axis_x * (Wfar * 0.5f);
+	_frustum.mPoints[3] = fc + _camXform.axis_y * (Hfar * 0.5f) + _camXform.axis_x * (Wfar * 0.5f);
+	_frustum.mPoints[1] = fc - _camXform.axis_y * (Hfar * 0.5f) - _camXform.axis_x * (Wfar * 0.5f);
+	_frustum.mPoints[2] = fc - _camXform.axis_y * (Hfar * 0.5f) + _camXform.axis_x * (Wfar * 0.5f);
+			   
+	_frustum.mPoints[4] = nc + _camXform.axis_y * (Hnear * 0.5f) - _camXform.axis_x * (Wnear * 0.5f);
+	_frustum.mPoints[5] = nc + _camXform.axis_y * (Hnear * 0.5f) + _camXform.axis_x * (Wnear * 0.5f);
+	_frustum.mPoints[7] = nc - _camXform.axis_y * (Hnear * 0.5f) - _camXform.axis_x * (Wnear * 0.5f);
+	_frustum.mPoints[6] = nc - _camXform.axis_y * (Hnear * 0.5f) + _camXform.axis_x * (Wnear * 0.5f);
+
+	BuildPlane(_frustum.mFaces[0], _frustum.mPoints[6], _frustum.mPoints[7], _frustum.mPoints[4]);
+	BuildPlane(_frustum.mFaces[1], _frustum.mPoints[1], _frustum.mPoints[2], _frustum.mPoints[3]);
+	BuildPlane(_frustum.mFaces[2], _frustum.mPoints[7], _frustum.mPoints[1], _frustum.mPoints[0]);
+	BuildPlane(_frustum.mFaces[3], _frustum.mPoints[2], _frustum.mPoints[6], _frustum.mPoints[5]);
+	BuildPlane(_frustum.mFaces[4], _frustum.mPoints[5], _frustum.mPoints[4], _frustum.mPoints[0]);
+	BuildPlane(_frustum.mFaces[5], _frustum.mPoints[7], _frustum.mPoints[6], _frustum.mPoints[2]);
+}
+
+bool Physics::FrustumToSphere(Frustum & _frustum, Sphere & _sphere)
+{
+	int test = 0;
+	for (int i = 0; i < 6; ++i)
+	{
+		if (SphereToPlane(_frustum.mFaces[i], _sphere) == 2)
+			break;
+		else
+			test++;
+	}
+
+	if (test == 6)
+		return true;
+	return false;
+}
+
+bool Physics::FrustumToAABB(Frustum & _frustum, AABB & _aabb)
+{
+	int test = 0;
+	for (int i = 0; i < 6; ++i)
+	{
+		if (AabbToPlane(_frustum.mFaces[i], _aabb) == 2)
+			break;
+		else
+			test++;
+	}
+
+	if (test == 6)
+		return true;
+	return false;
+}
+*/
+#pragma endregion
+
+
+#pragma region MISC_COLLISION
+
+bool Physics::AABBtoAABB(AABB& _aabb1, AABB& _aabb2)
+{
+	if (_aabb1.mMax.x < _aabb2.mMin.x || _aabb1.mMin.x > _aabb2.mMax.x)
+		return false;
+
+	if (_aabb1.mMax.y < _aabb2.mMin.y || _aabb1.mMin.y > _aabb2.mMax.y)
+		return false;
+
+	if (_aabb1.mMax.z < _aabb2.mMin.z || _aabb1.mMin.z >  _aabb2.mMax.z)
+		return false;
+
+	return true;
+}
+
+bool Physics::SphereToSphere(Sphere& _sphere1, Sphere& _sphere2)
+{
+	vec4f pos = _sphere1.mPosition - _sphere2.mPosition;
+	float distance = pos.x * pos.x + pos.y * pos.y + pos.z * pos.z;
+	float minDist = _sphere1.mRadius + _sphere2.mRadius;
+
+	return distance <= (minDist * minDist);
+}
+
+bool Physics::SphereToAABB(Sphere& _sphere, AABB& _aabb)
+{
+	float X, Y, Z;
+
+	if (_sphere.mPosition.x < _aabb.mMin.x)
+		X = _aabb.mMin.x;
+	else if (_sphere.mPosition.x > _aabb.mMax.x)
+		X = _aabb.mMax.x;
+	else
+		X = _sphere.mPosition.x;
+
+	if (_sphere.mPosition.y < _aabb.mMin.y)
+		Y = _aabb.mMin.y;
+	else if (_sphere.mPosition.y > _aabb.mMax.y)
+		Y = _aabb.mMax.y;
+	else
+		Y = _sphere.mPosition.y;
+
+	if (_sphere.mPosition.z < _aabb.mMin.z)
+		Z = _aabb.mMin.z;
+	else if (_sphere.mPosition.z > _aabb.mMax.z)
+		Z = _aabb.mMax.z;
+	else
+		Z = _sphere.mPosition.z;
+
+	vec4f point = { X, Y, Z, 1.0f };
+
+	return (fabsf((point.x - _sphere.mPosition.x)) < _sphere.mRadius &&
+		fabsf((point.y - _sphere.mPosition.y)) < _sphere.mRadius &&
+		fabsf((point.z - _sphere.mPosition.z)) < _sphere.mRadius);
+}
+
+#pragma endregion
+
+#pragma region SIMULATION
+
+vec4f Physics::CalcAcceleration(vec4f& _force, float _mass)
+{
+	return _force / _mass;
+}
+
+vec4f Physics::CalcVelocity(vec4f& _vel, vec4f& _accel, float _time)
+{
+	return _vel + _accel * _time;
+}
+
+vec4f Physics::CalcPosition(vec4f& _pos, vec4f& _vel, float _time)
+{
+	return _pos + _vel * _time;
+}
+
+#pragma endregion

@@ -91,6 +91,12 @@
     <Filter Include="Rendering\Source Files\Managers">
       <UniqueIdentifier>{2a4c5fa0-c9f7-4079-baa0-cc8cf6b526dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Rendering\Shaders">
+      <UniqueIdentifier>{0fa54450-647f-49e8-a7cd-3550b1847640}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Shaders\Layout Shaders">
+      <UniqueIdentifier>{b560e4df-5975-4c40-95c5-ed2ffde9c69a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\BaseObject.h">
@@ -170,6 +176,7 @@
     <ClInclude Include="BaseLevel.h">
       <Filter>Objects\Source Files\Levels</Filter>
     </ClInclude>
+    <ClInclude Include="Input\KeyboardInput.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -231,6 +238,7 @@
     <ClCompile Include="BaseLevel.cpp">
       <Filter>Objects\Header Files\Levels</Filter>
     </ClCompile>
+    <ClCompile Include="Input\KeyboardInput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHTNORMTANTEX_VS.hlsl" />
@@ -242,8 +250,69 @@
     <FxCompile Include="Rendering\Shaders\VertexLayout_POSTEX_VS.hlsl" />
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl" />
     <FxCompile Include="Rendering\Shaders\VertexLayout_VS.hlsl" />
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHT_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHTNORMTANTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHTNORMTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSCOLOR_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSNORMTANTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSNORMTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Rendering\Shaders\VertexLayouts.hlsli" />
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHT_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHTNORMTANTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHTNORMTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSCOLOR_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSNORMTANTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSNORMTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Rendering\Shaders\VertexLayouts.hlsli">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </None>
+    <None Include="Rendering\Shaders\VertexLayouts.hlsli">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
