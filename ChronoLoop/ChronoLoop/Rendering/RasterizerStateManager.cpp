@@ -1,0 +1,86 @@
+#include "stdafx.h"
+#include "RasterizerStateManager.h"
+#include "renderer.h"
+
+namespace RenderEngine {
+
+	RasterizerStateManager* RasterizerStateManager::sInstance = nullptr;
+
+	RasterizerStateManager::RasterizerStateManager() {
+		mStates = new ID3D11RasterizerState*[eRS_MAX];
+		mCurrentState = eRS_MAX;
+
+		D3D11_RASTERIZER_DESC desc;
+
+		desc.FillMode = D3D11_FILL_SOLID;
+		desc.CullMode = D3D11_CULL_BACK;
+		desc.FrontCounterClockwise = FALSE;
+		desc.DepthBias = 0;
+		desc.SlopeScaledDepthBias = 0.0f;
+		desc.DepthBiasClamp = 0.0f;
+		desc.DepthClipEnable = TRUE;
+		desc.ScissorEnable = FALSE;
+		desc.MultisampleEnable = FALSE;
+		desc.AntialiasedLineEnable = FALSE;
+
+		ID3D11RasterizerState *state;
+		(*Renderer::Instance()->GetDevice())->CreateRasterizerState(&desc, &state);
+		mStates[eRS_FILLED] = state;
+
+		desc.FillMode = D3D11_FILL_WIREFRAME;
+		(*Renderer::Instance()->GetDevice())->CreateRasterizerState(&desc, &state);
+		mStates[eRS_WIREFRAME] = state;
+
+		desc.FrontCounterClockwise = TRUE;
+		(*Renderer::Instance()->GetDevice())->CreateRasterizerState(&desc, &state);
+		mStates[eRS_CCW_WIREFRAME] = state;
+
+		desc.FillMode = D3D11_FILL_SOLID;
+		(*Renderer::Instance()->GetDevice())->CreateRasterizerState(&desc, &state);
+		mStates[eRS_CCW] = state;
+
+		desc.CullMode = D3D11_CULL_NONE;
+		(*Renderer::Instance()->GetDevice())->CreateRasterizerState(&desc, &state);
+		mStates[eRS_CCW_NO_CULL] = state;
+
+		desc.FrontCounterClockwise = FALSE;
+		(*Renderer::Instance()->GetDevice())->CreateRasterizerState(&desc, &state);
+		mStates[eRS_NO_CULL] = state;
+
+		this->ApplyState(eRS_FILLED);
+	}
+
+	RasterizerStateManager::~RasterizerStateManager() {
+		for (unsigned int i = 0; i < eRS_MAX; ++i) {
+			mStates[i]->Release();
+		}
+		delete[] mStates;
+	}
+
+	RasterizerStateManager * RasterizerStateManager::Instance() {
+		if (nullptr == sInstance) {
+			sInstance = new RasterizerStateManager;
+		}
+		return sInstance;
+	}
+
+	void RasterizerStateManager::DestroyInstance() {
+		delete sInstance;
+		sInstance = nullptr;
+	}
+
+
+	// Instance Functions
+
+	bool RasterizerStateManager::ApplyState(RasterState rs) {
+		if (rs < eRS_FILLED || rs >= eRS_MAX) {
+			return false;
+		}
+		if (rs == mCurrentState) {
+			return true;
+		}
+		(*Renderer::Instance()->GetContext())->RSSetState(mStates[rs]);
+		return true;
+	}
+
+} // Namespace
