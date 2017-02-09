@@ -463,9 +463,7 @@ matrix4::matrix4()
 
 matrix4::matrix4(matrix4& _copy)
 {
-	for (int i = 0; i < 4; ++i)
-		for (int j = 0; j < 4; ++j)
-			tiers[i].xyzw[j] = _copy.tiers[i].xyzw[j];
+	matrix = _copy.matrix;
 }
 
 matrix4::matrix4(float _11, float _12, float _13, float _14, float _21, float _22, float _23, float _24, float _31, float _32, float _33, float _34, float _41, float _42, float _43, float _44) {
@@ -504,11 +502,7 @@ bool matrix4::operator!=(matrix4 const& _other)
 matrix4& matrix4::operator=(matrix4 const& _other)
 {
 	if (*this != _other)
-	{
-		for (int i = 0; i < 4; ++i)
-			for (int j = 0; j < 4; ++j)
-				tiers[i].xyzw[j] = _other.tiers[i].xyzw[j];
-	}
+		this->matrix = _other.matrix;
 	return *this;
 }
 
@@ -528,9 +522,7 @@ matrix4& matrix4::operator*=(matrix4 const& _other)
 matrix4 matrix4::operator*(float _other)
 {
 	matrix4 temp;
-	for (int i = 0; i < 4; ++i)
-		for (int j = 0; j < 4; ++j)
-			temp.tiers[i].xyzw[j] = tiers[i].xyzw[j] * _other;
+	temp.matrix = matrix * _other;
 	return temp;
 }
 
@@ -543,9 +535,7 @@ matrix4& matrix4::operator*=(float _other)
 matrix4 matrix4::operator+(matrix4 const& _other)
 {
 	matrix4 temp;
-	for (int i = 0; i < 4; ++i)
-		for (int j = 0; j < 4; ++j)
-			temp.tiers[i].xyzw[j] = tiers[i].xyzw[j] + _other.tiers[i].xyzw[j];
+	temp.matrix = matrix + _other.matrix;
 	return temp;
 }
 
@@ -565,22 +555,8 @@ vec4f& matrix4::operator[](unsigned int _index)
 matrix4 matrix4::Inverse()
 {
 	matrix4 m;
-	m.matrix = DirectX::XMMatrixInverse(nullptr, matrix);
+	m.matrix = DirectX::XMMatrixInverse(&DirectX::XMMatrixDeterminant(matrix), matrix);
 	return m;
-}
-
-matrix4 matrix4::Identity()
-{
-	matrix4 temp;
-	for (int i = 0; i < 4; ++i)
-		for (int j = 0; j < 4; ++j)
-		{
-			if (i == j)
-				temp.tiers[i].xyzw[j] = 1;
-			else
-				temp.tiers[i].xyzw[j] = 0;
-		}
-	return temp;
 }
 
 #pragma endregion
@@ -589,82 +565,57 @@ matrix4 matrix4::Identity()
 matrix4 Math::MatrixRotateAxis(vec4f const& _axis, float _rads)
 {
 	matrix4 temp;
-	DirectX::XMMATRIX temp1;
 	DirectX::XMVECTOR vec;
 
 	for (int i = 0; i < 4; ++i)
 		vec.m128_f32[i] = _axis.xyzw[i];
 
-	temp1 = DirectX::XMMatrixRotationAxis(vec, _rads);
-
-	for (int i = 0; i < 4; ++i)
-		for (int j = 0; j < 4; ++j)
-			temp.tiers[i].xyzw[j] = temp1.r[i].m128_f32[j];
+	temp.matrix = DirectX::XMMatrixRotationAxis(vec, _rads);
 	return temp;
 }
 
 matrix4 Math::MatrixRotateX(float _rads)
 {
 	matrix4 temp;
-	DirectX::XMMATRIX temp1 = DirectX::XMMatrixRotationX(_rads);
-
-	for (int i = 0; i < 4; ++i)
-		for (int j = 0; j < 4; ++j)
-			temp.tiers[i].xyzw[j] = temp1.r[i].m128_f32[j];
+	temp.matrix = DirectX::XMMatrixRotationX(_rads);
 	return temp;
 }
 
 matrix4 Math::MatrixRotateY(float _rads)
 {
 	matrix4 temp;
-	DirectX::XMMATRIX temp1 = DirectX::XMMatrixRotationY(_rads);
-
-	for (int i = 0; i < 4; ++i)
-		for (int j = 0; j < 4; ++j)
-			temp.tiers[i].xyzw[j] = temp1.r[i].m128_f32[j];
+	temp.matrix = DirectX::XMMatrixRotationY(_rads);
 	return temp;
 }
 
 matrix4 Math::MatrixRotateZ(float _rads)
 {
 	matrix4 temp;
-	DirectX::XMMATRIX temp1 = DirectX::XMMatrixRotationZ(_rads);
-
-	for (int i = 0; i < 4; ++i)
-		for (int j = 0; j < 4; ++j)
-			temp.tiers[i].xyzw[j] = temp1.r[i].m128_f32[j];
+	temp.matrix = DirectX::XMMatrixRotationZ(_rads);
 	return temp;
 }
 
 matrix4 Math::MatrixTranslation(float _x, float _y, float _z)
 {
 	matrix4 temp;
-	DirectX::XMMATRIX temp1 = DirectX::XMMatrixTranslation(_x, _y, _z);
-
-	for (int i = 0; i < 4; ++i)
-		for (int j = 0; j < 4; ++j)
-			temp.tiers[i].xyzw[j] = temp1.r[i].m128_f32[j];
+	temp.matrix = DirectX::XMMatrixTranslation(_x, _y, _z);
 	return temp;
 }
 
 matrix4 Math::MatrixTranspose(matrix4& other)
 {
-	matrix4 _new;
-	for (int r = 0; r < 4; ++r) 
-		for (int c = 0; c < 4; ++c) 
-			_new[r][c] = other[c][r];
-	return _new;
+	matrix4 temp;
+	temp.matrix = DirectX::XMMatrixTranspose(other.matrix);
+	return temp;
 }
+
 matrix4 Math::MatrixScale(float _x, float _y, float _z)
 {
 	matrix4 temp;
-	DirectX::XMMATRIX temp1 = DirectX::XMMatrixScaling(_x, _y, _z);
-
-	for (int i = 0; i < 4; ++i)
-		for (int j = 0; j < 4; ++j)
-			temp.tiers[i].xyzw[j] = temp1.r[i].m128_f32[j];
+	temp.matrix = DirectX::XMMatrixScaling(_x, _y, _z);
 	return temp;
 }
+
 matrix4 Math::Projection(float _aspect, float _fov, float _near, float _far)
 {
 	matrix4 _new;
@@ -672,7 +623,8 @@ matrix4 Math::Projection(float _aspect, float _fov, float _near, float _far)
 	return _new;
 }
 
-matrix4 Math::Identity() {
+matrix4 Math::Identity() 
+{
 	matrix4 m;
 	m.matrix = DirectX::XMMatrixIdentity();
 	return m;
