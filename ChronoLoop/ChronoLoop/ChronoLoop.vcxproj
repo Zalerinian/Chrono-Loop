@@ -186,8 +186,10 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BaseLevel.h" />
     <ClInclude Include="Common\Math.h" />
     <ClInclude Include="Input\KeyboardInput.h" />
+    <ClInclude Include="LevelManager.h" />
     <ClInclude Include="Messager\Message.h" />
     <ClInclude Include="Messager\Messager.h" />
     <ClInclude Include="Objects\BaseObject.h" />
@@ -212,9 +214,11 @@
     <ClInclude Include="Timeline.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BaseLevel.cpp" />
     <ClCompile Include="ChronoLoop.cpp" />
     <ClCompile Include="Common\Math.cpp" />
     <ClCompile Include="Input\KeyboardInput.cpp" />
+    <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="Messager\Messager.cpp" />
     <ClCompile Include="Objects\BaseObject.cpp" />
     <ClCompile Include="Objects\Component.cpp" />

@@ -4,7 +4,7 @@
 
 BaseObject::BaseObject()
 {
-	name = nullptr;
+	//name = nullptr;
 	parent = nullptr;
 }
 BaseObject::BaseObject(std::string _name, Transform _transform)
