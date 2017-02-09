@@ -114,6 +114,8 @@ namespace RenderEngine {
 	
 	void InputLayoutManager::DestroyInstance()
 	{
+		if (sInstance)
+			delete sInstance;
 	}
 	void InputLayoutManager::LoadShader(char * _fileName, char **_output, int& _outputSize)
 	{
