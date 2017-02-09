@@ -118,6 +118,7 @@ bool Mesh::Load(vr::RenderModel_t * _model)
 	{
 		mIndicies.push_back(_model->rIndexData[i]);
 	}
+	return true;
 }
 
 Triangle * Mesh::GetTriangles()

@@ -6,30 +6,16 @@
 #include "RenderContext.h"
 #include "Mesh.h"
 #include "../Common/Math.h"
+#include "RenderSet.h"
 
 class InputLayoutManager;
 
 namespace RenderEngine {
 	
 	class Renderer {
-	public:
-		class NodeObject
-		{
-		private:
-			friend Renderer;
-			ID3D11Buffer*				mVertexBuffer;
-			ID3D11Buffer*				mIndexBuffer;
-			unsigned int				mIndexCount;
-		public:
-			NodeObject();
-			NodeObject(Mesh& _mesh);
-			~NodeObject();
-
-			void Load(Mesh& _mesh);
-		};
 	private:
 		struct MyBuffer {
-			matrix4 model, view, eye, projection;
+			matrix4 model, view, projection;
 		} constantData;
 
 		friend InputLayoutManager;
@@ -47,12 +33,10 @@ namespace RenderEngine {
 		vr::IVRSystem* mVrSystem;
 		std::shared_ptr<HWND> mWindow;
 		RenderContext mCurrentContext;
-		std::vector<RenderNode*> mNodes;
-		std::vector<Mesh> mMeshes;
+		RenderSet mRenderSet;
 		ID3D11Buffer* constantBluffer;
-		NodeObject mTempBox;
 
-	
+
 		static Renderer* sInstance;
 
 		void InitializeD3DDevice();
@@ -65,19 +49,24 @@ namespace RenderEngine {
 
 		void DoAllTheBootlegThingsForTheDemo();
 
-	
+		matrix4 mEyePosLeft, mEyePosRight, mEyeProjLeft, mEyeProjRight, mHMDPos;
+
+		matrix4 GetEye(vr::EVREye e);
+		matrix4 GetProjection(vr::EVREye e);
+		void GetMVP(vr::EVREye e, MyBuffer &data);
+
 		Renderer();
 		~Renderer();
 	public:
 		static Renderer* Instance();
 		static void DestroyInstance();
-	
-	
+
 		// Instance Functions
 		bool Initialize(HWND Window, unsigned int width, unsigned int height,
 			bool vsync, int fps, bool fullscreen, float farPlane, float nearPlane,
 			vr::IVRSystem* vrsys);
 
+		void AddNode(RenderNode *node);
 		void Render();
 		std::shared_ptr<ID3D11Device*> GetDevice();
 		std::shared_ptr<ID3D11DeviceContext*> GetContext();
