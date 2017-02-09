@@ -19,7 +19,7 @@ struct vec4i {
 			struct {
 				int x, y, z, w;
 			};
-			float xyzw[4];
+			int xyzw[4];
 		} data;
 	};
 };
