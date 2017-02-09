@@ -25,9 +25,11 @@ Timeline::Timeline()
 
 Timeline::~Timeline()
 {
+	mSnapshots.clear();
+	mSnaptimes.clear();
 }
 
-void Timeline::AddBaseObject(BaseObject& _object, short _id)
+void Timeline::AddBaseObject(BaseObject* _object, unsigned short _id)
 {
 	mLiveObjects[_id] = _object;
 }
@@ -47,31 +49,35 @@ SnapInfo Timeline::GenerateSnapInfo(BaseObject& _object)
 	return info;
 }
 
-Snapshot Timeline::GenerateSnapShot()
+Snapshot Timeline::GenerateSnapShot(float _time)
 {
 	Snapshot snap;
-	//TODO PAT: Make a game Time varible 
-	float TakenTime = -1;
 	//If first snapshot taken
 	if (mSnapshots.size() == 0)
 	{
-		for (int i = 0; i < mLiveObjects.size(); i++)
+		for (std::pair<unsigned short,BaseObject*> _b : mLiveObjects)
 		{
-			short id = mLiveObjects[i].GetUniqueId();
-			snap.mSnapinfos[id] = GenerateSnapInfo(mLiveObjects[i]);
-			snap.mUpdatedtimes[id] = TakenTime;
+			if (_b.second)
+			{
+				unsigned short id = _b.first;
+				snap.mSnapinfos[id] = GenerateSnapInfo(*_b.second);
+				snap.mUpdatedtimes[id] = _time;
+			}
 		}
 	}
 	else
 	{
 		snap.mUpdatedtimes = mSnapshots[(float)(mSnaptimes.size() - 1)].mUpdatedtimes;
-		for (int i = 0; i < mLiveObjects.size(); i++)
+		for (std::pair<unsigned short, BaseObject*> _b : mLiveObjects)
 		{
-			//TODO PAT: Do somesort of duplicate infomation checking to decide to add it or not
-			//If change add to mSnapinfos and Updatetime
-			short id = mLiveObjects[i].GetUniqueId();
-			snap.mSnapinfos[id] = GenerateSnapInfo(mLiveObjects[i]);
-			snap.mUpdatedtimes[id] = TakenTime;
+			if (_b.second)
+			{
+				//TODO PAT: Do somesort of duplicate infomation checking to decide to add it or not
+				//If change add to mSnapinfos and Updatetime
+				unsigned short id = _b.first;
+				snap.mSnapinfos[id] = GenerateSnapInfo(*_b.second);
+				snap.mUpdatedtimes[id] = _time;
+			}
 		}
 	}
 	return snap;

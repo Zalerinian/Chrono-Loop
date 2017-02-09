@@ -3,6 +3,7 @@
 #include "Rendering\renderer.h"
 #include "Rendering\InputLayoutManager.h"
 #include <openvr.h>
+#include <ctime>
 #include <chrono>
 
 
@@ -27,10 +28,13 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	// Initialize Rendering systems and VR
 	if (!RenderEngine::InitializeSystems(hwnd, 800, 600, false, 60, false, 1000, 0.1f, nullptr)) {
 		return 1;
-	}
-	TManager->Instance();
+	} 
+	TManager = TimeManager::Instance();
 	vr::HmdError *pError = new vr::HmdError;
 	vr::VR_Init(pError, vr::VRApplication_Utility);
+	BaseObject*  PlsGitRidOfThis = new BaseObject();
+	TimeManager::Instance()->GetTimeLine()->AddBaseObject(PlsGitRidOfThis, PlsGitRidOfThis->GetUniqueId());
+	
 
 	// Update everything
 	Update();
@@ -121,6 +125,7 @@ void Update() {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			// Handle windows message.
 			if (msg.message == WM_QUIT) {
+				TManager->Instance()->Destroy();
 				break;
 			}
 			TranslateMessage(&msg);
@@ -129,7 +134,7 @@ void Update() {
 
 			// Input.Update(float deltaTime);
 			// Logic.Update(float deltaTime);
-			TManager->Update(deltaTime);
+			TManager->Instance()->Update(deltaTime);
 			if (FrameCheck())
 			{
 				 RenderEngine::Renderer::Instance()->Render();
@@ -141,6 +146,7 @@ bool FrameCheck()
 {
 	static float fps = 1 / 90.0f;
 
+	
 	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count() - lastTime.time_since_epoch().count()) / 1000.0f / 1000.0f / 1000.0f;
 	lastTime = std::chrono::steady_clock::now();
 	timeFrame += deltaTime;

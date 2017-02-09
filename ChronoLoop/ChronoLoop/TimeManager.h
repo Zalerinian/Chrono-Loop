@@ -9,9 +9,9 @@ class TimeManager
 	static TimeManager* instanceTimemanager;
 
 	static Timeline* mTimeline;
-	float mRecordingTime = 100;			// 1/10th of a second in milliseconds 
-	float mLevelTime = 0;
-	float mlastRecordedTime = mLevelTime;
+	float mRecordingTime =.1f;		// 1/10th of a second in milliseconds 
+	float mLevelTime=0, mlastRecordedTime =0, mTimestamp = 0;
+	
 
 	TimeManager();
 	~TimeManager();

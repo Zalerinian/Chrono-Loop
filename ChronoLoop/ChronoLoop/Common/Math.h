@@ -74,7 +74,7 @@ struct vec4f {
 	DirectX::XMVECTOR GetUnderlyingType() { return data.vector; }
 
 	bool   vec4f::operator==(vec4f const& _other);
-	bool   vec4f::operator!=(vec4f const& _other);
+	//bool   vec4f::operator!=(vec4f const& _other);
 	vec4f& vec4f::operator=(vec4f const& _other);
 	vec4f  vec4f::operator^(vec4f const& _other);
 	vec4f  vec4f::operator*(matrix4 const& _other);
@@ -137,11 +137,13 @@ struct matrix4 {
 
 namespace Math
 {
+
 	matrix4 MatrixRotateAxis(vec4f _axis, float _rads);
 	matrix4 MatrixRotateX(float _rads);
 	matrix4 MatrixRotateY(float _rads);
 	matrix4 MatrixRotateZ(float _rads);
 	matrix4 MatrixTranslation(float _x, float _y, float _z);
+	matrix4 MatrixScale(float _x, float _y, float _z);
 	matrix4 FromMatrix(vr::HmdMatrix44_t _mat);
 	matrix4 FromMatrix(vr::HmdMatrix34_t _mat);
 }

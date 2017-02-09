@@ -12,7 +12,7 @@ class BaseObject
 {
 private:
 	std::string name;
-	short id;
+	unsigned short id;
 	std::vector<Component*> components;
 	Component* parent;
 	Transform transform;
@@ -22,7 +22,7 @@ public:
 	BaseObject();
 	BaseObject(std::string _name, Transform _transform);
 	~BaseObject();
-	short& GetUniqueId();
+	unsigned short& GetUniqueId();
 	Transform& GetTransform();
 	void Destroy() { delete this; };
 	void AddComponent(Component* _comp) { components.push_back(_comp); };

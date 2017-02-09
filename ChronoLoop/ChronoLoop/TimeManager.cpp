@@ -12,16 +12,17 @@ TimeManager::TimeManager()
 
 TimeManager::~TimeManager()
 {
+	int poop = 1;
 }
 
 void TimeManager::Update(float _delta)
 {
 	mLevelTime += _delta;
-
-	if (mLevelTime - mlastRecordedTime > mRecordingTime)
+	mTimestamp += _delta;
+	if (mTimestamp >= mRecordingTime)
 	{
-		mlastRecordedTime = mLevelTime + mRecordingTime;
-		Snapshot s = mTimeline->GenerateSnapShot();
+		mTimestamp = 0;
+		Snapshot s = mTimeline->GenerateSnapShot(mLevelTime);
 		mTimeline->AddSnapshot(s.mTime,s);
 	}
 }

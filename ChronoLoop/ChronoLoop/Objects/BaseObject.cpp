@@ -4,10 +4,11 @@
 
 BaseObject::BaseObject()
 {
-	name = nullptr;
+	
 	parent = nullptr;
 	//TESTING VALUES GET RID OF THIS EVENTUALLY
-	TimeManager::Instance()->GetTimeLine()->AddBaseObject(*this,id);
+	id = 2;
+	
 }
 BaseObject::BaseObject(std::string _name, Transform _transform)
 {
@@ -53,7 +54,7 @@ BaseObject const* BaseObject::operator=(BaseObject _equals)
 	return this;
 }
 
-short& BaseObject::GetUniqueId()
+unsigned short& BaseObject::GetUniqueId()
 {
 	return id;
 }

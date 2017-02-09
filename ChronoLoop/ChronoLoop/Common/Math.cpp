@@ -40,10 +40,10 @@ bool vec4f::operator==(vec4f const& _other)
 	return true;
 }
 
-bool vec4f::operator!=(vec4f const& _other)
-{
-	return !(*this == _other);
-}
+//bool vec4f::operator!=(vec4f const& _other)
+//{
+//	return !(*this == _other);
+//}
 
 vec4f& vec4f::operator=(vec4f const& _other)
 {
@@ -381,7 +381,7 @@ matrix4 Math::MatrixRotateX(float _rads)
 {
 	matrix4 temp;
 	DirectX::XMMATRIX temp1 = DirectX::XMMatrixIdentity();
-	DirectX::XMMatrixRotationX(_rads);
+	temp1 = DirectX::XMMatrixRotationX(_rads);
 
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 4; ++j)
@@ -393,7 +393,7 @@ matrix4 Math::MatrixRotateY(float _rads)
 {
 	matrix4 temp;
 	DirectX::XMMATRIX temp1 = DirectX::XMMatrixIdentity();
-	DirectX::XMMatrixRotationY(_rads);
+	temp1 = DirectX::XMMatrixRotationY(_rads);
 
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 4; ++j)
@@ -405,7 +405,7 @@ matrix4 Math::MatrixRotateZ(float _rads)
 {
 	matrix4 temp;
 	DirectX::XMMATRIX temp1 = DirectX::XMMatrixIdentity();
-	DirectX::XMMatrixRotationZ(_rads);
+	temp1 = DirectX::XMMatrixRotationZ(_rads);
 
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 4; ++j)
@@ -417,14 +417,25 @@ matrix4 Math::MatrixTranslation(float _x, float _y, float _z)
 {
 	matrix4 temp;
 	DirectX::XMMATRIX temp1 = DirectX::XMMatrixIdentity();
-	DirectX::XMMatrixTranslation(_x, _y, _z);
+	temp1 = DirectX::XMMatrixTranslation(_x, _y, _z);
 
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 4; ++j)
 			temp.data.tiers[i].data.xyzw[j] = temp1.r[i].m128_f32[j];
 	return temp;
 }
+matrix4 Math::MatrixScale(float x, float y, float z)
+{
+	matrix4 temp;
+	DirectX::XMMATRIX temp1 = DirectX::XMMatrixIdentity();
+	temp1 = DirectX::XMMatrixScaling(x, y, z);
 
+	for (int i = 0; i < 4; ++i)
+		for (int j = 0; j < 4; ++j)
+			temp.data.tiers[i].data.xyzw[j] = temp1.r[i].m128_f32[j];
+	return temp;
+	
+}
 matrix4 Math::FromMatrix(vr::HmdMatrix44_t _mat)
 {
 	matrix4 temp;
