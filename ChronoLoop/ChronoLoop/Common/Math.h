@@ -29,6 +29,7 @@ struct vec4f {
 	DirectX::XMVECTOR GetUnderlyingType() { return data.vector; }
 
 	bool   vec4f::operator==(vec4f const& _other);
+	bool   vec4f::operator!=(vec4f const& _other);
 	vec4f& vec4f::operator=(vec4f const& _other);
 	vec4f  vec4f::operator^(vec4f const& _other);
 	vec4f  vec4f::operator*(matrix4 const& _other);
@@ -75,6 +76,7 @@ struct matrix4 {
 	DirectX::XMMATRIX matrix4::GetUnderlyingType() { return data.matrix; }
 
 	bool     matrix4::operator==(matrix4 const& _other);
+	bool     matrix4::operator!=(matrix4 const& _other);
 	matrix4& matrix4::operator=(matrix4 const& _other);
 	matrix4  matrix4::operator*(matrix4 const& _other);
 	matrix4& matrix4::operator*=(matrix4 const& _other);
@@ -83,6 +85,7 @@ struct matrix4 {
 	matrix4  matrix4::operator+(matrix4 const& _other);
 	matrix4& matrix4::operator+=(matrix4 const& _other);
 	vec4f&   matrix4::operator[](unsigned int _index);
+	
 	matrix4  Inverse();
 	float*   AsArray() { return reinterpret_cast<float*>(data.matrix.r); }
 };
