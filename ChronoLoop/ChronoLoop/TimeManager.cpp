@@ -12,7 +12,7 @@ TimeManager::TimeManager()
 
 TimeManager::~TimeManager()
 {
-	int poop = 1;
+	delete mTimeline;
 }
 
 void TimeManager::Update(float _delta)
@@ -22,8 +22,8 @@ void TimeManager::Update(float _delta)
 	if (mTimestamp >= mRecordingTime)
 	{
 		mTimestamp = 0;
-		Snapshot s = mTimeline->GenerateSnapShot(mLevelTime);
-		mTimeline->AddSnapshot(s.mTime,s);
+		Snapshot* s = mTimeline->GenerateSnapShot(mLevelTime);
+		mTimeline->AddSnapshot(s->mTime,s);
 	}
 }
 

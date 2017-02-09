@@ -15,6 +15,7 @@ namespace RenderEngine {
 	bool ShutdownSystems() {
 		RasterizerStateManager::DestroyInstance();
 		Renderer::DestroyInstance();
+		TimeManager::Instance()->Destroy();
 		return true;
 	}
 }

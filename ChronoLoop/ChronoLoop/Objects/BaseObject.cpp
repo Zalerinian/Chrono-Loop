@@ -19,6 +19,10 @@ BaseObject::BaseObject(std::string _name, Transform _transform)
 BaseObject::~BaseObject()
 {
 	delete parent;
+	for(auto c : components)
+	{
+		delete c;
+	}
 	components.clear();
 	children.clear();
 }
