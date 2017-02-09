@@ -2,6 +2,8 @@
 
 namespace RenderEngine {
 
+	class RenderSet;
+
 	struct RenderNode {
 		typedef void(*NodeFunc)(RenderNode& n);
 		NodeFunc mNodeFunction;
@@ -13,6 +15,7 @@ namespace RenderEngine {
 		inline RenderNode& SetNext(RenderNode* n) { mNext = n; return *this; }
 	protected:
 		RenderNode* mNext;
+		friend RenderSet;
 	};
 
 }

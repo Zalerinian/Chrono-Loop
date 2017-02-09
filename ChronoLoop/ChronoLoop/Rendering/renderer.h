@@ -6,6 +6,7 @@
 #include "RenderContext.h"
 #include "Mesh.h"
 #include "../Common/Math.h"
+#include "RenderSet.h"
 
 class InputLayoutManager;
 
@@ -47,12 +48,12 @@ namespace RenderEngine {
 		vr::IVRSystem* mVrSystem;
 		std::shared_ptr<HWND> mWindow;
 		RenderContext mCurrentContext;
-		std::vector<RenderNode*> mNodes;
+		RenderSet mRenderSet;
 		std::vector<Mesh> mMeshes;
 		ID3D11Buffer* constantBluffer;
 		NodeObject mTempBox;
 
-	
+
 		static Renderer* sInstance;
 
 		void InitializeD3DDevice();
@@ -65,14 +66,13 @@ namespace RenderEngine {
 
 		void DoAllTheBootlegThingsForTheDemo();
 
-	
+
 		Renderer();
 		~Renderer();
 	public:
 		static Renderer* Instance();
 		static void DestroyInstance();
-	
-	
+
 		// Instance Functions
 		bool Initialize(HWND Window, unsigned int width, unsigned int height,
 			bool vsync, int fps, bool fullscreen, float farPlane, float nearPlane,

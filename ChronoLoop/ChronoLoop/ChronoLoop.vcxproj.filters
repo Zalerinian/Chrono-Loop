@@ -163,6 +163,12 @@
       <Filter>Physics\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Input\KeyboardInput.h" />
+    <ClInclude Include="Rendering\RenderShape.h">
+      <Filter>Rendering\Header Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RenderSet.h">
+      <Filter>Rendering\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -217,6 +223,10 @@
       <Filter>Physics\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Input\KeyboardInput.cpp" />
+    <ClCompile Include="Rendering\RenderShape.cpp">
+      <Filter>Rendering\Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\RenderSet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">

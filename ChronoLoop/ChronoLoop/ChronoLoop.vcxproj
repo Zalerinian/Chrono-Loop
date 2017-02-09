@@ -203,6 +203,8 @@
     <ClInclude Include="Rendering\renderer.h" />
     <ClInclude Include="Rendering\RendererDefines.h" />
     <ClInclude Include="Rendering\RenderNode.h" />
+    <ClInclude Include="Rendering\RenderSet.h" />
+    <ClInclude Include="Rendering\RenderShape.h" />
     <ClInclude Include="Rendering\Shader.h" />
     <ClInclude Include="Rendering\Structures.h" />
     <ClInclude Include="Rendering\SystemInitializer.h" />
@@ -226,6 +228,8 @@
     <ClCompile Include="Rendering\RenderContext.cpp" />
     <ClCompile Include="Rendering\renderer.cpp" />
     <ClCompile Include="Rendering\RenderNode.cpp" />
+    <ClCompile Include="Rendering\RenderSet.cpp" />
+    <ClCompile Include="Rendering\RenderShape.cpp" />
     <ClCompile Include="Rendering\Shader.cpp" />
     <ClCompile Include="Sound\SoundEngine.cpp" />
     <ClCompile Include="stdafx.cpp">
