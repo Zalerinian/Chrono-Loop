@@ -1,145 +1,167 @@
 #include "stdafx.h"
-//#include "Mesh.h"
-//#include <ppltasks.h>
-//#include <fstream>
-//#include <string>
-//#include "DDSTextureLoader.h"
-//#include "renderer.h"
-//
-//using namespace Concurrency;
-//
-//Mesh::Mesh()
-//{
-//	this->Image = nullptr;
-//	this->m_node = nullptr;
-//}
-//
-//Mesh::Mesh(char * path)
-//{
-//	this->Load(path);
-//	this->Image = nullptr;
-//}
-//
-//Mesh::Mesh(char * path, wchar_t * path2)
-//{
-//	this->Load(path);
-//	Image = path2;
-//}
-//
-//Mesh::~Mesh()
+#include "Mesh.h"
+#include <ppltasks.h>
+#include <fstream>
+#include <string>
+#include "renderer.h"
+#include "InputLayoutManager.h"
+
+using namespace Concurrency;
+
+Mesh::Mesh()
+{
+	this->mImage = nullptr;
+}
+
+Mesh::Mesh(char * path)
+{
+	this->Load(path);
+	this->mImage = nullptr;
+}
+
+Mesh::Mesh(char * path, wchar_t * path2)
+{
+	this->Load(path);
+	mImage = path2;
+}
+
+Mesh::~Mesh()
+{
+	this->Clear();
+}
+
+void Mesh::loadShaders(char * pixel, char * vertex)
+{
+	char *bytecode = nullptr;
+	int bytelength;
+	RenderEngine::InputLayoutManager::LoadShader(pixel, &bytecode, bytelength);
+	(*RenderEngine::Renderer::Instance()->GetDevice())->CreatePixelShader(bytecode, bytelength, nullptr, &pShader);
+	delete[] bytecode;
+	RenderEngine::InputLayoutManager::LoadShader(vertex, &bytecode, bytelength);
+	(*RenderEngine::Renderer::Instance()->GetDevice())->CreateVertexShader(bytecode, bytelength, nullptr, &vShader);
+}
+
+bool Mesh::Load(char * path)
+{
+	this->Clear();
+	std::vector<VertexPos> Verts;
+	std::vector<unsigned short> Ind;
+	int index = 1;
+	std::ifstream file;
+	file.open(path, std::ios::in);
+	if (!file.is_open())
+		return false;
+	std::string line;
+	std::vector<vec4f> verts;
+	std::vector<vec4f> norms;
+	std::vector<vec4f> uvs;
+	while (std::getline(file, line))
+	{
+		if (line[0] == 'v') {
+			if (line[1] == 't') {
+				vec4f uv;
+				sscanf_s(line.c_str(), "vt %f %f\n", &uv.x, &uv.y);
+				uv.y = 1 - uv.y;
+				uvs.push_back(uv);
+			}
+			else if (line[1] == 'n') {
+				vec4f normal;
+				sscanf_s(line.c_str(), "vn %f %f %f\n", &normal.x, &normal.y, &normal.z);
+				norms.push_back(normal);
+			}
+			else if(line[1] == ' ') {
+				vec4f vertex;
+				sscanf_s(line.c_str(), "v %f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
+				verts.push_back(vertex);
+			}
+		}
+		else if (line[0] == 'f') {
+			std::string vertex1, vertex2, vertex3;
+			unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
+			int matches = sscanf_s(line.c_str(), "f %d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
+			if (matches != 9) {
+				return false;
+			}
+			for (int i = 0; i < 3; i++)
+			{
+				VertexPos temp;
+				temp.Position = verts[vertexIndex[i] - 1];
+				temp.Position.w = 1;
+				//temp.color = DirectX::XMFLOAT4(i == 0, i == 1, i == 3);
+				/*temp.Normal = norms[normalIndex[i] - 1];
+				temp.UV = uvs[uvIndex[i] - 1];
+				temp.UV.z = 0;*/
+				Ind.push_back((unsigned short)Verts.size());
+				Verts.push_back(temp);
+			}
+		}
+	}
+	mUniqueVerts = Verts;
+	mIndicies = Ind;
+	file.close();
+	return true;
+}
+
+Triangle * Mesh::GetTriangles()
+{
+	if (mTriangles.size() != mIndicies.size() / 3)
+	{
+		for (unsigned int i = 0; i < mIndicies.size() / 3; i++)
+		{
+			Triangle temp;
+			//temp.Normal = (mUniqueVerts[mIndicies[(i * 3) + 0]].Normal + mUniqueVerts[mIndicies[(i * 3) + 1]].Normal + mUniqueVerts[mIndicies[(i * 3) + 2]].Normal) / 2;
+			temp.Vertex[0] = &mUniqueVerts[mIndicies[(i * 3) + 0]].Position;
+			temp.Vertex[1] = &mUniqueVerts[mIndicies[(i * 3) + 1]].Position;
+			temp.Vertex[2] = &mUniqueVerts[mIndicies[(i * 3) + 2]].Position;
+		}
+	}
+	return mTriangles.data();
+}
+
+//bool Mesh::Load(std::vector<Vertex>* vecArray, std::vector<Bone>* boneArray, Animation * anim)
 //{
 //	this->Clear();
-//}
-//
-//bool Mesh::Load(char * path)
-//{
-//	this->Clear();
-//	std::vector<AnimatedVert> Verts;
-//	std::vector<unsigned short> Ind;
-//	int index = 1;
-//	std::ifstream file;
-//	file.open(path, std::ios::in);
-//	if (!file.is_open())
-//		return false;
-//	std::string line;
-//	std::vector<DirectX::XMFLOAT4> verts;
-//	std::vector<DirectX::XMFLOAT4> norms;
-//	std::vector<DirectX::XMFLOAT4> uvs;
-//	while (std::getline(file, line))
+//	m_anim = *anim;
+//	for (int i = 0; i < vecArray->size(); i++)
 //	{
-//		if (line[0] == 'v') {
-//			if (line[1] == 't') {
-//				DirectX::XMFLOAT4 uv;
-//				sscanf_s(line.c_str(), "vt %f %f\n", &uv.x, &uv.y);
-//				uv.y = 1 - uv.y;
-//				uvs.push_back(uv);
-//			}
-//			else if (line[1] == 'n') {
-//				DirectX::XMFLOAT4 normal;
-//				sscanf_s(line.c_str(), "vn %f %f %f\n", &normal.x, &normal.y, &normal.z);
-//				norms.push_back(normal);
-//			}
-//			else if(line[1] == ' ') {
-//				DirectX::XMFLOAT4 vertex;
-//				sscanf_s(line.c_str(), "v %f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
-//				verts.push_back(vertex);
-//			}
-//		}
-//		else if (line[0] == 'f') {
-//			std::string vertex1, vertex2, vertex3;
-//			unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
-//			int matches = sscanf_s(line.c_str(), "f %d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
-//			if (matches != 9) {
-//				return false;
-//			}
-//			for (int i = 0; i < 3; i++)
+//		Indicies.push_back(i);
+//		DirectX::XMFLOAT4 pos(vecArray->at(i).pos);
+//		DirectX::XMFLOAT4 norm(vecArray->at(i).norms);
+//		//DirectX::XMFLOAT4 norm(1, 1, 1, 1);
+//		DirectX::XMFLOAT4 uv(vecArray->at(i).uvs);
+//		AnimatedVert temp;
+//		temp.position = pos;
+//		temp.normal = norm;
+//		temp.uv = uv;
+//		float weights[4];
+//		u_int indices[4];
+//		for (int j = 0; j < 4; j++)
+//		{
+//			if (j < vecArray->at(i).blendWeights.size())
 //			{
-//				AnimatedVert temp;
-//				temp.position = verts[vertexIndex[i] - 1];
-//				temp.position.w = 1;
-//				//temp.color = DirectX::XMFLOAT4(i == 0, i == 1, i == 3);
-//				temp.normal = norms[normalIndex[i] - 1];
-//				temp.uv = uvs[uvIndex[i] - 1];
-//				temp.uv.z = 0;
-//				temp.blendWeights = XMFLOAT4(1.0f, 0, 0, 0);
-//				temp.boneIndices = XMUINT4(0, 0, 0, 0);
-//				Ind.push_back((unsigned short)Verts.size());
-//				Verts.push_back(temp);
+//				weights[j] = vecArray->at(i).blendWeights[j];
+//				indices[j] = vecArray->at(i).boneIndices[j];
+//			}
+//			else
+//			{
+//				weights[j] = 0;
+//				indices[j] = 0;
 //			}
 //		}
+//		temp.blendWeights = DirectX::XMFLOAT4(weights);
+//		temp.boneIndices = DirectX::XMUINT4(indices);
+//		UniqueVerts.push_back(temp);
 //	}
-//	UniqueVerts = Verts;
-//	Indicies = Ind;
-//	totalUnique = verts.size();
-//	totalVerts = Ind.size();
-//	file.close();
+//	totalVerts = totalUnique = vecArray->size();
+//
+//	for (int i = 0; i < boneArray->size(); ++i)
+//	{
+//		Bones.push_back(&boneArray->at(i));
+//	}
 //	return true;
 //}
-//
-////bool Mesh::Load(std::vector<Vertex>* vecArray, std::vector<Bone>* boneArray, Animation * anim)
-////{
-////	this->Clear();
-////	m_anim = *anim;
-////	for (int i = 0; i < vecArray->size(); i++)
-////	{
-////		Indicies.push_back(i);
-////		DirectX::XMFLOAT4 pos(vecArray->at(i).pos);
-////		DirectX::XMFLOAT4 norm(vecArray->at(i).norms);
-////		//DirectX::XMFLOAT4 norm(1, 1, 1, 1);
-////		DirectX::XMFLOAT4 uv(vecArray->at(i).uvs);
-////		AnimatedVert temp;
-////		temp.position = pos;
-////		temp.normal = norm;
-////		temp.uv = uv;
-////		float weights[4];
-////		u_int indices[4];
-////		for (int j = 0; j < 4; j++)
-////		{
-////			if (j < vecArray->at(i).blendWeights.size())
-////			{
-////				weights[j] = vecArray->at(i).blendWeights[j];
-////				indices[j] = vecArray->at(i).boneIndices[j];
-////			}
-////			else
-////			{
-////				weights[j] = 0;
-////				indices[j] = 0;
-////			}
-////		}
-////		temp.blendWeights = DirectX::XMFLOAT4(weights);
-////		temp.boneIndices = DirectX::XMUINT4(indices);
-////		UniqueVerts.push_back(temp);
-////	}
-////	totalVerts = totalUnique = vecArray->size();
-////
-////	for (int i = 0; i < boneArray->size(); ++i)
-////	{
-////		Bones.push_back(&boneArray->at(i));
-////	}
-////	return true;
-////}
-//
-//
+
+
 //bool Mesh::LoadBin(char* path)
 //{
 //	LoadFBX(path, false);
@@ -269,23 +291,24 @@
 //
 //	return false;
 //}
-//
-//void Mesh::Clear()
-//{
-//	UniqueVerts.clear();
-//	Indicies.clear();
-//}
-//
-//void Mesh::Invert()
-//{
-//	for (int i = 0; i < totalVerts / 3; i++)
-//	{
-//		int temp = Indicies[(i * 3)];
-//		Indicies[(i * 3)] = Indicies[(i * 3) + 2];
-//		Indicies[(i * 3) + 2] = temp;
-//	}
-//}
-//
+
+void Mesh::Clear()
+{
+	mUniqueVerts.clear();
+	mIndicies.clear();
+	mTriangles.clear();
+}
+
+void Mesh::Invert()
+{
+	for (unsigned int i = 0; i < mIndicies.size() / 3; i++)
+	{
+		int temp = mIndicies[(i * 3)];
+		mIndicies[(i * 3)] = mIndicies[(i * 3) + 2];
+		mIndicies[(i * 3) + 2] = temp;
+	}
+}
+
 //void Mesh::MakePlane()
 //{
 //	this->Clear();
@@ -310,12 +333,12 @@
 //		Indicies.push_back(cubeIndices[i]);
 //	totalVerts = Indicies.size();
 //}
-//
+
 //void Mesh::MakeViewPlane()
 //{
 //	this->Clear();
 //
-//	static const AnimatedVert cubeVertices[] =
+//	static const VertexPosNormTex cubeVertices[] =
 //	{
 //		{ XMFLOAT4(-1.0f, -1.0f, 0.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT4(0, 0, 0, 0), XMUINT4(0, 0, 0, 0) },
 //		{ XMFLOAT4(-1.0f,  1.0f, 0.0f, 1.0f), XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT4(0, 0, 0, 0), XMUINT4(0, 0, 0, 0) },
@@ -335,33 +358,28 @@
 //		Indicies.push_back(cubeIndices[i]);
 //	totalVerts = Indicies.size();
 //}
-//
-//AnimatedVert * Mesh::GetVerts()
-//{
-//	return UniqueVerts.data();
-//}
-//
-//size_t Mesh::VertSize()
-//{
-//	return UniqueVerts.size();
-//}
-//
-//unsigned short * Mesh::GetIndicies()
-//{
-//	return Indicies.data();
-//}
-//
-//size_t Mesh::IndicieSize()
-//{
-//	return Indicies.size();
-//}
-//
-//wchar_t *Mesh::ImagePath()
-//{
-//	return Image;
-//}
-//
-//void Mesh::CreateNode()
-//{
-//	m_node = new Renderer::Node(this);
-//}
+
+VertexPos * Mesh::GetVerts()
+{
+	return mUniqueVerts.data();
+}
+
+size_t Mesh::VertSize()
+{
+	return mUniqueVerts.size();
+}
+
+unsigned short * Mesh::GetIndicies()
+{
+	return mIndicies.data();
+}
+
+size_t Mesh::IndicieSize()
+{
+	return mIndicies.size();
+}
+
+wchar_t *Mesh::ImagePath()
+{
+	return mImage;
+}

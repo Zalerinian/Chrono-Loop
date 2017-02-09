@@ -1,0 +1,21 @@
+#pragma once
+
+namespace RenderEngine {
+
+	enum RasterState { eRS_FILLED = 0, eRS_WIREFRAME, eRS_CCW_WIREFRAME, eRS_CCW, eRS_NO_CULL, eRS_CCW_NO_CULL, eRS_MAX };
+
+	enum VertFormat {
+		eVERT_POS = 0,
+		eVERT_POSCOLOR,
+		eVERT_POSTEX,
+		eVERT_POSNORMTEX,
+		eVERT_POSNORMTANTEX,
+		eVERT_POSBONEWEIGHT,
+		eVERT_POSBONEWEIGHTNORMTEX,
+		eVERT_POSBONEWEIGHTNORMTANTEX,
+		eVERT_MAX
+	};
+
+	enum RenderEye {eEYE_LEFT, eEYE_RIGHT, eEYE_MAX};
+
+}
