@@ -132,7 +132,7 @@
       <AdditionalDependencies>d3d11.lib;dxgi.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outputpath)openvr_api.dll"</Command>
+      <Command>echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outputpath)openvr_api.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

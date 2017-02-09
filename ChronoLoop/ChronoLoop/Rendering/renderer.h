@@ -18,7 +18,7 @@ namespace RenderEngine {
 		std::shared_ptr<ID3D11DeviceContext*> mContext;
 		std::shared_ptr<IDXGISwapChain*> mChain;
 		std::shared_ptr<IDXGIFactory1*> mFactory;
-		std::shared_ptr<ID3D11RenderTargetView*> mRTView;
+		std::shared_ptr<ID3D11RenderTargetView*> mDebugScreen, mLeftEye, mRightEye;
 		std::shared_ptr<ID3D11DepthStencilView*> mDSView;
 		std::shared_ptr<ID3D11Texture2D*> mDepthBuffer;
 		D3D11_VIEWPORT mViewport;

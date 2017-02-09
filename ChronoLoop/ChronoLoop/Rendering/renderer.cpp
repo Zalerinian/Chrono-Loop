@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "renderer.h"
 #include <d3d11.h>
+#include <openvr.h>
 
 using namespace std;
 
@@ -16,14 +17,24 @@ namespace RenderEngine {
 		(*mContext)->Release();
 		(*mDSView)->Release();
 		(*mDepthBuffer)->Release();
-		(*mRTView)->Release();
+		if (*mDebugScreen.get() != nullptr) {
+			(*mDebugScreen)->Release();
+		}
+		if (*mLeftEye.get() != nullptr) {
+			(*mLeftEye)->Release();
+		}
+		if (*mRightEye.get() != nullptr) {
+			(*mRightEye)->Release();
+		}
 		(*mFactory)->Release();
 		(*mChain)->Release();
 		(*mDevice)->Release();
 		mContext.reset();
 		mDSView.reset();
 		mDepthBuffer.reset();
-		mRTView.reset();
+		mDebugScreen.reset();
+		mLeftEye.reset();
+		mRightEye.reset();
 		mFactory.reset();
 		mChain.reset();
 		mDevice.reset();
@@ -101,7 +112,7 @@ namespace RenderEngine {
 		ID3D11RenderTargetView *rtv;
 		ThrowIfFailed((*sInstance->mChain)->GetBuffer(0, __uuidof(bbuffer), (void**)(&bbuffer)));
 		ThrowIfFailed((*sInstance->mDevice)->CreateRenderTargetView(bbuffer, NULL, &rtv));
-		sInstance->mRTView = make_shared<ID3D11RenderTargetView*>(rtv);
+		sInstance->mDebugScreen = make_shared<ID3D11RenderTargetView*>(rtv);
 	
 		ID3D11Texture2D *depthTexture;
 		ID3D11DepthStencilView *depthView;
