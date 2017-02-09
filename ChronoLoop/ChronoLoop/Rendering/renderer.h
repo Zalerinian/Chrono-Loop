@@ -12,6 +12,10 @@ class InputLayoutManager;
 namespace RenderEngine {
 	
 	class Renderer {
+		struct MyBuffer {
+			matrix4 model, view, eye, projection;
+		} constantData;
+
 		friend InputLayoutManager;
 		// D3D11 Variables
 		// Instance members
@@ -21,7 +25,7 @@ namespace RenderEngine {
 		std::shared_ptr<IDXGIFactory1*> mFactory;
 		std::shared_ptr<ID3D11RenderTargetView*> mDebugScreen, mLeftEye, mRightEye;
 		std::shared_ptr<ID3D11Texture2D*> mLeftTexture, mRightTexture;
-		std::shared_ptr<ID3D11DepthStencilView*> mDSView;
+		std::shared_ptr<ID3D11DepthStencilView*> mDSView, mVRDSView;
 		std::shared_ptr<ID3D11Texture2D*> mDepthBuffer;
 		D3D11_VIEWPORT mViewport;
 		vr::IVRSystem* mVrSystem;
@@ -29,7 +33,7 @@ namespace RenderEngine {
 		RenderContext mCurrentContext;
 		std::vector<RenderNode*> mNodes;
 		std::vector<Mesh> mMeshes;
-		matrix4 view, projection, eye;
+		ID3D11Buffer* constantBluffer, *boxVertex, *boxIndex;
 	
 		static Renderer* sInstance;
 

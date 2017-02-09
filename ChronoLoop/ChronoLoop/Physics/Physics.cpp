@@ -57,7 +57,7 @@ bool Physics::RayToSphere(vec4f& _pos, vec4f& _dir, vec4f& _center, float _radiu
 	if (_time < 0.0f)
 	{
 		_time = 0.0f;
-		vec4f np = { _pos.data.x + _time, _pos.data.y + _time, _pos.data.z + _time, 1.0f };
+		vec4f np = { _pos.x + _time, _pos.y + _time, _pos.z + _time, 1.0f };
 		_out = np ^ _dir;
 	}
 
@@ -279,7 +279,7 @@ int Physics::AabbToPlane(Plane & _plane, AABB & _aabb)
 	vec4f center = (_aabb.mMax + _aabb.mMin) * 0.5f;
 	float pOffset = center * _plane.mNormal - _plane.mOffset;
 	vec4f E = _aabb.mMax - center;
-	float r = E.data.x * fabsf(_plane.mNormal.data.x) + E.data.y * fabsf(_plane.mNormal.data.y) + E.data.z * fabsf(_plane.mNormal.data.z);
+	float r = E.x * fabsf(_plane.mNormal.x) + E.y * fabsf(_plane.mNormal.y) + E.z * fabsf(_plane.mNormal.z);
 
 	if (pOffset > r)
 		return 1;
@@ -359,13 +359,13 @@ bool Physics::FrustumToAABB(Frustum & _frustum, AABB & _aabb)
 
 bool Physics::AABBtoAABB(AABB & _aabb1, AABB & _aabb2)
 {
-	if (_aabb1.mMax.data.x < _aabb2.mMin.data.x || _aabb1.mMin.data.x > _aabb2.mMax.data.x)
+	if (_aabb1.mMax.x < _aabb2.mMin.x || _aabb1.mMin.x > _aabb2.mMax.x)
 		return false;
 
-	if (_aabb1.mMax.data.y < _aabb2.mMin.data.y || _aabb1.mMin.data.y > _aabb2.mMax.data.y)
+	if (_aabb1.mMax.y < _aabb2.mMin.y || _aabb1.mMin.y > _aabb2.mMax.y)
 		return false;
 
-	if (_aabb1.mMax.data.z < _aabb2.mMin.data.z || _aabb1.mMin.data.z >  _aabb2.mMax.data.z)
+	if (_aabb1.mMax.z < _aabb2.mMin.z || _aabb1.mMin.z >  _aabb2.mMax.z)
 		return false;
 
 	return true;
@@ -374,7 +374,7 @@ bool Physics::AABBtoAABB(AABB & _aabb1, AABB & _aabb2)
 bool Physics::SphereToSphere(Sphere & _sphere1, Sphere & _sphere2)
 {
 	vec4f pos = _sphere1.mPosition - _sphere2.mPosition;
-	float distance = pos.data.x * pos.data.x + pos.data.y * pos.data.y + pos.data.z * pos.data.z;
+	float distance = pos.x * pos.x + pos.y * pos.y + pos.z * pos.z;
 	float minDist = _sphere1.mRadius + _sphere2.mRadius;
 
 	return distance <= (minDist * minDist);
@@ -384,32 +384,32 @@ bool Physics::SphereToAABB(Sphere & _sphere, AABB & _aabb)
 {
 	float X, Y, Z;
 
-	if (_sphere.mPosition.data.x < _aabb.mMin.data.x)
-		X = _aabb.mMin.data.x;
-	else if (_sphere.mPosition.data.x > _aabb.mMax.data.x)
-		X = _aabb.mMax.data.x;
+	if (_sphere.mPosition.x < _aabb.mMin.x)
+		X = _aabb.mMin.x;
+	else if (_sphere.mPosition.x > _aabb.mMax.x)
+		X = _aabb.mMax.x;
 	else
-		X = _sphere.mPosition.data.x;
+		X = _sphere.mPosition.x;
 
-	if (_sphere.mPosition.data.y < _aabb.mMin.data.y)
-		Y = _aabb.mMin.data.y;
-	else if (_sphere.mPosition.data.y > _aabb.mMax.data.y)
-		Y = _aabb.mMax.data.y;
+	if (_sphere.mPosition.y < _aabb.mMin.y)
+		Y = _aabb.mMin.y;
+	else if (_sphere.mPosition.y > _aabb.mMax.y)
+		Y = _aabb.mMax.y;
 	else
-		Y = _sphere.mPosition.data.y;
+		Y = _sphere.mPosition.y;
 
-	if (_sphere.mPosition.data.z < _aabb.mMin.data.z)
-		Z = _aabb.mMin.data.z;
-	else if (_sphere.mPosition.data.z > _aabb.mMax.data.z)
-		Z = _aabb.mMax.data.z;
+	if (_sphere.mPosition.z < _aabb.mMin.z)
+		Z = _aabb.mMin.z;
+	else if (_sphere.mPosition.z > _aabb.mMax.z)
+		Z = _aabb.mMax.z;
 	else
-		Z = _sphere.mPosition.data.z;
+		Z = _sphere.mPosition.z;
 
 	vec4f point = { X, Y, Z, 1.0f };
 
-	return (fabsf((point.data.x - _sphere.mPosition.data.x)) < _sphere.mRadius &&
-		fabsf((point.data.y - _sphere.mPosition.data.y)) < _sphere.mRadius &&
-		fabsf((point.data.z - _sphere.mPosition.data.z)) < _sphere.mRadius);
+	return (fabsf((point.x - _sphere.mPosition.x)) < _sphere.mRadius &&
+		fabsf((point.y - _sphere.mPosition.y)) < _sphere.mRadius &&
+		fabsf((point.z - _sphere.mPosition.z)) < _sphere.mRadius);
 }
 
 #pragma endregion

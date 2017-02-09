@@ -162,6 +162,7 @@
     <ClInclude Include="Physics\Physics.h">
       <Filter>Physics\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Input\KeyboardInput.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -215,20 +216,36 @@
     <ClCompile Include="Physics\Physics.cpp">
       <Filter>Physics\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Input\KeyboardInput.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHTNORMTANTEX_VS.hlsl" />
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHTNORMTEX_VS.hlsl" />
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHT_VS.hlsl" />
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POSCOLOR_VS.hlsl" />
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POSNORMTANTEX_VS.hlsl" />
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POSNORMTEX_VS.hlsl" />
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POSTEX_VS.hlsl" />
-    <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl" />
-    <FxCompile Include="Rendering\Shaders\VertexLayout_VS.hlsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Rendering\Shaders\VertexLayouts.hlsli" />
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHT_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHTNORMTANTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHTNORMTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSCOLOR_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSNORMTANTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSNORMTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
@@ -266,6 +283,9 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Rendering\Shaders\VertexLayouts.hlsli">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </None>
     <None Include="Rendering\Shaders\VertexLayouts.hlsli">
       <Filter>Rendering\Shaders\Layout Shaders</Filter>
     </None>

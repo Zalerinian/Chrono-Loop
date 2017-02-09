@@ -175,6 +175,25 @@ namespace RenderEngine {
 			ThrowIfFailed((*mDevice)->CreateRenderTargetView(rightTex, NULL, &rightView));
 			mLeftEye = make_shared<ID3D11RenderTargetView*>(leftView);
 			mRightEye = make_shared<ID3D11RenderTargetView*>(rightView);
+
+			D3D11_TEXTURE2D_DESC depthStencilDesc;
+			depthStencilDesc.Width = texWidth;
+			depthStencilDesc.Height = texHeight;
+			depthStencilDesc.MipLevels = 1;
+			depthStencilDesc.ArraySize = 1;
+			depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+			depthStencilDesc.SampleDesc.Count = 1;
+			depthStencilDesc.SampleDesc.Quality = 0;
+			depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+			depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+			depthStencilDesc.CPUAccessFlags = 0;
+			depthStencilDesc.MiscFlags = 0;
+			ID3D11Texture2D *depthTexture;
+			ID3D11DepthStencilView *depthView;
+			ThrowIfFailed((*mDevice)->CreateTexture2D(&depthStencilDesc, NULL, &depthTexture));
+			ThrowIfFailed((*mDevice)->CreateDepthStencilView(depthTexture, NULL, &depthView));
+			mVRDSView = make_shared<ID3D11DepthStencilView*>(depthView);
+
 		}
 		else {
 			std::cout << "What's a VR?" << std::endl;
@@ -231,31 +250,77 @@ namespace RenderEngine {
 		InitializeDXGIFactory();
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, _width, _height);
 		InitializeViews(_width, _height);
+
+		constantData.projection = Math::MatrixTranspose(Math::Projection((float)_width / (float)_height, 180, _nearPlane, _farPlane));
+		constantData.view = Math::MatrixTranspose(Math::MatrixTranslation(0, -1, 5)).Inverse();
+		constantData.model.matrix = DirectX::XMMatrixIdentity();
+		// Eye gets changd per render
+		mMeshes.push_back(Mesh("Box.obj"));
+		mMeshes[0].loadShaders("BasicPixelShader.cso", "BasicVertexShader.cso");
+
+		CD3D11_BUFFER_DESC desc(sizeof(MyBuffer), D3D11_BIND_CONSTANT_BUFFER);
+		(*mDevice)->CreateBuffer(&desc, nullptr, &constantBluffer);
+
+		desc = CD3D11_BUFFER_DESC(sizeof(VertexPos) * mMeshes[0].VertSize(), D3D11_BIND_VERTEX_BUFFER);
+		(*mDevice)->CreateBuffer(&desc, nullptr, &boxVertex);
+		(*mContext)->UpdateSubresource(boxVertex, 0, NULL, mMeshes[0].GetVerts(), 0, 0);
+
+		desc = CD3D11_BUFFER_DESC(sizeof(unsigned short) * mMeshes[0].IndicieSize(), D3D11_BIND_INDEX_BUFFER);
+		(*mDevice)->CreateBuffer(&desc, nullptr, &boxIndex);
+		(*mContext)->UpdateSubresource(boxIndex, 0, NULL, mMeshes[0].GetIndicies(), 0, 0);
+
 		return true;
 	}
 
 	void Renderer::Render() {
 		float color[4] = { 0.3f, 0.3f, 1, 1 };
 		(*mContext)->ClearRenderTargetView((*mDebugScreen), color);
-		(*mContext)->ClearRenderTargetView((*mLeftEye), color);
-		(*mContext)->ClearRenderTargetView((*mRightEye), color);
+		if (mVrSystem != nullptr) {
+			(*mContext)->ClearRenderTargetView((*mLeftEye), color);
+			(*mContext)->ClearRenderTargetView((*mRightEye), color);
+		}
+
+		matrix4 temp = Math::FromMatrix(mVrSystem->GetEyeToHeadTransform(vr::EVREye::Eye_Left));
+		constantData.eye.matrix = temp.Inverse().matrix;
+		(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
+		(*mContext)->OMSetRenderTargets(1, mDebugScreen.get(), (*mDSView));
+		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+		UINT strideGround = sizeof(VertexPos);
+		UINT offsetGround = 0;
+		(*mContext)->IASetInputLayout(InputLayoutManager::Instance().GetInputLayout(eVERT_POS));
+		(*mContext)->IASetIndexBuffer(boxIndex, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
+		(*mContext)->IASetVertexBuffers(0, 1, &boxVertex, &strideGround, &offsetGround);
+		(*mContext)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		(*mContext)->VSSetShader(mMeshes[0].vShader, nullptr, 0);
+		(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
+		/// Pixel Shader(s)
+		(*mContext)->PSSetShader(mMeshes[0].pShader, nullptr, 0);
+
+
+		(*mContext)->DrawIndexed((UINT)mMeshes[0].IndicieSize(), 0, 0);
+
+		(*mContext)->OMSetRenderTargets(1, mLeftEye.get(), (*mVRDSView));
+		(*mContext)->ClearDepthStencilView((*mVRDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+		(*mContext)->DrawIndexed((UINT)mMeshes[0].IndicieSize(), 0, 0);
+
+		constantData.eye.matrix = Math::FromMatrix(mVrSystem->GetEyeToHeadTransform(vr::EVREye::Eye_Right)).Inverse().matrix;
+		(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
+		(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
+		(*mContext)->OMSetRenderTargets(1, mRightEye.get(), (*mVRDSView));
+		(*mContext)->ClearDepthStencilView((*mVRDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+		(*mContext)->DrawIndexed((UINT)mMeshes[0].IndicieSize(), 0, 0);
 
 		if (mVrSystem != nullptr) {
+
+
 
 			vr::TrackedDevicePose_t pose;
 			mVrSystem->GetDeviceToAbsoluteTrackingPose(vr::ETrackingUniverseOrigin::TrackingUniverseStanding,
 				0,
 				&pose,
 				1);
-
-			/*std::cout << "[";
-			for (int r = 0; r < 12; ++r) {
-				std::cout << pose.mDeviceToAbsoluteTracking.m[r / 3][r % 4] << " ";
-				if (r == 11) {
-					std::cout << std::endl;
-				}
-			}*/
-
 
 			vr::VRCompositor()->CompositorBringToFront();
 			vr::TrackedDevicePose_t m_rTrackedDevicePose[vr::k_unMaxTrackedDeviceCount];
@@ -265,6 +330,8 @@ namespace RenderEngine {
 				vr::VRCompositor()->Submit(i == 0 ? vr::EVREye::Eye_Left : vr::EVREye::Eye_Right, &tex);
 			}
 		}
+
+
 
 		(*mChain)->Present(0, 0);
 	}

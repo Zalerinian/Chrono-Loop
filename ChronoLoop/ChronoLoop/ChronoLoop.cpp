@@ -33,7 +33,7 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	}
 
 	//vrsys = nullptr;
-	if (!RenderEngine::InitializeSystems(hwnd, 800, 600, false, 90, false, 1000, 0.1f, vrsys)) {
+	if (!RenderEngine::InitializeSystems(hwnd, 1512, 1680, false, 90, false, 1000, 0.1f, vrsys)) {
 		return 1;
 	}
 
@@ -137,6 +137,9 @@ void Update() {
 			// Input.Update();
 			// Logic.Update();
 			RenderEngine::Renderer::Instance()->Render();
+			if (GetAsyncKeyState(VK_ESCAPE)) {
+				break;
+			}
 		}
 	}
 }

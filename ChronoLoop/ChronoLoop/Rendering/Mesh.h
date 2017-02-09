@@ -8,7 +8,6 @@
 #include <vector>
 #include <fstream>
 #include "stdafx.h"
-#include "renderer.h"
 #include "Structures.h"
 
 struct Triangle

@@ -5,36 +5,36 @@
 
 #include "stdafx.h"
 #include "Math.h"
-
+#include <memory>
 
 #pragma region VECTOR_MATH
 
 vec4f::vec4f()
 {
-	data.x = 0;
-	data.y = 0;
-	data.z = 0;
-	data.w = 0;
+	x = 0;
+	y = 0;
+	z = 0;
+	w = 0;
 }
 
 vec4f::vec4f(float _x, float _y, float _z, float _w)
 {
-	data.x = _x;
-	data.y = _y;
-	data.z = _z;
-	data.w = _w;
+	x = _x;
+	y = _y;
+	z = _z;
+	w = _w;
 }
 
 vec4f::vec4f(vec4f const& _copy)
 {
 	for (int i = 0; i < 4; ++i)
-		data.xyzw[i] = _copy.data.xyzw[i];
+		xyzw[i] = _copy.xyzw[i];
 }
 
 bool vec4f::operator==(vec4f const& _other)
 {
 	for (int i = 0; i < 4; ++i)
-		if (data.xyzw[i] != _other.data.xyzw[i])
+		if (xyzw[i] != _other.xyzw[i])
 			return false;
 
 	return true;
@@ -50,7 +50,7 @@ vec4f& vec4f::operator=(vec4f const& _other)
 	if (!(*this == _other))
 	{
 		for (int i = 0; i < 4; ++i)
-			data.xyzw[i] = _other.data.xyzw[i];
+			xyzw[i] = _other.xyzw[i];
 	}
 
 	return *this;
@@ -59,10 +59,10 @@ vec4f& vec4f::operator=(vec4f const& _other)
 vec4f vec4f::operator^(vec4f const& _other)
 {
 	vec4f temp;
-	temp.data.x = (data.y * _other.data.z) - (data.z * _other.data.y);
-	temp.data.y = (data.z * _other.data.x) - (data.x * _other.data.z);
-	temp.data.z = (data.x * _other.data.y) - (data.y * _other.data.x);
-	temp.data.w = 1;
+	temp.x = (y * _other.z) - (z * _other.y);
+	temp.y = (z * _other.x) - (x * _other.z);
+	temp.z = (x * _other.y) - (y * _other.x);
+	temp.w = 1;
 	return temp;
 }
 
@@ -70,11 +70,11 @@ vec4f vec4f::operator*(matrix4 const& _other)
 {
 	vec4f temp;
 	for(int i = 0; i < 3; ++i)
-		temp.data.xyzw[i] = (data.xyzw[0] * _other.data.first.data.xyzw[i]) + 
-							(data.xyzw[1] * _other.data.second.data.xyzw[i]) - 
-							(data.xyzw[2] * _other.data.third.data.xyzw[i]);
+		temp.xyzw[i] = (xyzw[0] * _other.first.xyzw[i]) + 
+							(xyzw[1] * _other.second.xyzw[i]) - 
+							(xyzw[2] * _other.third.xyzw[i]);
 
-	temp.data.w = 1;
+	temp.w = 1;
 	return temp;
 }
 
@@ -86,15 +86,15 @@ vec4f& vec4f::operator*=(matrix4 const& _other)
 
 float vec4f::operator*(vec4f const& _other)
 {
-	return data.x * _other.data.x + data.y * _other.data.y + data.z + _other.data.z;
+	return x * _other.x + y * _other.y + z + _other.z;
 }
 
 vec4f vec4f::operator*(float const & _other)
 {
 	vec4f temp;
 	for (int i = 0; i < 3; ++i)
-		temp.data.xyzw[i] = data.xyzw[i] * _other;
-	temp.data.w = 1;
+		temp.xyzw[i] = xyzw[i] * _other;
+	temp.w = 1;
 	return temp;
 }
 
@@ -108,8 +108,8 @@ vec4f vec4f::operator/(float const & _other)
 {
 	vec4f temp;
 	for (int i = 0; i < 3; ++i)
-		temp.data.xyzw[i] = data.xyzw[i] / _other;
-	temp.data.w = 1;
+		temp.xyzw[i] = xyzw[i] / _other;
+	temp.w = 1;
 	return temp;
 }
 
@@ -123,8 +123,8 @@ vec4f vec4f::operator-()
 {
 	vec4f temp;
 	for(int i = 0; i < 3; ++i)
-		temp.data.xyzw[i] = data.xyzw[i] * -1.0f;
-	temp.data.w = 1;
+		temp.xyzw[i] = xyzw[i] * -1.0f;
+	temp.w = 1;
 	return temp;
 }
 
@@ -132,8 +132,8 @@ vec4f vec4f::operator-(vec4f const & _other)
 {
 	vec4f temp;
 	for(int i = 0; i < 3; ++i)
-		temp.data.xyzw[i] = data.xyzw[i] - _other.data.xyzw[i];
-	temp.data.w = 1;
+		temp.xyzw[i] = xyzw[i] - _other.xyzw[i];
+	temp.w = 1;
 	return temp;
 }
 
@@ -141,8 +141,8 @@ vec4f vec4f::operator-(float const & _other)
 {
 	vec4f temp;
 	for (int i = 0; i < 3; ++i)
-		temp.data.xyzw[i] = data.xyzw[i] - _other;
-	temp.data.w = 1;
+		temp.xyzw[i] = xyzw[i] - _other;
+	temp.w = 1;
 	return temp;
 }
 
@@ -162,8 +162,8 @@ vec4f vec4f::operator+(float const & _other)
 {
 	vec4f temp;
 	for (int i = 0; i < 3; ++i)
-		temp.data.xyzw[i] = data.xyzw[i] + _other;
-	temp.data.w = 1;
+		temp.xyzw[i] = xyzw[i] + _other;
+	temp.w = 1;
 	return temp;
 }
 
@@ -171,8 +171,8 @@ vec4f vec4f::operator+(vec4f const & _other)
 {
 	vec4f temp;
 	for (int i = 0; i < 3; ++i)
-		temp.data.xyzw[i] = data.xyzw[i] + _other.data.xyzw[i];
-	temp.data.w = 1;
+		temp.xyzw[i] = xyzw[i] + _other.xyzw[i];
+	temp.w = 1;
 	return temp;
 }
 
@@ -191,8 +191,8 @@ vec4f& vec4f::operator+=(vec4f const & _other)
 float& vec4f::operator[](unsigned int _index)
 {
 	if (_index < 4)
-		return data.xyzw[_index];
-	return data.xyzw[0];
+		return xyzw[_index];
+	return xyzw[0];
 }
 
 vec4f vec4f::Cross(vec4f const & _other)
@@ -207,7 +207,7 @@ float vec4f::Dot(vec4f const & _other)
 
 float vec4f::Magnitude() const
 {
-	return (float)sqrt(powf(data.x, 2.0f) + powf(data.y, 2.0f) + powf(data.z, 2.0f) + powf(data.w, 2.0f));
+	return (float)sqrt(powf(x, 2.0f) + powf(y, 2.0f) + powf(z, 2.0f) + powf(w, 2.0f));
 }
 
 float vec4f::SquaredMagnitude() const
@@ -220,7 +220,7 @@ vec4f vec4f::Normalize() const
 	vec4f temp;
 	float norm = 1 / Magnitude();
 	for(int i = 0; i < 4; ++i)
-		temp.data.xyzw[i] = data.xyzw[i] * norm;
+		temp.xyzw[i] = xyzw[i] * norm;
 	return temp;
 }
 
@@ -240,23 +240,21 @@ vec4f vec4f::Reflect(vec4f const& _other)
 
 matrix4::matrix4()
 {
-	for (int i = 0; i < 4; ++i)
-		for (int j = 0; j < 4; ++j)
-			data.tiers[i].data.xyzw[j] = 0;
+	memset(&matrix, 0, sizeof(matrix));
 }
 
-matrix4::matrix4(matrix4 const& _copy)
+matrix4::matrix4(matrix4& _copy)
 {
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 4; ++j)
-			data.tiers[i].data.xyzw[j] = _copy.data.tiers[i].data.xyzw[j];
+			tiers[i].xyzw[j] = _copy.tiers[i].xyzw[j];
 }
 
 bool matrix4::operator==(matrix4 const& _other)
 {
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 4; ++j)
-			if (data.tiers[i].data.xyzw[j] != _other.data.tiers[i].data.xyzw[j])
+			if (tiers[i].xyzw[j] != _other.tiers[i].xyzw[j])
 				return false;
 	return true;
 }
@@ -272,7 +270,7 @@ matrix4& matrix4::operator=(matrix4 const& _other)
 	{
 		for (int i = 0; i < 4; ++i)
 			for (int j = 0; j < 4; ++j)
-				data.tiers[i].data.xyzw[j] = _other.data.tiers[i].data.xyzw[j];
+				tiers[i].xyzw[j] = _other.tiers[i].xyzw[j];
 	}
 	return *this;
 }
@@ -280,21 +278,7 @@ matrix4& matrix4::operator=(matrix4 const& _other)
 matrix4 matrix4::operator*(matrix4 const& _other)
 {
 	matrix4 temp;
-	DirectX::XMMATRIX temp1, temp2, temp3;
-	for (int i = 0; i < 4; ++i)
-	{
-		for (int j = 0; j < 4; ++j)
-		{
-			temp1.r[i].m128_f32[j] = data.tiers[i].data.xyzw[j];
-			temp2.r[i].m128_f32[j] = _other.data.tiers[i].data.xyzw[j];
-		}
-	}
-	
-	temp3 = temp1 * temp2;
-	for (int i = 0; i < 4; ++i)
-		for (int j = 0; j < 4; ++j)
-			temp.data.tiers[i].data.xyzw[j] = temp1.r[i].m128_f32[j];
-	
+	temp.matrix = this->matrix * _other.matrix;
 	return temp;
 }
 
@@ -309,7 +293,7 @@ matrix4 matrix4::operator*(float _other)
 	matrix4 temp;
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 4; ++j)
-			temp.data.tiers[i].data.xyzw[j] = data.tiers[i].data.xyzw[j] * _other;
+			temp.tiers[i].xyzw[j] = tiers[i].xyzw[j] * _other;
 	return temp;
 }
 
@@ -324,7 +308,7 @@ matrix4 matrix4::operator+(matrix4 const& _other)
 	matrix4 temp;
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 4; ++j)
-			temp.data.tiers[i].data.xyzw[j] = data.tiers[i].data.xyzw[j] + _other.data.tiers[i].data.xyzw[j];
+			temp.tiers[i].xyzw[j] = tiers[i].xyzw[j] + _other.tiers[i].xyzw[j];
 	return temp;
 }
 
@@ -337,43 +321,34 @@ matrix4& matrix4::operator+=(matrix4 const& _other)
 vec4f& matrix4::operator[](unsigned int _index)
 {
 	if (_index < 4)
-		return data.tiers[_index];
-	return data.tiers[0];
+		return tiers[_index];
+	return tiers[0];
 }
 
 matrix4 matrix4::Inverse()
 {
-	matrix4 temp;
-	DirectX::XMMATRIX temp1, temp2;
-	for (int i = 0; i < 4; ++i)
-		for (int j = 0; j < 4; ++j)
-			temp1.r[i].m128_f32[j] = data.tiers[i].data.xyzw[j];
-
-	temp2 = DirectX::XMMatrixInverse(&DirectX::XMMatrixDeterminant(temp1), temp1);
-
-	for (int i = 0; i < 4; ++i)
-		for (int j = 0; j < 4; ++j)
-			temp.data.tiers[i].data.xyzw[j] = temp1.r[i].m128_f32[j];
-	return temp;
+	matrix4 m;
+	m.matrix = DirectX::XMMatrixInverse(nullptr, matrix);
+	return m;
 }
 
 #pragma endregion
 
 
-matrix4 Math::MatrixRotateAxis(vec4f _axis, float _rads)
+matrix4 Math::MatrixRotateAxis(vec4f const& _axis, float _rads)
 {
 	matrix4 temp;
 	DirectX::XMMATRIX temp1;
 	DirectX::XMVECTOR vec;
 
 	for (int i = 0; i < 4; ++i)
-		vec.m128_f32[i] = _axis.data.xyzw[i];
+		vec.m128_f32[i] = _axis.xyzw[i];
 
 	temp1 = DirectX::XMMatrixRotationAxis(vec, _rads);
 
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 4; ++j)
-			temp.data.tiers[i].data.xyzw[j] = temp1.r[i].m128_f32[j];
+			temp.tiers[i].xyzw[j] = temp1.r[i].m128_f32[j];
 	return temp;
 }
 
@@ -385,7 +360,7 @@ matrix4 Math::MatrixRotateX(float _rads)
 
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 4; ++j)
-			temp.data.tiers[i].data.xyzw[j] = temp1.r[i].m128_f32[j];
+			temp.tiers[i].xyzw[j] = temp1.r[i].m128_f32[j];
 	return temp;
 }
 
@@ -397,7 +372,7 @@ matrix4 Math::MatrixRotateY(float _rads)
 
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 4; ++j)
-			temp.data.tiers[i].data.xyzw[j] = temp1.r[i].m128_f32[j];
+			temp.tiers[i].xyzw[j] = temp1.r[i].m128_f32[j];
 	return temp;
 }
 
@@ -409,20 +384,37 @@ matrix4 Math::MatrixRotateZ(float _rads)
 
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 4; ++j)
-			temp.data.tiers[i].data.xyzw[j] = temp1.r[i].m128_f32[j];
+			temp.tiers[i].xyzw[j] = temp1.r[i].m128_f32[j];
 	return temp;
 }
 
 matrix4 Math::MatrixTranslation(float _x, float _y, float _z)
 {
 	matrix4 temp;
-	DirectX::XMMATRIX temp1 = DirectX::XMMatrixIdentity();
-	DirectX::XMMatrixTranslation(_x, _y, _z);
+	DirectX::XMMATRIX temp1 = DirectX::XMMatrixTranslation(_x, _y, _z);
 
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 4; ++j)
-			temp.data.tiers[i].data.xyzw[j] = temp1.r[i].m128_f32[j];
+			temp.tiers[i].xyzw[j] = temp1.r[i].m128_f32[j];
 	return temp;
+}
+
+matrix4 Math::MatrixTranspose(matrix4& other)
+{
+	matrix4 _new;
+	for (int r = 0; r < 4; ++r) {
+		for (int c = 0; c < 4; ++c) {
+			_new[r][c] = other[c][r];
+		}
+	}
+	return _new;
+}
+
+matrix4 Math::Projection(float _aspect, float _fov, float _near, float _far)
+{
+	matrix4 _new;
+	_new.matrix = DirectX::XMMatrixPerspectiveFovRH(_fov, _aspect, _near, _far);
+	return _new;
 }
 
 matrix4 Math::FromMatrix(vr::HmdMatrix44_t _mat)
@@ -430,20 +422,22 @@ matrix4 Math::FromMatrix(vr::HmdMatrix44_t _mat)
 	matrix4 temp;
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 3; ++j)
-			temp.data.tiers[i].data.xyzw[j] = _mat.m[i][j];
+			temp.tiers[i].xyzw[j] = _mat.m[i][j];
 
-	temp.data.tiers[0].data.xyzw[3] = 0;
-	temp.data.tiers[1].data.xyzw[3] = 0;
-	temp.data.tiers[2].data.xyzw[3] = 0;
-	temp.data.tiers[3].data.xyzw[3] = 1;
+	temp.tiers[0].xyzw[3] = 0;
+	temp.tiers[1].xyzw[3] = 0;
+	temp.tiers[2].xyzw[3] = 0;
+	temp.tiers[3].xyzw[3] = 1;
 	return temp;
 }
 
 matrix4 Math::FromMatrix(vr::HmdMatrix34_t _mat)
 {
 	matrix4 temp;
-	for (int i = 0; i < 4; ++i)
+	for (int i = 0; i < 3; ++i)
 		for (int j = 0; j < 4; ++j)
-			temp.data.tiers[i].data.xyzw[j] = _mat.m[i][j];
+			temp.tiers[i].xyzw[j] = _mat.m[i][j];
+	memset(temp.tiers[3].xyzw, 0, sizeof(float) * 4);
+	temp.tiers[3].xyzw[3] = 1;
 	return temp;
 }

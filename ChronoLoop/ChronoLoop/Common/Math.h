@@ -56,22 +56,17 @@ struct vec3f {
 
 struct vec4f {
 	union {
+		DirectX::XMVECTOR vector;
 		struct {
-			friend vec4f;
-		private:
-			DirectX::XMVECTOR vector;
-		public:
-			struct {
-				float x, y, z, w;
-			};
-			float xyzw[4];
-		} data;
+			float x, y, z, w;
+		};
+		float xyzw[4];
 	};
 
 	vec4f();
 	vec4f(float _x, float _y, float _z, float _w);
 	vec4f(vec4f const& _copy);
-	DirectX::XMVECTOR GetUnderlyingType() { return data.vector; }
+	//DirectX::XMVECTOR GetUnderlyingType() { return vector; }
 
 	bool   vec4f::operator==(vec4f const& _other);
 	bool   vec4f::operator!=(vec4f const& _other);
@@ -104,21 +99,16 @@ struct vec4f {
 
 struct matrix4 {
 	union {
+		DirectX::XMMATRIX matrix;
+		vec4f tiers[4];
 		struct {
-			friend matrix4;
-		private:
-			DirectX::XMMATRIX matrix;
-		public:
-			vec4f tiers[4];
-			struct {
-				vec4f first, second, third, fourth;
-			};
-		} data;
+			vec4f first, second, third, fourth;
+		};
 	};
 
 	matrix4();
-	matrix4(matrix4 const& _copy);
-	DirectX::XMMATRIX matrix4::GetUnderlyingType() { return data.matrix; }
+	matrix4(matrix4& _copy);
+	DirectX::XMMATRIX matrix4::GetUnderlyingType() { return matrix; }
 
 	bool     matrix4::operator==(matrix4 const& _other);
 	bool     matrix4::operator!=(matrix4 const& _other);
@@ -132,16 +122,18 @@ struct matrix4 {
 	vec4f&   matrix4::operator[](unsigned int _index);
 	
 	matrix4  Inverse();
-	float*   AsArray() { return reinterpret_cast<float*>(data.matrix.r); }
+	float*   AsArray() { return reinterpret_cast<float*>(matrix.r); }
 };
 
 namespace Math
 {
-	matrix4 MatrixRotateAxis(vec4f _axis, float _rads);
+	matrix4 MatrixRotateAxis(vec4f const& _axis, float _rads);
 	matrix4 MatrixRotateX(float _rads);
 	matrix4 MatrixRotateY(float _rads);
 	matrix4 MatrixRotateZ(float _rads);
 	matrix4 MatrixTranslation(float _x, float _y, float _z);
+	matrix4 MatrixTranspose(matrix4 & other);
+	matrix4 Projection(float _aspect, float _fov, float _near, float _far);
 	matrix4 FromMatrix(vr::HmdMatrix44_t _mat);
 	matrix4 FromMatrix(vr::HmdMatrix34_t _mat);
 }

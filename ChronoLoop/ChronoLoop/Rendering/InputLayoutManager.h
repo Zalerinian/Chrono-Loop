@@ -18,7 +18,7 @@ namespace RenderEngine {
 		~InputLayoutManager();
 		static InputLayoutManager &Instance();
 		static void DestroyInstance();
-		static void LoadShader(char* _fileName, char* _output, int& _outputSize);
+		static void LoadShader(char* _fileName, char**_output, int& _outputSize);
 		ID3D11InputLayout *GetInputLayout(VertFormat _index) { return mInputLayouts[_index]; };
 	};
 

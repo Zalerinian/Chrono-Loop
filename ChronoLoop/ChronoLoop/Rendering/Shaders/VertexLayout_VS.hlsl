@@ -9,7 +9,7 @@ float4 main( float4 pos : POSITION ) : SV_POSITION
 
 float4 VLPos(VERTEX_POS input) : SV_POSITION
 {
-	return float4(input.position, 1);
+	return float4(input.position);
 }
 
 float4 VLPosColor(VERTEX_POSCOLOR input) : SV_POSITION
