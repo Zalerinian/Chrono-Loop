@@ -11,47 +11,67 @@ struct matrix4;
 
 struct vec4i {
 	union {
+		DirectX::XMVECTOR vector;
 		struct {
-			friend vec4i;
-		private:
-			DirectX::XMINT4 vector;
-		public:
-			struct {
-				int x, y, z, w;
-			};
-			int xyzw[4];
-		} data;
+			int x, y, z, w;
+		};
+		int xyzw[4];
 	};
 };
 
 struct vec2f {
 	union {
+		DirectX::XMVECTOR vector;
 		struct {
-			friend vec2f;
-		private:
-			DirectX::XMFLOAT2 vector;
-		public:
-			struct {
-				float x, y;
-			};
-			float xy[2];
-		} data;
+			float x, y;
+		};
+		float xy[2];
 	};
 };
 
 struct vec3f {
 	union {
+		DirectX::XMVECTOR vector;
 		struct {
-			friend vec3f;
-		private:
-			DirectX::XMFLOAT3 vector;
-		public:
-			struct {
-				float x, y, z;
-			};
-			float xyz[3];
-		} data;
+			float x, y, z;
+		};
+		float xyz[3];
 	};
+
+	vec3f();
+	vec3f(float _x, float _y, float _z);
+	vec3f(vec3f const& _copy);
+	vec3f(vec4f const& _copy);
+
+	//DirectX::XMVECTOR GetUnderlyingType() { return vector; }
+
+	bool   vec3f::operator==(vec3f const& _other);
+	bool   vec3f::operator!=(vec3f const& _other);
+	vec3f& vec3f::operator=(vec3f const& _other);
+	vec3f  vec3f::operator^(vec3f const& _other);
+	vec3f  vec3f::operator*(matrix4 const& _other);
+	vec3f& vec3f::operator*=(matrix4 const& _other);
+	float  vec3f::operator*(vec3f const& _other);
+	vec3f  vec3f::operator*(float const& _other);
+	vec3f& vec3f::operator*=(float const&_other);
+	vec3f  vec3f::operator/(float const& _other);
+	vec3f& vec3f::operator/=(float const& _other);
+	vec3f  vec3f::operator-();
+	vec3f  vec3f::operator-(vec3f const& _other);
+	vec3f  vec3f::operator-(float const& _other);
+	vec3f& vec3f::operator-=(vec3f const& _other);
+	vec3f& vec3f::operator-=(float const& _other);
+	vec3f  vec3f::operator+(float const& _other);
+	vec3f  vec3f::operator+(vec3f const& _other);
+	vec3f& vec3f::operator+=(float const& _other);
+	vec3f& vec3f::operator+=(vec3f const& _other);
+	float& vec3f::operator[](unsigned int _index);
+	vec3f  Cross(vec3f const& _other);
+	float  Dot(vec3f const& _other);
+	float  Magnitude() const;
+	float  SquaredMagnitude() const;
+	vec3f  Normalize() const;
+	vec3f  Reflect(vec3f const& other);
 };
 
 struct vec4f {
@@ -66,6 +86,7 @@ struct vec4f {
 	vec4f();
 	vec4f(float _x, float _y, float _z, float _w);
 	vec4f(vec4f const& _copy);
+	vec4f(vec3f const& _copy);
 	//DirectX::XMVECTOR GetUnderlyingType() { return vector; }
 
 	bool   vec4f::operator==(vec4f const& _other);
