@@ -5,14 +5,14 @@
 namespace RenderEngine {
 
 
-void RenderSet::AddNode(RenderNode & node) {
+void RenderSet::AddNode(RenderNode *node) {
 	if (mTail) {
-		mTail->mNext = &node;
-		mTail = &node;
-		node.mNext = nullptr;
+		mTail->mNext = node;
+		mTail = node;
+		node->mNext = nullptr;
 	} else {
-		mHead = mTail = &node;
-		node.mNext = nullptr;
+		mHead = mTail = node;
+		node->mNext = nullptr;
 	}
 }
 

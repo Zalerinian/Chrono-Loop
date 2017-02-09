@@ -8,7 +8,7 @@ namespace RenderEngine {
 		RenderNode *mHead = nullptr, *mTail = nullptr;
 
 	public:
-		void AddNode(RenderNode& node);
+		void AddNode(RenderNode* node);
 		void ClearSet();
 		const RenderNode *GetHead();
 	};

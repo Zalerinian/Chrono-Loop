@@ -13,21 +13,6 @@ class InputLayoutManager;
 namespace RenderEngine {
 	
 	class Renderer {
-	public:
-		class NodeObject
-		{
-		private:
-			friend Renderer;
-			ID3D11Buffer*				mVertexBuffer;
-			ID3D11Buffer*				mIndexBuffer;
-			unsigned int				mIndexCount;
-		public:
-			NodeObject();
-			NodeObject(Mesh& _mesh);
-			~NodeObject();
-
-			void Load(Mesh& _mesh);
-		};
 	private:
 		struct MyBuffer {
 			matrix4 model, view, eye, projection;
@@ -49,9 +34,7 @@ namespace RenderEngine {
 		std::shared_ptr<HWND> mWindow;
 		RenderContext mCurrentContext;
 		RenderSet mRenderSet;
-		std::vector<Mesh> mMeshes;
 		ID3D11Buffer* constantBluffer;
-		NodeObject mTempBox;
 
 
 		static Renderer* sInstance;
@@ -78,6 +61,7 @@ namespace RenderEngine {
 			bool vsync, int fps, bool fullscreen, float farPlane, float nearPlane,
 			vr::IVRSystem* vrsys);
 
+		void AddNode(RenderNode *node);
 		void Render();
 		std::shared_ptr<ID3D11Device*> GetDevice();
 		std::shared_ptr<ID3D11DeviceContext*> GetContext();

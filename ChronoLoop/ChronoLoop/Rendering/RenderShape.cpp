@@ -3,6 +3,7 @@
 #include "renderer.h"
 #include "Mesh.h"
 #include <d3d11.h>
+#include "InputLayoutManager.h"
 
 RenderEngine::RenderShape::RenderShape() {
 	mNext = nullptr;
@@ -34,4 +35,14 @@ void RenderEngine::RenderShape::Load(Mesh & _mesh) {
 	result = device->CreateBuffer(&indexBufferDesc, nullptr, &mIndexBuffer);
 	auto context = *Renderer::Instance()->GetContext();
 	context->UpdateSubresource(mIndexBuffer, 0, NULL, _mesh.GetIndicies(), 0, 0);
+}
+
+void RenderEngine::RenderShape::LoadShaders(char * vertex, char * pixel) {
+	char *bytecode = nullptr;
+	int bytelength;
+	RenderEngine::InputLayoutManager::LoadShader(pixel, &bytecode, bytelength);
+	(*RenderEngine::Renderer::Instance()->GetDevice())->CreatePixelShader(bytecode, bytelength, nullptr, &pShader);
+	delete[] bytecode;
+	RenderEngine::InputLayoutManager::LoadShader(vertex, &bytecode, bytelength);
+	(*RenderEngine::Renderer::Instance()->GetDevice())->CreateVertexShader(bytecode, bytelength, nullptr, &vShader);
 }
