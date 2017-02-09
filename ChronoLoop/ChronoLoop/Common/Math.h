@@ -25,7 +25,7 @@ struct vec2f {
 		struct {
 			float x, y;
 		};
-		float xyzw[2];
+		float xy[2];
 	};
 };
 
