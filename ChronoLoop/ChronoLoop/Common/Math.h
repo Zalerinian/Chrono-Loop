@@ -158,4 +158,5 @@ namespace Math
 	matrix4 Projection(float _aspect, float _fov, float _near, float _far);
 	matrix4 FromMatrix(vr::HmdMatrix44_t _mat);
 	matrix4 FromMatrix(vr::HmdMatrix34_t _mat);
+	matrix4 Identity();
 }

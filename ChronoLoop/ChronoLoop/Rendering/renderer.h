@@ -12,6 +12,22 @@ class InputLayoutManager;
 namespace RenderEngine {
 	
 	class Renderer {
+	public:
+		class NodeObject
+		{
+		private:
+			friend Renderer;
+			ID3D11Buffer*				mVertexBuffer;
+			ID3D11Buffer*				mIndexBuffer;
+			unsigned int				mIndexCount;
+		public:
+			NodeObject();
+			NodeObject(Mesh& _mesh);
+			~NodeObject();
+
+			void Load(Mesh& _mesh);
+		};
+	private:
 		struct MyBuffer {
 			matrix4 model, view, eye, projection;
 		} constantData;
@@ -33,7 +49,9 @@ namespace RenderEngine {
 		RenderContext mCurrentContext;
 		std::vector<RenderNode*> mNodes;
 		std::vector<Mesh> mMeshes;
-		ID3D11Buffer* constantBluffer, *boxVertex, *boxIndex;
+		ID3D11Buffer* constantBluffer;
+		NodeObject mTempBox;
+
 	
 		static Renderer* sInstance;
 

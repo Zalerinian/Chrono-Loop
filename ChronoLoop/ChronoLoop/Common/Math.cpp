@@ -649,6 +649,12 @@ matrix4 Math::Projection(float _aspect, float _fov, float _near, float _far)
 	return _new;
 }
 
+matrix4 Math::Identity() {
+	matrix4 m;
+	m.matrix = DirectX::XMMatrixIdentity();
+	return m;
+}
+
 matrix4 Math::FromMatrix(vr::HmdMatrix44_t _mat)
 {
 	matrix4 temp;

@@ -255,19 +255,13 @@ namespace RenderEngine {
 		constantData.view = Math::MatrixTranspose(Math::MatrixTranslation(0, -1, 5)).Inverse();
 		constantData.model.matrix = DirectX::XMMatrixIdentity();
 		// Eye gets changd per render
-		mMeshes.push_back(Mesh("Box.obj"));
+		mMeshes.push_back(Mesh("../Resources/Box.obj"));
 		mMeshes[0].loadShaders("BasicPixelShader.cso", "BasicVertexShader.cso");
 
 		CD3D11_BUFFER_DESC desc(sizeof(MyBuffer), D3D11_BIND_CONSTANT_BUFFER);
 		(*mDevice)->CreateBuffer(&desc, nullptr, &constantBluffer);
 
-		desc = CD3D11_BUFFER_DESC(sizeof(VertexPos) * mMeshes[0].VertSize(), D3D11_BIND_VERTEX_BUFFER);
-		(*mDevice)->CreateBuffer(&desc, nullptr, &boxVertex);
-		(*mContext)->UpdateSubresource(boxVertex, 0, NULL, mMeshes[0].GetVerts(), 0, 0);
-
-		desc = CD3D11_BUFFER_DESC(sizeof(unsigned short) * mMeshes[0].IndicieSize(), D3D11_BIND_INDEX_BUFFER);
-		(*mDevice)->CreateBuffer(&desc, nullptr, &boxIndex);
-		(*mContext)->UpdateSubresource(boxIndex, 0, NULL, mMeshes[0].GetIndicies(), 0, 0);
+		mTempBox.Load(mMeshes[0]);
 
 		return true;
 	}
@@ -280,7 +274,10 @@ namespace RenderEngine {
 			(*mContext)->ClearRenderTargetView((*mRightEye), color);
 		}
 
-		matrix4 temp = Math::FromMatrix(mVrSystem->GetEyeToHeadTransform(vr::EVREye::Eye_Left));
+
+		matrix4 temp = Math::Identity();
+
+		//matrix4 temp = Math::FromMatrix(mVrSystem->GetEyeToHeadTransform(vr::EVREye::Eye_Left));
 		constantData.eye.matrix = temp.Inverse().matrix;
 		(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
 		(*mContext)->OMSetRenderTargets(1, mDebugScreen.get(), (*mDSView));
@@ -289,8 +286,8 @@ namespace RenderEngine {
 		UINT strideGround = sizeof(VertexPos);
 		UINT offsetGround = 0;
 		(*mContext)->IASetInputLayout(InputLayoutManager::Instance().GetInputLayout(eVERT_POS));
-		(*mContext)->IASetIndexBuffer(boxIndex, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
-		(*mContext)->IASetVertexBuffers(0, 1, &boxVertex, &strideGround, &offsetGround);
+		(*mContext)->IASetIndexBuffer(mTempBox.mIndexBuffer, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
+		(*mContext)->IASetVertexBuffers(0, 1, &mTempBox.mVertexBuffer, &strideGround, &offsetGround);
 		(*mContext)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		(*mContext)->VSSetShader(mMeshes[0].vShader, nullptr, 0);
@@ -301,16 +298,17 @@ namespace RenderEngine {
 
 		(*mContext)->DrawIndexed((UINT)mMeshes[0].IndicieSize(), 0, 0);
 
-		(*mContext)->OMSetRenderTargets(1, mLeftEye.get(), (*mVRDSView));
+		/*(*mContext)->OMSetRenderTargets(1, mLeftEye.get(), (*mVRDSView));
 		(*mContext)->ClearDepthStencilView((*mVRDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-		(*mContext)->DrawIndexed((UINT)mMeshes[0].IndicieSize(), 0, 0);
+		(*mContext)->DrawIndexed((UINT)mMeshes[0].IndicieSize(), 0, 0);*/
 
-		constantData.eye.matrix = Math::FromMatrix(mVrSystem->GetEyeToHeadTransform(vr::EVREye::Eye_Right)).Inverse().matrix;
+		//temp = Math::FromMatrix(mVrSystem->GetEyeToHeadTransform(vr::EVREye::Eye_Left));
+		/*constantData.eye.matrix = temp.Inverse().matrix;
 		(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
 		(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
 		(*mContext)->OMSetRenderTargets(1, mRightEye.get(), (*mVRDSView));
 		(*mContext)->ClearDepthStencilView((*mVRDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-		(*mContext)->DrawIndexed((UINT)mMeshes[0].IndicieSize(), 0, 0);
+		(*mContext)->DrawIndexed((UINT)mMeshes[0].IndicieSize(), 0, 0);*/
 
 		if (mVrSystem != nullptr) {
 
@@ -361,5 +359,46 @@ namespace RenderEngine {
 	}
 
 #pragma endregion Instance Functions
+
+	Renderer::NodeObject::NodeObject()
+	{
+		mIndexBuffer = nullptr;
+		mVertexBuffer = nullptr;
+		mIndexCount = 0;
+	}
+
+	Renderer::NodeObject::NodeObject(Mesh& _mesh)
+	{
+		this->Load(_mesh);
+	}
+
+	Renderer::NodeObject::~NodeObject()
+	{
+		mIndexBuffer->Release();
+		mVertexBuffer->Release();
+	}
+
+	void Renderer::NodeObject::Load(Mesh& _mesh) {
+		mIndexBuffer = nullptr;
+		mVertexBuffer = nullptr;
+		auto device = *Renderer::Instance()->GetDevice().get();
+		D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
+		auto verts = _mesh.GetVerts();
+		vertexBufferData.pSysMem = verts;
+		vertexBufferData.SysMemPitch = 0;
+		vertexBufferData.SysMemSlicePitch = 0;
+		CD3D11_BUFFER_DESC vertexBufferDesc((UINT)_mesh.VertSize() * sizeof(VertexPos), D3D11_BIND_VERTEX_BUFFER);
+		HRESULT result = device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &mVertexBuffer);
+		//Index Buffer
+		mIndexCount = (unsigned int)_mesh.VertSize();
+		D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
+		indexBufferData.pSysMem = _mesh.GetIndicies();
+		indexBufferData.SysMemPitch = 0;
+		indexBufferData.SysMemSlicePitch = 0;
+		CD3D11_BUFFER_DESC indexBufferDesc((UINT)_mesh.IndicieSize() * sizeof(unsigned short), D3D11_BIND_INDEX_BUFFER);
+		result = device->CreateBuffer(&indexBufferDesc, nullptr, &mIndexBuffer);
+		auto context = *Renderer::Instance()->GetContext();
+		context->UpdateSubresource(mIndexBuffer, 0, NULL, _mesh.GetIndicies(), 0, 0);
+	}
 
 }
