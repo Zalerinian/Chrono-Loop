@@ -1,10 +1,11 @@
 ///////////////////////////////////////
 //Written: 2/8/2017
-//Author: Chris Burt
+//Author: Chris Burtvec4f &
 ///////////////////////////////////////
 
 #include "stdafx.h"
 #include "Physics.h"
+#include "..\Rendering\Mesh.h"
 
 
 #pragma region RAY_CASTING
@@ -37,9 +38,10 @@ bool Physics::RayToTriangle(vec4f& _vert0, vec4f& _vert1, vec4f& _vert2, vec4f& 
 		_time = ((offset - (_start * _normal)) / (_normal * _dir));
 		return true;
 	}
+	return false;
 }
 
-bool Physics::RayToSphere(vec4f& _pos, vec4f& _dir, vec4f& _center, float _radius, float& _time, vec4f& _out)
+bool Physics::RayToSphere(vec4f & _pos, vec4f & _dir, vec4f & _center, float _radius, float & _time, vec4f & _out)
 {
 	vec4f check = _pos - _center;
 
@@ -64,7 +66,7 @@ bool Physics::RayToSphere(vec4f& _pos, vec4f& _dir, vec4f& _center, float _radiu
 	return true;
 }
 
-bool Physics::RayToCylinder(vec4f& _start, vec4f& _normal, vec4f& _point1, vec4f& _point2, float _radius, float& _time)
+bool Physics::RayToCylinder(vec4f & _start, vec4f & _normal, vec4f & _point1, vec4f & _point2, float _radius, float & _time)
 {
 	vec4f d = _point2 - _point1;
 	vec4f od = _point1 - _point2;
@@ -103,7 +105,7 @@ bool Physics::RayToCylinder(vec4f& _start, vec4f& _normal, vec4f& _point1, vec4f
 	return true;
 }
 
-bool Physics::RayToCapsule(vec4f& _start, vec4f& _normal, vec4f& _point1, vec4f& _point2, float _radius, float& _time)
+bool Physics::RayToCapsule(vec4f & _start, vec4f & _normal, vec4f & _point1, vec4f & _point2, float _radius, float & _time)
 {
 	float fTime = FLT_MAX;
 	_time = FLT_MAX;
@@ -138,7 +140,7 @@ bool Physics::RayToCapsule(vec4f& _start, vec4f& _normal, vec4f& _point1, vec4f&
 
 #pragma region MOVING_SPHERE
 
-bool Physics::MovingSphereToTriangle(vec4f& _vert0, vec4f& _vert1, vec4f& _vert2, vec4f& _normal, vec4f& _start, vec4f& _dir, float _radius, float& _time, vec4f& _outNormal)
+bool Physics::MovingSphereToTriangle(vec4f & _vert0, vec4f & _vert1, vec4f & _vert2, vec4f & _normal, vec4f & _start, vec4f & _dir, float _radius, float & _time, vec4f & _outNormal)
 {
 	bool bReturn = false;
 	float fTime = FLT_MAX;
@@ -192,7 +194,7 @@ bool Physics::MovingSphereToTriangle(vec4f& _vert0, vec4f& _vert1, vec4f& _vert2
 	return bReturn;
 }
 
-//bool Physics::MovingSphereToMesh(vec4f& _start, vec4f& _dir, float _radius, ED2Mesh* _mesh, float& _time, vec4f& _outNormal)
+//bool Physics::MovingSphereToMesh(vec4f & _start, vec4f & _dir, float _radius, Mesh* _mesh, float & _time, vec4f & _outNormal)
 //{
 //	bool bCollision = false;
 //	_time = FLT_MAX;
@@ -200,31 +202,30 @@ bool Physics::MovingSphereToTriangle(vec4f& _vert0, vec4f& _vert1, vec4f& _vert2
 //	
 //	unsigned int tempSortedIndicies[3] = { 0,0,0 };
 //
-//	for (unsigned int i = 0; i < mesh->m_Triangles.size(); i++) {
+//	for (unsigned int i = 0; i < _mesh->GetNumTriangles(); i++) 
+//	{
+//		Triangle currTri = _mesh->GetTriangles()[i];
+//		vec4f currNorm = _mesh->GetTriangles()[i].Normal;
 //
-//		ED2Triangle currTri = mesh->m_Triangles[i];
-//		vec4f currNorm = mesh->m_TriNorms[i];
-//
-//		for (unsigned int x = 0; x < 3; x++) {
-//			tempSortedIndicies[x] = currTri.indices[x];
-//		}
+//		for (unsigned int x = 0; x < 3; x++)
+//			tempSortedIndicies[x] = currTri;
 //
 //		unsigned int temp = 0;
-//		for (unsigned int i = 1; i < 4; i++) {
-//			for (unsigned int j = 0; j < 3; j++) {
+//		for (unsigned int j = 1; j < 4; j++) {
+//			for (unsigned int k = 0; k < 3; k++) {
 //				if (tempSortedIndicies[j + 1] < tempSortedIndicies[j]) {
 //					temp = tempSortedIndicies[j];
 //					tempSortedIndicies[j] = tempSortedIndicies[j + 1];
 //					tempSortedIndicies[j + 1] = temp;
 //					break;
 //				}
-//			}
+//			}vec4f&
 //		}
 //
 //		if (MovingSphereToTriangle(
-//			mesh->m_Vertices[tempSortedIndicies[0]].pos,
-//			mesh->m_Vertices[tempSortedIndicies[1]].pos,
-//			mesh->m_Vertices[tempSortedIndicies[2]].pos,
+//			*_mesh->GetTriangles()[tempSortedIndicies[0]].Vertex[1],
+//			*_mesh->GetTriangles()[tempSortedIndicies[1]].Vertex[2],
+//			*_mesh->GetTriangles()[tempSortedIndicies[2]].Vertex[3],
 //			currNorm, _start, _dir, _radius, fTime, _outNormal))
 //		{
 //			_time = fminf(_time, fTime);
@@ -241,7 +242,7 @@ bool Physics::MovingSphereToTriangle(vec4f& _vert0, vec4f& _vert1, vec4f& _vert2
 
 #pragma region PLANE_COLISION
 
-void Physics::BuildPlane(Plane& _plane, vec4f _pointA, vec4f& _pointB, vec4f& _pointC)
+void Physics::BuildPlane(Plane& _plane, vec4f& _pointA, vec4f& _pointB, vec4f& _pointC)
 {
 	_plane.mNormal = (_pointA - _pointC) ^ (_pointB - _pointA);
 	_plane.mNormal.Normalize();
@@ -274,7 +275,7 @@ int Physics::SphereToPlane(Plane& _plane, Sphere& _sphere)
 //Returns 1 if in front of plane.
 //Returns 2 if behind plane.
 //Returns 3 if intersecting plane.
-int Physics::AabbToPlane(Plane & _plane, AABB & _aabb)
+int Physics::AabbToPlane(Plane& _plane, AABB& _aabb)
 {
 	vec4f center = (_aabb.mMax + _aabb.mMin) * 0.5f;
 	float pOffset = center * _plane.mNormal - _plane.mOffset;
@@ -357,7 +358,7 @@ bool Physics::FrustumToAABB(Frustum & _frustum, AABB & _aabb)
 
 #pragma region MISC_COLLISION
 
-bool Physics::AABBtoAABB(AABB & _aabb1, AABB & _aabb2)
+bool Physics::AABBtoAABB(AABB& _aabb1, AABB& _aabb2)
 {
 	if (_aabb1.mMax.x < _aabb2.mMin.x || _aabb1.mMin.x > _aabb2.mMax.x)
 		return false;
@@ -371,7 +372,7 @@ bool Physics::AABBtoAABB(AABB & _aabb1, AABB & _aabb2)
 	return true;
 }
 
-bool Physics::SphereToSphere(Sphere & _sphere1, Sphere & _sphere2)
+bool Physics::SphereToSphere(Sphere& _sphere1, Sphere& _sphere2)
 {
 	vec4f pos = _sphere1.mPosition - _sphere2.mPosition;
 	float distance = pos.x * pos.x + pos.y * pos.y + pos.z * pos.z;
@@ -380,7 +381,7 @@ bool Physics::SphereToSphere(Sphere & _sphere1, Sphere & _sphere2)
 	return distance <= (minDist * minDist);
 }
 
-bool Physics::SphereToAABB(Sphere & _sphere, AABB & _aabb)
+bool Physics::SphereToAABB(Sphere& _sphere, AABB& _aabb)
 {
 	float X, Y, Z;
 
@@ -416,17 +417,17 @@ bool Physics::SphereToAABB(Sphere & _sphere, AABB & _aabb)
 
 #pragma region SIMULATION
 
-vec4f Physics::CalcAcceleration(vec4f _force, float _mass)
+vec4f Physics::CalcAcceleration(vec4f& _force, float _mass)
 {
 	return _force / _mass;
 }
 
-vec4f Physics::CalcVelocity(vec4f _vel, vec4f _accel, float _time)
+vec4f Physics::CalcVelocity(vec4f& _vel, vec4f& _accel, float _time)
 {
 	return _vel + _accel * _time;
 }
 
-vec4f Physics::CalcPosition(vec4f _pos, vec4f _vel, float _time)
+vec4f Physics::CalcPosition(vec4f& _pos, vec4f& _vel, float _time)
 {
 	return _pos + _vel * _time;
 }
