@@ -7,7 +7,7 @@
 #include "Math.h"
 #include <memory>
 
-#pragma region VECTOR_MATH
+#pragma region VECTOR4F_MATH
 
 vec4f::vec4f()
 {
@@ -29,6 +29,13 @@ vec4f::vec4f(vec4f const& _copy)
 {
 	for (int i = 0; i < 4; ++i)
 		xyzw[i] = _copy.xyzw[i];
+}
+
+vec4f::vec4f(vec3f const& _copy)
+{
+	for (int i = 0; i < 3; ++i)
+		xyzw[i] = _copy.xyz[i];
+	w = 1;
 }
 
 bool vec4f::operator==(vec4f const& _other)
@@ -223,6 +230,226 @@ vec4f vec4f::Normalize() const
 vec4f vec4f::Reflect(vec4f const& _other)
 {
 	vec4f temp, N;
+	N = _other.Normalize();
+	float reflect = -2 * (*this * N);
+	temp = N * reflect - *this;
+	return temp;
+}
+
+#pragma endregion
+
+
+#pragma region VECTOR3F_MATH
+
+vec3f::vec3f()
+{
+	x = 0;
+	y = 0;
+	z = 0;
+}
+
+vec3f::vec3f(float _x, float _y, float _z)
+{
+	x = _x;
+	y = _y;
+	z = _z;
+}
+
+vec3f::vec3f(vec3f const& _copy)
+{
+	for (int i = 0; i < 3; ++i)
+		xyz[i] = _copy.xyz[i];
+}
+
+vec3f::vec3f(vec4f const& _copy)
+{
+	for (int i = 0; i < 3; ++i)
+		xyz[i] = _copy.xyzw[i];
+}
+
+bool vec3f::operator==(vec3f const& _other)
+{
+	for (int i = 0; i < 3; ++i)
+		if (xyz[i] != _other.xyz[i])
+			return false;
+	return true;
+}
+
+bool vec3f::operator!=(vec3f const& _other)
+{
+	return !(*this == _other);
+}
+
+vec3f& vec3f::operator=(vec3f const& _other)
+{
+	if (*this != _other)
+		for (int i = 0; i < 3; ++i)
+			xyz[i] = _other.xyz[i];
+	return *this;
+}
+
+vec3f vec3f::operator^(vec3f const& _other)
+{
+	vec3f temp;
+	temp.x = (y * _other.z) - (z * _other.y);
+	temp.y = (z * _other.x) - (x * _other.z);
+	temp.z = (x * _other.y) - (y * _other.x);
+	return temp;
+}
+
+vec3f vec3f::operator*(matrix4 const& _other)
+{
+	vec3f temp;
+	for (int i = 0; i < 3; ++i)
+		temp.xyz[i] = (xyz[0] * _other.first.xyzw[i]) +
+		(xyz[1] * _other.second.xyzw[i]) -
+		(xyz[2] * _other.third.xyzw[i]);
+	
+	return temp;
+}
+
+vec3f& vec3f::operator*=(matrix4 const& _other)
+{
+	*this = *this * _other;
+	return *this;
+}
+
+float vec3f::operator*(vec3f const& _other)
+{
+	return x * _other.x + y * _other.y + z + _other.z;
+}
+
+vec3f vec3f::operator*(float const& _other)
+{
+	vec3f temp;
+	for (int i = 0; i < 3; ++i)
+		temp.xyz[i] = xyz[i] * _other;
+	return temp;
+}
+
+vec3f& vec3f::operator*=(float const& _other)
+{
+	*this = *this * _other;
+	return *this;
+}
+
+vec3f vec3f::operator/(float const& _other)
+{
+	vec3f temp;
+	for (int i = 0; i < 3; ++i)
+		temp.xyz[i] = xyz[i] / _other;
+	return temp;
+}
+
+vec3f& vec3f::operator/=(float const& _other)
+{
+	*this = *this / _other;
+	return *this;
+}
+
+vec3f vec3f::operator-()
+{
+	vec3f temp;
+	for (int i = 0; i < 3; ++i)
+		temp.xyz[i] = xyz[i] * -1.0f;
+	return temp;
+}
+
+vec3f vec3f::operator-(vec3f const& _other)
+{
+	vec3f temp;
+	for (int i = 0; i < 3; ++i)
+		temp.xyz[i] = xyz[i] - _other.xyz[i];
+	return temp;
+}
+
+vec3f vec3f::operator-(float const& _other)
+{
+	vec3f temp;
+	for (int i = 0; i < 3; ++i)
+		temp.xyz[i] = xyz[i] - _other;
+	return temp;
+}
+
+vec3f& vec3f::operator-=(vec3f const& _other)
+{
+	*this = *this - _other;
+	return *this;
+}
+
+vec3f& vec3f::operator-=(float const& _other)
+{
+	*this = *this - _other;
+	return *this;
+}
+
+vec3f vec3f::operator+(float const& _other)
+{
+	vec3f temp;
+	for (int i = 0; i < 3; ++i)
+		temp.xyz[i] = xyz[i] + _other;
+	return temp;
+}
+
+vec3f vec3f::operator+(vec3f const& _other)
+{
+	vec3f temp;
+	for (int i = 0; i < 3; ++i)
+		temp.xyz[i] = xyz[i] + _other.xyz[i];
+	return temp;
+}
+
+vec3f& vec3f::operator+=(float const & _other)
+{
+	*this = *this + _other;
+	return *this;
+}
+
+vec3f& vec3f::operator+=(vec3f const & _other)
+{
+	*this = *this + _other;
+	return *this;
+}
+
+float& vec3f::operator[](unsigned int _index)
+{
+	if (_index < 3)
+		return xyz[_index];
+	return xyz[0];
+}
+
+vec3f vec3f::Cross(vec3f const& _other)
+{
+	return *this ^ _other;
+}
+
+float vec3f::Dot(vec3f const& _other)
+{
+	return *this * _other;
+}
+
+float vec3f::Magnitude() const
+{
+	return sqrtf(powf(x, 2.0f) + powf(y, 2.0f) + powf(z, 2.0f));
+}
+
+float vec3f::SquaredMagnitude() const
+{
+	return powf(Magnitude(), 2.0f);
+}
+
+vec3f vec3f::Normalize() const
+{
+	vec3f temp;
+	float norm = 1 / Magnitude();
+	for (int i = 0; i < 4; ++i)
+		temp.xyz[i] = xyz[i] * norm;
+	return temp;
+}
+
+vec3f vec3f::Reflect(vec3f const& _other)
+{
+	vec3f temp, N;
 	N = _other.Normalize();
 	float reflect = -2 * (*this * N);
 	temp = N * reflect - *this;

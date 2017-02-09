@@ -194,48 +194,31 @@ bool Physics::MovingSphereToTriangle(vec4f & _vert0, vec4f & _vert1, vec4f & _ve
 	return bReturn;
 }
 
-//bool Physics::MovingSphereToMesh(vec4f & _start, vec4f & _dir, float _radius, Mesh* _mesh, float & _time, vec4f & _outNormal)
-//{
-//	bool bCollision = false;
-//	_time = FLT_MAX;
-//	float fTime = FLT_MAX;
-//	
-//	unsigned int tempSortedIndicies[3] = { 0,0,0 };
-//
-//	for (unsigned int i = 0; i < _mesh->GetNumTriangles(); i++) 
-//	{
-//		Triangle currTri = _mesh->GetTriangles()[i];
-//		vec4f currNorm = _mesh->GetTriangles()[i].Normal;
-//
-//		for (unsigned int x = 0; x < 3; x++)
-//			tempSortedIndicies[x] = currTri;
-//
-//		unsigned int temp = 0;
-//		for (unsigned int j = 1; j < 4; j++) {
-//			for (unsigned int k = 0; k < 3; k++) {
-//				if (tempSortedIndicies[j + 1] < tempSortedIndicies[j]) {
-//					temp = tempSortedIndicies[j];
-//					tempSortedIndicies[j] = tempSortedIndicies[j + 1];
-//					tempSortedIndicies[j + 1] = temp;
-//					break;
-//				}
-//			}vec4f&
-//		}
-//
-//		if (MovingSphereToTriangle(
-//			*_mesh->GetTriangles()[tempSortedIndicies[0]].Vertex[1],
-//			*_mesh->GetTriangles()[tempSortedIndicies[1]].Vertex[2],
-//			*_mesh->GetTriangles()[tempSortedIndicies[2]].Vertex[3],
-//			currNorm, _start, _dir, _radius, fTime, _outNormal))
-//		{
-//			_time = fminf(_time, fTime);
-//			_outNormal = currNorm;
-//			bCollision = true;
-//		}
-//	}
-//
-//	return bCollision;
-//}
+bool Physics::MovingSphereToMesh(vec4f & _start, vec4f & _dir, float _radius, Mesh* _mesh, float & _time, vec4f & _outNormal)
+{
+	bool bCollision = false;
+	_time = FLT_MAX;
+	float fTime = FLT_MAX;
+	
+	for (unsigned int i = 0; i < _mesh->GetNumTriangles(); i++) 
+	{
+		Triangle currTri = _mesh->GetTriangles()[i];
+		vec4f currNorm = _mesh->GetTriangles()[i].Normal;
+
+		if (MovingSphereToTriangle(
+			*currTri.Vertex[0],
+			*currTri.Vertex[1],
+			*currTri.Vertex[2],
+			currNorm, _start, _dir, _radius, fTime, _outNormal))
+		{
+			_time = fminf(_time, fTime);
+			_outNormal = currNorm;
+			bCollision = true;
+		}
+	}
+
+	return bCollision;
+}
 
 #pragma endregion
 
