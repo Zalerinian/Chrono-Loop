@@ -1,5 +1,6 @@
 #pragma once
 class BaseObject;
+class Transform;
 struct matrix4;
 
 
@@ -20,22 +21,22 @@ protected:
 
 	BaseObject* object = nullptr;
 public:
-	bool isEnabled() { return isEnable; };
-	void Disable() { isEnable = false; };
-	void Enable() { isEnable = true; };
+	bool isEnabled() { return isEnable; }
+	void Disable() { isEnable = false; }
+	void Enable() { isEnable = true; }
 	//virtual void Update() = 0;
 	//virtual void Destroy() = 0;
-	void GetMatrix(matrix4& _m);
+	Transform& GetTransform() const;
 };
 
-class Listener : Component
+class Listener : public Component
 {
 public:
 
 	//void Update();
 };
 
-class Emitter : Component
+class Emitter : public Component
 {
 public:
 	void Play();

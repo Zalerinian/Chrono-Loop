@@ -3,8 +3,11 @@
 #include <vector>
 #include <map>
 
-#include "../Objects/Component.h"
 #include "AkSoundEngineDLL.h"
+
+class Emitter;
+class Listener;
+struct vec4f;
 
 #define DLL __declspec(dllexport)
 
@@ -21,8 +24,8 @@ extern "C"
 		static AudioWrapper* audioSystem;
 
 	private:
-		std::vector<Emitter> mEmitters;
-		std::vector<Listener> mListeners;
+		std::vector<const Emitter*> mEmitters;
+		std::vector<const Listener*> mListeners;
 		std::map<std::wstring, AkBankID> mRegisteredSoundBanks;
 
 		bool mIsInitialize = false;
@@ -46,7 +49,7 @@ extern "C"
 		bool RemoveEmitter(const Emitter * _emitter);
 
 		//Posts an event at a pos, emitter location, or near a listener.
-		bool MakeEvent(AudioEvent _id, float* _pos);
+		bool MakeEvent(AudioEvent _id, vec4f* _pos);
 		bool MakeEvent(AudioEvent _id, const Emitter * _emitter);
 		bool MakeEvent(AudioEvent _id, unsigned int _listenerID = 0);
 

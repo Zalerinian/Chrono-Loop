@@ -16,12 +16,22 @@ public:
 	void Scale(float x, float y, float z) { this->m_worldMatrix = MatrixScale(x, y, z); };
 
 	//**GETTERS**//
-	//const vec4f* GetXAxis() {};
-	//const vec4f* GetYAxis() {};
-	//const vec4f* GetZAxis() {};
-	//const vec4f* GetPosition() {};
-
-
+	const vec4f* GetXAxis() 
+	{
+		return reinterpret_cast<const vec4f*>(&m_worldMatrix.data.first);
+	};
+	const vec4f* GetYAxis() 
+	{
+		return reinterpret_cast<const vec4f*>(&m_worldMatrix.data.second);
+	};
+	const vec4f* GetZAxis() 
+	{
+		return reinterpret_cast<const vec4f*>(&m_worldMatrix.data.third);
+	};
+	const vec4f* GetPosition() 
+	{
+		return reinterpret_cast<const vec4f*>(&m_worldMatrix.data.fourth);
+	};
 
 	//**OPERATORS**//
 	Transform const* operator=(Transform const _t);

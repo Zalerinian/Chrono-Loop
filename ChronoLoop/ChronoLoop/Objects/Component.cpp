@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "Component.h"
 #include "BaseObject.h"
+#include "../Common/Math.h"
+
+using namespace Math;
 
 //Base Component---------------------------------------------
 #pragma region Base Component
@@ -19,9 +22,9 @@
 
 
 
-void Component::GetMatrix(matrix4& _m)
+Transform& Component::GetTransform() const
 {
-	  //_m = object->transform.m_matrix4;
+	  return object->transform;
 }
 
 #pragma endregion

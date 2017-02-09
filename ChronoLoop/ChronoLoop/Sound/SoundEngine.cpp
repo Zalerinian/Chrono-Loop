@@ -4,6 +4,12 @@
 #include "stdafx.h"
 #include "SoundEngine.h"
 #include <iostream>
+#include <string>
+#include <sstream>
+#include "../Common/Math.h"
+#include "../Objects/Component.h"
+#include "../Objects/Transform.h"
+using namespace Math;
 
 #pragma comment(lib, "AkSoundEngineDLL.lib")
 using namespace AK;
@@ -68,7 +74,38 @@ void AudioWrapper::Shutdown()
 
 void AudioWrapper::Update()
 {
+	AkListenerPosition lPos;
+	AkSoundPosition sPos;
 
+	unsigned int i;
+	// Update listener pos & orientation
+	for (i = 0; i < mListeners.size(); ++i) {
+		const vec4f * pos = mListeners[i]->GetTransform().GetPosition();
+
+		lPos.SetPosition(pos->data.x, pos->data.y, pos->data.z);
+
+		const vec4f * zAxis = mListeners[i]->GetTransform().GetZAxis();
+		const vec4f * yAxis = mListeners[i]->GetTransform().GetYAxis();
+
+		lPos.SetOrientation(zAxis->data.x, zAxis->data.y, zAxis->data.z, yAxis->data.x, yAxis->data.y, yAxis->data.z);
+
+		SoundEngine::SetListenerPosition(lPos, i);
+	}
+	// Update emitter pos & orientation
+	for (i = 0; i < mEmitters.size(); ++i) {
+		const vec4f * pos = mEmitters[i]->GetTransform().GetPosition();
+
+		sPos.SetPosition(pos->data.x, pos->data.y, pos->data.z);
+
+		const vec4f * zAxis = mEmitters[i]->GetTransform().GetZAxis();
+		const vec4f * yAxis = mEmitters[i]->GetTransform().GetYAxis();
+
+		sPos.SetOrientation(zAxis->data.x, zAxis->data.y, zAxis->data.z, yAxis->data.x, yAxis->data.y, yAxis->data.z);
+
+		SoundEngine::SetPosition((AkGameObjectID)mEmitters[i], sPos);
+	}
+	// Render Audio
+	SOUNDENGINE_DLL::Tick();
 }
 //----------------------------------------------------
 void AudioWrapper::SetWorldScale(float _scale)
@@ -82,49 +119,123 @@ void AudioWrapper::SetWorldScale(float _scale)
 //------------Add/Remove-Listeners/Emitters-----------------------------------------
 bool AudioWrapper::AddListener(const Listener* _listener, const char * _name)
 {
+	// If no name give pos in vector as name
+	if (!_name)
+	{
+		std::stringstream ssNum;
+		ssNum << (mListeners.size() + 1);
+		std::string strTemp = "listener" + ssNum.str();
 
+		//Still should probably added additional error checking?
+		if (SoundEngine::RegisterGameObj((AkGameObjectID)_listener, strTemp.c_str()) != AK_Success) {
+			return false;
+		}
+	}
+	else
+	{
+		if (SoundEngine::RegisterGameObj((AkGameObjectID)_listener, _name) != AK_Success) {
+			return false;
+		}
+	}
+
+	SoundEngine::SetListenerScalingFactor((AkUInt32)mListeners.size(), mWorldScale);
+	mListeners.push_back(_listener);
 
 	return true;
 }
 
 bool AudioWrapper::RemoveListener(const Listener* _listener)
 {
+	for (unsigned int i = 0; i < mListeners.size(); ++i) {
+		if (mListeners[i] == _listener) {
+			mListeners.erase(mListeners.begin() + i);
 
+			if (SoundEngine::UnregisterGameObj((AkGameObjectID)_listener) != AK_Success) {
+				return false;
+			}
+			break;
+		}
+	}
 
 	return true;
 }
 
 bool AudioWrapper::AddEmitter(const Emitter * _emitter, const char * _name)
 {
+	// If no name give pos in vector as name
+	if (!_name)
+	{
+		std::stringstream ssNum;
+		ssNum << (mListeners.size() + 1);
+		std::string strTemp = "listener" + ssNum.str();
 
+		//Still should probably added additional error checking?
+		if (SoundEngine::RegisterGameObj((AkGameObjectID)_emitter, strTemp.c_str()) != AK_Success) {
+			return false;
+		}
+	}
+	else
+	{
+		if (SoundEngine::RegisterGameObj((AkGameObjectID)_emitter, _name) != AK_Success) {
+			return false;
+		}
+	}
+
+	mEmitters.push_back(_emitter);
 
 	return true;
 }
 
 bool AudioWrapper::RemoveEmitter(const Emitter * _emitter)
 {
+	for (unsigned int i = 0; i < mEmitters.size(); ++i) {
+		if (mEmitters[i] == _emitter) {
+			mEmitters.erase(mEmitters.begin() + i);
 
+			if (SoundEngine::UnregisterGameObj((AkGameObjectID)_emitter) != AK_Success) {
+				return false;
+			}
+			break;
+		}
+	}
 
 	return true;
 }
 
 //-------------EVENTS-----------------------------------------------
-bool AudioWrapper::MakeEvent(AudioEvent _id, float * _pos)
+bool AudioWrapper::MakeEvent(AudioEvent _id, vec4f * _pos)
 {
+	static long dummyID = -1;
+	++dummyID;
 
+	AkSoundPosition sPos;
+	sPos.SetOrientation(0, 0, 1.0f, 0, 0, 1.0f);
+	sPos.SetPosition(_pos->data.x, _pos->data.y, _pos->data.z);
+
+	SoundEngine::SetPosition(dummyID, sPos);
+	if (SoundEngine::PostEvent((AkUniqueID)_id, dummyID) == AK_INVALID_PLAYING_ID)
+		return false;
 
 	return true;
 }
 
 bool AudioWrapper::MakeEvent(AudioEvent _id, const Emitter * _emitter)
 {
+	//Check to see if it exists???
+
+	if (SoundEngine::PostEvent((AkUniqueID)_id, (AkGameObjectID)_emitter) == AK_INVALID_PLAYING_ID)
+		return false;
 
 	return true;
 }
 
 bool AudioWrapper::MakeEvent(AudioEvent _id, unsigned int _listenerID)
 {
+	if ((mListeners.size() - _listenerID) < 0)
+		return false;
 
+	if (SoundEngine::PostEvent((AkUniqueID)_id, (AkGameObjectID)mListeners[_listenerID]) == AK_INVALID_PLAYING_ID)
+		return false;
 
 	return true;
 }
@@ -132,19 +243,29 @@ bool AudioWrapper::MakeEvent(AudioEvent _id, unsigned int _listenerID)
 
 void AudioWrapper::SetBasePath(const wchar_t* _strPath)
 {
-
+	SOUNDENGINE_DLL::SetBasePath(_strPath);
 }
 
 bool AudioWrapper::LoadSoundBank(const wchar_t* _BankName)
 {
-
+	AkBankID newID;
+	if (SoundEngine::LoadBank(_BankName, AK_DEFAULT_POOL_ID, newID) == AK_Success)
+		mRegisteredSoundBanks[_BankName] = newID;
+	else
+		return false;
 
 	return true;
 }
 
 bool AudioWrapper::UnloadSoundBank(const wchar_t* _BankName)
 {
+	if (mRegisteredSoundBanks.find(_BankName) == mRegisteredSoundBanks.end())
+		return false;
 
+	if (SoundEngine::UnloadBank(mRegisteredSoundBanks[_BankName], nullptr, nullptr) != AK_Success)
+		return false;
+
+	mRegisteredSoundBanks.erase(_BankName);
 
 	return true;
 }

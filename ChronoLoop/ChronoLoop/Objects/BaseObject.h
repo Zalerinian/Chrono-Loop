@@ -12,9 +12,9 @@ private:
 	//uint32 id;
 	std::vector<Component*> components;
 	Component* parent;
-	Transform transform;
 	std::list<BaseObject*> children;
 public:
+	Transform transform;
 	BaseObject();
 	BaseObject(std::string _name, Transform _transform);
 	~BaseObject();
@@ -26,4 +26,5 @@ public:
 	BaseObject Clone();
 	BaseObject Clone(BaseObject _clone);
 	BaseObject const* operator=(BaseObject _equals);
+
 };
