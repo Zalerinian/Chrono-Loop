@@ -4,53 +4,53 @@
 
 struct VertexPos
 {
-	vec3f	Position;
+	vec4f	Position;
 };
 struct VertexPosColor
 {
-	vec3f	Position;
+	vec4f	Position;
 	vec4f	Color;
 };
 struct VertexPosTex
 {
-	vec3f	Position;
-	vec2f	UV;
+	vec4f	Position;
+	vec4f	UV;
 };
 struct VertexPosNormTex
 {
-	vec3f	Position;
-	vec3f	Normal;
-	vec2f	UV;
+	vec4f	Position;
+	vec4f	Normal;
+	vec4f	UV;
 };
 struct VertexPosNormTanTex
 {
-	vec3f	Position;
-	vec3f	Normal;
-	vec2f	UV;
-	vec3f	Tangent;
+	vec4f	Position;
+	vec4f	Normal;
+	vec4f	UV;
+	vec4f	Tangent;
 	float	Determinant;
 };
 struct VertexPosBoneWeight
 {
-	vec3f	Position;
+	vec4f	Position;
 	vec4i	BoneIndices;
 	vec4f	Weights;
 };
 struct VertexPosBoneWeightNormTex
 {
-	vec3f	Position;
+	vec4f	Position;
 	vec4i	BoneIndices;
 	vec4f	Weights;
-	vec3f	Normal;
-	vec2f	UV;
+	vec4f	Normal;
+	vec4f	UV;
 };
 struct VertexPosBoneWeightNormTanTex
 {
-	vec3f	Position;
-	vec3f	Normal;
-	vec2f	UV;
+	vec4f	Position;
+	vec4f	Normal;
+	vec4f	UV;
 	vec4i	BoneIndices;
 	vec4f	Weights;
-	vec3f	Tangent;
+	vec4f	Tangent;
 	float	Determinant;
 };

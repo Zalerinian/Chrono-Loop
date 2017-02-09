@@ -4,8 +4,6 @@
 #ifndef VERTEX_LAYOUTS_HLSLI
 #define VERTEX_LAYOUTS_HLSLI
 
-#include "../EDRendererD3D/LightBuffers.h"
-
 ////////////////////////////////////////////////////////////
 // Input vertices
 
