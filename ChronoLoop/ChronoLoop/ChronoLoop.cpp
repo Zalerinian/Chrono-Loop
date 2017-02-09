@@ -128,7 +128,7 @@ void Update() {
 		} else {
 			// Input.Update();
 			// Logic.Update();
-			 RenderEngine::Renderer::Instance()->Render();
+			RenderEngine::Renderer::Instance()->Render();
 		}
 	}
 }
