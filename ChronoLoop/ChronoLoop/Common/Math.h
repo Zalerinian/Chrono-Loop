@@ -24,6 +24,7 @@ struct vec2f {
 	};
 };
 
+struct vec4f;
 struct vec3f {
 	union {
 		DirectX::XMVECTOR vector;
