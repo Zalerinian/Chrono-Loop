@@ -99,7 +99,6 @@ bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, b
 												hInstance,                           //Specifies instance of current program
 												NULL                                 //used for an MDI client window
 	);
-
 	if (!hwnd) {
 		MessageBox(NULL, L"Error creating window", L"Error", MB_OK | MB_ICONERROR);
 		return 1;

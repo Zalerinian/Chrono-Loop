@@ -5,6 +5,7 @@
 #include <string>
 #include "renderer.h"
 #include "InputLayoutManager.h"
+#include <openvr.h>
 
 using namespace Concurrency;
 
@@ -100,6 +101,23 @@ bool Mesh::Load(char * path)
 	mIndicies = Ind;
 	file.close();
 	return true;
+}
+
+bool Mesh::Load(vr::RenderModel_t * _model)
+{
+	for (int i = 0; i < _model->unVertexCount; i++)
+	{
+		VertexPos temp;
+		for (int j = 0; j < 3; j++)
+			temp.Position.xyzw[j] = _model->rVertexData[i].vPosition.v[j];
+		temp.Position.w = 1;
+		
+		mUniqueVerts.push_back(temp);
+	}
+	for (int i = 0; i < _model->unTriangleCount * 3; i++)
+	{
+		mIndicies.push_back(_model->rIndexData[i]);
+	}
 }
 
 Triangle * Mesh::GetTriangles()
