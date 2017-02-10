@@ -6,17 +6,24 @@
 #include "Component.h"
 #include "../Physics/Physics.h"
 using namespace Physics;
+#include "../TimeManager.h"
+
+class Component;
+
 class BaseObject
 {
 private:
 	float mass;
 	std::string name;
 	BaseObject* parent;
+	unsigned short id;
+	std::vector<Component*> components;
 	Transform transform;
 	vec4f pos, vel, acc;
 	unsigned short UniqueID;
 	std::list<BaseObject*> children;
-	std::vector<Component*> components;
+
+	//std::vector<Component*> components;
 	
 public:
 	//**CONSTRUCTORS**//
@@ -24,6 +31,11 @@ public:
 	BaseObject(std::string _name, Transform _transform);
 	BaseObject(std::string name, Transform _transform, float mass);
 	~BaseObject();
+	BaseObject Clone();
+	BaseObject Clone(BaseObject _clone);
+	BaseObject const* operator=(BaseObject _equals);
+	unsigned short& GetUniqueId();
+
 	void Destroy() { delete this; };
 
 	//**GETTERS/SETTERS**//
@@ -36,7 +48,7 @@ public:
 	BaseObject*					GetParent() { return parent; };
 	void						SetParent(BaseObject* _parent) { parent = _parent; };
 
-	Transform					GetTransform() { return transform; };
+	Transform&					GetTransform() { return transform; };
 	void						SetTransform(Transform _transform) { transform = _transform; };
 
 	vec4f						GetPosition() { return pos; };
@@ -61,7 +73,4 @@ public:
 	void						CalcAcceleration(vec4f& _force);
 	void						CalcVelocity(vec4f& _force, float _dt);
 	void						CalcPosition(vec4f& _force, float _dt);
-	BaseObject					Clone();
-	BaseObject					Clone(BaseObject _clone);
-	BaseObject const*			operator=(BaseObject _equals);
 };

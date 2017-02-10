@@ -22,6 +22,8 @@ struct vec2f {
 		};
 		float xy[2];
 	};
+	vec2f() { x = 0; y = 0; };
+	vec2f(float _x, float _y) { x = _x; y = _y; };
 };
 
 struct vec4f;
@@ -86,7 +88,7 @@ struct vec4f {
 	//DirectX::XMVECTOR GetUnderlyingType() { return vector; }
 
 	bool   vec4f::operator==(vec4f const& _other);
-	bool   vec4f::operator!=(vec4f const& _other);
+	inline bool   vec4f::operator!=(vec4f const& _other) { return !(*this == _other); }
 	vec4f& vec4f::operator=(vec4f const& _other);
 	vec4f  vec4f::operator^(vec4f const& _other);
 	vec4f  vec4f::operator*(matrix4 const& _other);

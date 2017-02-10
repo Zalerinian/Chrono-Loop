@@ -7,11 +7,12 @@
 #include "Mesh.h"
 #include "../Common/Math.h"
 #include "RenderSet.h"
+#include "RenderShape.h"
 
 class InputLayoutManager;
 
 namespace RenderEngine {
-	
+
 	class Renderer {
 	private:
 		struct MyBuffer {
@@ -26,6 +27,7 @@ namespace RenderEngine {
 		std::shared_ptr<IDXGISwapChain*> mChain;
 		std::shared_ptr<IDXGIFactory1*> mFactory;
 		std::shared_ptr<ID3D11RenderTargetView*> mDebugScreen, mLeftEye, mRightEye;
+		std::shared_ptr<ID3D11ShaderResourceView*> mTexture;
 		std::shared_ptr<ID3D11Texture2D*> mLeftTexture, mRightTexture;
 		std::shared_ptr<ID3D11DepthStencilView*> mDSView, mVRDSView;
 		std::shared_ptr<ID3D11Texture2D*> mDepthBuffer;
@@ -35,7 +37,8 @@ namespace RenderEngine {
 		RenderContext mCurrentContext;
 		RenderSet mRenderSet;
 		ID3D11Buffer* constantBluffer;
-
+		RenderShape mControllerModel;
+		vr::RenderModel_t *mControllerRM;
 
 		static Renderer* sInstance;
 
@@ -50,10 +53,14 @@ namespace RenderEngine {
 		void DoAllTheBootlegThingsForTheDemo();
 
 		matrix4 mEyePosLeft, mEyePosRight, mEyeProjLeft, mEyeProjRight, mHMDPos;
+		vr::TrackedDevicePose_t poses[vr::k_unMaxTrackedDeviceCount];	
 
 		matrix4 GetEye(vr::EVREye e);
 		matrix4 GetProjection(vr::EVREye e);
-		void GetMVP(vr::EVREye e, MyBuffer &data);
+		void GetMVP(vr::EVREye e, MyBuffer &data, matrix4 world);
+
+		void RenderVR();
+		void RenderNoVR();
 
 		Renderer();
 		~Renderer();

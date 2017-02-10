@@ -4,8 +4,11 @@
 
 BaseObject::BaseObject()
 {
-	//name = nullptr;
+	
 	parent = nullptr;
+	//TESTING VALUES GET RID OF THIS EVENTUALLY
+	id = 2;
+	
 }
 BaseObject::BaseObject(std::string _name, Transform _transform)
 {
@@ -24,11 +27,16 @@ BaseObject::BaseObject(std::string _name, Transform _transform, float _mass)
 BaseObject::~BaseObject()
 {
 	delete parent;
+	for(auto c : components)
+	{
+		delete c;
+	}
 	components.clear();
 	children.clear();
 }
 BaseObject BaseObject::Clone()
 {
+	//clone copies properties execpt id
 	BaseObject temp;
 	temp.name = this->name;
 	temp.transform = this->transform;
@@ -39,6 +47,7 @@ BaseObject BaseObject::Clone()
 }
 BaseObject BaseObject::Clone(BaseObject _clone)
 {
+	//clone copies properties execpt id
 	_clone.name = this->name;
 	_clone.transform = this->transform;
 	_clone.parent = this->parent;
@@ -48,6 +57,7 @@ BaseObject BaseObject::Clone(BaseObject _clone)
 }
 BaseObject const* BaseObject::operator=(BaseObject _equals)
 {
+	if (this->id != _equals.id) this->id = _equals.id;
 	if (this->name != _equals.name) this->name = _equals.name;
 	if (this->parent != _equals.parent) this->parent = _equals.parent;
 	if (this->children != _equals.children) this->children = _equals.children;
@@ -68,4 +78,9 @@ void BaseObject::CalcPosition(vec4f& _force, float _dt)
 {
 	CalcVelocity(_force, _dt);
 	pos = Physics::CalcPosition(pos, vel, _dt);
+}
+
+unsigned short& BaseObject::GetUniqueId()
+{
+	return id;
 }

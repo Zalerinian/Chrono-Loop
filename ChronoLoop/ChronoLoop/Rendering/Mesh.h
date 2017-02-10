@@ -24,7 +24,7 @@ class Mesh
 {
 private:
 	std::vector<Triangle> mTriangles;
-	std::vector<VertexPos> mUniqueVerts;
+	std::vector<VertexPosNormTex> mUniqueVerts;
 	std::vector<unsigned short> mIndicies;
 	wchar_t *mImage;
 public:
@@ -46,7 +46,7 @@ public:
 	void Invert();
 	//void MakePlane();
 	//void MakeViewPlane();
-	VertexPos *GetVerts();
+	VertexPosNormTex *GetVerts();
 	size_t VertSize();
 	unsigned short *GetIndicies();
 	size_t IndicieSize();

@@ -14,20 +14,20 @@ float4 VLPos(VERTEX_POS input) : SV_POSITION
 
 float4 VLPosColor(VERTEX_POSCOLOR input) : SV_POSITION
 {
-	return float4(input.position.xyz, 1);
+	return input.position;
 }
 
 float4 VLPosTex(VERTEX_POSTEX input) : SV_POSITION
 {
-	return float4(input.position, 1);
+	return input.position;
 }
 
 float4 VLPosNormTex(VERTEX_POSNORMTEX input) : SV_POSITION
 {
-	return float4(input.position, 1);
+	return input.position;
 }
 
 float4 VLPosNormTanTex(VERTEX_POSNORMTANTEX input) : SV_POSITION
 {
-	return float4(input.position, 1);
+	return input.position;
 }

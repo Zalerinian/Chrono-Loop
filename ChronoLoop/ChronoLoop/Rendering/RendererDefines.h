@@ -16,6 +16,21 @@ namespace RenderEngine {
 		eVERT_MAX
 	};
 
-	enum RenderEye {eEYE_LEFT, eEYE_RIGHT, eEYE_MAX};
+	enum ShaderFormat {
+		eVS_BASIC = 0,
+		ePS_BASIC,
+		eVS_TEXTURED,
+		ePS_TEXTURED,
+		eSHADER_MAX
+	};
+
+	enum TextureType {
+		eTEX_DIFFUSE = 0,
+		eTEX_NORMAL,
+		eTEX_SPECULAR,
+		eTEX_MAX
+	};
+
+	enum RenderEye {eEYE_LEFT = 0, eEYE_RIGHT, eEYE_MAX};
 
 }

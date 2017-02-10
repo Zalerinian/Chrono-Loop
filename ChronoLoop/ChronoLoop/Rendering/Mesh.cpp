@@ -45,7 +45,7 @@ void Mesh::loadShaders(char * pixel, char * vertex)
 bool Mesh::Load(char * path)
 {
 	this->Clear();
-	std::vector<VertexPos> Verts;
+	std::vector<VertexPosNormTex> Verts;
 	std::vector<unsigned short> Ind;
 	int index = 1;
 	std::ifstream file;
@@ -85,13 +85,13 @@ bool Mesh::Load(char * path)
 			}
 			for (int i = 0; i < 3; i++)
 			{
-				VertexPos temp;
+				VertexPosNormTex temp;
 				temp.Position = verts[vertexIndex[i] - 1];
 				temp.Position.w = 1;
 				//temp.color = DirectX::XMFLOAT4(i == 0, i == 1, i == 3);
-				/*temp.Normal = norms[normalIndex[i] - 1];
+				temp.Normal = norms[normalIndex[i] - 1];
 				temp.UV = uvs[uvIndex[i] - 1];
-				temp.UV.z = 0;*/
+				temp.UV.z = 0;
 				Ind.push_back((unsigned short)Verts.size());
 				Verts.push_back(temp);
 			}
@@ -107,7 +107,7 @@ bool Mesh::Load(vr::RenderModel_t * _model)
 {
 	for (unsigned int i = 0; i < _model->unVertexCount; i++)
 	{
-		VertexPos temp;
+		VertexPosNormTex temp;
 		for (int j = 0; j < 3; j++)
 			temp.Position.xyzw[j] = _model->rVertexData[i].vPosition.v[j];
 		temp.Position.w = 1;
@@ -128,7 +128,7 @@ Triangle * Mesh::GetTriangles()
 		for (unsigned int i = 0; i < mIndicies.size() / 3; i++)
 		{
 			Triangle temp;
-			//temp.Normal = (mUniqueVerts[mIndicies[(i * 3) + 0]].Normal + mUniqueVerts[mIndicies[(i * 3) + 1]].Normal + mUniqueVerts[mIndicies[(i * 3) + 2]].Normal) / 2;
+			temp.Normal = (mUniqueVerts[mIndicies[(i * 3) + 0]].Normal + mUniqueVerts[mIndicies[(i * 3) + 1]].Normal + mUniqueVerts[mIndicies[(i * 3) + 2]].Normal) / 2;
 			temp.Vertex[0] = &mUniqueVerts[mIndicies[(i * 3) + 0]].Position;
 			temp.Vertex[1] = &mUniqueVerts[mIndicies[(i * 3) + 1]].Position;
 			temp.Vertex[2] = &mUniqueVerts[mIndicies[(i * 3) + 2]].Position;
@@ -378,7 +378,7 @@ void Mesh::Invert()
 //	totalVerts = Indicies.size();
 //}
 
-VertexPos * Mesh::GetVerts()
+VertexPosNormTex * Mesh::GetVerts()
 {
 	return mUniqueVerts.data();
 }

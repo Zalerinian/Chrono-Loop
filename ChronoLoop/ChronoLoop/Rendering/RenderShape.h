@@ -10,11 +10,11 @@ namespace RenderEngine {
 
 	class RenderShape : public RenderNode {
 	public:
-		ID3D11PixelShader		*pShader;
-		ID3D11VertexShader	*vShader;
-		ID3D11Buffer				*mVertexBuffer;
-		ID3D11Buffer				*mIndexBuffer;
-		unsigned int				mIndexCount;
+		ID3D11PixelShader			*pShader = nullptr;
+		ID3D11VertexShader			*vShader = nullptr;
+		ID3D11Buffer				*mVertexBuffer = nullptr;
+		ID3D11Buffer				*mIndexBuffer = nullptr;
+		unsigned int				mIndexCount = 0;
 
 		RenderShape();
 		RenderShape(Mesh& _mesh);

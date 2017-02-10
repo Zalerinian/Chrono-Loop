@@ -41,10 +41,10 @@ bool vec4f::operator==(vec4f const& _other)
 	return true;
 }
 
-bool vec4f::operator!=(vec4f const& _other)
-{
-	return !(*this == _other);
-}
+//bool vec4f::operator!=(vec4f const& _other)
+//{
+//	return !(*this == _other);
+//}
 
 vec4f& vec4f::operator=(vec4f const& _other)
 {
