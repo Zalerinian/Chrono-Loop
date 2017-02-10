@@ -43,13 +43,13 @@ public:
 	inline bool GetValid() { return mValid; };
 
 	//controller input
-	bool GetPress(vr::EVRButtonId buttonId) { Update(); return (mState.ulButtonPressed& vr::ButtonMaskFromId(buttonId)); }
-	bool GetPressDown(vr::EVRButtonId buttonId) { Update(); return (mState.ulButtonPressed& vr::ButtonMaskFromId(buttonId)) != 0 && (mPrevState.ulButtonPressed & vr::ButtonMaskFromId(buttonId)) == 0; }
-	bool GetPressUp(vr::EVRButtonId buttonId) { Update(); return (mState.ulButtonPressed& vr::ButtonMaskFromId(buttonId)) == 0 && (mPrevState.ulButtonPressed & vr::ButtonMaskFromId(buttonId)) != 0; }
+	bool GetPress(vr::EVRButtonId buttonId) { Update(); return (mState.ulButtonPressed & vr::ButtonMaskFromId(buttonId)); }
+	bool GetPressDown(vr::EVRButtonId buttonId) { Update(); return (mState.ulButtonPressed & vr::ButtonMaskFromId(buttonId)) != 0 && (mPrevState.ulButtonPressed & vr::ButtonMaskFromId(buttonId)) == 0; }
+	bool GetPressUp(vr::EVRButtonId buttonId) { Update(); return (mState.ulButtonPressed & vr::ButtonMaskFromId(buttonId)) == 0 && (mPrevState.ulButtonPressed & vr::ButtonMaskFromId(buttonId)) != 0; }
 
-	bool GetTouch(vr::EVRButtonId buttonId) { Update(); return (mState.ulButtonTouched& vr::ButtonMaskFromId(buttonId)); }
-	bool GetTouchDown(vr::EVRButtonId buttonId) { Update(); return (mState.ulButtonTouched& vr::ButtonMaskFromId(buttonId)) != 0 && (mPrevState.ulButtonTouched & vr::ButtonMaskFromId(buttonId)) == 0; }
-	bool GetTouchUp(vr::EVRButtonId buttonId) { Update(); return (mState.ulButtonTouched& vr::ButtonMaskFromId(buttonId)) == 0 && (mPrevState.ulButtonTouched & vr::ButtonMaskFromId(buttonId)) != 0; }
+	bool GetTouch(vr::EVRButtonId buttonId) { Update(); return (mState.ulButtonTouched & vr::ButtonMaskFromId(buttonId)); }
+	bool GetTouchDown(vr::EVRButtonId buttonId) { Update(); return (mState.ulButtonTouched & vr::ButtonMaskFromId(buttonId)) != 0 && (mPrevState.ulButtonTouched & vr::ButtonMaskFromId(buttonId)) == 0; }
+	bool GetTouchUp(vr::EVRButtonId buttonId) { Update(); return (mState.ulButtonTouched & vr::ButtonMaskFromId(buttonId)) == 0 && (mPrevState.ulButtonTouched & vr::ButtonMaskFromId(buttonId)) != 0; }
 
 	//Trigger
 	void UpdateHairTrigger();
