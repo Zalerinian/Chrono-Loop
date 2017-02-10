@@ -25,6 +25,16 @@ void VRInputManager::mInitialize(vr::IVRSystem * _hmd)
 
 void VRInputManager::update()
 {
+	if (mRightController.GetIndex() < 0)
+	{
+		mRightController.SetIndex(mHmd->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_RightHand));
+		std::cout << "Right Controler reconnected." << std::endl;
+	}
+	if (mLeftController.GetIndex() < 0)
+	{
+		mLeftController.SetIndex(mHmd->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand));
+		std::cout << "Left Controler reconnected." << std::endl;
+	}
 	if (true) {
 		if (mRightController.GetPressDown(vr::k_EButton_SteamVR_Trigger))
 			std::cout << "Right Trigger Pressed" << std::endl;
