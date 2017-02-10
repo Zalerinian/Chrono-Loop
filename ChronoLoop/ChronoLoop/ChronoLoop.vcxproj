@@ -73,25 +73,25 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)_$(Configuration) $(PlatformShortName)\</OutDir>
     <LibraryPath>$(outputpath)Lib\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(solutiondir)openvr\headers;$(IncludePath)</IncludePath>
+    <IncludePath>$(solutiondir)DXTK\;$(solutiondir)openvr\headers;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)_$(Configuration) $(PlatformShortName)\</OutDir>
     <LibraryPath>$(outputpath)Lib\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(solutiondir)openvr\headers;$(IncludePath)</IncludePath>
+    <IncludePath>$(solutiondir)DXTK\;$(solutiondir)openvr\headers;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)_$(Configuration) $(PlatformShortName)\</OutDir>
     <LibraryPath>$(outputpath)Lib\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(solutiondir)openvr\headers;$(IncludePath)</IncludePath>
+    <IncludePath>$(solutiondir)DXTK\;$(solutiondir)openvr\headers;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)_$(Configuration) $(PlatformShortName)\</OutDir>
     <LibraryPath>$(outputpath)Lib\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(solutiondir)openvr\headers;$(IncludePath)</IncludePath>
+    <IncludePath>$(solutiondir)DXTK\;$(solutiondir)openvr\headers;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -256,6 +256,26 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Rendering\Shaders\BasicVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\TexturedPixel.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\TexturedVertex.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

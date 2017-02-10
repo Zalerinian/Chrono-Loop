@@ -23,7 +23,7 @@ void RenderEngine::RenderShape::Load(Mesh & _mesh) {
 	vertexBufferData.pSysMem = verts;
 	vertexBufferData.SysMemPitch = 0;
 	vertexBufferData.SysMemSlicePitch = 0;
-	CD3D11_BUFFER_DESC vertexBufferDesc((UINT)_mesh.VertSize() * sizeof(VertexPos), D3D11_BIND_VERTEX_BUFFER);
+	CD3D11_BUFFER_DESC vertexBufferDesc((UINT)_mesh.VertSize() * sizeof(VertexPosNormTex), D3D11_BIND_VERTEX_BUFFER);
 	HRESULT result = device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &mVertexBuffer);
 	//Index Buffer
 	mIndexCount = (unsigned int)_mesh.VertSize();

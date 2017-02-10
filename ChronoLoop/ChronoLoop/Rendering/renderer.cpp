@@ -77,11 +77,11 @@ namespace RenderEngine {
 
 		matrix4 hmdPos = hmd.Inverse();
 		if (e == vr::EVREye::Eye_Left) {
-			data.model = Math::MatrixTranspose(Math::MatrixTranslation(0, 0, 0));
+			data.model = Math::MatrixTranspose(Math::MatrixTranslation(0, -1, -3));
 			data.view = Math::MatrixTranspose(mEyePosLeft * hmdPos);
 			data.projection = Math::MatrixTranspose(mEyeProjLeft);
 		} else {
-			data.model = Math::MatrixTranspose(Math::MatrixTranslation(0, 0, 0));
+			data.model = Math::MatrixTranspose(Math::MatrixTranslation(0, -1, -3));
 			data.view = Math::MatrixTranspose(mEyePosRight * hmdPos);
 			data.projection = Math::MatrixTranspose(mEyeProjRight);
 		}
@@ -304,8 +304,8 @@ namespace RenderEngine {
 
 
 		// Eye gets changd per render
-		RenderShape *box = new RenderShape(Mesh("../Resources/Box.obj"));
-		box->LoadShaders("BasicVertexShader.cso", "BasicPixelShader.cso");
+		RenderShape *box = new RenderShape(Mesh("../Resources/Cube.obj"));
+		box->LoadShaders("TexturedVertex.cso", "TexturedPixel.cso");
 		AddNode(box);
 
 		CD3D11_BUFFER_DESC desc(sizeof(MyBuffer), D3D11_BIND_CONSTANT_BUFFER);
@@ -332,9 +332,9 @@ namespace RenderEngine {
 		(*mContext)->OMSetRenderTargets(1, mDebugScreen.get(), (*mDSView));
 		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-		UINT strideGround = sizeof(VertexPos);
+		UINT strideGround = sizeof(VertexPosNormTex);
 		UINT offsetGround = 0;
-		(*mContext)->IASetInputLayout(InputLayoutManager::Instance().GetInputLayout(eVERT_POS)); 
+		(*mContext)->IASetInputLayout(InputLayoutManager::Instance().GetInputLayout(eVERT_POSNORMTEX)); 
 		(*mContext)->IASetIndexBuffer(((RenderShape*)mRenderSet.GetHead())->mIndexBuffer, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
 		(*mContext)->IASetVertexBuffers(0, 1, &((RenderShape*)mRenderSet.GetHead())->mVertexBuffer, &strideGround, &offsetGround);
 		(*mContext)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -377,6 +377,14 @@ namespace RenderEngine {
 
 
 		(*mChain)->Present(0, 0);
+	}
+
+	void Renderer::RenderVR() {
+
+	}
+
+	void Renderer::RenderNoVR() {
+
 	}
 
 	std::shared_ptr<ID3D11Device*> Renderer::GetDevice() {

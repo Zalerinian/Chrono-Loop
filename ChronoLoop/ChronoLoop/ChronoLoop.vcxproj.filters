@@ -169,6 +169,8 @@
     <ClInclude Include="Rendering\RenderSet.h">
       <Filter>Rendering\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BaseLevel.h" />
+    <ClInclude Include="LevelManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -226,7 +228,11 @@
     <ClCompile Include="Rendering\RenderShape.cpp">
       <Filter>Rendering\Source Files\Nodes</Filter>
     </ClCompile>
-    <ClCompile Include="Rendering\RenderSet.cpp" />
+    <ClCompile Include="BaseLevel.cpp" />
+    <ClCompile Include="LevelManager.cpp" />
+    <ClCompile Include="Rendering\RenderSet.cpp">
+      <Filter>Rendering\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
@@ -260,6 +266,12 @@
       <Filter>Rendering\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Rendering\Shaders\BasicVertexShader.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\TexturedPixel.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\TexturedVertex.hlsl">
       <Filter>Rendering\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

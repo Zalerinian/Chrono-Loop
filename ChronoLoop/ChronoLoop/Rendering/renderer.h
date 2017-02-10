@@ -55,6 +55,9 @@ namespace RenderEngine {
 		matrix4 GetProjection(vr::EVREye e);
 		void GetMVP(vr::EVREye e, MyBuffer &data);
 
+		void RenderVR();
+		void RenderNoVR();
+
 		Renderer();
 		~Renderer();
 	public:

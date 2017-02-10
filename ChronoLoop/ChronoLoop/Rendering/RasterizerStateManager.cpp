@@ -47,7 +47,7 @@ namespace RenderEngine {
 		(*Renderer::Instance()->GetDevice())->CreateRasterizerState(&desc, &state);
 		mStates[eRS_NO_CULL] = state;
 
-		this->ApplyState(eRS_NO_CULL);
+		this->ApplyState(eRS_FILLED);
 	}
 
 	RasterizerStateManager::~RasterizerStateManager() {

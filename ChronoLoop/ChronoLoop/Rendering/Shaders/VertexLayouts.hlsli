@@ -14,56 +14,56 @@ struct VERTEX_POS
 
 struct VERTEX_POSCOLOR
 {
-	float3 position :	POSITION0;
+	float4 position :	POSITION0;
 	float4 color	:	COLOR0;
 };
 
 struct VERTEX_POSTEX
 {
-	float3 position :	POSITION0;
-	float2 texCoord :	TEXCOORD0;
+	float4 position :	POSITION0;
+	float4 texCoord :	TEXCOORD0;
 };
 
 struct VERTEX_POSNORMTEX
 {
-	float3 position :	POSITION0;
-	float3 normal	:	NORMAL0;
-	float2 texCoord :	TEXCOORD0;
+	float4 position :	POSITION0;
+	float4 normal	:	NORMAL0;
+	float4 texCoord :	TEXCOORD0;
 };
 
 struct VERTEX_POSNORMTANTEX
 {
-	float3 position		: POSITION0;
-	float3 normal		: NORMAL0;
-	float2 texCoord		: TEXCOORD0;
-	float3 tangent		: TANGENT0;
+	float4 position		: POSITION0;
+	float4 normal		: NORMAL0;
+	float4 texCoord		: TEXCOORD0;
+	float4 tangent		: TANGENT0;
 	float determinant	: TANGENT1;
 };
 
 struct VERTEX_POSBONEWEIGHT
 {
-	float3 position :	POSITION0;
-	int4   bone     :   BONEIDS0;
+	float4 position :	POSITION0;
+	int4   bone     :   BONEINDICES0;
 	float4 weights  :   BONEWEIGHTS0;
 };
 
 struct VERTEX_POSBONEWEIGHTNORMTEX
 {
-	float3 position :	POSITION0;
+	float4 position :	POSITION0;
 	int4   bone     :   BONEIDS0;
 	float4 weights  :   BONEWEIGHTS0;
-	float3 normal	:	NORMAL0;
-	float2 texCoord :	TEXCOORD0;
+	float4 normal	:	NORMAL0;
+	float4 texCoord :	TEXCOORD0;
 };
 
 struct VERTEX_POSBONEWEIGHTNORMTANTEX
 {
-	float3 position :	POSITION0;
-	float3 normal	:	NORMAL0;
-	float2 texCoord :	TEXCOORD0;
+	float4 position :	POSITION0;
+	float4 normal	:	NORMAL0;
+	float4 texCoord :	TEXCOORD0;
 	int4   bone     :   BONEIDS0;
 	float4 weights  :   BONEWEIGHTS0;
-	float3 tangent		: TANGENT0;
+	float4 tangent		: TANGENT0;
 	float determinant	: TANGENT1;
 };
 
