@@ -4,10 +4,11 @@
 HWND hwnd;
 LPCTSTR WndClassName = L"ChronoWindow";
 HINSTANCE hInst;
-Messager theBUS;
+Messager msger = Messager::Instance();
 
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+template<class... Args>
 void Update();
 
 int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
@@ -97,10 +98,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 	return 0;
 }
 
+template<class... Args>
 void Update() {
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
+
+	Message<> * _msg = new Message<>(messageTypes::SoundEngine, soundMessages::INITAILIZE_Audio, 0, false);
+	msger.SendInMessage((void*)_msg);
+	Message<Listener*, const char*> *_msg1 = new Message<Listener*, const char*>(messageTypes::SoundEngine, soundMessages::ADD_Listener, 0, false, new Listener(), nullptr);
+	msger.SendInMessage((void*)_msg1);
+
 	while (true) {
+
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			// Handle windows message.
 			if (msg.message == WM_QUIT) {

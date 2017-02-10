@@ -33,15 +33,15 @@ class Listener : public Component
 {
 public:
 
-	//void Update();
+	void Update();
+	void Destroy();
+
 };
 
 class Emitter : public Component
 {
 public:
-	void Play();
-	void Pause();
-	void Stop();
+	void MakeEvent(long _id);
 
 	void Update();
 	void Destroy();
@@ -52,7 +52,7 @@ business entity- gmail, twitter, facebook, steam account
 art, audio, marketing, designer students ?
 
 first initial last name, password lower case
-gdserve.fullsail.com:8080
+gdserv.fullsail.com:8080
 install doc, follow it
 
 

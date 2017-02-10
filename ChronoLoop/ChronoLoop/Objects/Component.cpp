@@ -8,20 +8,6 @@ using namespace Math;
 //Base Component---------------------------------------------
 #pragma region Base Component
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Transform& Component::GetTransform() const
 {
 	  return object->transform;
@@ -32,17 +18,15 @@ Transform& Component::GetTransform() const
 //Listener----------------------------------------------------
 #pragma region Listener
 
-//void Listener::Update(){}
+void Listener::Update()
+{
 
+}
 
+void Listener::Destroy() 
+{
 
-
-
-
-
-
-
-
+}
 
 #pragma endregion
 //------------------------------------------------------------
@@ -54,17 +38,7 @@ void Emitter::Update()
 
 }
 
-void Emitter::Play()
-{
-
-}
-
-void Emitter::Pause()
-{
-
-}
-
-void Emitter::Stop()
+void Emitter::MakeEvent(long _id)
 {
 
 }

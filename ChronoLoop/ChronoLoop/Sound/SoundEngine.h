@@ -2,14 +2,11 @@
 //Credit to John Murphy
 #include <vector>
 #include <map>
+#include "../Objects/Component.h"
 
 #include "AkSoundEngineDLL.h"
 
-class Emitter;
-class Listener;
 struct vec4f;
-
-#define DLL __declspec(dllexport)
 
 //Needed to work with Wwise soundbanks and the .h they generate
 #if defined(_WIN64)
@@ -17,8 +14,6 @@ typedef unsigned __int64 AudioEvent;				///< Integer (unsigned) type for pointer
 #else
 typedef __w64 unsigned int AudioEvent;			///< Integer (unsigned) type for pointers
 #endif
-extern "C"
-{
 	class AudioWrapper
 	{
 		static AudioWrapper* audioSystem;
@@ -59,4 +54,4 @@ extern "C"
 		bool UnloadSoundBank(const wchar_t* _BankName);
 
 	};
-}
+

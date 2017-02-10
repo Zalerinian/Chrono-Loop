@@ -7,7 +7,6 @@
 #include <string>
 #include <sstream>
 #include "../Common/Math.h"
-#include "../Objects/Component.h"
 #include "../Objects/Transform.h"
 using namespace Math;
 
