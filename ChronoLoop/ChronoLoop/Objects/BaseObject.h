@@ -6,7 +6,7 @@
 #include "Component.h"
 #include "../Physics/Physics.h"
 using namespace Physics;
-#include "../TimeManager.h"
+#include "../Core/TimeManager.h"
 
 class Component;
 

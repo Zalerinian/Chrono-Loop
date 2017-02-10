@@ -1,5 +1,6 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "TimeManager.h"
+#include "Timeline.h"
 
 TimeManager* TimeManager::instanceTimemanager = nullptr;
 Timeline* TimeManager::mTimeline = nullptr;

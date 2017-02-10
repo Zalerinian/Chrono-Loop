@@ -1,4 +1,4 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "renderer.h"
 #include <d3d11.h>
 #include <openvr.h>
@@ -8,8 +8,8 @@
 #include "RenderShape.h"
 #include "../../DXTK/DirectXTexP.h"
 #include "../../DXTK/ddstextureloader.h"
-#include "../VRInputManager.h"
-#include "../Controller.h"
+#include "../Input/VRInputManager.h"
+#include "../Input/Controller.h"
 
 using namespace std;
 
@@ -207,7 +207,7 @@ namespace RenderEngine {
 			TextureDescription.Height = texHeight;
 			TextureDescription.MipLevels = 1;
 			TextureDescription.ArraySize = 1;
-			TextureDescription.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			TextureDescription.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 			TextureDescription.SampleDesc.Count = 1;
 			TextureDescription.Usage = D3D11_USAGE_DEFAULT;
 			TextureDescription.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
@@ -414,7 +414,7 @@ namespace RenderEngine {
 						(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
 						(*mContext)->IASetIndexBuffer(mControllerModel.mIndexBuffer, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
 						(*mContext)->IASetVertexBuffers(0, 1, &mControllerModel.mVertexBuffer, &strideGround, &offsetGround);
-						
+
 						(*mContext)->VSSetShader(mControllerModel.vShader, nullptr, 0);
 						(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
 						/// Pixel Shader(s)
@@ -428,7 +428,7 @@ namespace RenderEngine {
 						(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
 						(*mContext)->IASetIndexBuffer(mControllerModel.mIndexBuffer, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
 						(*mContext)->IASetVertexBuffers(0, 1, &mControllerModel.mVertexBuffer, &strideGround, &offsetGround);
-						
+
 						(*mContext)->VSSetShader(mControllerModel.vShader, nullptr, 0);
 						(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
 						/// Pixel Shader(s)
@@ -473,21 +473,12 @@ namespace RenderEngine {
 
 
 
+				ID3D11Resource* bbuffer;
+				ThrowIfFailed((*mChain)->GetBuffer(0, __uuidof(bbuffer), (void**)(&bbuffer)));
 
-
-
-			vr::TrackedDevicePose_t pose;
-			mVrSystem->GetDeviceToAbsoluteTrackingPose(vr::ETrackingUniverseOrigin::TrackingUniverseStanding,
-				0,
-				&pose,
-				1);
-
-			vr::VRCompositor()->CompositorBringToFront();
-			vr::TrackedDevicePose_t m_rTrackedDevicePose[vr::k_unMaxTrackedDeviceCount];
-			auto e = vr::VRCompositor()->WaitGetPoses(m_rTrackedDevicePose, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
 			for (int i = 0; i < 2; i++) {
 				vr::Texture_t tex = { i == 0 ? (void*)(*mLeftTexture) : (void*)(*mRightTexture), vr::TextureType_DirectX, vr::ColorSpace_Auto };
-				e = vr::VRCompositor()->Submit(i == 0 ? vr::EVREye::Eye_Left : vr::EVREye::Eye_Right, &tex);
+				vr::VRCompositor()->Submit(i == 0 ? vr::EVREye::Eye_Left : vr::EVREye::Eye_Right, &tex);
 			}
 		}
 

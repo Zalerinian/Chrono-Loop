@@ -7,7 +7,7 @@
 #include <directxmath.h>
 #include <vector>
 #include <fstream>
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "Structures.h"
 
 struct Triangle

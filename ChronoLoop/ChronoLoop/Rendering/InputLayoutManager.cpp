@@ -1,4 +1,4 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include <d3d11.h>
 #include "InputLayoutManager.h"
 #include "renderer.h"

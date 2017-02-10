@@ -5,12 +5,12 @@ struct matrix4;
 
 enum ComponentType
 {
-	Unknown,
-	Code,
-	Collider,
-	AudioEmitter,
-	AudioListener,
-	UI
+	eCOMPONENT_Unknown,
+	eCOMPONENT_Code,
+	eCOMPONENT_Collider,
+	eCOMPONENT_AudioEmitter,
+	eCOMPONENT_AudioListener,
+	eCOMPONENT_UI
 };
 class Component
 {
