@@ -32,8 +32,6 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	if (!InitializeWindow(hInstance, nCmdShow, 800, 600, true)) {
 		MessageBox(NULL, L"Kablamo.", L"The window broked.", MB_ICONERROR | MB_OK);
 	}
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	_CrtSetBreakAlloc(-1);
 
 
 	// Initialize Rendering systems and VR
@@ -159,6 +157,7 @@ void Update() {
 
 			UpdateTime();
 			// Input.Update(float deltaTime);
+			VRInputManager::Instance().update();
 			// Logic.Update(float deltaTime);
 			TManager->Instance()->Update(deltaTime);
 			RenderEngine::Renderer::Instance()->Render();

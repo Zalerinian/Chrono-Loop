@@ -91,6 +91,9 @@
     <Filter Include="Rendering\Source Files\Managers">
       <UniqueIdentifier>{4309e908-8f28-4b2b-9cab-2df4b234807b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DXTK">
+      <UniqueIdentifier>{16572d88-a51f-45a6-a564-025b7a4af6ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\BaseObject.h">
@@ -165,7 +168,6 @@
     </ClInclude>
     <ClInclude Include="BaseLevel.h" />
     <ClInclude Include="LevelManager.h" />
-    <ClInclude Include="Rendering\RenderShape.h" />
     <ClInclude Include="Rendering\InputLayoutManager.h">
       <Filter>Rendering\Header Files\Managers</Filter>
     </ClInclude>
@@ -180,6 +182,33 @@
     </ClInclude>
     <ClInclude Include="Rendering\RenderNode.h">
       <Filter>Rendering\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DXTK\BC.h">
+      <Filter>DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DXTK\BCDirectCompute.h">
+      <Filter>DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DXTK\DDS.h">
+      <Filter>DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DXTK\ddstextureloader.h">
+      <Filter>DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DXTK\DirectXTex.h">
+      <Filter>DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DXTK\DirectXTexP.h">
+      <Filter>DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DXTK\Filters.h">
+      <Filter>DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DXTK\scoped.h">
+      <Filter>DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RenderShape.h">
+      <Filter>Rendering\Header Files\Nodes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -240,7 +269,6 @@
     <ClCompile Include="Controller.cpp">
       <Filter>Input\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rendering\RenderShape.cpp" />
     <ClCompile Include="Rendering\RasterizerStateManager.cpp">
       <Filter>Rendering\Source Files\Managers</Filter>
     </ClCompile>
@@ -251,6 +279,72 @@
       <Filter>Rendering\Source Files\Nodes</Filter>
     </ClCompile>
     <ClCompile Include="Rendering\RenderNode.cpp">
+      <Filter>Rendering\Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\BC.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\BC4BC5.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\BC6HBC7.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\BCDirectCompute.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DDSTextureLoader.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexCompress.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexCompressGPU.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexConvert.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexD3D11.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexDDS.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexFlipRotate.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexHDR.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexImage.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexMipmaps.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexMisc.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexNormalMaps.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexPMAlpha.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexResize.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexTGA.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexUtil.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexWIC.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\RenderShape.cpp">
       <Filter>Rendering\Source Files\Nodes</Filter>
     </ClCompile>
   </ItemGroup>
@@ -330,6 +424,9 @@
     </None>
     <None Include="Rendering\Shaders\VertexLayouts.hlsli">
       <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </None>
+    <None Include="..\DXTK\DirectXTex.inl">
+      <Filter>DXTK</Filter>
     </None>
   </ItemGroup>
 </Project>

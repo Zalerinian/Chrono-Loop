@@ -25,22 +25,26 @@ void VRInputManager::mInitialize(vr::IVRSystem * _hmd)
 
 void VRInputManager::update()
 {
-	if (mRightController.GetPressDown(vr::k_EButton_SteamVR_Trigger))
-		std::cout << "Right Trigger Pressed";
-	if (mRightController.GetPressDown(vr::k_EButton_SteamVR_Touchpad))
-		std::cout << "Right Touchpad Pressed";
-	if (mRightController.GetPressDown(vr::k_EButton_ApplicationMenu))
-		std::cout << "Right Menu Pressed";
-	if (mRightController.GetPressDown(vr::k_EButton_Grip))
-		std::cout << "Right Grip Pressed";
-	if (mLeftController.GetPressDown(vr::k_EButton_SteamVR_Trigger))
-		std::cout << "Left Trigger Pressed";
-	if (mLeftController.GetPressDown(vr::k_EButton_SteamVR_Touchpad))
-		std::cout << "Left Touchpad Pressed";
-	if (mLeftController.GetPressDown(vr::k_EButton_ApplicationMenu))
-		std::cout << "Left Menu Pressed";
-	if (mLeftController.GetPressDown(vr::k_EButton_Grip))
-		std::cout << "Left Grip Pressed";
+	if (true) {
+		if (mRightController.GetPressDown(vr::k_EButton_SteamVR_Trigger))
+			std::cout << "Right Trigger Pressed" << std::endl;
+		if (mRightController.GetPressDown(vr::k_EButton_SteamVR_Touchpad))
+			std::cout << "Right Touchpad Pressed" << std::endl;
+		if (mRightController.GetPressDown(vr::k_EButton_ApplicationMenu))
+			std::cout << "Right Menu Pressed" << std::endl;
+		if (mRightController.GetPressDown(vr::k_EButton_Grip))
+			std::cout << "Right Grip Pressed" << std::endl;
+	}
+	if(true) {
+		if (mLeftController.GetPressDown(vr::k_EButton_SteamVR_Trigger))
+			std::cout << "Left Trigger Pressed" << std::endl;
+		if (mLeftController.GetPressDown(vr::k_EButton_SteamVR_Touchpad))
+			std::cout << "Left Touchpad Pressed" << std::endl;
+		if (mLeftController.GetPressDown(vr::k_EButton_ApplicationMenu))
+			std::cout << "Left Menu Pressed" << std::endl;
+		if (mLeftController.GetPressDown(vr::k_EButton_Grip))
+			std::cout << "Left Grip Pressed" << std::endl;
+	}
 }
 
 VRInputManager & VRInputManager::Instance()
