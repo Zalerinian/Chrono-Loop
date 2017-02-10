@@ -38,7 +38,7 @@ void Timeline::AddSnapshot(float _snaptime,Snapshot _snapshot)
 	if(mSnapshots.size() > 1)
 	{
 		//_snapshot.mUpdatedtimes = mSnapshots[mSnaptimes.size() - 2];
-		mSnapshots[mSnaptimes.size() - 1] = _snapshot;
+		mSnapshots[(float)mSnaptimes.size() - 1] = _snapshot;
 		
 	}
 	else

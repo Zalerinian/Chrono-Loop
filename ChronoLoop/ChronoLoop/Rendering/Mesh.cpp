@@ -105,7 +105,7 @@ bool Mesh::Load(char * path)
 
 bool Mesh::Load(vr::RenderModel_t * _model)
 {
-	for (int i = 0; i < _model->unVertexCount; i++)
+	for (unsigned int i = 0; i < _model->unVertexCount; i++)
 	{
 		VertexPos temp;
 		for (int j = 0; j < 3; j++)
@@ -114,7 +114,7 @@ bool Mesh::Load(vr::RenderModel_t * _model)
 		
 		mUniqueVerts.push_back(temp);
 	}
-	for (int i = 0; i < _model->unTriangleCount * 3; i++)
+	for (unsigned int i = 0; i < _model->unTriangleCount * 3; i++)
 	{
 		mIndicies.push_back(_model->rIndexData[i]);
 	}
