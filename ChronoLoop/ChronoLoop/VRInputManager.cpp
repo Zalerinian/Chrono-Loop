@@ -28,31 +28,33 @@ void VRInputManager::update()
 	if (mRightController.GetIndex() < 0)
 	{
 		mRightController.SetIndex(mHmd->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_RightHand));
-		std::cout << "Right Controler reconnected." << std::endl;
+		if (mRightController.GetIndex() > 0)
+			std::cout << "Right Controler reconnected." << std::endl;
 	}
 	if (mLeftController.GetIndex() < 0)
 	{
 		mLeftController.SetIndex(mHmd->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand));
-		std::cout << "Left Controler reconnected." << std::endl;
+		if (mLeftController.GetIndex() > 0)
+			std::cout << "Left Controler reconnected." << std::endl;
 	}
 	if (true) {
-		if (mRightController.GetPressDown(vr::k_EButton_SteamVR_Trigger))
+		if (mRightController.GetPress(vr::k_EButton_SteamVR_Trigger))
 			std::cout << "Right Trigger Pressed" << std::endl;
-		if (mRightController.GetPressDown(vr::k_EButton_SteamVR_Touchpad))
+		if (mRightController.GetPress(vr::k_EButton_SteamVR_Touchpad))
 			std::cout << "Right Touchpad Pressed" << std::endl;
-		if (mRightController.GetPressDown(vr::k_EButton_ApplicationMenu))
+		if (mRightController.GetPress(vr::k_EButton_ApplicationMenu))
 			std::cout << "Right Menu Pressed" << std::endl;
-		if (mRightController.GetPressDown(vr::k_EButton_Grip))
+		if (mRightController.GetPress(vr::k_EButton_Grip))
 			std::cout << "Right Grip Pressed" << std::endl;
 	}
 	if(true) {
-		if (mLeftController.GetPressDown(vr::k_EButton_SteamVR_Trigger))
+		if (mLeftController.GetPress(vr::k_EButton_SteamVR_Trigger))
 			std::cout << "Left Trigger Pressed" << std::endl;
-		if (mLeftController.GetPressDown(vr::k_EButton_SteamVR_Touchpad))
+		if (mLeftController.GetPress(vr::k_EButton_SteamVR_Touchpad))
 			std::cout << "Left Touchpad Pressed" << std::endl;
-		if (mLeftController.GetPressDown(vr::k_EButton_ApplicationMenu))
+		if (mLeftController.GetPress(vr::k_EButton_ApplicationMenu))
 			std::cout << "Left Menu Pressed" << std::endl;
-		if (mLeftController.GetPressDown(vr::k_EButton_Grip))
+		if (mLeftController.GetPress(vr::k_EButton_Grip))
 			std::cout << "Left Grip Pressed" << std::endl;
 	}
 }
