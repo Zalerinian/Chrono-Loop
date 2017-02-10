@@ -5,6 +5,7 @@
 #include <iostream>
 #include "Mesh.h"
 #include "InputLayoutManager.h"
+#include "RenderShape.h"
 
 using namespace std;
 
@@ -41,6 +42,49 @@ namespace RenderEngine {
 	void Renderer::DoAllTheBootlegThingsForTheDemo()
 	{
 		
+	}
+
+	matrix4 Renderer::GetEye(vr::EVREye e) {
+		vr::HmdMatrix34_t matEyeRight = mVrSystem->GetEyeToHeadTransform(e);
+		matrix4 matrixObj(
+			matEyeRight.m[0][0], matEyeRight.m[1][0], matEyeRight.m[2][0], 0.0,
+			matEyeRight.m[0][1], matEyeRight.m[1][1], matEyeRight.m[2][1], 0.0,
+			matEyeRight.m[0][2], matEyeRight.m[1][2], matEyeRight.m[2][2], 0.0,
+			matEyeRight.m[0][3], matEyeRight.m[1][3], matEyeRight.m[2][3], 1.0f
+		);
+
+		return matrixObj.Inverse();
+	}
+
+	matrix4 Renderer::GetProjection(vr::EVREye e) {
+		
+		vr::HmdMatrix44_t mat = mVrSystem->GetProjectionMatrix(e, 0.1f, 1000);
+
+		return matrix4(
+			mat.m[0][0], mat.m[1][0], mat.m[2][0], mat.m[3][0],
+			mat.m[0][1], mat.m[1][1], mat.m[2][1], mat.m[3][1],
+			mat.m[0][2], mat.m[1][2], mat.m[2][2], mat.m[3][2],
+			mat.m[0][3], mat.m[1][3], mat.m[2][3], mat.m[3][3]
+		);
+	}
+
+	void Renderer::GetMVP(vr::EVREye e, MyBuffer &data) {
+		
+		vr::TrackedDevicePose_t poses[vr::k_unMaxTrackedDeviceCount];
+		vr::VRCompositor()->WaitGetPoses(poses, vr::k_unMaxTrackedDeviceCount, NULL, 0);
+
+		matrix4 hmd = (Math::FromMatrix(poses[0].mDeviceToAbsoluteTracking));
+
+		matrix4 hmdPos = hmd.Inverse();
+		if (e == vr::EVREye::Eye_Left) {
+			data.model = Math::MatrixTranspose(Math::MatrixTranslation(0, 0, 0));
+			data.view = Math::MatrixTranspose(mEyePosLeft * hmdPos);
+			data.projection = Math::MatrixTranspose(mEyeProjLeft);
+		} else {
+			data.model = Math::MatrixTranspose(Math::MatrixTranslation(0, 0, 0));
+			data.view = Math::MatrixTranspose(mEyePosRight * hmdPos);
+			data.projection = Math::MatrixTranspose(mEyeProjRight);
+		}
 	}
 
 	Renderer::Renderer() {}
@@ -251,25 +295,27 @@ namespace RenderEngine {
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, _width, _height);
 		InitializeViews(_width, _height);
 
-		constantData.projection = Math::MatrixTranspose(Math::Projection((float)_width / (float)_height, 180, _nearPlane, _farPlane));
-		constantData.view = Math::MatrixTranspose(Math::MatrixTranslation(0, -1, 5)).Inverse();
-		constantData.model.matrix = DirectX::XMMatrixIdentity();
+		mEyePosLeft = GetEye(vr::EVREye::Eye_Left);
+		mEyePosRight = GetEye(vr::EVREye::Eye_Right);
+		mEyeProjLeft = GetProjection(vr::EVREye::Eye_Left);
+		mEyeProjRight = GetProjection(vr::EVREye::Eye_Right);
+
+
+
+
 		// Eye gets changd per render
-		mMeshes.push_back(Mesh("Box.obj"));
-		mMeshes[0].loadShaders("BasicPixelShader.cso", "BasicVertexShader.cso");
+		RenderShape *box = new RenderShape(Mesh("../Resources/Box.obj"));
+		box->LoadShaders("BasicVertexShader.cso", "BasicPixelShader.cso");
+		AddNode(box);
 
 		CD3D11_BUFFER_DESC desc(sizeof(MyBuffer), D3D11_BIND_CONSTANT_BUFFER);
 		(*mDevice)->CreateBuffer(&desc, nullptr, &constantBluffer);
 
-		desc = CD3D11_BUFFER_DESC(sizeof(VertexPos) * (UINT)mMeshes[0].VertSize(), D3D11_BIND_VERTEX_BUFFER);
-		(*mDevice)->CreateBuffer(&desc, nullptr, &boxVertex);
-		(*mContext)->UpdateSubresource(boxVertex, 0, NULL, mMeshes[0].GetVerts(), 0, 0);
-
-		desc = CD3D11_BUFFER_DESC(sizeof(unsigned short) * (UINT)mMeshes[0].IndicieSize(), D3D11_BIND_INDEX_BUFFER);
-		(*mDevice)->CreateBuffer(&desc, nullptr, &boxIndex);
-		(*mContext)->UpdateSubresource(boxIndex, 0, NULL, mMeshes[0].GetIndicies(), 0, 0);
-
 		return true;
+	}
+
+	void Renderer::AddNode(RenderNode *node) {
+		mRenderSet.AddNode(node);
 	}
 
 	void Renderer::Render() {
@@ -280,40 +326,37 @@ namespace RenderEngine {
 			(*mContext)->ClearRenderTargetView((*mRightEye), color);
 		}
 
-		matrix4 temp = Math::FromMatrix(mVrSystem->GetEyeToHeadTransform(vr::EVREye::Eye_Left));
-		constantData.eye.matrix = temp.Inverse().matrix;
+
+		GetMVP(vr::EVREye::Eye_Left, constantData);
 		(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
 		(*mContext)->OMSetRenderTargets(1, mDebugScreen.get(), (*mDSView));
 		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 		UINT strideGround = sizeof(VertexPos);
 		UINT offsetGround = 0;
-		(*mContext)->IASetInputLayout(InputLayoutManager::Instance().GetInputLayout(eVERT_POS));
-		(*mContext)->IASetIndexBuffer(boxIndex, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
-		(*mContext)->IASetVertexBuffers(0, 1, &boxVertex, &strideGround, &offsetGround);
+		(*mContext)->IASetInputLayout(InputLayoutManager::Instance().GetInputLayout(eVERT_POS)); 
+		(*mContext)->IASetIndexBuffer(((RenderShape*)mRenderSet.GetHead())->mIndexBuffer, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
+		(*mContext)->IASetVertexBuffers(0, 1, &((RenderShape*)mRenderSet.GetHead())->mVertexBuffer, &strideGround, &offsetGround);
 		(*mContext)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		(*mContext)->VSSetShader(mMeshes[0].vShader, nullptr, 0);
+		(*mContext)->VSSetShader(((RenderShape*)mRenderSet.GetHead())->vShader, nullptr, 0);
 		(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
 		/// Pixel Shader(s)
-		(*mContext)->PSSetShader(mMeshes[0].pShader, nullptr, 0);
+		(*mContext)->PSSetShader(((RenderShape*)mRenderSet.GetHead())->pShader, nullptr, 0);
 
-
-		(*mContext)->DrawIndexed((UINT)mMeshes[0].IndicieSize(), 0, 0);
-
-		(*mContext)->OMSetRenderTargets(1, mLeftEye.get(), (*mVRDSView));
-		(*mContext)->ClearDepthStencilView((*mVRDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-		(*mContext)->DrawIndexed((UINT)mMeshes[0].IndicieSize(), 0, 0);
-
-		constantData.eye.matrix = Math::FromMatrix(mVrSystem->GetEyeToHeadTransform(vr::EVREye::Eye_Right)).Inverse().matrix;
-		(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
-		(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
-		(*mContext)->OMSetRenderTargets(1, mRightEye.get(), (*mVRDSView));
-		(*mContext)->ClearDepthStencilView((*mVRDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-		(*mContext)->DrawIndexed((UINT)mMeshes[0].IndicieSize(), 0, 0);
+		(*mContext)->DrawIndexed((UINT)((RenderShape*)mRenderSet.GetHead())->mIndexCount, 0, 0);
 
 		if (mVrSystem != nullptr) {
+				(*mContext)->OMSetRenderTargets(1, mLeftEye.get(), (*mVRDSView));
+				(*mContext)->ClearDepthStencilView((*mVRDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+				(*mContext)->DrawIndexed((UINT)((RenderShape*)mRenderSet.GetHead())->mIndexCount, 0, 0);
 
+				GetMVP(vr::EVREye::Eye_Right, constantData);
+				(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
+				(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
+				(*mContext)->OMSetRenderTargets(1, mRightEye.get(), (*mVRDSView));
+				(*mContext)->ClearDepthStencilView((*mVRDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+				(*mContext)->DrawIndexed((UINT)((RenderShape*)mRenderSet.GetHead())->mIndexCount, 0, 0);
 
 
 			vr::TrackedDevicePose_t pose;
@@ -327,7 +370,7 @@ namespace RenderEngine {
 			auto e = vr::VRCompositor()->WaitGetPoses(m_rTrackedDevicePose, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
 			for (int i = 0; i < 2; i++) {
 				vr::Texture_t tex = { i == 0 ? (void*)(*mLeftTexture) : (void*)(*mRightTexture), vr::TextureType_DirectX, vr::ColorSpace_Auto };
-				vr::VRCompositor()->Submit(i == 0 ? vr::EVREye::Eye_Left : vr::EVREye::Eye_Right, &tex);
+				e = vr::VRCompositor()->Submit(i == 0 ? vr::EVREye::Eye_Left : vr::EVREye::Eye_Right, &tex);
 			}
 		}
 
