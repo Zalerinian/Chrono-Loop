@@ -2,6 +2,7 @@
 #include "Rendering\SystemInitializer.h"
 #include "Rendering\renderer.h"
 #include "Rendering\InputLayoutManager.h"
+#include "VRInputManager.h"
 #include <openvr.h>
 #include <iostream>
 
@@ -36,7 +37,10 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	if (!RenderEngine::InitializeSystems(hwnd, 1512, 1680, false, 90, false, 1000, 0.1f, vrsys)) {
 		return 1;
 	}
-
+	if (vrsys)
+	{
+		VRInputManager::Instance();
+	}
 	// Update everything
 	Update();
 

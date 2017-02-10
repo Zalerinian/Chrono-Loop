@@ -171,6 +171,14 @@
     </ClInclude>
     <ClInclude Include="BaseLevel.h" />
     <ClInclude Include="LevelManager.h" />
+    <ClInclude Include="VRInputManager.h">
+      <Filter>Input\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller.h">
+      <Filter>Input\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLevel.h" />
+    <ClInclude Include="LevelManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -232,6 +240,14 @@
     <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="Rendering\RenderSet.cpp">
       <Filter>Rendering\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLevel.cpp" />
+    <ClCompile Include="LevelManager.cpp" />
+    <ClCompile Include="VRInputManager.cpp">
+      <Filter>Input\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller.cpp">
+      <Filter>Input\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
