@@ -136,7 +136,7 @@ void Messager::ProcessMessage(Message<Args...>* _msg)
 		ProcessSound(_msg);
 	}
 	break;
-	case messageTypes::RenderEngine:
+	case messageTypes::Render:
 	{
 		ProcessRender(_msg);
 	}
@@ -146,7 +146,7 @@ void Messager::ProcessMessage(Message<Args...>* _msg)
 		ProcessInput(_msg);
 	}
 	break;
-	case messageTypes::Physics:
+	case messageTypes::Science:
 	{
 		ProcessPhysics(_msg);
 	}

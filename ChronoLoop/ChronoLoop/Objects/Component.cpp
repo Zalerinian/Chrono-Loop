@@ -10,7 +10,7 @@ using namespace Math;
 
 Transform& Component::GetTransform() const
 {
-	  return object->transform;
+	  return object->GetTransform();
 }
 
 #pragma endregion

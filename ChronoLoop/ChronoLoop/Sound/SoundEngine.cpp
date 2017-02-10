@@ -81,12 +81,12 @@ void AudioWrapper::Update()
 	for (i = 0; i < mListeners.size(); ++i) {
 		const vec4f * pos = mListeners[i]->GetTransform().GetPosition();
 
-		lPos.SetPosition(pos->data.x, pos->data.y, pos->data.z);
+		lPos.SetPosition(pos->x, pos->y, pos->z);
 
 		const vec4f * zAxis = mListeners[i]->GetTransform().GetZAxis();
 		const vec4f * yAxis = mListeners[i]->GetTransform().GetYAxis();
 
-		lPos.SetOrientation(zAxis->data.x, zAxis->data.y, zAxis->data.z, yAxis->data.x, yAxis->data.y, yAxis->data.z);
+		lPos.SetOrientation(zAxis->x, zAxis->y, zAxis->z, yAxis->x, yAxis->y, yAxis->z);
 
 		SoundEngine::SetListenerPosition(lPos, i);
 	}
@@ -94,12 +94,12 @@ void AudioWrapper::Update()
 	for (i = 0; i < mEmitters.size(); ++i) {
 		const vec4f * pos = mEmitters[i]->GetTransform().GetPosition();
 
-		sPos.SetPosition(pos->data.x, pos->data.y, pos->data.z);
+		sPos.SetPosition(pos->x, pos->y, pos->z);
 
 		const vec4f * zAxis = mEmitters[i]->GetTransform().GetZAxis();
 		const vec4f * yAxis = mEmitters[i]->GetTransform().GetYAxis();
 
-		sPos.SetOrientation(zAxis->data.x, zAxis->data.y, zAxis->data.z, yAxis->data.x, yAxis->data.y, yAxis->data.z);
+		sPos.SetOrientation(zAxis->x, zAxis->y, zAxis->z, yAxis->x, yAxis->y, yAxis->z);
 
 		SoundEngine::SetPosition((AkGameObjectID)mEmitters[i], sPos);
 	}
@@ -209,7 +209,7 @@ bool AudioWrapper::MakeEvent(AudioEvent _id, vec4f * _pos)
 
 	AkSoundPosition sPos;
 	sPos.SetOrientation(0, 0, 1.0f, 0, 0, 1.0f);
-	sPos.SetPosition(_pos->data.x, _pos->data.y, _pos->data.z);
+	sPos.SetPosition(_pos->x, _pos->y, _pos->z);
 
 	SoundEngine::SetPosition(dummyID, sPos);
 	if (SoundEngine::PostEvent((AkUniqueID)_id, dummyID) == AK_INVALID_PLAYING_ID)

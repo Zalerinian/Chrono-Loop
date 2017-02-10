@@ -8,55 +8,49 @@
 #include <vector>
 #include <fstream>
 #include "stdafx.h"
-#include "renderer.h"
-#include "Structures.h
+#include "Structures.h"
 
-struct Skeleton
+struct Triangle
 {
-	std::vector<Bone*> Bones;
-	Animation m_anim;
+	vec4f* Vertex[3];
+	vec4f Normal;
 };
+namespace vr
+{
+	struct RenderModel_t;
+}
 
 class Mesh
 {
 private:
-
-	std::vector<AnimatedVert> UniqueVerts;
-	std::vector<unsigned short> Indicies;
-	//std::vector<Bone*> Bones;
-	wchar_t *Image;
-	size_t totalVerts;
-	size_t totalUnique;
-	Renderer::Node* m_node;
-	bool FirstRun = true;
-
+	std::vector<Triangle> mTriangles;
+	std::vector<VertexPosNormTex> mUniqueVerts;
+	std::vector<unsigned short> mIndicies;
+	wchar_t *mImage;
 public:
+	// Super temporary shit
+	ID3D11PixelShader *pShader;
+	ID3D11VertexShader *vShader;
 
-	int currSkeleton = 0;
-	int NumSkeletons = 0;
 	Mesh();
 	Mesh(char *path);
 	Mesh(char *path, wchar_t *path2);
 	virtual ~Mesh();
+	void loadShaders(char *pixel, char* vertex);
 	bool Load(char *path);
-	//bool Load(std::vector<Vertex>* vecArray, std::vector<Bone>* boneArray, Animation * anim);
-	bool LoadBin(char *path);
+	bool Load(vr::RenderModel_t *_model);
+	Triangle *GetTriangles();
+	inline size_t GetNumTriangles() { return mTriangles.size(); };
+	//bool LoadBin(char *path);
 	void Clear();
 	void Invert();
-	void MakePlane();
-	void MakeViewPlane();
-	AnimatedVert *GetVerts();
+	//void MakePlane();
+	//void MakeViewPlane();
+	VertexPosNormTex *GetVerts();
 	size_t VertSize();
 	unsigned short *GetIndicies();
 	size_t IndicieSize();
 	wchar_t *ImagePath();
-	void CreateNode();
-	void SetConstantBuffer(ModelViewProjectionConstantBuffer* cb) { m_node->SetConstantBuffer(cb); };
-	void SetImagePath(wchar_t* path) { Image = path; };
-	void Translate(float x, float y, float z) { m_node->Translate(x, y, z); };
-	void SetPos(float x, float y, float z) { m_node->Position(x, y, z); };
-	void Scale(float x, float y, float z) { m_node->Scale(x, y, z); };
-	void Rotate(float x, float y, float z) { m_node->Rotate(x, y, z); };
-	void ToggleRender() { if (m_node) m_node->ToggleRender(); };
+	void SetImagePath(wchar_t* path) { mImage = path; };
 };
 

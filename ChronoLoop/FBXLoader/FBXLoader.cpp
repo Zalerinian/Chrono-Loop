@@ -170,7 +170,7 @@ void LoadFBX(char* path, bool Reopen = true)
 						int* bIndices = cluster->GetControlPointIndices();
 						for (int ind = 0; ind < indices; ++ind)
 						{
-							for (int l = 0; l < verts->size(); ++l)
+							for (unsigned int l = 0; l < verts->size(); ++l)
 							{
 								if (verts->at(l).controlPointIndice == cluster->GetControlPointIndices()[ind])
 								{
