@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Controller.h"
+#include <iostream>
 
 #define MAX(a,b) ((a) > (b) ? (a) : (b))
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
@@ -15,6 +16,13 @@ void Controller::Update()
 	mPrevState = mState;
 	if (mHmd != NULL)
 	{
+		/*uint64_t touchpad = vr::ButtonMaskFromId(vr::EVRButtonId::k_EButton_SteamVR_Touchpad);
+		if (mState.ulButtonTouched & touchpad) {
+			std::cout << "Touchpad touched " << touchpad << std::endl;
+		}
+		if (mState.ulButtonPressed & touchpad) {
+			std::cout << "Touchpad pressed " << touchpad << std::endl;
+		}*/
 		mValid = mHmd->GetControllerStateWithPose(mTrackingSpace, mIndex, &mState, sizeof(mState), &mPose);
 		if (mPrevState.ulButtonPressed != mState.ulButtonPressed)
 			int breakpoint = 0;
