@@ -5,10 +5,13 @@
 #include "VRInputManager.h"
 #include <openvr.h>
 #include <iostream>
+#include <ctime>
+#include <chrono>
 
 #define _CRTDBG_MAP_ALLOC  
 #include <stdlib.h>  
 #include <crtdbg.h> 
+
 
 
 HWND hwnd;
@@ -16,14 +19,21 @@ LPCTSTR WndClassName = L"ChronoWindow";
 HINSTANCE hInst;
 
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed);
+std::chrono::steady_clock::time_point lastTime = std::chrono::steady_clock::now();
+static float timeFrame = 0.0f;
+static float deltaTime;
+TimeManager* TManager; 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void Update();
+void UpdateTime();
 
 int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	if (!InitializeWindow(hInstance, nCmdShow, 800, 600, true)) {
 		MessageBox(NULL, L"Kablamo.", L"The window broked.", MB_ICONERROR | MB_OK);
 	}
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	_CrtSetBreakAlloc(-1);
 
 
 	// Initialize Rendering systems and VR
@@ -34,16 +44,20 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	}
 
 	//vrsys = nullptr;
-	if (!RenderEngine::InitializeSystems(hwnd, 1512, 1680, false, 90, false, 1000, 0.1f, vrsys)) {
-		return 1;
-	}
+	
 	if (vrsys)
 	{
 		VRInputManager::Instance();
 	}
+	if (!RenderEngine::InitializeSystems(hwnd, 1512, 1680, false, 90, false, 1000, 0.1f, vrsys)) {
+		return 1;
+	} 
+	TManager = TimeManager::Instance();
+	
 	// Update everything
 	Update();
 
+	//delete PlsGitRidOfThis;
 	// Cleanup
 	RenderEngine::ShutdownSystems();
 
@@ -53,6 +67,7 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 
 	return 0;
 }
+
 
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed) {
 #if _DEBUG || CONSOLE_OVERRIDE
@@ -132,19 +147,28 @@ void Update() {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			// Handle windows message.
 			if (msg.message == WM_QUIT) {
+				
 				break;
 			}
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		} else {
-			// Input.Update();
-			// Logic.Update();
-			RenderEngine::Renderer::Instance()->Render();
 			if (GetAsyncKeyState(VK_ESCAPE)) {
 				break;
 			}
+
+			UpdateTime();
+			// Input.Update(float deltaTime);
+			// Logic.Update(float deltaTime);
+			TManager->Instance()->Update(deltaTime);
+			RenderEngine::Renderer::Instance()->Render();
 		}
 	}
+}
+void UpdateTime()
+{
+	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count() - lastTime.time_since_epoch().count()) / 1000.0f / 1000.0f / 1000.0f;
+	lastTime = std::chrono::steady_clock::now();
 }
 
 

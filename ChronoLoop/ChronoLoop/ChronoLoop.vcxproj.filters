@@ -73,23 +73,23 @@
     <Filter Include="Messanger\Source Files">
       <UniqueIdentifier>{36d90c6f-1459-46c7-850e-c2671a0bc2fc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Rendering\Header Files\Nodes">
-      <UniqueIdentifier>{d40797e6-0a44-4be6-97cc-45a99293c61e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rendering\Source Files\Nodes">
-      <UniqueIdentifier>{654f6dd3-285a-4896-b914-82fd78f6bb40}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rendering\Header Files\Managers">
-      <UniqueIdentifier>{e3b0ba0e-ff95-44ac-a559-ff7762c8f922}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rendering\Source Files\Managers">
-      <UniqueIdentifier>{2a4c5fa0-c9f7-4079-baa0-cc8cf6b526dc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Rendering\Shaders">
       <UniqueIdentifier>{0fa54450-647f-49e8-a7cd-3550b1847640}</UniqueIdentifier>
     </Filter>
     <Filter Include="Rendering\Shaders\Layout Shaders">
       <UniqueIdentifier>{b560e4df-5975-4c40-95c5-ed2ffde9c69a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Header Files\Nodes">
+      <UniqueIdentifier>{f27cd6e9-feb0-4b32-8929-680f3b2a6b1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Header Files\Managers">
+      <UniqueIdentifier>{8529e787-4dac-480a-a26c-8762a89d3dd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Source Files\Nodes">
+      <UniqueIdentifier>{8038cd1c-2ac7-45f0-ae93-f416f592d4f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Source Files\Managers">
+      <UniqueIdentifier>{4309e908-8f28-4b2b-9cab-2df4b234807b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -138,34 +138,20 @@
     <ClInclude Include="Timeline.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Rendering\BlendManager.h">
-      <Filter>Rendering\Header Files\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\RenderNode.h">
-      <Filter>Rendering\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\RenderContext.h">
-      <Filter>Rendering\Header Files\Nodes</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\RasterizerStateManager.h">
-      <Filter>Rendering\Header Files\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\SystemInitializer.h">
-      <Filter>Rendering\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\RendererDefines.h">
-      <Filter>Rendering\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\InputLayoutManager.h">
-      <Filter>Rendering\Header Files\Managers</Filter>
+    <ClInclude Include="Input\KeyboardInput.h" />
+    <ClInclude Include="TimeManager.h">
+      <Filter>Core\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Physics\Physics.h">
       <Filter>Physics\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Input\KeyboardInput.h" />
-    <ClInclude Include="Rendering\RenderShape.h">
-      <Filter>Rendering\Header Files\Nodes</Filter>
+    <ClInclude Include="Rendering\RendererDefines.h">
+      <Filter>Rendering\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Rendering\SystemInitializer.h">
+      <Filter>Rendering\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\KeyboardInput.h" />
     <ClInclude Include="Rendering\RenderSet.h">
       <Filter>Rendering\Header Files</Filter>
     </ClInclude>
@@ -179,6 +165,22 @@
     </ClInclude>
     <ClInclude Include="BaseLevel.h" />
     <ClInclude Include="LevelManager.h" />
+    <ClInclude Include="Rendering\RenderShape.h" />
+    <ClInclude Include="Rendering\InputLayoutManager.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RasterizerStateManager.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\BlendManager.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RenderContext.h">
+      <Filter>Rendering\Header Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RenderNode.h">
+      <Filter>Rendering\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -217,25 +219,14 @@
     <ClCompile Include="Timeline.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rendering\RasterizerStateManager.cpp">
-      <Filter>Rendering\Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\RenderNode.cpp">
-      <Filter>Rendering\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\RenderContext.cpp">
-      <Filter>Rendering\Source Files\Nodes</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\InputLayoutManager.cpp">
-      <Filter>Rendering\Source Files\Managers</Filter>
+    <ClCompile Include="Input\KeyboardInput.cpp" />
+    <ClCompile Include="TimeManager.cpp">
+      <Filter>Core\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Physics\Physics.cpp">
       <Filter>Physics\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Input\KeyboardInput.cpp" />
-    <ClCompile Include="Rendering\RenderShape.cpp">
-      <Filter>Rendering\Source Files\Nodes</Filter>
-    </ClCompile>
     <ClCompile Include="BaseLevel.cpp" />
     <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="Rendering\RenderSet.cpp">
@@ -248,6 +239,19 @@
     </ClCompile>
     <ClCompile Include="Controller.cpp">
       <Filter>Input\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\RenderShape.cpp" />
+    <ClCompile Include="Rendering\RasterizerStateManager.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\InputLayoutManager.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\RenderContext.cpp">
+      <Filter>Rendering\Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\RenderNode.cpp">
+      <Filter>Rendering\Source Files\Nodes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -38,3 +38,4 @@ bool Transform::operator!=(Transform const _t)
 		return true;
 	return false;
 }
+

@@ -72,6 +72,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)_$(Configuration) $(PlatformShortName)\</OutDir>
+    <LibraryPath>$(outputpath)Lib\;$(solutiondir)openvr\lib\win32;$(LibraryPath)</LibraryPath>
     <LibraryPath>$(outputpath)Lib\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(solutiondir)DXTK\;$(solutiondir)openvr\headers;$(IncludePath)</IncludePath>
   </PropertyGroup>
@@ -80,12 +81,14 @@
     <OutDir>$(SolutionDir)_$(Configuration) $(PlatformShortName)\</OutDir>
     <LibraryPath>$(outputpath)Lib\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(solutiondir)DXTK\;$(solutiondir)openvr\headers;$(IncludePath)</IncludePath>
+    <LibraryPath>$(outputpath)Lib\;$(solutiondir)openvr\lib\win64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)_$(Configuration) $(PlatformShortName)\</OutDir>
     <LibraryPath>$(outputpath)Lib\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(solutiondir)DXTK\;$(solutiondir)openvr\headers;$(IncludePath)</IncludePath>
+    <LibraryPath>$(outputpath)Lib\;$(solutiondir)openvr\lib\win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -107,11 +110,11 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)PDB Files\$(TargetName).pdb</ProgramDatabaseFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)Sound\$(Configuration);$(SolutionDir)openvr\lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(solutiondir)openvr\lib\win32\;$(SolutionDir)Sound\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win32\openvr_api.dll" "$(outputpath)openvr_api.dll"</Command>
+      <Command>echo f | xcopy "$(solutiondir)openvr\bin\win32\opevr_api.dll" "$(outputpath)openvr_api.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -128,8 +131,8 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)PDB Files\$(TargetName).pdb</ProgramDatabaseFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)Sound\$(Configuration);$(SolutionDir)openvr\lib\win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(solutiondir)openvr\lib\win64\;$(SolutionDir)Sound\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outputpath)openvr_api.dll"</Command>
@@ -153,11 +156,11 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)PDB Files\$(TargetName).pdb</ProgramDatabaseFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)Sound\$(Configuration);$(SolutionDir)openvr\lib\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(solutiondir)openvr\lib\win32\;$(SolutionDir)Sound\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win32\openvr_api.dll" "$(outputpath)openvr_api.dll"</Command>
+      <Command>echo f | xcopy "$(solutiondir)openvr\bin\win32\opevr_api.dll" "$(outputpath)openvr_api.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -178,8 +181,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)PDB Files\$(TargetName).pdb</ProgramDatabaseFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)Sound\$(Configuration);$(SolutionDir)openvr\lib\win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(solutiondir)openvr\lib\win64\;$(SolutionDir)Sound\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outputpath)openvr_api.dll"</Command>
@@ -216,6 +219,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Timeline.h" />
     <ClInclude Include="VRInputManager.h" />
+    <ClInclude Include="TimeManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseLevel.cpp" />
@@ -247,6 +251,7 @@
     </ClCompile>
     <ClCompile Include="Timeline.cpp" />
     <ClCompile Include="VRInputManager.cpp" />
+    <ClCompile Include="TimeManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\BasicPixelShader.hlsl">
