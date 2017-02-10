@@ -16,5 +16,7 @@ public:
 	static VRInputManager& Instance();
 	static void Initialize(vr::IVRSystem* _hmd);
 	static void Shutdown();
+
+	Controller& GetController(bool left);
 };
 

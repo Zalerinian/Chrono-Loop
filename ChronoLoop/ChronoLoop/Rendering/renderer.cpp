@@ -8,6 +8,8 @@
 #include "RenderShape.h"
 #include "../../DXTK/DirectXTexP.h"
 #include "../../DXTK/ddstextureloader.h"
+#include "../VRInputManager.h"
+#include "../Controller.h"
 
 using namespace std;
 
@@ -326,6 +328,7 @@ namespace RenderEngine {
 		
 		CD3D11_BUFFER_DESC desc(sizeof(MyBuffer), D3D11_BIND_CONSTANT_BUFFER);
 		(*mDevice)->CreateBuffer(&desc, nullptr, &constantBluffer);
+		boxPosition = Math::Identity();
 
 		return true;
 	}
@@ -341,7 +344,18 @@ namespace RenderEngine {
 			(*mContext)->ClearRenderTargetView((*mLeftEye), color);
 			(*mContext)->ClearRenderTargetView((*mRightEye), color);
 		}
-		matrix4 identity = Math::MatrixTranslation(0, -1, -3);
+		matrix4 identity = boxPosition;
+
+		Controller& rightController = VRInputManager::Instance().GetController(false);
+		Controller& leftController = VRInputManager::Instance().GetController(true);
+		if (rightController.GetPress(vr::k_EButton_SteamVR_Trigger)) {
+			identity = boxPosition = Math::FromMatrix(poses[rightController.GetIndex()].mDeviceToAbsoluteTracking);
+		}
+		if (leftController.GetPress(vr::k_EButton_SteamVR_Trigger)) {
+			identity = boxPosition = Math::FromMatrix(poses[leftController.GetIndex()].mDeviceToAbsoluteTracking);
+		}
+
+
 
 		GetMVP(vr::EVREye::Eye_Left, constantData, identity);
 		(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
@@ -366,7 +380,7 @@ namespace RenderEngine {
 		if (mVrSystem != nullptr) {
 			UpdateTrackedPositions();
 			if (mControllerModel.pShader == nullptr) {
-					auto status = vr::VRRenderModels()->LoadRenderModel_Async("lh_basestation_01_boysandgirls", &mControllerRM);
+					auto status = vr::VRRenderModels()->LoadRenderModel_Async("vr_controller_vive_1_5", &mControllerRM);
 					if (status == vr::VRRenderModelError_None) {
 						Mesh controllerMesh;
 						controllerMesh.Load(mControllerRM);
@@ -392,34 +406,68 @@ namespace RenderEngine {
 
 
 				if (mControllerModel.pShader != nullptr) {
+
 					// Controller 1
-					(*mContext)->OMSetRenderTargets(1, mLeftEye.get(), (*mVRDSView));
-					GetMVP(vr::EVREye::Eye_Left, constantData, Math::FromMatrix(poses[1].mDeviceToAbsoluteTracking));
-					(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
-					(*mContext)->IASetIndexBuffer(mControllerModel.mIndexBuffer, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
-					(*mContext)->IASetVertexBuffers(0, 1, &mControllerModel.mVertexBuffer, &strideGround, &offsetGround);
-					
-					(*mContext)->VSSetShader(mControllerModel.vShader, nullptr, 0);
-					(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
-					/// Pixel Shader(s)
-					(*mContext)->PSSetShader(mControllerModel.pShader, nullptr, 0);
-					(*mContext)->PSSetShaderResources(0, 1, mTexture.get());
+					if (leftController.GetIndex() > 0) {
+						(*mContext)->OMSetRenderTargets(1, mLeftEye.get(), (*mVRDSView));
+						GetMVP(vr::EVREye::Eye_Left, constantData, Math::FromMatrix(leftController.mPose.mDeviceToAbsoluteTracking));
+						(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
+						(*mContext)->IASetIndexBuffer(mControllerModel.mIndexBuffer, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
+						(*mContext)->IASetVertexBuffers(0, 1, &mControllerModel.mVertexBuffer, &strideGround, &offsetGround);
+						
+						(*mContext)->VSSetShader(mControllerModel.vShader, nullptr, 0);
+						(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
+						/// Pixel Shader(s)
+						(*mContext)->PSSetShader(mControllerModel.pShader, nullptr, 0);
+						(*mContext)->PSSetShaderResources(0, 1, mTexture.get());
 
-					(*mContext)->DrawIndexed((UINT)mControllerModel.mIndexCount, 0, 0);
+						(*mContext)->DrawIndexed((UINT)mControllerModel.mIndexCount, 0, 0);
 
-					(*mContext)->OMSetRenderTargets(1, mRightEye.get(), (*mVRDSView));
-					GetMVP(vr::EVREye::Eye_Right, constantData, Math::FromMatrix(poses[1].mDeviceToAbsoluteTracking));
-					(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
-					(*mContext)->IASetIndexBuffer(mControllerModel.mIndexBuffer, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
-					(*mContext)->IASetVertexBuffers(0, 1, &mControllerModel.mVertexBuffer, &strideGround, &offsetGround);
-					
-					(*mContext)->VSSetShader(mControllerModel.vShader, nullptr, 0);
-					(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
-					/// Pixel Shader(s)
-					(*mContext)->PSSetShader(mControllerModel.pShader, nullptr, 0);
-					(*mContext)->PSSetShaderResources(0, 1, mTexture.get());
+						(*mContext)->OMSetRenderTargets(1, mRightEye.get(), (*mVRDSView));
+						GetMVP(vr::EVREye::Eye_Right, constantData, Math::FromMatrix(leftController.mPose.mDeviceToAbsoluteTracking));
+						(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
+						(*mContext)->IASetIndexBuffer(mControllerModel.mIndexBuffer, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
+						(*mContext)->IASetVertexBuffers(0, 1, &mControllerModel.mVertexBuffer, &strideGround, &offsetGround);
+						
+						(*mContext)->VSSetShader(mControllerModel.vShader, nullptr, 0);
+						(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
+						/// Pixel Shader(s)
+						(*mContext)->PSSetShader(mControllerModel.pShader, nullptr, 0);
+						(*mContext)->PSSetShaderResources(0, 1, mTexture.get());
 
-					(*mContext)->DrawIndexed((UINT)mControllerModel.mIndexCount, 0, 0);
+						(*mContext)->DrawIndexed((UINT)mControllerModel.mIndexCount, 0, 0);
+					}
+
+					// Controller 1
+					if (rightController.GetIndex() > 0) {
+						(*mContext)->OMSetRenderTargets(1, mLeftEye.get(), (*mVRDSView));
+						GetMVP(vr::EVREye::Eye_Left, constantData, Math::FromMatrix(rightController.mPose.mDeviceToAbsoluteTracking));
+						(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
+						(*mContext)->IASetIndexBuffer(mControllerModel.mIndexBuffer, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
+						(*mContext)->IASetVertexBuffers(0, 1, &mControllerModel.mVertexBuffer, &strideGround, &offsetGround);
+
+						(*mContext)->VSSetShader(mControllerModel.vShader, nullptr, 0);
+						(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
+						/// Pixel Shader(s)
+						(*mContext)->PSSetShader(mControllerModel.pShader, nullptr, 0);
+						(*mContext)->PSSetShaderResources(0, 1, mTexture.get());
+
+						(*mContext)->DrawIndexed((UINT)mControllerModel.mIndexCount, 0, 0);
+
+						(*mContext)->OMSetRenderTargets(1, mRightEye.get(), (*mVRDSView));
+						GetMVP(vr::EVREye::Eye_Right, constantData, Math::FromMatrix(rightController.mPose.mDeviceToAbsoluteTracking));
+						(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
+						(*mContext)->IASetIndexBuffer(mControllerModel.mIndexBuffer, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
+						(*mContext)->IASetVertexBuffers(0, 1, &mControllerModel.mVertexBuffer, &strideGround, &offsetGround);
+
+						(*mContext)->VSSetShader(mControllerModel.vShader, nullptr, 0);
+						(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
+						/// Pixel Shader(s)
+						(*mContext)->PSSetShader(mControllerModel.pShader, nullptr, 0);
+						(*mContext)->PSSetShaderResources(0, 1, mTexture.get());
+
+						(*mContext)->DrawIndexed((UINT)mControllerModel.mIndexCount, 0, 0);
+					}
 				}
 
 

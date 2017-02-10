@@ -16,13 +16,6 @@ void Controller::Update()
 	mPrevState = mState;
 	if (mHmd != NULL)
 	{
-		/*uint64_t touchpad = vr::ButtonMaskFromId(vr::EVRButtonId::k_EButton_SteamVR_Touchpad);
-		if (mState.ulButtonTouched & touchpad) {
-			std::cout << "Touchpad touched " << touchpad << std::endl;
-		}
-		if (mState.ulButtonPressed & touchpad) {
-			std::cout << "Touchpad pressed " << touchpad << std::endl;
-		}*/
 		mValid = mHmd->GetControllerStateWithPose(mTrackingSpace, mIndex, &mState, sizeof(mState), &mPose);
 		if (mPrevState.ulButtonPressed != mState.ulButtonPressed)
 			int breakpoint = 0;
@@ -49,7 +42,7 @@ vec2f Controller::GetAxis(vr::EVRButtonId buttonId)
 {
 	Update();
 	vec2f axis_value;
-	u_int axisId = (u_int)buttonId - (u_int)vr::k_EButton_Axis0;
+	int axisId = (int)buttonId - (int)vr::k_EButton_Axis0;
 	switch (axisId)
 	{
 	case 0: axis_value = vec2f(mState.rAxis[0].x, mState.rAxis[0].y); break;
@@ -61,11 +54,11 @@ vec2f Controller::GetAxis(vr::EVRButtonId buttonId)
 	return axis_value;
 }
 
-void Controller::TriggerHapticPulse(u_int duration_micro_sec, vr::EVRButtonId buttonId)
+void Controller::TriggerHapticPulse(int duration_micro_sec, vr::EVRButtonId buttonId)
 {
 	if (mHmd != NULL)
 	{
-		u_int axisId = (u_int)buttonId - (u_int)vr::k_EButton_Axis0;
+		int axisId = (int)buttonId - (int)vr::k_EButton_Axis0;
 		mHmd->TriggerHapticPulse(mIndex, axisId, (char)duration_micro_sec);
 	}
 }

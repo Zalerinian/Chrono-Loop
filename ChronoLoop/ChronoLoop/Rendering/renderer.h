@@ -39,6 +39,8 @@ namespace RenderEngine {
 		ID3D11Buffer* constantBluffer;
 		RenderShape mControllerModel;
 		vr::RenderModel_t *mControllerRM;
+		matrix4 boxPosition;
+
 
 		static Renderer* sInstance;
 

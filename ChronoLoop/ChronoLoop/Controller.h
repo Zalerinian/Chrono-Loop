@@ -4,16 +4,14 @@
 #include "Common/Math.h"
 
 typedef unsigned long ulong;
-typedef unsigned int u_int;
 
 class Controller
 {
 private:
 	vr::IVRSystem* mHmd;
-	u_int mIndex;
+	int mIndex;
 	bool mValid, mConnected, mHasTracking, mOutOfRange, mCalibrating, mUninitalized;
 	vr::VRControllerState_t mState, mPrevState;
-	vr::TrackedDevicePose_t mPose;
 	vec3f mPosition;
 
 	vr::ETrackingUniverseOrigin mTrackingSpace = vr::TrackingUniverseStanding;
@@ -22,10 +20,11 @@ private:
 	float mHairTriggerLimit; //trigger dead zone
 	bool mHairTriggerState, mHairTriggerPrevState;
 public:
+	vr::TrackedDevicePose_t mPose;
 	Controller();
 	~Controller() {};
 	void Update();
-	inline void SetUp(u_int index, vr::IVRSystem* hmd) { mIndex = index; mHmd = hmd; Update(); }
+	inline void SetUp(int index, vr::IVRSystem* hmd) { mIndex = index; mHmd = hmd; Update(); }
 
 	//transforms
 	vec3f GetPosition() { Update();  return mPosition; };
@@ -37,17 +36,17 @@ public:
 	vr::TrackedDevicePose_t GetPose() { Update(); return mPose; }
 
 	//Getters and Setters
-	inline void SetIndex(u_int index) { mIndex = index; };
-	inline u_int GetIndex() { return mIndex; };
+	inline void SetIndex(int index) { mIndex = index; };
+	inline int GetIndex() { return mIndex; };
 	inline void SetValid(bool valid) { mValid = valid; };
 	inline bool GetValid() { return mValid; };
 
 	//controller input
-	bool GetPress(vr::EVRButtonId buttonId) { Update(); return (mState.ulButtonPressed & vr::ButtonMaskFromId(buttonId)); }
+	bool GetPress(vr::EVRButtonId buttonId) { Update(); return (mState.ulButtonPressed & vr::ButtonMaskFromId(buttonId)) != 0; }
 	bool GetPressDown(vr::EVRButtonId buttonId) { Update(); return (mState.ulButtonPressed & vr::ButtonMaskFromId(buttonId)) != 0 && (mPrevState.ulButtonPressed & vr::ButtonMaskFromId(buttonId)) == 0; }
 	bool GetPressUp(vr::EVRButtonId buttonId) { Update(); return (mState.ulButtonPressed & vr::ButtonMaskFromId(buttonId)) == 0 && (mPrevState.ulButtonPressed & vr::ButtonMaskFromId(buttonId)) != 0; }
 
-	bool GetTouch(vr::EVRButtonId buttonId) { Update(); return (mState.ulButtonTouched & vr::ButtonMaskFromId(buttonId)); }
+	bool GetTouch(vr::EVRButtonId buttonId) { Update(); return (mState.ulButtonTouched & vr::ButtonMaskFromId(buttonId)) != 0; }
 	bool GetTouchDown(vr::EVRButtonId buttonId) { Update(); return (mState.ulButtonTouched & vr::ButtonMaskFromId(buttonId)) != 0 && (mPrevState.ulButtonTouched & vr::ButtonMaskFromId(buttonId)) == 0; }
 	bool GetTouchUp(vr::EVRButtonId buttonId) { Update(); return (mState.ulButtonTouched & vr::ButtonMaskFromId(buttonId)) == 0 && (mPrevState.ulButtonTouched & vr::ButtonMaskFromId(buttonId)) != 0; }
 
@@ -59,6 +58,6 @@ public:
 
 	//mostly for touchpad
 	vec2f GetAxis(vr::EVRButtonId buttonId = vr::k_EButton_SteamVR_Touchpad);
-	void TriggerHapticPulse(u_int duration_micro_sec = 500, vr::EVRButtonId buttonId = vr::k_EButton_SteamVR_Touchpad);
+	void TriggerHapticPulse(int duration_micro_sec = 500, vr::EVRButtonId buttonId = vr::k_EButton_SteamVR_Touchpad);
 };
 
