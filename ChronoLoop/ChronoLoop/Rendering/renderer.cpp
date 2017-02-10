@@ -71,10 +71,6 @@ namespace RenderEngine {
 	}
 
 	void Renderer::GetMVP(vr::EVREye e, MyBuffer &data, matrix4 world) {
-		
-		
-		vr::VRCompositor()->WaitGetPoses(poses, vr::k_unMaxTrackedDeviceCount, NULL, 0);
-
 		matrix4 hmd = (Math::FromMatrix(poses[0].mDeviceToAbsoluteTracking));
 
 		matrix4 hmdPos = hmd.Inverse();
@@ -87,6 +83,10 @@ namespace RenderEngine {
 			data.view = Math::MatrixTranspose(mEyePosRight * hmdPos);
 			data.projection = Math::MatrixTranspose(mEyeProjRight);
 		}
+	}
+
+	void Renderer::UpdateTrackedPositions() {
+		vr::VRCompositor()->WaitGetPoses(poses, vr::k_unMaxTrackedDeviceCount, NULL, 0);
 	}
 
 	Renderer::Renderer() {}
@@ -364,8 +364,9 @@ namespace RenderEngine {
 		(*mContext)->DrawIndexed((UINT)((RenderShape*)mRenderSet.GetHead())->mIndexCount, 0, 0);
 
 		if (mVrSystem != nullptr) {
+			UpdateTrackedPositions();
 			if (mControllerModel.pShader == nullptr) {
-					auto status = vr::VRRenderModels()->LoadRenderModel_Async("vr_controller_vive_1_5", &mControllerRM);
+					auto status = vr::VRRenderModels()->LoadRenderModel_Async("lh_basestation_01_boysandgirls", &mControllerRM);
 					if (status == vr::VRRenderModelError_None) {
 						Mesh controllerMesh;
 						controllerMesh.Load(mControllerRM);

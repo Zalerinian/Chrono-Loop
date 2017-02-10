@@ -58,6 +58,7 @@ namespace RenderEngine {
 		matrix4 GetEye(vr::EVREye e);
 		matrix4 GetProjection(vr::EVREye e);
 		void GetMVP(vr::EVREye e, MyBuffer &data, matrix4 world);
+		void UpdateTrackedPositions();
 
 		void RenderVR();
 		void RenderNoVR();
