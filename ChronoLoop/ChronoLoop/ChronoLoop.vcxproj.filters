@@ -103,6 +103,15 @@
     <Filter Include="Levels\Source Files">
       <UniqueIdentifier>{44d77786-9078-4fd2-96e0-8d872606fb6d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common\FileIO">
+      <UniqueIdentifier>{4c95a99f-2d97-4b8d-913a-3425865ce968}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\FileIO\Header Files">
+      <UniqueIdentifier>{e592c27b-89c9-45a8-a222-ee38bb22b990}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\FileIO\Source Files">
+      <UniqueIdentifier>{e1cc4151-26b6-4ac4-975b-f442b93a2c81}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\BaseObject.h">
@@ -216,6 +225,15 @@
     </ClInclude>
     <ClInclude Include="Input\KeyboardInput.h">
       <Filter>Input\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\FileIO.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\FileIO\FileIO_General.h">
+      <Filter>Common\FileIO\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\FileIO\FileIO_Textures.h">
+      <Filter>Common\FileIO\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -357,6 +375,12 @@
     </ClCompile>
     <ClCompile Include="Rendering\ShaderManager.cpp">
       <Filter>Rendering\Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\FileIO\FileIO_General.cpp">
+      <Filter>Common\FileIO\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\FileIO\FileIO_Textures.cpp">
+      <Filter>Common\FileIO\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -3,7 +3,7 @@
 #include "renderer.h"
 #include "Mesh.h"
 #include <d3d11.h>
-#include "InputLayoutManager.h"
+#include "../Common/FileIO.h"
 
 RenderEngine::RenderShape::RenderShape() {
 	mNext = nullptr;
@@ -38,9 +38,11 @@ void RenderEngine::RenderShape::Load(Mesh & _mesh) {
 void RenderEngine::RenderShape::LoadShaders(char * vertex, char * pixel) {
 	char *bytecode = nullptr;
 	int bytelength;
-	RenderEngine::InputLayoutManager::LoadShader(pixel, &bytecode, bytelength);
+	if (!FileIO::LoadBytes(pixel, &bytecode, bytelength)) {
+		// TODO: Make thi function return a value indicating if there has been a failure.
+	}
 	(*RenderEngine::Renderer::Instance()->GetDevice())->CreatePixelShader(bytecode, bytelength, nullptr, &pShader);
 	delete[] bytecode;
-	RenderEngine::InputLayoutManager::LoadShader(vertex, &bytecode, bytelength);
+	FileIO::LoadBytes(vertex, &bytecode, bytelength);
 	(*RenderEngine::Renderer::Instance()->GetDevice())->CreateVertexShader(bytecode, bytelength, nullptr, &vShader);
 }

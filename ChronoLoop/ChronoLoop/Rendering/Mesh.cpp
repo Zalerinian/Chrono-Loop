@@ -4,7 +4,7 @@
 #include <fstream>
 #include <string>
 #include "renderer.h"
-#include "InputLayoutManager.h"
+#include "../Common/FileIO.h"
 #include <openvr.h>
 
 using namespace Concurrency;
@@ -35,10 +35,10 @@ void Mesh::loadShaders(char * pixel, char * vertex)
 {
 	char *bytecode = nullptr;
 	int bytelength;
-	RenderEngine::InputLayoutManager::LoadShader(pixel, &bytecode, bytelength);
+	FileIO::LoadBytes(pixel, &bytecode, bytelength);
 	(*RenderEngine::Renderer::Instance()->GetDevice())->CreatePixelShader(bytecode, bytelength, nullptr, &pShader);
 	delete[] bytecode;
-	RenderEngine::InputLayoutManager::LoadShader(vertex, &bytecode, bytelength);
+	FileIO::LoadBytes(vertex, &bytecode, bytelength);
 	(*RenderEngine::Renderer::Instance()->GetDevice())->CreateVertexShader(bytecode, bytelength, nullptr, &vShader);
 }
 

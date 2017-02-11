@@ -416,7 +416,7 @@ namespace RenderEngine {
 					// Controller 1
 					if (leftController.GetIndex() > 0) {
 						(*mContext)->OMSetRenderTargets(1, mLeftEye.get(), (*mVRDSView));
-						GetMVP(vr::EVREye::Eye_Left, constantData, Math::FromMatrix(leftController.mPose.mDeviceToAbsoluteTracking));
+						GetMVP(vr::EVREye::Eye_Left, constantData, Math::FromMatrix(poses[leftController.GetIndex()].mDeviceToAbsoluteTracking));
 						(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
 						(*mContext)->IASetIndexBuffer(mControllerModel.mIndexBuffer, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
 						(*mContext)->IASetVertexBuffers(0, 1, &mControllerModel.mVertexBuffer, &strideGround, &offsetGround);
@@ -430,7 +430,7 @@ namespace RenderEngine {
 						(*mContext)->DrawIndexed((UINT)mControllerModel.mIndexCount, 0, 0);
 
 						(*mContext)->OMSetRenderTargets(1, mRightEye.get(), (*mVRDSView));
-						GetMVP(vr::EVREye::Eye_Right, constantData, Math::FromMatrix(leftController.mPose.mDeviceToAbsoluteTracking));
+						GetMVP(vr::EVREye::Eye_Right, constantData, Math::FromMatrix(poses[leftController.GetIndex()].mDeviceToAbsoluteTracking));
 						(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
 						(*mContext)->IASetIndexBuffer(mControllerModel.mIndexBuffer, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
 						(*mContext)->IASetVertexBuffers(0, 1, &mControllerModel.mVertexBuffer, &strideGround, &offsetGround);
@@ -447,7 +447,7 @@ namespace RenderEngine {
 					// Controller 1
 					if (rightController.GetIndex() > 0) {
 						(*mContext)->OMSetRenderTargets(1, mLeftEye.get(), (*mVRDSView));
-						GetMVP(vr::EVREye::Eye_Left, constantData, Math::FromMatrix(rightController.mPose.mDeviceToAbsoluteTracking));
+						GetMVP(vr::EVREye::Eye_Left, constantData, Math::FromMatrix(poses[rightController.GetIndex()].mDeviceToAbsoluteTracking));
 						(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
 						(*mContext)->IASetIndexBuffer(mControllerModel.mIndexBuffer, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
 						(*mContext)->IASetVertexBuffers(0, 1, &mControllerModel.mVertexBuffer, &strideGround, &offsetGround);
@@ -461,7 +461,7 @@ namespace RenderEngine {
 						(*mContext)->DrawIndexed((UINT)mControllerModel.mIndexCount, 0, 0);
 
 						(*mContext)->OMSetRenderTargets(1, mRightEye.get(), (*mVRDSView));
-						GetMVP(vr::EVREye::Eye_Right, constantData, Math::FromMatrix(rightController.mPose.mDeviceToAbsoluteTracking));
+						GetMVP(vr::EVREye::Eye_Right, constantData, Math::FromMatrix(poses[rightController.GetIndex()].mDeviceToAbsoluteTracking));
 						(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
 						(*mContext)->IASetIndexBuffer(mControllerModel.mIndexBuffer, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
 						(*mContext)->IASetVertexBuffers(0, 1, &mControllerModel.mVertexBuffer, &strideGround, &offsetGround);

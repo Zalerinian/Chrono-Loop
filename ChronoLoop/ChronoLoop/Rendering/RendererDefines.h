@@ -24,12 +24,16 @@ namespace RenderEngine {
 		eVERT_MAX
 	};
 
-	enum ShaderFormat {
-		eVS_BASIC = 0,
-		ePS_BASIC,
-		eVS_TEXTURED,
+	enum PixelShaderFormat {
+		ePS_BASIC = 0,
 		ePS_TEXTURED,
-		eSHADER_MAX
+		ePS_MAX
+	};
+
+	enum VertexShaderFormat {
+		eVS_BASIC = 0,
+		eVS_TEXTURED,
+		eVS_MAX
 	};
 
 	enum TextureType {
