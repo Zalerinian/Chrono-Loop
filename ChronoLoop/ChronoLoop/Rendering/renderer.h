@@ -16,7 +16,7 @@ namespace RenderEngine {
 	class Renderer {
 	private:
 		struct MyBuffer {
-			matrix4 model, view, projection;
+			matrix4 model, view, projection, viewproj;
 		} constantData;
 
 		friend InputLayoutManager;

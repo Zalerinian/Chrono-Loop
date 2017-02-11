@@ -32,9 +32,7 @@ void RenderEngine::RenderShape::Load(Mesh & _mesh) {
 	indexBufferData.SysMemPitch = 0;
 	indexBufferData.SysMemSlicePitch = 0;
 	CD3D11_BUFFER_DESC indexBufferDesc((UINT)_mesh.IndicieSize() * sizeof(unsigned short), D3D11_BIND_INDEX_BUFFER);
-	result = device->CreateBuffer(&indexBufferDesc, nullptr, &mIndexBuffer);
-	auto context = *Renderer::Instance()->GetContext();
-	context->UpdateSubresource(mIndexBuffer, 0, NULL, _mesh.GetIndicies(), 0, 0);
+	result = device->CreateBuffer(&indexBufferDesc, &indexBufferData, &mIndexBuffer);
 }
 
 void RenderEngine::RenderShape::LoadShaders(char * vertex, char * pixel) {

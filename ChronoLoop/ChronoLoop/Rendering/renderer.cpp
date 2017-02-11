@@ -78,12 +78,14 @@ namespace RenderEngine {
 		matrix4 hmdPos = hmd.Inverse();
 		if (e == vr::EVREye::Eye_Left) {
 			data.model = Math::MatrixTranspose(world);
-			data.view = Math::MatrixTranspose(mEyePosLeft * hmdPos);
+			data.view = Math::MatrixTranspose((mEyePosLeft * hmdPos));
 			data.projection = Math::MatrixTranspose(mEyeProjLeft);
+			data.viewproj = (mEyeProjLeft * mEyePosLeft * hmdPos);
 		} else {
 			data.model = Math::MatrixTranspose(world);
-			data.view = Math::MatrixTranspose(mEyePosRight * hmdPos);
+			data.view = Math::MatrixTranspose((mEyePosRight * hmdPos));
 			data.projection = Math::MatrixTranspose(mEyeProjRight);
+			data.viewproj = (mEyeProjRight * mEyePosRight * hmdPos);
 		}
 	}
 
@@ -168,7 +170,7 @@ namespace RenderEngine {
 		DXGI_SWAP_CHAIN_DESC scDesc;
 		memset(&scDesc, 0, sizeof(scDesc));
 		scDesc.BufferCount = 1;
-		scDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		scDesc.BufferDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
 		scDesc.BufferDesc.Width = _width;
 		scDesc.BufferDesc.Height = _height;
 		scDesc.BufferDesc.RefreshRate.Numerator = 1;
@@ -207,7 +209,7 @@ namespace RenderEngine {
 			TextureDescription.Height = texHeight;
 			TextureDescription.MipLevels = 1;
 			TextureDescription.ArraySize = 1;
-			TextureDescription.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+			TextureDescription.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 			TextureDescription.SampleDesc.Count = 1;
 			TextureDescription.Usage = D3D11_USAGE_DEFAULT;
 			TextureDescription.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
@@ -470,11 +472,6 @@ namespace RenderEngine {
 					}
 				}
 
-
-
-
-				ID3D11Resource* bbuffer;
-				ThrowIfFailed((*mChain)->GetBuffer(0, __uuidof(bbuffer), (void**)(&bbuffer)));
 
 			for (int i = 0; i < 2; i++) {
 				vr::Texture_t tex = { i == 0 ? (void*)(*mLeftTexture) : (void*)(*mRightTexture), vr::TextureType_DirectX, vr::ColorSpace_Auto };
