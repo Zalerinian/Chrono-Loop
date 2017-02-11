@@ -335,6 +335,7 @@
     <ClCompile Include="Rendering\RenderSet.cpp" />
     <ClCompile Include="Rendering\RenderShape.cpp" />
     <ClCompile Include="Rendering\Shader.cpp" />
+    <ClCompile Include="Rendering\ShaderManager.cpp" />
     <ClCompile Include="Sound\SoundEngine.cpp" />
   </ItemGroup>
   <ItemGroup>

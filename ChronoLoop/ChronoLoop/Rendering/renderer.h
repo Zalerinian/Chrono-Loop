@@ -51,9 +51,6 @@ namespace RenderEngine {
 		void InitializeViews(int _width, int _height);
 		void ThrowIfFailed(HRESULT hr);
 
-
-		void DoAllTheBootlegThingsForTheDemo();
-
 		matrix4 mEyePosLeft, mEyePosRight, mEyeProjLeft, mEyeProjRight, mHMDPos;
 		vr::TrackedDevicePose_t poses[vr::k_unMaxTrackedDeviceCount];	
 

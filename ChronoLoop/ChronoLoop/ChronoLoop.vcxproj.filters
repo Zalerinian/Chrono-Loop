@@ -154,8 +154,6 @@
     <ClInclude Include="Rendering\RenderSet.h">
       <Filter>Rendering\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BaseLevel.h" />
-    <ClInclude Include="LevelManager.h" />
     <ClInclude Include="Rendering\InputLayoutManager.h">
       <Filter>Rendering\Header Files\Managers</Filter>
     </ClInclude>
@@ -258,8 +256,6 @@
     <ClCompile Include="Rendering\RenderSet.cpp">
       <Filter>Rendering\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BaseLevel.cpp" />
-    <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="Rendering\RasterizerStateManager.cpp">
       <Filter>Rendering\Source Files\Managers</Filter>
     </ClCompile>
@@ -358,6 +354,9 @@
     </ClCompile>
     <ClCompile Include="Input\KeyboardInput.cpp">
       <Filter>Input\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\ShaderManager.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

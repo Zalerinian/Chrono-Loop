@@ -636,10 +636,12 @@ matrix4 Math::Identity()
 
 matrix4 Math::FromMatrix(vr::HmdMatrix44_t _mat)
 {
+	// TODO: Check to make sure this properly converts matrices. I think HmdMtrices are column major,
+	// so [i][j] would leave us with a column major version, which is bad.
 	matrix4 temp;
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 4; ++j)
-			temp.tiers[i].xyzw[j] = _mat.m[i][j];
+			temp.tiers[i].xyzw[j] = _mat.m[j][i];
 
 	return temp;
 }

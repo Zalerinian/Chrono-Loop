@@ -37,15 +37,14 @@ namespace RenderEngine {
 
 #pragma region Instance Functions
 
+
+#pragma region Private Functions
+
+
 	void Renderer::ThrowIfFailed(HRESULT hr) {
 		if (FAILED(hr)) {
 			throw "Something has gone catastrophically wrong!";
 		}
-	}
-
-	void Renderer::DoAllTheBootlegThingsForTheDemo()
-	{
-		
 	}
 
 	matrix4 Renderer::GetEye(vr::EVREye e) {
@@ -284,17 +283,26 @@ namespace RenderEngine {
 		(*mContext)->RSSetViewports(1, &mViewport);
 	}
 
+	void Renderer::RenderVR() {
+
+	}
+
+	void Renderer::RenderNoVR() {
+
+	}
+
+#pragma endregion Private Functions
+
+#pragma region Public Functions
+
+	void Renderer::AddNode(RenderNode *node) {
+		// TODO: Bad. Very Bad! Get the render context from the render shape!
+		mRenderSet.AddNode(node, new RenderContext());
+	}
+
 	bool Renderer::Initialize(HWND _Window, unsigned int _width, unsigned int _height, bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane, vr::IVRSystem * _vrsys) {
 		mWindow = make_shared<HWND>(_Window);
 		mVrSystem = _vrsys;
-
-		if (_vrsys) {
-			for (unsigned int i = 0; i < vr::VRRenderModels()->GetRenderModelCount(); ++i) {
-				char name[1024];
-				vr::VRRenderModels()->GetRenderModelName(i, name, 1024);
-				std::cout << "We've got a nice little " << name << " model here (" << i << ")" << std::endl;
-			}
-		}
 
 		InitializeD3DDevice();
 		InitializeDXGIFactory();
@@ -327,16 +335,12 @@ namespace RenderEngine {
 
 		mControllerRM = nullptr;
 		memset(&mControllerModel, 0, sizeof(mControllerModel));
-		
+
 		CD3D11_BUFFER_DESC desc(sizeof(MyBuffer), D3D11_BIND_CONSTANT_BUFFER);
 		(*mDevice)->CreateBuffer(&desc, nullptr, &constantBluffer);
 		boxPosition = Math::Identity();
 
 		return true;
-	}
-
-	void Renderer::AddNode(RenderNode *node) {
-		mRenderSet.AddNode(node);
 	}
 
 	void Renderer::Render() {
@@ -484,14 +488,6 @@ namespace RenderEngine {
 		(*mChain)->Present(0, 0);
 	}
 
-	void Renderer::RenderVR() {
-
-	}
-
-	void Renderer::RenderNoVR() {
-
-	}
-
 	std::shared_ptr<ID3D11Device*> Renderer::GetDevice() {
 		return mDevice;
 	}
@@ -515,6 +511,8 @@ namespace RenderEngine {
 	std::shared_ptr<ID3D11DepthStencilView*> Renderer::GetDSView() {
 		return mDSView;
 	}
+
+#pragma endregion Public Functions
 
 #pragma endregion Instance Functions
 
