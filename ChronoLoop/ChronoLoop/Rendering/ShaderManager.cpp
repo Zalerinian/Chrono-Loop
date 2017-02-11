@@ -2,6 +2,7 @@
 #include "ShaderManager.h"
 #include <d3d11.h>
 #include "InputLayoutManager.h"
+#include "../Common/FileIO.h"
 
 namespace RenderEngine {
 
@@ -9,6 +10,16 @@ namespace RenderEngine {
 	
 	ShaderManager::ShaderManager() {
 		// Create Pixel Shaders
+		char *buffer;
+		int byteSize = 0;
+		if (!FileIO::LoadBytes("BasicPixel.cso", &buffer, byteSize)) {
+			// TODO: Put an actual error here.
+		}
+		// Create the shader
+		// Store it as a shared_ptr
+		delete[] buffer;
+
+		//Load a new shader
 
 
 
