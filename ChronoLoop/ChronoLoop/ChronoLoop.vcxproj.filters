@@ -411,16 +411,16 @@
     <FxCompile Include="Rendering\Shaders\VertexLayout_VS.hlsl">
       <Filter>Rendering\Shaders\Layout Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Rendering\Shaders\BasicPixelShader.hlsl">
-      <Filter>Rendering\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\BasicVertexShader.hlsl">
-      <Filter>Rendering\Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="Rendering\Shaders\TexturedPixel.hlsl">
       <Filter>Rendering\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Rendering\Shaders\TexturedVertex.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\BasicPixel.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\BasicVertex.hlsl">
       <Filter>Rendering\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

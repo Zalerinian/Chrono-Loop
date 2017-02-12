@@ -111,4 +111,9 @@ namespace RenderEngine {
 		if (sInstance)
 			delete sInstance;
 	}
+
+	void InputLayoutManager::ApplyLayout(VertFormat v) {
+		(*Renderer::Instance()->GetContext())->IASetInputLayout(mInputLayouts[v]);
+		(*Renderer::Instance()->GetContext())->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	}
 }

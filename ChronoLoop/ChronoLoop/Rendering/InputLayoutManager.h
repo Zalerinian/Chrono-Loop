@@ -18,6 +18,8 @@ namespace RenderEngine {
 	public:
 		static InputLayoutManager &Instance();
 		static void DestroyInstance();
+
+		void ApplyLayout(VertFormat v);
 		ID3D11InputLayout *GetInputLayout(VertFormat _index) { return mInputLayouts[_index]; };
 	};
 

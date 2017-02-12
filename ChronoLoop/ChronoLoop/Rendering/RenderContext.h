@@ -19,6 +19,8 @@ namespace RenderEngine {
 
 		RenderContext();
 		~RenderContext();
+		void Apply();
+		void Apply(RenderContext& from);
 		bool operator==(RenderContext& other);
 	};
 

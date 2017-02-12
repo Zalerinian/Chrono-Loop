@@ -60,7 +60,7 @@ namespace RenderEngine {
 	}
 
 	matrix4 Renderer::GetProjection(vr::EVREye e) {
-		
+
 		vr::HmdMatrix44_t mat = mVrSystem->GetProjectionMatrix(e, 0.1f, 1000);
 
 		return matrix4(
@@ -79,12 +79,10 @@ namespace RenderEngine {
 			data.model = Math::MatrixTranspose(world);
 			data.view = Math::MatrixTranspose((mEyePosLeft * hmdPos));
 			data.projection = Math::MatrixTranspose(mEyeProjLeft);
-			data.viewproj = (mEyeProjLeft * mEyePosLeft * hmdPos);
 		} else {
 			data.model = Math::MatrixTranspose(world);
 			data.view = Math::MatrixTranspose((mEyePosRight * hmdPos));
 			data.projection = Math::MatrixTranspose(mEyeProjRight);
-			data.viewproj = (mEyeProjRight * mEyePosRight * hmdPos);
 		}
 	}
 
@@ -113,9 +111,9 @@ namespace RenderEngine {
 
 	void Renderer::InitializeD3DDevice() {
 		UINT flags = 0;
-#if _DEBUG
+	#if _DEBUG
 		flags = D3D11_CREATE_DEVICE_DEBUG;
-#endif
+	#endif
 
 		D3D_FEATURE_LEVEL levels[] = {
 			D3D_FEATURE_LEVEL_11_0,
@@ -222,6 +220,7 @@ namespace RenderEngine {
 	}
 
 	void Renderer::RenderVR() {
+		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 		UpdateTrackedPositions();
 		vr::VRCompositor()->CompositorBringToFront();
 		float color[4] = { 0.3f, 0.3f, 1, 1 };
@@ -229,12 +228,18 @@ namespace RenderEngine {
 			vr::EVREye currentEye;
 			if (i == 0) {
 				currentEye = vr::EVREye::Eye_Left;
-			}
-			else {
+			} else {
 				currentEye = vr::EVREye::Eye_Right;
 				(*mContext)->ClearRenderTargetView((*mMainView), color);
+				(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 			}
 			// TODO: Setup the view/projection matrices, then process the render set.
+			MyBuffer data;
+			GetMVP(currentEye, data, Math::MatrixTranslation(0, 3, -4));
+			(*mContext)->UpdateSubresource(constantBluffer, 0, nullptr, (void*)&data, 0, 0);
+			(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
+
+			processRenderSet();
 
 			vr::Texture_t submitTexture = { (void*)(*mMainViewTexture), vr::TextureType_DirectX, vr::ColorSpace_Auto };
 			vr::VRCompositor()->Submit(currentEye, &submitTexture);
@@ -245,13 +250,25 @@ namespace RenderEngine {
 
 	}
 
+	void Renderer::processRenderSet() {
+		const RenderNode* head = mRenderSet.GetHead();
+		while (head != nullptr) {
+			if (head->mType == RenderNode::RenderNodeType::Context) {
+				((RenderContext*)head)->Apply();
+			} else if (head->mType == RenderNode::RenderNodeType::Shape) {
+				((RenderShape*)head)->Render();
+			}
+			head = head->GetNext();
+		}
+	}
+
 #pragma endregion Private Functions
 
 #pragma region Public Functions
 
-	void Renderer::AddNode(RenderNode *node) {
+	void Renderer::AddNode(RenderShape *node) {
 		// TODO: Bad. Very Bad! Get the render context from the render shape!
-		mRenderSet.AddNode(node, new RenderContext());
+		mRenderSet.AddNode(node, &node->GetContext());
 	}
 
 	bool Renderer::Initialize(HWND _Window, unsigned int _width, unsigned int _height, bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane, vr::IVRSystem * _vrsys) {
@@ -265,7 +282,8 @@ namespace RenderEngine {
 			uint32_t texWidth, texHeight;
 			mVrSystem->GetRecommendedRenderTargetSize(&texWidth, &texHeight);
 			std::cout << "According to VR, the view of our headset is " << texWidth << "x" << texHeight << std::endl;
-			std::cout << "The screen will probably look bad. We're just using one render target view currently, and it gets set to the VR headset's recommended resolution when it's plugged in. We should account for that later." << std::endl;
+			std::cout << "The screen will probably look bad. We're just using one render target view currently, and it gets set to the VR headset's recommended resolution when it's plugged in.\n" <<
+				"We should account for that later." << std::endl;
 			rtvWidth = (int)texWidth;
 			rtvHeight = (int)texHeight;
 
@@ -298,6 +316,7 @@ namespace RenderEngine {
 		ID3D11Texture2D *tex;
 		DirectX::CreateDDSTextureFromMemory((*mDevice), (const uint8_t*)image->GetBufferPointer(), image->GetBufferSize(), (ID3D11Resource**)&tex, &rtv);
 		mTexture = make_shared<ID3D11ShaderResourceView*>(rtv);
+		(*mContext)->PSSetShaderResources(0, 1, mTexture.get());
 		box->SetShaders(ePS_TEXTURED, eVS_TEXTURED);
 		AddNode(box);
 
@@ -315,21 +334,20 @@ namespace RenderEngine {
 		(*mContext)->ClearRenderTargetView((*mMainView), color);
 		if (nullptr == mVrSystem) {
 			RenderNoVR();
-		}
-		else {
+		} else {
 			RenderVR();
 		}
 		(*mChain)->Present(mUseVsync ? 1 : 0, 0);
 		//matrix4 identity = boxPosition;
 
-		//Controller& rightController = VRInputManager::Instance().GetController(false);
-		//Controller& leftController = VRInputManager::Instance().GetController(true);
-		//if (rightController.GetPress(vr::k_EButton_SteamVR_Trigger)) {
-		//	identity = boxPosition = Math::FromMatrix(poses[rightController.GetIndex()].mDeviceToAbsoluteTracking);
-		//}
-		//if (leftController.GetPress(vr::k_EButton_SteamVR_Trigger)) {
-		//	identity = boxPosition = Math::FromMatrix(poses[leftController.GetIndex()].mDeviceToAbsoluteTracking);
-		//}
+		/*Controller& rightController = VRInputManager::Instance().GetController(false);
+		Controller& leftController = VRInputManager::Instance().GetController(true);
+		if (rightController.GetPress(vr::k_EButton_SteamVR_Trigger)) {
+			identity = boxPosition = Math::FromMatrix(poses[rightController.GetIndex()].mDeviceToAbsoluteTracking);
+		}
+		if (leftController.GetPress(vr::k_EButton_SteamVR_Trigger)) {
+			identity = boxPosition = Math::FromMatrix(poses[leftController.GetIndex()].mDeviceToAbsoluteTracking);
+		}*/
 
 
 

@@ -70,6 +70,15 @@ namespace RenderEngine {
 		delete sInstance;
 		sInstance = nullptr;
 	}
+	
+	void ShaderManager::ApplyVShader(VertexShaderFormat f) {
+		(*Renderer::Instance()->GetContext())->VSSetShader(*mVertexShaders[f], nullptr, 0);
+	}
+
+	void ShaderManager::ApplyPShader(PixelShaderFormat f) {
+		(*Renderer::Instance()->GetContext())->PSSetShader(*mPixelShaders[f], nullptr, 0);
+	}
+
 	std::shared_ptr<ID3D11PixelShader*> ShaderManager::GetPixelShader(PixelShaderFormat f) {
 		if (f >= ePS_BASIC && f < ePS_MAX) {
 			return mPixelShaders[f];

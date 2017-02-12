@@ -18,6 +18,9 @@ namespace RenderEngine {
 		void Load(Mesh& _mesh);
 		void SetShaders(PixelShaderFormat pf, VertexShaderFormat vf);
 
+		inline RenderContext &GetContext() { return mContext; }
+
+		void Render();
 
 	protected:
 		RenderContext mContext;

@@ -1,6 +1,7 @@
 #pragma once
 #include "renderer.h"
 #include "RasterizerStateManager.h"
+#include "ShaderManager.h"
 #include "../Input/VRInputManager.h"
 #include "../Core/TimeManager.h"
 
@@ -15,10 +16,12 @@ namespace RenderEngine {
 			VRInputManager::Instance();
 			VRInputManager::Initialize(_vrsys);
 		}
+		ShaderManager::Instance();
 		return true;
 	}
 
 	bool ShutdownSystems() {
+		ShaderManager::DestroyInstance();
 		RasterizerStateManager::DestroyInstance();
 		TimeManager::Destroy();
 		VRInputManager::Shutdown();

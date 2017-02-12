@@ -8,12 +8,18 @@
 namespace RenderEngine {
 
 	RenderShape::RenderShape() {
+		mType = RenderNodeType::Shape;
 		mNext = nullptr;
+		mContext.mRasterState = eRS_FILLED;
+		mContext.mVertexFormat = eVERT_POSNORMTEX;
 	}
 	
 	RenderShape::RenderShape(Mesh & _mesh) {
 		this->Load(_mesh);
 		mNext = nullptr;
+		mType = RenderNodeType::Shape;
+		mContext.mRasterState = eRS_FILLED;
+		mContext.mVertexFormat = eVERT_POSNORMTEX;
 	}
 	
 	void RenderShape::Load(Mesh & _mesh) {
@@ -50,6 +56,13 @@ namespace RenderEngine {
 		}
 		mContext.mVertexShaderFormat = vf;
 		mContext.mPixelShaderFormat = pf;
+	}
+
+	void RenderShape::Render() {
+		UINT stride = sizeof(VertexPosNormTex), offset = 0;
+		(*Renderer::Instance()->GetContext())->IASetIndexBuffer(*mIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+		(*Renderer::Instance()->GetContext())->IASetVertexBuffers(0, 1, mVertexBuffer.get(), &stride, &offset);
+		(*Renderer::Instance()->GetContext())->DrawIndexed(mIndexCount, 0, 0);
 	}
 
 }

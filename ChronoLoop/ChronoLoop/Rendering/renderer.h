@@ -15,7 +15,7 @@ namespace RenderEngine {
 	class Renderer {
 	private:
 		struct MyBuffer {
-			matrix4 model, view, projection, viewproj;
+			matrix4 model, view, projection;
 		} constantData;
 
 		friend InputLayoutManager;
@@ -64,6 +64,7 @@ namespace RenderEngine {
 
 		void RenderVR();
 		void RenderNoVR();
+		void processRenderSet();
 
 		Renderer();
 		~Renderer();
@@ -76,7 +77,7 @@ namespace RenderEngine {
 			bool vsync, int fps, bool fullscreen, float farPlane, float nearPlane,
 			vr::IVRSystem* vrsys);
 
-		void AddNode(RenderNode *node);
+		void AddNode(RenderShape *node);
 		void Render();
 		inline std::shared_ptr<ID3D11Device*> GetDevice() { return mDevice; }
 		inline std::shared_ptr<ID3D11DeviceContext*> GetContext() { return mContext; }
