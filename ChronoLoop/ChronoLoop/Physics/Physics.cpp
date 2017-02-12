@@ -1,8 +1,3 @@
-///////////////////////////////////////
-//Written: 2/8/2017
-//Author: Chris Burtvec4f &
-///////////////////////////////////////
-
 #include "stdafx.h"
 #include "Physics.h"
 #include "..\Rendering\Mesh.h"

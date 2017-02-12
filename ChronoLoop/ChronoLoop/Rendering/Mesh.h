@@ -15,6 +15,10 @@ struct Triangle
 	vec4f* Vertex[3];
 	vec4f Normal;
 };
+namespace vr
+{
+	struct RenderModel_t;
+}
 
 class Mesh
 {
@@ -28,13 +32,13 @@ public:
 	ID3D11PixelShader *pShader;
 	ID3D11VertexShader *vShader;
 
-
 	Mesh();
 	Mesh(char *path);
 	Mesh(char *path, wchar_t *path2);
 	virtual ~Mesh();
 	void loadShaders(char *pixel, char* vertex);
 	bool Load(char *path);
+	bool Load(vr::RenderModel_t *_model);
 	Triangle *GetTriangles();
 	inline size_t GetNumTriangles() { return mTriangles.size(); };
 	//bool LoadBin(char *path);

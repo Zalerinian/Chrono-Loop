@@ -1,8 +1,3 @@
-///////////////////////////////////////
-//Written: 2/7/2017
-//Author: Chris Burt
-///////////////////////////////////////
-
 #pragma once
 #include <DirectXMath.h>
 #include <openvr.h>
@@ -130,6 +125,7 @@ struct matrix4 {
 
 	matrix4();
 	matrix4(matrix4& _copy);
+	matrix4(float _11, float _12, float _13, float _14, float _21, float _22, float _23, float _24, float _31, float _32, float _33, float _34, float _41, float _42, float _43, float _44);
 	DirectX::XMMATRIX matrix4::GetUnderlyingType() { return matrix; }
 
 	bool     matrix4::operator==(matrix4 const& _other);
@@ -144,7 +140,6 @@ struct matrix4 {
 	vec4f&   matrix4::operator[](unsigned int _index);
 	
 	matrix4  Inverse();
-	matrix4  Identity();
 	float*   AsArray() { return reinterpret_cast<float*>(matrix.r); }
 };
 
@@ -160,4 +155,5 @@ namespace Math
 	matrix4 Projection(float _aspect, float _fov, float _near, float _far);
 	matrix4 FromMatrix(vr::HmdMatrix44_t _mat);
 	matrix4 FromMatrix(vr::HmdMatrix34_t _mat);
+	matrix4 Identity();
 }
