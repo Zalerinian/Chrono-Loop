@@ -5,10 +5,10 @@
 
 namespace RenderEngine {
 	void RenderSet::AddNode(RenderNode *node, RenderContext* rc) {
-		if (mTail = nullptr) {
+		if (mTail == nullptr) {
 			mContexts.push_back(rc);
-			mHead = mTail = (RenderNode*)rc;
-			rc->mNext = node;
+			mHead = mTail = node;//(RenderNode*)rc;
+			//rc->mNext = node;
 			node->mNext = nullptr;
 		}
 	}

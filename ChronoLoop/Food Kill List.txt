@@ -1,7 +1,7 @@
 Food that has been "harmed" during the production of ChronoLoop
   - Subs: 1
   - Pizzas: 0
-  - 
+  - Fried Chicken: 12
   - 
   - 
   - 

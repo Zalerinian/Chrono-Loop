@@ -10,7 +10,6 @@ struct ID3D11ShaderResourceView;
 namespace RenderEngine {
 
 	struct RenderContext : RenderNode {
-		
 		RasterState mRasterState = eRS_MAX;
 		VertFormat mVertexFormat = eVERT_MAX;
 		PixelShaderFormat mPixelShaderFormat = ePS_MAX;
@@ -18,6 +17,8 @@ namespace RenderEngine {
 		//RenderEye mEye = eEYE_MAX;
 		std::unordered_map<int, std::shared_ptr<ID3D11ShaderResourceView*>> mTextures;
 
+		RenderContext();
+		~RenderContext();
 		bool operator==(RenderContext& other);
 	};
 

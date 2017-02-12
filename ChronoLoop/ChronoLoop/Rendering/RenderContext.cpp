@@ -1,6 +1,14 @@
 //#include "stdafx.h"
 #include "RenderContext.h"
 
+RenderEngine::RenderContext::RenderContext()
+{
+//	mTextures.insert(std::pair<int, ID3D11ShaderResourceView*>(1, nullptr));
+}
+
+RenderEngine::RenderContext::~RenderContext()
+{
+}
 
 bool RenderEngine::RenderContext::operator==(RenderContext & other) {
 	for (int i = eTEX_DIFFUSE; i < eTEX_MAX; ++i) {
