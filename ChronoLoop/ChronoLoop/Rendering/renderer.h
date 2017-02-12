@@ -27,7 +27,7 @@ namespace RenderEngine {
 		std::shared_ptr<IDXGIFactory1*> mFactory;
 		std::shared_ptr<ID3D11RenderTargetView*> mMainView;
 		std::shared_ptr<ID3D11ShaderResourceView*> mTexture;
-		std::shared_ptr<ID3D11Texture2D*> mLeftTexture, mRightTexture;
+		std::shared_ptr<ID3D11Texture2D*> mMainViewTexture;
 		std::shared_ptr<ID3D11DepthStencilView*> mDSView, mVRDSView;
 		std::shared_ptr<ID3D11Texture2D*> mDepthBuffer;
 		D3D11_VIEWPORT mViewport;

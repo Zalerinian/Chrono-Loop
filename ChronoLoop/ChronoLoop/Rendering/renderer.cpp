@@ -184,6 +184,7 @@ namespace RenderEngine {
 		ThrowIfFailed((*mChain)->GetBuffer(0, __uuidof(bbuffer), (void**)(&bbuffer)));
 		ThrowIfFailed((*mDevice)->CreateRenderTargetView(bbuffer, NULL, &rtv));
 		mMainView = make_shared<ID3D11RenderTargetView*>(rtv);
+		mMainViewTexture = make_shared<ID3D11Texture2D*>((ID3D11Texture2D*)bbuffer);
 
 		ID3D11Texture2D *depthTexture;
 		ID3D11DepthStencilView *depthView;
@@ -221,7 +222,23 @@ namespace RenderEngine {
 	}
 
 	void Renderer::RenderVR() {
+		UpdateTrackedPositions();
+		vr::VRCompositor()->CompositorBringToFront();
+		float color[4] = { 0.3f, 0.3f, 1, 1 };
+		for (int i = 0; i < 2; ++i) {
+			vr::EVREye currentEye;
+			if (i == 0) {
+				currentEye = vr::EVREye::Eye_Left;
+			}
+			else {
+				currentEye = vr::EVREye::Eye_Right;
+				(*mContext)->ClearRenderTargetView((*mMainView), color);
+			}
+			// TODO: Setup the view/projection matrices, then process the render set.
 
+			vr::Texture_t submitTexture = { (void*)(*mMainViewTexture), vr::TextureType_DirectX, vr::ColorSpace_Auto };
+			vr::VRCompositor()->Submit(currentEye, &submitTexture);
+		}
 	}
 
 	void Renderer::RenderNoVR() {
@@ -262,7 +279,7 @@ namespace RenderEngine {
 		InitializeD3DDevice();
 		InitializeDXGIFactory();
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, rtvWidth, rtvHeight);
-		InitializeViews(_width, _height);
+		InitializeViews(rtvWidth, rtvHeight);
 
 		mUseVsync = _vsync;
 
