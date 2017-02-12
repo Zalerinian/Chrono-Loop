@@ -1,5 +1,7 @@
 #pragma once
 #include <d3d11.h>
+#include <d2d1.h>
+#include <dwrite.h>
 #include <memory>
 #include <vector>
 #include <openvr.h>
@@ -24,11 +26,22 @@ namespace RenderEngine {
 		D3D11_VIEWPORT mViewport;
 		std::shared_ptr<HWND> mWindow;
 		std::vector<RenderNode*> mNodes;
+
+		//Pat Added
+		//DirectWrite Drawing componets
+		std::shared_ptr<ID2D1Factory*> mTextFactory;
+		std::shared_ptr<IDWriteFactory*> mDWrite;
+		std::shared_ptr<IDWriteTextFormat*>mTextformat;
+		std::shared_ptr<ID2D1DCRenderTarget*> m2DRenderTarget;
+		std::shared_ptr<ID2D1SolidColorBrush*>mBrush;
 	
 		// Static members
 		static Renderer* sInstance;
 		static void InitializeD3DDevice();
 		static void InitializeDXGIFactory();
+		//PatAdded
+		static void InitializeIDWriteFactory();
+
 		static void InitializeDXGISwapChain(HWND &_win, bool _fullscreen, int _fps,
 																				int _width, int _height);
 		static void InitializeViews(int _width, int _height);

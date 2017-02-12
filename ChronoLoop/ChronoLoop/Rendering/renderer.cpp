@@ -3,6 +3,7 @@
 #include <d3d11.h>
 
 using namespace std;
+using namespace D2D1;
 
 namespace RenderEngine {
 
@@ -71,6 +72,60 @@ namespace RenderEngine {
 		IDXGIFactory1 *factory;
 		ThrowIfFailed(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&factory));
 		sInstance->mFactory = make_shared<IDXGIFactory1*>(factory);
+
+	}
+
+	void Renderer::InitializeIDWriteFactory()
+	{
+		ID2D1Factory * factory2;
+		ThrowIfFailed(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &factory2));
+		sInstance->mTextFactory = make_shared<ID2D1Factory*>(factory2);
+
+		IDWriteFactory* WriteFactory;
+		ThrowIfFailed(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(WriteFactory), reinterpret_cast<IUnknown**>(&WriteFactory)));
+		sInstance->mDWrite = make_shared<IDWriteFactory*>(WriteFactory);
+
+		static const WCHAR fontName[] = L"Verdana";
+		static const FLOAT fontSize = 50;
+
+		IDWriteTextFormat* WriteFormat;
+		ThrowIfFailed(WriteFactory->CreateTextFormat(
+			fontName,
+			NULL,
+			DWRITE_FONT_WEIGHT_NORMAL,
+			DWRITE_FONT_STYLE_NORMAL,
+			DWRITE_FONT_STRETCH_NORMAL,
+			fontSize,
+			L"en-us",
+			&WriteFormat));
+		sInstance->mTextformat = make_shared<IDWriteTextFormat*>(WriteFormat);
+
+		WriteFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
+		WriteFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+
+		
+		D2D1_PIXEL_FORMAT PF = {DXGI_FORMAT_B8G8R8A8_UNORM,D2D1_ALPHA_MODE_IGNORE};
+
+		D2D1_RENDER_TARGET_PROPERTIES RTProp = {
+			D2D1_RENDER_TARGET_TYPE_DEFAULT,
+			PF,
+			0,
+			0,
+			D2D1_RENDER_TARGET_USAGE_NONE,
+			D2D1_FEATURE_LEVEL_DEFAULT
+		};
+
+		ID2D1DCRenderTarget* rt;
+		ThrowIfFailed(factory2->CreateDCRenderTarget(&RTProp, &rt));
+		sInstance->m2DRenderTarget = make_shared <ID2D1DCRenderTarget*>(rt);
+	
+		ID2D1SolidColorBrush* brush;
+		ThrowIfFailed(rt->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White,1.0f),&brush));
+		sInstance->mBrush = make_shared<ID2D1SolidColorBrush*>(brush);
+
+		
+	
+
 	}
 	
 	void Renderer::InitializeDXGISwapChain(HWND &_win, bool _fullscreen, int _fps, int _width, int _height) {
@@ -164,6 +219,8 @@ namespace RenderEngine {
 	
 		InitializeD3DDevice();
 		InitializeDXGIFactory();
+		//PatAdded
+		InitializeIDWriteFactory();
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, _width, _height);
 		InitializeViews(_width, _height);
 		return true;
@@ -176,6 +233,38 @@ namespace RenderEngine {
 	void Renderer::Render() {
 		float color[4] = { 0.3f, 0.3f, 1, 1 };
 		(*mContext)->ClearRenderTargetView((*mRTView), color);
+		(*mContext)->OMSetRenderTargets(1, &(*mRTView), *mDSView);
+
+		D2D1_TAG t1 = NULL;
+		D2D1_TAG t2 = NULL;
+
+		static const WCHAR sc_helloWorld[] = L"Hello, World!";
+
+		
+		// Retrieve the size of the render target.
+		D2D1_SIZE_F renderTargetSize = (*m2DRenderTarget)->GetSize();
+
+		(*m2DRenderTarget)->BeginDraw();
+		
+		(*m2DRenderTarget)->SetTransform(D2D1::Matrix3x2F::Identity());
+
+		(*m2DRenderTarget)->Clear(D2D1::ColorF(D2D1::ColorF::White));
+
+		//(*m2DRenderTarget)->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
+		//(*m2DRenderTarget)->SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE_ALIASED);
+		
+
+		(*m2DRenderTarget)->DrawText(
+			sc_helloWorld,
+			ARRAYSIZE(sc_helloWorld) - 1,
+			(*mTextformat),
+			D2D1::RectF(0, 0, renderTargetSize.width, renderTargetSize.height),
+			(*mBrush)
+		);
+
+		HRESULT hr;
+		hr = (*m2DRenderTarget)->EndDraw(&t1,&t2);
+
 
 		(*mChain)->Present(0, 0);
 	}
