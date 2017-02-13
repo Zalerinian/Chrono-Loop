@@ -3,7 +3,7 @@
 /_Release x86
 /_Release x64
 /_Build
-
+/Logs
 /ipch
 /UnitTest++/obj/
 /*/Debug
