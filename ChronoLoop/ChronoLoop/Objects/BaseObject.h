@@ -5,26 +5,21 @@
 #include "Transform.h"
 #include "Component.h"
 #include "../Physics/Physics.h"
-using namespace Physics;
 #include "../TimeManager.h"
+
 
 class Component;
 
 class BaseObject
 {
 private:
-	float mass;
 	std::string name;
 	BaseObject* parent;
-	unsigned short id;
+	unsigned short  UniqueID, id;
+	std::list<BaseObject*> children;
 	std::vector<Component*> components;
 	Transform transform;
-	vec4f pos, vel, acc;
-	unsigned short UniqueID;
-	std::list<BaseObject*> children;
 
-	//std::vector<Component*> components;
-	
 public:
 	//**CONSTRUCTORS**//
 	BaseObject();
@@ -35,13 +30,11 @@ public:
 	BaseObject Clone(BaseObject _clone);
 	BaseObject const* operator=(BaseObject _equals);
 	unsigned short& GetUniqueId();
+	Mesh* mMesh;
 
 	void Destroy() { delete this; };
 
 	//**GETTERS/SETTERS**//
-	float						GetMass() { return mass; };
-	void						SetMass(float _mass) { mass = _mass; };
-
 	std::string					GetName() { return name; };
 	void						SetName(std::string _name) { name = _name; };
 
@@ -50,10 +43,6 @@ public:
 
 	Transform&					GetTransform() { return transform; };
 	void						SetTransform(Transform _transform) { transform = _transform; };
-
-	vec4f						GetPosition() { return pos; };
-	vec4f						GetVelocity() { return vel; };
-	vec4f						GetAcceleration() { return acc; };
 
 	unsigned short&				GetUniqueID() { return UniqueID; };
 	void						SetUniqueID(unsigned short _id) { UniqueID = _id; };
@@ -70,7 +59,4 @@ public:
 	//void						RemoveComponent(Component _comp) { components.remove(_comp); };
 	void						AddChild(BaseObject* _obj) { children.push_back(_obj); };
 	void						RemoveChild(BaseObject* _obj) { children.remove(_obj); };
-	void						CalcAcceleration(vec4f& _force);
-	void						CalcVelocity(vec4f& _force, float _dt);
-	void						CalcPosition(vec4f& _force, float _dt);
 };

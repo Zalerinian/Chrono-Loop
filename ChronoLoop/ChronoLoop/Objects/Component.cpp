@@ -1,49 +1,20 @@
 #include "stdafx.h"
 #include "Component.h"
 #include "BaseObject.h"
+#include "..\Common\Math.h"
 
-//Base Component---------------------------------------------
 #pragma region Base Component
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-void Component::GetMatrix(matrix4& _m)
-{
-	  //_m = object->transform.m_matrix4;
-}
-
 #pragma endregion
-//------------------------------------------------------------
-//Listener----------------------------------------------------
+
 #pragma region Listener
 
 //void Listener::Update(){}
 
-
-
-
-
-
-
-
-
-
-
 #pragma endregion
-//------------------------------------------------------------
-//Emitter-----------------------------------------------------
+
 #pragma region Emitter
 
 void Emitter::Update()
@@ -70,5 +41,18 @@ void Emitter::Destroy()
 {
 
 }
+
 #pragma endregion
-//------------------------------------------------------------
+
+void Collider::CalcObjAcceleration(vec4f& _force)
+{
+	mAcceleration = Physics::Instance()->CalcAcceleration(_force, mMass);
+}
+void Collider::CalcObjVelocity(vec4f& _force, float _dt)
+{
+	mVelocity = Physics::Instance()->CalcVelocity(mVelocity, mAcceleration, _dt);
+}
+void Collider::CalcObjPosition(vec4f& _force, float _dt)
+{
+	object->GetTransform().GetMatrix().fourth = Physics::Instance()->CalcPosition(object->GetTransform().GetMatrix().fourth, mVelocity, _dt);
+}

@@ -141,7 +141,6 @@
     <ClInclude Include="Timeline.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Input\KeyboardInput.h" />
     <ClInclude Include="TimeManager.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
@@ -210,6 +209,9 @@
     <ClInclude Include="Rendering\RenderShape.h">
       <Filter>Rendering\Header Files\Nodes</Filter>
     </ClInclude>
+    <ClInclude Include="Input\KeyboardInput.h">
+      <Filter>Input\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -248,7 +250,6 @@
     <ClCompile Include="Timeline.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Input\KeyboardInput.cpp" />
     <ClCompile Include="TimeManager.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
@@ -346,6 +347,9 @@
     </ClCompile>
     <ClCompile Include="Rendering\RenderShape.cpp">
       <Filter>Rendering\Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\KeyboardInput.cpp">
+      <Filter>Input\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

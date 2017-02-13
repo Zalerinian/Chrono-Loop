@@ -2,36 +2,36 @@
 class BaseObject;
 struct matrix4;
 
-
 enum ComponentType
 {
 	Unknown,
 	Code,
-	Collider,
+	PhysicsCollider,
 	AudioEmitter,
 	AudioListener,
 	UI
 };
+
 class Component
 {
+	friend class Physics;
 protected:
-	bool isEnable;
-	ComponentType type;
-
+	bool mIsEnabled;
 	BaseObject* object = nullptr;
+
 public:
-	bool isEnabled() { return isEnable; };
-	void Disable() { isEnable = false; };
-	void Enable() { isEnable = true; };
-	//virtual void Update() = 0;
-	//virtual void Destroy() = 0;
-	void GetMatrix(matrix4& _m);
+	ComponentType type;
+	bool isEnabled() { return mIsEnabled; };
+	void Disable() { mIsEnabled = false; };
+	void Enable() { mIsEnabled = true; };
+	virtual void Update() {};
+	virtual void Destroy() {};
+	//matrix4 GetMatrix() { return object->GetTransform().GetMatrix(); };
 };
 
 class Listener : Component
 {
 public:
-
 	//void Update();
 };
 
@@ -46,25 +46,21 @@ public:
 	void Destroy();
 };
 
-/*
-business entity- gmail, twitter, facebook, steam account
-art, audio, marketing, designer students ?
+class Collider : public Component
+{
+public:
+	bool mIsCube;
+	bool mIsSphere;
+	bool mIsPlane;
+	vec4f mCubeMax;
+	vec4f mCubeMin;
+	vec4f mPlaneNorm;
+	float mPlaneOffset;
+	float mSphereRadius;
+	float mMass, mRadius;
+	vec4f mVelocity, mAcceleration;
 
-first initial last name, password lower case
-gdserve.fullsail.com:8080
-install doc, follow it
-
-
-
-
-*/
-
-
-
-
-
-
-
-
-
-
+	void CalcObjAcceleration(vec4f& _force);
+	void CalcObjVelocity(vec4f& _force, float _dt);
+	void CalcObjPosition(vec4f& _force, float _dt);
+};

@@ -9,6 +9,7 @@ namespace RenderEngine {
 												 vr::IVRSystem* _vrsys) {
 		Renderer::Instance()->Initialize(_Window, _width, _height, _vsync, _fps, _fullscreen, _farPlane, _nearPlane, _vrsys);
 		RasterizerStateManager::Instance();
+		Physics::Instance();
 		if (_vrsys) {
 			VRInputManager::Instance();
 			VRInputManager::Initialize(_vrsys);

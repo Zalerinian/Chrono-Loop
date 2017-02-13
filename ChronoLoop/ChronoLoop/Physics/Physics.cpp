@@ -1,7 +1,31 @@
 #include "stdafx.h"
 #include "Physics.h"
+#include "..\Objects\BaseObject.h"
 #include "..\Rendering\Mesh.h"
 
+Physics* Physics::mInstance;
+
+Physics::Physics()
+{
+	mRayCasting = false;
+	mInstance = nullptr;
+}
+
+Physics* Physics::Instance()
+{
+	if (!mInstance)
+		mInstance = new Physics();
+	return mInstance;
+}
+
+void Physics::Destroy()
+{
+	if (mInstance)
+	{
+		delete mInstance;
+		mInstance = nullptr;
+	}
+}
 
 #pragma region RAY_CASTING
 
@@ -108,7 +132,7 @@ bool Physics::RayToCapsule(vec4f & _start, vec4f & _normal, vec4f & _point1, vec
 
 	if (RayToCylinder(_start, _normal, _point1, _point2, _radius, _time))
 	{
-		fTime = MIN(_time, fTime);
+		fTime = PMIN(_time, fTime);
 		_time = fTime;
 		bReturn = true;
 	}
@@ -116,14 +140,14 @@ bool Physics::RayToCapsule(vec4f & _start, vec4f & _normal, vec4f & _point1, vec
 	vec4f pcol, qcol;
 	if (RayToSphere(_start, _normal, _point1, _radius, _time, pcol))
 	{
-		fTime = MIN(_time, fTime);
+		fTime = PMIN(_time, fTime);
 		_time = fTime;
 		bReturn = true;
 	}
 
 	if (RayToSphere(_start, _normal, _point2, _radius, _time, qcol))
 	{
-		fTime = MIN(_time, fTime);
+		fTime = PMIN(_time, fTime);
 		_time = fTime;
 		bReturn = true;
 	}
@@ -148,7 +172,7 @@ bool Physics::MovingSphereToTriangle(vec4f & _vert0, vec4f & _vert1, vec4f & _ve
 
 	if (RayToTriangle(offset0, offset1, offset2, _normal, _start, _dir, _time))
 	{
-		fTime = MIN(_time, fTime);
+		fTime = PMIN(_time, fTime);
 		_time = fTime;
 		_outNormal = _normal;
 		bReturn = true;
@@ -157,7 +181,7 @@ bool Physics::MovingSphereToTriangle(vec4f & _vert0, vec4f & _vert1, vec4f & _ve
 	{
 		if (RayToCapsule(_start, _dir, _vert0, _vert1, _radius, _time))
 		{
-			fTime = MIN(_time, fTime);
+			fTime = PMIN(_time, fTime);
 			_time = fTime;
 			vec4f temp1 = _dir * _time + _start;
 			vec4f temp2 = (_vert1 - _vert0) * _time + _vert0;
@@ -167,7 +191,7 @@ bool Physics::MovingSphereToTriangle(vec4f & _vert0, vec4f & _vert1, vec4f & _ve
 
 		if (RayToCapsule(_start, _dir, _vert1, _vert2, _radius, _time))
 		{
-			fTime = MIN(_time, fTime);
+			fTime = PMIN(_time, fTime);
 			_time = fTime;
 			vec4f temp1 = _dir * _time + _start;
 			vec4f temp2 = (_vert1 - _vert0) * _time + _vert0;
@@ -177,7 +201,7 @@ bool Physics::MovingSphereToTriangle(vec4f & _vert0, vec4f & _vert1, vec4f & _ve
 
 		if (RayToCapsule(_start, _dir, _vert2, _vert0, _radius, _time))
 		{
-			fTime = MIN(_time, fTime);
+			fTime = PMIN(_time, fTime);
 			_time = fTime;
 			vec4f temp1 = _dir * _time + _start;
 			vec4f temp2 = (_vert1 - _vert0) * _time + _vert0;
@@ -201,9 +225,9 @@ bool Physics::MovingSphereToMesh(vec4f & _start, vec4f & _dir, float _radius, Me
 		vec4f currNorm = _mesh->GetTriangles()[i].Normal;
 
 		if (MovingSphereToTriangle(
-			*currTri.Vertex[0],
-			*currTri.Vertex[1],
-			*currTri.Vertex[2],
+			vec4f(*currTri.Vertex[0]),
+			vec4f(*currTri.Vertex[1]),
+			vec4f(*currTri.Vertex[2]),
 			currNorm, _start, _dir, _radius, fTime, _outNormal))
 		{
 			_time = fminf(_time, fTime);
@@ -411,3 +435,113 @@ vec4f Physics::CalcPosition(vec4f& _pos, vec4f& _vel, float _time)
 }
 
 #pragma endregion
+
+void Physics::Update(float _time)
+{
+	Collider* collider;
+	Collider* otherCol;
+	Transform* transform;
+	vec4f norm;
+	
+	int objs = mColliders.size();
+	for (int i = 0; i < objs; ++i)
+	{
+		collider = mColliders[i];
+		transform = &mColliders[i]->object->GetTransform();
+		if (collider->mIsSphere)
+		{
+			Sphere s1(transform->GetMatrix().fourth, collider->mRadius);
+			for (int j = 0; j < objs; ++j)
+			{
+				if (mColliders[j] != mColliders[i])
+				{
+					//Not sure what outnorm is used for at the moment might just stick with basic cube/sphere collisions
+					//if (MovingSphereToMesh(transform->GetMatrix().fourth, collider->mVelocity, collider->mRadius, mColliders[j]->mMesh, _time, norm))
+
+					otherCol = mColliders[j];
+					if (otherCol->mIsSphere)
+					{
+						Sphere s2(otherCol->object->GetTransform().GetMatrix().fourth, otherCol->mRadius);
+						if (SphereToSphere(s1, s2))
+						{
+							//reflect? dissapear?
+						}
+						break;
+					}
+					else if (otherCol->mIsCube)
+					{
+						AABB aabb(otherCol->mCubeMin, otherCol->mCubeMax);
+						if (SphereToAABB(s1, aabb))
+						{
+							//reflect? dissapear?
+						}
+						break;
+					}
+					else if (otherCol->mIsPlane)
+					{
+						Plane plane(otherCol->mPlaneNorm, otherCol->mPlaneOffset);
+						int result = SphereToPlane(plane, s1);
+						if (result == 1)//in front of plane
+						{
+
+						}
+						else if (result == 2)//behind plane
+						{
+
+						}
+						else if (result == 3)// intersecting plane
+						{
+
+						}
+					}
+				}
+			}
+		}
+		else if (collider->mIsCube)
+		{
+			AABB aabb1(collider->mCubeMin, collider->mCubeMax);
+			for (int j = 0; j < objs; ++j)
+			{
+				if (mColliders[j] != mColliders[i])
+				{
+					otherCol = mColliders[j];
+					if (otherCol->mIsCube)
+					{
+						AABB aabb2(otherCol->mCubeMin, otherCol->mCubeMax);
+						if (AABBtoAABB(aabb1, aabb2))
+						{
+							//reflect? dissapear?
+						}
+						break;
+					}
+					else if (otherCol->mIsSphere)
+					{
+						Sphere s1(otherCol->object->GetTransform().GetMatrix().fourth, otherCol->mRadius);
+						if (SphereToAABB(s1, aabb1))
+						{
+							//reflect? dissapear?
+						}
+						break;
+					}
+					else if (otherCol->mIsPlane)
+					{
+						Plane plane(otherCol->mPlaneNorm, otherCol->mPlaneOffset);
+						int result = AabbToPlane(plane, aabb1);
+						if (result == 1)//in front of plane
+						{
+
+						}
+						else if (result == 2)//behind plane
+						{
+
+						}
+						else if (result == 3)// intersecting plane
+						{
+
+						}
+					}
+				}
+			}
+		}
+	}
+}
