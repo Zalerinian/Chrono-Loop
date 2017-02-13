@@ -148,8 +148,6 @@ void Update() {
 
 	Message<> * _msg = new Message<>(messageTypes::SoundEngine, soundMessages::INITAILIZE_Audio, 0, false);
 	msger.SendInMessage((void*)_msg);
-	Message<Listener*, const char*> *_msg1 = new Message<Listener*, const char*>(messageTypes::SoundEngine, soundMessages::ADD_Listener, 0, false, new Listener(), nullptr);
-	msger.SendInMessage((void*)_msg1);
 
 	while (true) {
 

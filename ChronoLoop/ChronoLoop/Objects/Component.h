@@ -24,8 +24,8 @@ public:
 	bool isEnabled() { return isEnable; }
 	void Disable() { isEnable = false; }
 	void Enable() { isEnable = true; }
-	//virtual void Update() = 0;
-	//virtual void Destroy() = 0;
+	void Update();
+	void Destroy();
 	Transform& GetTransform() const;
 };
 

@@ -73,39 +73,37 @@ void Messager::ProcessSound(Message<Args...>* _msg)
 	break;
 	case ADD_Listener:
 	{
-		//audio.AddListener(std::get<0>((*_msg).need), std::get<1>((*_msg).need));
-
 		TupleSplitter::apply(&AudioWrapper::AddListener, _msg->need);
 	}
 	break;
 	case REMOVE_Listener:
 	{
-		//TupleSplitter::apply(audio.RemoveListener, (*_msg).need);
+		TupleSplitter::apply(&AudioWrapper::RemoveListener, _msg->need);
 	}
 	break;
 	case ADD_Emitter:
 	{
-		//TupleSplitter::apply(audio.AddEmitter, (*_msg).need);
+		TupleSplitter::apply(&AudioWrapper::AddEmitter, _msg->need);
 	}
 	break;
 	case REMOVE_Emitter:
 	{
-		//TupleSplitter::apply(audio.RemoveEmitter, (*_msg).need);
+		TupleSplitter::apply(&AudioWrapper::RemoveEmitter, _msg->need);
 	}
 	break;
 	case SET_BasePath:
 	{
-		//TupleSplitter::apply(audio.SetBasePath, (*_msg).need);
+		TupleSplitter::apply(&AudioWrapper::SetBasePath, _msg->need);
 	}
 	break;
 	case ADD_Soundbank:
 	{
-		//TupleSplitter::apply(audio.LoadSoundBank, (*_msg).need);
+		TupleSplitter::apply(&AudioWrapper::LoadSoundBank, _msg->need);
 	}
 	break;
 	case REMOVE_Soundbank:
 	{
-		//TupleSplitter::apply(audio.UnloadSoundBank, (*_msg).need);
+		TupleSplitter::apply(&AudioWrapper::UnloadSoundBank, _msg->need);
 	}
 	break;
 	}
