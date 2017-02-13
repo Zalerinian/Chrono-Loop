@@ -21,7 +21,7 @@ public:
 	//const vec4f*			GetYAxis() {};
 	//const vec4f*			GetZAxis() {};
 	//const vec4f*			GetPosition() {};
-	matrix4					GetMatrix() { return m_worldMatrix; };
+	matrix4&					GetMatrix() { return m_worldMatrix; };
 
 	void					SetMatrix(matrix4 _mat) { m_worldMatrix = _mat; };
 

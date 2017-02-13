@@ -16,12 +16,6 @@ BaseObject::BaseObject(std::string _name, Transform _transform)
 	parent = nullptr;
 	transform = _transform;
 }
-BaseObject::BaseObject(std::string _name, Transform _transform, float _mass)
-{
-	name = _name;
-	parent = nullptr;
-	transform = _transform;
-}
 BaseObject::~BaseObject()
 {
 	delete parent;

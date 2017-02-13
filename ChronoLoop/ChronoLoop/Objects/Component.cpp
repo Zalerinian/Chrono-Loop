@@ -1,7 +1,6 @@
 //#include "stdafx.h"
 #include "Component.h"
 #include "BaseObject.h"
-#include "..\Common\Math.h"
 
 #pragma region Base Component
 
@@ -44,15 +43,29 @@ void Emitter::Destroy()
 
 #pragma endregion
 
-void Collider::CalcObjAcceleration(vec4f& _force)
+vec4f Collider::GetPos()
 {
-	mAcceleration = Physics::Instance()->CalcAcceleration(_force, mMass);
+	return object->GetTransform().GetMatrix().fourth;
+
 }
-void Collider::CalcObjVelocity(vec4f& _force, float _dt)
+void Collider::SetPos(vec4f _newPos)
 {
-	mVelocity = Physics::Instance()->CalcVelocity(mVelocity, mAcceleration, _dt);
+	object->GetTransform().GetMatrix().fourth = _newPos;
+	if (mIsCube)
+	{
+		mCubeMax += _newPos;
+		mCubeMin += _newPos;
+	}
 }
-void Collider::CalcObjPosition(vec4f& _force, float _dt)
-{
-	object->GetTransform().GetMatrix().fourth = Physics::Instance()->CalcPosition(object->GetTransform().GetMatrix().fourth, mVelocity, _dt);
-}
+//void Collider::CalcObjAcceleration(vec4f& _force)
+//{
+//	mAcceleration = Physics::Instance()->CalcAcceleration(_force, mMass);
+//}
+//void Collider::CalcObjVelocity(vec4f& _force, float _dt)
+//{
+//	mVelocity = Physics::Instance()->CalcVelocity(mVelocity, mAcceleration, _dt);
+//}
+//void Collider::CalcObjPosition(vec4f& _force, float _dt)
+//{
+//	object->GetTransform().GetMatrix().fourth = Physics::Instance()->CalcPosition(object->GetTransform().GetMatrix().fourth, mVelocity, _dt);
+//}

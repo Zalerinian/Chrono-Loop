@@ -1,10 +1,9 @@
 #pragma once
+#include "..\Common\Math.h"
 class BaseObject;
-struct matrix4;
 
 enum ComponentType
 {
-	Unknown,
 	Code,
 	PhysicsCollider,
 	AudioEmitter,
@@ -17,9 +16,9 @@ class Component
 	friend class Physics;
 protected:
 	bool mIsEnabled;
-	BaseObject* object = nullptr;
 
 public:
+	BaseObject* object = nullptr;
 	ComponentType type;
 	bool isEnabled() { return mIsEnabled; };
 	void Disable() { mIsEnabled = false; };
@@ -49,18 +48,13 @@ public:
 class Collider : public Component
 {
 public:
-	bool mIsCube;
-	bool mIsSphere;
-	bool mIsPlane;
-	vec4f mCubeMax;
-	vec4f mCubeMin;
-	vec4f mPlaneNorm;
-	float mPlaneOffset;
-	float mSphereRadius;
-	float mMass, mRadius;
-	vec4f mVelocity, mAcceleration;
+	bool mIsCube, mIsSphere, mIsPlane, mShouldMove;
+	vec4f mCubeMax, mCubeMin, mPlaneNorm, mVelocity, mAcceleration;
+	float mPlaneOffset, mSphereRadius, mMass, mRadius;
 
-	void CalcObjAcceleration(vec4f& _force);
-	void CalcObjVelocity(vec4f& _force, float _dt);
-	void CalcObjPosition(vec4f& _force, float _dt);
+	vec4f GetPos();
+	void SetPos(vec4f _newPos);
+	//void CalcObjAcceleration(vec4f& _force);
+	//void CalcObjVelocity(vec4f& _force, float _dt);
+	//void CalcObjPosition(vec4f& _force, float _dt);
 };

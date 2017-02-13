@@ -1,6 +1,7 @@
 //#include "stdafx.h"
 #include "Rendering/SystemInitializer.h"
 #include "Rendering/renderer.h"
+#include "Objects\BaseObject.h"
 #include "Rendering/InputLayoutManager.h"
 #include "Input/VRInputManager.h"
 #include "Core/TimeManager.h"
@@ -139,6 +140,54 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 void Update() {
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
+
+	/*///////////////////////Using this to test physics//////////////////
+	Transform transform, transform1;
+	transform.SetMatrix(Identity());
+	BaseObject obj;
+	obj.SetName("aabb");
+	Collider aabb;
+	aabb.mAcceleration.vector = { 0.0f, 0.0f, 0.0f, 0.0f };
+	aabb.mCubeMax.vector = { -1.0f, 2.0f, -1.0f, 1.0f };
+	aabb.mCubeMin.vector = { 1.0f, 1.0f, 1.0f, 1.0f };
+	aabb.mIsCube = true;
+	aabb.mIsSphere = false;
+	aabb.mIsPlane = false;
+	aabb.mShouldMove = true;
+	aabb.mMass = 1.0f;
+	aabb.mVelocity.vector = { 0.0f, 0.0f, 0.0f, 0.0f };
+	obj.AddComponent(&aabb);
+	obj.SetTransform(transform);
+	aabb.object = &obj;
+
+	matrix4 mat = Identity();
+	mat.fourth.x = 0.0f;
+	mat.fourth.y = -1.0f;
+	mat.fourth.z = 0.0f;
+	mat.fourth.w = 1.0f;
+
+	transform1.SetMatrix(mat);
+	BaseObject obj1;
+	obj1.SetName("plane");
+	Collider plane;
+	plane.mAcceleration.vector = { 0.0f, 0.0f, 0.0f, 0.0f };
+	plane.mIsCube = false;
+	plane.mIsSphere = false;
+	plane.mIsPlane = true;
+	plane.mShouldMove = false;
+	plane.mMass = 0.0f;
+	plane.mPlaneNorm.vector = { 0.0f, 1.0f, 0.0f, 0.0f };
+	plane.mPlaneOffset = 0.0f;
+	plane.mVelocity.vector = { 0.0f, 0.0f, 0.0f, 0.0f };
+	obj1.AddComponent(&plane);
+	obj1.SetTransform(transform1);
+	plane.object = &obj1;
+
+	Physics::Instance()->mColliders.push_back(&aabb);
+	Physics::Instance()->mColliders.push_back(&plane);
+	*////////////////////////////////////////////////////////////////////
+
+
 	while (true) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			// Handle windows message.
@@ -152,6 +201,7 @@ void Update() {
 				break;
 			}
 
+			Physics::Instance()->Update(deltaTime);
 			UpdateTime();
 			VRInputManager::Instance().update();
 			// Logic.Update(float deltaTime);
@@ -166,6 +216,3 @@ void UpdateTime()
 	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count() - lastTime.time_since_epoch().count()) / 1000.0f / 1000.0f / 1000.0f;
 	lastTime = std::chrono::steady_clock::now();
 }
-
-
-

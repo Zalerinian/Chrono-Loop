@@ -84,7 +84,7 @@ struct vec4f {
 	};
 
 	vec4f() { x = 0; y = 0; z = 0; w = 0; };
-	vec4f(float _x, float _y, float _z, float _w) { x = _x; _y = y; _z = z; w = _w; };
+	vec4f(float _x, float _y, float _z, float _w) { x = _x; y = _y; z = _z; w = _w; };
 	vec4f(vec4f const& _copy);
 	vec4f(vec3f const& _copy);
 	//DirectX::XMVECTOR GetUnderlyingType() { return vector; }

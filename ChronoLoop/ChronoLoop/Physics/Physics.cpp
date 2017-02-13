@@ -2,6 +2,8 @@
 #include "Physics.h"
 #include "..\Objects\BaseObject.h"
 #include "..\Rendering\Mesh.h"
+#include "..\Common\Logger.h"
+#include "..\Objects\Component.h"
 
 Physics* Physics::mInstance;
 
@@ -448,6 +450,14 @@ void Physics::Update(float _time)
 	{
 		collider = mColliders[i];
 		transform = &mColliders[i]->object->GetTransform();
+		if (collider->mShouldMove)
+		{
+			vec4f vec = { 0.0f, -9.8f, 0.0f, 0.0f };
+			collider->mAcceleration = CalcAcceleration(vec, collider->mMass);
+			collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
+			collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
+		}
+
 		if (collider->mIsSphere)
 		{
 			Sphere s1(transform->GetMatrix().fourth, collider->mRadius);
@@ -461,10 +471,11 @@ void Physics::Update(float _time)
 					otherCol = mColliders[j];
 					if (otherCol->mIsSphere)
 					{
-						Sphere s2(otherCol->object->GetTransform().GetMatrix().fourth, otherCol->mRadius);
+						Sphere s2(otherCol->GetPos(), otherCol->mRadius);
 						if (SphereToSphere(s1, s2))
 						{
 							//reflect? dissapear?
+							SystemLogger::GetLog() << "SPHERE TO SPHERE COLLISION!";
 						}
 						break;
 					}
@@ -474,6 +485,7 @@ void Physics::Update(float _time)
 						if (SphereToAABB(s1, aabb))
 						{
 							//reflect? dissapear?
+							SystemLogger::GetLog() << "SPHERE TO AABB COLLISION FROM SPHERE!";
 						}
 						break;
 					}
@@ -483,15 +495,15 @@ void Physics::Update(float _time)
 						int result = SphereToPlane(plane, s1);
 						if (result == 1)//in front of plane
 						{
-
+							SystemLogger::GetLog() << "SPHERE IN FRONT OF PLANE!";
 						}
 						else if (result == 2)//behind plane
 						{
-
+							SystemLogger::GetLog() << "SPHERE BEHIND PLANE!";
 						}
 						else if (result == 3)// intersecting plane
 						{
-
+							SystemLogger::GetLog() << "SPHERE INTERSECTING PLANE!";
 						}
 					}
 				}
@@ -511,6 +523,7 @@ void Physics::Update(float _time)
 						if (AABBtoAABB(aabb1, aabb2))
 						{
 							//reflect? dissapear?
+							SystemLogger::GetLog() << "AABB TO AABB COLLISION!";
 						}
 						break;
 					}
@@ -520,6 +533,7 @@ void Physics::Update(float _time)
 						if (SphereToAABB(s1, aabb1))
 						{
 							//reflect? dissapear?
+							SystemLogger::GetLog() << "SPHERE TO AABB COLLISION FROM AABB!";
 						}
 						break;
 					}
@@ -529,15 +543,15 @@ void Physics::Update(float _time)
 						int result = AabbToPlane(plane, aabb1);
 						if (result == 1)//in front of plane
 						{
-
+							SystemLogger::GetLog() << "AABB IN FRONT OF PLANE!";
 						}
 						else if (result == 2)//behind plane
 						{
-
+							SystemLogger::GetLog() << "AABB BEHIND PLANE!";
 						}
 						else if (result == 3)// intersecting plane
 						{
-
+							SystemLogger::GetLog() << "AABB INTERSECTING PLANE!";
 						}
 					}
 				}

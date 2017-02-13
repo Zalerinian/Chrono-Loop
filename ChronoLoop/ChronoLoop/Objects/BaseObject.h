@@ -4,8 +4,8 @@
 #include <vector>
 #include "Transform.h"
 #include "Component.h"
-#include "../Physics/Physics.h"
-#include "../TimeManager.h"
+#include "..\Physics\Physics.h"
+#include "..\Core\TimeManager.h"
 
 
 class Component;
@@ -24,7 +24,6 @@ public:
 	//**CONSTRUCTORS**//
 	BaseObject();
 	BaseObject(std::string _name, Transform _transform);
-	BaseObject(std::string name, Transform _transform, float mass);
 	~BaseObject();
 	BaseObject Clone();
 	BaseObject Clone(BaseObject _clone);

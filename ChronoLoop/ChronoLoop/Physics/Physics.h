@@ -1,6 +1,7 @@
 #pragma once
 
 #include "..\Common\Math.h"
+#include <vector>
 
 #define PMIN(x, y) ((x < y) ? x : y)
 #define PMAX(x, y) ((x > y) ? x : y)
@@ -8,6 +9,7 @@
 
 class Mesh;
 class BaseObject;
+class Collider;
 
 struct Plane
 {
@@ -51,7 +53,7 @@ public:
 	std::vector<Collider*> mColliders;
 
 	static Physics* Instance();
-	void			Destroy();
+	static void		Destroy();
 	
 	void			Update(float _time);
 
