@@ -18,8 +18,8 @@ private:
 	float mHairTriggerDelta;
 	float mHairTriggerLimit; //trigger dead zone
 	bool mHairTriggerState, mHairTriggerPrevState;
-	inline void SetIndex(int index);
-	inline void SetValid(bool valid);
+	void SetIndex(int index);
+	void SetValid(bool valid);
 
 	friend class VRInputManager;
 public:
@@ -28,38 +28,38 @@ public:
 	Controller();
 	~Controller() {};
 	void Update();
-	inline void SetUp(int _index, vr::IVRSystem* _vr);
+	void SetUp(int _index, vr::IVRSystem* _vr);
 
 	//transforms
-	inline vec3f GetPosition();
-	inline vec3f GetVelocity();
-	inline vec3f GetAngularVelocity();
+	vec3f GetPosition();
+	vec3f GetVelocity();
+	vec3f GetAngularVelocity();
 
-	inline vr::VRControllerState_t GetState();
-	inline vr::VRControllerState_t GetPrevState();
-	inline vr::TrackedDevicePose_t GetPose();
+	vr::VRControllerState_t GetState();
+	vr::VRControllerState_t GetPrevState();
+	vr::TrackedDevicePose_t GetPose();
 
 	//Getters and Setters
-	inline int GetIndex();
-	inline bool GetValid();
+	int GetIndex();
+	bool GetValid();
 
 	//controller input
-	inline bool GetPress(vr::EVRButtonId buttonId);
-	inline bool GetPressDown(vr::EVRButtonId buttonId);
-	inline bool GetPressUp(vr::EVRButtonId buttonId);
+	bool GetPress(vr::EVRButtonId buttonId);
+	bool GetPressDown(vr::EVRButtonId buttonId);
+	bool GetPressUp(vr::EVRButtonId buttonId);
 
-	inline bool GetTouch(vr::EVRButtonId buttonId);
-	inline bool GetTouchDown(vr::EVRButtonId buttonId);
-	inline bool GetTouchUp(vr::EVRButtonId buttonId);
+	bool GetTouch(vr::EVRButtonId buttonId);
+	bool GetTouchDown(vr::EVRButtonId buttonId);
+	bool GetTouchUp(vr::EVRButtonId buttonId);
 
 	//Trigger
 	void UpdateHairTrigger();
-	inline bool GetHairTrigger();
-	inline bool GetHairTriggerDown();
-	inline bool GetHairTriggerUp();
+	bool GetHairTrigger();
+	bool GetHairTriggerDown();
+	bool GetHairTriggerUp();
 
 	//mostly for touchpad
-	inline vec2f GetAxis(vr::EVRButtonId buttonId = vr::k_EButton_SteamVR_Touchpad);
-	inline void TriggerHapticPulse(int duration_micro_sec = 500, vr::EVRButtonId buttonId = vr::k_EButton_SteamVR_Touchpad);
+	vec2f GetAxis(vr::EVRButtonId buttonId = vr::k_EButton_SteamVR_Touchpad);
+	void TriggerHapticPulse(int duration_micro_sec = 500, vr::EVRButtonId buttonId = vr::k_EButton_SteamVR_Touchpad);
 };
 

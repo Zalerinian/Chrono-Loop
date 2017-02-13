@@ -1,59 +1,51 @@
 //#include "stdafx.h"
 #include "Controller.h"
-#include <iostream>
+#include "../Common/Logger.h"
 
 #define MAX(a,b) ((a) > (b) ? (a) : (b))
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
 
-Controller::Controller()
-{
+Controller::Controller() {
 	mHairTriggerDelta = 0.1f; //trigger deadzone
 }
 
-void Controller::Update()
-{
+void Controller::Update() {
 	//update the contoller pose/state when called. 
 	mPrevState = mState;
-	if (mHmd != NULL)
-	{
+	if (mHmd != NULL) {
 		mValid = mHmd->GetControllerStateWithPose(mTrackingSpace, mIndex, &mState, sizeof(mState), &mPose);
-		//if (mPrevState.ulButtonPressed != mState.ulButtonPressed)
-		UpdateHairTrigger();
+		if (mPrevState.ulButtonPressed != mState.ulButtonPressed) {
+			UpdateHairTrigger();
+		}
 	}
 }
 
-void Controller::UpdateHairTrigger()
-{
+void Controller::UpdateHairTrigger() {
 	mHairTriggerPrevState = mHairTriggerState;
 	float value = mState.rAxis[1].x;
 	if (mHairTriggerState)
 		if (value < mHairTriggerLimit - mHairTriggerDelta || value <= 0.0f)
 			mHairTriggerState = false;
-	else
-		if (value > mHairTriggerLimit + mHairTriggerDelta || value >= 1.0f)
-			mHairTriggerState = true;
+		else
+			if (value > mHairTriggerLimit + mHairTriggerDelta || value >= 1.0f)
+				mHairTriggerState = true;
 
 	mHairTriggerLimit = mHairTriggerState ? MAX(mHairTriggerLimit, value) : MIN(mHairTriggerLimit, value);
 }
 
 
-vec2f Controller::GetAxis(vr::EVRButtonId buttonId)
-{
+vec2f Controller::GetAxis(vr::EVRButtonId buttonId) {
 	Update();
 	int axisId = (int)buttonId - (int)vr::k_EButton_Axis0;
 	return vec2f(mState.rAxis[axisId].x, mState.rAxis[axisId].y);
 }
 
-void Controller::TriggerHapticPulse(int duration_micro_sec, vr::EVRButtonId buttonId)
-{
-	if (mHmd != NULL)
-	{
+void Controller::TriggerHapticPulse(int duration_micro_sec, vr::EVRButtonId buttonId) {
+	if (mHmd != NULL) {
 		int axisId = (int)buttonId - (int)vr::k_EButton_Axis0;
 		mHmd->TriggerHapticPulse(mIndex, axisId, (char)duration_micro_sec);
 	}
 }
-
-#pragma region Inline Functions
 
 #pragma region Private Functions
 
@@ -67,9 +59,11 @@ void Controller::SetValid(bool _valid) {
 
 #pragma endregion Private Functions
 
+#pragma region Public Functions
+
 void Controller::SetUp(int _index, vr::IVRSystem *_vr) {
 	mIndex = _index;
-	mHmd = _vr; 
+	mHmd = _vr;
 	Update();
 }
 
@@ -124,12 +118,12 @@ bool Controller::GetTouch(vr::EVRButtonId _id) {
 }
 
 bool Controller::GetTouchDown(vr::EVRButtonId _id) {
-	return (mState.ulButtonTouched & vr::ButtonMaskFromId(_id)) != 0 && 
+	return (mState.ulButtonTouched & vr::ButtonMaskFromId(_id)) != 0 &&
 		(mPrevState.ulButtonTouched & vr::ButtonMaskFromId(_id)) == 0;
 }
 
 bool Controller::GetTouchUp(vr::EVRButtonId _id) {
-	return (mState.ulButtonTouched & vr::ButtonMaskFromId(_id)) == 0 && 
+	return (mState.ulButtonTouched & vr::ButtonMaskFromId(_id)) == 0 &&
 		(mPrevState.ulButtonTouched & vr::ButtonMaskFromId(_id)) != 0;
 }
 
@@ -145,5 +139,4 @@ bool Controller::GetHairTriggerUp() {
 	return !mHairTriggerState && mHairTriggerPrevState;
 }
 
-
-#pragma endregion Inline Functions
+#pragma endregion Public Functions

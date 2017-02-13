@@ -6,7 +6,6 @@
 #include "Core/TimeManager.h"
 #include "Common/Logger.h"
 #include <openvr.h>
-#include <iostream>
 #include <ctime>
 #include <chrono>
 
@@ -38,12 +37,20 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 
 	// Initialize Rendering systems and VR
 	vr::HmdError pError;
-	vr::IVRSystem *vrsys = vr::VR_Init(&pError, vr::VRApplication_Scene);
-	if (pError != vr::HmdError::VRInitError_None) {
-		std::cout << "Could not initialize OpenVR for reasons!" << std::endl;
+	vr::IVRSystem *vrsys = nullptr;
+	if (vr::VR_IsHmdPresent()) {
+		vrsys = vr::VR_Init(&pError, vr::VRApplication_Scene);
+		if (pError != vr::HmdError::VRInitError_None) {
+			SystemLogger::GetLog() << "Could not initialize OpenVR for reasons!" << std::endl;
+		}
+	} else {
+		SystemLogger::GetLog() << "There is no VR Headset present. VR will not be enabled." << std::endl;
 	}
 
 	//vrsys = nullptr;
+	if (vr::VR_IsHmdPresent() && vrsys == nullptr) {
+		SystemLogger::GetLog() << "VR seems to be ready, but the VR pointer is null. Was VR forcefully disabled?" << std::endl;
+	}
 
 	if (vrsys != nullptr) {
 		VREnabled = true;
@@ -62,6 +69,8 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	RenderEngine::ShutdownSystems();
 	SystemLogger::CloseLog();
 	SystemLogger::CloseError();
+	vr::VR_Shutdown();
+	vrsys = nullptr;
 
 #if _DEBUG || CONSOLE_OVERRIDE
 	FreeConsole();
