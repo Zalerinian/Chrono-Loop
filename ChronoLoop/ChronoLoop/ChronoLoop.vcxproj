@@ -201,6 +201,7 @@
     <ClInclude Include="Common\FileIO.h" />
     <ClInclude Include="Common\FileIO\FileIO_General.h" />
     <ClInclude Include="Common\FileIO\FileIO_Textures.h" />
+    <ClInclude Include="Common\Logger.h" />
     <ClInclude Include="Common\Math.h" />
     <ClInclude Include="Core\Timeline.h" />
     <ClInclude Include="Core\TimeManager.h" />
@@ -319,6 +320,7 @@
     <ClCompile Include="ChronoLoop.cpp" />
     <ClCompile Include="Common\FileIO\FileIO_General.cpp" />
     <ClCompile Include="Common\FileIO\FileIO_Textures.cpp" />
+    <ClCompile Include="Common\Logger.cpp" />
     <ClCompile Include="Common\Math.cpp" />
     <ClCompile Include="Core\Timeline.cpp" />
     <ClCompile Include="Core\TimeManager.cpp" />

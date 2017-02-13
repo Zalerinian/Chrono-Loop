@@ -238,6 +238,9 @@
     <ClInclude Include="Common\Common.h">
       <Filter>Common\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Common\Logger.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -384,6 +387,9 @@
     </ClCompile>
     <ClCompile Include="Common\FileIO\FileIO_Textures.cpp">
       <Filter>Common\FileIO\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Logger.cpp">
+      <Filter>Common\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

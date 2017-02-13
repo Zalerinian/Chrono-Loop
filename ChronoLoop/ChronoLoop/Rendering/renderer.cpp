@@ -242,6 +242,22 @@ namespace RenderEngine {
 			vr::Texture_t submitTexture = { (void*)(*mMainViewTexture), vr::TextureType_DirectX, vr::ColorSpace_Auto };
 			vr::VRCompositor()->Submit(currentEye, &submitTexture);
 		}
+
+
+		// Bootleg load the controller model.
+		if (mControllerModel.mIndexCount == 0) {
+			vr::RenderModel_t *vrControllerModel;
+			if (vr::VRRenderModels()->LoadRenderModel_Async("vr_controller_vive_1_5", &vrControllerModel) == vr::VRRenderModelError_None) {
+				Mesh controller;
+				controller.Load(vrControllerModel);
+				controller.Invert();
+				mControllerModel.Load(controller);
+				mControllerModel.SetShaders(ePS_BASIC, eVS_BASIC);
+				AddNode(&mControllerModel);
+				vr::VRRenderModels()->FreeRenderModel(vrControllerModel);
+			}
+		}
+
 	}
 
 	void Renderer::RenderNoVR() {
@@ -329,21 +345,6 @@ namespace RenderEngine {
 			RenderVR();
 		}
 		(*mChain)->Present(mUseVsync ? 1 : 0, 0);
-
-		// Bootleg load the controller model.
-		if (mControllerModel.mIndexCount == 0) {
-			vr::RenderModel_t *vrControllerModel;
-			if (vr::VRRenderModels()->LoadRenderModel_Async("vr_controller_vive_1_5", &vrControllerModel) == vr::VRRenderModelError_None) {
-				Mesh controller;
-				controller.Load(vrControllerModel);
-				controller.Invert();
-				mControllerModel.Load(controller);
-				mControllerModel.SetShaders(ePS_BASIC, eVS_BASIC);
-				AddNode(&mControllerModel);
-				vr::VRRenderModels()->FreeRenderModel(vrControllerModel);
-			}
-		}
-
 	}
 
 #pragma endregion Public Functions

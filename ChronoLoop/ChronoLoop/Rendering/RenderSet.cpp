@@ -4,11 +4,18 @@
 #include "RenderContext.h"
 #include "RenderShape.h"
 
+#if _DEBUG
+#include <intrin.h>
+#endif
+
 namespace RenderEngine {
 	void RenderSet::AddNode(RenderNode *node, RenderContext* rc) {
 		if (node->mType == RenderNode::RenderNodeType::Shape) {
 			if (((RenderShape*)node)->mIndexCount == 0) {
-				OutputDebugString(L"Attempting to set render shape with 0 indices!");
+				OutputDebugString(L"Attempting to set render shape with 0 indices!\n");
+#if _DEBUG
+				__debugbreak();
+#endif
 			}
 		}
 		if (mTail == nullptr) {

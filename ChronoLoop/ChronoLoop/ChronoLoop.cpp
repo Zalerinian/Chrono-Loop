@@ -4,6 +4,7 @@
 #include "Rendering/InputLayoutManager.h"
 #include "Input/VRInputManager.h"
 #include "Core/TimeManager.h"
+#include "Common/Logger.h"
 #include <openvr.h>
 #include <iostream>
 #include <ctime>
@@ -12,8 +13,6 @@
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
-
-
 
 HWND hwnd;
 LPCTSTR WndClassName = L"ChronoWindow";
@@ -48,11 +47,15 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 		return 1;
 	}
 	
+	SystemLogger::GetLog() << "Hello World!" << std::endl;
+
 	// Update everything
 	Update();
 
 	// Cleanup
 	RenderEngine::ShutdownSystems();
+	SystemLogger::CloseLog();
+	SystemLogger::CloseError();
 
 #if _DEBUG || CONSOLE_OVERRIDE
 	FreeConsole();

@@ -8,6 +8,11 @@
 #include "../../DXTK/DirectXTex.h"
 #include <memory>
 
+
+#if _DEBUG
+#include <intrin.h>
+#endif
+
 namespace RenderEngine {
 
 	RenderShape::RenderShape() {
@@ -30,11 +35,21 @@ namespace RenderEngine {
 	}
 
 	RenderShape::~RenderShape() {
-		(*mVertexBuffer)->Release();
-		(*mIndexBuffer)->Release();
+		if (mVertexBuffer.get() != nullptr) {
+			(*mVertexBuffer)->Release();
+		}
+		if (mIndexBuffer.get() != nullptr) {
+			(*mIndexBuffer)->Release();
+		}
 	}
 	
 	void RenderShape::Load(Mesh & _mesh) {
+#if _DEBUG
+		if (_mesh.VertSize() == 0) {
+			OutputDebugString(L"Attempting to load an empty mesh.\n");
+			__debugbreak();
+		}
+#endif
 		ID3D11Buffer *tBuffer;
 		mIndexBuffer = nullptr;
 		mVertexBuffer = nullptr;
