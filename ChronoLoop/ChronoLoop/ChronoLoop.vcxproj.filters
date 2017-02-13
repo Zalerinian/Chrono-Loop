@@ -91,6 +91,15 @@
     <Filter Include="Rendering\Shaders\Layout Shaders">
       <UniqueIdentifier>{b560e4df-5975-4c40-95c5-ed2ffde9c69a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Level">
+      <UniqueIdentifier>{854b351d-a708-4e49-bb01-2f790529fd71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Level\Headers">
+      <UniqueIdentifier>{5c836820-43e3-46b0-a282-57eccafa4072}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Level\Sources">
+      <UniqueIdentifier>{146a2953-0c09-437b-9c07-8060a57ff562}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\BaseObject.h">
@@ -169,6 +178,12 @@
     <ClInclude Include="Rendering\RenderSet.h">
       <Filter>Rendering\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BaseLevel.h">
+      <Filter>Level\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelManager.h">
+      <Filter>Level\Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -227,6 +242,12 @@
       <Filter>Rendering\Source Files\Nodes</Filter>
     </ClCompile>
     <ClCompile Include="Rendering\RenderSet.cpp" />
+    <ClCompile Include="LevelManager.cpp">
+      <Filter>Level\Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLevel.cpp">
+      <Filter>Level\Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
