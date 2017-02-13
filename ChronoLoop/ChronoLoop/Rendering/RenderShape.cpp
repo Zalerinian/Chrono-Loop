@@ -24,6 +24,15 @@ namespace RenderEngine {
 		mContext.mRasterState = eRS_FILLED;
 		mContext.mVertexFormat = eVERT_POSNORMTEX;
 	}
+
+	RenderShape::RenderShape(const char * _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs) {
+		Load(_path, _invert, _ps, _vs);
+	}
+
+	RenderShape::~RenderShape() {
+		(*mVertexBuffer)->Release();
+		(*mIndexBuffer)->Release();
+	}
 	
 	void RenderShape::Load(Mesh & _mesh) {
 		ID3D11Buffer *tBuffer;
@@ -48,6 +57,15 @@ namespace RenderEngine {
 		result = device->CreateBuffer(&indexBufferDesc, &indexBufferData, &tBuffer);
 		mIndexBuffer = std::make_shared<ID3D11Buffer*>(tBuffer);
 	}
+
+	void RenderShape::Load(const char * _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs) {
+		Mesh m(_path);
+		if (_invert) {
+			m.Invert();
+		}
+		Load(m);
+		SetShaders(_ps, _vs);
+	}
 	
 	void RenderShape::SetShaders(PixelShaderFormat pf, VertexShaderFormat vf)
 	{
@@ -61,14 +79,15 @@ namespace RenderEngine {
 		mContext.mPixelShaderFormat = pf;
 	}
 
-	void RenderShape::AddTexture(const char * _path, TextureType position) {
+	RenderShape& RenderShape::AddTexture(const char * _path, TextureType position) {
 		wchar_t *path = nullptr;
 		Engine::MakeWide(_path, path, (unsigned int)strlen(_path) + 1);
 		AddTexture(path, position);
 		delete[] path;
+		return *this;
 	}
 
-	void RenderShape::AddTexture(const wchar_t * _path, TextureType position) {
+	RenderShape& RenderShape::AddTexture(const wchar_t * _path, TextureType position) {
 		DirectX::ScratchImage img;
 		DirectX::Blob *image = new DirectX::Blob;
 		UINT flags = 0;
@@ -82,6 +101,8 @@ namespace RenderEngine {
 			(ID3D11Resource**)&tex,
 			&srv);
 		mContext.mTextures[position] = std::make_shared<ID3D11ShaderResourceView*>(srv);
+		delete image;
+		return *this;
 	}
 
 	void RenderShape::Render() {

@@ -20,6 +20,7 @@ void RenderEngine::RenderContext::Apply() {
 	for (auto it = mTextures.begin(); it != mTextures.end(); ++it) {
 		if (it->second.get() != nullptr) {
 			(*Renderer::Instance()->GetContext())->PSSetShaderResources((UINT)it->first, 1, it->second.get());
+			//(*Renderer::Instance()->GetContext())->PSSetSamplers((UINT)it->first, 1, nullptr); //TODO: Create a Sampler state and set it here.
 		}
 	}
 }

@@ -11,21 +11,12 @@ using namespace Concurrency;
 
 Mesh::Mesh()
 {
-	this->mImage = nullptr;
 }
 
-Mesh::Mesh(char * path)
+Mesh::Mesh(const char * path)
 {
 	this->Load(path);
-	this->mImage = nullptr;
 }
-
-Mesh::Mesh(char * path, wchar_t * path2)
-{
-	this->Load(path);
-	mImage = path2;
-}
-
 Mesh::~Mesh()
 {
 	this->Clear();
@@ -42,7 +33,7 @@ void Mesh::loadShaders(char * pixel, char * vertex)
 	(*RenderEngine::Renderer::Instance()->GetDevice())->CreateVertexShader(bytecode, bytelength, nullptr, &vShader);
 }
 
-bool Mesh::Load(char * path)
+bool Mesh::Load(const char * path)
 {
 	this->Clear();
 	std::vector<VertexPosNormTex> Verts;
@@ -396,9 +387,4 @@ unsigned short * Mesh::GetIndicies()
 size_t Mesh::IndicieSize()
 {
 	return mIndicies.size();
-}
-
-wchar_t *Mesh::ImagePath()
-{
-	return mImage;
 }

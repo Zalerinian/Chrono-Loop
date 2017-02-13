@@ -14,6 +14,10 @@ VRInputManager::~VRInputManager()
 
 void VRInputManager::mInitialize(vr::IVRSystem * _hmd)
 {
+	if (nullptr == _hmd) {
+		std::cout << "VR Input is disabled." << std::endl;
+		return;
+	}
 	mHmd = _hmd;
 	int rightID = mHmd->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_RightHand);
 	int leftID = mHmd->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand);
@@ -25,6 +29,9 @@ void VRInputManager::mInitialize(vr::IVRSystem * _hmd)
 
 void VRInputManager::update()
 {
+	if (!mInitialized) {
+		return;
+	}
 	if (mRightController.GetIndex() < 0)
 	{
 		mRightController.SetIndex(mHmd->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_RightHand));

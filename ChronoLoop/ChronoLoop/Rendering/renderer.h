@@ -39,7 +39,7 @@ namespace RenderEngine {
 		vr::IVRSystem* mVrSystem;
 		RenderSet mRenderSet;
 		ID3D11Buffer* constantBluffer;
-		RenderShape mControllerModel;
+		RenderShape mControllerModel, mBox;
 		bool mUseVsync = false;
 
 

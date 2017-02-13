@@ -26,18 +26,16 @@ private:
 	std::vector<Triangle> mTriangles;
 	std::vector<VertexPosNormTex> mUniqueVerts;
 	std::vector<unsigned short> mIndicies;
-	wchar_t *mImage;
 public:
 	// Super temporary shit
 	ID3D11PixelShader *pShader;
 	ID3D11VertexShader *vShader;
 
 	Mesh();
-	Mesh(char *path);
-	Mesh(char *path, wchar_t *path2);
+	Mesh(const char *path);
 	virtual ~Mesh();
 	void loadShaders(char *pixel, char* vertex);
-	bool Load(char *path);
+	bool Load(const char *path);
 	bool Load(vr::RenderModel_t *_model);
 	Triangle *GetTriangles();
 	inline size_t GetNumTriangles() { return mTriangles.size(); };
@@ -50,7 +48,5 @@ public:
 	size_t VertSize();
 	unsigned short *GetIndicies();
 	size_t IndicieSize();
-	wchar_t *ImagePath();
-	void SetImagePath(wchar_t* path) { mImage = path; };
 };
 

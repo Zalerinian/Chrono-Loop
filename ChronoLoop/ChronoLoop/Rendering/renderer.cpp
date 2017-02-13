@@ -299,12 +299,9 @@ namespace RenderEngine {
 
 		mUseVsync = _vsync;
 
-		Mesh cube("../Resources/Cube.obj");
-		cube.Invert();
-		RenderShape *box = new RenderShape(cube);
-		box->AddTexture(L"../Resources/cube_texture.png", eTEX_DIFFUSE);
-		box->SetShaders(ePS_TEXTURED, eVS_TEXTURED);
-		AddNode(box);
+		mBox.Load("../Resources/Cube.obj", true, ePS_TEXTURED, eVS_TEXTURED);
+		mBox.AddTexture(L"../Resources/cube_texture.png", eTEX_DIFFUSE);
+		AddNode(&mBox);
 
 
 		CD3D11_BUFFER_DESC desc(sizeof(MyBuffer), D3D11_BIND_CONSTANT_BUFFER);

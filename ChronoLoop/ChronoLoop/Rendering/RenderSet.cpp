@@ -2,9 +2,15 @@
 #include "RenderSet.h"
 #include "RenderNode.h"
 #include "RenderContext.h"
+#include "RenderShape.h"
 
 namespace RenderEngine {
 	void RenderSet::AddNode(RenderNode *node, RenderContext* rc) {
+		if (node->mType == RenderNode::RenderNodeType::Shape) {
+			if (((RenderShape*)node)->mIndexCount == 0) {
+				OutputDebugString(L"Attempting to set render shape with 0 indices!");
+			}
+		}
 		if (mTail == nullptr) {
 			mContexts.push_back(rc);
 			mHead = (RenderNode*)rc;
