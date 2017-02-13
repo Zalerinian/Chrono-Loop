@@ -47,7 +47,7 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 		return 1;
 	}
 	
-	SystemLogger::GetLog() << "Hello World!" << std::endl;
+	SystemLogger::GetLog() << "Hello World! " << "We hope you have at least" << 5 << "smiles today." << std::endl;
 
 	// Update everything
 	Update();

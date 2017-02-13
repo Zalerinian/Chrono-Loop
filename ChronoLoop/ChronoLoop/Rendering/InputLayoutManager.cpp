@@ -1,7 +1,7 @@
 //#include "stdafx.h"
 #include <d3d11.h>
 #include "InputLayoutManager.h"
-#include "renderer.h"
+#include "Renderer.h"
 #include "../Common/FileIO.h"
 
 

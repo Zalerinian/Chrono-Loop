@@ -2,8 +2,9 @@
 #include "ShaderManager.h"
 #include <d3d11.h>
 #include "../Common/FileIO.h"
-#include "renderer.h"
+#include "Renderer.h"
 #include <memory>
+#include "../Common/Logger.h"
 
 namespace RenderEngine {
 
@@ -15,7 +16,7 @@ namespace RenderEngine {
 		int byteSize = 0;
 		ID3D11PixelShader *ps;
 		if (!FileIO::LoadBytes("BasicPixel.cso", &buffer, byteSize)) {
-			// TODO: Put an actual error here.
+			
 			throw "Something catastrophic has occurred.";
 		}
 		(*Renderer::Instance()->GetDevice())->CreatePixelShader(buffer, byteSize, nullptr, &ps);

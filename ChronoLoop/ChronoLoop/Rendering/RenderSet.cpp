@@ -3,6 +3,8 @@
 #include "RenderNode.h"
 #include "RenderContext.h"
 #include "RenderShape.h"
+#include "../Common/Breakpoint.h"
+#include "../Common/Logger.h"
 
 #if _DEBUG
 #include <intrin.h>
@@ -13,9 +15,7 @@ namespace RenderEngine {
 		if (node->mType == RenderNode::RenderNodeType::Shape) {
 			if (((RenderShape*)node)->mIndexCount == 0) {
 				OutputDebugString(L"Attempting to set render shape with 0 indices!\n");
-#if _DEBUG
-				__debugbreak();
-#endif
+				Debug::SetBreakpoint();
 			}
 		}
 		if (mTail == nullptr) {

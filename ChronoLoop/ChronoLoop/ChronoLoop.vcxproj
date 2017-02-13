@@ -197,6 +197,7 @@
     <ClInclude Include="..\DXTK\DirectXTexP.h" />
     <ClInclude Include="..\DXTK\Filters.h" />
     <ClInclude Include="..\DXTK\scoped.h" />
+    <ClInclude Include="Common\Breakpoint.h" />
     <ClInclude Include="Common\Common.h" />
     <ClInclude Include="Common\FileIO.h" />
     <ClInclude Include="Common\FileIO\FileIO_General.h" />
@@ -221,7 +222,7 @@
     <ClInclude Include="Rendering\Mesh.h" />
     <ClInclude Include="Rendering\RasterizerStateManager.h" />
     <ClInclude Include="Rendering\RenderContext.h" />
-    <ClInclude Include="Rendering\renderer.h" />
+    <ClInclude Include="Rendering\Renderer.h" />
     <ClInclude Include="Rendering\RendererDefines.h" />
     <ClInclude Include="Rendering\RenderNode.h" />
     <ClInclude Include="Rendering\RenderSet.h" />
@@ -338,7 +339,7 @@
     <ClCompile Include="Rendering\Mesh.cpp" />
     <ClCompile Include="Rendering\RasterizerStateManager.cpp" />
     <ClCompile Include="Rendering\RenderContext.cpp" />
-    <ClCompile Include="Rendering\renderer.cpp" />
+    <ClCompile Include="Rendering\Renderer.cpp" />
     <ClCompile Include="Rendering\RenderNode.cpp" />
     <ClCompile Include="Rendering\RenderSet.cpp" />
     <ClCompile Include="Rendering\RenderShape.cpp" />

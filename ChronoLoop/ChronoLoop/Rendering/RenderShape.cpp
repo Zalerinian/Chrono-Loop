@@ -1,6 +1,6 @@
 //#include "stdafx.h"
 #include "RenderShape.h"
-#include "renderer.h"
+#include "Renderer.h"
 #include <d3d11.h>
 #include "../Common/FileIO.h"
 #include "../Common/Common.h"

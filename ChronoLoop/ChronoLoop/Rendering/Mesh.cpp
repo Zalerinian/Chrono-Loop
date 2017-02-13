@@ -3,7 +3,7 @@
 #include <ppltasks.h>
 #include <fstream>
 #include <string>
-#include "renderer.h"
+#include "Renderer.h"
 #include "../Common/FileIO.h"
 #include <openvr.h>
 

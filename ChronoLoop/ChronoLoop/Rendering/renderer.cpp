@@ -1,5 +1,5 @@
 //#include "stdafx.h"
-#include "renderer.h"
+#include "Renderer.h"
 #include <d3d11.h>
 #include <openvr.h>
 #include <iostream>
@@ -231,7 +231,6 @@ namespace RenderEngine {
 				(*mContext)->ClearRenderTargetView((*mMainView), color);
 				(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 			}
-			// TODO: Setup the view/projection matrices, then process the render set.
 			MyBuffer data;
 			GetMVP(currentEye, data, Math::MatrixTranslation(0, 1, -1));
 			(*mContext)->UpdateSubresource(constantBluffer, 0, nullptr, (void*)&data, 0, 0);
@@ -281,7 +280,6 @@ namespace RenderEngine {
 #pragma region Public Functions
 
 	void Renderer::AddNode(RenderShape *node) {
-		// TODO: Bad. Very Bad! Get the render context from the render shape!
 		mRenderSet.AddNode(node, &node->GetContext());
 	}
 

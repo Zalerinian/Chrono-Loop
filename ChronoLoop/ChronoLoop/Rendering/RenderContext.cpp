@@ -1,6 +1,6 @@
 //#include "stdafx.h"
 #include "RenderContext.h"
-#include "renderer.h"
+#include "Renderer.h"
 #include "RasterizerStateManager.h"
 #include "ShaderManager.h"
 #include "InputLayoutManager.h"
