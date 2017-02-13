@@ -18,14 +18,14 @@ public:
 		}
 		return *Info;
 	}
-	inline static void CloseLog() { if (Info != nullptr) { delete Info; } }
-	inline static void CloseError() { if (Error != nullptr) { delete Error; } }
 	inline static SystemLogger& GetError() {
 		if (nullptr == Error) {
 			Error = new SystemLogger("../Logs/Error.log");
 		}
 		return *Error;
 	}
+	inline static void CloseLog() { if (Info != nullptr) { delete Info; } }
+	inline static void CloseError() { if (Error != nullptr) { delete Error; } }
 	
 	//SystemLogger &operator<<(wchar_t i);
 	SystemLogger& operator<<(const char i);
@@ -44,9 +44,4 @@ public:
 	SystemLogger& operator<<(std::ios& (*pf)(std::ios&));
 	SystemLogger& operator<<(std::ios_base& (*pf)(std::ios_base&));
 	SystemLogger& flush();
-	//SystemLogger &operator<<(int i);
-	//SystemLogger &operator<<(int i);
-	//SystemLogger &operator<<(int i);
-	//SystemLogger &operator<<(int i);
-
 };

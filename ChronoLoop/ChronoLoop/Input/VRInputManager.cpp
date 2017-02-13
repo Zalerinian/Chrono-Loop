@@ -29,9 +29,6 @@ void VRInputManager::mInitialize(vr::IVRSystem * _hmd)
 
 void VRInputManager::update()
 {
-	if (!mInitialized) {
-		return;
-	}
 	if (mRightController.GetIndex() < 0)
 	{
 		mRightController.SetIndex(mHmd->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_RightHand));

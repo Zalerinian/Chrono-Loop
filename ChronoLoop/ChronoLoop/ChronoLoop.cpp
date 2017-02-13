@@ -17,6 +17,7 @@
 HWND hwnd;
 LPCTSTR WndClassName = L"ChronoWindow";
 HINSTANCE hInst;
+bool VREnabled = false;
 
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed);
 std::chrono::steady_clock::time_point lastTime = std::chrono::steady_clock::now();
@@ -43,11 +44,16 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	}
 
 	//vrsys = nullptr;
+
+	if (vrsys != nullptr) {
+		VREnabled = true;
+	}
+
 	if (!RenderEngine::InitializeSystems(hwnd, 800, 600, false, 90, false, 1000, 0.1f, vrsys)) {
 		return 1;
 	}
 	
-	SystemLogger::GetLog() << "Hello World! " << "We hope you have at least" << 5 << "smiles today." << std::endl;
+	SystemLogger::GetLog() << "Hello World! " << "We hope you have at least " << 5 << " smiles today." << std::endl;
 
 	// Update everything
 	Update();
@@ -64,6 +70,38 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	return 0;
 }
 
+void Update() {
+	MSG msg;
+	ZeroMemory(&msg, sizeof(MSG));
+	while (true) {
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+			// Handle windows message.
+			if (msg.message == WM_QUIT) {
+				break;
+			}
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		} else {
+			if (GetAsyncKeyState(VK_ESCAPE)) {
+				break;
+			}
+
+			UpdateTime();
+			if (VREnabled) {
+				VRInputManager::Instance().update();
+			}
+			// Logic.Update(float deltaTime);
+			TManager->Instance()->Update(deltaTime);
+			RenderEngine::Renderer::Instance()->Render();
+		}
+	}
+}
+
+void UpdateTime()
+{
+	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count() - lastTime.time_since_epoch().count()) / 1000.0f / 1000.0f / 1000.0f;
+	lastTime = std::chrono::steady_clock::now();
+}
 
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed) {
 #if _DEBUG || CONSOLE_OVERRIDE
@@ -135,37 +173,3 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 	}
 	return 0;
 }
-
-void Update() {
-	MSG msg;
-	ZeroMemory(&msg, sizeof(MSG));
-	while (true) {
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
-			// Handle windows message.
-			if (msg.message == WM_QUIT) {
-				break;
-			}
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		} else {
-			if (GetAsyncKeyState(VK_ESCAPE)) {
-				break;
-			}
-
-			UpdateTime();
-			VRInputManager::Instance().update();
-			// Logic.Update(float deltaTime);
-			TManager->Instance()->Update(deltaTime);
-			RenderEngine::Renderer::Instance()->Render();
-		}
-	}
-}
-
-void UpdateTime()
-{
-	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count() - lastTime.time_since_epoch().count()) / 1000.0f / 1000.0f / 1000.0f;
-	lastTime = std::chrono::steady_clock::now();
-}
-
-
-

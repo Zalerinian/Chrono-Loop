@@ -1,4 +1,4 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "Controller.h"
 #include <iostream>
 
@@ -17,8 +17,7 @@ void Controller::Update()
 	if (mHmd != NULL)
 	{
 		mValid = mHmd->GetControllerStateWithPose(mTrackingSpace, mIndex, &mState, sizeof(mState), &mPose);
-		if (mPrevState.ulButtonPressed != mState.ulButtonPressed)
-			int breakpoint = 0;
+		//if (mPrevState.ulButtonPressed != mState.ulButtonPressed)
 		UpdateHairTrigger();
 	}
 }
@@ -41,17 +40,8 @@ void Controller::UpdateHairTrigger()
 vec2f Controller::GetAxis(vr::EVRButtonId buttonId)
 {
 	Update();
-	vec2f axis_value;
 	int axisId = (int)buttonId - (int)vr::k_EButton_Axis0;
-	switch (axisId)
-	{
-	case 0: axis_value = vec2f(mState.rAxis[0].x, mState.rAxis[0].y); break;
-	case 1: axis_value = vec2f(mState.rAxis[1].x, mState.rAxis[1].y); break;
-	case 2: axis_value = vec2f(mState.rAxis[2].x, mState.rAxis[2].y); break;
-	case 3: axis_value = vec2f(mState.rAxis[3].x, mState.rAxis[3].y); break;
-	case 4: axis_value = vec2f(mState.rAxis[4].x, mState.rAxis[4].y); break;
-	}
-	return axis_value;
+	return vec2f(mState.rAxis[axisId].x, mState.rAxis[axisId].y);
 }
 
 void Controller::TriggerHapticPulse(int duration_micro_sec, vr::EVRButtonId buttonId)
@@ -62,3 +52,98 @@ void Controller::TriggerHapticPulse(int duration_micro_sec, vr::EVRButtonId butt
 		mHmd->TriggerHapticPulse(mIndex, axisId, (char)duration_micro_sec);
 	}
 }
+
+#pragma region Inline Functions
+
+#pragma region Private Functions
+
+void Controller::SetIndex(int _index) {
+	mIndex = _index;
+}
+
+void Controller::SetValid(bool _valid) {
+	mValid = _valid;
+}
+
+#pragma endregion Private Functions
+
+void Controller::SetUp(int _index, vr::IVRSystem *_vr) {
+	mIndex = _index;
+	mHmd = _vr; 
+	Update();
+}
+
+vec3f Controller::GetPosition() {
+	return mPosition;
+}
+
+vec3f Controller::GetVelocity() {
+	return vec3f(mPose.vVelocity.v[0], mPose.vVelocity.v[1], -mPose.vVelocity.v[2]);
+}
+
+vec3f Controller::GetAngularVelocity() {
+	return vec3f(-mPose.vAngularVelocity.v[0], -mPose.vAngularVelocity.v[1], mPose.vAngularVelocity.v[2]);
+}
+
+vr::VRControllerState_t Controller::GetState() {
+	return mState;
+}
+
+vr::VRControllerState_t	Controller::GetPrevState() {
+	return mPrevState;
+}
+
+vr::TrackedDevicePose_t	Controller::GetPose() {
+	return mPose;
+}
+
+int Controller::GetIndex() {
+	return mIndex;
+}
+
+bool Controller::GetValid() {
+	return mValid;
+}
+
+bool Controller::GetPress(vr::EVRButtonId _id) {
+	return (mState.ulButtonPressed & vr::ButtonMaskFromId(_id)) != 0;
+}
+
+bool Controller::GetPressDown(vr::EVRButtonId _id) {
+	return (mState.ulButtonPressed & vr::ButtonMaskFromId(_id)) != 0 &&
+		(mPrevState.ulButtonPressed & vr::ButtonMaskFromId(_id)) == 0;
+}
+
+bool Controller::GetPressUp(vr::EVRButtonId _id) {
+	return (mState.ulButtonPressed & vr::ButtonMaskFromId(_id)) == 0 &&
+		(mPrevState.ulButtonPressed & vr::ButtonMaskFromId(_id)) != 0;
+}
+
+bool Controller::GetTouch(vr::EVRButtonId _id) {
+	return (mState.ulButtonTouched & vr::ButtonMaskFromId(_id)) != 0;
+}
+
+bool Controller::GetTouchDown(vr::EVRButtonId _id) {
+	return (mState.ulButtonTouched & vr::ButtonMaskFromId(_id)) != 0 && 
+		(mPrevState.ulButtonTouched & vr::ButtonMaskFromId(_id)) == 0;
+}
+
+bool Controller::GetTouchUp(vr::EVRButtonId _id) {
+	return (mState.ulButtonTouched & vr::ButtonMaskFromId(_id)) == 0 && 
+		(mPrevState.ulButtonTouched & vr::ButtonMaskFromId(_id)) != 0;
+}
+
+bool Controller::GetHairTrigger() {
+	return mHairTriggerState;
+}
+
+bool Controller::GetHairTriggerDown() {
+	return mHairTriggerState && !mHairTriggerPrevState;
+}
+
+bool Controller::GetHairTriggerUp() {
+	return !mHairTriggerState && mHairTriggerPrevState;
+}
+
+
+#pragma endregion Inline Functions
