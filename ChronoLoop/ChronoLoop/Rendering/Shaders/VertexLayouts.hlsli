@@ -50,7 +50,7 @@ struct VERTEX_POSBONEWEIGHT
 struct VERTEX_POSBONEWEIGHTNORMTEX
 {
 	float4 position :	POSITION0;
-	int4   bone     :   BONEIDS0;
+	int4   bone     :   BONEINDICES0;
 	float4 weights  :   BONEWEIGHTS0;
 	float4 normal	:	NORMAL0;
 	float4 texCoord :	TEXCOORD0;
@@ -61,7 +61,7 @@ struct VERTEX_POSBONEWEIGHTNORMTANTEX
 	float4 position :	POSITION0;
 	float4 normal	:	NORMAL0;
 	float4 texCoord :	TEXCOORD0;
-	int4   bone     :   BONEIDS0;
+	int4   bone     :   BONEINDICES0;
 	float4 weights  :   BONEWEIGHTS0;
 	float4 tangent		: TANGENT0;
 	float determinant	: TANGENT1;

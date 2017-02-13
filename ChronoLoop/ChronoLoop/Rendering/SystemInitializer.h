@@ -1,7 +1,10 @@
 #pragma once
-#include "renderer.h"
+#include "Renderer.h"
 #include "RasterizerStateManager.h"
-#include "../VRInputManager.h"
+#include "ShaderManager.h"
+#include "InputLayoutManager.h"
+#include "../Input/VRInputManager.h"
+#include "../Core/TimeManager.h"
 
 namespace RenderEngine {
 	bool InitializeSystems(HWND _Window, unsigned int _width, unsigned int _height,
@@ -9,19 +12,22 @@ namespace RenderEngine {
 												 vr::IVRSystem* _vrsys) {
 		Renderer::Instance()->Initialize(_Window, _width, _height, _vsync, _fps, _fullscreen, _farPlane, _nearPlane, _vrsys);
 		RasterizerStateManager::Instance();
-		Physics::Instance();
-		if (_vrsys) {
+TimeManager::Instance();
+		InputLayoutManager::Instance();Physics::Instance();		if (_vrsys) {
 			VRInputManager::Instance();
 			VRInputManager::Initialize(_vrsys);
 		}
+		ShaderManager::Instance();
 		return true;
 	}
 
 	bool ShutdownSystems() {
+		ShaderManager::DestroyInstance();
+		VRInputManager::Shutdown();
+		InputLayoutManager::DestroyInstance();
+		TimeManager::Destroy();
 		RasterizerStateManager::DestroyInstance();
 		Renderer::DestroyInstance();
-		TimeManager::Instance()->Destroy();
-		VRInputManager::Shutdown();
 		return true;
 	}
 }

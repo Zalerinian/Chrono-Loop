@@ -4,6 +4,7 @@ cbuffer MVEP : register(b0) {
 	matrix model;
 	matrix view;
 	matrix proj;
+	matrix viewproj;
 }
 
 struct PSI

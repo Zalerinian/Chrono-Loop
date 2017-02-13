@@ -1,4 +1,4 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "Physics.h"
 #include "..\Objects\BaseObject.h"
 #include "..\Rendering\Mesh.h"

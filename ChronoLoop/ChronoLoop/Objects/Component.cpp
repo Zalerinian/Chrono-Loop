@@ -1,4 +1,4 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "Component.h"
 #include "BaseObject.h"
 #include "..\Common\Math.h"

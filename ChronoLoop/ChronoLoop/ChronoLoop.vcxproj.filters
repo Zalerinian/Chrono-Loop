@@ -94,6 +94,24 @@
     <Filter Include="DXTK">
       <UniqueIdentifier>{16572d88-a51f-45a6-a564-025b7a4af6ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Levels">
+      <UniqueIdentifier>{b49f92a9-24c1-4e42-8e4a-b0d3243fa29a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Levels\Header Files">
+      <UniqueIdentifier>{6b3a7d00-40b8-4a02-99bc-e0fdb2c6e209}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Levels\Source Files">
+      <UniqueIdentifier>{44d77786-9078-4fd2-96e0-8d872606fb6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\FileIO">
+      <UniqueIdentifier>{4c95a99f-2d97-4b8d-913a-3425865ce968}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\FileIO\Header Files">
+      <UniqueIdentifier>{e592c27b-89c9-45a8-a222-ee38bb22b990}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\FileIO\Source Files">
+      <UniqueIdentifier>{e1cc4151-26b6-4ac4-975b-f442b93a2c81}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\BaseObject.h">
@@ -107,9 +125,6 @@
     </ClInclude>
     <ClInclude Include="Objects\Transform.h">
       <Filter>Objects\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\renderer.h">
-      <Filter>Rendering\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Rendering\Shader.h">
       <Filter>Rendering\Header Files</Filter>
@@ -132,18 +147,6 @@
     <ClInclude Include="Sound\SoundEngine.h">
       <Filter>Sound\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Timeline.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TimeManager.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Physics\Physics.h">
       <Filter>Physics\Header Files</Filter>
     </ClInclude>
@@ -157,30 +160,14 @@
     <ClInclude Include="Rendering\RenderSet.h">
       <Filter>Rendering\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BaseLevel.h" />
-    <ClInclude Include="LevelManager.h" />
-    <ClInclude Include="VRInputManager.h">
-      <Filter>Input\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Controller.h">
-      <Filter>Input\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BaseLevel.h" />
-    <ClInclude Include="LevelManager.h" />
     <ClInclude Include="Rendering\InputLayoutManager.h">
       <Filter>Rendering\Header Files\Managers</Filter>
     </ClInclude>
     <ClInclude Include="Rendering\RasterizerStateManager.h">
       <Filter>Rendering\Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Rendering\BlendManager.h">
-      <Filter>Rendering\Header Files\Managers</Filter>
-    </ClInclude>
     <ClInclude Include="Rendering\RenderContext.h">
       <Filter>Rendering\Header Files\Nodes</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\RenderNode.h">
-      <Filter>Rendering\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\DXTK\BC.h">
       <Filter>DXTK</Filter>
@@ -209,8 +196,53 @@
     <ClInclude Include="Rendering\RenderShape.h">
       <Filter>Rendering\Header Files\Nodes</Filter>
     </ClInclude>
+    <ClInclude Include="Rendering\RenderNode.h">
+      <Filter>Rendering\Header Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\ShaderManager.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\Controller.h">
+      <Filter>Input\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\VRInputManager.h">
+      <Filter>Input\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Timeline.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\TimeManager.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Levels\BaseLevel.h">
+      <Filter>Levels\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Levels\LevelManager.h">
+      <Filter>Levels\Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Input\KeyboardInput.h">
       <Filter>Input\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\FileIO.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\FileIO\FileIO_General.h">
+      <Filter>Common\FileIO\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\FileIO\FileIO_Textures.h">
+      <Filter>Common\FileIO\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Common.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Logger.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Renderer.h">
+      <Filter>Rendering\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Breakpoint.h">
+      <Filter>Common\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -222,9 +254,6 @@
     </ClCompile>
     <ClCompile Include="Objects\Transform.cpp">
       <Filter>Objects\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\renderer.cpp">
-      <Filter>Rendering\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Rendering\Shader.cpp">
       <Filter>Rendering\Source Files</Filter>
@@ -244,31 +273,12 @@
     <ClCompile Include="Sound\SoundEngine.cpp">
       <Filter>Sound\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Timeline.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TimeManager.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Physics\Physics.cpp">
       <Filter>Physics\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Input\KeyboardInput.cpp" />
-    <ClCompile Include="BaseLevel.cpp" />
-    <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="Rendering\RenderSet.cpp">
       <Filter>Rendering\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BaseLevel.cpp" />
-    <ClCompile Include="LevelManager.cpp" />
-    <ClCompile Include="VRInputManager.cpp">
-      <Filter>Input\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Controller.cpp">
-      <Filter>Input\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Rendering\RasterizerStateManager.cpp">
       <Filter>Rendering\Source Files\Managers</Filter>
@@ -348,8 +358,41 @@
     <ClCompile Include="Rendering\RenderShape.cpp">
       <Filter>Rendering\Source Files\Nodes</Filter>
     </ClCompile>
+    <ClCompile Include="Input\Controller.cpp">
+      <Filter>Input\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\VRInputManager.cpp">
+      <Filter>Input\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Timeline.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\TimeManager.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Levels\LevelManager.cpp">
+      <Filter>Levels\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Levels\BaseLevel.cpp">
+      <Filter>Levels\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Input\KeyboardInput.cpp">
       <Filter>Input\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\ShaderManager.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\FileIO\FileIO_General.cpp">
+      <Filter>Common\FileIO\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\FileIO\FileIO_Textures.cpp">
+      <Filter>Common\FileIO\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Logger.cpp">
+      <Filter>Common\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Renderer.cpp">
+      <Filter>Rendering\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -380,16 +423,16 @@
     <FxCompile Include="Rendering\Shaders\VertexLayout_VS.hlsl">
       <Filter>Rendering\Shaders\Layout Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Rendering\Shaders\BasicPixelShader.hlsl">
-      <Filter>Rendering\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\BasicVertexShader.hlsl">
-      <Filter>Rendering\Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="Rendering\Shaders\TexturedPixel.hlsl">
       <Filter>Rendering\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Rendering\Shaders\TexturedVertex.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\BasicPixel.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\BasicVertex.hlsl">
       <Filter>Rendering\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

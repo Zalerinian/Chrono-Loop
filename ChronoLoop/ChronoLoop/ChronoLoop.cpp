@@ -1,18 +1,18 @@
-#include "stdafx.h"
-#include "Rendering\SystemInitializer.h"
-#include "Rendering\renderer.h"
-#include "Rendering\InputLayoutManager.h"
-#include "VRInputManager.h"
+//#include "stdafx.h"
+#include "Rendering/SystemInitializer.h"
+#include "Rendering/renderer.h"
+#include "Rendering/InputLayoutManager.h"
+#include "Input/VRInputManager.h"
+#include "Core/TimeManager.h"
+#include "Common/Logger.h"
 #include <openvr.h>
 #include <iostream>
 #include <ctime>
 #include <chrono>
 
-#define _CRTDBG_MAP_ALLOC  
-#include <stdlib.h>  
-#include <crtdbg.h> 
-
-
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
 
 HWND hwnd;
 LPCTSTR WndClassName = L"ChronoWindow";
@@ -29,10 +29,11 @@ void UpdateTime();
 
 int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	//_CrtSetBreakAlloc(354);
 	if (!InitializeWindow(hInstance, nCmdShow, 800, 600, true)) {
-		MessageBox(NULL, L"Kablamo.", L"The window broked.", MB_ICONERROR | MB_OK);
+		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
+		return 2;
 	}
-
 
 	// Initialize Rendering systems and VR
 	vr::HmdError pError;
@@ -42,22 +43,19 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	}
 
 	//vrsys = nullptr;
-	
-	if (vrsys)
-	{
-		VRInputManager::Instance();
-	}
-	if (!RenderEngine::InitializeSystems(hwnd, 1512, 1680, false, 90, false, 1000, 0.1f, vrsys)) {
+	if (!RenderEngine::InitializeSystems(hwnd, 800, 600, false, 90, false, 1000, 0.1f, vrsys)) {
 		return 1;
-	} 
-	TManager = TimeManager::Instance();
+	}
 	
+	SystemLogger::GetLog() << "Hello World! " << "We hope you have at least" << 5 << "smiles today." << std::endl;
+
 	// Update everything
 	Update();
 
-	//delete PlsGitRidOfThis;
 	// Cleanup
 	RenderEngine::ShutdownSystems();
+	SystemLogger::CloseLog();
+	SystemLogger::CloseError();
 
 #if _DEBUG || CONSOLE_OVERRIDE
 	FreeConsole();
@@ -145,7 +143,6 @@ void Update() {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			// Handle windows message.
 			if (msg.message == WM_QUIT) {
-				
 				break;
 			}
 			TranslateMessage(&msg);
@@ -156,7 +153,6 @@ void Update() {
 			}
 
 			UpdateTime();
-			// Input.Update(float deltaTime);
 			VRInputManager::Instance().update();
 			// Logic.Update(float deltaTime);
 			TManager->Instance()->Update(deltaTime);
@@ -164,6 +160,7 @@ void Update() {
 		}
 	}
 }
+
 void UpdateTime()
 {
 	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count() - lastTime.time_since_epoch().count()) / 1000.0f / 1000.0f / 1000.0f;

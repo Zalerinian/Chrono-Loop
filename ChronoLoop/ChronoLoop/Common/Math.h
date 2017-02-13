@@ -125,6 +125,7 @@ struct matrix4 {
 		struct {
 			vec4f first, second, third, fourth;
 		};
+		float _floats[16];
 	};
 
 	matrix4();

@@ -1,9 +1,7 @@
 #pragma once
-#include "Timeline.h"
 #include <chrono>
 
-
-
+class Timeline;
 class TimeManager
 {
 	static TimeManager* instanceTimemanager;

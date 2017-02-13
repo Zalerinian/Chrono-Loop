@@ -1,13 +1,13 @@
-#include "stdafx.h"
-#include "renderer.h"
+//#include "stdafx.h"
+#include "Renderer.h"
 #include <d3d11.h>
 #include <openvr.h>
 #include <iostream>
 #include "Mesh.h"
 #include "InputLayoutManager.h"
 #include "RenderShape.h"
-#include "../../DXTK/DirectXTexP.h"
-#include "../../DXTK/ddstextureloader.h"
+#include "../Input/VRInputManager.h"
+#include "../Input/Controller.h"
 
 using namespace std;
 
@@ -35,15 +35,14 @@ namespace RenderEngine {
 
 #pragma region Instance Functions
 
+
+#pragma region Private Functions
+
+
 	void Renderer::ThrowIfFailed(HRESULT hr) {
 		if (FAILED(hr)) {
 			throw "Something has gone catastrophically wrong!";
 		}
-	}
-
-	void Renderer::DoAllTheBootlegThingsForTheDemo()
-	{
-		
 	}
 
 	matrix4 Renderer::GetEye(vr::EVREye e) {
@@ -59,7 +58,7 @@ namespace RenderEngine {
 	}
 
 	matrix4 Renderer::GetProjection(vr::EVREye e) {
-		
+
 		vr::HmdMatrix44_t mat = mVrSystem->GetProjectionMatrix(e, 0.1f, 1000);
 
 		return matrix4(
@@ -71,22 +70,22 @@ namespace RenderEngine {
 	}
 
 	void Renderer::GetMVP(vr::EVREye e, MyBuffer &data, matrix4 world) {
-		
-		
-		vr::VRCompositor()->WaitGetPoses(poses, vr::k_unMaxTrackedDeviceCount, NULL, 0);
-
 		matrix4 hmd = (Math::FromMatrix(poses[0].mDeviceToAbsoluteTracking));
 
 		matrix4 hmdPos = hmd.Inverse();
 		if (e == vr::EVREye::Eye_Left) {
 			data.model = Math::MatrixTranspose(world);
-			data.view = Math::MatrixTranspose(mEyePosLeft * hmdPos);
+			data.view = Math::MatrixTranspose((hmdPos * mEyePosLeft));
 			data.projection = Math::MatrixTranspose(mEyeProjLeft);
 		} else {
 			data.model = Math::MatrixTranspose(world);
-			data.view = Math::MatrixTranspose(mEyePosRight * hmdPos);
+			data.view = Math::MatrixTranspose((hmdPos * mEyePosRight));
 			data.projection = Math::MatrixTranspose(mEyeProjRight);
 		}
+	}
+
+	void Renderer::UpdateTrackedPositions() {
+		vr::VRCompositor()->WaitGetPoses(poses, vr::k_unMaxTrackedDeviceCount, NULL, 0);
 	}
 
 	Renderer::Renderer() {}
@@ -95,24 +94,14 @@ namespace RenderEngine {
 		(*mContext)->Release();
 		(*mDSView)->Release();
 		(*mDepthBuffer)->Release();
-		if (mDebugScreen.get() != nullptr) {
-			(*mDebugScreen)->Release();
-		}
-		if (mLeftEye.get() != nullptr) {
-			(*mLeftEye)->Release();
-		}
-		if (mRightEye.get() != nullptr) {
-			(*mRightEye)->Release();
-		}
+		(*mMainView)->Release();
 		(*mFactory)->Release();
 		(*mChain)->Release();
 		(*mDevice)->Release();
 		mContext.reset();
 		mDSView.reset();
 		mDepthBuffer.reset();
-		mDebugScreen.reset();
-		mLeftEye.reset();
-		mRightEye.reset();
+		mMainView.reset();
 		mFactory.reset();
 		mChain.reset();
 		mDevice.reset();
@@ -120,9 +109,9 @@ namespace RenderEngine {
 
 	void Renderer::InitializeD3DDevice() {
 		UINT flags = 0;
-#if _DEBUG
+	#if _DEBUG
 		flags = D3D11_CREATE_DEVICE_DEBUG;
-#endif
+	#endif
 
 		D3D_FEATURE_LEVEL levels[] = {
 			D3D_FEATURE_LEVEL_11_0,
@@ -166,7 +155,7 @@ namespace RenderEngine {
 		DXGI_SWAP_CHAIN_DESC scDesc;
 		memset(&scDesc, 0, sizeof(scDesc));
 		scDesc.BufferCount = 1;
-		scDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		scDesc.BufferDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
 		scDesc.BufferDesc.Width = _width;
 		scDesc.BufferDesc.Height = _height;
 		scDesc.BufferDesc.RefreshRate.Numerator = 1;
@@ -190,60 +179,8 @@ namespace RenderEngine {
 		ID3D11RenderTargetView *rtv;
 		ThrowIfFailed((*mChain)->GetBuffer(0, __uuidof(bbuffer), (void**)(&bbuffer)));
 		ThrowIfFailed((*mDevice)->CreateRenderTargetView(bbuffer, NULL, &rtv));
-		mDebugScreen = make_shared<ID3D11RenderTargetView*>(rtv);
-
-		if (mVrSystem != nullptr) {
-
-			uint32_t texWidth, texHeight;
-			mVrSystem->GetRecommendedRenderTargetSize(&texWidth, &texHeight);
-
-			std::cout << "According to VR, the view of our headset is " << texWidth << "x" << texHeight << std::endl;
-
-			D3D11_TEXTURE2D_DESC TextureDescription;
-			memset(&TextureDescription, 0, sizeof(TextureDescription));
-			TextureDescription.Width = texWidth;
-			TextureDescription.Height = texHeight;
-			TextureDescription.MipLevels = 1;
-			TextureDescription.ArraySize = 1;
-			TextureDescription.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-			TextureDescription.SampleDesc.Count = 1;
-			TextureDescription.Usage = D3D11_USAGE_DEFAULT;
-			TextureDescription.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-
-			ID3D11Texture2D *leftTex, *rightTex;
-			ThrowIfFailed((*mDevice)->CreateTexture2D(&TextureDescription, nullptr, &leftTex));
-			ThrowIfFailed((*mDevice)->CreateTexture2D(&TextureDescription, nullptr, &rightTex));
-			mLeftTexture = make_shared<ID3D11Texture2D*>(leftTex);
-			mRightTexture = make_shared<ID3D11Texture2D*>(rightTex);
-
-			ID3D11RenderTargetView *leftView, *rightView;
-			ThrowIfFailed((*mDevice)->CreateRenderTargetView(leftTex, NULL, &leftView));
-			ThrowIfFailed((*mDevice)->CreateRenderTargetView(rightTex, NULL, &rightView));
-			mLeftEye = make_shared<ID3D11RenderTargetView*>(leftView);
-			mRightEye = make_shared<ID3D11RenderTargetView*>(rightView);
-
-			D3D11_TEXTURE2D_DESC depthStencilDesc;
-			depthStencilDesc.Width = texWidth;
-			depthStencilDesc.Height = texHeight;
-			depthStencilDesc.MipLevels = 1;
-			depthStencilDesc.ArraySize = 1;
-			depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-			depthStencilDesc.SampleDesc.Count = 1;
-			depthStencilDesc.SampleDesc.Quality = 0;
-			depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
-			depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-			depthStencilDesc.CPUAccessFlags = 0;
-			depthStencilDesc.MiscFlags = 0;
-			ID3D11Texture2D *depthTexture;
-			ID3D11DepthStencilView *depthView;
-			ThrowIfFailed((*mDevice)->CreateTexture2D(&depthStencilDesc, NULL, &depthTexture));
-			ThrowIfFailed((*mDevice)->CreateDepthStencilView(depthTexture, NULL, &depthView));
-			mVRDSView = make_shared<ID3D11DepthStencilView*>(depthView);
-
-		}
-		else {
-			std::cout << "What's a VR?" << std::endl;
-		}
+		mMainView = make_shared<ID3D11RenderTargetView*>(rtv);
+		mMainViewTexture = make_shared<ID3D11Texture2D*>((ID3D11Texture2D*)bbuffer);
 
 		ID3D11Texture2D *depthTexture;
 		ID3D11DepthStencilView *depthView;
@@ -280,176 +217,45 @@ namespace RenderEngine {
 		(*mContext)->RSSetViewports(1, &mViewport);
 	}
 
-	bool Renderer::Initialize(HWND _Window, unsigned int _width, unsigned int _height, bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane, vr::IVRSystem * _vrsys) {
-		mWindow = make_shared<HWND>(_Window);
-		mVrSystem = _vrsys;
-
-		if (_vrsys) {
-			for (unsigned int i = 0; i < vr::VRRenderModels()->GetRenderModelCount(); ++i) {
-				char name[1024];
-				vr::VRRenderModels()->GetRenderModelName(i, name, 1024);
-				std::cout << "We've got a nice little " << name << " model here (" << i << ")" << std::endl;
-			}
-		}
-
-		InitializeD3DDevice();
-		InitializeDXGIFactory();
-		InitializeDXGISwapChain(_Window, _fullscreen, _fps, _width, _height);
-		InitializeViews(_width, _height);
-
-		mEyePosLeft = GetEye(vr::EVREye::Eye_Left);
-		mEyePosRight = GetEye(vr::EVREye::Eye_Right);
-		mEyeProjLeft = GetProjection(vr::EVREye::Eye_Left);
-		mEyeProjRight = GetProjection(vr::EVREye::Eye_Right);
-
-
-
-
-		// Eye gets changd per render
-		Mesh cube("../Resources/Cube.obj");
-		cube.Invert();
-		RenderShape *box = new RenderShape(cube);
-		DirectX::ScratchImage img;
-		DirectX::Blob *image = new DirectX::Blob;
-		UINT flags = 0;
-		DirectX::LoadFromWICFile(L"../Resources/cube_texture.png", flags, nullptr, img);
-		DirectX::SaveToDDSMemory(*img.GetImage(0, 0, 0), flags, *image);
-		ID3D11ShaderResourceView *rtv;
-		ID3D11Texture2D *tex;
-		DirectX::CreateDDSTextureFromMemory((*mDevice), (const uint8_t*)image->GetBufferPointer(), image->GetBufferSize(), (ID3D11Resource**)&tex, &rtv);
-		mTexture = make_shared<ID3D11ShaderResourceView*>(rtv);
-		box->LoadShaders("TexturedVertex.cso", "TexturedPixel.cso");
-		AddNode(box);
-
-		mControllerRM = nullptr;
-		memset(&mControllerModel, 0, sizeof(mControllerModel));
-		
-		CD3D11_BUFFER_DESC desc(sizeof(MyBuffer), D3D11_BIND_CONSTANT_BUFFER);
-		(*mDevice)->CreateBuffer(&desc, nullptr, &constantBluffer);
-
-		return true;
-	}
-
-	void Renderer::AddNode(RenderNode *node) {
-		mRenderSet.AddNode(node);
-	}
-
-	void Renderer::Render() {
-		float color[4] = { 0.3f, 0.3f, 1, 1 };
-		(*mContext)->ClearRenderTargetView((*mDebugScreen), color);
-		if (mVrSystem != nullptr) {
-			(*mContext)->ClearRenderTargetView((*mLeftEye), color);
-			(*mContext)->ClearRenderTargetView((*mRightEye), color);
-		}
-		matrix4 identity = Math::MatrixTranslation(0, -1, -3);
-
-		GetMVP(vr::EVREye::Eye_Left, constantData, identity);
-		(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
-		(*mContext)->OMSetRenderTargets(1, mDebugScreen.get(), (*mDSView));
-		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-		UINT strideGround = sizeof(VertexPosNormTex);
-		UINT offsetGround = 0;
-		(*mContext)->IASetInputLayout(InputLayoutManager::Instance().GetInputLayout(eVERT_POSNORMTEX)); 
-		(*mContext)->IASetIndexBuffer(((RenderShape*)mRenderSet.GetHead())->mIndexBuffer, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
-		(*mContext)->IASetVertexBuffers(0, 1, &((RenderShape*)mRenderSet.GetHead())->mVertexBuffer, &strideGround, &offsetGround);
-		(*mContext)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-		(*mContext)->VSSetShader(((RenderShape*)mRenderSet.GetHead())->vShader, nullptr, 0);
-		(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
-		/// Pixel Shader(s)
-		(*mContext)->PSSetShader(((RenderShape*)mRenderSet.GetHead())->pShader, nullptr, 0);
-		(*mContext)->PSSetShaderResources(0, 1, mTexture.get());
-
-		(*mContext)->DrawIndexed((UINT)((RenderShape*)mRenderSet.GetHead())->mIndexCount, 0, 0);
-
-		if (mVrSystem != nullptr) {
-				auto status = vr::VRRenderModels()->LoadRenderModel_Async("vr_controller_vive_1_5", &mControllerRM);
-				if (status == vr::VRRenderModelError_None && mControllerModel.pShader == nullptr) {
-					Mesh controllerMesh;
-					controllerMesh.Load(mControllerRM);
-					controllerMesh.Invert();
-					mControllerModel.Load(controllerMesh);
-					mControllerModel.LoadShaders("TexturedVertex.cso", "TexturedPixel.cso");
-				}
-
-				(*mContext)->OMSetRenderTargets(1, mLeftEye.get(), (*mVRDSView));
-				(*mContext)->ClearDepthStencilView((*mVRDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-				(*mContext)->DrawIndexed((UINT)((RenderShape*)mRenderSet.GetHead())->mIndexCount, 0, 0);
-
-				GetMVP(vr::EVREye::Eye_Right, constantData, identity);
-				(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
-				(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
-				(*mContext)->OMSetRenderTargets(1, mRightEye.get(), (*mVRDSView));
-				(*mContext)->ClearDepthStencilView((*mVRDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-				(*mContext)->DrawIndexed((UINT)((RenderShape*)mRenderSet.GetHead())->mIndexCount, 0, 0);
-
-
-
-
-
-				if (mControllerModel.pShader != nullptr) {
-					// Controller 1
-					(*mContext)->OMSetRenderTargets(1, mLeftEye.get(), (*mVRDSView));
-					GetMVP(vr::EVREye::Eye_Left, constantData, Math::FromMatrix(poses[3].mDeviceToAbsoluteTracking));
-					(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
-					(*mContext)->IASetInputLayout(InputLayoutManager::Instance().GetInputLayout(eVERT_POSNORMTEX));
-					(*mContext)->IASetIndexBuffer(mControllerModel.mIndexBuffer, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
-					(*mContext)->IASetVertexBuffers(0, 1, &mControllerModel.mVertexBuffer, &strideGround, &offsetGround);
-					(*mContext)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-					(*mContext)->VSSetShader(mControllerModel.vShader, nullptr, 0);
-					(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
-					/// Pixel Shader(s)
-					(*mContext)->PSSetShader(mControllerModel.pShader, nullptr, 0);
-					(*mContext)->PSSetShaderResources(0, 1, mTexture.get());
-
-					(*mContext)->DrawIndexed((UINT)mControllerModel.mIndexCount, 0, 0);
-
-					(*mContext)->OMSetRenderTargets(1, mRightEye.get(), (*mVRDSView));
-					GetMVP(vr::EVREye::Eye_Right, constantData, Math::FromMatrix(poses[3].mDeviceToAbsoluteTracking));
-					(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
-					(*mContext)->IASetInputLayout(InputLayoutManager::Instance().GetInputLayout(eVERT_POSNORMTEX));
-					(*mContext)->IASetIndexBuffer(mControllerModel.mIndexBuffer, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
-					(*mContext)->IASetVertexBuffers(0, 1, &mControllerModel.mVertexBuffer, &strideGround, &offsetGround);
-					(*mContext)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-					(*mContext)->VSSetShader(mControllerModel.vShader, nullptr, 0);
-					(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
-					/// Pixel Shader(s)
-					(*mContext)->PSSetShader(mControllerModel.pShader, nullptr, 0);
-					(*mContext)->PSSetShaderResources(0, 1, mTexture.get());
-
-					(*mContext)->DrawIndexed((UINT)mControllerModel.mIndexCount, 0, 0);
-				}
-
-
-
-
-
-
-
-			vr::TrackedDevicePose_t pose;
-			mVrSystem->GetDeviceToAbsoluteTrackingPose(vr::ETrackingUniverseOrigin::TrackingUniverseStanding,
-				0,
-				&pose,
-				1);
-
-			vr::VRCompositor()->CompositorBringToFront();
-			vr::TrackedDevicePose_t m_rTrackedDevicePose[vr::k_unMaxTrackedDeviceCount];
-			auto e = vr::VRCompositor()->WaitGetPoses(m_rTrackedDevicePose, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
-			for (int i = 0; i < 2; i++) {
-				vr::Texture_t tex = { i == 0 ? (void*)(*mLeftTexture) : (void*)(*mRightTexture), vr::TextureType_DirectX, vr::ColorSpace_Auto };
-				e = vr::VRCompositor()->Submit(i == 0 ? vr::EVREye::Eye_Left : vr::EVREye::Eye_Right, &tex);
-			}
-		}
-
-
-
-		(*mChain)->Present(0, 0);
-	}
-
 	void Renderer::RenderVR() {
+		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+		UpdateTrackedPositions();
+		vr::VRCompositor()->CompositorBringToFront();
+		float color[4] = { 0.3f, 0.3f, 1, 1 };
+		for (int i = 0; i < 2; ++i) {
+			vr::EVREye currentEye;
+			if (i == 0) {
+				currentEye = vr::EVREye::Eye_Left;
+			} else {
+				currentEye = vr::EVREye::Eye_Right;
+				(*mContext)->ClearRenderTargetView((*mMainView), color);
+				(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+			}
+			MyBuffer data;
+			GetMVP(currentEye, data, Math::MatrixTranslation(0, 1, -1));
+			(*mContext)->UpdateSubresource(constantBluffer, 0, nullptr, (void*)&data, 0, 0);
+			(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
+
+			processRenderSet();
+
+			vr::Texture_t submitTexture = { (void*)(*mMainViewTexture), vr::TextureType_DirectX, vr::ColorSpace_Auto };
+			vr::VRCompositor()->Submit(currentEye, &submitTexture);
+		}
+
+
+		// Bootleg load the controller model.
+		if (mControllerModel.mIndexCount == 0) {
+			vr::RenderModel_t *vrControllerModel;
+			if (vr::VRRenderModels()->LoadRenderModel_Async("vr_controller_vive_1_5", &vrControllerModel) == vr::VRRenderModelError_None) {
+				Mesh controller;
+				controller.Load(vrControllerModel);
+				controller.Invert();
+				mControllerModel.Load(controller);
+				mControllerModel.SetShaders(ePS_BASIC, eVS_BASIC);
+				AddNode(&mControllerModel);
+				vr::VRRenderModels()->FreeRenderModel(vrControllerModel);
+			}
+		}
 
 	}
 
@@ -457,29 +263,89 @@ namespace RenderEngine {
 
 	}
 
-	std::shared_ptr<ID3D11Device*> Renderer::GetDevice() {
-		return mDevice;
+	void Renderer::processRenderSet() {
+		const RenderNode* head = mRenderSet.GetHead();
+		while (head != nullptr) {
+			if (head->mType == RenderNode::RenderNodeType::Context) {
+				((RenderContext*)head)->Apply();
+			} else if (head->mType == RenderNode::RenderNodeType::Shape) {
+				((RenderShape*)head)->Render();
+			}
+			head = head->GetNext();
+		}
 	}
 
-	std::shared_ptr<ID3D11DeviceContext*> Renderer::GetContext() {
-		return mContext;
+#pragma endregion Private Functions
+
+#pragma region Public Functions
+
+	void Renderer::AddNode(RenderShape *node) {
+		mRenderSet.AddNode(node, &node->GetContext());
 	}
 
-	std::shared_ptr<IDXGISwapChain*> Renderer::GetChain() {
-		return mChain;
+	bool Renderer::Initialize(HWND _Window, unsigned int _width, unsigned int _height, bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane, vr::IVRSystem * _vrsys) {
+		mWindow = make_shared<HWND>(_Window);
+		mVrSystem = _vrsys;
+
+		int rtvWidth = _width;
+		int rtvHeight = _height;
+
+		if (mVrSystem) {
+			uint32_t texWidth, texHeight;
+			mVrSystem->GetRecommendedRenderTargetSize(&texWidth, &texHeight);
+			std::cout << "According to VR, the view of our headset is " << texWidth << "x" << texHeight << std::endl;
+			std::cout << "The screen will probably look bad. We're just using one render target view currently, and it gets set to the VR headset's recommended resolution when it's plugged in.\n" <<
+				"We should account for that later." << std::endl;
+			rtvWidth = (int)texWidth;
+			rtvHeight = (int)texHeight;
+
+
+			mEyePosLeft = GetEye(vr::EVREye::Eye_Left);
+			mEyePosRight = GetEye(vr::EVREye::Eye_Right);
+			mEyeProjLeft = GetProjection(vr::EVREye::Eye_Left);
+			mEyeProjRight = GetProjection(vr::EVREye::Eye_Right);
+		}
+
+		InitializeD3DDevice();
+		InitializeDXGIFactory();
+		InitializeDXGISwapChain(_Window, _fullscreen, _fps, rtvWidth, rtvHeight);
+		InitializeViews(rtvWidth, rtvHeight);
+
+		mUseVsync = _vsync;
+
+		mBox.Load("../Resources/Cube.obj", true, ePS_TEXTURED, eVS_TEXTURED);
+		mBox.AddTexture(L"../Resources/cube_texture.png", eTEX_DIFFUSE);
+		AddNode(&mBox);
+
+
+		CD3D11_BUFFER_DESC desc(sizeof(MyBuffer), D3D11_BIND_CONSTANT_BUFFER);
+		(*mDevice)->CreateBuffer(&desc, nullptr, &constantBluffer);
+
+		//// Print out the render model names available from openVR.
+		//char buffer[2048];
+		//for (int i = 0; i < vr::VRRenderModels()->GetRenderModelCount(); ++i) {
+		//	vr::VRRenderModels()->GetRenderModelName((uint32_t)i, buffer, 2048);
+		//	std::cout << buffer << std::endl;
+		//}
+
+
+
+
+		return true;
 	}
 
-	std::shared_ptr<IDXGIFactory1*> Renderer::GetFactory() {
-		return mFactory;
+	void Renderer::Render() {
+		float color[4] = { 0.3f, 0.3f, 1, 1 };
+		(*mContext)->ClearRenderTargetView((*mMainView), color);
+		if (nullptr == mVrSystem) {
+			RenderNoVR();
+		} else {
+			RenderVR();
+		}
+		(*mChain)->Present(mUseVsync ? 1 : 0, 0);
 	}
 
-	std::shared_ptr<ID3D11RenderTargetView*> Renderer::GetRTView() {
-		return mDebugScreen;
-	}
-
-	std::shared_ptr<ID3D11DepthStencilView*> Renderer::GetDSView() {
-		return mDSView;
-	}
+#pragma endregion Public Functions
 
 #pragma endregion Instance Functions
 
