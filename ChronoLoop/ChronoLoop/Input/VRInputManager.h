@@ -1,8 +1,8 @@
 #pragma once
 #include <openvr.h>
 #include "Controller.h"
-class VRInputManager
-{
+
+class VRInputManager {
 private:
 	static VRInputManager* sInstance;
 	vr::IVRSystem* mHmd;

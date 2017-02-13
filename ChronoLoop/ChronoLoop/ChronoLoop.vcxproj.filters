@@ -156,7 +156,6 @@
     <ClInclude Include="Rendering\SystemInitializer.h">
       <Filter>Rendering\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Input\KeyboardInput.h" />
     <ClInclude Include="Rendering\RenderSet.h">
       <Filter>Rendering\Header Files</Filter>
     </ClInclude>
@@ -202,9 +201,6 @@
     <ClInclude Include="Rendering\ShaderManager.h">
       <Filter>Rendering\Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Input\Controller.h">
-      <Filter>Input\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Input\VRInputManager.h">
       <Filter>Input\Header Files</Filter>
     </ClInclude>
@@ -244,6 +240,12 @@
     <ClInclude Include="Common\Breakpoint.h">
       <Filter>Common\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Input\Controller.h">
+      <Filter>Input\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\KeyboardInput.h">
+      <Filter>Input\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -276,7 +278,6 @@
     <ClCompile Include="Physics\Physics.cpp">
       <Filter>Physics\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Input\KeyboardInput.cpp" />
     <ClCompile Include="Rendering\RenderSet.cpp">
       <Filter>Rendering\Source Files</Filter>
     </ClCompile>
@@ -358,9 +359,6 @@
     <ClCompile Include="Rendering\RenderShape.cpp">
       <Filter>Rendering\Source Files\Nodes</Filter>
     </ClCompile>
-    <ClCompile Include="Input\Controller.cpp">
-      <Filter>Input\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Input\VRInputManager.cpp">
       <Filter>Input\Source Files</Filter>
     </ClCompile>
@@ -393,6 +391,12 @@
     </ClCompile>
     <ClCompile Include="Rendering\Renderer.cpp">
       <Filter>Rendering\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\Controller.cpp">
+      <Filter>Input\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\KeyboardInput.cpp">
+      <Filter>Input\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
