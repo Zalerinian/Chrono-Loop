@@ -67,3 +67,11 @@ Transform & BaseObject::GetTransform()
 {
 	return transform;
 }
+
+Component* const BaseObject::GetComponet(unsigned int _indx) {
+	return components[_indx];
+}
+
+unsigned int BaseObject::GetNumofComponets() {
+	return components.size();
+}

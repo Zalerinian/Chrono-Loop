@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "renderer.h"
 #include <d3d11.h>
+#include<d2d1_1.h>
+#include <dxgi1_2.h>
 
 using namespace std;
 using namespace D2D1;
@@ -33,7 +35,7 @@ namespace RenderEngine {
 	void Renderer::InitializeD3DDevice() {
 		UINT flags = 0;
 	#if _DEBUG
-		flags = D3D11_CREATE_DEVICE_DEBUG;
+		flags = D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 	#endif
 	
 		D3D_FEATURE_LEVEL levels[] = {
@@ -77,11 +79,29 @@ namespace RenderEngine {
 
 	void Renderer::InitializeIDWriteFactory()
 	{
-		ID2D1Factory * factory2;
+		HRESULT hr;
+		//create 2dfactory
+		ID2D1Factory1 * factory2;
 		ThrowIfFailed(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &factory2));
-		sInstance->mTextFactory = make_shared<ID2D1Factory*>(factory2);
+		sInstance->mTextFactory = make_shared<ID2D1Factory1*>(factory2);
 
-		IDWriteFactory* WriteFactory;
+		//createDxgiDevice
+		IDXGIDevice* DxgiDevice;
+		ThrowIfFailed((*sInstance->GetDevice())->QueryInterface(__uuidof(IDXGIDevice), (void **)&DxgiDevice));
+		sInstance->mGIDevice = make_shared<IDXGIDevice*>(DxgiDevice);
+
+		//create device2d 
+		ID2D1Device* Device2d;
+		ThrowIfFailed(factory2->CreateDevice(*sInstance->mGIDevice, &Device2d));
+		sInstance->mDevice2D = make_shared<ID2D1Device*>(Device2d);
+
+		//create context
+		ID2D1DeviceContext* context2d;
+		ThrowIfFailed((*sInstance->mDevice2D)->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, &context2d));
+		sInstance->mContext2D = make_shared<ID2D1DeviceContext*>(context2d);
+
+
+	/*	IDWriteFactory* WriteFactory;
 		ThrowIfFailed(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(WriteFactory), reinterpret_cast<IUnknown**>(&WriteFactory)));
 		sInstance->mDWrite = make_shared<IDWriteFactory*>(WriteFactory);
 
@@ -121,7 +141,7 @@ namespace RenderEngine {
 	
 		ID2D1SolidColorBrush* brush;
 		ThrowIfFailed(rt->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White,1.0f),&brush));
-		sInstance->mBrush = make_shared<ID2D1SolidColorBrush*>(brush);
+		sInstance->mBrush = make_shared<ID2D1SolidColorBrush*>(brush);*/
 
 		
 	
@@ -146,8 +166,8 @@ namespace RenderEngine {
 		IDXGISwapChain *chain;
 	
 		ThrowIfFailed((*sInstance->mFactory)->CreateSwapChain((*sInstance->mDevice),
-																												&scDesc,
-																												&chain));
+																&scDesc,
+																&chain));
 		sInstance->mChain = make_shared<IDXGISwapChain*>(chain);
 	}
 	

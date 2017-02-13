@@ -27,7 +27,8 @@ public:
 	BaseObject const* operator=(BaseObject _equals);
 	unsigned short& GetUniqueId();
 	Transform& GetTransform();
-
+	Component* const GetComponet(unsigned int _indx);
+	unsigned int GetNumofComponets();
 	void Destroy() { delete this; };
 	void AddComponent(Component* _comp) { components.push_back(_comp); };
 	//void RemoveComponent(Component _comp) { components.remove(_comp); };

@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 #include <openvr.h>
+#include <d2d1_1.h>
 
 class InputLayoutManager;
 
@@ -29,7 +30,10 @@ namespace RenderEngine {
 
 		//Pat Added
 		//DirectWrite Drawing componets
-		std::shared_ptr<ID2D1Factory*> mTextFactory;
+		std::shared_ptr<ID2D1Factory1*> mTextFactory;
+		std::shared_ptr<ID2D1Device*> mDevice2D;
+		std::shared_ptr<IDXGIDevice*> mGIDevice;
+		std::shared_ptr<ID2D1DeviceContext*>mContext2D;
 		std::shared_ptr<IDWriteFactory*> mDWrite;
 		std::shared_ptr<IDWriteTextFormat*>mTextformat;
 		std::shared_ptr<ID2D1DCRenderTarget*> m2DRenderTarget;

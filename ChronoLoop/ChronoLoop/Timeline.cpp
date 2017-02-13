@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Timeline.h"
-
+#include "./Objects/Component.h"
 
 
 bool Snapshot::IsObjectStored(short _id)
@@ -39,12 +39,19 @@ void Timeline::AddSnapshot(float _snaptime,Snapshot* _snapshot)
 	mSnapshots[_snaptime] = _snapshot;
 }
 
+
 void Timeline::ClearTimeLine()
 {
 	for (auto snapshot : mSnapshots)
 	{
 		for (auto snapInfo : snapshot.second->mSnapinfos)
 		{
+			if (snapInfo.second)
+			for (auto snapComps : snapInfo.second->mComponets)
+				delete snapComps;
+
+			snapInfo.second->mComponets.clear();
+
 			if (snapInfo.second)
 				delete snapInfo.second;
 
@@ -62,10 +69,32 @@ void Timeline::ClearTimeLine()
 SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object)
 {
 	SnapInfo* info = new SnapInfo();
-	info->id = _object->GetUniqueId();
+	info->mId = _object->GetUniqueId();
 	info->mTransform = _object->GetTransform();
-	//info->components = _object->GetComponets();
-	//Add alot more componet data when componets get made
+	
+
+	//Componet information
+	for (unsigned int i = 0; i < _object->GetNumofComponets(); i++) {
+		 Component* temp = _object->GetComponet(i);
+
+		//If there is a componet we want to store make a snap component
+		switch (temp->GetType())
+		{
+		case ComponentType::eCOMPONENT_COLLIDER:
+			{
+			SnapComponent* newComp = new SnapComponent();
+			newComp->CompType = temp->GetType();
+			((SnapComponent_Physics*)newComp)->acceleration = ((Collider*)temp)->GetAcceleration();
+			((SnapComponent_Physics*)newComp)->velocity = ((Collider*)temp)->GetVelocity();
+			info->mComponets.push_back(newComp);
+			break;
+			}
+		default:
+			//This component is not having its information stored in snapshot
+			break;
+		}
+	}
+
 	return info;
 }
 

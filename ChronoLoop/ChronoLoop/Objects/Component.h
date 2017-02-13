@@ -5,12 +5,12 @@ struct matrix4;
 
 enum ComponentType
 {
-	Unknown,
-	Code,
-	Collider,
-	AudioEmitter,
-	AudioListener,
-	UI
+	eCOMPONENT_UNKNOWN,
+	eCOMPONENT_CODE,
+	eCOMPONENT_COLLIDER,
+	eCOMPONENT_AUDIOEMITTER,
+	eCOMPONENT_AUDIOLISTENER,
+	eCOMPONENT_UI
 };
 class Component
 {
@@ -20,6 +20,7 @@ protected:
 
 	BaseObject* object = nullptr;
 public:
+	ComponentType GetType() { return type; };
 	bool isEnabled() { return isEnable; };
 	void Disable() { isEnable = false; };
 	void Enable() { isEnable = true; };
@@ -44,6 +45,16 @@ public:
 
 	void Update();
 	void Destroy();
+};
+
+class Collider : Component
+{
+	vec4f mAcceleration;
+	vec4f mVelocity;
+	
+public:
+	vec4f GetAcceleration() { return mAcceleration; };
+	vec4f GetVelocity() { return mVelocity; };
 };
 
 /*
