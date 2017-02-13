@@ -62,7 +62,7 @@ void Timeline::ClearTimeLine()
 SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object)
 {
 	SnapInfo* info = new SnapInfo();
-	info->id = _object->GetUniqueId();
+	info->id = _object->GetUniqueID();
 	info->mTransform = _object->GetTransform();
 	//info->components = _object->GetComponets();
 	//Add alot more componet data when componets get made
