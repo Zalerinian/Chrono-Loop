@@ -1,7 +1,7 @@
 #pragma once
 #include <openvr.h>
-#include "Objects\Transform.h"
-#include "Common/Math.h"
+#include "../Objects/Transform.h"
+#include "../Common/Math.h"
 
 typedef unsigned long ulong;
 

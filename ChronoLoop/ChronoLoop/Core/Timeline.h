@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <unordered_map>
-#include "Objects/BaseObject.h"
+#include "../Objects/BaseObject.h"
 
 class Component;
 //Extracted values from BaseObjects and its componets

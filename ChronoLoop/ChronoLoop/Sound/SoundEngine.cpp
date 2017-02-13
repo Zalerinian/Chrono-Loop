@@ -1,7 +1,7 @@
 // SoundEngine.cpp : Defines the exported functions for the DLL application.
 //Again -> Credit to John Murphy
 
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "SoundEngine.h"
 #include <iostream>
 #include <string>

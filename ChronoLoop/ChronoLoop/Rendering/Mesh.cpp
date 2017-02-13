@@ -1,31 +1,22 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "Mesh.h"
 #include <ppltasks.h>
 #include <fstream>
 #include <string>
-#include "renderer.h"
-#include "InputLayoutManager.h"
+#include "Renderer.h"
+#include "../Common/FileIO.h"
 #include <openvr.h>
 
 using namespace Concurrency;
 
 Mesh::Mesh()
 {
-	this->mImage = nullptr;
 }
 
-Mesh::Mesh(char * path)
+Mesh::Mesh(const char * path)
 {
 	this->Load(path);
-	this->mImage = nullptr;
 }
-
-Mesh::Mesh(char * path, wchar_t * path2)
-{
-	this->Load(path);
-	mImage = path2;
-}
-
 Mesh::~Mesh()
 {
 	this->Clear();
@@ -35,14 +26,14 @@ void Mesh::loadShaders(char * pixel, char * vertex)
 {
 	char *bytecode = nullptr;
 	int bytelength;
-	RenderEngine::InputLayoutManager::LoadShader(pixel, &bytecode, bytelength);
+	FileIO::LoadBytes(pixel, &bytecode, bytelength);
 	(*RenderEngine::Renderer::Instance()->GetDevice())->CreatePixelShader(bytecode, bytelength, nullptr, &pShader);
 	delete[] bytecode;
-	RenderEngine::InputLayoutManager::LoadShader(vertex, &bytecode, bytelength);
+	FileIO::LoadBytes(vertex, &bytecode, bytelength);
 	(*RenderEngine::Renderer::Instance()->GetDevice())->CreateVertexShader(bytecode, bytelength, nullptr, &vShader);
 }
 
-bool Mesh::Load(char * path)
+bool Mesh::Load(const char * path)
 {
 	this->Clear();
 	std::vector<VertexPosNormTex> Verts;
@@ -105,7 +96,7 @@ bool Mesh::Load(char * path)
 
 bool Mesh::Load(vr::RenderModel_t * _model)
 {
-	for (int i = 0; i < _model->unVertexCount; i++)
+	for (unsigned int i = 0; i < _model->unVertexCount; i++)
 	{
 		VertexPosNormTex temp;
 		for (int j = 0; j < 3; j++)
@@ -114,7 +105,7 @@ bool Mesh::Load(vr::RenderModel_t * _model)
 		
 		mUniqueVerts.push_back(temp);
 	}
-	for (int i = 0; i < _model->unTriangleCount * 3; i++)
+	for (unsigned int i = 0; i < _model->unTriangleCount * 3; i++)
 	{
 		mIndicies.push_back(_model->rIndexData[i]);
 	}
@@ -396,9 +387,4 @@ unsigned short * Mesh::GetIndicies()
 size_t Mesh::IndicieSize()
 {
 	return mIndicies.size();
-}
-
-wchar_t *Mesh::ImagePath()
-{
-	return mImage;
 }

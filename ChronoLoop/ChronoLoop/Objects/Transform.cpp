@@ -1,4 +1,4 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "Transform.h"
 
 void Transform::TranslateLocal(float x, float y, float z)

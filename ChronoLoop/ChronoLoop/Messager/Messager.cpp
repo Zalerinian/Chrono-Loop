@@ -1,4 +1,4 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "Messager.h"
 
 Messager* Messager::mMessenger = nullptr;

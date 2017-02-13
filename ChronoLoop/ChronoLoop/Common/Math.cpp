@@ -1,4 +1,4 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "Math.h"
 #include <memory>
 
@@ -508,6 +508,11 @@ matrix4& matrix4::operator=(matrix4 const& _other)
 
 matrix4 matrix4::operator*(matrix4 const& _other)
 {
+	/// A grave reminde that for some reason OpenGL and DirectX multiply matrices in REVERSE ORDER FROM EACH OTHER.
+	//matrix4 temp(_floats[0] * _other._floats[0] + _floats[4] * _other._floats[1] + _floats[8] * _other._floats[2] + _floats[12] * _other._floats[3], _floats[1] * _other._floats[0] + _floats[5] * _other._floats[1] + _floats[9] * _other._floats[2] + _floats[13] * _other._floats[3], _floats[2] * _other._floats[0] + _floats[6] * _other._floats[1] + _floats[10] * _other._floats[2] + _floats[14] * _other._floats[3], _floats[3] * _other._floats[0] + _floats[7] * _other._floats[1] + _floats[11] * _other._floats[2] + _floats[15] * _other._floats[3],
+	//	_floats[0] * _other._floats[4] + _floats[4] * _other._floats[5] + _floats[8] * _other._floats[6] + _floats[12] * _other._floats[7], _floats[1] * _other._floats[4] + _floats[5] * _other._floats[5] + _floats[9] * _other._floats[6] + _floats[13] * _other._floats[7], _floats[2] * _other._floats[4] + _floats[6] * _other._floats[5] + _floats[10] * _other._floats[6] + _floats[14] * _other._floats[7], _floats[3] * _other._floats[4] + _floats[7] * _other._floats[5] + _floats[11] * _other._floats[6] + _floats[15] * _other._floats[7],
+	//	_floats[0] * _other._floats[8] + _floats[4] * _other._floats[9] + _floats[8] * _other._floats[10] + _floats[12] * _other._floats[11], _floats[1] * _other._floats[8] + _floats[5] * _other._floats[9] + _floats[9] * _other._floats[10] + _floats[13] * _other._floats[11], _floats[2] * _other._floats[8] + _floats[6] * _other._floats[9] + _floats[10] * _other._floats[10] + _floats[14] * _other._floats[11], _floats[3] * _other._floats[8] + _floats[7] * _other._floats[9] + _floats[11] * _other._floats[10] + _floats[15] * _other._floats[11],
+	//	_floats[0] * _other._floats[12] + _floats[4] * _other._floats[13] + _floats[8] * _other._floats[14] + _floats[12] * _other._floats[15], _floats[1] * _other._floats[12] + _floats[5] * _other._floats[13] + _floats[9] * _other._floats[14] + _floats[13] * _other._floats[15], _floats[2] * _other._floats[12] + _floats[6] * _other._floats[13] + _floats[10] * _other._floats[14] + _floats[14] * _other._floats[15], _floats[3] * _other._floats[12] + _floats[7] * _other._floats[13] + _floats[11] * _other._floats[14] + _floats[15] * _other._floats[15]);
 	matrix4 temp;
 	temp.matrix = this->matrix * _other.matrix;
 	return temp;
@@ -632,10 +637,12 @@ matrix4 Math::Identity()
 
 matrix4 Math::FromMatrix(vr::HmdMatrix44_t _mat)
 {
+	// TODO: Check to make sure this properly converts matrices. I think HmdMtrices are column major,
+	// so [i][j] would leave us with a column major version, which is bad.
 	matrix4 temp;
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 4; ++j)
-			temp.tiers[i].xyzw[j] = _mat.m[i][j];
+			temp.tiers[i].xyzw[j] = _mat.m[j][i];
 
 	return temp;
 }
