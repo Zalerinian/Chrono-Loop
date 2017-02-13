@@ -1,4 +1,5 @@
 #pragma once
+#include "../Common/Math.h"
 class BaseObject;
 struct matrix4;
 

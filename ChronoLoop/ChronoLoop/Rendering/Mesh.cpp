@@ -1,35 +1,39 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "Mesh.h"
 #include <ppltasks.h>
 #include <fstream>
 #include <string>
-#include "renderer.h"
+#include "Renderer.h"
+#include "../Common/FileIO.h"
+#include <openvr.h>
 
 using namespace Concurrency;
 
 Mesh::Mesh()
 {
-	this->mImage = nullptr;
 }
 
-Mesh::Mesh(char * path)
+Mesh::Mesh(const char * path)
 {
 	this->Load(path);
-	this->mImage = nullptr;
 }
-
-Mesh::Mesh(char * path, wchar_t * path2)
-{
-	this->Load(path);
-	mImage = path2;
-}
-
 Mesh::~Mesh()
 {
 	this->Clear();
 }
 
-bool Mesh::Load(char * path)
+void Mesh::loadShaders(char * pixel, char * vertex)
+{
+	char *bytecode = nullptr;
+	int bytelength;
+	FileIO::LoadBytes(pixel, &bytecode, bytelength);
+	(*RenderEngine::Renderer::Instance()->GetDevice())->CreatePixelShader(bytecode, bytelength, nullptr, &pShader);
+	delete[] bytecode;
+	FileIO::LoadBytes(vertex, &bytecode, bytelength);
+	(*RenderEngine::Renderer::Instance()->GetDevice())->CreateVertexShader(bytecode, bytelength, nullptr, &vShader);
+}
+
+bool Mesh::Load(const char * path)
 {
 	this->Clear();
 	std::vector<VertexPosNormTex> Verts;
@@ -48,18 +52,18 @@ bool Mesh::Load(char * path)
 		if (line[0] == 'v') {
 			if (line[1] == 't') {
 				vec4f uv;
-				sscanf_s(line.c_str(), "vt %f %f\n", &uv.data.x, &uv.data.y);
-				uv.data.y = 1 - uv.data.y;
+				sscanf_s(line.c_str(), "vt %f %f\n", &uv.x, &uv.y);
+				uv.y = 1 - uv.y;
 				uvs.push_back(uv);
 			}
 			else if (line[1] == 'n') {
 				vec4f normal;
-				sscanf_s(line.c_str(), "vn %f %f %f\n", &normal.data.x, &normal.data.y, &normal.data.z);
+				sscanf_s(line.c_str(), "vn %f %f %f\n", &normal.x, &normal.y, &normal.z);
 				norms.push_back(normal);
 			}
 			else if(line[1] == ' ') {
 				vec4f vertex;
-				sscanf_s(line.c_str(), "v %f %f %f\n", &vertex.data.x, &vertex.data.y, &vertex.data.z);
+				sscanf_s(line.c_str(), "v %f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
 				verts.push_back(vertex);
 			}
 		}
@@ -74,11 +78,11 @@ bool Mesh::Load(char * path)
 			{
 				VertexPosNormTex temp;
 				temp.Position = verts[vertexIndex[i] - 1];
-				temp.Position.data.w = 1;
+				temp.Position.w = 1;
 				//temp.color = DirectX::XMFLOAT4(i == 0, i == 1, i == 3);
 				temp.Normal = norms[normalIndex[i] - 1];
 				temp.UV = uvs[uvIndex[i] - 1];
-				temp.UV.data.z = 0;
+				temp.UV.z = 0;
 				Ind.push_back((unsigned short)Verts.size());
 				Verts.push_back(temp);
 			}
@@ -90,11 +94,29 @@ bool Mesh::Load(char * path)
 	return true;
 }
 
+bool Mesh::Load(vr::RenderModel_t * _model)
+{
+	for (unsigned int i = 0; i < _model->unVertexCount; i++)
+	{
+		VertexPosNormTex temp;
+		for (int j = 0; j < 3; j++)
+			temp.Position.xyzw[j] = _model->rVertexData[i].vPosition.v[j];
+		temp.Position.w = 1;
+		
+		mUniqueVerts.push_back(temp);
+	}
+	for (unsigned int i = 0; i < _model->unTriangleCount * 3; i++)
+	{
+		mIndicies.push_back(_model->rIndexData[i]);
+	}
+	return true;
+}
+
 Triangle * Mesh::GetTriangles()
 {
 	if (mTriangles.size() != mIndicies.size() / 3)
 	{
-		for (int i = 0; i < mIndicies.size() / 3; i++)
+		for (unsigned int i = 0; i < mIndicies.size() / 3; i++)
 		{
 			Triangle temp;
 			temp.Normal = (mUniqueVerts[mIndicies[(i * 3) + 0]].Normal + mUniqueVerts[mIndicies[(i * 3) + 1]].Normal + mUniqueVerts[mIndicies[(i * 3) + 2]].Normal) / 2;
@@ -289,7 +311,7 @@ void Mesh::Clear()
 
 void Mesh::Invert()
 {
-	for (int i = 0; i < mIndicies.size() / 3; i++)
+	for (unsigned int i = 0; i < mIndicies.size() / 3; i++)
 	{
 		int temp = mIndicies[(i * 3)];
 		mIndicies[(i * 3)] = mIndicies[(i * 3) + 2];
@@ -365,9 +387,4 @@ unsigned short * Mesh::GetIndicies()
 size_t Mesh::IndicieSize()
 {
 	return mIndicies.size();
-}
-
-wchar_t *Mesh::ImagePath()
-{
-	return mImage;
 }

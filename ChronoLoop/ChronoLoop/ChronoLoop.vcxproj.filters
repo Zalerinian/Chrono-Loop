@@ -73,6 +73,45 @@
     <Filter Include="Messanger\Source Files">
       <UniqueIdentifier>{36d90c6f-1459-46c7-850e-c2671a0bc2fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Rendering\Shaders">
+      <UniqueIdentifier>{0fa54450-647f-49e8-a7cd-3550b1847640}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Shaders\Layout Shaders">
+      <UniqueIdentifier>{b560e4df-5975-4c40-95c5-ed2ffde9c69a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Header Files\Nodes">
+      <UniqueIdentifier>{f27cd6e9-feb0-4b32-8929-680f3b2a6b1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Header Files\Managers">
+      <UniqueIdentifier>{8529e787-4dac-480a-a26c-8762a89d3dd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Source Files\Nodes">
+      <UniqueIdentifier>{8038cd1c-2ac7-45f0-ae93-f416f592d4f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Source Files\Managers">
+      <UniqueIdentifier>{4309e908-8f28-4b2b-9cab-2df4b234807b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DXTK">
+      <UniqueIdentifier>{16572d88-a51f-45a6-a564-025b7a4af6ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Levels">
+      <UniqueIdentifier>{b49f92a9-24c1-4e42-8e4a-b0d3243fa29a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Levels\Header Files">
+      <UniqueIdentifier>{6b3a7d00-40b8-4a02-99bc-e0fdb2c6e209}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Levels\Source Files">
+      <UniqueIdentifier>{44d77786-9078-4fd2-96e0-8d872606fb6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\FileIO">
+      <UniqueIdentifier>{4c95a99f-2d97-4b8d-913a-3425865ce968}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\FileIO\Header Files">
+      <UniqueIdentifier>{e592c27b-89c9-45a8-a222-ee38bb22b990}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\FileIO\Source Files">
+      <UniqueIdentifier>{e1cc4151-26b6-4ac4-975b-f442b93a2c81}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\BaseObject.h">
@@ -86,9 +125,6 @@
     </ClInclude>
     <ClInclude Include="Objects\Transform.h">
       <Filter>Objects\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\renderer.h">
-      <Filter>Rendering\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Rendering\Shader.h">
       <Filter>Rendering\Header Files</Filter>
@@ -111,33 +147,102 @@
     <ClInclude Include="Sound\SoundEngine.h">
       <Filter>Sound\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Timeline.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Input\KeyboardInput.h" />
-    <ClInclude Include="TimeManager.h">
-      <Filter>Core\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Physics\Physics.h">
       <Filter>Physics\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\InputLayoutManager.h">
-      <Filter>Rendering\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\RasterizerStateManager.h">
-      <Filter>Rendering\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Rendering\RendererDefines.h">
       <Filter>Rendering\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Rendering\SystemInitializer.h">
       <Filter>Rendering\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\KeyboardInput.h" />
+    <ClInclude Include="Rendering\RenderSet.h">
+      <Filter>Rendering\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\InputLayoutManager.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RasterizerStateManager.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RenderContext.h">
+      <Filter>Rendering\Header Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DXTK\BC.h">
+      <Filter>DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DXTK\BCDirectCompute.h">
+      <Filter>DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DXTK\DDS.h">
+      <Filter>DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DXTK\ddstextureloader.h">
+      <Filter>DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DXTK\DirectXTex.h">
+      <Filter>DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DXTK\DirectXTexP.h">
+      <Filter>DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DXTK\Filters.h">
+      <Filter>DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\DXTK\scoped.h">
+      <Filter>DXTK</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RenderShape.h">
+      <Filter>Rendering\Header Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RenderNode.h">
+      <Filter>Rendering\Header Files\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\ShaderManager.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\Controller.h">
+      <Filter>Input\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\VRInputManager.h">
+      <Filter>Input\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Timeline.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\TimeManager.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Levels\BaseLevel.h">
+      <Filter>Levels\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Levels\LevelManager.h">
+      <Filter>Levels\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\KeyboardInput.h">
+      <Filter>Input\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\FileIO.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\FileIO\FileIO_General.h">
+      <Filter>Common\FileIO\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\FileIO\FileIO_Textures.h">
+      <Filter>Common\FileIO\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Common.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Logger.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Renderer.h">
+      <Filter>Rendering\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Breakpoint.h">
+      <Filter>Common\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -149,9 +254,6 @@
     </ClCompile>
     <ClCompile Include="Objects\Transform.cpp">
       <Filter>Objects\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\renderer.cpp">
-      <Filter>Rendering\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Rendering\Shader.cpp">
       <Filter>Rendering\Source Files</Filter>
@@ -171,24 +273,207 @@
     <ClCompile Include="Sound\SoundEngine.cpp">
       <Filter>Sound\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Timeline.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Input\KeyboardInput.cpp" />
-    <ClCompile Include="TimeManager.cpp">
-      <Filter>Core\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Physics\Physics.cpp">
       <Filter>Physics\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rendering\InputLayoutManager.cpp">
-      <Filter>Rendering\Header Files</Filter>
+    <ClCompile Include="Input\KeyboardInput.cpp" />
+    <ClCompile Include="Rendering\RenderSet.cpp">
+      <Filter>Rendering\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Rendering\RasterizerStateManager.cpp">
-      <Filter>Rendering\Header Files</Filter>
+      <Filter>Rendering\Source Files\Managers</Filter>
     </ClCompile>
+    <ClCompile Include="Rendering\InputLayoutManager.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\RenderContext.cpp">
+      <Filter>Rendering\Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\RenderNode.cpp">
+      <Filter>Rendering\Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\BC.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\BC4BC5.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\BC6HBC7.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\BCDirectCompute.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DDSTextureLoader.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexCompress.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexCompressGPU.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexConvert.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexD3D11.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexDDS.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexFlipRotate.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexHDR.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexImage.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexMipmaps.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexMisc.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexNormalMaps.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexPMAlpha.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexResize.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexTGA.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexUtil.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\DXTK\DirectXTexWIC.cpp">
+      <Filter>DXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\RenderShape.cpp">
+      <Filter>Rendering\Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\Controller.cpp">
+      <Filter>Input\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\VRInputManager.cpp">
+      <Filter>Input\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Timeline.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\TimeManager.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Levels\LevelManager.cpp">
+      <Filter>Levels\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Levels\BaseLevel.cpp">
+      <Filter>Levels\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\KeyboardInput.cpp">
+      <Filter>Input\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\ShaderManager.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\FileIO\FileIO_General.cpp">
+      <Filter>Common\FileIO\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\FileIO\FileIO_Textures.cpp">
+      <Filter>Common\FileIO\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Logger.cpp">
+      <Filter>Common\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Renderer.cpp">
+      <Filter>Rendering\Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHT_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHTNORMTANTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHTNORMTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSCOLOR_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSNORMTANTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSNORMTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\TexturedPixel.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\TexturedVertex.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\BasicPixel.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\BasicVertex.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHT_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHTNORMTANTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSBONEWEIGHTNORMTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSCOLOR_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSNORMTANTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSNORMTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_POSTEX_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VertexLayout_VS.hlsl">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Rendering\Shaders\VertexLayouts.hlsli">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </None>
+    <None Include="Rendering\Shaders\VertexLayouts.hlsli">
+      <Filter>Rendering\Shaders\Layout Shaders</Filter>
+    </None>
+    <None Include="..\DXTK\DirectXTex.inl">
+      <Filter>DXTK</Filter>
+    </None>
   </ItemGroup>
 </Project>

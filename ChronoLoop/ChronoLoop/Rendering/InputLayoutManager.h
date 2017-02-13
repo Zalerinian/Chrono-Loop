@@ -1,5 +1,5 @@
 #pragma once
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "RendererDefines.h"
 
 struct ID3D11InputLayout;
@@ -12,13 +12,14 @@ namespace RenderEngine {
 		static InputLayoutManager* sInstance;
 	
 		InputLayoutManager();
-		void Initialize();
-		ID3D11InputLayout* mInputLayouts[VertFormat::MAX];
-	public:
 		~InputLayoutManager();
+		void Initialize();
+		ID3D11InputLayout* mInputLayouts[VertFormat::eVERT_MAX];
+	public:
 		static InputLayoutManager &Instance();
 		static void DestroyInstance();
-		static void LoadShader(char* _fileName, char* _output, int& _outputSize);
+
+		void ApplyLayout(VertFormat v);
 		ID3D11InputLayout *GetInputLayout(VertFormat _index) { return mInputLayouts[_index]; };
 	};
 

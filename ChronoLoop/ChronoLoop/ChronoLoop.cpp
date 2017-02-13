@@ -1,11 +1,18 @@
-#include "stdafx.h"
-#include "Rendering\SystemInitializer.h"
-#include "Rendering\renderer.h"
-#include "Rendering\InputLayoutManager.h"
+//#include "stdafx.h"
+#include "Rendering/SystemInitializer.h"
+#include "Rendering/renderer.h"
+#include "Rendering/InputLayoutManager.h"
+#include "Input/VRInputManager.h"
+#include "Core/TimeManager.h"
+#include "Common/Logger.h"
 #include <openvr.h>
+#include <iostream>
 #include <ctime>
 #include <chrono>
 
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
 
 HWND hwnd;
 LPCTSTR WndClassName = L"ChronoWindow";
@@ -18,35 +25,45 @@ static float deltaTime;
 TimeManager* TManager; 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void Update();
-bool FrameCheck();
+void UpdateTime();
 
 int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
-	if (!InitializeWindow(hInstance, nCmdShow, 800, 600, true)) {
-		MessageBox(NULL, L"Kablamo.", L"The window broked.", MB_ICONERROR | MB_OK);
-	}
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	_CrtSetBreakAlloc(-1);
+	//_CrtSetBreakAlloc(354);
+	if (!InitializeWindow(hInstance, nCmdShow, 800, 600, true)) {
+		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
+		return 2;
+	}
 
 	// Initialize Rendering systems and VR
-	if (!RenderEngine::InitializeSystems(hwnd, 800, 600, false, 60, false, 1000, 0.1f, nullptr)) {
+	vr::HmdError pError;
+	vr::IVRSystem *vrsys = vr::VR_Init(&pError, vr::VRApplication_Scene);
+	if (pError != vr::HmdError::VRInitError_None) {
+		std::cout << "Could not initialize OpenVR for reasons!" << std::endl;
+	}
+
+	//vrsys = nullptr;
+	if (!RenderEngine::InitializeSystems(hwnd, 800, 600, false, 90, false, 1000, 0.1f, vrsys)) {
 		return 1;
-	} 
-	TManager = TimeManager::Instance();
-	vr::HmdError *pError = new vr::HmdError;
-	vr::VR_Init(pError, vr::VRApplication_Utility);
-	BaseObject*  PlsGitRidOfThis = new BaseObject();
-	TimeManager::Instance()->GetTimeLine()->AddBaseObject(PlsGitRidOfThis, PlsGitRidOfThis->GetUniqueId());
+	}
 	
+	SystemLogger::GetLog() << "Hello World! " << "We hope you have at least" << 5 << "smiles today." << std::endl;
 
 	// Update everything
 	Update();
 
-	delete PlsGitRidOfThis;
 	// Cleanup
 	RenderEngine::ShutdownSystems();
+	SystemLogger::CloseLog();
+	SystemLogger::CloseError();
+
+#if _DEBUG || CONSOLE_OVERRIDE
+	FreeConsole();
+#endif
 
 	return 0;
 }
+
 
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed) {
 #if _DEBUG || CONSOLE_OVERRIDE
@@ -89,7 +106,7 @@ bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, b
 												WndClassName,                        //Name of our windows class
 												L"Chrono::Loop",                     //Name in the title bar of our window
 												WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME, //style of our window
-												600, 150,										         //Top left corner of window
+												600, 150,                            //Top left corner of window
 												width,                               //Width of our window
 												height,                              //Height of our window
 												NULL,                                //Handle to parent window
@@ -97,7 +114,6 @@ bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, b
 												hInstance,                           //Specifies instance of current program
 												NULL                                 //used for an MDI client window
 	);
-
 	if (!hwnd) {
 		MessageBox(NULL, L"Error creating window", L"Error", MB_OK | MB_ICONERROR);
 		return 1;
@@ -122,44 +138,33 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 
 void Update() {
 	MSG msg;
-	
 	ZeroMemory(&msg, sizeof(MSG));
 	while (true) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			// Handle windows message.
 			if (msg.message == WM_QUIT) {
-				
 				break;
 			}
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		} else {
+			if (GetAsyncKeyState(VK_ESCAPE)) {
+				break;
+			}
 
-			// Input.Update(float deltaTime);
+			UpdateTime();
+			VRInputManager::Instance().update();
 			// Logic.Update(float deltaTime);
 			TManager->Instance()->Update(deltaTime);
-			if (FrameCheck())
-			{
-				 RenderEngine::Renderer::Instance()->Render();
-			}
+			RenderEngine::Renderer::Instance()->Render();
 		}
 	}
 }
-bool FrameCheck()
-{
-	static float fps = 1 / 90.0f;
 
-	
+void UpdateTime()
+{
 	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count() - lastTime.time_since_epoch().count()) / 1000.0f / 1000.0f / 1000.0f;
 	lastTime = std::chrono::steady_clock::now();
-	timeFrame += deltaTime;
-	if (timeFrame > fps)
-	{
-		timeFrame = 0;
-		return true;
-	}
-
-	return false;
 }
 
 

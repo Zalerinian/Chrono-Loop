@@ -1,10 +1,6 @@
-///////////////////////////////////////
-//Written: 2/8/2017
-//Author: Chris Burt
-///////////////////////////////////////
-
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "Physics.h"
+#include "..\Rendering\Mesh.h"
 
 
 #pragma region RAY_CASTING
@@ -37,9 +33,10 @@ bool Physics::RayToTriangle(vec4f& _vert0, vec4f& _vert1, vec4f& _vert2, vec4f& 
 		_time = ((offset - (_start * _normal)) / (_normal * _dir));
 		return true;
 	}
+	return false;
 }
 
-bool Physics::RayToSphere(vec4f& _pos, vec4f& _dir, vec4f& _center, float _radius, float& _time, vec4f& _out)
+bool Physics::RayToSphere(vec4f & _pos, vec4f & _dir, vec4f & _center, float _radius, float & _time, vec4f & _out)
 {
 	vec4f check = _pos - _center;
 
@@ -57,14 +54,14 @@ bool Physics::RayToSphere(vec4f& _pos, vec4f& _dir, vec4f& _center, float _radiu
 	if (_time < 0.0f)
 	{
 		_time = 0.0f;
-		vec4f np = { _pos.data.x + _time, _pos.data.y + _time, _pos.data.z + _time, 1.0f };
+		vec4f np = { _pos.x + _time, _pos.y + _time, _pos.z + _time, 1.0f };
 		_out = np ^ _dir;
 	}
 
 	return true;
 }
 
-bool Physics::RayToCylinder(vec4f& _start, vec4f& _normal, vec4f& _point1, vec4f& _point2, float _radius, float& _time)
+bool Physics::RayToCylinder(vec4f & _start, vec4f & _normal, vec4f & _point1, vec4f & _point2, float _radius, float & _time)
 {
 	vec4f d = _point2 - _point1;
 	vec4f od = _point1 - _point2;
@@ -103,7 +100,7 @@ bool Physics::RayToCylinder(vec4f& _start, vec4f& _normal, vec4f& _point1, vec4f
 	return true;
 }
 
-bool Physics::RayToCapsule(vec4f& _start, vec4f& _normal, vec4f& _point1, vec4f& _point2, float _radius, float& _time)
+bool Physics::RayToCapsule(vec4f & _start, vec4f & _normal, vec4f & _point1, vec4f & _point2, float _radius, float & _time)
 {
 	float fTime = FLT_MAX;
 	_time = FLT_MAX;
@@ -138,7 +135,7 @@ bool Physics::RayToCapsule(vec4f& _start, vec4f& _normal, vec4f& _point1, vec4f&
 
 #pragma region MOVING_SPHERE
 
-bool Physics::MovingSphereToTriangle(vec4f& _vert0, vec4f& _vert1, vec4f& _vert2, vec4f& _normal, vec4f& _start, vec4f& _dir, float _radius, float& _time, vec4f& _outNormal)
+bool Physics::MovingSphereToTriangle(vec4f & _vert0, vec4f & _vert1, vec4f & _vert2, vec4f & _normal, vec4f & _start, vec4f & _dir, float _radius, float & _time, vec4f & _outNormal)
 {
 	bool bReturn = false;
 	float fTime = FLT_MAX;
@@ -192,56 +189,38 @@ bool Physics::MovingSphereToTriangle(vec4f& _vert0, vec4f& _vert1, vec4f& _vert2
 	return bReturn;
 }
 
-//bool Physics::MovingSphereToMesh(vec4f& _start, vec4f& _dir, float _radius, ED2Mesh* _mesh, float& _time, vec4f& _outNormal)
-//{
-//	bool bCollision = false;
-//	_time = FLT_MAX;
-//	float fTime = FLT_MAX;
-//	
-//	unsigned int tempSortedIndicies[3] = { 0,0,0 };
-//
-//	for (unsigned int i = 0; i < mesh->m_Triangles.size(); i++) {
-//
-//		ED2Triangle currTri = mesh->m_Triangles[i];
-//		vec4f currNorm = mesh->m_TriNorms[i];
-//
-//		for (unsigned int x = 0; x < 3; x++) {
-//			tempSortedIndicies[x] = currTri.indices[x];
-//		}
-//
-//		unsigned int temp = 0;
-//		for (unsigned int i = 1; i < 4; i++) {
-//			for (unsigned int j = 0; j < 3; j++) {
-//				if (tempSortedIndicies[j + 1] < tempSortedIndicies[j]) {
-//					temp = tempSortedIndicies[j];
-//					tempSortedIndicies[j] = tempSortedIndicies[j + 1];
-//					tempSortedIndicies[j + 1] = temp;
-//					break;
-//				}
-//			}
-//		}
-//
-//		if (MovingSphereToTriangle(
-//			mesh->m_Vertices[tempSortedIndicies[0]].pos,
-//			mesh->m_Vertices[tempSortedIndicies[1]].pos,
-//			mesh->m_Vertices[tempSortedIndicies[2]].pos,
-//			currNorm, _start, _dir, _radius, fTime, _outNormal))
-//		{
-//			_time = fminf(_time, fTime);
-//			_outNormal = currNorm;
-//			bCollision = true;
-//		}
-//	}
-//
-//	return bCollision;
-//}
+bool Physics::MovingSphereToMesh(vec4f & _start, vec4f & _dir, float _radius, Mesh* _mesh, float & _time, vec4f & _outNormal)
+{
+	bool bCollision = false;
+	_time = FLT_MAX;
+	float fTime = FLT_MAX;
+	
+	for (unsigned int i = 0; i < _mesh->GetNumTriangles(); i++) 
+	{
+		Triangle currTri = _mesh->GetTriangles()[i];
+		vec4f currNorm = _mesh->GetTriangles()[i].Normal;
+
+		if (MovingSphereToTriangle(
+			*currTri.Vertex[0],
+			*currTri.Vertex[1],
+			*currTri.Vertex[2],
+			currNorm, _start, _dir, _radius, fTime, _outNormal))
+		{
+			_time = fminf(_time, fTime);
+			_outNormal = currNorm;
+			bCollision = true;
+		}
+	}
+
+	return bCollision;
+}
 
 #pragma endregion
 
 
 #pragma region PLANE_COLISION
 
-void Physics::BuildPlane(Plane& _plane, vec4f _pointA, vec4f& _pointB, vec4f& _pointC)
+void Physics::BuildPlane(Plane& _plane, vec4f& _pointA, vec4f& _pointB, vec4f& _pointC)
 {
 	_plane.mNormal = (_pointA - _pointC) ^ (_pointB - _pointA);
 	_plane.mNormal.Normalize();
@@ -274,12 +253,12 @@ int Physics::SphereToPlane(Plane& _plane, Sphere& _sphere)
 //Returns 1 if in front of plane.
 //Returns 2 if behind plane.
 //Returns 3 if intersecting plane.
-int Physics::AabbToPlane(Plane & _plane, AABB & _aabb)
+int Physics::AabbToPlane(Plane& _plane, AABB& _aabb)
 {
 	vec4f center = (_aabb.mMax + _aabb.mMin) * 0.5f;
 	float pOffset = center * _plane.mNormal - _plane.mOffset;
 	vec4f E = _aabb.mMax - center;
-	float r = E.data.x * fabsf(_plane.mNormal.data.x) + E.data.y * fabsf(_plane.mNormal.data.y) + E.data.z * fabsf(_plane.mNormal.data.z);
+	float r = E.x * fabsf(_plane.mNormal.x) + E.y * fabsf(_plane.mNormal.y) + E.z * fabsf(_plane.mNormal.z);
 
 	if (pOffset > r)
 		return 1;
@@ -357,76 +336,76 @@ bool Physics::FrustumToAABB(Frustum & _frustum, AABB & _aabb)
 
 #pragma region MISC_COLLISION
 
-bool Physics::AABBtoAABB(AABB & _aabb1, AABB & _aabb2)
+bool Physics::AABBtoAABB(AABB& _aabb1, AABB& _aabb2)
 {
-	if (_aabb1.mMax.data.x < _aabb2.mMin.data.x || _aabb1.mMin.data.x > _aabb2.mMax.data.x)
+	if (_aabb1.mMax.x < _aabb2.mMin.x || _aabb1.mMin.x > _aabb2.mMax.x)
 		return false;
 
-	if (_aabb1.mMax.data.y < _aabb2.mMin.data.y || _aabb1.mMin.data.y > _aabb2.mMax.data.y)
+	if (_aabb1.mMax.y < _aabb2.mMin.y || _aabb1.mMin.y > _aabb2.mMax.y)
 		return false;
 
-	if (_aabb1.mMax.data.z < _aabb2.mMin.data.z || _aabb1.mMin.data.z >  _aabb2.mMax.data.z)
+	if (_aabb1.mMax.z < _aabb2.mMin.z || _aabb1.mMin.z >  _aabb2.mMax.z)
 		return false;
 
 	return true;
 }
 
-bool Physics::SphereToSphere(Sphere & _sphere1, Sphere & _sphere2)
+bool Physics::SphereToSphere(Sphere& _sphere1, Sphere& _sphere2)
 {
 	vec4f pos = _sphere1.mPosition - _sphere2.mPosition;
-	float distance = pos.data.x * pos.data.x + pos.data.y * pos.data.y + pos.data.z * pos.data.z;
+	float distance = pos.x * pos.x + pos.y * pos.y + pos.z * pos.z;
 	float minDist = _sphere1.mRadius + _sphere2.mRadius;
 
 	return distance <= (minDist * minDist);
 }
 
-bool Physics::SphereToAABB(Sphere & _sphere, AABB & _aabb)
+bool Physics::SphereToAABB(Sphere& _sphere, AABB& _aabb)
 {
 	float X, Y, Z;
 
-	if (_sphere.mPosition.data.x < _aabb.mMin.data.x)
-		X = _aabb.mMin.data.x;
-	else if (_sphere.mPosition.data.x > _aabb.mMax.data.x)
-		X = _aabb.mMax.data.x;
+	if (_sphere.mPosition.x < _aabb.mMin.x)
+		X = _aabb.mMin.x;
+	else if (_sphere.mPosition.x > _aabb.mMax.x)
+		X = _aabb.mMax.x;
 	else
-		X = _sphere.mPosition.data.x;
+		X = _sphere.mPosition.x;
 
-	if (_sphere.mPosition.data.y < _aabb.mMin.data.y)
-		Y = _aabb.mMin.data.y;
-	else if (_sphere.mPosition.data.y > _aabb.mMax.data.y)
-		Y = _aabb.mMax.data.y;
+	if (_sphere.mPosition.y < _aabb.mMin.y)
+		Y = _aabb.mMin.y;
+	else if (_sphere.mPosition.y > _aabb.mMax.y)
+		Y = _aabb.mMax.y;
 	else
-		Y = _sphere.mPosition.data.y;
+		Y = _sphere.mPosition.y;
 
-	if (_sphere.mPosition.data.z < _aabb.mMin.data.z)
-		Z = _aabb.mMin.data.z;
-	else if (_sphere.mPosition.data.z > _aabb.mMax.data.z)
-		Z = _aabb.mMax.data.z;
+	if (_sphere.mPosition.z < _aabb.mMin.z)
+		Z = _aabb.mMin.z;
+	else if (_sphere.mPosition.z > _aabb.mMax.z)
+		Z = _aabb.mMax.z;
 	else
-		Z = _sphere.mPosition.data.z;
+		Z = _sphere.mPosition.z;
 
 	vec4f point = { X, Y, Z, 1.0f };
 
-	return (fabsf((point.data.x - _sphere.mPosition.data.x)) < _sphere.mRadius &&
-		fabsf((point.data.y - _sphere.mPosition.data.y)) < _sphere.mRadius &&
-		fabsf((point.data.z - _sphere.mPosition.data.z)) < _sphere.mRadius);
+	return (fabsf((point.x - _sphere.mPosition.x)) < _sphere.mRadius &&
+		fabsf((point.y - _sphere.mPosition.y)) < _sphere.mRadius &&
+		fabsf((point.z - _sphere.mPosition.z)) < _sphere.mRadius);
 }
 
 #pragma endregion
 
 #pragma region SIMULATION
 
-vec4f Physics::CalcAcceleration(vec4f _force, float _mass)
+vec4f Physics::CalcAcceleration(vec4f& _force, float _mass)
 {
 	return _force / _mass;
 }
 
-vec4f Physics::CalcVelocity(vec4f _vel, vec4f _accel, float _time)
+vec4f Physics::CalcVelocity(vec4f& _vel, vec4f& _accel, float _time)
 {
 	return _vel + _accel * _time;
 }
 
-vec4f Physics::CalcPosition(vec4f _pos, vec4f _vel, float _time)
+vec4f Physics::CalcPosition(vec4f& _pos, vec4f& _vel, float _time)
 {
 	return _pos + _vel * _time;
 }

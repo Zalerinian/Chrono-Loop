@@ -7,8 +7,7 @@
 #include <directxmath.h>
 #include <vector>
 #include <fstream>
-#include "stdafx.h"
-#include "renderer.h"
+//#include "stdafx.h"
 #include "Structures.h"
 
 struct Triangle
@@ -16,6 +15,10 @@ struct Triangle
 	vec4f* Vertex[3];
 	vec4f Normal;
 };
+namespace vr
+{
+	struct RenderModel_t;
+}
 
 class Mesh
 {
@@ -23,15 +26,19 @@ private:
 	std::vector<Triangle> mTriangles;
 	std::vector<VertexPosNormTex> mUniqueVerts;
 	std::vector<unsigned short> mIndicies;
-	wchar_t *mImage;
 public:
+	// Super temporary shit
+	ID3D11PixelShader *pShader;
+	ID3D11VertexShader *vShader;
+
 	Mesh();
-	Mesh(char *path);
-	Mesh(char *path, wchar_t *path2);
+	Mesh(const char *path);
 	virtual ~Mesh();
-	bool Load(char *path);
+	void loadShaders(char *pixel, char* vertex);
+	bool Load(const char *path);
+	bool Load(vr::RenderModel_t *_model);
 	Triangle *GetTriangles();
-	size_t GetNumTriangles() { return mTriangles.size(); };
+	inline size_t GetNumTriangles() { return mTriangles.size(); };
 	//bool LoadBin(char *path);
 	void Clear();
 	void Invert();
@@ -41,7 +48,5 @@ public:
 	size_t VertSize();
 	unsigned short *GetIndicies();
 	size_t IndicieSize();
-	wchar_t *ImagePath();
-	void SetImagePath(wchar_t* path) { mImage = path; };
 };
 

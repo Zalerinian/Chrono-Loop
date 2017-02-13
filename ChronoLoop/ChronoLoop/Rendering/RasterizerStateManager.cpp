@@ -1,6 +1,6 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "RasterizerStateManager.h"
-#include "renderer.h"
+#include "Renderer.h"
 
 namespace RenderEngine {
 

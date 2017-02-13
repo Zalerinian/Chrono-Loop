@@ -1,4 +1,4 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "Shader.h"
 #include <fstream>
 
@@ -25,8 +25,4 @@ PixelShader::PixelShader(const char * _path)  {
 		bytecode.push_back(*bite);
 	}
 	delete bite;
-
-
-
-
 }

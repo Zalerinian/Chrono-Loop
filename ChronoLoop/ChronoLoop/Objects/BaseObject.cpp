@@ -1,4 +1,4 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "BaseObject.h"
 
 
@@ -15,6 +15,14 @@ BaseObject::BaseObject(std::string _name, Transform _transform)
 	name = _name;
 	parent = nullptr;
 	transform = _transform;
+	mass = 0.0f;
+}
+BaseObject::BaseObject(std::string _name, Transform _transform, float _mass)
+{
+	name = _name;
+	parent = nullptr;
+	transform = _transform;
+	mass = _mass;
 }
 BaseObject::~BaseObject()
 {
@@ -57,15 +65,24 @@ BaseObject const* BaseObject::operator=(BaseObject _equals)
 	if (this->components != _equals.components) this->components = _equals.components;
 	return this;
 }
+void BaseObject::CalcAcceleration(vec4f& _force)
+{
+	acc = Physics::CalcAcceleration(_force, mass);
+}
+void BaseObject::CalcVelocity(vec4f& _force, float _dt)
+{
+	CalcAcceleration(_force);
+	vel = Physics::CalcVelocity(vel, acc, _dt);
+}
+void BaseObject::CalcPosition(vec4f& _force, float _dt)
+{
+	CalcVelocity(_force, _dt);
+	pos = Physics::CalcPosition(pos, vel, _dt);
+}
 
 unsigned short& BaseObject::GetUniqueId()
 {
 	return id;
-}
-
-Transform & BaseObject::GetTransform()
-{
-	return transform;
 }
 
 Component* const BaseObject::GetComponet(unsigned int _indx) {
