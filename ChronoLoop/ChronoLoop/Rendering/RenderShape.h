@@ -3,9 +3,9 @@
 #include "RenderContext.h"
 #include "RendererDefines.h"
 #include <memory>
+#include "Mesh.h"
 
 struct ID3D11Buffer;
-class Mesh;
 
 namespace RenderEngine {
 
@@ -20,6 +20,8 @@ namespace RenderEngine {
 
 		inline RenderContext &GetContext() { return mContext; }
 
+		void AddTexture(const char* _path, TextureType position);
+		void AddTexture(const wchar_t* _path, TextureType position);
 		void Render();
 
 	protected:

@@ -1,9 +1,12 @@
 //#include "stdafx.h"
 #include "RenderShape.h"
 #include "renderer.h"
-#include "Mesh.h"
 #include <d3d11.h>
 #include "../Common/FileIO.h"
+#include "../Common/Common.h"
+#include "../../DXTK/ddstextureloader.h"
+#include "../../DXTK/DirectXTex.h"
+#include <memory>
 
 namespace RenderEngine {
 
@@ -56,6 +59,29 @@ namespace RenderEngine {
 		}
 		mContext.mVertexShaderFormat = vf;
 		mContext.mPixelShaderFormat = pf;
+	}
+
+	void RenderShape::AddTexture(const char * _path, TextureType position) {
+		wchar_t *path = nullptr;
+		Engine::MakeWide(_path, path, (unsigned int)strlen(_path) + 1);
+		AddTexture(path, position);
+		delete[] path;
+	}
+
+	void RenderShape::AddTexture(const wchar_t * _path, TextureType position) {
+		DirectX::ScratchImage img;
+		DirectX::Blob *image = new DirectX::Blob;
+		UINT flags = 0;
+		DirectX::LoadFromWICFile(_path, flags, nullptr, img);
+		DirectX::SaveToDDSMemory(*img.GetImage(0, 0, 0), flags, *image);
+		ID3D11ShaderResourceView *srv;
+		ID3D11Texture2D *tex;
+		DirectX::CreateDDSTextureFromMemory((*Renderer::Instance()->GetDevice()), 
+			(const uint8_t*)image->GetBufferPointer(),
+			image->GetBufferSize(),
+			(ID3D11Resource**)&tex,
+			&srv);
+		mContext.mTextures[position] = std::make_shared<ID3D11ShaderResourceView*>(srv);
 	}
 
 	void RenderShape::Render() {

@@ -6,8 +6,6 @@
 #include "Mesh.h"
 #include "InputLayoutManager.h"
 #include "RenderShape.h"
-#include "../../DXTK/DirectXTexP.h"
-#include "../../DXTK/ddstextureloader.h"
 #include "../Input/VRInputManager.h"
 #include "../Input/Controller.h"
 
@@ -77,11 +75,11 @@ namespace RenderEngine {
 		matrix4 hmdPos = hmd.Inverse();
 		if (e == vr::EVREye::Eye_Left) {
 			data.model = Math::MatrixTranspose(world);
-			data.view = Math::MatrixTranspose((mEyePosLeft * hmdPos));
+			data.view = Math::MatrixTranspose((hmdPos * mEyePosLeft));
 			data.projection = Math::MatrixTranspose(mEyeProjLeft);
 		} else {
 			data.model = Math::MatrixTranspose(world);
-			data.view = Math::MatrixTranspose((mEyePosRight * hmdPos));
+			data.view = Math::MatrixTranspose((hmdPos * mEyePosRight));
 			data.projection = Math::MatrixTranspose(mEyeProjRight);
 		}
 	}
@@ -235,7 +233,7 @@ namespace RenderEngine {
 			}
 			// TODO: Setup the view/projection matrices, then process the render set.
 			MyBuffer data;
-			GetMVP(currentEye, data, Math::MatrixTranslation(0, 3, -4));
+			GetMVP(currentEye, data, Math::MatrixTranslation(0, 1, -1));
 			(*mContext)->UpdateSubresource(constantBluffer, 0, nullptr, (void*)&data, 0, 0);
 			(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
 
@@ -301,30 +299,26 @@ namespace RenderEngine {
 
 		mUseVsync = _vsync;
 
-
-
-		// Eye gets changd per render
 		Mesh cube("../Resources/Cube.obj");
 		cube.Invert();
 		RenderShape *box = new RenderShape(cube);
-		DirectX::ScratchImage img;
-		DirectX::Blob *image = new DirectX::Blob;
-		UINT flags = 0;
-		DirectX::LoadFromWICFile(L"../Resources/cube_texture.png", flags, nullptr, img);
-		DirectX::SaveToDDSMemory(*img.GetImage(0, 0, 0), flags, *image);
-		ID3D11ShaderResourceView *rtv;
-		ID3D11Texture2D *tex;
-		DirectX::CreateDDSTextureFromMemory((*mDevice), (const uint8_t*)image->GetBufferPointer(), image->GetBufferSize(), (ID3D11Resource**)&tex, &rtv);
-		mTexture = make_shared<ID3D11ShaderResourceView*>(rtv);
-		(*mContext)->PSSetShaderResources(0, 1, mTexture.get());
+		box->AddTexture(L"../Resources/cube_texture.png", eTEX_DIFFUSE);
 		box->SetShaders(ePS_TEXTURED, eVS_TEXTURED);
 		AddNode(box);
 
-		mControllerRM = nullptr;
 
 		CD3D11_BUFFER_DESC desc(sizeof(MyBuffer), D3D11_BIND_CONSTANT_BUFFER);
 		(*mDevice)->CreateBuffer(&desc, nullptr, &constantBluffer);
-		boxPosition = Math::Identity();
+
+		//// Print out the render model names available from openVR.
+		//char buffer[2048];
+		//for (int i = 0; i < vr::VRRenderModels()->GetRenderModelCount(); ++i) {
+		//	vr::VRRenderModels()->GetRenderModelName((uint32_t)i, buffer, 2048);
+		//	std::cout << buffer << std::endl;
+		//}
+
+
+
 
 		return true;
 	}
@@ -338,142 +332,21 @@ namespace RenderEngine {
 			RenderVR();
 		}
 		(*mChain)->Present(mUseVsync ? 1 : 0, 0);
-		//matrix4 identity = boxPosition;
 
-		/*Controller& rightController = VRInputManager::Instance().GetController(false);
-		Controller& leftController = VRInputManager::Instance().GetController(true);
-		if (rightController.GetPress(vr::k_EButton_SteamVR_Trigger)) {
-			identity = boxPosition = Math::FromMatrix(poses[rightController.GetIndex()].mDeviceToAbsoluteTracking);
+		// Bootleg load the controller model.
+		if (mControllerModel.mIndexCount == 0) {
+			vr::RenderModel_t *vrControllerModel;
+			if (vr::VRRenderModels()->LoadRenderModel_Async("vr_controller_vive_1_5", &vrControllerModel) == vr::VRRenderModelError_None) {
+				Mesh controller;
+				controller.Load(vrControllerModel);
+				controller.Invert();
+				mControllerModel.Load(controller);
+				mControllerModel.SetShaders(ePS_BASIC, eVS_BASIC);
+				AddNode(&mControllerModel);
+				vr::VRRenderModels()->FreeRenderModel(vrControllerModel);
+			}
 		}
-		if (leftController.GetPress(vr::k_EButton_SteamVR_Trigger)) {
-			identity = boxPosition = Math::FromMatrix(poses[leftController.GetIndex()].mDeviceToAbsoluteTracking);
-		}*/
 
-
-
-		//GetMVP(vr::EVREye::Eye_Left, constantData, identity);
-		//(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
-		//(*mContext)->OMSetRenderTargets(1, mDebugScreen.get(), (*mDSView));
-		//(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-		//UINT strideGround = sizeof(VertexPosNormTex);
-		//UINT offsetGround = 0;
-		//(*mContext)->IASetInputLayout(InputLayoutManager::Instance().GetInputLayout(eVERT_POSNORMTEX)); 
-		//(*mContext)->IASetIndexBuffer(((RenderShape*)mRenderSet.GetHead())->mIndexBuffer, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
-		//(*mContext)->IASetVertexBuffers(0, 1, &((RenderShape*)mRenderSet.GetHead())->mVertexBuffer, &strideGround, &offsetGround);
-		//(*mContext)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-		//(*mContext)->VSSetShader(((RenderShape*)mRenderSet.GetHead())->vShader, nullptr, 0);
-		//(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
-		///// Pixel Shader(s)
-		//(*mContext)->PSSetShader(((RenderShape*)mRenderSet.GetHead())->pShader, nullptr, 0);
-		//(*mContext)->PSSetShaderResources(0, 1, mTexture.get());
-
-		//(*mContext)->DrawIndexed((UINT)((RenderShape*)mRenderSet.GetHead())->mIndexCount, 0, 0);
-
-		//if (mVrSystem != nullptr) {
-		//	UpdateTrackedPositions();
-		//	if (mControllerModel.pShader == nullptr) {
-		//			auto status = vr::VRRenderModels()->LoadRenderModel_Async("vr_controller_vive_1_5", &mControllerRM);
-		//			if (status == vr::VRRenderModelError_None) {
-		//				Mesh controllerMesh;
-		//				controllerMesh.Load(mControllerRM);
-		//				controllerMesh.Invert();
-		//				mControllerModel.Load(controllerMesh);
-		//				mControllerModel.LoadShaders("TexturedVertex.cso", "TexturedPixel.cso");
-		//			}
-		//		}
-
-		//		(*mContext)->OMSetRenderTargets(1, mLeftEye.get(), (*mVRDSView));
-		//		(*mContext)->ClearDepthStencilView((*mVRDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-		//		(*mContext)->DrawIndexed((UINT)((RenderShape*)mRenderSet.GetHead())->mIndexCount, 0, 0);
-
-		//		GetMVP(vr::EVREye::Eye_Right, constantData, identity);
-		//		(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
-		//		(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
-		//		(*mContext)->OMSetRenderTargets(1, mRightEye.get(), (*mVRDSView));
-		//		(*mContext)->ClearDepthStencilView((*mVRDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-		//		(*mContext)->DrawIndexed((UINT)((RenderShape*)mRenderSet.GetHead())->mIndexCount, 0, 0);
-
-
-
-
-
-		//		if (mControllerModel.pShader != nullptr) {
-
-		//			// Controller 1
-		//			if (leftController.GetIndex() > 0) {
-		//				(*mContext)->OMSetRenderTargets(1, mLeftEye.get(), (*mVRDSView));
-		//				GetMVP(vr::EVREye::Eye_Left, constantData, Math::FromMatrix(poses[leftController.GetIndex()].mDeviceToAbsoluteTracking));
-		//				(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
-		//				(*mContext)->IASetIndexBuffer(mControllerModel.mIndexBuffer, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
-		//				(*mContext)->IASetVertexBuffers(0, 1, &mControllerModel.mVertexBuffer, &strideGround, &offsetGround);
-
-		//				(*mContext)->VSSetShader(mControllerModel.vShader, nullptr, 0);
-		//				(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
-		//				/// Pixel Shader(s)
-		//				(*mContext)->PSSetShader(mControllerModel.pShader, nullptr, 0);
-		//				(*mContext)->PSSetShaderResources(0, 1, mTexture.get());
-
-		//				(*mContext)->DrawIndexed((UINT)mControllerModel.mIndexCount, 0, 0);
-
-		//				(*mContext)->OMSetRenderTargets(1, mRightEye.get(), (*mVRDSView));
-		//				GetMVP(vr::EVREye::Eye_Right, constantData, Math::FromMatrix(poses[leftController.GetIndex()].mDeviceToAbsoluteTracking));
-		//				(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
-		//				(*mContext)->IASetIndexBuffer(mControllerModel.mIndexBuffer, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
-		//				(*mContext)->IASetVertexBuffers(0, 1, &mControllerModel.mVertexBuffer, &strideGround, &offsetGround);
-
-		//				(*mContext)->VSSetShader(mControllerModel.vShader, nullptr, 0);
-		//				(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
-		//				/// Pixel Shader(s)
-		//				(*mContext)->PSSetShader(mControllerModel.pShader, nullptr, 0);
-		//				(*mContext)->PSSetShaderResources(0, 1, mTexture.get());
-
-		//				(*mContext)->DrawIndexed((UINT)mControllerModel.mIndexCount, 0, 0);
-		//			}
-
-		//			// Controller 1
-		//			if (rightController.GetIndex() > 0) {
-		//				(*mContext)->OMSetRenderTargets(1, mLeftEye.get(), (*mVRDSView));
-		//				GetMVP(vr::EVREye::Eye_Left, constantData, Math::FromMatrix(poses[rightController.GetIndex()].mDeviceToAbsoluteTracking));
-		//				(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
-		//				(*mContext)->IASetIndexBuffer(mControllerModel.mIndexBuffer, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
-		//				(*mContext)->IASetVertexBuffers(0, 1, &mControllerModel.mVertexBuffer, &strideGround, &offsetGround);
-
-		//				(*mContext)->VSSetShader(mControllerModel.vShader, nullptr, 0);
-		//				(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
-		//				/// Pixel Shader(s)
-		//				(*mContext)->PSSetShader(mControllerModel.pShader, nullptr, 0);
-		//				(*mContext)->PSSetShaderResources(0, 1, mTexture.get());
-
-		//				(*mContext)->DrawIndexed((UINT)mControllerModel.mIndexCount, 0, 0);
-
-		//				(*mContext)->OMSetRenderTargets(1, mRightEye.get(), (*mVRDSView));
-		//				GetMVP(vr::EVREye::Eye_Right, constantData, Math::FromMatrix(poses[rightController.GetIndex()].mDeviceToAbsoluteTracking));
-		//				(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
-		//				(*mContext)->IASetIndexBuffer(mControllerModel.mIndexBuffer, DXGI_FORMAT_R16_UINT, 0); // Indicies are shorts
-		//				(*mContext)->IASetVertexBuffers(0, 1, &mControllerModel.mVertexBuffer, &strideGround, &offsetGround);
-
-		//				(*mContext)->VSSetShader(mControllerModel.vShader, nullptr, 0);
-		//				(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
-		//				/// Pixel Shader(s)
-		//				(*mContext)->PSSetShader(mControllerModel.pShader, nullptr, 0);
-		//				(*mContext)->PSSetShaderResources(0, 1, mTexture.get());
-
-		//				(*mContext)->DrawIndexed((UINT)mControllerModel.mIndexCount, 0, 0);
-		//			}
-		//		}
-
-
-		//	for (int i = 0; i < 2; i++) {
-		//		vr::Texture_t tex = { i == 0 ? (void*)(*mLeftTexture) : (void*)(*mRightTexture), vr::TextureType_DirectX, vr::ColorSpace_Auto };
-		//		vr::VRCompositor()->Submit(i == 0 ? vr::EVREye::Eye_Left : vr::EVREye::Eye_Right, &tex);
-		//	}
-		//}
-
-
-
-		//(*mChain)->Present(0, 0);
 	}
 
 #pragma endregion Public Functions

@@ -40,8 +40,6 @@ namespace RenderEngine {
 		RenderSet mRenderSet;
 		ID3D11Buffer* constantBluffer;
 		RenderShape mControllerModel;
-		vr::RenderModel_t *mControllerRM;
-		matrix4 boxPosition;
 		bool mUseVsync = false;
 
 

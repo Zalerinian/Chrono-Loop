@@ -1,6 +1,6 @@
 //#include "stdafx.h"
 #include "RenderContext.h"
-//#include "renderer.h"
+#include "renderer.h"
 #include "RasterizerStateManager.h"
 #include "ShaderManager.h"
 #include "InputLayoutManager.h"
@@ -17,6 +17,11 @@ void RenderEngine::RenderContext::Apply() {
 	InputLayoutManager::Instance().ApplyLayout(mVertexFormat);
 	ShaderManager::Instance()->ApplyPShader(mPixelShaderFormat);
 	ShaderManager::Instance()->ApplyVShader(mVertexShaderFormat);
+	for (auto it = mTextures.begin(); it != mTextures.end(); ++it) {
+		if (it->second.get() != nullptr) {
+			(*Renderer::Instance()->GetContext())->PSSetShaderResources((UINT)it->first, 1, it->second.get());
+		}
+	}
 }
 
 void RenderEngine::RenderContext::Apply(RenderContext & from) {
@@ -31,6 +36,11 @@ void RenderEngine::RenderContext::Apply(RenderContext & from) {
 	}
 	if (mVertexShaderFormat != from.mVertexShaderFormat) {
 		ShaderManager::Instance()->ApplyVShader(mVertexShaderFormat);
+	}
+	for (auto it = mTextures.begin(); it != mTextures.end(); ++it) {
+		if (it->second.get() != nullptr && from.mTextures[it->first].get() != it->second.get()) {
+			(*Renderer::Instance()->GetContext())->PSSetShaderResources((UINT)it->first, 1, it->second.get());
+		}
 	}
 }
 
