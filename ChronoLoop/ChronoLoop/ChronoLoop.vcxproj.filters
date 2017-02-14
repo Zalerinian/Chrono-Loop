@@ -398,6 +398,9 @@
     <ClCompile Include="Input\KeyboardInput.cpp">
       <Filter>Input\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Common\Common.cpp">
+      <Filter>Common\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">

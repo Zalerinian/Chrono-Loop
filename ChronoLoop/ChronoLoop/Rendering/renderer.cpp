@@ -97,6 +97,16 @@ namespace RenderEngine {
 		(*mMainView)->Release();
 		(*mFactory)->Release();
 		(*mChain)->Release();
+		
+		ID3D11Debug *debug;
+		(*mDevice)->QueryInterface(IID_ID3D11Debug, (void**)&debug);
+		if (debug) {
+			OutputDebugStringA("\n\n\n");
+			debug->ReportLiveDeviceObjects(D3D11_RLDO_FLAGS::D3D11_RLDO_DETAIL);
+			debug->Release();
+			OutputDebugStringA("\n\n\n");
+		}
+		
 		(*mDevice)->Release();
 		mContext.reset();
 		mDSView.reset();

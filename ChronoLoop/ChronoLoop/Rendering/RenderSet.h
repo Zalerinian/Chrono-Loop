@@ -14,5 +14,7 @@ namespace RenderEngine {
 		void AddNode(RenderNode* node, RenderContext *rc);
 		void ClearSet();
 		const RenderNode *GetHead();
+
+		~RenderSet();
 	};
 }

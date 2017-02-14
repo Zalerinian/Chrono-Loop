@@ -319,6 +319,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="ChronoLoop.cpp" />
+    <ClCompile Include="Common\Common.cpp" />
     <ClCompile Include="Common\FileIO\FileIO_General.cpp" />
     <ClCompile Include="Common\FileIO\FileIO_Textures.cpp" />
     <ClCompile Include="Common\Logger.cpp" />
