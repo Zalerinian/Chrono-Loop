@@ -5,7 +5,7 @@ class Transform
 {
 private:
 	matrix4 m_worldMatrix;//World
-	vec4f up,forward,right;//Local//y,z,x
+	vec4f m_up,m_foward,m_right;//Local//y,z,x
 	
 public:
 	//**MOVEMENT**//

@@ -1,86 +1,90 @@
 #include "stdafx.h"
 #include "VrInputManager.h"
-#include <iostream>
+#include "../Common/Logger.h"
 
 VRInputManager* VRInputManager::sInstance = nullptr;
 
-VRInputManager::VRInputManager()
-{
-}
+VRInputManager::VRInputManager() {}
 
-VRInputManager::~VRInputManager()
-{
-}
+VRInputManager::~VRInputManager() {}
 
-void VRInputManager::mInitialize(vr::IVRSystem * _hmd)
-{
+void VRInputManager::mInitialize(vr::IVRSystem * _hmd) {
 	if (nullptr == _hmd) {
-		std::cout << "VR Input is disabled." << std::endl;
+		SystemLogger::GetLog() << "VR Input is disabled." << std::endl;
 		return;
 	}
 	mHmd = _hmd;
 	int rightID = mHmd->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_RightHand);
 	int leftID = mHmd->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand);
-	std::cout << "Right controller ID: " << rightID << std::endl;
-	std::cout << "Left controller ID:  " << leftID << std::endl;
+	SystemLogger::GetLog() << "Right controller ID: " << rightID << std::endl;
+	SystemLogger::GetLog() << "Left controller ID:  " << leftID << std::endl;
 	mRightController.SetUp(rightID, mHmd);
 	mLeftController.SetUp(leftID, mHmd);
 }
 
-void VRInputManager::update()
-{
-	if (!mInitialized) {
-		return;
-	}
-	if (mRightController.GetIndex() < 0)
-	{
+void VRInputManager::update() {
+	if (mRightController.GetIndex() < 0) {
 		mRightController.SetIndex(mHmd->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_RightHand));
-		if (mRightController.GetIndex() > 0)
-			std::cout << "Right Controller reconnected." << std::endl;
+		mRightController.Update();
+		if (mRightController.GetIndex() > 0) {
+			SystemLogger::GetLog() << "Right Controller reconnected." << std::endl;
+		}
+	} else {
+		mRightController.Update();
 	}
-	if (mLeftController.GetIndex() < 0)
-	{
+	if (mLeftController.GetIndex() < 0) {
 		mLeftController.SetIndex(mHmd->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand));
-		if (mLeftController.GetIndex() > 0)
-			std::cout << "Left Controller reconnected." << std::endl;
+		mLeftController.Update();
+		if (mLeftController.GetIndex() > 0) {
+			SystemLogger::GetLog() << "Left Controller reconnected." << std::endl;
+		}
+	} else {
+		mLeftController.Update();
 	}
-	if (mRightController.GetIndex() > 0) {
-		if (mRightController.GetPress(vr::k_EButton_SteamVR_Trigger))
-			std::cout << "Right Trigger Pressed" << std::endl;
-		if (mRightController.GetPress(vr::k_EButton_SteamVR_Touchpad))
-			std::cout << "Right Touchpad Pressed" << std::endl;
-		if (mRightController.GetPress(vr::k_EButton_ApplicationMenu))
-			std::cout << "Right Menu Pressed" << std::endl;
-		if (mRightController.GetPress(vr::k_EButton_Grip))
-			std::cout << "Right Grip Pressed" << std::endl;
-	}
-	if(mLeftController.GetIndex() > 0) {
-		if (mLeftController.GetPress(vr::k_EButton_SteamVR_Trigger))
-			std::cout << "Left Trigger Pressed" << std::endl;
-		if (mLeftController.GetPress(vr::k_EButton_SteamVR_Touchpad))
-			std::cout << "Left Touchpad Pressed" << std::endl;
-		if (mLeftController.GetPress(vr::k_EButton_ApplicationMenu))
-			std::cout << "Left Menu Pressed" << std::endl;
-		if (mLeftController.GetPress(vr::k_EButton_Grip))
-			std::cout << "Left Grip Pressed" << std::endl;
-	}
+
+
+	//if (mRightController.GetIndex() > 0) {
+	//	if (mRightController.GetPress(vr::k_EButton_SteamVR_Trigger)) {
+	//		SystemLogger::GetLog() << "Right Trigger Pressed" << std::endl;
+	//	}
+	//	if (mRightController.GetPress(vr::k_EButton_SteamVR_Touchpad)) {
+	//		SystemLogger::GetLog() << "Right Touchpad Pressed" << std::endl;
+	//	}
+	//	if (mRightController.GetPress(vr::k_EButton_ApplicationMenu)) {
+	//		SystemLogger::GetLog() << "Right Menu Pressed" << std::endl;
+	//	}
+	//	if (mRightController.GetPress(vr::k_EButton_Grip)) {
+	//		SystemLogger::GetLog() << "Right Grip Pressed" << std::endl;
+	//	}
+	//}
+	//if (mLeftController.GetIndex() > 0) {
+	//	if (mLeftController.GetPress(vr::k_EButton_SteamVR_Trigger)) {
+	//		SystemLogger::GetLog() << "Left Trigger Pressed" << std::endl;
+	//	}
+	//	if (mLeftController.GetPress(vr::k_EButton_SteamVR_Touchpad)) {
+	//		SystemLogger::GetLog() << "Left Touchpad Pressed" << std::endl;
+	//	}
+	//	if (mLeftController.GetPress(vr::k_EButton_ApplicationMenu)) {
+	//		SystemLogger::GetLog() << "Left Menu Pressed" << std::endl;
+	//	}
+	//	if (mLeftController.GetPress(vr::k_EButton_Grip)) {
+	//		SystemLogger::GetLog() << "Left Grip Pressed" << std::endl;
+	//	}
+	//}
 }
 
-VRInputManager & VRInputManager::Instance()
-{
+VRInputManager & VRInputManager::Instance() {
 	if (!sInstance)
 		sInstance = new VRInputManager();
 	return *sInstance;
 }
 
-void VRInputManager::Initialize(vr::IVRSystem * _hmd)
-{
+void VRInputManager::Initialize(vr::IVRSystem * _hmd) {
 	if (sInstance)
 		sInstance->mInitialize(_hmd);
 }
 
-void VRInputManager::Shutdown()
-{
+void VRInputManager::Shutdown() {
 	if (sInstance)
 		delete sInstance;
 }

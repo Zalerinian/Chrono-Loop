@@ -4,7 +4,7 @@
 #include<d2d1_1.h>
 #include <dxgi1_2.h>
 #include <openvr.h>
-#include <iostream>
+#include "../Common/Logger.h"
 #include "Mesh.h"
 #include "InputLayoutManager.h"
 #include "RenderShape.h"
@@ -108,7 +108,7 @@ namespace RenderEngine {
 		mFactory.reset();
 		mChain.reset();
 		mDevice.reset();
-		
+
 		(*mTextFactory)->Release();
 		(*mDevice2D)->Release();
 		(*mGIDevice)->Release();
@@ -409,8 +409,8 @@ namespace RenderEngine {
 		if (mVrSystem) {
 			uint32_t texWidth, texHeight;
 			mVrSystem->GetRecommendedRenderTargetSize(&texWidth, &texHeight);
-			std::cout << "According to VR, the view of our headset is " << texWidth << "x" << texHeight << std::endl;
-			std::cout << "The screen will probably look bad. We're just using one render target view currently, and it gets set to the VR headset's recommended resolution when it's plugged in.\n" <<
+			SystemLogger::GetLog() << "According to VR, the view of our headset is " << texWidth << "x" << texHeight << std::endl;
+			SystemLogger::GetLog() << "The screen will probably look bad. We're just using one render target view currently, and it gets set to the VR headset's recommended resolution when it's plugged in.\n" <<
 				"We should account for that later." << std::endl;
 			rtvWidth = (int)texWidth;
 			rtvHeight = (int)texHeight;
@@ -446,7 +446,7 @@ namespace RenderEngine {
 		//char buffer[2048];
 		//for (int i = 0; i < vr::VRRenderModels()->GetRenderModelCount(); ++i) {
 		//	vr::VRRenderModels()->GetRenderModelName((uint32_t)i, buffer, 2048);
-		//	std::cout << buffer << std::endl;
+		//	SystemLogger::GetLog() << buffer << std::endl;
 		//}
 		return true;
 	}
@@ -476,14 +476,12 @@ namespace RenderEngine {
 
 		static const WCHAR sc_helloWorld[] = L"IT JUST WENT OFF";
 
-
 		// Retrieve the size of the render target.
 		D2D1_SIZE_F renderTargetSize = (*mContext2D)->GetSize();
 
 		(*mContext2D)->BeginDraw();
-
 		(*mContext2D)->SetTransform(D2D1::Matrix3x2F::Identity());
-
+		
 		(*mContext2D)->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
 		(*mContext2D)->SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE_ALIASED);
 
@@ -494,12 +492,8 @@ namespace RenderEngine {
 			D2D1::RectF(0, 0, renderTargetSize.width, renderTargetSize.height),
 			(*mBrush)
 		);
-
 		HRESULT hr;
-		hr = (*mContext2D)->EndDraw(&t1, &t2);
-
-
-		
+		hr= (*mContext2D)->EndDraw(&t1, &t2);
 
 		(*mChain)->Present(0, 0);
 	}

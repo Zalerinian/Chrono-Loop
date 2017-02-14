@@ -69,7 +69,7 @@ void Timeline::ClearTimeLine()
 SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object)
 {
 	SnapInfo* info = new SnapInfo();
-	info->mId = _object->GetUniqueId();
+	info->mId = _object->GetUniqueID();
 	info->mTransform = _object->GetTransform();
 	
 
