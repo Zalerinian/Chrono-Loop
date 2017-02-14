@@ -53,10 +53,6 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	}
 	
 	std::shared_ptr<ID3D11Device*> renderingDevice = RenderEngine::Renderer::Instance()->GetDevice();
-	ID3D11Debug *debug;
-
-
-	SystemLogger::GetLog() << "Hello World! " << "We hope you have at least " << 5 << " smiles today." << std::endl;
 
 	// Update everything
 	Update();
@@ -68,6 +64,9 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	vr::VR_Shutdown();
 	vrsys = nullptr;
 
+#if _DEBUG
+	// In debug mode, dump any remaining live DirectX objects. This list should be hopefully small at this point.
+	ID3D11Debug *debug;
 	(*renderingDevice)->QueryInterface(IID_ID3D11Debug, (void**)&debug);
 	if (debug) {
 		OutputDebugStringA("\n\n\n");
@@ -75,7 +74,9 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 		debug->Release();
 		OutputDebugStringA("\n\n\n");
 	}
+#endif
 
+	// Release the Device
 	(*renderingDevice)->Release();
 
 #if _DEBUG || CONSOLE_OVERRIDE

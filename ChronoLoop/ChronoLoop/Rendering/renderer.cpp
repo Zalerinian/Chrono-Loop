@@ -220,6 +220,7 @@ namespace RenderEngine {
 	}
 
 	void Renderer::InitializeObjectNames() {
+#if _DEBUG
 		char deviceName[] = "Main Rendering Device";
 		char contextName[] = "Main Context";
 		char swapchainName[] = "Main Swapchain";
@@ -239,6 +240,7 @@ namespace RenderEngine {
 		(*mDSView)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(dsvName), dsvName);
 		(*mDepthBuffer)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(dbName), dbName);
 		//constantBluffer->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(cbuffName), cbuffName);
+#endif
 	}
 
 	void Renderer::RenderVR() {
@@ -334,7 +336,9 @@ namespace RenderEngine {
 		InitializeDXGIFactory();
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, rtvWidth, rtvHeight);
 		InitializeViews(rtvWidth, rtvHeight);
+#if _DEBUG
 		InitializeObjectNames();
+#endif
 
 		mUseVsync = _vsync;
 
