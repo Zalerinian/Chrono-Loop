@@ -97,7 +97,9 @@ namespace RenderEngine {
 		(*mMainView)->Release();
 		(*mFactory)->Release();
 		(*mChain)->Release();
-		(*mDevice)->Release();
+		// The device's release has been moved to ChronoLoop.cpp
+		constantBluffer->Release();
+		(*mMainViewTexture)->Release();
 		mContext.reset();
 		mDSView.reset();
 		mDepthBuffer.reset();
@@ -217,6 +219,28 @@ namespace RenderEngine {
 		(*mContext)->RSSetViewports(1, &mViewport);
 	}
 
+	void Renderer::InitializeObjectNames() {
+		char deviceName[] = "Main Rendering Device";
+		char contextName[] = "Main Context";
+		char swapchainName[] = "Main Swapchain";
+		char factoryName[] = "3D DXGI Factory";
+		char mainViewName[] = "Backbuffer Render Target View";
+		char mainViewTexName[] = "Backbuffer Texture";
+		char dsvName[] = "Main Depth-Stencil View";
+		char dbName[] = "Main Depth Buffer Texture";
+		char cbuffName[] = "Temporary Rendering Constant Buffer";
+
+		(*mDevice)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(deviceName), deviceName);
+		(*mContext)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(contextName), contextName);
+		(*mChain)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(swapchainName), swapchainName);
+		(*mFactory)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(factoryName), factoryName);
+		(*mMainView)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(mainViewName), mainViewName);
+		(*mMainViewTexture)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(mainViewTexName), mainViewTexName);
+		(*mDSView)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(dsvName), dsvName);
+		(*mDepthBuffer)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(dbName), dbName);
+		//constantBluffer->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(cbuffName), cbuffName);
+	}
+
 	void Renderer::RenderVR() {
 		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 		UpdateTrackedPositions();
@@ -232,7 +256,7 @@ namespace RenderEngine {
 				(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 			}
 			MyBuffer data;
-			GetMVP(currentEye, data, Math::MatrixTranslation(0, 1, -1));
+			GetMVP(currentEye, data, Math::MatrixTranslation(0, 1, -3));
 			(*mContext)->UpdateSubresource(constantBluffer, 0, nullptr, (void*)&data, 0, 0);
 			(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
 
@@ -260,7 +284,7 @@ namespace RenderEngine {
 	}
 
 	void Renderer::RenderNoVR() {
-
+		processRenderSet();
 	}
 
 	void Renderer::processRenderSet() {
@@ -310,16 +334,27 @@ namespace RenderEngine {
 		InitializeDXGIFactory();
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, rtvWidth, rtvHeight);
 		InitializeViews(rtvWidth, rtvHeight);
+		InitializeObjectNames();
 
 		mUseVsync = _vsync;
-
+		mPlane.Load("../Resources/Liftoff.obj", true, ePS_BASIC, eVS_BASIC);
 		mBox.Load("../Resources/Cube.obj", true, ePS_TEXTURED, eVS_TEXTURED);
-		mBox.AddTexture(L"../Resources/cube_texture.png", eTEX_DIFFUSE);
+		mBox.AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 		AddNode(&mBox);
-
+		AddNode(&mPlane);
 
 		CD3D11_BUFFER_DESC desc(sizeof(MyBuffer), D3D11_BIND_CONSTANT_BUFFER);
 		(*mDevice)->CreateBuffer(&desc, nullptr, &constantBluffer);
+
+		if (!mVrSystem) {
+			constantData.model = Math::MatrixTranspose(Math::MatrixTranslation(0, 0, 0));
+			constantData.view.matrix = (DirectX::XMMatrixLookAtRH({ 0, 2, 1, 0 }, { 0, 0, 0, 0 }, { 0, 1, 0, 0 }));
+			constantData.projection.matrix = DirectX::XMMatrixPerspectiveFovRH(70, (float)_height / (float)_width, 0.1f, 1000);
+			constantData.view = Math::MatrixTranspose(constantData.view);
+			constantData.projection = Math::MatrixTranspose(constantData.projection);
+			(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
+			(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
+		}
 
 		//// Print out the render model names available from openVR.
 		//char buffer[2048];
@@ -328,15 +363,13 @@ namespace RenderEngine {
 		//	SystemLogger::GetLog() << buffer << std::endl;
 		//}
 
-
-
-
 		return true;
 	}
 
 	void Renderer::Render() {
 		float color[4] = { 0.3f, 0.3f, 1, 1 };
 		(*mContext)->ClearRenderTargetView((*mMainView), color);
+		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 		if (nullptr == mVrSystem) {
 			RenderNoVR();
 		} else {

@@ -27,14 +27,9 @@ private:
 	std::vector<VertexPosNormTex> mUniqueVerts;
 	std::vector<unsigned short> mIndicies;
 public:
-	// Super temporary shit
-	ID3D11PixelShader *pShader;
-	ID3D11VertexShader *vShader;
-
 	Mesh();
 	Mesh(const char *path);
 	virtual ~Mesh();
-	void loadShaders(char *pixel, char* vertex);
 	bool Load(const char *path);
 	bool Load(vr::RenderModel_t *_model);
 	Triangle *GetTriangles();

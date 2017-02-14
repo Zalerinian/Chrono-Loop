@@ -1,6 +1,7 @@
 #pragma once
 #include <sstream>
 #include <fstream>
+//#include <mutex>
 
 class SystemLogger {
 		
@@ -9,6 +10,7 @@ class SystemLogger {
 	SystemLogger(const char *_path);
 	~SystemLogger();
 	std::ofstream output;
+	bool canPrintTime = true;
 	void PrintTime();
 public:
 
@@ -16,18 +18,21 @@ public:
 		if (nullptr == Info) { 
 			Info = new SystemLogger("../Logs/Log.log");
 		}
+		Info->canPrintTime = true;
 		return *Info;
 	}
 	inline static SystemLogger& GetError() {
 		if (nullptr == Error) {
 			Error = new SystemLogger("../Logs/Error.log");
 		}
+		Error->canPrintTime = true;
 		return *Error;
 	}
 	inline static void CloseLog() { if (Info != nullptr) { delete Info; } }
 	inline static void CloseError() { if (Error != nullptr) { delete Error; } }
-	
-	//SystemLogger &operator<<(wchar_t i);
+
+	//static void lock(SystemLogger& _log);
+
 	SystemLogger& operator<<(const char i);
 	SystemLogger& operator<<(const short i);
 	SystemLogger& operator<<(const int i);
@@ -43,5 +48,7 @@ public:
 	SystemLogger& operator<<(std::ostream& (*pf)(std::ostream&)); // Stream manipulator
 	SystemLogger& operator<<(std::ios& (*pf)(std::ios&));
 	SystemLogger& operator<<(std::ios_base& (*pf)(std::ios_base&));
+	SystemLogger& operator<<(void (*pf)(SystemLogger&));  // For custom manipulators, with which things such as mutex locking can occur.
+	SystemLogger& operator<<(void (SystemLogger::*pf)());	// For custom manipulators, with which things such as mutex locking can occur.
 	SystemLogger& flush();
 };
