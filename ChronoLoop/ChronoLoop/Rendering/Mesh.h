@@ -1,14 +1,9 @@
 #pragma once
-#pragma comment (lib, "d3D11.lib")
-#pragma comment (lib, "dxgi.lib")
-#pragma comment (lib, "d3dcompiler.lib")
-
-#include <d3D11.h>
-#include <directxmath.h>
+#include <string>
 #include <vector>
-#include <fstream>
 //#include "stdafx.h"
 #include "Structures.h"
+#include "RendererDefines.h"
 
 struct Triangle
 {
@@ -18,22 +13,24 @@ struct Triangle
 namespace vr
 {
 	struct RenderModel_t;
-}
-
-class Mesh
+};
+template<typename T>
+class MeshFormat
 {
 private:
 	std::vector<Triangle> mTriangles;
-	std::vector<VertexPosNormTex> mUniqueVerts;
+	std::vector<T> mUniqueVerts;
 	std::vector<unsigned short> mIndicies;
+	RenderEngine::VertFormat mFormat;
+	void CheckFormat();
 public:
 	// Super temporary shit
 	ID3D11PixelShader *pShader;
 	ID3D11VertexShader *vShader;
 
-	Mesh();
-	Mesh(const char *path);
-	virtual ~Mesh();
+	MeshFormat();
+	MeshFormat(const char *path);
+	virtual ~MeshFormat();
 	void loadShaders(char *pixel, char* vertex);
 	bool Load(const char *path);
 	bool Load(vr::RenderModel_t *_model);
@@ -44,9 +41,11 @@ public:
 	void Invert();
 	//void MakePlane();
 	//void MakeViewPlane();
-	VertexPosNormTex *GetVerts();
-	size_t VertSize();
-	unsigned short *GetIndicies();
-	size_t IndicieSize();
+	inline T *GetVerts() { return mUniqueVerts.data(); };
+	inline size_t VertSize() { return mUniqueVerts.size(); };
+	inline unsigned short *GetIndicies() { return mIndicies.data(); };
+	inline size_t IndicieSize() { return mIndicies.size(); };
 };
+
+typedef MeshFormat<VertexPosNormTex> Mesh;
 

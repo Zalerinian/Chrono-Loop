@@ -266,9 +266,6 @@
     <ClCompile Include="ChronoLoop.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rendering\Mesh.cpp">
-      <Filter>Rendering\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Messager\Messager.cpp">
       <Filter>Messanger\Source Files</Filter>
     </ClCompile>

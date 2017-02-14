@@ -7,22 +7,47 @@
 #include "../Common/FileIO.h"
 #include <openvr.h>
 
-using namespace Concurrency;
-
-Mesh::Mesh()
+template<typename T>
+void MeshFormat<T>::CheckFormat()
 {
+	if (typeid(T) == typeid(VertexPos))
+		mFormat = RenderEngine::eVERT_POS;
+	else if (typeid(T) == typeid(VertexPosColor))
+		mFormat = RenderEngine::eVERT_POSCOLOR;
+	else if (typeid(T) == typeid(VertexPosTex))
+		mFormat = RenderEngine::eVERT_POSTEX;
+	else if (typeid(T) == typeid(VertexPosNormTex))
+		mFormat = RenderEngine::eVERT_POSNORMTEX;
+	else if (typeid(T) == typeid(VertexPosNormTanTex))
+		mFormat = RenderEngine::eVERT_POSNORMTANTEX;
+	else if (typeid(T) == typeid(VertexPosBoneWeight))
+		mFormat = RenderEngine::eVERT_POSBONEWEIGHT;
+	else if (typeid(T) == typeid(VertexPosBoneWeightNormTex))
+		mFormat = RenderEngine::eVERT_POSBONEWEIGHTNORMTEX;
+	else if (typeid(T) == typeid(VertexPosBoneWeightNormTanTex))
+		mFormat = RenderEngine::eVERT_POSBONEWEIGHTNORMTANTEX;
 }
 
-Mesh::Mesh(const char * path)
+template<typename T>
+MeshFormat<T>::MeshFormat()
 {
+	CheckFormat();
+}
+
+template<typename T>
+MeshFormat<T>::MeshFormat(const char * path)
+{
+	CheckFormat();
 	this->Load(path);
 }
-Mesh::~Mesh()
+template<typename T>
+MeshFormat<T>::~MeshFormat()
 {
 	this->Clear();
 }
 
-void Mesh::loadShaders(char * pixel, char * vertex)
+template<typename T>
+void MeshFormat<T>::loadShaders(char * pixel, char * vertex)
 {
 	char *bytecode = nullptr;
 	int bytelength;
@@ -33,7 +58,8 @@ void Mesh::loadShaders(char * pixel, char * vertex)
 	(*RenderEngine::Renderer::Instance()->GetDevice())->CreateVertexShader(bytecode, bytelength, nullptr, &vShader);
 }
 
-bool Mesh::Load(const char * path)
+template<typename T>
+bool MeshFormat<T>::Load(const char * path)
 {
 	this->Clear();
 	std::vector<VertexPosNormTex> Verts;
@@ -61,7 +87,7 @@ bool Mesh::Load(const char * path)
 				sscanf_s(line.c_str(), "vn %f %f %f\n", &normal.x, &normal.y, &normal.z);
 				norms.push_back(normal);
 			}
-			else if(line[1] == ' ') {
+			else if (line[1] == ' ') {
 				vec4f vertex;
 				sscanf_s(line.c_str(), "v %f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
 				verts.push_back(vertex);
@@ -76,13 +102,46 @@ bool Mesh::Load(const char * path)
 			}
 			for (int i = 0; i < 3; i++)
 			{
-				VertexPosNormTex temp;
-				temp.Position = verts[vertexIndex[i] - 1];
-				temp.Position.w = 1;
-				//temp.color = DirectX::XMFLOAT4(i == 0, i == 1, i == 3);
-				temp.Normal = norms[normalIndex[i] - 1];
-				temp.UV = uvs[uvIndex[i] - 1];
-				temp.UV.z = 0;
+				T temp;
+				switch (mFormat)
+				{
+				case RenderEngine::eVERT_POSNORMTANTEX:
+					temp.Tangent = vec4f();
+					temp.Determinant = 0;
+				case RenderEngine::eVERT_POSNORMTEX:
+					temp.Normal = norms[normalIndex[i] - 1];
+					temp.Normal.w = 0;
+				case RenderEngine::eVERT_POSTEX:
+					temp.UV = uvs[uvIndex[i] - 1];
+					temp.UV.z = 0;
+					temp.UV.w = 0;
+				case RenderEngine::eVERT_POS:
+					temp.Position = verts[vertexIndex[i] - 1];
+					temp.Position.w = 1;
+					break;
+				case RenderEngine::eVERT_POSCOLOR:
+					temp.Position = verts[vertexIndex[i] - 1];
+					temp.Position.w = 1;
+					temp.Color = vec4f(0, 0, 0, 0);
+					break;
+				case RenderEngine::eVERT_POSBONEWEIGHTNORMTANTEX:
+					temp.Tangent = vec4f();
+					temp.Determinant = 0;
+				case RenderEngine::eVERT_POSBONEWEIGHTNORMTEX:
+					temp.Normal = norms[normalIndex[i] - 1];
+					temp.Normal.w = 0;
+					temp.UV = uvs[uvIndex[i] - 1];
+					temp.UV.z = 0;
+					temp.UV.w = 0;
+				case RenderEngine::eVERT_POSBONEWEIGHT:
+					temp.Position = verts[vertexIndex[i] - 1];
+					temp.Position.w = 1;
+					temp.BoneIndices = vec4i(0, 0, 0, 0);
+					temp.BoneWeights = vec4f(1, 0, 0, 0);
+					break;
+				default:
+					break;
+				}
 				Ind.push_back((unsigned short)Verts.size());
 				Verts.push_back(temp);
 			}
@@ -94,15 +153,16 @@ bool Mesh::Load(const char * path)
 	return true;
 }
 
-bool Mesh::Load(vr::RenderModel_t * _model)
+template<typename T>
+bool MeshFormat<T>::Load(vr::RenderModel_t * _model)
 {
 	for (unsigned int i = 0; i < _model->unVertexCount; i++)
 	{
-		VertexPosNormTex temp;
+		T temp;
 		for (int j = 0; j < 3; j++)
 			temp.Position.xyzw[j] = _model->rVertexData[i].vPosition.v[j];
 		temp.Position.w = 1;
-		
+
 		mUniqueVerts.push_back(temp);
 	}
 	for (unsigned int i = 0; i < _model->unTriangleCount * 3; i++)
@@ -112,7 +172,8 @@ bool Mesh::Load(vr::RenderModel_t * _model)
 	return true;
 }
 
-Triangle * Mesh::GetTriangles()
+template<typename T>
+Triangle * MeshFormat<T>::GetTriangles()
 {
 	if (mTriangles.size() != mIndicies.size() / 3)
 	{
@@ -128,7 +189,7 @@ Triangle * Mesh::GetTriangles()
 	return mTriangles.data();
 }
 
-//bool Mesh::Load(std::vector<Vertex>* vecArray, std::vector<Bone>* boneArray, Animation * anim)
+//bool MeshFormat<T>::Load(std::vector<Vertex>* vecArray, std::vector<Bone>* boneArray, Animation * anim)
 //{
 //	this->Clear();
 //	m_anim = *anim;
@@ -172,7 +233,7 @@ Triangle * Mesh::GetTriangles()
 //}
 
 
-//bool Mesh::LoadBin(char* path)
+//bool MeshFormat<T>::LoadBin(char* path)
 //{
 //	LoadFBX(path, false);
 //	std::ifstream file;
@@ -302,14 +363,16 @@ Triangle * Mesh::GetTriangles()
 //	return false;
 //}
 
-void Mesh::Clear()
+template<typename T>
+void MeshFormat<T>::Clear()
 {
 	mUniqueVerts.clear();
 	mIndicies.clear();
 	mTriangles.clear();
 }
 
-void Mesh::Invert()
+template<typename T>
+void MeshFormat<T>::Invert()
 {
 	for (unsigned int i = 0; i < mIndicies.size() / 3; i++)
 	{
@@ -319,7 +382,7 @@ void Mesh::Invert()
 	}
 }
 
-//void Mesh::MakePlane()
+//void MeshFormat<T>::MakePlane()
 //{
 //	this->Clear();
 //
@@ -344,7 +407,7 @@ void Mesh::Invert()
 //	totalVerts = Indicies.size();
 //}
 
-//void Mesh::MakeViewPlane()
+//void MeshFormat<T>::MakeViewPlane()
 //{
 //	this->Clear();
 //
@@ -368,23 +431,3 @@ void Mesh::Invert()
 //		Indicies.push_back(cubeIndices[i]);
 //	totalVerts = Indicies.size();
 //}
-
-VertexPosNormTex * Mesh::GetVerts()
-{
-	return mUniqueVerts.data();
-}
-
-size_t Mesh::VertSize()
-{
-	return mUniqueVerts.size();
-}
-
-unsigned short * Mesh::GetIndicies()
-{
-	return mIndicies.data();
-}
-
-size_t Mesh::IndicieSize()
-{
-	return mIndicies.size();
-}
