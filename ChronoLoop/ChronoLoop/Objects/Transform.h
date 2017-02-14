@@ -5,7 +5,7 @@ class Transform
 {
 private:
 	matrix4 m_worldMatrix;//World
-	vec4f up,forward,right;//Local//y,z,x
+	vec4f m_up,m_foward,m_right;//Local//y,z,x
 	
 public:
 	//**MOVEMENT**//
@@ -17,22 +17,13 @@ public:
 	void					Scale(float x, float y, float z) { this->m_worldMatrix = MatrixScale(x, y, z); };
 
 	//**GETTERS**//
-	const vec4f* GetXAxis() 
-	{
-		return reinterpret_cast<const vec4f*>(&m_worldMatrix.first);
-	};
-	const vec4f* GetYAxis() 
-	{
-		return reinterpret_cast<const vec4f*>(&m_worldMatrix.second);
-	};
-	const vec4f* GetZAxis() 
-	{
-		return reinterpret_cast<const vec4f*>(&m_worldMatrix.third);
-	};
-	const vec4f* GetPosition() 
-	{
-		return reinterpret_cast<const vec4f*>(&m_worldMatrix.fourth);
-	};
+	const vec4f*			GetXAxis() { return reinterpret_cast<vec4f*> (&m_worldMatrix.first); };
+	const vec4f*			GetYAxis() { return reinterpret_cast<vec4f*> (&m_worldMatrix.second); };
+	const vec4f*			GetZAxis() { return reinterpret_cast<vec4f*> (&m_worldMatrix.third); };
+	const vec4f*			GetPosition() { return reinterpret_cast<vec4f*> (&m_worldMatrix.fourth); };
+	matrix4&					GetMatrix() { return m_worldMatrix; };
+
+	void					SetMatrix(matrix4 _mat) { m_worldMatrix = _mat; };
 
 	//**OPERATORS**//
 	Transform const*		operator=(Transform const _t);

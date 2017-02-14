@@ -1,71 +1,62 @@
 #pragma once
+#include "..\Common\Math.h"
 class BaseObject;
 class Transform;
-struct matrix4;
-
 
 enum ComponentType
 {
-	eCOMPONENT_Unknown,
-	eCOMPONENT_Code,
-	eCOMPONENT_Collider,
-	eCOMPONENT_AudioEmitter,
-	eCOMPONENT_AudioListener,
-	eCOMPONENT_UI
+	Code,
+	PhysicsCollider,
+	AudioEmitter,
+	AudioListener,
+	UI
 };
+
 class Component
 {
+	friend class Physics;
 protected:
-	bool isEnable;
-	ComponentType type;
+	bool mIsEnabled;
 
-	BaseObject* object = nullptr;
 public:
-	bool isEnabled() { return isEnable; }
-	void Disable() { isEnable = false; }
-	void Enable() { isEnable = true; }
-	void Update();
-	void Destroy();
+	BaseObject* object = nullptr;
+	ComponentType type;
+	bool isEnabled() { return mIsEnabled; }
+	void Disable() { mIsEnabled = false; }
+	void Enable() { mIsEnabled = true; }
+	virtual void Update() {}
+	virtual void Destroy() {}
+	Transform& GetTransform();
 	Transform& GetTransform() const;
 };
 
 class Listener : public Component
 {
 public:
-
-	void Update();
-	void Destroy();
-
+	//void Update();
 };
 
 class Emitter : public Component
 {
 public:
-	void MakeEvent(long _id);
+	void Play();
+	void Pause();
+	void Stop();
 
 	void Update();
 	void Destroy();
 };
 
-/*
-business entity- gmail, twitter, facebook, steam account
-art, audio, marketing, designer students ?
+class Collider : public Component
+{
+public:
+	bool mIsCube, mIsSphere, mIsPlane, mShouldMove;
+	vec4f mCubeMax, mCubeMin, mPlaneNorm, mVelocity, mAcceleration;
+	float mPlaneOffset, mSphereRadius, mMass, mRadius;
 
-first initial last name, password lower case
-gdserv.fullsail.com:8080
-install doc, follow it
-
-
-
-
-*/
-
-
-
-
-
-
-
-
-
-
+	vec4f GetPos();
+	void SetPos(vec4f _newPos);
+	//void CalcObjAcceleration(vec4f& _force);
+	//void CalcObjVelocity(vec4f& _force, float _dt);
+	//void CalcObjPosition(vec4f& _force, float _dt);
+};
