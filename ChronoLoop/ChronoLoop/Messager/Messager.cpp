@@ -1,62 +1,91 @@
-//#include "stdafx.h"
 #include "Messager.h"
 
-Messager* Messager::mMessenger = nullptr;
+Messager* Messager::mMessager = nullptr;
+//std::priority_queue<Message*, std::vector<Message*>, cmp> Messager::msgQueue = std::priority_queue<Message*, std::vector<Message*>, cmp>();
+std::queue<Message*> Messager::msgQueue = std::queue<Message*>();
 bool Messager::death = false;
-std::queue<void*> Messager::msgQueue = std::queue<void*>();
 
-template<class... Args>
 Messager::Messager()
 {
 	Initialize();
 }
-
 Messager::~Messager()
 {
 	death = true;
 }
 
-Messager& Messager::Instance()
-{
-	if (!mMessenger)
-		mMessenger = new Messager();
-
-	return *mMessenger;
-}
-template<class... Args>
-void Messager::Destroy()
-{
-	if (mMessenger)
-		delete mMessenger;
-}
-
-template<class... Args>
 void Messager::Initialize()
 {
-	if (!mMessenger)
-		mMessenger = this;
-	
-	std::thread thrd(&Messager::Process<Args...>, this);
+	if (!mMessager)
+		mMessager = this;
+
+	std::thread thrd(&Messager::Process, this);
 	thrd.detach();
 }
+Messager& Messager::Instance()
+{
+	if (!mMessager)
+		mMessager = new Messager();
 
-void Messager::SendInMessage(void* _msg)
+	return *mMessager;
+}
+void Messager::Destroy()
+{
+	if (mMessager)
+		delete mMessager;
+}
+
+
+void Messager::SendInMessage(Message* _msg)
 {
 	msgQueue.push(_msg);
 }
-//?Need? just call the function needed?
-template<class... Args>
-void Messager::SendOutMessage(Message<Args...>* _msg)
+void Messager::Process()
 {
+	while (!death)
+	{
+		if (msgQueue.empty())
+			continue;
 
+		Message* tempMsg = msgQueue.front();
+		ProcessMessage(tempMsg);
+		msgQueue.pop();
+
+		delete tempMsg;
+	}
 }
 
-template<class... Args>
-void Messager::ProcessSound(Message<Args...>* _msg)
+void Messager::ProcessMessage(Message* _msg)
+{
+	switch (_msg->mType)
+	{
+	case msgTypes::mSound:
+	{
+		ProcessSound(_msg);
+	}
+	break;
+	case msgTypes::mRender:
+	{
+		ProcessRender(_msg);
+	}
+	break;
+	case msgTypes::mInput:
+	{
+		ProcessInput(_msg);
+	}
+	break;
+	case msgTypes::mPhysics:
+	{
+		ProcessPhysics(_msg);
+	}
+	break;
+	}
+}
+void Messager::ProcessSound(Message* _msg)
 {
 	switch (_msg->smType)
 	{
-	case INITAILIZE_Audio:
+	case INITIALIZE_Audio:
 	{
 		audio.Initialize();
 	}
@@ -73,100 +102,69 @@ void Messager::ProcessSound(Message<Args...>* _msg)
 	break;
 	case ADD_Listener:
 	{
-		TupleSplitter::apply(&AudioWrapper::AddListener, _msg->need);
+
 	}
 	break;
 	case REMOVE_Listener:
 	{
-		TupleSplitter::apply(&AudioWrapper::RemoveListener, _msg->need);
+
 	}
 	break;
 	case ADD_Emitter:
 	{
-		TupleSplitter::apply(&AudioWrapper::AddEmitter, _msg->need);
+
 	}
 	break;
 	case REMOVE_Emitter:
 	{
-		TupleSplitter::apply(&AudioWrapper::RemoveEmitter, _msg->need);
+
+	}
+	break;
+	case MAKEEVENT_Event:
+	{
+
+	}
+	break;
+	case MAKEEVENT_Loc:
+	{
+		m_LocEvent* lEvent = (m_LocEvent*)(_msg->mNeed);
+		audio.MakeEventAtLocation(lEvent->mID, lEvent->mPos);
+	}
+	break;
+	case MAKEEVENT_Listener:
+	{
+
 	}
 	break;
 	case SET_BasePath:
 	{
-		TupleSplitter::apply(&AudioWrapper::SetBasePath, _msg->need);
+		m_Path* pth = (m_Path*)(_msg->mNeed);
+		audio.SetBasePath(pth->mPath);
 	}
 	break;
 	case ADD_Soundbank:
 	{
-		TupleSplitter::apply(&AudioWrapper::LoadSoundBank, _msg->need);
+		m_Path* pth = (m_Path*)(_msg->mNeed);
+		audio.LoadSoundBank(pth->mPath);
 	}
 	break;
 	case REMOVE_Soundbank:
 	{
-		TupleSplitter::apply(&AudioWrapper::UnloadSoundBank, _msg->need);
+		m_Path* pth = (m_Path*)(_msg->mNeed);
+		audio.UnloadSoundBank(pth->mPath);
 	}
 	break;
 	}
 }
-template<class... Args>
-void Messager::ProcessRender(Message<Args...>* _msg)
+void Messager::ProcessRender(Message* _msg)
 {
 
 }
-template<class... Args>
-void Messager::ProcessPhysics(Message<Args...>* _msg)
+void Messager::ProcessPhysics(Message* _msg)
 {
 
 }
-template<class... Args>
-void Messager::ProcessInput(Message<Args...>* _msg)
+void Messager::ProcessInput(Message* _msg)
 {
 
-}
-
-template<class... Args>
-void Messager::ProcessMessage(Message<Args...>* _msg)
-{
-	switch (_msg->typ)
-	{
-	case messageTypes::SoundEngine:
-	{
-		ProcessSound(_msg);
-	}
-	break;
-	case messageTypes::Render:
-	{
-		ProcessRender(_msg);
-	}
-	break;
-	case messageTypes::Input:
-	{
-		ProcessInput(_msg);
-	}
-	break;
-	case messageTypes::Science:
-	{
-		ProcessPhysics(_msg);
-	}
-	break;
-	}
-}
-
-template<class... Args>
-void Messager::Process()
-{
-	//While alive, process messages in the queue
-	while (!death)
-	{
-		if (msgQueue.empty())
-			continue;
-
-		Message<Args...> * getMsg = nullptr;
-
-		void* temp = msgQueue.front();
-		getMsg = (Message<Args...>*)(temp);
-		ProcessMessage(getMsg);
-		msgQueue.pop();
-		delete getMsg;
-	}
 }

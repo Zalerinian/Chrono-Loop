@@ -66,8 +66,8 @@ bool AudioWrapper::Initialize()
 void AudioWrapper::Shutdown()
 {
 	//Un-register everything and terminate
-	SoundEngine::UnregisterAllGameObj();
-	SOUNDENGINE_DLL::Term();
+	//SoundEngine::UnregisterAllGameObj();
+	//SOUNDENGINE_DLL::Term();
 	mIsInitialize = false;
 }
 
@@ -202,7 +202,7 @@ bool AudioWrapper::RemoveEmitter(const Emitter * _emitter)
 }
 
 //-------------EVENTS-----------------------------------------------
-bool AudioWrapper::MakeEvent(AudioEvent _id, vec4f * _pos)
+bool AudioWrapper::MakeEventAtLocation(AudioEvent _id, vec4f * _pos)
 {
 	static long dummyID = -1;
 	++dummyID;
@@ -228,7 +228,7 @@ bool AudioWrapper::MakeEvent(AudioEvent _id, const Emitter * _emitter)
 	return true;
 }
 
-bool AudioWrapper::MakeEvent(AudioEvent _id, unsigned int _listenerID)
+bool AudioWrapper::MakeEventAtListener(AudioEvent _id, unsigned int _listenerID)
 {
 	if ((mListeners.size() - _listenerID) < 0)
 		return false;

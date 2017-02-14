@@ -44,9 +44,9 @@ typedef __w64 unsigned int AudioEvent;			///< Integer (unsigned) type for pointe
 		bool RemoveEmitter(const Emitter * _emitter);
 
 		//Posts an event at a pos, emitter location, or near a listener.
-		bool MakeEvent(AudioEvent _id, vec4f* _pos);
+		bool MakeEventAtLocation(AudioEvent _id, vec4f* _pos);
 		bool MakeEvent(AudioEvent _id, const Emitter * _emitter);
-		bool MakeEvent(AudioEvent _id, unsigned int _listenerID = 0);
+		bool MakeEventAtListener(AudioEvent _id, unsigned int _listenerID = 0);
 
 		//Set soundbank path(s)
 		void SetBasePath(const wchar_t* _strPath);

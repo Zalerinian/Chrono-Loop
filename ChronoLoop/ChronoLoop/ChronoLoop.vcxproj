@@ -232,6 +232,7 @@
     <ClInclude Include="Rendering\Structures.h" />
     <ClInclude Include="Rendering\SystemInitializer.h" />
     <ClInclude Include="Sound\SoundEngine.h" />
+    <ClInclude Include="Sound\Sound\Soundbanks\Wwise_IDs.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\DXTK\BC.cpp">

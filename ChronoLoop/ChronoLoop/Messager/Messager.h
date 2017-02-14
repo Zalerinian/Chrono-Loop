@@ -1,203 +1,157 @@
 #pragma once
 #include "..\Sound\SoundEngine.h"
+#include "..\Sound\Sound\Soundbanks\Wwise_IDs.h"
 #include <queue>
 #include <vector>
 #include <thread>
 #include <cstdarg>
 
-//TUPLE voodoo
-namespace TupleSplitter {
-	template<typename F, typename Tuple, size_t ...S >
-	decltype(auto) apply_tuple_impl(F&& fn, Tuple&& t, std::index_sequence<S...>) {
-		return std::initializer_list<int>{
-			(std::forward<F>(fn)(std::get<S>(std::forward<Tuple>(t))), void(), 0)...
-		};
-			//std::forward<F>(fn)(std::get<S>(std::forward<Tuple>(t))...);
-	}
+enum msgTypes {NONE = -1, mSound, mRender, mInput, mPhysics};
 
-	template<typename F, typename Tuple>
-	decltype(auto) apply(F&& fn, Tuple&& t) {
-		std::size_t constexpr tSize
-			= std::tuple_size<typename std::remove_reference<Tuple>::type>::value;
-		return apply_tuple_impl(std::forward<F>(fn),
-			std::forward<Tuple>(t),
-			std::make_index_sequence<tSize>());
-		// I'm at least 15% sure that the make_index_sequence bit is for making the
-		// third template argument valid, as technically the value itself is never
-		// used in the function, but it is used as part of the template.
+enum soundMsg {INITIALIZE_Audio, SHUTDOWN_Audio, UPDATE_Audio, ADD_Listener, REMOVE_Listener,
+				ADD_Emitter, REMOVE_Emitter, MAKEEVENT_Loc, MAKEEVENT_Listener, MAKEEVENT_Event,
+				SET_BasePath, ADD_Soundbank, REMOVE_Soundbank};
+enum renderMsg {};
+enum inputMsg {};
+enum physicsMsg {};
 
-		// std::forward makes a regular lvalue into an rvalue, but an lvalue reference
-		// is unchanged.
-
-		// std::get is used to get a value from a tuple. Since it can hold any number
-		// of any number of types, you can't index into it like a regular array or
-		// anything. std::get expects an index as a template argument for which
-		// value to get.
-	}
-}
-
-enum messageTypes {
-	NONE = -1,
-	SoundEngine,
-	Render,
-	Input,
-	Science
-	
-};
-
-enum soundMessages
-{
-	//SoundEngine
-	INITAILIZE_Audio,
-	SHUTDOWN_Audio,
-	UPDATE_Audio,
-	ADD_Listener,
-	REMOVE_Listener,
-	ADD_Emitter,
-	REMOVE_Emitter,
-	SET_BasePath,
-	ADD_Soundbank,
-	REMOVE_Soundbank
-};
-enum renderMessages
-{
-
-};
-enum inputMessages
-{
-
-};
-enum physicsMessages
-{
-
-};
-
-template<class... Args>
 struct Message
 {
-private:
 public:
+	long mAge;
+	bool mIsPriority;
 
-	long age;
-	bool isPriority;
-
-	messageTypes typ;
+	msgTypes mType;
 	union
 	{
 		int num;
-		soundMessages smType;
-		renderMessages rmTypes;
-		inputMessages imTypes;
-		physicsMessages pmTypes;
+		soundMsg smType;
+		renderMsg rmTypes;
+		inputMsg imTypes;
+		physicsMsg pmTypes;
 	};
-	std::tuple<Args...> need;
 
+	//Pointer to the struct *ugh*
+	void * mNeed;
 
 	Message()
 	{
-		age = 0;
-		isPriority = false;
+		mNeed = nullptr;
 	}
-	Message(Message<Args...>& _msg)
+	Message(Message& _msg)
 	{
-		age = _msg.age;
-		isPriority = _msg.isPriority;
-		typ = _msg.typ;
-		need = _msg.need;
+
+	}
+	Message(msgTypes _type, int _secondtype, long _age, bool _priority, void* _shit = nullptr)
+	{
+		mType = _type;
+		num = _secondtype;
+		mAge = _age;
+		mIsPriority = _priority;
+		mNeed = _shit;
 	}
 
-	Message(messageTypes _type, int _secondtype, long _age, bool _priority, Args&&... _args)
-	{
-		typ = _type;
-		num = _secondtype;
-		age = 0;
-		isPriority = _priority;
-		need = std::make_tuple(_args...);
-	}
 #pragma region Operator Overrides
 
-	bool operator==(const Message& _msg)
+	//Is older
+	bool operator<(Message& _other)
 	{
-		return (typ == _msg.typ) && (num == _msg.num) && (need = _msg.need) && (age == _msg.age) && (isPriority == _msg.isPriority);
+		return mAge < _other.mAge;
 	}
-	bool operator==(Message& _msg)
+	bool operator<(const Message& _other)
 	{
-		return (typ == _msg.typ) && (num == _msg.num) && (need = _msg.need) && (age == _msg.age) && (isPriority == _msg.isPriority);
+		return mAge < _other.mAge;
+	}
+	bool operator<=(Message& _other)
+	{
+		return mAge <= _other.mAge;
+	}
+	bool operator<=(const Message& _other)
+	{
+		return mAge <= _other.mAge;
+	}
+	//Is younger
+	bool operator>(Message& _other)
+	{
+		return mAge > _other.mAge;
+	}
+	bool operator>(const Message& _other)
+	{
+		return mAge > _other.mAge;
+	}
+	bool operator>=(Message& _other)
+	{
+		return mAge >= _other.mAge;
+	}
+	bool operator>=(const Message& _other)
+	{
+		return mAge >= _other.mAge;
 	}
 
-	//Compares if age is less, determines if its older
-	bool operator<(const Message& _msg)
+	bool operator==(Message& _other)
 	{
-		return (age < _msg.age)
+		return true;
 	}
-	bool operator<(Message& _msg)
+	bool operator==(const Message& _other)
 	{
-		return (age < _msg.age)
-	}
-
-	//Compares if age is greater, determines if its younger
-	bool operator>(const Message& _msg)
-	{
-		return (age > _msg.age)
-	}
-	bool operator>(Message& _msg)
-	{
-		return (age > _msg.age)
+		return true;
 	}
 
 #pragma endregion
 
 };
-struct CMP {
-
-	template<class... Args>
-	bool operator()(const void* _r, const void* _l)
+struct cmp
+{
+	bool operator()(Message* _l, Message* _r)
 	{
 		return true;
 	}
 };
 
-
 class Messager
 {
-	static Messager* mMessenger;
+	static Messager* mMessager;
 
 private:
 	AudioWrapper audio;
 
-	static std::queue<void*> msgQueue;
+	//static std::priority_queue<Message*, std::vector<Message*>, cmp> msgQueue;
+	static std::queue<Message*> Messager::msgQueue;
 	static bool death;
-	static void(*proc)(void);
 
+	void ProcessMessage(Message* _msg);
+
+	void ProcessSound(Message* _msg);
+	void ProcessRender(Message* _msg);
+	void ProcessPhysics(Message* _msg);
+	void ProcessInput(Message* _msg);
 public:
-	template<class... Args>
 	Messager();
 	~Messager();
 	static Messager& Instance();
-	template<class... Args>
 	static void Destroy();
-	Messager* GetMessenger() { return mMessenger; }
 
-	void SendInMessage(void* _msg);
-	template<class... Args>
-	void SendOutMessage(Message<Args...>* _msg);
-
-	template<class... Args>
+	void SendInMessage(Message* _msg);
 	void Initialize();
-
-	template<class... Args>
 	void Process();
-
-private:
-	template<class... Args>
-	void ProcessMessage(Message<Args...>* _msg);
-
-	template<class... Args>
-	void ProcessSound(Message<Args...>* _msg);
-	template<class... Args>
-	void ProcessRender(Message<Args...>* _msg);
-	template<class... Args>
-	void ProcessPhysics(Message<Args...>* _msg);
-	template<class... Args>
-	void ProcessInput(Message<Args...>* _msg);
 };
+
+//Bullshit Structs
+
+struct m_Path
+{
+	const wchar_t* mPath;
+
+	m_Path() { mPath = nullptr; }
+	m_Path(const wchar_t* _path) { mPath = _path; }
+};
+
+struct m_LocEvent
+{
+	AudioEvent mID;
+	vec4f* mPos;
+
+	m_LocEvent() { }
+	m_LocEvent(AudioEvent _id, vec4f* _pos) { mID = _id; mPos = _pos; }
+};
+
