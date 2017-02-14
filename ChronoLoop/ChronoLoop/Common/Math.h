@@ -12,6 +12,8 @@ struct vec4i {
 		};
 		int xyzw[4];
 	};
+	vec4i() { x = y = z = w = 0; };
+	vec4i(int _x, int _y, int _z, int _w) { x = _x; y = _y; z = _z; w = _w; }
 };
 
 struct vec2f {

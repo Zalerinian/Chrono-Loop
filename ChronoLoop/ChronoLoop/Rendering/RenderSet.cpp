@@ -14,7 +14,7 @@ namespace RenderEngine {
 	void RenderSet::AddNode(RenderNode *node, RenderContext* rc) {
 		if (node->mType == RenderNode::RenderNodeType::Shape) {
 			if (((RenderShape*)node)->mIndexCount == 0) {
-				OutputDebugString(L"Attempting to set render shape with 0 indices!\n");
+//				OutputDebugString(L"Attempting to set render shape with 0 indices!\n");
 				Debug::SetBreakpoint();
 			}
 		}
