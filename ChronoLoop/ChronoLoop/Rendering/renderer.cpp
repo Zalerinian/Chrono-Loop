@@ -337,17 +337,18 @@ namespace RenderEngine {
 		InitializeObjectNames();
 
 		mUseVsync = _vsync;
-
+		mPlane.Load("../Resources/Liftoff.obj", true, ePS_BASIC, eVS_BASIC);
 		mBox.Load("../Resources/Cube.obj", true, ePS_TEXTURED, eVS_TEXTURED);
 		mBox.AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 		AddNode(&mBox);
+		AddNode(&mPlane);
 
 		CD3D11_BUFFER_DESC desc(sizeof(MyBuffer), D3D11_BIND_CONSTANT_BUFFER);
 		(*mDevice)->CreateBuffer(&desc, nullptr, &constantBluffer);
 
 		if (!mVrSystem) {
 			constantData.model = Math::MatrixTranspose(Math::MatrixTranslation(0, 0, 0));
-			constantData.view.matrix = (DirectX::XMMatrixLookAtRH({ 0, 2, 0.3f, 0 }, { 0, 0, 0, 0 }, { 0, 1, 0, 0 }));
+			constantData.view.matrix = (DirectX::XMMatrixLookAtRH({ 0, 2, 1, 0 }, { 0, 0, 0, 0 }, { 0, 1, 0, 0 }));
 			constantData.projection.matrix = DirectX::XMMatrixPerspectiveFovRH(70, (float)_height / (float)_width, 0.1f, 1000);
 			constantData.view = Math::MatrixTranspose(constantData.view);
 			constantData.projection = Math::MatrixTranspose(constantData.projection);
@@ -355,16 +356,12 @@ namespace RenderEngine {
 			(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
 		}
 
-
 		//// Print out the render model names available from openVR.
 		//char buffer[2048];
 		//for (int i = 0; i < vr::VRRenderModels()->GetRenderModelCount(); ++i) {
 		//	vr::VRRenderModels()->GetRenderModelName((uint32_t)i, buffer, 2048);
 		//	SystemLogger::GetLog() << buffer << std::endl;
 		//}
-
-
-
 
 		return true;
 	}
