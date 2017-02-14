@@ -1,9 +1,12 @@
 #pragma once
 #include <d3d11.h>
+#include <d2d1.h>
+#include <dwrite.h>
 #include "../Common/Math.h"
 #include <memory>
 #include <vector>
 #include <openvr.h>
+#include <d2d1_1.h>
 #include "Mesh.h"
 #include "RenderSet.h"
 #include "RenderShape.h"
@@ -40,10 +43,27 @@ namespace RenderEngine {
 		bool mUseVsync = false;
 
 
+		std::vector<RenderNode*> mNodes;
+
+		//Pat Added
+		//DirectWrite Drawing componets
+		std::shared_ptr<ID2D1Factory1*> mTextFactory;
+		std::shared_ptr<ID2D1Device*> mDevice2D;
+		std::shared_ptr<IDXGIDevice*> mGIDevice;
+		std::shared_ptr<ID2D1DeviceContext*>mContext2D;
+		std::shared_ptr<IDWriteFactory*> mDWrite;
+		std::shared_ptr<IDWriteTextFormat*>mTextformat;
+		std::shared_ptr<ID2D1DCRenderTarget*> m2DRenderTarget;
+		std::shared_ptr<ID2D1SolidColorBrush*>mBrush;
+		std::shared_ptr<ID2D1Bitmap1*>mBitmap;
+
 		void InitializeD3DDevice();
 		void InitializeDXGIFactory();
 		void InitializeDXGISwapChain(HWND &_win, bool _fullscreen, int _fps,
 																	int _width, int _height);
+//PatAdded
+		void InitializeIDWriteFactory();
+
 		void InitializeViews(int _width, int _height);
 		void InitializeObjectNames();
 		void ThrowIfFailed(HRESULT hr);

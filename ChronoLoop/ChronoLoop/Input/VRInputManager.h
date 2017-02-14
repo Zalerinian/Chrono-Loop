@@ -11,7 +11,6 @@ private:
 	VRInputManager();
 	~VRInputManager();
 	void mInitialize(vr::IVRSystem* _hmd);
-	bool mInitialized = false;
 public:
 	void update();
 	static VRInputManager& Instance();

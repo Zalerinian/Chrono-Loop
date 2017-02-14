@@ -24,6 +24,8 @@ public:
 	BaseObject(std::string _name, Transform _transform);
 	BaseObject(std::string name, Transform _transform, float mass);
 	~BaseObject();
+Component* const GetComponet(unsigned int _indx);
+	unsigned int GetNumofComponets();
 	void Destroy() { delete this; };
 
 	//**GETTERS/SETTERS**//
