@@ -92,7 +92,7 @@ void Update() {
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
 
-	/*///////////////////////Using this to test physics//////////////////
+	///*///////////////////////Using this to test physics//////////////////
 	Transform transform, transform1;
 	transform.SetMatrix(Identity());
 	BaseObject obj;
@@ -105,8 +105,9 @@ void Update() {
 	aabb.mIsSphere = false;
 	aabb.mIsPlane = false;
 	aabb.mShouldMove = true;
-	aabb.mMass = 1.0f;
+	aabb.mMass = 10.0f;
 	aabb.mVelocity.vector = { 0.0f, 0.0f, 0.0f, 0.0f };
+	aabb.mElasticity = 0.5f;
 	obj.AddComponent(&aabb);
 	obj.SetTransform(transform);
 	aabb.object = &obj;
@@ -127,6 +128,7 @@ void Update() {
 	plane.mIsPlane = true;
 	plane.mShouldMove = false;
 	plane.mMass = 0.0f;
+	plane.mElasticity = 0.0f;
 	plane.mPlaneNorm.vector = { 0.0f, 1.0f, 0.0f, 0.0f };
 	plane.mPlaneOffset = 0.0f;
 	plane.mVelocity.vector = { 0.0f, 0.0f, 0.0f, 0.0f };
@@ -136,7 +138,7 @@ void Update() {
 
 	Physics::Instance()->mColliders.push_back(&aabb);
 	Physics::Instance()->mColliders.push_back(&plane);
-	*////////////////////////////////////////////////////////////////////
+	//*////////////////////////////////////////////////////////////////////
 
 
 	while (true) {

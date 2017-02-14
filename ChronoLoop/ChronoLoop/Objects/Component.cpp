@@ -1,6 +1,7 @@
 //#include "stdafx.h"
 #include "Component.h"
 #include "BaseObject.h"
+#include "..\Rendering\Mesh.h"
 
 #pragma region Base Component
 

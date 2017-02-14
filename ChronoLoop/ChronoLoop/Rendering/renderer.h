@@ -39,7 +39,7 @@ namespace RenderEngine {
 		vr::IVRSystem* mVrSystem;
 		RenderSet mRenderSet;
 		ID3D11Buffer* constantBluffer;
-		RenderShape mControllerModel, mBox;
+		//RenderShape mControllerModel, mBox;
 		bool mUseVsync = false;
 
 
@@ -67,6 +67,7 @@ namespace RenderEngine {
 		Renderer();
 		~Renderer();
 	public:
+		RenderShape mControllerModel, mBox;
 		static Renderer* Instance();
 		static void DestroyInstance();
 

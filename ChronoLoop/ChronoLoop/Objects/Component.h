@@ -1,6 +1,7 @@
 #pragma once
 #include "..\Common\Math.h"
 class BaseObject;
+class Mesh;
 
 enum ComponentType
 {
@@ -48,9 +49,10 @@ public:
 class Collider : public Component
 {
 public:
-	bool mIsCube, mIsSphere, mIsPlane, mShouldMove;
-	vec4f mCubeMax, mCubeMin, mPlaneNorm, mVelocity, mAcceleration;
-	float mPlaneOffset, mSphereRadius, mMass, mRadius;
+	bool mIsCube, mIsSphere, mIsPlane, mIsMesh, mShouldMove;
+	vec4f mCubeMax, mCubeMin, mPlaneNorm, mVelocity, mAcceleration, mTotalForce, mImpulsiveForce, mGravity;
+	float mPlaneOffset, mSphereRadius, mMass, mRadius, mElasticity;
+	Mesh* mMesh;
 
 	vec4f GetPos();
 	void SetPos(vec4f _newPos);

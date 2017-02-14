@@ -29,7 +29,6 @@ public:
 	BaseObject Clone(BaseObject _clone);
 	BaseObject const* operator=(BaseObject _equals);
 	unsigned short& GetUniqueId();
-	Mesh* mMesh;
 
 	void Destroy() { delete this; };
 

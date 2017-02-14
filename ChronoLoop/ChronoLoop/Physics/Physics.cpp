@@ -227,9 +227,9 @@ bool Physics::MovingSphereToMesh(vec4f & _start, vec4f & _dir, float _radius, Me
 		vec4f currNorm = _mesh->GetTriangles()[i].Normal;
 
 		if (MovingSphereToTriangle(
-			vec4f(*currTri.Vertex[0]),
-			vec4f(*currTri.Vertex[1]),
-			vec4f(*currTri.Vertex[2]),
+			vec4f(currTri.Vertex[0]),
+			vec4f(currTri.Vertex[1]),
+			vec4f(currTri.Vertex[2]),
 			currNorm, _start, _dir, _radius, fTime, _outNormal))
 		{
 			_time = fminf(_time, fTime);
@@ -417,6 +417,80 @@ bool Physics::SphereToAABB(Sphere& _sphere, AABB& _aabb)
 		fabsf((point.z - _sphere.mPosition.z)) < _sphere.mRadius);
 }
 
+bool Physics::SphereToTriangle(Sphere& _sphere, Triangle& _tri, vec4f& _displacement)
+{
+	float offset = (_sphere.mPosition - _tri.Vertex[0]) * _tri.Normal;
+	vec4f scaled = _tri.Normal * offset;
+	vec4f projected = _sphere.mPosition - scaled;
+	vec4f edge0 = _tri.Vertex[1] - _tri.Vertex[0];
+	vec4f edge1 = _tri.Vertex[2] - _tri.Vertex[1];
+	vec4f edge2 = _tri.Vertex[0] - _tri.Vertex[2];
+	vec4f norm0, norm1, norm2, Cpt = _sphere.mPosition;
+	norm0 = edge0 ^ _tri.Normal;
+	norm1 = edge1 ^ _tri.Normal;
+	norm2 = edge2 ^ _tri.Normal;
+	Plane plane0(norm0, _tri.Vertex[0] * norm0);
+	Plane plane1(norm1, _tri.Vertex[1] * norm1);
+	Plane plane2(norm2, _tri.Vertex[2] * norm2);
+
+	if (PointToPlane(plane0, projected) == 1 &&
+		PointToPlane(plane1, projected) == 1 &&
+		PointToPlane(plane2, projected) == 1)
+	{
+		Cpt = projected;
+	}
+	else
+	{
+		vec4f s0 = projected - _tri.Vertex[0];
+		vec4f s1 = projected - _tri.Vertex[1];
+		vec4f s2 = projected - _tri.Vertex[2];
+		float p0 = (s0 * edge0) / (edge0 * edge0);
+		float p1 = (s1 * edge1) / (edge1 * edge1);
+		float p2 = (s2 * edge2) / (edge2 * edge2);
+
+		if (p0 < 0)
+			p0 = 0;
+		else if (p0 > 1)
+			p0 = 1;
+
+		if (p1 < 1)
+			p1 = 0;
+		else if (p1 > 1)
+			p1 = 1;
+
+		if (p2 < 0)
+			p2 = 0;
+		else if (p2 > 1)
+			p2 = 1;
+
+		vec4f c0 = _tri.Vertex[0] + edge0 * p0;
+		vec4f c1 = _tri.Vertex[1] + edge1 * p1;
+		vec4f c2 = _tri.Vertex[2] + edge2 * p2;
+		float r0 = (projected - c0) * (projected - c0);
+		float r1 = (projected - c1) * (projected - c1);
+		float r2 = (projected - c2) * (projected - c2);
+
+		float min = fminf(fminf(r0, r1), r2);
+		if (min == r0)
+			Cpt = c0;
+		else if (min == r1)
+			Cpt = c1;
+		else if (min == r2)
+			Cpt = c2;
+	}
+
+	if ((Cpt - _sphere.mPosition) * (Cpt - _sphere.mPosition) < (_sphere.mRadius * _sphere.mRadius))
+	{
+		vec4f v = _sphere.mPosition - Cpt;
+		float dist = v.Magnitude();
+		vec4f n = v.Normalize();
+		_displacement = n * (_sphere.mRadius - dist);
+		return true;
+	}
+
+	return false;
+}
+
 #pragma endregion
 
 #pragma region SIMULATION
@@ -436,40 +510,78 @@ vec4f Physics::CalcPosition(vec4f& _pos, vec4f& _vel, float _time)
 	return _pos + _vel * _time;
 }
 
+void Physics::CalcReaction(Collider& _col1, Collider& _col2, float _time)
+{
+	float avgElasticity;     // average coefficient of restitution
+	vec4f impulse; //  impulse vector 
+	vec4f collisionNormal; // the normalized vector of the collision normal vector
+	vec4f relativeVelocity; // relative velocity of the ball 
+				 // compute the average coefficient of restitution (e) of the 2 colliding bodies
+	avgElasticity = (_col1.mElasticity + _col2.mElasticity) / 2;
+	//compute collision Normal n= C1-C2   C1=ball1 center position ,C2=ball2 center position
+	collisionNormal = _col1.GetPos() - _col2.GetPos();
+	// normalize n 
+	collisionNormal.Normalize();
+	// set the Collision normal(theCollision.norma) to n
+	//theCollision.normal = collisionNormal;
+	// compute the relative velocity of the two balls  Vr=v1-v2  where v1=body1 velocity and v2=body2 velocity
+	relativeVelocity = _col1.mVelocity - _col2.mVelocity;
+	// set theCollision relative velocity to Vr 
+	//theCollision.relativeVelocity = relativeVelocity;
+	//compute the magnitutde of impulse  impulse= -(1+e)*m1*m2*(v1-v2)*n/(m1+m2) , v1-v2=relative velocity=Vr
+	float impulseMagnitude;
+	impulseMagnitude = -(1 + avgElasticity) * _col1.mMass * _col2.mMass * (relativeVelocity * collisionNormal) / (_col1.mMass + _col2.mMass);
+	// compute now the impulse vector impulse in the direction of the collision normal vector n, impulse= impulse*n
+	impulse = collisionNormal * impulseMagnitude;
+	// compute the impulsive force (impulsiveForce) of ball1 .remember F=impulse/deltaT
+	_col1.mImpulsiveForce = impulse / _time;
+	// compute the impulsive force (impulsiveForce) of ball2 .remember F=-impulse/deltaT
+	_col2.mImpulsiveForce = -impulse / _time;
+	// compute the velocities of body1 after collision:v1=v1+ impulse/m1
+	_col1.mVelocity = _col1.mVelocity + impulse / _col1.mMass;
+	// compute the velocities of body2 after collision:v2=v2-impulse/m2
+	_col2.mVelocity = _col2.mVelocity - impulse / _col2.mMass;
+	// compute the total force on body1 during collision : body1 totalForce= body1 impulsiveForce 
+	_col1.mTotalForce = _col1.mImpulsiveForce + _col1.mGravity;
+	// compute the total force on body2 during collision : body2 totalForce= body2 impulsiveForce 
+	_col2.mTotalForce = _col2.mImpulsiveForce + _col2.mGravity;
+	// calculate the collision contact point C=C1 + ball1Radius*n  from ball1 .
+	//theCollision.contactPoint = body1.position + body1.radius * collisionNormal;
+}
+
 #pragma endregion
 
 void Physics::Update(float _time)
 {
 	Collider* collider;
 	Collider* otherCol;
-	Transform* transform;
 	vec4f norm;
 	
 	int objs = mColliders.size();
 	for (int i = 0; i < objs; ++i)
 	{
 		collider = mColliders[i];
-		transform = &mColliders[i]->object->GetTransform();
 		if (collider->mShouldMove)
 		{
-			vec4f vec = { 0.0f, -9.8f, 0.0f, 0.0f };
-			collider->mAcceleration = CalcAcceleration(vec, collider->mMass);
+			collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
 			collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
 			collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
 		}
 
 		if (collider->mIsSphere)
 		{
-			Sphere s1(transform->GetMatrix().fourth, collider->mRadius);
+			Sphere s1(collider->GetPos(), collider->mRadius);
 			for (int j = 0; j < objs; ++j)
 			{
 				if (mColliders[j] != mColliders[i])
 				{
-					//Not sure what outnorm is used for at the moment might just stick with basic cube/sphere collisions
-					//if (MovingSphereToMesh(transform->GetMatrix().fourth, collider->mVelocity, collider->mRadius, mColliders[j]->mMesh, _time, norm))
-
 					otherCol = mColliders[j];
-					if (otherCol->mIsSphere)
+					//Not sure what outnorm is used for at the moment might just stick with basic cube/sphere collisions
+					if (MovingSphereToMesh(collider->GetPos(), collider->mVelocity, collider->mRadius, mColliders[j]->mMesh, _time, norm))
+					{
+						SystemLogger::GetLog() << "SPHERE TO MESH COLLISION!";
+					}
+					else if (otherCol->mIsSphere)
 					{
 						Sphere s2(otherCol->GetPos(), otherCol->mRadius);
 						if (SphereToSphere(s1, s2))
@@ -552,6 +664,7 @@ void Physics::Update(float _time)
 						else if (result == 3)// intersecting plane
 						{
 							SystemLogger::GetLog() << "AABB INTERSECTING PLANE!";
+							CalcReaction(*collider, *otherCol, _time);
 						}
 					}
 				}

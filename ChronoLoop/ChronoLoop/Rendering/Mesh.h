@@ -12,7 +12,7 @@
 
 struct Triangle
 {
-	vec4f* Vertex[3];
+	vec4f Vertex[3];
 	vec4f Normal;
 };
 namespace vr
