@@ -25,8 +25,6 @@ private:
 	void CheckFormat();
 public:
 	// Super temporary shit
-	ID3D11PixelShader *pShader;
-	ID3D11VertexShader *vShader;
 
 	MeshFormat();
 	MeshFormat(const char *path);
@@ -48,4 +46,3 @@ public:
 };
 
 typedef MeshFormat<VertexPosNormTex> Mesh;
-

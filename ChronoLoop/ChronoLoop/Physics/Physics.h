@@ -1,12 +1,13 @@
 #pragma once
 
 #include "..\Common\Math.h"
+#include "..\Rendering\Mesh.h"
 
 #define MIN(x, y) ((x < y) ? x : y)
 #define MAX(x, y) ((x > y) ? x : y)
 #define SameSign(x, y) (x > 0 && y > 0) || (x < 0 && y < 0)
 
-class Mesh;
+
 
 struct Plane
 {
