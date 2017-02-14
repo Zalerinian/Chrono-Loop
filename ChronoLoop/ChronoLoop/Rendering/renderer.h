@@ -28,7 +28,7 @@ namespace RenderEngine {
 		std::shared_ptr<IDXGIFactory1*> mFactory;
 		std::shared_ptr<ID3D11RenderTargetView*> mMainView;
 		std::shared_ptr<ID3D11Texture2D*> mMainViewTexture;
-		std::shared_ptr<ID3D11DepthStencilView*> mDSView, mVRDSView;
+		std::shared_ptr<ID3D11DepthStencilView*> mDSView;
 		std::shared_ptr<ID3D11Texture2D*> mDepthBuffer;
 		D3D11_VIEWPORT mViewport;
 		std::shared_ptr<HWND> mWindow;
@@ -45,6 +45,7 @@ namespace RenderEngine {
 		void InitializeDXGISwapChain(HWND &_win, bool _fullscreen, int _fps,
 																	int _width, int _height);
 		void InitializeViews(int _width, int _height);
+		void InitializeObjectNames();
 		void ThrowIfFailed(HRESULT hr);
 
 		matrix4 mEyePosLeft, mEyePosRight, mEyeProjLeft, mEyeProjRight, mHMDPos;

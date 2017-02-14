@@ -3,6 +3,7 @@
 #include "RasterizerStateManager.h"
 #include "ShaderManager.h"
 #include "InputLayoutManager.h"
+#include "TextureManager.h"
 #include "../Input/VRInputManager.h"
 #include "../Core/TimeManager.h"
 
@@ -14,6 +15,7 @@ namespace RenderEngine {
 		RasterizerStateManager::Instance();
 		TimeManager::Instance();
 		InputLayoutManager::Instance();
+		TextureManager::Instance();
 		if (_vrsys) {
 			VRInputManager::Instance();
 			VRInputManager::Initialize(_vrsys);
@@ -25,6 +27,7 @@ namespace RenderEngine {
 	bool ShutdownSystems() {
 		ShaderManager::DestroyInstance();
 		VRInputManager::Shutdown();
+		TextureManager::DestroyInstance();
 		InputLayoutManager::DestroyInstance();
 		TimeManager::Destroy();
 		RasterizerStateManager::DestroyInstance();

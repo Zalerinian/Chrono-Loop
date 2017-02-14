@@ -97,17 +97,9 @@ namespace RenderEngine {
 		(*mMainView)->Release();
 		(*mFactory)->Release();
 		(*mChain)->Release();
-		
-		ID3D11Debug *debug;
-		(*mDevice)->QueryInterface(IID_ID3D11Debug, (void**)&debug);
-		if (debug) {
-			OutputDebugStringA("\n\n\n");
-			debug->ReportLiveDeviceObjects(D3D11_RLDO_FLAGS::D3D11_RLDO_DETAIL);
-			debug->Release();
-			OutputDebugStringA("\n\n\n");
-		}
-		
-		(*mDevice)->Release();
+		// The device's release has been moved to ChronoLoop.cpp
+		constantBluffer->Release();
+		(*mMainViewTexture)->Release();
 		mContext.reset();
 		mDSView.reset();
 		mDepthBuffer.reset();
@@ -227,6 +219,28 @@ namespace RenderEngine {
 		(*mContext)->RSSetViewports(1, &mViewport);
 	}
 
+	void Renderer::InitializeObjectNames() {
+		char deviceName[] = "Main Rendering Device";
+		char contextName[] = "Main Context";
+		char swapchainName[] = "Main Swapchain";
+		char factoryName[] = "3D DXGI Factory";
+		char mainViewName[] = "Backbuffer Render Target View";
+		char mainViewTexName[] = "Backbuffer Texture";
+		char dsvName[] = "Main Depth-Stencil View";
+		char dbName[] = "Main Depth Buffer Texture";
+		char cbuffName[] = "Temporary Rendering Constant Buffer";
+
+		(*mDevice)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(deviceName), deviceName);
+		(*mContext)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(contextName), contextName);
+		(*mChain)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(swapchainName), swapchainName);
+		(*mFactory)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(factoryName), factoryName);
+		(*mMainView)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(mainViewName), mainViewName);
+		(*mMainViewTexture)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(mainViewTexName), mainViewTexName);
+		(*mDSView)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(dsvName), dsvName);
+		(*mDepthBuffer)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(dbName), dbName);
+		//constantBluffer->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(cbuffName), cbuffName);
+	}
+
 	void Renderer::RenderVR() {
 		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 		UpdateTrackedPositions();
@@ -320,11 +334,12 @@ namespace RenderEngine {
 		InitializeDXGIFactory();
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, rtvWidth, rtvHeight);
 		InitializeViews(rtvWidth, rtvHeight);
+		InitializeObjectNames();
 
 		mUseVsync = _vsync;
 
 		mBox.Load("../Resources/Cube.obj", true, ePS_TEXTURED, eVS_TEXTURED);
-		mBox.AddTexture(L"../Resources/cube_texture.png", eTEX_DIFFUSE);
+		mBox.AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 		AddNode(&mBox);
 
 

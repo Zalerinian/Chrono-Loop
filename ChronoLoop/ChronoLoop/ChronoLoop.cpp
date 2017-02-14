@@ -8,6 +8,7 @@
 #include <openvr.h>
 #include <ctime>
 #include <chrono>
+#include <d3d11.h>
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -29,7 +30,7 @@ void UpdateTime();
 
 int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(354);
+	//_CrtSetBreakAlloc(373);
 	if (!InitializeWindow(hInstance, nCmdShow, 800, 600, true)) {
 		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
 		return 2;
@@ -38,18 +39,9 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	// Initialize Rendering systems and VR
 	vr::HmdError pError;
 	vr::IVRSystem *vrsys = nullptr;
-	if (vr::VR_IsHmdPresent()) {
-		vrsys = vr::VR_Init(&pError, vr::VRApplication_Scene);
-		if (pError != vr::HmdError::VRInitError_None) {
-			SystemLogger::GetLog() << "Could not initialize OpenVR for reasons!" << std::endl;
-		}
-	} else {
-		SystemLogger::GetLog() << "There is no VR Headset present. VR will not be enabled." << std::endl;
-	}
-
-	//vrsys = nullptr;
-	if (vr::VR_IsHmdPresent() && vrsys == nullptr) {
-		SystemLogger::GetLog() << "VR seems to be ready, but the VR pointer is null. Was VR forcefully disabled?" << std::endl;
+	vrsys = vr::VR_Init(&pError, vr::VRApplication_Scene);
+	if (pError != vr::HmdError::VRInitError_None) {
+		SystemLogger::GetLog() << "Could not initialize OpenVR for reasons!" << std::endl;
 	}
 
 	if (vrsys != nullptr) {
@@ -60,6 +52,10 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 		return 1;
 	}
 	
+	std::shared_ptr<ID3D11Device*> renderingDevice = RenderEngine::Renderer::Instance()->GetDevice();
+	ID3D11Debug *debug;
+
+
 	SystemLogger::GetLog() << "Hello World! " << "We hope you have at least " << 5 << " smiles today." << std::endl;
 
 	// Update everything
@@ -71,6 +67,16 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	SystemLogger::CloseError();
 	vr::VR_Shutdown();
 	vrsys = nullptr;
+
+	(*renderingDevice)->QueryInterface(IID_ID3D11Debug, (void**)&debug);
+	if (debug) {
+		OutputDebugStringA("\n\n\n");
+		debug->ReportLiveDeviceObjects(D3D11_RLDO_FLAGS::D3D11_RLDO_DETAIL);
+		debug->Release();
+		OutputDebugStringA("\n\n\n");
+	}
+
+	(*renderingDevice)->Release();
 
 #if _DEBUG || CONSOLE_OVERRIDE
 	FreeConsole();
