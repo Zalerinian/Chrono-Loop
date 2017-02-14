@@ -4,6 +4,7 @@
 #include "RendererDefines.h"
 #include <memory>
 #include "Mesh.h"
+#include "../Common/Math.h"
 
 struct ID3D11Buffer;
 
@@ -12,6 +13,8 @@ namespace RenderEngine {
 	struct RenderShape : public RenderNode {
 		std::shared_ptr<ID3D11Buffer*> mVertexBuffer, mIndexBuffer;
 		unsigned int                   mIndexCount = 0;
+
+		matrix4 mPosition;
 
 		RenderShape();
 		RenderShape(Mesh& _mesh);

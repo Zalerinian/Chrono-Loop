@@ -293,6 +293,8 @@ namespace RenderEngine {
 			if (head->mType == RenderNode::RenderNodeType::Context) {
 				((RenderContext*)head)->Apply();
 			} else if (head->mType == RenderNode::RenderNodeType::Shape) {
+				constantData.model = ((RenderShape*)head)->mPosition;
+				(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
 				((RenderShape*)head)->Render();
 			}
 			head = head->GetNext();
