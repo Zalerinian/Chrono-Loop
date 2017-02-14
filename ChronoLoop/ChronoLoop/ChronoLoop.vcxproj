@@ -187,6 +187,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BaseLevel.h" />
+    <ClInclude Include="CommandConsole.h" />
     <ClInclude Include="Common\Math.h" />
     <ClInclude Include="Input\KeyboardInput.h" />
     <ClInclude Include="LevelManager.h" />
@@ -218,6 +219,7 @@
     <ClCompile Include="BaseLevel.cpp" />
     <ClCompile Include="ChronoLoop.cpp" />
     <ClCompile Include="Common\Math.cpp" />
+    <ClCompile Include="ConsoleCommand.cpp" />
     <ClCompile Include="Input\KeyboardInput.cpp" />
     <ClCompile Include="LevelManager.cpp" />
     <ClCompile Include="Messager\Messager.cpp" />

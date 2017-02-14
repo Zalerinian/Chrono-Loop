@@ -102,6 +102,9 @@
     <ClCompile Include="Rendering\RenderShape.cpp">
       <Filter>Rendering\Sources\Nodes</Filter>
     </ClCompile>
+    <ClCompile Include="ConsoleCommand.cpp">
+      <Filter>Input\Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Math.h">
@@ -184,6 +187,9 @@
     </ClInclude>
     <ClInclude Include="Rendering\RasterizerStateManager.h">
       <Filter>Rendering\Headers\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandConsole.h">
+      <Filter>Input\Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
