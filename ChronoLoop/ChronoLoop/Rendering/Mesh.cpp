@@ -180,7 +180,10 @@ Triangle * MeshFormat<T>::GetTriangles()
 		for (unsigned int i = 0; i < mIndicies.size() / 3; i++)
 		{
 			Triangle temp;
-			temp.Normal = (mUniqueVerts[mIndicies[(i * 3) + 0]].Normal + mUniqueVerts[mIndicies[(i * 3) + 1]].Normal + mUniqueVerts[mIndicies[(i * 3) + 2]].Normal) / 2;
+			if (mFormat == RenderEngine::eVERT_POSNORMTEX || mFormat == RenderEngine::eVERT_POSNORMTANTEX || mFormat == RenderEngine::eVERT_POSBONEWEIGHTNORMTEX || mFormat == RenderEngine::eVERT_POSBONEWEIGHTNORMTANTEX)
+			{
+				temp.Normal = (mUniqueVerts[mIndicies[(i * 3) + 0]].Normal + mUniqueVerts[mIndicies[(i * 3) + 1]].Normal + mUniqueVerts[mIndicies[(i * 3) + 2]].Normal) / 2;
+			}
 			temp.Vertex[0] = &mUniqueVerts[mIndicies[(i * 3) + 0]].Position;
 			temp.Vertex[1] = &mUniqueVerts[mIndicies[(i * 3) + 1]].Position;
 			temp.Vertex[2] = &mUniqueVerts[mIndicies[(i * 3) + 2]].Position;
