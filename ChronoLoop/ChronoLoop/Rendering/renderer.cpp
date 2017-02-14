@@ -256,7 +256,7 @@ namespace RenderEngine {
 				(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 			}
 			MyBuffer data;
-			GetMVP(currentEye, data, Math::MatrixTranslation(0, 1, -1));
+			GetMVP(currentEye, data, Math::MatrixTranslation(0, 1, -3));
 			(*mContext)->UpdateSubresource(constantBluffer, 0, nullptr, (void*)&data, 0, 0);
 			(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
 
@@ -284,7 +284,7 @@ namespace RenderEngine {
 	}
 
 	void Renderer::RenderNoVR() {
-
+		processRenderSet();
 	}
 
 	void Renderer::processRenderSet() {
@@ -342,9 +342,19 @@ namespace RenderEngine {
 		mBox.AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 		AddNode(&mBox);
 
-
 		CD3D11_BUFFER_DESC desc(sizeof(MyBuffer), D3D11_BIND_CONSTANT_BUFFER);
 		(*mDevice)->CreateBuffer(&desc, nullptr, &constantBluffer);
+
+		if (!mVrSystem) {
+			constantData.model = Math::MatrixTranspose(Math::MatrixTranslation(0, 0, 0));
+			constantData.view.matrix = (DirectX::XMMatrixLookAtRH({ 0, 2, 0.3f, 0 }, { 0, 0, 0, 0 }, { 0, 1, 0, 0 }));
+			constantData.projection.matrix = DirectX::XMMatrixPerspectiveFovRH(70, (float)_height / (float)_width, 0.1f, 1000);
+			constantData.view = Math::MatrixTranspose(constantData.view);
+			constantData.projection = Math::MatrixTranspose(constantData.projection);
+			(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
+			(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
+		}
+
 
 		//// Print out the render model names available from openVR.
 		//char buffer[2048];
@@ -362,6 +372,7 @@ namespace RenderEngine {
 	void Renderer::Render() {
 		float color[4] = { 0.3f, 0.3f, 1, 1 };
 		(*mContext)->ClearRenderTargetView((*mMainView), color);
+		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 		if (nullptr == mVrSystem) {
 			RenderNoVR();
 		} else {

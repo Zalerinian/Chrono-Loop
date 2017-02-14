@@ -8,23 +8,23 @@ VRInputManager::VRInputManager() {}
 
 VRInputManager::~VRInputManager() {}
 
-void VRInputManager::mInitialize(vr::IVRSystem * _hmd) {
-	if (nullptr == _hmd) {
+void VRInputManager::mInitialize(vr::IVRSystem *_vr) {
+	if (nullptr == _vr) {
 		SystemLogger::GetLog() << "VR Input is disabled." << std::endl;
 		return;
 	}
-	mHmd = _hmd;
-	int rightID = mHmd->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_RightHand);
-	int leftID = mHmd->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand);
+	mVRSystem = _vr;
+	int rightID = mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_RightHand);
+	int leftID = mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand);
 	SystemLogger::GetLog() << "Right controller ID: " << rightID << std::endl;
 	SystemLogger::GetLog() << "Left controller ID:  " << leftID << std::endl;
-	mRightController.SetUp(rightID, mHmd);
-	mLeftController.SetUp(leftID, mHmd);
+	mRightController.SetUp(rightID, mVRSystem);
+	mLeftController.SetUp(leftID, mVRSystem);
 }
 
 void VRInputManager::update() {
 	if (mRightController.GetIndex() < 0) {
-		mRightController.SetIndex(mHmd->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_RightHand));
+		mRightController.SetIndex(mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_RightHand));
 		mRightController.Update();
 		if (mRightController.GetIndex() > 0) {
 			SystemLogger::GetLog() << "Right Controller reconnected." << std::endl;
@@ -33,7 +33,7 @@ void VRInputManager::update() {
 		mRightController.Update();
 	}
 	if (mLeftController.GetIndex() < 0) {
-		mLeftController.SetIndex(mHmd->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand));
+		mLeftController.SetIndex(mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand));
 		mLeftController.Update();
 		if (mLeftController.GetIndex() > 0) {
 			SystemLogger::GetLog() << "Left Controller reconnected." << std::endl;
@@ -79,9 +79,9 @@ VRInputManager & VRInputManager::Instance() {
 	return *sInstance;
 }
 
-void VRInputManager::Initialize(vr::IVRSystem * _hmd) {
+void VRInputManager::Initialize(vr::IVRSystem * _vr) {
 	if (sInstance)
-		sInstance->mInitialize(_hmd);
+		sInstance->mInitialize(_vr);
 }
 
 void VRInputManager::Shutdown() {

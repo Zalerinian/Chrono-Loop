@@ -404,9 +404,11 @@
     <ClCompile Include="Common\Common.cpp">
       <Filter>Common\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rendering\TextureManager.cpp" />
     <ClCompile Include="Common\Breakpoint.cpp">
       <Filter>Common\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\TextureManager.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
