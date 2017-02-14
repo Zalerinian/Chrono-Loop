@@ -75,8 +75,6 @@ void Messager::Process()
 			ProcessMessage(tempMsg);
 		}
 
-
-
 		delete tempMsg;
 	}
 }

@@ -151,20 +151,32 @@ void Update() {
 	Physics::Instance()->mColliders.push_back(&plane);
 	*////////////////////////////////////////////////////////////////////
 
-
+	//	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::INITIALIZE_Audio, 0, false));
+	//	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::SET_BasePath, 0, false, (void*)new m_Path(_basePath)));
+	//	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_initSB)));
+	//	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
+	//	BaseObject* test = new BaseObject();
+	//	Listener* lisnr = new Listener();
+	//	test->AddComponent(lisnr);
+	//	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(lisnr, nullptr)));
+	//	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Loc, 0, false, (void*)new m_LocEvent((AudioEvent)AK::EVENTS::PLAY_TEST2, new vec4f(0, 0, 0, 0))));
+	
 	while (true) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			// Handle windows message.
 			if (msg.message == WM_QUIT) {
+				//msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::SHUTDOWN_Audio, 0, false));
 				break;
 			}
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		} else {
 			if (GetAsyncKeyState(VK_ESCAPE)) {
+				//msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::SHUTDOWN_Audio, 0, false));
 				break;
 			}
 			Physics::Instance()->Update(deltaTime);
+			//msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false));
 			UpdateTime();
 			if (VREnabled) {
 				VRInputManager::Instance().update();
@@ -246,42 +258,3 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 	}
 	return 0;
 }
-//void Update() {
-//	MSG msg;
-//	ZeroMemory(&msg, sizeof(MSG));
-//
-//	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::INITIALIZE_Audio, 0, false));
-//	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::SET_BasePath, 0, false, (void*)new m_Path(_basePath)));
-//	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_initSB)));
-//	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
-//	BaseObject* test = new BaseObject();
-//	Listener* lisnr = new Listener();
-//	test->AddComponent(lisnr);
-//	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(lisnr, nullptr)));
-//	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Loc, 0, false, (void*)new m_LocEvent((AudioEvent)AK::EVENTS::PLAY_TEST2, new vec4f(0, 0, 0, 0))));
-//
-//	while (true) {
-//
-//		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
-//			// Handle windows message.
-//			if (msg.message == WM_QUIT) {
-//				break;
-//			}
-//			TranslateMessage(&msg);
-//			DispatchMessage(&msg);
-//		} else {
-//			if (GetAsyncKeyState(VK_ESCAPE)) {
-//				msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::SHUTDOWN_Audio, 0, false));
-//				break;
-//			}
-//			msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false));
-//			UpdateTime();
-//			VRInputManager::Instance().update();
-//			// Logic.Update(float deltaTime);
-//			TManager->Instance()->Update(deltaTime);
-//			RenderEngine::Renderer::Instance()->Render();
-//		}
-//	}
-//
-//	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::SHUTDOWN_Audio, 0, false));
-//}
