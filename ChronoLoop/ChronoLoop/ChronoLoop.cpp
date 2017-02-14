@@ -10,6 +10,7 @@
 #include <ctime>
 #include <chrono>
 #include "Messager\Messager.h"
+#include "Objects\BaseObject.h"
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -20,9 +21,9 @@ LPCTSTR WndClassName = L"ChronoWindow";
 HINSTANCE hInst;
 Messager msger = Messager::Instance();
 
-const wchar_t* _basePath = L"../ChronoLoop/Sound/Sound/Soundbanks/";
+const wchar_t* _basePath = L"../ChronoLoop/Sound/Sound/Soundbanks/1";
 const wchar_t* _initSB = L"Init.bnk";
-const wchar_t* _aSB = L"Test_Soundbank";
+const wchar_t* _aSB = L"Test_Soundbank.bnk";
 
 #if defined(_WIN64)
 typedef unsigned __int64 AudioEvent;				///< Integer (unsigned) type for pointers
@@ -156,7 +157,10 @@ void Update() {
 	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::SET_BasePath, 0, false, (void*)new m_Path(_basePath)));
 	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_initSB)));
 	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
-
+	BaseObject* test = new BaseObject();
+	Listener* lisnr = new Listener();
+	test->AddComponent(lisnr);
+	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(lisnr, nullptr)));
 	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Loc, 0, false, (void*)new m_LocEvent((AudioEvent)AK::EVENTS::PLAY_TEST2, new vec4f(0, 0, 0, 0))));
 
 	while (true) {
@@ -170,9 +174,10 @@ void Update() {
 			DispatchMessage(&msg);
 		} else {
 			if (GetAsyncKeyState(VK_ESCAPE)) {
+				msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::SHUTDOWN_Audio, 0, false));
 				break;
 			}
-
+			msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false));
 			UpdateTime();
 			VRInputManager::Instance().update();
 			// Logic.Update(float deltaTime);

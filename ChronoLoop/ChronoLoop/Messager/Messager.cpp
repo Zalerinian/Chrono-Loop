@@ -1,7 +1,7 @@
 #include "Messager.h"
 
 Messager* Messager::mMessager = nullptr;
-//std::priority_queue<Message*, std::vector<Message*>, cmp> Messager::msgQueue = std::priority_queue<Message*, std::vector<Message*>, cmp>();
+//std::priority_queue<Message*, std::vector<Message*>> Messager::msgQueue = std::priority_queue<Message*, std::vector<Message*>>();
 std::queue<Message*> Messager::msgQueue = std::queue<Message*>();
 bool Messager::death = false;
 
@@ -9,9 +9,23 @@ Messager::Messager()
 {
 	Initialize();
 }
+Messager::Messager(Messager& _newMsgr)
+{
+	audio = _newMsgr.audio;
+	death = _newMsgr.death;
+	if (mLocker.try_lock())
+	{
+		msgQueue = _newMsgr.msgQueue;
+		mLocker.unlock();
+	}
+}
 Messager::~Messager()
 {
 	death = true;
+	while (!msgQueue.empty())
+	{
+		msgQueue.pop();
+	}
 }
 
 void Messager::Initialize()
@@ -38,18 +52,30 @@ void Messager::Destroy()
 
 void Messager::SendInMessage(Message* _msg)
 {
-	msgQueue.push(_msg);
+	if (mLocker.try_lock())
+	{
+		msgQueue.push(_msg);
+		mLocker.unlock();
+	}
 }
+
 void Messager::Process()
 {
 	while (!death)
 	{
-		if (msgQueue.empty())
-			continue;
+		Message* tempMsg = nullptr;
+		if (mLocker.try_lock())
+		{
+			if (msgQueue.empty())
+				continue;
 
-		Message* tempMsg = msgQueue.front();
-		ProcessMessage(tempMsg);
-		msgQueue.pop();
+			tempMsg = msgQueue.front();
+			msgQueue.pop();
+			mLocker.unlock();
+			ProcessMessage(tempMsg);
+		}
+
+
 
 		delete tempMsg;
 	}
@@ -102,27 +128,32 @@ void Messager::ProcessSound(Message* _msg)
 	break;
 	case ADD_Listener:
 	{
-
+		m_Listener* lisn = (m_Listener*)(_msg->mNeed);
+		audio.AddListener(lisn->mListener, lisn->mName);
 	}
 	break;
 	case REMOVE_Listener:
 	{
-
+		Listener* mLis = (Listener*)(_msg->mNeed);
+		audio.RemoveListener(mLis);
 	}
 	break;
 	case ADD_Emitter:
 	{
-
+		m_Emitter* emit = (m_Emitter*)(_msg->mNeed);
+		audio.AddEmitter(emit->mEmitter, emit->mName);
 	}
 	break;
 	case REMOVE_Emitter:
 	{
-
+		Emitter* emit = (Emitter*)(_msg->mNeed);
+		audio.RemoveEmitter(emit);
 	}
 	break;
 	case MAKEEVENT_Event:
 	{
-
+		m_Event* evnt = (m_Event*)(_msg->mNeed);
+		audio.MakeEvent(evnt->mID, evnt->mEmitter);
 	}
 	break;
 	case MAKEEVENT_Loc:
@@ -133,7 +164,8 @@ void Messager::ProcessSound(Message* _msg)
 	break;
 	case MAKEEVENT_Listener:
 	{
-
+		m_EventListener * evnt = (m_EventListener*)(_msg->mNeed);
+		audio.MakeEventAtListener(evnt->mID, evnt->mLID);
 	}
 	break;
 	case SET_BasePath:

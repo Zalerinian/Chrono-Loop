@@ -4,6 +4,7 @@
 #include <queue>
 #include <vector>
 #include <thread>
+#include <mutex>
 #include <cstdarg>
 
 enum msgTypes {NONE = -1, mSound, mRender, mInput, mPhysics};
@@ -100,13 +101,6 @@ public:
 #pragma endregion
 
 };
-struct cmp
-{
-	bool operator()(Message* _l, Message* _r)
-	{
-		return true;
-	}
-};
 
 class Messager
 {
@@ -114,9 +108,9 @@ class Messager
 
 private:
 	AudioWrapper audio;
-
-	//static std::priority_queue<Message*, std::vector<Message*>, cmp> msgQueue;
-	static std::queue<Message*> Messager::msgQueue;
+	//static std::priority_queue<Message*,std::vector<Message*>> msgQueue;
+	std::mutex mLocker;
+	static std::queue<Message*> msgQueue;
 	static bool death;
 
 	void ProcessMessage(Message* _msg);
@@ -127,6 +121,7 @@ private:
 	void ProcessInput(Message* _msg);
 public:
 	Messager();
+	Messager(Messager& _newMsger);
 	~Messager();
 	static Messager& Instance();
 	static void Destroy();
@@ -138,6 +133,7 @@ public:
 
 //Bullshit Structs
 
+//Sound Func Structs--------------------
 struct m_Path
 {
 	const wchar_t* mPath;
@@ -154,4 +150,51 @@ struct m_LocEvent
 	m_LocEvent() { }
 	m_LocEvent(AudioEvent _id, vec4f* _pos) { mID = _id; mPos = _pos; }
 };
+
+struct m_Event
+{
+	AudioEvent mID;
+	Emitter* mEmitter;
+
+	m_Event() { }
+	m_Event(AudioEvent _id, Emitter* _emitter) { mID = _id; mEmitter = _emitter; }
+};
+
+struct m_EventListener
+{
+	AudioEvent mID; 
+	unsigned int mLID;
+
+	m_EventListener() { mLID = 0; }
+	m_EventListener(AudioEvent _id, unsigned int _lID = 0) { mID = _id; mLID = _lID; }
+};
+
+struct m_Listener
+{
+	Listener* mListener;
+	char * mName;
+
+	m_Listener() {}
+	m_Listener(Listener* _listener, char* _name) { mListener = _listener; mName = _name;}
+};
+
+struct m_Emitter
+{
+	Emitter* mEmitter;
+	char* mName;
+
+	m_Emitter() {}
+	m_Emitter(Emitter* _emitter, char* _name) { mEmitter = _emitter; mName = _name; }
+};
+
+struct m_FLT
+{
+	float mScale;
+
+	m_FLT() { mScale = 1.0f; }
+	m_FLT(float _scale = 1.0f) { mScale = _scale; }
+};
+//-------------------------------------
+
+
 

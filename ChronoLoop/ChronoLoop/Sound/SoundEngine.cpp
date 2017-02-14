@@ -66,8 +66,8 @@ bool AudioWrapper::Initialize()
 void AudioWrapper::Shutdown()
 {
 	//Un-register everything and terminate
-	//SoundEngine::UnregisterAllGameObj();
-	//SOUNDENGINE_DLL::Term();
+	SoundEngine::UnregisterAllGameObj();
+	SOUNDENGINE_DLL::Term();
 	mIsInitialize = false;
 }
 
