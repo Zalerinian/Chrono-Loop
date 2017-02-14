@@ -108,6 +108,27 @@ namespace RenderEngine {
 		mFactory.reset();
 		mChain.reset();
 		mDevice.reset();
+		
+		(*mTextFactory)->Release();
+		(*mDevice2D)->Release();
+		(*mGIDevice)->Release();
+		(*mContext2D)->Release();
+		(*mDWrite)->Release();
+		(*mTextformat)->Release();
+		(*m2DRenderTarget)->Release();
+		(*mBrush)->Release();
+		(*mBitmap)->Release();
+
+		mTextFactory.reset();
+		mDevice.reset();
+		mGIDevice.reset();
+		mContext2D.reset();
+		mDWrite.reset();
+		mTextformat.reset();
+		m2DRenderTarget.reset();
+		mBrush.reset();
+		mBitmap.reset();
+
 	}
 
 	void Renderer::InitializeD3DDevice() {
@@ -196,6 +217,8 @@ namespace RenderEngine {
 		//Set render target
 		(*mContext2D)->SetTarget((*mBitmap));
 
+
+		//Write Factory initalized
 		IDWriteFactory* WriteFactory;
 		ThrowIfFailed(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(WriteFactory), reinterpret_cast<IUnknown**>(&WriteFactory)));
 		sInstance->mDWrite = make_shared<IDWriteFactory*>(WriteFactory);
@@ -219,7 +242,7 @@ namespace RenderEngine {
 		WriteFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
 
 
-		D2D1_PIXEL_FORMAT PF = { DXGI_FORMAT_B8G8R8A8_UNORM,D2D1_ALPHA_MODE_IGNORE };
+		/*D2D1_PIXEL_FORMAT PF = { DXGI_FORMAT_B8G8R8A8_UNORM,D2D1_ALPHA_MODE_IGNORE };
 
 		D2D1_RENDER_TARGET_PROPERTIES RTProp = {
 			D2D1_RENDER_TARGET_TYPE_DEFAULT,
@@ -232,8 +255,9 @@ namespace RenderEngine {
 
 		ID2D1DCRenderTarget* rt;
 		ThrowIfFailed(factory2->CreateDCRenderTarget(&RTProp, &rt));
-		sInstance->m2DRenderTarget = make_shared <ID2D1DCRenderTarget*>(rt);
+		sInstance->m2DRenderTarget = make_shared <ID2D1DCRenderTarget*>(rt);*/
 
+		//Brush for the screen
 		ID2D1SolidColorBrush* brush;
 		ThrowIfFailed((*mContext2D)->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White, 1.0f), &brush));
 		sInstance->mBrush = make_shared<ID2D1SolidColorBrush*>(brush);
