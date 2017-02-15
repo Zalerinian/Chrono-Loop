@@ -14,9 +14,11 @@ namespace RenderEngine {
 
 	class Renderer {
 	private:
-		struct MyBuffer {
-			matrix4 model, view, projection;
-		} constantData;
+		struct ViewProjectionBuffer {
+			matrix4 view, projection;
+		} mVPData;
+
+
 		static Renderer* sInstance;
 
 		friend InputLayoutManager;
@@ -35,17 +37,20 @@ namespace RenderEngine {
 
 		vr::IVRSystem* mVrSystem;
 		RenderSet mRenderSet;
-		ID3D11Buffer* constantBluffer;
+		std::shared_ptr<ID3D11Buffer*> mVPBuffer, mPositionBuffer;
 		RenderShape mControllerModel, mBox, mPlane;
 		bool mUseVsync = false;
 
 
+		// These are instance functions
 		void InitializeD3DDevice();
 		void InitializeDXGIFactory();
 		void InitializeDXGISwapChain(HWND &_win, bool _fullscreen, int _fps,
 																	int _width, int _height);
 		void InitializeViews(int _width, int _height);
+		void InitializeBuffers();
 		void InitializeObjectNames();
+		void SetStaticBuffers();
 		void ThrowIfFailed(HRESULT hr);
 
 		matrix4 mEyePosLeft, mEyePosRight, mEyeProjLeft, mEyeProjRight, mHMDPos;
@@ -53,7 +58,7 @@ namespace RenderEngine {
 
 		matrix4 GetEye(vr::EVREye e);
 		matrix4 GetProjection(vr::EVREye e);
-		void GetMVP(vr::EVREye e, MyBuffer &data, matrix4 world);
+		void GetMVP(vr::EVREye e, ViewProjectionBuffer &data);
 		void UpdateTrackedPositions();
 
 		void RenderVR();

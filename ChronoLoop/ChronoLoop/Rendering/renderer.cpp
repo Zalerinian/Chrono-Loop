@@ -69,16 +69,14 @@ namespace RenderEngine {
 		);
 	}
 
-	void Renderer::GetMVP(vr::EVREye e, MyBuffer &data, matrix4 world) {
+	void Renderer::GetMVP(vr::EVREye e, ViewProjectionBuffer &data) {
 		matrix4 hmd = (Math::FromMatrix(poses[0].mDeviceToAbsoluteTracking));
 
 		matrix4 hmdPos = hmd.Inverse();
 		if (e == vr::EVREye::Eye_Left) {
-			data.model = Math::MatrixTranspose(world);
 			data.view = Math::MatrixTranspose((hmdPos * mEyePosLeft));
 			data.projection = Math::MatrixTranspose(mEyeProjLeft);
 		} else {
-			data.model = Math::MatrixTranspose(world);
 			data.view = Math::MatrixTranspose((hmdPos * mEyePosRight));
 			data.projection = Math::MatrixTranspose(mEyeProjRight);
 		}
@@ -98,7 +96,8 @@ namespace RenderEngine {
 		(*mFactory)->Release();
 		(*mChain)->Release();
 		// The device's release has been moved to ChronoLoop.cpp
-		constantBluffer->Release();
+		(*mVPBuffer)->Release();
+		(*mPositionBuffer)->Release();
 		(*mMainViewTexture)->Release();
 		mContext.reset();
 		mDSView.reset();
@@ -206,7 +205,6 @@ namespace RenderEngine {
 		mDepthBuffer = make_shared<ID3D11Texture2D*>(depthTexture);
 		mDSView = make_shared<ID3D11DepthStencilView*>(depthView);
 
-
 		// Viewport
 		DXGI_SWAP_CHAIN_DESC scd;
 		(*mChain)->GetDesc(&scd);
@@ -219,7 +217,18 @@ namespace RenderEngine {
 		(*mContext)->RSSetViewports(1, &mViewport);
 	}
 
+	void Renderer::InitializeBuffers() {
+		ID3D11Buffer* pBuff;
+		CD3D11_BUFFER_DESC desc(sizeof(ViewProjectionBuffer), D3D11_BIND_CONSTANT_BUFFER);
+		(*mDevice)->CreateBuffer(&desc, nullptr, &pBuff);
+		mVPBuffer = std::make_shared<ID3D11Buffer*>(pBuff);
+		
+		desc.ByteWidth = sizeof(matrix4);
+		(*mDevice)->CreateBuffer(&desc, nullptr, &pBuff);
+		mPositionBuffer = std::make_shared<ID3D11Buffer*>(pBuff);
+	}
 	void Renderer::InitializeObjectNames() {
+#if _DEBUG
 		char deviceName[] = "Main Rendering Device";
 		char contextName[] = "Main Context";
 		char swapchainName[] = "Main Swapchain";
@@ -228,7 +237,8 @@ namespace RenderEngine {
 		char mainViewTexName[] = "Backbuffer Texture";
 		char dsvName[] = "Main Depth-Stencil View";
 		char dbName[] = "Main Depth Buffer Texture";
-		char cbuffName[] = "Temporary Rendering Constant Buffer";
+		char vpbName[] = "View-Projection Buffer";
+		char pBuffName[] = "Position Buffer";
 
 		(*mDevice)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(deviceName), deviceName);
 		(*mContext)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(contextName), contextName);
@@ -238,14 +248,25 @@ namespace RenderEngine {
 		(*mMainViewTexture)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(mainViewTexName), mainViewTexName);
 		(*mDSView)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(dsvName), dsvName);
 		(*mDepthBuffer)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(dbName), dbName);
-		//constantBluffer->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(cbuffName), cbuffName);
+		(*mVPBuffer)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(vpbName), vpbName);
+		(*mPositionBuffer)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(pBuffName), pBuffName);
+#endif
+	}
+
+	void Renderer::SetStaticBuffers() {
+		(*mContext)->VSSetConstantBuffers(0, 1, mVPBuffer.get());
+		(*mContext)->VSSetConstantBuffers(1, 1, mPositionBuffer.get());
+		//(*mContext)->VSGetConstantBuffers(2, 1, nullptr); // This will crash.
+		//(*mContext)->VSGetConstantBuffers(3, 1, nullptr); // This will crash.
+
+		//(*mContext)->PSSetConstantBuffers(0, 1, nullptr); // This will crash.
 	}
 
 	void Renderer::RenderVR() {
 		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 		UpdateTrackedPositions();
 		vr::VRCompositor()->CompositorBringToFront();
-		float color[4] = { 0.3f, 0.3f, 1, 1 };
+		float color[4] = { 0.251f, 0.709f, 0.541f, 1 };
 		for (int i = 0; i < 2; ++i) {
 			vr::EVREye currentEye;
 			if (i == 0) {
@@ -255,10 +276,10 @@ namespace RenderEngine {
 				(*mContext)->ClearRenderTargetView((*mMainView), color);
 				(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 			}
-			MyBuffer data;
-			GetMVP(currentEye, data, Math::MatrixTranslation(0, 1, -3));
-			(*mContext)->UpdateSubresource(constantBluffer, 0, nullptr, (void*)&data, 0, 0);
-			(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
+			ViewProjectionBuffer data;
+			GetMVP(currentEye, data);
+			(*mContext)->UpdateSubresource(*mVPBuffer, 0, nullptr, (void*)&data, 0, 0);
+			/*(*mContext)->VSSetConstantBuffers(0, 1, &mVPBuffer);*/
 
 			processRenderSet();
 
@@ -293,8 +314,7 @@ namespace RenderEngine {
 			if (head->mType == RenderNode::RenderNodeType::Context) {
 				((RenderContext*)head)->Apply();
 			} else if (head->mType == RenderNode::RenderNodeType::Shape) {
-				constantData.model = ((RenderShape*)head)->mPosition;
-				(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
+				(*mContext)->UpdateSubresource(*mPositionBuffer, 0, nullptr, &((RenderShape*)head)->mPosition, 0, 0);
 				((RenderShape*)head)->Render();
 			}
 			head = head->GetNext();
@@ -332,11 +352,16 @@ namespace RenderEngine {
 			mEyeProjRight = GetProjection(vr::EVREye::Eye_Right);
 		}
 
+
 		InitializeD3DDevice();
 		InitializeDXGIFactory();
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, rtvWidth, rtvHeight);
 		InitializeViews(rtvWidth, rtvHeight);
+		InitializeBuffers();
+#if _DEBUG
 		InitializeObjectNames();
+#endif
+		SetStaticBuffers();
 
 		mUseVsync = _vsync;
 		mPlane.Load("../Resources/Liftoff.obj", true, ePS_BASIC, eVS_BASIC);
@@ -344,18 +369,17 @@ namespace RenderEngine {
 		mBox.AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 		AddNode(&mBox);
 		AddNode(&mPlane);
+		mBox.mPosition = Math::MatrixTranspose(Math::MatrixTranslation(0, 3, 0));
+		mPlane.mPosition = Math::MatrixTranspose(Math::MatrixTranslation(0, -1, 0));
 
-		CD3D11_BUFFER_DESC desc(sizeof(MyBuffer), D3D11_BIND_CONSTANT_BUFFER);
-		(*mDevice)->CreateBuffer(&desc, nullptr, &constantBluffer);
 
 		if (!mVrSystem) {
-			constantData.model = Math::MatrixTranspose(Math::MatrixTranslation(0, 0, 0));
-			constantData.view.matrix = (DirectX::XMMatrixLookAtRH({ 0, 2, 1, 0 }, { 0, 0, 0, 0 }, { 0, 1, 0, 0 }));
-			constantData.projection.matrix = DirectX::XMMatrixPerspectiveFovRH(70, (float)_height / (float)_width, 0.1f, 1000);
-			constantData.view = Math::MatrixTranspose(constantData.view);
-			constantData.projection = Math::MatrixTranspose(constantData.projection);
-			(*mContext)->UpdateSubresource(constantBluffer, 0, NULL, &constantData, 0, 0);
-			(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
+			mVPData.view.matrix = (DirectX::XMMatrixLookAtRH({ 0, 5, 5, 0 }, { 0, 1, 0, 0 }, { 0, 1, 0, 0 }));
+			mVPData.projection.matrix = DirectX::XMMatrixPerspectiveFovRH(70, (float)_height / (float)_width, 0.1f, 1000);
+			mVPData.view = Math::MatrixTranspose(mVPData.view);
+			mVPData.projection = Math::MatrixTranspose(mVPData.projection);
+			(*mContext)->UpdateSubresource(*mVPBuffer, 0, NULL, &mVPData, 0, 0);
+			(*mContext)->VSSetConstantBuffers(0, 1, mVPBuffer.get());
 		}
 
 		//// Print out the render model names available from openVR.
@@ -369,7 +393,7 @@ namespace RenderEngine {
 	}
 
 	void Renderer::Render() {
-		float color[4] = { 0.3f, 0.3f, 1, 1 };
+		float color[4] = { 0.251f, 0.709f, 0.541f, 1 };
 		(*mContext)->ClearRenderTargetView((*mMainView), color);
 		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 		if (nullptr == mVrSystem) {
