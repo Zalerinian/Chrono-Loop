@@ -69,7 +69,8 @@ namespace RenderEngine {
 																	int _width, int _height);
 		void InitializeIDWriteFactory();
 		void InitializeDirect2D();
-		int poop = 1;
+		int mFps = 0;
+		float mFrameTime = 0;
 
 		void InitializeViews(int _width, int _height);
 		void ThrowIfFailed(HRESULT hr);
@@ -102,7 +103,7 @@ namespace RenderEngine {
 			vr::IVRSystem* vrsys);
 
 		void AddNode(RenderShape *node);
-		void Render();
+		void Render(float _deltaTime);
 		inline std::shared_ptr<ID3D11Device*> GetDevice() { return mDevice; }
 		inline std::shared_ptr<ID3D11DeviceContext*> GetContext() { return mContext; }
 		inline std::shared_ptr<IDXGISwapChain*> GetChain() { return mChain; }

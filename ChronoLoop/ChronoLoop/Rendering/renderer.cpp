@@ -181,11 +181,10 @@ namespace RenderEngine {
 		//ID3D11Texture2D* backbuffer2D;
 		//ThrowIfFailed((*mChain)->GetBuffer(0, IID_PPV_ARGS(&backbuffer2D)));
 
-		//sInstance->mScreenBitmap = make_shared<ID2D1Bitmap*>(CreateBitmapForTexture(backbuffer2D));
-		sInstance->mScreenBitmap = make_shared<ID2D1Bitmap1*>(CreateBitmapForTexture((*mMainViewTexture)));
+		//sInstance->mScreenBitmap = make_shared<ID2D1Bitmap1*>(CreateBitmapForTexture(backbuffer2D));
+		//(*mContext2D)->SetTarget((*mScreenBitmap));
 
-		//Set Render Target
-		(*mContext2D)->SetTarget((*mScreenBitmap));
+		sInstance->mScreenBitmap = make_shared<ID2D1Bitmap1*>(CreateBitmapForTexture((*mMainViewTexture)));
 
 		//Write Factory initalized
 		IDWriteFactory* WriteFactory;
@@ -218,7 +217,7 @@ namespace RenderEngine {
 
 	void Renderer::InitializeDirect2D()
 	{
-		HRESULT hr;
+
 		//create 2dfactory
 		ID2D1Factory1 * factory2;
 		ThrowIfFailed(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &factory2));
@@ -321,9 +320,12 @@ namespace RenderEngine {
 				(*mContext)->ClearRenderTargetView((*mMainView), color);
 				(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 			}
+			//pat added 
+			std::wstring FPS = L"FPS: " + to_wstring(mFps);
+			DrawTextToBitmap(FPS, (*mScreenBitmap));
+			//-----
 			MyBuffer data;
 			GetMVP(currentEye, data, Math::MatrixTranslation(0, 1, -1));
-			
 			(*mContext)->UpdateSubresource(constantBluffer, 0, nullptr, (void*)&data, 0, 0);
 			(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
 
@@ -382,9 +384,9 @@ namespace RenderEngine {
 
 		(*mContext2D)->DrawText(
 			_text.c_str(),
-			_text.size(),
+			(UINT32)_text.size(),
 			(*mTextformat),
-			D2D1::RectF(0, 0, renderTargetSize.width, renderTargetSize.height),
+			D2D1::RectF(renderTargetSize.width*(3.0f/4.0f), renderTargetSize.height*(3.0f/4.0f), renderTargetSize.width, renderTargetSize.height),
 			(*mBrush)
 		);
 		ThrowIfFailed((*mContext2D)->EndDraw());
@@ -445,9 +447,10 @@ namespace RenderEngine {
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, rtvWidth, rtvHeight);
 		InitializeViews(rtvWidth, rtvHeight);
 		InitializeDirect2D();
-		InitializeIDWriteFactory();
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, _width, _height);
 		InitializeViews(_width, _height);
+		InitializeIDWriteFactory();
+
 		mUseVsync = _vsync;
 
 		//Model loading
@@ -473,7 +476,7 @@ namespace RenderEngine {
 #pragma region Instance Functions
 
 
-	void Renderer::Render() {
+	void Renderer::Render(float _deltaTime) {
 		float color[4] = { 0.3f, 0.3f, 1, 1 };
 		(*mContext)->ClearRenderTargetView((*mMainView), color);
 		if (nullptr == mVrSystem) {
@@ -482,8 +485,12 @@ namespace RenderEngine {
 			RenderVR();
 		}
 		(*mChain)->Present(mUseVsync ? 1 : 0, 0);
-		poop++;
-		DrawTextToBitmap(L"Frames:" +poop ,(*mScreenBitmap));
+		
+		mFrameTime += _deltaTime;
+		if (mFrameTime > .5f) {
+			mFps = (int)(1000.0f / (_deltaTime * 1000));
+			mFrameTime = 0;
+		}
 	}
 
 #pragma endregion Public Functions

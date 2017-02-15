@@ -101,7 +101,7 @@ void Update() {
 			}
 			// Logic.Update(float deltaTime);
 			TManager->Instance()->Update(deltaTime);
-			RenderEngine::Renderer::Instance()->Render();
+			RenderEngine::Renderer::Instance()->Render(deltaTime);
 		}
 	}
 }
