@@ -11,7 +11,7 @@ struct ID3D11Buffer;
 namespace RenderEngine {
 
 	struct RenderShape : public RenderNode {
-		std::shared_ptr<ID3D11Buffer*> mVertexBuffer, mIndexBuffer;
+		std::shared_ptr<ID3D11Buffer*> mVertexBuffer, mIndexBuffer, mPositionBuffer;
 		unsigned int                   mIndexCount = 0;
 
 		matrix4 mPosition;
