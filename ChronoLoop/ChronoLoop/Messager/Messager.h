@@ -5,6 +5,8 @@
 #include <vector>
 #include <thread>
 #include <mutex>
+#include <condition_variable>
+#include "..\Common\Logger.h"
 #include <cstdarg>
 
 enum msgTypes {NONE = -1, mSound, mRender, mInput, mPhysics};
@@ -109,7 +111,10 @@ class Messager
 private:
 	AudioWrapper audio;
 	//static std::priority_queue<Message*,std::vector<Message*>> msgQueue;
+	std::thread thrd;
 	std::mutex mLocker;
+	std::condition_variable cvar;
+
 	static std::queue<Message*> msgQueue;
 	static bool death;
 

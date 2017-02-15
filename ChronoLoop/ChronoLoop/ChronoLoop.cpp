@@ -22,7 +22,7 @@ HINSTANCE hInst;
 Messager msger = Messager::Instance();
 bool VREnabled = false;
 
-const wchar_t* _basePath = L"../ChronoLoop/Sound/Sound/Soundbanks/1";
+const wchar_t* _basePath = L"../ChronoLoop/Sound/Sound/Soundbanks/";
 const wchar_t* _initSB = L"Init.bnk";
 const wchar_t* _aSB = L"Test_Soundbank.bnk";
 
@@ -36,7 +36,7 @@ bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, b
 std::chrono::steady_clock::time_point lastTime = std::chrono::steady_clock::now();
 static float timeFrame = 0.0f;
 static float deltaTime;
-TimeManager* TManager; 
+TimeManager* TManager;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void Update();
 void UpdateTime();
@@ -151,32 +151,37 @@ void Update() {
 	Physics::Instance()->mColliders.push_back(&plane);
 	*////////////////////////////////////////////////////////////////////
 
-	//	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::INITIALIZE_Audio, 0, false));
-	//	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::SET_BasePath, 0, false, (void*)new m_Path(_basePath)));
-	//	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_initSB)));
-	//	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
-	//	BaseObject* test = new BaseObject();
-	//	Listener* lisnr = new Listener();
-	//	test->AddComponent(lisnr);
-	//	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(lisnr, nullptr)));
-	//	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Loc, 0, false, (void*)new m_LocEvent((AudioEvent)AK::EVENTS::PLAY_TEST2, new vec4f(0, 0, 0, 0))));
-	
+	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::INITIALIZE_Audio, 0, false));
+	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::SET_BasePath, 0, false, (void*)new m_Path(_basePath)));
+	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_initSB)));
+	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
+	Transform t;
+	t.SetMatrix(matrix4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0));
+	BaseObject* test = new BaseObject("", t);
+	Listener* lisnr = new Listener();
+	Emitter* emit = new Emitter();
+	lisnr->object = emit->object = test;
+	test->AddComponent(lisnr);
+	test->AddComponent(emit);
+	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(lisnr, nullptr)));
+	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(emit, nullptr)));
+	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Loc, 0, false, (void*)new m_Event((AudioEvent)AK::EVENTS::PLAY_TEST2, emit)));
+
 	while (true) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			// Handle windows message.
 			if (msg.message == WM_QUIT) {
-				//msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::SHUTDOWN_Audio, 0, false));
 				break;
 			}
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
-		} else {
+		}
+		else {
 			if (GetAsyncKeyState(VK_ESCAPE)) {
-				//msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::SHUTDOWN_Audio, 0, false));
 				break;
 			}
 			Physics::Instance()->Update(deltaTime);
-			//msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false));
+			msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false));
 			UpdateTime();
 			if (VREnabled) {
 				VRInputManager::Instance().update();
@@ -225,17 +230,17 @@ bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, b
 	}
 
 	hwnd = CreateWindowEx(                                     //Create our Extended Window
-												NULL,                                //Extended style
-												WndClassName,                        //Name of our windows class
-												L"Chrono::Loop",                     //Name in the title bar of our window
-												WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME, //style of our window
-												600, 150,                            //Top left corner of window
-												width,                               //Width of our window
-												height,                              //Height of our window
-												NULL,                                //Handle to parent window
-												NULL,                                //Handle to a Menu
-												hInstance,                           //Specifies instance of current program
-												NULL                                 //used for an MDI client window
+		NULL,                                //Extended style
+		WndClassName,                        //Name of our windows class
+		L"Chrono::Loop",                     //Name in the title bar of our window
+		WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME, //style of our window
+		600, 150,                            //Top left corner of window
+		width,                               //Width of our window
+		height,                              //Height of our window
+		NULL,                                //Handle to parent window
+		NULL,                                //Handle to a Menu
+		hInstance,                           //Specifies instance of current program
+		NULL                                 //used for an MDI client window
 	);
 	if (!hwnd) {
 		MessageBox(NULL, L"Error creating window", L"Error", MB_OK | MB_ICONERROR);
@@ -250,11 +255,11 @@ bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, b
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	switch (message) {
-		case WM_DESTROY:
-			PostQuitMessage(0);
-			break;
-		default:
-			return DefWindowProc(hWnd, message, wParam, lParam);
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		break;
+	default:
+		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
 	return 0;
 }

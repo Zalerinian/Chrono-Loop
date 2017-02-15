@@ -4,6 +4,8 @@ Messager* Messager::mMessager = nullptr;
 //std::priority_queue<Message*, std::vector<Message*>> Messager::msgQueue = std::priority_queue<Message*, std::vector<Message*>>();
 std::queue<Message*> Messager::msgQueue = std::queue<Message*>();
 bool Messager::death = false;
+bool fuckingLOCKED = false; //Send in progress
+bool fuckingLOCKED2 = false; //Process in progress
 
 Messager::Messager()
 {
@@ -13,19 +15,21 @@ Messager::Messager(Messager& _newMsgr)
 {
 	audio = _newMsgr.audio;
 	death = _newMsgr.death;
-	if (mLocker.try_lock())
+	/*if (mLocker.try_lock())
 	{
 		msgQueue = _newMsgr.msgQueue;
 		mLocker.unlock();
-	}
+	}*/
 }
 Messager::~Messager()
 {
 	death = true;
-	while (!msgQueue.empty())
+	thrd.join();
+	audio.Shutdown();
+	/*while (!msgQueue.empty())
 	{
 		msgQueue.pop();
-	}
+	}*/
 }
 
 void Messager::Initialize()
@@ -33,8 +37,7 @@ void Messager::Initialize()
 	if (!mMessager)
 		mMessager = this;
 
-	std::thread thrd(&Messager::Process, this);
-	thrd.detach();
+	thrd = std::thread(&Messager::Process, this);
 }
 Messager& Messager::Instance()
 {
@@ -52,11 +55,10 @@ void Messager::Destroy()
 
 void Messager::SendInMessage(Message* _msg)
 {
-	if (mLocker.try_lock())
-	{
-		msgQueue.push(_msg);
-		mLocker.unlock();
-	}
+	while (fuckingLOCKED2);
+	fuckingLOCKED = true;
+	msgQueue.push(_msg);
+	fuckingLOCKED = false;
 }
 
 void Messager::Process()
@@ -64,17 +66,18 @@ void Messager::Process()
 	while (!death)
 	{
 		Message* tempMsg = nullptr;
-		if (mLocker.try_lock())
+
+		while (fuckingLOCKED);
+		fuckingLOCKED2 = true;
+		if (msgQueue.empty())
 		{
-			if (msgQueue.empty())
-				continue;
-
-			tempMsg = msgQueue.front();
-			msgQueue.pop();
-			mLocker.unlock();
-			ProcessMessage(tempMsg);
+			fuckingLOCKED2 = false;
+			continue;
 		}
-
+		tempMsg = msgQueue.front();
+		msgQueue.pop();
+		fuckingLOCKED2 = false;
+		ProcessMessage(tempMsg);
 		delete tempMsg;
 	}
 }
@@ -105,6 +108,7 @@ void Messager::ProcessMessage(Message* _msg)
 	break;
 	}
 }
+
 void Messager::ProcessSound(Message* _msg)
 {
 	switch (_msg->smType)
