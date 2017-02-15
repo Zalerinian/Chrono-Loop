@@ -100,7 +100,9 @@ namespace RenderEngine {
 		(*mMainView)->Release();
 		(*mFactory)->Release();
 		(*mChain)->Release();
-		(*mDevice)->Release();
+		// The device's release has been moved to ChronoLoop.cpp
+		constantBluffer->Release();
+		(*mMainViewTexture)->Release();
 		mContext.reset();
 		mDSView.reset();
 		mDepthBuffer.reset();
@@ -115,7 +117,6 @@ namespace RenderEngine {
 		(*mContext2D)->Release();
 		(*mDWrite)->Release();
 		(*mTextformat)->Release();
-		(*m2DRenderTarget)->Release();
 		(*mBrush)->Release();
 		(*mScreenBitmap)->Release();
 
@@ -125,7 +126,6 @@ namespace RenderEngine {
 		mContext2D.reset();
 		mDWrite.reset();
 		mTextformat.reset();
-		m2DRenderTarget.reset();
 		mBrush.reset();
 		mScreenBitmap.reset();
 
@@ -177,14 +177,6 @@ namespace RenderEngine {
 	}
 
 	void Renderer::InitializeIDWriteFactory() {
-
-		//ID3D11Texture2D* backbuffer2D;
-		//ThrowIfFailed((*mChain)->GetBuffer(0, IID_PPV_ARGS(&backbuffer2D)));
-
-		//sInstance->mScreenBitmap = make_shared<ID2D1Bitmap1*>(CreateBitmapForTexture(backbuffer2D));
-		//(*mContext2D)->SetTarget((*mScreenBitmap));
-
-		sInstance->mScreenBitmap = make_shared<ID2D1Bitmap1*>(CreateBitmapForTexture((*mMainViewTexture)));
 
 		//Write Factory initalized
 		IDWriteFactory* WriteFactory;
@@ -238,6 +230,17 @@ namespace RenderEngine {
 		ThrowIfFailed((*sInstance->mDevice2D)->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, &context2d));
 		sInstance->mContext2D = make_shared<ID2D1DeviceContext*>(context2d);
 
+	}
+
+	void Renderer::InitializeScreenBitmap()
+	{
+		//ID3D11Texture2D* backbuffer2D;
+		//ThrowIfFailed((*mChain)->GetBuffer(0, IID_PPV_ARGS(&backbuffer2D)));
+
+		//sInstance->mScreenBitmap = make_shared<ID2D1Bitmap1*>(CreateBitmapForTexture(backbuffer2D));
+		//(*mContext2D)->SetTarget((*mScreenBitmap));
+
+		sInstance->mScreenBitmap = make_shared<ID2D1Bitmap1*>(CreateBitmapForTexture((*mMainViewTexture)));
 	}
 
 	void Renderer::InitializeDXGISwapChain(HWND &_win, bool _fullscreen, int _fps, int _width, int _height) {
@@ -304,6 +307,30 @@ namespace RenderEngine {
 		mViewport.TopLeftX = 0;
 		mViewport.TopLeftY = 0;
 		(*mContext)->RSSetViewports(1, &mViewport);
+	}
+
+	void Renderer::InitializeObjectNames() {
+#if _DEBUG
+		char deviceName[] = "Main Rendering Device";
+		char contextName[] = "Main Context";
+		char swapchainName[] = "Main Swapchain";
+		char factoryName[] = "3D DXGI Factory";
+		char mainViewName[] = "Backbuffer Render Target View";
+		char mainViewTexName[] = "Backbuffer Texture";
+		char dsvName[] = "Main Depth-Stencil View";
+		char dbName[] = "Main Depth Buffer Texture";
+		char cbuffName[] = "Temporary Rendering Constant Buffer";
+
+		(*mDevice)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(deviceName), deviceName);
+		(*mContext)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(contextName), contextName);
+		(*mChain)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(swapchainName), swapchainName);
+		(*mFactory)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(factoryName), factoryName);
+		(*mMainView)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(mainViewName), mainViewName);
+		(*mMainViewTexture)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(mainViewTexName), mainViewTexName);
+		(*mDSView)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(dsvName), dsvName);
+		(*mDepthBuffer)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(dbName), dbName);
+		//constantBluffer->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(cbuffName), cbuffName);
+#endif
 	}
 
 	void Renderer::RenderVR() {
@@ -447,15 +474,20 @@ namespace RenderEngine {
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, rtvWidth, rtvHeight);
 		InitializeViews(rtvWidth, rtvHeight);
 		InitializeDirect2D();
+		InitializeIDWriteFactory();
+#if _DEBUG
+		InitializeObjectNames();
+#endif
+
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, _width, _height);
 		InitializeViews(_width, _height);
-		InitializeIDWriteFactory();
+		InitializeScreenBitmap();
 
 		mUseVsync = _vsync;
 
 		//Model loading
 		mBox.Load("../Resources/Cube.obj", true, ePS_TEXTURED, eVS_TEXTURED);
-		mBox.AddTexture(L"../Resources/cube_texture.png", eTEX_DIFFUSE);
+		mBox.AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 		AddNode(&mBox);
 
 

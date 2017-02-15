@@ -2,16 +2,12 @@
 #include "RenderShape.h"
 #include "Renderer.h"
 #include <d3d11.h>
-#include "../Common/FileIO.h"
+#include "../Common/Breakpoint.h"
 #include "../Common/Common.h"
-#include "../../DXTK/ddstextureloader.h"
-#include "../../DXTK/DirectXTex.h"
+#include "../Common/Logger.h"
+#include "TextureManager.h"
 #include <memory>
 
-
-#if _DEBUG
-#include <intrin.h>
-#endif
 
 namespace RenderEngine {
 
@@ -46,8 +42,8 @@ namespace RenderEngine {
 	void RenderShape::Load(Mesh & _mesh) {
 #if _DEBUG
 		if (_mesh.VertSize() == 0) {
-			OutputDebugString(L"Attempting to load an empty mesh.\n");
-			__debugbreak();
+			Debug::SetBreakpoint();
+			SystemLogger::GetError() << "[Error] Attempting to load an empty mesh in RenderShape!" << std::endl;
 		}
 #endif
 		ID3D11Buffer *tBuffer;
@@ -94,29 +90,22 @@ namespace RenderEngine {
 		mContext.mPixelShaderFormat = pf;
 	}
 
-	RenderShape& RenderShape::AddTexture(const char * _path, TextureType position) {
-		wchar_t *path = nullptr;
-		Engine::MakeWide(_path, path, (unsigned int)strlen(_path) + 1);
-		AddTexture(path, position);
-		delete[] path;
+	RenderShape& RenderShape::AddTexture(const char * _path, TextureType _position) {
+		std::shared_ptr<ID3D11ShaderResourceView*> srv;
+		TextureManager::TextureStatus stat = TextureManager::Instance()->iGetTexture2D(_path, &srv, nullptr);
+		if (stat == TextureManager::TextureStatus::eSuccess) {
+			mContext.mTextures[_position] = srv;
+		} else {
+			SystemLogger::GetError() << "[Error] Failed to get synchronous texture from TextureManager!" << std::endl;
+		}
 		return *this;
 	}
 
-	RenderShape& RenderShape::AddTexture(const wchar_t * _path, TextureType position) {
-		DirectX::ScratchImage img;
-		DirectX::Blob *image = new DirectX::Blob;
-		UINT flags = 0;
-		DirectX::LoadFromWICFile(_path, flags, nullptr, img);
-		DirectX::SaveToDDSMemory(*img.GetImage(0, 0, 0), flags, *image);
-		ID3D11ShaderResourceView *srv;
-		ID3D11Texture2D *tex;
-		DirectX::CreateDDSTextureFromMemory((*Renderer::Instance()->GetDevice()), 
-			(const uint8_t*)image->GetBufferPointer(),
-			image->GetBufferSize(),
-			(ID3D11Resource**)&tex,
-			&srv);
-		mContext.mTextures[position] = std::make_shared<ID3D11ShaderResourceView*>(srv);
-		delete image;
+	RenderShape& RenderShape::AddTexture(const wchar_t * _path, TextureType _position) {
+		char *narrow = nullptr;
+		Engine::MakeNarrow(_path, &narrow, (unsigned int)std::wcslen(_path) + 1);
+		AddTexture(narrow, _position);
+		delete[] narrow;
 		return *this;
 	}
 

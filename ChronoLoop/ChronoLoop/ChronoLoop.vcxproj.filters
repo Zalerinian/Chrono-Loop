@@ -246,6 +246,9 @@
     <ClInclude Include="Input\KeyboardInput.h">
       <Filter>Input\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Rendering\TextureManager.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -397,6 +400,13 @@
     </ClCompile>
     <ClCompile Include="Input\KeyboardInput.cpp">
       <Filter>Input\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Common.cpp">
+      <Filter>Common\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\TextureManager.cpp" />
+    <ClCompile Include="Common\Breakpoint.cpp">
+      <Filter>Common\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

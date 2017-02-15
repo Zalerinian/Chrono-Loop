@@ -10,7 +10,13 @@ RenderEngine::RenderContext::RenderContext() {
 	//	mTextures.insert(std::pair<int, ID3D11ShaderResourceView*>(1, nullptr));
 }
 
-RenderEngine::RenderContext::~RenderContext() {}
+RenderEngine::RenderContext::~RenderContext() {
+	for (auto it = mTextures.begin(); it != mTextures.end(); ++it) {
+		if (it->second) {
+			(*it->second)->Release();
+		}
+	}
+}
 
 void RenderEngine::RenderContext::Apply() {
 	RasterizerStateManager::Instance()->ApplyState(mRasterState);

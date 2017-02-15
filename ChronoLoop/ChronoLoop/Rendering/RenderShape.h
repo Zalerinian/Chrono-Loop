@@ -23,8 +23,8 @@ namespace RenderEngine {
 
 		inline RenderContext &GetContext() { return mContext; }
 
-		RenderShape& AddTexture(const char* _path, TextureType position);
-		RenderShape& AddTexture(const wchar_t* _path, TextureType position);
+		RenderShape& AddTexture(const char* _path, TextureType _position);
+		RenderShape& AddTexture(const wchar_t* _path, TextureType _position);
 		void Render();
 
 	protected:

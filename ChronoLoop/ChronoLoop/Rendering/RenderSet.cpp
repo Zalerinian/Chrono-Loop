@@ -6,10 +6,6 @@
 #include "../Common/Breakpoint.h"
 #include "../Common/Logger.h"
 
-#if _DEBUG
-#include <intrin.h>
-#endif
-
 namespace RenderEngine {
 	void RenderSet::AddNode(RenderNode *node, RenderContext* rc) {
 		if (node->mType == RenderNode::RenderNodeType::Shape) {
@@ -52,4 +48,14 @@ namespace RenderEngine {
 	const RenderNode * RenderSet::GetHead() {
 		return mHead;
 	}
+
+	RenderSet::~RenderSet() {
+		mContexts.clear();
+		while (mHead) {
+			RenderNode *n = mHead;
+			mHead = mHead->mNext;
+			//delete n;
+		}
+	}
+
 }
