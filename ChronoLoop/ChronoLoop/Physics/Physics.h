@@ -51,7 +51,7 @@ class Physics
 
 public:
 	bool mRayCasting;
-	std::vector<Collider*> mColliders;
+	std::vector< BaseObject*> mObjects;
 
 	static Physics* Instance();
 	static void		Destroy();

@@ -47,26 +47,76 @@ void Emitter::Destroy()
 vec4f Collider::GetPos()
 {
 	return object->GetTransform().GetMatrix().fourth;
-
 }
+
 void Collider::SetPos(vec4f _newPos)
 {
 	object->GetTransform().GetMatrix().fourth = _newPos;
-	if (mIsCube)
-	{
-		mCubeMax += _newPos;
-		mCubeMin += _newPos;
-	}
 }
-//void Collider::CalcObjAcceleration(vec4f& _force)
-//{
-//	mAcceleration = Physics::Instance()->CalcAcceleration(_force, mMass);
-//}
-//void Collider::CalcObjVelocity(vec4f& _force, float _dt)
-//{
-//	mVelocity = Physics::Instance()->CalcVelocity(mVelocity, mAcceleration, _dt);
-//}
-//void Collider::CalcObjPosition(vec4f& _force, float _dt)
-//{
-//	object->GetTransform().GetMatrix().fourth = Physics::Instance()->CalcPosition(object->GetTransform().GetMatrix().fourth, mVelocity, _dt);
-//}
+
+MeshCollider::MeshCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, char * _path)
+{
+	mType = eCOLLIDER_Mesh;
+	mGravity = _gravity;
+	mVelocity = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
+	mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
+	mTotalForce = mGravity;
+	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
+	mShouldMove = _move;
+	mMass = _mass;
+	mElasticity = _elasticity;
+	mMesh = &Mesh(_path);
+}
+
+SphereCollider::SphereCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _radius)
+{
+	mType = eCOLLIDER_Sphere;
+	mGravity = _gravity;
+	mVelocity = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
+	mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
+	mTotalForce = mGravity;
+	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
+	mShouldMove = _move;
+	mMass = _mass;
+	mElasticity = _elasticity;
+	mRadius = _radius;
+}
+
+CubeCollider::CubeCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, vec4f _min, vec4f _max)
+{
+	mType = eCOLLIDER_Cube;
+	mGravity = _gravity;
+	mVelocity = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
+	mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
+	mTotalForce = mGravity;
+	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
+	mShouldMove = _move;
+	mMass = _mass;
+	mElasticity = _elasticity;
+	mMin = _min;
+	mMax = _max;
+}
+
+void CubeCollider::SetPos(vec4f _newPos)
+{
+	object->GetTransform().GetMatrix().fourth = _newPos; 
+	mMin += _newPos; 
+	mMax += _newPos; 
+}
+
+PlaneCollider::PlaneCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _offset, vec4f _norm)
+{
+	mType = eCOLLIDER_Plane;
+	mGravity = _gravity;
+	mVelocity = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
+	mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
+	mTotalForce = mGravity;
+	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
+	mShouldMove = _move;
+	mMass = _mass;
+	mElasticity = _elasticity;
+	mOffset = _offset;
+	mNormal = _norm;
+}
+
+

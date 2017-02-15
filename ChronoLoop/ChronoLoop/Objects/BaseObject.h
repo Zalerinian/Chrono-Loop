@@ -2,13 +2,12 @@
 #include <string>
 #include <list>
 #include <vector>
+#include <unordered_map>
 #include "Transform.h"
 #include "Component.h"
 #include "..\Physics\Physics.h"
 #include "..\Core\TimeManager.h"
-
-
-class Component;
+#include "..\Objects\Component.h"
 
 class BaseObject
 {
@@ -17,7 +16,7 @@ private:
 	BaseObject* parent;
 	unsigned short  UniqueID, id;
 	std::list<BaseObject*> children;
-	std::vector<Component*> components;
+	//std::vector<Component*> components;
 	Transform transform;
 
 public:
@@ -29,6 +28,7 @@ public:
 	BaseObject Clone(BaseObject _clone);
 	BaseObject const* operator=(BaseObject _equals);
 	unsigned short& GetUniqueId();
+	std::unordered_map<ComponentType, std::vector<Component*>> mComponents;
 
 	void Destroy() { delete this; };
 
@@ -48,12 +48,12 @@ public:
 	std::list<BaseObject*>		GetChildren() { return children; };
 	void						SetChildren(std::list<BaseObject*> _children) { children = _children; };
 
-	std::vector<Component*>		GetComponents() { return components; };
-	void						SetComponents(std::vector<Component*> _components) { components = _components; };
+	std::vector<Component*>		GetComponents(ComponentType _type) { return mComponents[_type]; };
+	void						SetComponents(ComponentType _type, std::vector<Component*> _components) { mComponents[_type] = _components; };
 	
 
 	//**FUNCTION**//
-	void						AddComponent(Component* _comp) { components.push_back(_comp); };
+	void						AddComponent(ComponentType _type, Component* _comp);
 	//void						RemoveComponent(Component _comp) { components.remove(_comp); };
 	void						AddChild(BaseObject* _obj) { children.push_back(_obj); };
 	void						RemoveChild(BaseObject* _obj) { children.remove(_obj); };

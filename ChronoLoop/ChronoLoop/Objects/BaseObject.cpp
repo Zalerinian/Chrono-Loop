@@ -19,11 +19,12 @@ BaseObject::BaseObject(std::string _name, Transform _transform)
 BaseObject::~BaseObject()
 {
 	delete parent;
-	for(auto c : components)
+	for(auto iter = mComponents.begin(); iter != mComponents.end(); ++iter)
 	{
-		delete c;
+		for (int i = 0; i < iter->second.size(); ++i)
+			delete iter->second[i];
 	}
-	components.clear();
+	mComponents.clear();
 	children.clear();
 }
 BaseObject BaseObject::Clone()
@@ -33,7 +34,7 @@ BaseObject BaseObject::Clone()
 	temp.name = this->name;
 	temp.transform = this->transform;
 	temp.parent = this->parent;
-	temp.components = this->components;
+	temp.mComponents = this->mComponents;
 	temp.children = this->children;
 	return temp;
 }
@@ -43,7 +44,7 @@ BaseObject BaseObject::Clone(BaseObject _clone)
 	_clone.name = this->name;
 	_clone.transform = this->transform;
 	_clone.parent = this->parent;
-	_clone.components = this->components;
+	_clone.mComponents = this->mComponents;
 	_clone.children = this->children;
 	return _clone;
 }
@@ -54,7 +55,7 @@ BaseObject const* BaseObject::operator=(BaseObject _equals)
 	if (this->parent != _equals.parent) this->parent = _equals.parent;
 	if (this->children != _equals.children) this->children = _equals.children;
 	//if (this->transform != _equals.transform) this->transform = _equals.transform;
-	if (this->components != _equals.components) this->components = _equals.components;
+	if (this->mComponents != _equals.mComponents) this->mComponents = _equals.mComponents;
 	return this;
 }
 
@@ -62,3 +63,9 @@ unsigned short& BaseObject::GetUniqueId()
 {
 	return id;
 }
+
+void BaseObject::AddComponent(ComponentType _type, Component* _comp)
+{
+	mComponents[_type].push_back(_comp);
+}
+

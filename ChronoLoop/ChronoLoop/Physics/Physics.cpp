@@ -512,41 +512,24 @@ vec4f Physics::CalcPosition(vec4f& _pos, vec4f& _vel, float _time)
 
 void Physics::CalcReaction(Collider& _col1, Collider& _col2, float _time)
 {
-	float avgElasticity;     // average coefficient of restitution
-	vec4f impulse; //  impulse vector 
-	vec4f collisionNormal; // the normalized vector of the collision normal vector
-	vec4f relativeVelocity; // relative velocity of the ball 
-				 // compute the average coefficient of restitution (e) of the 2 colliding bodies
+	float avgElasticity;
+	vec4f impulse; 
+	vec4f collisionNormal; 
+	vec4f relativeVelocity;
+				 
 	avgElasticity = (_col1.mElasticity + _col2.mElasticity) / 2;
-	//compute collision Normal n= C1-C2   C1=ball1 center position ,C2=ball2 center position
 	collisionNormal = _col1.GetPos() - _col2.GetPos();
-	// normalize n 
 	collisionNormal.Normalize();
-	// set the Collision normal(theCollision.norma) to n
-	//theCollision.normal = collisionNormal;
-	// compute the relative velocity of the two balls  Vr=v1-v2  where v1=body1 velocity and v2=body2 velocity
 	relativeVelocity = _col1.mVelocity - _col2.mVelocity;
-	// set theCollision relative velocity to Vr 
-	//theCollision.relativeVelocity = relativeVelocity;
-	//compute the magnitutde of impulse  impulse= -(1+e)*m1*m2*(v1-v2)*n/(m1+m2) , v1-v2=relative velocity=Vr
 	float impulseMagnitude;
 	impulseMagnitude = -(1 + avgElasticity) * _col1.mMass * _col2.mMass * (relativeVelocity * collisionNormal) / (_col1.mMass + _col2.mMass);
-	// compute now the impulse vector impulse in the direction of the collision normal vector n, impulse= impulse*n
 	impulse = collisionNormal * impulseMagnitude;
-	// compute the impulsive force (impulsiveForce) of ball1 .remember F=impulse/deltaT
 	_col1.mImpulsiveForce = impulse / _time;
-	// compute the impulsive force (impulsiveForce) of ball2 .remember F=-impulse/deltaT
 	_col2.mImpulsiveForce = -impulse / _time;
-	// compute the velocities of body1 after collision:v1=v1+ impulse/m1
 	_col1.mVelocity = _col1.mVelocity + impulse / _col1.mMass;
-	// compute the velocities of body2 after collision:v2=v2-impulse/m2
 	_col2.mVelocity = _col2.mVelocity - impulse / _col2.mMass;
-	// compute the total force on body1 during collision : body1 totalForce= body1 impulsiveForce 
-	_col1.mTotalForce = _col1.mImpulsiveForce + _col1.mGravity;
-	// compute the total force on body2 during collision : body2 totalForce= body2 impulsiveForce 
-	_col2.mTotalForce = _col2.mImpulsiveForce + _col2.mGravity;
-	// calculate the collision contact point C=C1 + ball1Radius*n  from ball1 .
-	//theCollision.contactPoint = body1.position + body1.radius * collisionNormal;
+	_col1.mTotalForce += _col1.mImpulsiveForce;
+	_col2.mTotalForce += _col2.mImpulsiveForce;
 }
 
 #pragma endregion
@@ -557,114 +540,129 @@ void Physics::Update(float _time)
 	Collider* otherCol;
 	vec4f norm;
 	
-	int objs = mColliders.size();
+	int objs = mObjects.size();
 	for (int i = 0; i < objs; ++i)
 	{
-		collider = mColliders[i];
-		if (collider->mShouldMove)
+		int cols = mObjects[i]->mComponents[eCOMPONENT_PhysicsCollider].size();
+		for (int i = 0; i < cols; ++i)
 		{
-			collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
-			collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
-			collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
-		}
-
-		if (collider->mIsSphere)
-		{
-			Sphere s1(collider->GetPos(), collider->mRadius);
-			for (int j = 0; j < objs; ++j)
+			collider = (Collider*)mObjects[i]->mComponents[eCOMPONENT_PhysicsCollider][i];
+			if (collider->mShouldMove)
 			{
-				if (mColliders[j] != mColliders[i])
+				collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
+				collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
+				collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
+			}
+
+			if (collider->mType == Collider::eCOLLIDER_Sphere)
+			{
+				Sphere s1(((SphereCollider*)collider)->GetPos(), ((SphereCollider*)collider)->mRadius);
+				for (int j = 0; j < objs; ++j)
 				{
-					otherCol = mColliders[j];
-					//Not sure what outnorm is used for at the moment might just stick with basic cube/sphere collisions
-					if (MovingSphereToMesh(collider->GetPos(), collider->mVelocity, collider->mRadius, mColliders[j]->mMesh, _time, norm))
+					if (mObjects[j] != mObjects[i])
 					{
-						SystemLogger::GetLog() << "SPHERE TO MESH COLLISION!";
-					}
-					else if (otherCol->mIsSphere)
-					{
-						Sphere s2(otherCol->GetPos(), otherCol->mRadius);
-						if (SphereToSphere(s1, s2))
+						int othercols = mObjects[j]->mComponents[eCOMPONENT_PhysicsCollider].size();
+						for (int k = 0; k < othercols; ++k)
 						{
-							//reflect? dissapear?
-							SystemLogger::GetLog() << "SPHERE TO SPHERE COLLISION!";
-						}
-						break;
-					}
-					else if (otherCol->mIsCube)
-					{
-						AABB aabb(otherCol->mCubeMin, otherCol->mCubeMax);
-						if (SphereToAABB(s1, aabb))
-						{
-							//reflect? dissapear?
-							SystemLogger::GetLog() << "SPHERE TO AABB COLLISION FROM SPHERE!";
-						}
-						break;
-					}
-					else if (otherCol->mIsPlane)
-					{
-						Plane plane(otherCol->mPlaneNorm, otherCol->mPlaneOffset);
-						int result = SphereToPlane(plane, s1);
-						if (result == 1)//in front of plane
-						{
-							SystemLogger::GetLog() << "SPHERE IN FRONT OF PLANE!";
-						}
-						else if (result == 2)//behind plane
-						{
-							SystemLogger::GetLog() << "SPHERE BEHIND PLANE!";
-						}
-						else if (result == 3)// intersecting plane
-						{
-							SystemLogger::GetLog() << "SPHERE INTERSECTING PLANE!";
+							otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_PhysicsCollider][k];
+							if (otherCol->mType == Collider::eCOLLIDER_Mesh)
+							{
+								//Not sure what outnorm is used for at the moment might just stick with basic cube/sphere collisions
+								if (MovingSphereToMesh(collider->GetPos(), collider->mVelocity, ((SphereCollider*)collider)->mRadius, ((MeshCollider*)otherCol)->mMesh, _time, norm))
+								{
+									SystemLogger::GetLog() << "SPHERE TO MESH COLLISION!";
+								}
+							}
+							else if (otherCol->mType == Collider::eCOLLIDER_Sphere)
+							{
+								Sphere s2(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
+								if (SphereToSphere(s1, s2))
+								{
+									//reflect? dissapear?
+									SystemLogger::GetLog() << "SPHERE TO SPHERE COLLISION!";
+								}
+								break;
+							}
+							else if (otherCol->mType == Collider::eCOLLIDER_Cube)
+							{
+								AABB aabb(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
+								if (SphereToAABB(s1, aabb))
+								{
+									//reflect? dissapear?
+									SystemLogger::GetLog() << "SPHERE TO AABB COLLISION FROM SPHERE!";
+								}
+								break;
+							}
+							else if (otherCol->mType == Collider::eCOLLIDER_Plane)
+							{
+								Plane plane(((PlaneCollider*)otherCol)->mNormal, ((PlaneCollider*)otherCol)->mOffset);
+								int result = SphereToPlane(plane, s1);
+								if (result == 1)//in front of plane
+								{
+									SystemLogger::GetLog() << "SPHERE IN FRONT OF PLANE!";
+								}
+								else if (result == 2)//behind plane
+								{
+									SystemLogger::GetLog() << "SPHERE BEHIND PLANE!";
+								}
+								else if (result == 3)// intersecting plane
+								{
+									SystemLogger::GetLog() << "SPHERE INTERSECTING PLANE!";
+								}
+							}
 						}
 					}
 				}
 			}
-		}
-		else if (collider->mIsCube)
-		{
-			AABB aabb1(collider->mCubeMin, collider->mCubeMax);
-			for (int j = 0; j < objs; ++j)
+			else if (collider->mType == Collider::eCOLLIDER_Cube)
 			{
-				if (mColliders[j] != mColliders[i])
+				AABB aabb1(((CubeCollider*)collider)->mMin, ((CubeCollider*)collider)->mMax);
+				for (int j = 0; j < objs; ++j)
 				{
-					otherCol = mColliders[j];
-					if (otherCol->mIsCube)
+					if (mObjects[j] != mObjects[i])
 					{
-						AABB aabb2(otherCol->mCubeMin, otherCol->mCubeMax);
-						if (AABBtoAABB(aabb1, aabb2))
+						int othercols = mObjects[j]->mComponents[eCOMPONENT_PhysicsCollider].size();
+						for (int k = 0; k < othercols; ++k)
 						{
-							//reflect? dissapear?
-							SystemLogger::GetLog() << "AABB TO AABB COLLISION!";
-						}
-						break;
-					}
-					else if (otherCol->mIsSphere)
-					{
-						Sphere s1(otherCol->object->GetTransform().GetMatrix().fourth, otherCol->mRadius);
-						if (SphereToAABB(s1, aabb1))
-						{
-							//reflect? dissapear?
-							SystemLogger::GetLog() << "SPHERE TO AABB COLLISION FROM AABB!";
-						}
-						break;
-					}
-					else if (otherCol->mIsPlane)
-					{
-						Plane plane(otherCol->mPlaneNorm, otherCol->mPlaneOffset);
-						int result = AabbToPlane(plane, aabb1);
-						if (result == 1)//in front of plane
-						{
-							SystemLogger::GetLog() << "AABB IN FRONT OF PLANE!";
-						}
-						else if (result == 2)//behind plane
-						{
-							SystemLogger::GetLog() << "AABB BEHIND PLANE!";
-						}
-						else if (result == 3)// intersecting plane
-						{
-							SystemLogger::GetLog() << "AABB INTERSECTING PLANE!";
-							CalcReaction(*collider, *otherCol, _time);
+							otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_PhysicsCollider][k];
+							if (otherCol->mType == Collider::eCOLLIDER_Cube)
+							{
+								AABB aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
+								if (AABBtoAABB(aabb1, aabb2))
+								{
+									//reflect? dissapear?
+									SystemLogger::GetLog() << "AABB TO AABB COLLISION!";
+								}
+								break;
+							}
+							else if (otherCol->mType == Collider::eCOLLIDER_Sphere)
+							{
+								Sphere s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
+								if (SphereToAABB(s1, aabb1))
+								{
+									//reflect? dissapear?
+									SystemLogger::GetLog() << "SPHERE TO AABB COLLISION FROM AABB!";
+								}
+								break;
+							}
+							else if (otherCol->mType == Collider::eCOLLIDER_Plane)
+							{
+								Plane plane(((PlaneCollider*)otherCol)->mNormal, ((PlaneCollider*)otherCol)->mOffset);
+								int result = AabbToPlane(plane, aabb1);
+								if (result == 1)//in front of plane
+								{
+									SystemLogger::GetLog() << "AABB IN FRONT OF PLANE!" << std::endl;
+								}
+								else if (result == 2)//behind plane
+								{
+									SystemLogger::GetLog() << "AABB BEHIND PLANE!" << std::endl;
+								}
+								else if (result == 3)// intersecting plane
+								{
+									SystemLogger::GetLog() << "AABB INTERSECTING PLANE!" << std::endl;
+									//CalcReaction(*collider, *otherCol, _time);
+								}
+							}
 						}
 					}
 				}

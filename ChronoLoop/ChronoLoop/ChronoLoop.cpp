@@ -3,6 +3,7 @@
 #include "Rendering/renderer.h"
 #include "Objects/BaseObject.h"
 #include "Rendering/InputLayoutManager.h"
+#include ".\Rendering\RenderShape.h"
 #include "Input/VRInputManager.h"
 #include "Core/TimeManager.h"
 #include "Common/Logger.h"
@@ -100,24 +101,13 @@ void Update() {
 	ZeroMemory(&msg, sizeof(MSG));
 
 	///*///////////////////////Using this to test physics//////////////////
-	Transform transform, transform1;
+	Transform transform;
 	transform.SetMatrix(Identity());
-	BaseObject obj;
-	obj.SetName("aabb");
-	Collider aabb;
-	aabb.mAcceleration.vector = { 0.0f, 0.0f, 0.0f, 0.0f };
-	aabb.mCubeMax.vector = { -1.0f, 2.0f, -1.0f, 1.0f };
-	aabb.mCubeMin.vector = { 1.0f, 1.0f, 1.0f, 1.0f };
-	aabb.mIsCube = true;
-	aabb.mIsSphere = false;
-	aabb.mIsPlane = false;
-	aabb.mShouldMove = true;
-	aabb.mMass = 10.0f;
-	aabb.mVelocity.vector = { 0.0f, 0.0f, 0.0f, 0.0f };
-	aabb.mElasticity = 0.5f;
-	obj.AddComponent(&aabb);
-	obj.SetTransform(transform);
+	BaseObject obj("aabb", transform);
+	CubeCollider aabb(true, vec4f(0.0f, -0.01f, 0.0f, 0.0f), 10.0f, 5.0f, vec4f(1.0f, 1.0f, 1.0f, 1.0f), vec4f(-1.0f, 2.0f, -1.0f, 1.0f));
+	obj.AddComponent(eCOMPONENT_PhysicsCollider, &aabb);
 	aabb.object = &obj;
+	//RenderEngine::Renderer::Instance()->mBox.mPosition = obj.GetTransform().GetMatrix();
 
 	matrix4 mat = Identity();
 	mat.fourth.x = 0.0f;
@@ -125,26 +115,16 @@ void Update() {
 	mat.fourth.z = 0.0f;
 	mat.fourth.w = 1.0f;
 
+	Transform transform1;
 	transform1.SetMatrix(mat);
-	BaseObject obj1;
-	obj1.SetName("plane");
-	Collider plane;
-	plane.mAcceleration.vector = { 0.0f, 0.0f, 0.0f, 0.0f };
-	plane.mIsCube = false;
-	plane.mIsSphere = false;
-	plane.mIsPlane = true;
-	plane.mShouldMove = false;
-	plane.mMass = 0.0f;
-	plane.mElasticity = 0.0f;
-	plane.mPlaneNorm.vector = { 0.0f, 1.0f, 0.0f, 0.0f };
-	plane.mPlaneOffset = 0.0f;
-	plane.mVelocity.vector = { 0.0f, 0.0f, 0.0f, 0.0f };
-	obj1.AddComponent(&plane);
-	obj1.SetTransform(transform1);
+	BaseObject obj1("plane", transform1);
+	PlaneCollider plane(false, vec4f(0.0f, 0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0.0f, vec4f(0.0f, 1.0f, 0.0f , 0.0f));
+	obj1.AddComponent(eCOMPONENT_PhysicsCollider, &plane);
 	plane.object = &obj1;
+	//RenderEngine::Renderer::Instance()->mPlane.mPosition = obj1.GetTransform().GetMatrix();
 
-	Physics::Instance()->mColliders.push_back(&aabb);
-	Physics::Instance()->mColliders.push_back(&plane);
+	Physics::Instance()->mObjects.push_back(&obj);
+	Physics::Instance()->mObjects.push_back(&obj1);
 	//*////////////////////////////////////////////////////////////////////
 
 
@@ -160,6 +140,8 @@ void Update() {
 			if (GetAsyncKeyState(VK_ESCAPE)) {
 				break;
 			}
+			//RenderEngine::Renderer::Instance()->mBox.mPosition = obj.GetTransform().GetMatrix();
+			//RenderEngine::Renderer::Instance()->mPlane.mPosition = obj1.GetTransform().GetMatrix();
 			Physics::Instance()->Update(deltaTime);
 			UpdateTime();
 			if (VREnabled) {
