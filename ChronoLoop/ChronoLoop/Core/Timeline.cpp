@@ -35,8 +35,45 @@ void Timeline::AddBaseObject(BaseObject* _object, unsigned short _id)
 
 void Timeline::AddSnapshot(float _snaptime,Snapshot* _snapshot)
 {
-	mSnaptimes.push_back(_snaptime);
 	mSnapshots[_snaptime] = _snapshot;
+}
+
+void Timeline::RewindNoClone(float _snaptime)
+{
+	//Look for the snap inx we want to rewind back to
+	for (int i = 0; i<mSnaptimes.size(); i++)
+	{
+		if (_snaptime == mSnaptimes[i]) {
+			mCurrentGameTimeIndx = i;
+			break;
+		}
+	}
+
+	MoveAllObjectsToSnap(_snaptime);
+
+}
+
+void Timeline::MoveAllObjectsToSnap(float _snaptime)
+{
+	//TODO PAT: THIS DOESNT TAKE IN ACCOUNT IF SOMETHING WAS MADE IN THE FUTURE TO DELETE IT
+	Snapshot* destination = mSnapshots[_snaptime];
+	for(auto object : mLiveObjects)
+	{
+		short id = object.second->GetUniqueID();
+		SnapInfo* destInfo = destination->mSnapinfos[id];
+		//If the object doesnt have a info, then check against the list for the last snap it was updated
+		if( destInfo == nullptr)
+		{
+			float lastUpdated = destination->mUpdatedtimes[id];
+			destInfo = mSnapshots[lastUpdated]->mSnapinfos[id];
+		}
+		//Set Object data
+		BaseObject* baseobject = object.second;
+		baseobject->SetTransform(destInfo->mTransform);
+		//TODO PAT: WRITE A SetComponets Func to take in SnapComonets
+		//baseobject->SetComponents(destInfo->mComponets)
+		
+	}
 }
 
 
@@ -100,8 +137,23 @@ SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object)
 
 Snapshot* Timeline::GenerateSnapShot(float _time)
 {
-	Snapshot* snap = new Snapshot();
-	snap->mTime = _time;
+	Snapshot* snap;
+	bool OldSnap = false;
+
+	//We are on an old Snapshot
+	if(mCurrentGameTimeIndx < mSnaptimes.size()-1)
+	{
+		_time = mSnaptimes[mCurrentGameTimeIndx];
+		snap = mSnapshots[_time];
+		OldSnap = true;
+	}
+	//We are making a new snap in the timeline
+	else
+	{
+		snap = new Snapshot();
+		snap->mTime = _time;
+	}
+	
 	//If first snapshot taken
 	if (mSnapshots.size() == 0)
 	{
@@ -117,7 +169,8 @@ Snapshot* Timeline::GenerateSnapShot(float _time)
 	}
 	else
 	{
-		snap->mUpdatedtimes = mSnapshots[mSnaptimes[mSnaptimes.size() -1]]->mUpdatedtimes;
+		//Copy the exciting updated times to this one
+		snap->mUpdatedtimes = mSnapshots[mSnaptimes[mCurrentGameTimeIndx]]->mUpdatedtimes;
 		for (std::pair<unsigned short, BaseObject*> _b : mLiveObjects)
 		{
 			if (_b.second)
@@ -131,6 +184,10 @@ Snapshot* Timeline::GenerateSnapShot(float _time)
 			}
 		}
 	}
+	if (!OldSnap) {
+		mSnaptimes.push_back(_time);
+	}
+	mCurrentGameTimeIndx++;
 	return snap;
 }
 

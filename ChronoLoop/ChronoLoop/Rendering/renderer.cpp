@@ -203,7 +203,7 @@ namespace RenderEngine {
 
 		//Brush for the screen
 		ID2D1SolidColorBrush* brush;
-		ThrowIfFailed((*mContext2D)->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White, 1.0f), &brush));
+		ThrowIfFailed((*mContext2D)->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::SeaGreen, 1.0f), &brush));
 		sInstance->mBrush = make_shared<ID2D1SolidColorBrush*>(brush);
 	}
 
@@ -522,6 +522,7 @@ namespace RenderEngine {
 		if (mFrameTime > .5f) {
 			mFps = (int)(1000.0f / (_deltaTime * 1000));
 			mFrameTime = 0;
+
 		}
 	}
 

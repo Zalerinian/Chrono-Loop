@@ -47,9 +47,12 @@ class Timeline
 public:
 	Timeline();
 	~Timeline();
+	int mCurrentGameTimeIndx = -1;
 	void AddBaseObject(BaseObject* _object, unsigned short _id);						//add to the list of recorded objects. This func should be called constructer
 	//TODO PAT: add a remove base object func that says the object has been removed in the next snap recording
 	void AddSnapshot(float _snaptime, Snapshot* _snapshot);
+	void RewindNoClone(float _snaptime);
+	void MoveAllObjectsToSnap(float _snaptime);
 	void ClearTimeLine();
 	SnapInfo* GenerateSnapInfo(BaseObject* _object);							//Error check agianst the BaseObject* if it is null or not
 	Snapshot* GenerateSnapShot(float _time);
