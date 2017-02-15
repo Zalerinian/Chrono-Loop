@@ -117,7 +117,7 @@ namespace RenderEngine {
 		(*mTextformat)->Release();
 		(*m2DRenderTarget)->Release();
 		(*mBrush)->Release();
-		(*mBitmap)->Release();
+		(*mScreenBitmap)->Release();
 
 		mTextFactory.reset();
 		mDevice.reset();
@@ -127,7 +127,7 @@ namespace RenderEngine {
 		mTextformat.reset();
 		m2DRenderTarget.reset();
 		mBrush.reset();
-		mBitmap.reset();
+		mScreenBitmap.reset();
 
 	}
 
@@ -177,46 +177,15 @@ namespace RenderEngine {
 	}
 
 	void Renderer::InitializeIDWriteFactory() {
-		HRESULT hr;
-		//create 2dfactory
-		ID2D1Factory1 * factory2;
-		ThrowIfFailed(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &factory2));
-		sInstance->mTextFactory = make_shared<ID2D1Factory1*>(factory2);
 
-		//createDxgiDevice
-		IDXGIDevice* DxgiDevice;
-		ThrowIfFailed((*sInstance->GetDevice())->QueryInterface(__uuidof(IDXGIDevice), (void **)&DxgiDevice));
-		sInstance->mGIDevice = make_shared<IDXGIDevice*>(DxgiDevice);
+		//ID3D11Texture2D* backbuffer2D;
+		//ThrowIfFailed((*mChain)->GetBuffer(0, IID_PPV_ARGS(&backbuffer2D)));
 
-		//create device2d 
-		ID2D1Device* Device2d;
-		ThrowIfFailed(factory2->CreateDevice(*sInstance->mGIDevice, &Device2d));
-		sInstance->mDevice2D = make_shared<ID2D1Device*>(Device2d);
+		//sInstance->mScreenBitmap = make_shared<ID2D1Bitmap*>(CreateBitmapForTexture(backbuffer2D));
+		sInstance->mScreenBitmap = make_shared<ID2D1Bitmap1*>(CreateBitmapForTexture((*mMainViewTexture)));
 
-		//create context
-		ID2D1DeviceContext* context2d;
-		ThrowIfFailed((*sInstance->mDevice2D)->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, &context2d));
-		sInstance->mContext2D = make_shared<ID2D1DeviceContext*>(context2d);
-
-		//Make a bitmap
-		D2D1_BITMAP_PROPERTIES1 bitmapProperties =
-			BitmapProperties1(
-				D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
-				PixelFormat(DXGI_FORMAT_R16G16B16A16_FLOAT, D2D1_ALPHA_MODE_IGNORE),
-				0,
-				0		//defaults to 96
-			);
-
-		IDXGISurface* dxgiBackbuffer;
-		ThrowIfFailed((*mChain)->GetBuffer(0, IID_PPV_ARGS(&dxgiBackbuffer)));
-
-		ID2D1Bitmap1* bitmap;
-		hr = (*mContext2D)->CreateBitmapFromDxgiSurface(dxgiBackbuffer, &bitmapProperties, &bitmap);
-		sInstance->mBitmap = make_shared<ID2D1Bitmap1*>(bitmap);
-
-		//Set render target
-		(*mContext2D)->SetTarget((*mBitmap));
-
+		//Set Render Target
+		(*mContext2D)->SetTarget((*mScreenBitmap));
 
 		//Write Factory initalized
 		IDWriteFactory* WriteFactory;
@@ -241,29 +210,34 @@ namespace RenderEngine {
 		WriteFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
 		WriteFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
 
-
-		/*D2D1_PIXEL_FORMAT PF = { DXGI_FORMAT_B8G8R8A8_UNORM,D2D1_ALPHA_MODE_IGNORE };
-
-		D2D1_RENDER_TARGET_PROPERTIES RTProp = {
-			D2D1_RENDER_TARGET_TYPE_DEFAULT,
-			PF,
-			0,
-			0,
-			D2D1_RENDER_TARGET_USAGE_NONE,
-			D2D1_FEATURE_LEVEL_DEFAULT
-		};
-
-		ID2D1DCRenderTarget* rt;
-		ThrowIfFailed(factory2->CreateDCRenderTarget(&RTProp, &rt));
-		sInstance->m2DRenderTarget = make_shared <ID2D1DCRenderTarget*>(rt);*/
-
 		//Brush for the screen
 		ID2D1SolidColorBrush* brush;
 		ThrowIfFailed((*mContext2D)->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White, 1.0f), &brush));
 		sInstance->mBrush = make_shared<ID2D1SolidColorBrush*>(brush);
+	}
 
+	void Renderer::InitializeDirect2D()
+	{
+		HRESULT hr;
+		//create 2dfactory
+		ID2D1Factory1 * factory2;
+		ThrowIfFailed(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &factory2));
+		sInstance->mTextFactory = make_shared<ID2D1Factory1*>(factory2);
 
+		//createDxgiDevice
+		IDXGIDevice* DxgiDevice;
+		ThrowIfFailed((*sInstance->GetDevice())->QueryInterface(__uuidof(IDXGIDevice), (void **)&DxgiDevice));
+		sInstance->mGIDevice = make_shared<IDXGIDevice*>(DxgiDevice);
 
+		//create device2d 
+		ID2D1Device* Device2d;
+		ThrowIfFailed(factory2->CreateDevice(*sInstance->mGIDevice, &Device2d));
+		sInstance->mDevice2D = make_shared<ID2D1Device*>(Device2d);
+
+		//create context
+		ID2D1DeviceContext* context2d;
+		ThrowIfFailed((*sInstance->mDevice2D)->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, &context2d));
+		sInstance->mContext2D = make_shared<ID2D1DeviceContext*>(context2d);
 
 	}
 
@@ -349,6 +323,7 @@ namespace RenderEngine {
 			}
 			MyBuffer data;
 			GetMVP(currentEye, data, Math::MatrixTranslation(0, 1, -1));
+			
 			(*mContext)->UpdateSubresource(constantBluffer, 0, nullptr, (void*)&data, 0, 0);
 			(*mContext)->VSSetConstantBuffers(0, 1, &constantBluffer);
 
@@ -391,6 +366,49 @@ namespace RenderEngine {
 		}
 	}
 
+	void Renderer::DrawTextToBitmap(std::wstring _text, ID2D1Bitmap* _bitmap)
+	{
+		(*mContext2D)->SetTarget(_bitmap);
+		float color[4] = { 0.3f, 0.3f, 1, 1 };
+
+		// Retrieve the size of the render target.
+		D2D1_SIZE_F renderTargetSize = (*mContext2D)->GetSize();
+
+		(*mContext2D)->BeginDraw();
+		(*mContext2D)->SetTransform(D2D1::Matrix3x2F::Identity());
+
+		(*mContext2D)->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
+		(*mContext2D)->SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE_ALIASED);
+
+		(*mContext2D)->DrawText(
+			_text.c_str(),
+			_text.size(),
+			(*mTextformat),
+			D2D1::RectF(0, 0, renderTargetSize.width, renderTargetSize.height),
+			(*mBrush)
+		);
+		ThrowIfFailed((*mContext2D)->EndDraw());
+	}
+
+	//IF YOU USE THIS, CLEAN UP AFTER YOURSELF
+	ID2D1Bitmap1 * Renderer::CreateBitmapForTexture(ID3D11Texture2D * _texture) {
+		//Make a bitmap
+		D2D1_BITMAP_PROPERTIES1 bitmapProperties =
+			BitmapProperties1(
+				D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
+				PixelFormat(DXGI_FORMAT_R16G16B16A16_FLOAT, D2D1_ALPHA_MODE_IGNORE),
+				0,
+				0		//defaults to 96
+			);
+
+		IDXGISurface* surface;
+		ThrowIfFailed(_texture->QueryInterface(IID_IDXGISurface, (void**)&surface));
+
+		ID2D1Bitmap1* bitmap;
+		ThrowIfFailed((*mContext2D)->CreateBitmapFromDxgiSurface(surface, &bitmapProperties, &bitmap));
+		return bitmap;
+	}
+
 #pragma endregion Private Functions
 
 #pragma region Public Functions
@@ -426,8 +444,7 @@ namespace RenderEngine {
 		InitializeDXGIFactory();
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, rtvWidth, rtvHeight);
 		InitializeViews(rtvWidth, rtvHeight);
-
-		//PatAdded
+		InitializeDirect2D();
 		InitializeIDWriteFactory();
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, _width, _height);
 		InitializeViews(_width, _height);
@@ -465,37 +482,8 @@ namespace RenderEngine {
 			RenderVR();
 		}
 		(*mChain)->Present(mUseVsync ? 1 : 0, 0);
-
-		//Fix this 
-		//float color[4] = { 0.3f, 0.3f, 1, 1 };
-		(*mContext)->ClearRenderTargetView((*mMainView), color);
-		(*mContext)->OMSetRenderTargets(1, &(*mMainView), *mDSView);
-
-		D2D1_TAG t1 = NULL;
-		D2D1_TAG t2 = NULL;
-
-		static const WCHAR sc_helloWorld[] = L"IT JUST WENT OFF";
-
-		// Retrieve the size of the render target.
-		D2D1_SIZE_F renderTargetSize = (*mContext2D)->GetSize();
-
-		(*mContext2D)->BeginDraw();
-		(*mContext2D)->SetTransform(D2D1::Matrix3x2F::Identity());
-		
-		(*mContext2D)->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
-		(*mContext2D)->SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE_ALIASED);
-
-		(*mContext2D)->DrawText(
-			sc_helloWorld,
-			ARRAYSIZE(sc_helloWorld) - 1,
-			(*mTextformat),
-			D2D1::RectF(0, 0, renderTargetSize.width, renderTargetSize.height),
-			(*mBrush)
-		);
-		HRESULT hr;
-		hr= (*mContext2D)->EndDraw(&t1, &t2);
-
-		(*mChain)->Present(0, 0);
+		poop++;
+		DrawTextToBitmap(L"Frames:" +poop ,(*mScreenBitmap));
 	}
 
 #pragma endregion Public Functions

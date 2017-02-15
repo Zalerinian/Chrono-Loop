@@ -58,7 +58,7 @@ namespace RenderEngine {
 		std::shared_ptr<IDWriteTextFormat*>mTextformat;
 		std::shared_ptr<ID2D1DCRenderTarget*> m2DRenderTarget;
 		std::shared_ptr<ID2D1SolidColorBrush*>mBrush;
-		std::shared_ptr<ID2D1Bitmap1*>mBitmap;
+		std::shared_ptr<ID2D1Bitmap1*>mScreenBitmap;
 	
 		// Static members
 		static Renderer* sInstance;
@@ -67,8 +67,9 @@ namespace RenderEngine {
 		void InitializeDXGIFactory();
 		void InitializeDXGISwapChain(HWND &_win, bool _fullscreen, int _fps,
 																	int _width, int _height);
-//PatAdded
 		void InitializeIDWriteFactory();
+		void InitializeDirect2D();
+		int poop = 1;
 
 		void InitializeViews(int _width, int _height);
 		void ThrowIfFailed(HRESULT hr);
@@ -84,6 +85,10 @@ namespace RenderEngine {
 		void RenderVR();
 		void RenderNoVR();
 		void processRenderSet();
+		void DrawTextToBitmap(std::wstring _text, ID2D1Bitmap* _bitmap);
+		ID2D1Bitmap1* CreateBitmapForTexture(ID3D11Texture2D* _texture);
+
+
 
 		Renderer();
 		~Renderer();
