@@ -57,6 +57,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	std::shared_ptr<ID3D11Device*> renderingDevice = RenderEngine::Renderer::Instance()->GetDevice();
 
 	// Update everything
+	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count());
 	Update();
 
 	// Cleanup
@@ -135,10 +136,6 @@ void Update() {
 			if (GetAsyncKeyState(VK_ESCAPE)) {
 				break;
 			}
-		
-			Physics::Instance()->Update(deltaTime);
-			RenderEngine::Renderer::Instance()->mBox.mPosition = Math::MatrixTranspose(obj.GetTransform().GetMatrix());
-			RenderEngine::Renderer::Instance()->mPlane.mPosition = Math::MatrixTranspose(obj1.GetTransform().GetMatrix());
 
 			UpdateTime();
 			if (VREnabled) {
@@ -147,6 +144,10 @@ void Update() {
 			// Logic.Update(float deltaTime);
 			TManager->Instance()->Update(deltaTime);
 			RenderEngine::Renderer::Instance()->Render(deltaTime);
+
+			Physics::Instance()->Update(deltaTime);
+			RenderEngine::Renderer::Instance()->mBox.mPosition = Math::MatrixTranspose(obj.GetTransform().GetMatrix());
+			RenderEngine::Renderer::Instance()->mPlane.mPosition = Math::MatrixTranspose(obj1.GetTransform().GetMatrix());
 		}
 	}
 }

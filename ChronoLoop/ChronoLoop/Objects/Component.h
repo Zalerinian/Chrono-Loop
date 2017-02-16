@@ -75,7 +75,7 @@ public:
 		eCOLLIDER_Plane
 	};
 
-	bool mShouldMove;
+	bool mShouldMove, mColliding;
 	vec4f mVelocity, mAcceleration, mTotalForce, mImpulsiveForce, mGravity;
 	float mMass, mElasticity;
 	ColliderType mColliderType;
@@ -83,7 +83,7 @@ public:
 	void Update();
 	void Destroy();
 
-	vec4f AddForce(vec4f _force) { mTotalForce += _force; return mTotalForce; };
+	vec4f AddForce(vec4f _force) { mShouldMove = true; mTotalForce += _force; return mTotalForce; };
 	virtual vec4f GetPos();
 	virtual void SetPos(vec4f _newPos);
 };

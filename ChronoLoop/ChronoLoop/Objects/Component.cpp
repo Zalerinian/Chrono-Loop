@@ -107,6 +107,7 @@ CubeCollider::CubeCollider(bool _move, vec4f _gravity, float _mass, float _elast
 	mTotalForce = mGravity;
 	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	mShouldMove = _move;
+	mColliding = false;
 	mMass = _mass;
 	mElasticity = _elasticity;
 	mMin = _min;
