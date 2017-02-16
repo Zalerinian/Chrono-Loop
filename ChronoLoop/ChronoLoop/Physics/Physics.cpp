@@ -542,10 +542,10 @@ void Physics::Update(float _time)
 	Collider* otherCol;
 	vec4f norm;
 	
-	int objs = mObjects.size();
+	int objs = (int)mObjects.size();
 	for (int i = 0; i < objs; ++i)
 	{
-		int cols = mObjects[i]->mComponents[eCOMPONENT_COLLIDER].size();
+		int cols = (int)mObjects[i]->mComponents[eCOMPONENT_COLLIDER].size();
 		for (int i = 0; i < cols; ++i)
 		{
 			collider = (Collider*)mObjects[i]->mComponents[eCOMPONENT_COLLIDER][i];
@@ -563,7 +563,7 @@ void Physics::Update(float _time)
 				{
 					if (mObjects[j] != mObjects[i])
 					{
-						int othercols = mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
+						int othercols = (int)mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
 						for (int k = 0; k < othercols; ++k)
 						{
 							otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
@@ -623,7 +623,7 @@ void Physics::Update(float _time)
 				{
 					if (mObjects[j] != mObjects[i])
 					{
-						int othercols = mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
+						int othercols = (int)mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
 						for (int k = 0; k < othercols; ++k)
 						{
 							otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
