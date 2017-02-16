@@ -36,6 +36,8 @@ public:
 	SystemLogger& operator<<(const char i);
 	SystemLogger& operator<<(const short i);
 	SystemLogger& operator<<(const int i);
+	SystemLogger& operator<<(const float i);
+	SystemLogger& operator<<(const double i);
 	SystemLogger& operator<<(const long i);
 	SystemLogger& operator<<(const long long i);
 	SystemLogger& operator<<(const unsigned char i);
