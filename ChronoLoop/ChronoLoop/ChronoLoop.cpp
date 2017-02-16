@@ -112,7 +112,7 @@ void Update() {
 	transform.SetMatrix(mat1);
 	BaseObject obj("aabb", transform);
 	
-	CubeCollider aabb(true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, vec4f(0.15f, -0.15f, .15f, 1.0f), vec4f(-0.15f, 0.15f, -0.15f, 1.0f));
+	CubeCollider aabb(true, vec4f(2.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, vec4f(0.15f, -0.15f, .15f, 1.0f), vec4f(-0.15f, 0.15f, -0.15f, 1.0f));
 	obj.AddComponent(eCOMPONENT_PhysicsCollider, &aabb);
 	aabb.object = &obj;
 	RenderEngine::Renderer::Instance()->mBox.mPosition = Math::MatrixTranspose(obj.GetTransform().GetMatrix());
@@ -149,10 +149,6 @@ void Update() {
 			if (GetAsyncKeyState(VK_ESCAPE)) {
 				break;
 			}
-		
-			Physics::Instance()->Update(deltaTime);
-			RenderEngine::Renderer::Instance()->mBox.mPosition = Math::MatrixTranspose(obj.GetTransform().GetMatrix());
-			RenderEngine::Renderer::Instance()->mPlane.mPosition = Math::MatrixTranspose(obj1.GetTransform().GetMatrix());
 
 			UpdateTime();
 			if (VREnabled) {
@@ -162,6 +158,10 @@ void Update() {
 			// Logic.Update(float deltaTime);
 			TManager->Instance()->Update(deltaTime);
 			RenderEngine::Renderer::Instance()->Render(deltaTime);
+
+			Physics::Instance()->Update(deltaTime);
+			RenderEngine::Renderer::Instance()->mBox.mPosition = Math::MatrixTranspose(obj.GetTransform().GetMatrix());
+			RenderEngine::Renderer::Instance()->mPlane.mPosition = Math::MatrixTranspose(obj1.GetTransform().GetMatrix());
 		}
 	}
 }

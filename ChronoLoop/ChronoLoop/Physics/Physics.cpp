@@ -537,6 +537,7 @@ void Physics::PlaneColReaction(Collider& _col, Collider& _plane)
 
 void Physics::Update(float _time)
 {
+	//SystemLogger::GetLog() << _time << std::endl;
 	Collider* collider;
 	Collider* otherCol;
 	vec4f norm;
@@ -552,12 +553,6 @@ void Physics::Update(float _time)
 			{
 				collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
 				collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
-
-				//if (fabsf(collider->mTotalForce.y) < 0.01f)
-				//	collider->mTotalForce.y = 0;
-				if (fabsf(collider->mVelocity.y) < 0.01f)
-					collider->mVelocity.y = 0;
-				
 				collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
 			}
 
@@ -658,16 +653,35 @@ void Physics::Update(float _time)
 								int result = AabbToPlane(plane, aabb1);
 								if (result == 1)//in front of plane
 								{
-									SystemLogger::GetLog() << "AABB IN FRONT OF PLANE!" << std::endl;
+									if (collider->mColliding)
+										collider->mColliding = false;
+									//SystemLogger::GetLog() << "AABB IN FRONT OF PLANE!" << std::endl;
+									//SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
 								}
 								else if (result == 2)//behind plane
 								{
-									SystemLogger::GetLog() << "AABB BEHIND PLANE!" << std::endl;
+									if (collider->mColliding)
+										collider->mColliding = false;
+									//SystemLogger::GetLog() << "AABB BEHIND PLANE!" << std::endl;
+									//SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
 								}
 								else if (result == 3)// intersecting plane
 								{
-									SystemLogger::GetLog() << "AABB INTERSECTING PLANE!" << std::endl;
-									PlaneColReaction(*collider, *otherCol);
+									//SystemLogger::GetLog() << "AABB INTERSECTING PLANE!" << std::endl;
+									//SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
+
+									if (collider->mShouldMove && !collider->mColliding)
+									{
+										collider->mColliding = true;
+										PlaneColReaction(*collider, *otherCol);
+									}
+
+									if (collider->mShouldMove && fabsf(collider->mVelocity.y) < 0.001f)
+									{
+										//SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
+										collider->mVelocity.y = 0;
+										collider->mShouldMove = false;
+									}
 								}
 							}
 						}

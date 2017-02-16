@@ -578,7 +578,7 @@ namespace RenderEngine {
 
 
 		if (!mVrSystem) {
-			mDebugCameraPos.matrix = (DirectX::XMMatrixLookAtRH({ 0, 5, 5, 0 }, { 0, 1, 0, 0 }, { 0, 1, 0, 0 }));
+			mDebugCameraPos.matrix = (DirectX::XMMatrixLookAtRH({ 0, .5, 5, 0 }, { 0, 0, 0, 0 }, { 0, 1, 0, 0 }));
 			//mVPData.view.matrix = (DirectX::XMMatrixLookAtRH({ 0, 5, 5, 0 }, { 0, 1, 0, 0 }, { 0, 1, 0, 0 }));
 			mVPData.projection.matrix = DirectX::XMMatrixPerspectiveFovRH(70, (float)_height / (float)_width, 0.1f, 1000);
 			//mVPData.view = Math::MatrixTranspose(mVPData.view);
