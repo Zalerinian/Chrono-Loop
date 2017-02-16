@@ -106,6 +106,7 @@ void Update() {
 			if (VREnabled) {
 				VRInputManager::Instance().update();
 			}
+
 			// Logic.Update(float deltaTime);
 			TManager->Instance()->Update(deltaTime);
 			RenderEngine::Renderer::Instance()->Render(deltaTime);

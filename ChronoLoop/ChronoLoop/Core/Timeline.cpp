@@ -33,27 +33,21 @@ void Timeline::AddBaseObject(BaseObject* _object, unsigned short _id)
 	mLiveObjects[_id] = _object;
 }
 
-void Timeline::AddSnapshot(float _snaptime,Snapshot* _snapshot)
+void Timeline::AddSnapshot(unsigned int _snaptime,Snapshot* _snapshot)
 {
 	mSnapshots[_snaptime] = _snapshot;
 }
 
-void Timeline::RewindNoClone(float _snaptime)
+bool Timeline::RewindNoClone(unsigned int _snaptime)
 {
-	//Look for the snap inx we want to rewind back to
-	for (int i = 0; i<mSnaptimes.size(); i++)
-	{
-		if (_snaptime == mSnaptimes[i]) {
-			mCurrentGameTimeIndx = i;
-			break;
-		}
-	}
+	if (_snaptime < 0 || _snaptime > mSnaptimes.size()-1)
+		return false;
 
+	mCurrentGameTimeIndx = _snaptime;
 	MoveAllObjectsToSnap(_snaptime);
-
 }
 
-void Timeline::MoveAllObjectsToSnap(float _snaptime)
+void Timeline::MoveAllObjectsToSnap(unsigned int _snaptime)
 {
 	//TODO PAT: THIS DOESNT TAKE IN ACCOUNT IF SOMETHING WAS MADE IN THE FUTURE TO DELETE IT
 	Snapshot* destination = mSnapshots[_snaptime];
@@ -109,7 +103,6 @@ SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object)
 	info->mId = _object->GetUniqueID();
 	info->mTransform = _object->GetTransform();
 	
-
 	//Componet information
 	for (unsigned int i = 0; i < _object->GetNumofComponets(); i++) {
 		 Component* temp = _object->GetComponet(i);
@@ -135,23 +128,23 @@ SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object)
 	return info;
 }
 
-Snapshot* Timeline::GenerateSnapShot(float _time)
+Snapshot* Timeline::GenerateSnapShot(unsigned int _time)
 {
 	Snapshot* snap;
 	bool OldSnap = false;
 
-	//We are on an old Snapshot
-	if(mCurrentGameTimeIndx < mSnaptimes.size()-1)
-	{
-		_time = mSnaptimes[mCurrentGameTimeIndx];
-		snap = mSnapshots[_time];
-		OldSnap = true;
-	}
 	//We are making a new snap in the timeline
-	else
+	//If the CurrentFrame is the last one on the list, make a new one
+	if(mCurrentGameTimeIndx == mSnaptimes.size()-1 || mSnaptimes.size() == 0)
 	{
 		snap = new Snapshot();
 		snap->mTime = _time;
+	}
+	//We are on an old Snapshot
+	else
+	{
+		snap = mSnapshots[_time];
+		OldSnap = true;
 	}
 	
 	//If first snapshot taken
@@ -187,7 +180,10 @@ Snapshot* Timeline::GenerateSnapShot(float _time)
 	if (!OldSnap) {
 		mSnaptimes.push_back(_time);
 	}
+
+	if (mSnapshots.size() !=0)
 	mCurrentGameTimeIndx++;
+
 	return snap;
 }
 
