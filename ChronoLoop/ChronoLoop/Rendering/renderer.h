@@ -1,9 +1,12 @@
 #pragma once
 #include <d3d11.h>
+#include <d2d1.h>
+#include <dwrite.h>
 #include "../Common/Math.h"
 #include <memory>
 #include <vector>
 #include <openvr.h>
+#include <d2d1_1.h>
 #include "Mesh.h"
 #include "RenderSet.h"
 #include "RenderShape.h"
@@ -42,11 +45,28 @@ namespace RenderEngine {
 		bool mUseVsync = false;
 
 
-		// These are instance functions
+		//Pat Added
+		//DirectWrite Drawing componets
+		std::shared_ptr<ID2D1Factory1*> mTextFactory;
+		std::shared_ptr<ID2D1Device*> mDevice2D;
+		std::shared_ptr<IDXGIDevice*> mGIDevice;
+		std::shared_ptr<ID2D1DeviceContext*>mContext2D;
+		std::shared_ptr<IDWriteFactory*> mDWrite;
+		std::shared_ptr<IDWriteTextFormat*>mTextformat;
+		std::shared_ptr<ID2D1DCRenderTarget*> m2DRenderTarget;
+		std::shared_ptr<ID2D1SolidColorBrush*>mBrush;
+		std::shared_ptr<ID2D1Bitmap1*>mScreenBitmap;
+
 		void InitializeD3DDevice();
 		void InitializeDXGIFactory();
 		void InitializeDXGISwapChain(HWND &_win, bool _fullscreen, int _fps,
 																	int _width, int _height);
+		void InitializeIDWriteFactory();
+		void InitializeDirect2D();
+		void InitializeScreenBitmap();
+		int mFps = 0;
+		float mFrameTime = 0;
+
 		void InitializeViews(int _width, int _height);
 		void InitializeBuffers();
 		void InitializeObjectNames();
@@ -67,10 +87,14 @@ namespace RenderEngine {
 		void GetMVP(vr::EVREye e, ViewProjectionBuffer &data);
 		void UpdateTrackedPositions();
 
-		void RenderVR();
+		void RenderVR(float _delta);
 		void UpdateCamera(float const moveSpd, float const rotSpd, float delta);
-		void RenderNoVR();
+		void RenderNoVR(float _delta);
 		void ProcessRenderSet();
+		void DrawTextToBitmap(std::wstring _text, ID2D1Bitmap* _bitmap);
+		ID2D1Bitmap1* CreateBitmapForTexture(ID3D11Texture2D* _texture);
+
+
 
 		Renderer();
 		~Renderer();
@@ -84,7 +108,7 @@ namespace RenderEngine {
 			vr::IVRSystem* vrsys);
 
 		void AddNode(RenderShape *node);
-		void Render();
+		void Render(float _deltaTime);
 		inline std::shared_ptr<ID3D11Device*> GetDevice() { return mDevice; }
 		inline std::shared_ptr<ID3D11DeviceContext*> GetContext() { return mContext; }
 		inline std::shared_ptr<IDXGISwapChain*> GetChain() { return mChain; }
