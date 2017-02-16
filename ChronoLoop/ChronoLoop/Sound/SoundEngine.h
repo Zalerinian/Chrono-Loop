@@ -21,6 +21,7 @@ typedef __w64 unsigned int AudioEvent;			///< Integer (unsigned) type for pointe
 	private:
 		std::vector<const Emitter*> mEmitters;
 		std::vector<const Listener*> mListeners;
+		std::vector<const BaseObject*> mObjects;
 		std::map<std::wstring, AkBankID> mRegisteredSoundBanks;
 
 		bool mIsInitialize = false;
