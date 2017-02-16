@@ -246,6 +246,15 @@
     <ClInclude Include="Input\KeyboardInput.h">
       <Filter>Input\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Rendering\IndexBufferManager.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\VertexBuffer.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\VertexBufferManager.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -397,6 +406,15 @@
     </ClCompile>
     <ClCompile Include="Rendering\Mesh.cpp">
       <Filter>Rendering\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\IndexBufferManager.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\VertexBufferManager.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\VertexBuffer.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

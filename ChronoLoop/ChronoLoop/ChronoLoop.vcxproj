@@ -218,6 +218,7 @@
     <ClInclude Include="Objects\Components.h" />
     <ClInclude Include="Objects\Transform.h" />
     <ClInclude Include="Physics\Physics.h" />
+    <ClInclude Include="Rendering\IndexBufferManager.h" />
     <ClInclude Include="Rendering\InputLayoutManager.h" />
     <ClInclude Include="Rendering\Mesh.h" />
     <ClInclude Include="Rendering\RasterizerStateManager.h" />
@@ -231,6 +232,8 @@
     <ClInclude Include="Rendering\ShaderManager.h" />
     <ClInclude Include="Rendering\Structures.h" />
     <ClInclude Include="Rendering\SystemInitializer.h" />
+    <ClInclude Include="Rendering\VertexBuffer.h" />
+    <ClInclude Include="Rendering\VertexBufferManager.h" />
     <ClInclude Include="Sound\SoundEngine.h" />
   </ItemGroup>
   <ItemGroup>
@@ -335,6 +338,7 @@
     <ClCompile Include="Objects\Component.cpp" />
     <ClCompile Include="Objects\Transform.cpp" />
     <ClCompile Include="Physics\Physics.cpp" />
+    <ClCompile Include="Rendering\IndexBufferManager.cpp" />
     <ClCompile Include="Rendering\InputLayoutManager.cpp" />
     <ClCompile Include="Rendering\Mesh.cpp" />
     <ClCompile Include="Rendering\RasterizerStateManager.cpp" />
@@ -345,6 +349,8 @@
     <ClCompile Include="Rendering\RenderShape.cpp" />
     <ClCompile Include="Rendering\Shader.cpp" />
     <ClCompile Include="Rendering\ShaderManager.cpp" />
+    <ClCompile Include="Rendering\VertexBuffer.cpp" />
+    <ClCompile Include="Rendering\VertexBufferManager.cpp" />
     <ClCompile Include="Sound\SoundEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
