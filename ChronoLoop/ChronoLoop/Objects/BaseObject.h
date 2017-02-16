@@ -34,7 +34,7 @@ public:
 	inline BaseObject* GetParent() { return parent; };
 	inline void SetParent(BaseObject* _parent) { parent = _parent; };
 
-	inline Transform GetTransform() { return transform; };
+	inline Transform& GetTransform() { return transform; };
 	inline void SetTransform(Transform _transform) { transform = _transform; };
 
 	inline unsigned short& GetUniqueID() { return UniqueID; };
