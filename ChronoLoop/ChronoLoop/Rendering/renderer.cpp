@@ -110,9 +110,9 @@ namespace RenderEngine {
 
 	void Renderer::InitializeD3DDevice() {
 		UINT flags = 0;
-	#if _DEBUG
+#if _DEBUG
 		flags = D3D11_CREATE_DEVICE_DEBUG;
-	#endif
+#endif
 
 		D3D_FEATURE_LEVEL levels[] = {
 			D3D_FEATURE_LEVEL_11_0,
@@ -170,8 +170,8 @@ namespace RenderEngine {
 		IDXGISwapChain *chain;
 
 		ThrowIfFailed((*mFactory)->CreateSwapChain((*mDevice),
-			&scDesc,
-			&chain));
+																							 &scDesc,
+																							 &chain));
 		mChain = make_shared<IDXGISwapChain*>(chain);
 	}
 
@@ -222,7 +222,7 @@ namespace RenderEngine {
 		CD3D11_BUFFER_DESC desc(sizeof(ViewProjectionBuffer), D3D11_BIND_CONSTANT_BUFFER);
 		(*mDevice)->CreateBuffer(&desc, nullptr, &pBuff);
 		mVPBuffer = std::make_shared<ID3D11Buffer*>(pBuff);
-		
+
 		desc.ByteWidth = sizeof(matrix4);
 		(*mDevice)->CreateBuffer(&desc, nullptr, &pBuff);
 		mPositionBuffer = std::make_shared<ID3D11Buffer*>(pBuff);
@@ -281,7 +281,7 @@ namespace RenderEngine {
 			(*mContext)->UpdateSubresource(*mVPBuffer, 0, nullptr, (void*)&data, 0, 0);
 			/*(*mContext)->VSSetConstantBuffers(0, 1, &mVPBuffer);*/
 
-			processRenderSet();
+			ProcessRenderSet();
 
 			vr::Texture_t submitTexture = { (void*)(*mMainViewTexture), vr::TextureType_DirectX, vr::ColorSpace_Auto };
 			vr::VRCompositor()->Submit(currentEye, &submitTexture);
@@ -304,11 +304,65 @@ namespace RenderEngine {
 
 	}
 
-	void Renderer::RenderNoVR() {
-		processRenderSet();
+	void Renderer::UpdateCamera(float const _moveSpd, float const _rotSpd, float _delta) {
+#if _DEBUG
+		//w
+		if (GetAsyncKeyState('W')) {
+			mDebugCameraPos *= Math::MatrixTranslation(0, 0, _moveSpd * _delta);
+		}
+		//s
+		if (GetAsyncKeyState('S')) {
+			mDebugCameraPos *= Math::MatrixTranslation(0, 0, -_moveSpd * _delta);
+		}
+		//a
+		if (GetAsyncKeyState('A')) {
+			mDebugCameraPos *= Math::MatrixTranslation(_moveSpd * _delta, 0, 0);
+		}
+		//d
+		if (GetAsyncKeyState('D')) {
+			mDebugCameraPos *= Math::MatrixTranslation(-_moveSpd * _delta, 0, 0);
+		}
+		//x
+		if (GetAsyncKeyState(VK_CONTROL)) {
+			mDebugCameraPos *= Math::MatrixTranslation(0, _moveSpd * _delta, 0);
+		}
+
+		if (GetAsyncKeyState(VK_SPACE)) {
+			mDebugCameraPos *= Math::MatrixTranslation(0, -_moveSpd * _delta, 0);
+		}
+		if (GetAsyncKeyState(VK_LBUTTON) & 1 && !mIsMouseDown) {
+			GetCursorPos(&mMouseOrigin);
+			mIsMouseDown = true;
+		}
+		if (!GetAsyncKeyState(VK_LBUTTON)) {
+			mIsMouseDown = false;
+		}
+
+		if (mIsMouseDown) {
+			POINT now;
+			GetCursorPos(&now);
+			if (now.x != mMouseOrigin.x && now.y != mMouseOrigin.y) {
+				float dx = (now.x - mMouseOrigin.x) / 128.0f;
+				float dy = (now.y - mMouseOrigin.y) / 128.0f;
+				mDebugCameraPos = Math::MatrixRotateInPlace(mDebugCameraPos, 1, 0, 0, dy);
+				mDebugCameraPos = Math::MatrixRotateInPlace(mDebugCameraPos, 0, 1, 0, dx);
+				GetCursorPos(&mMouseOrigin);
+			}
+		}
+
+		mVPData.view = Math::MatrixTranspose(mDebugCameraPos);
+		(*mContext)->UpdateSubresource(*mVPBuffer, 0, nullptr, &mVPData, 0, 0);
+#endif
 	}
 
-	void Renderer::processRenderSet() {
+	void Renderer::RenderNoVR() {
+		UpdateCamera(2, 0, 1 / 90.0f);
+		//mBox.mPosition = Math::MatrixRotateAround(mBox.mPosition, { 0, 1, 0, 0 }, { 1, 0, 0, 0 }, DirectX::XM_PI / 256.0f);
+		mBox.mPosition = Math::MatrixRotateInPlace(mBox.mPosition, { 0, 1, 0, 0 }, DirectX::XM_PI / 256.0f);
+		ProcessRenderSet();
+	}
+
+	void Renderer::ProcessRenderSet() {
 		const RenderNode* head = mRenderSet.GetHead();
 		while (head != nullptr) {
 			if (head->mType == RenderNode::RenderNodeType::Context) {
@@ -374,9 +428,11 @@ namespace RenderEngine {
 
 
 		if (!mVrSystem) {
-			mVPData.view.matrix = (DirectX::XMMatrixLookAtRH({ 0, 5, 5, 0 }, { 0, 1, 0, 0 }, { 0, 1, 0, 0 }));
+			mDebugCameraPos.matrix = (DirectX::XMMatrixLookAtRH({ 0, 5, 5, 0 }, { 0, 1, 0, 0 }, { 0, 1, 0, 0 }));
+			//mVPData.view.matrix = (DirectX::XMMatrixLookAtRH({ 0, 5, 5, 0 }, { 0, 1, 0, 0 }, { 0, 1, 0, 0 }));
 			mVPData.projection.matrix = DirectX::XMMatrixPerspectiveFovRH(70, (float)_height / (float)_width, 0.1f, 1000);
-			mVPData.view = Math::MatrixTranspose(mVPData.view);
+			//mVPData.view = Math::MatrixTranspose(mVPData.view);
+			mVPData.view = Math::MatrixTranspose(mDebugCameraPos);
 			mVPData.projection = Math::MatrixTranspose(mVPData.projection);
 			(*mContext)->UpdateSubresource(*mVPBuffer, 0, NULL, &mVPData, 0, 0);
 			(*mContext)->VSSetConstantBuffers(0, 1, mVPBuffer.get());
