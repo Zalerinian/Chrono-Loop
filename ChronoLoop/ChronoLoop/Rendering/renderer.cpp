@@ -366,10 +366,6 @@ namespace RenderEngine {
 				(*mContext)->ClearRenderTargetView((*mMainView), color);
 				(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 			}
-			//pat added 
-			std::wstring FPS = L"FPS: " + to_wstring(mFps);
-			DrawTextToBitmap(FPS, (*mScreenBitmap));
-			//-----
 			ViewProjectionBuffer data;
 			GetMVP(currentEye, data);
 			(*mContext)->UpdateSubresource(*mVPBuffer, 0, nullptr, (void*)&data, 0, 0);
@@ -379,7 +375,10 @@ namespace RenderEngine {
 			vr::Texture_t submitTexture = { (void*)(*mMainViewTexture), vr::TextureType_DirectX, vr::ColorSpace_Auto };
 			vr::VRCompositor()->Submit(currentEye, &submitTexture);
 		}
-
+		//pat added 
+		std::wstring FPS = L"FPS: " + to_wstring(mFps);
+		DrawTextToBitmap(FPS, (*mScreenBitmap));
+		//-----
 
 		// Bootleg load the controller model.
 		if (mControllerModel.mIndexCount == 0) {
@@ -452,13 +451,11 @@ namespace RenderEngine {
 		UpdateCamera(2, 0, _delta);
 		//mBox.mPosition = Math::MatrixRotateAround(mBox.mPosition, { 0, 1, 0, 0 }, { 1, 0, 0, 0 }, DirectX::XM_PI / 256.0f);
 		mBox.mPosition = Math::MatrixRotateInPlace(mBox.mPosition, { 0, 1, 0, 0 }, DirectX::XM_PI / 256.0f);
-
+		ProcessRenderSet();
 		//pat added 
 		std::wstring FPS = L"FPS: " + to_wstring(mFps);
 		DrawTextToBitmap(FPS, (*mScreenBitmap));
 		//-----
-		
-		ProcessRenderSet();
 	}
 
 	void Renderer::ProcessRenderSet() {

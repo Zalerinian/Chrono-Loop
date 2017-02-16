@@ -64,7 +64,7 @@ public:
 	float mMass, mElasticity;
 	ColliderType mType;
 
-	vec4f AddForce(vec4f _force) { mShouldMove = true; mTotalForce += _force; return mTotalForce; };
+	vec4f AddForce(vec4f _force) { if(!mShouldMove) mShouldMove = true; mTotalForce = mGravity + _force; return mTotalForce; };
 	virtual vec4f GetPos();
 	virtual void SetPos(vec4f _newPos);
 };
