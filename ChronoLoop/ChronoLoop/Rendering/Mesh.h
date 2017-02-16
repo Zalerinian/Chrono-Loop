@@ -10,7 +10,7 @@
 
 struct Triangle
 {
-	vec4f* Vertex[3];
+	vec4f Vertex[3];
 	vec4f Normal;
 };
 
@@ -126,9 +126,10 @@ Triangle * MeshFormat<T>::GetTriangles()
 			{
 				temp.Normal = (mUniqueVerts[mIndicies[(i * 3) + 0]].Normal + mUniqueVerts[mIndicies[(i * 3) + 1]].Normal + mUniqueVerts[mIndicies[(i * 3) + 2]].Normal) / 2;
 			}
-			temp.Vertex[0] = &mUniqueVerts[mIndicies[(i * 3) + 0]].Position;
-			temp.Vertex[1] = &mUniqueVerts[mIndicies[(i * 3) + 1]].Position;
-			temp.Vertex[2] = &mUniqueVerts[mIndicies[(i * 3) + 2]].Position;
+			//temp.Vertex[0] = &mUniqueVerts[mIndicies[(i * 3) + 0]].Position;
+			//temp.Vertex[1] = &mUniqueVerts[mIndicies[(i * 3) + 1]].Position;
+			//temp.Vertex[2] = &mUniqueVerts[mIndicies[(i * 3) + 2]].Position;
+			//F I X   Y O U R   S T U F F   J A M E S
 		}
 	}
 	return mTriangles.data();

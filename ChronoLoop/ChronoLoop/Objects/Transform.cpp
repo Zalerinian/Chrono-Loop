@@ -10,14 +10,6 @@ void Transform::TranslateLocal(float x, float y, float z) {
 	temp = MatrixTranslation(x, y, z);
 }
 
-void Transform::GetMatrix(matrix4 & _filler) {
-	_filler = mMatrix;
-}
-
-matrix4 Transform::GetMatrix() {
-	return mMatrix;
-}
-
 Transform& Transform::operator=(Transform const&	 _t) {
 	mUp     = _t.mUp;
 	mRight  = _t.mRight;

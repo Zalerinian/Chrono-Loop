@@ -1,30 +1,33 @@
 #pragma once
-#include "../Common/Math.h"
+#include "..\Common\Math.h"
+#include "..\Rendering\Mesh.h"
 class BaseObject;
-struct matrix4;
-
+//class Mesh;
 
 enum ComponentType
 {
-	eCOMPONENT_UNKNOWN,
+	eCOMPONENT_UNKNOWN = 0,
 	eCOMPONENT_CODE,
-	eCOMPONENT_COLLIDER,
 	eCOMPONENT_AUDIOEMITTER,
 	eCOMPONENT_AUDIOLISTENER,
-	eCOMPONENT_UI
+	eCOMPONENT_COLLIDER,
+	eCOMPONENT_UI,
+	eCOMPONENT_MAX
 };
+
 class Component
 {
+	friend class Physics;
+	friend class BaseObject;
 protected:
-	bool isEnable;
-	ComponentType type;
-
-	BaseObject* object = nullptr;
+	bool mIsEnabled;
+	ComponentType mType = eCOMPONENT_MAX;
+	BaseObject* mObject = nullptr;
 public:
-	ComponentType GetType() { return type; };
-	bool isEnabled() { return isEnable; };
-	void Disable() { isEnable = false; };
-	void Enable() { isEnable = true; };
+	ComponentType GetType() { return mType; };
+	bool isEnabled() { return mIsEnabled; };
+	void Disable() { mIsEnabled = false; };
+	void Enable() { mIsEnabled = true; };
 	virtual void Update() = 0;
 	virtual void Destroy() = 0;
 	void GetMatrix(matrix4& _m);
@@ -33,7 +36,6 @@ public:
 class Listener : Component
 {
 public:
-
 	void Update() {}
 	void Destroy() {}
 };
@@ -45,18 +47,6 @@ public:
 	void Pause();
 	void Stop();
 
-	void Update();
-	void Destroy();
-};
-
-class Collider : Component
-{
-	vec4f mAcceleration;
-	vec4f mVelocity;
-	
-public:
-	vec4f GetAcceleration() { return mAcceleration; };
-	vec4f GetVelocity() { return mVelocity; };
 	void Update();
 	void Destroy();
 };
@@ -75,6 +65,56 @@ public:
 	void SetVisible(bool _vis);
 };
 
+
+class Collider : public Component {
+public:
+	enum ColliderType {
+		eCOLLIDER_Mesh,
+		eCOLLIDER_Sphere,
+		eCOLLIDER_Cube,
+		eCOLLIDER_Plane
+	};
+
+	bool mShouldMove;
+	vec4f mVelocity, mAcceleration, mTotalForce, mImpulsiveForce, mGravity;
+	float mMass, mElasticity;
+	ColliderType mColliderType;
+
+	void Update();
+	void Destroy();
+
+	vec4f AddForce(vec4f _force) { mTotalForce += _force; return mTotalForce; };
+	virtual vec4f GetPos();
+	virtual void SetPos(vec4f _newPos);
+};
+
+class MeshCollider : public Collider {
+public:
+	MeshCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, char* _path);
+	Mesh* mMesh;
+};
+
+class SphereCollider : public Collider {
+public:
+	SphereCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _radius);
+	float mRadius;
+};
+
+class CubeCollider : public Collider {
+public:
+	CubeCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, vec4f _min, vec4f _max);
+	vec4f mMin, mMax, mMinOffset, mMaxOffset;
+
+	void SetPos(vec4f _newPos);
+};
+
+class PlaneCollider : public Collider {
+public:
+	PlaneCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _offset, vec4f _norm);
+	vec4f mNormal;
+	float mOffset;
+};
+
 /*
 business entity- gmail, twitter, facebook, steam account
 art, audio, marketing, designer students ?
@@ -82,18 +122,4 @@ art, audio, marketing, designer students ?
 first initial last name, password lower case
 gdserv.fullsail.com:8080
 install doc, follow it
-
-
-
-
 */
-
-
-
-
-
-
-
-
-
-

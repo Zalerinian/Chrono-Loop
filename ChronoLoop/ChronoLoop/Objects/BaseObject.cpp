@@ -1,32 +1,32 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "BaseObject.h"
+#include "../Common/Logger.h"
+
+// 0 is reserved for the player.
+unsigned int BaseObject::ObjectCount = 1;
 
 BaseObject::BaseObject()
 {
-	//name = nullptr;
-	m_parent = nullptr;
+	parent = nullptr;
+	UniqueID = BaseObject::ObjectCount++;
 }
 BaseObject::BaseObject(std::string _name, Transform _transform)
 {
-	m_name = _name;
-	m_parent = nullptr;
-	m_transform = _transform;
-	m_mass = 0.0f;
-}
-
-BaseObject::BaseObject(std::string _name, Transform _transform, float _mass)
-{
-	m_name = _name;
-	m_parent = nullptr;
-	m_transform = _transform;
-	m_mass = _mass;
+	name = _name;
+	parent = nullptr;
+	transform = _transform;
 }
 
 BaseObject::~BaseObject()
 {
-	delete m_parent;
-	m_components.clear();
-	m_children.clear();
+	delete parent;
+	for(auto iter = mComponents.begin(); iter != mComponents.end(); ++iter)
+	{
+		for (int i = 0; i < iter->second.size(); ++i)
+			delete iter->second[i];
+	}
+	mComponents.clear();
+	children.clear();
 }
 
 //BaseObject BaseObject::Clone()
@@ -50,37 +50,56 @@ BaseObject::~BaseObject()
 //	return _clone;
 //}
 
-BaseObject const* BaseObject::operator=(BaseObject _equals)
+BaseObject& BaseObject::operator=(BaseObject& _equals)
 {
-	if (this->m_name != _equals.m_name) this->m_name = _equals.m_name;
-	if (this->m_parent != _equals.m_parent) this->m_parent = _equals.m_parent;
-	if (this->m_children != _equals.m_children) this->m_children = _equals.m_children;
-	//if (this->transform != _equals.transform) this->transform = _equals.transform;
-	if (this->m_components != _equals.m_components) this->m_components = _equals.m_components;
-	return this;
+	if (this->UniqueID != _equals.UniqueID) this->UniqueID = _equals.UniqueID;
+	if (this->name != _equals.name) this->name = _equals.name;
+	if (this->parent != _equals.parent) this->parent = _equals.parent;
+	if (this->children != _equals.children) this->children = _equals.children;
+	if (this->transform != _equals.transform) this->transform = _equals.transform;
+	if (this->mComponents != _equals.mComponents) this->mComponents = _equals.mComponents;
+	return *this;
 }
 
-//void BaseObject::CalcAcceleration(vec4f& _force)
-//{
-//	m_acc = Physics::CalcAcceleration(_force, m_mass);
-//}
-//
-//void BaseObject::CalcVelocity(vec4f& _force, float _dt)
-//{
-//	CalcAcceleration(_force);
-//	m_vel = Physics::CalcVelocity(m_vel, m_acc, _dt);
-//}
-//
-//void BaseObject::CalcPosition(vec4f& _force, float _dt)
-//{
-//	CalcVelocity(_force, _dt);
-//	m_pos = Physics::CalcPosition(m_pos, m_vel, _dt);
-//}
-
-//Component* const BaseObject::GetComponet(unsigned int _indx) {
-//	return m_components[_indx];
-//}
-
-unsigned int BaseObject::GetNumofComponets() {
-	return (unsigned int)m_components.size();
+unsigned short& BaseObject::GetUniqueId()
+{
+	return UniqueID;
 }
+
+void BaseObject::Destroy()
+{
+	for (auto iter = mComponents.begin(); iter != mComponents.end(); ++iter)
+		for (int i = 0; i < iter->second.size(); ++i)
+			delete iter->second[i];
+}
+
+unsigned int BaseObject::AddComponent(Component * _comp) {
+	if (_comp->GetType() == eCOMPONENT_MAX) {
+		SystemLogger::GetError() << "[Error] Trying to add a component with an invalid type. This is not allowed, returning -1U." << std::endl;
+		return -1;
+	}
+	_comp->mObject = this;
+	mComponents[_comp->GetType()].push_back(_comp);
+	return (unsigned int)mComponents[_comp->GetType()].size();
+}
+
+bool BaseObject::RemoveComponent(Component * _comp) {
+	if (_comp->GetType() == eCOMPONENT_MAX) {
+		SystemLogger::GetError() << "[Error] Trying to remove a component with an invalid type. This is not allowed, returning -1U." << std::endl;
+		return false;
+	}
+	ComponentType type = _comp->GetType();
+	unsigned int size = (unsigned int)mComponents[type].size();
+	for (auto it = mComponents[type].begin(); it != mComponents[type].end(); ++it) {
+		if((*it) == _comp) {
+			mComponents[type].erase(it);
+			return true;
+		}
+	}
+	return false;
+}
+
+//void BaseObject::AddComponent(ComponentType _type, Component* _comp)
+//{
+//	mComponents[_type].push_back(_comp);
+//}

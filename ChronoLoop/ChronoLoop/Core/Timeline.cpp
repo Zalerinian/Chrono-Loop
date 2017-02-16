@@ -72,28 +72,28 @@ SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object)
 	info->mId = _object->GetUniqueID();
 	info->mTransform = _object->GetTransform();
 	
-
+	////////////////////////////////////////////////////////////////////////////////Talk to Chris about mComponent rework
 	//Componet information
-	for (unsigned int i = 0; i < _object->GetNumofComponets(); i++) {
-		 Component* temp = _object->GetComponet(i);
-
-		//If there is a componet we want to store make a snap component
-		switch (temp->GetType())
-		{
-		case ComponentType::eCOMPONENT_COLLIDER:
-			{
-			SnapComponent* newComp = new SnapComponent();
-			newComp->CompType = temp->GetType();
-			((SnapComponent_Physics*)newComp)->acceleration = ((Collider*)temp)->GetAcceleration();
-			((SnapComponent_Physics*)newComp)->velocity = ((Collider*)temp)->GetVelocity();
-			info->mComponets.push_back(newComp);
-			break;
-			}
-		default:
-			//This component is not having its information stored in snapshot
-			break;
-		}
-	}
+	//or (unsigned int i = 0; i < _object->GetNumofComponets(); i++) {
+	//	 Component* temp = _object->GetComponent(i);
+	//
+	//	//If there is a componet we want to store make a snap component
+	//	switch (temp->GetType())
+	//	{
+	//	case ComponentType::eCOMPONENT_COLLIDER:
+	//		{
+	//		SnapComponent* newComp = new SnapComponent();
+	//		newComp->CompType = temp->GetType();
+	//		((SnapComponent_Physics*)newComp)->acceleration = ((Collider*)temp)->GetAcceleration();
+	//		((SnapComponent_Physics*)newComp)->velocity = ((Collider*)temp)->GetVelocity();
+	//		info->mComponets.push_back(newComp);
+	//		break;
+	//		}
+	//	default:
+	//		//This component is not having its information stored in snapshot
+	//		break;
+	//	}
+	//
 
 	return info;
 }

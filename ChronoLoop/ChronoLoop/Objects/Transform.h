@@ -19,9 +19,9 @@ public:
 	//inline const vec4f* GetYAxis() {};
 	//inline const vec4f* GetZAxis() {};
 	//inline const vec4f* GetPosition() {};
-
-	void GetMatrix(matrix4& _filler);
-	matrix4 GetMatrix();
+	inline matrix4& GetMatrix() { return mMatrix; };
+	inline void GetMatrix(matrix4& _filler) { _filler = mMatrix; }
+	inline void SetMatrix(matrix4& _mat) { mMatrix = _mat; };
 
 	//**OPERATORS**//
 	Transform& operator=(Transform const& _t);

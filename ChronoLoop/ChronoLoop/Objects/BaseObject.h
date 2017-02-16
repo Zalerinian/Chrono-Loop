@@ -2,65 +2,56 @@
 #include <string>
 #include <list>
 #include <vector>
+#include <unordered_map>
 #include "Transform.h"
 #include "Component.h"
-#include "../Physics/Physics.h"
-using namespace Physics;
-class BaseObject
-{
+#include "..\Physics\Physics.h"
+#include "..\Core\TimeManager.h"
+#include "..\Objects\Component.h"
+
+class BaseObject {
+	// The number of objects that exist in the world. ID 0 is reserved the player.
+	static unsigned int ObjectCount;
 private:
-	float m_mass;
-	std::string m_name;
-	BaseObject* m_parent;
-	Transform m_transform;
-	vec4f m_pos, m_vel, m_acc;
-	unsigned short m_UniqueId;
-	std::list<BaseObject*> m_children;
-	std::vector<Component*> m_components;
-	
+	std::string name;
+	BaseObject* parent;
+	unsigned short UniqueID;
+	std::list<BaseObject*> children;
+	Transform transform;
+
 public:
-	//**CONSTRUCTORS**//
 	BaseObject();
 	BaseObject(std::string _name, Transform _transform);
-	BaseObject(std::string name, Transform _transform, float mass);
 	~BaseObject();
-Component* const GetComponet(unsigned int _indx);
-	unsigned int GetNumofComponets();
-	inline void Destroy() { delete this; };
+	BaseObject& operator=(BaseObject& _equals);
+	unsigned short& GetUniqueId();
+	std::unordered_map<ComponentType, std::vector<Component*>> mComponents;
+	void Destroy();
 
-	//**GETTERS/SETTERS**//
-	inline float GetMass() { return m_mass; };
-	inline void SetMass(float _mass) { m_mass = _mass; };
+	inline std::string GetName() { return name; };
+	inline void SetName(std::string _name) { name = _name; };
 
-	inline std::string GetName() { return m_name; };
-	inline void SetName(std::string _name) { m_name = _name; };
+	inline BaseObject* GetParent() { return parent; };
+	inline void SetParent(BaseObject* _parent) { parent = _parent; };
 
-	inline BaseObject* GetParent() { return m_parent; };
-	inline void SetParent(BaseObject* _parent) { m_parent = _parent; };
+	inline Transform GetTransform() { return transform; };
+	inline void SetTransform(Transform _transform) { transform = _transform; };
 
-	inline Transform GetTransform() { return m_transform; };
-	inline void SetTransform(Transform _transform) { m_transform = _transform; };
+	inline unsigned short& GetUniqueID() { return UniqueID; };
+	inline void SetUniqueID(unsigned short _id) { UniqueID = _id; };
 
-	inline vec4f GetPosition() { return m_pos; };
-	inline vec4f GetVelocity() { return m_vel; };
-	inline vec4f GetAcceleration() { return m_acc; };
+	inline std::list<BaseObject*> GetChildren() { return children; };
+	inline void SetChildren(std::list<BaseObject*> _children) { children = _children; };
 
-	inline unsigned short& GetUniqueID() { return m_UniqueId; };
-	inline void SetUniqueID(unsigned short _id) { m_UniqueId = _id; };
-
-	inline std::list<BaseObject*> GetChildren() { return m_children; };
-	inline void SetChildren(std::list<BaseObject*> _children) { m_children = _children; };
-
-	inline std::vector<Component*> GetComponents() { return m_components; };
-	inline void SetComponents(std::vector<Component*> _components) { m_components = _components; };
-	
+	inline std::vector<Component*> GetComponents(ComponentType _type) { return mComponents[_type]; }
+	inline Component* GetComponentIndexed(ComponentType _type, unsigned int _index) { return mComponents[_type][_index]; }
+	inline unsigned int GetComponentCount(ComponentType _type) { return (unsigned int)mComponents[_type].size(); }
+	unsigned int AddComponent(Component* _comp);
+	bool RemoveComponent(Component* _comp);
 
 	//**FUNCTION**//
-	inline void AddComponent(Component* _comp) { m_components.push_back(_comp); };
-	inline //void RemoveComponent(Component _comp) { components.remove(_comp); };
-	inline void AddChild(BaseObject* _obj) { m_children.push_back(_obj); };
-	inline void RemoveChild(BaseObject* _obj) { m_children.remove(_obj); };
-	//BaseObject Clone();
-	//BaseObject Clone(BaseObject _clone);
-	BaseObject& operator=(BaseObject _equals);
+	inline void AddChild(BaseObject* _obj) { children.push_back(_obj); };
+	inline void RemoveChild(BaseObject* _obj) { children.remove(_obj); };
+	//BaseObject& Clone();
+	//BaseObject& Clone(BaseObject& _clone);
 };

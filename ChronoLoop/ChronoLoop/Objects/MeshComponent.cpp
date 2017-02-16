@@ -3,7 +3,7 @@
 #include "../Rendering/RenderShape.h"
 
 void MeshComponent::Update() {
-	object->GetTransform().GetMatrix(mShape->mPosition);
+	mObject->GetTransform().GetMatrix(mShape->mPosition);
 }
 
 void MeshComponent::Destroy() {
