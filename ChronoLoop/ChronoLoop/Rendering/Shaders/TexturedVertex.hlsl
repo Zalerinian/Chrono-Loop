@@ -1,10 +1,12 @@
 #include "VertexLayouts.hlsli"
 
-cbuffer MVEP : register(b0) {
-	matrix model;
+cbuffer VPBuffer : register(b0) {
 	matrix view;
 	matrix proj;
-	matrix viewproj;
+}
+
+cbuffer ModelBuffer : register(b1) {
+	matrix model;
 }
 
 struct PSI

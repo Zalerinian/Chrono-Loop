@@ -17,9 +17,11 @@ namespace RenderEngine {
 
 	class Renderer {
 	private:
-		struct MyBuffer {
-			matrix4 model, view, projection;
-		} constantData;
+		struct ViewProjectionBuffer {
+			matrix4 view, projection;
+		} mVPData;
+
+
 		static Renderer* sInstance;
 
 		friend InputLayoutManager;
@@ -38,12 +40,10 @@ namespace RenderEngine {
 
 		vr::IVRSystem* mVrSystem;
 		RenderSet mRenderSet;
-		ID3D11Buffer* constantBluffer;
-		RenderShape mControllerModel, mBox;
+		std::shared_ptr<ID3D11Buffer*> mVPBuffer, mPositionBuffer;
+		//RenderShape mControllerModel, mBox, mPlane;
 		bool mUseVsync = false;
 
-
-		std::vector<RenderNode*> mNodes;
 
 		//Pat Added
 		//DirectWrite Drawing componets
@@ -68,20 +68,29 @@ namespace RenderEngine {
 		float mFrameTime = 0;
 
 		void InitializeViews(int _width, int _height);
+		void InitializeBuffers();
 		void InitializeObjectNames();
+		void SetStaticBuffers();
 		void ThrowIfFailed(HRESULT hr);
 
-		matrix4 mEyePosLeft, mEyePosRight, mEyeProjLeft, mEyeProjRight, mHMDPos;
+		matrix4 mEyePosLeft, mEyePosRight, mEyeProjLeft, mEyeProjRight, mHMDPos, mDebugCameraPos;
 		vr::TrackedDevicePose_t poses[vr::k_unMaxTrackedDeviceCount];
+
+#if _DEBUG
+		// Shit for the debug camera.
+		POINT mMouseOrigin;
+		bool mIsMouseDown = false;
+#endif
 
 		matrix4 GetEye(vr::EVREye e);
 		matrix4 GetProjection(vr::EVREye e);
-		void GetMVP(vr::EVREye e, MyBuffer &data, matrix4 world);
+		void GetMVP(vr::EVREye e, ViewProjectionBuffer &data);
 		void UpdateTrackedPositions();
 
-		void RenderVR();
-		void RenderNoVR();
-		void processRenderSet();
+		void RenderVR(float _delta);
+		void UpdateCamera(float const moveSpd, float const rotSpd, float delta);
+		void RenderNoVR(float _delta);
+		void ProcessRenderSet();
 		void DrawTextToBitmap(std::wstring _text, ID2D1Bitmap* _bitmap);
 		ID2D1Bitmap1* CreateBitmapForTexture(ID3D11Texture2D* _texture);
 
@@ -92,6 +101,7 @@ namespace RenderEngine {
 	public:
 		static Renderer* Instance();
 		static void DestroyInstance();
+		RenderShape mControllerModel, mBox, mPlane;
 
 		// Instance Functions
 		bool Initialize(HWND Window, unsigned int width, unsigned int height,

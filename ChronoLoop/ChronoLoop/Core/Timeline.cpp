@@ -33,6 +33,7 @@ void Timeline::AddBaseObject(BaseObject* _object, unsigned short _id)
 	mLiveObjects[_id] = _object;
 }
 
+
 void Timeline::AddSnapshot(unsigned int _snaptime,Snapshot* _snapshot)
 {
 	mSnapshots[_snaptime] = _snapshot;
@@ -102,28 +103,41 @@ SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object)
 	SnapInfo* info = new SnapInfo();
 	info->mId = _object->GetUniqueID();
 	info->mTransform = _object->GetTransform();
-	
-	//Componet information
-	for (unsigned int i = 0; i < _object->GetNumofComponets(); i++) {
-		 Component* temp = _object->GetComponet(i);
+	//TODO PAT: ADD MORE COMPONETS WHEN WE NEED THEM
 
-		//If there is a componet we want to store make a snap component
-		switch (temp->GetType())
-		{
-		case ComponentType::eCOMPONENT_COLLIDER:
-			{
-			SnapComponent* newComp = new SnapComponent();
-			newComp->CompType = temp->GetType();
-			((SnapComponent_Physics*)newComp)->acceleration = ((Collider*)temp)->GetAcceleration();
-			((SnapComponent_Physics*)newComp)->velocity = ((Collider*)temp)->GetVelocity();
-			info->mComponets.push_back(newComp);
-			break;
-			}
-		default:
-			//This component is not having its information stored in snapshot
-			break;
-		}
+	//Physics componets
+	std::vector<Component*>temp = _object->GetComponents(ComponentType::eCOMPONENT_PhysicsCollider);
+	for (unsigned int i = 0; i < temp.size(); i++)
+	{
+		SnapComponent* newComp = new SnapComponent();
+		newComp->CompType = eCOMPONENT_PhysicsCollider;
+		((SnapComponent_Physics*)newComp)->acceleration = ((Collider*)temp[i])->mAcceleration;
+		((SnapComponent_Physics*)newComp)->velocity = ((Collider*)temp[i])->mVelocity;
+		info->mComponets.push_back(newComp);
 	}
+	
+	////////////////////////////////////////////////////////////////////////////////Talk to Chris about mComponent rework
+	//Componet information
+	//or (unsigned int i = 0; i < _object->GetNumofComponets(); i++) {
+	//	 Component* temp = _object->GetComponent(i);
+	//
+	//	//If there is a componet we want to store make a snap component
+	//	switch (temp->GetType())
+	//	{
+	//	case ComponentType::eCOMPONENT_COLLIDER:
+	//		{
+	//		SnapComponent* newComp = new SnapComponent();
+	//		newComp->CompType = temp->GetType();
+	//		((SnapComponent_Physics*)newComp)->acceleration = ((Collider*)temp)->GetAcceleration();
+	//		((SnapComponent_Physics*)newComp)->velocity = ((Collider*)temp)->GetVelocity();
+	//		info->mComponets.push_back(newComp);
+	//		break;
+	//		}
+	//	default:
+	//		//This component is not having its information stored in snapshot
+	//		break;
+	//	}
+	//
 
 	return info;
 }

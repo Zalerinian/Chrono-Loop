@@ -14,7 +14,7 @@ namespace RenderEngine {
 	RenderShape::RenderShape() {
 		mType = RenderNodeType::Shape;
 		mNext = nullptr;
-		mContext.mRasterState = eRS_FILLED;
+		mContext.mRasterState = eRS_MAX;
 		mContext.mVertexFormat = eVERT_POSNORMTEX;
 	}
 	
@@ -22,7 +22,7 @@ namespace RenderEngine {
 		this->Load(_mesh);
 		mNext = nullptr;
 		mType = RenderNodeType::Shape;
-		mContext.mRasterState = eRS_FILLED;
+		mContext.mRasterState = eRS_MAX;
 		mContext.mVertexFormat = eVERT_POSNORMTEX;
 	}
 
@@ -81,10 +81,12 @@ namespace RenderEngine {
 	void RenderShape::SetShaders(PixelShaderFormat pf, VertexShaderFormat vf)
 	{
 		if (pf < ePS_BASIC || pf >= ePS_MAX) {
-			throw "Invalid pixel shader enumeration.";
+			SystemLogger::GetError() << "[Error] Invalid Pixel shader enumation at RenderShape::SetShaders: " << pf << ". Forcing to ePS_MAX!" << std::endl;
+			pf = ePS_MAX;
 		}
 		if (vf < eVS_BASIC || vf >= eVS_MAX) {
-			throw "Invalid vertex shader enumeration.";
+			SystemLogger::GetError() << "[Error] Invalid VertexShader enumation at RenderShape::SetShaders: " << vf << ". Forcing to eVS_MAX!" << std::endl;
+			vf = eVS_MAX;
 		}
 		mContext.mVertexShaderFormat = vf;
 		mContext.mPixelShaderFormat = pf;

@@ -1,79 +1,88 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "BaseObject.h"
 
 
 BaseObject::BaseObject()
 {
-	//name = nullptr;
-	m_parent = nullptr;
+	
+	parent = nullptr;
+	//TESTING VALUES GET RID OF THIS EVENTUALLY
+	id = 2;
+	
 }
 BaseObject::BaseObject(std::string _name, Transform _transform)
 {
-	m_name = _name;
-	m_parent = nullptr;
-	m_transform = _transform;
-	m_mass = 0.0f;
-}
-BaseObject::BaseObject(std::string _name, Transform _transform, float _mass)
-{
-	m_name = _name;
-	m_parent = nullptr;
-	m_transform = _transform;
-	m_mass = _mass;
+	name = _name;
+	parent = nullptr;
+	transform = _transform;
 }
 BaseObject::~BaseObject()
 {
-	delete m_parent;
-	m_components.clear();
-	m_children.clear();
+	delete parent;
+	for(auto iter = mComponents.begin(); iter != mComponents.end(); ++iter)
+	{
+		for (int i = 0; i < iter->second.size(); ++i)
+			delete iter->second[i];
+	}
+	mComponents.clear();
+	children.clear();
 }
 BaseObject BaseObject::Clone()
 {
+	//clone copies properties execpt id
 	BaseObject temp;
-	temp.m_name = this->m_name;
-	temp.m_transform = this->m_transform;
-	temp.m_parent = this->m_parent;
-	temp.m_components = this->m_components;
-	temp.m_children = this->m_children;
+	temp.name = this->name;
+	temp.transform = this->transform;
+	temp.parent = this->parent;
+	temp.mComponents = this->mComponents;
+	temp.children = this->children;
 	return temp;
 }
 BaseObject BaseObject::Clone(BaseObject _clone)
 {
-	_clone.m_name = this->m_name;
-	_clone.m_transform = this->m_transform;
-	_clone.m_parent = this->m_parent;
-	_clone.m_components = this->m_components;
-	_clone.m_children = this->m_children;
+	//clone copies properties execpt id
+	_clone.name = this->name;
+	_clone.transform = this->transform;
+	_clone.parent = this->parent;
+	_clone.mComponents = this->mComponents;
+	_clone.children = this->children;
 	return _clone;
 }
 BaseObject const* BaseObject::operator=(BaseObject _equals)
 {
-	if (this->m_name != _equals.m_name) this->m_name = _equals.m_name;
-	if (this->m_parent != _equals.m_parent) this->m_parent = _equals.m_parent;
-	if (this->m_children != _equals.m_children) this->m_children = _equals.m_children;
+	if (this->id != _equals.id) this->id = _equals.id;
+	if (this->name != _equals.name) this->name = _equals.name;
+	if (this->parent != _equals.parent) this->parent = _equals.parent;
+	if (this->children != _equals.children) this->children = _equals.children;
 	//if (this->transform != _equals.transform) this->transform = _equals.transform;
-	if (this->m_components != _equals.m_components) this->m_components = _equals.m_components;
+	if (this->mComponents != _equals.mComponents) this->mComponents = _equals.mComponents;
 	return this;
 }
-void BaseObject::CalcAcceleration(vec4f& _force)
+
+unsigned short& BaseObject::GetUniqueId()
 {
-	m_acc = Physics::CalcAcceleration(_force, m_mass);
-}
-void BaseObject::CalcVelocity(vec4f& _force, float _dt)
-{
-	CalcAcceleration(_force);
-	m_vel = Physics::CalcVelocity(m_vel, m_acc, _dt);
-}
-void BaseObject::CalcPosition(vec4f& _force, float _dt)
-{
-	CalcVelocity(_force, _dt);
-	m_pos = Physics::CalcPosition(m_pos, m_vel, _dt);
+	return id;
 }
 
-Component* const BaseObject::GetComponet(unsigned int _indx) {
-	return m_components[_indx];
+void BaseObject::Destroy()
+{
+	for (auto iter = mComponents.begin(); iter != mComponents.end(); ++iter)
+		for (int i = 0; i < iter->second.size(); ++i)
+			delete iter->second[i];
 }
 
-unsigned int BaseObject::GetNumofComponets() {
-	return m_components.size();
+void BaseObject::AddComponent(ComponentType _type, Component* _comp)
+{
+	mComponents[_type].push_back(_comp);
 }
+
+Component* const BaseObject::GetComponent(ComponentType _type, unsigned int _index) 
+{
+	return mComponents[_type][_index];
+}
+
+unsigned int BaseObject::GetNumofComponets(ComponentType _type)
+{
+	return mComponents[_type].size();
+}
+

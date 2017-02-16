@@ -1,9 +1,12 @@
 //#include "stdafx.h"
 #include "Rendering/SystemInitializer.h"
 #include "Rendering/renderer.h"
+#include "Objects/BaseObject.h"
 #include "Rendering/InputLayoutManager.h"
+#include ".\Rendering\RenderShape.h"
 #include "Input/VRInputManager.h"
 #include "Core/TimeManager.h"
+#include "Core/Timeline.h"
 #include "Common/Logger.h"
 #include <openvr.h>
 #include <ctime>
@@ -28,7 +31,7 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void Update();
 void UpdateTime();
 
-int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
+int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	//_CrtSetBreakAlloc(373);
 	if (!InitializeWindow(hInstance, nCmdShow, 800, 600, true)) {
@@ -51,10 +54,11 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	if (!RenderEngine::InitializeSystems(hwnd, 800, 600, false, 90, false, 1000, 0.1f, vrsys)) {
 		return 1;
 	}
-	
+
 	std::shared_ptr<ID3D11Device*> renderingDevice = RenderEngine::Renderer::Instance()->GetDevice();
 
 	// Update everything
+	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count());
 	Update();
 
 	// Cleanup
@@ -86,9 +90,53 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	return 0;
 }
 
+void UpdateTime()
+{
+	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count() - lastTime.time_since_epoch().count()) / 1000.0f / 1000.0f / 1000.0f;
+	lastTime = std::chrono::steady_clock::now();
+}
+
+
 void Update() {
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
+
+	///*///////////////////////Using this to test physics//////////////////
+	Transform transform;
+	transform.SetMatrix(MatrixIdentity());
+	matrix4 mat1 = MatrixIdentity();
+	mat1.fourth.x = 0.0f;
+	mat1.fourth.y = 3.0f;
+	mat1.fourth.z = 0.0f;
+	mat1.fourth.w = 1.0f;
+	transform.SetMatrix(mat1);
+	BaseObject obj("aabb", transform);
+	
+	CubeCollider aabb(true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, vec4f(0.15f, -0.15f, .15f, 1.0f), vec4f(-0.15f, 0.15f, -0.15f, 1.0f));
+	obj.AddComponent(eCOMPONENT_PhysicsCollider, &aabb);
+	aabb.object = &obj;
+	RenderEngine::Renderer::Instance()->mBox.mPosition = Math::MatrixTranspose(obj.GetTransform().GetMatrix());
+
+	matrix4 mat = MatrixIdentity();
+	mat.fourth.x = 0.0f;
+	mat.fourth.y = -1.0f;
+	mat.fourth.z = 0.0f;
+	mat.fourth.w = 1.0f;
+
+	Transform transform1;
+	transform1.SetMatrix(mat);
+	BaseObject obj1("plane", transform1);
+	PlaneCollider plane(false, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.0f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
+	obj1.AddComponent(eCOMPONENT_PhysicsCollider, &plane);
+	plane.object = &obj1;
+	RenderEngine::Renderer::Instance()->mPlane.mPosition = Math::MatrixTranspose(obj1.GetTransform().GetMatrix());
+
+	TimeManager::Instance()->GetTimeLine()->AddBaseObject(&obj,obj.GetUniqueId());
+	Physics::Instance()->mObjects.push_back(&obj);
+	Physics::Instance()->mObjects.push_back(&obj1);
+	//*////////////////////////////////////////////////////////////////////
+
+
 	while (true) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			// Handle windows message.
@@ -101,6 +149,10 @@ void Update() {
 			if (GetAsyncKeyState(VK_ESCAPE)) {
 				break;
 			}
+		
+			Physics::Instance()->Update(deltaTime);
+			RenderEngine::Renderer::Instance()->mBox.mPosition = Math::MatrixTranspose(obj.GetTransform().GetMatrix());
+			RenderEngine::Renderer::Instance()->mPlane.mPosition = Math::MatrixTranspose(obj1.GetTransform().GetMatrix());
 
 			UpdateTime();
 			if (VREnabled) {
@@ -112,12 +164,6 @@ void Update() {
 			RenderEngine::Renderer::Instance()->Render(deltaTime);
 		}
 	}
-}
-
-void UpdateTime()
-{
-	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count() - lastTime.time_since_epoch().count()) / 1000.0f / 1000.0f / 1000.0f;
-	lastTime = std::chrono::steady_clock::now();
 }
 
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed) {

@@ -24,7 +24,6 @@ struct SnapInfo
 	Transform mTransform;	//positional data of the object
 	std::vector<SnapComponent*>mComponets;
 	//TODO PAT: ADD HEADSET POSITION DATA
-	
 	//Componet info needed
 };
 

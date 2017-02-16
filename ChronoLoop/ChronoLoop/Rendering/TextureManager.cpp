@@ -63,10 +63,10 @@ namespace RenderEngine {
 			std::forward<std::shared_ptr<ID3D11Texture2D*>>(text2d)
 		);
 		if (_srv) {
-			(*_srv) = srv;
+			(*_srv) = mTextureMap2D[_path].first;
 		}
 		if (_texture) {
-			(*_texture) = text2d;
+			(*_texture) = mTextureMap2D[_path].second;
 		}
 		return TextureStatus::eSuccess;
 	}

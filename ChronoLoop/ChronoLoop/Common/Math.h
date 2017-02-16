@@ -12,6 +12,8 @@ struct vec4i {
 		};
 		int xyzw[4];
 	};
+	vec4i() { x = 0; y = 0; z = 0; w = 0; };
+	vec4i(int _x, int _y, int _z, int _w) { x = _x; _y = y; _z = z; w = _w; };
 };
 
 struct vec2f {
@@ -81,8 +83,8 @@ struct vec4f {
 		float xyzw[4];
 	};
 
-	vec4f();
-	vec4f(float _x, float _y, float _z, float _w);
+	vec4f() { x = 0; y = 0; z = 0; w = 0; };
+	vec4f(float _x, float _y, float _z, float _w) { x = _x; y = _y; z = _z; w = _w; };
 	vec4f(vec4f const& _copy);
 	vec4f(vec3f const& _copy);
 	//DirectX::XMVECTOR GetUnderlyingType() { return vector; }
@@ -155,6 +157,10 @@ namespace Math
 	matrix4 MatrixTranslation(float _x, float _y, float _z);
 	matrix4 MatrixTranspose(matrix4 & other);
 	matrix4 MatrixScale(float _x, float _y, float _z);
+	matrix4 MatrixIdentity();
+	matrix4 MatrixRotateInPlace(matrix4 _self, float _x, float _y, float _z, float _rads);
+	matrix4 MatrixRotateInPlace(matrix4 _self, vec4f _axis, float _rads);
+	matrix4 MatrixRotateAround(matrix4 _self, vec4f _axis, vec4f _point, float _rads);
 	matrix4 Projection(float _aspect, float _fov, float _near, float _far);
 	matrix4 FromMatrix(vr::HmdMatrix44_t _mat);
 	matrix4 FromMatrix(vr::HmdMatrix34_t _mat);

@@ -1,7 +1,10 @@
-cbuffer MVEP : register(b0) {
-	matrix model;
+cbuffer VPBuffer : register(b0) {
 	matrix view;
 	matrix proj;
+}
+
+cbuffer ModelBuffer : register(b1) {
+	matrix model;
 }
 
 struct VertexShaderInput {
