@@ -1,41 +1,43 @@
 //#include "stdafx.h"
 #include "Transform.h"
 
-void Transform::TranslateLocal(float x, float y, float z)
-{
+void Transform::TranslateLocal(float x, float y, float z) {
 	matrix4 temp;
-	temp[0] = this->m_right;
-	temp[1] = this->m_up;
-	temp[2] = this->m_foward;
+	temp[0] = this->mRight;
+	temp[1] = this->mUp;
+	temp[2] = this->mFoward;
 
 	temp = MatrixTranslation(x, y, z);
 }
 
-Transform const * Transform::operator=(Transform const _t)
-{
-	if (!(this->m_up == _t.m_up)) this->m_up = _t.m_up;
-	if (!(this->m_right == _t.m_right)) this->m_right = _t.m_right;
-	if (!(this->m_foward == _t.m_foward)) this->m_foward = _t.m_foward;
-	if (!(this->m_worldMatrix == _t.m_worldMatrix)) this->m_worldMatrix = _t.m_worldMatrix;
-	return this;
+void Transform::GetMatrix(matrix4 & _filler) {
+	_filler = mMatrix;
 }
 
-bool Transform::operator==(Transform const _t)
-{
-	if (!(this->m_up == _t.m_up)) return false;
-	if (!(this->m_right == _t.m_right)) return false;
-	if (!(this->m_foward == _t.m_foward)) return false;
-	if (!(this->m_worldMatrix == _t.m_worldMatrix)) return false;
+matrix4 Transform::GetMatrix() {
+	return mMatrix;
+}
+
+Transform& Transform::operator=(Transform const&	 _t) {
+	mUp     = _t.mUp;
+	mRight  = _t.mRight;
+	mFoward = _t.mFoward;
+	mMatrix = _t.mMatrix;
+	return *this;
+}
+
+bool Transform::operator==(Transform const& _t) {
+	if (!(this->mUp == _t.mUp)) return false;
+	if (!(this->mRight == _t.mRight)) return false;
+	if (!(this->mFoward == _t.mFoward)) return false;
+	if (!(this->mMatrix == _t.mMatrix)) return false;
 	return true;
 }
 
-bool Transform::operator!=(Transform const _t)
-{
-	if (!(this->m_up == _t.m_up) || 
-		!(this->m_right == _t.m_right) ||
-		!(this->m_foward == _t.m_foward) || 
-		!(this->m_worldMatrix == _t.m_worldMatrix)) 
+bool Transform::operator!=(Transform const& _t) {
+	if (!((*this) == _t)) {
 		return true;
+	}
 	return false;
 }
 

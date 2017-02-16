@@ -6,7 +6,7 @@
 #pragma region Base Component
 void Component::GetMatrix(matrix4& _m)
 {
-	  //_m = object->transform.m_matrix4;
+	//_m = object->transform.m_matrix4;
 }
 
 #pragma endregion

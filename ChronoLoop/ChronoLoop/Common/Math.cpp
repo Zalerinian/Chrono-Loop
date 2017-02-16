@@ -634,8 +634,7 @@ matrix4 Math::MatrixRotateInPlace(matrix4 _self, float _x, float _y, float _z, f
 		pos[i] = _self[i][3];
 		_self[i][3] = 0;
 	}
-	matrix4 rot = Math::MatrixRotateAxis({ _x, _y, _z, 0 }, _rads);
-	_self *= rot;
+	_self *= Math::MatrixRotateAxis({ _x, _y, _z, 0 }, _rads);
 	for (int i = 0; i < 4; ++i) {
 		_self[i][3] = pos[i];
 	}
@@ -645,6 +644,7 @@ matrix4 Math::MatrixRotateInPlace(matrix4 _self, float _x, float _y, float _z, f
 matrix4 Math::MatrixRotateInPlace(matrix4 _self, vec4f _axis, float _rads) {
 	return MatrixRotateInPlace(_self, _axis.x, _axis.y, _axis.z, _rads);
 }
+
 
 matrix4 Math::MatrixRotateAround(matrix4 _self, vec4f _axis, vec4f _point, float _rads) {
 	vec4f pos;
