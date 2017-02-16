@@ -101,8 +101,8 @@ void Update() {
 
 	///*///////////////////////Using this to test physics//////////////////
 	Transform transform;
-	transform.SetMatrix(Identity());
-	matrix4 mat1 = Identity();
+	transform.SetMatrix(MatrixIdentity());
+	matrix4 mat1 = MatrixIdentity();
 	mat1.fourth.x = 0.0f;
 	mat1.fourth.y = 3.0f;
 	mat1.fourth.z = 0.0f;
@@ -114,7 +114,7 @@ void Update() {
 	aabb.object = &obj;
 	RenderEngine::Renderer::Instance()->mBox.mPosition = Math::MatrixTranspose(obj.GetTransform().GetMatrix());
 
-	matrix4 mat = Identity();
+	matrix4 mat = MatrixIdentity();
 	mat.fourth.x = 0.0f;
 	mat.fourth.y = -1.0f;
 	mat.fourth.z = 0.0f;

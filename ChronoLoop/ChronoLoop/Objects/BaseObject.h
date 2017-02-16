@@ -24,13 +24,14 @@ public:
 	BaseObject();
 	BaseObject(std::string _name, Transform _transform);
 	~BaseObject();
-Component* const GetComponet(unsigned int _indx);
-	unsigned int GetNumofComponets();BaseObject Clone();
+	Component* const GetComponent(ComponentType _type, unsigned int _indx);
+	unsigned int GetNumofComponets(ComponentType _type);
+	BaseObject Clone();
 	BaseObject Clone(BaseObject _clone);
 	BaseObject const* operator=(BaseObject _equals);
 	unsigned short& GetUniqueId();
 	std::unordered_map<ComponentType, std::vector<Component*>> mComponents;
-	void Destroy() { delete this; };
+	void Destroy();
 
 	//**GETTERS/SETTERS**//
 	std::string					GetName() { return name; };

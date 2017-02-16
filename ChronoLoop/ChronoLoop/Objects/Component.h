@@ -1,7 +1,8 @@
 #pragma once
 #include "..\Common\Math.h"
+#include "..\Rendering\Mesh.h"
 class BaseObject;
-class Mesh;
+//class Mesh;
 
 enum ComponentType
 {
