@@ -103,11 +103,17 @@ void Update() {
 	///*///////////////////////Using this to test physics//////////////////
 	Transform transform;
 	transform.SetMatrix(Identity());
+	matrix4 mat1 = Identity();
+	mat1.fourth.x = 0.0f;
+	mat1.fourth.y = 3.0f;
+	mat1.fourth.z = 0.0f;
+	mat1.fourth.w = 1.0f;
+	transform.SetMatrix(mat1);
 	BaseObject obj("aabb", transform);
-	CubeCollider aabb(true, vec4f(0.0f, -0.01f, 0.0f, 0.0f), 10.0f, 5.0f, vec4f(1.0f, 1.0f, 1.0f, 1.0f), vec4f(-1.0f, 2.0f, -1.0f, 1.0f));
+	CubeCollider aabb(true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, vec4f(0.15f, -0.15f, .15f, 1.0f), vec4f(-0.15f, 0.15f, -0.15f, 1.0f));
 	obj.AddComponent(eCOMPONENT_PhysicsCollider, &aabb);
 	aabb.object = &obj;
-	//RenderEngine::Renderer::Instance()->mBox.mPosition = obj.GetTransform().GetMatrix();
+	RenderEngine::Renderer::Instance()->mBox.mPosition = Math::MatrixTranspose(obj.GetTransform().GetMatrix());
 
 	matrix4 mat = Identity();
 	mat.fourth.x = 0.0f;
@@ -118,10 +124,10 @@ void Update() {
 	Transform transform1;
 	transform1.SetMatrix(mat);
 	BaseObject obj1("plane", transform1);
-	PlaneCollider plane(false, vec4f(0.0f, 0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0.0f, vec4f(0.0f, 1.0f, 0.0f , 0.0f));
+	PlaneCollider plane(false, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.0f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
 	obj1.AddComponent(eCOMPONENT_PhysicsCollider, &plane);
 	plane.object = &obj1;
-	//RenderEngine::Renderer::Instance()->mPlane.mPosition = obj1.GetTransform().GetMatrix();
+	RenderEngine::Renderer::Instance()->mPlane.mPosition = Math::MatrixTranspose(obj1.GetTransform().GetMatrix());
 
 	Physics::Instance()->mObjects.push_back(&obj);
 	Physics::Instance()->mObjects.push_back(&obj1);
@@ -140,9 +146,11 @@ void Update() {
 			if (GetAsyncKeyState(VK_ESCAPE)) {
 				break;
 			}
-			//RenderEngine::Renderer::Instance()->mBox.mPosition = obj.GetTransform().GetMatrix();
-			//RenderEngine::Renderer::Instance()->mPlane.mPosition = obj1.GetTransform().GetMatrix();
+		
 			Physics::Instance()->Update(deltaTime);
+			RenderEngine::Renderer::Instance()->mBox.mPosition = Math::MatrixTranspose(obj.GetTransform().GetMatrix());
+			RenderEngine::Renderer::Instance()->mPlane.mPosition = Math::MatrixTranspose(obj1.GetTransform().GetMatrix());
+
 			UpdateTime();
 			if (VREnabled) {
 				VRInputManager::Instance().update();

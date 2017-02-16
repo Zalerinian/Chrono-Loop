@@ -350,7 +350,7 @@ namespace RenderEngine {
 
 		if (!mVrSystem) {
 			constantData.model = Math::MatrixTranspose(Math::MatrixTranslation(0, 0, 0));
-			constantData.view.matrix = (DirectX::XMMatrixLookAtRH({ 0, 2, 1, 0 }, { 0, 0, 0, 0 }, { 0, 1, 0, 0 }));
+			constantData.view.matrix = (DirectX::XMMatrixLookAtRH({ 0, 1, 3, 0 }, { 0, 0, 0, 0 }, { 0, 1, 0, 0 }));
 			constantData.projection.matrix = DirectX::XMMatrixPerspectiveFovRH(70, (float)_height / (float)_width, 0.1f, 1000);
 			constantData.view = Math::MatrixTranspose(constantData.view);
 			constantData.projection = Math::MatrixTranspose(constantData.projection);

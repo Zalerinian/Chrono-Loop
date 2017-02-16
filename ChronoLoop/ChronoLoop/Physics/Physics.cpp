@@ -512,24 +512,25 @@ vec4f Physics::CalcPosition(vec4f& _pos, vec4f& _vel, float _time)
 
 void Physics::CalcReaction(Collider& _col1, Collider& _col2, float _time)
 {
-	float avgElasticity;
-	vec4f impulse; 
-	vec4f collisionNormal; 
-	vec4f relativeVelocity;
-				 
-	avgElasticity = (_col1.mElasticity + _col2.mElasticity) / 2;
-	collisionNormal = _col1.GetPos() - _col2.GetPos();
+	float avgElasticity = (_col1.mElasticity + _col2.mElasticity) / 2;
+	vec4f collisionNormal = _col1.GetPos() - _col2.GetPos();
 	collisionNormal.Normalize();
-	relativeVelocity = _col1.mVelocity - _col2.mVelocity;
-	float impulseMagnitude;
-	impulseMagnitude = -(1 + avgElasticity) * _col1.mMass * _col2.mMass * (relativeVelocity * collisionNormal) / (_col1.mMass + _col2.mMass);
-	impulse = collisionNormal * impulseMagnitude;
+	vec4f relativeVelocity = _col1.mVelocity - _col2.mVelocity;
+	
+	float impulseMagnitude = -(1 + avgElasticity) * _col1.mMass * _col2.mMass * (relativeVelocity * collisionNormal) / (_col1.mMass + _col2.mMass);
+	vec4f impulse = collisionNormal * impulseMagnitude;
 	_col1.mImpulsiveForce = impulse / _time;
 	_col2.mImpulsiveForce = -impulse / _time;
 	_col1.mVelocity = _col1.mVelocity + impulse / _col1.mMass;
 	_col2.mVelocity = _col2.mVelocity - impulse / _col2.mMass;
-	_col1.mTotalForce += _col1.mImpulsiveForce;
-	_col2.mTotalForce += _col2.mImpulsiveForce;
+	_col1.mTotalForce = _col1.mImpulsiveForce;
+	_col2.mTotalForce = _col2.mImpulsiveForce;
+}
+
+void Physics::PlaneColReaction(Collider& _col, Collider& _plane)
+{
+	vec4f normalVel = (((PlaneCollider*)&_plane)->mNormal * (_col.mVelocity * ((PlaneCollider*)&_plane)->mNormal));
+	_col.mVelocity = (normalVel * -_col.mElasticity) + (_col.mVelocity - normalVel);
 }
 
 #pragma endregion
@@ -551,6 +552,12 @@ void Physics::Update(float _time)
 			{
 				collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
 				collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
+
+				//if (fabsf(collider->mTotalForce.y) < 0.01f)
+				//	collider->mTotalForce.y = 0;
+				if (fabsf(collider->mVelocity.y) < 0.01f)
+					collider->mVelocity.y = 0;
+				
 				collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
 			}
 
@@ -660,7 +667,7 @@ void Physics::Update(float _time)
 								else if (result == 3)// intersecting plane
 								{
 									SystemLogger::GetLog() << "AABB INTERSECTING PLANE!" << std::endl;
-									//CalcReaction(*collider, *otherCol, _time);
+									PlaneColReaction(*collider, *otherCol);
 								}
 							}
 						}

@@ -58,10 +58,10 @@ MeshCollider::MeshCollider(bool _move, vec4f _gravity, float _mass, float _elast
 {
 	mType = eCOLLIDER_Mesh;
 	mGravity = _gravity;
-	mVelocity = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
-	mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
+	mVelocity = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+	mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	mTotalForce = mGravity;
-	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
+	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	mShouldMove = _move;
 	mMass = _mass;
 	mElasticity = _elasticity;
@@ -72,10 +72,10 @@ SphereCollider::SphereCollider(bool _move, vec4f _gravity, float _mass, float _e
 {
 	mType = eCOLLIDER_Sphere;
 	mGravity = _gravity;
-	mVelocity = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
-	mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
+	mVelocity = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+	mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	mTotalForce = mGravity;
-	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
+	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	mShouldMove = _move;
 	mMass = _mass;
 	mElasticity = _elasticity;
@@ -86,32 +86,34 @@ CubeCollider::CubeCollider(bool _move, vec4f _gravity, float _mass, float _elast
 {
 	mType = eCOLLIDER_Cube;
 	mGravity = _gravity;
-	mVelocity = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
-	mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
+	mVelocity = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+	mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	mTotalForce = mGravity;
-	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
+	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	mShouldMove = _move;
 	mMass = _mass;
 	mElasticity = _elasticity;
 	mMin = _min;
+	mMinOffset = mMin;
 	mMax = _max;
+	mMaxOffset = mMax;
 }
 
 void CubeCollider::SetPos(vec4f _newPos)
 {
 	object->GetTransform().GetMatrix().fourth = _newPos; 
-	mMin += _newPos; 
-	mMax += _newPos; 
+	mMin = _newPos + mMinOffset; 
+	mMax = _newPos + mMaxOffset; 
 }
 
 PlaneCollider::PlaneCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _offset, vec4f _norm)
 {
 	mType = eCOLLIDER_Plane;
 	mGravity = _gravity;
-	mVelocity = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
-	mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
+	mVelocity = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+	mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	mTotalForce = mGravity;
-	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 0.0f);
+	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	mShouldMove = _move;
 	mMass = _mass;
 	mElasticity = _elasticity;
