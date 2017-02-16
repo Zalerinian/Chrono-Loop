@@ -1,24 +1,8 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "Math.h"
 #include <memory>
 
 #pragma region VECTOR4F_MATH
-
-vec4f::vec4f()
-{
-	x = 0;
-	y = 0;
-	z = 0;
-	w = 0;
-}
-
-vec4f::vec4f(float _x, float _y, float _z, float _w)
-{
-	x = _x;
-	y = _y;
-	z = _z;
-	w = _w;
-}
 
 vec4f::vec4f(vec4f const& _copy)
 {
@@ -41,10 +25,10 @@ bool vec4f::operator==(vec4f const& _other)
 	return true;
 }
 
-bool vec4f::operator!=(vec4f const& _other)
-{
-	return !(*this == _other);
-}
+//bool vec4f::operator!=(vec4f const& _other)
+//{
+//	return !(*this == _other);
+//}
 
 vec4f& vec4f::operator=(vec4f const& _other)
 {
@@ -508,6 +492,11 @@ matrix4& matrix4::operator=(matrix4 const& _other)
 
 matrix4 matrix4::operator*(matrix4 const& _other)
 {
+	/// A grave reminde that for some reason OpenGL and DirectX multiply matrices in REVERSE ORDER FROM EACH OTHER.
+	//matrix4 temp(_floats[0] * _other._floats[0] + _floats[4] * _other._floats[1] + _floats[8] * _other._floats[2] + _floats[12] * _other._floats[3], _floats[1] * _other._floats[0] + _floats[5] * _other._floats[1] + _floats[9] * _other._floats[2] + _floats[13] * _other._floats[3], _floats[2] * _other._floats[0] + _floats[6] * _other._floats[1] + _floats[10] * _other._floats[2] + _floats[14] * _other._floats[3], _floats[3] * _other._floats[0] + _floats[7] * _other._floats[1] + _floats[11] * _other._floats[2] + _floats[15] * _other._floats[3],
+	//	_floats[0] * _other._floats[4] + _floats[4] * _other._floats[5] + _floats[8] * _other._floats[6] + _floats[12] * _other._floats[7], _floats[1] * _other._floats[4] + _floats[5] * _other._floats[5] + _floats[9] * _other._floats[6] + _floats[13] * _other._floats[7], _floats[2] * _other._floats[4] + _floats[6] * _other._floats[5] + _floats[10] * _other._floats[6] + _floats[14] * _other._floats[7], _floats[3] * _other._floats[4] + _floats[7] * _other._floats[5] + _floats[11] * _other._floats[6] + _floats[15] * _other._floats[7],
+	//	_floats[0] * _other._floats[8] + _floats[4] * _other._floats[9] + _floats[8] * _other._floats[10] + _floats[12] * _other._floats[11], _floats[1] * _other._floats[8] + _floats[5] * _other._floats[9] + _floats[9] * _other._floats[10] + _floats[13] * _other._floats[11], _floats[2] * _other._floats[8] + _floats[6] * _other._floats[9] + _floats[10] * _other._floats[10] + _floats[14] * _other._floats[11], _floats[3] * _other._floats[8] + _floats[7] * _other._floats[9] + _floats[11] * _other._floats[10] + _floats[15] * _other._floats[11],
+	//	_floats[0] * _other._floats[12] + _floats[4] * _other._floats[13] + _floats[8] * _other._floats[14] + _floats[12] * _other._floats[15], _floats[1] * _other._floats[12] + _floats[5] * _other._floats[13] + _floats[9] * _other._floats[14] + _floats[13] * _other._floats[15], _floats[2] * _other._floats[12] + _floats[6] * _other._floats[13] + _floats[10] * _other._floats[14] + _floats[14] * _other._floats[15], _floats[3] * _other._floats[12] + _floats[7] * _other._floats[13] + _floats[11] * _other._floats[14] + _floats[15] * _other._floats[15]);
 	matrix4 temp;
 	temp.matrix = this->matrix * _other.matrix;
 	return temp;
@@ -616,26 +605,54 @@ matrix4 Math::MatrixScale(float _x, float _y, float _z)
 	return temp;
 }
 
-matrix4 Math::Projection(float _aspect, float _fov, float _near, float _far)
-{
-	matrix4 _new;
-	_new.matrix = DirectX::XMMatrixPerspectiveFovRH(_fov, _aspect, _near, _far);
-	return _new;
-}
-
-matrix4 Math::Identity() 
+matrix4 Math::MatrixIdentity() 
 {
 	matrix4 m;
 	m.matrix = DirectX::XMMatrixIdentity();
 	return m;
 }
 
+matrix4 Math::MatrixRotateInPlace(matrix4 _self, float _x, float _y, float _z, float _rads) {
+	vec4f pos;
+	for (int i = 0; i < 4; ++i) {
+		pos[i] = _self[i][3];
+		_self[i][3] = 0;
+	}
+	_self *= Math::MatrixRotateAxis({ _x, _y, _z, 0 }, _rads);
+	for (int i = 0; i < 4; ++i) {
+		_self[i][3] = pos[i];
+	}
+	return _self;
+}
+
+matrix4 Math::MatrixRotateInPlace(matrix4 _self, vec4f _axis, float _rads) {
+	return MatrixRotateInPlace(_self, _axis.x, _axis.y, _axis.z, _rads);
+}
+
+
+matrix4 Math::MatrixRotateAround(matrix4 _self, vec4f _axis, vec4f _point, float _rads) {
+	vec4f pos;
+	for (int i = 0; i < 3; ++i) {
+		pos[i] = _self[i][3];
+		_self[i][3] = pos[i] - _point[i]; // Set object's position to the delta of where it is to where it rotates about.
+		pos[i] = _point[i] - pos[i];
+	}
+	// TODO: Fix this.
+	_self *= Math::MatrixRotateAxis(_axis, _rads);
+	for (int i = 0; i < 3; ++i) {
+		_self[i][3] += pos[i]; // pos[i] is now the offset on each component, which we add back into the rotated object.
+	}
+	return _self;
+}
+
 matrix4 Math::FromMatrix(vr::HmdMatrix44_t _mat)
 {
+	// TODO: Check to make sure this properly converts matrices. I think HmdMtrices are column major,
+	// so [i][j] would leave us with a column major version, which is bad.
 	matrix4 temp;
 	for (int i = 0; i < 4; ++i)
 		for (int j = 0; j < 4; ++j)
-			temp.tiers[i].xyzw[j] = _mat.m[i][j];
+			temp.tiers[i].xyzw[j] = _mat.m[j][i];
 
 	return temp;
 }

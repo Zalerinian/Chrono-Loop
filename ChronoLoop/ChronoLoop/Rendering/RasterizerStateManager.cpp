@@ -1,6 +1,6 @@
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "RasterizerStateManager.h"
-#include "renderer.h"
+#include "Renderer.h"
 
 namespace RenderEngine {
 
@@ -39,15 +39,14 @@ namespace RenderEngine {
 		(*Renderer::Instance()->GetDevice())->CreateRasterizerState(&desc, &state);
 		mStates[eRS_CCW] = state;
 
-		desc.CullMode = D3D11_CULL_NONE;
-		(*Renderer::Instance()->GetDevice())->CreateRasterizerState(&desc, &state);
-		mStates[eRS_CCW_NO_CULL] = state;
-
 		desc.FrontCounterClockwise = FALSE;
 		(*Renderer::Instance()->GetDevice())->CreateRasterizerState(&desc, &state);
 		mStates[eRS_NO_CULL] = state;
 
-		this->ApplyState(eRS_NO_CULL);
+
+		// TODO: Everything is counter-clockwise by default. Is this an export option in Blender?
+		// For now everything gets inverted to display correctly (bool in RenderShape constructor)
+		this->ApplyState(eRS_FILLED);
 	}
 
 	RasterizerStateManager::~RasterizerStateManager() {

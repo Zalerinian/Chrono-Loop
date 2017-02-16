@@ -1,5 +1,5 @@
 #pragma once
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "../Common/Math.h"
 
 struct VertexPos
@@ -43,6 +43,7 @@ struct VertexPosBoneWeightNormTex
 	vec4f	Weights;
 	vec4f	Normal;
 	vec4f	UV;
+	VertexPosBoneWeightNormTex() {};
 };
 struct VertexPosBoneWeightNormTanTex
 {
@@ -53,4 +54,5 @@ struct VertexPosBoneWeightNormTanTex
 	vec4f	Weights;
 	vec4f	Tangent;
 	float	Determinant;
+	VertexPosBoneWeightNormTanTex() {};
 };

@@ -1,27 +1,37 @@
 #pragma once
 #include "RenderNode.h"
+#include "RenderContext.h"
+#include "RendererDefines.h"
+#include <memory>
+#include "Mesh.h"
+#include "../Common/Math.h"
 
 struct ID3D11Buffer;
-class Mesh;
-struct ID3D11PixelShader;
-struct ID3D11VertexShader;
 
 namespace RenderEngine {
 
-	class RenderShape : public RenderNode {
-	public:
-		ID3D11PixelShader		*pShader;
-		ID3D11VertexShader	*vShader;
-		ID3D11Buffer				*mVertexBuffer;
-		ID3D11Buffer				*mIndexBuffer;
-		unsigned int				mIndexCount;
+	struct RenderShape : public RenderNode {
+		std::shared_ptr<ID3D11Buffer*> mVertexBuffer, mIndexBuffer;
+		unsigned int                   mIndexCount = 0;
+
+		matrix4 mPosition;
 
 		RenderShape();
 		RenderShape(Mesh& _mesh);
+		RenderShape(const char* _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs);
+		~RenderShape();
 		void Load(Mesh& _mesh);
-		void LoadShaders(char* vertex, char* pixel);
+		void Load(const char* _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs);
+		void SetShaders(PixelShaderFormat pf, VertexShaderFormat vf);
 
+		inline RenderContext &GetContext() { return mContext; }
 
+		RenderShape& AddTexture(const char* _path, TextureType _position);
+		RenderShape& AddTexture(const wchar_t* _path, TextureType _position);
+		void Render();
+
+	protected:
+		RenderContext mContext;
 	};
 
 }

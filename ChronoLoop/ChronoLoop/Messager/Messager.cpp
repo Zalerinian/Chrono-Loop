@@ -1,7 +1,7 @@
 // Messager.cpp : Defines the exported functions for the DLL application.
 //
 
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "Messager.h"
 #include "Message.h"
 //#include "..\SoundEngine\SoundEngine.h"
