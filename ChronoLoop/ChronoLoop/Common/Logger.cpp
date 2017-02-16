@@ -57,6 +57,22 @@ SystemLogger & SystemLogger::operator<<(const int i) {
 	return *this;
 }
 
+SystemLogger & SystemLogger::operator<<(const float i)
+{
+	cout << i;
+	PrintTime();
+	output << i;
+	return *this;
+}
+
+SystemLogger & SystemLogger::operator<<(const double i)
+{
+	cout << i;
+	PrintTime();
+	output << i;
+	return *this;
+}
+
 SystemLogger & SystemLogger::operator<<(const long i) {
 	cout << i;
 	PrintTime();
