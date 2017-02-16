@@ -20,6 +20,7 @@ private:
 	Transform transform;
 
 public:
+	std::unordered_map<ComponentType, std::vector<Component*>> mComponents;
 	//**CONSTRUCTORS**//
 	BaseObject();
 	BaseObject(std::string _name, Transform _transform);
@@ -30,7 +31,6 @@ public:
 	BaseObject Clone(BaseObject _clone);
 	BaseObject const* operator=(BaseObject _equals);
 	unsigned short& GetUniqueId();
-	std::unordered_map<ComponentType, std::vector<Component*>> mComponents;
 	void Destroy();
 
 	//**GETTERS/SETTERS**//

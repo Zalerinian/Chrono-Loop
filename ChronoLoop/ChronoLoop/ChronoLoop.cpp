@@ -6,6 +6,7 @@
 #include ".\Rendering\RenderShape.h"
 #include "Input/VRInputManager.h"
 #include "Core/TimeManager.h"
+#include "Core/Timeline.h"
 #include "Common/Logger.h"
 #include <openvr.h>
 #include <ctime>
@@ -57,6 +58,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	std::shared_ptr<ID3D11Device*> renderingDevice = RenderEngine::Renderer::Instance()->GetDevice();
 
 	// Update everything
+	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count());
 	Update();
 
 	// Cleanup
@@ -109,6 +111,7 @@ void Update() {
 	mat1.fourth.w = 1.0f;
 	transform.SetMatrix(mat1);
 	BaseObject obj("aabb", transform);
+	
 	CubeCollider aabb(true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, vec4f(0.15f, -0.15f, .15f, 1.0f), vec4f(-0.15f, 0.15f, -0.15f, 1.0f));
 	obj.AddComponent(eCOMPONENT_PhysicsCollider, &aabb);
 	aabb.object = &obj;
@@ -128,6 +131,7 @@ void Update() {
 	plane.object = &obj1;
 	RenderEngine::Renderer::Instance()->mPlane.mPosition = Math::MatrixTranspose(obj1.GetTransform().GetMatrix());
 
+	TimeManager::Instance()->GetTimeLine()->AddBaseObject(&obj,obj.GetUniqueId());
 	Physics::Instance()->mObjects.push_back(&obj);
 	Physics::Instance()->mObjects.push_back(&obj1);
 	//*////////////////////////////////////////////////////////////////////

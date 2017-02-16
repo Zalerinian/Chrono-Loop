@@ -71,6 +71,19 @@ SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object)
 	SnapInfo* info = new SnapInfo();
 	info->mId = _object->GetUniqueID();
 	info->mTransform = _object->GetTransform();
+
+	//TODO PAT: ADD MORE COMPONETS WHEN WE NEED THEM
+
+	//Physics componets
+	std::vector<Component*>temp = _object->GetComponents(ComponentType::eCOMPONENT_PhysicsCollider);
+	for (unsigned int i = 0; i < temp.size(); i++)
+	{
+		SnapComponent* newComp = new SnapComponent();
+		newComp->CompType = eCOMPONENT_PhysicsCollider;
+		((SnapComponent_Physics*)newComp)->acceleration = ((Collider*)temp[i])->mAcceleration;
+		((SnapComponent_Physics*)newComp)->velocity = ((Collider*)temp[i])->mVelocity;
+		info->mComponets.push_back(newComp);
+	}
 	
 	////////////////////////////////////////////////////////////////////////////////Talk to Chris about mComponent rework
 	//Componet information
