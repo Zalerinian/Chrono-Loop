@@ -68,4 +68,16 @@ void BaseObject::AddComponent(ComponentType _type, Component* _comp)
 {
 	mComponents[_type].push_back(_comp);
 }
+void BaseObject::CalcPosition(vec4f& _force, float _dt)
+{
+	CalcVelocity(_force, _dt);
+	m_pos = Physics::CalcPosition(m_pos, m_vel, _dt);
+}
 
+Component* const BaseObject::GetComponet(unsigned int _indx) {
+	return m_components[_indx];
+}
+
+unsigned int BaseObject::GetNumofComponets() {
+	return m_components.size();
+}

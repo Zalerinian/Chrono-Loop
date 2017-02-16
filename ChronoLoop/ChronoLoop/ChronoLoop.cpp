@@ -56,9 +56,6 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 
 	std::shared_ptr<ID3D11Device*> renderingDevice = RenderEngine::Renderer::Instance()->GetDevice();
 
-
-	SystemLogger::GetLog() << "Hello World! " << "We hope you have at least " << 5 << " smiles today." << std::endl;
-
 	// Update everything
 	Update();
 
@@ -70,6 +67,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	vrsys = nullptr;
 
 #if _DEBUG
+	// In debug mode, dump any remaining live DirectX objects. This list should be hopefully small at this point.
 	ID3D11Debug *debug;
 	(*renderingDevice)->QueryInterface(IID_ID3D11Debug, (void**)&debug);
 	if (debug) {
@@ -80,6 +78,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	}
 #endif
 
+	// Release the Device
 	(*renderingDevice)->Release();
 
 #if _DEBUG || CONSOLE_OVERRIDE
@@ -157,7 +156,7 @@ void Update() {
 			}
 			// Logic.Update(float deltaTime);
 			TManager->Instance()->Update(deltaTime);
-			RenderEngine::Renderer::Instance()->Render();
+			RenderEngine::Renderer::Instance()->Render(deltaTime);
 		}
 	}
 }

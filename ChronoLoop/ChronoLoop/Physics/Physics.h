@@ -1,16 +1,15 @@
 #pragma once
 
 #include "..\Common\Math.h"
-#include <vector>
-
+#include "..\Rendering\Mesh.h"#include <vector>
 #define PMIN(x, y) ((x < y) ? x : y)
 #define PMAX(x, y) ((x > y) ? x : y)
 #define SameSign(x, y) (x > 0 && y > 0) || (x < 0 && y < 0)
 
-class Mesh;
 class BaseObject;
 class Collider;
 struct Triangle;
+
 
 struct Plane
 {

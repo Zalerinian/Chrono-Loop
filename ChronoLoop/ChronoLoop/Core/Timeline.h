@@ -4,12 +4,26 @@
 #include "../Objects/BaseObject.h"
 
 class Component;
+//Componet Structs for storing;
+#pragma region ComponetStructs
+struct SnapComponent {
+	ComponentType CompType;
+};
+struct SnapComponent_Physics : SnapComponent {
+	vec4f acceleration;
+	vec4f velocity;
+};
+//Add more componets when we need it
+#pragma endregion ComponetStructs
+
+
 //Extracted values from BaseObjects and its componets
 struct SnapInfo
 {
-	
-	Transform mTransform;
-	unsigned short id;
+	unsigned short mId;	//unique id of the object
+	Transform mTransform;	//positional data of the object
+	std::vector<SnapComponent*>mComponets;
+	//TODO PAT: ADD HEADSET POSITION DATA
 	
 	//Componet info needed
 };
