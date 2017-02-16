@@ -545,10 +545,10 @@ void Physics::Update(float _time)
 	int objs = mObjects.size();
 	for (int i = 0; i < objs; ++i)
 	{
-		int cols = mObjects[i]->mComponents[eCOMPONENT_PhysicsCollider].size();
+		int cols = mObjects[i]->mComponents[eCOMPONENT_COLLIDER].size();
 		for (int i = 0; i < cols; ++i)
 		{
-			collider = (Collider*)mObjects[i]->mComponents[eCOMPONENT_PhysicsCollider][i];
+			collider = (Collider*)mObjects[i]->mComponents[eCOMPONENT_COLLIDER][i];
 			if (collider->mShouldMove)
 			{
 				collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
@@ -563,10 +563,10 @@ void Physics::Update(float _time)
 				{
 					if (mObjects[j] != mObjects[i])
 					{
-						int othercols = mObjects[j]->mComponents[eCOMPONENT_PhysicsCollider].size();
+						int othercols = mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
 						for (int k = 0; k < othercols; ++k)
 						{
-							otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_PhysicsCollider][k];
+							otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
 							if (otherCol->mType == Collider::eCOLLIDER_Mesh)
 							{
 								//Not sure what outnorm is used for at the moment might just stick with basic cube/sphere collisions
@@ -623,10 +623,10 @@ void Physics::Update(float _time)
 				{
 					if (mObjects[j] != mObjects[i])
 					{
-						int othercols = mObjects[j]->mComponents[eCOMPONENT_PhysicsCollider].size();
+						int othercols = mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
 						for (int k = 0; k < othercols; ++k)
 						{
-							otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_PhysicsCollider][k];
+							otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
 							if (otherCol->mType == Collider::eCOLLIDER_Cube)
 							{
 								AABB aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);

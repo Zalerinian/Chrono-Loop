@@ -215,7 +215,6 @@
     <ClInclude Include="Messager\Messager.h" />
     <ClInclude Include="Objects\BaseObject.h" />
     <ClInclude Include="Objects\Component.h" />
-    <ClInclude Include="Objects\Components.h" />
     <ClInclude Include="Objects\Transform.h" />
     <ClInclude Include="Physics\Physics.h" />
     <ClInclude Include="Rendering\InputLayoutManager.h" />
@@ -336,6 +335,7 @@
     <ClCompile Include="Messager\Messager.cpp" />
     <ClCompile Include="Objects\BaseObject.cpp" />
     <ClCompile Include="Objects\Component.cpp" />
+    <ClCompile Include="Objects\MeshComponent.cpp" />
     <ClCompile Include="Objects\Transform.cpp" />
     <ClCompile Include="Physics\Physics.cpp" />
     <ClCompile Include="Rendering\InputLayoutManager.cpp" />
