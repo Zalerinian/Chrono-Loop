@@ -46,6 +46,7 @@ bool Timeline::RewindNoClone(unsigned int _snaptime)
 
 	mCurrentGameTimeIndx = _snaptime;
 	MoveAllObjectsToSnap(_snaptime);
+	return true;
 }
 
 void Timeline::MoveAllObjectsToSnap(unsigned int _snaptime)
@@ -59,7 +60,7 @@ void Timeline::MoveAllObjectsToSnap(unsigned int _snaptime)
 		//If the object doesnt have a info, then check against the list for the last snap it was updated
 		if( destInfo == nullptr)
 		{
-			float lastUpdated = destination->mUpdatedtimes[id];
+			unsigned int lastUpdated = destination->mUpdatedtimes[id];
 			destInfo = mSnapshots[lastUpdated]->mSnapinfos[id];
 		}
 		//Set Object data
