@@ -2,6 +2,7 @@
 #include "../Common/Logger.h"
 #include "../Input/VRInputManager.h"
 #include "../Objects/BaseObject.h"
+#include "../Core/Timeline.h"
 
 BoxSnapToControllerAction::BoxSnapToControllerAction(BaseObject* _parent) : Action(_parent) {
 
@@ -20,6 +21,10 @@ void BoxSnapToControllerAction::Update() {
 			mHeldLeft = false;
 		} else if(mHeld) {
 			ReleaseCube();
+		}
+		if(VRInputManager::Instance().GetController(true).GetPress((vr::EVRButtonId::k_EButton_DPad_Left)))
+		{
+			TimeManager::Instance()->RewindTimeline();
 		}
 	}
 }
