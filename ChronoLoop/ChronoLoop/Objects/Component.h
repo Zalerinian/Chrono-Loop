@@ -24,6 +24,7 @@ class Component
 	static unsigned short mComponentCount;
 	unsigned short mComponentId;
 protected:
+	bool mDestroyed = false;
 	bool mIsEnabled = true, mIsValid = true;
 	ComponentType mType = eCOMPONENT_MAX;
 	BaseObject* mObject = nullptr;

@@ -18,6 +18,7 @@ private:
 	unsigned int mUniqueID;
 	std::list<BaseObject*> mChildren;
 	Transform mTransform;
+	bool mDestroyed = false;
 
 public:
 	std::unordered_map<ComponentType, std::vector<Component*>> mComponents;

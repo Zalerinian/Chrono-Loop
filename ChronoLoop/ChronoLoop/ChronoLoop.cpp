@@ -36,7 +36,7 @@ void UpdateTime();
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	_CrtSetBreakAlloc(445);
+	//_CrtSetBreakAlloc(431);
 	if (!InitializeWindow(hInstance, nCmdShow, 800, 600, true)) {
 		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
 		return 2;
@@ -114,7 +114,6 @@ void Update() {
 	CubeCollider *aabb = new CubeCollider(true, vec4f(0.0f, -9.80f, 0.0f, 1.0f), 10.0f, 0.5f, 0.7f, vec4f(0.15f, -0.15f, .15f, 1.0f), vec4f(-0.15f, 0.15f, -0.15f, 1.0f));
 	aabb->AddForce(vec4f(2, 0, 0, 0));
 	obj.AddComponent(aabb);
-	//RenderEngine::Renderer::Instance()->mBox.mPosition = Math::MatrixTranspose(obj.GetTransform().GetMatrix());
 
 	matrix4 mat = MatrixTranslation(0, -1, 0);
 
@@ -138,8 +137,6 @@ void Update() {
 	CodeComponent *invalidComponent = new CodeComponent(nullptr);
 	obj.AddComponent(codeComponent);
 	obj.AddComponent(invalidComponent);
-
-
 
 	Physics::Instance()->mObjects.push_back(&obj);
 	Physics::Instance()->mObjects.push_back(&obj1);
@@ -173,8 +170,6 @@ void Update() {
 			for (auto it = objects.begin(); it != objects.end(); ++it) {
 				(*it)->Update();
 			}
-			//RenderEngine::Renderer::Instance()->mBox.mPosition = Math::MatrixTranspose(obj.GetTransform().GetMatrix());
-			//RenderEngine::Renderer::Instance()->mPlane.mPosition = Math::MatrixTranspose(obj1.GetTransform().GetMatrix());
 		}
 	}
 }

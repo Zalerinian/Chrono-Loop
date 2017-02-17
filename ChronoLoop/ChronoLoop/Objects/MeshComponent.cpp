@@ -16,9 +16,9 @@ void MeshComponent::Update() {
 }
 
 void MeshComponent::Destroy() {
+	mDestroyed = true;
 	RenderEngine::Renderer::Instance()->RemoveNode(mShape);
 	delete mShape;
-	delete this;
 }
 
 void MeshComponent::SetVisible(bool _vis) {

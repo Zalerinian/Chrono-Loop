@@ -19,14 +19,11 @@ BaseObject::BaseObject(std::string _name, Transform _transform)
 
 BaseObject::~BaseObject()
 {
-	delete mParent;
-	for(auto iter = mComponents.begin(); iter != mComponents.end(); ++iter)
-	{
-		for (int i = 0; i < iter->second.size(); ++i)
-			iter->second[i]->Destroy();
+	if (mDestroyed) {
+		SystemLogger::GetError() << "[Warning] Deleting an object that is marked as destroyed." << std::endl;
+	} else {
+		Destroy();
 	}
-	mComponents.clear();
-	mChildren.clear();
 }
 
 //BaseObject BaseObject::Clone()
@@ -52,25 +49,44 @@ BaseObject::~BaseObject()
 
 BaseObject& BaseObject::operator=(BaseObject& _equals)
 {
-	if (this->mUniqueID != _equals.mUniqueID) this->mUniqueID = _equals.mUniqueID;
-	if (this->mName != _equals.mName) this->mName = _equals.mName;
-	if (this->mParent != _equals.mParent) this->mParent = _equals.mParent;
-	if (this->mChildren != _equals.mChildren) this->mChildren = _equals.mChildren;
-	if (this->mTransform != _equals.mTransform) this->mTransform = _equals.mTransform;
-	if (this->mComponents != _equals.mComponents) this->mComponents = _equals.mComponents;
+	mUniqueID   = _equals.mUniqueID;
+	mName       = _equals.mName;
+	mParent     = _equals.mParent;
+	mChildren   = _equals.mChildren;
+	mTransform  = _equals.mTransform;
+	mComponents = _equals.mComponents;
 	return *this;
 }
 
 void BaseObject::Destroy()
 {
+	if (mDestroyed) {
+		SystemLogger::GetError() << "[Error] Attempting to destroy an object that is already marked as destroyed." << std::endl;
+		return;
+	}
+	if (mParent) {
+		delete mParent;
+		mParent = nullptr;
+	}
 	for (auto iter = mComponents.begin(); iter != mComponents.end(); ++iter) {
 		for (int i = 0; i < iter->second.size(); ++i) {
+			iter->second[i]->Destroy();
 			delete iter->second[i];
 		}
 	}
+	mComponents.clear();
+	for (auto it = mChildren.begin(); it != mChildren.end(); ++it) {
+		delete (*it);
+	}
+	mChildren.clear();
+	mDestroyed = true;
 }
 
 void BaseObject::Update() {
+	if (mDestroyed) {
+		SystemLogger::GetError() << "[Error] Attempting to update an object that is already marked as destroyed." << std::endl;
+		return;
+	}
 	for (auto it = mComponents.begin(); it != mComponents.end(); ++it) {
 		if (it->first == eCOMPONENT_COLLIDER) {
 			continue;
@@ -82,12 +98,17 @@ void BaseObject::Update() {
 }
 
 unsigned int BaseObject::AddComponent(Component * _comp) {
+	if (mDestroyed) {
+		SystemLogger::GetError() << "[Error] Attempting to add a compontnet to an object that is already marked as destroyed." << std::endl;
+		return -1;
+	}
 	if (_comp->GetType() == eCOMPONENT_MAX) {
 		SystemLogger::GetError() << "[Error] Trying to add a component with an invalid type. This is not allowed, returning -1U." << std::endl;
 		return -1;
 	}
 	if (!_comp->IsValid()) {
-		SystemLogger::GetError() << "[Error] Attempted to add a component that is marked invalid." << std::endl;
+		SystemLogger::GetError() << "[Error] Attempted to add a component that is marked invalid. It will be deleted." << std::endl;
+		delete _comp;
 		return -1;
 	}
 	_comp->mObject = this;
@@ -96,6 +117,10 @@ unsigned int BaseObject::AddComponent(Component * _comp) {
 }
 
 bool BaseObject::RemoveComponent(Component * _comp) {
+	if (mDestroyed) {
+		SystemLogger::GetError() << "[Error] Attempting to remove a component from an object that is already marked as destroyed." << std::endl;
+		return false;
+	}
 	if (_comp->GetType() == eCOMPONENT_MAX) {
 		SystemLogger::GetError() << "[Error] Trying to remove a component with an invalid type. This is not allowed, returning -1U." << std::endl;
 		return false;
@@ -105,6 +130,7 @@ bool BaseObject::RemoveComponent(Component * _comp) {
 	for (auto it = mComponents[type].begin(); it != mComponents[type].end(); ++it) {
 		if((*it) == _comp) {
 			(*it)->Destroy();
+			delete (*it);
 			mComponents[type].erase(it);
 			return true;
 		}
