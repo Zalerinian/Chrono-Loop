@@ -72,7 +72,7 @@ vec3f Controller::GetPosition() {
 }
 
 vec3f Controller::GetVelocity() {
-	return vec3f(mPose.vVelocity.v[0], mPose.vVelocity.v[1], -mPose.vVelocity.v[2]);
+	return vec3f(mPose.vVelocity.v[0], mPose.vVelocity.v[1], mPose.vVelocity.v[2]);
 }
 
 vec3f Controller::GetAngularVelocity() {

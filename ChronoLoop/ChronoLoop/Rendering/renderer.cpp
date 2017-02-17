@@ -75,7 +75,7 @@ namespace RenderEngine {
 	void Renderer::GetMVP(vr::EVREye e, ViewProjectionBuffer &data) {
 		matrix4 hmd = (Math::FromMatrix(poses[0].mDeviceToAbsoluteTracking));
 
-		matrix4 hmdPos = hmd.Inverse();
+		matrix4 hmdPos = (hmd * Math::MatrixTranslation(0, 0, 3)).Inverse();
 		if (e == vr::EVREye::Eye_Left) {
 			data.view = Math::MatrixTranspose((hmdPos * mEyePosLeft));
 			data.projection = Math::MatrixTranspose(mEyeProjLeft);
@@ -566,8 +566,8 @@ namespace RenderEngine {
 		mPlane.Load("../Resources/Liftoff.obj", true, ePS_BASIC, eVS_BASIC);
 		//Model loading
 		mBox.Load("../Resources/Cube.obj", true, ePS_TEXTURED, eVS_TEXTURED);
-		mBox.AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
-		AddNode(&mBox);
+		mPlane.AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
+		//AddNode(&mBox);
 		AddNode(&mPlane);
 		mBox.mPosition = Math::MatrixTranspose(Math::MatrixTranslation(0, 3, 0));
 		mPlane.mPosition = Math::MatrixTranspose(Math::MatrixTranslation(0, -1, 0));

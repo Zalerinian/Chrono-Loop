@@ -30,17 +30,19 @@ void BoxSnapToControllerAction::SnapToController(bool left) {
 	mHeldLeft = left;
 	matrix4 m = Math::FromMatrix(VRInputManager::Instance().GetController(left).GetPose().mDeviceToAbsoluteTracking);
 	mObject->GetTransform().SetMatrix(m);
+	((CubeCollider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->SetPos(Math::MatrixTranspose(m).tiers[3]);
 	((Collider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mShouldMove = false;
 }
 
 void BoxSnapToControllerAction::ReleaseCube() {
 	if (mHeldLeft) {
 		vec4f force = VRInputManager::Instance().GetController(true).GetVelocity();
-		((Collider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->AddForce(force);
+		((Collider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mVelocity = force;
 	} else {
 		vec4f force = VRInputManager::Instance().GetController(false).GetVelocity();
-		((Collider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->AddForce(force);
+		((Collider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mVelocity = force;
 	}
+	((Collider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mShouldMove = true;
 	mHeldLeft = mHeld = false;
 }
 
