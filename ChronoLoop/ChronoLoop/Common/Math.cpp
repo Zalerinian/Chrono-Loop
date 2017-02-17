@@ -68,7 +68,7 @@ vec4f& vec4f::operator*=(matrix4 const& _other)
 
 float vec4f::operator*(vec4f const& _other)
 {
-	return x * _other.x + y * _other.y + z + _other.z;
+	return x * _other.x + y * _other.y + z * _other.z;
 }
 
 vec4f vec4f::operator*(float const& _other)

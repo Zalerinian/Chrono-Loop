@@ -284,8 +284,9 @@ int Physics::AabbToPlane(Plane& _plane, AABB& _aabb)
 	vec4f center = (_aabb.mMax + _aabb.mMin) * 0.5f;
 	float pOffset = center * _plane.mNormal - _plane.mOffset;
 	vec4f E = _aabb.mMax - center;
-	float r = E.x * fabsf(_plane.mNormal.x) + E.y * fabsf(_plane.mNormal.y) + E.z * fabsf(_plane.mNormal.z);
-
+	float r = E * _plane.mNormal;
+	Sphere s(center, r);
+	return SphereToPlane(_plane, s);
 	if (pOffset > r)
 		return 1;
 	else if (pOffset < -r)
