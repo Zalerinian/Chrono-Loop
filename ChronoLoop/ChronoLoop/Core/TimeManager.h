@@ -11,6 +11,9 @@ class TimeManager
 	unsigned int mLevelTime = 0;
 	float mlastRecordedTime =0, mTimestamp = 0;
 	
+	//GIT RID OF THIS 
+	bool rewindButton = false;
+	bool resetButton = false;
 
 	TimeManager();
 	~TimeManager();
