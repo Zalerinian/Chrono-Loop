@@ -77,7 +77,7 @@ public:
 
 	bool mShouldMove, mColliding;
 	vec4f mVelocity, mAcceleration, mTotalForce, mImpulsiveForce, mGravity;
-	float mMass, mElasticity;
+	float mMass, mElasticity, mFriction;
 	ColliderType mColliderType;
 
 	void Update();
@@ -90,19 +90,19 @@ public:
 
 class MeshCollider : public Collider {
 public:
-	MeshCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, char* _path);
+	MeshCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, char* _path);
 	Mesh* mMesh;
 };
 
 class SphereCollider : public Collider {
 public:
-	SphereCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _radius);
+	SphereCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, float _radius);
 	float mRadius;
 };
 
 class CubeCollider : public Collider {
 public:
-	CubeCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, vec4f _min, vec4f _max);
+	CubeCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, vec4f _min, vec4f _max);
 	vec4f mMin, mMax, mMinOffset, mMaxOffset;
 
 	void SetPos(vec4f _newPos);
@@ -110,7 +110,7 @@ public:
 
 class PlaneCollider : public Collider {
 public:
-	PlaneCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _offset, vec4f _norm);
+	PlaneCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, float _offset, vec4f _norm);
 	vec4f mNormal;
 	float mOffset;
 };

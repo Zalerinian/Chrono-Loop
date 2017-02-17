@@ -106,7 +106,7 @@ void Update() {
 	matrix4 mat1 = MatrixTranslation(0, 3, 0);
 	transform.SetMatrix(mat1);
 	BaseObject obj("aabb", transform);
-	CubeCollider *aabb = new CubeCollider(true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, vec4f(0.15f, -0.15f, .15f, 1.0f), vec4f(-0.15f, 0.15f, -0.15f, 1.0f));
+	CubeCollider *aabb = new CubeCollider(true, vec4f(2.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, 0.7f, vec4f(0.15f, -0.15f, .15f, 1.0f), vec4f(-0.15f, 0.15f, -0.15f, 1.0f));
 	obj.AddComponent(aabb);
 	RenderEngine::Renderer::Instance()->mBox.mPosition = Math::MatrixTranspose(obj.GetTransform().GetMatrix());
 
@@ -115,7 +115,7 @@ void Update() {
 	Transform transform1;
 	transform1.SetMatrix(mat);
 	BaseObject obj1("plane", transform1);
-	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.0f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
+	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
 	obj1.AddComponent(plane);
 	RenderEngine::Renderer::Instance()->mPlane.mPosition = Math::MatrixTranspose(obj1.GetTransform().GetMatrix());
 

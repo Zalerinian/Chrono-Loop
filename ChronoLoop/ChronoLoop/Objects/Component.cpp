@@ -70,7 +70,7 @@ void Collider::SetPos(vec4f _newPos) {
 	mObject->GetTransform().GetMatrix().fourth = _newPos;
 }
 
-MeshCollider::MeshCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, char * _path) {
+MeshCollider::MeshCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, char * _path) {
 	mType = eCOMPONENT_COLLIDER;
 	mColliderType = eCOLLIDER_Mesh;
 	mGravity = _gravity;
@@ -81,10 +81,11 @@ MeshCollider::MeshCollider(bool _move, vec4f _gravity, float _mass, float _elast
 	mShouldMove = _move;
 	mMass = _mass;
 	mElasticity = _elasticity;
+	mFriction = _friction;
 	mMesh = &Mesh(_path);
 }
 
-SphereCollider::SphereCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _radius) {
+SphereCollider::SphereCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, float _radius) {
 	mType = eCOMPONENT_COLLIDER;
 	mColliderType = eCOLLIDER_Sphere;
 	mGravity = _gravity;
@@ -95,10 +96,11 @@ SphereCollider::SphereCollider(bool _move, vec4f _gravity, float _mass, float _e
 	mShouldMove = _move;
 	mMass = _mass;
 	mElasticity = _elasticity;
+	mFriction = _friction;
 	mRadius = _radius;
 }
 
-CubeCollider::CubeCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, vec4f _min, vec4f _max) {
+CubeCollider::CubeCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, vec4f _min, vec4f _max) {
 	mType = eCOMPONENT_COLLIDER;
 	mColliderType = eCOLLIDER_Cube;
 	mGravity = _gravity;
@@ -110,6 +112,7 @@ CubeCollider::CubeCollider(bool _move, vec4f _gravity, float _mass, float _elast
 	mColliding = false;
 	mMass = _mass;
 	mElasticity = _elasticity;
+	mFriction = _friction;
 	mMin = _min;
 	mMinOffset = mMin;
 	mMax = _max;
@@ -122,7 +125,7 @@ void CubeCollider::SetPos(vec4f _newPos) {
 	mMax = _newPos + mMaxOffset;
 }
 
-PlaneCollider::PlaneCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _offset, vec4f _norm) {
+PlaneCollider::PlaneCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, float _offset, vec4f _norm) {
 	mType = eCOMPONENT_COLLIDER;
 	mColliderType = eCOLLIDER_Plane;
 	mGravity = _gravity;
@@ -133,6 +136,7 @@ PlaneCollider::PlaneCollider(bool _move, vec4f _gravity, float _mass, float _ela
 	mShouldMove = _move;
 	mMass = _mass;
 	mElasticity = _elasticity;
+	mFriction = _friction;
 	mOffset = _offset;
 	mNormal = _norm;
 }
