@@ -29,8 +29,8 @@ void BoxSnapToControllerAction::SnapToController(bool left) {
 	mHeld = true;
 	mHeldLeft = left;
 	matrix4 m = Math::FromMatrix(VRInputManager::Instance().GetController(left).GetPose().mDeviceToAbsoluteTracking);
-	mObject->GetTransform().SetMatrix(m);
 	((CubeCollider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->SetPos(Math::MatrixTranspose(m).tiers[3]);
+	mObject->GetTransform().SetMatrix(m);
 	((Collider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mShouldMove = false;
 }
 
