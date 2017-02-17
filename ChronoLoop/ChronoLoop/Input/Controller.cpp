@@ -68,6 +68,7 @@ void Controller::SetValid(bool _valid) {
 void Controller::SetUp(int _index, vr::IVRSystem *_vr) {
 	mIndex = _index;
 	mHmd = _vr;
+
 	Update();
 }
 

@@ -22,9 +22,9 @@ struct BoxSnapToControllerAction : public Action {
 			} else if (mHeld) {
 				ReleaseCube();
 			}
-			if (VRInputManager::Instance().GetController(true).GetPress((vr::EVRButtonId::k_EButton_DPad_Left))) {
+			if (VRInputManager::Instance().GetController(true).GetPressDown((vr::EVRButtonId::k_EButton_Grip))) {
 				TimeManager::Instance()->RewindTimeline();
-			} else if (VRInputManager::Instance().GetController(false).GetPress((vr::EVRButtonId::k_EButton_DPad_Left))) {
+			} else if (VRInputManager::Instance().GetController(false).GetPressDown((vr::EVRButtonId::k_EButton_Grip))) {
 				TimeManager::Instance()->RewindTimeline();
 			}
 		}
@@ -35,8 +35,8 @@ struct BoxSnapToControllerAction : public Action {
 		mHeld = true;
 		mHeldLeft = left;
 		matrix4 m = Math::FromMatrix(VRInputManager::Instance().GetController(left).GetPose().mDeviceToAbsoluteTracking);
-		mObject->GetTransform().SetMatrix(m);
 		((CubeCollider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->SetPos(Math::MatrixTranspose(m).tiers[3]);
+		mObject->GetTransform().SetMatrix(m);
 		((Collider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mShouldMove = false;
 	}
 
