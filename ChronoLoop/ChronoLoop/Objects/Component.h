@@ -2,6 +2,7 @@
 #include "..\Common\Math.h"
 #include "..\Rendering\Mesh.h"
 class BaseObject;
+class Transform;
 //class Mesh;
 
 enum ComponentType
@@ -40,16 +41,18 @@ public:
 	virtual void Destroy() = 0;
 	void GetMatrix(matrix4& _m);
 	unsigned short GetColliderId() { return mComponentId; };
+	Transform& GetTransform();
+	Transform& GetTransform() const;
 };
 
-class Listener : Component
+class Listener : public Component
 {
 public:
 	void Update() {}
 	void Destroy() {}
 };
 
-class Emitter : Component
+class Emitter :public Component
 {
 public:
 	void Play();

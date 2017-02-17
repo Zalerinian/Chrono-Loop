@@ -19,16 +19,9 @@ void Component::GetMatrix(matrix4& _m)
 {
 	//_m = object->transform.m_matrix4;
 }
+Transform& Component::GetTransform() { return mObject->GetTransform(); }
+Transform& Component::GetTransform() const { return mObject->GetTransform(); }
 
-<<<<<<< .mine
-
-Transform& Component::GetTransform() { return object->GetTransform(); }
-Transform& Component::GetTransform() const { return object->GetTransform(); }
-=======
-
-
-
->>>>>>> .theirs
 #pragma endregion
 //------------------------------------------------------------
 //Listener----------------------------------------------------

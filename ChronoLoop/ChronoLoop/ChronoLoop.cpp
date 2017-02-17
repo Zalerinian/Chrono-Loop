@@ -25,7 +25,7 @@
 HWND hwnd;
 LPCTSTR WndClassName = L"ChronoWindow";
 HINSTANCE hInst;
-Messager msger = Messager::Instance();
+//Messager msger = Messager::Instance();
 bool VREnabled = false;
 
 const wchar_t* _basePath = L"../ChronoLoop/Sound/Sound/Soundbanks/";
@@ -170,7 +170,6 @@ void Update() {
 				break;
 			}
 
-			msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false));
 			UpdateTime();
 			if (VREnabled) {
 				VRInputManager::Instance().update();
