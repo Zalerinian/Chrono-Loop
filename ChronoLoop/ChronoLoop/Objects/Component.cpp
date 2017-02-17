@@ -1,6 +1,7 @@
 //#include "stdafx.h"
 #include "Component.h"
 #include "BaseObject.h"
+#include "Action.h"
 
 //Base Component---------------------------------------------
 #pragma region Base Component
@@ -137,3 +138,28 @@ PlaneCollider::PlaneCollider(bool _move, vec4f _gravity, float _mass, float _ela
 	mNormal = _norm;
 }
 
+CodeComponent::CodeComponent(Action* _action) : mAction(_action) {
+	mType = ComponentType::eCOMPONENT_CODE;
+	if (mAction) {
+		mAction->Start();
+	} else {
+		// TODO: print an error and probably destroy this component.
+	}
+}
+
+void CodeComponent::Update() {
+	// TODO put Code Components in their own file.
+	if (mAction) {
+		mAction->Update();
+	} else {
+		// TODO print an error to the error console that a code component has no action. This component should probably be destroyed.
+	}
+}
+
+void CodeComponent::Destroy() {
+	if (mAction) {
+		mAction->OnDestroy();
+	} else {
+		// TODO: Print an error that the action does not exist.
+	}
+}

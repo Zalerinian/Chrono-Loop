@@ -27,6 +27,7 @@ namespace RenderEngine {
 	}
 
 	RenderShape::RenderShape(const char * _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs) {
+		mType = RenderNodeType::Shape;
 		Load(_path, _invert, _ps, _vs);
 	}
 

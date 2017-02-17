@@ -11,6 +11,7 @@
 #include <ctime>
 #include <chrono>
 #include <d3d11.h>
+#include "Actions/BoxSnapToControllerAction.h"
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -25,7 +26,7 @@ bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, b
 std::chrono::steady_clock::time_point lastTime = std::chrono::steady_clock::now();
 static float timeFrame = 0.0f;
 static float deltaTime;
-TimeManager* TManager; 
+TimeManager* TManager;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void Update();
 void UpdateTime();
@@ -89,8 +90,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	return 0;
 }
 
-void UpdateTime()
-{
+void UpdateTime() {
 	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count() - lastTime.time_since_epoch().count()) / 1000.0f / 1000.0f / 1000.0f;
 	lastTime = std::chrono::steady_clock::now();
 }
@@ -115,9 +115,16 @@ void Update() {
 	Transform transform1;
 	transform1.SetMatrix(mat);
 	BaseObject obj1("plane", transform1);
-	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.0f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
+	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.0f, -1.0f, vec4f(0.0f, 1.0f, 0.0f, 1.0f));
 	obj1.AddComponent(plane);
 	RenderEngine::Renderer::Instance()->mPlane.mPosition = Math::MatrixTranspose(obj1.GetTransform().GetMatrix());
+
+	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
+	obj.AddComponent(visibleMesh);
+
+	BoxSnapToControllerAction *Action = new BoxSnapToControllerAction();
+	CodeComponent *codeComponent = new CodeComponent(Action);
+	obj.AddComponent(codeComponent);
 
 	Physics::Instance()->mObjects.push_back(&obj);
 	Physics::Instance()->mObjects.push_back(&obj1);
@@ -146,7 +153,11 @@ void Update() {
 			RenderEngine::Renderer::Instance()->Render(deltaTime);
 
 			Physics::Instance()->Update(deltaTime);
-			RenderEngine::Renderer::Instance()->mBox.mPosition = Math::MatrixTranspose(obj.GetTransform().GetMatrix());
+			auto& objects = Physics::Instance()->mObjects;
+			for (auto it = objects.begin(); it != objects.end(); ++it) {
+				(*it)->Update();
+			}
+			//RenderEngine::Renderer::Instance()->mBox.mPosition = Math::MatrixTranspose(obj.GetTransform().GetMatrix());
 			RenderEngine::Renderer::Instance()->mPlane.mPosition = Math::MatrixTranspose(obj1.GetTransform().GetMatrix());
 		}
 	}

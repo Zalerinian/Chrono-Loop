@@ -676,13 +676,18 @@ void Physics::Update(float _time)
 										PlaneColReaction(*collider, *otherCol);
 									}
 
-									if (collider->mShouldMove && fabsf(collider->mVelocity.x) < 0.001f)
+									if (collider->mShouldMove && fabsf(collider->mVelocity.x) < 0.01f) {
+										collider->mTotalForce.x = 0;
 										collider->mVelocity.x = 0;
-									if (collider->mShouldMove && fabsf(collider->mVelocity.y) < 0.001f)
+									}
+									if (collider->mShouldMove && fabsf(collider->mVelocity.y) < 0.01f) {
+										collider->mTotalForce.y = 0;
 										collider->mVelocity.y = 0;
-									if (collider->mShouldMove && fabsf(collider->mVelocity.z) < 0.001f)
+									}
+									if (collider->mShouldMove && fabsf(collider->mVelocity.z) < 0.01f) {
+										collider->mTotalForce.z = 0;
 										collider->mVelocity.z = 0;
-
+									}
 									if(collider->mVelocity.x == 0 && collider->mVelocity.y == 0 && collider->mVelocity.z == 0)
 										collider->mShouldMove = false;
 								}

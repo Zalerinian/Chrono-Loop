@@ -12,6 +12,7 @@ enum ComponentType
 	eCOMPONENT_AUDIOLISTENER,
 	eCOMPONENT_COLLIDER,
 	eCOMPONENT_UI,
+	eCOMPONENT_MESH,
 	eCOMPONENT_MAX
 };
 
@@ -60,11 +61,21 @@ class MeshComponent : public Component {
 	bool mVisible;
 
 public:
+	MeshComponent(const char *_path);
 	void Update();
 	void Destroy();
 	void SetVisible(bool _vis);
 };
 
+struct Action;
+class CodeComponent : public Component {
+	Action* mAction = nullptr;
+public:
+	// TODO Add a destructor
+	CodeComponent(Action* _action);
+	void Update();
+	void Destroy();
+};
 
 class Collider : public Component {
 public:
