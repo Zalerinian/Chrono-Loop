@@ -1,5 +1,5 @@
 #include "CodeComponent.h"
-#include "Action.h"
+#include "../Actions/Action.hpp"
 #include "../Common/Logger.h"
 #include "BaseObject.h"
 
@@ -25,7 +25,9 @@ void CodeComponent::Update() {
 void CodeComponent::Destroy() {
 	if (mAction) {
 		mAction->OnDestroy();
+		delete mAction;
 	} else {
 		SystemLogger::GetError() << "[Error] A Code Component has been destroyed, but it contains an invalid action. The component will be removed from its object, and no OnDestroy function will be called." << std::endl;
 	}
+	delete this;
 }

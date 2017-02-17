@@ -11,7 +11,6 @@ class MeshComponent : public Component {
 	bool mVisible;
 
 public:
-	// TODO: Add textures to this class.
 	MeshComponent(const char *_path);
 	void Update();
 	void Destroy();

@@ -14,7 +14,7 @@
 #include <d3d11.h>
 #include "Objects/CodeComponent.h"
 #include "Objects/MeshComponent.h"
-#include "Actions/BoxSnapToControllerAction.h"
+#include "Actions/BoxSnapToControllerAction.hpp"
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -103,6 +103,8 @@ void Update() {
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
 
+
+	// TODO: Replace all this with a level to run.
 	///*///////////////////////Using this to test physics//////////////////
 	Transform transform;
 	transform.SetMatrix(MatrixIdentity());
@@ -155,8 +157,6 @@ void Update() {
 		} else {
 			if (GetAsyncKeyState(VK_ESCAPE)) {
 				break;
-			} else if (GetAsyncKeyState(VK_F10)) {
-				obj.RemoveComponent(visibleMesh);
 			}
 
 			UpdateTime();
