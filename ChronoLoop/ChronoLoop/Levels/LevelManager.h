@@ -4,18 +4,18 @@
 class LevelManager
 {
 private:
-	std::vector<BaseLevel*> m_LevelList;
+	std::vector<BaseLevel*> mLevelList;
 public:
 
 	//The List of Levels (m_LevelList)
-	std::vector<BaseLevel*> GetLevelList() { return m_LevelList; };
+	std::vector<BaseLevel*> GetLevelList() { return mLevelList; };
 
 	//Gets Level from List of Levels (m_LevelList)
-	BaseLevel* GetLevel(int _index) { return m_LevelList[_index]; };
+	BaseLevel* GetLevel(int _index) { return mLevelList[_index]; };
 
 	//Push_back a New Level into m_LevelList
-	void AddLevel(BaseLevel* _level) { m_LevelList.push_back(_level); };
+	void AddLevel(BaseLevel* _level) { mLevelList.push_back(_level); };
 
 	//Clears everything from m_LevelList
-	void ClearLevels() { m_LevelList.clear(); }
+	void ClearLevels() { mLevelList.clear(); }
 };
