@@ -66,6 +66,29 @@ void Timeline::MoveAllObjectsToSnap(unsigned int _snaptime)
 		//Set Object data
 		BaseObject* baseobject = object.second;
 		baseobject->SetTransform(destInfo->mTransform);
+		
+		//Set all componets back to time recorded
+		//TODO PAT: MAKE THIS MORE EFFICIENT
+		for (unsigned int i = 0; i < destInfo->mComponets.size(); i++) {
+			SnapComponent* destComp = destInfo->mComponets[i];
+			switch (destComp->mCompType)
+			{
+				//For each of the collider in the vec
+			case ComponentType::eCOMPONENT_COLLIDER:
+				{
+					//Loop to find the same collider component
+					for(unsigned int j = 0; j < baseobject->GetComponentCount(eCOMPONENT_COLLIDER);j++)
+					{
+						Component* currComp = baseobject->GetComponentIndexed(eCOMPONENT_COLLIDER, j);
+						if(currComp->GetColliderId() == destComp->mId)
+						{
+							((Collider*)currComp)->mAcceleration = ((SnapComponent_Physics*)destComp)->mAcceleration;
+							((Collider*)currComp)->mVelocity = ((SnapComponent_Physics*)destComp)->mVelocity;
+						}
+					}
+				}
+			}
+		}
 		//TODO PAT: WRITE A SetComponets Func to take in SnapComonets
 		//baseobject->SetComponents(destInfo->mComponets)
 		
@@ -107,13 +130,14 @@ SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object)
 	//TODO PAT: ADD MORE COMPONETS WHEN WE NEED THEM
 
 	//Physics componets
-	std::vector<Component*>temp = _object->GetComponents(ComponentType::eCOMPONENT_PhysicsCollider);
+	std::vector<Component*>temp = _object->GetComponents(ComponentType::eCOMPONENT_COLLIDER);
 	for (unsigned int i = 0; i < temp.size(); i++)
 	{
 		SnapComponent* newComp = new SnapComponent();
-		newComp->CompType = eCOMPONENT_PhysicsCollider;
-		((SnapComponent_Physics*)newComp)->acceleration = ((Collider*)temp[i])->mAcceleration;
-		((SnapComponent_Physics*)newComp)->velocity = ((Collider*)temp[i])->mVelocity;
+		newComp->mCompType = eCOMPONENT_COLLIDER;
+		((SnapComponent_Physics*)newComp)->mAcceleration = ((Collider*)temp[i])->mAcceleration;
+		((SnapComponent_Physics*)newComp)->mVelocity = ((Collider*)temp[i])->mVelocity;
+		//newComp->mId = temp[i]->GetColliderId();
 		info->mComponets.push_back(newComp);
 	}
 	

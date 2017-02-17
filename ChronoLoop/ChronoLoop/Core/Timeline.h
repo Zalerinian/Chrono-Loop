@@ -3,15 +3,17 @@
 #include <unordered_map>
 #include "../Objects/BaseObject.h"
 
+
 class Component;
 //Componet Structs for storing;
 #pragma region ComponetStructs
 struct SnapComponent {
-	ComponentType CompType;
+	ComponentType mCompType;
+	unsigned short mId;
 };
 struct SnapComponent_Physics : SnapComponent {
-	vec4f acceleration;
-	vec4f velocity;
+	vec4f mAcceleration;
+	vec4f mVelocity;
 };
 //Add more componets when we need it
 #pragma endregion ComponetStructs

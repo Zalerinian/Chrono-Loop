@@ -449,7 +449,6 @@ namespace RenderEngine {
 
 	void Renderer::RenderNoVR(float _delta) {
 		UpdateCamera(2, 0, _delta);
-		//mBox.mPosition = Math::MatrixRotateAround(mBox.mPosition, { 0, 1, 0, 0 }, { 1, 0, 0, 0 }, DirectX::XM_PI / 256.0f);
 		mBox.mPosition = Math::MatrixRotateInPlace(mBox.mPosition, { 0, 1, 0, 0 }, DirectX::XM_PI / 256.0f);
 		ProcessRenderSet();
 		//pat added 
