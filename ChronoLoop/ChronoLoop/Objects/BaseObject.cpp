@@ -7,26 +7,26 @@ unsigned int BaseObject::ObjectCount = 1;
 
 BaseObject::BaseObject()
 {
-	parent = nullptr;
-	UniqueID = BaseObject::ObjectCount++;
+	mParent = nullptr;
+	mUniqueID = BaseObject::ObjectCount++;
 }
 BaseObject::BaseObject(std::string _name, Transform _transform)
 {
-	name = _name;
-	parent = nullptr;
-	transform = _transform;
+	mName = _name;
+	mParent = nullptr;
+	mTransform = _transform;
 }
 
 BaseObject::~BaseObject()
 {
-	delete parent;
+	delete mParent;
 	for(auto iter = mComponents.begin(); iter != mComponents.end(); ++iter)
 	{
 		for (int i = 0; i < iter->second.size(); ++i)
 			delete iter->second[i];
 	}
 	mComponents.clear();
-	children.clear();
+	mChildren.clear();
 }
 
 //BaseObject BaseObject::Clone()
@@ -52,25 +52,22 @@ BaseObject::~BaseObject()
 
 BaseObject& BaseObject::operator=(BaseObject& _equals)
 {
-	if (this->UniqueID != _equals.UniqueID) this->UniqueID = _equals.UniqueID;
-	if (this->name != _equals.name) this->name = _equals.name;
-	if (this->parent != _equals.parent) this->parent = _equals.parent;
-	if (this->children != _equals.children) this->children = _equals.children;
-	if (this->transform != _equals.transform) this->transform = _equals.transform;
+	if (this->mUniqueID != _equals.mUniqueID) this->mUniqueID = _equals.mUniqueID;
+	if (this->mName != _equals.mName) this->mName = _equals.mName;
+	if (this->mParent != _equals.mParent) this->mParent = _equals.mParent;
+	if (this->mChildren != _equals.mChildren) this->mChildren = _equals.mChildren;
+	if (this->mTransform != _equals.mTransform) this->mTransform = _equals.mTransform;
 	if (this->mComponents != _equals.mComponents) this->mComponents = _equals.mComponents;
 	return *this;
 }
 
-unsigned short& BaseObject::GetUniqueId()
-{
-	return UniqueID;
-}
-
 void BaseObject::Destroy()
 {
-	for (auto iter = mComponents.begin(); iter != mComponents.end(); ++iter)
-		for (int i = 0; i < iter->second.size(); ++i)
+	for (auto iter = mComponents.begin(); iter != mComponents.end(); ++iter) {
+		for (int i = 0; i < iter->second.size(); ++i) {
 			delete iter->second[i];
+		}
+	}
 }
 
 unsigned int BaseObject::AddComponent(Component * _comp) {
