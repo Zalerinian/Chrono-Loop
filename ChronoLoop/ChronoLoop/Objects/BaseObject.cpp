@@ -70,6 +70,17 @@ void BaseObject::Destroy()
 	}
 }
 
+void BaseObject::Update() {
+	for (auto it = mComponents.begin(); it != mComponents.end(); ++it) {
+		if (it->first == eCOMPONENT_COLLIDER) {
+			continue;
+		}
+		for (auto cIt = it->second.begin(); cIt != it->second.end(); ++cIt) {
+			(*cIt)->Update();
+		}
+	}
+}
+
 unsigned int BaseObject::AddComponent(Component * _comp) {
 	if (_comp->GetType() == eCOMPONENT_MAX) {
 		SystemLogger::GetError() << "[Error] Trying to add a component with an invalid type. This is not allowed, returning -1U." << std::endl;

@@ -26,6 +26,8 @@ public:
 	BaseObject& operator=(BaseObject& _equals);
 	std::unordered_map<ComponentType, std::vector<Component*>> mComponents;
 	void Destroy();
+	void Update();
+
 	inline unsigned int GetUniqueId() { return mUniqueID; }
 
 	inline std::string GetName() { return mName; };
