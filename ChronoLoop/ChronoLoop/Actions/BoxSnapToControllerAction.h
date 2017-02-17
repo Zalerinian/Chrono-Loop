@@ -2,5 +2,11 @@
 #include "../Objects/Action.h"
 
 struct BoxSnapToControllerAction : public Action {
-	virtual void Update();
+	bool mHeld = false;
+	bool mHeldLeft = false;
+
+	BoxSnapToControllerAction(BaseObject* _parent);
+	virtual void Update() override;
+	virtual void SnapToController(bool left);
+	virtual void ReleaseCube();
 };

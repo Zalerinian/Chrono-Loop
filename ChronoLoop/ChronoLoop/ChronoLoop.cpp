@@ -122,7 +122,7 @@ void Update() {
 	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
 	obj.AddComponent(visibleMesh);
 
-	BoxSnapToControllerAction *Action = new BoxSnapToControllerAction();
+	BoxSnapToControllerAction *Action = new BoxSnapToControllerAction(&obj);
 	CodeComponent *codeComponent = new CodeComponent(Action);
 	obj.AddComponent(codeComponent);
 

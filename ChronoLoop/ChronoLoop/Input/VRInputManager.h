@@ -21,5 +21,6 @@ public:
 	static void Shutdown();
 
 	Controller& GetController(bool left);
+	inline bool iIsInitialized() const { return mVRSystem != nullptr; }
 };
 
