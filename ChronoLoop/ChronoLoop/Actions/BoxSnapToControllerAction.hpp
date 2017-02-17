@@ -1,6 +1,7 @@
 #pragma once
 #include "../Objects/BaseObject.h"
 #include "../Actions/Action.hpp"
+#include "../Core/TimeManager.h"
 
 struct BoxSnapToControllerAction : public Action {
 	bool mHeld = false;
@@ -20,6 +21,11 @@ struct BoxSnapToControllerAction : public Action {
 				mHeldLeft = false;
 			} else if (mHeld) {
 				ReleaseCube();
+			}
+			if (VRInputManager::Instance().GetController(true).GetPress((vr::EVRButtonId::k_EButton_DPad_Left))) {
+				TimeManager::Instance()->RewindTimeline();
+			} else if (VRInputManager::Instance().GetController(false).GetPress((vr::EVRButtonId::k_EButton_DPad_Left))) {
+				TimeManager::Instance()->RewindTimeline();
 			}
 		}
 	}
