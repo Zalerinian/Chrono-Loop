@@ -11,6 +11,7 @@
 #include <ctime>
 #include <chrono>
 #include <d3d11.h>
+#include "Objects/CodeComponent.h"
 #include "Actions/BoxSnapToControllerAction.h"
 
 #define _CRTDBG_MAP_ALLOC

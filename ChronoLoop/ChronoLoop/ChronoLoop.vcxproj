@@ -216,6 +216,7 @@
     <ClInclude Include="Messager\Messager.h" />
     <ClInclude Include="Objects\Action.h" />
     <ClInclude Include="Objects\BaseObject.h" />
+    <ClInclude Include="Objects\CodeComponent.h" />
     <ClInclude Include="Objects\Component.h" />
     <ClInclude Include="Objects\Transform.h" />
     <ClInclude Include="Physics\Physics.h" />
@@ -338,6 +339,7 @@
     <ClCompile Include="Messager\Messager.cpp" />
     <ClCompile Include="Objects\Action.cpp" />
     <ClCompile Include="Objects\BaseObject.cpp" />
+    <ClCompile Include="Objects\CodeComponent.cpp" />
     <ClCompile Include="Objects\Component.cpp" />
     <ClCompile Include="Objects\MeshComponent.cpp" />
     <ClCompile Include="Objects\Transform.cpp" />

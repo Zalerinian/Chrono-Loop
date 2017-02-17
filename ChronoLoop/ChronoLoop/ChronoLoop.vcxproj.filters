@@ -261,6 +261,9 @@
     <ClInclude Include="Actions\BoxSnapToControllerAction.h">
       <Filter>Actions\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Objects\CodeComponent.h">
+      <Filter>Objects\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -430,6 +433,9 @@
     </ClCompile>
     <ClCompile Include="Actions\BoxSnapToControllerAction.cpp">
       <Filter>Actions\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\CodeComponent.cpp">
+      <Filter>Objects\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
