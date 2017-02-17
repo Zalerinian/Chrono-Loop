@@ -35,6 +35,7 @@ namespace RenderEngine {
 		std::shared_ptr<ID3D11Texture2D*> mMainViewTexture;
 		std::shared_ptr<ID3D11DepthStencilView*> mDSView;
 		std::shared_ptr<ID3D11Texture2D*> mDepthBuffer;
+		std::shared_ptr<ID3D11SamplerState*> mSamplerState;
 		D3D11_VIEWPORT mViewport;
 		std::shared_ptr<HWND> mWindow;
 
@@ -69,6 +70,7 @@ namespace RenderEngine {
 
 		void InitializeViews(int _width, int _height);
 		void InitializeBuffers();
+		void InitializeSamplerState();
 		void InitializeObjectNames();
 		void SetStaticBuffers();
 		void ThrowIfFailed(HRESULT hr);
@@ -77,7 +79,6 @@ namespace RenderEngine {
 		vr::TrackedDevicePose_t poses[vr::k_unMaxTrackedDeviceCount];
 
 #if _DEBUG
-		// Shit for the debug camera.
 		POINT mMouseOrigin;
 		bool mIsMouseDown = false;
 #endif
@@ -101,14 +102,15 @@ namespace RenderEngine {
 	public:
 		static Renderer* Instance();
 		static void DestroyInstance();
-		RenderShape mControllerModel, mBox, mPlane;
+		RenderShape mControllerModel;//, mBox, mPlane;
 
 		// Instance Functions
 		bool Initialize(HWND Window, unsigned int width, unsigned int height,
 			bool vsync, int fps, bool fullscreen, float farPlane, float nearPlane,
 			vr::IVRSystem* vrsys);
 
-		void AddNode(RenderShape *node);
+		void AddNode(RenderShape *_node);
+		void RemoveNode(RenderShape *_node);
 		void Render(float _deltaTime);
 		inline std::shared_ptr<ID3D11Device*> GetDevice() { return mDevice; }
 		inline std::shared_ptr<ID3D11DeviceContext*> GetContext() { return mContext; }

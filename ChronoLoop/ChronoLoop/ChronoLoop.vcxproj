@@ -197,7 +197,8 @@
     <ClInclude Include="..\DXTK\DirectXTexP.h" />
     <ClInclude Include="..\DXTK\Filters.h" />
     <ClInclude Include="..\DXTK\scoped.h" />
-    <ClInclude Include="Actions\BoxSnapToControllerAction.h" />
+    <ClInclude Include="Actions\Action.hpp" />
+    <ClInclude Include="Actions\BoxSnapToControllerAction.hpp" />
     <ClInclude Include="Common\Breakpoint.h" />
     <ClInclude Include="Common\Common.h" />
     <ClInclude Include="Common\FileIO.h" />
@@ -214,10 +215,10 @@
     <ClInclude Include="Levels\LevelManager.h" />
     <ClInclude Include="Messager\Message.h" />
     <ClInclude Include="Messager\Messager.h" />
-    <ClInclude Include="Objects\Action.h" />
     <ClInclude Include="Objects\BaseObject.h" />
     <ClInclude Include="Objects\CodeComponent.h" />
     <ClInclude Include="Objects\Component.h" />
+    <ClInclude Include="Objects\MeshComponent.h" />
     <ClInclude Include="Objects\Transform.h" />
     <ClInclude Include="Physics\Physics.h" />
     <ClInclude Include="Rendering\InputLayoutManager.h" />
@@ -321,7 +322,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Actions\BoxSnapToControllerAction.cpp" />
     <ClCompile Include="ChronoLoop.cpp" />
     <ClCompile Include="Common\Breakpoint.cpp" />
     <ClCompile Include="Common\Common.cpp" />
@@ -337,7 +337,6 @@
     <ClCompile Include="Levels\BaseLevel.cpp" />
     <ClCompile Include="Levels\LevelManager.cpp" />
     <ClCompile Include="Messager\Messager.cpp" />
-    <ClCompile Include="Objects\Action.cpp" />
     <ClCompile Include="Objects\BaseObject.cpp" />
     <ClCompile Include="Objects\CodeComponent.cpp" />
     <ClCompile Include="Objects\Component.cpp" />

@@ -317,6 +317,24 @@ namespace RenderEngine {
 		(*mDevice)->CreateBuffer(&desc, nullptr, &pBuff);
 		mPositionBuffer = std::make_shared<ID3D11Buffer*>(pBuff);
 	}
+	
+	void Renderer::InitializeSamplerState() {
+		D3D11_SAMPLER_DESC sDesc;
+		memset(&sDesc, 0, sizeof(sDesc));
+		sDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		sDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		sDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		sDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		sDesc.MaxAnisotropy = 16;
+		sDesc.MinLOD = 0;
+		sDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+		ID3D11SamplerState *ss;
+		ThrowIfFailed((*mDevice)->CreateSamplerState(&sDesc, &ss));
+		mSamplerState = make_shared<ID3D11SamplerState*>(ss);
+		(*mContext)->PSSetSamplers(0, 1, &ss);
+	}
+
 	void Renderer::InitializeObjectNames() {
 #if _DEBUG
 		char deviceName[] = "Main Rendering Device";
@@ -449,7 +467,6 @@ namespace RenderEngine {
 
 	void Renderer::RenderNoVR(float _delta) {
 		UpdateCamera(2, 0, _delta);
-		mBox.mPosition = Math::MatrixRotateInPlace(mBox.mPosition, { 0, 1, 0, 0 }, DirectX::XM_PI / 256.0f);
 		ProcessRenderSet();
 		//pat added 
 		std::wstring FPS = L"FPS: " + to_wstring(mFps);
@@ -517,8 +534,12 @@ namespace RenderEngine {
 
 #pragma region Public Functions
 
-	void Renderer::AddNode(RenderShape *node) {
-		mRenderSet.AddNode(node, &node->GetContext());
+	void Renderer::AddNode(RenderShape *_node) {
+		mRenderSet.AddNode(_node, &_node->GetContext());
+	}
+
+	void Renderer::RemoveNode(RenderShape *_node) {
+		mRenderSet.RemoveShape(_node);
 	}
 
 	bool Renderer::Initialize(HWND _Window, unsigned int _width, unsigned int _height, bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane, vr::IVRSystem * _vrsys) {
@@ -556,28 +577,24 @@ namespace RenderEngine {
 		InitializeObjectNames();
 		InitializeObjectNames();
 #endif
+		InitializeSamplerState();
 		SetStaticBuffers();
 
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, _width, _height);
 		InitializeViews(_width, _height);
 		InitializeScreenBitmap();
 
+		// TODO Eventually: Give each shape a topology enum, perhaps?
+		(*mContext)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		// TODO Eventually: Actually assign input layouts for each render shape.
+		InputLayoutManager::Instance().ApplyLayout(eVERT_POSNORMTEX);
+
 		mUseVsync = _vsync;
-		mPlane.Load("../Resources/Liftoff.obj", true, ePS_TEXTURED, eVS_TEXTURED);
-		//Model loading
-		mBox.Load("../Resources/Cube.obj", true, ePS_TEXTURED, eVS_TEXTURED);
-		mPlane.AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
-		//AddNode(&mBox);
-		AddNode(&mPlane);
-		mBox.mPosition = Math::MatrixTranspose(Math::MatrixTranslation(0, 3, 0));
-		mPlane.mPosition = Math::MatrixTranspose(Math::MatrixTranslation(0, -1, 0));
 
 
 		if (!mVrSystem) {
 			mDebugCameraPos.matrix = (DirectX::XMMatrixLookAtRH({ 0, .5, 5, 0 }, { 0, 0, 0, 0 }, { 0, 1, 0, 0 }));
-			//mVPData.view.matrix = (DirectX::XMMatrixLookAtRH({ 0, 5, 5, 0 }, { 0, 1, 0, 0 }, { 0, 1, 0, 0 }));
 			mVPData.projection.matrix = DirectX::XMMatrixPerspectiveFovRH(70, (float)_height / (float)_width, 0.1f, 1000);
-			//mVPData.view = Math::MatrixTranspose(mVPData.view);
 			mVPData.view = Math::MatrixTranspose(mDebugCameraPos);
 			mVPData.projection = Math::MatrixTranspose(mVPData.projection);
 			(*mContext)->UpdateSubresource(*mVPBuffer, 0, NULL, &mVPData, 0, 0);
