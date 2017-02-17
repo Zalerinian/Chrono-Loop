@@ -4,8 +4,8 @@ Messager* Messager::mMessager = nullptr;
 //std::priority_queue<Message*, std::vector<Message*>> Messager::msgQueue = std::priority_queue<Message*, std::vector<Message*>>();
 std::queue<Message*> Messager::msgQueue = std::queue<Message*>();
 bool Messager::death = false;
-bool fuckingLOCKED = false; //Send in progress
-bool fuckingLOCKED2 = false; //Process in progress
+bool SendInProgress = false; //Send in progress
+bool ProcessInProgress = false; //Process in progress
 
 Messager::Messager()
 {
@@ -55,10 +55,10 @@ void Messager::Destroy()
 
 void Messager::SendInMessage(Message* _msg)
 {
-	while (fuckingLOCKED2);
-	fuckingLOCKED = true;
+	while (ProcessInProgress);
+	SendInProgress = true;
 	msgQueue.push(_msg);
-	fuckingLOCKED = false;
+	SendInProgress = false;
 }
 
 void Messager::Process()
@@ -67,16 +67,16 @@ void Messager::Process()
 	{
 		Message* tempMsg = nullptr;
 
-		while (fuckingLOCKED);
-		fuckingLOCKED2 = true;
+		while (SendInProgress);
+		ProcessInProgress = true;
 		if (msgQueue.empty())
 		{
-			fuckingLOCKED2 = false;
+			ProcessInProgress = false;
 			continue;
 		}
 		tempMsg = msgQueue.front();
 		msgQueue.pop();
-		fuckingLOCKED2 = false;
+		ProcessInProgress = false;
 		ProcessMessage(tempMsg);
 		delete tempMsg;
 	}
