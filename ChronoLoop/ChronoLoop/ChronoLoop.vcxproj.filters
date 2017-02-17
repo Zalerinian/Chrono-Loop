@@ -264,6 +264,9 @@
     <ClInclude Include="Objects\CodeComponent.h">
       <Filter>Objects\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Objects\MeshComponent.h">
+      <Filter>Objects\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">

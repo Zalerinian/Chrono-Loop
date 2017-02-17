@@ -86,6 +86,10 @@ unsigned int BaseObject::AddComponent(Component * _comp) {
 		SystemLogger::GetError() << "[Error] Trying to add a component with an invalid type. This is not allowed, returning -1U." << std::endl;
 		return -1;
 	}
+	if (!_comp->IsValid()) {
+		SystemLogger::GetError() << "[Error] Attempted to add a component that is marked invalid." << std::endl;
+		return -1;
+	}
 	_comp->mObject = this;
 	mComponents[_comp->GetType()].push_back(_comp);
 	return (unsigned int)mComponents[_comp->GetType()].size();
@@ -100,6 +104,7 @@ bool BaseObject::RemoveComponent(Component * _comp) {
 	unsigned int size = (unsigned int)mComponents[type].size();
 	for (auto it = mComponents[type].begin(); it != mComponents[type].end(); ++it) {
 		if((*it) == _comp) {
+			(*it)->Destroy();
 			mComponents[type].erase(it);
 			return true;
 		}

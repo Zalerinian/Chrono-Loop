@@ -2,12 +2,12 @@
 #include "Component.h"
 #include "../Rendering/RenderShape.h"
 #include "../Rendering/Renderer.h"
+#include "MeshComponent.h"
 
 MeshComponent::MeshComponent(const char * _path) {
 	mType = eCOMPONENT_MESH;
 	mShape = new RenderEngine::RenderShape(_path, true, RenderEngine::ePS_TEXTURED, RenderEngine::eVS_TEXTURED);
 	RenderEngine::Renderer::Instance()->AddNode(mShape);
-	// TODO - Remove the RenderShape from the renderset when the mesh component is destroyed.
 }
 
 void MeshComponent::Update() {
@@ -16,9 +16,14 @@ void MeshComponent::Update() {
 }
 
 void MeshComponent::Destroy() {
-
+	RenderEngine::Renderer::Instance()->RemoveNode(mShape);
+	delete this;
 }
 
 void MeshComponent::SetVisible(bool _vis) {
+	// TODO: Implement mesh component visibility.
+}
 
+void MeshComponent::AddTexture(const char * _path, RenderEngine::TextureType _type) {
+	mShape->AddTexture(_path, _type);
 }

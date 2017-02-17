@@ -13,6 +13,7 @@
 #include <chrono>
 #include <d3d11.h>
 #include "Objects/CodeComponent.h"
+#include "Objects/MeshComponent.h"
 #include "Actions/BoxSnapToControllerAction.h"
 
 #define _CRTDBG_MAP_ALLOC
@@ -111,7 +112,7 @@ void Update() {
 	CubeCollider *aabb = new CubeCollider(true, vec4f(0.0f, -9.80f, 0.0f, 1.0f), 10.0f, 0.5f, 0.7f, vec4f(0.15f, -0.15f, .15f, 1.0f), vec4f(-0.15f, 0.15f, -0.15f, 1.0f));
 	aabb->AddForce(vec4f(2, 0, 0, 0));
 	obj.AddComponent(aabb);
-	RenderEngine::Renderer::Instance()->mBox.mPosition = Math::MatrixTranspose(obj.GetTransform().GetMatrix());
+	//RenderEngine::Renderer::Instance()->mBox.mPosition = Math::MatrixTranspose(obj.GetTransform().GetMatrix());
 
 	matrix4 mat = MatrixTranslation(0, -1, 0);
 
@@ -119,16 +120,24 @@ void Update() {
 	transform1.SetMatrix(mat);
 	BaseObject obj1("plane", transform1);
 	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
+	MeshComponent *planeObj = new MeshComponent("../Resources/Liftoff.obj");
+	planeObj->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
 	obj1.AddComponent(plane);
-	RenderEngine::Renderer::Instance()->mPlane.mPosition = Math::MatrixTranspose(obj1.GetTransform().GetMatrix());
+	obj1.AddComponent(planeObj);
+	
 
 	TimeManager::Instance()->GetTimeLine()->AddBaseObject(&obj,obj.GetUniqueId());
 	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
+	visibleMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
 	obj.AddComponent(visibleMesh);
 
 	BoxSnapToControllerAction *Action = new BoxSnapToControllerAction(&obj);
 	CodeComponent *codeComponent = new CodeComponent(Action);
+	CodeComponent *invalidComponent = new CodeComponent(nullptr);
 	obj.AddComponent(codeComponent);
+	obj.AddComponent(invalidComponent);
+
+
 
 	Physics::Instance()->mObjects.push_back(&obj);
 	Physics::Instance()->mObjects.push_back(&obj1);
@@ -146,6 +155,8 @@ void Update() {
 		} else {
 			if (GetAsyncKeyState(VK_ESCAPE)) {
 				break;
+			} else if (GetAsyncKeyState(VK_F10)) {
+				obj.RemoveComponent(visibleMesh);
 			}
 
 			UpdateTime();
@@ -163,7 +174,7 @@ void Update() {
 				(*it)->Update();
 			}
 			//RenderEngine::Renderer::Instance()->mBox.mPosition = Math::MatrixTranspose(obj.GetTransform().GetMatrix());
-			RenderEngine::Renderer::Instance()->mPlane.mPosition = Math::MatrixTranspose(obj1.GetTransform().GetMatrix());
+			//RenderEngine::Renderer::Instance()->mPlane.mPosition = Math::MatrixTranspose(obj1.GetTransform().GetMatrix());
 		}
 	}
 }
