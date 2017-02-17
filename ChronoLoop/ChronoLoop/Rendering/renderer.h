@@ -35,6 +35,7 @@ namespace RenderEngine {
 		std::shared_ptr<ID3D11Texture2D*> mMainViewTexture;
 		std::shared_ptr<ID3D11DepthStencilView*> mDSView;
 		std::shared_ptr<ID3D11Texture2D*> mDepthBuffer;
+		std::shared_ptr<ID3D11SamplerState*> mSamplerState;
 		D3D11_VIEWPORT mViewport;
 		std::shared_ptr<HWND> mWindow;
 
@@ -69,6 +70,7 @@ namespace RenderEngine {
 
 		void InitializeViews(int _width, int _height);
 		void InitializeBuffers();
+		void InitializeSamplerState();
 		void InitializeObjectNames();
 		void SetStaticBuffers();
 		void ThrowIfFailed(HRESULT hr);

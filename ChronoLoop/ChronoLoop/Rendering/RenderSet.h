@@ -13,6 +13,7 @@ namespace RenderEngine {
 	public:
 		//RenderSet(); // Maybe have a constructor that reserves a smallish number of renderer contexts so it doesn't have to expand on demand?
 		void AddNode(RenderNode* _node, RenderContext *_rc);
+		void RemoveNode(RenderNode* _node);
 		void RemoveShape(RenderShape* _node);
 		void ClearSet();
 		const RenderNode *GetHead();

@@ -40,34 +40,48 @@ namespace RenderEngine {
 		}
 	}
 
-	void RenderSet::RemoveShape(RenderShape *_node) {
+	void RenderSet::RemoveNode(RenderNode * _node) {
 		// The render set does NOT delete anything, it is not technically a container.
 		// It simply
-		RenderNode *parent = nullptr, *grandparent = nullptr, *cur = mHead;
+		RenderNode *parent = nullptr, *cur = mHead;
 		while (cur != nullptr) {
 			if (cur == _node) {
-				if (parent) {
-					if (parent->mType == RenderNode::RenderNodeType::Context && cur->mNext && cur->mNext->mType == RenderNode::RenderNodeType::Context) {
-						// This is the only shape with this context.
-						if (grandparent) {
-							grandparent->mNext = cur->mNext;
+				if (_node->mType == RenderNode::RenderNodeType::Context) {
+					if (_node->mNext && _node->mNext->mType == RenderNode::RenderNodeType::Shape) {
+						// If this is a context, and the next node is a shape, replace this node with their context (via parent pointer or mHead).
+						if (parent) {
+							((RenderShape*)_node->mNext)->mContext.mNext = _node->mNext;
+							parent->mNext = &((RenderShape*)_node->mNext)->mContext;
 						} else {
-							mHead = cur->mNext;
+							((RenderShape*)_node->mNext)->mContext.mNext = _node->mNext;
+							mHead = _node->mNext;
 						}
-					} else {
-						// There are more shapes with the current context, only remove this shape.
-						parent->mNext = cur->mNext;
+					} else if (_node->mNext && _node->mNext->mType == RenderNode::RenderNodeType::Context) {
+						// This is a context and the next one's a context, this can just be trivially removed.
+						if (parent) {
+							parent->mNext = _node->mNext;
+						} else {
+							mHead = _node->mNext;
+						}
 					}
 				} else {
-					mHead = cur->mNext;
+					// Nodes that aren't contexts can be easily removed.
+					if (parent) {
+						parent->mNext = cur->mNext;
+					} else {
+						mHead = cur->mNext;
+					}
 				}
-			}
-			if (parent) {
-				grandparent = parent;
+				break;
 			}
 			parent = cur;
 			cur = cur->mNext;
 		}
+	}
+
+	void RenderSet::RemoveShape(RenderShape *_node) {
+		RemoveNode(_node);
+		RemoveNode(&_node->mContext);
 	}
 	
 	void RenderSet::ClearSet() {
@@ -82,6 +96,7 @@ namespace RenderEngine {
 	RenderSet::~RenderSet() {
 		mContexts.clear();
 		while (mHead) {
+			SystemLogger::GetError() << "[Warning] Nodes are being removed from the RenderSet in its destructor. This means nodes are no longer being rendered, but are still in memory, likely implying a leak somewhere." << std::endl;
 			RenderNode *n = mHead;
 			mHead = mHead->mNext;
 			//delete n;

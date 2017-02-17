@@ -317,6 +317,24 @@ namespace RenderEngine {
 		(*mDevice)->CreateBuffer(&desc, nullptr, &pBuff);
 		mPositionBuffer = std::make_shared<ID3D11Buffer*>(pBuff);
 	}
+	
+	void Renderer::InitializeSamplerState() {
+		D3D11_SAMPLER_DESC sDesc;
+		memset(&sDesc, 0, sizeof(sDesc));
+		sDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		sDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		sDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		sDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		sDesc.MaxAnisotropy = 16;
+		sDesc.MinLOD = 0;
+		sDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+		ID3D11SamplerState *ss;
+		ThrowIfFailed((*mDevice)->CreateSamplerState(&sDesc, &ss));
+		mSamplerState = make_shared<ID3D11SamplerState*>(ss);
+		(*mContext)->PSSetSamplers(0, 1, &ss);
+	}
+
 	void Renderer::InitializeObjectNames() {
 #if _DEBUG
 		char deviceName[] = "Main Rendering Device";
@@ -559,6 +577,7 @@ namespace RenderEngine {
 		InitializeObjectNames();
 		InitializeObjectNames();
 #endif
+		InitializeSamplerState();
 		SetStaticBuffers();
 
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, _width, _height);

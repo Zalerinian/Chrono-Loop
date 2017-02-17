@@ -23,7 +23,7 @@ BaseObject::~BaseObject()
 	for(auto iter = mComponents.begin(); iter != mComponents.end(); ++iter)
 	{
 		for (int i = 0; i < iter->second.size(); ++i)
-			delete iter->second[i];
+			iter->second[i]->Destroy();
 	}
 	mComponents.clear();
 	mChildren.clear();
