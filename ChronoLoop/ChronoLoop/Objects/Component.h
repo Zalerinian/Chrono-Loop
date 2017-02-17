@@ -31,6 +31,7 @@ protected:
 	BaseObject* mObject = nullptr;
 public:
 	Component();
+	Component(ComponentType _cType);
 	~Component();
 	inline ComponentType GetType() { return mType; };
 	inline bool IsEnabled() { return mIsEnabled; };
@@ -48,6 +49,7 @@ public:
 class Listener : public Component
 {
 public:
+	Listener() : Component(ComponentType::eCOMPONENT_AUDIOLISTENER) {}
 	void Update() {}
 	void Destroy() {}
 };
@@ -55,12 +57,25 @@ public:
 class Emitter :public Component
 {
 public:
+	int64_t mPlay, mPause, mResume, mStop;
+	bool mIsPaused, mIsPlaying;
+
+	Emitter(int64_t _play, int64_t _pause, int64_t _resume, int64_t _stop) : Component(ComponentType::eCOMPONENT_AUDIOEMITTER)
+	{
+		mPlay = _play;
+		mPause = _pause;
+		mResume = _resume;
+		mStop = _stop;
+		mIsPaused = mIsPlaying = false;
+	}
+
 	void Play();
 	void Pause();
 	void Stop();
 
 	void Update();
 	void Destroy();
+
 };
 
 class Collider : public Component {

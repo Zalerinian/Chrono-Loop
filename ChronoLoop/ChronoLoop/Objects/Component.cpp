@@ -1,6 +1,8 @@
 //#include "stdafx.h"
 #include "Component.h"
 #include "BaseObject.h"
+#include "..\Messager\Messager.h"
+
 
 // 0 is reserved for the player.
 unsigned short Component::mComponentCount = 0;
@@ -8,6 +10,10 @@ unsigned short Component::mComponentCount = 0;
 Component::Component()
 {
 	mComponentId = Component::mComponentCount++;
+}
+Component::Component(ComponentType _cType)
+{
+	mType = _cType;
 }
 Component::~Component()
 {
@@ -51,16 +57,43 @@ void Emitter::Update()
 
 void Emitter::Play()
 {
-
+	if (mPlay == -1 || mIsPlaying)
+		return;
+	m_Event* evnt = new m_Event(mPlay, this);
+	Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
+	Messager::Instance().SendInMessage(msg);
+	mIsPlaying = true;
 }
 
 void Emitter::Pause()
 {
+	if (mPause == -1 || mResume == -1)
+		return;
 
+	if (mIsPaused)
+	{
+		m_Event* evnt = new m_Event(mResume, this);
+		Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
+		Messager::Instance().SendInMessage(msg);
+		mIsPaused = false;
+	}
+	else
+	{
+		m_Event* evnt = new m_Event(mPause, this);
+		Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
+		Messager::Instance().SendInMessage(msg);
+		mIsPaused = true;
+	}
 }
 
 void Emitter::Stop()
 {
+	if (mStop == -1 || !mIsPlaying)
+		return;
+	m_Event* evnt = new m_Event(mStop, this);
+	Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
+	Messager::Instance().SendInMessage(msg);
+	mIsPlaying = false;
 
 }
 

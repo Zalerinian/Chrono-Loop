@@ -25,7 +25,7 @@
 HWND hwnd;
 LPCTSTR WndClassName = L"ChronoWindow";
 HINSTANCE hInst;
-//Messager msger = Messager::Instance();
+Messager msger = Messager::Instance();
 bool VREnabled = false;
 
 const wchar_t* _basePath = L"../ChronoLoop/Sound/Sound/Soundbanks/";
@@ -127,6 +127,8 @@ void Update() {
 	CubeCollider *aabb = new CubeCollider(true, vec4f(0.0f, -9.80f, 0.0f, 1.0f), 10.0f, 0.5f, 0.7f, vec4f(0.15f, -0.15f, .15f, 1.0f), vec4f(-0.15f, 0.15f, -0.15f, 1.0f));
 	aabb->AddForce(vec4f(2, 0, 0, 0));
 	obj.AddComponent(aabb);
+	Emitter* aabbSound = new Emitter(AK::EVENTS::PLAY_TEST1, AK::EVENTS::PAUSE_TEST1, AK::EVENTS::RESUME_TEST1, AK::EVENTS::STOP_TEST1);
+	obj.AddComponent(aabbSound);
 
 	matrix4 mat = MatrixTranslation(0, -1, 0);
 
@@ -155,6 +157,22 @@ void Update() {
 	Physics::Instance()->mObjects.push_back(&obj1);
 	//*////////////////////////////////////////////////////////////////////
 
+	//Sound Initializing---------------------------------------------------
+	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::INITIALIZE_Audio, 0, false));
+	//Soundbanks
+	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::SET_BasePath, 0, false, (void*)new m_Path(_basePath)));
+	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_initSB)));
+	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
+
+	//Temp Camera OBJ
+	Transform camTrans;
+	camTrans.SetMatrix(MatrixIdentity());
+	BaseObject camObj("TempCam", camTrans);
+	Listener* ears = new Listener();
+	camObj.AddComponent(ears);
+	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(ears, "Listener")));
+	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(aabbSound, "aabbS")));
+	aabbSound->Play();
 
 	while (true) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
@@ -169,7 +187,7 @@ void Update() {
 			if (GetAsyncKeyState(VK_ESCAPE)) {
 				break;
 			}
-
+			msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false, (void*)nullptr));
 			UpdateTime();
 			if (VREnabled) {
 				VRInputManager::Instance().update();

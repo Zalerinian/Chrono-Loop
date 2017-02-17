@@ -24,7 +24,7 @@ Messager::Messager(Messager& _newMsgr)
 Messager::~Messager()
 {
 	death = true;
-	thrd.join();
+	//thrd.join();
 	audio.Shutdown();
 	/*while (!msgQueue.empty())
 	{
@@ -125,7 +125,8 @@ void Messager::ProcessSound(Message* _msg)
 	break;
 	case UPDATE_Audio:
 	{
-		audio.Update();
+		if (audio.IsInitialized())
+			audio.Update();
 	}
 	break;
 	case ADD_Listener:
