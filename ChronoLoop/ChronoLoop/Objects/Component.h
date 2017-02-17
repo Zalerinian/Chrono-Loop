@@ -76,14 +76,14 @@ public:
 	};
 
 	bool mShouldMove, mColliding;
-	vec4f mVelocity, mAcceleration, mTotalForce, mImpulsiveForce, mGravity;
+	vec4f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity;
 	float mMass, mElasticity, mFriction;
 	ColliderType mColliderType;
 
 	void Update();
 	void Destroy();
 
-	vec4f AddForce(vec4f _force) { mShouldMove = true; mTotalForce += _force; return mTotalForce; };
+	vec4f AddForce(vec4f _force) { mShouldMove = true; mForces += _force; return mTotalForce; };
 	virtual vec4f GetPos();
 	virtual void SetPos(vec4f _newPos);
 };

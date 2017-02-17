@@ -551,6 +551,7 @@ void Physics::Update(float _time)
 			collider = (Collider*)mObjects[i]->mComponents[eCOMPONENT_COLLIDER][i];
 			if (collider->mShouldMove)
 			{
+				collider->mTotalForce = collider->mGravity + collider->mForces;
 				collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
 				collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
 				collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
@@ -676,21 +677,22 @@ void Physics::Update(float _time)
 										PlaneColReaction(*collider, *otherCol);
 									}
 
+									collider->mForces.x *= otherCol->mFriction;
 									collider->mVelocity.x *= otherCol->mFriction;
 
 									if (collider->mShouldMove && fabsf(collider->mVelocity.x) < 0.01f)
 									{
-										collider->mTotalForce.x = 0;
+										collider->mForces.x = 0;
 										collider->mVelocity.x = 0;
 									}
 									if (collider->mShouldMove && fabsf(collider->mVelocity.y) < 0.01f)
 									{
-										collider->mTotalForce.y = 0;
+										collider->mForces.y = 0;
 										collider->mVelocity.y = 0;
 									}
 									if (collider->mShouldMove && fabsf(collider->mVelocity.z) < 0.01f)
 									{
-										collider->mTotalForce.z = 0;
+										collider->mForces.z = 0;
 										collider->mVelocity.z = 0;
 									}
 
