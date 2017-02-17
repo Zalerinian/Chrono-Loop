@@ -202,7 +202,7 @@ namespace RenderEngine {
 
 		//Brush for the screen
 		ID2D1SolidColorBrush* brush;
-		ThrowIfFailed((*mContext2D)->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White, 1.0f), &brush));
+		ThrowIfFailed((*mContext2D)->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::SeaGreen, 1.0f), &brush));
 		sInstance->mBrush = make_shared<ID2D1SolidColorBrush*>(brush);
 	}
 
@@ -366,10 +366,6 @@ namespace RenderEngine {
 				(*mContext)->ClearRenderTargetView((*mMainView), color);
 				(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 			}
-			//pat added 
-			std::wstring FPS = L"FPS: " + to_wstring(mFps);
-			DrawTextToBitmap(FPS, (*mScreenBitmap));
-			//-----
 			ViewProjectionBuffer data;
 			GetMVP(currentEye, data);
 			(*mContext)->UpdateSubresource(*mVPBuffer, 0, nullptr, (void*)&data, 0, 0);
@@ -379,7 +375,10 @@ namespace RenderEngine {
 			vr::Texture_t submitTexture = { (void*)(*mMainViewTexture), vr::TextureType_DirectX, vr::ColorSpace_Auto };
 			vr::VRCompositor()->Submit(currentEye, &submitTexture);
 		}
-
+		//pat added 
+		std::wstring FPS = L"FPS: " + to_wstring(mFps);
+		DrawTextToBitmap(FPS, (*mScreenBitmap));
+		//-----
 
 		// Bootleg load the controller model.
 		if (mControllerModel.mIndexCount == 0) {
@@ -451,13 +450,11 @@ namespace RenderEngine {
 	void Renderer::RenderNoVR(float _delta) {
 		UpdateCamera(2, 0, _delta);
 		mBox.mPosition = Math::MatrixRotateInPlace(mBox.mPosition, { 0, 1, 0, 0 }, DirectX::XM_PI / 256.0f);
-
+		ProcessRenderSet();
 		//pat added 
 		std::wstring FPS = L"FPS: " + to_wstring(mFps);
 		DrawTextToBitmap(FPS, (*mScreenBitmap));
 		//-----
-		
-		ProcessRenderSet();
 	}
 
 	void Renderer::ProcessRenderSet() {
@@ -611,6 +608,7 @@ namespace RenderEngine {
 		if (mFrameTime > .5f) {
 			mFps = (int)(1000.0f / (_deltaTime * 1000));
 			mFrameTime = 0;
+
 		}
 	}
 

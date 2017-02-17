@@ -20,11 +20,16 @@ class Component
 {
 	friend class Physics;
 	friend class BaseObject;
+
+	static unsigned short mComponentCount;
+	unsigned short mComponentId;
 protected:
 	bool mIsEnabled;
 	ComponentType mType = eCOMPONENT_MAX;
 	BaseObject* mObject = nullptr;
 public:
+	Component();
+	~Component();
 	ComponentType GetType() { return mType; };
 	bool isEnabled() { return mIsEnabled; };
 	void Disable() { mIsEnabled = false; };
@@ -32,6 +37,7 @@ public:
 	virtual void Update() = 0;
 	virtual void Destroy() = 0;
 	void GetMatrix(matrix4& _m);
+	unsigned short GetColliderId() { return mComponentId; };
 };
 
 class Listener : Component
@@ -76,7 +82,7 @@ public:
 		eCOLLIDER_Plane
 	};
 
-	bool mShouldMove, mColliding;
+	bool mShouldMove, mColliding, mRewind;
 	vec4f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity;
 	float mMass, mElasticity, mFriction;
 	ColliderType mColliderType;
@@ -84,7 +90,7 @@ public:
 	void Update();
 	void Destroy();
 
-	vec4f AddForce(vec4f _force) { mShouldMove = true; mForces += _force; return mTotalForce; };
+	vec4f AddForce(vec4f _force) { mShouldMove = true; mForces = _force; return mForces; };
 	virtual vec4f GetPos();
 	virtual void SetPos(vec4f _newPos);
 };

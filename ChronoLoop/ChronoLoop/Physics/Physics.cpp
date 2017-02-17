@@ -552,8 +552,13 @@ void Physics::Update(float _time)
 			if (collider->mShouldMove)
 			{
 				collider->mTotalForce = collider->mGravity + collider->mForces;
-				collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
-				collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
+				if(collider->mShouldMove || !collider->mRewind)
+				{
+					collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
+					collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
+					collider->mRewind = false;
+				}
+
 				collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
 			}
 
@@ -679,6 +684,8 @@ void Physics::Update(float _time)
 
 									collider->mForces.x *= otherCol->mFriction;
 									collider->mVelocity.x *= otherCol->mFriction;
+									collider->mForces.z *= otherCol->mFriction;
+									collider->mVelocity.z *= otherCol->mFriction;
 
 									if (collider->mShouldMove && fabsf(collider->mVelocity.x) < 0.01f)
 									{
@@ -696,7 +703,7 @@ void Physics::Update(float _time)
 										collider->mVelocity.z = 0;
 									}
 
-									if(collider->mVelocity.x == 0 && collider->mVelocity.y == 0 && collider->mVelocity.z == 0)
+									if(collider->mVelocity.x == 0 && collider->mVelocity.y == 0 && collider->mVelocity.z == 0 && !collider->mRewind)
 										collider->mShouldMove = false;
 								}
 							}

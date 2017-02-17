@@ -3,6 +3,17 @@
 #include "BaseObject.h"
 #include "Action.h"
 
+// 0 is reserved for the player.
+unsigned short Component::mComponentCount = 0;
+
+Component::Component()
+{
+	mComponentId = Component::mComponentCount++;
+}
+Component::~Component()
+{
+	
+}
 //Base Component---------------------------------------------
 #pragma region Base Component
 void Component::GetMatrix(matrix4& _m)
@@ -81,6 +92,7 @@ MeshCollider::MeshCollider(bool _move, vec4f _gravity, float _mass, float _elast
 	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	mShouldMove = _move;
 	mMass = _mass;
+	mRewind = false;
 	mElasticity = _elasticity;
 	mFriction = _friction;
 	mMesh = &Mesh(_path);
@@ -96,6 +108,7 @@ SphereCollider::SphereCollider(bool _move, vec4f _gravity, float _mass, float _e
 	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	mShouldMove = _move;
 	mMass = _mass;
+	mRewind = false;
 	mElasticity = _elasticity;
 	mFriction = _friction;
 	mRadius = _radius;
@@ -111,6 +124,7 @@ CubeCollider::CubeCollider(bool _move, vec4f _gravity, float _mass, float _elast
 	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	mShouldMove = _move;
 	mColliding = false;
+	mRewind = false;
 	mMass = _mass;
 	mElasticity = _elasticity;
 	mFriction = _friction;
@@ -135,6 +149,7 @@ PlaneCollider::PlaneCollider(bool _move, vec4f _gravity, float _mass, float _ela
 	mTotalForce = mGravity;
 	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	mShouldMove = _move;
+	mRewind = false;
 	mMass = _mass;
 	mElasticity = _elasticity;
 	mFriction = _friction;

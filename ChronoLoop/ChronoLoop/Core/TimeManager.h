@@ -8,8 +8,12 @@ class TimeManager
 
 	static Timeline* mTimeline;
 	float mRecordingTime =.1f;		// 1/10th of a second in milliseconds 
-	float mLevelTime=0, mlastRecordedTime =0, mTimestamp = 0;
+	unsigned int mLevelTime = 0;
+	float mlastRecordedTime =0, mTimestamp = 0;
 	
+	//GIT RID OF THIS 
+	bool rewindButton = false;
+	bool resetButton = false;
 
 	TimeManager();
 	~TimeManager();

@@ -6,6 +6,7 @@
 #include ".\Rendering\RenderShape.h"
 #include "Input/VRInputManager.h"
 #include "Core/TimeManager.h"
+#include "Core/Timeline.h"
 #include "Common/Logger.h"
 #include <openvr.h>
 #include <ctime>
@@ -104,7 +105,7 @@ void Update() {
 	///*///////////////////////Using this to test physics//////////////////
 	Transform transform;
 	transform.SetMatrix(MatrixIdentity());
-	matrix4 mat1 = MatrixTranslation(0, 3, 0);
+	matrix4 mat1 = MatrixTranslation(0, 5, 0);
 	transform.SetMatrix(mat1);
 	BaseObject obj("aabb", transform);
 	CubeCollider *aabb = new CubeCollider(true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, 0.7f, vec4f(0.15f, -0.15f, .15f, 1.0f), vec4f(-0.15f, 0.15f, -0.15f, 1.0f));
@@ -121,6 +122,7 @@ void Update() {
 	obj1.AddComponent(plane);
 	RenderEngine::Renderer::Instance()->mPlane.mPosition = Math::MatrixTranspose(obj1.GetTransform().GetMatrix());
 
+	TimeManager::Instance()->GetTimeLine()->AddBaseObject(&obj,obj.GetUniqueId());
 	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
 	obj.AddComponent(visibleMesh);
 
@@ -150,6 +152,7 @@ void Update() {
 			if (VREnabled) {
 				VRInputManager::Instance().update();
 			}
+
 			// Logic.Update(float deltaTime);
 			TManager->Instance()->Update(deltaTime);
 			RenderEngine::Renderer::Instance()->Render(deltaTime);

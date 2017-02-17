@@ -20,11 +20,11 @@ private:
 	Transform mTransform;
 
 public:
+	std::unordered_map<ComponentType, std::vector<Component*>> mComponents;
 	BaseObject();
 	BaseObject(std::string _name, Transform _transform);
 	~BaseObject();
 	BaseObject& operator=(BaseObject& _equals);
-	std::unordered_map<ComponentType, std::vector<Component*>> mComponents;
 	void Destroy();
 	void Update();
 
