@@ -1,15 +1,16 @@
 #pragma once
 
 #include "..\Common\Math.h"
+#include "..\Rendering\Mesh.h"
 #include <vector>
-
 #define PMIN(x, y) ((x < y) ? x : y)
 #define PMAX(x, y) ((x > y) ? x : y)
 #define SameSign(x, y) (x > 0 && y > 0) || (x < 0 && y < 0)
 
-class Mesh;
 class BaseObject;
 class Collider;
+struct Triangle;
+
 
 struct Plane
 {
@@ -50,7 +51,7 @@ class Physics
 
 public:
 	bool mRayCasting;
-	std::vector<Collider*> mColliders;
+	std::vector< BaseObject*> mObjects;
 
 	static Physics* Instance();
 	static void		Destroy();
@@ -77,9 +78,12 @@ public:
 	bool			AABBtoAABB(AABB& _aabb1, AABB& _aabb2);
 	bool			SphereToSphere(Sphere& _sphere1, Sphere& _sphere2);
 	bool			SphereToAABB(Sphere& _sphere, AABB& _aabb);
+	bool			SphereToTriangle(Sphere& _sphere, Triangle& _tri, vec4f& _displacement);
 
 	vec4f			CalcAcceleration(vec4f& _force, float _mass);
 	vec4f			CalcVelocity(vec4f& _vel, vec4f& _accel, float _time);
 	vec4f			CalcPosition(vec4f& _pos, vec4f& _vel, float _time);
+	void			CalcReaction(Collider& _col1, Collider& _col2, float _time);
+	void			PlaneColReaction(Collider& _col, Collider& _plane);
 	//vec4f AddForce(vec4f _pos, vec4f _force, float _time);
 };

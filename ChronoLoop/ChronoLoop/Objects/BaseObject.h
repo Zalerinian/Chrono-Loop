@@ -2,60 +2,59 @@
 #include <string>
 #include <list>
 #include <vector>
+#include <unordered_map>
 #include "Transform.h"
 #include "Component.h"
 #include "..\Physics\Physics.h"
 #include "..\Core\TimeManager.h"
+#include "..\Objects\Component.h"
 
-
-class Component;
-
-class BaseObject
-{
+class BaseObject {
+	// The number of objects that exist in the world. ID 0 is reserved the player.
+	static unsigned int ObjectCount;
 private:
-	std::string name;
-	BaseObject* parent;
-	unsigned short  UniqueID, id;
-	std::list<BaseObject*> children;
-	std::vector<Component*> components;
-	Transform transform;
+	std::string mName;
+	BaseObject* mParent;
+	unsigned int mUniqueID;
+	std::list<BaseObject*> mChildren;
+	Transform mTransform;
+	bool mDestroyed = false;
 
 public:
-	//**CONSTRUCTORS**//
+	std::unordered_map<ComponentType, std::vector<Component*>> mComponents;
 	BaseObject();
 	BaseObject(std::string _name, Transform _transform);
 	~BaseObject();
-	BaseObject Clone();
-	BaseObject Clone(BaseObject _clone);
-	BaseObject const* operator=(BaseObject _equals);
-	unsigned short& GetUniqueId();
-	Mesh* mMesh;
+	BaseObject& operator=(BaseObject& _equals);
+	void Destroy();
+	void Update();
 
-	void Destroy() { delete this; };
+	inline unsigned int GetUniqueId() { return mUniqueID; }
 
-	//**GETTERS/SETTERS**//
-	std::string					GetName() { return name; };
-	void						SetName(std::string _name) { name = _name; };
+	inline std::string GetName() { return mName; };
+	inline void SetName(std::string _name) { mName = _name; };
 
-	BaseObject*					GetParent() { return parent; };
-	void						SetParent(BaseObject* _parent) { parent = _parent; };
+	inline BaseObject* GetParent() { return mParent; };
+	inline void SetParent(BaseObject* _parent) { mParent = _parent; };
 
-	Transform&					GetTransform() { return transform; };
-	void						SetTransform(Transform _transform) { transform = _transform; };
+	inline Transform& GetTransform() { return mTransform; };
+	inline void SetTransform(Transform _transform) { mTransform = _transform; };
 
-	unsigned short&				GetUniqueID() { return UniqueID; };
-	void						SetUniqueID(unsigned short _id) { UniqueID = _id; };
+	inline unsigned int GetUniqueID() { return mUniqueID; };
+	inline void SetUniqueID(unsigned short _id) { mUniqueID = _id; };
 
-	std::list<BaseObject*>		GetChildren() { return children; };
-	void						SetChildren(std::list<BaseObject*> _children) { children = _children; };
+	inline std::list<BaseObject*> GetChildren() { return mChildren; };
+	inline void SetChildren(std::list<BaseObject*> _children) { mChildren = _children; };
 
-	std::vector<Component*>		GetComponents() { return components; };
-	void						SetComponents(std::vector<Component*> _components) { components = _components; };
-	
+	inline std::vector<Component*> GetComponents(ComponentType _type) { return mComponents[_type]; }
+	inline Component* GetComponentIndexed(ComponentType _type, unsigned int _index) { return mComponents[_type][_index]; }
+	inline unsigned int GetComponentCount(ComponentType _type) { return (unsigned int)mComponents[_type].size(); }
+	unsigned int AddComponent(Component* _comp);
+	bool RemoveComponent(Component* _comp);
 
 	//**FUNCTION**//
-	void						AddComponent(Component* _comp) { components.push_back(_comp); };
-	//void						RemoveComponent(Component _comp) { components.remove(_comp); };
-	void						AddChild(BaseObject* _obj) { children.push_back(_obj); };
-	void						RemoveChild(BaseObject* _obj) { children.remove(_obj); };
+	inline void AddChild(BaseObject* _obj) { mChildren.push_back(_obj); };
+	inline void RemoveChild(BaseObject* _obj) { mChildren.remove(_obj); };
+	//BaseObject& Clone();
+	//BaseObject& Clone(BaseObject& _clone);
 };

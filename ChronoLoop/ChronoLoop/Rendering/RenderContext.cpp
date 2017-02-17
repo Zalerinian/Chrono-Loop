@@ -13,10 +13,18 @@ RenderEngine::RenderContext::RenderContext() {
 RenderEngine::RenderContext::~RenderContext() {}
 
 void RenderEngine::RenderContext::Apply() {
-	RasterizerStateManager::Instance()->ApplyState(mRasterState);
-	InputLayoutManager::Instance().ApplyLayout(mVertexFormat);
-	ShaderManager::Instance()->ApplyPShader(mPixelShaderFormat);
-	ShaderManager::Instance()->ApplyVShader(mVertexShaderFormat);
+	if (mRasterState != eRS_MAX) {
+		RasterizerStateManager::Instance()->ApplyState(mRasterState);
+	}
+	if (mVertexFormat != eVERT_MAX) {
+		InputLayoutManager::Instance().ApplyLayout(mVertexFormat);
+	}
+	if (mPixelShaderFormat != ePS_MAX) {
+		ShaderManager::Instance()->ApplyPShader(mPixelShaderFormat);
+	}
+	if (mVertexShaderFormat != eVS_MAX) {
+		ShaderManager::Instance()->ApplyVShader(mVertexShaderFormat);
+	}
 	for (auto it = mTextures.begin(); it != mTextures.end(); ++it) {
 		if (it->second.get() != nullptr) {
 			(*Renderer::Instance()->GetContext())->PSSetShaderResources((UINT)it->first, 1, it->second.get());
@@ -26,16 +34,16 @@ void RenderEngine::RenderContext::Apply() {
 }
 
 void RenderEngine::RenderContext::Apply(RenderContext & from) {
-	if (mRasterState != from.mRasterState) {
+	if (mRasterState != eRS_MAX && mRasterState != from.mRasterState) {
 		RasterizerStateManager::Instance()->ApplyState(mRasterState);
 	}
-	if (mVertexFormat != from.mVertexFormat) {
+	if (mVertexFormat != eVERT_MAX && mVertexFormat != from.mVertexFormat) {
 		InputLayoutManager::Instance().ApplyLayout(mVertexFormat);
 	}
-	if (mPixelShaderFormat != from.mPixelShaderFormat) {
+	if (mPixelShaderFormat != ePS_MAX && mPixelShaderFormat != from.mPixelShaderFormat) {
 		ShaderManager::Instance()->ApplyPShader(mPixelShaderFormat);
 	}
-	if (mVertexShaderFormat != from.mVertexShaderFormat) {
+	if (mVertexShaderFormat != eVS_MAX && mVertexShaderFormat != from.mVertexShaderFormat) {
 		ShaderManager::Instance()->ApplyVShader(mVertexShaderFormat);
 	}
 	for (auto it = mTextures.begin(); it != mTextures.end(); ++it) {

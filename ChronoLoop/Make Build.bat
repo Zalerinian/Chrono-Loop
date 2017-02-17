@@ -12,6 +12,11 @@ if not exist _Build (
 )
 xcopy /y /d /e "_Release x64" "_Build\bin64"
 xcopy /y /d /e "Resources" "_Build\Resources"
+del /q /s "_Build\bin64\*.ipdb"
+del /q /s"_Build\bin64\*.iobj"
+del /q /s "_Build\bin64\*.pdb"
+del /q /s "_Build\bin64\PDB Files"
+
 
 echo ////////////////////////////////////
 echo.

@@ -3,12 +3,18 @@
 #include "Rendering/renderer.h"
 #include "Objects/BaseObject.h"
 #include "Rendering/InputLayoutManager.h"
+#include ".\Rendering\RenderShape.h"
 #include "Input/VRInputManager.h"
 #include "Core/TimeManager.h"
+#include "Core/Timeline.h"
 #include "Common/Logger.h"
 #include <openvr.h>
 #include <ctime>
 #include <chrono>
+#include <d3d11.h>
+#include "Objects/CodeComponent.h"
+#include "Objects/MeshComponent.h"
+#include "Actions/BoxSnapToControllerAction.hpp"
 #include "Messager\Messager.h"
 #include "Objects\BaseObject.h"
 
@@ -43,7 +49,7 @@ void UpdateTime();
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(354);
+	//_CrtSetBreakAlloc(431);
 	if (!InitializeWindow(hInstance, nCmdShow, 800, 600, true)) {
 		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
 		return 2;
@@ -52,19 +58,9 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	// Initialize Rendering systems and VR
 	vr::HmdError pError;
 	vr::IVRSystem *vrsys = nullptr;
-	if (vr::VR_IsHmdPresent()) {
-		vrsys = vr::VR_Init(&pError, vr::VRApplication_Scene);
-		if (pError != vr::HmdError::VRInitError_None) {
-			SystemLogger::GetLog() << "Could not initialize OpenVR for reasons!" << std::endl;
-		}
-	}
-	else {
-		SystemLogger::GetLog() << "There is no VR Headset present. VR will not be enabled." << std::endl;
-	}
-
-	//vrsys = nullptr;
-	if (vr::VR_IsHmdPresent() && vrsys == nullptr) {
-		SystemLogger::GetLog() << "VR seems to be ready, but the VR pointer is null. Was VR forcefully disabled?" << std::endl;
+	vrsys = vr::VR_Init(&pError, vr::VRApplication_Scene);
+	if (pError != vr::HmdError::VRInitError_None) {
+		SystemLogger::GetLog() << "Could not initialize OpenVR for reasons!" << std::endl;
 	}
 
 	if (vrsys != nullptr) {
@@ -75,9 +71,10 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 		return 1;
 	}
 
-	SystemLogger::GetLog() << "Hello World! " << "We hope you have at least " << 5 << " smiles today." << std::endl;
+	std::shared_ptr<ID3D11Device*> renderingDevice = RenderEngine::Renderer::Instance()->GetDevice();
 
 	// Update everything
+	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count());
 	Update();
 
 	// Cleanup
@@ -87,6 +84,21 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	vr::VR_Shutdown();
 	vrsys = nullptr;
 
+#if _DEBUG
+	// In debug mode, dump any remaining live DirectX objects. This list should be hopefully small at this point.
+	ID3D11Debug *debug;
+	(*renderingDevice)->QueryInterface(IID_ID3D11Debug, (void**)&debug);
+	if (debug) {
+		OutputDebugStringA("\n\n\n");
+		debug->ReportLiveDeviceObjects(D3D11_RLDO_FLAGS::D3D11_RLDO_DETAIL);
+		debug->Release();
+		OutputDebugStringA("\n\n\n");
+	}
+#endif
+
+	// Release the Device
+	(*renderingDevice)->Release();
+
 #if _DEBUG || CONSOLE_OVERRIDE
 	FreeConsole();
 #endif
@@ -94,8 +106,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	return 0;
 }
 
-void UpdateTime()
-{
+void UpdateTime() {
 	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count() - lastTime.time_since_epoch().count()) / 1000.0f / 1000.0f / 1000.0f;
 	lastTime = std::chrono::steady_clock::now();
 }
@@ -105,67 +116,45 @@ void Update() {
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
 
-	/*///////////////////////Using this to test physics//////////////////
-	Transform transform, transform1;
-	transform.SetMatrix(Identity());
-	BaseObject obj;
-	obj.SetName("aabb");
-	Collider aabb;
-	aabb.mAcceleration.vector = { 0.0f, 0.0f, 0.0f, 0.0f };
-	aabb.mCubeMax.vector = { -1.0f, 2.0f, -1.0f, 1.0f };
-	aabb.mCubeMin.vector = { 1.0f, 1.0f, 1.0f, 1.0f };
-	aabb.mIsCube = true;
-	aabb.mIsSphere = false;
-	aabb.mIsPlane = false;
-	aabb.mShouldMove = true;
-	aabb.mMass = 1.0f;
-	aabb.mVelocity.vector = { 0.0f, 0.0f, 0.0f, 0.0f };
-	obj.AddComponent(&aabb);
-	obj.SetTransform(transform);
-	aabb.object = &obj;
 
-	matrix4 mat = Identity();
-	mat.fourth.x = 0.0f;
-	mat.fourth.y = -1.0f;
-	mat.fourth.z = 0.0f;
-	mat.fourth.w = 1.0f;
+	// TODO: Replace all this with a level to run.
+	///*///////////////////////Using this to test physics//////////////////
+	Transform transform;
+	transform.SetMatrix(MatrixIdentity());
+	matrix4 mat1 = MatrixTranslation(0, 5, 0);
+	transform.SetMatrix(mat1);
+	BaseObject obj("aabb", transform);
+	CubeCollider *aabb = new CubeCollider(true, vec4f(0.0f, -9.80f, 0.0f, 1.0f), 10.0f, 0.5f, 0.7f, vec4f(0.15f, -0.15f, .15f, 1.0f), vec4f(-0.15f, 0.15f, -0.15f, 1.0f));
+	aabb->AddForce(vec4f(2, 0, 0, 0));
+	obj.AddComponent(aabb);
 
+	matrix4 mat = MatrixTranslation(0, -1, 0);
+
+	Transform transform1;
 	transform1.SetMatrix(mat);
-	BaseObject obj1;
-	obj1.SetName("plane");
-	Collider plane;
-	plane.mAcceleration.vector = { 0.0f, 0.0f, 0.0f, 0.0f };
-	plane.mIsCube = false;
-	plane.mIsSphere = false;
-	plane.mIsPlane = true;
-	plane.mShouldMove = false;
-	plane.mMass = 0.0f;
-	plane.mPlaneNorm.vector = { 0.0f, 1.0f, 0.0f, 0.0f };
-	plane.mPlaneOffset = 0.0f;
-	plane.mVelocity.vector = { 0.0f, 0.0f, 0.0f, 0.0f };
-	obj1.AddComponent(&plane);
-	obj1.SetTransform(transform1);
-	plane.object = &obj1;
+	BaseObject obj1("plane", transform1);
+	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
+	MeshComponent *planeObj = new MeshComponent("../Resources/Liftoff.obj");
+	planeObj->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
+	obj1.AddComponent(plane);
+	obj1.AddComponent(planeObj);
+	
 
-	Physics::Instance()->mColliders.push_back(&aabb);
-	Physics::Instance()->mColliders.push_back(&plane);
-	*////////////////////////////////////////////////////////////////////
+	TimeManager::Instance()->GetTimeLine()->AddBaseObject(&obj,obj.GetUniqueId());
+	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
+	visibleMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
+	obj.AddComponent(visibleMesh);
 
-	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::INITIALIZE_Audio, 0, false));
-	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::SET_BasePath, 0, false, (void*)new m_Path(_basePath)));
-	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_initSB)));
-	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
-	Transform t;
-	t.SetMatrix(matrix4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0));
-	BaseObject* test = new BaseObject("", t);
-	Listener* lisnr = new Listener();
-	Emitter* emit = new Emitter();
-	lisnr->object = emit->object = test;
-	test->AddComponent(lisnr);
-	test->AddComponent(emit);
-	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(lisnr, nullptr)));
-	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(emit, nullptr)));
-	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Loc, 0, false, (void*)new m_Event((AudioEvent)AK::EVENTS::PLAY_TEST2, emit)));
+	BoxSnapToControllerAction *Action = new BoxSnapToControllerAction(&obj);
+	CodeComponent *codeComponent = new CodeComponent(Action);
+	CodeComponent *invalidComponent = new CodeComponent(nullptr);
+	obj.AddComponent(codeComponent);
+	obj.AddComponent(invalidComponent);
+
+	Physics::Instance()->mObjects.push_back(&obj);
+	Physics::Instance()->mObjects.push_back(&obj1);
+	//*////////////////////////////////////////////////////////////////////
+
 
 	while (true) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
@@ -180,15 +169,22 @@ void Update() {
 			if (GetAsyncKeyState(VK_ESCAPE)) {
 				break;
 			}
-			Physics::Instance()->Update(deltaTime);
+
 			msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false));
 			UpdateTime();
 			if (VREnabled) {
 				VRInputManager::Instance().update();
 			}
+
 			// Logic.Update(float deltaTime);
 			TManager->Instance()->Update(deltaTime);
-			RenderEngine::Renderer::Instance()->Render();
+			RenderEngine::Renderer::Instance()->Render(deltaTime);
+
+			Physics::Instance()->Update(deltaTime);
+			auto& objects = Physics::Instance()->mObjects;
+			for (auto it = objects.begin(); it != objects.end(); ++it) {
+				(*it)->Update();
+			}
 		}
 	}
 }

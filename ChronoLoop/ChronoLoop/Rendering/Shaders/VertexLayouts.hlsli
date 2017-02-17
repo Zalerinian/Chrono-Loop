@@ -1,5 +1,4 @@
 /// Header file for storing vertex declarations for input and out from vertex shaders
-/// TODO : Adjust code to use same file for both C and HLSL declarations
 
 #ifndef VERTEX_LAYOUTS_HLSLI
 #define VERTEX_LAYOUTS_HLSLI

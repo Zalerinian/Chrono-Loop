@@ -8,7 +8,6 @@ namespace RenderEngine {
 		eRS_CCW_WIREFRAME,
 		eRS_CCW,
 		eRS_NO_CULL,
-		eRS_CCW_NO_CULL,
 		eRS_MAX
 	};
 

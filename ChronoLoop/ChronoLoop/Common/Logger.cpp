@@ -3,6 +3,7 @@
 #include <chrono>
 #include <ctime>
 #include <iomanip>
+#include "../Common/Breakpoint.h"
 
 using namespace std;
 
@@ -13,8 +14,12 @@ SystemLogger::SystemLogger(const char * _path) {
 	output.open(_path, ios::app);
 	if(!output.is_open()) {
 		// TODO: We need folder operations, as this will crash without the Logs folder premade.
-		throw "something catastropihc has happened.";
+		cout << "[Error] Failed to open file stream \"" << _path << "\"" << endl;
+		Debug::SetBreakpoint();
 	}
+	// booleans print true/false instead of 1/0
+	cout << boolalpha;
+	output << boolalpha;
 }
 
 SystemLogger::~SystemLogger() {
@@ -22,11 +27,12 @@ SystemLogger::~SystemLogger() {
 }
 
 void SystemLogger::PrintTime() {
-	if ((int)output.tellp() == 0) {
+	if (canPrintTime) {
+		canPrintTime = false;
 		time_t now_t = chrono::system_clock::to_time_t(chrono::system_clock::now());
 		tm now;
 		localtime_s(&now, &now_t);
-		output << "[" << put_time(&now, "%D %r%p") << "] ";
+		output << nouppercase << "[" << put_time(&now, "%D %r%p") << "] ";
 	}
 }
 
@@ -45,6 +51,22 @@ SystemLogger &SystemLogger::operator<<(const short i) {
 }
 
 SystemLogger & SystemLogger::operator<<(const int i) {
+	cout << i;
+	PrintTime();
+	output << i;
+	return *this;
+}
+
+SystemLogger & SystemLogger::operator<<(const float i)
+{
+	cout << i;
+	PrintTime();
+	output << i;
+	return *this;
+}
+
+SystemLogger & SystemLogger::operator<<(const double i)
+{
 	cout << i;
 	PrintTime();
 	output << i;
@@ -116,22 +138,29 @@ SystemLogger & SystemLogger::operator<<(const std::string &i) {
 
 SystemLogger & SystemLogger::operator<<(ostream &(*pf)(ostream &)) {
 	cout << pf;
-	PrintTime();
 	output << pf;
 	return *this;
 }
 
 SystemLogger & SystemLogger::operator<<(ios &(*pf)(ios &)) {
 	cout << pf;
-	PrintTime();
 	output << pf;
 	return *this;
 }
 
 SystemLogger & SystemLogger::operator<<(ios_base &(*pf)(ios_base &)) {
 	cout << pf;
-	PrintTime();
 	output << pf;
+	return *this;
+}
+
+SystemLogger & SystemLogger::operator<<(void (*pf)(SystemLogger &)) {
+	pf(*this);
+	return *this;
+}
+
+SystemLogger & SystemLogger::operator<<(void (SystemLogger::* pf)()) {
+	(this->*(pf))();
 	return *this;
 }
 
