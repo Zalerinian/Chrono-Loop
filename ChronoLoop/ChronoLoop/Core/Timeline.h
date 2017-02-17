@@ -12,7 +12,10 @@ struct SnapComponent {
 	unsigned short mId;
 };
 struct SnapComponent_Physics : SnapComponent {
-	vec4f mTotalForce;
+	vec4f mForces;
+	vec4f mVel;
+	vec4f mAcc;
+
 };
 //Add more componets when we need it
 #pragma endregion ComponetStructs

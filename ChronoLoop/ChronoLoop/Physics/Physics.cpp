@@ -542,17 +542,23 @@ void Physics::Update(float _time)
 	Collider* otherCol;
 	vec4f norm;
 	
-	int objs = mObjects.size();
+	int objs = (int)mObjects.size();
 	for (int i = 0; i < objs; ++i)
 	{
-		int cols = mObjects[i]->mComponents[eCOMPONENT_COLLIDER].size();
+		int cols = (int)mObjects[i]->mComponents[eCOMPONENT_COLLIDER].size();
 		for (int i = 0; i < cols; ++i)
 		{
 			collider = (Collider*)mObjects[i]->mComponents[eCOMPONENT_COLLIDER][i];
 			if (collider->mShouldMove)
 			{
-				collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
-				collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
+				collider->mTotalForce = collider->mGravity + collider->mForces;
+				if(collider->mShouldMove || !collider->mRewind)
+				{
+					collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
+					collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
+					collider->mRewind = false;
+				}
+
 				collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
 			}
 
@@ -563,7 +569,7 @@ void Physics::Update(float _time)
 				{
 					if (mObjects[j] != mObjects[i])
 					{
-						int othercols = mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
+						int othercols = (int)mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
 						for (int k = 0; k < othercols; ++k)
 						{
 							otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
@@ -623,7 +629,7 @@ void Physics::Update(float _time)
 				{
 					if (mObjects[j] != mObjects[i])
 					{
-						int othercols = mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
+						int othercols = (int)mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
 						for (int k = 0; k < othercols; ++k)
 						{
 							otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
@@ -656,19 +662,19 @@ void Physics::Update(float _time)
 									if (collider->mColliding)
 										collider->mColliding = false;
 									//SystemLogger::GetLog() << "AABB IN FRONT OF PLANE!" << std::endl;
-									//SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
+									SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
 								}
 								else if (result == 2)//behind plane
 								{
 									if (collider->mColliding)
 										collider->mColliding = false;
 									//SystemLogger::GetLog() << "AABB BEHIND PLANE!" << std::endl;
-									//SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
+									SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
 								}
 								else if (result == 3)// intersecting plane
 								{
 									//SystemLogger::GetLog() << "AABB INTERSECTING PLANE!" << std::endl;
-									//SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
+									SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
 
 									if (collider->mShouldMove && !collider->mColliding)
 									{
@@ -676,14 +682,28 @@ void Physics::Update(float _time)
 										PlaneColReaction(*collider, *otherCol);
 									}
 
-									if (collider->mShouldMove && fabsf(collider->mVelocity.x) < 0.001f)
-										collider->mVelocity.x = 0;
-									if (collider->mShouldMove && fabsf(collider->mVelocity.y) < 0.001f)
-										collider->mVelocity.y = 0;
-									if (collider->mShouldMove && fabsf(collider->mVelocity.z) < 0.001f)
-										collider->mVelocity.z = 0;
+									collider->mForces.x *= otherCol->mFriction;
+									collider->mVelocity.x *= otherCol->mFriction;
+									collider->mForces.z *= otherCol->mFriction;
+									collider->mVelocity.z *= otherCol->mFriction;
 
-									if(collider->mVelocity.x == 0 && collider->mVelocity.y == 0 && collider->mVelocity.z == 0)
+									if (collider->mShouldMove && fabsf(collider->mVelocity.x) < 0.01f)
+									{
+										collider->mForces.x = 0;
+										collider->mVelocity.x = 0;
+									}
+									if (collider->mShouldMove && fabsf(collider->mVelocity.y) < 0.01f)
+									{
+										collider->mForces.y = 0;
+										collider->mVelocity.y = 0;
+									}
+									if (collider->mShouldMove && fabsf(collider->mVelocity.z) < 0.01f)
+									{
+										collider->mForces.z = 0;
+										collider->mVelocity.z = 0;
+									}
+
+									if(collider->mVelocity.x == 0 && collider->mVelocity.y == 0 && collider->mVelocity.z == 0 && !collider->mRewind)
 										collider->mShouldMove = false;
 								}
 							}

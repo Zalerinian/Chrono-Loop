@@ -66,7 +66,11 @@ void Timeline::MoveAllObjectsToSnap(unsigned int _snaptime) {
 				for (unsigned int j = 0; j < baseobject->GetComponentCount(eCOMPONENT_COLLIDER); j++) {
 					Component* currComp = baseobject->GetComponentIndexed(eCOMPONENT_COLLIDER, j);
 					if (currComp->GetColliderId() == destComp->mId) {
-						((Collider*)currComp)->AddForce(((SnapComponent_Physics*)destComp)->mTotalForce);
+						((Collider*)currComp)->mRewind = true;
+						((Collider*)currComp)->mShouldMove = false;
+						((Collider*)currComp)->mAcceleration = ((SnapComponent_Physics*)destComp)->mAcc;
+						((Collider*)currComp)->mVelocity = ((SnapComponent_Physics*)destComp)->mVel;
+						((Collider*)currComp)->AddForce(((SnapComponent_Physics*)destComp)->mForces);
 					}
 				}
 			}
@@ -113,7 +117,9 @@ SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object) {
 	for (unsigned int i = 0; i < temp.size(); i++) {
 		SnapComponent_Physics* newComp = new SnapComponent_Physics();
 		newComp->mCompType = eCOMPONENT_COLLIDER;
-		newComp->mTotalForce = ((Collider*)temp[i])->mTotalForce;
+		newComp->mForces = ((Collider*)temp[i])->mForces;
+		newComp->mAcc = ((Collider*)temp[i])->mAcceleration;
+		newComp->mVel = ((Collider*)temp[i])->mVelocity;
 		newComp->mId = temp[i]->GetColliderId();
 		info->mComponets.push_back(newComp);
 	}
