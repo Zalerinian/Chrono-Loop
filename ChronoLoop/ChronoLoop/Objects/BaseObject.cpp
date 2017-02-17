@@ -1,88 +1,102 @@
 //#include "stdafx.h"
 #include "BaseObject.h"
+#include "../Common/Logger.h"
 
+// 0 is reserved for the player.
+unsigned int BaseObject::ObjectCount = 1;
 
 BaseObject::BaseObject()
 {
-	
-	parent = nullptr;
-	//TESTING VALUES GET RID OF THIS EVENTUALLY
-	id = 2;
-	
+	mParent = nullptr;
+	mUniqueID = BaseObject::ObjectCount++;
 }
 BaseObject::BaseObject(std::string _name, Transform _transform)
 {
-	name = _name;
-	parent = nullptr;
-	transform = _transform;
+	mName = _name;
+	mParent = nullptr;
+	mTransform = _transform;
 }
+
 BaseObject::~BaseObject()
 {
-	delete parent;
+	delete mParent;
 	for(auto iter = mComponents.begin(); iter != mComponents.end(); ++iter)
 	{
 		for (int i = 0; i < iter->second.size(); ++i)
 			delete iter->second[i];
 	}
 	mComponents.clear();
-	children.clear();
-}
-BaseObject BaseObject::Clone()
-{
-	//clone copies properties execpt id
-	BaseObject temp;
-	temp.name = this->name;
-	temp.transform = this->transform;
-	temp.parent = this->parent;
-	temp.mComponents = this->mComponents;
-	temp.children = this->children;
-	return temp;
-}
-BaseObject BaseObject::Clone(BaseObject _clone)
-{
-	//clone copies properties execpt id
-	_clone.name = this->name;
-	_clone.transform = this->transform;
-	_clone.parent = this->parent;
-	_clone.mComponents = this->mComponents;
-	_clone.children = this->children;
-	return _clone;
-}
-BaseObject const* BaseObject::operator=(BaseObject _equals)
-{
-	if (this->id != _equals.id) this->id = _equals.id;
-	if (this->name != _equals.name) this->name = _equals.name;
-	if (this->parent != _equals.parent) this->parent = _equals.parent;
-	if (this->children != _equals.children) this->children = _equals.children;
-	//if (this->transform != _equals.transform) this->transform = _equals.transform;
-	if (this->mComponents != _equals.mComponents) this->mComponents = _equals.mComponents;
-	return this;
+	mChildren.clear();
 }
 
-unsigned short& BaseObject::GetUniqueId()
+//BaseObject BaseObject::Clone()
+//{
+//	BaseObject temp;
+//	temp.m_name = this->m_name;
+//	temp.m_transform = this->m_transform;
+//	temp.m_parent = this->m_parent;
+//	temp.m_components = this->m_components;
+//	temp.m_children = this->m_children;
+//	return temp;
+//}
+//
+//BaseObject BaseObject::Clone(BaseObject _clone)
+//{
+//	_clone.m_name = this->m_name;
+//	_clone.m_transform = this->m_transform;
+//	_clone.m_parent = this->m_parent;
+//	_clone.m_components = this->m_components;
+//	_clone.m_children = this->m_children;
+//	return _clone;
+//}
+
+BaseObject& BaseObject::operator=(BaseObject& _equals)
 {
-	return id;
+	if (this->mUniqueID != _equals.mUniqueID) this->mUniqueID = _equals.mUniqueID;
+	if (this->mName != _equals.mName) this->mName = _equals.mName;
+	if (this->mParent != _equals.mParent) this->mParent = _equals.mParent;
+	if (this->mChildren != _equals.mChildren) this->mChildren = _equals.mChildren;
+	if (this->mTransform != _equals.mTransform) this->mTransform = _equals.mTransform;
+	if (this->mComponents != _equals.mComponents) this->mComponents = _equals.mComponents;
+	return *this;
 }
 
 void BaseObject::Destroy()
 {
-	for (auto iter = mComponents.begin(); iter != mComponents.end(); ++iter)
-		for (int i = 0; i < iter->second.size(); ++i)
+	for (auto iter = mComponents.begin(); iter != mComponents.end(); ++iter) {
+		for (int i = 0; i < iter->second.size(); ++i) {
 			delete iter->second[i];
+		}
+	}
 }
 
-void BaseObject::AddComponent(ComponentType _type, Component* _comp)
-{
-	mComponents[_type].push_back(_comp);
+unsigned int BaseObject::AddComponent(Component * _comp) {
+	if (_comp->GetType() == eCOMPONENT_MAX) {
+		SystemLogger::GetError() << "[Error] Trying to add a component with an invalid type. This is not allowed, returning -1U." << std::endl;
+		return -1;
+	}
+	_comp->mObject = this;
+	mComponents[_comp->GetType()].push_back(_comp);
+	return (unsigned int)mComponents[_comp->GetType()].size();
 }
 
-Component* const BaseObject::GetComponent(ComponentType _type, unsigned int _index) 
-{
-	return mComponents[_type][_index];
+bool BaseObject::RemoveComponent(Component * _comp) {
+	if (_comp->GetType() == eCOMPONENT_MAX) {
+		SystemLogger::GetError() << "[Error] Trying to remove a component with an invalid type. This is not allowed, returning -1U." << std::endl;
+		return false;
+	}
+	ComponentType type = _comp->GetType();
+	unsigned int size = (unsigned int)mComponents[type].size();
+	for (auto it = mComponents[type].begin(); it != mComponents[type].end(); ++it) {
+		if((*it) == _comp) {
+			mComponents[type].erase(it);
+			return true;
+		}
+	}
+	return false;
 }
 
-unsigned int BaseObject::GetNumofComponets(ComponentType _type)
-{
-	return mComponents[_type].size();
-}
-
+//void BaseObject::AddComponent(ComponentType _type, Component* _comp)
+//{
+//	mComponents[_type].push_back(_comp);
+//}

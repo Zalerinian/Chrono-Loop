@@ -542,32 +542,33 @@ void Physics::Update(float _time)
 	Collider* otherCol;
 	vec4f norm;
 	
-	int objs = mObjects.size();
+	int objs = (int)mObjects.size();
 	for (int i = 0; i < objs; ++i)
 	{
-		int cols = mObjects[i]->mComponents[eCOMPONENT_PhysicsCollider].size();
+		int cols = (int)mObjects[i]->mComponents[eCOMPONENT_COLLIDER].size();
 		for (int i = 0; i < cols; ++i)
 		{
-			collider = (Collider*)mObjects[i]->mComponents[eCOMPONENT_PhysicsCollider][i];
+			collider = (Collider*)mObjects[i]->mComponents[eCOMPONENT_COLLIDER][i];
 			if (collider->mShouldMove)
 			{
+				collider->mTotalForce = collider->mGravity + collider->mForces;
 				collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
 				collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
 				collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
 			}
 
-			if (collider->mType == Collider::eCOLLIDER_Sphere)
+			if (collider->mColliderType == Collider::eCOLLIDER_Sphere)
 			{
 				Sphere s1(((SphereCollider*)collider)->GetPos(), ((SphereCollider*)collider)->mRadius);
 				for (int j = 0; j < objs; ++j)
 				{
 					if (mObjects[j] != mObjects[i])
 					{
-						int othercols = mObjects[j]->mComponents[eCOMPONENT_PhysicsCollider].size();
+						int othercols = (int)mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
 						for (int k = 0; k < othercols; ++k)
 						{
-							otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_PhysicsCollider][k];
-							if (otherCol->mType == Collider::eCOLLIDER_Mesh)
+							otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
+							if (otherCol->mColliderType == Collider::eCOLLIDER_Mesh)
 							{
 								//Not sure what outnorm is used for at the moment might just stick with basic cube/sphere collisions
 								if (MovingSphereToMesh(collider->GetPos(), collider->mVelocity, ((SphereCollider*)collider)->mRadius, ((MeshCollider*)otherCol)->mMesh, _time, norm))
@@ -575,7 +576,7 @@ void Physics::Update(float _time)
 									SystemLogger::GetLog() << "SPHERE TO MESH COLLISION!";
 								}
 							}
-							else if (otherCol->mType == Collider::eCOLLIDER_Sphere)
+							else if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
 							{
 								Sphere s2(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
 								if (SphereToSphere(s1, s2))
@@ -585,7 +586,7 @@ void Physics::Update(float _time)
 								}
 								break;
 							}
-							else if (otherCol->mType == Collider::eCOLLIDER_Cube)
+							else if (otherCol->mColliderType == Collider::eCOLLIDER_Cube)
 							{
 								AABB aabb(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
 								if (SphereToAABB(s1, aabb))
@@ -595,7 +596,7 @@ void Physics::Update(float _time)
 								}
 								break;
 							}
-							else if (otherCol->mType == Collider::eCOLLIDER_Plane)
+							else if (otherCol->mColliderType == Collider::eCOLLIDER_Plane)
 							{
 								Plane plane(((PlaneCollider*)otherCol)->mNormal, ((PlaneCollider*)otherCol)->mOffset);
 								int result = SphereToPlane(plane, s1);
@@ -616,18 +617,18 @@ void Physics::Update(float _time)
 					}
 				}
 			}
-			else if (collider->mType == Collider::eCOLLIDER_Cube)
+			else if (collider->mColliderType == Collider::eCOLLIDER_Cube)
 			{
 				AABB aabb1(((CubeCollider*)collider)->mMin, ((CubeCollider*)collider)->mMax);
 				for (int j = 0; j < objs; ++j)
 				{
 					if (mObjects[j] != mObjects[i])
 					{
-						int othercols = mObjects[j]->mComponents[eCOMPONENT_PhysicsCollider].size();
+						int othercols = (int)mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
 						for (int k = 0; k < othercols; ++k)
 						{
-							otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_PhysicsCollider][k];
-							if (otherCol->mType == Collider::eCOLLIDER_Cube)
+							otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
+							if (otherCol->mColliderType == Collider::eCOLLIDER_Cube)
 							{
 								AABB aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
 								if (AABBtoAABB(aabb1, aabb2))
@@ -637,7 +638,7 @@ void Physics::Update(float _time)
 								}
 								break;
 							}
-							else if (otherCol->mType == Collider::eCOLLIDER_Sphere)
+							else if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
 							{
 								Sphere s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
 								if (SphereToAABB(s1, aabb1))
@@ -647,7 +648,7 @@ void Physics::Update(float _time)
 								}
 								break;
 							}
-							else if (otherCol->mType == Collider::eCOLLIDER_Plane)
+							else if (otherCol->mColliderType == Collider::eCOLLIDER_Plane)
 							{
 								Plane plane(((PlaneCollider*)otherCol)->mNormal, ((PlaneCollider*)otherCol)->mOffset);
 								int result = AabbToPlane(plane, aabb1);
@@ -656,19 +657,19 @@ void Physics::Update(float _time)
 									if (collider->mColliding)
 										collider->mColliding = false;
 									//SystemLogger::GetLog() << "AABB IN FRONT OF PLANE!" << std::endl;
-									//SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
+									SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
 								}
 								else if (result == 2)//behind plane
 								{
 									if (collider->mColliding)
 										collider->mColliding = false;
 									//SystemLogger::GetLog() << "AABB BEHIND PLANE!" << std::endl;
-									//SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
+									SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
 								}
 								else if (result == 3)// intersecting plane
 								{
 									//SystemLogger::GetLog() << "AABB INTERSECTING PLANE!" << std::endl;
-									//SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
+									SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
 
 									if (collider->mShouldMove && !collider->mColliding)
 									{
@@ -676,12 +677,27 @@ void Physics::Update(float _time)
 										PlaneColReaction(*collider, *otherCol);
 									}
 
-									if (collider->mShouldMove && fabsf(collider->mVelocity.y) < 0.001f)
+									collider->mForces.x *= otherCol->mFriction;
+									collider->mVelocity.x *= otherCol->mFriction;
+
+									if (collider->mShouldMove && fabsf(collider->mVelocity.x) < 0.01f)
 									{
-										//SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
-										collider->mVelocity.y = 0;
-										collider->mShouldMove = false;
+										collider->mForces.x = 0;
+										collider->mVelocity.x = 0;
 									}
+									if (collider->mShouldMove && fabsf(collider->mVelocity.y) < 0.01f)
+									{
+										collider->mForces.y = 0;
+										collider->mVelocity.y = 0;
+									}
+									if (collider->mShouldMove && fabsf(collider->mVelocity.z) < 0.01f)
+									{
+										collider->mForces.z = 0;
+										collider->mVelocity.z = 0;
+									}
+
+									if(collider->mVelocity.x == 0 && collider->mVelocity.y == 0 && collider->mVelocity.z == 0)
+										collider->mShouldMove = false;
 								}
 							}
 						}

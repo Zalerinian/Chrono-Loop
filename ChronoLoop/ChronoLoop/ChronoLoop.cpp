@@ -104,31 +104,21 @@ void Update() {
 	///*///////////////////////Using this to test physics//////////////////
 	Transform transform;
 	transform.SetMatrix(MatrixIdentity());
-	matrix4 mat1 = MatrixIdentity();
-	mat1.fourth.x = 0.0f;
-	mat1.fourth.y = 3.0f;
-	mat1.fourth.z = 0.0f;
-	mat1.fourth.w = 1.0f;
+	matrix4 mat1 = MatrixTranslation(0, 3, 0);
 	transform.SetMatrix(mat1);
 	BaseObject obj("aabb", transform);
-	
-	CubeCollider aabb(true, vec4f(2.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, vec4f(0.15f, -0.15f, .15f, 1.0f), vec4f(-0.15f, 0.15f, -0.15f, 1.0f));
-	obj.AddComponent(eCOMPONENT_PhysicsCollider, &aabb);
-	aabb.object = &obj;
+	CubeCollider *aabb = new CubeCollider(true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, 0.7f, vec4f(0.15f, -0.15f, .15f, 1.0f), vec4f(-0.15f, 0.15f, -0.15f, 1.0f));
+	aabb->AddForce(vec4f(2, 0, 0, 0));
+	obj.AddComponent(aabb);
 	RenderEngine::Renderer::Instance()->mBox.mPosition = Math::MatrixTranspose(obj.GetTransform().GetMatrix());
 
-	matrix4 mat = MatrixIdentity();
-	mat.fourth.x = 0.0f;
-	mat.fourth.y = -1.0f;
-	mat.fourth.z = 0.0f;
-	mat.fourth.w = 1.0f;
+	matrix4 mat = MatrixTranslation(0, -1, 0);
 
 	Transform transform1;
 	transform1.SetMatrix(mat);
 	BaseObject obj1("plane", transform1);
-	PlaneCollider plane(false, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.0f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
-	obj1.AddComponent(eCOMPONENT_PhysicsCollider, &plane);
-	plane.object = &obj1;
+	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
+	obj1.AddComponent(plane);
 	RenderEngine::Renderer::Instance()->mPlane.mPosition = Math::MatrixTranspose(obj1.GetTransform().GetMatrix());
 
 	TimeManager::Instance()->GetTimeLine()->AddBaseObject(&obj,obj.GetUniqueId());

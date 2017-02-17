@@ -120,9 +120,6 @@
     <ClInclude Include="Objects\Component.h">
       <Filter>Objects\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\Components.h">
-      <Filter>Objects\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\Transform.h">
       <Filter>Objects\Header Files</Filter>
     </ClInclude>
@@ -409,6 +406,9 @@
     </ClCompile>
     <ClCompile Include="Rendering\Mesh.cpp">
       <Filter>Rendering\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\MeshComponent.cpp">
+      <Filter>Objects\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
