@@ -36,7 +36,7 @@ struct Snapshot
 {
 	unsigned int mTime = -1;									//This is the time in the world the snapshot was taken. If was not assigned mTime= -1;
 	std::unordered_map<unsigned short, SnapInfo*> mSnapinfos;
-	std::unordered_map<unsigned short, unsigned int> mUpdatedtimes;		//Map of float times of last updated times. Use the float retreaved to access a different snapshot 
+	std::unordered_map<unsigned short, unsigned int> mUpdatedtimes;		//Map of int times of last updated times. Use the float retreaved to access a different snapshot 
 
 	bool IsObjectStored(short _id);
 };
@@ -61,5 +61,6 @@ public:
 	void ClearTimeLine();
 	SnapInfo* GenerateSnapInfo(BaseObject* _object);							//Error check agianst the BaseObject* if it is null or not
 	Snapshot* GenerateSnapShot(unsigned int _time);
+	bool CheckForDuplicateData(unsigned short _id,BaseObject* _object);
 };
 

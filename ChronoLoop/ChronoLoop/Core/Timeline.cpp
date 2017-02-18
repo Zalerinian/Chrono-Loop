@@ -124,29 +124,6 @@ SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object) {
 		info->mComponets.push_back(newComp);
 	}
 
-	////////////////////////////////////////////////////////////////////////////////Talk to Chris about mComponent rework
-	//Componet information
-	//or (unsigned int i = 0; i < _object->GetNumofComponets(); i++) {
-	//	 Component* temp = _object->GetComponent(i);
-	//
-	//	//If there is a componet we want to store make a snap component
-	//	switch (temp->GetType())
-	//	{
-	//	case ComponentType::eCOMPONENT_COLLIDER:
-	//		{
-	//		SnapComponent* newComp = new SnapComponent();
-	//		newComp->CompType = temp->GetType();
-	//		((SnapComponent_Physics*)newComp)->acceleration = ((Collider*)temp)->GetAcceleration();
-	//		((SnapComponent_Physics*)newComp)->velocity = ((Collider*)temp)->GetVelocity();
-	//		info->mComponets.push_back(newComp);
-	//		break;
-	//		}
-	//	default:
-	//		//This component is not having its information stored in snapshot
-	//		break;
-	//	}
-	//
-
 	return info;
 }
 
@@ -165,7 +142,7 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time) {
 		snap = mSnapshots[_time];
 		OldSnap = true;
 	}
-	
+
 	//If first snapshot taken
 	if (mSnapshots.size() == 0) {
 		for (std::pair<unsigned short, BaseObject*> _b : mLiveObjects) {
@@ -180,12 +157,15 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time) {
 		snap->mUpdatedtimes = mSnapshots[mSnaptimes[mCurrentGameTimeIndx]]->mUpdatedtimes;
 		for (std::pair<unsigned short, BaseObject*> _b : mLiveObjects) {
 			if (_b.second) {
-				//TODO PAT: Do somesort of duplicate infomation checking to decide to add it or not
-				//If change add to mSnapinfos and Updatetime
 				unsigned short id = _b.first;
-				delete snap->mSnapinfos[id];
+				//delete an old snapshot
+				if (snap->mSnapinfos[id] != nullptr)
+					delete snap->mSnapinfos[id];
+				//If change add to mSnapinfos and Updatetime
+			    //if (!CheckForDuplicateData(id,_b.second)) {
 				snap->mSnapinfos[id] = GenerateSnapInfo(_b.second);
 				snap->mUpdatedtimes[id] = _time;
+
 			}
 		}
 	}
@@ -199,4 +179,9 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time) {
 	return snap;
 }
 
-
+//Returns True if the data is the same from last snap
+bool Timeline::CheckForDuplicateData(unsigned short _id, BaseObject* _object) {
+	SnapInfo* info = mSnapshots[mSnaptimes[mCurrentGameTimeIndx]]->mSnapinfos[_id];
+	//TODO PAT: Once all the structs and componets are final fill this out
+	return true;
+}

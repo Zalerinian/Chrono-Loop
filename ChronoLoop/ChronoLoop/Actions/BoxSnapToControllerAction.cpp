@@ -11,22 +11,22 @@ BoxSnapToControllerAction::BoxSnapToControllerAction(BaseObject* _parent) : Acti
 
 void BoxSnapToControllerAction::Update() {
 	//SystemLogger::GetLog() << "[INFO] The BoxSnapToControllerAction component is working!" << std::endl;
-	if (VRInputManager::Instance().iIsInitialized()) {
-		// TODO Fix this because it's pretty jank.
-		if (VRInputManager::Instance().GetController(true).GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger)) {
-			SnapToController(true);
-			mHeldLeft = true;
-		} else if (VRInputManager::Instance().GetController(false).GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger)) {
-			SnapToController(false);
-			mHeldLeft = false;
-		} else if(mHeld) {
-			ReleaseCube();
-		}
-		if(VRInputManager::Instance().GetController(true).GetPress((vr::EVRButtonId::k_EButton_DPad_Left)))
-		{
-			TimeManager::Instance()->RewindTimeline();
-		}
-	}
+	//if (VRInputManager::Instance().iIsInitialized()) {
+	//	// TODO Fix this because it's pretty jank.
+	//	if (VRInputManager::Instance().GetController(true).GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger)) {
+	//		SnapToController(true);
+	//		mHeldLeft = true;
+	//	} else if (VRInputManager::Instance().GetController(false).GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger)) {
+	//		SnapToController(false);
+	//		mHeldLeft = false;
+	//	} else if(mHeld) {
+	//		ReleaseCube();
+	//	}
+	//	if(VRInputManager::Instance().GetController(true).GetPress((vr::EVRButtonId::k_EButton_DPad_Left)))
+	//	{
+	//		TimeManager::Instance()->RewindTimeline();
+	//	}
+	//}
 }
 
 void BoxSnapToControllerAction::SnapToController(bool left) {

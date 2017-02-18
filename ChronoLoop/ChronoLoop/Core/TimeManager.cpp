@@ -35,6 +35,7 @@ void TimeManager::Update(float _delta)
 		mTimeline->RewindNoClone(mTimeline->GetCurrentGameTimeIndx() - 10);
 		//Tell the time manager what frame the timeline its on
 		mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
+		mRewindTime = false;
 	}
 }
 
