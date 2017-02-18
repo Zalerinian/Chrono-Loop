@@ -1,6 +1,7 @@
 #pragma once
 #include <openvr.h>
 #include "Controller.h"
+#include "../Common/Math.h"
 
 class VRInputManager {
 private:
@@ -12,15 +13,15 @@ private:
 	~VRInputManager();
 	void mInitialize(vr::IVRSystem* _vr);
 	
-	vr::TrackedDevicePose_t mPoses[vr::k_unMaxTrackedDeviceCount];
-
+	matrix4 mPlayerPosition;
+	
 public:
-	void update();
 	static VRInputManager& Instance();
 	static void Initialize(vr::IVRSystem* _vr);
 	static void Shutdown();
 
-	Controller& GetController(bool left);
+	void iUpdate();
+	Controller& iGetController(bool left);
 	inline bool iIsInitialized() const { return mVRSystem != nullptr; }
+	inline matrix4& iGetPlayerPosition() { return mPlayerPosition; }
 };
-

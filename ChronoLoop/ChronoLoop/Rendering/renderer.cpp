@@ -216,7 +216,7 @@ namespace RenderEngine {
 
 		//createDxgiDevice
 		IDXGIDevice* DxgiDevice;
-		ThrowIfFailed((*sInstance->GetDevice())->QueryInterface(__uuidof(IDXGIDevice), (void **)&DxgiDevice));
+		ThrowIfFailed((*sInstance->iGetDevice())->QueryInterface(__uuidof(IDXGIDevice), (void **)&DxgiDevice));
 		sInstance->mGIDevice = make_shared<IDXGIDevice*>(DxgiDevice);
 
 		//create device2d 
@@ -542,7 +542,7 @@ namespace RenderEngine {
 		mRenderSet.RemoveShape(_node);
 	}
 
-	bool Renderer::Initialize(HWND _Window, unsigned int _width, unsigned int _height, bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane, vr::IVRSystem * _vrsys) {
+	bool Renderer::iInitialize(HWND _Window, unsigned int _width, unsigned int _height, bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane, vr::IVRSystem * _vrsys) {
 		mWindow = make_shared<HWND>(_Window);
 		mVrSystem = _vrsys;
 

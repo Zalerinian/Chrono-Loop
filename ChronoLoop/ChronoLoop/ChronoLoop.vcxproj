@@ -199,6 +199,7 @@
     <ClInclude Include="..\DXTK\scoped.h" />
     <ClInclude Include="Actions\Action.hpp" />
     <ClInclude Include="Actions\BoxSnapToControllerAction.hpp" />
+    <ClInclude Include="Actions\CodeComponent.hpp" />
     <ClInclude Include="Common\Breakpoint.h" />
     <ClInclude Include="Common\Common.h" />
     <ClInclude Include="Common\FileIO.h" />
@@ -216,7 +217,6 @@
     <ClInclude Include="Messager\Message.h" />
     <ClInclude Include="Messager\Messager.h" />
     <ClInclude Include="Objects\BaseObject.h" />
-    <ClInclude Include="Objects\CodeComponent.h" />
     <ClInclude Include="Objects\Component.h" />
     <ClInclude Include="Objects\MeshComponent.h" />
     <ClInclude Include="Objects\Transform.h" />
@@ -338,7 +338,6 @@
     <ClCompile Include="Levels\LevelManager.cpp" />
     <ClCompile Include="Messager\Messager.cpp" />
     <ClCompile Include="Objects\BaseObject.cpp" />
-    <ClCompile Include="Objects\CodeComponent.cpp" />
     <ClCompile Include="Objects\Component.cpp" />
     <ClCompile Include="Objects\MeshComponent.cpp" />
     <ClCompile Include="Objects\Transform.cpp" />

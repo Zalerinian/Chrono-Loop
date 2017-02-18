@@ -12,7 +12,7 @@
 #include <ctime>
 #include <chrono>
 #include <d3d11.h>
-#include "Objects/CodeComponent.h"
+//#include "Actions/CodeComponent.h"
 #include "Objects/MeshComponent.h"
 #include "Actions/BoxSnapToControllerAction.hpp"
 
@@ -58,7 +58,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 		return 1;
 	}
 
-	std::shared_ptr<ID3D11Device*> renderingDevice = RenderEngine::Renderer::Instance()->GetDevice();
+	std::shared_ptr<ID3D11Device*> renderingDevice = RenderEngine::Renderer::Instance()->iGetDevice();
 
 	// Update everything
 	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count());
@@ -132,11 +132,9 @@ void Update() {
 	visibleMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
 	obj.AddComponent(visibleMesh);
 
-	BoxSnapToControllerAction *Action = new BoxSnapToControllerAction(&obj);
-	CodeComponent *codeComponent = new CodeComponent(Action);
-	CodeComponent *invalidComponent = new CodeComponent(nullptr);
+	//BoxSnapToControllerAction *Action = new BoxSnapToControllerAction(&obj);
+	CodeComponent *codeComponent = new BoxSnapToControllerAction();
 	obj.AddComponent(codeComponent);
-	obj.AddComponent(invalidComponent);
 
 	Physics::Instance()->mObjects.push_back(&obj);
 	Physics::Instance()->mObjects.push_back(&obj1);
@@ -158,7 +156,7 @@ void Update() {
 
 			UpdateTime();
 			if (VREnabled) {
-				VRInputManager::Instance().update();
+				VRInputManager::Instance().iUpdate();
 			}
 
 			// Logic.Update(float deltaTime);

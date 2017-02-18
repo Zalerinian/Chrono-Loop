@@ -113,7 +113,7 @@ namespace RenderEngine {
 	}
 
 	void InputLayoutManager::ApplyLayout(VertFormat v) {
-		(*Renderer::Instance()->GetContext())->IASetInputLayout(mInputLayouts[v]);
-		(*Renderer::Instance()->GetContext())->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		(*Renderer::Instance()->iGetContext())->IASetInputLayout(mInputLayouts[v]);
+		(*Renderer::Instance()->iGetContext())->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
 }
