@@ -110,28 +110,28 @@ namespace RenderEngine {
 		mChain.reset();
 		mDevice.reset();
 
-		//(*mTextFactory)->Release();
-		//(*mDevice2D)->Release();
-		//(*mGIDevice)->Release();
-		//(*mContext2D)->Release();
-		//(*mDWrite)->Release();
-		//(*mTextformat)->Release();
-		//(*mBrush)->Release();
-		//(*mScreenBitmap)->Release();
-		//
-		//mTextFactory.reset();
-		//mDevice.reset();
-		//mGIDevice.reset();
-		//mContext2D.reset();
-		//mDWrite.reset();
-		//mTextformat.reset();
-		//mBrush.reset();
-		//mScreenBitmap.reset();
+		(*mTextFactory)->Release();
+		(*mDevice2D)->Release();
+		(*mGIDevice)->Release();
+		(*mContext2D)->Release();
+		(*mDWrite)->Release();
+		(*mTextformat)->Release();
+		(*mBrush)->Release();
+		(*mScreenBitmap)->Release();
+		
+		mTextFactory.reset();
+		mDevice.reset();
+		mGIDevice.reset();
+		mContext2D.reset();
+		mDWrite.reset();
+		mTextformat.reset();
+		mBrush.reset();
+		mScreenBitmap.reset();
 
 	}
 
 	void Renderer::InitializeD3DDevice() {
-		UINT flags = 0;
+		UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #if _DEBUG
 		flags = D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #endif
@@ -394,8 +394,8 @@ namespace RenderEngine {
 			vr::VRCompositor()->Submit(currentEye, &submitTexture);
 		}
 		//pat added 
-		//std::wstring FPS = L"FPS: " + to_wstring(mFps);
-		//DrawTextToBitmap(FPS, (*mScreenBitmap));
+		std::wstring FPS = L"FPS: " + to_wstring(mFps);
+		DrawTextToBitmap(FPS, (*mScreenBitmap));
 		//-----
 
 		// Bootleg load the controller model.
@@ -469,8 +469,8 @@ namespace RenderEngine {
 		UpdateCamera(2, 0, _delta);
 		ProcessRenderSet();
 		//pat added 
-		//std::wstring FPS = L"FPS: " + to_wstring(mFps);
-		//DrawTextToBitmap(FPS, (*mScreenBitmap));
+		std::wstring FPS = L"FPS: " + to_wstring(mFps);
+		DrawTextToBitmap(FPS, (*mScreenBitmap));
 		//-----
 	}
 
@@ -571,8 +571,8 @@ namespace RenderEngine {
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, rtvWidth, rtvHeight);
 		InitializeViews(rtvWidth, rtvHeight);
 		InitializeBuffers();
-		//InitializeDirect2D();
-		//InitializeIDWriteFactory();
+		InitializeDirect2D();
+		InitializeIDWriteFactory();
 #if _DEBUG
 		InitializeObjectNames();
 #endif
@@ -581,7 +581,7 @@ namespace RenderEngine {
 
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, _width, _height);
 		InitializeViews(_width, _height);
-		//InitializeScreenBitmap();
+		InitializeScreenBitmap();
 
 		// TODO Eventually: Give each shape a topology enum, perhaps?
 		(*mContext)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
