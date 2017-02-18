@@ -31,7 +31,6 @@ struct BoxSnapToControllerAction : public Action {
 	}
 
 	virtual void SnapToController(bool left) {
-		// TODO Fix this because it's pretty jank.
 		mHeld = true;
 		mHeldLeft = left;
 		matrix4 m = Math::FromMatrix(VRInputManager::Instance().GetController(left).GetPose().mDeviceToAbsoluteTracking);

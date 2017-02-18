@@ -578,9 +578,6 @@ namespace RenderEngine {
 #endif
 		InitializeSamplerState();
 		SetStaticBuffers();
-
-		InitializeDXGISwapChain(_Window, _fullscreen, _fps, _width, _height);
-		InitializeViews(_width, _height);
 		InitializeScreenBitmap();
 
 		// TODO Eventually: Give each shape a topology enum, perhaps?

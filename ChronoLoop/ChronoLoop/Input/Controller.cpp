@@ -39,7 +39,6 @@ void Controller::UpdateHairTrigger() {
 
 
 vec2f Controller::GetAxis(vr::EVRButtonId buttonId) {
-	Update();
 	int axisId = (int)buttonId - (int)vr::k_EButton_Axis0;
 	return vec2f(mState.rAxis[axisId].x, mState.rAxis[axisId].y);
 }
@@ -68,7 +67,6 @@ void Controller::SetValid(bool _valid) {
 void Controller::SetUp(int _index, vr::IVRSystem *_vr) {
 	mIndex = _index;
 	mHmd = _vr;
-
 	Update();
 }
 
