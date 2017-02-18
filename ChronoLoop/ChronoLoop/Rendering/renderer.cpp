@@ -118,7 +118,7 @@ namespace RenderEngine {
 		(*mTextformat)->Release();
 		(*mBrush)->Release();
 		(*mScreenBitmap)->Release();
-
+		
 		mTextFactory.reset();
 		mDevice.reset();
 		mGIDevice.reset();
@@ -131,7 +131,7 @@ namespace RenderEngine {
 	}
 
 	void Renderer::InitializeD3DDevice() {
-		UINT flags = 0;
+		UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #if _DEBUG
 		flags = D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #endif
@@ -216,7 +216,7 @@ namespace RenderEngine {
 
 		//createDxgiDevice
 		IDXGIDevice* DxgiDevice;
-		ThrowIfFailed((*sInstance->GetDevice())->QueryInterface(__uuidof(IDXGIDevice), (void **)&DxgiDevice));
+		ThrowIfFailed((*sInstance->iGetDevice())->QueryInterface(__uuidof(IDXGIDevice), (void **)&DxgiDevice));
 		sInstance->mGIDevice = make_shared<IDXGIDevice*>(DxgiDevice);
 
 		//create device2d 
@@ -542,7 +542,7 @@ namespace RenderEngine {
 		mRenderSet.RemoveShape(_node);
 	}
 
-	bool Renderer::Initialize(HWND _Window, unsigned int _width, unsigned int _height, bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane, vr::IVRSystem * _vrsys) {
+	bool Renderer::iInitialize(HWND _Window, unsigned int _width, unsigned int _height, bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane, vr::IVRSystem * _vrsys) {
 		mWindow = make_shared<HWND>(_Window);
 		mVrSystem = _vrsys;
 
@@ -575,13 +575,9 @@ namespace RenderEngine {
 		InitializeIDWriteFactory();
 #if _DEBUG
 		InitializeObjectNames();
-		InitializeObjectNames();
 #endif
 		InitializeSamplerState();
 		SetStaticBuffers();
-
-		InitializeDXGISwapChain(_Window, _fullscreen, _fps, _width, _height);
-		InitializeViews(_width, _height);
 		InitializeScreenBitmap();
 
 		// TODO Eventually: Give each shape a topology enum, perhaps?

@@ -249,9 +249,6 @@
     <ClInclude Include="Rendering\TextureManager.h">
       <Filter>Rendering\Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\CodeComponent.h">
-      <Filter>Objects\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\MeshComponent.h">
       <Filter>Objects\Header Files</Filter>
     </ClInclude>
@@ -259,6 +256,9 @@
       <Filter>Actions</Filter>
     </ClInclude>
     <ClInclude Include="Actions\BoxSnapToControllerAction.hpp">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CodeComponent.hpp">
       <Filter>Actions</Filter>
     </ClInclude>
   </ItemGroup>
@@ -423,9 +423,6 @@
       <Filter>Rendering\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Objects\MeshComponent.cpp">
-      <Filter>Objects\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\CodeComponent.cpp">
       <Filter>Objects\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -105,19 +105,19 @@ namespace RenderEngine {
 		RenderShape mControllerModel;//, mBox, mPlane;
 
 		// Instance Functions
-		bool Initialize(HWND Window, unsigned int width, unsigned int height,
+		bool iInitialize(HWND Window, unsigned int width, unsigned int height,
 			bool vsync, int fps, bool fullscreen, float farPlane, float nearPlane,
 			vr::IVRSystem* vrsys);
 
 		void AddNode(RenderShape *_node);
 		void RemoveNode(RenderShape *_node);
 		void Render(float _deltaTime);
-		inline std::shared_ptr<ID3D11Device*> GetDevice() { return mDevice; }
-		inline std::shared_ptr<ID3D11DeviceContext*> GetContext() { return mContext; }
-		inline std::shared_ptr<IDXGISwapChain*> GetChain() { return mChain; }
-		inline std::shared_ptr<IDXGIFactory1*> GetFactory() { return mFactory; }
-		inline std::shared_ptr<ID3D11RenderTargetView*> GetRTView() { return mMainView; }
-		inline std::shared_ptr<ID3D11DepthStencilView*> GetDSView() { return mDSView; }
+		inline std::shared_ptr<ID3D11Device*> iGetDevice() { return mDevice; }
+		inline std::shared_ptr<ID3D11DeviceContext*> iGetContext() { return mContext; }
+		inline std::shared_ptr<IDXGISwapChain*> iGetChain() { return mChain; }
+		inline std::shared_ptr<IDXGIFactory1*> iGetFactory() { return mFactory; }
+		inline std::shared_ptr<ID3D11RenderTargetView*> iGetRTView() { return mMainView; }
+		inline std::shared_ptr<ID3D11DepthStencilView*> iGetDSView() { return mDSView; }
 	};
 
 }

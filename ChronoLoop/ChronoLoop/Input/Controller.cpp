@@ -7,12 +7,16 @@
 
 Controller::Controller() {
 	mHairTriggerDelta = 0.1f; //trigger deadzone
+	mValid = false;
+	mIndex = -1;
+	mHmd = nullptr;
+
 }
 
 void Controller::Update() {
 	//update the contoller pose/state when called. 
-	mPrevState = mState;
 	if (mHmd != NULL) {
+		mPrevState = mState;
 		mValid = mHmd->GetControllerStateWithPose(mTrackingSpace, mIndex, &mState, sizeof(mState), &mPose);
 		if (mPrevState.ulButtonPressed != mState.ulButtonPressed) {
 			UpdateHairTrigger();
@@ -35,7 +39,6 @@ void Controller::UpdateHairTrigger() {
 
 
 vec2f Controller::GetAxis(vr::EVRButtonId buttonId) {
-	Update();
 	int axisId = (int)buttonId - (int)vr::k_EButton_Axis0;
 	return vec2f(mState.rAxis[axisId].x, mState.rAxis[axisId].y);
 }
@@ -100,42 +103,69 @@ bool Controller::GetValid() {
 }
 
 bool Controller::GetPress(vr::EVRButtonId _id) {
+	if (!GetValid()) {
+		return false;
+	}
 	return (mState.ulButtonPressed & vr::ButtonMaskFromId(_id)) != 0;
 }
 
 bool Controller::GetPressDown(vr::EVRButtonId _id) {
+	if (!GetValid()) {
+		return false;
+	}
 	return (mState.ulButtonPressed & vr::ButtonMaskFromId(_id)) != 0 &&
 		(mPrevState.ulButtonPressed & vr::ButtonMaskFromId(_id)) == 0;
 }
 
 bool Controller::GetPressUp(vr::EVRButtonId _id) {
+	if (!GetValid()) {
+		return false;
+	}
 	return (mState.ulButtonPressed & vr::ButtonMaskFromId(_id)) == 0 &&
 		(mPrevState.ulButtonPressed & vr::ButtonMaskFromId(_id)) != 0;
 }
 
 bool Controller::GetTouch(vr::EVRButtonId _id) {
+	if (!GetValid()) {
+		return false;
+	}
 	return (mState.ulButtonTouched & vr::ButtonMaskFromId(_id)) != 0;
 }
 
 bool Controller::GetTouchDown(vr::EVRButtonId _id) {
+	if (!GetValid()) {
+		return false;
+	}
 	return (mState.ulButtonTouched & vr::ButtonMaskFromId(_id)) != 0 &&
 		(mPrevState.ulButtonTouched & vr::ButtonMaskFromId(_id)) == 0;
 }
 
 bool Controller::GetTouchUp(vr::EVRButtonId _id) {
+	if (!GetValid()) {
+		return false;
+	}
 	return (mState.ulButtonTouched & vr::ButtonMaskFromId(_id)) == 0 &&
 		(mPrevState.ulButtonTouched & vr::ButtonMaskFromId(_id)) != 0;
 }
 
 bool Controller::GetHairTrigger() {
+	if (!GetValid()) {
+		return false;
+	}
 	return mHairTriggerState;
 }
 
 bool Controller::GetHairTriggerDown() {
+	if (!GetValid()) {
+		return false;
+	}
 	return mHairTriggerState && !mHairTriggerPrevState;
 }
 
 bool Controller::GetHairTriggerUp() {
+	if (!GetValid()) {
+		return false;
+	}
 	return !mHairTriggerState && mHairTriggerPrevState;
 }
 

@@ -89,10 +89,10 @@ void MeshFormat<T>::loadShaders(char * pixel, char * vertex)
 	char *bytecode = nullptr;
 	int bytelength;
 	FileIO::LoadBytes(pixel, &bytecode, bytelength);
-	(*RenderEngine::Renderer::Instance()->GetDevice())->CreatePixelShader(bytecode, bytelength, nullptr, &pShader);
+	(*RenderEngine::Renderer::Instance()->iGetDevice())->CreatePixelShader(bytecode, bytelength, nullptr, &pShader);
 	delete[] bytecode;
 	FileIO::LoadBytes(vertex, &bytecode, bytelength);
-	(*RenderEngine::Renderer::Instance()->GetDevice())->CreateVertexShader(bytecode, bytelength, nullptr, &vShader);
+	(*RenderEngine::Renderer::Instance()->iGetDevice())->CreateVertexShader(bytecode, bytelength, nullptr, &vShader);
 }
 
 template<typename T>
