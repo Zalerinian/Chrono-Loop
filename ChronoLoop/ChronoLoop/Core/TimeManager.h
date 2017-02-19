@@ -1,6 +1,8 @@
 #pragma once
 #include <chrono>
 
+class BaseObject;
+
 class Timeline;
 class TimeManager
 {
@@ -13,6 +15,7 @@ class TimeManager
 	
 	//GIT RID OF THIS 
 	bool mRewindTime = false;
+	BaseObject* mPlayer;
 
 	TimeManager();
 	~TimeManager();

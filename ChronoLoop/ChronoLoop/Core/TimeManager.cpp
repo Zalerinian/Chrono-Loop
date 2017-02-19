@@ -2,6 +2,7 @@
 #include "TimeManager.h"
 #include "Timeline.h"
 #include "../Input/KeyboardInput.h"
+#include "../Objects/BaseObject.h"
 
 TimeManager* TimeManager::instanceTimemanager = nullptr;
 Timeline* TimeManager::mTimeline = nullptr;
@@ -9,6 +10,12 @@ Timeline* TimeManager::mTimeline = nullptr;
 TimeManager::TimeManager()
 {
 	mTimeline = new Timeline();
+	mPlayer = new BaseObject();
+
+	//This id is for the player and for the player only
+	mPlayer->SetUniqueID(0);
+
+	mTimeline->AddBaseObject(mPlayer,mPlayer->GetUniqueID());
 }
 
 

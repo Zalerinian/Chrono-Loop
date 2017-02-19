@@ -616,4 +616,9 @@ namespace RenderEngine {
 
 #pragma endregion Instance Functions
 
+		matrix4* Renderer::GetPlayerWorldPos() {
+		matrix4 temp = FromMatrix(poses[0].mDeviceToAbsoluteTracking);
+		return &temp;
+	}
+
 }

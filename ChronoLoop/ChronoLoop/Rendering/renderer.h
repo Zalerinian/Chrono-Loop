@@ -102,7 +102,7 @@ namespace RenderEngine {
 		static Renderer* Instance();
 		static void DestroyInstance();
 		RenderShape mControllerModel, mBox, mPlane;
-
+		matrix4* Renderer::GetPlayerWorldPos();
 		// Instance Functions
 		bool Initialize(HWND Window, unsigned int width, unsigned int height,
 			bool vsync, int fps, bool fullscreen, float farPlane, float nearPlane,

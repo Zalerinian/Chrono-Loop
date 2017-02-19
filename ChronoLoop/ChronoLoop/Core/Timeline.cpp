@@ -1,6 +1,8 @@
 //#include "stdafx.h"
 #include "Timeline.h"
 #include "../Objects/Component.h"
+#include "../Input/VrInputManager.h"
+#include "../Rendering/Renderer.h"
 
 
 bool Snapshot::IsObjectStored(short _id) {
@@ -14,7 +16,9 @@ bool Snapshot::IsObjectStored(short _id) {
 }
 
 
-Timeline::Timeline() {}
+Timeline::Timeline() {
+
+}
 
 
 Timeline::~Timeline() {
@@ -37,6 +41,14 @@ bool Timeline::RewindNoClone(unsigned int _snaptime) {
 	mCurrentGameTimeIndx = _snaptime;
 	MoveAllObjectsToSnap(_snaptime);
 	return true;
+}
+
+BaseObject * Timeline::RewindMakeClone(unsigned int _snaptime) {
+	if (_snaptime < 0 || _snaptime > mSnaptimes.size() - 1)
+		return nullptr;
+
+	BaseObject* clone = new BaseObject();
+
 }
 
 void Timeline::MoveAllObjectsToSnap(unsigned int _snaptime) {
@@ -127,6 +139,16 @@ SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object) {
 	return info;
 }
 
+SnapInfoPlayer * Timeline::GenerateSnapInfoPlayer() {
+	SnapInfoPlayer* snapP = new SnapInfoPlayer(
+		*RenderEngine::Renderer::Instance()->GetPlayerWorldPos(),//Player World Matrix
+		Math::FromMatrix(VRInputManager::Instance().GetController(true).GetPose().mDeviceToAbsoluteTracking),//Left Controller World Matrix
+		Math::FromMatrix(VRInputManager::Instance().GetController(false).GetPose().mDeviceToAbsoluteTracking));//Right Controller World Matrix
+
+	return snapP;
+}
+
+
 Snapshot* Timeline::GenerateSnapShot(unsigned int _time) {
 	Snapshot* snap;
 	bool OldSnap = false;
@@ -148,8 +170,14 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time) {
 		for (std::pair<unsigned short, BaseObject*> _b : mLiveObjects) {
 			if (_b.second) {
 				unsigned short id = _b.first;
-				snap->mSnapinfos[id] = GenerateSnapInfo(_b.second);
-				snap->mUpdatedtimes[id] = _time;
+				//If Player
+				if (id == 0) {
+					snap->mSnapinfos[id] = GenerateSnapInfoPlayer();
+					snap->mUpdatedtimes[id] = _time;
+				} else {
+					snap->mSnapinfos[id] = GenerateSnapInfo(_b.second);
+					snap->mUpdatedtimes[id] = _time;
+				}
 			}
 		}
 	} else {
@@ -158,14 +186,18 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time) {
 		for (std::pair<unsigned short, BaseObject*> _b : mLiveObjects) {
 			if (_b.second) {
 				unsigned short id = _b.first;
-				//delete an old snapshot
-				if (snap->mSnapinfos[id] != nullptr)
-					delete snap->mSnapinfos[id];
-				//If change add to mSnapinfos and Updatetime
-			    //if (!CheckForDuplicateData(id,_b.second)) {
-				snap->mSnapinfos[id] = GenerateSnapInfo(_b.second);
-				snap->mUpdatedtimes[id] = _time;
-
+				if (id == 0) {
+					snap->mSnapinfos[id] = GenerateSnapInfoPlayer();
+					snap->mUpdatedtimes[id] = _time;
+				} else {
+					//delete an old snapshot
+					if (snap->mSnapinfos[id] != nullptr)
+						delete snap->mSnapinfos[id];
+					//If change add to mSnapinfos and Updatetime
+					//if (!CheckForDuplicateData(id,_b.second)) {
+					snap->mSnapinfos[id] = GenerateSnapInfo(_b.second);
+					snap->mUpdatedtimes[id] = _time;
+				}
 			}
 		}
 	}
