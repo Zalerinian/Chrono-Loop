@@ -7,7 +7,8 @@
 #include <string>
 #include <sstream>
 #include "../Common/Math.h"
-#include "../Objects/Transform.h"
+#include "../Objects/Component.h"
+#include "../Objects/BaseObject.h"
 using namespace Math;
 
 #pragma comment(lib, "AkSoundEngineDLL.lib")

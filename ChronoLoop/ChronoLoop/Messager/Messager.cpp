@@ -15,21 +15,13 @@ Messager::Messager(Messager& _newMsgr)
 {
 	audio = _newMsgr.audio;
 	death = _newMsgr.death;
-	/*if (mLocker.try_lock())
-	{
-		msgQueue = _newMsgr.msgQueue;
-		mLocker.unlock();
-	}*/
 }
 Messager::~Messager()
 {
 	death = true;
 	//thrd.join();
-	audio.Shutdown();
-	/*while (!msgQueue.empty())
-	{
-		msgQueue.pop();
-	}*/
+	if (audio.IsInitialized())
+		audio.Shutdown();
 }
 
 void Messager::Initialize()
@@ -91,7 +83,7 @@ void Messager::ProcessMessage(Message* _msg)
 		ProcessSound(_msg);
 	}
 	break;
-	case msgTypes::mRender:
+	/*case msgTypes::mRender:
 	{
 		ProcessRender(_msg);
 	}
@@ -105,7 +97,7 @@ void Messager::ProcessMessage(Message* _msg)
 	{
 		ProcessPhysics(_msg);
 	}
-	break;
+	break;*/
 	}
 }
 

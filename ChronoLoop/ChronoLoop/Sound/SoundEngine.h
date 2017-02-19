@@ -1,12 +1,18 @@
 #pragma once
 //Credit to John Murphy
+
+#ifndef AudioWrapper_h
+#define AudioWrapper_h
+
 #include <vector>
 #include <map>
-#include "../Objects/Component.h"
 
 #include "AkSoundEngineDLL.h"
 
 struct vec4f;
+class BaseObject;
+class Emitter;
+class Listener;
 
 //Needed to work with Wwise soundbanks and the .h they generate
 #if defined(_WIN64)
@@ -59,4 +65,5 @@ typedef __w64 unsigned int AudioEvent;			///< Integer (unsigned) type for pointe
 		bool UnloadSoundBank(const wchar_t* _BankName);
 
 	};
+#endif // AudioWrapper_h
 

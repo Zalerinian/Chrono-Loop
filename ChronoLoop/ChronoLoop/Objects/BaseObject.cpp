@@ -1,5 +1,6 @@
 //#include "stdafx.h"
 #include "BaseObject.h"
+#include "../Actions/CodeComponent.hpp"
 #include "../Common/Logger.h"
 
 // 0 is reserved for the player.
@@ -113,6 +114,9 @@ unsigned int BaseObject::AddComponent(Component * _comp) {
 	}
 	_comp->mObject = this;
 	mComponents[_comp->GetType()].push_back(_comp);
+	if (_comp->GetType() == eCOMPONENT_CODE) {
+		((CodeComponent*)_comp)->Start();
+	}
 	return (unsigned int)mComponents[_comp->GetType()].size();
 }
 

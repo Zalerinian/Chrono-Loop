@@ -666,3 +666,39 @@ matrix4 Math::FromMatrix(vr::HmdMatrix34_t _mat)
 	);
 	return matrixObj;
 }
+
+vec2f vec2f::operator-(const vec2f & _r) {
+	vec2f m;
+	m.x = x - _r.x;
+	m.y = y - _r.y;
+	return m;
+}
+
+vec2f vec2f::operator-() {
+	return vec2f(-x, -y);
+}
+
+float vec2f::operator*(const vec2f & _r) {
+	return x * _r.x + y * _r.y;
+}
+
+float vec2f::Magnitude() {
+	return sqrtf(SquaredMagnitude());
+}
+
+float vec2f::SquaredMagnitude() {
+	return x * x + y * y;
+}
+
+vec2f vec2f::Normalize() {
+	float mag = Magnitude();
+	return vec2f(x / mag, y / mag);
+}
+
+float vec2f::Dot(const vec2f & _r) {
+	return (*this) * _r;
+}
+
+vec2f vec2f::Cross() {
+	return vec2f(y, -x);
+}

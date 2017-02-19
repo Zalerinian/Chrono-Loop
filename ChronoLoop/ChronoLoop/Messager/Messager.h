@@ -4,16 +4,16 @@
 #include <queue>
 #include <vector>
 #include <thread>
-#include <mutex>
-#include <condition_variable>
 #include "..\Common\Logger.h"
 #include <cstdarg>
 
-enum msgTypes {NONE = -1, mSound, mRender, mInput, mPhysics};
+enum msgTypes { NONE = -1, mSound, mRender, mInput, mPhysics };
 
-enum soundMsg {INITIALIZE_Audio, SHUTDOWN_Audio, UPDATE_Audio, ADD_Listener, REMOVE_Listener,
-				ADD_Emitter, REMOVE_Emitter, MAKEEVENT_Loc, MAKEEVENT_Listener, MAKEEVENT_Event,
-				SET_BasePath, ADD_Soundbank, REMOVE_Soundbank};
+enum soundMsg {
+	INITIALIZE_Audio, SHUTDOWN_Audio, UPDATE_Audio, ADD_Listener, REMOVE_Listener,
+	ADD_Emitter, REMOVE_Emitter, MAKEEVENT_Loc, MAKEEVENT_Listener, MAKEEVENT_Event,
+	SET_BasePath, ADD_Soundbank, REMOVE_Soundbank
+};
 enum renderMsg {};
 enum inputMsg {};
 enum physicsMsg {};
@@ -112,8 +112,6 @@ private:
 	AudioWrapper audio;
 	//static std::priority_queue<Message*,std::vector<Message*>> msgQueue;
 	std::thread thrd;
-	std::mutex mLocker;
-	std::condition_variable cvar;
 
 	static std::queue<Message*> msgQueue;
 	static bool death;
@@ -167,7 +165,7 @@ struct m_Event
 
 struct m_EventListener
 {
-	AudioEvent mID; 
+	AudioEvent mID;
 	unsigned int mLID;
 
 	m_EventListener() { mLID = 0; }
@@ -180,7 +178,7 @@ struct m_Listener
 	char * mName;
 
 	m_Listener() {}
-	m_Listener(Listener* _listener, char* _name) { mListener = _listener; mName = _name;}
+	m_Listener(Listener* _listener, char* _name) { mListener = _listener; mName = _name; }
 };
 
 struct m_Emitter

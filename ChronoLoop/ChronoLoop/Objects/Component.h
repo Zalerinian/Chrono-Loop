@@ -32,7 +32,7 @@ protected:
 public:
 	Component();
 	Component(ComponentType _cType);
-	~Component();
+	virtual ~Component();
 	inline ComponentType GetType() { return mType; };
 	inline bool IsEnabled() { return mIsEnabled; };
 	inline bool IsValid() { return mIsValid; }
@@ -56,9 +56,10 @@ public:
 
 class Emitter :public Component
 {
-public:
 	int64_t mPlay, mPause, mResume, mStop;
-	bool mIsPaused, mIsPlaying;
+	bool mIsPlaying = false, mIsPaused = false;
+
+public:
 
 	Emitter(int64_t _play, int64_t _pause, int64_t _resume, int64_t _stop) : Component(ComponentType::eCOMPONENT_AUDIOEMITTER)
 	{

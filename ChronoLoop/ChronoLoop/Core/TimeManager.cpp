@@ -30,15 +30,13 @@ void TimeManager::Update(float _delta)
 		mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
 	}
 
-	if ((GetAsyncKeyState(VK_TAB)) & 0x1)
+	if (mRewindTime == true || GetAsyncKeyState(VK_TAB) & 1)
 	{
-		rewindButton = true;
-		resetButton = false;
 		mTimeline->RewindNoClone(mTimeline->GetCurrentGameTimeIndx() - 10);
 		//Tell the time manager what frame the timeline its on
-		mLevelTime = mTimeline->GetCurrentGameTimeIndx()+1;
+		mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
+		mRewindTime = false;
 	}
-
 }
 
 TimeManager * TimeManager::Instance()
@@ -56,6 +54,11 @@ Timeline * TimeManager::GetTimeLine()
 		mTimeline = new Timeline();
 	};
 	return mTimeline;
+}
+
+void TimeManager::RewindTimeline()
+{
+	mRewindTime = true;
 }
 
 void TimeManager::Destroy()

@@ -12,8 +12,7 @@ class TimeManager
 	float mlastRecordedTime =0, mTimestamp = 0;
 	
 	//GIT RID OF THIS 
-	bool rewindButton = false;
-	bool resetButton = false;
+	bool mRewindTime = false;
 
 	TimeManager();
 	~TimeManager();
@@ -22,6 +21,7 @@ public:
 	void Update(float _delta);
 	static TimeManager* Instance();
 	static Timeline* GetTimeLine();
+	void RewindTimeline();
 	static void Destroy();
 };
 

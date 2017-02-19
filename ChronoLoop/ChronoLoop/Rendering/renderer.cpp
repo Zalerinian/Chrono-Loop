@@ -73,9 +73,9 @@ namespace RenderEngine {
 	}
 
 	void Renderer::GetMVP(vr::EVREye e, ViewProjectionBuffer &data) {
-		matrix4 hmd = (Math::FromMatrix(poses[0].mDeviceToAbsoluteTracking));
+		matrix4 hmd = Math::FromMatrix(VRInputManager::Instance().iGetTrackedPositions()[0].mDeviceToAbsoluteTracking);
 
-		matrix4 hmdPos = (hmd * Math::MatrixTranslation(0, 0, 0)).Inverse();
+		matrix4 hmdPos = (hmd * VRInputManager::Instance().iGetPlayerPosition()).Inverse();
 		if (e == vr::EVREye::Eye_Left) {
 			data.view = Math::MatrixTranspose((hmdPos * mEyePosLeft));
 			data.projection = Math::MatrixTranspose(mEyeProjLeft);
@@ -83,10 +83,6 @@ namespace RenderEngine {
 			data.view = Math::MatrixTranspose((hmdPos * mEyePosRight));
 			data.projection = Math::MatrixTranspose(mEyeProjRight);
 		}
-	}
-
-	void Renderer::UpdateTrackedPositions() {
-		vr::VRCompositor()->WaitGetPoses(poses, vr::k_unMaxTrackedDeviceCount, NULL, 0);
 	}
 
 	Renderer::Renderer() {}
@@ -118,7 +114,7 @@ namespace RenderEngine {
 		(*mTextformat)->Release();
 		(*mBrush)->Release();
 		(*mScreenBitmap)->Release();
-
+		
 		mTextFactory.reset();
 		mDevice.reset();
 		mGIDevice.reset();
@@ -131,7 +127,7 @@ namespace RenderEngine {
 	}
 
 	void Renderer::InitializeD3DDevice() {
-		UINT flags = 0;
+		UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #if _DEBUG
 		flags = D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #endif
@@ -216,7 +212,7 @@ namespace RenderEngine {
 
 		//createDxgiDevice
 		IDXGIDevice* DxgiDevice;
-		ThrowIfFailed((*sInstance->GetDevice())->QueryInterface(__uuidof(IDXGIDevice), (void **)&DxgiDevice));
+		ThrowIfFailed((*sInstance->iGetDevice())->QueryInterface(__uuidof(IDXGIDevice), (void **)&DxgiDevice));
 		sInstance->mGIDevice = make_shared<IDXGIDevice*>(DxgiDevice);
 
 		//create device2d 
@@ -372,7 +368,6 @@ namespace RenderEngine {
 
 	void Renderer::RenderVR(float _delta) {
 		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-		UpdateTrackedPositions();
 		vr::VRCompositor()->CompositorBringToFront();
 		float color[4] = { 0.251f, 0.709f, 0.541f, 1 };
 		for (int i = 0; i < 2; ++i) {
@@ -542,7 +537,7 @@ namespace RenderEngine {
 		mRenderSet.RemoveShape(_node);
 	}
 
-	bool Renderer::Initialize(HWND _Window, unsigned int _width, unsigned int _height, bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane, vr::IVRSystem * _vrsys) {
+	bool Renderer::iInitialize(HWND _Window, unsigned int _width, unsigned int _height, bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane, vr::IVRSystem * _vrsys) {
 		mWindow = make_shared<HWND>(_Window);
 		mVrSystem = _vrsys;
 
@@ -575,13 +570,9 @@ namespace RenderEngine {
 		InitializeIDWriteFactory();
 #if _DEBUG
 		InitializeObjectNames();
-		InitializeObjectNames();
 #endif
 		InitializeSamplerState();
 		SetStaticBuffers();
-
-		InitializeDXGISwapChain(_Window, _fullscreen, _fps, _width, _height);
-		InitializeViews(_width, _height);
 		InitializeScreenBitmap();
 
 		// TODO Eventually: Give each shape a topology enum, perhaps?

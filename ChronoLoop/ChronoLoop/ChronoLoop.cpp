@@ -12,7 +12,7 @@
 #include <ctime>
 #include <chrono>
 #include <d3d11.h>
-#include "Objects/CodeComponent.h"
+#include "Actions\CodeComponent.hpp"
 #include "Objects/MeshComponent.h"
 #include "Actions/BoxSnapToControllerAction.hpp"
 #include "Messager\Messager.h"
@@ -49,7 +49,7 @@ void UpdateTime();
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(431);
+	//_CrtSetBreakAlloc(1253);
 	if (!InitializeWindow(hInstance, nCmdShow, 800, 600, true)) {
 		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
 		return 2;
@@ -71,7 +71,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 		return 1;
 	}
 
-	std::shared_ptr<ID3D11Device*> renderingDevice = RenderEngine::Renderer::Instance()->GetDevice();
+	std::shared_ptr<ID3D11Device*> renderingDevice = RenderEngine::Renderer::Instance()->iGetDevice();
 
 	// Update everything
 	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count());
@@ -147,15 +147,15 @@ void Update() {
 	visibleMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
 	obj.AddComponent(visibleMesh);
 
-	BoxSnapToControllerAction *Action = new BoxSnapToControllerAction(&obj);
-	CodeComponent *codeComponent = new CodeComponent(Action);
-	CodeComponent *invalidComponent = new CodeComponent(nullptr);
-	obj.AddComponent(codeComponent);
-	obj.AddComponent(invalidComponent);
+	BoxSnapToControllerAction *boxSnap = new BoxSnapToControllerAction();
+	obj.AddComponent(boxSnap);
 
 	Physics::Instance()->mObjects.push_back(&obj);
 	Physics::Instance()->mObjects.push_back(&obj1);
 	//*////////////////////////////////////////////////////////////////////
+	if (VREnabled) {
+		VRInputManager::Instance().iUpdate();
+	}
 
 	//Sound Initializing---------------------------------------------------
 	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::INITIALIZE_Audio, 0, false));
@@ -189,18 +189,15 @@ void Update() {
 			}
 			msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false, (void*)nullptr));
 			UpdateTime();
-			if (VREnabled) {
-				VRInputManager::Instance().update();
-			}
-
-			// Logic.Update(float deltaTime);
-			TManager->Instance()->Update(deltaTime);
-			RenderEngine::Renderer::Instance()->Render(deltaTime);
-
-			Physics::Instance()->Update(deltaTime);
 			auto& objects = Physics::Instance()->mObjects;
 			for (auto it = objects.begin(); it != objects.end(); ++it) {
 				(*it)->Update();
+			}
+			TManager->Instance()->Update(deltaTime);
+			RenderEngine::Renderer::Instance()->Render(deltaTime);
+			Physics::Instance()->Update(deltaTime);
+			if (VREnabled) {
+				VRInputManager::Instance().iUpdate();
 			}
 		}
 	}

@@ -27,8 +27,8 @@ void RenderEngine::RenderContext::Apply() {
 	}
 	for (auto it = mTextures.begin(); it != mTextures.end(); ++it) {
 		if (it->second.get() != nullptr) {
-			(*Renderer::Instance()->GetContext())->PSSetShaderResources((UINT)it->first, 1, it->second.get());
-			//(*Renderer::Instance()->GetContext())->PSSetSamplers((UINT)it->first, 1, nullptr); //TODO: Create a Sampler state and set it here.
+			(*Renderer::Instance()->iGetContext())->PSSetShaderResources((UINT)it->first, 1, it->second.get());
+			//(*Renderer::Instance()->iGetContext())->PSSetSamplers((UINT)it->first, 1, nullptr); //TODO: Consider adding samplers to contexts. Curently a global sampler is applied in the renderer.
 		}
 	}
 }
@@ -48,7 +48,7 @@ void RenderEngine::RenderContext::Apply(RenderContext & from) {
 	}
 	for (auto it = mTextures.begin(); it != mTextures.end(); ++it) {
 		if (it->second.get() != nullptr && from.mTextures[it->first].get() != it->second.get()) {
-			(*Renderer::Instance()->GetContext())->PSSetShaderResources((UINT)it->first, 1, it->second.get());
+			(*Renderer::Instance()->iGetContext())->PSSetShaderResources((UINT)it->first, 1, it->second.get());
 		}
 	}
 }
@@ -64,9 +64,9 @@ bool RenderEngine::RenderContext::operator==(RenderContext & other) {
 	}
 
 	if (mRasterState != other.mRasterState ||
-		mVertexFormat != other.mVertexFormat ||
-		/*mEye != other.mEye ||*/
-		false) {
+			mVertexFormat != other.mVertexFormat ||
+			mPixelShaderFormat != other.mPixelShaderFormat ||
+			mVertexShaderFormat != other.mVertexShaderFormat) {
 		return false;
 	}
 
