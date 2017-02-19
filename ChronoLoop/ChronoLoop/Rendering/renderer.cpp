@@ -202,7 +202,7 @@ namespace RenderEngine {
 
 		//Brush for the screen
 		ID2D1SolidColorBrush* brush;
-		ThrowIfFailed((*mContext2D)->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::SeaGreen, 1.0f), &brush));
+		ThrowIfFailed((*mContext2D)->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black, 1.0f), &brush));
 		sInstance->mBrush = make_shared<ID2D1SolidColorBrush*>(brush);
 	}
 

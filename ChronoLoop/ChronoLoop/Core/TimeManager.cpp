@@ -6,6 +6,7 @@
 
 TimeManager* TimeManager::instanceTimemanager = nullptr;
 Timeline* TimeManager::mTimeline = nullptr;
+short TimeManager::CloneCreationCount = -1;
 
 TimeManager::TimeManager()
 {
@@ -21,7 +22,7 @@ TimeManager::TimeManager()
 
 TimeManager::~TimeManager()
 {
-	delete mTimeline;
+	Destroy();
 }
 
 void TimeManager::Update(float _delta)
@@ -37,13 +38,17 @@ void TimeManager::Update(float _delta)
 		mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
 	}
 
-	if (mRewindTime == true)
-	{
-		mTimeline->RewindNoClone(mTimeline->GetCurrentGameTimeIndx() - 10);
-		//Tell the time manager what frame the timeline its on
-		mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
-		mRewindTime = false;
-	}
+	//if (mRewindTime)
+	//{
+	//	mTimeline->RewindNoClone(mTimeline->GetCurrentGameTimeIndx() - 10);
+	//	//Tell the time manager what frame the timeline its on
+	//	mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
+	//	mRewindTime = false;
+	//}
+	//else if(mRewindMakeClone)
+	//{
+	//	mRewindMakeClone = false;
+	//}
 }
 
 TimeManager * TimeManager::Instance()
@@ -63,12 +68,24 @@ Timeline * TimeManager::GetTimeLine()
 	return mTimeline;
 }
 
-void TimeManager::RewindTimeline()
+void TimeManager::RewindTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2, unsigned short _id3)
 {
-	mRewindTime = true;
+	//mRewindTime = true;
+	//mTimeline->RewindNoClone(mTimeline->GetCurrentGameTimeIndx() - 10);
+	mTimeline->RewindNoClone(_frame);
+	//Tell the time manager what frame the timeline its on
+	mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
+}
+
+void TimeManager::RewindMakeClone(unsigned int _frame, BaseObject* _ob1, BaseObject* _ob2, BaseObject* _ob3)
+{
+	//mRewindMakeClone = true;
 }
 
 void TimeManager::Destroy()
 {
+	//Level manager will clear delete clones
+	instanceTimemanager->mClones.clear();
+	delete mTimeline;
 	delete instanceTimemanager;
 }

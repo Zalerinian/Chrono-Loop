@@ -62,7 +62,7 @@ class Timeline
 {
 	std::vector<unsigned int> mSnaptimes;
 	std::unordered_map<unsigned int, Snapshot*> mSnapshots;		//The key will be the time they were taken (mSnapTimes)
-	std::unordered_map<unsigned short, BaseObject*> mLiveObjects;  
+	std::unordered_map<short, BaseObject*> mLiveObjects;  
 
 public:
 	Timeline();
@@ -70,7 +70,7 @@ public:
 	//Where we are at in the timeline
 	unsigned int mCurrentGameTimeIndx = 0;
 	unsigned int GetCurrentGameTimeIndx() { return mCurrentGameTimeIndx; }
-	void AddBaseObject(BaseObject* _object, unsigned short _id);						//add to the list of recorded objects.
+	void AddBaseObject(BaseObject* _object, short _id);						//add to the list of recorded objects.
 	//TODO PAT: add a remove base object func that says the object has been removed in the next snap recording
 	void AddSnapshot(unsigned int _snaptime, Snapshot* _snapshot);
 	bool RewindNoClone(unsigned int _snaptime);
@@ -80,6 +80,6 @@ public:
 	SnapInfo* GenerateSnapInfo(BaseObject* _object);							//Error check agianst the BaseObject* if it is null or not
 	Snapshot* GenerateSnapShot(unsigned int _time);
 	SnapInfoPlayer * GenerateSnapInfoPlayer();
-	bool CheckForDuplicateData(unsigned short _id,BaseObject* _object);
+	bool CheckForDuplicateData(short _id,BaseObject* _object);
 };
 
