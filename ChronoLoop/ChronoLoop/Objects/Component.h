@@ -30,7 +30,7 @@ protected:
 	BaseObject* mObject = nullptr;
 public:
 	Component();
-	~Component();
+	virtual ~Component();
 	inline ComponentType GetType() { return mType; };
 	inline bool IsEnabled() { return mIsEnabled; };
 	inline bool IsValid() { return mIsValid; }

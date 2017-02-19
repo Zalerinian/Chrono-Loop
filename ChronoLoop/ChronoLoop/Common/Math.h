@@ -26,6 +26,15 @@ struct vec2f {
 	};
 	vec2f() { x = 0; y = 0; };
 	vec2f(float _x, float _y) { x = _x; y = _y; };
+	vec2f operator-(const vec2f& _r);
+	vec2f operator-();
+	float operator*(const vec2f& _r);
+
+	float Magnitude();
+	float SquaredMagnitude();
+	vec2f Normalize();
+	float Dot(const vec2f& _r);
+	vec2f Cross();
 };
 
 struct vec4f;
