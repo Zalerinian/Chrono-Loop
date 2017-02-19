@@ -252,9 +252,6 @@
     <ClInclude Include="Objects\MeshComponent.h">
       <Filter>Objects\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\Action.hpp">
-      <Filter>Actions</Filter>
-    </ClInclude>
     <ClInclude Include="Actions\BoxSnapToControllerAction.hpp">
       <Filter>Actions</Filter>
     </ClInclude>

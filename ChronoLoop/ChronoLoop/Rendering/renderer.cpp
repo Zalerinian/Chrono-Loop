@@ -73,9 +73,9 @@ namespace RenderEngine {
 	}
 
 	void Renderer::GetMVP(vr::EVREye e, ViewProjectionBuffer &data) {
-		matrix4 hmd = (Math::FromMatrix(poses[0].mDeviceToAbsoluteTracking));
+		matrix4 hmd = Math::FromMatrix(VRInputManager::Instance().iGetTrackedPositions()[0].mDeviceToAbsoluteTracking);
 
-		matrix4 hmdPos = (hmd * Math::MatrixTranslation(0, 0, 0)).Inverse();
+		matrix4 hmdPos = (hmd * VRInputManager::Instance().iGetPlayerPosition()).Inverse();
 		if (e == vr::EVREye::Eye_Left) {
 			data.view = Math::MatrixTranspose((hmdPos * mEyePosLeft));
 			data.projection = Math::MatrixTranspose(mEyeProjLeft);
@@ -83,10 +83,6 @@ namespace RenderEngine {
 			data.view = Math::MatrixTranspose((hmdPos * mEyePosRight));
 			data.projection = Math::MatrixTranspose(mEyeProjRight);
 		}
-	}
-
-	void Renderer::UpdateTrackedPositions() {
-		vr::VRCompositor()->WaitGetPoses(poses, vr::k_unMaxTrackedDeviceCount, NULL, 0);
 	}
 
 	Renderer::Renderer() {}
@@ -372,7 +368,6 @@ namespace RenderEngine {
 
 	void Renderer::RenderVR(float _delta) {
 		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-		UpdateTrackedPositions();
 		vr::VRCompositor()->CompositorBringToFront();
 		float color[4] = { 0.251f, 0.709f, 0.541f, 1 };
 		for (int i = 0; i < 2; ++i) {

@@ -76,8 +76,7 @@ namespace RenderEngine {
 		void ThrowIfFailed(HRESULT hr);
 
 		matrix4 mEyePosLeft, mEyePosRight, mEyeProjLeft, mEyeProjRight, mHMDPos, mDebugCameraPos;
-		vr::TrackedDevicePose_t poses[vr::k_unMaxTrackedDeviceCount];
-
+		
 #if _DEBUG
 		POINT mMouseOrigin;
 		bool mIsMouseDown = false;
@@ -86,8 +85,7 @@ namespace RenderEngine {
 		matrix4 GetEye(vr::EVREye e);
 		matrix4 GetProjection(vr::EVREye e);
 		void GetMVP(vr::EVREye e, ViewProjectionBuffer &data);
-		void UpdateTrackedPositions();
-
+		
 		void RenderVR(float _delta);
 		void UpdateCamera(float const moveSpd, float const rotSpd, float delta);
 		void RenderNoVR(float _delta);

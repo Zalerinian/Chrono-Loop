@@ -197,7 +197,6 @@
     <ClInclude Include="..\DXTK\DirectXTexP.h" />
     <ClInclude Include="..\DXTK\Filters.h" />
     <ClInclude Include="..\DXTK\scoped.h" />
-    <ClInclude Include="Actions\Action.hpp" />
     <ClInclude Include="Actions\BoxSnapToControllerAction.hpp" />
     <ClInclude Include="Actions\CodeComponent.hpp" />
     <ClInclude Include="Common\Breakpoint.h" />

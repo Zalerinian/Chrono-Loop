@@ -139,7 +139,7 @@ void Update() {
 	Physics::Instance()->mObjects.push_back(&obj);
 	Physics::Instance()->mObjects.push_back(&obj1);
 	//*////////////////////////////////////////////////////////////////////
-
+	VRInputManager::Instance().iUpdate();
 
 	while (true) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
@@ -155,18 +155,15 @@ void Update() {
 			}
 
 			UpdateTime();
-			if (VREnabled) {
-				VRInputManager::Instance().iUpdate();
-			}
-
-			// Logic.Update(float deltaTime);
-			TManager->Instance()->Update(deltaTime);
-			RenderEngine::Renderer::Instance()->Render(deltaTime);
-
-			Physics::Instance()->Update(deltaTime);
 			auto& objects = Physics::Instance()->mObjects;
 			for (auto it = objects.begin(); it != objects.end(); ++it) {
 				(*it)->Update();
+			}
+			TManager->Instance()->Update(deltaTime);
+			RenderEngine::Renderer::Instance()->Render(deltaTime);
+			Physics::Instance()->Update(deltaTime);
+			if (VREnabled) {
+				VRInputManager::Instance().iUpdate();
 			}
 		}
 	}
