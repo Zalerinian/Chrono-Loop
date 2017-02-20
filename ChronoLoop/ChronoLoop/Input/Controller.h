@@ -7,7 +7,7 @@ typedef unsigned long ulong;
 
 class Controller {
 private:
-	vr::IVRSystem* mHmd;
+	vr::IVRSystem* mHmd = nullptr;
 	int mIndex;
 	bool mValid;
 	vr::VRControllerState_t mState, mPrevState;

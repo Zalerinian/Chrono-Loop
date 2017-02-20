@@ -15,6 +15,9 @@ struct TeleportAction : public CodeComponent {
 	}
 
 	virtual void Update() {
+		if (!VRInputManager::Instance().iIsInitialized()) {
+			return;
+		}
 		// I'm lazy so, let's just set this thing's position to the controller's position.
 		matrix4 mat = VRInputManager::Instance().iGetController(true).GetPosition();
 		mObject->GetTransform().SetMatrix(mat);

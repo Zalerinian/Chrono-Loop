@@ -123,12 +123,20 @@ void Update() {
 	transform1.SetMatrix(mat);
 	BaseObject obj1("plane", transform1);
 	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
-	MeshComponent *planeObj = new MeshComponent("../Resources/Liftoff.obj");
-	planeObj->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
+	MeshComponent *planeObj = new MeshComponent("../Resources/BigFloor.obj");
+	planeObj->AddTexture("../Resources/floorg.png", RenderEngine::eTEX_DIFFUSE);
 	obj1.AddComponent(plane);
 	obj1.AddComponent(planeObj);
 
-	BaseObject obj3("Controller");
+	BaseObject walls("walls", transform1);
+	MeshComponent *wallMesh = new MeshComponent("../Resources/BigWall.obj");
+	wallMesh->AddTexture("../Resources/Wallg.png", RenderEngine::eTEX_DIFFUSE);
+	walls.AddComponent(wallMesh);
+
+	Transform identity;
+	identity.SetMatrix(Math::MatrixIdentity());
+
+	BaseObject obj3("Controller", identity);
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
 	TeleportAction *ta = new TeleportAction();
@@ -140,20 +148,18 @@ void Update() {
 	visibleMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
 	obj.AddComponent(visibleMesh);
 
-	//BoxSnapToControllerAction *Action = new BoxSnapToControllerAction(&obj);
 	CodeComponent *codeComponent = new BoxSnapToControllerAction();
 	obj.AddComponent(codeComponent);
 
 	Physics::Instance()->mObjects.push_back(&obj);
 	Physics::Instance()->mObjects.push_back(&obj1);
 	Physics::Instance()->mObjects.push_back(&obj3);
-	
-	matrix4 rotation = Math::MatrixRotateX(DirectX::XM_PI) * Math::MatrixRotateZ(DirectX::XM_PI) * Math::MatrixRotateY(DirectX::XM_PI / 2);
-	vec4f direction(0, 0, 1, 0);
-	vec4f rotated = direction * rotation;
+	Physics::Instance()->mObjects.push_back(&walls);
+
 	//*////////////////////////////////////////////////////////////////////
 	if (VREnabled) {
 		VRInputManager::Instance().iUpdate();
+		VRInputManager::Instance().iGetPlayerPosition().second[3] = -1;
 	}
 
 	while (true) {

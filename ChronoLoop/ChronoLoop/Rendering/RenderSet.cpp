@@ -5,12 +5,13 @@
 #include "RenderShape.h"
 #include "../Common/Breakpoint.h"
 #include "../Common/Logger.h"
+#include <algorithm>
 
 namespace RenderEngine {
 	void RenderSet::AddNode(RenderNode *_node, RenderContext* _rc) {
 		if (_node->mType == RenderNode::RenderNodeType::Shape) {
 			if (((RenderShape*)_node)->mIndexCount == 0) {
-//				OutputDebugString(L"Attempting to set render shape with 0 indices!\n");
+				SystemLogger::GetError() << "[Error] Attempting to set render shape with 0 indices!" << std::endl;
 				Debug::SetBreakpoint();
 			}
 		}
@@ -19,23 +20,30 @@ namespace RenderEngine {
 			mHead = (RenderNode*)_rc;
 			mTail = _node;
 			_rc->mNext = _node;
+			_rc->mPrevious = nullptr;
 			_node->mNext = nullptr;
-			mContexts.push_back(_rc);
+			_node->mPrevious = _rc;
 		} else {
 			bool foundContext = false;
 			for (auto it = mContexts.begin(); it != mContexts.end(); ++it) {
 				if (*(*it) == *_rc) {
 					foundContext = true;
 					_node->mNext = (*it)->mNext;
+					_node->mPrevious = (*it);
+					_node->mNext->mPrevious = _node;
 					(*it)->mNext = _node;
 					break;
 				}
 			}
 			if (!foundContext) {
 				// Insert a new context and mesh.
+				_node->mNext = nullptr;
+				_node->mPrevious = _rc;
 				_rc->mNext = _node;
+				_rc->mPrevious = mTail;
 				mTail->mNext = _rc;
 				mTail = _node;
+				mContexts.push_back(_rc);
 			}
 		}
 	}
@@ -43,45 +51,61 @@ namespace RenderEngine {
 	void RenderSet::RemoveNode(RenderNode * _node) {
 		// The render set does NOT delete anything, it is not technically a container.
 		// It simply
-		RenderNode *parent = nullptr, *cur = mHead;
+		RenderNode *cur = mHead;
 		while (cur != nullptr) {
 			if (cur == _node) {
-				if (_node->mType == RenderNode::RenderNodeType::Context) {
-					if (_node->mNext && _node->mNext->mType == RenderNode::RenderNodeType::Shape) {
-						// If this is a context, and the next node is a shape, replace this node with their context (via parent pointer or mHead).
-						if (parent) {
-							((RenderShape*)_node->mNext)->mContext.mNext = _node->mNext;
-							parent->mNext = &((RenderShape*)_node->mNext)->mContext;
-						} else {
-							((RenderShape*)_node->mNext)->mContext.mNext = _node->mNext;
-							mHead = _node->mNext;
-						}
-					} else if (_node->mNext && _node->mNext->mType == RenderNode::RenderNodeType::Context) {
-						// This is a context and the next one's a context, this can just be trivially removed.
-						if (parent) {
-							parent->mNext = _node->mNext;
-						} else {
-							mHead = _node->mNext;
-						}
+				if (cur->mPrevious) {
+					cur->mPrevious->mNext = cur->mNext;
+					if (cur->mNext) {
+						cur->mNext->mPrevious = cur->mPrevious;
 					}
 				} else {
-					// Nodes that aren't contexts can be easily removed.
-					if (parent) {
-						parent->mNext = cur->mNext;
+					mHead = cur->mNext;
+					if (mHead) {
+						mHead->mPrevious = nullptr;
 					} else {
-						mHead = cur->mNext;
+						mTail = nullptr;
 					}
 				}
 				break;
 			}
-			parent = cur;
 			cur = cur->mNext;
 		}
 	}
 
+	void RenderSet::RemoveContext(std::vector<RenderContext*>::iterator _it) {
+		RenderContext* rc = (*_it);
+		if (rc->mNext && rc->mNext->mNext) {
+			// This node has two valid children.
+			if(rc->mNext->mType == RenderNode::RenderNodeType::Shape && rc->mNext->mNext->mType == RenderNode::RenderNodeType::Shape) {
+				// Both children are shapes.
+				RenderShape *child = (RenderShape*)rc->mNext, *grandchild = (RenderShape*)rc->mNext->mNext;
+				if (rc != &child->mContext) {
+					(*_it) = &child->mContext;
+				} else if (rc != &grandchild->mContext) {
+					(*_it) = &grandchild->mContext;
+				} else {
+					// Something's fucky.
+					Debug::SetBreakpoint();
+				}
+			} else {
+				// Both children are not shapes
+				mContexts.erase(_it);
+			}
+		} else {
+			// This context does not have two children
+			mContexts.erase(_it);
+		}
+		RemoveNode(rc);
+	}
+
 	void RenderSet::RemoveShape(RenderShape *_node) {
+		auto it = std::find(mContexts.begin(), mContexts.end(), &_node->mContext);
+		if (it != mContexts.end()) {
+			// This shape's context is in the list
+			RemoveContext(it);
+		}
 		RemoveNode(_node);
-		RemoveNode(&_node->mContext);
 	}
 	
 	void RenderSet::ClearSet() {
