@@ -1,6 +1,5 @@
 //#include "stdafx.h"
 #include "Physics.h"
-#include "..\Rendering\Mesh.h"
 
 
 #pragma region RAY_CASTING
