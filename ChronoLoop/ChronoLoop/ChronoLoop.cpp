@@ -130,6 +130,7 @@ void Update() {
 
 	BaseObject obj3("Controller");
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
+	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
 	TeleportAction *ta = new TeleportAction();
 	obj3.AddComponent(mc);
 	obj3.AddComponent(ta);

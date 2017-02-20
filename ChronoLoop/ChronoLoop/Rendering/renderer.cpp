@@ -11,6 +11,9 @@
 #include "../Input/VRInputManager.h"
 #include "../Input/Controller.h"
 
+#define ENABLE_TEXT 0
+
+
 using namespace std;
 using namespace D2D1;
 
@@ -106,6 +109,7 @@ namespace RenderEngine {
 		mChain.reset();
 		mDevice.reset();
 
+#if ENABLE_TEXT
 		(*mTextFactory)->Release();
 		(*mDevice2D)->Release();
 		(*mGIDevice)->Release();
@@ -123,7 +127,7 @@ namespace RenderEngine {
 		mTextformat.reset();
 		mBrush.reset();
 		mScreenBitmap.reset();
-
+#endif
 	}
 
 	void Renderer::InitializeD3DDevice() {
@@ -389,24 +393,11 @@ namespace RenderEngine {
 			vr::VRCompositor()->Submit(currentEye, &submitTexture);
 		}
 		//pat added 
+#if ENABLE_TEXT
 		std::wstring FPS = L"FPS: " + to_wstring(mFps);
 		DrawTextToBitmap(FPS, (*mScreenBitmap));
+#endif
 		//-----
-
-		// Bootleg load the controller model.
-		if (mControllerModel.mIndexCount == 0) {
-			vr::RenderModel_t *vrControllerModel;
-			if (vr::VRRenderModels()->LoadRenderModel_Async("vr_controller_vive_1_5", &vrControllerModel) == vr::VRRenderModelError_None) {
-				Mesh controller;
-				controller.Load(vrControllerModel);
-				controller.Invert();
-				mControllerModel.Load(controller);
-				mControllerModel.SetShaders(ePS_BASIC, eVS_BASIC);
-				AddNode(&mControllerModel);
-				vr::VRRenderModels()->FreeRenderModel(vrControllerModel);
-			}
-		}
-
 	}
 
 	void Renderer::UpdateCamera(float const _moveSpd, float const _rotSpd, float _delta) {
@@ -464,8 +455,10 @@ namespace RenderEngine {
 		UpdateCamera(2, 0, _delta);
 		ProcessRenderSet();
 		//pat added 
+#if ENABLE_TEXT
 		std::wstring FPS = L"FPS: " + to_wstring(mFps);
 		DrawTextToBitmap(FPS, (*mScreenBitmap));
+#endif
 		//-----
 	}
 
@@ -566,14 +559,16 @@ namespace RenderEngine {
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, rtvWidth, rtvHeight);
 		InitializeViews(rtvWidth, rtvHeight);
 		InitializeBuffers();
+#if ENABLE_TEXT
 		InitializeDirect2D();
 		InitializeIDWriteFactory();
+		InitializeScreenBitmap();
+#endif
 #if _DEBUG
 		InitializeObjectNames();
 #endif
 		InitializeSamplerState();
 		SetStaticBuffers();
-		InitializeScreenBitmap();
 
 		// TODO Eventually: Give each shape a topology enum, perhaps?
 		(*mContext)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

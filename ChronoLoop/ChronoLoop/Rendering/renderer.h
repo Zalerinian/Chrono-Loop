@@ -42,7 +42,6 @@ namespace RenderEngine {
 		vr::IVRSystem* mVrSystem;
 		RenderSet mRenderSet;
 		std::shared_ptr<ID3D11Buffer*> mVPBuffer, mPositionBuffer;
-		//RenderShape mControllerModel, mBox, mPlane;
 		bool mUseVsync = false;
 
 
@@ -100,7 +99,6 @@ namespace RenderEngine {
 	public:
 		static Renderer* Instance();
 		static void DestroyInstance();
-		RenderShape mControllerModel;//, mBox, mPlane;
 
 		// Instance Functions
 		bool iInitialize(HWND Window, unsigned int width, unsigned int height,
