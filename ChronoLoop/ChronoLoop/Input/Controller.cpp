@@ -1,6 +1,7 @@
 //#include "stdafx.h"
 #include "Controller.h"
 #include "../Common/Logger.h"
+#include "VRInputManager.h"
 
 #define MAX(a,b) ((a) > (b) ? (a) : (b))
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
@@ -56,7 +57,7 @@ void Controller::SetIndex(int _index) {
 void Controller::SetValid(bool _valid) {
 	mValid = _valid;
 }
-
+	
 #pragma endregion Private Functions
 
 #pragma region Public Functions
@@ -67,8 +68,12 @@ void Controller::SetUp(int _index, vr::IVRSystem *_vr) {
 	Update();
 }
 
-vec3f Controller::GetPosition() {
-	return mPosition;
+matrix4 Controller::GetPosition() {
+	if (GetValid()) {
+		return Math::FromMatrix(mPose.mDeviceToAbsoluteTracking) * VRInputManager::Instance().iGetPlayerPosition();
+	} else {
+		return Math::MatrixIdentity();
+	}
 }
 
 vec3f Controller::GetVelocity() {

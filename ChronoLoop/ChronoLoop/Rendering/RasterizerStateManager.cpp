@@ -24,29 +24,28 @@ namespace RenderEngine {
 		desc.AntialiasedLineEnable = FALSE;
 
 		ID3D11RasterizerState *state;
-		(*Renderer::Instance()->GetDevice())->CreateRasterizerState(&desc, &state);
+		(*Renderer::Instance()->iGetDevice())->CreateRasterizerState(&desc, &state);
 		mStates[eRS_FILLED] = state;
 
 		desc.FillMode = D3D11_FILL_WIREFRAME;
-		(*Renderer::Instance()->GetDevice())->CreateRasterizerState(&desc, &state);
+		(*Renderer::Instance()->iGetDevice())->CreateRasterizerState(&desc, &state);
 		mStates[eRS_WIREFRAME] = state;
 
 		desc.FrontCounterClockwise = TRUE;
-		(*Renderer::Instance()->GetDevice())->CreateRasterizerState(&desc, &state);
+		(*Renderer::Instance()->iGetDevice())->CreateRasterizerState(&desc, &state);
 		mStates[eRS_CCW_WIREFRAME] = state;
 
 		desc.FillMode = D3D11_FILL_SOLID;
-		(*Renderer::Instance()->GetDevice())->CreateRasterizerState(&desc, &state);
+		(*Renderer::Instance()->iGetDevice())->CreateRasterizerState(&desc, &state);
 		mStates[eRS_CCW] = state;
 
-		desc.CullMode = D3D11_CULL_NONE;
-		(*Renderer::Instance()->GetDevice())->CreateRasterizerState(&desc, &state);
-		mStates[eRS_CCW_NO_CULL] = state;
-
 		desc.FrontCounterClockwise = FALSE;
-		(*Renderer::Instance()->GetDevice())->CreateRasterizerState(&desc, &state);
+		(*Renderer::Instance()->iGetDevice())->CreateRasterizerState(&desc, &state);
 		mStates[eRS_NO_CULL] = state;
 
+
+		// TODO: Everything is counter-clockwise by default. Is this an export option in Blender?
+		// For now everything gets inverted to display correctly (bool in RenderShape constructor)
 		this->ApplyState(eRS_FILLED);
 	}
 
@@ -79,7 +78,7 @@ namespace RenderEngine {
 		if (rs == mCurrentState) {
 			return true;
 		}
-		(*Renderer::Instance()->GetContext())->RSSetState(mStates[rs]);
+		(*Renderer::Instance()->iGetContext())->RSSetState(mStates[rs]);
 		return true;
 	}
 

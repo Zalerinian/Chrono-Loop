@@ -6,12 +6,13 @@
 #include "TextureManager.h"
 #include "../Input/VRInputManager.h"
 #include "../Core/TimeManager.h"
+#include "..\Physics\Physics.h"
 
 namespace RenderEngine {
 	bool InitializeSystems(HWND _Window, unsigned int _width, unsigned int _height,
 												 bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane,
 												 vr::IVRSystem* _vrsys) {
-		Renderer::Instance()->Initialize(_Window, _width, _height, _vsync, _fps, _fullscreen, _farPlane, _nearPlane, _vrsys);
+		Renderer::Instance()->iInitialize(_Window, _width, _height, _vsync, _fps, _fullscreen, _farPlane, _nearPlane, _vrsys);
 		RasterizerStateManager::Instance();
 		TimeManager::Instance();
 		InputLayoutManager::Instance();
@@ -21,6 +22,7 @@ namespace RenderEngine {
 			VRInputManager::Initialize(_vrsys);
 		}
 		ShaderManager::Instance();
+		Physics::Instance();
 		return true;
 	}
 
@@ -32,6 +34,7 @@ namespace RenderEngine {
 		TimeManager::Destroy();
 		RasterizerStateManager::DestroyInstance();
 		Renderer::DestroyInstance();
+		Physics::Destroy();
 		return true;
 	}
 }

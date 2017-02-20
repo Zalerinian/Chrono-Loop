@@ -14,7 +14,7 @@ namespace RenderEngine {
 	RenderShape::RenderShape() {
 		mType = RenderNodeType::Shape;
 		mNext = nullptr;
-		mContext.mRasterState = eRS_FILLED;
+		mContext.mRasterState = eRS_MAX;
 		mContext.mVertexFormat = eVERT_POSNORMTEX;
 	}
 	
@@ -22,11 +22,12 @@ namespace RenderEngine {
 		this->Load(_mesh);
 		mNext = nullptr;
 		mType = RenderNodeType::Shape;
-		mContext.mRasterState = eRS_FILLED;
+		mContext.mRasterState = eRS_MAX;
 		mContext.mVertexFormat = eVERT_POSNORMTEX;
 	}
 
 	RenderShape::RenderShape(const char * _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs) {
+		mType = RenderNodeType::Shape;
 		Load(_path, _invert, _ps, _vs);
 	}
 
@@ -49,7 +50,7 @@ namespace RenderEngine {
 		ID3D11Buffer *tBuffer;
 		mIndexBuffer = nullptr;
 		mVertexBuffer = nullptr;
-		auto device = *Renderer::Instance()->GetDevice().get();
+		auto device = *Renderer::Instance()->iGetDevice().get();
 		D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
 		auto verts = _mesh.GetVerts();
 		vertexBufferData.pSysMem = verts;
@@ -70,21 +71,23 @@ namespace RenderEngine {
 	}
 
 	void RenderShape::Load(const char * _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs) {
-		Mesh m(_path);
+		mMesh.Load(_path);
 		if (_invert) {
-			m.Invert();
+			mMesh.Invert();
 		}
-		Load(m);
+		Load(mMesh);
 		SetShaders(_ps, _vs);
 	}
 	
 	void RenderShape::SetShaders(PixelShaderFormat pf, VertexShaderFormat vf)
 	{
 		if (pf < ePS_BASIC || pf >= ePS_MAX) {
-			throw "Invalid pixel shader enumeration.";
+			SystemLogger::GetError() << "[Error] Invalid Pixel shader enumation at RenderShape::SetShaders: " << pf << ". Forcing to ePS_MAX!" << std::endl;
+			pf = ePS_MAX;
 		}
 		if (vf < eVS_BASIC || vf >= eVS_MAX) {
-			throw "Invalid vertex shader enumeration.";
+			SystemLogger::GetError() << "[Error] Invalid VertexShader enumation at RenderShape::SetShaders: " << vf << ". Forcing to eVS_MAX!" << std::endl;
+			vf = eVS_MAX;
 		}
 		mContext.mVertexShaderFormat = vf;
 		mContext.mPixelShaderFormat = pf;
@@ -111,9 +114,9 @@ namespace RenderEngine {
 
 	void RenderShape::Render() {
 		UINT stride = sizeof(VertexPosNormTex), offset = 0;
-		(*Renderer::Instance()->GetContext())->IASetIndexBuffer(*mIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-		(*Renderer::Instance()->GetContext())->IASetVertexBuffers(0, 1, mVertexBuffer.get(), &stride, &offset);
-		(*Renderer::Instance()->GetContext())->DrawIndexed(mIndexCount, 0, 0);
+		(*Renderer::Instance()->iGetContext())->IASetIndexBuffer(*mIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+		(*Renderer::Instance()->iGetContext())->IASetVertexBuffers(0, 1, mVertexBuffer.get(), &stride, &offset);
+		(*Renderer::Instance()->iGetContext())->DrawIndexed(mIndexCount, 0, 0);
 	}
 
 }

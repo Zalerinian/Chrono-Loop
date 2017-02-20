@@ -1,14 +1,22 @@
 //#include "stdafx.h"
 #include "Rendering/SystemInitializer.h"
 #include "Rendering/renderer.h"
+#include "Objects/BaseObject.h"
 #include "Rendering/InputLayoutManager.h"
+#include ".\Rendering\RenderShape.h"
 #include "Input/VRInputManager.h"
 #include "Core/TimeManager.h"
+#include "Core/Timeline.h"
 #include "Common/Logger.h"
 #include <openvr.h>
 #include <ctime>
 #include <chrono>
 #include <d3d11.h>
+#include "Common/Math.h"
+//#include "Actions/CodeComponent.h"
+#include "Objects/MeshComponent.h"
+#include "Actions/BoxSnapToControllerAction.hpp"
+#include "Actions/TeleportAction.hpp"
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -23,14 +31,14 @@ bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, b
 std::chrono::steady_clock::time_point lastTime = std::chrono::steady_clock::now();
 static float timeFrame = 0.0f;
 static float deltaTime;
-TimeManager* TManager; 
+TimeManager* TManager;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void Update();
 void UpdateTime();
 
-int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
+int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(373);
+	//_CrtSetBreakAlloc(1253);
 	if (!InitializeWindow(hInstance, nCmdShow, 800, 600, true)) {
 		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
 		return 2;
@@ -51,10 +59,11 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	if (!RenderEngine::InitializeSystems(hwnd, 800, 600, false, 90, false, 1000, 0.1f, vrsys)) {
 		return 1;
 	}
-	
-	std::shared_ptr<ID3D11Device*> renderingDevice = RenderEngine::Renderer::Instance()->GetDevice();
+
+	std::shared_ptr<ID3D11Device*> renderingDevice = RenderEngine::Renderer::Instance()->iGetDevice();
 
 	// Update everything
+	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count());
 	Update();
 
 	// Cleanup
@@ -86,9 +95,66 @@ int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	return 0;
 }
 
+void UpdateTime() {
+	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count() - lastTime.time_since_epoch().count()) / 1000.0f / 1000.0f / 1000.0f;
+	lastTime = std::chrono::steady_clock::now();
+}
+
+
 void Update() {
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
+
+
+	// TODO: Replace all this with a level to run.
+	///*///////////////////////Using this to test physics//////////////////
+	Transform transform;
+	transform.SetMatrix(MatrixIdentity());
+	matrix4 mat1 = MatrixTranslation(0, 5, 0);
+	transform.SetMatrix(mat1);
+	BaseObject obj("aabb", transform);
+	CubeCollider *aabb = new CubeCollider(true, vec4f(0.0f, -9.80f, 0.0f, 1.0f), 10.0f, 0.5f, 0.7f, vec4f(0.15f, -0.15f, .15f, 1.0f), vec4f(-0.15f, 0.15f, -0.15f, 1.0f));
+	aabb->AddForce(vec4f(2, 0, 0, 0));
+	obj.AddComponent(aabb);
+
+	matrix4 mat = MatrixTranslation(0, -1, 0);
+
+	Transform transform1;
+	transform1.SetMatrix(mat);
+	BaseObject obj1("plane", transform1);
+	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
+	MeshComponent *planeObj = new MeshComponent("../Resources/Liftoff.obj");
+	planeObj->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
+	obj1.AddComponent(plane);
+	obj1.AddComponent(planeObj);
+
+	BaseObject obj3("Controller");
+	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
+	TeleportAction *ta = new TeleportAction();
+	obj3.AddComponent(mc);
+	obj3.AddComponent(ta);
+	
+	TimeManager::Instance()->GetTimeLine()->AddBaseObject(&obj,obj.GetUniqueId());
+	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
+	visibleMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
+	obj.AddComponent(visibleMesh);
+
+	//BoxSnapToControllerAction *Action = new BoxSnapToControllerAction(&obj);
+	CodeComponent *codeComponent = new BoxSnapToControllerAction();
+	obj.AddComponent(codeComponent);
+
+	Physics::Instance()->mObjects.push_back(&obj);
+	Physics::Instance()->mObjects.push_back(&obj1);
+	Physics::Instance()->mObjects.push_back(&obj3);
+	
+	matrix4 rotation = Math::MatrixRotateX(DirectX::XM_PI) * Math::MatrixRotateZ(DirectX::XM_PI) * Math::MatrixRotateY(DirectX::XM_PI / 2);
+	vec4f direction(0, 0, 1, 0);
+	vec4f rotated = direction * rotation;
+	//*////////////////////////////////////////////////////////////////////
+	if (VREnabled) {
+		VRInputManager::Instance().iUpdate();
+	}
+
 	while (true) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			// Handle windows message.
@@ -103,20 +169,18 @@ void Update() {
 			}
 
 			UpdateTime();
-			if (VREnabled) {
-				VRInputManager::Instance().update();
+			auto& objects = Physics::Instance()->mObjects;
+			for (auto it = objects.begin(); it != objects.end(); ++it) {
+				(*it)->Update();
 			}
-			// Logic.Update(float deltaTime);
 			TManager->Instance()->Update(deltaTime);
-			RenderEngine::Renderer::Instance()->Render();
+			RenderEngine::Renderer::Instance()->Render(deltaTime);
+			Physics::Instance()->Update(deltaTime);
+			if (VREnabled) {
+				VRInputManager::Instance().iUpdate();
+			}
 		}
 	}
-}
-
-void UpdateTime()
-{
-	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count() - lastTime.time_since_epoch().count()) / 1000.0f / 1000.0f / 1000.0f;
-	lastTime = std::chrono::steady_clock::now();
 }
 
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed) {

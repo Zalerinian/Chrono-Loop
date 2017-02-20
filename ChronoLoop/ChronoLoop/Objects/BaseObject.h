@@ -2,68 +2,68 @@
 #include <string>
 #include <list>
 #include <vector>
+#include <unordered_map>
 #include "Transform.h"
 #include "Component.h"
-#include "../Physics/Physics.h"
-using namespace Physics;
-class BaseObject
-{
+#include "..\Physics\Physics.h"
+#include "..\Core\TimeManager.h"
+#include "..\Objects\Component.h"
+
+class BaseObject {
+	// The number of objects that exist in the world. ID 0 is reserved the player.
+	static unsigned int ObjectCount;
+	static std::unordered_map<std::string, BaseObject*> AllObjects;
+
 private:
-	float m_mass;
-	std::string m_name;
-	BaseObject* m_parent;
-	Transform m_transform;
-	vec4f m_pos, m_vel, m_acc;
-	unsigned short m_UniqueId;
-	std::list<BaseObject*> m_children;
-	std::vector<Component*> m_components;
-	
+	std::string mName;
+	BaseObject* mParent;
+	unsigned int mUniqueID;
+	std::list<BaseObject*> mChildren;
+	Transform mTransform;
+	bool mDestroyed = false;
+
+	void Construct(std::string _name, Transform _transform, BaseObject* _parent);
+
 public:
-	//**CONSTRUCTORS**//
-	BaseObject();
+	std::unordered_map<ComponentType, std::vector<Component*>> mComponents;
+	BaseObject(std::string _name);
 	BaseObject(std::string _name, Transform _transform);
-	BaseObject(std::string name, Transform _transform, float mass);
 	~BaseObject();
-Component* const GetComponet(unsigned int _indx);
-	unsigned int GetNumofComponets();
-	void Destroy() { delete this; };
+	BaseObject& operator=(BaseObject& _equals);
+	void Destroy();
+	void Update();
 
-	//**GETTERS/SETTERS**//
-	float						GetMass() { return m_mass; };
-	void						SetMass(float _mass) { m_mass = _mass; };
+#pragma region Static Functions
+	static BaseObject* GetObjectByName(std::string _name);
+#pragma endregion Static Functions
 
-	std::string					GetName() { return m_name; };
-	void						SetName(std::string _name) { m_name = _name; };
 
-	BaseObject*					GetParent() { return m_parent; };
-	void						SetParent(BaseObject* _parent) { m_parent = _parent; };
+	inline unsigned int GetUniqueId() { return mUniqueID; }
 
-	Transform					GetTransform() { return m_transform; };
-	void						SetTransform(Transform _transform) { m_transform = _transform; };
+	inline std::string GetName() { return mName; };
+	inline void SetName(std::string _name) { mName = _name; };
 
-	vec4f						GetPosition() { return m_pos; };
-	vec4f						GetVelocity() { return m_vel; };
-	vec4f						GetAcceleration() { return m_acc; };
+	inline BaseObject* GetParent() { return mParent; };
+	inline void SetParent(BaseObject* _parent) { mParent = _parent; };
 
-	unsigned short&				GetUniqueID() { return m_UniqueId; };
-	void						SetUniqueID(unsigned short _id) { m_UniqueId = _id; };
+	inline Transform& GetTransform() { return mTransform; };
+	inline void SetTransform(Transform _transform) { mTransform = _transform; };
 
-	std::list<BaseObject*>		GetChildren() { return m_children; };
-	void						SetChildren(std::list<BaseObject*> _children) { m_children = _children; };
+	inline unsigned int GetUniqueID() { return mUniqueID; };
+	inline void SetUniqueID(unsigned short _id) { mUniqueID = _id; };
 
-	std::vector<Component*>		GetComponents() { return m_components; };
-	void						SetComponents(std::vector<Component*> _components) { m_components = _components; };
-	
+	inline std::list<BaseObject*> GetChildren() { return mChildren; };
+	inline void SetChildren(std::list<BaseObject*> _children) { mChildren = _children; };
+
+	inline std::vector<Component*> GetComponents(ComponentType _type) { return mComponents[_type]; }
+	inline Component* GetComponentIndexed(ComponentType _type, unsigned int _index) { return mComponents[_type][_index]; }
+	inline unsigned int GetComponentCount(ComponentType _type) { return (unsigned int)mComponents[_type].size(); }
+	unsigned int AddComponent(Component* _comp);
+	bool RemoveComponent(Component* _comp);
 
 	//**FUNCTION**//
-	void						AddComponent(Component* _comp) { m_components.push_back(_comp); };
-	//void						RemoveComponent(Component _comp) { components.remove(_comp); };
-	void						AddChild(BaseObject* _obj) { m_children.push_back(_obj); };
-	void						RemoveChild(BaseObject* _obj) { m_children.remove(_obj); };
-	void						CalcAcceleration(vec4f& _force);
-	void						CalcVelocity(vec4f& _force, float _dt);
-	void						CalcPosition(vec4f& _force, float _dt);
-	BaseObject					Clone();
-	BaseObject					Clone(BaseObject _clone);
-	BaseObject const*			operator=(BaseObject _equals);
+	inline void AddChild(BaseObject* _obj) { mChildren.push_back(_obj); };
+	inline void RemoveChild(BaseObject* _obj) { mChildren.remove(_obj); };
+	//BaseObject& Clone();
+	//BaseObject& Clone(BaseObject& _clone);
 };

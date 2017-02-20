@@ -112,15 +112,15 @@
     <Filter Include="Common\FileIO\Source Files">
       <UniqueIdentifier>{e1cc4151-26b6-4ac4-975b-f442b93a2c81}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Actions">
+      <UniqueIdentifier>{48beaf3c-0f0e-4a07-9918-0972a580a156}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\BaseObject.h">
       <Filter>Objects\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Component.h">
-      <Filter>Objects\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\Components.h">
       <Filter>Objects\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Objects\Transform.h">
@@ -248,6 +248,18 @@
     </ClInclude>
     <ClInclude Include="Rendering\TextureManager.h">
       <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\MeshComponent.h">
+      <Filter>Objects\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\BoxSnapToControllerAction.hpp">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CodeComponent.hpp">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\TeleportAction.hpp">
+      <Filter>Actions</Filter>
     </ClInclude>
     <ClInclude Include="Rendering\IndexBufferManager.h">
       <Filter>Rendering\Header Files\Managers</Filter>
@@ -410,9 +422,11 @@
     <ClCompile Include="Common\Common.cpp">
       <Filter>Common\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rendering\TextureManager.cpp" />
     <ClCompile Include="Common\Breakpoint.cpp">
       <Filter>Common\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\TextureManager.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="Rendering\Mesh.cpp">
       <Filter>Rendering\Source Files</Filter>

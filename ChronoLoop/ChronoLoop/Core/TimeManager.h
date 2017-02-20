@@ -8,8 +8,11 @@ class TimeManager
 
 	static Timeline* mTimeline;
 	float mRecordingTime =.1f;		// 1/10th of a second in milliseconds 
-	float mLevelTime=0, mlastRecordedTime =0, mTimestamp = 0;
+	unsigned int mLevelTime = 0;
+	float mlastRecordedTime =0, mTimestamp = 0;
 	
+	//GIT RID OF THIS 
+	bool mRewindTime = false;
 
 	TimeManager();
 	~TimeManager();
@@ -18,6 +21,7 @@ public:
 	void Update(float _delta);
 	static TimeManager* Instance();
 	static Timeline* GetTimeLine();
+	void RewindTimeline();
 	static void Destroy();
 };
 

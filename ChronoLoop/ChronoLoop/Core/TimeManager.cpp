@@ -1,6 +1,7 @@
 //#include "stdafx.h"
 #include "TimeManager.h"
 #include "Timeline.h"
+#include "../Input/KeyboardInput.h"
 
 TimeManager* TimeManager::instanceTimemanager = nullptr;
 Timeline* TimeManager::mTimeline = nullptr;
@@ -18,13 +19,23 @@ TimeManager::~TimeManager()
 
 void TimeManager::Update(float _delta)
 {
-	mLevelTime += _delta;
+	//Snap Update 
 	mTimestamp += _delta;
 	if (mTimestamp >= mRecordingTime)
 	{
 		mTimestamp = 0;
+		//Generate 
 		Snapshot* s = mTimeline->GenerateSnapShot(mLevelTime);
-		mTimeline->AddSnapshot(s->mTime,s);
+		mTimeline->AddSnapshot(mLevelTime,s);
+		mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
+	}
+
+	if (mRewindTime == true || GetAsyncKeyState(VK_TAB) & 1)
+	{
+		mTimeline->RewindNoClone(mTimeline->GetCurrentGameTimeIndx() - 10);
+		//Tell the time manager what frame the timeline its on
+		mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
+		mRewindTime = false;
 	}
 }
 
@@ -43,6 +54,11 @@ Timeline * TimeManager::GetTimeLine()
 		mTimeline = new Timeline();
 	};
 	return mTimeline;
+}
+
+void TimeManager::RewindTimeline()
+{
+	mRewindTime = true;
 }
 
 void TimeManager::Destroy()
