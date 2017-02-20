@@ -295,7 +295,7 @@ vec3f& vec3f::operator*=(matrix4 const& _other)
 
 float vec3f::operator*(vec3f const& _other)
 {
-	return x * _other.x + y * _other.y + z + _other.z;
+	return x * _other.x + y * _other.y + z * _other.z;
 }
 
 vec3f vec3f::operator*(float const& _other)

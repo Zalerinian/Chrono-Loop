@@ -61,7 +61,6 @@ struct BoxSnapToControllerAction : public CodeComponent {
 	Bootleg mBootleg;
 
 	virtual void Update() override {
-		return;
 		Controller &leftController = VRInputManager::Instance().iGetController(true), &rightController = VRInputManager::Instance().iGetController(false);
 		if (VRInputManager::Instance().iIsInitialized()) {
 			if (leftController.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger)) {

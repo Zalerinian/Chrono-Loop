@@ -31,7 +31,7 @@ public:
 	void SetUp(int _index, vr::IVRSystem* _vr);
 
 	//transforms
-	vec3f GetPosition();
+	matrix4 GetPosition();
 	vec3f GetVelocity();
 	vec3f GetAngularVelocity();
 
