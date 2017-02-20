@@ -258,6 +258,9 @@
     <ClInclude Include="Actions\CodeComponent.hpp">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\TeleportAction.hpp">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">

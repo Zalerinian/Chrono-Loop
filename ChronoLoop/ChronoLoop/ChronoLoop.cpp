@@ -12,9 +12,11 @@
 #include <ctime>
 #include <chrono>
 #include <d3d11.h>
+#include "Common/Math.h"
 //#include "Actions/CodeComponent.h"
 #include "Objects/MeshComponent.h"
 #include "Actions/BoxSnapToControllerAction.hpp"
+#include "Actions/TeleportAction.hpp"
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -125,8 +127,13 @@ void Update() {
 	planeObj->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
 	obj1.AddComponent(plane);
 	obj1.AddComponent(planeObj);
-	
 
+	BaseObject obj3("Controller");
+	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
+	TeleportAction *ta = new TeleportAction();
+	obj3.AddComponent(mc);
+	obj3.AddComponent(ta);
+	
 	TimeManager::Instance()->GetTimeLine()->AddBaseObject(&obj,obj.GetUniqueId());
 	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
 	visibleMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
@@ -138,6 +145,11 @@ void Update() {
 
 	Physics::Instance()->mObjects.push_back(&obj);
 	Physics::Instance()->mObjects.push_back(&obj1);
+	Physics::Instance()->mObjects.push_back(&obj3);
+	
+	matrix4 rotation = Math::MatrixRotateX(DirectX::XM_PI) * Math::MatrixRotateZ(DirectX::XM_PI) * Math::MatrixRotateY(DirectX::XM_PI / 2);
+	vec4f direction(0, 0, 1, 0);
+	vec4f rotated = direction * rotation;
 	//*////////////////////////////////////////////////////////////////////
 	if (VREnabled) {
 		VRInputManager::Instance().iUpdate();

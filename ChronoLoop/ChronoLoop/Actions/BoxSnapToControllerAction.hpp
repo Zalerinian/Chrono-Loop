@@ -61,6 +61,7 @@ struct BoxSnapToControllerAction : public CodeComponent {
 	Bootleg mBootleg;
 
 	virtual void Update() override {
+		return;
 		Controller &leftController = VRInputManager::Instance().iGetController(true), &rightController = VRInputManager::Instance().iGetController(false);
 		if (VRInputManager::Instance().iIsInitialized()) {
 			if (leftController.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger)) {
@@ -78,9 +79,10 @@ struct BoxSnapToControllerAction : public CodeComponent {
 				TimeManager::Instance()->RewindTimeline();
 			}
 
-
+#pragma region Gestures
 			vec2f touch = leftController.GetAxis();
 			mBootleg.AddHead(touch);
+
 			//SystemLogger::GetLog() << "(" << touch.x << "," << touch.y << ")" << std::endl;
 			if (mBootleg.mSize == mBootleg.mLimit) {
 				// Get initial point, get vector from it's negation (v - (-v)), and then cross it (v.y, -v.x)
@@ -100,6 +102,7 @@ struct BoxSnapToControllerAction : public CodeComponent {
 					}
 				}
 			}
+#pragma endregion Gestures
 		}
 		//SystemLogger::GetLog() << "[Debug] Touchpad Axis: (" << touch.x << ", " << touch.y << ")" << std::endl;
 	}

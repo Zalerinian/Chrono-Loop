@@ -2,20 +2,31 @@
 #include "BaseObject.h"
 #include "../Actions/CodeComponent.hpp"
 #include "../Common/Logger.h"
+#include "../Common/Breakpoint.h"
 
 // 0 is reserved for the player.
 unsigned int BaseObject::ObjectCount = 1;
+std::unordered_map<std::string, BaseObject*> BaseObject::AllObjects;
 
-BaseObject::BaseObject()
-{
-	mParent = nullptr;
+void BaseObject::Construct(std::string _name, Transform _transform, BaseObject* _parent) {
+	if (AllObjects[_name] != nullptr) {
+		SystemLogger::GetError() << "[Error] An object with the provided name (" << _name << ") already exists. Objects must be unique. This object will be invalid." << std::endl;
+		Debug::SetBreakpoint();
+	}
+	mName = _name;
+	mTransform = _transform;
+	mParent = _parent;
 	mUniqueID = BaseObject::ObjectCount++;
+	AllObjects[_name] = this;
+}
+
+BaseObject::BaseObject(std::string _name)
+{
+	Construct(_name, Transform(), nullptr);
 }
 BaseObject::BaseObject(std::string _name, Transform _transform)
 {
-	mName = _name;
-	mParent = nullptr;
-	mTransform = _transform;
+	Construct(_name, _transform, nullptr);
 }
 
 BaseObject::~BaseObject()
@@ -24,6 +35,7 @@ BaseObject::~BaseObject()
 		SystemLogger::GetError() << "[Warning] Deleting an object that is marked as destroyed." << std::endl;
 	} else {
 		Destroy();
+		AllObjects.erase(mName);
 	}
 }
 
@@ -96,6 +108,15 @@ void BaseObject::Update() {
 			(*cIt)->Update();
 		}
 	}
+}
+
+BaseObject * BaseObject::GetObjectByName(std::string _name) {
+	for (auto it = AllObjects.begin(); it != AllObjects.end(); ++it) {
+		if (it->first == _name) {
+			return it->second;
+		}
+	}
+	return nullptr;
 }
 
 unsigned int BaseObject::AddComponent(Component * _comp) {

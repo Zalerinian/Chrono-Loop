@@ -199,6 +199,7 @@
     <ClInclude Include="..\DXTK\scoped.h" />
     <ClInclude Include="Actions\BoxSnapToControllerAction.hpp" />
     <ClInclude Include="Actions\CodeComponent.hpp" />
+    <ClInclude Include="Actions\TeleportAction.hpp" />
     <ClInclude Include="Common\Breakpoint.h" />
     <ClInclude Include="Common\Common.h" />
     <ClInclude Include="Common\FileIO.h" />
