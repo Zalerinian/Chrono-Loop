@@ -127,7 +127,7 @@ void Update() {
 	CubeCollider *aabb = new CubeCollider(true, vec4f(0.0f, -9.80f, 0.0f, 1.0f), 10.0f, 0.5f, 0.7f, vec4f(0.15f, -0.15f, .15f, 1.0f), vec4f(-0.15f, 0.15f, -0.15f, 1.0f));
 	aabb->AddForce(vec4f(2, 0, 0, 0));
 	obj.AddComponent(aabb);
-	Emitter* aabbSound = new Emitter(AK::EVENTS::PLAY_TEST1, AK::EVENTS::PAUSE_TEST1, AK::EVENTS::RESUME_TEST1, AK::EVENTS::STOP_TEST1);
+	Emitter* aabbSound = new Emitter(AK::EVENTS::PLAY_TEST1, AK::EVENTS::PAUSE_TEST1, AK::EVENTS::RESUME_TEST1, AK::EVENTS::STOP_TEST1, -1);
 	obj.AddComponent(aabbSound);
 
 	matrix4 mat = MatrixTranslation(0, -1, 0);

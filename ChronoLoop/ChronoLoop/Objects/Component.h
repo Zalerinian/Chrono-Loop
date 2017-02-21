@@ -1,6 +1,7 @@
 #pragma once
 #include "..\Common\Math.h"
 #include "..\Rendering\Mesh.h"
+#include <unordered_map>
 class BaseObject;
 class Transform;
 //class Mesh;
@@ -56,23 +57,27 @@ public:
 
 class Emitter :public Component
 {
-	int64_t mPlay, mPause, mResume, mStop;
+	//Possible additional vectors for multiple of sound of said types
+	enum sfxTypes { ePlayLoop, ePauseLoop, eResumeLoop, eStopLoop, ePlaySFX};
 	bool mIsPlaying = false, mIsPaused = false;
+	std::unordered_map<sfxTypes, int64_t> mSFX;
 
 public:
 
-	Emitter(int64_t _play, int64_t _pause, int64_t _resume, int64_t _stop) : Component(ComponentType::eCOMPONENT_AUDIOEMITTER)
+	Emitter(int64_t _play, int64_t _pause, int64_t _resume, int64_t _stop, int64_t _sfx) : Component(ComponentType::eCOMPONENT_AUDIOEMITTER)
 	{
-		mPlay = _play;
-		mPause = _pause;
-		mResume = _resume;
-		mStop = _stop;
+		mSFX[ePlayLoop] = _play;
+		mSFX[ePauseLoop] = _pause;
+		mSFX[eResumeLoop] = _resume;
+		mSFX[eStopLoop] = _stop;
+		mSFX[ePlaySFX] = _sfx;
 		mIsPaused = mIsPlaying = false;
 	}
 
-	void Play();
-	void Pause();
-	void Stop();
+	void Play(int _id = 0);
+	void Pause(int _id = 0);
+	void Stop(int _id = 0);
+	void PlaySFX(int _id = 0);
 
 	void Update();
 	void Destroy();

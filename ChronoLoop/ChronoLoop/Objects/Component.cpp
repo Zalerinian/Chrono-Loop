@@ -55,45 +55,53 @@ void Emitter::Update()
 
 }
 
-void Emitter::Play()
+void Emitter::Play(int _id)
 {
-	if (mPlay == -1 || mIsPlaying)
+	if (mSFX[ePlayLoop] == -1 || mIsPlaying)
 		return;
-	m_Event* evnt = new m_Event(mPlay, this);
+	m_Event* evnt = new m_Event(mSFX[ePlayLoop], this);
 	Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
 	Messager::Instance().SendInMessage(msg);
 	mIsPlaying = true;
 }
 
-void Emitter::Pause()
+void Emitter::Pause(int _id)
 {
-	if (mPause == -1 || mResume == -1)
+	if (mSFX[ePauseLoop] == -1 || mSFX[ePauseLoop] == -1)
 		return;
 
 	if (mIsPaused)
 	{
-		m_Event* evnt = new m_Event(mResume, this);
+		m_Event* evnt = new m_Event(mSFX[eResumeLoop], this);
 		Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
 		Messager::Instance().SendInMessage(msg);
 		mIsPaused = false;
 	}
 	else
 	{
-		m_Event* evnt = new m_Event(mPause, this);
+		m_Event* evnt = new m_Event(mSFX[ePauseLoop], this);
 		Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
 		Messager::Instance().SendInMessage(msg);
 		mIsPaused = true;
 	}
 }
 
-void Emitter::Stop()
+void Emitter::Stop(int _id)
 {
-	if (mStop == -1 || !mIsPlaying)
+	if (mSFX[eStopLoop] == -1 || !mIsPlaying)
 		return;
-	m_Event* evnt = new m_Event(mStop, this);
+	m_Event* evnt = new m_Event(mSFX[eStopLoop], this);
 	Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
 	Messager::Instance().SendInMessage(msg);
 	mIsPlaying = false;
+
+}
+
+void Emitter::PlaySFX(int _id)
+{
+	if (mSFX[ePlaySFX] == -1)
+		return;
+
 
 }
 
