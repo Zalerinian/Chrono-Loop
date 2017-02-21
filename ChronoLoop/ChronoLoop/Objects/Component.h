@@ -69,10 +69,10 @@ public:
 		eCOLLIDER_Plane
 	};
 
+	ColliderType mColliderType;
 	bool mShouldMove, mColliding, mRewind;
 	vec4f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity;
-	float mMass, mElasticity, mFriction;
-	ColliderType mColliderType;
+	float mMass, mElasticity, mFriction, mInvMass;
 
 	void Update();
 	void Destroy();
@@ -98,14 +98,13 @@ class CubeCollider : public Collider {
 public:
 	CubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, vec4f _min, vec4f _max);
 	vec4f mMin, mMax, mMinOffset, mMaxOffset;
-
 	void SetPos(vec4f _newPos);
 };
 
 class PlaneCollider : public Collider {
 public:
-	PlaneCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, float _offset, vec4f _norm);
-	vec4f mNormal;
+	PlaneCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, float _offset, vec4f _norm, vec4f _min, vec4f _max);
+	vec4f mNormal, mMin, mMax;
 	float mOffset;
 };
 

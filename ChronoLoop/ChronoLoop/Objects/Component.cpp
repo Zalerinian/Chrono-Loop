@@ -91,6 +91,10 @@ MeshCollider::MeshCollider(bool _move, vec4f _gravity, float _mass, float _elast
 	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	mShouldMove = _move;
 	mMass = _mass;
+	if (mMass == 0)
+		mInvMass = 0;
+	else
+		mInvMass = 1 / mMass;
 	mRewind = false;
 	mElasticity = _elasticity;
 	mFriction = _friction;
@@ -107,6 +111,10 @@ SphereCollider::SphereCollider(bool _move, vec4f _gravity, float _mass, float _e
 	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	mShouldMove = _move;
 	mMass = _mass;
+	if (mMass == 0)
+		mInvMass = 0;
+	else
+		mInvMass = 1 / mMass;
 	mRewind = false;
 	mElasticity = _elasticity;
 	mFriction = _friction;
@@ -126,6 +134,10 @@ CubeCollider::CubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _
 	mColliding = false;
 	mRewind = false;
 	mMass = _mass;
+	if (mMass == 0)
+		mInvMass = 0;
+	else
+		mInvMass = 1 / mMass;
 	mElasticity = _elasticity;
 	mFriction = _friction;
 	mMinOffset = _min;
@@ -140,7 +152,7 @@ void CubeCollider::SetPos(vec4f _newPos) {
 	mMax = _newPos + mMaxOffset;
 }
 
-PlaneCollider::PlaneCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, float _offset, vec4f _norm) {
+PlaneCollider::PlaneCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, float _offset, vec4f _norm, vec4f _min, vec4f _max) {
 	mType = eCOMPONENT_COLLIDER;
 	mColliderType = eCOLLIDER_Plane;
 	mGravity = _gravity;
@@ -151,9 +163,15 @@ PlaneCollider::PlaneCollider(bool _move, vec4f _gravity, float _mass, float _ela
 	mShouldMove = _move;
 	mRewind = false;
 	mMass = _mass;
+	if (mMass == 0)
+		mInvMass = 0;
+	else
+		mInvMass = 1 / mMass;
 	mElasticity = _elasticity;
 	mFriction = _friction;
 	mOffset = _offset;
 	mNormal = _norm;
+	mMin = _min;
+	mMax = _max;
 }
 

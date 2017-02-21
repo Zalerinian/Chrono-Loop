@@ -8,8 +8,8 @@ struct CCElasticReaction : public CodeComponent
 	{
 		if (_other.mColliderType == Collider::eCOLLIDER_Plane)
 		{
-			vec4f normalVel = (((PlaneCollider*)&_other)->mNormal * (_col.mVelocity * ((PlaneCollider*)&_other)->mNormal));
-			_col.mVelocity = (normalVel * -_col.mElasticity) + (_col.mVelocity - normalVel);
+			vec4f normalVel = (((PlaneCollider*)&_other)->mNormal * -(_col.mVelocity * ((PlaneCollider*)&_other)->mNormal));
+			_col.mVelocity += normalVel * (1 + _col.mElasticity);
 			return;
 		}
 		//Doesnt work

@@ -16,7 +16,8 @@
 //#include "Actions/CodeComponent.h"
 #include "Objects/MeshComponent.h"
 #include "Actions/BoxSnapToControllerAction.hpp"
-#include "Actions/CCElasticReaction.h"#include "Actions/TeleportAction.hpp"
+#include "Actions/CCElasticReaction.h"
+#include "Actions/TeleportAction.hpp"
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -110,20 +111,20 @@ void Update() {
 	///*///////////////////////Using this to test physics//////////////////
 	Transform AABBtransform1;
 	AABBtransform1.SetMatrix(MatrixIdentity());
-	matrix4 AABBmat1 = MatrixTranslation(1, 1, 0);
+	matrix4 AABBmat1 = MatrixTranslation(-1, 5, 5);
 	AABBtransform1.SetMatrix(AABBmat1);
 	BaseObject AABBobj1("aabb", AABBtransform1);
-	CubeCollider *AABBcol1 = new CubeCollider(&AABBobj1, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 1.0f, 0.7f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
-	AABBcol1->AddForce(vec4f(0, 0, 0, 0));
+	CubeCollider *AABBcol1 = new CubeCollider(&AABBobj1, true, vec4f(0.0f, -2.0f, 0.0f, 1.0f), 1.0f, 0.5f, 0.7f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
+	AABBcol1->AddForce(vec4f(.5f, 0, 0, 0));
 	AABBobj1.AddComponent(AABBcol1);
 	
 
 	Transform AABBtransform2;
 	AABBtransform2.SetMatrix(MatrixIdentity());
-	matrix4 AABBmat2 = MatrixTranslation(-1, 1, 0);
+	matrix4 AABBmat2 = MatrixTranslation(1, 5, 5);
 	AABBtransform2.SetMatrix(AABBmat2);
-	BaseObject AABBobj2("aabb", AABBtransform2);
-	CubeCollider *AABBcol2 = new CubeCollider(&AABBobj2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, 0.7f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
+	BaseObject AABBobj2("aabb2", AABBtransform2);
+	CubeCollider *AABBcol2 = new CubeCollider(&AABBobj2, true, vec4f(0.0f, -2.0f, 0.0f, 1.0f), 1.0f, 0.5f, 0.7f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
 	AABBcol2->AddForce(vec4f(0, 0, 0, 0));
 	AABBobj2.AddComponent(AABBcol2);
 
@@ -131,7 +132,7 @@ void Update() {
 	Transform transform1;
 	transform1.SetMatrix(PlaneMat);
 	BaseObject Planeobj("plane", transform1);
-	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
+	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f), vec4f(-6.0f, -1.0f, -6.0f, 1.0f), vec4f(5.0f, -1.0f, 5.0f, 1.0f));
 	MeshComponent *planeObj = new MeshComponent("../Resources/BigFloor.obj");
 	planeObj->AddTexture("../Resources/floorg.png", RenderEngine::eTEX_DIFFUSE);
 	Planeobj.AddComponent(plane);
