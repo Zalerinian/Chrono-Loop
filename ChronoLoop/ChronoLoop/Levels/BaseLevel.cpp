@@ -9,6 +9,13 @@ BaseLevel::BaseLevel(unsigned int _id) {
 	SetId(_id);
 }
 
+BaseLevel::BaseLevel(BaseObject* _headset, BaseObject* _controller1, BaseObject* _controller2)
+{
+	mHeadset = _headset;
+	mController1 = _controller1;
+	mController2 = _controller2;
+}
+
 BaseLevel::~BaseLevel() {
 	for (std::list<BaseObject*>::const_iterator iter = mObjectList.begin(); iter != mObjectList.end(); ++iter) { 
 			BaseObject* rtn = (*iter);
@@ -66,6 +73,37 @@ void BaseLevel::SetLevelObject(BaseObject * _obj, unsigned short _id) {
 
 		}
 	}
+}
+
+void BaseLevel::SetHeadsetAndControllers(BaseObject * _headset, BaseObject * _controller1, BaseObject * _controller2)
+{
+	//Remove the action componets and 
+	//Set the new BaseObjects to the current controller so new objects can follow old controller movement as clones.
+	unsigned short headid = _headset->GetUniqueId();
+	unsigned short cl1id = _controller1->GetUniqueId();
+	unsigned short cl2id = _controller2->GetUniqueId();
+	std::string headname = _headset->GetName();
+	std::string Controller1name = _controller1->GetName();
+	std::string Controller2name = _controller2->GetName();
+
+	_headset->SetUniqueID(mHeadset->GetUniqueId());
+	_controller1->SetUniqueID(mController1->GetUniqueId());
+	_controller2->SetUniqueID(mController2->GetUniqueId());
+	_headset->SetName(mHeadset->GetName());
+	_controller1->SetName(mController1->GetName());
+	_controller2->SetName(mController2->GetName());
+	
+	mHeadset->SetUniqueID(headid);
+	mController1->SetUniqueID(cl1id);
+	mController2->SetUniqueID(cl2id);
+	mHeadset->SetName(headname);
+	mController1->SetName(Controller1name);
+	mController2->SetName(Controller2name);
+
+	mObjectList.push_back(_headset);
+	mObjectList.push_back(_controller1);
+	mObjectList.push_back(_controller2);
+
 }
 
 void BaseLevel::LoadLevel() {

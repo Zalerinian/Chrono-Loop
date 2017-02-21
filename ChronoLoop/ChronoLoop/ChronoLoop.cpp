@@ -17,6 +17,7 @@
 #include "Objects/MeshComponent.h"
 #include "Actions/BoxSnapToControllerAction.hpp"
 #include "Actions/TeleportAction.hpp"
+#include "Levels/LevelManager.h"
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -108,67 +109,88 @@ void Update() {
 
 	// TODO: Replace all this with a level to run.
 	///*///////////////////////Using this to test physics//////////////////
+
 	Transform transform;
 	transform.SetMatrix(MatrixIdentity());
 	matrix4 mat1 = MatrixTranslation(0, 5, 0);
 	transform.SetMatrix(mat1);
-	BaseObject obj("aabb", transform);
+	BaseObject* obj = new BaseObject("aabb", transform);
 	CubeCollider *aabb = new CubeCollider(true, vec4f(0.0f, -9.80f, 0.0f, 1.0f), 10.0f, 0.5f, 0.7f, vec4f(0.15f, -0.15f, .15f, 1.0f), vec4f(-0.15f, 0.15f, -0.15f, 1.0f));
 	aabb->AddForce(vec4f(2, 0, 0, 0));
-	obj.AddComponent(aabb);
-	TimeManager::Instance()->AddObjectToTimeline(&obj);
+	obj->AddComponent(aabb);
+	TimeManager::Instance()->AddObjectToTimeline(obj);
 
 	matrix4 mat = MatrixTranslation(0, -1, 0);
 
 	Transform transform1;
 	transform1.SetMatrix(mat);
-	BaseObject obj1("plane", transform1);
+	BaseObject* obj1 = new BaseObject("plane", transform1);
 	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
 	MeshComponent *planeObj = new MeshComponent("../Resources/BigFloor.obj");
 	planeObj->AddTexture("../Resources/floorg.png", RenderEngine::eTEX_DIFFUSE);
-	obj1.AddComponent(plane);
-	obj1.AddComponent(planeObj);
+	obj1->AddComponent(plane);
+	obj1->AddComponent(planeObj);
 
-
-	BaseObject obj4("plane2", transform1);
+	BaseObject* obj4 = new BaseObject("plane2", transform1);
 	MeshComponent *planeObj2 = new MeshComponent("../Resources/Liftoff.obj");
 	planeObj2->AddTexture("../Resources/floorg.png", RenderEngine::eTEX_DIFFUSE);
-	obj4.AddComponent(planeObj2);
+	obj4->AddComponent(planeObj2);
 	
 	Transform identity;
 	identity.SetMatrix(Math::MatrixIdentity());
 
-	BaseObject walls("walls", transform1);
+	BaseObject* walls = new BaseObject("walls", transform1);
 	MeshComponent *wallMesh = new MeshComponent("../Resources/BigWall.obj");
 	wallMesh->AddTexture("../Resources/Wallg.png", RenderEngine::eTEX_DIFFUSE);
-	walls.AddComponent(wallMesh);
+	walls->AddComponent(wallMesh);
 
-
-	BaseObject obj3("Controller", identity);
+	BaseObject* obj3 = new BaseObject("Controller", identity);
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
 	TeleportAction *ta = new TeleportAction();
-	obj3.AddComponent(mc);
-	obj3.AddComponent(ta);
-	TimeManager::Instance()->AddObjectToTimeline(&obj3);
+	obj3->AddComponent(mc);
+	obj3->AddComponent(ta);
+	TimeManager::Instance()->AddObjectToTimeline(obj3);
 
 	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
 	visibleMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
-	obj.AddComponent(visibleMesh);
-
+	obj->AddComponent(visibleMesh);
 	CodeComponent *codeComponent = new BoxSnapToControllerAction();
-	obj.AddComponent(codeComponent);
+	obj->AddComponent(codeComponent);
 
-	Physics::Instance()->mObjects.push_back(&obj);
-	Physics::Instance()->mObjects.push_back(&obj1);
-	Physics::Instance()->mObjects.push_back(&obj3);
-	Physics::Instance()->mObjects.push_back(&walls);
+	//pat added
+	BaseObject* obj2 = new BaseObject("Controller2", identity);
+	MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
+	mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
+	TeleportAction *ta2 = new TeleportAction();
+	obj2->AddComponent(mc2);
+	obj2->AddComponent(ta2);
+	TimeManager::Instance()->AddObjectToTimeline(obj2);
+
+	BaseObject* headset = new BaseObject("headset", transform);
+	headset->AddComponent(visibleMesh);
+	TimeManager::Instance()->AddObjectToTimeline(headset);
+
+
+	Physics::Instance()->mObjects.push_back(obj);
+	Physics::Instance()->mObjects.push_back(obj1);
+	Physics::Instance()->mObjects.push_back(walls);
+	BaseLevel* L1 = new BaseLevel(headset,obj3,obj2);
+	L1->AddLevelObject(obj);
+	L1->AddLevelObject(obj1);
+	L1->AddLevelObject(obj3);
+	L1->AddLevelObject(obj4);
+	L1->AddLevelObject(walls);
+	L1->AddLevelObject(headset);
+	L1->AddLevelObject(obj2);
+	
+	LevelManager::Instance()->AddLevel(L1);
 
 	//*////////////////////////////////////////////////////////////////////
 	if (VREnabled) {
 		VRInputManager::Instance().iUpdate();
 	}
-
+	
 	while (true) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			// Handle windows message.

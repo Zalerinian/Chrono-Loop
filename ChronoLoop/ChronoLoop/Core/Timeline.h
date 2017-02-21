@@ -74,11 +74,12 @@ public:
 	void AddSnapshot(unsigned int _snaptime, Snapshot* _snapshot);
 	bool RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 	bool RewindMakeClone(unsigned int _snaptime);
+	void MoveObjectToSnap(unsigned int _snaptime,unsigned short _id);
 	void MoveAllObjectsToSnap(unsigned int _snaptime);
 	void MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime,unsigned short _id1, unsigned short _id2, unsigned short _id3);
 	void ClearTimeLine();
 	SnapInfo* GenerateSnapInfo(BaseObject* _object);							//Error check agianst the BaseObject* if it is null or not
-	Snapshot* GenerateSnapShot(unsigned int _time);
+	Snapshot* GenerateSnapShot(unsigned int _time,std::vector<BaseObject*> & _clones);
 	SnapInfoPlayer * GenerateSnapInfoPlayer();
 	bool CheckForDuplicateData(unsigned short _id,BaseObject* _object);
 };

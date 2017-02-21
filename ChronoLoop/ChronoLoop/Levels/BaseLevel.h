@@ -13,11 +13,15 @@ class BaseLevel {
 private:
 	std::list<BaseObject*> mObjectList;
 	unsigned short mId;
+	BaseObject* mHeadset;
+	BaseObject* mController1;
+	BaseObject* mController2;
 
 public:
 	//**CONSTRUCTORS/DESTRUCTORS**//
 	BaseLevel();
 	BaseLevel(unsigned int _id);
+	BaseLevel(BaseObject* _headset, BaseObject* _controller1, BaseObject* _controller2);
 	~BaseLevel();
 	//**GETTERS**//
 	virtual	std::list<BaseObject*> GetLevelObjects() { return mObjectList; };
@@ -30,6 +34,7 @@ public:
 	virtual void SetLevelObject(BaseObject* _obj, int _index);
 	virtual void SetLevelObject(BaseObject* _obj, unsigned short _id);
 	virtual void SetId(unsigned short _set) { mId = _set; };
+	virtual void SetHeadsetAndControllers(BaseObject* _headset, BaseObject* _controller1, BaseObject* _controller2);
 
 	//**FUNCTIONS**//
 	virtual void RemoveLevelObject(BaseObject* _obj) { mObjectList.remove(_obj); };

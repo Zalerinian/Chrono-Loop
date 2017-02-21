@@ -27,6 +27,8 @@ public:
 	void AddObjectToTimeline(BaseObject* _obj);
 	//Clears the list of BaseObject* the Timemanager has refrence to.
 	void ClearClones();
+	//Returns the current snapshot indx
+	unsigned int GetCurrentSnapFrame();
 	//Go back into time. Send in dest frame and send in player headset and conrollers id
 	void RewindTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 	//Go back into time and make clone. Send in dest frame and send in player headset and conrollers baseObjects

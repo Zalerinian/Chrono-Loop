@@ -5,6 +5,7 @@ class LevelManager
 {
 private:
 	std::vector<BaseLevel*> mLevelList;
+	static LevelManager* mLevelmanager;
 public:
 	LevelManager();
 	~LevelManager();
@@ -18,5 +19,11 @@ public:
 	void AddLevel(BaseLevel* _level) { mLevelList.push_back(_level); };
 
 	//Clears everything from m_LevelList
-	void ClearLevels() { mLevelList.clear(); }
+	static void ClearLevels();
+
+	//Instance the class if not already and return a pointer of the class.
+	static LevelManager* Instance();
+
+	static void Destroy();
+
 };

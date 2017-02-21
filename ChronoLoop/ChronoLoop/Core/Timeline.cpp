@@ -40,7 +40,7 @@ bool Timeline::RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsign
 		return false;
 
 	mCurrentGameTimeIndx = _snaptime;
-	MoveAllObjectsToSnapExceptPlayer(_snaptime,_id1,_id2,_id3);
+	MoveAllObjectsToSnapExceptPlayer(_snaptime, _id1, _id2, _id3);
 	return true;
 }
 
@@ -50,6 +50,48 @@ bool Timeline::RewindMakeClone(unsigned int _snaptime) {
 	mCurrentGameTimeIndx = _snaptime;
 	MoveAllObjectsToSnap(_snaptime);
 	return true;
+}
+
+void Timeline::MoveObjectToSnap(unsigned int _snaptime, unsigned short _id) {
+	//TODO PAT: THIS DOESNT TAKE IN ACCOUNT IF SOMETHING WAS MADE IN THE FUTURE TO DELETE IT
+	Snapshot* destination = mSnapshots[_snaptime];
+	SnapInfo* destInfo;
+	//If the object doesnt have a info, then check against the list for the last snap it was updated
+	bool stored = destination->IsObjectStored(_id);
+	if (stored) {
+		destInfo = destination->mSnapinfos[_id];
+	} else if (!stored) {
+		unsigned int lastUpdated = destination->mUpdatedtimes[_id];
+		destInfo = mSnapshots[lastUpdated]->mSnapinfos[_id];
+	}
+	//Set Object data
+	BaseObject* baseobject = mLiveObjects[_id];
+	baseobject->SetTransform(destInfo->mTransform);
+
+	//Set all componets to time recorded
+	//TODO PAT: MAKE THIS MORE EFFICIENT
+	//TODO PAT: WRITE A SetComponets Func to take in SnapComonets.
+	for (unsigned int i = 0; i < destInfo->mComponets.size(); i++) {
+		SnapComponent* destComp = destInfo->mComponets[i];
+		switch (destComp->mCompType) {
+			//For each of the collider in the vec
+		case ComponentType::eCOMPONENT_COLLIDER:
+		{
+			//Loop to find the same collider component
+			for (unsigned int j = 0; j < baseobject->GetComponentCount(eCOMPONENT_COLLIDER); j++) {
+				Component* currComp = baseobject->GetComponentIndexed(eCOMPONENT_COLLIDER, j);
+				if (currComp->GetColliderId() == destComp->mId) {
+					((Collider*)currComp)->mRewind = true;
+					((Collider*)currComp)->mShouldMove = false;
+					((Collider*)currComp)->mAcceleration = ((SnapComponent_Physics*)destComp)->mAcc;
+					((Collider*)currComp)->mVelocity = ((SnapComponent_Physics*)destComp)->mVel;
+					((Collider*)currComp)->AddForce(((SnapComponent_Physics*)destComp)->mForces);
+				}
+			}
+		}
+		}
+
+	}
 }
 
 void Timeline::MoveAllObjectsToSnap(unsigned int _snaptime) {
@@ -197,7 +239,7 @@ SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object) {
 //}
 
 
-Snapshot* Timeline::GenerateSnapShot(unsigned int _time) {
+Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*> & _clones) {
 	Snapshot* snap;
 	bool OldSnap = false;
 
@@ -218,8 +260,8 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time) {
 		for (std::pair<unsigned short, BaseObject*> _b : mLiveObjects) {
 			if (_b.second) {
 				unsigned short id = _b.first;
-					snap->mSnapinfos[id] = GenerateSnapInfo(_b.second);
-					snap->mUpdatedtimes[id] = _time;
+				snap->mSnapinfos[id] = GenerateSnapInfo(_b.second);
+				snap->mUpdatedtimes[id] = _time;
 			}
 		}
 	} else {
@@ -228,13 +270,29 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time) {
 		for (std::pair<unsigned short, BaseObject*> _b : mLiveObjects) {
 			if (_b.second) {
 				unsigned short id = _b.first;
-					//delete an old snapshot
+				if (_clones.size() > 0) {
+					for (unsigned int i = 0; i < _clones.size(); i++) {
+						//Move clone to next frame if frame is avalible
+						if (snap->mSnapinfos[id] != nullptr && id == _clones[i]->GetUniqueId()) {
+							MoveObjectToSnap(_time, id);
+						} else {
+							//delete an old snapshot
+							if (snap->mSnapinfos[id] != nullptr && id != _clones[i]->GetUniqueId())
+								delete snap->mSnapinfos[id];
+							//If change add to mSnapinfos and Updatetime
+							//if (!CheckForDuplicateData(id,_b.second)) {
+							snap->mSnapinfos[id] = GenerateSnapInfo(_b.second);
+							snap->mUpdatedtimes[id] = _time;
+						}
+					}
+				} else {
 					if (snap->mSnapinfos[id] != nullptr)
 						delete snap->mSnapinfos[id];
 					//If change add to mSnapinfos and Updatetime
 					//if (!CheckForDuplicateData(id,_b.second)) {
 					snap->mSnapinfos[id] = GenerateSnapInfo(_b.second);
 					snap->mUpdatedtimes[id] = _time;
+				}
 			}
 		}
 	}
