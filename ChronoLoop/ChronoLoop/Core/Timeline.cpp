@@ -44,15 +44,12 @@ bool Timeline::RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsign
 	return true;
 }
 
-BaseObject * Timeline::RewindMakeClone(unsigned int _snaptime) {
+bool Timeline::RewindMakeClone(unsigned int _snaptime) {
 	if (_snaptime < 0 || _snaptime > mSnaptimes.size() - 1)
-		return nullptr;
-
-	BaseObject* clone = new BaseObject();
+		return false;
+	mCurrentGameTimeIndx = _snaptime;
 	MoveAllObjectsToSnap(_snaptime);
-
-
-	return clone;
+	return true;
 }
 
 void Timeline::MoveAllObjectsToSnap(unsigned int _snaptime) {

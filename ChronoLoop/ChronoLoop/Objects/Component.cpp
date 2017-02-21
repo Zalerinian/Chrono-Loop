@@ -1,7 +1,6 @@
 //#include "stdafx.h"
 #include "Component.h"
 #include "BaseObject.h"
-#include "Action.h"
 
 // 0 is reserved for the player.
 unsigned short Component::mComponentCount = 0;

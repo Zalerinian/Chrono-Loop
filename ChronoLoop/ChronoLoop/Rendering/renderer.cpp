@@ -11,6 +11,9 @@
 #include "../Input/VRInputManager.h"
 #include "../Input/Controller.h"
 
+#define ENABLE_TEXT 0
+
+
 using namespace std;
 using namespace D2D1;
 
@@ -73,9 +76,9 @@ namespace RenderEngine {
 	}
 
 	void Renderer::GetMVP(vr::EVREye e, ViewProjectionBuffer &data) {
-		matrix4 hmd = (Math::FromMatrix(poses[0].mDeviceToAbsoluteTracking));
+		matrix4 hmd = Math::FromMatrix(VRInputManager::Instance().iGetTrackedPositions()[0].mDeviceToAbsoluteTracking);
 
-		matrix4 hmdPos = (hmd * Math::MatrixTranslation(0, 0, 0)).Inverse();
+		matrix4 hmdPos = (hmd * VRInputManager::Instance().iGetPlayerPosition()).Inverse();
 		if (e == vr::EVREye::Eye_Left) {
 			data.view = Math::MatrixTranspose((hmdPos * mEyePosLeft));
 			data.projection = Math::MatrixTranspose(mEyeProjLeft);
@@ -83,10 +86,6 @@ namespace RenderEngine {
 			data.view = Math::MatrixTranspose((hmdPos * mEyePosRight));
 			data.projection = Math::MatrixTranspose(mEyeProjRight);
 		}
-	}
-
-	void Renderer::UpdateTrackedPositions() {
-		vr::VRCompositor()->WaitGetPoses(poses, vr::k_unMaxTrackedDeviceCount, NULL, 0);
 	}
 
 	Renderer::Renderer() {}
@@ -110,6 +109,7 @@ namespace RenderEngine {
 		mChain.reset();
 		mDevice.reset();
 
+#if ENABLE_TEXT
 		(*mTextFactory)->Release();
 		(*mDevice2D)->Release();
 		(*mGIDevice)->Release();
@@ -118,7 +118,7 @@ namespace RenderEngine {
 		(*mTextformat)->Release();
 		(*mBrush)->Release();
 		(*mScreenBitmap)->Release();
-
+		
 		mTextFactory.reset();
 		mDevice.reset();
 		mGIDevice.reset();
@@ -127,11 +127,11 @@ namespace RenderEngine {
 		mTextformat.reset();
 		mBrush.reset();
 		mScreenBitmap.reset();
-
+#endif
 	}
 
 	void Renderer::InitializeD3DDevice() {
-		UINT flags = 0;
+		UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #if _DEBUG
 		flags = D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #endif
@@ -216,7 +216,7 @@ namespace RenderEngine {
 
 		//createDxgiDevice
 		IDXGIDevice* DxgiDevice;
-		ThrowIfFailed((*sInstance->GetDevice())->QueryInterface(__uuidof(IDXGIDevice), (void **)&DxgiDevice));
+		ThrowIfFailed((*sInstance->iGetDevice())->QueryInterface(__uuidof(IDXGIDevice), (void **)&DxgiDevice));
 		sInstance->mGIDevice = make_shared<IDXGIDevice*>(DxgiDevice);
 
 		//create device2d 
@@ -317,6 +317,24 @@ namespace RenderEngine {
 		(*mDevice)->CreateBuffer(&desc, nullptr, &pBuff);
 		mPositionBuffer = std::make_shared<ID3D11Buffer*>(pBuff);
 	}
+	
+	void Renderer::InitializeSamplerState() {
+		D3D11_SAMPLER_DESC sDesc;
+		memset(&sDesc, 0, sizeof(sDesc));
+		sDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		sDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		sDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		sDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		sDesc.MaxAnisotropy = 16;
+		sDesc.MinLOD = 0;
+		sDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+		ID3D11SamplerState *ss;
+		ThrowIfFailed((*mDevice)->CreateSamplerState(&sDesc, &ss));
+		mSamplerState = make_shared<ID3D11SamplerState*>(ss);
+		(*mContext)->PSSetSamplers(0, 1, &ss);
+	}
+
 	void Renderer::InitializeObjectNames() {
 #if _DEBUG
 		char deviceName[] = "Main Rendering Device";
@@ -354,7 +372,6 @@ namespace RenderEngine {
 
 	void Renderer::RenderVR(float _delta) {
 		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-		UpdateTrackedPositions();
 		vr::VRCompositor()->CompositorBringToFront();
 		float color[4] = { 0.251f, 0.709f, 0.541f, 1 };
 		for (int i = 0; i < 2; ++i) {
@@ -376,24 +393,11 @@ namespace RenderEngine {
 			vr::VRCompositor()->Submit(currentEye, &submitTexture);
 		}
 		//pat added 
+#if ENABLE_TEXT
 		std::wstring FPS = L"FPS: " + to_wstring(mFps);
 		DrawTextToBitmap(FPS, (*mScreenBitmap));
+#endif
 		//-----
-
-		// Bootleg load the controller model.
-		if (mControllerModel.mIndexCount == 0) {
-			vr::RenderModel_t *vrControllerModel;
-			if (vr::VRRenderModels()->LoadRenderModel_Async("vr_controller_vive_1_5", &vrControllerModel) == vr::VRRenderModelError_None) {
-				Mesh controller;
-				controller.Load(vrControllerModel);
-				controller.Invert();
-				mControllerModel.Load(controller);
-				mControllerModel.SetShaders(ePS_BASIC, eVS_BASIC);
-				AddNode(&mControllerModel);
-				vr::VRRenderModels()->FreeRenderModel(vrControllerModel);
-			}
-		}
-
 	}
 
 	void Renderer::UpdateCamera(float const _moveSpd, float const _rotSpd, float _delta) {
@@ -449,11 +453,12 @@ namespace RenderEngine {
 
 	void Renderer::RenderNoVR(float _delta) {
 		UpdateCamera(2, 0, _delta);
-		mBox.mPosition = Math::MatrixRotateInPlace(mBox.mPosition, { 0, 1, 0, 0 }, DirectX::XM_PI / 256.0f);
 		ProcessRenderSet();
 		//pat added 
+#if ENABLE_TEXT
 		std::wstring FPS = L"FPS: " + to_wstring(mFps);
 		DrawTextToBitmap(FPS, (*mScreenBitmap));
+#endif
 		//-----
 	}
 
@@ -517,10 +522,14 @@ namespace RenderEngine {
 
 #pragma region Public Functions
 
-	void Renderer::AddNode(RenderShape *node) {
-		mRenderSet.AddNode(node, &node->GetContext());
+	void Renderer::AddNode(RenderShape *_node) {
+		mRenderSet.AddNode(_node, &_node->GetContext());
 	}
-	bool Renderer::Initialize(HWND _Window, unsigned int _width, unsigned int _height, bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane, vr::IVRSystem * _vrsys) {
+	void Renderer::RemoveNode(RenderShape *_node) {
+		mRenderSet.RemoveShape(_node);
+	}
+
+	bool Renderer::iInitialize(HWND _Window, unsigned int _width, unsigned int _height, bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane, vr::IVRSystem * _vrsys) {
 		mWindow = make_shared<HWND>(_Window);
 		mVrSystem = _vrsys;
 
@@ -549,34 +558,28 @@ namespace RenderEngine {
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, rtvWidth, rtvHeight);
 		InitializeViews(rtvWidth, rtvHeight);
 		InitializeBuffers();
+#if ENABLE_TEXT
 		InitializeDirect2D();
 		InitializeIDWriteFactory();
+		InitializeScreenBitmap();
+#endif
 #if _DEBUG
 		InitializeObjectNames();
-		InitializeObjectNames();
 #endif
+		InitializeSamplerState();
 		SetStaticBuffers();
 
-		InitializeDXGISwapChain(_Window, _fullscreen, _fps, _width, _height);
-		InitializeViews(_width, _height);
-		InitializeScreenBitmap();
+		// TODO Eventually: Give each shape a topology enum, perhaps?
+		(*mContext)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		// TODO Eventually: Actually assign input layouts for each render shape.
+		InputLayoutManager::Instance().ApplyLayout(eVERT_POSNORMTEX);
 
 		mUseVsync = _vsync;
-		mPlane.Load("../Resources/Liftoff.obj", true, ePS_TEXTURED, eVS_TEXTURED);
-		//Model loading
-		mBox.Load("../Resources/Cube.obj", true, ePS_TEXTURED, eVS_TEXTURED);
-		mPlane.AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
-		//AddNode(&mBox);
-		AddNode(&mPlane);
-		mBox.mPosition = Math::MatrixTranspose(Math::MatrixTranslation(0, 3, 0));
-		mPlane.mPosition = Math::MatrixTranspose(Math::MatrixTranslation(0, -1, 0));
 
 
 		if (!mVrSystem) {
 			mDebugCameraPos.matrix = (DirectX::XMMatrixLookAtRH({ 0, .5, 5, 0 }, { 0, 0, 0, 0 }, { 0, 1, 0, 0 }));
-			//mVPData.view.matrix = (DirectX::XMMatrixLookAtRH({ 0, 5, 5, 0 }, { 0, 1, 0, 0 }, { 0, 1, 0, 0 }));
 			mVPData.projection.matrix = DirectX::XMMatrixPerspectiveFovRH(70, (float)_height / (float)_width, 0.1f, 1000);
-			//mVPData.view = Math::MatrixTranspose(mVPData.view);
 			mVPData.view = Math::MatrixTranspose(mDebugCameraPos);
 			mVPData.projection = Math::MatrixTranspose(mVPData.projection);
 			(*mContext)->UpdateSubresource(*mVPBuffer, 0, NULL, &mVPData, 0, 0);
@@ -614,10 +617,5 @@ namespace RenderEngine {
 #pragma endregion Public Functions
 
 #pragma endregion Instance Functions
-
-		matrix4* Renderer::GetPlayerWorldPos() {
-		matrix4 temp = FromMatrix(poses[0].mDeviceToAbsoluteTracking);
-		return &temp;
-	}
 
 }

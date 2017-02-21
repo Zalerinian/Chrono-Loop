@@ -10,6 +10,10 @@ BaseLevel::BaseLevel(unsigned int _id) {
 }
 
 BaseLevel::~BaseLevel() {
+	for (std::list<BaseObject*>::const_iterator iter = mObjectList.begin(); iter != mObjectList.end(); ++iter) { 
+			BaseObject* rtn = (*iter);
+			delete rtn;
+	}
 	mObjectList.clear();
 }
 

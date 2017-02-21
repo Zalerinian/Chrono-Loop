@@ -33,8 +33,10 @@ void Physics::Destroy()
 
 bool Physics::RayToTriangle(vec4f& _vert0, vec4f& _vert1, vec4f& _vert2, vec4f& _normal, vec4f& _start, vec4f& _dir, float& _time)
 {
-	if ((_normal * _dir) > 0 || ((_vert0 - _start) * _normal) > 0)
+	vec3f rayToCentroid = ((_vert0 + _vert1 + _vert2) / 3) - _start;
+	if ((_normal * _dir) > 0.001f || (rayToCentroid * _normal) > 0) {
 		return false;
+	}
 
 	vec4f sa = _vert0 - _start;
 	vec4f sb = _vert1 - _start;
@@ -50,7 +52,7 @@ bool Physics::RayToTriangle(vec4f& _vert0, vec4f& _vert1, vec4f& _vert2, vec4f& 
 	if (dn1 == 0.0f && dn2 == 0.0f && dn3 == 0.0f)
 	{
 		_time = 0;
-		return false;
+		return true;
 	}
 
 	if (SameSign(dn1, dn2) && SameSign(dn2, dn3))
@@ -663,19 +665,19 @@ void Physics::Update(float _time)
 									if (collider->mColliding)
 										collider->mColliding = false;
 									//SystemLogger::GetLog() << "AABB IN FRONT OF PLANE!" << std::endl;
-									SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
+									//SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
 								}
 								else if (result == 2)//behind plane
 								{
 									if (collider->mColliding)
 										collider->mColliding = false;
 									//SystemLogger::GetLog() << "AABB BEHIND PLANE!" << std::endl;
-									SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
+									//SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
 								}
 								else if (result == 3)// intersecting plane
 								{
 									//SystemLogger::GetLog() << "AABB INTERSECTING PLANE!" << std::endl;
-									SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
+									//SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
 
 									if (collider->mShouldMove && !collider->mColliding)
 									{

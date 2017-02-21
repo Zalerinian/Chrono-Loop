@@ -12,8 +12,11 @@
 #include <ctime>
 #include <chrono>
 #include <d3d11.h>
-#include "Objects/CodeComponent.h"
-#include "Actions/BoxSnapToControllerAction.h"
+#include "Common/Math.h"
+//#include "Actions/CodeComponent.h"
+#include "Objects/MeshComponent.h"
+#include "Actions/BoxSnapToControllerAction.hpp"
+#include "Actions/TeleportAction.hpp"
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -35,7 +38,7 @@ void UpdateTime();
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(373);
+	//_CrtSetBreakAlloc(1253);
 	if (!InitializeWindow(hInstance, nCmdShow, 800, 600, true)) {
 		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
 		return 2;
@@ -57,7 +60,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 		return 1;
 	}
 
-	std::shared_ptr<ID3D11Device*> renderingDevice = RenderEngine::Renderer::Instance()->GetDevice();
+	std::shared_ptr<ID3D11Device*> renderingDevice = RenderEngine::Renderer::Instance()->iGetDevice();
 
 	// Update everything
 	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count());
@@ -102,6 +105,8 @@ void Update() {
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
 
+
+	// TODO: Replace all this with a level to run.
 	///*///////////////////////Using this to test physics//////////////////
 	Transform transform;
 	transform.SetMatrix(MatrixIdentity());
@@ -111,7 +116,7 @@ void Update() {
 	CubeCollider *aabb = new CubeCollider(true, vec4f(0.0f, -9.80f, 0.0f, 1.0f), 10.0f, 0.5f, 0.7f, vec4f(0.15f, -0.15f, .15f, 1.0f), vec4f(-0.15f, 0.15f, -0.15f, 1.0f));
 	aabb->AddForce(vec4f(2, 0, 0, 0));
 	obj.AddComponent(aabb);
-	RenderEngine::Renderer::Instance()->mBox.mPosition = Math::MatrixTranspose(obj.GetTransform().GetMatrix());
+	TimeManager::Instance()->AddObjectToTimeline(&obj);
 
 	matrix4 mat = MatrixTranslation(0, -1, 0);
 
@@ -119,21 +124,50 @@ void Update() {
 	transform1.SetMatrix(mat);
 	BaseObject obj1("plane", transform1);
 	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
+	MeshComponent *planeObj = new MeshComponent("../Resources/BigFloor.obj");
+	planeObj->AddTexture("../Resources/floorg.png", RenderEngine::eTEX_DIFFUSE);
 	obj1.AddComponent(plane);
-	RenderEngine::Renderer::Instance()->mPlane.mPosition = Math::MatrixTranspose(obj1.GetTransform().GetMatrix());
+	obj1.AddComponent(planeObj);
 
-	TimeManager::Instance()->AddObjectToTimeline(&obj);
+
+	BaseObject obj4("plane2", transform1);
+	MeshComponent *planeObj2 = new MeshComponent("../Resources/Liftoff.obj");
+	planeObj2->AddTexture("../Resources/floorg.png", RenderEngine::eTEX_DIFFUSE);
+	obj4.AddComponent(planeObj2);
+	
+	Transform identity;
+	identity.SetMatrix(Math::MatrixIdentity());
+
+	BaseObject walls("walls", transform1);
+	MeshComponent *wallMesh = new MeshComponent("../Resources/BigWall.obj");
+	wallMesh->AddTexture("../Resources/Wallg.png", RenderEngine::eTEX_DIFFUSE);
+	walls.AddComponent(wallMesh);
+
+
+	BaseObject obj3("Controller", identity);
+	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
+	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
+	TeleportAction *ta = new TeleportAction();
+	obj3.AddComponent(mc);
+	obj3.AddComponent(ta);
+	TimeManager::Instance()->AddObjectToTimeline(&obj3);
+
 	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
+	visibleMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
 	obj.AddComponent(visibleMesh);
 
-	BoxSnapToControllerAction *Action = new BoxSnapToControllerAction(&obj);
-	CodeComponent *codeComponent = new CodeComponent(Action);
+	CodeComponent *codeComponent = new BoxSnapToControllerAction();
 	obj.AddComponent(codeComponent);
 
 	Physics::Instance()->mObjects.push_back(&obj);
 	Physics::Instance()->mObjects.push_back(&obj1);
-	//*////////////////////////////////////////////////////////////////////
+	Physics::Instance()->mObjects.push_back(&obj3);
+	Physics::Instance()->mObjects.push_back(&walls);
 
+	//*////////////////////////////////////////////////////////////////////
+	if (VREnabled) {
+		VRInputManager::Instance().iUpdate();
+	}
 
 	while (true) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
@@ -149,21 +183,16 @@ void Update() {
 			}
 
 			UpdateTime();
-			if (VREnabled) {
-				VRInputManager::Instance().update();
-			}
-
-			// Logic.Update(float deltaTime);
-			TManager->Instance()->Update(deltaTime);
-			RenderEngine::Renderer::Instance()->Render(deltaTime);
-
-			Physics::Instance()->Update(deltaTime);
 			auto& objects = Physics::Instance()->mObjects;
 			for (auto it = objects.begin(); it != objects.end(); ++it) {
 				(*it)->Update();
 			}
-			//RenderEngine::Renderer::Instance()->mBox.mPosition = Math::MatrixTranspose(obj.GetTransform().GetMatrix());
-			RenderEngine::Renderer::Instance()->mPlane.mPosition = Math::MatrixTranspose(obj1.GetTransform().GetMatrix());
+			TManager->Instance()->Update(deltaTime);
+			RenderEngine::Renderer::Instance()->Render(deltaTime);
+			Physics::Instance()->Update(deltaTime);
+			if (VREnabled) {
+				VRInputManager::Instance().iUpdate();
+			}
 		}
 	}
 }

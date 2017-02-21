@@ -14,7 +14,6 @@ class TimeManager
 	float mlastRecordedTime =0, mTimestamp = 0;
 	unsigned int mLevelTime = 0;
 	bool mRewindTime = false, mRewindMakeClone = false;
-	BaseObject* mPlayer;
 	std::vector<BaseObject*>mClones;
 	Timeline* GetTimeLine();
 	

@@ -115,12 +115,6 @@
     <Filter Include="Actions">
       <UniqueIdentifier>{48beaf3c-0f0e-4a07-9918-0972a580a156}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Actions\Header Files">
-      <UniqueIdentifier>{40394fa7-5ad7-4f4d-b45d-9766ac66b0f3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Actions\Source Files">
-      <UniqueIdentifier>{1c502cf1-5084-4abb-a940-cc43b5710b51}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\BaseObject.h">
@@ -255,14 +249,26 @@
     <ClInclude Include="Rendering\TextureManager.h">
       <Filter>Rendering\Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\Action.h">
+    <ClInclude Include="Objects\MeshComponent.h">
       <Filter>Objects\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\BoxSnapToControllerAction.h">
-      <Filter>Actions\Header Files</Filter>
+    <ClInclude Include="Actions\BoxSnapToControllerAction.hpp">
+      <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\CodeComponent.h">
-      <Filter>Objects\Header Files</Filter>
+    <ClInclude Include="Actions\CodeComponent.hpp">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\TeleportAction.hpp">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\IndexBufferManager.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\VertexBuffer.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\VertexBufferManager.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -425,16 +431,16 @@
     <ClCompile Include="Rendering\Mesh.cpp">
       <Filter>Rendering\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Rendering\IndexBufferManager.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\VertexBufferManager.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\VertexBuffer.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
+    </ClCompile>
     <ClCompile Include="Objects\MeshComponent.cpp">
-      <Filter>Objects\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\Action.cpp">
-      <Filter>Objects\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Actions\BoxSnapToControllerAction.cpp">
-      <Filter>Actions\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\CodeComponent.cpp">
       <Filter>Objects\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

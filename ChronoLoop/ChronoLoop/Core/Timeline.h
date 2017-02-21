@@ -73,7 +73,7 @@ public:
 	//TODO PAT: add a remove base object func that says the object has been removed in the next snap recording
 	void AddSnapshot(unsigned int _snaptime, Snapshot* _snapshot);
 	bool RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
-	BaseObject* RewindMakeClone(unsigned int _snaptime);
+	bool RewindMakeClone(unsigned int _snaptime);
 	void MoveAllObjectsToSnap(unsigned int _snaptime);
 	void MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime,unsigned short _id1, unsigned short _id2, unsigned short _id3);
 	void ClearTimeLine();

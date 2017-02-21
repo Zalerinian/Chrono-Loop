@@ -6,7 +6,8 @@ class LevelManager
 private:
 	std::vector<BaseLevel*> mLevelList;
 public:
-
+	LevelManager();
+	~LevelManager();
 	//The List of Levels (m_LevelList)
 	std::vector<BaseLevel*> GetLevelList() { return mLevelList; };
 

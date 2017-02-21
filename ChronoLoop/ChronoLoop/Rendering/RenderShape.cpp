@@ -50,7 +50,7 @@ namespace RenderEngine {
 		ID3D11Buffer *tBuffer;
 		mIndexBuffer = nullptr;
 		mVertexBuffer = nullptr;
-		auto device = *Renderer::Instance()->GetDevice().get();
+		auto device = *Renderer::Instance()->iGetDevice().get();
 		D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
 		auto verts = _mesh.GetVerts();
 		vertexBufferData.pSysMem = verts;
@@ -71,11 +71,11 @@ namespace RenderEngine {
 	}
 
 	void RenderShape::Load(const char * _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs) {
-		Mesh m(_path);
+		mMesh.Load(_path);
 		if (_invert) {
-			m.Invert();
+			mMesh.Invert();
 		}
-		Load(m);
+		Load(mMesh);
 		SetShaders(_ps, _vs);
 	}
 	
@@ -114,9 +114,9 @@ namespace RenderEngine {
 
 	void RenderShape::Render() {
 		UINT stride = sizeof(VertexPosNormTex), offset = 0;
-		(*Renderer::Instance()->GetContext())->IASetIndexBuffer(*mIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-		(*Renderer::Instance()->GetContext())->IASetVertexBuffers(0, 1, mVertexBuffer.get(), &stride, &offset);
-		(*Renderer::Instance()->GetContext())->DrawIndexed(mIndexCount, 0, 0);
+		(*Renderer::Instance()->iGetContext())->IASetIndexBuffer(*mIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+		(*Renderer::Instance()->iGetContext())->IASetVertexBuffers(0, 1, mVertexBuffer.get(), &stride, &offset);
+		(*Renderer::Instance()->iGetContext())->DrawIndexed(mIndexCount, 0, 0);
 	}
 
 }

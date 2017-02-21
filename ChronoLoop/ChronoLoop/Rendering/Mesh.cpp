@@ -221,6 +221,7 @@ bool MeshFormat<VertexPosNormTex>::Load(const char * path)
 			if (matches != 9) {
 				return false;
 			}
+			Triangle t;
 			for (int i = 0; i < 3; i++)
 			{
 				VertexPosNormTex temp;
@@ -232,6 +233,7 @@ bool MeshFormat<VertexPosNormTex>::Load(const char * path)
 				temp.Normal = norms[normalIndex[i] - 1];
 				temp.Normal.w = 0;
 				Ind.push_back((unsigned short)Verts.size());
+				t.Vertex[i] = temp.Position;
 				Verts.push_back(temp);
 			}
 		}

@@ -24,16 +24,18 @@ class Component
 	static unsigned short mComponentCount;
 	unsigned short mComponentId;
 protected:
-	bool mIsEnabled;
+	bool mDestroyed = false;
+	bool mIsEnabled = true, mIsValid = true;
 	ComponentType mType = eCOMPONENT_MAX;
 	BaseObject* mObject = nullptr;
 public:
 	Component();
-	~Component();
-	ComponentType GetType() { return mType; };
-	bool isEnabled() { return mIsEnabled; };
-	void Disable() { mIsEnabled = false; };
-	void Enable() { mIsEnabled = true; };
+	virtual ~Component();
+	inline ComponentType GetType() { return mType; };
+	inline bool IsEnabled() { return mIsEnabled; };
+	inline bool IsValid() { return mIsValid; }
+	inline void Disable() { mIsEnabled = false; };
+	inline void Enable() { mIsEnabled = true; };
 	virtual void Update() = 0;
 	virtual void Destroy() = 0;
 	void GetMatrix(matrix4& _m);
@@ -56,21 +58,6 @@ public:
 
 	void Update();
 	void Destroy();
-};
-
-namespace RenderEngine {
-	struct RenderShape;
-}
-
-class MeshComponent : public Component {
-	RenderEngine::RenderShape* mShape;
-	bool mVisible;
-
-public:
-	MeshComponent(const char *_path);
-	void Update();
-	void Destroy();
-	void SetVisible(bool _vis);
 };
 
 class Collider : public Component {
