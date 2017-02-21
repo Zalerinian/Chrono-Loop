@@ -1,26 +1,171 @@
-#include "stdafx.h"
+//#include "stdafx.h"
+#include "Rendering/SystemInitializer.h"
+#include "Rendering/renderer.h"
+#include "Objects/BaseObject.h"
+#include "Rendering/InputLayoutManager.h"
+#include ".\Rendering\RenderShape.h"
+#include "Input/VRInputManager.h"
+#include "Core/TimeManager.h"
+#include "Core/Timeline.h"
+#include "Common/Logger.h"
+#include <openvr.h>
+#include <ctime>
+#include <chrono>
+#include <d3d11.h>
+#include "Objects/CodeComponent.h"
+#include "Actions/BoxSnapToControllerAction.h"
+
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
 
 HWND hwnd;
 LPCTSTR WndClassName = L"ChronoWindow";
 HINSTANCE hInst;
+bool VREnabled = false;
 
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed);
+std::chrono::steady_clock::time_point lastTime = std::chrono::steady_clock::now();
+static float timeFrame = 0.0f;
+static float deltaTime;
+TimeManager* TManager;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void Update();
+void UpdateTime();
 
-int APIENTRY wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
+int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	//_CrtSetBreakAlloc(373);
 	if (!InitializeWindow(hInstance, nCmdShow, 800, 600, true)) {
-		MessageBox(NULL, L"Kablamo.", L"The window broked.", MB_ICONERROR | MB_OK);
+		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
+		return 2;
 	}
 
-	// Initialize Renderer / VR
+	// Initialize Rendering systems and VR
+	vr::HmdError pError;
+	vr::IVRSystem *vrsys = nullptr;
+	vrsys = vr::VR_Init(&pError, vr::VRApplication_Scene);
+	if (pError != vr::HmdError::VRInitError_None) {
+		SystemLogger::GetLog() << "Could not initialize OpenVR for reasons!" << std::endl;
+	}
+
+	if (vrsys != nullptr) {
+		VREnabled = true;
+	}
+
+	if (!RenderEngine::InitializeSystems(hwnd, 800, 600, false, 90, false, 1000, 0.1f, vrsys)) {
+		return 1;
+	}
+
+	std::shared_ptr<ID3D11Device*> renderingDevice = RenderEngine::Renderer::Instance()->GetDevice();
 
 	// Update everything
+	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count());
 	Update();
 
 	// Cleanup
+	RenderEngine::ShutdownSystems();
+	SystemLogger::CloseLog();
+	SystemLogger::CloseError();
+	vr::VR_Shutdown();
+	vrsys = nullptr;
+
+#if _DEBUG
+	// In debug mode, dump any remaining live DirectX objects. This list should be hopefully small at this point.
+	ID3D11Debug *debug;
+	(*renderingDevice)->QueryInterface(IID_ID3D11Debug, (void**)&debug);
+	if (debug) {
+		OutputDebugStringA("\n\n\n");
+		debug->ReportLiveDeviceObjects(D3D11_RLDO_FLAGS::D3D11_RLDO_DETAIL);
+		debug->Release();
+		OutputDebugStringA("\n\n\n");
+	}
+#endif
+
+	// Release the Device
+	(*renderingDevice)->Release();
+
+#if _DEBUG || CONSOLE_OVERRIDE
+	FreeConsole();
+#endif
 
 	return 0;
+}
+
+void UpdateTime() {
+	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count() - lastTime.time_since_epoch().count()) / 1000.0f / 1000.0f / 1000.0f;
+	lastTime = std::chrono::steady_clock::now();
+}
+
+
+void Update() {
+	MSG msg;
+	ZeroMemory(&msg, sizeof(MSG));
+
+	///*///////////////////////Using this to test physics//////////////////
+	Transform transform;
+	transform.SetMatrix(MatrixIdentity());
+	matrix4 mat1 = MatrixTranslation(0, 5, 0);
+	transform.SetMatrix(mat1);
+	BaseObject obj("aabb", transform);
+	CubeCollider *aabb = new CubeCollider(true, vec4f(0.0f, -9.80f, 0.0f, 1.0f), 10.0f, 0.5f, 0.7f, vec4f(0.15f, -0.15f, .15f, 1.0f), vec4f(-0.15f, 0.15f, -0.15f, 1.0f));
+	aabb->AddForce(vec4f(2, 0, 0, 0));
+	obj.AddComponent(aabb);
+	RenderEngine::Renderer::Instance()->mBox.mPosition = Math::MatrixTranspose(obj.GetTransform().GetMatrix());
+
+	matrix4 mat = MatrixTranslation(0, -1, 0);
+
+	Transform transform1;
+	transform1.SetMatrix(mat);
+	BaseObject obj1("plane", transform1);
+	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
+	obj1.AddComponent(plane);
+	RenderEngine::Renderer::Instance()->mPlane.mPosition = Math::MatrixTranspose(obj1.GetTransform().GetMatrix());
+
+	TimeManager::Instance()->GetTimeLine()->AddBaseObject(&obj,obj.GetUniqueId());
+	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
+	obj.AddComponent(visibleMesh);
+
+	BoxSnapToControllerAction *Action = new BoxSnapToControllerAction(&obj);
+	CodeComponent *codeComponent = new CodeComponent(Action);
+	obj.AddComponent(codeComponent);
+
+	Physics::Instance()->mObjects.push_back(&obj);
+	Physics::Instance()->mObjects.push_back(&obj1);
+	//*////////////////////////////////////////////////////////////////////
+
+
+	while (true) {
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+			// Handle windows message.
+			if (msg.message == WM_QUIT) {
+				break;
+			}
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		} else {
+			if (GetAsyncKeyState(VK_ESCAPE)) {
+				break;
+			}
+
+			UpdateTime();
+			if (VREnabled) {
+				VRInputManager::Instance().update();
+			}
+
+			// Logic.Update(float deltaTime);
+			TManager->Instance()->Update(deltaTime);
+			RenderEngine::Renderer::Instance()->Render(deltaTime);
+
+			Physics::Instance()->Update(deltaTime);
+			auto& objects = Physics::Instance()->mObjects;
+			for (auto it = objects.begin(); it != objects.end(); ++it) {
+				(*it)->Update();
+			}
+			//RenderEngine::Renderer::Instance()->mBox.mPosition = Math::MatrixTranspose(obj.GetTransform().GetMatrix());
+			RenderEngine::Renderer::Instance()->mPlane.mPosition = Math::MatrixTranspose(obj1.GetTransform().GetMatrix());
+		}
+	}
 }
 
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed) {
@@ -64,7 +209,7 @@ bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, b
 												WndClassName,                        //Name of our windows class
 												L"Chrono::Loop",                     //Name in the title bar of our window
 												WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME, //style of our window
-												600, 150,										         //Top left corner of window
+												600, 150,                            //Top left corner of window
 												width,                               //Width of our window
 												height,                              //Height of our window
 												NULL,                                //Handle to parent window
@@ -72,7 +217,6 @@ bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, b
 												hInstance,                           //Specifies instance of current program
 												NULL                                 //used for an MDI client window
 	);
-
 	if (!hwnd) {
 		MessageBox(NULL, L"Error creating window", L"Error", MB_OK | MB_ICONERROR);
 		return 1;
@@ -94,25 +238,3 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 	}
 	return 0;
 }
-
-void Update() {
-	MSG msg;
-	ZeroMemory(&msg, sizeof(MSG));
-	while (true) {
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
-			// Handle windows message.
-			if (msg.message == WM_QUIT) {
-				break;
-			}
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		} else {
-			// Input.Update();
-			// Logic.Update();
-			// Renderer.Render();
-		}
-	}
-}
-
-
-
