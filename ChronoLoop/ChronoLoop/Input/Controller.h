@@ -8,8 +8,8 @@ typedef unsigned long ulong;
 class Controller {
 private:
 	vr::IVRSystem* mHmd = nullptr;
-	int mIndex;
-	bool mValid;
+	int mIndex = -1;
+	bool mValid = false;
 	vr::VRControllerState_t mState, mPrevState;
 	vec3f mPosition;
 

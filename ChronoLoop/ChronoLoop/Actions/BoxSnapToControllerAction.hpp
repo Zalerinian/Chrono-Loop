@@ -87,16 +87,16 @@ struct BoxSnapToControllerAction : public CodeComponent {
 				// Get initial point, get vector from it's negation (v - (-v)), and then cross it (v.y, -v.x)
 				vec2f initialPoint = mBootleg[0];
 				vec2f line = (initialPoint - (-initialPoint));
-				vec2f clockwise = line.Cross().Normalize();
+				vec2f counterClockwise = line.Cross().Normalize();
 
 				vec2f pointEight = mBootleg[8];
 				vec2f leg = (pointEight - initialPoint);
 				vec2f nLeg = leg.Normalize();
 				if (leg.SquaredMagnitude() >= 0.01f) {
-					if (nLeg * clockwise < 0) {
+					if (nLeg * counterClockwise < 0) {
 						SystemLogger::GetLog() << "Somewhat Clockwise" << std::endl;
 					}
-					if (nLeg * clockwise > 0) {
+					if (nLeg * counterClockwise > 0) {
 						SystemLogger::GetLog() << "Somewhat Counter-Clockwise" << std::endl;
 					}
 				}
