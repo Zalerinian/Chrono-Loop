@@ -25,7 +25,6 @@
 HWND hwnd;
 LPCTSTR WndClassName = L"ChronoWindow";
 HINSTANCE hInst;
-Messager msger = Messager::Instance();
 bool VREnabled = false;
 
 const wchar_t* _basePath = L"../ChronoLoop/Sound/Sound/Soundbanks/";
@@ -37,6 +36,7 @@ typedef unsigned __int64 AudioEvent;				///< Integer (unsigned) type for pointer
 #else
 typedef __w64 unsigned int AudioEvent;			///< Integer (unsigned) type for pointers
 #endif
+#define CONSOLE_OVERRIDE 1
 
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed);
 std::chrono::steady_clock::time_point lastTime = std::chrono::steady_clock::now();
@@ -158,20 +158,20 @@ void Update() {
 	}
 
 	//Sound Initializing---------------------------------------------------
-	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::INITIALIZE_Audio, 0, false));
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::INITIALIZE_Audio, 0, false));
 	//Soundbanks
-	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::SET_BasePath, 0, false, (void*)new m_Path(_basePath)));
-	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_initSB)));
-	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
-
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::SET_BasePath, 0, false, (void*)new m_Path(_basePath)));
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_initSB)));
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
+	
 	//Temp Camera OBJ
 	Transform camTrans;
 	camTrans.SetMatrix(MatrixIdentity());
 	BaseObject camObj("TempCam", camTrans);
 	Listener* ears = new Listener();
 	camObj.AddComponent(ears);
-	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(ears, "Listener")));
-	msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(aabbSound, "aabbS")));
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(ears, "Listener")));
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(aabbSound, "aabbS")));
 	aabbSound->Play();
 
 	while (true) {
@@ -187,7 +187,7 @@ void Update() {
 			if (GetAsyncKeyState(VK_ESCAPE)) {
 				break;
 			}
-			msger.SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false, (void*)nullptr));
+			Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false, (void*)nullptr));
 			UpdateTime();
 			auto& objects = Physics::Instance()->mObjects;
 			for (auto it = objects.begin(); it != objects.end(); ++it) {
@@ -201,6 +201,8 @@ void Update() {
 			}
 		}
 	}
+	Messager::Destroy();
+
 }
 
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed) {

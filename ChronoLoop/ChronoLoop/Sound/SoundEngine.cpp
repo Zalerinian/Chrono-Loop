@@ -11,7 +11,7 @@
 #include "../Objects/BaseObject.h"
 using namespace Math;
 
-#pragma comment(lib, "AkSoundEngineDLL.lib")
+//#pragma comment(lib, "AkSoundEngineDLL.lib")
 using namespace AK;
 
 AudioWrapper * AudioWrapper::audioSystem = nullptr;
@@ -24,13 +24,14 @@ AudioWrapper::AudioWrapper() : mWorldScale(1.f), mIsInitialize(false)
 
 AudioWrapper::~AudioWrapper()
 {
-
+	Shutdown();
 }
+
 //-------Initialize-Shutdown-Update------------------------------------
 bool AudioWrapper::Initialize()
 {
 	AkMemSettings memorySettings;
-	memorySettings.uMaxNumPools = 40;
+	memorySettings.uMaxNumPools = 400;
 
 	AkStreamMgrSettings streamSettings;
 	StreamMgr::GetDefaultSettings(streamSettings);
@@ -49,7 +50,7 @@ bool AudioWrapper::Initialize()
 	musicInitialize.fStreamingLookAheadRatio = 100;
 
 	AKRESULT eResult = SOUNDENGINE_DLL::Init(&memorySettings, &streamSettings, &deviceSettings, &InitSettings, &platInitSetings, &musicInitialize);
-
+	
 	//More error checking?
 	/*switch (eResult) {}*/
 
@@ -59,6 +60,7 @@ bool AudioWrapper::Initialize()
 		SOUNDENGINE_DLL::Term();
 		return false;
 	}
+
 
 	mIsInitialize = true;
 	return true;
@@ -205,8 +207,7 @@ bool AudioWrapper::RemoveEmitter(const Emitter * _emitter)
 //-------------EVENTS-----------------------------------------------
 bool AudioWrapper::MakeEventAtLocation(AudioEvent _id, vec4f * _pos)
 {
-	static long dummyID = -1;
-	++dummyID;
+	static long dummyID = 0;
 
 	AkSoundPosition sPos;
 	sPos.SetOrientation(0, 0, 1.0f, 0, 0, 1.0f);

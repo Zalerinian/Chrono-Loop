@@ -4,6 +4,7 @@
 #include <queue>
 #include <vector>
 #include <thread>
+#include <mutex>
 #include "..\Common\Logger.h"
 #include <cstdarg>
 
@@ -109,12 +110,12 @@ class Messager
 	static Messager* mMessager;
 
 private:
-	AudioWrapper audio;
 	//static std::priority_queue<Message*,std::vector<Message*>> msgQueue;
 	std::thread thrd;
+	std::mutex mLock;
 
-	static std::queue<Message*> msgQueue;
-	static bool death;
+	std::queue<Message*> msgQueue;
+	bool death;
 
 	void ProcessMessage(Message* _msg);
 
@@ -122,9 +123,10 @@ private:
 	void ProcessRender(Message* _msg);
 	void ProcessPhysics(Message* _msg);
 	void ProcessInput(Message* _msg);
-public:
 	Messager();
-	Messager(Messager& _newMsger);
+	Messager(const Messager& _newMsger){}
+	Messager& operator=(const Messager& _m) { return *this; }
+public:
 	~Messager();
 	static Messager& Instance();
 	static void Destroy();

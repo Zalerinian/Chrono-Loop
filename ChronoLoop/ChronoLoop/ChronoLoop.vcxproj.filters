@@ -138,9 +138,6 @@
     <ClInclude Include="Rendering\Structures.h">
       <Filter>Rendering\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Messager\Message.h">
-      <Filter>Messanger\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Messager\Messager.h">
       <Filter>Messanger\Header Files</Filter>
     </ClInclude>
