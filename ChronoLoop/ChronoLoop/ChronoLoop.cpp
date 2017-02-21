@@ -128,13 +128,19 @@ void Update() {
 	obj1.AddComponent(plane);
 	obj1.AddComponent(planeObj);
 
+	BaseObject obj4("plane2", transform1);
+	MeshComponent *planeObj2 = new MeshComponent("../Resources/Liftoff.obj");
+	planeObj2->AddTexture("../Resources/floorg.png", RenderEngine::eTEX_DIFFUSE);
+	obj4.AddComponent(planeObj2);
+	
+	Transform identity;
+	identity.SetMatrix(Math::MatrixIdentity());
+
 	BaseObject walls("walls", transform1);
 	MeshComponent *wallMesh = new MeshComponent("../Resources/BigWall.obj");
 	wallMesh->AddTexture("../Resources/Wallg.png", RenderEngine::eTEX_DIFFUSE);
 	walls.AddComponent(wallMesh);
 
-	Transform identity;
-	identity.SetMatrix(Math::MatrixIdentity());
 
 	BaseObject obj3("Controller", identity);
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
@@ -159,7 +165,6 @@ void Update() {
 	//*////////////////////////////////////////////////////////////////////
 	if (VREnabled) {
 		VRInputManager::Instance().iUpdate();
-		VRInputManager::Instance().iGetPlayerPosition().second[3] = -1;
 	}
 
 	while (true) {

@@ -109,20 +109,16 @@ struct BoxSnapToControllerAction : public CodeComponent {
 	virtual void SnapToController(bool left) {
 		mHeld = true;
 		mHeldLeft = left;
-		matrix4 m = Math::FromMatrix(VRInputManager::Instance().iGetController(left).GetPose().mDeviceToAbsoluteTracking);
-		((CubeCollider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->SetPos(Math::MatrixTranspose(m).tiers[3]);
+		matrix4 m = VRInputManager::Instance().iGetController(left).GetPosition();
+		((CubeCollider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->SetPos((m).tiers[3]);
 		mObject->GetTransform().SetMatrix(m);
 		((Collider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mShouldMove = false;
 	}
 
 	virtual void ReleaseCube() {
-		if (mHeldLeft) {
-			vec4f force = VRInputManager::Instance().iGetController(true).GetVelocity();
-			((Collider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mVelocity = force;
-		} else {
-			vec4f force = VRInputManager::Instance().iGetController(false).GetVelocity();
-			((Collider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mVelocity = force;
-		}
+		vec4f force = VRInputManager::Instance().iGetController(mHeldLeft).GetVelocity();
+		force[2] *= -1; // SteamVR seems to Assume +Z goes into the screen.
+		((Collider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mVelocity = force;
 		((Collider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mShouldMove = true;
 		mHeldLeft = mHeld = false;
 	}
