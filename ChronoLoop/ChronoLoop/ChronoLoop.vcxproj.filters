@@ -440,6 +440,9 @@
     <ClCompile Include="Rendering\VertexBuffer.cpp">
       <Filter>Rendering\Source Files\Managers</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\MeshComponent.cpp">
+      <Filter>Objects\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
