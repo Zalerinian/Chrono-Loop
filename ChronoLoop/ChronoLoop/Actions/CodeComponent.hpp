@@ -19,6 +19,10 @@ struct CodeComponent : public Component {
 
 	virtual void Update() {}
 
+	virtual void OnTriggerEnter(Collider& _col1) {}
+
+	virtual void OnCollision(Collider& _col1, Collider& _col2, float _time) {}
+
 	virtual void OnDisable() {}
 
 	virtual void OnEnable() {}

@@ -113,7 +113,8 @@ SphereCollider::SphereCollider(bool _move, vec4f _gravity, float _mass, float _e
 	mRadius = _radius;
 }
 
-CubeCollider::CubeCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, vec4f _min, vec4f _max) {
+CubeCollider::CubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, vec4f _min, vec4f _max) {
+	mObject = _obj;
 	mType = eCOMPONENT_COLLIDER;
 	mColliderType = eCOLLIDER_Cube;
 	mGravity = _gravity;
@@ -127,10 +128,10 @@ CubeCollider::CubeCollider(bool _move, vec4f _gravity, float _mass, float _elast
 	mMass = _mass;
 	mElasticity = _elasticity;
 	mFriction = _friction;
-	mMin = _min;
-	mMinOffset = mMin;
-	mMax = _max;
-	mMaxOffset = mMax;
+	mMinOffset = _min;
+	mMin = _min + mObject->GetTransform().GetMatrix().fourth;
+	mMaxOffset = _max;
+	mMax = _max + mObject->GetTransform().GetMatrix().fourth;
 }
 
 void CubeCollider::SetPos(vec4f _newPos) {

@@ -252,13 +252,16 @@
     <ClInclude Include="Objects\MeshComponent.h">
       <Filter>Objects\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\Action.hpp">
-      <Filter>Actions</Filter>
-    </ClInclude>
     <ClInclude Include="Actions\BoxSnapToControllerAction.hpp">
       <Filter>Actions</Filter>
     </ClInclude>
     <ClInclude Include="Actions\CodeComponent.hpp">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCElasticReaction.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCElasticReactionWithPlane.h">
       <Filter>Actions</Filter>
     </ClInclude>
   </ItemGroup>

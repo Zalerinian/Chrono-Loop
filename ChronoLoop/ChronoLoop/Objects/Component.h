@@ -96,7 +96,7 @@ public:
 
 class CubeCollider : public Collider {
 public:
-	CubeCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, vec4f _min, vec4f _max);
+	CubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, vec4f _min, vec4f _max);
 	vec4f mMin, mMax, mMinOffset, mMaxOffset;
 
 	void SetPos(vec4f _newPos);

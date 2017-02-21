@@ -15,6 +15,8 @@
 //#include "Actions/CodeComponent.h"
 #include "Objects/MeshComponent.h"
 #include "Actions/BoxSnapToControllerAction.hpp"
+#include "Actions/CCElasticReaction.h"
+
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -106,38 +108,58 @@ void Update() {
 
 	// TODO: Replace all this with a level to run.
 	///*///////////////////////Using this to test physics//////////////////
-	Transform transform;
-	transform.SetMatrix(MatrixIdentity());
-	matrix4 mat1 = MatrixTranslation(0, 5, 0);
-	transform.SetMatrix(mat1);
-	BaseObject obj("aabb", transform);
-	CubeCollider *aabb = new CubeCollider(true, vec4f(0.0f, -9.80f, 0.0f, 1.0f), 10.0f, 0.5f, 0.7f, vec4f(0.15f, -0.15f, .15f, 1.0f), vec4f(-0.15f, 0.15f, -0.15f, 1.0f));
-	aabb->AddForce(vec4f(2, 0, 0, 0));
-	obj.AddComponent(aabb);
+	Transform AABBtransform1;
+	AABBtransform1.SetMatrix(MatrixIdentity());
+	matrix4 AABBmat1 = MatrixTranslation(1, 1, 0);
+	AABBtransform1.SetMatrix(AABBmat1);
+	BaseObject AABBobj1("aabb", AABBtransform1);
+	CubeCollider *AABBcol1 = new CubeCollider(&AABBobj1, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 1.0f, 0.7f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
+	AABBcol1->AddForce(vec4f(0, 0, 0, 0));
+	AABBobj1.AddComponent(AABBcol1);
+	
 
-	matrix4 mat = MatrixTranslation(0, -1, 0);
+	Transform AABBtransform2;
+	AABBtransform2.SetMatrix(MatrixIdentity());
+	matrix4 AABBmat2 = MatrixTranslation(-1, 1, 0);
+	AABBtransform2.SetMatrix(AABBmat2);
+	BaseObject AABBobj2("aabb", AABBtransform2);
+	CubeCollider *AABBcol2 = new CubeCollider(&AABBobj2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, 0.7f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
+	AABBcol2->AddForce(vec4f(0, 0, 0, 0));
+	AABBobj2.AddComponent(AABBcol2);
 
+	matrix4 PlaneMat = MatrixTranslation(0, -1, 0);
 	Transform transform1;
-	transform1.SetMatrix(mat);
-	BaseObject obj1("plane", transform1);
+	transform1.SetMatrix(PlaneMat);
+	BaseObject Planeobj("plane", transform1);
 	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
 	MeshComponent *planeObj = new MeshComponent("../Resources/Liftoff.obj");
 	planeObj->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
-	obj1.AddComponent(plane);
-	obj1.AddComponent(planeObj);
+	Planeobj.AddComponent(plane);
+	Planeobj.AddComponent(planeObj);
 	
 
-	TimeManager::Instance()->GetTimeLine()->AddBaseObject(&obj,obj.GetUniqueId());
-	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
-	visibleMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
-	obj.AddComponent(visibleMesh);
+	TimeManager::Instance()->GetTimeLine()->AddBaseObject(&AABBobj1,AABBobj1.GetUniqueId());
+	MeshComponent *visibleMesh1 = new MeshComponent("../Resources/Cube.obj");
+	visibleMesh1->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
+	AABBobj1.AddComponent(visibleMesh1);
+
+	TimeManager::Instance()->GetTimeLine()->AddBaseObject(&AABBobj2, AABBobj2.GetUniqueId());
+	MeshComponent *visibleMesh2 = new MeshComponent("../Resources/Cube.obj");
+	visibleMesh2->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
+	AABBobj2.AddComponent(visibleMesh2);
 
 	//BoxSnapToControllerAction *Action = new BoxSnapToControllerAction(&obj);
 	CodeComponent *codeComponent = new BoxSnapToControllerAction();
-	obj.AddComponent(codeComponent);
+	CodeComponent *collision = new CCElasticReaction();
+	CodeComponent *collision2 = new CCElasticReaction();
 
-	Physics::Instance()->mObjects.push_back(&obj);
-	Physics::Instance()->mObjects.push_back(&obj1);
+	AABBobj1.AddComponent(codeComponent);
+	AABBobj1.AddComponent(collision);
+	AABBobj2.AddComponent(collision2);
+
+	Physics::Instance()->mObjects.push_back(&AABBobj1);
+	Physics::Instance()->mObjects.push_back(&AABBobj2);
+	Physics::Instance()->mObjects.push_back(&Planeobj);
 	//*////////////////////////////////////////////////////////////////////
 
 
