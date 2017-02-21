@@ -5,7 +5,7 @@
 #include <vector>
 #define PMIN(x, y) ((x < y) ? x : y)
 #define PMAX(x, y) ((x > y) ? x : y)
-#define SameSign(x, y) (x > 0 && y > 0) || (x < 0 && y < 0)
+#define SameSign(x, y) ((x > 0 && y > 0) || (x < 0 && y < 0))
 
 class BaseObject;
 class Collider;

@@ -258,11 +258,17 @@
     <ClInclude Include="Actions\CodeComponent.hpp">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\CCElasticReaction.h">
+    <ClInclude Include="Actions\TeleportAction.hpp">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\CCElasticReactionWithPlane.h">
-      <Filter>Actions</Filter>
+    <ClInclude Include="Rendering\IndexBufferManager.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\VertexBuffer.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\VertexBufferManager.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -425,8 +431,14 @@
     <ClCompile Include="Rendering\Mesh.cpp">
       <Filter>Rendering\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\MeshComponent.cpp">
-      <Filter>Objects\Source Files</Filter>
+    <ClCompile Include="Rendering\IndexBufferManager.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\VertexBufferManager.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\VertexBuffer.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

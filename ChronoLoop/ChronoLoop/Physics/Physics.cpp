@@ -34,8 +34,10 @@ void Physics::Destroy()
 
 bool Physics::RayToTriangle(vec4f& _vert0, vec4f& _vert1, vec4f& _vert2, vec4f& _normal, vec4f& _start, vec4f& _dir, float& _time)
 {
-	if ((_normal * _dir) > 0 || ((_vert0 - _start) * _normal) > 0)
+	vec3f rayToCentroid = ((_vert0 + _vert1 + _vert2) / 3) - _start;
+	if ((_normal * _dir) > 0.001f || (rayToCentroid * _normal) > 0) {
 		return false;
+	}
 
 	vec4f sa = _vert0 - _start;
 	vec4f sb = _vert1 - _start;
@@ -51,7 +53,7 @@ bool Physics::RayToTriangle(vec4f& _vert0, vec4f& _vert1, vec4f& _vert2, vec4f& 
 	if (dn1 == 0.0f && dn2 == 0.0f && dn3 == 0.0f)
 	{
 		_time = 0;
-		return false;
+		return true;
 	}
 
 	if (SameSign(dn1, dn2) && SameSign(dn2, dn3))

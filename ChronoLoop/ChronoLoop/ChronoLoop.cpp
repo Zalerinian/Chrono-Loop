@@ -12,11 +12,11 @@
 #include <ctime>
 #include <chrono>
 #include <d3d11.h>
+#include "Common/Math.h"
 //#include "Actions/CodeComponent.h"
 #include "Objects/MeshComponent.h"
 #include "Actions/BoxSnapToControllerAction.hpp"
-#include "Actions/CCElasticReaction.h"
-
+#include "Actions/CCElasticReaction.h"#include "Actions/TeleportAction.hpp"
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -38,7 +38,7 @@ void UpdateTime();
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(431);
+	//_CrtSetBreakAlloc(1253);
 	if (!InitializeWindow(hInstance, nCmdShow, 800, 600, true)) {
 		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
 		return 2;
@@ -132,12 +132,26 @@ void Update() {
 	transform1.SetMatrix(PlaneMat);
 	BaseObject Planeobj("plane", transform1);
 	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
-	MeshComponent *planeObj = new MeshComponent("../Resources/Liftoff.obj");
-	planeObj->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
+	MeshComponent *planeObj = new MeshComponent("../Resources/BigFloor.obj");
+	planeObj->AddTexture("../Resources/floorg.png", RenderEngine::eTEX_DIFFUSE);
 	Planeobj.AddComponent(plane);
 	Planeobj.AddComponent(planeObj);
-	
 
+	BaseObject walls("walls", transform1);
+	MeshComponent *wallMesh = new MeshComponent("../Resources/BigWall.obj");
+	wallMesh->AddTexture("../Resources/Wallg.png", RenderEngine::eTEX_DIFFUSE);
+	walls.AddComponent(wallMesh);
+
+	Transform identity;
+	identity.SetMatrix(Math::MatrixIdentity());
+
+	BaseObject obj3("Controller", identity);
+	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
+	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
+	TeleportAction *ta = new TeleportAction();
+	obj3.AddComponent(mc);
+	obj3.AddComponent(ta);
+	
 	TimeManager::Instance()->GetTimeLine()->AddBaseObject(&AABBobj1,AABBobj1.GetUniqueId());
 	MeshComponent *visibleMesh1 = new MeshComponent("../Resources/Cube.obj");
 	visibleMesh1->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
@@ -160,8 +174,14 @@ void Update() {
 	Physics::Instance()->mObjects.push_back(&AABBobj1);
 	Physics::Instance()->mObjects.push_back(&AABBobj2);
 	Physics::Instance()->mObjects.push_back(&Planeobj);
-	//*////////////////////////////////////////////////////////////////////
+	Physics::Instance()->mObjects.push_back(&obj3);
+	Physics::Instance()->mObjects.push_back(&walls);
 
+	//*////////////////////////////////////////////////////////////////////
+	if (VREnabled) {
+		VRInputManager::Instance().iUpdate();
+		VRInputManager::Instance().iGetPlayerPosition().second[3] = -1;
+	}
 
 	while (true) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
@@ -177,18 +197,15 @@ void Update() {
 			}
 
 			UpdateTime();
-			if (VREnabled) {
-				VRInputManager::Instance().iUpdate();
-			}
-
-			// Logic.Update(float deltaTime);
-			TManager->Instance()->Update(deltaTime);
-			RenderEngine::Renderer::Instance()->Render(deltaTime);
-
-			Physics::Instance()->Update(deltaTime);
 			auto& objects = Physics::Instance()->mObjects;
 			for (auto it = objects.begin(); it != objects.end(); ++it) {
 				(*it)->Update();
+			}
+			TManager->Instance()->Update(deltaTime);
+			RenderEngine::Renderer::Instance()->Render(deltaTime);
+			Physics::Instance()->Update(deltaTime);
+			if (VREnabled) {
+				VRInputManager::Instance().iUpdate();
 			}
 		}
 	}

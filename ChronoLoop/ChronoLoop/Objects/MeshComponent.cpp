@@ -37,4 +37,6 @@ void MeshComponent::SetVisible(bool _vis) {
 
 void MeshComponent::AddTexture(const char * _path, RenderEngine::TextureType _type) {
 	mShape->AddTexture(_path, _type);
+	RenderEngine::Renderer::Instance()->RemoveNode(mShape);
+	RenderEngine::Renderer::Instance()->AddNode(mShape);
 }

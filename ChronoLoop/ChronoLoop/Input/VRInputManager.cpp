@@ -2,6 +2,22 @@
 #include "VrInputManager.h"
 #include "../Common/Logger.h"
 
+VRInputManager & VRInputManager::Instance() {
+	if (!sInstance)
+		sInstance = new VRInputManager();
+	return *sInstance;
+}
+
+void VRInputManager::Initialize(vr::IVRSystem * _vr) {
+	if (sInstance)
+		sInstance->mInitialize(_vr);
+}
+
+void VRInputManager::Shutdown() {
+	if (sInstance)
+		delete sInstance;
+}
+
 VRInputManager* VRInputManager::sInstance = nullptr;
 
 VRInputManager::VRInputManager() {}
@@ -20,6 +36,7 @@ void VRInputManager::mInitialize(vr::IVRSystem *_vr) {
 	SystemLogger::GetLog() << "Left controller ID:  " << leftID << std::endl;
 	mRightController.SetUp(rightID, mVRSystem);
 	mLeftController.SetUp(leftID, mVRSystem);
+	mPlayerPosition = Math::MatrixIdentity();
 }
 
 void VRInputManager::iUpdate() {
@@ -41,23 +58,9 @@ void VRInputManager::iUpdate() {
 	} else {
 		mLeftController.Update();
 	}
+	vr::VRCompositor()->WaitGetPoses(mPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
 }
 
-VRInputManager & VRInputManager::Instance() {
-	if (!sInstance)
-		sInstance = new VRInputManager();
-	return *sInstance;
-}
-
-void VRInputManager::Initialize(vr::IVRSystem * _vr) {
-	if (sInstance)
-		sInstance->mInitialize(_vr);
-}
-
-void VRInputManager::Shutdown() {
-	if (sInstance)
-		delete sInstance;
-}
 
 Controller& VRInputManager::iGetController(bool left) {
 	if (left) {

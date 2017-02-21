@@ -10,7 +10,7 @@ private:
 public:
 	void TranslateLocal(float x, float y, float z);
 	void TranslateGlobal(float x, float y, float z) { this->mMatrix = MatrixTranslation(x, y, z); };
-	void Rotate(vec4f axis, float radians) { this->mMatrix = MatrixRotateAxis(axis, radians); };
+	void Rotate(vec4f axis, float radians);
 	void RotateAround(vec4f point, vec4f axis, float radians) {/*Insert Code Here*/ };
 	void RotateInPlace(vec4f& _axis, float _rads) { /*MatrixRotateInPlace()*/ };
 	void Scale(float x, float y, float z) { this->mMatrix = MatrixScale(x, y, z); };

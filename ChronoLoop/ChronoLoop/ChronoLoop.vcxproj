@@ -201,6 +201,7 @@
     <ClInclude Include="Actions\CCElasticReaction.h" />
     <ClInclude Include="Actions\CCElasticReactionWithPlane.h" />
     <ClInclude Include="Actions\CodeComponent.hpp" />
+    <ClInclude Include="Actions\TeleportAction.hpp" />
     <ClInclude Include="Common\Breakpoint.h" />
     <ClInclude Include="Common\Common.h" />
     <ClInclude Include="Common\FileIO.h" />
@@ -222,6 +223,7 @@
     <ClInclude Include="Objects\MeshComponent.h" />
     <ClInclude Include="Objects\Transform.h" />
     <ClInclude Include="Physics\Physics.h" />
+    <ClInclude Include="Rendering\IndexBufferManager.h" />
     <ClInclude Include="Rendering\InputLayoutManager.h" />
     <ClInclude Include="Rendering\Mesh.h" />
     <ClInclude Include="Rendering\RasterizerStateManager.h" />
@@ -235,6 +237,8 @@
     <ClInclude Include="Rendering\ShaderManager.h" />
     <ClInclude Include="Rendering\Structures.h" />
     <ClInclude Include="Rendering\SystemInitializer.h" />
+    <ClInclude Include="Rendering\VertexBuffer.h" />
+    <ClInclude Include="Rendering\VertexBufferManager.h" />
     <ClInclude Include="Rendering\TextureManager.h" />
     <ClInclude Include="Sound\SoundEngine.h" />
   </ItemGroup>
@@ -343,6 +347,7 @@
     <ClCompile Include="Objects\MeshComponent.cpp" />
     <ClCompile Include="Objects\Transform.cpp" />
     <ClCompile Include="Physics\Physics.cpp" />
+    <ClCompile Include="Rendering\IndexBufferManager.cpp" />
     <ClCompile Include="Rendering\InputLayoutManager.cpp" />
     <ClCompile Include="Rendering\Mesh.cpp" />
     <ClCompile Include="Rendering\RasterizerStateManager.cpp" />
@@ -353,6 +358,8 @@
     <ClCompile Include="Rendering\RenderShape.cpp" />
     <ClCompile Include="Rendering\Shader.cpp" />
     <ClCompile Include="Rendering\ShaderManager.cpp" />
+    <ClCompile Include="Rendering\VertexBuffer.cpp" />
+    <ClCompile Include="Rendering\VertexBufferManager.cpp" />
     <ClCompile Include="Rendering\TextureManager.cpp" />
     <ClCompile Include="Sound\SoundEngine.cpp" />
   </ItemGroup>
