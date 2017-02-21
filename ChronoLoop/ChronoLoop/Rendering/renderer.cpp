@@ -520,7 +520,6 @@ namespace RenderEngine {
 	void Renderer::AddNode(RenderShape *node) {
 		mRenderSet.AddNode(node, &node->GetContext());
 	}
-
 	bool Renderer::Initialize(HWND _Window, unsigned int _width, unsigned int _height, bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane, vr::IVRSystem * _vrsys) {
 		mWindow = make_shared<HWND>(_Window);
 		mVrSystem = _vrsys;

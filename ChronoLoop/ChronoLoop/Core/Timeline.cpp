@@ -5,7 +5,8 @@
 #include "../Rendering/Renderer.h"
 
 
-bool Snapshot::IsObjectStored(short _id) {
+
+bool Snapshot::IsObjectStored(unsigned short _id) {
 	try {
 		mSnapinfos.at(_id);
 	} catch (std::exception e) {
@@ -25,7 +26,7 @@ Timeline::~Timeline() {
 	ClearTimeLine();
 }
 
-void Timeline::AddBaseObject(BaseObject* _object,short _id) {
+void Timeline::AddBaseObject(BaseObject* _object, unsigned short _id) {
 	mLiveObjects[_id] = _object;
 }
 
@@ -34,12 +35,12 @@ void Timeline::AddSnapshot(unsigned int _snaptime, Snapshot* _snapshot) {
 	mSnapshots[_snaptime] = _snapshot;
 }
 
-bool Timeline::RewindNoClone(unsigned int _snaptime) {
+bool Timeline::RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3) {
 	if (_snaptime < 0 || _snaptime > mSnaptimes.size() - 1)
 		return false;
 
 	mCurrentGameTimeIndx = _snaptime;
-	MoveAllObjectsToSnap(_snaptime);
+	MoveAllObjectsToSnapExceptPlayer(_snaptime,_id1,_id2,_id3);
 	return true;
 }
 
@@ -58,15 +59,13 @@ void Timeline::MoveAllObjectsToSnap(unsigned int _snaptime) {
 	//TODO PAT: THIS DOESNT TAKE IN ACCOUNT IF SOMETHING WAS MADE IN THE FUTURE TO DELETE IT
 	Snapshot* destination = mSnapshots[_snaptime];
 	for (auto object : mLiveObjects) {
-		short id = object.second->GetUniqueID();
+		unsigned short id = object.second->GetUniqueID();
 		SnapInfo* destInfo;
 		//If the object doesnt have a info, then check against the list for the last snap it was updated
 		bool stored = destination->IsObjectStored(id);
 		if (stored) {
 			destInfo = destination->mSnapinfos[id];
-		}
-		else if(!stored)
-		{
+		} else if (!stored) {
 			unsigned int lastUpdated = destination->mUpdatedtimes[id];
 			destInfo = mSnapshots[lastUpdated]->mSnapinfos[id];
 		}
@@ -76,6 +75,7 @@ void Timeline::MoveAllObjectsToSnap(unsigned int _snaptime) {
 
 		//Set all componets back to time recorded
 		//TODO PAT: MAKE THIS MORE EFFICIENT
+		//TODO PAT: WRITE A SetComponets Func to take in SnapComonets.
 		for (unsigned int i = 0; i < destInfo->mComponets.size(); i++) {
 			SnapComponent* destComp = destInfo->mComponets[i];
 			switch (destComp->mCompType) {
@@ -96,9 +96,52 @@ void Timeline::MoveAllObjectsToSnap(unsigned int _snaptime) {
 			}
 			}
 		}
-		//TODO PAT: WRITE A SetComponets Func to take in SnapComonets.
-		//baseobject->SetComponents(destInfo->mComponets)
+	}
+}
 
+void Timeline::MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3) {
+	//TODO PAT: THIS DOESNT TAKE IN ACCOUNT IF SOMETHING WAS MADE IN THE FUTURE or past
+	Snapshot* destination = mSnapshots[_snaptime];
+	for (auto object : mLiveObjects) {
+		unsigned short id = object.second->GetUniqueID();
+		if (id == _id1 || id == _id2 || id == _id3)
+			return;
+		SnapInfo* destInfo;
+		//If the object doesnt have a info, then check against the list for the last snap it was updated
+		bool stored = destination->IsObjectStored(id);
+		if (stored) {
+			destInfo = destination->mSnapinfos[id];
+		} else if (!stored) {
+			unsigned int lastUpdated = destination->mUpdatedtimes[id];
+			destInfo = mSnapshots[lastUpdated]->mSnapinfos[id];
+		}
+		//Set Object data
+		BaseObject* baseobject = object.second;
+		baseobject->SetTransform(destInfo->mTransform);
+
+		//Set all componets back to time recorded
+		//TODO PAT: MAKE THIS MORE EFFICIENT
+		//TODO PAT: WRITE A SetComponets Func to take in SnapComonets.
+		for (unsigned int i = 0; i < destInfo->mComponets.size(); i++) {
+			SnapComponent* destComp = destInfo->mComponets[i];
+			switch (destComp->mCompType) {
+				//For each of the collider in the vec
+			case ComponentType::eCOMPONENT_COLLIDER:
+			{
+				//Loop to find the same collider component
+				for (unsigned int j = 0; j < baseobject->GetComponentCount(eCOMPONENT_COLLIDER); j++) {
+					Component* currComp = baseobject->GetComponentIndexed(eCOMPONENT_COLLIDER, j);
+					if (currComp->GetColliderId() == destComp->mId) {
+						((Collider*)currComp)->mRewind = true;
+						((Collider*)currComp)->mShouldMove = false;
+						((Collider*)currComp)->mAcceleration = ((SnapComponent_Physics*)destComp)->mAcc;
+						((Collider*)currComp)->mVelocity = ((SnapComponent_Physics*)destComp)->mVel;
+						((Collider*)currComp)->AddForce(((SnapComponent_Physics*)destComp)->mForces);
+					}
+				}
+			}
+			}
+		}
 	}
 }
 
@@ -147,14 +190,14 @@ SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object) {
 	return info;
 }
 
-SnapInfoPlayer * Timeline::GenerateSnapInfoPlayer() {
-	SnapInfoPlayer* snapP = new SnapInfoPlayer(
-		*RenderEngine::Renderer::Instance()->GetPlayerWorldPos(),//Player World Matrix
-		Math::FromMatrix(VRInputManager::Instance().GetController(true).GetPose().mDeviceToAbsoluteTracking),//Left Controller World Matrix
-		Math::FromMatrix(VRInputManager::Instance().GetController(false).GetPose().mDeviceToAbsoluteTracking));//Right Controller World Matrix
-
-	return snapP;
-}
+//SnapInfoPlayer * Timeline::GenerateSnapInfoPlayer() {
+//	SnapInfoPlayer* snapP = new SnapInfoPlayer(
+//		*RenderEngine::Renderer::Instance()->GetPlayerWorldPos(),//Player World Matrix
+//		Math::FromMatrix(VRInputManager::Instance().GetController(true).GetPose().mDeviceToAbsoluteTracking),//Left Controller World Matrix
+//		Math::FromMatrix(VRInputManager::Instance().GetController(false).GetPose().mDeviceToAbsoluteTracking));//Right Controller World Matrix
+//
+//	return snapP;
+//}
 
 
 Snapshot* Timeline::GenerateSnapShot(unsigned int _time) {
@@ -175,29 +218,19 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time) {
 
 	//If first snapshot taken
 	if (mSnapshots.size() == 0) {
-		for (std::pair<short, BaseObject*> _b : mLiveObjects) {
+		for (std::pair<unsigned short, BaseObject*> _b : mLiveObjects) {
 			if (_b.second) {
-				short id = _b.first;
-				//If Player
-				if (id == 0) {
-					snap->mSnapinfos[id] = GenerateSnapInfoPlayer();
-					snap->mUpdatedtimes[id] = _time;
-				} else {
+				unsigned short id = _b.first;
 					snap->mSnapinfos[id] = GenerateSnapInfo(_b.second);
 					snap->mUpdatedtimes[id] = _time;
-				}
 			}
 		}
 	} else {
 		//Copy the exciting updated times to this one
 		snap->mUpdatedtimes = mSnapshots[mSnaptimes[mCurrentGameTimeIndx]]->mUpdatedtimes;
-		for (std::pair<short, BaseObject*> _b : mLiveObjects) {
+		for (std::pair<unsigned short, BaseObject*> _b : mLiveObjects) {
 			if (_b.second) {
-				 short id = _b.first;
-				if (id == 0) {
-					snap->mSnapinfos[id] = GenerateSnapInfoPlayer();
-					snap->mUpdatedtimes[id] = _time;
-				} else {
+				unsigned short id = _b.first;
 					//delete an old snapshot
 					if (snap->mSnapinfos[id] != nullptr)
 						delete snap->mSnapinfos[id];
@@ -205,7 +238,6 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time) {
 					//if (!CheckForDuplicateData(id,_b.second)) {
 					snap->mSnapinfos[id] = GenerateSnapInfo(_b.second);
 					snap->mUpdatedtimes[id] = _time;
-				}
 			}
 		}
 	}
@@ -220,7 +252,7 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time) {
 }
 
 //Returns True if the data is the same from last snap
-bool Timeline::CheckForDuplicateData(short _id, BaseObject* _object) {
+bool Timeline::CheckForDuplicateData(unsigned short _id, BaseObject* _object) {
 	SnapInfo* info = mSnapshots[mSnaptimes[mCurrentGameTimeIndx]]->mSnapinfos[_id];
 	//TODO PAT: Once all the structs and componets are final fill this out
 	return true;

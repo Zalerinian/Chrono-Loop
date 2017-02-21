@@ -3,10 +3,10 @@
 #include "Timeline.h"
 #include "../Input/KeyboardInput.h"
 #include "../Objects/BaseObject.h"
+#include "../Common/Logger.h"
 
 TimeManager* TimeManager::instanceTimemanager = nullptr;
 Timeline* TimeManager::mTimeline = nullptr;
-short TimeManager::CloneCreationCount = -1;
 
 TimeManager::TimeManager()
 {
@@ -59,6 +59,17 @@ TimeManager * TimeManager::Instance()
 	return instanceTimemanager;
 }
 
+void TimeManager::AddObjectToTimeline(BaseObject * _obj)
+{
+	if(_obj != nullptr)
+	mTimeline->AddBaseObject(_obj,_obj->GetUniqueId());
+}
+
+void TimeManager::ClearClones()
+{
+	mClones.clear();
+}
+
 Timeline * TimeManager::GetTimeLine()
 {
 	if(!mTimeline)
@@ -72,7 +83,7 @@ void TimeManager::RewindTimeline(unsigned int _frame, unsigned short _id1, unsig
 {
 	//mRewindTime = true;
 	//mTimeline->RewindNoClone(mTimeline->GetCurrentGameTimeIndx() - 10);
-	mTimeline->RewindNoClone(_frame);
+	mTimeline->RewindNoClone(_frame,_id1,_id2,_id3);
 	//Tell the time manager what frame the timeline its on
 	mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
 }
@@ -80,6 +91,17 @@ void TimeManager::RewindTimeline(unsigned int _frame, unsigned short _id1, unsig
 void TimeManager::RewindMakeClone(unsigned int _frame, BaseObject* _ob1, BaseObject* _ob2, BaseObject* _ob3)
 {
 	//mRewindMakeClone = true;
+	if (_ob1 == nullptr || _ob2 == nullptr || _ob3 == nullptr)
+		SystemLogger::GetLog() << "When you tried to rewind time, you gave the timemanager bad BaseObject pointer(s)";
+	mTimeline->RewindMakeClone(_frame);
+	mTimeline->AddBaseObject(_ob1,_ob1->GetUniqueId());
+	mTimeline->AddBaseObject(_ob2, _ob2->GetUniqueId());
+	mTimeline->AddBaseObject(_ob3, _ob3->GetUniqueId());
+	mClones.push_back(_ob1);
+	mClones.push_back(_ob2);
+	mClones.push_back(_ob3);
+	//Tell the time manager what frame the timeline its on
+	mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
 }
 
 void TimeManager::Destroy()

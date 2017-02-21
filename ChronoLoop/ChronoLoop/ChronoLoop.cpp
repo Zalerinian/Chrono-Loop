@@ -122,7 +122,7 @@ void Update() {
 	obj1.AddComponent(plane);
 	RenderEngine::Renderer::Instance()->mPlane.mPosition = Math::MatrixTranspose(obj1.GetTransform().GetMatrix());
 
-	TimeManager::Instance()->GetTimeLine()->AddBaseObject(&obj,obj.GetUniqueId());
+	TimeManager::Instance()->AddObjectToTimeline(&obj);
 	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
 	obj.AddComponent(visibleMesh);
 
