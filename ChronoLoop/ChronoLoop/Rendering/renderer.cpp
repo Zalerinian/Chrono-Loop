@@ -10,6 +10,9 @@
 #include "RenderShape.h"
 #include "../Input/VRInputManager.h"
 #include "../Input/Controller.h"
+#include<comdef.h>
+
+
 
 using namespace std;
 using namespace D2D1;
@@ -131,7 +134,7 @@ namespace RenderEngine {
 	}
 
 	void Renderer::InitializeD3DDevice() {
-		UINT flags = 0;
+		UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #if _DEBUG
 		flags = D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #endif
@@ -221,6 +224,7 @@ namespace RenderEngine {
 
 		//create device2d 
 		ID2D1Device* Device2d;
+		HRESULT HR;
 		ThrowIfFailed(factory2->CreateDevice(*sInstance->mGIDevice, &Device2d));
 		sInstance->mDevice2D = make_shared<ID2D1Device*>(Device2d);
 
