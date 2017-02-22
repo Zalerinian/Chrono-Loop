@@ -627,13 +627,11 @@ void Physics::Update(float _time)
 								//SystemLogger::GetLog() << "Collision State: " << collider->mColliding << std::endl;
 								if (!collider->mColliding && collider->mShouldMove && AABBtoAABB(aabb1, aabb2))
 								{
-									collider->mColliding = true;
 									for (int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
 									{
 										((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
 										((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
 									}
-									collider->mColliding = false;
 								}
 							}
 							else if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
@@ -653,13 +651,13 @@ void Physics::Update(float _time)
 								{
 									//SystemLogger::GetLog() << "AABB IN FRONT OF PLANE!" << std::endl;
 									//SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
-									collider->mColliding = false;
+									//collider->mColliding = false;
 								}
 								else if (result == 2)//behind plane
 								{
 									//SystemLogger::GetLog() << "AABB BEHIND PLANE!" << std::endl;
 									//SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
-									collider->mColliding = false;
+									//collider->mColliding = false;
 								}
 								else if (result == 3)// intersecting plane
 								{
@@ -678,15 +676,15 @@ void Physics::Update(float _time)
 									if (!collider->mRewind && collider->mColliding && collider->mVelocity.x < 0.001f && collider->mVelocity.y < 0.001f && collider->mVelocity.z < 0.001f)
 										collider->mTotalForce = { 0,0,0,0 };
 
-									if (!collider->mColliding)
-									{
-										collider->mColliding = true;
+									//if (!collider->mColliding)
+									//{
+										//collider->mColliding = true;
 										for (int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
 										{
 											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
 											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
 										}
-									}
+									//}
 								}
 							}
 						}

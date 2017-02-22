@@ -4,9 +4,18 @@
 
 struct CCElasticReactionWithPlane : public CodeComponent
 {
-	virtual void OnCollision(Collider& _col1, Collider& _col2, float _time)
+	bool colliding = false;
+	virtual void OnCollision(Collider& _col, Collider& _other, float _time)
 	{
-		vec4f normalVel = (((PlaneCollider*)&_col2)->mNormal * (_col1.mVelocity * ((PlaneCollider*)&_col2)->mNormal));
-		_col1.mVelocity = (normalVel * -_col1.mElasticity) + (_col1.mVelocity - normalVel);
+		if (!colliding && _other.mColliderType == Collider::eCOLLIDER_Plane)
+		{
+			colliding = true;
+			SystemLogger::GetLog() << "PLANE COLLISION" << std::endl;
+
+			vec4f normalVel = (((PlaneCollider*)&_other)->mNormal * -(_col.mVelocity * ((PlaneCollider*)&_other)->mNormal));
+			_col.mVelocity += normalVel * (1 + _col.mElasticity);
+		}
+		else
+			colliding = false;
 	}
 };

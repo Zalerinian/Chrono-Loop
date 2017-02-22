@@ -1,5 +1,6 @@
 #pragma once
 #include "../Objects/Component.h"
+#include "..\Common\Logger.h"
 
 struct CodeComponent : public Component {
 	CodeComponent() {
