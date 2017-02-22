@@ -402,6 +402,10 @@ namespace RenderEngine {
 
 	void Renderer::UpdateCamera(float const _moveSpd, float const _rotSpd, float _delta) {
 #if _DEBUG
+		if (GetActiveWindow() != *mWindow) {
+			return;
+		}
+
 		//w
 		if (GetAsyncKeyState('W')) {
 			mDebugCameraPos *= Math::MatrixTranslation(0, 0, _moveSpd * _delta);
@@ -437,16 +441,27 @@ namespace RenderEngine {
 		if (mIsMouseDown) {
 			POINT now;
 			GetCursorPos(&now);
-			if (now.x != mMouseOrigin.x && now.y != mMouseOrigin.y) {
-				float dx = (now.x - mMouseOrigin.x) / 128.0f;
-				float dy = (now.y - mMouseOrigin.y) / 128.0f;
-				mDebugCameraPos = Math::MatrixRotateInPlace(mDebugCameraPos, 1, 0, 0, dy);
-				mDebugCameraPos = Math::MatrixRotateInPlace(mDebugCameraPos, 0, 1, 0, dx);
+			if (now.x != mMouseOrigin.x || now.y != mMouseOrigin.y) {
+				mDebugCameraYRot += (now.x - mMouseOrigin.x) / 128.0f;
+				mDebugCameraXRot += (now.y - mMouseOrigin.y) / 128.0f;
+
+
+				//vec4f forward(0, 0, 1, 0);
+				mDebugCameraPosition = mDebugCameraPos.fourth;
+				mDebugCameraPos = Math::MatrixRotateY(mDebugCameraYRot) * Math::MatrixRotateX(mDebugCameraXRot);
+				//forward *= mDebugCameraPos;
+				mDebugCameraPos.fourth = mDebugCameraPosition;
+
+				// Reset cursor to center of the window.
+				WINDOWINFO winfo;
+				winfo.cbSize = sizeof(WINDOWINFO);
+				GetWindowInfo(*mWindow, &winfo);
+				SetCursorPos((winfo.rcClient.left + winfo.rcClient.right) / 2, (winfo.rcClient.top + winfo.rcClient.bottom) / 2);
 				GetCursorPos(&mMouseOrigin);
 			}
 		}
 
-		mVPData.view = Math::MatrixTranspose(mDebugCameraPos);
+		mVPData.view = Math::MatrixTranspose(mDebugCameraPos/*.Inverse()*/);
 		(*mContext)->UpdateSubresource(*mVPBuffer, 0, nullptr, &mVPData, 0, 0);
 #endif
 	}

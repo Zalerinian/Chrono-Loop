@@ -75,7 +75,9 @@ namespace RenderEngine {
 		void ThrowIfFailed(HRESULT hr);
 
 		matrix4 mEyePosLeft, mEyePosRight, mEyeProjLeft, mEyeProjRight, mHMDPos, mDebugCameraPos;
-		
+		float mDebugCameraYRot = 0, mDebugCameraXRot = 0;
+		vec4f mDebugCameraPosition;
+
 #if _DEBUG
 		POINT mMouseOrigin;
 		bool mIsMouseDown = false;
