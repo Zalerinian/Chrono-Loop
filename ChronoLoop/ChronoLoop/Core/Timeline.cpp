@@ -110,7 +110,8 @@ void Timeline::MoveAllObjectsToSnap(unsigned int _snaptime) {
 		}
 		//Set Object data
 		BaseObject* baseobject = object.second;
-		baseobject->SetTransform(destInfo->mTransform);
+		if (baseobject)
+			baseobject->SetTransform(destInfo->mTransform);
 
 		//Set all componets back to time recorded
 		//TODO PAT: MAKE THIS MORE EFFICIENT
@@ -275,7 +276,16 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 						//Move clone to next frame if frame is avalible
 						if (snap->mSnapinfos[id] != nullptr && id == _clones[i]->GetUniqueId()) {
 							MoveObjectToSnap(_time, id);
-						} else {
+						}
+						//If we are a clone but dont have a next movement then record one at position
+						else if (snap->mSnapinfos[id] == nullptr && id == _clones[i]->GetUniqueId()) {
+							//If change add to mSnapinfos and Updatetime
+							//if (!CheckForDuplicateData(id,_b.second)) {
+							snap->mSnapinfos[id] = GenerateSnapInfo(_b.second);
+							snap->mUpdatedtimes[id] = _time;
+						}
+						//If we made it through the list do the normal
+						else if (id != _clones[i]->GetUniqueId() && i == _clones.size() - 1) {
 							//delete an old snapshot
 							if (snap->mSnapinfos[id] != nullptr && id != _clones[i]->GetUniqueId())
 								delete snap->mSnapinfos[id];
@@ -309,6 +319,6 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 //Returns True if the data is the same from last snap
 bool Timeline::CheckForDuplicateData(unsigned short _id, BaseObject* _object) {
 	SnapInfo* info = mSnapshots[mSnaptimes[mCurrentGameTimeIndx]]->mSnapinfos[_id];
-	//TODO PAT: Once all the structs and componets are final fill this out
+	//TODO PAT: Once all the structs and components are final fill this out  
 	return true;
 }

@@ -112,6 +112,10 @@ void BaseLevel::LoadLevel() {
 
 void BaseLevel::Update() {
 	//*Insert Code Here When we Get to It**//
+	auto& objects = mObjectList;
+	for (auto it = objects.begin(); it != objects.end(); ++it) {
+		(*it)->Update();
+	}
 }
 
 void BaseLevel::Shutdown() {

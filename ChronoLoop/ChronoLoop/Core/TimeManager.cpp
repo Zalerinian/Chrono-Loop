@@ -81,6 +81,9 @@ void TimeManager::RewindMakeClone(unsigned int _frame, BaseObject* _ob1, BaseObj
 	if (_ob1 == nullptr || _ob2 == nullptr || _ob3 == nullptr)
 		SystemLogger::GetLog() << "When you tried to rewind time, you gave the timemanager bad BaseObject pointer(s)";
 	mTimeline->RewindMakeClone(_frame);
+	/*mTimeline->AddBaseObject(_ob1,_ob1->GetUniqueID());
+	mTimeline->AddBaseObject(_ob2, _ob3->GetUniqueID());
+	mTimeline->AddBaseObject(_ob3, _ob2->GetUniqueID());*/
 	mClones.push_back(_ob1);
 	mClones.push_back(_ob2);
 	mClones.push_back(_ob3);

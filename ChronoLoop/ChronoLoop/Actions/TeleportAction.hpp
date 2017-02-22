@@ -9,7 +9,8 @@
 
 struct TeleportAction : public CodeComponent {
 	MeshComponent *mPlaneMesh;
-	
+	bool left;
+	TeleportAction(bool _left) { left = _left; };
 
 	virtual void Start() {
 		mPlaneMesh = (MeshComponent*)BaseObject::GetObjectByName("plane")->GetComponentIndexed(eCOMPONENT_MESH, 0);
@@ -20,10 +21,10 @@ struct TeleportAction : public CodeComponent {
 			return;
 		}
 		// I'm lazy so, let's just set this thing's position to the controller's position.
-		matrix4 mat = VRInputManager::Instance().iGetController(true).GetPosition();
+		matrix4 mat = VRInputManager::Instance().iGetController(left).GetPosition();
 		mObject->GetTransform().SetMatrix(mat);
 
-		if (VRInputManager::Instance().iGetController(true).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Trigger)) {
+		if (VRInputManager::Instance().iGetController(left).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Trigger)) {
 			vec4f forward(0, 0, 1, 0);
 			forward *= mObject->GetTransform().GetMatrix();
 			Triangle *tris = mPlaneMesh->GetTriangles();
@@ -40,40 +41,47 @@ struct TeleportAction : public CodeComponent {
 			}
 		}
 
-		if (VRInputManager::Instance().iGetController(true).GetPressDown(vr::EVRButtonId::k_EButton_DPad_Left))
+		if (VRInputManager::Instance().iGetController(left).GetPressDown(vr::EVRButtonId::k_EButton_Grip))
 		{
 			Transform identity;
 			identity.SetMatrix(Math::MatrixIdentity());
 
+			int rand = std::rand();
+
 			MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
 			visibleMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
 
-			BaseObject* headset = new BaseObject("headset", identity);
+			BaseObject* headset = new BaseObject("headset" + std::to_string(rand), identity);
 			headset->AddComponent(visibleMesh);
 			headset->AddComponent(visibleMesh);
-			TimeManager::Instance()->AddObjectToTimeline(headset);
+			
 
-			BaseObject* Controller1 = new BaseObject("Controller", identity);
+			BaseObject* Controller1 = new BaseObject("Controller" + std::to_string(rand), identity);
 			MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 			mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
 			Controller1->AddComponent(mc);
 
 		
 
-			BaseObject* Controller2 = new BaseObject("Controller", identity);
+			BaseObject* Controller2 = new BaseObject("Controller2" + std::to_string(rand), identity);
 			MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 			mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
 			Controller2->AddComponent(mc2);
 
+			//Make a clone 3 seconds ago.
+			TimeManager::Instance()->RewindMakeClone(TimeManager::Instance()->GetCurrentSnapFrame() - 30, headset, Controller1, Controller2);
+			LevelManager::Instance()->GetLevel(0)->SetHeadsetAndControllers(headset, Controller1, Controller2);
 			TimeManager::Instance()->AddObjectToTimeline(headset);
 			TimeManager::Instance()->AddObjectToTimeline(Controller1);
 			TimeManager::Instance()->AddObjectToTimeline(Controller2);
-
-			LevelManager::Instance()->GetLevel(0)->SetHeadsetAndControllers(headset, Controller1, Controller2);
-			//Make a clone 3 seconds ago.
-			TimeManager::Instance()->RewindMakeClone(TimeManager::Instance()->GetCurrentSnapFrame() - 30, headset, Controller1, Controller2);
 			
 		}
+		if (VRInputManager::Instance().iGetController(left).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu)) {
+			BaseLevel* CurLev = LevelManager::Instance()->GetLevel(0);
+			TimeManager::Instance()->RewindTimeline(TimeManager::Instance()->GetCurrentSnapFrame() - 30, CurLev->mHeadset->GetUniqueID(), CurLev->mController1->GetUniqueID(), CurLev->mController2->GetUniqueID());
+
+		}
+
 	}
 
 };

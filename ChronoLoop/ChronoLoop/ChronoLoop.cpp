@@ -147,7 +147,7 @@ void Update() {
 	BaseObject* obj3 = new BaseObject("Controller", identity);
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
-	TeleportAction *ta = new TeleportAction();
+	TeleportAction *ta = new TeleportAction(false);
 	obj3->AddComponent(mc);
 	obj3->AddComponent(ta);
 	TimeManager::Instance()->AddObjectToTimeline(obj3);
@@ -162,7 +162,7 @@ void Update() {
 	BaseObject* obj2 = new BaseObject("Controller2", identity);
 	MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 	mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
-	TeleportAction *ta2 = new TeleportAction();
+	TeleportAction *ta2 = new TeleportAction(true);
 	obj2->AddComponent(mc2);
 	obj2->AddComponent(ta2);
 	TimeManager::Instance()->AddObjectToTimeline(obj2);
@@ -205,10 +205,8 @@ void Update() {
 			}
 
 			UpdateTime();
-			auto& objects = Physics::Instance()->mObjects;
-			for (auto it = objects.begin(); it != objects.end(); ++it) {
-				(*it)->Update();
-			}
+			LevelManager::Instance()->GetLevel(0)->Update();
+			
 			TManager->Instance()->Update(deltaTime);
 			RenderEngine::Renderer::Instance()->Render(deltaTime);
 			Physics::Instance()->Update(deltaTime);

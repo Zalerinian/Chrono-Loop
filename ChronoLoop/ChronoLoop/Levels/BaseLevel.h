@@ -13,11 +13,12 @@ class BaseLevel {
 private:
 	std::list<BaseObject*> mObjectList;
 	unsigned short mId;
+	
+
+public:
 	BaseObject* mHeadset;
 	BaseObject* mController1;
 	BaseObject* mController2;
-
-public:
 	//**CONSTRUCTORS/DESTRUCTORS**//
 	BaseLevel();
 	BaseLevel(unsigned int _id);
