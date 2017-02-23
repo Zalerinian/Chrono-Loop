@@ -2,6 +2,8 @@
 #include "Math.h"
 #include <memory>
 
+#define EPSILON 0.001f
+
 #pragma region VECTOR4F_MATH
 
 vec4f::vec4f(vec4f const& _copy)
@@ -701,4 +703,13 @@ float vec2f::Dot(const vec2f & _r) {
 
 vec2f vec2f::Cross() {
 	return vec2f(y, -x);
+}
+
+bool vec2f::operator==(const vec2f & _other) {
+	return (fabs(x - _other.x) < EPSILON &&
+					fabs(y - _other.y) < EPSILON);
+}
+
+bool vec2f::operator!=(const vec2f & _other) {
+	return !(*this == _other);
 }

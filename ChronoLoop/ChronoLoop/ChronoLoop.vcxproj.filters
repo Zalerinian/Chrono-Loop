@@ -270,6 +270,12 @@
     <ClInclude Include="Rendering\VertexBufferManager.h">
       <Filter>Rendering\Header Files\Managers</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\GestureDetection.hpp">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\LimitedList.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -442,6 +448,9 @@
     </ClCompile>
     <ClCompile Include="Objects\MeshComponent.cpp">
       <Filter>Objects\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\LimitedList.cpp">
+      <Filter>Common\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -199,12 +199,14 @@
     <ClInclude Include="..\DXTK\scoped.h" />
     <ClInclude Include="Actions\BoxSnapToControllerAction.hpp" />
     <ClInclude Include="Actions\CodeComponent.hpp" />
+    <ClInclude Include="Actions\GestureDetection.hpp" />
     <ClInclude Include="Actions\TeleportAction.hpp" />
     <ClInclude Include="Common\Breakpoint.h" />
     <ClInclude Include="Common\Common.h" />
     <ClInclude Include="Common\FileIO.h" />
     <ClInclude Include="Common\FileIO\FileIO_General.h" />
     <ClInclude Include="Common\FileIO\FileIO_Textures.h" />
+    <ClInclude Include="Common\LimitedList.h" />
     <ClInclude Include="Common\Logger.h" />
     <ClInclude Include="Common\Math.h" />
     <ClInclude Include="Core\Timeline.h" />
@@ -330,6 +332,7 @@
     <ClCompile Include="Common\Common.cpp" />
     <ClCompile Include="Common\FileIO\FileIO_General.cpp" />
     <ClCompile Include="Common\FileIO\FileIO_Textures.cpp" />
+    <ClCompile Include="Common\LimitedList.cpp" />
     <ClCompile Include="Common\Logger.cpp" />
     <ClCompile Include="Common\Math.cpp" />
     <ClCompile Include="Core\Timeline.cpp" />
