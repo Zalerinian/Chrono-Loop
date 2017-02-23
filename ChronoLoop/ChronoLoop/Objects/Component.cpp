@@ -175,3 +175,27 @@ PlaneCollider::PlaneCollider(bool _move, vec4f _gravity, float _mass, float _ela
 	mMax = _max;
 }
 
+ButtonCollider::ButtonCollider(vec4f _min, vec4f _max, float _mass, float _normForce, vec4f _pushNormal, vec4f _upper, vec4f _lower)
+{
+	mType = eCOMPONENT_COLLIDER;
+	mColliderType = eCOLLIDER_Cube;
+	mGravity =  _pushNormal * _normForce;
+	mVelocity = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+	mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+	mTotalForce = mGravity * _mass;
+	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+	mShouldMove = true;
+	mColliding = false;
+	mRewind = false;
+	mMass = _mass;
+	if (mMass == 0)
+		mInvMass = 0;
+	else
+		mInvMass = 1 / mMass;
+	mElasticity = 0;
+	mFriction = 0;
+	mMinOffset = _min;
+	mMin = _min + mObject->GetTransform().GetMatrix().fourth;
+	mMaxOffset = _max;
+	mMax = _max + mObject->GetTransform().GetMatrix().fourth;
+}

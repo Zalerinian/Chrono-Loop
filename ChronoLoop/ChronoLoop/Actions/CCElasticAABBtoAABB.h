@@ -16,7 +16,7 @@ struct CCElasticAABBtoAABB : public CodeComponent
 			vec4f collisionNormal = (_col.GetPos() - _other.GetPos()).Normalize();
 			//vec4f relativeVelocity = _col.mVelocity - _other.mVelocity;
 			_col.mVelocity += collisionNormal * (1 + _col.mElasticity);
-			
+
 			//float impulseMagnitude = -(1 + avgElasticity) * _col.mMass * _other.mMass * (relativeVelocity * collisionNormal) / (_col.mMass + _other.mMass);
 			//vec4f impulse = collisionNormal * impulseMagnitude;
 			//_col.mImpulsiveForce = impulse / _time;

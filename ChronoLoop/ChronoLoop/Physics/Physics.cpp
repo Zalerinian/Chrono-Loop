@@ -643,7 +643,7 @@ void Physics::Update(float _time)
 									SystemLogger::GetLog() << "SPHERE TO AABB COLLISION FROM AABB!";
 								}
 							}
-							else if (otherCol->mColliderType == Collider::eCOLLIDER_Plane)
+							else if (otherCol->mColliderType == Collider::eCOLLIDER_Plane)//check with aabbtoaabb for non infinite plane?
 							{
 								Plane plane(((PlaneCollider*)otherCol)->mNormal, ((PlaneCollider*)otherCol)->mOffset);
 								int result = AabbToPlane(plane, aabb1);
@@ -666,14 +666,14 @@ void Physics::Update(float _time)
 									collider->mVelocity.x *= otherCol->mFriction;
 									collider->mVelocity.z *= otherCol->mFriction;
 
-									if (((CubeCollider*)collider)->mMin.y < otherCol->GetPos().y) // intersecting below
+									if (((CubeCollider*)collider)->mMin.y < otherCol->GetPos().y)
 									{
 										float depth = ((CubeCollider*)collider)->mMin.y - otherCol->GetPos().y;
 										vec4f correction = ((PlaneCollider*)otherCol)->mNormal * (depth / (collider->mInvMass + otherCol->mInvMass)) * 0.2f;
 										collider->SetPos(collider->GetPos() - (correction * collider->mInvMass));
 									}
 
-									if (!collider->mRewind && collider->mColliding && collider->mVelocity.x < 0.001f && collider->mVelocity.y < 0.001f && collider->mVelocity.z < 0.001f)
+									if (!collider->mRewind && collider->mVelocity.x < 0.001f && collider->mVelocity.y < 0.001f && collider->mVelocity.z < 0.001f)
 										collider->mTotalForce = { 0,0,0,0 };
 
 									//if (!collider->mColliding)

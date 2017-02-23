@@ -276,6 +276,9 @@
     <ClInclude Include="Actions\CCElasticAABBtoAABB.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\CCButtonPress.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">

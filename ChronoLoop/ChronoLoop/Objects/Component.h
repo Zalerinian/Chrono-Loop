@@ -96,9 +96,10 @@ public:
 
 class CubeCollider : public Collider {
 public:
+	CubeCollider() {}
 	CubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, vec4f _min, vec4f _max);
 	vec4f mMin, mMax, mMinOffset, mMaxOffset;
-	void SetPos(vec4f _newPos);
+	virtual void SetPos(vec4f _newPos);
 };
 
 class PlaneCollider : public Collider {
@@ -106,6 +107,13 @@ public:
 	PlaneCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, float _offset, vec4f _norm, vec4f _min, vec4f _max);
 	vec4f mNormal, mMin, mMax;
 	float mOffset;
+};
+
+class ButtonCollider : public CubeCollider
+{
+public:
+	ButtonCollider(vec4f _min, vec4f _max, float _mass, float normForce, vec4f _pushNormal, vec4f _upper, vec4f _lower);
+	vec4f mPushNormal, mUpperBound, mLowerBound;
 };
 
 /*

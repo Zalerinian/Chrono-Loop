@@ -17,6 +17,7 @@
 #include "Objects/MeshComponent.h"
 #include "Actions/BoxSnapToControllerAction.hpp"
 #include "Actions/CCElasticAABBtoAABB.h"
+#include "Actions/CCButtonPress.h"
 #include "Actions/CCElasticReactionWithPlane.h"
 #include "Actions/TeleportAction.hpp"
 
@@ -112,21 +113,21 @@ void Update() {
 	///*///////////////////////Using this to test physics//////////////////
 	Transform AABBtransform1;
 	AABBtransform1.SetMatrix(MatrixIdentity());
-	matrix4 AABBmat1 = MatrixTranslation(-1, 3, 5);
+	matrix4 AABBmat1 = MatrixTranslation(0, 5, 5);
 	AABBtransform1.SetMatrix(AABBmat1);
 	BaseObject AABBobj1("aabb", AABBtransform1);
-	CubeCollider *AABBcol1 = new CubeCollider(&AABBobj1, true, vec4f(0.0f, -3.0f, 0.0f, 1.0f), 1.0f, 0.5f, 0.7f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
-	AABBcol1->AddForce(vec4f(.6f, 0, 0, 0));
+	CubeCollider *AABBcol1 = new CubeCollider(&AABBobj1, true, vec4f(0.0f, -1.0f, 0.0f, 1.0f), 1.0f, 0.5f, 0.7f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
+	AABBcol1->AddForce(vec4f(0, 0, 0, 0));
 	AABBobj1.AddComponent(AABBcol1);
 	
 
 	Transform AABBtransform2;
 	AABBtransform2.SetMatrix(MatrixIdentity());
-	matrix4 AABBmat2 = MatrixTranslation(1, 3, 5);
+	matrix4 AABBmat2 = MatrixTranslation(0, 3, 5);
 	AABBtransform2.SetMatrix(AABBmat2);
 	BaseObject AABBobj2("aabb2", AABBtransform2);
-	CubeCollider *AABBcol2 = new CubeCollider(&AABBobj2, true, vec4f(0.0f, -3.0f, 0.0f, 1.0f), 1.0f, 0.5f, 0.7f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
-	AABBcol2->AddForce(vec4f(-.6f, 0, 0, 0));
+	CubeCollider *AABBcol2 = new CubeCollider(&AABBobj2, true, vec4f(0.0f, 0.0f, 0.0f, 1.0f), 1.0f, 0.5f, 0.7f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
+	AABBcol2->AddForce(vec4f(0, 0, 0, 0));
 	AABBobj2.AddComponent(AABBcol2);
 
 	matrix4 PlaneMat = MatrixTranslation(0, -1, 0);
@@ -175,11 +176,13 @@ void Update() {
 	CodeComponent *PlaneCollision = new CCElasticReactionWithPlane();
 	CodeComponent *PlaneCollision2 = new CCElasticReactionWithPlane();
 	CodeComponent *BoxCollision = new CCElasticAABBtoAABB();
+	//CodeComponent *ButtonPress = new CCButtonPress();
 	CodeComponent *BoxCollision2 = new CCElasticAABBtoAABB();
 
 	AABBobj1.AddComponent(codeComponent);
 	AABBobj1.AddComponent(PlaneCollision);
 	AABBobj2.AddComponent(PlaneCollision2);
+	//AABBobj1.AddComponent(ButtonPress);
 	AABBobj1.AddComponent(BoxCollision);
 	AABBobj2.AddComponent(BoxCollision2);
 
