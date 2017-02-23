@@ -66,6 +66,7 @@ public:
 
 	//Posts an event at a pos, emitter location, or near a listener.
 	bool MakeEventAtLocation(AudioEvent _id, vec4f* _pos);
+	bool MakeEventAtLocation(AudioEvent _id, const vec4f* _pos);
 	bool MakeEvent(AudioEvent _id, const Emitter * _emitter);
 	bool MakeEventAtListener(AudioEvent _id, unsigned int _listenerID = 0);
 	bool MakeEvent(AudioEvent _id, const BaseObject* _obj);

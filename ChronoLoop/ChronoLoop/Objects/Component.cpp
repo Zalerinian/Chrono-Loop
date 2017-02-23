@@ -57,9 +57,11 @@ void Emitter::Update()
 
 void Emitter::Play(int _id)
 {
-	if (mSFX[ePlayLoop] == -1 || mIsPlaying)
+	if (_id < 0 || _id > mSFX[ePlayLoop].size() - 1)
 		return;
-	m_Event* evnt = new m_Event(mSFX[ePlayLoop], this);
+	if (mIsPlaying)
+		return;
+	m_Event* evnt = new m_Event(mSFX[ePlayLoop][_id], this);
 	Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
 	Messager::Instance().SendInMessage(msg);
 	mIsPlaying = true;
@@ -67,19 +69,19 @@ void Emitter::Play(int _id)
 
 void Emitter::Pause(int _id)
 {
-	if (mSFX[ePauseLoop] == -1 || mSFX[ePauseLoop] == -1)
+	if (_id < 0 || _id > mSFX[ePauseLoop].size() - 1 || mSFX[eResumeLoop].size() - 1)
 		return;
 
 	if (mIsPaused)
 	{
-		m_Event* evnt = new m_Event(mSFX[eResumeLoop], this);
+		m_Event* evnt = new m_Event(mSFX[eResumeLoop][_id], this);
 		Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
 		Messager::Instance().SendInMessage(msg);
 		mIsPaused = false;
 	}
 	else
 	{
-		m_Event* evnt = new m_Event(mSFX[ePauseLoop], this);
+		m_Event* evnt = new m_Event(mSFX[ePauseLoop][_id], this);
 		Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
 		Messager::Instance().SendInMessage(msg);
 		mIsPaused = true;
@@ -88,9 +90,11 @@ void Emitter::Pause(int _id)
 
 void Emitter::Stop(int _id)
 {
-	if (mSFX[eStopLoop] == -1 || !mIsPlaying)
+	if (_id < 0 || _id > mSFX[eStopLoop].size() - 1)
 		return;
-	m_Event* evnt = new m_Event(mSFX[eStopLoop], this);
+	if (!mIsPlaying)
+		return;
+	m_Event* evnt = new m_Event(mSFX[eStopLoop][_id], this);
 	Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
 	Messager::Instance().SendInMessage(msg);
 	mIsPlaying = false;
@@ -99,11 +103,59 @@ void Emitter::Stop(int _id)
 
 void Emitter::PlaySFX(int _id)
 {
-	if (mSFX[ePlaySFX] == -1)
+	if (_id < 0 || _id > mSFX[ePlaySFX].size() - 1)
 		return;
 
-
+	const vec4f * pos = GetTransform().GetPosition();
+	m_LocEvent* evnt = new m_LocEvent(mSFX[ePlaySFX][_id], pos);
+	Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Loc, 0, false, (void*)evnt);
+	Messager::Instance().SendInMessage(msg);
 }
+void Emitter::PlaySFX(int _id, const vec4f* _pos)
+{
+	if (_id < 0 || _id > mSFX[ePlaySFX].size() - 1)
+		return;
+
+	const vec4f * pos = _pos;
+	m_LocEvent* evnt = new m_LocEvent(mSFX[ePlaySFX][_id], pos);
+	Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Loc, 0, false, (void*)evnt);
+	Messager::Instance().SendInMessage(msg);
+}
+
+
+void Emitter::AddSoundEvent(sfxTypes _type, int64_t _event)
+{
+	switch (_type)
+	{
+	case sfxTypes::ePlayLoop:
+	{
+		mSFX[_type].push_back(_event);
+	}
+	break;
+	case sfxTypes::ePauseLoop:
+	{
+		mSFX[_type].push_back(_event);
+	}
+	break;
+	case sfxTypes::eResumeLoop:
+	{
+		mSFX[_type].push_back(_event);
+	}
+	break;
+	case sfxTypes::eStopLoop:
+	{
+		mSFX[_type].push_back(_event);
+	}
+	break;
+	case sfxTypes::ePlaySFX:
+	{
+		mSFX[_type].push_back(_event);
+	}
+	break;
+
+	}
+}
+
 
 void Emitter::Destroy()
 {

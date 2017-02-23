@@ -150,10 +150,10 @@ struct m_Path
 struct m_LocEvent
 {
 	AudioEvent mID;
-	vec4f* mPos;
+	const vec4f* mPos;
 
 	m_LocEvent() { }
-	m_LocEvent(AudioEvent _id, vec4f* _pos) { mID = _id; mPos = _pos; }
+	m_LocEvent(AudioEvent _id, const vec4f* _pos) { mID = _id; mPos = _pos; }
 };
 
 struct m_Event

@@ -57,20 +57,11 @@ public:
 
 class Emitter :public Component
 {
-	//Possible additional vectors for multiple of sound of said types
-	enum sfxTypes { ePlayLoop, ePauseLoop, eResumeLoop, eStopLoop, ePlaySFX};
-	bool mIsPlaying = false, mIsPaused = false;
-	std::unordered_map<sfxTypes, int64_t> mSFX;
-
 public:
+	enum sfxTypes { ePlayLoop, ePauseLoop, eResumeLoop, eStopLoop, ePlaySFX };
 
-	Emitter(int64_t _play, int64_t _pause, int64_t _resume, int64_t _stop, int64_t _sfx) : Component(ComponentType::eCOMPONENT_AUDIOEMITTER)
+	Emitter() : Component(ComponentType::eCOMPONENT_AUDIOEMITTER)
 	{
-		mSFX[ePlayLoop] = _play;
-		mSFX[ePauseLoop] = _pause;
-		mSFX[eResumeLoop] = _resume;
-		mSFX[eStopLoop] = _stop;
-		mSFX[ePlaySFX] = _sfx;
 		mIsPaused = mIsPlaying = false;
 	}
 
@@ -78,9 +69,14 @@ public:
 	void Pause(int _id = 0);
 	void Stop(int _id = 0);
 	void PlaySFX(int _id = 0);
+	void PlaySFX(int _id = 0, const vec4f* _pos = new vec4f());
+	void AddSoundEvent(sfxTypes _type, int64_t _event);
 
 	void Update();
 	void Destroy();
+private:
+	bool mIsPlaying = false, mIsPaused = false;
+	std::unordered_map<sfxTypes, std::vector<int64_t>> mSFX;
 
 };
 

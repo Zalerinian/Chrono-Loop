@@ -219,6 +219,21 @@ bool AudioWrapper::MakeEventAtLocation(AudioEvent _id, vec4f * _pos)
 
 	return true;
 }
+bool AudioWrapper::MakeEventAtLocation(AudioEvent _id, const vec4f * _pos)
+{
+	static long dummyID = 0;
+
+	AkSoundPosition sPos;
+	sPos.SetOrientation(0, 0, 1.0f, 0, 0, 1.0f);
+	sPos.SetPosition(_pos->x, _pos->y, _pos->z);
+
+	SoundEngine::SetPosition(dummyID, sPos);
+	if (SoundEngine::PostEvent((AkUniqueID)_id, dummyID) == AK_INVALID_PLAYING_ID)
+		return false;
+
+	return true;
+}
+
 
 bool AudioWrapper::MakeEvent(AudioEvent _id, const Emitter * _emitter)
 {
