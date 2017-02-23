@@ -17,6 +17,7 @@ namespace AK
         static const AkUniqueID PAUSE_TEST2 = 1888362326U;
         static const AkUniqueID PLAY_TEST1 = 3759155919U;
         static const AkUniqueID PLAY_TEST2 = 3759155916U;
+        static const AkUniqueID PLAYBOUNCEEFFECTS = 3909886823U;
         static const AkUniqueID RESUME_TEST1 = 1235130312U;
         static const AkUniqueID RESUME_TEST2 = 1235130315U;
         static const AkUniqueID STOP_TEST1 = 2011175805U;
