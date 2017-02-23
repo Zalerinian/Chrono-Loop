@@ -202,7 +202,7 @@ namespace RenderEngine {
 
 		//Brush for the screen
 		ID2D1SolidColorBrush* brush;
-		ThrowIfFailed((*mContext2D)->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::SeaGreen, 1.0f), &brush));
+		ThrowIfFailed((*mContext2D)->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black, 1.0f), &brush));
 		sInstance->mBrush = make_shared<ID2D1SolidColorBrush*>(brush);
 	}
 
@@ -402,29 +402,41 @@ namespace RenderEngine {
 
 	void Renderer::UpdateCamera(float const _moveSpd, float const _rotSpd, float _delta) {
 #if _DEBUG
+		if (GetActiveWindow() != *mWindow) {
+			return;
+		}
+
 		//w
 		if (GetAsyncKeyState('W')) {
-			mDebugCameraPos *= Math::MatrixTranslation(0, 0, _moveSpd * _delta);
+			mDebugCameraPos = Math::MatrixTranslation(0, 0, -_moveSpd * _delta) * mDebugCameraPos;
 		}
 		//s
 		if (GetAsyncKeyState('S')) {
-			mDebugCameraPos *= Math::MatrixTranslation(0, 0, -_moveSpd * _delta);
+			mDebugCameraPos = Math::MatrixTranslation(0, 0, _moveSpd * _delta) * mDebugCameraPos;
 		}
 		//a
 		if (GetAsyncKeyState('A')) {
-			mDebugCameraPos *= Math::MatrixTranslation(_moveSpd * _delta, 0, 0);
+			mDebugCameraPos = Math::MatrixTranslation(-_moveSpd * _delta, 0, 0) * mDebugCameraPos;
 		}
 		//d
 		if (GetAsyncKeyState('D')) {
-			mDebugCameraPos *= Math::MatrixTranslation(-_moveSpd * _delta, 0, 0);
+			mDebugCameraPos = Math::MatrixTranslation(_moveSpd * _delta, 0, 0) * mDebugCameraPos;
+		}
+		// Q
+		if (GetAsyncKeyState('Q')) {
+			mDebugCameraPos = Math::MatrixRotateZ(_rotSpd * _delta) * mDebugCameraPos;
+		}
+		// E
+		if (GetAsyncKeyState('E')) {
+			mDebugCameraPos = Math::MatrixRotateZ(-_rotSpd * _delta) * mDebugCameraPos;
 		}
 		//x
 		if (GetAsyncKeyState(VK_CONTROL)) {
-			mDebugCameraPos *= Math::MatrixTranslation(0, _moveSpd * _delta, 0);
+			mDebugCameraPos = Math::MatrixTranslation(0, -_moveSpd * _delta, 0) * mDebugCameraPos;
 		}
 
 		if (GetAsyncKeyState(VK_SPACE)) {
-			mDebugCameraPos *= Math::MatrixTranslation(0, -_moveSpd * _delta, 0);
+			mDebugCameraPos = Math::MatrixTranslation(0, _moveSpd * _delta, 0) * mDebugCameraPos;
 		}
 		if (GetAsyncKeyState(VK_LBUTTON) & 1 && !mIsMouseDown) {
 			GetCursorPos(&mMouseOrigin);
@@ -437,22 +449,28 @@ namespace RenderEngine {
 		if (mIsMouseDown) {
 			POINT now;
 			GetCursorPos(&now);
-			if (now.x != mMouseOrigin.x && now.y != mMouseOrigin.y) {
-				float dx = (now.x - mMouseOrigin.x) / 128.0f;
-				float dy = (now.y - mMouseOrigin.y) / 128.0f;
-				mDebugCameraPos = Math::MatrixRotateInPlace(mDebugCameraPos, 1, 0, 0, dy);
-				mDebugCameraPos = Math::MatrixRotateInPlace(mDebugCameraPos, 0, 1, 0, dx);
+			if (now.x != mMouseOrigin.x || now.y != mMouseOrigin.y) {
+				float dx = -(now.x - mMouseOrigin.x) * _rotSpd * _delta;
+				float dy = -(now.y - mMouseOrigin.y) * _rotSpd * _delta;
+
+				mDebugCameraPos = Math::MatrixRotateX(dy) * Math::MatrixRotateY(dx) * mDebugCameraPos;
+
+				// Reset cursor to center of the window.
+				WINDOWINFO winfo;
+				winfo.cbSize = sizeof(WINDOWINFO);
+				GetWindowInfo(*mWindow, &winfo);
+				SetCursorPos((winfo.rcClient.left + winfo.rcClient.right) / 2, (winfo.rcClient.top + winfo.rcClient.bottom) / 2);
 				GetCursorPos(&mMouseOrigin);
 			}
 		}
 
-		mVPData.view = Math::MatrixTranspose(mDebugCameraPos);
+		mVPData.view = Math::MatrixTranspose(mDebugCameraPos).Inverse();
 		(*mContext)->UpdateSubresource(*mVPBuffer, 0, nullptr, &mVPData, 0, 0);
 #endif
 	}
 
 	void Renderer::RenderNoVR(float _delta) {
-		UpdateCamera(2, 0, _delta);
+		UpdateCamera(2, 2, _delta);
 		ProcessRenderSet();
 		//pat added 
 #if ENABLE_TEXT
@@ -525,7 +543,6 @@ namespace RenderEngine {
 	void Renderer::AddNode(RenderShape *_node) {
 		mRenderSet.AddNode(_node, &_node->GetContext());
 	}
-
 	void Renderer::RemoveNode(RenderShape *_node) {
 		mRenderSet.RemoveShape(_node);
 	}
