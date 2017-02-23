@@ -75,7 +75,7 @@ namespace RenderEngine {
 		void ThrowIfFailed(HRESULT hr);
 
 		matrix4 mEyePosLeft, mEyePosRight, mEyeProjLeft, mEyeProjRight, mHMDPos, mDebugCameraPos;
-		
+
 #if _DEBUG
 		POINT mMouseOrigin;
 		bool mIsMouseDown = false;
@@ -99,7 +99,7 @@ namespace RenderEngine {
 	public:
 		static Renderer* Instance();
 		static void DestroyInstance();
-
+		matrix4* Renderer::GetPlayerWorldPos();
 		// Instance Functions
 		bool iInitialize(HWND Window, unsigned int width, unsigned int height,
 			bool vsync, int fps, bool fullscreen, float farPlane, float nearPlane,

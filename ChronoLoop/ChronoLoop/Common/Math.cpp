@@ -2,6 +2,8 @@
 #include "Math.h"
 #include <memory>
 
+#define EPSILON 0.001f
+
 #pragma region VECTOR4F_MATH
 
 vec4f::vec4f(vec4f const& _copy)
@@ -615,12 +617,12 @@ matrix4 Math::MatrixIdentity()
 matrix4 Math::MatrixRotateInPlace(matrix4 _self, float _x, float _y, float _z, float _rads) {
 	vec4f pos;
 	for (int i = 0; i < 4; ++i) {
-		pos[i] = _self[i][3];
-		_self[i][3] = 0;
+		pos[i] = _self[3][i];
+		_self[3][i] = 0;
 	}
 	_self *= Math::MatrixRotateAxis({ _x, _y, _z, 0 }, _rads);
 	for (int i = 0; i < 4; ++i) {
-		_self[i][3] = pos[i];
+		_self[3][i] = pos[i];
 	}
 	return _self;
 }
@@ -701,4 +703,13 @@ float vec2f::Dot(const vec2f & _r) {
 
 vec2f vec2f::Cross() {
 	return vec2f(y, -x);
+}
+
+bool vec2f::operator==(const vec2f & _other) {
+	return (fabs(x - _other.x) < EPSILON &&
+					fabs(y - _other.y) < EPSILON);
+}
+
+bool vec2f::operator!=(const vec2f & _other) {
+	return !(*this == _other);
 }

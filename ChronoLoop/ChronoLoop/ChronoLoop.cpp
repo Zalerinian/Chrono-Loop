@@ -16,14 +16,14 @@
 //#include "Actions/CodeComponent.h"
 #include "Objects/MeshComponent.h"
 #include "Actions/BoxSnapToControllerAction.hpp"
-#include "Actions/CCElasticAABBtoAABB.h"
-#include "Actions/CCButtonPress.h"
-#include "Actions/CCElasticReactionWithPlane.h"
 #include "Actions/TeleportAction.hpp"
+#include "Levels/LevelManager.h"
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
+
+#define CONSOLE_OVERRIDE 1
 
 HWND hwnd;
 LPCTSTR WndClassName = L"ChronoWindow";
@@ -111,92 +111,87 @@ void Update() {
 
 	// TODO: Replace all this with a level to run.
 	///*///////////////////////Using this to test physics//////////////////
-	Transform AABBtransform1;
-	AABBtransform1.SetMatrix(MatrixIdentity());
-	matrix4 AABBmat1 = MatrixTranslation(0, 5, 5);
-	AABBtransform1.SetMatrix(AABBmat1);
-	BaseObject AABBobj1("aabb", AABBtransform1);
-	CubeCollider *AABBcol1 = new CubeCollider(&AABBobj1, true, vec4f(0.0f, -1.0f, 0.0f, 1.0f), 1.0f, 0.5f, 0.7f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
-	AABBcol1->AddForce(vec4f(0, 0, 0, 0));
-	AABBobj1.AddComponent(AABBcol1);
-	
 
-	Transform AABBtransform2;
-	AABBtransform2.SetMatrix(MatrixIdentity());
-	matrix4 AABBmat2 = MatrixTranslation(0, 3, 5);
-	AABBtransform2.SetMatrix(AABBmat2);
-	BaseObject AABBobj2("aabb2", AABBtransform2);
-	CubeCollider *AABBcol2 = new CubeCollider(&AABBobj2, true, vec4f(0.0f, 0.0f, 0.0f, 1.0f), 1.0f, 0.5f, 0.7f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
-	AABBcol2->AddForce(vec4f(0, 0, 0, 0));
-	AABBobj2.AddComponent(AABBcol2);
+	Transform transform;
+	transform.SetMatrix(MatrixIdentity());
+	matrix4 mat1 = MatrixTranslation(0, 5, 0);
+	transform.SetMatrix(mat1);
+	BaseObject* PhysicsBox = new BaseObject("aabb", transform);
+	CubeCollider *BoxCollider = new CubeCollider(true, vec4f(0.0f, -9.80f, 0.0f, 1.0f), 10.0f, 0.5f, 0.7f, vec4f(0.15f, -0.15f, .15f, 1.0f), vec4f(-0.15f, 0.15f, -0.15f, 1.0f));
+	BoxCollider->AddForce(vec4f(2, 0, 0, 0));
+	PhysicsBox->AddComponent(BoxCollider);
+	TimeManager::Instance()->AddObjectToTimeline(PhysicsBox);
 
-	matrix4 PlaneMat = MatrixTranslation(0, -1, 0);
-	Transform transform1;
-	transform1.SetMatrix(PlaneMat);
-	BaseObject Planeobj("plane", transform1);
-	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f), vec4f(-6.0f, -1.0f, -6.0f, 1.0f), vec4f(5.0f, -1.0f, 5.0f, 1.0f));
+
+	Transform PlaneTransform;
+	PlaneTransform.SetMatrix(MatrixTranslation(0, -1, 0));
+	BaseObject* Floor = new BaseObject("plane", PlaneTransform);
+	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
 	MeshComponent *planeObj = new MeshComponent("../Resources/BigFloor.obj");
 	planeObj->AddTexture("../Resources/floorg.png", RenderEngine::eTEX_DIFFUSE);
-	Planeobj.AddComponent(plane);
-	Planeobj.AddComponent(planeObj);
-
-	BaseObject obj4("plane2", transform1);
-	MeshComponent *planeObj2 = new MeshComponent("../Resources/Liftoff.obj");
-	planeObj2->AddTexture("../Resources/floorg.png", RenderEngine::eTEX_DIFFUSE);
-	obj4.AddComponent(planeObj2);
+	Floor->AddComponent(plane);
+	Floor->AddComponent(planeObj);
 	
 	Transform identity;
 	identity.SetMatrix(Math::MatrixIdentity());
 
-	BaseObject walls("walls", transform1);
+	BaseObject* walls = new BaseObject("walls", PlaneTransform);
 	MeshComponent *wallMesh = new MeshComponent("../Resources/BigWall.obj");
 	wallMesh->AddTexture("../Resources/Wallg.png", RenderEngine::eTEX_DIFFUSE);
-	walls.AddComponent(wallMesh);
+	walls->AddComponent(wallMesh);
 
-
-	BaseObject obj3("Controller", identity);
+	BaseObject* RightController = new BaseObject("Controller", identity);
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
-	TeleportAction *ta = new TeleportAction();
-	obj3.AddComponent(mc);
-	obj3.AddComponent(ta);
-	
-	TimeManager::Instance()->GetTimeLine()->AddBaseObject(&AABBobj1,AABBobj1.GetUniqueId());
-	MeshComponent *visibleMesh1 = new MeshComponent("../Resources/Cube.obj");
-	visibleMesh1->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
-	AABBobj1.AddComponent(visibleMesh1);
+	TeleportAction *ta = new TeleportAction(false);
+	RightController->AddComponent(mc);
+	RightController->AddComponent(ta);
+	TimeManager::Instance()->AddObjectToTimeline(RightController);
 
-	TimeManager::Instance()->GetTimeLine()->AddBaseObject(&AABBobj2, AABBobj2.GetUniqueId());
+	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
+	visibleMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
+	PhysicsBox->AddComponent(visibleMesh);
+	CodeComponent *codeComponent = new BoxSnapToControllerAction();
+	PhysicsBox->AddComponent(codeComponent);
+
+	//pat added
+	BaseObject* LeftController = new BaseObject("Controller2", identity);
+	MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
+	mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
+	TeleportAction *ta2 = new TeleportAction(true);
+	LeftController->AddComponent(mc2);
+	LeftController->AddComponent(ta2);
+	TimeManager::Instance()->AddObjectToTimeline(LeftController);
+
+	BaseObject* headset = new BaseObject("headset", transform);
 	MeshComponent *visibleMesh2 = new MeshComponent("../Resources/Cube.obj");
 	visibleMesh2->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
-	AABBobj2.AddComponent(visibleMesh2);
+	visibleMesh2->SetVisible(false);
+	HeadsetFollow* hfollow = new HeadsetFollow();
+	headset->AddComponent(hfollow);
+	headset->AddComponent(visibleMesh2);
 
-	//BoxSnapToControllerAction *Action = new BoxSnapToControllerAction(&obj);
-	CodeComponent *codeComponent = new BoxSnapToControllerAction();
-	CodeComponent *PlaneCollision = new CCElasticReactionWithPlane();
-	CodeComponent *PlaneCollision2 = new CCElasticReactionWithPlane();
-	CodeComponent *BoxCollision = new CCElasticAABBtoAABB();
-	//CodeComponent *ButtonPress = new CCButtonPress();
-	CodeComponent *BoxCollision2 = new CCElasticAABBtoAABB();
+	TimeManager::Instance()->AddObjectToTimeline(headset);
 
-	AABBobj1.AddComponent(codeComponent);
-	AABBobj1.AddComponent(PlaneCollision);
-	AABBobj2.AddComponent(PlaneCollision2);
-	//AABBobj1.AddComponent(ButtonPress);
-	AABBobj1.AddComponent(BoxCollision);
-	AABBobj2.AddComponent(BoxCollision2);
 
-	Physics::Instance()->mObjects.push_back(&AABBobj1);
-	Physics::Instance()->mObjects.push_back(&AABBobj2);
-	Physics::Instance()->mObjects.push_back(&Planeobj);
-	Physics::Instance()->mObjects.push_back(&obj3);
-	Physics::Instance()->mObjects.push_back(&walls);
+	Physics::Instance()->mObjects.push_back(PhysicsBox);
+	Physics::Instance()->mObjects.push_back(Floor);
+	Physics::Instance()->mObjects.push_back(walls);
+	BaseLevel* L1 = new BaseLevel(headset,RightController,LeftController);
+	L1->AddLevelObject(PhysicsBox);
+	L1->AddLevelObject(Floor);
+	L1->AddLevelObject(RightController);
+	L1->AddLevelObject(walls);
+	L1->AddLevelObject(headset);
+	L1->AddLevelObject(LeftController);
+	
+	LevelManager::Instance()->AddLevel(L1);
 
 	//*////////////////////////////////////////////////////////////////////
 	if (VREnabled) {
 		VRInputManager::Instance().iUpdate();
 	}
-
+	
 	while (true) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			// Handle windows message.
@@ -211,10 +206,8 @@ void Update() {
 			}
 
 			UpdateTime();
-			auto& objects = Physics::Instance()->mObjects;
-			for (auto it = objects.begin(); it != objects.end(); ++it) {
-				(*it)->Update();
-			}
+			LevelManager::Instance()->GetLevel(0)->Update();
+			
 			TManager->Instance()->Update(deltaTime);
 			RenderEngine::Renderer::Instance()->Render(deltaTime);
 			Physics::Instance()->Update(deltaTime);
