@@ -22,6 +22,7 @@
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
+#include "TimeManipulation.h"
 
 #define CONSOLE_OVERRIDE 1
 
@@ -144,8 +145,10 @@ void Update() {
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
 	TeleportAction *ta = new TeleportAction(false);
+	TimeManipulation* tm = new TimeManipulation(false);
 	RightController->AddComponent(mc);
 	RightController->AddComponent(ta);
+	RightController->AddComponent(tm);
 	TimeManager::Instance()->AddObjectToTimeline(RightController);
 
 	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
@@ -159,8 +162,10 @@ void Update() {
 	MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 	mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
 	TeleportAction *ta2 = new TeleportAction(true);
+	TimeManipulation* tm2 = new TimeManipulation(true);
 	LeftController->AddComponent(mc2);
 	LeftController->AddComponent(ta2);
+	LeftController->AddComponent(tm2);
 	TimeManager::Instance()->AddObjectToTimeline(LeftController);
 
 	BaseObject* headset = new BaseObject("headset", transform);

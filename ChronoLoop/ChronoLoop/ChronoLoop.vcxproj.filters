@@ -115,6 +115,12 @@
     <Filter Include="Actions">
       <UniqueIdentifier>{48beaf3c-0f0e-4a07-9918-0972a580a156}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Actions\Header Files">
+      <UniqueIdentifier>{b1a8acac-397e-47cc-b4fc-e9ed3fa3f3ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actions\Source Files">
+      <UniqueIdentifier>{d74cdf54-647c-40f6-835b-2e969a5cdd29}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\BaseObject.h">
@@ -278,6 +284,9 @@
     </ClInclude>
     <ClInclude Include="Common\LimitedList.h">
       <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeManipulation.h">
+      <Filter>Actions\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -454,6 +463,9 @@
     </ClCompile>
     <ClCompile Include="Common\LimitedList.cpp">
       <Filter>Common\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeManipulation.cpp">
+      <Filter>Actions\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

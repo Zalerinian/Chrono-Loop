@@ -213,10 +213,11 @@ void Timeline::ClearTimeLine() {
 	mLiveObjects.clear();
 }
 
-SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object) {
-	SnapInfo* info = new SnapInfo();
-	info->mId = _object->GetUniqueID();
-	info->mTransform = _object->GetTransform();
+SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object, SnapInfo* _info) {
+	if(_info == nullptr)
+	 _info = new SnapInfo();
+	_info->mId = _object->GetUniqueID();
+	_info->mTransform = _object->GetTransform();
 	//TODO PAT: ADD MORE COMPONETS WHEN WE NEED THEM.
 
 	//Physics componets
@@ -228,10 +229,9 @@ SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object) {
 		newComp->mAcc = ((Collider*)temp[i])->mAcceleration;
 		newComp->mVel = ((Collider*)temp[i])->mVelocity;
 		newComp->mId = temp[i]->GetColliderId();
-		info->mComponets.push_back(newComp);
+		_info->mComponets.push_back(newComp);
 	}
-
-	return info;
+	return _info;
 }
 
 //SnapInfoPlayer * Timeline::GenerateSnapInfoPlayer() {
@@ -265,7 +265,7 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 		for (std::pair<unsigned short, BaseObject*> _b : mLiveObjects) {
 			if (_b.second) {
 				unsigned short id = _b.first;
-				snap->mSnapinfos[id] = GenerateSnapInfo(_b.second);
+				snap->mSnapinfos[id] = GenerateSnapInfo(_b.second,nullptr);
 				snap->mUpdatedtimes[id] = _time;
 			}
 		}
@@ -285,26 +285,27 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 						else if (snap->mSnapinfos[id] == nullptr && id == _clones[i]->GetUniqueId()) {
 							//If change add to mSnapinfos and Updatetime
 							//if (!CheckForDuplicateData(id,_b.second)) {
-							snap->mSnapinfos[id] = GenerateSnapInfo(_b.second);
+							snap->mSnapinfos[id] = GenerateSnapInfo(_b.second,nullptr);
 							snap->mUpdatedtimes[id] = _time;
 						}
 						//If we made it through the list do the normal
 						else if (id != _clones[i]->GetUniqueId() && i == _clones.size() - 1) {
 							//delete an old snapshot
-							if (snap->mSnapinfos[id] != nullptr && id != _clones[i]->GetUniqueId())
-								delete snap->mSnapinfos[id];
+							//if (snap->mSnapinfos[id] != nullptr)
+							//	delete snap->mSnapinfos[id];
+
 							//If change add to mSnapinfos and Updatetime
 							//if (!CheckForDuplicateData(id,_b.second)) {
-							snap->mSnapinfos[id] = GenerateSnapInfo(_b.second);
+							snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, snap->mSnapinfos[id]);
 							snap->mUpdatedtimes[id] = _time;
 						}
 					}
 				} else {
-					if (snap->mSnapinfos[id] != nullptr)
-						delete snap->mSnapinfos[id];
+					//if (snap->mSnapinfos[id] != nullptr)
+					//	delete snap->mSnapinfos[id];
 					//If change add to mSnapinfos and Updatetime
 					//if (!CheckForDuplicateData(id,_b.second)) {
-					snap->mSnapinfos[id] = GenerateSnapInfo(_b.second);
+					snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, snap->mSnapinfos[id]);
 					snap->mUpdatedtimes[id] = _time;
 				}
 			}

@@ -89,10 +89,6 @@ namespace RenderEngine {
 		void UpdateCamera(float const moveSpd, float const rotSpd, float delta);
 		void RenderNoVR(float _delta);
 		void ProcessRenderSet();
-		void DrawTextToBitmap(std::wstring _text, ID2D1Bitmap* _bitmap);
-		ID2D1Bitmap1* CreateBitmapForTexture(ID3D11Texture2D* _texture);
-
-
 
 		Renderer();
 		~Renderer();
@@ -108,6 +104,11 @@ namespace RenderEngine {
 		void AddNode(RenderShape *_node);
 		void RemoveNode(RenderShape *_node);
 		void Render(float _deltaTime);
+
+		//Draws text in 0 to 1 space
+		void DrawTextToBitmap(std::wstring _text, ID2D1Bitmap* _bitmap,float _topLeftx, float _topLefty, float _bottomRightx, float _bottomRighty);
+		ID2D1Bitmap1* CreateBitmapForTexture(ID3D11Texture2D* _texture);
+
 		inline std::shared_ptr<ID3D11Device*> iGetDevice() { return mDevice; }
 		inline std::shared_ptr<ID3D11DeviceContext*> iGetContext() { return mContext; }
 		inline std::shared_ptr<IDXGISwapChain*> iGetChain() { return mChain; }

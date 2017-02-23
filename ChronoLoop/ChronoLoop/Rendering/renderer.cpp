@@ -395,7 +395,7 @@ namespace RenderEngine {
 		//pat added 
 #if ENABLE_TEXT
 		std::wstring FPS = L"FPS: " + to_wstring(mFps);
-		DrawTextToBitmap(FPS, (*mScreenBitmap));
+		DrawTextToBitmap(FPS, (*mScreenBitmap,.75f, .75f, 1.0f, 1.0f));
 #endif
 		//-----
 	}
@@ -475,7 +475,7 @@ namespace RenderEngine {
 		//pat added 
 #if ENABLE_TEXT
 		std::wstring FPS = L"FPS: " + to_wstring(mFps);
-		DrawTextToBitmap(FPS, (*mScreenBitmap));
+		DrawTextToBitmap(FPS, (*mScreenBitmap,.75f,.75f,1.0f,1.0f));
 #endif
 		//-----
 	}
@@ -493,7 +493,7 @@ namespace RenderEngine {
 		}
 	}
 
-	void Renderer::DrawTextToBitmap(std::wstring _text, ID2D1Bitmap* _bitmap)
+	void Renderer::DrawTextToBitmap(std::wstring _text, ID2D1Bitmap* _bitmap, float _topLeftx, float _topLefty, float _bottomRightx, float _bottomRighty)
 	{
 		(*mContext2D)->SetTarget(_bitmap);
 		float color[4] = { 0.3f, 0.3f, 1, 1 };
@@ -511,7 +511,7 @@ namespace RenderEngine {
 			_text.c_str(),
 			(UINT32)_text.size(),
 			(*mTextformat),
-			D2D1::RectF(renderTargetSize.width*(3.0f/4.0f), renderTargetSize.height*(3.0f/4.0f), renderTargetSize.width, renderTargetSize.height),
+			D2D1::RectF(renderTargetSize.width*(_topLeftx), renderTargetSize.height*(_topLefty), renderTargetSize.width*(_bottomRightx), renderTargetSize.height * (_bottomRighty)),
 			(*mBrush)
 		);
 		ThrowIfFailed((*mContext2D)->EndDraw());

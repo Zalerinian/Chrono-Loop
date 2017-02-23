@@ -242,6 +242,7 @@
     <ClInclude Include="Rendering\VertexBufferManager.h" />
     <ClInclude Include="Rendering\TextureManager.h" />
     <ClInclude Include="Sound\SoundEngine.h" />
+    <ClInclude Include="TimeManipulation.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\DXTK\BC.cpp">
@@ -364,6 +365,7 @@
     <ClCompile Include="Rendering\VertexBufferManager.cpp" />
     <ClCompile Include="Rendering\TextureManager.cpp" />
     <ClCompile Include="Sound\SoundEngine.cpp" />
+    <ClCompile Include="TimeManipulation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\BasicPixel.hlsl">
