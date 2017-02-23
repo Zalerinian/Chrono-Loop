@@ -106,6 +106,8 @@ void Timeline::MoveAllObjectsToSnap(unsigned int _snaptime) {
 			destInfo = destination->mSnapinfos[id];
 		} else if (!stored) {
 			unsigned int lastUpdated = destination->mUpdatedtimes[id];
+			if(lastUpdated == 0) //assume its broken
+				continue;
 			destInfo = mSnapshots[lastUpdated]->mSnapinfos[id];
 		}
 		//Set Object data
@@ -153,6 +155,8 @@ void Timeline::MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime, unsigned
 			destInfo = destination->mSnapinfos[id];
 		} else if (!stored) {
 			unsigned int lastUpdated = destination->mUpdatedtimes[id];
+			if (lastUpdated == 0) //assume its broken
+				continue;
 			destInfo = mSnapshots[lastUpdated]->mSnapinfos[id];
 		}
 		//Set Object data

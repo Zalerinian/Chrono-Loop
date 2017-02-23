@@ -104,6 +104,11 @@ void BaseLevel::SetHeadsetAndControllers(BaseObject * _headset, BaseObject * _co
 	mObjectList.push_back(_controller1);
 	mObjectList.push_back(_controller2);
 
+	//Add the headset and controllers to the time manager with their new ids
+	TimeManager::Instance()->AddObjectToTimeline(mHeadset);
+	TimeManager::Instance()->AddObjectToTimeline(mController1);
+	TimeManager::Instance()->AddObjectToTimeline(mController2);
+
 }
 
 void BaseLevel::LoadLevel() {

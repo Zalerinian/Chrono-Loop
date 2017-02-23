@@ -270,6 +270,9 @@
     <ClInclude Include="Rendering\VertexBufferManager.h">
       <Filter>Rendering\Header Files\Managers</Filter>
     </ClInclude>
+    <ClInclude Include="HeadsetFollow.hpp">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">

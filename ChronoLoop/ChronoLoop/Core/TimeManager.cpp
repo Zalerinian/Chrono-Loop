@@ -57,6 +57,14 @@ void TimeManager::ClearClones() {
 	mClones.clear();
 }
 
+bool TimeManager::CheckRewindAvaliable(unsigned int _frame)
+{
+	if (mTimeline->mCurrentGameTimeIndx - _frame < 0)
+		return false;
+	else
+		return true;
+}
+
 unsigned int TimeManager::GetCurrentSnapFrame() {
 	return mTimeline->mCurrentGameTimeIndx;
 }
@@ -95,5 +103,5 @@ void TimeManager::Destroy() {
 	//Level manager will clear delete clones
 	instanceTimemanager->mClones.clear();
 	delete mTimeline;
-	delete instanceTimemanager;
+	
 }

@@ -23,6 +23,8 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 
+#define CONSOLE_OVERRIDE 1
+
 HWND hwnd;
 LPCTSTR WndClassName = L"ChronoWindow";
 HINSTANCE hInst;
@@ -168,7 +170,13 @@ void Update() {
 	TimeManager::Instance()->AddObjectToTimeline(obj2);
 
 	BaseObject* headset = new BaseObject("headset", transform);
-	headset->AddComponent(visibleMesh);
+	MeshComponent *visibleMesh2 = new MeshComponent("../Resources/Cube.obj");
+	visibleMesh2->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
+	visibleMesh2->SetVisible(false);
+	HeadsetFollow* hfollow = new HeadsetFollow();
+	headset->AddComponent(hfollow);
+	headset->AddComponent(visibleMesh2);
+
 	TimeManager::Instance()->AddObjectToTimeline(headset);
 
 

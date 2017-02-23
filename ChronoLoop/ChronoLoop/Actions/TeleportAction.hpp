@@ -6,6 +6,8 @@
 #include "../Physics/Physics.h"
 #include "../Input/VRInputManager.h"
 #include "../Levels/LevelManager.h"
+#include "../HeadsetFollow.hpp"
+
 
 struct TeleportAction : public CodeComponent {
 	MeshComponent *mPlaneMesh;
@@ -43,6 +45,10 @@ struct TeleportAction : public CodeComponent {
 
 		if (VRInputManager::Instance().iGetController(left).GetPressDown(vr::EVRButtonId::k_EButton_Grip))
 		{
+			int frameRewind = 30;
+
+			if (!TimeManager::Instance()->CheckRewindAvaliable(frameRewind))
+				return;
 			Transform identity;
 			identity.SetMatrix(Math::MatrixIdentity());
 
@@ -52,7 +58,6 @@ struct TeleportAction : public CodeComponent {
 			visibleMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
 
 			BaseObject* headset = new BaseObject("headset" + std::to_string(rand), identity);
-			headset->AddComponent(visibleMesh);
 			headset->AddComponent(visibleMesh);
 			
 

@@ -17,7 +17,6 @@ class TimeManager
 	std::vector<BaseObject*>mClones;
 	Timeline* GetTimeLine();
 	
-
 	TimeManager();
 	~TimeManager();
 public:
@@ -27,6 +26,8 @@ public:
 	void AddObjectToTimeline(BaseObject* _obj);
 	//Clears the list of BaseObject* the Timemanager has refrence to.
 	void ClearClones();
+	//Checks and see if you can rewind to passed in frame
+	bool CheckRewindAvaliable(unsigned int _RewindNumOfframes);
 	//Returns the current snapshot indx
 	unsigned int GetCurrentSnapFrame();
 	//Go back into time. Send in dest frame and send in player headset and conrollers id
