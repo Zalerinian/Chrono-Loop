@@ -1,5 +1,6 @@
 #include "TextureManager.h"
 #include "../Common/FileIO/FileIO_Textures.h"
+#include "Renderer.h"
 #include <d3d11.h>
 #include <memory>
 
@@ -34,6 +35,26 @@ namespace RenderEngine {
 		sInstance = nullptr;
 	}
 
+	TextureManager::TextureStatus TextureManager::iAddTexture2D(std::string& _name, ID3D11Texture2D * _tex, std::shared_ptr<ID3D11ShaderResourceView*>* _srv) {
+		if (_tex == nullptr) {
+			return TextureStatus::eError;
+		}
+		D3D11_TEXTURE2D_DESC texDesc;
+		_tex->GetDesc(&texDesc);
+		CD3D11_SHADER_RESOURCE_VIEW_DESC srvDesc(_tex, D3D11_SRV_DIMENSION::D3D11_SRV_DIMENSION_TEXTURE2D, texDesc.Format);
+		ID3D11ShaderResourceView* srv;
+		(*RenderEngine::Renderer::Instance()->iGetDevice())->CreateShaderResourceView(_tex, &srvDesc, &srv);
+		_name = "memory:" + _name;
+		mTextureMap2D[_name] = std::make_pair<std::shared_ptr<ID3D11ShaderResourceView*>, std::shared_ptr<ID3D11Texture2D*>>(
+				std::make_shared<ID3D11ShaderResourceView*>(srv),
+				std::make_shared<ID3D11Texture2D*>(_tex)
+			);
+		if (_srv) {
+			(*_srv) = mTextureMap2D[_name].first;
+		}
+		return TextureStatus::eSuccess;
+	}
+
 	TextureManager::TextureStatus TextureManager::iGetTexture2D(const char * _path, std::shared_ptr<ID3D11ShaderResourceView*>* _srv, std::shared_ptr<ID3D11Texture2D*>* _texture) {
 		if (_srv == nullptr && _texture == nullptr) {
 			return TextureStatus::eError;
@@ -47,9 +68,19 @@ namespace RenderEngine {
 			}
 			return TextureStatus::eSuccess;
 		}
+
 		std::shared_ptr<ID3D11ShaderResourceView*> srv;
 		std::shared_ptr<ID3D11Texture2D*> text2d;
-		if (!FileIO::LoadTexture2D(_path, &srv, &text2d)) {
+		if (strncmp(_path, "memory:", 7) == 0) {
+			// We're looking for a file added via memory, but we don't have it, so return nullptr's.
+			if (_srv) {
+				(*_srv) = nullptr;
+			}
+			if (_texture) {
+				(*_texture) = nullptr;
+			}
+			return TextureStatus::eError;
+		} else if (!FileIO::LoadTexture2D(_path, &srv, &text2d)) {
 			if (_srv) {
 				(*_srv) = nullptr;
 			}

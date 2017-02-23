@@ -18,11 +18,12 @@
 #include "Actions/BoxSnapToControllerAction.hpp"
 #include "Actions/TeleportAction.hpp"
 #include "Levels/LevelManager.h"
+//#include "Rendering/TextureManager.h"
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
-#include "TimeManipulation.h"
+#include "Actions/TimeManipulation.h"
 
 #define CONSOLE_OVERRIDE 1
 
@@ -191,6 +192,25 @@ void Update() {
 	L1->AddLevelObject(LeftController);
 	
 	LevelManager::Instance()->AddLevel(L1);
+
+	//// Test for TextureManager::iAddTexture2D. Works nicely!
+	//D3D11_TEXTURE2D_DESC AddedTextureDesc;
+	//AddedTextureDesc.Width = 800;
+	//AddedTextureDesc.Height = 600;
+	//AddedTextureDesc.MipLevels = 1;
+	//AddedTextureDesc.ArraySize = 1;
+	//AddedTextureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	//AddedTextureDesc.SampleDesc.Count = 1;
+	//AddedTextureDesc.SampleDesc.Quality = 0;
+	//AddedTextureDesc.Usage = D3D11_USAGE_DEFAULT;
+	//AddedTextureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	//AddedTextureDesc.CPUAccessFlags = 0;
+	//AddedTextureDesc.MiscFlags = 0;
+	//ID3D11Texture2D *AddedTex;
+	//(*Renderer::Instance()->iGetDevice())->CreateTexture2D(&AddedTextureDesc, nullptr, &AddedTex);
+	//std::string AddedTextureName = "Bootleg";
+	//TextureManager::Instance()->iAddTexture2D(AddedTextureName, AddedTex, nullptr);
+	//planeObj->AddTexture(AddedTextureName.c_str(), eTEX_CUSTOM1);
 
 	//*////////////////////////////////////////////////////////////////////
 	if (VREnabled) {
