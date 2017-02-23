@@ -17,6 +17,7 @@ struct Plane
 	vec4f mNormal;
 	float mOffset;
 
+	Plane() {}
 	Plane(vec4f _norm, float _offset) { mNormal = _norm; mOffset = _offset; };
 };
 

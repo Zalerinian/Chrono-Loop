@@ -625,7 +625,7 @@ void Physics::Update(float _time)
 							{
 								AABB aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
 								//SystemLogger::GetLog() << "Collision State: " << collider->mColliding << std::endl;
-								if (!collider->mColliding && collider->mShouldMove && AABBtoAABB(aabb1, aabb2))
+								if (collider->mShouldMove && AABBtoAABB(aabb1, aabb2))
 								{
 									for (int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
 									{
@@ -673,22 +673,77 @@ void Physics::Update(float _time)
 										collider->SetPos(collider->GetPos() - (correction * collider->mInvMass));
 									}
 
-									if (!collider->mRewind && collider->mVelocity.x < 0.001f && collider->mVelocity.y < 0.001f && collider->mVelocity.z < 0.001f)
+									if (!collider->mRewind && collider->mVelocity.x < 0.0001f && collider->mVelocity.y < 0.0001f && collider->mVelocity.z < 0.0001f)
 										collider->mTotalForce = { 0,0,0,0 };
 
-									//if (!collider->mColliding)
-									//{
-										//collider->mColliding = true;
-										for (int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
-										{
-											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
-											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
-										}
-									//}
+									for (int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
+									{
+										((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
+										((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+									}
+
+									if (((CubeCollider*)collider)->mMin.y < otherCol->GetPos().y)
+									{
+										float depth = ((CubeCollider*)collider)->mMin.y - otherCol->GetPos().y;
+										vec4f correction = ((PlaneCollider*)otherCol)->mNormal * (depth / (collider->mInvMass + otherCol->mInvMass)) * 0.2f;
+										collider->SetPos(collider->GetPos() - (correction * collider->mInvMass));
+									}
 								}
 							}
 						}
 					}
+				}
+			}
+			else if (collider->mColliderType == Collider::eCOLLIDER_Button)
+			{
+				AABB aabb1(((ButtonCollider*)collider)->mMin, ((ButtonCollider*)collider)->mMax);
+				
+
+				if (AabbToPlane(((ButtonCollider*)collider)->mUpperBound, aabb1) != 2)
+				{
+					collider->mVelocity = { 0,0,0,0 };
+					collider->mAcceleration = { 0,0,0,0 };
+					collider->mTotalForce = { 0,0,0,0 };
+				}
+
+				for (int j = 0; j < objs; ++j)
+				{
+					if (mObjects[j] != mObjects[i])
+					{
+						int othercols = (int)mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
+						for (int k = 0; k < othercols; ++k)
+						{
+							otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
+							if (otherCol->mColliderType == Collider::eCOLLIDER_Cube)
+							{
+								AABB aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
+								if (collider->mShouldMove && (AabbToPlane(((ButtonCollider*)collider)->mLowerBound, aabb1) == 1) && AABBtoAABB(aabb1, aabb2))
+								{
+									for (int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
+									{
+										((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
+										((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+									}
+								}
+							}
+							else if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
+							{
+								Sphere s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
+								if (SphereToAABB(s1, aabb1))
+								{
+									//reflect? dissapear?
+									SystemLogger::GetLog() << "SPHERE TO AABB COLLISION FROM AABB!";
+								}
+							}
+						}
+					}
+				}
+
+				if (AabbToPlane(((ButtonCollider*)collider)->mLowerBound, aabb1) != 1)
+				{
+					collider->mVelocity = -collider->mVelocity;
+					collider->mAcceleration = -collider->mAcceleration;
+					collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
 				}
 			}
 

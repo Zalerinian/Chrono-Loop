@@ -131,7 +131,6 @@ CubeCollider::CubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _
 	mTotalForce = mGravity;
 	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	mShouldMove = _move;
-	mColliding = false;
 	mRewind = false;
 	mMass = _mass;
 	if (mMass == 0)
@@ -175,17 +174,17 @@ PlaneCollider::PlaneCollider(bool _move, vec4f _gravity, float _mass, float _ela
 	mMax = _max;
 }
 
-ButtonCollider::ButtonCollider(vec4f _min, vec4f _max, float _mass, float _normForce, vec4f _pushNormal, vec4f _upper, vec4f _lower)
+ButtonCollider::ButtonCollider(BaseObject* _obj, vec4f _min, vec4f _max, float _mass, float _normForce, vec4f _pushNormal)
 {
+	mObject = _obj;
 	mType = eCOMPONENT_COLLIDER;
-	mColliderType = eCOLLIDER_Cube;
+	mColliderType = eCOLLIDER_Button;
 	mGravity =  _pushNormal * _normForce;
 	mVelocity = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	mTotalForce = mGravity * _mass;
 	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	mShouldMove = true;
-	mColliding = false;
 	mRewind = false;
 	mMass = _mass;
 	if (mMass == 0)
@@ -198,4 +197,9 @@ ButtonCollider::ButtonCollider(vec4f _min, vec4f _max, float _mass, float _normF
 	mMin = _min + mObject->GetTransform().GetMatrix().fourth;
 	mMaxOffset = _max;
 	mMax = _max + mObject->GetTransform().GetMatrix().fourth;
+	mPushNormal = _pushNormal;
+	mUpperBound.mNormal = mPushNormal;
+	mUpperBound.mOffset = mMax * mPushNormal;
+	mLowerBound.mNormal = mPushNormal;
+	mLowerBound.mOffset = (mMin - mMax) * mPushNormal * 2;
 }

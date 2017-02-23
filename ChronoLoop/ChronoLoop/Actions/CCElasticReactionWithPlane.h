@@ -10,7 +10,7 @@ struct CCElasticReactionWithPlane : public CodeComponent
 		if (!colliding && _other.mColliderType == Collider::eCOLLIDER_Plane)
 		{
 			colliding = true;
-			SystemLogger::GetLog() << "PLANE COLLISION" << std::endl;
+			//SystemLogger::GetLog() << "PLANE COLLISION" << std::endl;
 
 			vec4f normalVel = (((PlaneCollider*)&_other)->mNormal * -(_col.mVelocity * ((PlaneCollider*)&_other)->mNormal));
 			_col.mVelocity += normalVel * (1 + _col.mElasticity);

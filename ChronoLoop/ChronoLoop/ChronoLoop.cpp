@@ -113,20 +113,29 @@ void Update() {
 	///*///////////////////////Using this to test physics//////////////////
 	Transform AABBtransform1;
 	AABBtransform1.SetMatrix(MatrixIdentity());
-	matrix4 AABBmat1 = MatrixTranslation(0, 5, 5);
+	matrix4 AABBmat1 = MatrixTranslation(0, 3, 5);
 	AABBtransform1.SetMatrix(AABBmat1);
 	BaseObject AABBobj1("aabb", AABBtransform1);
-	CubeCollider *AABBcol1 = new CubeCollider(&AABBobj1, true, vec4f(0.0f, -1.0f, 0.0f, 1.0f), 1.0f, 0.5f, 0.7f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
+	CubeCollider *AABBcol1 = new CubeCollider(&AABBobj1, true, vec4f(0.0f, -1.0f, 0.0f, 1.0f), 2.0f, 0.0f, 0.7f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
 	AABBcol1->AddForce(vec4f(0, 0, 0, 0));
 	AABBobj1.AddComponent(AABBcol1);
 	
 
+	//Transform AABBtransform2;
+	//AABBtransform2.SetMatrix(MatrixIdentity());
+	//matrix4 AABBmat2 = MatrixTranslation(-1, 3, 5);
+	//AABBtransform2.SetMatrix(AABBmat2);
+	//BaseObject AABBobj2("aabb2", AABBtransform2);
+	//CubeCollider *AABBcol2 = new CubeCollider(&AABBobj2, true, vec4f(0.0f, -1.0f, 0.0f, 1.0f), 1.0f, 0.5f, 0.7f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
+	//AABBcol2->AddForce(vec4f(-.5f, 0, 0, 0));
+	//AABBobj2.AddComponent(AABBcol2);
+
 	Transform AABBtransform2;
 	AABBtransform2.SetMatrix(MatrixIdentity());
-	matrix4 AABBmat2 = MatrixTranslation(0, 3, 5);
+	matrix4 AABBmat2 = MatrixTranslation(0, 0, 5);
 	AABBtransform2.SetMatrix(AABBmat2);
 	BaseObject AABBobj2("aabb2", AABBtransform2);
-	CubeCollider *AABBcol2 = new CubeCollider(&AABBobj2, true, vec4f(0.0f, 0.0f, 0.0f, 1.0f), 1.0f, 0.5f, 0.7f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
+	ButtonCollider *AABBcol2 = new ButtonCollider(&AABBobj2, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), 1, .1f, {0, 1, 0, 0});
 	AABBcol2->AddForce(vec4f(0, 0, 0, 0));
 	AABBobj2.AddComponent(AABBcol2);
 
@@ -176,15 +185,15 @@ void Update() {
 	CodeComponent *PlaneCollision = new CCElasticReactionWithPlane();
 	CodeComponent *PlaneCollision2 = new CCElasticReactionWithPlane();
 	CodeComponent *BoxCollision = new CCElasticAABBtoAABB();
-	//CodeComponent *ButtonPress = new CCButtonPress();
+	CodeComponent *ButtonPress = new CCButtonPress();
 	CodeComponent *BoxCollision2 = new CCElasticAABBtoAABB();
 
 	AABBobj1.AddComponent(codeComponent);
 	AABBobj1.AddComponent(PlaneCollision);
-	AABBobj2.AddComponent(PlaneCollision2);
-	//AABBobj1.AddComponent(ButtonPress);
+	//AABBobj2.AddComponent(PlaneCollision2);
+	AABBobj2.AddComponent(ButtonPress);
 	AABBobj1.AddComponent(BoxCollision);
-	AABBobj2.AddComponent(BoxCollision2);
+	//AABBobj2.AddComponent(BoxCollision2);
 
 	Physics::Instance()->mObjects.push_back(&AABBobj1);
 	Physics::Instance()->mObjects.push_back(&AABBobj2);
@@ -215,6 +224,27 @@ void Update() {
 			for (auto it = objects.begin(); it != objects.end(); ++it) {
 				(*it)->Update();
 			}
+			//if (GetAsyncKeyState(VK_UP))
+			//{
+			//	vec4f thing = AABBcol1->GetPos();
+			//	AABBcol1->SetPos(vec4f(thing.x, thing.y + .001f, thing.z, 0));
+			//}
+			//if (GetAsyncKeyState(VK_DOWN))
+			//{
+			//	vec4f thing = AABBcol1->GetPos();
+			//	AABBcol1->SetPos(vec4f(thing.x, thing.y - .001f, thing.z, 0));
+			//}
+			//if (GetAsyncKeyState(VK_LEFT))
+			//{
+			//	vec4f thing = AABBcol1->GetPos();
+			//	AABBcol1->SetPos(vec4f(thing.x - .001f, thing.y, thing.z, 0));
+			//}
+			//if (GetAsyncKeyState(VK_RIGHT))
+			//{
+			//	vec4f thing = AABBcol1->GetPos();
+			//	AABBcol1->SetPos(vec4f(thing.x + .001f, thing.y, thing.z, 0));
+			//}
+
 			TManager->Instance()->Update(deltaTime);
 			RenderEngine::Renderer::Instance()->Render(deltaTime);
 			Physics::Instance()->Update(deltaTime);

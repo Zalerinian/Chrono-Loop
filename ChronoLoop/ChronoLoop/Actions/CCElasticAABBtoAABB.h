@@ -10,7 +10,7 @@ struct CCElasticAABBtoAABB : public CodeComponent
 		if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane)
 		{
 			colliding = true;
-			SystemLogger::GetLog() << "BOX COLLISION" << std::endl;
+			//SystemLogger::GetLog() << "BOX COLLISION" << std::endl;
 
 			float avgElasticity = (_col.mElasticity + _other.mElasticity) / 2;
 			vec4f collisionNormal = (_col.GetPos() - _other.GetPos()).Normalize();

@@ -1,6 +1,8 @@
 #pragma once
 #include "..\Common\Math.h"
 #include "..\Rendering\Mesh.h"
+#include "..\Physics\Physics.h"
+
 class BaseObject;
 //class Mesh;
 
@@ -66,11 +68,12 @@ public:
 		eCOLLIDER_Mesh,
 		eCOLLIDER_Sphere,
 		eCOLLIDER_Cube,
-		eCOLLIDER_Plane
+		eCOLLIDER_Plane,
+		eCOLLIDER_Button
 	};
 
 	ColliderType mColliderType;
-	bool mShouldMove, mColliding, mRewind;
+	bool mShouldMove, mRewind;
 	vec4f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity;
 	float mMass, mElasticity, mFriction, mInvMass;
 
@@ -112,8 +115,9 @@ public:
 class ButtonCollider : public CubeCollider
 {
 public:
-	ButtonCollider(vec4f _min, vec4f _max, float _mass, float normForce, vec4f _pushNormal, vec4f _upper, vec4f _lower);
-	vec4f mPushNormal, mUpperBound, mLowerBound;
+	ButtonCollider(BaseObject* _obj, vec4f _min, vec4f _max, float _mass, float normForce, vec4f _pushNormal);
+	vec4f mPushNormal;
+	Plane mUpperBound, mLowerBound;
 };
 
 /*
