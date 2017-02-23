@@ -74,9 +74,9 @@ struct BoxSnapToControllerAction : public CodeComponent {
 				ReleaseCube();
 			}
 			if (leftController.GetPressDown((vr::EVRButtonId::k_EButton_Grip))) {
-				TimeManager::Instance()->RewindTimeline();
+//				TimeManager::Instance()->RewindTimeline();
 			} else if (rightController.GetPressDown((vr::EVRButtonId::k_EButton_Grip))) {
-				TimeManager::Instance()->RewindTimeline();
+	//			TimeManager::Instance()->RewindTimeline();
 			}
 
 #pragma region Gestures

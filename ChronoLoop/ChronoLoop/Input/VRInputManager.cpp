@@ -69,3 +69,8 @@ Controller& VRInputManager::iGetController(bool left) {
 		return mRightController;
 	}
 }
+
+matrix4 VRInputManager::iGetPlayerWorldPos() {
+		matrix4 temp = FromMatrix(mPoses[0].mDeviceToAbsoluteTracking) * mPlayerPosition;
+		return temp;
+}

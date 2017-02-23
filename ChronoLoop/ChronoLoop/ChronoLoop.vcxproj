@@ -211,6 +211,7 @@
     <ClInclude Include="Common\Math.h" />
     <ClInclude Include="Core\Timeline.h" />
     <ClInclude Include="Core\TimeManager.h" />
+    <ClInclude Include="HeadsetFollow.hpp" />
     <ClInclude Include="Input\Controller.h" />
     <ClInclude Include="Input\KeyboardInput.h" />
     <ClInclude Include="Input\VRInputManager.h" />
