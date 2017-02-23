@@ -26,3 +26,6 @@ E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\D
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectPlay.xml
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectSound.xml
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\heightdata.raw
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Cube.obj
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Sphere.obj
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\StrangeTree.obj

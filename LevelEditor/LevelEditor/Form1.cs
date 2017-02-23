@@ -4,11 +4,11 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
+using System.Collections.Generic;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.IO;
 using Microsoft.DirectX.DirectInput;
-using System.Windows.Forms;
 using System.Diagnostics;
 
 namespace LevelEditor
@@ -19,13 +19,19 @@ namespace LevelEditor
         private int HEIGHT = 64;
 
         private Microsoft.DirectX.Direct3D.Device device;
-        private float angle = 0f;
-        private CustomVertex.PositionColored[] vertices;
+        private float angle, rotSpeed;
         private int[,] heightData;
+        private CustomVertex.PositionColored[] vertices;
         private int[] indices;
         private IndexBuffer ib;
         private VertexBuffer vb;
         private Microsoft.DirectX.DirectInput.Device keyb;
+        private List<ToolObject> objects = new List<ToolObject>();
+        private Stopwatch fpsTimer = new Stopwatch();
+        private List<long> advMillisecond = new List<long>();
+        private Vector3 cameraPos = new Vector3(0, 0, 0);
+        private Vector2 prevMouse, curMouse;
+        Matrix rotate = Matrix.Identity;
 
         public Editor()
         {
@@ -34,12 +40,20 @@ namespace LevelEditor
             InitializeDevice();
             InitializeKeyboard();
             InitializeCamera();
-            VertexDeclaration();
-            IndicesDeclaration();
+            objects.Add(new ToolObject(ref device));
+            objects.Add(new ToolObject("Assets/Cube.obj", ref device));
+            objects.Add(new ToolObject("Assets/Sphere.obj", ref device));
+            objects[0].Scale(new Vector3(10, 10, 10));
+            objects[1].Scale(new Vector3(10, 10, 10));
+            objects[1].Translate(new Vector3(0, 1, 0));
+            objects[2].Scale(new Vector3(5, 5, 5));
+            objects[2].Translate(new Vector3(3.0f, 1, -1.0f));
             splitContainer1.BorderStyle = BorderStyle.None;
             splitContainer1.SplitterWidth = 1;
             splitContainer2.BorderStyle = BorderStyle.None;
             splitContainer2.SplitterWidth = 1;
+            fpsTimer.Start();
+            rotSpeed = 0.01f;
         }
         private void InitializeDevice()
         {
@@ -69,13 +83,16 @@ namespace LevelEditor
             device.RenderState.FillMode = FillMode.WireFrame;
             device.RenderState.CullMode = Cull.None;
             InitializeCamera();
-            VertexDeclaration();
-            IndicesDeclaration();
+            foreach (ToolObject to in objects)
+            {
+                to.VertexDeclaration();
+                to.IndicesDeclaration();
+            }
         }
         private void InitializeCamera()
         {
-            device.Transform.Projection = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, (float)graphicsPanel1.Width / (float)graphicsPanel1.Height, 1f, 150f);
-            device.Transform.View = Matrix.LookAtLH(new Vector3(0, -40, 50), new Vector3(0, -5, 0), new Vector3(0, 1, 0));
+            device.Transform.Projection = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, (float)graphicsPanel1.Width / (float)graphicsPanel1.Height, 1f, 1000);
+            device.Transform.View = Matrix.LookAtLH(new Vector3(0, -40, 50), new Vector3(0, -5, 0), new Vector3(0, 1, 0)) * Matrix.RotationZ(angle);
             device.RenderState.Lighting = false;
             device.RenderState.CullMode = Cull.None;
         }
@@ -85,56 +102,21 @@ namespace LevelEditor
             keyb.SetCooperativeLevel(this, CooperativeLevelFlags.Background | CooperativeLevelFlags.NonExclusive);
             keyb.Acquire();
         }
-        private void VertexDeclaration()
-        {
-            vb = new VertexBuffer(typeof(CustomVertex.PositionColored), WIDTH * HEIGHT, device, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
-            vertices = new CustomVertex.PositionColored[WIDTH * HEIGHT];
-
-            for (int x = 0; x < WIDTH; x++)
-            {
-
-                for (int y = 0; y < HEIGHT; y++)
-                {
-                    vertices[x + y * WIDTH].Position = new Vector3(x, y, heightData[x, y]);
-                    vertices[x + y * WIDTH].Color = Color.White.ToArgb();
-                }
-            }
-
-            vb.SetData(vertices, 0, LockFlags.None);
-        }
-        private void IndicesDeclaration()
-        {
-            ib = new IndexBuffer(typeof(int), (WIDTH - 1) * (HEIGHT - 1) * 6, device, Usage.WriteOnly, Pool.Default);
-            indices = new int[(WIDTH - 1) * (HEIGHT - 1) * 6];
-
-            for (int x = 0; x < WIDTH - 1; x++)
-            {
-
-                for (int y = 0; y < HEIGHT - 1; y++)
-                {
-                    indices[(x + y * (WIDTH - 1)) * 6] = (x + 1) + (y + 1) * WIDTH;
-                    indices[(x + y * (WIDTH - 1)) * 6 + 1] = (x + 1) + y * WIDTH;
-                    indices[(x + y * (WIDTH - 1)) * 6 + 2] = x + y * WIDTH;
-
-                    indices[(x + y * (WIDTH - 1)) * 6 + 3] = (x + 1) + (y + 1) * WIDTH;
-                    indices[(x + y * (WIDTH - 1)) * 6 + 4] = x + y * WIDTH;
-                    indices[(x + y * (WIDTH - 1)) * 6 + 5] = x + (y + 1) * WIDTH;
-                }
-            }
-            ib.SetData(indices, 0, LockFlags.None);
-        }
 
         private void Paint(object sender, PaintEventArgs e)
         {
             device.Clear(ClearFlags.Target, Color.Black, 1.0f, 0);
 
             device.BeginScene();
-            device.VertexFormat = CustomVertex.PositionColored.Format;
-            device.SetStreamSource(0, vb, 0);
-            device.Indices = ib;
+            device.VertexFormat = CustomVertex.PositionNormalTextured.Format;
+            foreach (ToolObject tObj in objects)
+            {
+                device.SetStreamSource(0, tObj.VertexBuffer, 0);
+                device.Indices = tObj.IndexBuffer;
             
-            device.Transform.World = Matrix.Translation(-HEIGHT / 2, -WIDTH / 2, 0) * Matrix.RotationZ(angle);
-            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, WIDTH * HEIGHT, 0, indices.Length / 3);
+                device.Transform.World = tObj.Transform;
+                device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Indices.Length, 0, tObj.Indices.Length / 3);
+            }
             device.EndScene();
 
             device.Present();
@@ -144,13 +126,25 @@ namespace LevelEditor
         {
             KeyboardState keys = keyb.GetCurrentKeyboardState();
             if (keys[Key.RightArrow])
-            {
                 angle += 0.03f;
-            }
             if (keys[Key.LeftArrow])
-            {
                 angle -= 0.03f;
-            }
+            if (keys[Key.W])
+                cameraPos.Z += 1;
+            if (keys[Key.S])
+                cameraPos.Z -= 1;
+            if (keys[Key.A])
+                cameraPos.X -= 1;
+            if (keys[Key.D])
+                cameraPos.X += 1;
+            if (keys[Key.LeftShift])
+                cameraPos.Y -= 1;
+            if (keys[Key.Space])
+                cameraPos.Y += 1;
+            Matrix pos = Matrix.Translation(cameraPos);
+            Vector4 temp = Vector3.Transform(new Vector3(0, 0, 1), rotate);
+            Vector3 look = cameraPos + new Vector3(temp.X, temp.Y, temp.Z);
+            device.Transform.View = Matrix.LookAtLH(cameraPos, look, new Vector3(0, 1, 0));
         }
         private void LoadHeightData()
         {
@@ -187,8 +181,51 @@ namespace LevelEditor
             splitContainer1.Panel1Collapsed = !splitContainer1.Panel1Collapsed;
         }
 
+        private void graphicsPanel1_MouseClick(object sender, MouseEventArgs e)
+        {
+        }
+
+        private void graphicsPanel1_MouseMove(object sender, MouseEventArgs e)
+        {
+            prevMouse = curMouse;
+            curMouse = new Vector2(e.X, e.Y);
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+                    break;
+                case MouseButtons.None:
+                    break;
+                case MouseButtons.Right:
+                    break;
+                case MouseButtons.Middle:
+                    float dx = curMouse.X - prevMouse.X;
+                    float dy = curMouse.Y - prevMouse.Y;
+                    rotate *= Matrix.RotationY(dx * rotSpeed);
+                    rotate *= Matrix.RotationX(dy * rotSpeed);
+                    break;
+                case MouseButtons.XButton1:
+                    break;
+                case MouseButtons.XButton2:
+                    break;
+                default:
+                    break;
+            }
+        }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
+            fpsTimer.Stop();
+            advMillisecond.Add(fpsTimer.ElapsedMilliseconds);
+            if (advMillisecond.Count >= 5)
+            {
+                long adv = 0;
+                foreach (long l in advMillisecond)
+                    adv += l;
+                adv /= advMillisecond.Count;
+                FpsCount.Text = "FPS: " + (1000 / adv);
+            }
+            fpsTimer.Reset();
+            fpsTimer.Start();
             graphicsPanel1.Invalidate();
         }
     }
