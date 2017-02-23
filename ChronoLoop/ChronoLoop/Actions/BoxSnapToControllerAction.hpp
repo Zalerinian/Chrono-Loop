@@ -61,8 +61,9 @@ struct BoxSnapToControllerAction : public CodeComponent {
 	Bootleg mBootleg;
 
 	virtual void Update() override {
-		Controller &leftController = VRInputManager::Instance().iGetController(true), &rightController = VRInputManager::Instance().iGetController(false);
+
 		if (VRInputManager::Instance().iIsInitialized()) {
+			Controller &leftController = VRInputManager::Instance().iGetController(true), &rightController = VRInputManager::Instance().iGetController(false);
 			if (leftController.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger)) {
 				SnapToController(true);
 				mHeldLeft = true;
@@ -101,9 +102,10 @@ struct BoxSnapToControllerAction : public CodeComponent {
 					}
 				}
 			}
+			//SystemLogger::GetLog() << "[Debug] Touchpad Axis: (" << touch.x << ", " << touch.y << ")" << std::endl;
 #pragma endregion Gestures
 		}
-		//SystemLogger::GetLog() << "[Debug] Touchpad Axis: (" << touch.x << ", " << touch.y << ")" << std::endl;
+		mObject->GetTransform().SetMatrix(Math::MatrixRotateInPlace(mObject->GetTransform().GetMatrix(), 1, 0, 0, DirectX::XM_PI / 1024.0f));
 	}
 
 	virtual void SnapToController(bool left) {

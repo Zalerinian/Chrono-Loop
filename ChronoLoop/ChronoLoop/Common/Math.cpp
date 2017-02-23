@@ -615,12 +615,12 @@ matrix4 Math::MatrixIdentity()
 matrix4 Math::MatrixRotateInPlace(matrix4 _self, float _x, float _y, float _z, float _rads) {
 	vec4f pos;
 	for (int i = 0; i < 4; ++i) {
-		pos[i] = _self[i][3];
-		_self[i][3] = 0;
+		pos[i] = _self[3][i];
+		_self[3][i] = 0;
 	}
 	_self *= Math::MatrixRotateAxis({ _x, _y, _z, 0 }, _rads);
 	for (int i = 0; i < 4; ++i) {
-		_self[i][3] = pos[i];
+		_self[3][i] = pos[i];
 	}
 	return _self;
 }
