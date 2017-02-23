@@ -209,6 +209,7 @@
     <ClInclude Include="Common\LimitedList.h" />
     <ClInclude Include="Common\Logger.h" />
     <ClInclude Include="Common\Math.h" />
+    <ClInclude Include="Common\Pool.h" />
     <ClInclude Include="Core\Timeline.h" />
     <ClInclude Include="Core\TimeManager.h" />
     <ClInclude Include="HeadsetFollow.hpp" />
@@ -336,6 +337,7 @@
     <ClCompile Include="Common\LimitedList.cpp" />
     <ClCompile Include="Common\Logger.cpp" />
     <ClCompile Include="Common\Math.cpp" />
+    <ClCompile Include="Common\Pool.cpp" />
     <ClCompile Include="Core\Timeline.cpp" />
     <ClCompile Include="Core\TimeManager.cpp" />
     <ClCompile Include="Input\Controller.cpp" />

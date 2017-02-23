@@ -25,13 +25,15 @@ struct GestureDetection : CodeComponent {
 
 			if (i == mHolder) {
 				// This controller started touching the touchpad first.
-				if (controller.GetAxis() == zero2f) {
+				vec2f touch = controller.GetAxis();
+				if (touch == zero2f) {
 					// The touchpad has been released.
 					mIsHeld = false;
 					mHolder = -1;
 					mList.Clear();
 				} else {
 					// The touchpad is still being touched.
+					mList.AddHead(touch);
 				}
 			}
 		}

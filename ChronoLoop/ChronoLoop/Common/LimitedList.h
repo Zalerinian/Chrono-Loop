@@ -1,14 +1,13 @@
 #pragma once
 #include "Math.h"
 
-struct LimitedList {
+class LimitedList {
 	struct Node {
 		vec2f data;
 		Node *mNext, *mPrev;
 		Node(vec2f _d) : data(_d) {}
 	};
 
-private:
 	Node *mHead, *mTail;
 	unsigned int mSize, mLimit = 9;
 

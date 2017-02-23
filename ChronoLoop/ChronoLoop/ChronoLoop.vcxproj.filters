@@ -279,6 +279,9 @@
     <ClInclude Include="Common\LimitedList.h">
       <Filter>Common\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Common\Pool.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -455,6 +458,7 @@
     <ClCompile Include="Common\LimitedList.cpp">
       <Filter>Common\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Common\Pool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">

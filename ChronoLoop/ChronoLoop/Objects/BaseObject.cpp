@@ -6,18 +6,21 @@
 
 // 0 is reserved for the player.
 unsigned int BaseObject::ObjectCount = 1;
-std::unordered_map<std::string, BaseObject*> BaseObject::AllObjects;
 
 void BaseObject::Construct(std::string _name, Transform _transform, BaseObject* _parent) {
-	if (AllObjects[_name] != nullptr) {
-		SystemLogger::GetError() << "[Error] An object with the provided name (" << _name << ") already exists. Objects must be unique. This object will be invalid." << std::endl;
-		Debug::SetBreakpoint();
-	}
+	//if (AllObjects[_name] != nullptr) {
+	//	SystemLogger::GetError() << "[Error] An object with the provided name (" << _name << ") already exists. Objects must be unique. This object will be invalid." << std::endl;
+	//	Debug::SetBreakpoint();
+	//}
 	mName = _name;
 	mTransform = _transform;
 	mParent = _parent;
 	mUniqueID = BaseObject::ObjectCount++;
-	AllObjects[_name] = this;
+	//AllObjects[_name] = this;
+}
+
+BaseObject::BaseObject() {
+	Construct("", Transform(), nullptr);
 }
 
 BaseObject::BaseObject(std::string _name)
@@ -29,13 +32,16 @@ BaseObject::BaseObject(std::string _name, Transform _transform)
 	Construct(_name, _transform, nullptr);
 }
 
+BaseObject::BaseObject(std::string _name, Transform _transform, BaseObject * _parent) {
+	Construct(_name, _transform, _parent);
+}
+
 BaseObject::~BaseObject()
 {
 	if (mDestroyed) {
 		SystemLogger::GetError() << "[Warning] Deleting an object that is marked as destroyed." << std::endl;
 	} else {
 		Destroy();
-		AllObjects.erase(mName);
 	}
 }
 
@@ -111,12 +117,17 @@ void BaseObject::Update() {
 }
 
 BaseObject * BaseObject::GetObjectByName(std::string _name) {
-	for (auto it = AllObjects.begin(); it != AllObjects.end(); ++it) {
+	/*for (auto it = AllObjects.begin(); it != AllObjects.end(); ++it) {
 		if (it->first == _name) {
 			return it->second;
 		}
-	}
+	}*/
 	return nullptr;
+}
+
+void BaseObject::SetName(std::string _name) {
+
+	mName = _name;
 }
 
 unsigned int BaseObject::AddComponent(Component * _comp) {
