@@ -1,10 +1,11 @@
-#include "./Actions/TimeManipulation.h"
-#include "Objects/Component.h"
-#include "Objects/MeshComponent.h"
-#include "Actions/CodeComponent.hpp"
-#include "Objects/BaseObject.h"
-#include "Levels/LevelManager.h"
-#include "Input/VRInputManager.h"
+
+#include "../Objects/Component.h"
+#include "../Objects/MeshComponent.h"
+#include "../Actions/CodeComponent.hpp"
+#include "../Objects/BaseObject.h"
+#include "../Levels/LevelManager.h"
+#include "../Input/VRInputManager.h"
+#include "TimeManipulation.h"
 
 
 TimeManipulation::TimeManipulation() {}
@@ -12,16 +13,33 @@ TimeManipulation::TimeManipulation() {}
 
 TimeManipulation::~TimeManipulation() {}
 
-virtual void TimeManipulation::Start() {
+unsigned int TimeManipulation::mCloneCount = 0;
+
+
+void TimeManipulation::Start() {
 	mCloneCount++;
 
 	//TODO PAT: Replace this with ryan's GUI system
+	D3D11_TEXTURE2D_DESC txtdec;
+	txtdec.Width = 800;
+	txtdec.Height = 600;
+	txtdec.MipLevels = 1;
+	txtdec.ArraySize = 1;
+	txtdec.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+	txtdec.SampleDesc.Count = 1;
+	txtdec.SampleDesc.Quality = 0;
+	txtdec.Usage = D3D11_USAGE_DEFAULT;
+	txtdec.BindFlags = D3D11_BIND_RENDER_TARGET;
+	txtdec.CPUAccessFlags = 0;
+	txtdec.MiscFlags = 0;
+	HRESULT hr;
+	hr = ((*RenderEngine::Renderer::Instance()->iGetDevice())->CreateTexture2D(&txtdec, NULL, &mCountTxt));
 	mCountMap = RenderEngine::Renderer::Instance()->CreateBitmapForTexture(mCountTxt);
 	//This draws to center
 	RenderEngine::Renderer::Instance()->DrawTextToBitmap(std::to_wstring(mCloneCount), mCountMap, 0.0f, 0.0f, 1.0f, 1.0f);
 }
 
-virtual void TimeManipulation::Update() {
+void TimeManipulation::Update() {
 	if (VRInputManager::Instance().iGetController(mLeft).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu)) {
 		int frameRewind = 30;
 

@@ -285,7 +285,7 @@
     <ClInclude Include="Common\LimitedList.h">
       <Filter>Common\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TimeManipulation.h">
+    <ClInclude Include="Actions\TimeManipulation.h">
       <Filter>Actions\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -464,7 +464,7 @@
     <ClCompile Include="Common\LimitedList.cpp">
       <Filter>Common\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TimeManipulation.cpp">
+    <ClCompile Include="Actions\TimeManipulation.cpp">
       <Filter>Actions\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

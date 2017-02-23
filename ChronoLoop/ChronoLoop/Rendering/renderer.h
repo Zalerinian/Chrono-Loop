@@ -106,6 +106,7 @@ namespace RenderEngine {
 		void Render(float _deltaTime);
 
 		//Draws text in 0 to 1 space
+		
 		void DrawTextToBitmap(std::wstring _text, ID2D1Bitmap* _bitmap,float _topLeftx, float _topLefty, float _bottomRightx, float _bottomRighty);
 		ID2D1Bitmap1* CreateBitmapForTexture(ID3D11Texture2D* _texture);
 

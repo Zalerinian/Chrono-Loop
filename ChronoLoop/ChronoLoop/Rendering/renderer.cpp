@@ -11,7 +11,7 @@
 #include "../Input/VRInputManager.h"
 #include "../Input/Controller.h"
 
-#define ENABLE_TEXT 0
+#define ENABLE_TEXT 1
 
 
 using namespace std;
@@ -395,7 +395,7 @@ namespace RenderEngine {
 		//pat added 
 #if ENABLE_TEXT
 		std::wstring FPS = L"FPS: " + to_wstring(mFps);
-		DrawTextToBitmap(FPS, (*mScreenBitmap,.75f, .75f, 1.0f, 1.0f));
+		DrawTextToBitmap(FPS, (*mScreenBitmap),.75f, .75f, 1.0f, 1.0f);
 #endif
 		//-----
 	}
@@ -475,7 +475,7 @@ namespace RenderEngine {
 		//pat added 
 #if ENABLE_TEXT
 		std::wstring FPS = L"FPS: " + to_wstring(mFps);
-		DrawTextToBitmap(FPS, (*mScreenBitmap,.75f,.75f,1.0f,1.0f));
+		DrawTextToBitmap(FPS, (*mScreenBitmap),.75f,.75f,1.0f,1.0f);
 #endif
 		//-----
 	}
@@ -528,6 +528,7 @@ namespace RenderEngine {
 				0		//defaults to 96
 			);
 
+		HRESULT hr;
 		IDXGISurface* surface;
 		ThrowIfFailed(_texture->QueryInterface(IID_IDXGISurface, (void**)&surface));
 
