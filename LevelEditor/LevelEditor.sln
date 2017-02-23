@@ -3,24 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LevelEditor", "LevelEditor\LevelEditor.vcxproj", "{F4AC4E6D-37BE-4C9C-AF45-C630DB934B5A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LevelEditor", "LevelEditor\LevelEditor.csproj", "{F14EA184-AC29-4671-A206-F9142DCAE17A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
-		Release|x64 = Release|x64
-		Release|x86 = Release|x86
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F4AC4E6D-37BE-4C9C-AF45-C630DB934B5A}.Debug|x64.ActiveCfg = Debug|x64
-		{F4AC4E6D-37BE-4C9C-AF45-C630DB934B5A}.Debug|x64.Build.0 = Debug|x64
-		{F4AC4E6D-37BE-4C9C-AF45-C630DB934B5A}.Debug|x86.ActiveCfg = Debug|Win32
-		{F4AC4E6D-37BE-4C9C-AF45-C630DB934B5A}.Debug|x86.Build.0 = Debug|Win32
-		{F4AC4E6D-37BE-4C9C-AF45-C630DB934B5A}.Release|x64.ActiveCfg = Release|x64
-		{F4AC4E6D-37BE-4C9C-AF45-C630DB934B5A}.Release|x64.Build.0 = Release|x64
-		{F4AC4E6D-37BE-4C9C-AF45-C630DB934B5A}.Release|x86.ActiveCfg = Release|Win32
-		{F4AC4E6D-37BE-4C9C-AF45-C630DB934B5A}.Release|x86.Build.0 = Release|Win32
+		{F14EA184-AC29-4671-A206-F9142DCAE17A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F14EA184-AC29-4671-A206-F9142DCAE17A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F14EA184-AC29-4671-A206-F9142DCAE17A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F14EA184-AC29-4671-A206-F9142DCAE17A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

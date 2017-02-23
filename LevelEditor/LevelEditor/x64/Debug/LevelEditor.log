@@ -1,9 +1,0 @@
-﻿  Editor.cpp
-  GraphicsPanel.cpp
-  Main.cpp
-Main.cpp(7): warning C4829: Possibly incorrect parameters to function main. Consider 'int main(Platform::Array<Platform::String^>^ argv)'
-  NoFocusButton.cpp
-  Generating Code...
-  Editor.obj : /DEBUG:FASTLINK is not supported when managed code is present; restarting link with /DEBUG:FULL
-  LevelEditor.vcxproj -> E:\Users\James Moran\Documents\GitHub\LevelEditor\x64\Debug\LevelEditor.exe
-  LevelEditor.vcxproj -> E:\Users\James Moran\Documents\GitHub\LevelEditor\x64\Debug\LevelEditor.pdb (Partial PDB)
