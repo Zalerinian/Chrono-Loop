@@ -33,6 +33,9 @@ public:
 	inline void iAddObject(BaseObject* _obj) { mObjectMap[_obj->GetName()].push_back(_obj); }
 	bool iRemoveObject(BaseObject* _obj);
 	unsigned short iGetId() { return mId; };
+	inline BaseObject* iGetHeadset() { return mHeadset; }
+	inline BaseObject* iGetLeftController() { return mController1; }
+	inline BaseObject* iGetRightController() { return mController2; }
 
 
 	//**SETTERS**//

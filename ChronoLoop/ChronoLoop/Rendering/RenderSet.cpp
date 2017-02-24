@@ -46,6 +46,7 @@ namespace RenderEngine {
 				mContexts.push_back(_rc);
 			}
 		}
+		mSize++;
 	}
 
 	void RenderSet::RemoveNode(RenderNode * _node) {
@@ -106,6 +107,7 @@ namespace RenderEngine {
 			RemoveContext(it);
 		}
 		RemoveNode(_node);
+		mSize--;
 	}
 	
 	void RenderSet::ClearSet() {

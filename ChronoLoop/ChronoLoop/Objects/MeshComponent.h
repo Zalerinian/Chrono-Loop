@@ -1,6 +1,7 @@
 #pragma once
 #include "Component.h"
 #include "../Rendering/RendererDefines.h"
+#include  "../Rendering/RenderShape.h"
 
 namespace RenderEngine {
 	struct RenderShape;

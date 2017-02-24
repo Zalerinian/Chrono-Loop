@@ -8,6 +8,7 @@ namespace RenderEngine {
 
 	class RenderSet {
 		RenderNode *mHead = nullptr, *mTail = nullptr;
+		unsigned int mSize = 0;
 		std::vector<RenderContext*> mContexts;
 
 	public:

@@ -36,7 +36,7 @@ void VRInputManager::mInitialize(vr::IVRSystem *_vr) {
 	SystemLogger::GetLog() << "Left controller ID:  " << leftID << std::endl;
 	mRightController.SetUp(rightID, mVRSystem);
 	mLeftController.SetUp(leftID, mVRSystem);
-	mPlayerPosition = Math::MatrixIdentity();
+	mPlayerPosition = Math::MatrixTranslation(2, -1, 8);
 }
 
 void VRInputManager::iUpdate() {

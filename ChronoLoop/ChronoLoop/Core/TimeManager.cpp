@@ -14,7 +14,9 @@ TimeManager::TimeManager() {
 
 
 TimeManager::~TimeManager() {
-	Destroy();
+	//Level manager will clear delete clones
+	delete mTimeline;
+	instanceTimemanager->mClones.clear();
 }
 
 void TimeManager::Update(float _delta) {
@@ -100,8 +102,7 @@ void TimeManager::RewindMakeClone(unsigned int _frame, BaseObject* _ob1, BaseObj
 }
 
 void TimeManager::Destroy() {
-	//Level manager will clear delete clones
-	instanceTimemanager->mClones.clear();
-	delete mTimeline;
+	
+	delete instanceTimemanager;
 	
 }

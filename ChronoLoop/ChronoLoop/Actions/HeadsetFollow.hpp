@@ -10,7 +10,6 @@ private:
 	
 public:
 
-
 virtual void Update() {
 	if (!VRInputManager::Instance().iIsInitialized()) {
 		return;

@@ -103,6 +103,12 @@
     <Filter Include="Actions">
       <UniqueIdentifier>{48beaf3c-0f0e-4a07-9918-0972a580a156}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Actions\Header Files">
+      <UniqueIdentifier>{b1a8acac-397e-47cc-b4fc-e9ed3fa3f3ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actions\Source Files">
+      <UniqueIdentifier>{d74cdf54-647c-40f6-835b-2e969a5cdd29}</UniqueIdentifier>
+    </Filter>
     <Filter Include="DXTK">
       <UniqueIdentifier>{16572d88-a51f-45a6-a564-025b7a4af6ff}</UniqueIdentifier>
     </Filter>
@@ -255,20 +261,23 @@
     <ClInclude Include="Rendering\VertexBufferManager.h">
       <Filter>Rendering\Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="HeadsetFollow.hpp">
-      <Filter>Actions</Filter>
-    </ClInclude>
     <ClInclude Include="Actions\GestureDetection.hpp">
       <Filter>Actions</Filter>
     </ClInclude>
     <ClInclude Include="Common\LimitedList.h">
       <Filter>Common\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\TimeManipulation.h">
+      <Filter>Actions\Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Common\Pool.h">
       <Filter>Common\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Core\Level.h">
       <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\HeadsetFollow.hpp">
+      <Filter>Actions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -439,6 +448,9 @@
     </ClCompile>
     <ClCompile Include="Common\LimitedList.cpp">
       <Filter>Common\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Actions\TimeManipulation.cpp">
+      <Filter>Actions\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Common\Pool.cpp" />
     <ClCompile Include="Core\Level.cpp">

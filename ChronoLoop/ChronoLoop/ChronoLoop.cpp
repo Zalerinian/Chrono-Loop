@@ -13,15 +13,18 @@
 #include <chrono>
 #include <d3d11.h>
 #include "Common/Math.h"
-//#include "Actions/CodeComponent.h"
 #include "Objects/MeshComponent.h"
+#include "Actions/HeadsetFollow.hpp"
 #include "Actions/BoxSnapToControllerAction.hpp"
 #include "Actions/TeleportAction.hpp"
 #include "Core/Level.h"
+//#include "Rendering/TextureManager.h"
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
+#include "Actions/TimeManipulation.h"
+
 
 #define CONSOLE_OVERRIDE 1
 
@@ -34,14 +37,13 @@ bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, b
 std::chrono::steady_clock::time_point lastTime = std::chrono::steady_clock::now();
 static float timeFrame = 0.0f;
 static float deltaTime;
-TimeManager* TManager;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void Update();
 void UpdateTime();
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(1253);
+	//_CrtSetBreakAlloc(7251);
 	if (!InitializeWindow(hInstance, nCmdShow, 800, 600, true)) {
 		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
 		return 2;
@@ -145,23 +147,27 @@ void Update() {
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
 	TeleportAction *ta = new TeleportAction(false);
+	TimeManipulation* tm = new TimeManipulation(false);
 	RightController->AddComponent(mc);
 	RightController->AddComponent(ta);
+	RightController->AddComponent(tm);
 	TimeManager::Instance()->AddObjectToTimeline(RightController);
 
 	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
 	visibleMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
 	PhysicsBox->AddComponent(visibleMesh);
-	CodeComponent *codeComponent = new BoxSnapToControllerAction();
-	PhysicsBox->AddComponent(codeComponent);
+	//CodeComponent *codeComponent = new BoxSnapToControllerAction();
+	//PhysicsBox->AddComponent(codeComponent);
 
 	//pat added
 	BaseObject* LeftController = new BaseObject("Controller2", identity);
 	MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 	mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
 	TeleportAction *ta2 = new TeleportAction(true);
+	TimeManipulation* tm2 = new TimeManipulation(true);
 	LeftController->AddComponent(mc2);
 	LeftController->AddComponent(ta2);
+	LeftController->AddComponent(tm2);
 	TimeManager::Instance()->AddObjectToTimeline(LeftController);
 
 	BaseObject* headset = new BaseObject("headset", transform);
@@ -188,6 +194,25 @@ void Update() {
 	L1->iAddObject(LeftController);
 	L1->iCallStart();
 
+	//// Test for TextureManager::iAddTexture2D. Works nicely!
+	//D3D11_TEXTURE2D_DESC AddedTextureDesc;
+	//AddedTextureDesc.Width = 800;
+	//AddedTextureDesc.Height = 600;
+	//AddedTextureDesc.MipLevels = 1;
+	//AddedTextureDesc.ArraySize = 1;
+	//AddedTextureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	//AddedTextureDesc.SampleDesc.Count = 1;
+	//AddedTextureDesc.SampleDesc.Quality = 0;
+	//AddedTextureDesc.Usage = D3D11_USAGE_DEFAULT;
+	//AddedTextureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	//AddedTextureDesc.CPUAccessFlags = 0;
+	//AddedTextureDesc.MiscFlags = 0;
+	//ID3D11Texture2D *AddedTex;
+	//(*Renderer::Instance()->iGetDevice())->CreateTexture2D(&AddedTextureDesc, nullptr, &AddedTex);
+	//std::string AddedTextureName = "Bootleg";
+	//TextureManager::Instance()->iAddTexture2D(AddedTextureName, AddedTex, nullptr);
+	//planeObj->AddTexture(AddedTextureName.c_str(), eTEX_CUSTOM1);
+
 	//*////////////////////////////////////////////////////////////////////
 	if (VREnabled) {
 		VRInputManager::Instance().iUpdate();
@@ -209,7 +234,7 @@ void Update() {
 			UpdateTime();
 			Level::Instance()->iUpdate();
 			
-			TManager->Instance()->Update(deltaTime);
+			TimeManager::Instance()->Update(deltaTime);
 			RenderEngine::Renderer::Instance()->Render(deltaTime);
 			Physics::Instance()->Update(deltaTime);
 			if (VREnabled) {

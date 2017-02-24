@@ -78,7 +78,7 @@ public:
 	void MoveAllObjectsToSnap(unsigned int _snaptime);
 	void MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime,unsigned short _id1, unsigned short _id2, unsigned short _id3);
 	void ClearTimeLine();
-	SnapInfo* GenerateSnapInfo(BaseObject* _object);							//Error check agianst the BaseObject* if it is null or not
+	SnapInfo* GenerateSnapInfo(BaseObject* _object, SnapInfo* _info);							//Error check agianst the BaseObject* if it is null or not
 	Snapshot* GenerateSnapShot(unsigned int _time,std::vector<BaseObject*> & _clones);
 	SnapInfoPlayer * GenerateSnapInfoPlayer();
 	bool CheckForDuplicateData(unsigned short _id,BaseObject* _object);
