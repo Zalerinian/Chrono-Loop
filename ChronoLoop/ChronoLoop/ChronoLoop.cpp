@@ -135,7 +135,7 @@ void Update() {
 
 	Transform ButtonTransform;
 	ButtonTransform.SetMatrix(MatrixIdentity());
-	matrix4 ButtonMat = MatrixTranslation(-3, 1, 0);
+	matrix4 ButtonMat = MatrixTranslation(-3, 0, 0);
 	ButtonTransform.SetMatrix(ButtonMat);
 	BaseObject* Button = new BaseObject("button", ButtonTransform);
 	ButtonCollider* ButtonCol = new ButtonCollider(Button, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), 3, 1, vec4f(0,1,0,0));
@@ -249,9 +249,9 @@ void Update() {
 	L1->iAddObject(walls);
 	L1->iAddObject(headset);
 	L1->iAddObject(LeftController);
+	L1->iAddObject(Button);
 	L1->iCallStart();
 
-	L1->iAddObject(Button);
 	//// Test for TextureManager::iAddTexture2D. Works nicely!
 	//D3D11_TEXTURE2D_DESC AddedTextureDesc;
 	//AddedTextureDesc.Width = 800;

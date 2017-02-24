@@ -17,7 +17,8 @@ class Level {
 	BaseObject* mController2;
 	//yea.... make a list or welcome to the hell of random
 	//Change the name at position and DO NOT RE-INSERT
-	std::unordered_map<std::string, std::vector<BaseObject*>> mObjectMap;
+	//std::unordered_map<std::string, std::vector<BaseObject*>> mObjectMap;
+	std::list<BaseObject*> mObjectList;
 	unsigned short mId;
 
 
@@ -31,8 +32,8 @@ public:
 	//**GETTERS**//
 	BaseObject* iFindObjectWithName(std::string _name);
 	std::vector<BaseObject*> iFindAllObjectsWithName(std::string _name);
-	std::unordered_map<std::string, std::vector<BaseObject*>> iGetLevelObjects() { return mObjectMap; };
-	inline void iAddObject(BaseObject* _obj) { mObjectMap[_obj->GetName()].push_back(_obj); }
+	std::list<BaseObject*> iGetLevelObjects() { return mObjectList; };
+	void iAddObject(BaseObject* _obj);
 	bool iRemoveObject(BaseObject* _obj);
 	unsigned short iGetId() { return mId; };
 	inline BaseObject* iGetHeadset() { return mHeadset; }

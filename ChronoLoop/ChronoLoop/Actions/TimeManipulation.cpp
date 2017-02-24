@@ -20,6 +20,7 @@ unsigned int TimeManipulation::mCloneCount = 0;
 
 void TimeManipulation::Start() {
 	//TODO PAT: Replace this with ryan's GUI system
+	return;
 	D3D11_TEXTURE2D_DESC txtdec;
 	txtdec.Width = 800;
 	txtdec.Height = 600;

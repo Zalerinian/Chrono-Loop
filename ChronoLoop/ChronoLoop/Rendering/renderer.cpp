@@ -11,7 +11,7 @@
 #include "../Input/VRInputManager.h"
 #include "../Input/Controller.h"
 
-#define ENABLE_TEXT 1
+#define ENABLE_TEXT 0
 
 
 using namespace std;
