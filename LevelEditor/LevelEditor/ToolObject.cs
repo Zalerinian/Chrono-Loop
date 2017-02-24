@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System.Drawing;
 
 namespace LevelEditor
 {
@@ -17,51 +18,96 @@ namespace LevelEditor
         private VertexBuffer mVertexBuffer;
         private Matrix mTransform;
         private Device mDevice;
+        private Texture mTexture;
+        private Material mMaterial;
+        private bool mIsWireFrame;
+        private Vector3 mPosition;
+
         #region Properties
         public CustomVertex.PositionNormalTextured[] Vertices
         {
             get { return mVertices; }
-            set { mVertices = value; }
         }
 
         public int[] Indices
         {
             get { return mIndices; }
-            set { mIndices = value; }
         }
 
         public IndexBuffer IndexBuffer
         {
             get { return mIndexBuffer; }
-            set { mIndexBuffer = value; }
         }
 
         public VertexBuffer VertexBuffer
         {
             get { return mVertexBuffer; }
-            set { mVertexBuffer = value; }
         }
 
         public Matrix Transform
         {
             get { return mTransform; }
-            set { mTransform = value; }
+        }
+
+        public Texture Texture
+        {
+            get { return mTexture; }
+        }
+
+        public bool IsWireFrame
+        {
+            get { return mIsWireFrame; }
+            set { mIsWireFrame = value; }
+        }
+
+        public Vector3 Position
+        {
+            get { return mPosition; }
         }
         #endregion
 
         public ToolObject(ref Device _Device)
         {
             mTransform = Matrix.Identity;
+            mPosition = new Vector3();
+            mMaterial = new Material();
+            mMaterial.Diffuse = Color.White;
+            mMaterial.Specular = Color.LightGray;
+            mMaterial.SpecularSharpness = 15.0F;
             mDevice = _Device;
             MakeGrid();
+            mIsWireFrame = true;
+            mTexture = null;
             VertexDeclaration();
             IndicesDeclaration();
         }
         public ToolObject(string _File, ref Device _Device)
         {
             mTransform = Matrix.Identity;
+            mPosition = new Vector3();
+            mMaterial = new Material();
+            mMaterial.Diffuse = Color.White;
+            mMaterial.Specular = Color.LightGray;
+            mMaterial.SpecularSharpness = 15.0F;
             mDevice = _Device;
             Load(_File);
+            mIsWireFrame = false;
+            mTexture = null;
+            VertexDeclaration();
+            IndicesDeclaration();
+        }
+        public ToolObject(string _File, string _Texture, ref Device _Device)
+        {
+            mTransform = Matrix.Identity;
+            mPosition = new Vector3();
+            mMaterial = new Material();
+            mMaterial.Diffuse = Color.White;
+            mMaterial.Specular = Color.LightGray;
+            mMaterial.SpecularSharpness = 0.0F;
+            mDevice = _Device;
+            Load(_File);
+            mIsWireFrame = false;
+            mTexture = TextureLoader.FromFile(_Device, _Texture);
             VertexDeclaration();
             IndicesDeclaration();
         }
@@ -121,6 +167,15 @@ namespace LevelEditor
             mVertices = vertices.ToArray();
             mIndices = Ind.ToArray();
         }
+        public void Invert()
+        {
+            for (int i = 0; i < mIndices.Length / 3; i++)
+            {
+                int temp = mIndices[(i * 3)];
+                mIndices[(i * 3)] = mIndices[(i * 3) + 2];
+                mIndices[(i * 3) + 2] = temp;
+            }
+        }
         public void MakeGrid()
         {
             List<CustomVertex.PositionNormalTextured> verts = new List<CustomVertex.PositionNormalTextured>();
@@ -159,6 +214,12 @@ namespace LevelEditor
         public void Translate(Vector3 _Offset)
         {
             mTransform = Matrix.Translation(_Offset) * mTransform;
+            mPosition += _Offset;
+        }
+        public void SetPosition(Vector3 _Pos)
+        {
+            mTransform = Matrix.Scaling(new Vector3(10, 10, 10)) * Matrix.Translation(_Pos);
+            mPosition = _Pos;
         }
         public void Rotate(Vector3 _Rotation)
         {

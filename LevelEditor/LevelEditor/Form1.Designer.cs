@@ -63,12 +63,12 @@ namespace LevelEditor
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.FpsCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.graphicsPanel1 = new LevelEditor.GraphicsPanel();
             this.LeftToggle = new LevelEditor.NoFocusButton();
             this.RightToggle = new LevelEditor.NoFocusButton();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.FpsCount = new System.Windows.Forms.ToolStripStatusLabel();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -76,8 +76,8 @@ namespace LevelEditor
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
             this.graphicsPanel1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -327,7 +327,6 @@ namespace LevelEditor
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.ForeColor = System.Drawing.SystemColors.Control;
-            this.splitContainer1.Panel1Collapsed = true;
             // 
             // splitContainer1.Panel2
             // 
@@ -351,32 +350,10 @@ namespace LevelEditor
             // 
             this.splitContainer2.Panel1.Controls.Add(this.graphicsPanel1);
             this.splitContainer2.Panel2Collapsed = true;
-            this.splitContainer2.Size = new System.Drawing.Size(484, 337);
+            this.splitContainer2.Size = new System.Drawing.Size(333, 337);
             this.splitContainer2.SplitterDistance = 333;
             this.splitContainer2.SplitterWidth = 1;
             this.splitContainer2.TabIndex = 3;
-            // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.FpsCount});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 339);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(484, 22);
-            this.statusStrip1.TabIndex = 4;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // timer1
-            // 
-            this.timer1.Enabled = true;
-            this.timer1.Interval = 1;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // FpsCount
-            // 
-            this.FpsCount.Name = "FpsCount";
-            this.FpsCount.Size = new System.Drawing.Size(44, 17);
-            this.FpsCount.Text = "FPS: 00";
             // 
             // graphicsPanel1
             // 
@@ -385,7 +362,7 @@ namespace LevelEditor
             this.graphicsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.graphicsPanel1.Location = new System.Drawing.Point(0, 0);
             this.graphicsPanel1.Name = "graphicsPanel1";
-            this.graphicsPanel1.Size = new System.Drawing.Size(484, 337);
+            this.graphicsPanel1.Size = new System.Drawing.Size(333, 337);
             this.graphicsPanel1.TabIndex = 2;
             this.graphicsPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.Paint);
             this.graphicsPanel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseClick);
@@ -408,7 +385,7 @@ namespace LevelEditor
             // 
             this.RightToggle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.RightToggle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.RightToggle.Location = new System.Drawing.Point(458, 3);
+            this.RightToggle.Location = new System.Drawing.Point(307, 3);
             this.RightToggle.MinimumSize = new System.Drawing.Size(1, 1);
             this.RightToggle.Name = "RightToggle";
             this.RightToggle.Size = new System.Drawing.Size(23, 23);
@@ -416,6 +393,28 @@ namespace LevelEditor
             this.RightToggle.Text = "<";
             this.RightToggle.UseVisualStyleBackColor = true;
             this.RightToggle.Click += new System.EventHandler(this.RightToggle_Click);
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.FpsCount});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 339);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(484, 22);
+            this.statusStrip1.TabIndex = 4;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // FpsCount
+            // 
+            this.FpsCount.Name = "FpsCount";
+            this.FpsCount.Size = new System.Drawing.Size(44, 17);
+            this.FpsCount.Text = "FPS: 00";
+            // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 1;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // Editor
             // 
@@ -436,9 +435,9 @@ namespace LevelEditor
             this.splitContainer2.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.graphicsPanel1.ResumeLayout(false);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.graphicsPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

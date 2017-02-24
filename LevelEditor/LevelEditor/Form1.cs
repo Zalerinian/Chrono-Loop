@@ -10,21 +10,15 @@ using Microsoft.DirectX.Direct3D;
 using System.IO;
 using Microsoft.DirectX.DirectInput;
 using System.Diagnostics;
+using System.Linq;
 
 namespace LevelEditor
 {
     public partial class Editor : Form
     {
-        private int WIDTH = 64;
-        private int HEIGHT = 64;
 
         private Microsoft.DirectX.Direct3D.Device device;
-        private float angle, rotSpeed;
-        private int[,] heightData;
-        private CustomVertex.PositionColored[] vertices;
-        private int[] indices;
-        private IndexBuffer ib;
-        private VertexBuffer vb;
+        private float angleX, angleY, rotSpeed;
         private Microsoft.DirectX.DirectInput.Device keyb;
         private List<ToolObject> objects = new List<ToolObject>();
         private Stopwatch fpsTimer = new Stopwatch();
@@ -36,16 +30,16 @@ namespace LevelEditor
         public Editor()
         {
             InitializeComponent();
-            LoadHeightData();
             InitializeDevice();
             InitializeKeyboard();
             InitializeCamera();
+            objects.Add(new ToolObject("Assets\\Cube.obj", "Assets\\skybox.dds", ref device));
             objects.Add(new ToolObject(ref device));
-            objects.Add(new ToolObject("Assets/Cube.obj", ref device));
-            objects.Add(new ToolObject("Assets/Sphere.obj", ref device));
+            objects.Add(new ToolObject("Assets\\Sphere.obj", ref device));
             objects[0].Scale(new Vector3(10, 10, 10));
             objects[1].Scale(new Vector3(10, 10, 10));
             objects[1].Translate(new Vector3(0, 1, 0));
+            objects[1].Invert();
             objects[2].Scale(new Vector3(5, 5, 5));
             objects[2].Translate(new Vector3(3.0f, 1, -1.0f));
             splitContainer1.BorderStyle = BorderStyle.None;
@@ -53,7 +47,9 @@ namespace LevelEditor
             splitContainer2.BorderStyle = BorderStyle.None;
             splitContainer2.SplitterWidth = 1;
             fpsTimer.Start();
-            rotSpeed = 0.01f;
+            rotSpeed = 0.005f;
+            angleX = angleY = 0;
+            rotate = Matrix.Identity;
         }
         private void InitializeDevice()
         {
@@ -63,8 +59,9 @@ namespace LevelEditor
                 presentParams.Windowed = true;
                 presentParams.SwapEffect = SwapEffect.Discard;
                 device = new Microsoft.DirectX.Direct3D.Device(0, Microsoft.DirectX.Direct3D.DeviceType.Hardware, this.graphicsPanel1, CreateFlags.SoftwareVertexProcessing, presentParams);
-                device.RenderState.FillMode = FillMode.WireFrame;
+                device.RenderState.FillMode = FillMode.Solid;
                 device.RenderState.CullMode = Cull.None;
+                device.RenderState.ZBufferEnable = true;
                 device.DeviceReset += new EventHandler(HandleResetEvent);
             }
             catch (GraphicsException exception)
@@ -80,8 +77,9 @@ namespace LevelEditor
         }
         private void HandleResetEvent(object caller, EventArgs args)
         {
-            device.RenderState.FillMode = FillMode.WireFrame;
+            device.RenderState.FillMode = FillMode.Solid;
             device.RenderState.CullMode = Cull.None;
+            device.RenderState.ZBufferEnable = true;
             InitializeCamera();
             foreach (ToolObject to in objects)
             {
@@ -91,9 +89,12 @@ namespace LevelEditor
         }
         private void InitializeCamera()
         {
-            device.Transform.Projection = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, (float)graphicsPanel1.Width / (float)graphicsPanel1.Height, 1f, 1000);
-            device.Transform.View = Matrix.LookAtLH(new Vector3(0, -40, 50), new Vector3(0, -5, 0), new Vector3(0, 1, 0)) * Matrix.RotationZ(angle);
+            device.Transform.Projection = Matrix.PerspectiveFovRH((float)Math.PI / 4.0f, (float)graphicsPanel1.Width / (float)graphicsPanel1.Height, 1f, 1000);
+            Matrix rotate = Matrix.RotationYawPitchRoll(angleY, angleX, 0);
+            Vector3 look = cameraPos + GetVector3(Vector3.Transform(new Vector3(0, 0, 1), rotate));
+            device.Transform.View = Matrix.LookAtRH(cameraPos, look, new Vector3(0, 1, 0));
             device.RenderState.Lighting = false;
+                device.RenderState.ZBufferEnable = true;
             device.RenderState.CullMode = Cull.None;
         }
         public void InitializeKeyboard()
@@ -102,67 +103,58 @@ namespace LevelEditor
             keyb.SetCooperativeLevel(this, CooperativeLevelFlags.Background | CooperativeLevelFlags.NonExclusive);
             keyb.Acquire();
         }
-
         private void Paint(object sender, PaintEventArgs e)
         {
+            //objects.Sort((a, b) => (Vector3.Dot(a.Position, cameraPos) / Vector3.Dot(cameraPos, cameraPos) * cameraPos).Length().CompareTo((Vector3.Dot(a.Position, cameraPos) / Vector3.Dot(cameraPos, cameraPos) * cameraPos).Length()));
             device.Clear(ClearFlags.Target, Color.Black, 1.0f, 0);
 
             device.BeginScene();
             device.VertexFormat = CustomVertex.PositionNormalTextured.Format;
+            bool cleared = false;
             foreach (ToolObject tObj in objects)
             {
+                device.RenderState.FillMode = tObj.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
                 device.SetStreamSource(0, tObj.VertexBuffer, 0);
                 device.Indices = tObj.IndexBuffer;
-            
+                device.SetTexture(0, tObj.Texture);
                 device.Transform.World = tObj.Transform;
                 device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Indices.Length, 0, tObj.Indices.Length / 3);
+                if (!cleared)
+                {
+                    //device.Clear(ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+                    cleared = true;
+                }
             }
             device.EndScene();
 
             device.Present();
             ReadKeyboard();
         }
+        private Vector3 GetVector3(Vector4 v)
+        {
+            return new Vector3(v.X, v.Y, v.Z);
+        }
         private void ReadKeyboard()
         {
+            Matrix pos = Matrix.Translation(cameraPos);
+            Matrix rotate = Matrix.RotationYawPitchRoll(angleY, angleX, 0);
+            Vector3 look = cameraPos + GetVector3(Vector3.Transform(new Vector3(0, 0, 1), rotate));
+            device.Transform.View = Matrix.LookAtRH(cameraPos, look, new Vector3(0, 1, 0));
             KeyboardState keys = keyb.GetCurrentKeyboardState();
-            if (keys[Key.RightArrow])
-                angle += 0.03f;
-            if (keys[Key.LeftArrow])
-                angle -= 0.03f;
+            objects[1].SetPosition(cameraPos);
             if (keys[Key.W])
-                cameraPos.Z += 1;
+                cameraPos += GetVector3(Vector3.Transform(new Vector3(0, 0, 1), rotate));
             if (keys[Key.S])
-                cameraPos.Z -= 1;
+                cameraPos -= GetVector3(Vector3.Transform(new Vector3(0, 0, 1), rotate));
             if (keys[Key.A])
-                cameraPos.X -= 1;
+                cameraPos += GetVector3(Vector3.Transform(new Vector3(1, 0, 0), rotate));
             if (keys[Key.D])
-                cameraPos.X += 1;
+                cameraPos -= GetVector3(Vector3.Transform(new Vector3(1, 0, 0), rotate));
             if (keys[Key.LeftShift])
                 cameraPos.Y -= 1;
             if (keys[Key.Space])
                 cameraPos.Y += 1;
-            Matrix pos = Matrix.Translation(cameraPos);
-            Vector4 temp = Vector3.Transform(new Vector3(0, 0, 1), rotate);
-            Vector3 look = cameraPos + new Vector3(temp.X, temp.Y, temp.Z);
-            device.Transform.View = Matrix.LookAtLH(cameraPos, look, new Vector3(0, 1, 0));
-        }
-        private void LoadHeightData()
-        {
-            heightData = new int[WIDTH, HEIGHT];
-
-            FileStream fs = new FileStream("Assets/heightdata.raw", FileMode.Open, FileAccess.Read);
-            BinaryReader r = new BinaryReader(fs);
-
-            for (int i = 0; i < HEIGHT; i++)
-            {
-
-                for (int y = 0; y < WIDTH; y++)
-                {
-                    int height = (int)(r.ReadByte() / 50);
-                    heightData[WIDTH - 1 - y, HEIGHT - 1 - i] = height;
-                }
-            }
-            r.Close();
+            objects[1].SetPosition(cameraPos);
         }
         private void Resize(object sender, EventArgs e)
         {
@@ -200,8 +192,8 @@ namespace LevelEditor
                 case MouseButtons.Middle:
                     float dx = curMouse.X - prevMouse.X;
                     float dy = curMouse.Y - prevMouse.Y;
-                    rotate *= Matrix.RotationY(dx * rotSpeed);
-                    rotate *= Matrix.RotationX(dy * rotSpeed);
+                    angleY += -dx * rotSpeed;
+                    angleX += dy * rotSpeed;
                     break;
                 case MouseButtons.XButton1:
                     break;

@@ -29,3 +29,36 @@ E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\D
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Cube.obj
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Sphere.obj
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\StrangeTree.obj
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Sphere.obj
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\StrangeTree.obj
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Cube.obj
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\LevelEditor.exe.config
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\LevelEditor.exe
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\LevelEditor.pdb
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.AudioVideoPlayback.dll
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Diagnostics.dll
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3D.dll
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3DX.dll
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectDraw.dll
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectInput.dll
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectPlay.dll
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectSound.dll
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.dll
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.xml
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.AudioVideoPlayback.xml
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Diagnostics.xml
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3D.xml
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3DX.xml
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectDraw.xml
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectInput.xml
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectPlay.xml
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectSound.xml
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.Editor.resources
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.Properties.Resources.resources
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.csproj.GenerateResource.Cache
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.exe
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.pdb
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\ArenaGridAlbedo.dds
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\jealousy.dds
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\skybox.dds
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.csprojResolveAssemblyReference.cache
