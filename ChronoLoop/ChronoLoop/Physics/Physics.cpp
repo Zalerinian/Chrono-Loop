@@ -754,16 +754,16 @@ void Physics::Update(float _time)
 			{
 				if (((ControllerCollider*)collider)->mLeft)
 				{
-					collider->mTotalForce = vec4f(0, -1, 0, 0);
+					collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
+					collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
 					collider->mVelocity = VRInputManager::Instance().iGetController(true).GetVelocity();
-					collider->mAcceleration = collider->mVelocity;
 					collider->SetPos(VRInputManager::Instance().iGetController(true).GetPosition().tiers[3]);
 				}
 				else
 				{
-					collider->mTotalForce = vec4f(0, -1, 0, 0);
+					collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
+					collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
 					collider->mVelocity = VRInputManager::Instance().iGetController(false).GetVelocity();
-					collider->mAcceleration = collider->mVelocity;
 					collider->SetPos(VRInputManager::Instance().iGetController(false).GetPosition().tiers[3]);
 				}
 			}

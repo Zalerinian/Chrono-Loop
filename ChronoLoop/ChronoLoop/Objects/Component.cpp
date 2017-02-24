@@ -206,6 +206,8 @@ ControllerCollider::ControllerCollider(BaseObject* _obj, vec4f _min, vec4f _max,
 {
 	mObject = _obj;
 	mLeft = _left;
+	mMass = 2;
+	mForces = vec4f(0, -1, 0, 0);
 	mGravity = vec4f(0,-2.0f,0,0);
 	mType = eCOMPONENT_COLLIDER;
 	mColliderType = eCOLLIDER_Controller;
