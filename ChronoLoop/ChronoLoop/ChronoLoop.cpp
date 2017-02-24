@@ -17,7 +17,7 @@
 #include "Objects/MeshComponent.h"
 #include "Actions/BoxSnapToControllerAction.hpp"
 #include "Actions/TeleportAction.hpp"
-#include "Levels/LevelManager.h"
+#include "Core/Level.h"
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
@@ -70,10 +70,11 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	Update();
 
 	// Cleanup
+	vr::VR_Shutdown();
 	RenderEngine::ShutdownSystems();
+	Level::DestroyInstance();
 	SystemLogger::CloseLog();
 	SystemLogger::CloseError();
-	vr::VR_Shutdown();
 	vrsys = nullptr;
 
 #if _DEBUG
@@ -177,15 +178,15 @@ void Update() {
 	Physics::Instance()->mObjects.push_back(PhysicsBox);
 	Physics::Instance()->mObjects.push_back(Floor);
 	Physics::Instance()->mObjects.push_back(walls);
-	BaseLevel* L1 = new BaseLevel(headset,RightController,LeftController);
-	L1->AddLevelObject(PhysicsBox);
-	L1->AddLevelObject(Floor);
-	L1->AddLevelObject(RightController);
-	L1->AddLevelObject(walls);
-	L1->AddLevelObject(headset);
-	L1->AddLevelObject(LeftController);
-	
-	LevelManager::Instance()->AddLevel(L1);
+	Level::Initialize(headset, RightController, LeftController);
+	Level* L1 = Level::Instance(); 
+	L1->iAddObject(PhysicsBox);
+	L1->iAddObject(Floor);
+	L1->iAddObject(RightController);
+	L1->iAddObject(walls);
+	L1->iAddObject(headset);
+	L1->iAddObject(LeftController);
+	L1->iCallStart();
 
 	//*////////////////////////////////////////////////////////////////////
 	if (VREnabled) {
@@ -206,7 +207,7 @@ void Update() {
 			}
 
 			UpdateTime();
-			LevelManager::Instance()->GetLevel(0)->Update();
+			Level::Instance()->iUpdate();
 			
 			TManager->Instance()->Update(deltaTime);
 			RenderEngine::Renderer::Instance()->Render(deltaTime);

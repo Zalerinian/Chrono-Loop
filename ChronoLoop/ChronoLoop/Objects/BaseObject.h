@@ -34,10 +34,6 @@ public:
 	void Destroy();
 	void Update();
 
-#pragma region Static Functions
-	static BaseObject* GetObjectByName(std::string _name);
-#pragma endregion Static Functions
-
 
 	inline unsigned int GetUniqueId() { return mUniqueID; }
 

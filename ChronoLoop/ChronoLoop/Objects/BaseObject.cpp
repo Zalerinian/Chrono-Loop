@@ -3,6 +3,7 @@
 #include "../Actions/CodeComponent.hpp"
 #include "../Common/Logger.h"
 #include "../Common/Breakpoint.h"
+#include "../Core/Level.h"
 
 // 0 is reserved for the player.
 unsigned int BaseObject::ObjectCount = 1;
@@ -39,7 +40,8 @@ BaseObject::BaseObject(std::string _name, Transform _transform, BaseObject * _pa
 BaseObject::~BaseObject()
 {
 	if (mDestroyed) {
-		SystemLogger::GetError() << "[Warning] Deleting an object that is marked as destroyed." << std::endl;
+		SystemLogger::GetError() << "[FATAL] Deleting an object that is marked as destroyed!" << std::endl;
+		Debug::SetBreakpoint();
 	} else {
 		Destroy();
 	}
@@ -83,10 +85,7 @@ void BaseObject::Destroy()
 		SystemLogger::GetError() << "[Error] Attempting to destroy an object that is already marked as destroyed." << std::endl;
 		return;
 	}
-	if (mParent) {
-		delete mParent;
-		mParent = nullptr;
-	}
+	mParent = nullptr;
 	for (auto iter = mComponents.begin(); iter != mComponents.end(); ++iter) {
 		for (int i = 0; i < iter->second.size(); ++i) {
 			iter->second[i]->Destroy();
@@ -116,18 +115,12 @@ void BaseObject::Update() {
 	}
 }
 
-BaseObject * BaseObject::GetObjectByName(std::string _name) {
-	/*for (auto it = AllObjects.begin(); it != AllObjects.end(); ++it) {
-		if (it->first == _name) {
-			return it->second;
-		}
-	}*/
-	return nullptr;
-}
-
 void BaseObject::SetName(std::string _name) {
-
-	mName = _name;
+	if (Level::Instance()->iOnObjectNamechange(this, _name)) {
+		mName = _name;
+	} else {
+		SystemLogger::GetError() << "[Error] A name change was requested for an object that did not exist in the level." << std::endl;
+	}
 }
 
 unsigned int BaseObject::AddComponent(Component * _comp) {
@@ -146,9 +139,6 @@ unsigned int BaseObject::AddComponent(Component * _comp) {
 	}
 	_comp->mObject = this;
 	mComponents[_comp->GetType()].push_back(_comp);
-	if (_comp->GetType() == eCOMPONENT_CODE) {
-		((CodeComponent*)_comp)->Start();
-	}
 	return (unsigned int)mComponents[_comp->GetType()].size();
 }
 

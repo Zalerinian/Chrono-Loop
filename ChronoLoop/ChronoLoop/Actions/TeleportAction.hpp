@@ -5,7 +5,7 @@
 #include "../Objects/MeshComponent.h"
 #include "../Physics/Physics.h"
 #include "../Input/VRInputManager.h"
-#include "../Levels/LevelManager.h"
+#include "../Core/Level.h"
 #include "../HeadsetFollow.hpp"
 
 
@@ -15,7 +15,7 @@ struct TeleportAction : public CodeComponent {
 	TeleportAction(bool _left) { left = _left; };
 
 	virtual void Start() {
-		mPlaneMesh = (MeshComponent*)BaseObject::GetObjectByName("plane")->GetComponentIndexed(eCOMPONENT_MESH, 0);
+		mPlaneMesh = (MeshComponent*)Level::Instance()->iFindObjectWithName("plane")->GetComponentIndexed(eCOMPONENT_MESH, 0);
 	}
 
 	virtual void Update() {
@@ -75,15 +75,15 @@ struct TeleportAction : public CodeComponent {
 
 			//Make a clone 3 seconds ago.
 			TimeManager::Instance()->RewindMakeClone(TimeManager::Instance()->GetCurrentSnapFrame() - 30, headset, Controller1, Controller2);
-			LevelManager::Instance()->GetLevel(0)->SetHeadsetAndControllers(headset, Controller1, Controller2);
+			Level::Instance()->iSetHeadsetAndControllers(headset, Controller1, Controller2);
 			TimeManager::Instance()->AddObjectToTimeline(headset);
 			TimeManager::Instance()->AddObjectToTimeline(Controller1);
 			TimeManager::Instance()->AddObjectToTimeline(Controller2);
 			
 		}
 		if (VRInputManager::Instance().iGetController(left).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu)) {
-			BaseLevel* CurLev = LevelManager::Instance()->GetLevel(0);
-			TimeManager::Instance()->RewindTimeline(TimeManager::Instance()->GetCurrentSnapFrame() - 30, CurLev->mHeadset->GetUniqueID(), CurLev->mController1->GetUniqueID(), CurLev->mController2->GetUniqueID());
+			Level* CurLev = Level::Instance();
+			//TimeManager::Instance()->RewindTimeline(TimeManager::Instance()->GetCurrentSnapFrame() - 30, CurLev->mHeadset->GetUniqueID(), CurLev->mController1->GetUniqueID(), CurLev->mController2->GetUniqueID());
 
 		}
 
