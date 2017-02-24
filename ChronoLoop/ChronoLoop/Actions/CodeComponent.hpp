@@ -1,5 +1,6 @@
 #pragma once
 #include "../Objects/Component.h"
+#include "..\Common\Logger.h"
 
 struct CodeComponent : public Component {
 	CodeComponent() {
@@ -18,6 +19,10 @@ struct CodeComponent : public Component {
 	virtual void Awake() {}
 
 	virtual void Update() {}
+
+	virtual void OnTriggerEnter(Collider& _col1, Collider& _col2) {}
+
+	virtual void OnCollision(Collider& _col1, Collider& _col2, float _time) {}
 
 	virtual void OnDisable() {}
 

@@ -198,6 +198,9 @@
     <ClInclude Include="..\DXTK\Filters.h" />
     <ClInclude Include="..\DXTK\scoped.h" />
     <ClInclude Include="Actions\BoxSnapToControllerAction.hpp" />
+    <ClInclude Include="Actions\CCButtonPress.h" />
+    <ClInclude Include="Actions\CCElasticAABBtoAABB.h" />
+    <ClInclude Include="Actions\CCElasticReactionWithPlane.h" />
     <ClInclude Include="Actions\CodeComponent.hpp" />
     <ClInclude Include="Actions\GestureDetection.hpp" />
     <ClInclude Include="Actions\HeadsetFollow.hpp" />

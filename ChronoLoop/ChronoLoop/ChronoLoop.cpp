@@ -17,6 +17,9 @@
 #include "Actions/HeadsetFollow.hpp"
 #include "Actions/BoxSnapToControllerAction.hpp"
 #include "Actions/TeleportAction.hpp"
+#include "Actions/CCElasticReactionWithPlane.h"
+#include "Actions/CCElasticAABBtoAABB.h"
+#include "Actions/CCButtonPress.h"
 #include "Core/Level.h"
 //#include "Rendering/TextureManager.h"
 
@@ -120,16 +123,30 @@ void Update() {
 	matrix4 mat1 = MatrixTranslation(0, 5, 0);
 	transform.SetMatrix(mat1);
 	BaseObject* PhysicsBox = Pool::Instance()->iGetObject()->Reset("aabb", transform);//new BaseObject("aabb", transform);
-	CubeCollider *BoxCollider = new CubeCollider(true, vec4f(0.0f, -9.80f, 0.0f, 1.0f), 10.0f, 0.5f, 0.7f, vec4f(0.15f, -0.15f, .15f, 1.0f), vec4f(-0.15f, 0.15f, -0.15f, 1.0f));
+	CubeCollider *BoxCollider = new CubeCollider(PhysicsBox, true, vec4f(0.0f, -1.0f, 0.0f, 1.0f), 1.0f, 0.5f, 0.0f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
 	BoxCollider->AddForce(vec4f(2, 0, 0, 0));
+	CodeComponent* PlaneCollision = new CCElasticReactionWithPlane;
+	CodeComponent* BoxCollision = new CCElasticAABBtoAABB;
 	PhysicsBox->AddComponent(BoxCollider);
+	PhysicsBox->AddComponent(PlaneCollision);
+	PhysicsBox->AddComponent(BoxCollision);
 	TimeManager::Instance()->AddObjectToTimeline(PhysicsBox);
 
+	Transform ButtonTransform;
+	ButtonTransform.SetMatrix(MatrixIdentity());
+	matrix4 ButtonMat = MatrixTranslation(-3, 1, 0);
+	ButtonTransform.SetMatrix(ButtonMat);
+	BaseObject* Button = new BaseObject("button", ButtonTransform);
+	ButtonCollider* ButtonCol = new ButtonCollider(Button, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), 3, 1, vec4f(0,1,0,0));
+	CodeComponent* ButtonCollision = new CCButtonPress;
+	Button->AddComponent(ButtonCol);
+	Button->AddComponent(ButtonCollision);
+	TimeManager::Instance()->AddObjectToTimeline(Button);
 
 	Transform PlaneTransform;
 	PlaneTransform.SetMatrix(MatrixTranslation(0, -1, 0));
 	BaseObject* Floor = Pool::Instance()->iGetObject()->Reset("plane", PlaneTransform);// new BaseObject("plane", PlaneTransform);
-	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
+	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, 0.0f, 0.0f, 1.0f), 10.0f, 0.5f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
 	MeshComponent *planeObj = new MeshComponent("../Resources/BigFloor.obj");
 	planeObj->AddTexture("../Resources/floorg.png", RenderEngine::eTEX_DIFFUSE);
 	Floor->AddComponent(plane);
@@ -141,6 +158,32 @@ void Update() {
 	BaseObject* walls = Pool::Instance()->iGetObject()->Reset("walls", PlaneTransform);// new BaseObject("walls", PlaneTransform);
 	MeshComponent *wallMesh = new MeshComponent("../Resources/BigWall.obj");
 	wallMesh->AddTexture("../Resources/Wallg.png", RenderEngine::eTEX_DIFFUSE);
+	CubeCollider* ButtonRoomBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(-7.034f, -1, -8, 1), vec4f(1.011f, 2, -7.026f, 1));
+	CubeCollider* ExitLeftWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(-0.985f, -1, -9.008f, 1), vec4f(1.011f, 2, -7.026f, 1));
+	CubeCollider* ExitBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(0.985f, -1, -10.008f, 1), vec4f(3.112f, 2, -9.008f, 1));
+	CubeCollider* ExitRightWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(3.112f, -1, -9.008f, 1), vec4f(4.112f, 2, -6.991f, 1));
+	CubeCollider* MainBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(4.112f, -1, -7.991f, 1), vec4f(7.036f, 2, -6.991f, 1));
+	CubeCollider* RightWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(7.036f, -1, -6.991f, 1), vec4f(8.036f, 2, 7.142f, 1));
+	CubeCollider* MainFrontWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(3.063f, -1, 7.142f, 1), vec4f(8.036f, 2, 8.142f, 1));
+	CubeCollider* EnterRightWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(3.063f, -1, 7.142f, 1), vec4f(4.063f, 2, 9.055f, 1));
+	CubeCollider* EnterBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(0.918f, -1, 9.055f, 1), vec4f(4.063f, 2, 10.055f, 1));
+	CubeCollider* EnterLeftWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(-0.918f, -1, 7.014f, 1), vec4f(0.918f, 2, 9.055f, 1));
+	CubeCollider* ButtonRoomFrontWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(-7.054f, -1, 7.014f, 1), vec4f(0.918f, -1, 8.014f, 1));
+	CubeCollider* LeftWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(-8.054f, -1, -7.014f, 1), vec4f(-7.054f, 2, 7.014f, 1));
+	CubeCollider* DividerWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(-1.273f, -1, -7.022f, 1), vec4f(-0.871f, 2, 3.125f, 1));
+	walls->AddComponent(ButtonRoomBackWall);
+	walls->AddComponent(ExitLeftWall);
+	walls->AddComponent(ExitBackWall);
+	walls->AddComponent(ExitRightWall);
+	walls->AddComponent(MainBackWall);
+	walls->AddComponent(RightWall);
+	walls->AddComponent(MainFrontWall);
+	walls->AddComponent(EnterRightWall);
+	walls->AddComponent(EnterBackWall);
+	walls->AddComponent(EnterLeftWall);
+	walls->AddComponent(ButtonRoomFrontWall);
+	walls->AddComponent(LeftWall);
+	walls->AddComponent(DividerWall);
 	walls->AddComponent(wallMesh);
 
 	BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller", identity);// new BaseObject("Controller", identity);
@@ -148,8 +191,10 @@ void Update() {
 	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
 	TeleportAction *ta = new TeleportAction(false);
 	TimeManipulation* tm = new TimeManipulation(false);
+	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 	RightController->AddComponent(mc);
 	RightController->AddComponent(ta);
+	RightController->AddComponent(rightConCol);
 	RightController->AddComponent(tm);
 	TimeManager::Instance()->AddObjectToTimeline(RightController);
 
@@ -159,12 +204,19 @@ void Update() {
 	//CodeComponent *codeComponent = new BoxSnapToControllerAction();
 	//PhysicsBox->AddComponent(codeComponent);
 
+	MeshComponent *ButtonMesh = new MeshComponent("../Resources/cube.obj");
+	ButtonMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
+	
+	Button->AddComponent(ButtonMesh);
+
 	//pat added
 	BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2", identity); //new BaseObject("Controller2", identity);
 	MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 	mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
 	TeleportAction *ta2 = new TeleportAction(true);
 	TimeManipulation* tm2 = new TimeManipulation(true);
+	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
+	LeftController->AddComponent(leftConCol);
 	LeftController->AddComponent(mc2);
 	LeftController->AddComponent(ta2);
 	LeftController->AddComponent(tm2);
@@ -184,6 +236,9 @@ void Update() {
 	Physics::Instance()->mObjects.push_back(PhysicsBox);
 	Physics::Instance()->mObjects.push_back(Floor);
 	Physics::Instance()->mObjects.push_back(walls);
+	Physics::Instance()->mObjects.push_back(RightController);
+	Physics::Instance()->mObjects.push_back(LeftController);
+	Physics::Instance()->mObjects.push_back(Button);
 	Level::Initialize(headset, RightController, LeftController);
 	Level* L1 = Level::Instance(); 
 	L1->iAddObject(PhysicsBox);
@@ -194,6 +249,7 @@ void Update() {
 	L1->iAddObject(LeftController);
 	L1->iCallStart();
 
+	L1->iAddObject(Button);
 	//// Test for TextureManager::iAddTexture2D. Works nicely!
 	//D3D11_TEXTURE2D_DESC AddedTextureDesc;
 	//AddedTextureDesc.Width = 800;

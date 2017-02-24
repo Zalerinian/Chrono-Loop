@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 namespace RenderEngine {
 
@@ -21,6 +22,7 @@ namespace RenderEngine {
 		inline RenderNode& SetNext(RenderNode* n) { mNext = n; return *this; }
 		inline RenderNode& SetPrevious(RenderNode *n) { mPrevious = n; return *this; }
 	protected:
+		std::string mName;
 		RenderNode* mNext, *mPrevious;
 		friend RenderSet;
 	};
