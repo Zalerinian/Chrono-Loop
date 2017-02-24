@@ -1,4 +1,4 @@
-//#include "stdafx.h"
+#include "stdafx.h"
 #include "VrInputManager.h"
 #include "../Common/Logger.h"
 
@@ -36,7 +36,7 @@ void VRInputManager::mInitialize(vr::IVRSystem *_vr) {
 	SystemLogger::GetLog() << "Left controller ID:  " << leftID << std::endl;
 	mRightController.SetUp(rightID, mVRSystem);
 	mLeftController.SetUp(leftID, mVRSystem);
-	mPlayerPosition = Math::MatrixIdentity();
+	mPlayerPosition = Math::MatrixTranslation(2, -1, 8);
 }
 
 void VRInputManager::iUpdate() {
@@ -68,4 +68,9 @@ Controller& VRInputManager::iGetController(bool left) {
 	} else {
 		return mRightController;
 	}
+}
+
+matrix4 VRInputManager::iGetPlayerWorldPos() {
+		matrix4 temp = FromMatrix(mPoses[0].mDeviceToAbsoluteTracking) * mPlayerPosition;
+		return temp;
 }

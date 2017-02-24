@@ -71,11 +71,12 @@ namespace RenderEngine {
 	}
 
 	void RenderShape::Load(const char * _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs) {
-		Mesh m(_path);
+		mName = std::string("Shape: ") + _path;
+		mMesh.Load(_path);
 		if (_invert) {
-			m.Invert();
+			mMesh.Invert();
 		}
-		Load(m);
+		Load(mMesh);
 		SetShaders(_ps, _vs);
 	}
 	

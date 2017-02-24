@@ -2,6 +2,8 @@
 #include "..\Common\Math.h"
 #include "..\Rendering\Mesh.h"
 #include <unordered_map>
+#include "..\Physics\Physics.h"
+
 class BaseObject;
 class Transform;
 //class Mesh;
@@ -86,13 +88,15 @@ public:
 		eCOLLIDER_Mesh,
 		eCOLLIDER_Sphere,
 		eCOLLIDER_Cube,
-		eCOLLIDER_Plane
+		eCOLLIDER_Plane,
+		eCOLLIDER_Button,
+		eCOLLIDER_Controller
 	};
 
-	bool mShouldMove, mColliding, mRewind;
-	vec4f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity;
-	float mMass, mElasticity, mFriction;
 	ColliderType mColliderType;
+	bool mShouldMove, mRewind;
+	vec4f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity;
+	float mMass, mElasticity, mFriction, mInvMass;
 
 	void Update();
 	void Destroy();
@@ -116,17 +120,32 @@ public:
 
 class CubeCollider : public Collider {
 public:
-	CubeCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, vec4f _min, vec4f _max);
+	CubeCollider() {}
+	CubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, vec4f _min, vec4f _max);
 	vec4f mMin, mMax, mMinOffset, mMaxOffset;
-
-	void SetPos(vec4f _newPos);
+	virtual void SetPos(vec4f _newPos);
 };
 
 class PlaneCollider : public Collider {
 public:
 	PlaneCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, float _offset, vec4f _norm);
-	vec4f mNormal;
+	vec4f mNormal, mMin, mMax;
 	float mOffset;
+};
+
+class ButtonCollider : public CubeCollider
+{
+public:
+	ButtonCollider(BaseObject* _obj, vec4f _min, vec4f _max, float _mass, float normForce, vec4f _pushNormal);
+	vec4f mPushNormal;
+	Plane mUpperBound, mLowerBound;
+};
+
+class ControllerCollider : public CubeCollider
+{
+public:
+	ControllerCollider(BaseObject* _obj, vec4f _min, vec4f _max, bool _left);
+	bool mLeft;
 };
 
 /*

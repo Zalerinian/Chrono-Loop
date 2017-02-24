@@ -2,26 +2,41 @@
 #include "BaseObject.h"
 #include "../Actions/CodeComponent.hpp"
 #include "../Common/Logger.h"
+#include "../Common/Breakpoint.h"
+#include "../Core/Level.h"
 
 // 0 is reserved for the player.
 unsigned int BaseObject::ObjectCount = 1;
 
-BaseObject::BaseObject()
-{
-	mParent = nullptr;
+void BaseObject::Construct(std::string _name, Transform _transform, BaseObject* _parent) {
+	mName = _name;
+	mTransform = _transform;
+	mParent = _parent;
 	mUniqueID = BaseObject::ObjectCount++;
+}
+
+BaseObject::BaseObject() {
+	Construct("", Transform(), nullptr);
+}
+
+BaseObject::BaseObject(std::string _name)
+{
+	Construct(_name, Transform(), nullptr);
 }
 BaseObject::BaseObject(std::string _name, Transform _transform)
 {
-	mName = _name;
-	mParent = nullptr;
-	mTransform = _transform;
+	Construct(_name, _transform, nullptr);
+}
+
+BaseObject::BaseObject(std::string _name, Transform _transform, BaseObject * _parent) {
+	Construct(_name, _transform, _parent);
 }
 
 BaseObject::~BaseObject()
 {
 	if (mDestroyed) {
-		SystemLogger::GetError() << "[Warning] Deleting an object that is marked as destroyed." << std::endl;
+		SystemLogger::GetError() << "[FATAL] Deleting an object that is marked as destroyed!" << std::endl;
+		Debug::SetBreakpoint();
 	} else {
 		Destroy();
 	}
@@ -65,10 +80,7 @@ void BaseObject::Destroy()
 		SystemLogger::GetError() << "[Error] Attempting to destroy an object that is already marked as destroyed." << std::endl;
 		return;
 	}
-	if (mParent) {
-		delete mParent;
-		mParent = nullptr;
-	}
+	mParent = nullptr;
 	for (auto iter = mComponents.begin(); iter != mComponents.end(); ++iter) {
 		for (int i = 0; i < iter->second.size(); ++i) {
 			iter->second[i]->Destroy();
@@ -98,6 +110,33 @@ void BaseObject::Update() {
 	}
 }
 
+BaseObject * BaseObject::Reset(std::string _name) {
+	Transform t;
+	t.SetMatrix(Math::MatrixIdentity());
+	Reset(_name, t, nullptr);
+	return this;
+}
+
+BaseObject * BaseObject::Reset(std::string _name, Transform _transform) {
+	Reset(_name, _transform, nullptr);
+	return this;
+}
+
+BaseObject * BaseObject::Reset(std::string _name, Transform _transform, BaseObject * _parent) {
+	mName = _name;
+	mTransform = _transform;
+	mParent = _parent;
+	return this;
+}
+
+void BaseObject::SetName(std::string _name) {
+	if (Level::Instance()->iOnObjectNamechange(this, _name)) {
+		mName = _name;
+	} else {
+		SystemLogger::GetError() << "[Error] A name change was requested for an object that did not exist in the level." << std::endl;
+	}
+}
+
 unsigned int BaseObject::AddComponent(Component * _comp) {
 	if (mDestroyed) {
 		SystemLogger::GetError() << "[Error] Attempting to add a compontnet to an object that is already marked as destroyed." << std::endl;
@@ -114,9 +153,6 @@ unsigned int BaseObject::AddComponent(Component * _comp) {
 	}
 	_comp->mObject = this;
 	mComponents[_comp->GetType()].push_back(_comp);
-	if (_comp->GetType() == eCOMPONENT_CODE) {
-		((CodeComponent*)_comp)->Start();
-	}
 	return (unsigned int)mComponents[_comp->GetType()].size();
 }
 

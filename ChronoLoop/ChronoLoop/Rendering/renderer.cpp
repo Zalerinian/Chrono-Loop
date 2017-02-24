@@ -11,6 +11,9 @@
 #include "../Input/VRInputManager.h"
 #include "../Input/Controller.h"
 
+#define ENABLE_TEXT 0
+
+
 using namespace std;
 using namespace D2D1;
 
@@ -106,6 +109,7 @@ namespace RenderEngine {
 		mChain.reset();
 		mDevice.reset();
 
+#if ENABLE_TEXT
 		(*mTextFactory)->Release();
 		(*mDevice2D)->Release();
 		(*mGIDevice)->Release();
@@ -123,7 +127,7 @@ namespace RenderEngine {
 		mTextformat.reset();
 		mBrush.reset();
 		mScreenBitmap.reset();
-
+#endif
 	}
 
 	void Renderer::InitializeD3DDevice() {
@@ -198,7 +202,7 @@ namespace RenderEngine {
 
 		//Brush for the screen
 		ID2D1SolidColorBrush* brush;
-		ThrowIfFailed((*mContext2D)->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::SeaGreen, 1.0f), &brush));
+		ThrowIfFailed((*mContext2D)->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White, 1.0f), &brush));
 		sInstance->mBrush = make_shared<ID2D1SolidColorBrush*>(brush);
 	}
 
@@ -389,51 +393,50 @@ namespace RenderEngine {
 			vr::VRCompositor()->Submit(currentEye, &submitTexture);
 		}
 		//pat added 
+#if ENABLE_TEXT
 		std::wstring FPS = L"FPS: " + to_wstring(mFps);
-		DrawTextToBitmap(FPS, (*mScreenBitmap));
+		DrawTextToBitmap(FPS, (*mScreenBitmap),.75f, .75f, 1.0f, 1.0f);
+#endif
 		//-----
-
-		// Bootleg load the controller model.
-		if (mControllerModel.mIndexCount == 0) {
-			vr::RenderModel_t *vrControllerModel;
-			if (vr::VRRenderModels()->LoadRenderModel_Async("vr_controller_vive_1_5", &vrControllerModel) == vr::VRRenderModelError_None) {
-				Mesh controller;
-				controller.Load(vrControllerModel);
-				controller.Invert();
-				mControllerModel.Load(controller);
-				mControllerModel.SetShaders(ePS_BASIC, eVS_BASIC);
-				AddNode(&mControllerModel);
-				vr::VRRenderModels()->FreeRenderModel(vrControllerModel);
-			}
-		}
-
 	}
 
 	void Renderer::UpdateCamera(float const _moveSpd, float const _rotSpd, float _delta) {
 #if _DEBUG
+		if (GetActiveWindow() != *mWindow) {
+			return;
+		}
+
 		//w
 		if (GetAsyncKeyState('W')) {
-			mDebugCameraPos *= Math::MatrixTranslation(0, 0, _moveSpd * _delta);
+			mDebugCameraPos = Math::MatrixTranslation(0, 0, -_moveSpd * _delta) * mDebugCameraPos;
 		}
 		//s
 		if (GetAsyncKeyState('S')) {
-			mDebugCameraPos *= Math::MatrixTranslation(0, 0, -_moveSpd * _delta);
+			mDebugCameraPos = Math::MatrixTranslation(0, 0, _moveSpd * _delta) * mDebugCameraPos;
 		}
 		//a
 		if (GetAsyncKeyState('A')) {
-			mDebugCameraPos *= Math::MatrixTranslation(_moveSpd * _delta, 0, 0);
+			mDebugCameraPos = Math::MatrixTranslation(-_moveSpd * _delta, 0, 0) * mDebugCameraPos;
 		}
 		//d
 		if (GetAsyncKeyState('D')) {
-			mDebugCameraPos *= Math::MatrixTranslation(-_moveSpd * _delta, 0, 0);
+			mDebugCameraPos = Math::MatrixTranslation(_moveSpd * _delta, 0, 0) * mDebugCameraPos;
+		}
+		// Q
+		if (GetAsyncKeyState('Q')) {
+			mDebugCameraPos = Math::MatrixRotateZ(_rotSpd * _delta) * mDebugCameraPos;
+		}
+		// E
+		if (GetAsyncKeyState('E')) {
+			mDebugCameraPos = Math::MatrixRotateZ(-_rotSpd * _delta) * mDebugCameraPos;
 		}
 		//x
 		if (GetAsyncKeyState(VK_CONTROL)) {
-			mDebugCameraPos *= Math::MatrixTranslation(0, _moveSpd * _delta, 0);
+			mDebugCameraPos = Math::MatrixTranslation(0, -_moveSpd * _delta, 0) * mDebugCameraPos;
 		}
 
 		if (GetAsyncKeyState(VK_SPACE)) {
-			mDebugCameraPos *= Math::MatrixTranslation(0, -_moveSpd * _delta, 0);
+			mDebugCameraPos = Math::MatrixTranslation(0, _moveSpd * _delta, 0) * mDebugCameraPos;
 		}
 		if (GetAsyncKeyState(VK_LBUTTON) & 1 && !mIsMouseDown) {
 			GetCursorPos(&mMouseOrigin);
@@ -446,26 +449,34 @@ namespace RenderEngine {
 		if (mIsMouseDown) {
 			POINT now;
 			GetCursorPos(&now);
-			if (now.x != mMouseOrigin.x && now.y != mMouseOrigin.y) {
-				float dx = (now.x - mMouseOrigin.x) / 128.0f;
-				float dy = (now.y - mMouseOrigin.y) / 128.0f;
-				mDebugCameraPos = Math::MatrixRotateInPlace(mDebugCameraPos, 1, 0, 0, dy);
-				mDebugCameraPos = Math::MatrixRotateInPlace(mDebugCameraPos, 0, 1, 0, dx);
+			if (now.x != mMouseOrigin.x || now.y != mMouseOrigin.y) {
+				float dx = -(now.x - mMouseOrigin.x) * _rotSpd * _delta;
+				float dy = -(now.y - mMouseOrigin.y) * _rotSpd * _delta;
+
+				mDebugCameraPos = Math::MatrixRotateX(dy) * Math::MatrixRotateY(dx) * mDebugCameraPos;
+
+				// Reset cursor to center of the window.
+				WINDOWINFO winfo;
+				winfo.cbSize = sizeof(WINDOWINFO);
+				GetWindowInfo(*mWindow, &winfo);
+				SetCursorPos((winfo.rcClient.left + winfo.rcClient.right) / 2, (winfo.rcClient.top + winfo.rcClient.bottom) / 2);
 				GetCursorPos(&mMouseOrigin);
 			}
 		}
 
-		mVPData.view = Math::MatrixTranspose(mDebugCameraPos);
+		mVPData.view = Math::MatrixTranspose(mDebugCameraPos).Inverse();
 		(*mContext)->UpdateSubresource(*mVPBuffer, 0, nullptr, &mVPData, 0, 0);
 #endif
 	}
 
 	void Renderer::RenderNoVR(float _delta) {
-		UpdateCamera(2, 0, _delta);
+		UpdateCamera(2, 2, _delta);
 		ProcessRenderSet();
 		//pat added 
+#if ENABLE_TEXT
 		std::wstring FPS = L"FPS: " + to_wstring(mFps);
-		DrawTextToBitmap(FPS, (*mScreenBitmap));
+		DrawTextToBitmap(FPS, (*mScreenBitmap),.75f,.75f,1.0f,1.0f);
+#endif
 		//-----
 	}
 
@@ -482,7 +493,7 @@ namespace RenderEngine {
 		}
 	}
 
-	void Renderer::DrawTextToBitmap(std::wstring _text, ID2D1Bitmap* _bitmap)
+	void Renderer::DrawTextToBitmap(std::wstring _text, ID2D1Bitmap* _bitmap, float _topLeftx, float _topLefty, float _bottomRightx, float _bottomRighty)
 	{
 		(*mContext2D)->SetTarget(_bitmap);
 		float color[4] = { 0.3f, 0.3f, 1, 1 };
@@ -500,7 +511,7 @@ namespace RenderEngine {
 			_text.c_str(),
 			(UINT32)_text.size(),
 			(*mTextformat),
-			D2D1::RectF(renderTargetSize.width*(3.0f/4.0f), renderTargetSize.height*(3.0f/4.0f), renderTargetSize.width, renderTargetSize.height),
+			D2D1::RectF(renderTargetSize.width*(_topLeftx), renderTargetSize.height*(_topLefty), renderTargetSize.width*(_bottomRightx), renderTargetSize.height * (_bottomRighty)),
 			(*mBrush)
 		);
 		ThrowIfFailed((*mContext2D)->EndDraw());
@@ -517,6 +528,7 @@ namespace RenderEngine {
 				0		//defaults to 96
 			);
 
+	
 		IDXGISurface* surface;
 		ThrowIfFailed(_texture->QueryInterface(IID_IDXGISurface, (void**)&surface));
 
@@ -532,7 +544,6 @@ namespace RenderEngine {
 	void Renderer::AddNode(RenderShape *_node) {
 		mRenderSet.AddNode(_node, &_node->GetContext());
 	}
-
 	void Renderer::RemoveNode(RenderShape *_node) {
 		mRenderSet.RemoveShape(_node);
 	}
@@ -566,14 +577,16 @@ namespace RenderEngine {
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, rtvWidth, rtvHeight);
 		InitializeViews(rtvWidth, rtvHeight);
 		InitializeBuffers();
+#if ENABLE_TEXT
 		InitializeDirect2D();
 		InitializeIDWriteFactory();
+		InitializeScreenBitmap();
+#endif
 #if _DEBUG
 		InitializeObjectNames();
 #endif
 		InitializeSamplerState();
 		SetStaticBuffers();
-		InitializeScreenBitmap();
 
 		// TODO Eventually: Give each shape a topology enum, perhaps?
 		(*mContext)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -584,9 +597,9 @@ namespace RenderEngine {
 
 
 		if (!mVrSystem) {
-			mDebugCameraPos.matrix = (DirectX::XMMatrixLookAtRH({ 0, .5, 5, 0 }, { 0, 0, 0, 0 }, { 0, 1, 0, 0 }));
+			mDebugCameraPos = Math::MatrixTranslation(1.9f, 0.5f, 8);
 			mVPData.projection.matrix = DirectX::XMMatrixPerspectiveFovRH(70, (float)_height / (float)_width, 0.1f, 1000);
-			mVPData.view = Math::MatrixTranspose(mDebugCameraPos);
+			mVPData.view = Math::MatrixTranspose(mDebugCameraPos).Inverse();
 			mVPData.projection = Math::MatrixTranspose(mVPData.projection);
 			(*mContext)->UpdateSubresource(*mVPBuffer, 0, NULL, &mVPData, 0, 0);
 			(*mContext)->VSSetConstantBuffers(0, 1, mVPBuffer.get());

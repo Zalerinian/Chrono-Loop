@@ -27,4 +27,5 @@ public:
 	inline matrix4& iGetPlayerPosition() { return mPlayerPosition; }
 	inline vr::TrackedDevicePose_t* iGetTrackedPositions() { return mPoses; }
 	inline unsigned int iGetTrackedDeviceCount() { return vr::k_unMaxTrackedDeviceCount; }
+	matrix4 iGetPlayerWorldPos();
 };

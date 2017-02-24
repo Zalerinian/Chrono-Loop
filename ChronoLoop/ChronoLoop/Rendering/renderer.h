@@ -42,7 +42,6 @@ namespace RenderEngine {
 		vr::IVRSystem* mVrSystem;
 		RenderSet mRenderSet;
 		std::shared_ptr<ID3D11Buffer*> mVPBuffer, mPositionBuffer;
-		//RenderShape mControllerModel, mBox, mPlane;
 		bool mUseVsync = false;
 
 
@@ -76,7 +75,7 @@ namespace RenderEngine {
 		void ThrowIfFailed(HRESULT hr);
 
 		matrix4 mEyePosLeft, mEyePosRight, mEyeProjLeft, mEyeProjRight, mHMDPos, mDebugCameraPos;
-		
+
 #if _DEBUG
 		POINT mMouseOrigin;
 		bool mIsMouseDown = false;
@@ -90,18 +89,13 @@ namespace RenderEngine {
 		void UpdateCamera(float const moveSpd, float const rotSpd, float delta);
 		void RenderNoVR(float _delta);
 		void ProcessRenderSet();
-		void DrawTextToBitmap(std::wstring _text, ID2D1Bitmap* _bitmap);
-		ID2D1Bitmap1* CreateBitmapForTexture(ID3D11Texture2D* _texture);
-
-
 
 		Renderer();
 		~Renderer();
 	public:
 		static Renderer* Instance();
 		static void DestroyInstance();
-		RenderShape mControllerModel;//, mBox, mPlane;
-
+		matrix4* Renderer::GetPlayerWorldPos();
 		// Instance Functions
 		bool iInitialize(HWND Window, unsigned int width, unsigned int height,
 			bool vsync, int fps, bool fullscreen, float farPlane, float nearPlane,
@@ -110,12 +104,19 @@ namespace RenderEngine {
 		void AddNode(RenderShape *_node);
 		void RemoveNode(RenderShape *_node);
 		void Render(float _deltaTime);
+
+		//Draws text in 0 to 1 space
+		
+		void DrawTextToBitmap(std::wstring _text, ID2D1Bitmap* _bitmap,float _topLeftx, float _topLefty, float _bottomRightx, float _bottomRighty);
+		ID2D1Bitmap1* CreateBitmapForTexture(ID3D11Texture2D* _texture);
+
 		inline std::shared_ptr<ID3D11Device*> iGetDevice() { return mDevice; }
 		inline std::shared_ptr<ID3D11DeviceContext*> iGetContext() { return mContext; }
 		inline std::shared_ptr<IDXGISwapChain*> iGetChain() { return mChain; }
 		inline std::shared_ptr<IDXGIFactory1*> iGetFactory() { return mFactory; }
 		inline std::shared_ptr<ID3D11RenderTargetView*> iGetRTView() { return mMainView; }
 		inline std::shared_ptr<ID3D11DepthStencilView*> iGetDSView() { return mDSView; }
+		inline std::shared_ptr<HWND> iGetWindow() { return mWindow; }
 	};
 
 }

@@ -198,27 +198,36 @@
     <ClInclude Include="..\DXTK\Filters.h" />
     <ClInclude Include="..\DXTK\scoped.h" />
     <ClInclude Include="Actions\BoxSnapToControllerAction.hpp" />
+    <ClInclude Include="Actions\CCButtonPress.h" />
+    <ClInclude Include="Actions\CCElasticAABBtoAABB.h" />
+    <ClInclude Include="Actions\CCElasticReactionWithPlane.h" />
     <ClInclude Include="Actions\CodeComponent.hpp" />
+    <ClInclude Include="Actions\GestureDetection.hpp" />
+    <ClInclude Include="Actions\HeadsetFollow.hpp" />
+    <ClInclude Include="Actions\TeleportAction.hpp" />
+    <ClInclude Include="Actions\TimeManipulation.h" />
     <ClInclude Include="Common\Breakpoint.h" />
     <ClInclude Include="Common\Common.h" />
     <ClInclude Include="Common\FileIO.h" />
     <ClInclude Include="Common\FileIO\FileIO_General.h" />
     <ClInclude Include="Common\FileIO\FileIO_Textures.h" />
+    <ClInclude Include="Common\LimitedList.h" />
     <ClInclude Include="Common\Logger.h" />
     <ClInclude Include="Common\Math.h" />
+    <ClInclude Include="Core\Level.h" />
+    <ClInclude Include="Core\Pool.h" />
     <ClInclude Include="Core\Timeline.h" />
     <ClInclude Include="Core\TimeManager.h" />
     <ClInclude Include="Input\Controller.h" />
     <ClInclude Include="Input\KeyboardInput.h" />
     <ClInclude Include="Input\VRInputManager.h" />
-    <ClInclude Include="Levels\BaseLevel.h" />
-    <ClInclude Include="Levels\LevelManager.h" />
     <ClInclude Include="Messager\Messager.h" />
     <ClInclude Include="Objects\BaseObject.h" />
     <ClInclude Include="Objects\Component.h" />
     <ClInclude Include="Objects\MeshComponent.h" />
     <ClInclude Include="Objects\Transform.h" />
     <ClInclude Include="Physics\Physics.h" />
+    <ClInclude Include="Rendering\IndexBufferManager.h" />
     <ClInclude Include="Rendering\InputLayoutManager.h" />
     <ClInclude Include="Rendering\Mesh.h" />
     <ClInclude Include="Rendering\RasterizerStateManager.h" />
@@ -232,6 +241,8 @@
     <ClInclude Include="Rendering\ShaderManager.h" />
     <ClInclude Include="Rendering\Structures.h" />
     <ClInclude Include="Rendering\SystemInitializer.h" />
+    <ClInclude Include="Rendering\VertexBuffer.h" />
+    <ClInclude Include="Rendering\VertexBufferManager.h" />
     <ClInclude Include="Rendering\TextureManager.h" />
     <ClInclude Include="Sound\SoundEngine.h" />
   </ItemGroup>
@@ -320,26 +331,29 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Actions\TimeManipulation.cpp" />
     <ClCompile Include="ChronoLoop.cpp" />
     <ClCompile Include="Common\Breakpoint.cpp" />
     <ClCompile Include="Common\Common.cpp" />
     <ClCompile Include="Common\FileIO\FileIO_General.cpp" />
     <ClCompile Include="Common\FileIO\FileIO_Textures.cpp" />
+    <ClCompile Include="Common\LimitedList.cpp" />
     <ClCompile Include="Common\Logger.cpp" />
     <ClCompile Include="Common\Math.cpp" />
+    <ClCompile Include="Core\Level.cpp" />
+    <ClCompile Include="Core\Pool.cpp" />
     <ClCompile Include="Core\Timeline.cpp" />
     <ClCompile Include="Core\TimeManager.cpp" />
     <ClCompile Include="Input\Controller.cpp" />
     <ClCompile Include="Input\KeyboardInput.cpp" />
     <ClCompile Include="Input\VRInputManager.cpp" />
-    <ClCompile Include="Levels\BaseLevel.cpp" />
-    <ClCompile Include="Levels\LevelManager.cpp" />
     <ClCompile Include="Messager\Messager.cpp" />
     <ClCompile Include="Objects\BaseObject.cpp" />
     <ClCompile Include="Objects\Component.cpp" />
     <ClCompile Include="Objects\MeshComponent.cpp" />
     <ClCompile Include="Objects\Transform.cpp" />
     <ClCompile Include="Physics\Physics.cpp" />
+    <ClCompile Include="Rendering\IndexBufferManager.cpp" />
     <ClCompile Include="Rendering\InputLayoutManager.cpp" />
     <ClCompile Include="Rendering\Mesh.cpp" />
     <ClCompile Include="Rendering\RasterizerStateManager.cpp" />
@@ -350,6 +364,8 @@
     <ClCompile Include="Rendering\RenderShape.cpp" />
     <ClCompile Include="Rendering\Shader.cpp" />
     <ClCompile Include="Rendering\ShaderManager.cpp" />
+    <ClCompile Include="Rendering\VertexBuffer.cpp" />
+    <ClCompile Include="Rendering\VertexBufferManager.cpp" />
     <ClCompile Include="Rendering\TextureManager.cpp" />
     <ClCompile Include="Sound\SoundEngine.cpp" />
   </ItemGroup>

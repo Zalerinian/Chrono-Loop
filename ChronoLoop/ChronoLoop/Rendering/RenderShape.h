@@ -29,10 +29,14 @@ namespace RenderEngine {
 
 		RenderShape& AddTexture(const char* _path, TextureType _position);
 		RenderShape& AddTexture(const wchar_t* _path, TextureType _position);
+		inline Triangle* GetTriangles() { return mMesh.GetTriangles(); }
+		inline size_t GetTriangleCount() { return mMesh.GetNumTriangles(); }
+		
 		void Render();
 
 	protected:
 		RenderContext mContext;
+		Mesh mMesh;
 	};
 
 }

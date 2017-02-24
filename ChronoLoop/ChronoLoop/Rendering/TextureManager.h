@@ -32,6 +32,7 @@ namespace RenderEngine {
 		static TextureManager* Instance();
 		static void DestroyInstance();
 	
+		TextureStatus iAddTexture2D(std::string& _name, ID3D11Texture2D *_tex, std::shared_ptr<ID3D11ShaderResourceView*>* _srv);
 		TextureStatus iGetTexture2D(const char* _path, std::shared_ptr<ID3D11ShaderResourceView*>* _srv, std::shared_ptr<ID3D11Texture2D*>* _texture);
 		//TextureStatus iGetTexture2DAsync(const char* _path, ID3D11ShaderResourceView** _srv, ID3D11Texture2D** _texture);
 		//TextureStatus iGetTexture3D(const char* _path, ID3D11ShaderResourceView** _srv, ID3D11Texture3D** _texture);

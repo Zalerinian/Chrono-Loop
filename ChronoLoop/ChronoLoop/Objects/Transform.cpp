@@ -10,6 +10,14 @@ void Transform::TranslateLocal(float x, float y, float z) {
 	temp = MatrixTranslation(x, y, z);
 }
 
+void Transform::Rotate(vec4f axis, float radians) {
+	matrix4 rotation = MatrixRotateAxis(axis, radians);
+	this->mMatrix *= rotation;
+	this->mFoward *= rotation;
+	this->mRight *= rotation;
+	this->mUp *= rotation;
+}
+
 Transform& Transform::operator=(Transform const&	 _t) {
 	mUp     = _t.mUp;
 	mRight  = _t.mRight;

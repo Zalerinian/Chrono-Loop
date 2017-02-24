@@ -61,8 +61,9 @@ struct BoxSnapToControllerAction : public CodeComponent {
 	Bootleg mBootleg;
 
 	virtual void Update() override {
-		Controller &leftController = VRInputManager::Instance().iGetController(true), &rightController = VRInputManager::Instance().iGetController(false);
+
 		if (VRInputManager::Instance().iIsInitialized()) {
+			Controller &leftController = VRInputManager::Instance().iGetController(true), &rightController = VRInputManager::Instance().iGetController(false);
 			if (leftController.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger)) {
 				SnapToController(true);
 				mHeldLeft = true;
@@ -73,54 +74,53 @@ struct BoxSnapToControllerAction : public CodeComponent {
 				ReleaseCube();
 			}
 			if (leftController.GetPressDown((vr::EVRButtonId::k_EButton_Grip))) {
-				TimeManager::Instance()->RewindTimeline();
+//				TimeManager::Instance()->RewindTimeline();
 			} else if (rightController.GetPressDown((vr::EVRButtonId::k_EButton_Grip))) {
-				TimeManager::Instance()->RewindTimeline();
+	//			TimeManager::Instance()->RewindTimeline();
 			}
 
-
+#pragma region Gestures
 			vec2f touch = leftController.GetAxis();
 			mBootleg.AddHead(touch);
+
 			//SystemLogger::GetLog() << "(" << touch.x << "," << touch.y << ")" << std::endl;
 			if (mBootleg.mSize == mBootleg.mLimit) {
 				// Get initial point, get vector from it's negation (v - (-v)), and then cross it (v.y, -v.x)
 				vec2f initialPoint = mBootleg[0];
 				vec2f line = (initialPoint - (-initialPoint));
-				vec2f clockwise = line.Cross().Normalize();
+				vec2f counterClockwise = line.Cross().Normalize();
 
 				vec2f pointEight = mBootleg[8];
 				vec2f leg = (pointEight - initialPoint);
 				vec2f nLeg = leg.Normalize();
 				if (leg.SquaredMagnitude() >= 0.01f) {
-					if (nLeg * clockwise < 0) {
+					if (nLeg * counterClockwise < 0) {
 						SystemLogger::GetLog() << "Somewhat Clockwise" << std::endl;
 					}
-					if (nLeg * clockwise > 0) {
+					if (nLeg * counterClockwise > 0) {
 						SystemLogger::GetLog() << "Somewhat Counter-Clockwise" << std::endl;
 					}
 				}
 			}
+			//SystemLogger::GetLog() << "[Debug] Touchpad Axis: (" << touch.x << ", " << touch.y << ")" << std::endl;
+#pragma endregion Gestures
 		}
-		//SystemLogger::GetLog() << "[Debug] Touchpad Axis: (" << touch.x << ", " << touch.y << ")" << std::endl;
+		//mObject->GetTransform().SetMatrix(Math::MatrixRotateInPlace(mObject->GetTransform().GetMatrix(), 1, 0, 0, DirectX::XM_PI / 1024.0f));
 	}
 
 	virtual void SnapToController(bool left) {
 		mHeld = true;
 		mHeldLeft = left;
-		matrix4 m = Math::FromMatrix(VRInputManager::Instance().iGetController(left).GetPose().mDeviceToAbsoluteTracking);
-		((CubeCollider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->SetPos(Math::MatrixTranspose(m).tiers[3]);
+		matrix4 m = VRInputManager::Instance().iGetController(left).GetPosition();
+		((CubeCollider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->SetPos((m).tiers[3]);
 		mObject->GetTransform().SetMatrix(m);
 		((Collider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mShouldMove = false;
 	}
 
 	virtual void ReleaseCube() {
-		if (mHeldLeft) {
-			vec4f force = VRInputManager::Instance().iGetController(true).GetVelocity();
-			((Collider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mVelocity = force;
-		} else {
-			vec4f force = VRInputManager::Instance().iGetController(false).GetVelocity();
-			((Collider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mVelocity = force;
-		}
+		vec4f force = VRInputManager::Instance().iGetController(mHeldLeft).GetVelocity();
+		force[2] *= -1; // SteamVR seems to Assume +Z goes into the screen.
+		((Collider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mVelocity = force;
 		((Collider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mShouldMove = true;
 		mHeldLeft = mHeld = false;
 	}

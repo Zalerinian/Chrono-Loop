@@ -4,7 +4,6 @@
 #include "../Objects/BaseObject.h"
 
 
-class Component;
 //Componet Structs for storing;
 #pragma region ComponetStructs
 struct SnapComponent {
@@ -30,15 +29,32 @@ struct SnapInfo
 	//TODO PAT: ADD HEADSET POSITION DATA
 	//Componet info needed
 };
+struct SnapInfoPlayer : SnapInfo {
+	//TODO PAT: ADD HEADSET POSITION DATA
+
+	matrix4 mPlayerWorldPos;
+	//Left Controller World Pos
+	matrix4 mLCWorldPos;
+	//Right Controller World Pos
+	matrix4 mRCWorldPos;
+
+	SnapInfoPlayer() {};
+	SnapInfoPlayer(matrix4 _playerWorldPos, matrix4 _leftController, matrix4 _rightController) {
+		mPlayerWorldPos = _playerWorldPos;
+		mLCWorldPos = _leftController;
+		mRCWorldPos = _rightController;
+	}
+
+};
 
 //If you rewind time and there is no snapshot for your object that means nothing changed from the last 
 struct Snapshot
 {
 	unsigned int mTime = -1;									//This is the time in the world the snapshot was taken. If was not assigned mTime= -1;
 	std::unordered_map<unsigned short, SnapInfo*> mSnapinfos;
-	std::unordered_map<unsigned short, unsigned int> mUpdatedtimes;		//Map of float times of last updated times. Use the float retreaved to access a different snapshot 
+	std::unordered_map<unsigned short, unsigned int> mUpdatedtimes;		//Map of int times of last updated times. Use the float retreaved to access a different snapshot 
 
-	bool IsObjectStored(short _id);
+	bool IsObjectStored(unsigned short _id);
 };
 
 class Timeline
@@ -53,13 +69,18 @@ public:
 	//Where we are at in the timeline
 	unsigned int mCurrentGameTimeIndx = 0;
 	unsigned int GetCurrentGameTimeIndx() { return mCurrentGameTimeIndx; }
-	void AddBaseObject(BaseObject* _object, unsigned short _id);						//add to the list of recorded objects. This func should be called constructer
+	void AddBaseObject(BaseObject* _object, unsigned short _id);						//add to the list of recorded objects.
 	//TODO PAT: add a remove base object func that says the object has been removed in the next snap recording
 	void AddSnapshot(unsigned int _snaptime, Snapshot* _snapshot);
-	bool RewindNoClone(unsigned int _snaptime);
+	bool RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
+	bool RewindMakeClone(unsigned int _snaptime);
+	void MoveObjectToSnap(unsigned int _snaptime,unsigned short _id);
 	void MoveAllObjectsToSnap(unsigned int _snaptime);
+	void MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime,unsigned short _id1, unsigned short _id2, unsigned short _id3);
 	void ClearTimeLine();
-	SnapInfo* GenerateSnapInfo(BaseObject* _object);							//Error check agianst the BaseObject* if it is null or not
-	Snapshot* GenerateSnapShot(unsigned int _time);
+	SnapInfo* GenerateSnapInfo(BaseObject* _object, SnapInfo* _info);							//Error check agianst the BaseObject* if it is null or not
+	Snapshot* GenerateSnapShot(unsigned int _time,std::vector<BaseObject*> & _clones);
+	SnapInfoPlayer * GenerateSnapInfoPlayer();
+	bool CheckForDuplicateData(unsigned short _id,BaseObject* _object);
 };
 

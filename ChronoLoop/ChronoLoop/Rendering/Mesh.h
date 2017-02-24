@@ -114,22 +114,18 @@ bool MeshFormat<T>::Load(vr::RenderModel_t * _model)
 	return true;
 }
 
-template<typename T>
-Triangle * MeshFormat<T>::GetTriangles()
-{
-	if (mTriangles.size() != mIndicies.size() / 3)
-	{
-		for (unsigned int i = 0; i < mIndicies.size() / 3; i++)
-		{
+template <class T>
+Triangle * MeshFormat<T>::GetTriangles() {
+	if (mTriangles.size() != mIndicies.size() / 3) {
+		for (unsigned int i = 0; i < mIndicies.size() / 3; i++) {
 			Triangle temp;
-			if (mFormat == RenderEngine::eVERT_POSNORMTEX || mFormat == RenderEngine::eVERT_POSNORMTANTEX || mFormat == RenderEngine::eVERT_POSBONEWEIGHTNORMTEX || mFormat == RenderEngine::eVERT_POSBONEWEIGHTNORMTANTEX)
-			{
+			if (mFormat == RenderEngine::eVERT_POSNORMTEX || mFormat == RenderEngine::eVERT_POSNORMTANTEX || mFormat == RenderEngine::eVERT_POSBONEWEIGHTNORMTEX || mFormat == RenderEngine::eVERT_POSBONEWEIGHTNORMTANTEX) {
 				temp.Normal = (mUniqueVerts[mIndicies[(i * 3) + 0]].Normal + mUniqueVerts[mIndicies[(i * 3) + 1]].Normal + mUniqueVerts[mIndicies[(i * 3) + 2]].Normal) / 2;
 			}
-			//temp.Vertex[0] = &mUniqueVerts[mIndicies[(i * 3) + 0]].Position;
-			//temp.Vertex[1] = &mUniqueVerts[mIndicies[(i * 3) + 1]].Position;
-			//temp.Vertex[2] = &mUniqueVerts[mIndicies[(i * 3) + 2]].Position;
-			//F I X   Y O U R   S T U F F   J A M E S
+			temp.Vertex[0] = mUniqueVerts[mIndicies[(i * 3) + 0]].Position;
+			temp.Vertex[1] = mUniqueVerts[mIndicies[(i * 3) + 1]].Position;
+			temp.Vertex[2] = mUniqueVerts[mIndicies[(i * 3) + 2]].Position;
+			mTriangles.push_back(temp);
 		}
 	}
 	return mTriangles.data();
