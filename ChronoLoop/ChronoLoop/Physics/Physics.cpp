@@ -718,7 +718,7 @@ void Physics::Update(float _time)
 						for (int k = 0; k < othercols; ++k)
 						{
 							otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
-							if (otherCol->mShouldMove && otherCol->mColliderType == Collider::eCOLLIDER_Cube)
+							if (otherCol->mColliderType == Collider::eCOLLIDER_Cube || otherCol->mColliderType == Collider::eCOLLIDER_Controller)
 							{
 								AABB aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
 								if (collider->mShouldMove && (AabbToPlane(((ButtonCollider*)collider)->mLowerBound, aabb1) == 1) && AABBtoAABB(aabb1, aabb2))
@@ -754,13 +754,17 @@ void Physics::Update(float _time)
 			{
 				if (((ControllerCollider*)collider)->mLeft)
 				{
+					collider->mTotalForce = vec4f(0, -1, 0, 0);
 					collider->mVelocity = VRInputManager::Instance().iGetController(true).GetVelocity();
-					collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
+					collider->mAcceleration = collider->mVelocity;
+					collider->SetPos(VRInputManager::Instance().iGetController(true).GetPosition().tiers[3]);
 				}
 				else
 				{
+					collider->mTotalForce = vec4f(0, -1, 0, 0);
 					collider->mVelocity = VRInputManager::Instance().iGetController(false).GetVelocity();
-					collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
+					collider->mAcceleration = collider->mVelocity;
+					collider->SetPos(VRInputManager::Instance().iGetController(false).GetPosition().tiers[3]);
 				}
 			}
 
