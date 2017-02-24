@@ -24,6 +24,8 @@ public:
 	void Update(float _delta);
 	static TimeManager* Instance();
 	void AddObjectToTimeline(BaseObject* _obj);
+	//TODO PAT: PLS GIT RID OF THIS
+	void HotFixAddClone(BaseObject* _obj) { mClones.push_back(_obj); };
 	//Clears the list of BaseObject* the Timemanager has refrence to.
 	void ClearClones();
 	//Checks and see if you can rewind to passed in frame

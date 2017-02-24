@@ -15,6 +15,8 @@ class Level {
 	BaseObject* mHeadset;
 	BaseObject* mController1;
 	BaseObject* mController2;
+	//yea.... make a list or welcome to the hell of random
+	//Change the name at position and DO NOT RE-INSERT
 	std::unordered_map<std::string, std::vector<BaseObject*>> mObjectMap;
 	unsigned short mId;
 

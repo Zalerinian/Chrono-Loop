@@ -50,6 +50,11 @@ void Pool::iResize(unsigned int _size) {
 }
 
 BaseObject * Pool::iGetObject() {
+	if(mSize == 0)
+	{
+		// TODO: Actually implement capacity.
+		iResize(50);
+	}
 	if (mHead != nullptr) {
 		Node* n = mHead;
 		mHead = mHead->mNext;

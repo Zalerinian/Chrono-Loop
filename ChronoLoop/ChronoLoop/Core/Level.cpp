@@ -74,10 +74,10 @@ void Level::iSetHeadsetAndControllers(BaseObject * _headset, BaseObject * _contr
 	std::string headname = _headset->GetName();
 	std::string Controller1name = _controller1->GetName();
 	std::string Controller2name = _controller2->GetName();
-
 	mObjectMap[_headset->GetName()].push_back(_headset);
 	mObjectMap[_controller1->GetName()].push_back(_controller1);
 	mObjectMap[_controller2->GetName()].push_back(_controller2);
+
 
 	_headset->SetUniqueID(mHeadset->GetUniqueId());
 	_controller1->SetUniqueID(mController1->GetUniqueId());

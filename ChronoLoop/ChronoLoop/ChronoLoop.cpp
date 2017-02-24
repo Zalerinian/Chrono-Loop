@@ -21,6 +21,7 @@
 #include "Actions/CCElasticAABBtoAABB.h"
 #include "Actions/CCButtonPress.h"
 #include "Core/Level.h"
+#include "Common/Logger.h"
 //#include "Rendering/TextureManager.h"
 
 #define _CRTDBG_MAP_ALLOC
@@ -239,6 +240,7 @@ void Update() {
 	Physics::Instance()->mObjects.push_back(RightController);
 	Physics::Instance()->mObjects.push_back(LeftController);
 	Physics::Instance()->mObjects.push_back(Button);
+	TimeManager::Instance()->HotFixAddClone(Button);
 	Level::Initialize(headset, RightController, LeftController);
 	Level* L1 = Level::Instance(); 
 	L1->iAddObject(PhysicsBox);
@@ -287,6 +289,8 @@ void Update() {
 				break;
 			}
 
+
+			//SystemLogger::GetLog() << "[Debug] Regular Update " << std::endl;
 			UpdateTime();
 			Level::Instance()->iUpdate();
 			
