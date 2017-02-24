@@ -19,8 +19,6 @@ unsigned int TimeManipulation::mCloneCount = 0;
 
 
 void TimeManipulation::Start() {
-	mCloneCount++;
-
 	//TODO PAT: Replace this with ryan's GUI system
 	D3D11_TEXTURE2D_DESC txtdec;
 	txtdec.Width = 800;
@@ -53,27 +51,26 @@ void TimeManipulation::Update() {
 
 		if (!TimeManager::Instance()->CheckRewindAvaliable(frameRewind))
 			return;
+
+		SystemLogger::GetLog() << "[Debug] A clone is being made, please hold: " << mCloneCount << " | Is left: " << mLeft << std::endl;
+
 		Transform identity;
 		identity.SetMatrix(Math::MatrixIdentity());
 
-		int rand = std::rand();
-
-
+		BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset - " + std::to_string(mCloneCount), identity); //new BaseObject("headset" + std::to_string(rand), identity);
 		MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
-		//visibleMesh->AddTexture(textureName.c_str(), RenderEngine::eTEX_DIFFUSE);
-
-		BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset - " + std::to_string(rand), identity); //new BaseObject("headset" + std::to_string(rand), identity);
+		visibleMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
 		headset->AddComponent(visibleMesh);
 
 
-		BaseObject* Controller1 = Pool::Instance()->iGetObject()->Reset("Controller - " + std::to_string(rand), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
+		BaseObject* Controller1 = Pool::Instance()->iGetObject()->Reset("Controller - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
 		MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 		mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
 		Controller1->AddComponent(mc);
 
 
 
-		BaseObject* Controller2 = Pool::Instance()->iGetObject()->Reset("Controller2 - " + std::to_string(rand)); //new BaseObject("Controller2" + std::to_string(rand), identity);
+		BaseObject* Controller2 = Pool::Instance()->iGetObject()->Reset("Controller2 - " + std::to_string(mCloneCount)); //new BaseObject("Controller2" + std::to_string(rand), identity);
 		MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 		mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
 		Controller2->AddComponent(mc2);
@@ -84,7 +81,7 @@ void TimeManipulation::Update() {
 		TimeManager::Instance()->AddObjectToTimeline(headset);
 		TimeManager::Instance()->AddObjectToTimeline(Controller1);
 		TimeManager::Instance()->AddObjectToTimeline(Controller2);
-
+		mCloneCount++;
 	}
 	if (VRInputManager::Instance().iGetController(mLeft).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
 		Level* CurLev = Level::Instance();

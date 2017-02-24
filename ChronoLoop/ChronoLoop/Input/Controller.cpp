@@ -14,6 +14,7 @@ void Controller::Update() {
 	//update the contoller pose/state when called. 
 	mPrevState = mState;
 	if (mHmd != NULL) {
+		//SystemLogger::GetLog() << "[Debug] Controller update." << std::endl;
 		mValid = mHmd->GetControllerStateWithPose(mTrackingSpace, mIndex, &mState, sizeof(mState), &mPose);
 		if (mPrevState.ulButtonPressed != mState.ulButtonPressed) {
 			UpdateHairTrigger();
