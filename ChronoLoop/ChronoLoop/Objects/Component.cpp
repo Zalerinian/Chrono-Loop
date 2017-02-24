@@ -151,7 +151,7 @@ void CubeCollider::SetPos(vec4f _newPos) {
 	mMax = _newPos + mMaxOffset;
 }
 
-PlaneCollider::PlaneCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, float _offset, vec4f _norm, vec4f _min, vec4f _max) {
+PlaneCollider::PlaneCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, float _offset, vec4f _norm) {
 	mType = eCOMPONENT_COLLIDER;
 	mColliderType = eCOLLIDER_Plane;
 	mGravity = _gravity;
@@ -170,8 +170,6 @@ PlaneCollider::PlaneCollider(bool _move, vec4f _gravity, float _mass, float _ela
 	mFriction = _friction;
 	mOffset = _offset;
 	mNormal = _norm;
-	mMin = _min;
-	mMax = _max;
 }
 
 ButtonCollider::ButtonCollider(BaseObject* _obj, vec4f _min, vec4f _max, float _mass, float _normForce, vec4f _pushNormal)
@@ -202,4 +200,18 @@ ButtonCollider::ButtonCollider(BaseObject* _obj, vec4f _min, vec4f _max, float _
 	mUpperBound.mOffset = mMax * mPushNormal;
 	mLowerBound.mNormal = mPushNormal;
 	mLowerBound.mOffset = (mMin - mMax) * mPushNormal * 2;
+}
+
+ControllerCollider::ControllerCollider(BaseObject* _obj, vec4f _min, vec4f _max, bool _left)
+{
+	mObject = _obj;
+	mLeft = _left;
+	mType = eCOMPONENT_COLLIDER;
+	mColliderType = eCOLLIDER_Controller;
+	mShouldMove = false;
+	mRewind = false;
+	mMinOffset = _min;
+	mMin = _min + mObject->GetTransform().GetMatrix().fourth;
+	mMaxOffset = _max;
+	mMax = _max + mObject->GetTransform().GetMatrix().fourth;
 }

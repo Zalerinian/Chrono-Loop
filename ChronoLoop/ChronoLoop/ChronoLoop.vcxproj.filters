@@ -279,6 +279,15 @@
     <ClInclude Include="Common\LimitedList.h">
       <Filter>Common\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\CCButtonPress.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCElasticAABBtoAABB.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCElasticReactionWithPlane.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">

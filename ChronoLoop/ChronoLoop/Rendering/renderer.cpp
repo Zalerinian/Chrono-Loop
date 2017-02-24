@@ -450,16 +450,10 @@ namespace RenderEngine {
 			POINT now;
 			GetCursorPos(&now);
 			if (now.x != mMouseOrigin.x || now.y != mMouseOrigin.y) {
-				float dx = -(now.x - mMouseOrigin.x) * _rotSpd * _delta;
-				float dy = -(now.y - mMouseOrigin.y) * _rotSpd * _delta;
-
-				mDebugCameraPos = Math::MatrixRotateX(dy) * Math::MatrixRotateY(dx) * mDebugCameraPos;
-
-				// Reset cursor to center of the window.
-				WINDOWINFO winfo;
-				winfo.cbSize = sizeof(WINDOWINFO);
-				GetWindowInfo(*mWindow, &winfo);
-				SetCursorPos((winfo.rcClient.left + winfo.rcClient.right) / 2, (winfo.rcClient.top + winfo.rcClient.bottom) / 2);
+				float dx = (now.x - mMouseOrigin.x) / 128.0f;
+				float dy = (now.y - mMouseOrigin.y) / 128.0f;
+				mDebugCameraPos = Math::MatrixRotateInPlace(mDebugCameraPos, 1, 0, 0, dy);
+				mDebugCameraPos = Math::MatrixRotateInPlace(mDebugCameraPos, 0, 1, 0, dx);
 				GetCursorPos(&mMouseOrigin);
 			}
 		}

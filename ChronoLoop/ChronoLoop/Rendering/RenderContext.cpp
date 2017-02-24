@@ -7,6 +7,7 @@
 
 RenderEngine::RenderContext::RenderContext() {
 	mType = RenderNodeType::Context;
+	mName = "A rendering context.";
 	//	mTextures.insert(std::pair<int, ID3D11ShaderResourceView*>(1, nullptr));
 }
 

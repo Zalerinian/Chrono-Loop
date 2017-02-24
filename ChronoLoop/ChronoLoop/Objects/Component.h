@@ -69,7 +69,8 @@ public:
 		eCOLLIDER_Sphere,
 		eCOLLIDER_Cube,
 		eCOLLIDER_Plane,
-		eCOLLIDER_Button
+		eCOLLIDER_Button,
+		eCOLLIDER_Controller
 	};
 
 	ColliderType mColliderType;
@@ -107,7 +108,7 @@ public:
 
 class PlaneCollider : public Collider {
 public:
-	PlaneCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, float _offset, vec4f _norm, vec4f _min, vec4f _max);
+	PlaneCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, float _offset, vec4f _norm);
 	vec4f mNormal, mMin, mMax;
 	float mOffset;
 };
@@ -118,6 +119,13 @@ public:
 	ButtonCollider(BaseObject* _obj, vec4f _min, vec4f _max, float _mass, float normForce, vec4f _pushNormal);
 	vec4f mPushNormal;
 	Plane mUpperBound, mLowerBound;
+};
+
+class ControllerCollider : public CubeCollider
+{
+public:
+	ControllerCollider(BaseObject* _obj, vec4f _min, vec4f _max, bool _left);
+	bool mLeft;
 };
 
 /*

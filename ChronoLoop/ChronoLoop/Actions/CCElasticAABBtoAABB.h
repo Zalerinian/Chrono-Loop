@@ -13,7 +13,8 @@ struct CCElasticAABBtoAABB : public CodeComponent
 			//SystemLogger::GetLog() << "BOX COLLISION" << std::endl;
 
 			float avgElasticity = (_col.mElasticity + _other.mElasticity) / 2;
-			vec4f collisionNormal = (_col.GetPos() - _other.GetPos()).Normalize();
+			vec4f otherPos = (((CubeCollider*)&_other)->mMax + ((CubeCollider*)&_other)->mMin) * 0.5f;
+			vec4f collisionNormal = (_col.GetPos() - otherPos).Normalize();
 			//vec4f relativeVelocity = _col.mVelocity - _other.mVelocity;
 			_col.mVelocity += collisionNormal * (1 + _col.mElasticity);
 
