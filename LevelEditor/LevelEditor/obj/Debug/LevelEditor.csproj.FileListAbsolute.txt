@@ -25,7 +25,6 @@ E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\D
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.AudioVideoPlayback.xml
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectPlay.xml
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectSound.xml
-E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\heightdata.raw
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Cube.obj
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Sphere.obj
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\StrangeTree.obj
@@ -62,3 +61,6 @@ D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\A
 D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\jealousy.dds
 D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\skybox.dds
 D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.csprojResolveAssemblyReference.cache
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\ArenaGridAlbedo.dds
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\jealousy.dds
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\skybox.dds

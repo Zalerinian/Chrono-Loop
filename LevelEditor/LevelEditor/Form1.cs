@@ -33,8 +33,8 @@ namespace LevelEditor
             InitializeDevice();
             InitializeKeyboard();
             InitializeCamera();
-            objects.Add(new ToolObject("Assets\\Cube.obj", "Assets\\skybox.dds", ref device));
             objects.Add(new ToolObject(ref device));
+            objects.Add(new ToolObject("Assets\\Cube.obj", "Assets\\skybox.dds", ref device));
             objects.Add(new ToolObject("Assets\\Sphere.obj", ref device));
             objects[0].Scale(new Vector3(10, 10, 10));
             objects[1].Scale(new Vector3(10, 10, 10));
@@ -50,6 +50,8 @@ namespace LevelEditor
             rotSpeed = 0.005f;
             angleX = angleY = 0;
             rotate = Matrix.Identity;
+            Tree.Nodes[0].Nodes.Add("test");
+            Tree.Nodes[1].Nodes.Add("test1");
         }
         private void InitializeDevice()
         {
@@ -60,7 +62,7 @@ namespace LevelEditor
                 presentParams.SwapEffect = SwapEffect.Discard;
                 device = new Microsoft.DirectX.Direct3D.Device(0, Microsoft.DirectX.Direct3D.DeviceType.Hardware, this.graphicsPanel1, CreateFlags.SoftwareVertexProcessing, presentParams);
                 device.RenderState.FillMode = FillMode.Solid;
-                device.RenderState.CullMode = Cull.None;
+                device.RenderState.CullMode = Cull.Clockwise;
                 device.RenderState.ZBufferEnable = true;
                 device.DeviceReset += new EventHandler(HandleResetEvent);
             }
@@ -78,7 +80,7 @@ namespace LevelEditor
         private void HandleResetEvent(object caller, EventArgs args)
         {
             device.RenderState.FillMode = FillMode.Solid;
-            device.RenderState.CullMode = Cull.None;
+            device.RenderState.CullMode = Cull.Clockwise;
             device.RenderState.ZBufferEnable = true;
             InitializeCamera();
             foreach (ToolObject to in objects)
@@ -95,7 +97,7 @@ namespace LevelEditor
             device.Transform.View = Matrix.LookAtRH(cameraPos, look, new Vector3(0, 1, 0));
             device.RenderState.Lighting = false;
                 device.RenderState.ZBufferEnable = true;
-            device.RenderState.CullMode = Cull.None;
+            device.RenderState.CullMode = Cull.Clockwise;
         }
         public void InitializeKeyboard()
         {
@@ -141,7 +143,7 @@ namespace LevelEditor
             Vector3 look = cameraPos + GetVector3(Vector3.Transform(new Vector3(0, 0, 1), rotate));
             device.Transform.View = Matrix.LookAtRH(cameraPos, look, new Vector3(0, 1, 0));
             KeyboardState keys = keyb.GetCurrentKeyboardState();
-            objects[1].SetPosition(cameraPos);
+            //objects[1].SetPosition(cameraPos);
             if (keys[Key.W])
                 cameraPos += GetVector3(Vector3.Transform(new Vector3(0, 0, 1), rotate));
             if (keys[Key.S])
@@ -154,7 +156,6 @@ namespace LevelEditor
                 cameraPos.Y -= 1;
             if (keys[Key.Space])
                 cameraPos.Y += 1;
-            objects[1].SetPosition(cameraPos);
         }
         private void Resize(object sender, EventArgs e)
         {

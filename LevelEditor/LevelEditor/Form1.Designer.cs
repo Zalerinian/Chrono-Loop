@@ -31,6 +31,8 @@ namespace LevelEditor
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor));
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Objects");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Higharchy");
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,21 +65,23 @@ namespace LevelEditor
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.graphicsPanel1 = new LevelEditor.GraphicsPanel();
-            this.LeftToggle = new LevelEditor.NoFocusButton();
-            this.RightToggle = new LevelEditor.NoFocusButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.FpsCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.Tree = new System.Windows.Forms.TreeView();
+            this.graphicsPanel1 = new LevelEditor.GraphicsPanel();
+            this.LeftToggle = new LevelEditor.NoFocusButton();
+            this.RightToggle = new LevelEditor.NoFocusButton();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            this.graphicsPanel1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            this.graphicsPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -326,6 +330,7 @@ namespace LevelEditor
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.Tree);
             this.splitContainer1.Panel1.ForeColor = System.Drawing.SystemColors.Control;
             // 
             // splitContainer1.Panel2
@@ -351,9 +356,46 @@ namespace LevelEditor
             this.splitContainer2.Panel1.Controls.Add(this.graphicsPanel1);
             this.splitContainer2.Panel2Collapsed = true;
             this.splitContainer2.Size = new System.Drawing.Size(333, 337);
-            this.splitContainer2.SplitterDistance = 333;
+            this.splitContainer2.SplitterDistance = 308;
             this.splitContainer2.SplitterWidth = 1;
             this.splitContainer2.TabIndex = 3;
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.FpsCount});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 339);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(484, 22);
+            this.statusStrip1.TabIndex = 4;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // FpsCount
+            // 
+            this.FpsCount.Name = "FpsCount";
+            this.FpsCount.Size = new System.Drawing.Size(44, 17);
+            this.FpsCount.Text = "FPS: 00";
+            // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 1;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // Tree
+            // 
+            this.Tree.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Tree.Location = new System.Drawing.Point(0, 0);
+            this.Tree.Name = "Tree";
+            treeNode1.Name = "Objects";
+            treeNode1.Text = "Objects";
+            treeNode2.Name = "Higharchy";
+            treeNode2.Text = "Higharchy";
+            this.Tree.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode1,
+            treeNode2});
+            this.Tree.Size = new System.Drawing.Size(150, 337);
+            this.Tree.TabIndex = 0;
             // 
             // graphicsPanel1
             // 
@@ -394,28 +436,6 @@ namespace LevelEditor
             this.RightToggle.UseVisualStyleBackColor = true;
             this.RightToggle.Click += new System.EventHandler(this.RightToggle_Click);
             // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.FpsCount});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 339);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(484, 22);
-            this.statusStrip1.TabIndex = 4;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // FpsCount
-            // 
-            this.FpsCount.Name = "FpsCount";
-            this.FpsCount.Size = new System.Drawing.Size(44, 17);
-            this.FpsCount.Text = "FPS: 00";
-            // 
-            // timer1
-            // 
-            this.timer1.Enabled = true;
-            this.timer1.Interval = 1;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
             // Editor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -429,15 +449,16 @@ namespace LevelEditor
             this.Text = "Level Editor";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
-            this.graphicsPanel1.ResumeLayout(false);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.graphicsPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -483,6 +504,7 @@ namespace LevelEditor
         private NoFocusButton LeftToggle;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.ToolStripStatusLabel FpsCount;
+        private System.Windows.Forms.TreeView Tree;
     }
 }
 
