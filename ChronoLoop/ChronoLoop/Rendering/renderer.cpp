@@ -202,7 +202,7 @@ namespace RenderEngine {
 
 		//Brush for the screen
 		ID2D1SolidColorBrush* brush;
-		ThrowIfFailed((*mContext2D)->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black, 1.0f), &brush));
+		ThrowIfFailed((*mContext2D)->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White, 1.0f), &brush));
 		sInstance->mBrush = make_shared<ID2D1SolidColorBrush*>(brush);
 	}
 
@@ -528,7 +528,7 @@ namespace RenderEngine {
 				0		//defaults to 96
 			);
 
-		HRESULT hr;
+	
 		IDXGISurface* surface;
 		ThrowIfFailed(_texture->QueryInterface(IID_IDXGISurface, (void**)&surface));
 

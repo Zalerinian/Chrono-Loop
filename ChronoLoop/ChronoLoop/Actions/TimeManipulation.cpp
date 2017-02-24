@@ -5,6 +5,7 @@
 #include "../Objects/BaseObject.h"
 #include "../Levels/LevelManager.h"
 #include "../Input/VRInputManager.h"
+#include "../Rendering/TextureManager.h"
 #include "TimeManipulation.h"
 
 
@@ -29,7 +30,7 @@ void TimeManipulation::Start() {
 	txtdec.SampleDesc.Count = 1;
 	txtdec.SampleDesc.Quality = 0;
 	txtdec.Usage = D3D11_USAGE_DEFAULT;
-	txtdec.BindFlags = D3D11_BIND_RENDER_TARGET;
+	txtdec.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 	txtdec.CPUAccessFlags = 0;
 	txtdec.MiscFlags = 0;
 	HRESULT hr;
@@ -40,6 +41,13 @@ void TimeManipulation::Start() {
 }
 
 void TimeManipulation::Update() {
+	std::string textureName = std::string("Clone") + std::to_string(mCloneCount);
+	if(!mTexturedApplied)
+	{
+		TextureManager::Instance()->iAddTexture2D(textureName, mCountTxt, nullptr);
+		((MeshComponent*)BaseObject::GetObjectByName("plane")->GetComponentIndexed(eCOMPONENT_MESH, 0))->AddTexture(textureName.c_str(), eTEX_CUSTOM1);
+		mTexturedApplied = true;
+	}
 	if (VRInputManager::Instance().iGetController(mLeft).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu)) {
 		int frameRewind = 30;
 
@@ -50,9 +58,9 @@ void TimeManipulation::Update() {
 
 		int rand = std::rand();
 
-		ID3D11Texture2D* clonecount;
+
 		MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
-		visibleMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
+		visibleMesh->AddTexture(textureName.c_str(), RenderEngine::eTEX_DIFFUSE);
 		BaseObject* headset = new BaseObject("headset" + std::to_string(rand), identity);
 		headset->AddComponent(visibleMesh);
 
