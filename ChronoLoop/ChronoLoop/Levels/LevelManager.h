@@ -16,7 +16,7 @@ public:
 	BaseLevel* GetLevel(int _index) { return mLevelList[_index]; };
 
 	//Push_back a New Level into m_LevelList
-	void AddLevel(BaseLevel* _level) { mLevelList.push_back(_level); };
+	void AddLevel(BaseLevel*  _level) { mLevelList.push_back(_level); };
 
 	//Clears everything from m_LevelList
 	static void ClearLevels();

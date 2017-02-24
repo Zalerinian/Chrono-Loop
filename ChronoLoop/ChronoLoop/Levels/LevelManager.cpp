@@ -10,14 +10,14 @@ LevelManager::LevelManager()
 
 LevelManager::~LevelManager()
 {
-	Destroy();
+	ClearLevels();
 }
 
 void LevelManager::ClearLevels()
 {
 	for(unsigned int i = 0; i< mLevelmanager->mLevelList.size(); i++)
 	{
-		delete  mLevelmanager->mLevelList[i];
+		delete mLevelmanager->mLevelList[i];
 	}
 	mLevelmanager->mLevelList.clear();
 }
@@ -31,6 +31,5 @@ LevelManager * LevelManager::Instance() {
 
 void LevelManager::Destroy()
 {
-	ClearLevels();
 	delete mLevelmanager;
 }

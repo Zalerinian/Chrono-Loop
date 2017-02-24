@@ -37,14 +37,13 @@ bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, b
 std::chrono::steady_clock::time_point lastTime = std::chrono::steady_clock::now();
 static float timeFrame = 0.0f;
 static float deltaTime;
-TimeManager* TManager;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void Update();
 void UpdateTime();
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(1253);
+	//_CrtSetBreakAlloc(7251);
 	if (!InitializeWindow(hInstance, nCmdShow, 800, 600, true)) {
 		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
 		return 2;
@@ -156,8 +155,8 @@ void Update() {
 	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
 	visibleMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
 	PhysicsBox->AddComponent(visibleMesh);
-	CodeComponent *codeComponent = new BoxSnapToControllerAction();
-	PhysicsBox->AddComponent(codeComponent);
+	//CodeComponent *codeComponent = new BoxSnapToControllerAction();
+	//PhysicsBox->AddComponent(codeComponent);
 
 	//pat added
 	BaseObject* LeftController = new BaseObject("Controller2", identity);
@@ -234,7 +233,7 @@ void Update() {
 			UpdateTime();
 			LevelManager::Instance()->GetLevel(0)->Update();
 			
-			TManager->Instance()->Update(deltaTime);
+			TimeManager::Instance()->Update(deltaTime);
 			RenderEngine::Renderer::Instance()->Render(deltaTime);
 			Physics::Instance()->Update(deltaTime);
 			if (VREnabled) {
@@ -242,6 +241,8 @@ void Update() {
 			}
 		}
 	}
+	
+	LevelManager::Instance()->Destroy();
 }
 
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed) {

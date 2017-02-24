@@ -6,7 +6,7 @@
 #include "../Physics/Physics.h"
 #include "../Input/VRInputManager.h"
 #include "../Levels/LevelManager.h"
-#include "../HeadsetFollow.hpp"
+#include "../Actions/HeadsetFollow.hpp"
 
 
 struct TeleportAction : public CodeComponent {

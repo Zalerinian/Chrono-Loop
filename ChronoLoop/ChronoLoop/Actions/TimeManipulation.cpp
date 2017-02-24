@@ -41,13 +41,12 @@ void TimeManipulation::Start() {
 }
 
 void TimeManipulation::Update() {
-	std::string textureName = std::string("Clone") + std::to_string(mCloneCount);
-	if(!mTexturedApplied)
-	{
-		TextureManager::Instance()->iAddTexture2D(textureName, mCountTxt, nullptr);
-		((MeshComponent*)BaseObject::GetObjectByName("plane")->GetComponentIndexed(eCOMPONENT_MESH, 0))->AddTexture(textureName.c_str(), eTEX_CUSTOM1);
-		mTexturedApplied = true;
-	}
+	//std::string textureName = std::string("Clone") + std::to_string(mCloneCount);
+	//if (!mTexturedApplied) {
+	//	TextureManager::Instance()->iAddTexture2D(textureName, mCountTxt, nullptr);
+	//	//((MeshComponent*)BaseObject::GetObjectByName("plane")->GetComponentIndexed(eCOMPONENT_MESH, 0))->AddTexture(textureName.c_str(), eTEX_CUSTOM1);
+	//	mTexturedApplied = true;
+	//}
 	if (VRInputManager::Instance().iGetController(mLeft).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu)) {
 		int frameRewind = 30;
 
@@ -60,7 +59,8 @@ void TimeManipulation::Update() {
 
 
 		MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
-		visibleMesh->AddTexture(textureName.c_str(), RenderEngine::eTEX_DIFFUSE);
+		//visibleMesh->AddTexture(textureName.c_str(), RenderEngine::eTEX_DIFFUSE);
+
 		BaseObject* headset = new BaseObject("headset" + std::to_string(rand), identity);
 		headset->AddComponent(visibleMesh);
 
