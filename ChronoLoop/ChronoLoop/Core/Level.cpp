@@ -75,6 +75,10 @@ void Level::iSetHeadsetAndControllers(BaseObject * _headset, BaseObject * _contr
 	std::string Controller1name = _controller1->GetName();
 	std::string Controller2name = _controller2->GetName();
 
+	mObjectMap[_headset->GetName()].push_back(_headset);
+	mObjectMap[_controller1->GetName()].push_back(_controller1);
+	mObjectMap[_controller2->GetName()].push_back(_controller2);
+
 	_headset->SetUniqueID(mHeadset->GetUniqueId());
 	_controller1->SetUniqueID(mController1->GetUniqueId());
 	_controller2->SetUniqueID(mController2->GetUniqueId());
@@ -88,10 +92,6 @@ void Level::iSetHeadsetAndControllers(BaseObject * _headset, BaseObject * _contr
 	mHeadset->SetName(headname);
 	mController1->SetName(Controller1name);
 	mController2->SetName(Controller2name);
-
-	mObjectMap[_headset->GetName()].push_back(_headset);
-	mObjectMap[_controller1->GetName()].push_back(_controller1);
-	mObjectMap[_controller2->GetName()].push_back(_controller2);
 
 	//Add the headset and controllers to the time manager with their new ids
 	TimeManager::Instance()->AddObjectToTimeline(mHeadset);
@@ -118,8 +118,8 @@ void Level::iLoadLevel() {
 void Level::iUpdate() {
 	//*Insert Code Here When we Get to It**//
 	for (auto mit = mObjectMap.begin(); mit != mObjectMap.end(); ++mit) {
-		for (auto vit = mit->second.begin(); vit != mit->second.end(); ++vit) {
-			(*vit)->Update();
+		for (unsigned int i = 0; i < mit->second.size(); ++i) {
+			mit->second[i]->Update();
 		}
 	}
 }
