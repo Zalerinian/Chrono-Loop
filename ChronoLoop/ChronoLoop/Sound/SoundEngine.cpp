@@ -1,5 +1,5 @@
 // SoundEngine.cpp : Defines the exported functions for the DLL application.
-//Again -> Credit to John Murphy
+//Again--> Credit to John Murphy
 
 //#include "stdafx.h"
 #include "SoundEngine.h"
@@ -61,6 +61,7 @@ bool AudioWrapper::Initialize()
 		return false;
 	}
 
+	SoundEngine::RegisterGameObj(0, "Dummy");
 
 	mIsInitialize = true;
 	return true;
@@ -233,7 +234,6 @@ bool AudioWrapper::MakeEventAtLocation(AudioEvent _id, const vec4f * _pos)
 
 	return true;
 }
-
 
 bool AudioWrapper::MakeEvent(AudioEvent _id, const Emitter * _emitter)
 {
