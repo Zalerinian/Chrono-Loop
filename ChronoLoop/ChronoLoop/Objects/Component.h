@@ -1,6 +1,8 @@
 #pragma once
 #include "..\Common\Math.h"
 #include "..\Rendering\Mesh.h"
+#include "..\Physics\Physics.h"
+
 class BaseObject;
 //class Mesh;
 
@@ -24,16 +26,18 @@ class Component
 	static unsigned short mComponentCount;
 	unsigned short mComponentId;
 protected:
-	bool mIsEnabled;
+	bool mDestroyed = false;
+	bool mIsEnabled = true, mIsValid = true;
 	ComponentType mType = eCOMPONENT_MAX;
 	BaseObject* mObject = nullptr;
 public:
 	Component();
-	~Component();
-	ComponentType GetType() { return mType; };
-	bool isEnabled() { return mIsEnabled; };
-	void Disable() { mIsEnabled = false; };
-	void Enable() { mIsEnabled = true; };
+	virtual ~Component();
+	inline ComponentType GetType() { return mType; };
+	inline bool IsEnabled() { return mIsEnabled; };
+	inline bool IsValid() { return mIsValid; }
+	inline void Disable() { mIsEnabled = false; };
+	inline void Enable() { mIsEnabled = true; };
 	virtual void Update() = 0;
 	virtual void Destroy() = 0;
 	void GetMatrix(matrix4& _m);
@@ -58,34 +62,21 @@ public:
 	void Destroy();
 };
 
-namespace RenderEngine {
-	struct RenderShape;
-}
-
-class MeshComponent : public Component {
-	RenderEngine::RenderShape* mShape;
-	bool mVisible;
-
-public:
-	MeshComponent(const char *_path);
-	void Update();
-	void Destroy();
-	void SetVisible(bool _vis);
-};
-
 class Collider : public Component {
 public:
 	enum ColliderType {
 		eCOLLIDER_Mesh,
 		eCOLLIDER_Sphere,
 		eCOLLIDER_Cube,
-		eCOLLIDER_Plane
+		eCOLLIDER_Plane,
+		eCOLLIDER_Button,
+		eCOLLIDER_Controller
 	};
 
-	bool mShouldMove, mColliding, mRewind;
-	vec4f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity;
-	float mMass, mElasticity, mFriction;
 	ColliderType mColliderType;
+	bool mShouldMove, mRewind;
+	vec4f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity;
+	float mMass, mElasticity, mFriction, mInvMass;
 
 	void Update();
 	void Destroy();
@@ -109,17 +100,32 @@ public:
 
 class CubeCollider : public Collider {
 public:
-	CubeCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, vec4f _min, vec4f _max);
+	CubeCollider() {}
+	CubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, vec4f _min, vec4f _max);
 	vec4f mMin, mMax, mMinOffset, mMaxOffset;
-
-	void SetPos(vec4f _newPos);
+	virtual void SetPos(vec4f _newPos);
 };
 
 class PlaneCollider : public Collider {
 public:
 	PlaneCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, float _offset, vec4f _norm);
-	vec4f mNormal;
+	vec4f mNormal, mMin, mMax;
 	float mOffset;
+};
+
+class ButtonCollider : public CubeCollider
+{
+public:
+	ButtonCollider(BaseObject* _obj, vec4f _min, vec4f _max, float _mass, float normForce, vec4f _pushNormal);
+	vec4f mPushNormal;
+	Plane mUpperBound, mLowerBound;
+};
+
+class ControllerCollider : public CubeCollider
+{
+public:
+	ControllerCollider(BaseObject* _obj, vec4f _min, vec4f _max, bool _left);
+	bool mLeft;
 };
 
 /*

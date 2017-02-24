@@ -2,6 +2,8 @@
 #include "Math.h"
 #include <memory>
 
+#define EPSILON 0.001f
+
 #pragma region VECTOR4F_MATH
 
 vec4f::vec4f(vec4f const& _copy)
@@ -295,7 +297,7 @@ vec3f& vec3f::operator*=(matrix4 const& _other)
 
 float vec3f::operator*(vec3f const& _other)
 {
-	return x * _other.x + y * _other.y + z + _other.z;
+	return x * _other.x + y * _other.y + z * _other.z;
 }
 
 vec3f vec3f::operator*(float const& _other)
@@ -615,12 +617,12 @@ matrix4 Math::MatrixIdentity()
 matrix4 Math::MatrixRotateInPlace(matrix4 _self, float _x, float _y, float _z, float _rads) {
 	vec4f pos;
 	for (int i = 0; i < 4; ++i) {
-		pos[i] = _self[i][3];
-		_self[i][3] = 0;
+		pos[i] = _self[3][i];
+		_self[3][i] = 0;
 	}
 	_self *= Math::MatrixRotateAxis({ _x, _y, _z, 0 }, _rads);
 	for (int i = 0; i < 4; ++i) {
-		_self[i][3] = pos[i];
+		_self[3][i] = pos[i];
 	}
 	return _self;
 }
@@ -665,4 +667,49 @@ matrix4 Math::FromMatrix(vr::HmdMatrix34_t _mat)
 		_mat.m[0][3], _mat.m[1][3], _mat.m[2][3], 1.0f
 	);
 	return matrixObj;
+}
+
+vec2f vec2f::operator-(const vec2f & _r) {
+	vec2f m;
+	m.x = x - _r.x;
+	m.y = y - _r.y;
+	return m;
+}
+
+vec2f vec2f::operator-() {
+	return vec2f(-x, -y);
+}
+
+float vec2f::operator*(const vec2f & _r) {
+	return x * _r.x + y * _r.y;
+}
+
+float vec2f::Magnitude() {
+	return sqrtf(SquaredMagnitude());
+}
+
+float vec2f::SquaredMagnitude() {
+	return x * x + y * y;
+}
+
+vec2f vec2f::Normalize() {
+	float mag = Magnitude();
+	return vec2f(x / mag, y / mag);
+}
+
+float vec2f::Dot(const vec2f & _r) {
+	return (*this) * _r;
+}
+
+vec2f vec2f::Cross() {
+	return vec2f(y, -x);
+}
+
+bool vec2f::operator==(const vec2f & _other) {
+	return (fabs(x - _other.x) < EPSILON &&
+					fabs(y - _other.y) < EPSILON);
+}
+
+bool vec2f::operator!=(const vec2f & _other) {
+	return !(*this == _other);
 }

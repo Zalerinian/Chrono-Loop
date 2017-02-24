@@ -12,26 +12,36 @@
 class BaseObject {
 	// The number of objects that exist in the world. ID 0 is reserved the player.
 	static unsigned int ObjectCount;
+
 private:
 	std::string mName;
 	BaseObject* mParent;
 	unsigned int mUniqueID;
 	std::list<BaseObject*> mChildren;
 	Transform mTransform;
+	bool mDestroyed = false;
+
+	void Construct(std::string _name, Transform _transform, BaseObject* _parent);
 
 public:
 	std::unordered_map<ComponentType, std::vector<Component*>> mComponents;
 	BaseObject();
+	BaseObject(std::string _name);
 	BaseObject(std::string _name, Transform _transform);
+	BaseObject(std::string _name, Transform _transform, BaseObject* _parent);
 	~BaseObject();
 	BaseObject& operator=(BaseObject& _equals);
 	void Destroy();
 	void Update();
+	BaseObject* Reset(std::string _name);
+	BaseObject* Reset(std::string _name, Transform _transform);
+	BaseObject* Reset(std::string _name, Transform _transform, BaseObject* _parent);
+
 
 	inline unsigned int GetUniqueId() { return mUniqueID; }
 
 	inline std::string GetName() { return mName; };
-	inline void SetName(std::string _name) { mName = _name; };
+	void SetName(std::string _name);
 
 	inline BaseObject* GetParent() { return mParent; };
 	inline void SetParent(BaseObject* _parent) { mParent = _parent; };

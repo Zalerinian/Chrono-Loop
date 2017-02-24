@@ -7,9 +7,9 @@ typedef unsigned long ulong;
 
 class Controller {
 private:
-	vr::IVRSystem* mHmd;
-	int mIndex;
-	bool mValid;
+	vr::IVRSystem* mHmd = nullptr;
+	int mIndex = -1;
+	bool mValid = false;
 	vr::VRControllerState_t mState, mPrevState;
 	vec3f mPosition;
 
@@ -31,7 +31,7 @@ public:
 	void SetUp(int _index, vr::IVRSystem* _vr);
 
 	//transforms
-	vec3f GetPosition();
+	matrix4 GetPosition();
 	vec3f GetVelocity();
 	vec3f GetAngularVelocity();
 
