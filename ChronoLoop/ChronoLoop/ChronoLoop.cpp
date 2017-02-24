@@ -231,8 +231,22 @@ void Update() {
 	headset->AddComponent(hfollow);
 	headset->AddComponent(visibleMesh2);
 
-	TimeManager::Instance()->AddObjectToTimeline(headset);
+	Transform Door, Exit;
+	Door.SetMatrix(Math::MatrixTranslation(0, 2, 0));
+	Exit.SetMatrix(Math::MatrixTranslation(0, -1, 0));
+	BaseObject* ExitWall = Pool::Instance()->iGetObject()->Reset("ExitWall", Exit);
+	MeshComponent *ExitMesh = new MeshComponent("../Resources/ExitDoor.obj");
+	ExitMesh->AddTexture("../Resources/Floorg.png", RenderEngine::eTEX_DIFFUSE);
+	ExitWall->AddComponent(ExitMesh);
+	TimeManager::Instance()->AddObjectToTimeline(ExitWall);
 
+	BaseObject* BlockDoor = Pool::Instance()->iGetObject()->Reset("BlockDoor", Door);
+	MeshComponent *DoorMesh = new MeshComponent("../Resources/BlockDoor.obj");
+	DoorMesh->AddTexture("../Resources/Floorg.png", RenderEngine::eTEX_DIFFUSE);
+	BlockDoor->AddComponent(DoorMesh);
+	TimeManager::Instance()->AddObjectToTimeline(BlockDoor);
+
+	TimeManager::Instance()->AddObjectToTimeline(headset);
 
 	Physics::Instance()->mObjects.push_back(PhysicsBox);
 	Physics::Instance()->mObjects.push_back(Floor);
@@ -241,6 +255,8 @@ void Update() {
 	Physics::Instance()->mObjects.push_back(LeftController);
 	Physics::Instance()->mObjects.push_back(Button);
 	TimeManager::Instance()->HotFixAddClone(Button);
+	TimeManager::Instance()->HotFixAddClone(ExitWall);
+	TimeManager::Instance()->HotFixAddClone(BlockDoor);
 	Level::Initialize(headset, RightController, LeftController);
 	Level* L1 = Level::Instance(); 
 	L1->iAddObject(PhysicsBox);
@@ -250,6 +266,8 @@ void Update() {
 	L1->iAddObject(headset);
 	L1->iAddObject(LeftController);
 	L1->iAddObject(Button);
+	L1->iAddObject(ExitWall);
+	L1->iAddObject(BlockDoor);
 	L1->iCallStart();
 
 	//// Test for TextureManager::iAddTexture2D. Works nicely!
