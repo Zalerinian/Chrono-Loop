@@ -9,15 +9,10 @@
 unsigned int BaseObject::ObjectCount = 1;
 
 void BaseObject::Construct(std::string _name, Transform _transform, BaseObject* _parent) {
-	//if (AllObjects[_name] != nullptr) {
-	//	SystemLogger::GetError() << "[Error] An object with the provided name (" << _name << ") already exists. Objects must be unique. This object will be invalid." << std::endl;
-	//	Debug::SetBreakpoint();
-	//}
 	mName = _name;
 	mTransform = _transform;
 	mParent = _parent;
 	mUniqueID = BaseObject::ObjectCount++;
-	//AllObjects[_name] = this;
 }
 
 BaseObject::BaseObject() {
@@ -113,6 +108,25 @@ void BaseObject::Update() {
 			(*cIt)->Update();
 		}
 	}
+}
+
+BaseObject * BaseObject::Reset(std::string _name) {
+	Transform t;
+	t.SetMatrix(Math::MatrixIdentity());
+	Reset(_name, t, nullptr);
+	return this;
+}
+
+BaseObject * BaseObject::Reset(std::string _name, Transform _transform) {
+	Reset(_name, _transform, nullptr);
+	return this;
+}
+
+BaseObject * BaseObject::Reset(std::string _name, Transform _transform, BaseObject * _parent) {
+	mName = _name;
+	mTransform = _transform;
+	mParent = _parent;
+	return this;
 }
 
 void BaseObject::SetName(std::string _name) {

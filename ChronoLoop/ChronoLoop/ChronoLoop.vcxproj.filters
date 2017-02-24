@@ -270,14 +270,14 @@
     <ClInclude Include="Actions\TimeManipulation.h">
       <Filter>Actions\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Common\Pool.h">
-      <Filter>Common\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Level.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Actions\HeadsetFollow.hpp">
       <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Pool.h">
+      <Filter>Core\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -452,8 +452,10 @@
     <ClCompile Include="Actions\TimeManipulation.cpp">
       <Filter>Actions\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Common\Pool.cpp" />
     <ClCompile Include="Core\Level.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Pool.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

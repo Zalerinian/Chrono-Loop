@@ -1,34 +1,55 @@
 #include "Pool.h"
-#include "Logger.h"
+#include "../Common/Logger.h"
+
+Pool* Pool::sInstance = nullptr;
 
 Pool::Pool(int _capacity) {
-	Resize(_capacity);
+	iResize(_capacity);
 }
 
 Pool::~Pool() {
-	Clear();
+	iClear();
 }
 
-inline unsigned int Pool::GetSize() {
+Pool * Pool::Instance() {
+	return sInstance;
+}
+
+void Pool::Initialize(unsigned int _size) {
+	if (nullptr == sInstance) {
+		sInstance = new Pool(_size);
+	}
+}
+
+void Pool::DestroyInstance() {
+	if (sInstance != nullptr) {
+		delete sInstance;
+		sInstance = nullptr;
+	}
+}
+
+inline unsigned int Pool::iGetSize() {
 	return mSize;
 }
 
-void Pool::Resize(unsigned int _size) {
+void Pool::iResize(unsigned int _size) {
 	if (_size > 5000) {
 		SystemLogger::GetError() << "[Warning] The size of the pool has been set to " << _size << ", which is pretty big. Was this intentional?" << std::endl;
 	}
 	if (_size < mSize) {
 		// Delete objects to reach the size.
 		while (_size < mSize) {
-			delete GetObject();
+			delete iGetObject();
 		}
 	} else if(_size > mSize) {
 		// Add more objects to meet the size
-		AddObject(new BaseObject);
+		while (_size > mSize) {
+			iAddObject(new BaseObject);
+		}
 	}
 }
 
-BaseObject * Pool::GetObject() {
+BaseObject * Pool::iGetObject() {
 	if (mHead != nullptr) {
 		Node* n = mHead;
 		mHead = mHead->mNext;
@@ -40,7 +61,7 @@ BaseObject * Pool::GetObject() {
 	return nullptr;
 }
 
-void Pool::AddObject(BaseObject * _obj) {
+void Pool::iAddObject(BaseObject * _obj) {
 	Node* n = new Node;
 	n->data = _obj;
 	n->mNext = mHead;
@@ -48,7 +69,7 @@ void Pool::AddObject(BaseObject * _obj) {
 	++mSize;
 }
 
-void Pool::Clear() {
+void Pool::iClear() {
 	Node *n = mHead, *t = nullptr;
 	while (n != nullptr) {
 		t = n;

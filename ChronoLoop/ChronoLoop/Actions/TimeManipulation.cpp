@@ -6,6 +6,7 @@
 #include "../Core/Level.h"
 #include "../Input/VRInputManager.h"
 #include "../Rendering/TextureManager.h"
+#include "../Core/Pool.h"
 #include "TimeManipulation.h"
 
 
@@ -61,18 +62,18 @@ void TimeManipulation::Update() {
 		MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
 		//visibleMesh->AddTexture(textureName.c_str(), RenderEngine::eTEX_DIFFUSE);
 
-		BaseObject* headset = new BaseObject("headset" + std::to_string(rand), identity);
+		BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset - " + std::to_string(rand), identity); //new BaseObject("headset" + std::to_string(rand), identity);
 		headset->AddComponent(visibleMesh);
 
 
-		BaseObject* Controller1 = new BaseObject("Controller" + std::to_string(rand), identity);
+		BaseObject* Controller1 = Pool::Instance()->iGetObject()->Reset("Controller - " + std::to_string(rand), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
 		MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 		mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
 		Controller1->AddComponent(mc);
 
 
 
-		BaseObject* Controller2 = new BaseObject("Controller2" + std::to_string(rand), identity);
+		BaseObject* Controller2 = Pool::Instance()->iGetObject()->Reset("Controller2 - " + std::to_string(rand)); //new BaseObject("Controller2" + std::to_string(rand), identity);
 		MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 		mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
 		Controller2->AddComponent(mc2);

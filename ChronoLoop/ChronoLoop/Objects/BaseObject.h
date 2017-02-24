@@ -33,6 +33,9 @@ public:
 	BaseObject& operator=(BaseObject& _equals);
 	void Destroy();
 	void Update();
+	BaseObject* Reset(std::string _name);
+	BaseObject* Reset(std::string _name, Transform _transform);
+	BaseObject* Reset(std::string _name, Transform _transform, BaseObject* _parent);
 
 
 	inline unsigned int GetUniqueId() { return mUniqueID; }

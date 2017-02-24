@@ -119,7 +119,7 @@ void Update() {
 	transform.SetMatrix(MatrixIdentity());
 	matrix4 mat1 = MatrixTranslation(0, 5, 0);
 	transform.SetMatrix(mat1);
-	BaseObject* PhysicsBox = new BaseObject("aabb", transform);
+	BaseObject* PhysicsBox = Pool::Instance()->iGetObject()->Reset("aabb", transform);//new BaseObject("aabb", transform);
 	CubeCollider *BoxCollider = new CubeCollider(true, vec4f(0.0f, -9.80f, 0.0f, 1.0f), 10.0f, 0.5f, 0.7f, vec4f(0.15f, -0.15f, .15f, 1.0f), vec4f(-0.15f, 0.15f, -0.15f, 1.0f));
 	BoxCollider->AddForce(vec4f(2, 0, 0, 0));
 	PhysicsBox->AddComponent(BoxCollider);
@@ -128,7 +128,7 @@ void Update() {
 
 	Transform PlaneTransform;
 	PlaneTransform.SetMatrix(MatrixTranslation(0, -1, 0));
-	BaseObject* Floor = new BaseObject("plane", PlaneTransform);
+	BaseObject* Floor = Pool::Instance()->iGetObject()->Reset("plane", PlaneTransform);// new BaseObject("plane", PlaneTransform);
 	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.5f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
 	MeshComponent *planeObj = new MeshComponent("../Resources/BigFloor.obj");
 	planeObj->AddTexture("../Resources/floorg.png", RenderEngine::eTEX_DIFFUSE);
@@ -138,12 +138,12 @@ void Update() {
 	Transform identity;
 	identity.SetMatrix(Math::MatrixIdentity());
 
-	BaseObject* walls = new BaseObject("walls", PlaneTransform);
+	BaseObject* walls = Pool::Instance()->iGetObject()->Reset("walls", PlaneTransform);// new BaseObject("walls", PlaneTransform);
 	MeshComponent *wallMesh = new MeshComponent("../Resources/BigWall.obj");
 	wallMesh->AddTexture("../Resources/Wallg.png", RenderEngine::eTEX_DIFFUSE);
 	walls->AddComponent(wallMesh);
 
-	BaseObject* RightController = new BaseObject("Controller", identity);
+	BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller", identity);// new BaseObject("Controller", identity);
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
 	TeleportAction *ta = new TeleportAction(false);
@@ -160,7 +160,7 @@ void Update() {
 	//PhysicsBox->AddComponent(codeComponent);
 
 	//pat added
-	BaseObject* LeftController = new BaseObject("Controller2", identity);
+	BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2", identity); //new BaseObject("Controller2", identity);
 	MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 	mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
 	TeleportAction *ta2 = new TeleportAction(true);
@@ -170,7 +170,7 @@ void Update() {
 	LeftController->AddComponent(tm2);
 	TimeManager::Instance()->AddObjectToTimeline(LeftController);
 
-	BaseObject* headset = new BaseObject("headset", transform);
+	BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", transform); //new BaseObject("headset", transform);
 	MeshComponent *visibleMesh2 = new MeshComponent("../Resources/Cube.obj");
 	visibleMesh2->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
 	visibleMesh2->SetVisible(false);

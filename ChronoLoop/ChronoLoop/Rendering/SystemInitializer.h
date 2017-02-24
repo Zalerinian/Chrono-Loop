@@ -7,6 +7,8 @@
 #include "../Input/VRInputManager.h"
 #include "../Core/TimeManager.h"
 #include "..\Physics\Physics.h"
+#include "../Core/Pool.h"
+
 
 namespace RenderEngine {
 	bool InitializeSystems(HWND _Window, unsigned int _width, unsigned int _height,
@@ -22,6 +24,7 @@ namespace RenderEngine {
 			VRInputManager::Initialize(_vrsys);
 		}
 		ShaderManager::Instance();
+		Pool::Initialize();
 		Physics::Instance();
 		return true;
 	}
@@ -34,6 +37,7 @@ namespace RenderEngine {
 		TimeManager::Destroy();
 		RasterizerStateManager::DestroyInstance();
 		Renderer::DestroyInstance();
+		Pool::DestroyInstance();
 		Physics::Destroy();
 		return true;
 	}
