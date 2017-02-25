@@ -276,13 +276,13 @@ void Update() {
 	Exit.SetMatrix(Math::MatrixTranslation(0, -1, 0));
 	BaseObject* ExitWall = Pool::Instance()->iGetObject()->Reset("ExitWall", Exit);
 	MeshComponent *ExitMesh = new MeshComponent("../Resources/ExitDoor.obj");
-	ExitMesh->AddTexture("../Resources/Floorg.png", RenderEngine::eTEX_DIFFUSE);
+	ExitMesh->AddTexture("../Resources/Doors.png", RenderEngine::eTEX_DIFFUSE);
 	ExitWall->AddComponent(ExitMesh);
 	TimeManager::Instance()->AddObjectToTimeline(ExitWall);
 
 	BaseObject* BlockDoor = Pool::Instance()->iGetObject()->Reset("BlockDoor", Door);
 	MeshComponent *DoorMesh = new MeshComponent("../Resources/BlockDoor.obj");
-	DoorMesh->AddTexture("../Resources/Floorg.png", RenderEngine::eTEX_DIFFUSE);
+	DoorMesh->AddTexture("../Resources/Doors.png", RenderEngine::eTEX_DIFFUSE);
 	BlockDoor->AddComponent(DoorMesh);
 	TimeManager::Instance()->AddObjectToTimeline(BlockDoor);
 
