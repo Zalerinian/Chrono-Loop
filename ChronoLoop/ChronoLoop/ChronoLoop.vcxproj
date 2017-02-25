@@ -135,7 +135,8 @@
       <AdditionalDependencies>openvr_api.lib;D2d1.lib;DWrite.lib;d3d11.lib;dxgi.lib;windowscodecs.lib;AkSoundEngineDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outputpath)openvr_api.dll"</Command>
+      <Command>xcopy /y /d /e "$(solutiondir)Additional Libraries\$(configuration)" "$(outputpath)"
+echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outputpath)openvr_api.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -185,7 +186,8 @@
       <AdditionalDependencies>openvr_api.lib;D2d1.lib;DWrite.lib;d3d11.lib;dxgi.lib;windowscodecs.lib;AkSoundEngineDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outputpath)openvr_api.dll"</Command>
+      <Command>xcopy /y /d /e "$(solutiondir)Additional Libraries\$(configuration)" "$(outputpath)"
+echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outputpath)openvr_api.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
