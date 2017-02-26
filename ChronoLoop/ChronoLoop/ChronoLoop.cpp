@@ -229,6 +229,9 @@ void Update() {
 	Physics::Instance()->mObjects.push_back(PhysicsBox);
 	Physics::Instance()->mObjects.push_back(Floor);
 	Physics::Instance()->mObjects.push_back(walls);
+	Physics::Instance()->mObjects.push_back(RightController);
+	Physics::Instance()->mObjects.push_back(LeftController);
+	Physics::Instance()->mObjects.push_back(Button);
 	BaseLevel* L1 = new BaseLevel(headset,RightController,LeftController);
 	L1->AddLevelObject(PhysicsBox);
 	L1->AddLevelObject(Button);
