@@ -11,7 +11,7 @@ struct CCElasticAABBtoAABB : public CodeComponent
 		if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane)
 		{
 			colliding = true;
-			SystemLogger::GetLog() << "BOX COLLISION" << std::endl;
+			//SystemLogger::GetLog() << "BOX COLLISION" << std::endl;
 
 			vec4f max = ((CubeCollider*)&_other)->mMax;
 			vec4f min = ((CubeCollider*)&_other)->mMin;

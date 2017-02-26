@@ -95,8 +95,8 @@ public:
 
 	ColliderType mColliderType;
 	bool mShouldMove, mRewind;
-	vec4f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity;
-	float mMass, mElasticity, mFriction, mInvMass;
+	vec4f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity, mWeight, mDragForce;
+	float mMass, mElasticity, mKineticFriction, mStaticFriction, mInvMass, mRHO, mDrag, mArea;
 
 	void Update();
 	void Destroy();
@@ -108,27 +108,27 @@ public:
 
 class MeshCollider : public Collider {
 public:
-	MeshCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, char* _path);
+	MeshCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, char* _path);
 	Mesh* mMesh;
 };
 
 class SphereCollider : public Collider {
 public:
-	SphereCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, float _radius);
+	SphereCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _radius);
 	float mRadius;
 };
 
 class CubeCollider : public Collider {
 public:
 	CubeCollider() {}
-	CubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, vec4f _min, vec4f _max);
+	CubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec4f _min, vec4f _max);
 	vec4f mMin, mMax, mMinOffset, mMaxOffset;
 	virtual void SetPos(vec4f _newPos);
 };
 
 class PlaneCollider : public Collider {
 public:
-	PlaneCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, float _offset, vec4f _norm);
+	PlaneCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _offset, vec4f _norm);
 	vec4f mNormal, mMin, mMax;
 	float mOffset;
 };
