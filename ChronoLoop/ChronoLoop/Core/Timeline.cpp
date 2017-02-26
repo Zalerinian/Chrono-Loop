@@ -86,6 +86,7 @@ void Timeline::MoveObjectToSnap(unsigned int _snaptime, unsigned short _id) {
 					((Collider*)currComp)->mAcceleration = ((SnapComponent_Physics*)destComp)->mAcc;
 					((Collider*)currComp)->mVelocity = ((SnapComponent_Physics*)destComp)->mVel;
 					((Collider*)currComp)->AddForce(((SnapComponent_Physics*)destComp)->mForces);
+					((Collider*)currComp)->SetPos(*destInfo->mTransform.GetPosition());
 				}
 			}
 		}

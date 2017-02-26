@@ -66,14 +66,18 @@ void TimeManipulation::Update() {
 
 		BaseObject* Controller1 = Pool::Instance()->iGetObject()->Reset("Controller - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
 		MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
+		CubeCollider* CubeColider = new CubeCollider(Controller1, true, vec4f(0, 0, 0, 0), 2, 0, .2f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
 		mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
+		Controller1->AddComponent(CubeColider);
 		Controller1->AddComponent(mc);
 
 
 
 		BaseObject* Controller2 = Pool::Instance()->iGetObject()->Reset("Controller2 - " + std::to_string(mCloneCount)); //new BaseObject("Controller2" + std::to_string(rand), identity);
 		MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
+		CubeCollider* CubeColider2 = new CubeCollider(Controller1, true, vec4f(0, 0, 0, 0), 2, 0, .2f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
 		mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
+		Controller2->AddComponent(CubeColider2);
 		Controller2->AddComponent(mc2);
 
 		//Make a clone 3 seconds ago.
