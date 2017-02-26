@@ -3,10 +3,19 @@
 #include "CodeComponent.hpp"
 #include "..\Physics\Physics.h"
 #include "..\Common\Logger.h"
+#include "../Core/Level.h"
 
 struct CCButtonPress : public CodeComponent
 {
 	bool colliding = false;
+	bool mBooped = false;
+
+	BaseObject *Block = nullptr, *Exit = nullptr;
+	virtual void Start() {
+		Block = Level::Instance()->iFindObjectWithName("BlockDoor");
+		Exit = Level::Instance()->iFindObjectWithName("ExitWall");
+	}
+
 	virtual void OnCollision(Collider& _col, Collider& _other, float _time)
 	{
 		if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane)
@@ -23,6 +32,11 @@ struct CCButtonPress : public CodeComponent
 				_col.mTotalForce += tForce;
 				_col.mVelocity += vel;
 				_col.mAcceleration += vel / _time;
+				if (!mBooped) {
+					Block->GetTransform().SetMatrix(Math::MatrixTranslation(0, -1, 0));
+					Exit->GetTransform().SetMatrix(Math::MatrixTranslation(0, 2, 0));
+					mBooped = true;
+				}
 			}
 		}
 		else

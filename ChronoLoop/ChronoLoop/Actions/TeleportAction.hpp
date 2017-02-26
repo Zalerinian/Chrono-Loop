@@ -11,11 +11,13 @@
 
 struct TeleportAction : public CodeComponent {
 	MeshComponent *mPlaneMesh;
+	BaseObject *mPlaneObject;
 	bool left;
 	TeleportAction(bool _left) { left = _left; };
 
 	virtual void Start() {
-		mPlaneMesh = (MeshComponent*)Level::Instance()->iFindObjectWithName("plane")->GetComponentIndexed(eCOMPONENT_MESH, 0);
+		mPlaneObject = Level::Instance()->iFindObjectWithName("plane");
+		mPlaneMesh = (MeshComponent*)mPlaneObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 	}
 
 	virtual void Update() {
@@ -31,7 +33,7 @@ struct TeleportAction : public CodeComponent {
 			forward *= mObject->GetTransform().GetMatrix();
 			Triangle *tris = mPlaneMesh->GetTriangles();
 			size_t numTris = mPlaneMesh->GetTriangleCount();
-			vec4f position = mat.fourth;
+			vec4f position = (mat * mPlaneObject->GetTransform().GetMatrix().Inverse()).fourth;
 			for (unsigned int i = 0; i < numTris; ++i) {
 				float time = 0;
 				if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, forward, time)) {

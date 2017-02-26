@@ -125,17 +125,18 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles>
       </ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>$(SolutionDir)Sound\SoundEngine\Win32;$(SolutionDir)Sound\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ChronoLoop\Sound\Sound\SoundEngine\Win32;$(SolutionDir)ChronoLoop\Sound\Sound\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)PDB Files\$(TargetName).pdb</ProgramDatabaseFile>
-      <AdditionalLibraryDirectories>$(solutiondir)openvr\lib\win64\;$(SolutionDir)Sound\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>openvr_api.lib;D2d1.lib;DWrite.lib;d3d11.lib;dxgi.lib;windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(solutiondir)openvr\lib\win64\;$(SolutionDir)ChronoLoop\Sound\Sound\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>openvr_api.lib;D2d1.lib;DWrite.lib;d3d11.lib;dxgi.lib;windowscodecs.lib;AkSoundEngineDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outputpath)openvr_api.dll"</Command>
+      <Command>xcopy /y /d /e "$(solutiondir)Additional Libraries\$(configuration)" "$(outputpath)"
+echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outputpath)openvr_api.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -173,7 +174,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ForcedIncludeFiles>
       </ForcedIncludeFiles>
-      <AdditionalIncludeDirectories>$(SolutionDir)Sound\SoundEngine\Win32;$(SolutionDir)Sound\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ChronoLoop\Sound\Sound\SoundEngine\Win32;$(SolutionDir)ChronoLoop\Sound\Sound\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -181,11 +182,12 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)PDB Files\$(TargetName).pdb</ProgramDatabaseFile>
-      <AdditionalLibraryDirectories>$(solutiondir)openvr\lib\win64\;$(SolutionDir)Sound\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>openvr_api.lib;D2d1.lib;DWrite.lib;d3d11.lib;dxgi.lib;windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(solutiondir)openvr\lib\win64\;$(SolutionDir)ChronoLoop\Sound\Sound\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>openvr_api.lib;D2d1.lib;DWrite.lib;d3d11.lib;dxgi.lib;windowscodecs.lib;AkSoundEngineDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outputpath)openvr_api.dll"</Command>
+      <Command>xcopy /y /d /e "$(solutiondir)Additional Libraries\$(configuration)" "$(outputpath)"
+echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outputpath)openvr_api.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -221,7 +223,6 @@
     <ClInclude Include="Input\Controller.h" />
     <ClInclude Include="Input\KeyboardInput.h" />
     <ClInclude Include="Input\VRInputManager.h" />
-    <ClInclude Include="Messager\Message.h" />
     <ClInclude Include="Messager\Messager.h" />
     <ClInclude Include="Objects\BaseObject.h" />
     <ClInclude Include="Objects\Component.h" />

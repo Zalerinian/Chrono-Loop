@@ -14,6 +14,7 @@ void Controller::Update() {
 	//update the contoller pose/state when called. 
 	mPrevState = mState;
 	if (mHmd != NULL) {
+		//SystemLogger::GetLog() << "[Debug] Controller update." << std::endl;
 		mValid = mHmd->GetControllerStateWithPose(mTrackingSpace, mIndex, &mState, sizeof(mState), &mPose);
 		if (mPrevState.ulButtonPressed != mState.ulButtonPressed) {
 			UpdateHairTrigger();
@@ -105,42 +106,69 @@ bool Controller::GetValid() {
 }
 
 bool Controller::GetPress(vr::EVRButtonId _id) {
+	if (!GetValid()) {
+		return false;
+	}
 	return (mState.ulButtonPressed & vr::ButtonMaskFromId(_id)) != 0;
 }
 
 bool Controller::GetPressDown(vr::EVRButtonId _id) {
+	if (!GetValid()) {
+		return false;
+	}
 	return (mState.ulButtonPressed & vr::ButtonMaskFromId(_id)) != 0 &&
 		(mPrevState.ulButtonPressed & vr::ButtonMaskFromId(_id)) == 0;
 }
 
 bool Controller::GetPressUp(vr::EVRButtonId _id) {
+	if (!GetValid()) {
+		return false;
+	}
 	return (mState.ulButtonPressed & vr::ButtonMaskFromId(_id)) == 0 &&
 		(mPrevState.ulButtonPressed & vr::ButtonMaskFromId(_id)) != 0;
 }
 
 bool Controller::GetTouch(vr::EVRButtonId _id) {
+	if (!GetValid()) {
+		return false;
+	}
 	return (mState.ulButtonTouched & vr::ButtonMaskFromId(_id)) != 0;
 }
 
 bool Controller::GetTouchDown(vr::EVRButtonId _id) {
+	if (!GetValid()) {
+		return false;
+	}
 	return (mState.ulButtonTouched & vr::ButtonMaskFromId(_id)) != 0 &&
 		(mPrevState.ulButtonTouched & vr::ButtonMaskFromId(_id)) == 0;
 }
 
 bool Controller::GetTouchUp(vr::EVRButtonId _id) {
+	if (!GetValid()) {
+		return false;
+	}
 	return (mState.ulButtonTouched & vr::ButtonMaskFromId(_id)) == 0 &&
 		(mPrevState.ulButtonTouched & vr::ButtonMaskFromId(_id)) != 0;
 }
 
 bool Controller::GetHairTrigger() {
+	if (!GetValid()) {
+		return false;
+	}
 	return mHairTriggerState;
 }
 
 bool Controller::GetHairTriggerDown() {
+	if (!GetValid()) {
+		return false;
+	}
 	return mHairTriggerState && !mHairTriggerPrevState;
 }
 
 bool Controller::GetHairTriggerUp() {
+	if (!GetValid()) {
+		return false;
+	}
 	return !mHairTriggerState && mHairTriggerPrevState;
 }
 

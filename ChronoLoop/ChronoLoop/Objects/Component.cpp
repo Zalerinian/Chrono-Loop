@@ -1,6 +1,8 @@
 //#include "stdafx.h"
 #include "Component.h"
 #include "BaseObject.h"
+#include "..\Messager\Messager.h"
+
 
 // 0 is reserved for the player.
 unsigned short Component::mComponentCount = 0;
@@ -8,6 +10,10 @@ unsigned short Component::mComponentCount = 0;
 Component::Component()
 {
 	mComponentId = Component::mComponentCount++;
+}
+Component::Component(ComponentType _cType)
+{
+	mType = _cType;
 }
 Component::~Component()
 {
@@ -19,6 +25,8 @@ void Component::GetMatrix(matrix4& _m)
 {
 	//_m = object->transform.m_matrix4;
 }
+Transform& Component::GetTransform() { return mObject->GetTransform(); }
+Transform& Component::GetTransform() const { return mObject->GetTransform(); }
 
 #pragma endregion
 //------------------------------------------------------------
@@ -47,20 +55,107 @@ void Emitter::Update()
 
 }
 
-void Emitter::Play()
+void Emitter::Play(int _id)
 {
+	if (_id < 0 || _id > mSFX[ePlayLoop].size() - 1)
+		return;
+	if (mIsPlaying)
+		return;
+	m_Event* evnt = new m_Event(mSFX[ePlayLoop][_id], this);
+	Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
+	Messager::Instance().SendInMessage(msg);
+	mIsPlaying = true;
+}
+
+void Emitter::Pause(int _id)
+{
+	if (_id < 0 || _id > mSFX[ePauseLoop].size() - 1 || mSFX[eResumeLoop].size() - 1)
+		return;
+
+	if (mIsPaused)
+	{
+		m_Event* evnt = new m_Event(mSFX[eResumeLoop][_id], this);
+		Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
+		Messager::Instance().SendInMessage(msg);
+		mIsPaused = false;
+	}
+	else
+	{
+		m_Event* evnt = new m_Event(mSFX[ePauseLoop][_id], this);
+		Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
+		Messager::Instance().SendInMessage(msg);
+		mIsPaused = true;
+	}
+}
+
+void Emitter::Stop(int _id)
+{
+	if (_id < 0 || _id > mSFX[eStopLoop].size() - 1)
+		return;
+	if (!mIsPlaying)
+		return;
+	m_Event* evnt = new m_Event(mSFX[eStopLoop][_id], this);
+	Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
+	Messager::Instance().SendInMessage(msg);
+	mIsPlaying = false;
 
 }
 
-void Emitter::Pause()
+void Emitter::PlaySFX(int _id)
 {
+	if (_id < 0 || _id > mSFX[ePlaySFX].size() - 1)
+		return;
 
+	const vec4f * pos = GetTransform().GetPosition();
+	m_LocEvent* evnt = new m_LocEvent(mSFX[ePlaySFX][_id], pos);
+	Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Loc, 0, false, (void*)evnt);
+	Messager::Instance().SendInMessage(msg);
+}
+void Emitter::PlaySFX(int _id, const vec4f* _pos)
+{
+	if (_id < 0 || _id > mSFX[ePlaySFX].size() - 1)
+		return;
+
+	const vec4f * pos = _pos;
+	m_LocEvent* evnt = new m_LocEvent(mSFX[ePlaySFX][_id], pos);
+	Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Loc, 0, false, (void*)evnt);
+	Messager::Instance().SendInMessage(msg);
 }
 
-void Emitter::Stop()
-{
 
+void Emitter::AddSoundEvent(sfxTypes _type, int64_t _event)
+{
+	switch (_type)
+	{
+	case sfxTypes::ePlayLoop:
+	{
+		mSFX[_type].push_back(_event);
+	}
+	break;
+	case sfxTypes::ePauseLoop:
+	{
+		mSFX[_type].push_back(_event);
+	}
+	break;
+	case sfxTypes::eResumeLoop:
+	{
+		mSFX[_type].push_back(_event);
+	}
+	break;
+	case sfxTypes::eStopLoop:
+	{
+		mSFX[_type].push_back(_event);
+	}
+	break;
+	case sfxTypes::ePlaySFX:
+	{
+		mSFX[_type].push_back(_event);
+	}
+	break;
+
+	}
 }
+
 
 void Emitter::Destroy()
 {

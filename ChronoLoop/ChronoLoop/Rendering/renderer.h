@@ -116,6 +116,7 @@ namespace RenderEngine {
 		inline std::shared_ptr<IDXGIFactory1*> iGetFactory() { return mFactory; }
 		inline std::shared_ptr<ID3D11RenderTargetView*> iGetRTView() { return mMainView; }
 		inline std::shared_ptr<ID3D11DepthStencilView*> iGetDSView() { return mDSView; }
+		inline std::shared_ptr<HWND> iGetWindow() { return mWindow; }
 	};
 
 }

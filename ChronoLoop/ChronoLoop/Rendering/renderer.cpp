@@ -11,7 +11,7 @@
 #include "../Input/VRInputManager.h"
 #include "../Input/Controller.h"
 
-#define ENABLE_TEXT 1
+#define ENABLE_TEXT 0
 
 
 using namespace std;
@@ -599,7 +599,7 @@ namespace RenderEngine {
 		if (!mVrSystem) {
 			mDebugCameraPos = Math::MatrixTranslation(1.9f, 0.5f, 8);
 			mVPData.projection.matrix = DirectX::XMMatrixPerspectiveFovRH(70, (float)_height / (float)_width, 0.1f, 1000);
-			mVPData.view = Math::MatrixTranspose(mDebugCameraPos);
+			mVPData.view = Math::MatrixTranspose(mDebugCameraPos).Inverse();
 			mVPData.projection = Math::MatrixTranspose(mVPData.projection);
 			(*mContext)->UpdateSubresource(*mVPBuffer, 0, NULL, &mVPData, 0, 0);
 			(*mContext)->VSSetConstantBuffers(0, 1, mVPBuffer.get());

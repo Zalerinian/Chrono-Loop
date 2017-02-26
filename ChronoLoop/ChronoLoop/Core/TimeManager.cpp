@@ -61,7 +61,8 @@ void TimeManager::ClearClones() {
 
 bool TimeManager::CheckRewindAvaliable(unsigned int _frame)
 {
-	if (mTimeline->mCurrentGameTimeIndx - _frame < 0)
+	//wrapped
+	if (mTimeline->mCurrentGameTimeIndx - _frame > mTimeline->mCurrentGameTimeIndx)
 		return false;
 	else
 		return true;

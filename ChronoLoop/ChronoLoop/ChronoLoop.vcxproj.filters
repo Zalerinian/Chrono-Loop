@@ -135,9 +135,6 @@
     <ClInclude Include="Rendering\Structures.h">
       <Filter>Rendering\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Messager\Message.h">
-      <Filter>Messanger\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Messager\Messager.h">
       <Filter>Messanger\Header Files</Filter>
     </ClInclude>
@@ -397,6 +394,13 @@
     </ClCompile>
     <ClCompile Include="Rendering\RenderShape.cpp">
       <Filter>Rendering\Source Files\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="Messager\Messager.cpp">
+      <Filter>Messanger\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\KeyboardInput.cpp" />
+    <ClCompile Include="Input\Controller.cpp">
+      <Filter>Input\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Input\VRInputManager.cpp">
       <Filter>Input\Source Files</Filter>

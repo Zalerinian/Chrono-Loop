@@ -1,9 +1,11 @@
 #pragma once
 #include "..\Common\Math.h"
 #include "..\Rendering\Mesh.h"
+#include <unordered_map>
 #include "..\Physics\Physics.h"
 
 class BaseObject;
+class Transform;
 //class Mesh;
 
 enum ComponentType
@@ -32,6 +34,7 @@ protected:
 	BaseObject* mObject = nullptr;
 public:
 	Component();
+	Component(ComponentType _cType);
 	virtual ~Component();
 	inline ComponentType GetType() { return mType; };
 	inline bool IsEnabled() { return mIsEnabled; };
@@ -42,24 +45,41 @@ public:
 	virtual void Destroy() = 0;
 	void GetMatrix(matrix4& _m);
 	unsigned short GetColliderId() { return mComponentId; };
+	Transform& GetTransform();
+	Transform& GetTransform() const;
 };
 
-class Listener : Component
+class Listener : public Component
 {
 public:
+	Listener() : Component(ComponentType::eCOMPONENT_AUDIOLISTENER) {}
 	void Update() {}
 	void Destroy() {}
 };
 
-class Emitter : Component
+class Emitter :public Component
 {
 public:
-	void Play();
-	void Pause();
-	void Stop();
+	enum sfxTypes { ePlayLoop, ePauseLoop, eResumeLoop, eStopLoop, ePlaySFX };
+
+	Emitter() : Component(ComponentType::eCOMPONENT_AUDIOEMITTER)
+	{
+		mIsPaused = mIsPlaying = false;
+	}
+
+	void Play(int _id = 0);
+	void Pause(int _id = 0);
+	void Stop(int _id = 0);
+	void PlaySFX(int _id = 0);
+	void PlaySFX(int _id = 0, const vec4f* _pos = new vec4f());
+	void AddSoundEvent(sfxTypes _type, int64_t _event);
 
 	void Update();
 	void Destroy();
+private:
+	bool mIsPlaying = false, mIsPaused = false;
+	std::unordered_map<sfxTypes, std::vector<int64_t>> mSFX;
+
 };
 
 class Collider : public Component {

@@ -9,6 +9,7 @@
 struct TimeManipulation : public CodeComponent {
 private:
 	bool mLeft;
+	int mCount = 0;
 	bool mTexturedApplied = false;
 	static unsigned int mCloneCount;
 	ID3D11Texture2D* mCountTxt;
