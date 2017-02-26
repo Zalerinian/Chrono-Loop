@@ -117,11 +117,11 @@ void Update() {
 
 	Transform transform;
 	transform.SetMatrix(MatrixIdentity());
-	matrix4 mat1 = MatrixTranslation(0, 5, 0);
+	matrix4 mat1 = MatrixTranslation(2, 1, 0);
 	transform.SetMatrix(mat1);
 	BaseObject* PhysicsBox = new BaseObject("aabb", transform);
 	CubeCollider *BoxCollider = new CubeCollider(PhysicsBox, true, vec4f(0.0f, -1.0f, 0.0f, 1.0f), 1.0f, 0.5f, 0.0f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
-	BoxCollider->AddForce(vec4f(2, 0, 0, 0));
+	BoxCollider->AddForce(vec4f(-1, 0, 0, 0));
 	CodeComponent* PlaneCollision = new CCElasticReactionWithPlane;
 	CodeComponent* BoxCollision = new CCElasticAABBtoAABB;
 	PhysicsBox->AddComponent(BoxCollider);
@@ -143,7 +143,7 @@ void Update() {
 	Transform PlaneTransform;
 	PlaneTransform.SetMatrix(MatrixTranslation(0, -1, 0));
 	BaseObject* Floor = new BaseObject("plane", PlaneTransform);
-	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, 0.0f, 0.0f, 1.0f), 10.0f, 0.5f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
+	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, 0.0f, 0.0f, 1.0f), 10.0f, 0.0f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
 	MeshComponent *planeObj = new MeshComponent("../Resources/BigFloor.obj");
 	planeObj->AddTexture("../Resources/floorg.png", RenderEngine::eTEX_DIFFUSE);
 	Floor->AddComponent(plane);
