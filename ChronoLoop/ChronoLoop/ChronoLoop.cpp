@@ -256,8 +256,8 @@ void Update() {
 	
 	//Temp Camera OBJ
 	Transform camTrans;
-	camTrans.SetMatrix(MatrixIdentity());
-	BaseObject camObj("TempCam", camTrans);
+	camTrans.SetMatrix((VRInputManager::Instance()).iGetPlayerWorldPos());
+	BaseObject camObj("Cam", camTrans);
 	Listener* ears = new Listener();
 	camObj.AddComponent(ears);
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(ears, "Listener")));
@@ -270,7 +270,6 @@ void Update() {
 	HeadsetFollow* hfollow = new HeadsetFollow();
 	headset->AddComponent(hfollow);
 	headset->AddComponent(visibleMesh2);
-
 	Transform Door, Exit;
 	Door.SetMatrix(Math::MatrixTranslation(0, 2, 0));
 	Exit.SetMatrix(Math::MatrixTranslation(0, -1, 0));

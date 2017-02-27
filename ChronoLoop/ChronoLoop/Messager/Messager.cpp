@@ -81,21 +81,6 @@ void Messager::ProcessMessage(Message* _msg)
 		ProcessSound(_msg);
 	}
 	break;
-	/*case msgTypes::mRender:
-	{
-		ProcessRender(_msg);
-	}
-	break;
-	case msgTypes::mInput:
-	{
-		ProcessInput(_msg);
-	}
-	break;
-	case msgTypes::mPhysics:
-	{
-		ProcessPhysics(_msg);
-	}
-	break;*/
 	}
 }
 
@@ -180,16 +165,4 @@ void Messager::ProcessSound(Message* _msg)
 	}
 	break;
 	}
-}
-void Messager::ProcessRender(Message* _msg)
-{
-
-}
-void Messager::ProcessPhysics(Message* _msg)
-{
-
-}
-void Messager::ProcessInput(Message* _msg)
-{
-
 }

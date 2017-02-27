@@ -64,7 +64,7 @@ public:
 
 	Emitter() : Component(ComponentType::eCOMPONENT_AUDIOEMITTER)
 	{
-		mIsPaused = mIsPlaying = false;
+
 	}
 
 	void Play(int _id = 0);
@@ -77,7 +77,7 @@ public:
 	void Update();
 	void Destroy();
 private:
-	bool mIsPlaying = false, mIsPaused = false;
+	std::vector<std::pair<bool, bool>> mIsSounds;
 	std::unordered_map<sfxTypes, std::vector<int64_t>> mSFX;
 
 };

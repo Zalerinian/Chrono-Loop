@@ -8,16 +8,13 @@
 #include "..\Common\Logger.h"
 #include <cstdarg>
 
-enum msgTypes { NONE = -1, mSound, mRender, mInput, mPhysics };
+enum msgTypes { NONE = -1, mSound};
 
 enum soundMsg {
 	INITIALIZE_Audio, SHUTDOWN_Audio, UPDATE_Audio, ADD_Listener, REMOVE_Listener,
 	ADD_Emitter, REMOVE_Emitter, MAKEEVENT_Loc, MAKEEVENT_Listener, MAKEEVENT_Event,
 	SET_BasePath, ADD_Soundbank, REMOVE_Soundbank
 };
-enum renderMsg {};
-enum inputMsg {};
-enum physicsMsg {};
 
 struct Message
 {
@@ -30,9 +27,6 @@ public:
 	{
 		int num;
 		soundMsg smType;
-		renderMsg rmTypes;
-		inputMsg imTypes;
-		physicsMsg pmTypes;
 	};
 
 	//Pointer to the struct *ugh*
@@ -120,9 +114,6 @@ private:
 	void ProcessMessage(Message* _msg);
 
 	void ProcessSound(Message* _msg);
-	void ProcessRender(Message* _msg);
-	void ProcessPhysics(Message* _msg);
-	void ProcessInput(Message* _msg);
 	Messager();
 	Messager(const Messager& _newMsger){}
 	Messager& operator=(const Messager& _m) { return *this; }
@@ -135,8 +126,6 @@ public:
 	void Initialize();
 	void Process();
 };
-
-//Bullshit Structs
 
 //Sound Func Structs--------------------
 struct m_Path
@@ -200,6 +189,3 @@ struct m_FLT
 	m_FLT(float _scale = 1.0f) { mScale = _scale; }
 };
 //-------------------------------------
-
-
-
