@@ -52,6 +52,50 @@ bool Timeline::RewindMakeClone(unsigned int _snaptime) {
 	return true;
 }
 
+void Timeline::ChangeBitsetToSnap(SnapInfo * _destinfo, Component* _curComp)
+{
+	if(_destinfo->mBitset[_curComp->GetComponentNum()])
+		_curComp->Enable();
+
+	else
+		_curComp->Disable();
+	
+}
+
+void Timeline::SetComponent(SnapComponent* _destComp, BaseObject * _obj, SnapInfo* _destInfo) {
+	switch (_destComp->mCompType) {
+		//For each of the collider in the vec
+	case ComponentType::eCOMPONENT_COLLIDER:
+	{
+		//Loop to find the same collider component
+		for (unsigned int j = 0; j < _obj->GetComponentCount(eCOMPONENT_COLLIDER); j++) {
+			Component* currComp = _obj->GetComponentIndexed(eCOMPONENT_COLLIDER, j);
+			if (currComp->GetColliderId() == _destComp->mId) {
+				((Collider*)currComp)->mRewind = true;
+				((Collider*)currComp)->mShouldMove = false;
+				((Collider*)currComp)->mAcceleration = ((SnapComponent_Physics*)_destComp)->mAcc;
+				((Collider*)currComp)->mVelocity = ((SnapComponent_Physics*)_destComp)->mVel;
+				((Collider*)currComp)->AddForce(((SnapComponent_Physics*)_destComp)->mForces);
+				((Collider*)currComp)->SetPos(*_destInfo->mTransform.GetPosition());
+
+				//Set the bitset
+				ChangeBitsetToSnap(_destInfo, currComp);
+			}
+		}
+	}
+	default:
+	{
+		for (unsigned int j = 0; j < _obj->GetComponentCount(_destComp->mCompType); j++) {
+			Component* currComp = _obj->GetComponentIndexed(_destComp->mCompType, j);
+			if (currComp->GetColliderId() == _destComp->mId) {
+				//Set the bitset
+				ChangeBitsetToSnap(_destInfo, currComp);
+			}
+		}
+	}
+	}
+}
+
 void Timeline::MoveObjectToSnap(unsigned int _snaptime, unsigned short _id) {
 	//TODO PAT: THIS DOESNT TAKE IN ACCOUNT IF SOMETHING WAS MADE IN THE FUTURE TO DELETE IT
 	Snapshot* destination = mSnapshots[_snaptime];
@@ -69,29 +113,11 @@ void Timeline::MoveObjectToSnap(unsigned int _snaptime, unsigned short _id) {
 	baseobject->SetTransform(destInfo->mTransform);
 
 	//Set all componets to time recorded
-	//TODO PAT: MAKE THIS MORE EFFICIENT
-	//TODO PAT: WRITE A SetComponets Func to take in SnapComonets.
 	for (unsigned int i = 0; i < destInfo->mComponets.size(); i++) {
 		SnapComponent* destComp = destInfo->mComponets[i];
-		switch (destComp->mCompType) {
-			//For each of the collider in the vec
-		case ComponentType::eCOMPONENT_COLLIDER:
-		{
-			//Loop to find the same collider component
-			for (unsigned int j = 0; j < baseobject->GetComponentCount(eCOMPONENT_COLLIDER); j++) {
-				Component* currComp = baseobject->GetComponentIndexed(eCOMPONENT_COLLIDER, j);
-				if (currComp->GetColliderId() == destComp->mId) {
-					((Collider*)currComp)->mRewind = true;
-					((Collider*)currComp)->mShouldMove = false;
-					((Collider*)currComp)->mAcceleration = ((SnapComponent_Physics*)destComp)->mAcc;
-					((Collider*)currComp)->mVelocity = ((SnapComponent_Physics*)destComp)->mVel;
-					((Collider*)currComp)->AddForce(((SnapComponent_Physics*)destComp)->mForces);
-				}
-			}
-		}
-		}
-
+		SetComponent(destComp, baseobject, destInfo);
 	}
+
 }
 
 void Timeline::MoveAllObjectsToSnap(unsigned int _snaptime) {
@@ -106,7 +132,7 @@ void Timeline::MoveAllObjectsToSnap(unsigned int _snaptime) {
 			destInfo = destination->mSnapinfos[id];
 		} else if (!stored) {
 			unsigned int lastUpdated = destination->mUpdatedtimes[id];
-			if(lastUpdated == 0) //assume its broken
+			if (lastUpdated == 0) //assume its broken
 				continue;
 			destInfo = mSnapshots[lastUpdated]->mSnapinfos[id];
 		}
@@ -116,27 +142,9 @@ void Timeline::MoveAllObjectsToSnap(unsigned int _snaptime) {
 			baseobject->SetTransform(destInfo->mTransform);
 
 		//Set all componets back to time recorded
-		//TODO PAT: MAKE THIS MORE EFFICIENT
-		//TODO PAT: WRITE A SetComponets Func to take in SnapComonets.
 		for (unsigned int i = 0; i < destInfo->mComponets.size(); i++) {
 			SnapComponent* destComp = destInfo->mComponets[i];
-			switch (destComp->mCompType) {
-				//For each of the collider in the vec
-			case ComponentType::eCOMPONENT_COLLIDER:
-			{
-				//Loop to find the same collider component
-				for (unsigned int j = 0; j < baseobject->GetComponentCount(eCOMPONENT_COLLIDER); j++) {
-					Component* currComp = baseobject->GetComponentIndexed(eCOMPONENT_COLLIDER, j);
-					if (currComp->GetColliderId() == destComp->mId) {
-						((Collider*)currComp)->mRewind = true;
-						((Collider*)currComp)->mShouldMove = false;
-						((Collider*)currComp)->mAcceleration = ((SnapComponent_Physics*)destComp)->mAcc;
-						((Collider*)currComp)->mVelocity = ((SnapComponent_Physics*)destComp)->mVel;
-						((Collider*)currComp)->AddForce(((SnapComponent_Physics*)destComp)->mForces);
-					}
-				}
-			}
-			}
+			SetComponent(destComp, baseobject, destInfo);
 		}
 	}
 }
@@ -164,27 +172,10 @@ void Timeline::MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime, unsigned
 		baseobject->SetTransform(destInfo->mTransform);
 
 		//Set all componets back to time recorded
-		//TODO PAT: MAKE THIS MORE EFFICIENT
 		//TODO PAT: WRITE A SetComponets Func to take in SnapComonets.
 		for (unsigned int i = 0; i < destInfo->mComponets.size(); i++) {
 			SnapComponent* destComp = destInfo->mComponets[i];
-			switch (destComp->mCompType) {
-				//For each of the collider in the vec
-			case ComponentType::eCOMPONENT_COLLIDER:
-			{
-				//Loop to find the same collider component
-				for (unsigned int j = 0; j < baseobject->GetComponentCount(eCOMPONENT_COLLIDER); j++) {
-					Component* currComp = baseobject->GetComponentIndexed(eCOMPONENT_COLLIDER, j);
-					if (currComp->GetColliderId() == destComp->mId) {
-						((Collider*)currComp)->mRewind = true;
-						((Collider*)currComp)->mShouldMove = false;
-						((Collider*)currComp)->mAcceleration = ((SnapComponent_Physics*)destComp)->mAcc;
-						((Collider*)currComp)->mVelocity = ((SnapComponent_Physics*)destComp)->mVel;
-						((Collider*)currComp)->AddForce(((SnapComponent_Physics*)destComp)->mForces);
-					}
-				}
-			}
-			}
+			SetComponent(destComp, baseobject, destInfo);
 		}
 	}
 }
@@ -213,24 +204,45 @@ void Timeline::ClearTimeLine() {
 	mLiveObjects.clear();
 }
 
+
 SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object, SnapInfo* _info) {
-	if(_info == nullptr)
-	 _info = new SnapInfo();
+	if (_info == nullptr)
+		_info = new SnapInfo();
 	_info->mId = _object->GetUniqueID();
 	_info->mTransform = _object->GetTransform();
-	//TODO PAT: ADD MORE COMPONETS WHEN WE NEED THEM.
+	//making a new snap info. If this obj
+	//_info->mBitset[0] = true;
 
-	//Physics componets
-	std::vector<Component*>temp = _object->GetComponents(ComponentType::eCOMPONENT_COLLIDER);
-	for (unsigned int i = 0; i < temp.size(); i++) {
-		SnapComponent_Physics* newComp = new SnapComponent_Physics();
-		newComp->mCompType = eCOMPONENT_COLLIDER;
-		newComp->mForces = ((Collider*)temp[i])->mForces;
-		newComp->mAcc = ((Collider*)temp[i])->mAcceleration;
-		newComp->mVel = ((Collider*)temp[i])->mVelocity;
-		newComp->mId = temp[i]->GetColliderId();
-		_info->mComponets.push_back(newComp);
+	//TODO PAT: ADD MORE COMPONETS WHEN WE NEED THEM.
+	std::vector<Component*>temp;
+	for (int i = 1; i < ComponentType::eCOMPONENT_MAX; i++) {
+		{
+			if (i == ComponentType::eCOMPONENT_COLLIDER) {
+				//Physics componets
+				temp = _object->GetComponents(ComponentType::eCOMPONENT_COLLIDER);
+				for (unsigned int i = 0; i < temp.size(); i++) {
+					SnapComponent_Physics* newComp = new SnapComponent_Physics();
+					newComp->mCompType = eCOMPONENT_COLLIDER;
+					newComp->mForces = ((Collider*)temp[i])->mForces;
+					newComp->mAcc = ((Collider*)temp[i])->mAcceleration;
+					newComp->mVel = ((Collider*)temp[i])->mVelocity;
+					newComp->mId = temp[i]->GetColliderId();
+					newComp->mBitNum = temp[i]->GetComponentNum();
+					_info->mComponets.push_back(newComp);
+				}
+			} else {
+				temp = _object->GetComponents((ComponentType)i);
+				for (unsigned int i = 0; i < temp.size(); i++) {
+					SnapComponent* newComp = new SnapComponent;
+					newComp->mCompType = eCOMPONENT_UNKNOWN;
+					newComp->mId = temp[i]->GetColliderId();
+					newComp->mBitNum = temp[i]->GetComponentNum();
+					_info->mComponets.push_back(newComp);
+				}
+			}
+		}
 	}
+
 	return _info;
 }
 
@@ -265,7 +277,7 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 		for (std::pair<unsigned short, BaseObject*> _b : mLiveObjects) {
 			if (_b.second) {
 				unsigned short id = _b.first;
-				snap->mSnapinfos[id] = GenerateSnapInfo(_b.second,nullptr);
+				snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, nullptr);
 				snap->mUpdatedtimes[id] = _time;
 			}
 		}
@@ -284,29 +296,28 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 						//If we are a clone but dont have a next movement then record one at position
 						else if (snap->mSnapinfos[id] == nullptr && id == _clones[i]->GetUniqueId()) {
 							//If change add to mSnapinfos and Updatetime
-							//if (!CheckForDuplicateData(id,_b.second)) {
-							snap->mSnapinfos[id] = GenerateSnapInfo(_b.second,nullptr);
-							snap->mUpdatedtimes[id] = _time;
+							if (!CheckForDuplicateData(id, _b.second)) {
+								snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, nullptr);
+								snap->mUpdatedtimes[id] = _time;
+							}
 						}
 						//If we made it through the list do the normal
 						else if (id != _clones[i]->GetUniqueId() && i == _clones.size() - 1) {
-							//delete an old snapshot
-							//if (snap->mSnapinfos[id] != nullptr)
-							//	delete snap->mSnapinfos[id];
-
 							//If change add to mSnapinfos and Updatetime
-							//if (!CheckForDuplicateData(id,_b.second)) {
-							snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, snap->mSnapinfos[id]);
-							snap->mUpdatedtimes[id] = _time;
+							if (!CheckForDuplicateData(id, _b.second)) {
+								snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, snap->mSnapinfos[id]);
+								snap->mUpdatedtimes[id] = _time;
+							}
 						}
 					}
 				} else {
 					//if (snap->mSnapinfos[id] != nullptr)
 					//	delete snap->mSnapinfos[id];
 					//If change add to mSnapinfos and Updatetime
-					//if (!CheckForDuplicateData(id,_b.second)) {
-					snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, snap->mSnapinfos[id]);
-					snap->mUpdatedtimes[id] = _time;
+					if (!CheckForDuplicateData(id, _b.second)) {
+						snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, snap->mSnapinfos[id]);
+						snap->mUpdatedtimes[id] = _time;
+					}
 				}
 			}
 		}
@@ -323,7 +334,35 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 
 //Returns True if the data is the same from last snap
 bool Timeline::CheckForDuplicateData(unsigned short _id, BaseObject* _object) {
-	SnapInfo* info = mSnapshots[mSnaptimes[mCurrentGameTimeIndx]]->mSnapinfos[_id];
-	//TODO PAT: Once all the structs and components are final fill this out  
+	if (mCurrentGameTimeIndx == 0)
+		return false;
+	SnapInfo* info = mSnapshots[mSnaptimes[mCurrentGameTimeIndx-1]]->mSnapinfos[_id];
+	if (!info)
+		info = mSnapshots[mSnapshots[mSnaptimes[mCurrentGameTimeIndx - 1]]->mUpdatedtimes[_id]]->mSnapinfos[_id];
+
+	if (info->mTransform != _object->GetTransform())
+		return false;
+
+	for (unsigned int i = 0; i < info->mComponets.size(); i++) {
+		SnapComponent* comp = info->mComponets[i];
+
+		switch (comp->mCompType) {
+			//For each of the collider in the vec
+		case ComponentType::eCOMPONENT_COLLIDER:
+		{
+			//Loop to find the same collider component
+			for (unsigned int j = 0; j < _object->GetComponentCount(eCOMPONENT_COLLIDER); j++) {
+				Component* currComp = _object->GetComponentIndexed(eCOMPONENT_COLLIDER, j);
+				if (currComp->GetColliderId() == comp->mId) {
+					if (((Collider*)currComp)->mAcceleration != ((SnapComponent_Physics*)comp)->mAcc ||
+						((Collider*)currComp)->mVelocity != ((SnapComponent_Physics*)comp)->mVel ||
+						((Collider*)currComp)->mForces != ((SnapComponent_Physics*)comp)->mForces)
+						return false;
+				}
+			}
+		}
+		}
+	}
+
 	return true;
 }

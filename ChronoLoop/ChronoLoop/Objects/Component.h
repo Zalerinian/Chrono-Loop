@@ -26,7 +26,9 @@ class Component
 	friend class BaseObject;
 
 	static unsigned short mComponentCount;
-	unsigned short mComponentId;
+	unsigned short mComponentId;	//unique component id
+	unsigned short mComponentNum;  //the nth number component of a base object. This is for knowing the position in the bitset
+
 protected:
 	bool mDestroyed = false;
 	bool mIsEnabled = true, mIsValid = true;
@@ -43,6 +45,7 @@ public:
 	inline void Enable() { mIsEnabled = true; };
 	virtual void Update() = 0;
 	virtual void Destroy() = 0;
+	unsigned short GetComponentNum() { return mComponentNum; }
 	void GetMatrix(matrix4& _m);
 	unsigned short GetColliderId() { return mComponentId; };
 	Transform& GetTransform();
@@ -73,7 +76,7 @@ public:
 	void PlaySFX(int _id = 0);
 	void PlaySFX(int _id = 0, const vec4f* _pos = new vec4f());
 	void AddSoundEvent(sfxTypes _type, int64_t _event);
-
+	
 	void Update();
 	void Destroy();
 private:
