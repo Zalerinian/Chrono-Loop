@@ -4,6 +4,7 @@
 #include "../Input/VrInputManager.h"
 #include "../Rendering/Renderer.h"
 #include "../Objects/MeshComponent.h"
+#include "../Common/Logger.h"
 
 
 bool Snapshot::IsObjectStored(unsigned short _id) {
@@ -329,11 +330,11 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 				if (_clones.size() > 0) {
 					for (unsigned int i = 0; i < _clones.size(); i++) {
 						//Move clone to next frame if frame is avalible
-						if (snap->mSnapinfos[id] != nullptr && id == _clones[i]->GetUniqueId()) {
+						if (snap->mSnapinfos.find(id) != snap->mSnapinfos.end() && id == _clones[i]->GetUniqueId()) {
 							MoveObjectToSnap(_time, id);
 						}
 						//If we are a clone but dont have a next movement then record one at position
-						else if (snap->mSnapinfos[id] == nullptr && id == _clones[i]->GetUniqueId()) {
+						else if (snap->mSnapinfos.find(id) == snap->mSnapinfos.end() && id == _clones[i]->GetUniqueId()) {
 							//If change add to mSnapinfos and Updatetime
 							if (!CheckForDuplicateData(id, _b.second)) {
 								snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, nullptr);
@@ -375,9 +376,18 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 bool Timeline::CheckForDuplicateData(unsigned short _id, BaseObject* _object) {
 	if (mCurrentGameTimeIndx == 0)
 		return false;
-	SnapInfo* info = mSnapshots[mSnaptimes[mCurrentGameTimeIndx - 1]]->mSnapinfos[_id];
-	if (!info)
-		info = mSnapshots[mSnapshots[mSnaptimes[mCurrentGameTimeIndx - 1]]->mUpdatedtimes[_id]]->mSnapinfos[_id];
+	SnapInfo* info;
+	Snapshot* snap = mSnapshots[mSnaptimes[mCurrentGameTimeIndx]];
+	//find if the object exist
+	if(snap->mSnapinfos.find(_id) !=snap->mSnapinfos.end())
+		info = mSnapshots[mSnaptimes[mCurrentGameTimeIndx]]->mSnapinfos[_id];
+	else if(mSnapshots[snap->mUpdatedtimes[_id]]->mSnapinfos.find(_id) != mSnapshots[snap->mUpdatedtimes[_id]]->mSnapinfos.end()){
+		info = mSnapshots[snap->mUpdatedtimes[_id]]->mSnapinfos[_id];
+	}
+	else
+	{
+		SystemLogger::GetError() << "Patrick messed up! He tried and find a snapinfo of last recorded time and it didn't exist";
+	}
 
 	if (info->mTransform != _object->GetTransform())
 		return false;
