@@ -49,7 +49,7 @@ namespace LevelEditor
             debugObjs[0].ObjectColor = Color.SeaGreen;
             debugObjs[0].IsWireFrame = true;
             debugObjs.Add(new ToolObjectColor("Assets\\AxisGizmo.obj", ref device));
-            debugObjs[1].ObjectColor = Color.FromArgb(0, 255, 0, 0);
+            debugObjs[1].ObjectColor = Color.FromArgb(100, 255, 0, 0);
             splitContainer1.BorderStyle = BorderStyle.None;
             splitContainer1.SplitterWidth = 1;
             splitContainer2.BorderStyle = BorderStyle.None;
