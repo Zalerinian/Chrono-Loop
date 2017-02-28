@@ -210,11 +210,14 @@ void Update() {
 
 	BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller", identity);// new BaseObject("Controller", identity);
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
+	MeshComponent *rightRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
+	rightRaycaster->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
 	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
 	TeleportAction *ta = new TeleportAction(false);
 	TimeManipulation* tm = new TimeManipulation(false);
 	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 	RightController->AddComponent(mc);
+	RightController->AddComponent(rightRaycaster);
 	RightController->AddComponent(ta);
 	RightController->AddComponent(rightConCol);
 	RightController->AddComponent(tm);
@@ -234,11 +237,14 @@ void Update() {
 	//pat added
 	BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2", identity); //new BaseObject("Controller2", identity);
 	MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
+	MeshComponent *leftRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
+	leftRaycaster->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
 	mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
 	TeleportAction *ta2 = new TeleportAction(true);
 	TimeManipulation* tm2 = new TimeManipulation(true);
 	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
 	LeftController->AddComponent(leftConCol);
+	LeftController->AddComponent(leftRaycaster);
 	LeftController->AddComponent(mc2);
 	LeftController->AddComponent(ta2);
 	LeftController->AddComponent(tm2);
@@ -276,13 +282,13 @@ void Update() {
 	Exit.SetMatrix(Math::MatrixTranslation(0, -1, 0));
 	BaseObject* ExitWall = Pool::Instance()->iGetObject()->Reset("ExitWall", Exit);
 	MeshComponent *ExitMesh = new MeshComponent("../Resources/ExitDoor.obj");
-	ExitMesh->AddTexture("../Resources/Floorg.png", RenderEngine::eTEX_DIFFUSE);
+	ExitMesh->AddTexture("../Resources/Doors.png", RenderEngine::eTEX_DIFFUSE);
 	ExitWall->AddComponent(ExitMesh);
 	TimeManager::Instance()->AddObjectToTimeline(ExitWall);
 
 	BaseObject* BlockDoor = Pool::Instance()->iGetObject()->Reset("BlockDoor", Door);
 	MeshComponent *DoorMesh = new MeshComponent("../Resources/BlockDoor.obj");
-	DoorMesh->AddTexture("../Resources/Floorg.png", RenderEngine::eTEX_DIFFUSE);
+	DoorMesh->AddTexture("../Resources/Doors.png", RenderEngine::eTEX_DIFFUSE);
 	BlockDoor->AddComponent(DoorMesh);
 	TimeManager::Instance()->AddObjectToTimeline(BlockDoor);
 
