@@ -22,7 +22,7 @@ namespace LevelEditor
         private Microsoft.DirectX.DirectInput.Device keyb;
         private List<ToolObject> objects = new List<ToolObject>();
         private List<ToolObject> higharchy = new List<ToolObject>();
-        private List<ToolObject> debugObjs = new List<ToolObject>();
+        private List<ToolObjectColor> debugObjs = new List<ToolObjectColor>();
         private ToolObject oldSelected = null, selectedObject = null;
         private Stopwatch fpsTimer = new Stopwatch();
         private List<long> advMillisecond = new List<long>();
@@ -44,7 +44,12 @@ namespace LevelEditor
             {
                 Tree.Nodes[0].Nodes.Add(objects[i].Name);
             }
-            debugObjs.Add(new ToolObject(ref device));
+            debugObjs.Add(new ToolObjectColor(ref device));
+            debugObjs[0].MakeGrid();
+            debugObjs[0].ObjectColor = Color.SeaGreen;
+            debugObjs[0].IsWireFrame = true;
+            debugObjs.Add(new ToolObjectColor("Assets\\AxisGizmo.obj", ref device));
+            debugObjs[1].ObjectColor = Color.FromArgb(0, 255, 0, 0);
             splitContainer1.BorderStyle = BorderStyle.None;
             splitContainer1.SplitterWidth = 1;
             splitContainer2.BorderStyle = BorderStyle.None;
@@ -85,7 +90,7 @@ namespace LevelEditor
             device.RenderState.CullMode = Cull.Clockwise;
             device.RenderState.ZBufferEnable = true;
             InitializeCamera();
-            foreach(ToolObject to in debugObjs)
+            foreach(ToolObjectColor to in debugObjs)
             {
                 to.VertexDeclaration();
                 to.IndicesDeclaration();
@@ -117,16 +122,35 @@ namespace LevelEditor
             device.Clear(ClearFlags.Target, Color.Black, 1.0f, 0);
 
             device.BeginScene();
-            device.VertexFormat = CustomVertex.PositionNormalTextured.Format;
-            foreach (ToolObject tObj in debugObjs)
+            device.VertexFormat = CustomVertex.PositionNormalColored.Format;
+            device.RenderState.CullMode = Cull.None;
+            foreach (ToolObjectColor tObj in debugObjs)
             {
-                device.RenderState.FillMode = tObj.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
-                device.SetStreamSource(0, tObj.VertexBuffer, 0);
-                device.Indices = tObj.IndexBuffer;
-                device.SetTexture(0, tObj.Texture);
-                device.Transform.World = tObj.Transform;
-                device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Indices.Length, 0, tObj.Indices.Length / 3);
+                if (tObj.Children.Count > 0)
+                {
+                    device.RenderState.AlphaBlendEnable = true;
+                    foreach (ToolObjectColor tObj2 in tObj.Children)
+                    {
+                        device.RenderState.FillMode = tObj2.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
+                        device.SetStreamSource(0, tObj2.VertexBuffer, 0);
+                        device.Indices = tObj2.IndexBuffer;
+                        device.Transform.World = tObj2.Transform;
+                        device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj2.Indices.Length, 0, tObj2.Indices.Length / 3);
+                    }
+                }
+                else
+                {
+                    device.RenderState.AlphaBlendEnable = false;
+                    device.RenderState.FillMode = tObj.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
+                    device.SetStreamSource(0, tObj.VertexBuffer, 0);
+                    device.Indices = tObj.IndexBuffer;
+                    device.Transform.World = tObj.Transform;
+                    device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Indices.Length, 0, tObj.Indices.Length / 3);
+                }
             }
+            device.VertexFormat = CustomVertex.PositionNormalTextured.Format;
+            device.RenderState.CullMode = Cull.Clockwise;
+                    device.RenderState.AlphaBlendEnable = false;
             foreach (ToolObject tObj in higharchy)
             {
                 device.RenderState.FillMode = tObj.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
@@ -222,7 +246,6 @@ namespace LevelEditor
                 Vector3 look = cameraPos + GetVector3(Vector3.Transform(new Vector3(0, 0, 1), rotate));
                 device.Transform.View = Matrix.LookAtRH(cameraPos, look, new Vector3(0, 1, 0));
                 KeyboardState keys = keyb.GetCurrentKeyboardState();
-                //objects[1].SetPosition(cameraPos);
                 if (keys[Key.W])
                     cameraPos += GetVector3(Vector3.Transform(new Vector3(0, 0, 1), rotate));
                 if (keys[Key.S])
@@ -356,12 +379,12 @@ namespace LevelEditor
         }
 
 
-        private void supress_KeyDown(object sender, KeyEventArgs e)
+        private void supress_KeyDown(object sender, KeyPressEventArgs e)
         {
             int i = 0;
-            if (!int.TryParse(e.KeyCode.ToString(), out i))
+            if (!int.TryParse(e.KeyChar.ToString(), out i) && e.KeyChar != '\b')
             {
-                e.Handled = e.SuppressKeyPress = true;
+                e.Handled = true;
             }
         }
 
