@@ -177,17 +177,17 @@ void Update() {
 	Transform SphereTransform2;
 	SphereTransform2.SetMatrix(MatrixIdentity());
 	matrix4 SphereMat2 = MatrixScale(0.15f, 0.15f, 0.15f);
-	SphereMat2 *= MatrixTranslation(1, 2, 0);
+	SphereMat2 *= MatrixTranslation(-2, 2, 0);
 	SphereTransform2.SetMatrix(SphereMat2);
 	BaseObject* PhysicsSphere2 = Pool::Instance()->iGetObject()->Reset("sphere", SphereTransform2);
-	SphereCollider *BallCollider2 = new SphereCollider(PhysicsSphere2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 6.0f, 1.0f, 0.2f, 0.1f, 0.9f, 0.15f);
+	SphereCollider *BallCollider2 = new SphereCollider(PhysicsSphere2, true, vec4f(-0.2f, -9.8f, 0.0f, 1.0f), 6.0f, 1.0f, 0.2f, 0.1f, 0.9f, 0.15f);
 	BoxCollider->AddForce(vec4f(0, 0, 0, 0));
 	CodeComponent* PlaneCollision3 = new CCElasticReactionWithPlane;
 	CodeComponent* SpheretoSphere2 = new CCElasticSphereToSphere;
 	//CodeComponent* BoxCollision = new CCElasticAABBtoAABB;
 	PhysicsSphere2->AddComponent(BallCollider2);
 	PhysicsSphere2->AddComponent(PlaneCollision3);
-	PhysicsSphere->AddComponent(SpheretoSphere2);
+	PhysicsSphere2->AddComponent(SpheretoSphere2);
 	//PhysicsSphere->AddComponent(BoxCollision);
 	TimeManager::Instance()->AddObjectToTimeline(PhysicsSphere2);
 
