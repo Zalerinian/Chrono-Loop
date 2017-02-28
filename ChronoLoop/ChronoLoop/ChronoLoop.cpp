@@ -34,6 +34,7 @@
 
 
 #define CONSOLE_OVERRIDE 1
+#define FIXED_UPDATE_INTERVAL (1 / 120.0f)
 
 HWND hwnd;
 LPCTSTR WndClassName = L"ChronoWindow";
@@ -54,7 +55,7 @@ typedef __w64 unsigned int AudioEvent;			///< Integer (unsigned) type for pointe
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed);
 std::chrono::steady_clock::time_point lastTime = std::chrono::steady_clock::now();
 static float timeFrame = 0.0f;
-static float deltaTime;
+static float deltaTime, fixedTime;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void Update();
 void UpdateTime();
@@ -121,6 +122,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 
 void UpdateTime() {
 	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count() - lastTime.time_since_epoch().count()) / 1000.0f / 1000.0f / 1000.0f;
+	fixedTime += deltaTime;
 	lastTime = std::chrono::steady_clock::now();
 }
 
@@ -135,11 +137,11 @@ void Update() {
 
 	Transform transform;
 	transform.SetMatrix(MatrixIdentity());
-	matrix4 mat1 = MatrixTranslation(0, 5, 0);
+	matrix4 mat1 = MatrixTranslation(0, 1, 0);
 	transform.SetMatrix(mat1);
 	BaseObject* PhysicsBox = Pool::Instance()->iGetObject()->Reset("aabb", transform);//new BaseObject("aabb", transform);
-	CubeCollider *BoxCollider = new CubeCollider(PhysicsBox, true, vec4f(0.0f, -5.0f, 0.0f, 1.0f), 1.0f, 0.1f, 0.1f, 0.1f, 0.1f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
-	BoxCollider->AddForce(vec4f(4, 0, 0, 0));
+	CubeCollider *BoxCollider = new CubeCollider(PhysicsBox, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.4f, 0.1f, 0.1f, 0.9f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
+	BoxCollider->AddForce(vec4f(0, 0, 0, 0));
 	CodeComponent* PlaneCollision = new CCElasticReactionWithPlane;
 	CodeComponent* BoxCollision = new CCElasticAABBtoAABB;
 	PhysicsBox->AddComponent(BoxCollider);
@@ -168,7 +170,7 @@ void Update() {
 	Transform PlaneTransform;
 	PlaneTransform.SetMatrix(MatrixTranslation(0, -1, 0));
 	BaseObject* Floor = Pool::Instance()->iGetObject()->Reset("plane", PlaneTransform);// new BaseObject("plane", PlaneTransform);
-	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, 0.0f, 0.0f, 1.0f), 10.0f, 0.5f, 0.7f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
+	PlaneCollider* plane = new PlaneCollider(Floor, false, vec4f(0.0f, 0.0f, 0.0f, 1.0f), 10.0f, 0.1f, 0.8f, 0.7f, 0.1f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
 	MeshComponent *planeObj = new MeshComponent("../Resources/BigFloor.obj");
 	planeObj->AddTexture("../Resources/floorg.png", RenderEngine::eTEX_DIFFUSE);
 	Floor->AddComponent(plane);
@@ -226,8 +228,8 @@ void Update() {
 	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
 	visibleMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
 	PhysicsBox->AddComponent(visibleMesh);
-	//CodeComponent *codeComponent = new BoxSnapToControllerAction();
-	//PhysicsBox->AddComponent(codeComponent);
+	CodeComponent *codeComponent = new BoxSnapToControllerAction();
+	PhysicsBox->AddComponent(codeComponent);
 
 	MeshComponent *ButtonMesh = new MeshComponent("../Resources/cube.obj");
 	ButtonMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
@@ -340,6 +342,8 @@ void Update() {
 		VRInputManager::Instance().iUpdate();
 	}
 	
+	UpdateTime();
+	fixedTime = 0;
 	while (true) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			// Handle windows message.
@@ -361,7 +365,11 @@ void Update() {
 			
 			TimeManager::Instance()->Update(deltaTime);
 			RenderEngine::Renderer::Instance()->Render(deltaTime);
-			Physics::Instance()->Update(deltaTime);
+			while (fixedTime >= FIXED_UPDATE_INTERVAL) {
+				Physics::Instance()->Update(FIXED_UPDATE_INTERVAL);
+				fixedTime -= FIXED_UPDATE_INTERVAL;
+			}
+
 			if (VREnabled) {
 				VRInputManager::Instance().iUpdate();
 			}

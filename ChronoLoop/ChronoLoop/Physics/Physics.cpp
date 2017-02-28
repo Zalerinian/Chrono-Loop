@@ -482,7 +482,7 @@ bool Physics::SphereToTriangle(Sphere& _sphere, Triangle& _tri, vec4f& _displace
 	if ((Cpt - _sphere.mPosition) * (Cpt - _sphere.mPosition) < (_sphere.mRadius * _sphere.mRadius))
 	{
 		vec4f v = _sphere.mPosition - Cpt;
-		float dist = v.Magnitude();
+		float dist = v.Magnitude3();
 		vec4f n = v.Normalize();
 		_displacement = n * (_sphere.mRadius - dist);
 		return true;
@@ -517,8 +517,8 @@ void Physics::CalcReaction(Collider& _col1, Collider& _col2, float _time)
 	//collisionNormal.Normalize();
 	//vec4f relativeVelocity = _col1.mVelocity - _col2.mVelocity;
 	//
-	//float impulseMagnitude = -(1 + avgElasticity) * _col1.mMass * _col2.mMass * (relativeVelocity * collisionNormal) / (_col1.mMass + _col2.mMass);
-	//vec4f impulse = collisionNormal * impulseMagnitude;
+	//float impulseMagnitude3 = -(1 + avgElasticity) * _col1.mMass * _col2.mMass * (relativeVelocity * collisionNormal) / (_col1.mMass + _col2.mMass);
+	//vec4f impulse = collisionNormal * impulseMagnitude3;
 	//_col1.mImpulsiveForce = impulse / _time;
 	//_col2.mImpulsiveForce = -impulse / _time;
 	//_col1.mVelocity = _col1.mVelocity + impulse / _col1.mMass;
@@ -541,23 +541,33 @@ void Physics::CalcFriction(Collider& _col, Collider& _other)
 	float avgStatic = _col.mStaticFriction < _other.mStaticFriction ? _other.mStaticFriction : _col.mStaticFriction;
 	float avgKinetic = _col.mKineticFriction < _other.mKineticFriction ? _other.mKineticFriction : _col.mKineticFriction;
 
-	if (fabsf(_col.mVelocity.Magnitude()) < 0.001f)
+	if (!_col.mRewind)
 	{
-		staticFriction = avgStatic * (-_col.mWeight).Magnitude();
+		if (fabs(_col.mVelocity.x) < 0.1f)
+			_col.mVelocity.x = 0;
+		if (fabsf(_col.mVelocity.y) < 0.1f)
+			_col.mVelocity.y = 0;
+		if (fabsf(_col.mVelocity.z) < 0.1f)
+			_col.mVelocity.z = 0;
+	}
+
+	if (fabsf(_col.mVelocity.Magnitude3()) < 0.001f)
+	{
+		staticFriction = avgStatic * (-_col.mWeight).Magnitude3();
 		_col.mTotalForce = { 0,0,0,0 };
 	}
-	else if(_col.mVelocity.Magnitude() > 0)
+	else if(_col.mVelocity.Magnitude3() > 0)
 	{
 		//vec4f normDir(fabsf(_col.mVelocity.Normalize().x), fabsf(_col.mVelocity.Normalize().y), fabs(_col.mVelocity.Normalize().z), 1);
-		vec4f totalFriction = _col.mVelocity.Normalize() * (-avgKinetic * (-_col.mWeight).Magnitude());
+		vec4f totalFriction = _col.mVelocity.Normalize() * (-avgKinetic * (-_col.mWeight).Magnitude3());
 		_col.mTotalForce = _col.mForces + totalFriction + _col.mDragForce;
 	}
 	
-	if (fabsf(_col.mVelocity.Magnitude()) < 0.001f && tangentForce.Magnitude() >= staticFriction)
+	if (fabsf(_col.mVelocity.Magnitude3()) < 0.001f && tangentForce.Magnitude3() >= staticFriction)
 	{
-		float sliding = tangentForce.Magnitude() / staticFriction;
+		float sliding = tangentForce.Magnitude3() / staticFriction;
 		_col.mVelocity = tangentForce.Normalize() * sliding;
-		vec4f kineticFriction = _col.mVelocity.Normalize() * (-avgKinetic * (-_col.mWeight).Magnitude());
+		vec4f kineticFriction = _col.mVelocity.Normalize() * (-avgKinetic * (-_col.mWeight).Magnitude3());
 		_col.mTotalForce = _col.mForces + kineticFriction + _col.mDragForce;
 	}
 }
@@ -580,7 +590,7 @@ void Physics::Update(float _time)
 			collider = (Collider*)mObjects[i]->mComponents[eCOMPONENT_COLLIDER][x];
 			collider->mTotalForce = collider->mForces + collider->mWeight + collider->mDragForce;
 
-			if (collider->mColliderType == Collider::eCOLLIDER_Sphere)
+			if (collider->mColliderType == Collider::eCOLLIDER_Sphere)//Check SphereCollider's collision with other objects
 			{
 				Sphere s1(((SphereCollider*)collider)->GetPos(), ((SphereCollider*)collider)->mRadius);
 				for (int j = 0; j < objs; ++j)
@@ -640,7 +650,7 @@ void Physics::Update(float _time)
 					}
 				}
 			}
-			else if (collider->mColliderType == Collider::eCOLLIDER_Cube)
+			else if (collider->mColliderType == Collider::eCOLLIDER_Cube)//Check CubeCollider's collision with other objects
 			{
 				AABB aabb1(((CubeCollider*)collider)->mMin, ((CubeCollider*)collider)->mMax);
 				for (int j = 0; j < objs; ++j)
@@ -673,52 +683,28 @@ void Physics::Update(float _time)
 									SystemLogger::GetLog() << "SPHERE TO AABB COLLISION FROM AABB!";
 								}
 							}
-							else if (otherCol->mColliderType == Collider::eCOLLIDER_Plane)//check with aabbtoaabb for non infinite plane?
+							else if (otherCol->mColliderType == Collider::eCOLLIDER_Plane)
 							{
 								if (collider->mShouldMove)
 								{
 									Plane plane(((PlaneCollider*)otherCol)->mNormal, ((PlaneCollider*)otherCol)->mOffset);
 									int result = AabbToPlane(plane, aabb1);
-									if (result == 1)//in front of plane
+									if (result == 2)//behind plane
 									{
-										//SystemLogger::GetLog() << "AABB IN FRONT OF PLANE!" << std::endl;
-										//SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
-										//collider->mColliding = false;
-									}
-									else if (result == 2)//behind plane
-									{
-										//SystemLogger::GetLog() << "AABB BEHIND PLANE!" << std::endl;
-										//SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
-										//collider->mColliding = false;
-									}
-									else if (result == 3)// intersecting plane
-									{
-										//SystemLogger::GetLog() << "AABB INTERSECTING PLANE!" << std::endl;
-										//SystemLogger::GetLog() << collider->mVelocity.x << ", " << collider->mVelocity.y << ", " << collider->mVelocity.z << std::endl;
-
-										CalcFriction(*collider, *otherCol);
-
 										if (((CubeCollider*)collider)->mMin.y < otherCol->GetPos().y)
 										{
-											float depth = ((CubeCollider*)collider)->mMin.y - otherCol->GetPos().y;
+											float depth = ((CubeCollider*)collider)->mMin.y + otherCol->GetPos().y;
 											vec4f correction = ((PlaneCollider*)otherCol)->mNormal * (depth / (collider->mInvMass + otherCol->mInvMass)) * 0.2f;
 											collider->SetPos(collider->GetPos() - (correction * collider->mInvMass));
 										}
-
-										if (!collider->mRewind && fabs(collider->mVelocity.x) < 0.0001f && fabsf(collider->mVelocity.y) < 0.0001f && fabsf(collider->mVelocity.z) < 0.0001f)
-											collider->mTotalForce = { 0,0,0,0 };
-
+									}
+									else if (result == 3)// intersecting plane
+									{
+										CalcFriction(*collider, *otherCol);
 										for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
 										{
 											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
 											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
-										}
-
-										if (((CubeCollider*)collider)->mMin.y < otherCol->GetPos().y)
-										{
-											float depth = ((CubeCollider*)collider)->mMin.y - otherCol->GetPos().y;
-											vec4f correction = ((PlaneCollider*)otherCol)->mNormal * (depth / (collider->mInvMass + otherCol->mInvMass)) * 0.2f;
-											collider->SetPos(collider->GetPos() - (correction * collider->mInvMass));
 										}
 									}
 								}
@@ -727,7 +713,7 @@ void Physics::Update(float _time)
 					}
 				}
 			}
-			else if (collider->mColliderType == Collider::eCOLLIDER_Button)
+			else if (collider->mColliderType == Collider::eCOLLIDER_Button)//Check ButtonCollider's collision with other objects/controller
 			{
 				AABB aabb1(((ButtonCollider*)collider)->mMin, ((ButtonCollider*)collider)->mMax);
 
@@ -779,7 +765,7 @@ void Physics::Update(float _time)
 					collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
 				}
 			}
-			else if (collider->mColliderType == Collider::eCOLLIDER_Controller)
+			else if (collider->mColliderType == Collider::eCOLLIDER_Controller)//Update ControllerCollider position, do not apply physics to player
 			{
 				if (((ControllerCollider*)collider)->mLeft)
 				{
@@ -801,12 +787,15 @@ void Physics::Update(float _time)
 			{
 				if (collider->mShouldMove || !collider->mRewind)
 				{
-					//vec4f absVel(fabsf(collider->mVelocity.x), fabsf(collider->mVelocity.y), fabsf(collider->mVelocity.z), 1);
-					collider->mDragForce = collider->mVelocity * (-0.5f * collider->mRHO * collider->mVelocity.Magnitude() * collider->mDrag * collider->mArea);
+					collider->mDragForce = collider->mVelocity * (-0.5f * collider->mRHO * collider->mVelocity.Magnitude3() * collider->mDrag * collider->mArea);
 					collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
 					collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
 					collider->mRewind = false;
-					collider->mForces = { 0,0,0,0 };
+
+					if (!collider->mRewind && fabs(collider->mForces.x) < 0.01f && fabsf(collider->mForces.y) < 0.01f && fabsf(collider->mForces.z) < 0.01f)
+						collider->mForces = { 0,0,0,0 };
+					else
+						collider->mForces *= 0.99f;
 				}
 
 				collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));

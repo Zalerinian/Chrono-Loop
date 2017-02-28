@@ -124,8 +124,10 @@ struct vec4f {
 	float& vec4f::operator[](unsigned int _index);
 	vec4f  Cross(vec4f const& _other);
 	float  Dot(vec4f const& _other);
-	float  Magnitude() const;
-	float  SquaredMagnitude() const;
+	float  Magnitude3() const;
+	float  Magnitude4() const;
+	float  SquaredMagnitude3() const;
+	float  SquaredMagnitude4() const;
 	vec4f  Normalize() const;
 	vec4f  Reflect(vec4f const& other);
 };
