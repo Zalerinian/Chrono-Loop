@@ -17,6 +17,7 @@ public:
 	void Destroy();
 	void SetVisible(bool _vis);
 	void AddTexture(const char *_path, RenderEngine::TextureType _type);
+	inline bool IsVisible() { return mVisible; };
 	inline Triangle *GetTriangles() { return mShape->GetTriangles(); }
 	inline size_t GetTriangleCount() { return mShape->GetTriangleCount(); }
 };
