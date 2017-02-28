@@ -12,6 +12,8 @@ namespace LevelEditor
 {
     class ToolObject
     {
+        public const float RADIANS_TO_DEGREES = ((180.0f / 3.14f));
+        public const float DEGREES_TO_RADIANS = (1 / 180.0f * 3.14f);
         private CustomVertex.PositionNormalTextured[] mVertices;
         private int[] mIndices;
         private IndexBuffer mIndexBuffer;
@@ -84,6 +86,7 @@ namespace LevelEditor
             set { mName = value; }
         }
         #endregion
+
         public ToolObject(ToolObject _Tool)
         {
             mName = _Tool.Name;
@@ -111,7 +114,6 @@ namespace LevelEditor
             mMaterial.SpecularSharpness = 15.0F;
             mDevice = _Device;
             MakeGrid();
-            AddScale(new Vector3(10, 10, 10));
             mIsWireFrame = true;
             mTexture = null;
             VertexDeclaration();
@@ -201,12 +203,62 @@ namespace LevelEditor
                             break;
                         default:
                             break;
-
                     }
                 }
             }
             mVertices = vertices.ToArray();
             mIndices = Ind.ToArray();
+        }
+        public Vector3 TriNormal(int _triangleIndice)
+        {
+            Vector3 n1, n2, n3, nOut;
+            n1 = mVertices[mIndices[_triangleIndice + 0]].Normal;
+            n2 = mVertices[mIndices[_triangleIndice + 1]].Normal;
+            n3 = mVertices[mIndices[_triangleIndice + 2]].Normal;
+            nOut = (n1 + n2 + n3);
+            nOut.Multiply(1.0f / 3.0f);
+            return  nOut;
+        }
+        public bool RayHit(out Vector3 _out, Vector3 _start, Vector3 _end)
+        {
+            _out = new Vector3();
+            Vector3 end = _end;
+            bool hit = false;
+            for (int i = 0; i < mIndices.Length; i += 3)
+            {
+                Vector3 norm = TriNormal(i);
+                if (Vector3.Dot(_start, norm) - Vector3.Dot(mVertices[mIndices[i]].Position, norm) < 0)
+                    continue;
+                if (Vector3.Dot(end, norm) - Vector3.Dot(mVertices[mIndices[i]].Position, norm) > 0)
+                    continue;
+                //Plane intersection
+                float D0 = Vector3.Dot(norm, _start);
+                float D1 = Vector3.Dot(norm, mVertices[mIndices[i]].Position);
+                float D2 = D0 - D1;
+                Vector3 L = end - _start;
+                float D3 = Vector3.Dot(norm, L);
+                Vector3 CP = _start + (L * (-1.0f * (D2 / D3)));
+                //Point in triangle
+                bool outside = false;
+                for (int j = 0; j < 3; j++)
+                {
+                    if (outside)
+                        continue;
+                    Vector3 Edge0 = mVertices[mIndices[i + ((j + 1) % 3)]].Position - mVertices[mIndices[i + j]].Position;
+                    Vector3 Normal0 = Vector3.Cross(Edge0, norm);
+
+                    if (Vector3.Dot(CP - mVertices[mIndices[i + j]].Position, Normal0) > 0)
+                        outside = true;
+                }
+                if (!outside)
+                {
+                    end = CP;
+                    hit = true;
+                }
+            }
+            if (hit)
+                _out = end;
+            return hit;
         }
         public void Invert()
         {
@@ -221,23 +273,23 @@ namespace LevelEditor
         {
             List<CustomVertex.PositionNormalTextured> verts = new List<CustomVertex.PositionNormalTextured>();
             List<int> ind = new List<int>();
-            for (int i = 0; i <= 20; i++)
+            for (int i = 0; i <= 100; i++)
             {
                 ind.Add(verts.Count);
-                verts.Add(new CustomVertex.PositionNormalTextured(new Vector3((float)i - 10, 0, -10), new Vector3(), 0, 0));
+                verts.Add(new CustomVertex.PositionNormalTextured(new Vector3((float)i - 50, 0, -50), new Vector3(), 0, 0));
                 ind.Add(verts.Count);
-                verts.Add(new CustomVertex.PositionNormalTextured(new Vector3((float)i - 10, 0, 10.0f), new Vector3(), 0, 0));
+                verts.Add(new CustomVertex.PositionNormalTextured(new Vector3((float)i - 50, 0, 50), new Vector3(), 0, 0));
                 ind.Add(verts.Count);
-                verts.Add(new CustomVertex.PositionNormalTextured(new Vector3((float)i  - 10, 0, -10), new Vector3(), 0, 0));
+                verts.Add(new CustomVertex.PositionNormalTextured(new Vector3((float)i  - 50, 0, -50), new Vector3(), 0, 0));
             }
-            for (int i = 0; i <= 20; i++)
+            for (int i = 0; i <= 100; i++)
             {
                 ind.Add(verts.Count);
-                verts.Add(new CustomVertex.PositionNormalTextured(new Vector3(-10, 0, (float)i - 10), new Vector3(), 0, 0));
+                verts.Add(new CustomVertex.PositionNormalTextured(new Vector3(-50, 0, (float)i - 50), new Vector3(), 0, 0));
                 ind.Add(verts.Count);
-                verts.Add(new CustomVertex.PositionNormalTextured(new Vector3(10.0f, 0, (float)i - 10), new Vector3(), 0, 0));
+                verts.Add(new CustomVertex.PositionNormalTextured(new Vector3(50, 0, (float)i - 50), new Vector3(), 0, 0));
                 ind.Add(verts.Count);
-                verts.Add(new CustomVertex.PositionNormalTextured(new Vector3(-10, 0, (float)i - 10), new Vector3(), 0, 0));
+                verts.Add(new CustomVertex.PositionNormalTextured(new Vector3(-50, 0, (float)i - 50), new Vector3(), 0, 0));
             }
             mVertices = verts.ToArray();
             mIndices = ind.ToArray();
@@ -259,23 +311,19 @@ namespace LevelEditor
         }
         public void SetPosition(Vector3 _Pos)
         {
-            mTransform = Matrix.Scaling(mScale) * Matrix.Translation(_Pos);
-            Rotate(mRotation);
             mPosition = _Pos;
+            SetRotate(mRotation);
         }
         public void Rotate(Vector3 _Rotation)
         {
-            mTransform = Matrix.RotationX(_Rotation.X) * mTransform;
-            mTransform = Matrix.RotationY(_Rotation.Y) * mTransform;
-            mTransform = Matrix.RotationZ(_Rotation.Z) * mTransform;
+            mTransform = mTransform * Matrix.RotationYawPitchRoll(_Rotation.Y, _Rotation.X, _Rotation.Z);
             mRotation += _Rotation;
         }
         public void SetRotate(Vector3 _Rotation)
         {
-            mTransform = Matrix.Scaling(mScale) * Matrix.Translation(mPosition);
-            mTransform = Matrix.RotationX(_Rotation.X) * mTransform;
-            mTransform = Matrix.RotationY(_Rotation.Y) * mTransform;
-            mTransform = Matrix.RotationZ(_Rotation.Z) * mTransform;
+            mTransform = Matrix.RotationYawPitchRoll(_Rotation.Y, _Rotation.X, _Rotation.Z);
+            mTransform = Matrix.Scaling(mScale) * mTransform * Matrix.Translation(mPosition);
+            
             mRotation = _Rotation;
         }
         public void AddScale(Vector3 _Scale)

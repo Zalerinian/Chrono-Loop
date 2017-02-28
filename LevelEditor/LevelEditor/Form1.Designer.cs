@@ -372,7 +372,6 @@ namespace LevelEditor
             // 
             this.splitContainer1.Panel1.Controls.Add(this.Tree);
             this.splitContainer1.Panel1.ForeColor = System.Drawing.SystemColors.Control;
-            this.splitContainer1.Panel1Collapsed = true;
             // 
             // splitContainer1.Panel2
             // 
@@ -385,8 +384,14 @@ namespace LevelEditor
             // 
             // Tree
             // 
+            this.Tree.BackColor = System.Drawing.SystemColors.Control;
+            this.Tree.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.Tree.CausesValidation = false;
             this.Tree.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Tree.FullRowSelect = true;
+            this.Tree.HideSelection = false;
+            this.Tree.HotTracking = true;
+            this.Tree.Indent = 15;
             this.Tree.Location = new System.Drawing.Point(0, 0);
             this.Tree.Name = "Tree";
             treeNode1.Name = "Objects";
@@ -396,7 +401,8 @@ namespace LevelEditor
             this.Tree.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode1,
             treeNode2});
-            this.Tree.Size = new System.Drawing.Size(150, 100);
+            this.Tree.ShowLines = false;
+            this.Tree.Size = new System.Drawing.Size(150, 417);
             this.Tree.TabIndex = 0;
             this.Tree.TabStop = false;
             this.Tree.Click += new System.EventHandler(this.Tree_Click);
@@ -423,8 +429,8 @@ namespace LevelEditor
             this.splitContainer2.Panel2.Controls.Add(this.groupBox3);
             this.splitContainer2.Panel2.Controls.Add(this.groupBox5);
             this.splitContainer2.Panel2.Controls.Add(this.groupBox4);
-            this.splitContainer2.Size = new System.Drawing.Size(624, 417);
-            this.splitContainer2.SplitterDistance = 479;
+            this.splitContainer2.Size = new System.Drawing.Size(473, 417);
+            this.splitContainer2.SplitterDistance = 334;
             this.splitContainer2.SplitterWidth = 1;
             this.splitContainer2.TabIndex = 3;
             // 
@@ -435,10 +441,11 @@ namespace LevelEditor
             this.graphicsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.graphicsPanel1.Location = new System.Drawing.Point(0, 0);
             this.graphicsPanel1.Name = "graphicsPanel1";
-            this.graphicsPanel1.Size = new System.Drawing.Size(479, 417);
+            this.graphicsPanel1.Size = new System.Drawing.Size(334, 417);
             this.graphicsPanel1.TabIndex = 2;
             this.graphicsPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.Paint);
             this.graphicsPanel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseClick);
+            this.graphicsPanel1.MouseLeave += new System.EventHandler(this.graphicsPanel1_MouseLeave);
             this.graphicsPanel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseMove);
             this.graphicsPanel1.Resize += new System.EventHandler(this.Resize);
             // 
@@ -450,7 +457,7 @@ namespace LevelEditor
             this.LeftToggle.Name = "LeftToggle";
             this.LeftToggle.Size = new System.Drawing.Size(23, 23);
             this.LeftToggle.TabIndex = 1;
-            this.LeftToggle.Text = ">";
+            this.LeftToggle.Text = "<";
             this.LeftToggle.UseVisualStyleBackColor = true;
             this.LeftToggle.Click += new System.EventHandler(this.LeftToggle_Click);
             // 
@@ -458,12 +465,12 @@ namespace LevelEditor
             // 
             this.RightToggle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.RightToggle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.RightToggle.Location = new System.Drawing.Point(453, 3);
+            this.RightToggle.Location = new System.Drawing.Point(308, 3);
             this.RightToggle.MinimumSize = new System.Drawing.Size(1, 1);
             this.RightToggle.Name = "RightToggle";
             this.RightToggle.Size = new System.Drawing.Size(23, 23);
             this.RightToggle.TabIndex = 0;
-            this.RightToggle.Text = "<";
+            this.RightToggle.Text = ">";
             this.RightToggle.UseVisualStyleBackColor = true;
             this.RightToggle.Click += new System.EventHandler(this.RightToggle_Click);
             // 
@@ -480,7 +487,7 @@ namespace LevelEditor
             this.groupBox2.Location = new System.Drawing.Point(0, 284);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBox2.Size = new System.Drawing.Size(144, 72);
+            this.groupBox2.Size = new System.Drawing.Size(138, 72);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Rotation";
@@ -588,7 +595,7 @@ namespace LevelEditor
             this.groupBox1.Location = new System.Drawing.Point(0, 212);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBox1.Size = new System.Drawing.Size(144, 72);
+            this.groupBox1.Size = new System.Drawing.Size(138, 72);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Scale";
@@ -696,7 +703,7 @@ namespace LevelEditor
             this.groupBox3.Location = new System.Drawing.Point(0, 140);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBox3.Size = new System.Drawing.Size(144, 72);
+            this.groupBox3.Size = new System.Drawing.Size(138, 72);
             this.groupBox3.TabIndex = 5;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Position";
@@ -797,7 +804,7 @@ namespace LevelEditor
             this.groupBox5.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox5.Location = new System.Drawing.Point(0, 39);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(144, 101);
+            this.groupBox5.Size = new System.Drawing.Size(138, 101);
             this.groupBox5.TabIndex = 10;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Components";
@@ -816,7 +823,7 @@ namespace LevelEditor
             this.componetsCheck.Location = new System.Drawing.Point(3, 16);
             this.componetsCheck.Margin = new System.Windows.Forms.Padding(0);
             this.componetsCheck.Name = "componetsCheck";
-            this.componetsCheck.Size = new System.Drawing.Size(138, 82);
+            this.componetsCheck.Size = new System.Drawing.Size(132, 82);
             this.componetsCheck.TabIndex = 0;
             this.componetsCheck.KeyDown += new System.Windows.Forms.KeyEventHandler(this.supress_KeyDown);
             // 
@@ -827,7 +834,7 @@ namespace LevelEditor
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox4.Location = new System.Drawing.Point(0, 0);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(144, 39);
+            this.groupBox4.Size = new System.Drawing.Size(138, 39);
             this.groupBox4.TabIndex = 0;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Name";
@@ -838,9 +845,10 @@ namespace LevelEditor
             this.nameBox.Location = new System.Drawing.Point(3, 16);
             this.nameBox.Margin = new System.Windows.Forms.Padding(0);
             this.nameBox.Name = "nameBox";
-            this.nameBox.Size = new System.Drawing.Size(138, 20);
+            this.nameBox.Size = new System.Drawing.Size(132, 20);
             this.nameBox.TabIndex = 1;
-            this.nameBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.supress_KeyDown);
+            this.nameBox.TextChanged += new System.EventHandler(this.transform_ValueChanged);
+            this.nameBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.nameBox_KeyDown);
             // 
             // statusStrip1
             // 
