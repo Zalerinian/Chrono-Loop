@@ -11,6 +11,7 @@ CommandConsole & CommandConsole::Instance()
 	if (!sInstance)
 	{
 		sInstance = new CommandConsole();
+		sInstance->mInputThread = std::thread(&CommandConsole::InputFunction, sInstance);
 		sInstance->AddCommand(L"/HELP", sInstance->Help);
 		sInstance->AddCommand(L"/FPS", sInstance->ToggleFPS);
 	}
@@ -28,7 +29,6 @@ CommandConsole::CommandConsole()
 	isFPSon = false;
 	mFps = 0;
 	mFrameTime = 0.0f;
-	mInputThread = std::thread(&CommandConsole::InputFunction, this);
 	//mInputThread.join();
 }
 void CommandConsole::Update()
@@ -59,25 +59,10 @@ void CommandConsole::Update()
 			*tempFont, mCurCommand,
 			*(Draw::Instance().GetScreenBitmap()).get()
 		);
-		if (sInstance->isFPSon)
-		{
-			float _deltaTime = TimeManager::Instance()->GetDeltaTime();
-			sInstance->mFrameTime += _deltaTime;
-			if (sInstance->mFrameTime > .5f) {
-				sInstance->mFps = (int)(1000.0f / (_deltaTime * 1000));
-				sInstance->mFrameTime = 0;
-			}
-			std::wstring FPS = L"FPS: " + std::to_wstring(sInstance->mFps);
-			Font* tempFont = new Font(L"Times New Roman", 25, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_TRAILING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
-			Draw::Instance().DrawTextToBitmap(
-				(*Draw::Instance().GetContext2D())->GetSize().width*(7.0f / 8.0f),
-				(*Draw::Instance().GetContext2D())->GetSize().height*(30.0f / 32.0f),
-				(*Draw::Instance().GetContext2D())->GetSize().width,
-				(*Draw::Instance().GetContext2D())->GetSize().height, *tempFont,
-				FPS, *(Draw::Instance().GetScreenBitmap()).get());
-		}
 		Display();
 	}
+	if (isFPSon)
+		sInstance->DisplayFPS();
 }
 bool CommandConsole::CheckCommand(std::wstring _commandName,std::wstring _item)
 {
@@ -183,6 +168,26 @@ void CommandConsole::InputFunction()
 			bool isCalled = CheckCommand(command, item);
 			//Toggle();
 		}
+	}
+}
+void CommandConsole::DisplayFPS()
+{
+	if (isFPSon)
+	{
+		float _deltaTime = TimeManager::Instance()->GetDeltaTime();
+		sInstance->mFrameTime += _deltaTime;
+		if (sInstance->mFrameTime > .5f) {
+			sInstance->mFps = (int)(1000.0f / (_deltaTime * 1000));
+			sInstance->mFrameTime = 0;
+		}
+		std::wstring FPS = L"FPS: " + std::to_wstring(sInstance->mFps);
+		Font* tempFont = new Font(L"Times New Roman", 25, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_TRAILING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+		Draw::Instance().DrawTextToBitmap(
+			(*Draw::Instance().GetContext2D())->GetSize().width*(7.0f / 8.0f),
+			(*Draw::Instance().GetContext2D())->GetSize().height*(30.0f / 32.0f),
+			(*Draw::Instance().GetContext2D())->GetSize().width,
+			(*Draw::Instance().GetContext2D())->GetSize().height, *tempFont,
+			FPS, *(Draw::Instance().GetScreenBitmap()).get());
 	}
 }
 

@@ -493,13 +493,6 @@ namespace RenderEngine {
 			RenderVR(_deltaTime);
 		}
 		(*mChain)->Present(mUseVsync ? 1 : 0, 0);
-		
-		mFrameTime += _deltaTime;
-		if (mFrameTime > .5f) {
-			mFps = (int)(1000.0f / (_deltaTime * 1000));
-			mFrameTime = 0;
-
-		}
 	}
 
 #pragma endregion Public Functions

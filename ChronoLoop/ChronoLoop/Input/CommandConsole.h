@@ -19,7 +19,7 @@ private:
 	std::wstring mCurCommand; //A string to hold the thing that's being typed to the console
 	std::wstring mCurDisplay; //A string to display to the console
 	std::unordered_map<std::wstring, Command> mCommandLines; // Holds all of the Commands and their function pointers
-	std::thread mInputThread; 
+	std::thread mInputThread;
 
 	//Function Specific
 	bool isFPSon; //Toggle for FPS Counter
@@ -59,6 +59,7 @@ public:
 	void Toggle();
 
 	void InputFunction();
+	void DisplayFPS();
 
 
 
