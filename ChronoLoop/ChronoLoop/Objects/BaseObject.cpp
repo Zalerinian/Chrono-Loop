@@ -151,8 +151,14 @@ unsigned int BaseObject::AddComponent(Component * _comp) {
 		delete _comp;
 		return -1;
 	}
+	if (mComponents.size() + 1 > 30) {
+		SystemLogger::GetError() << "[Error] Attempted to add a component after reaching the max amount you can add. Deleting this component" << std::endl;
+		delete _comp;
+		return -1;
+	}
 	_comp->mObject = this;
 	mComponents[_comp->GetType()].push_back(_comp);
+	_comp->mComponentNum = mComponents.size();	//sets the component number for knowing the position in the bitset
 	return (unsigned int)mComponents[_comp->GetType()].size();
 }
 
