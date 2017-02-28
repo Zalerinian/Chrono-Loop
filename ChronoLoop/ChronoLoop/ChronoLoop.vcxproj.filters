@@ -285,8 +285,11 @@
     <ClInclude Include="Actions\CCElasticReactionWithPlane.h">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\CCElasticSphereToSphere.h">
-      <Filter>Actions</Filter>
+    <ClInclude Include="Rendering\Draw2D.h">
+      <Filter>Rendering\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\CommandConsole.h">
+      <Filter>Input\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -401,7 +404,6 @@
     <ClCompile Include="Messager\Messager.cpp">
       <Filter>Messanger\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Input\KeyboardInput.cpp" />
     <ClCompile Include="Input\Controller.cpp">
       <Filter>Input\Source Files</Filter>
     </ClCompile>
@@ -473,6 +475,15 @@
     </ClCompile>
     <ClCompile Include="Core\Pool.cpp">
       <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Draw2D.cpp">
+      <Filter>Rendering\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\KeyboardInput.cpp">
+      <Filter>Input\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\CommandConsole.cpp">
+      <Filter>Input\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
