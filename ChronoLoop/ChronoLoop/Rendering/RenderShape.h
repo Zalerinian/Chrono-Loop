@@ -13,7 +13,7 @@ namespace RenderEngine {
 	struct RenderShape : public RenderNode {
 		friend class RenderSet;
 		std::shared_ptr<ID3D11Buffer*> mVertexBuffer, mIndexBuffer;
-		unsigned int                   mIndexCount = 0;
+		unsigned int                   mIndexCount = 0, mVertexOffset = 0, mIndexOffset = 0;
 
 		matrix4 mPosition;
 

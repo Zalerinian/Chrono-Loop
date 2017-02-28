@@ -48,9 +48,6 @@ void LimitedList::AddHead(vec2f _node) {
 
 vec2f & LimitedList::operator[](unsigned int _index) {
 	Node* n = mHead;
-	if (!n) {
-		return vec2f();
-	}
 	for (unsigned int i = 0; i < _index; ++i) {
 		n = mHead->mNext;
 	}

@@ -24,7 +24,7 @@ void Controller::Update() {
 
 void Controller::UpdateHairTrigger() {
 	mHairTriggerPrevState = mHairTriggerState;
-	float value = mState.rAxis[1].x;
+	float value = mState.rAxis[vr::k_eControllerAxis_Trigger].x;
 	if (mHairTriggerState)
 		if (value < mHairTriggerLimit - mHairTriggerDelta || value <= 0.0f)
 			mHairTriggerState = false;
