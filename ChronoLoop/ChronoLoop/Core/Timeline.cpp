@@ -334,7 +334,11 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 
 //Returns True if the data is the same from last snap
 bool Timeline::CheckForDuplicateData(unsigned short _id, BaseObject* _object) {
-	SnapInfo* info = mSnapshots[mSnaptimes[mCurrentGameTimeIndx]]->mSnapinfos[_id];
+	if (mCurrentGameTimeIndx == 0)
+		return false;
+	SnapInfo* info = mSnapshots[mSnaptimes[mCurrentGameTimeIndx-1]]->mSnapinfos[_id];
+	if (!info)
+		info = mSnapshots[mSnapshots[mSnaptimes[mCurrentGameTimeIndx - 1]]->mUpdatedtimes[_id]]->mSnapinfos[_id];
 
 	if (info->mTransform != _object->GetTransform())
 		return false;
