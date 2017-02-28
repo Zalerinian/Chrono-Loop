@@ -1,5 +1,6 @@
 #pragma once
 #include <Windows.h>
+#include "../Input/CommandConsole.h"
 
 enum Keys
 {
@@ -57,7 +58,8 @@ enum Keys
 	Multiply,
 	Add,
 	Subtract = 0x6D,
-	Slash = 0xBF
+	Slash = 0xBF,
+	Tilde = 0xC0
 };
 //static const Keys ArrayOfKeys[] = { 
 //Backspace,Tab,Enter,Shift,Space,//Shit???
@@ -69,7 +71,11 @@ enum Keys
 class KeyboardInput
 {
 private:
-	//bool CommandConsoleOn;
+	static KeyboardInput* sInstance;
 public:
+	KeyboardInput();
+	~KeyboardInput();
+	static KeyboardInput& Instance();
+	static void DestroyInstance();
 	void CheckKeyboardButtonPress();
 };
