@@ -5,8 +5,9 @@ template<>
 bool MeshFormat<VertexPos>::Load(const char * path)
 {
 	this->Clear();
+	mName = path;
 	std::vector<VertexPos> Verts;
-	std::vector<unsigned short> Ind;
+	std::vector<unsigned int> Ind;
 	int index = 1;
 	std::ifstream file;
 	file.open(path, std::ios::in);
@@ -48,7 +49,7 @@ bool MeshFormat<VertexPos>::Load(const char * path)
 				VertexPos temp;
 				temp.Position = verts[vertexIndex[i] - 1];
 				temp.Position.w = 1;
-				Ind.push_back((unsigned short)Verts.size());
+				Ind.push_back((unsigned int)Verts.size());
 				Verts.push_back(temp);
 			}
 		}
@@ -63,8 +64,9 @@ template<>
 bool MeshFormat<VertexPosTex>::Load(const char * path)
 {
 	this->Clear();
+	mName = path;
 	std::vector<VertexPosTex> Verts;
-	std::vector<unsigned short> Ind;
+	std::vector<unsigned int> Ind;
 	int index = 1;
 	std::ifstream file;
 	file.open(path, std::ios::in);
@@ -109,7 +111,7 @@ bool MeshFormat<VertexPosTex>::Load(const char * path)
 				temp.UV = uvs[uvIndex[i] - 1];
 				temp.UV.z = 0;
 				temp.UV.w = 0;
-				Ind.push_back((unsigned short)Verts.size());
+				Ind.push_back((unsigned int)Verts.size());
 				Verts.push_back(temp);
 			}
 		}
@@ -124,8 +126,9 @@ template<>
 bool MeshFormat<VertexPosColor>::Load(const char * path)
 {
 	this->Clear();
+	mName = path;
 	std::vector<VertexPosColor> Verts;
-	std::vector<unsigned short> Ind;
+	std::vector<unsigned int> Ind;
 	int index = 1;
 	std::ifstream file;
 	file.open(path, std::ios::in);
@@ -168,7 +171,7 @@ bool MeshFormat<VertexPosColor>::Load(const char * path)
 				temp.Position = verts[vertexIndex[i] - 1];
 				temp.Position.w = 1;
 				temp.Color = vec4f(0, 0, 0, 0);
-				Ind.push_back((unsigned short)Verts.size());
+				Ind.push_back((unsigned int)Verts.size());
 				Verts.push_back(temp);
 			}
 		}
@@ -183,8 +186,9 @@ template<>
 bool MeshFormat<VertexPosNormTex>::Load(const char * path)
 {
 	this->Clear();
+	mName = path;
 	std::vector<VertexPosNormTex> Verts;
-	std::vector<unsigned short> Ind;
+	std::vector<unsigned int> Ind;
 	int index = 1;
 	std::ifstream file;
 	file.open(path, std::ios::in);
@@ -221,6 +225,7 @@ bool MeshFormat<VertexPosNormTex>::Load(const char * path)
 			if (matches != 9) {
 				return false;
 			}
+			Triangle t;
 			for (int i = 0; i < 3; i++)
 			{
 				VertexPosNormTex temp;
@@ -231,7 +236,8 @@ bool MeshFormat<VertexPosNormTex>::Load(const char * path)
 				temp.UV.w = 0;
 				temp.Normal = norms[normalIndex[i] - 1];
 				temp.Normal.w = 0;
-				Ind.push_back((unsigned short)Verts.size());
+				Ind.push_back((unsigned int)Verts.size());
+				t.Vertex[i] = temp.Position;
 				Verts.push_back(temp);
 			}
 		}
@@ -246,8 +252,9 @@ template<>
 bool MeshFormat<VertexPosNormTanTex>::Load(const char * path)
 {
 	this->Clear();
+	mName = path;
 	std::vector<VertexPosNormTanTex> Verts;
-	std::vector<unsigned short> Ind;
+	std::vector<unsigned int> Ind;
 	int index = 1;
 	std::ifstream file;
 	file.open(path, std::ios::in);
@@ -296,7 +303,7 @@ bool MeshFormat<VertexPosNormTanTex>::Load(const char * path)
 				temp.Normal.w = 0;
 				temp.Tangent = vec4f();
 				temp.Determinant = 0;
-				Ind.push_back((unsigned short)Verts.size());
+				Ind.push_back((unsigned int)Verts.size());
 				Verts.push_back(temp);
 			}
 		}
@@ -311,8 +318,9 @@ template<>
 bool MeshFormat<VertexPosBoneWeightNormTanTex>::Load(const char * path)
 {
 	this->Clear();
+	mName = path;
 	std::vector<VertexPosBoneWeightNormTanTex> Verts;
-	std::vector<unsigned short> Ind;
+	std::vector<unsigned int> Ind;
 	int index = 1;
 	std::ifstream file;
 	file.open(path, std::ios::in);
@@ -363,7 +371,7 @@ bool MeshFormat<VertexPosBoneWeightNormTanTex>::Load(const char * path)
 				temp.Determinant = 0;
 				temp.BoneIndices = vec4i(0, 0, 0, 0);
 				temp.Weights = vec4f(1, 0, 0, 0);
-				Ind.push_back((unsigned short)Verts.size());
+				Ind.push_back((unsigned int)Verts.size());
 				Verts.push_back(temp);
 			}
 		}
@@ -378,8 +386,9 @@ template<>
 bool MeshFormat<VertexPosBoneWeightNormTex>::Load(const char * path)
 {
 	this->Clear();
+	mName = path;
 	std::vector<VertexPosBoneWeightNormTex> Verts;
-	std::vector<unsigned short> Ind;
+	std::vector<unsigned int> Ind;
 	int index = 1;
 	std::ifstream file;
 	file.open(path, std::ios::in);
@@ -428,7 +437,7 @@ bool MeshFormat<VertexPosBoneWeightNormTex>::Load(const char * path)
 				temp.Normal.w = 0;
 				temp.BoneIndices = vec4i(0, 0, 0, 0);
 				temp.Weights = vec4f(1, 0, 0, 0);
-				Ind.push_back((unsigned short)Verts.size());
+				Ind.push_back((unsigned int)Verts.size());
 				Verts.push_back(temp);
 			}
 		}
@@ -443,8 +452,9 @@ template<>
 bool MeshFormat<VertexPosBoneWeight>::Load(const char * path)
 {
 	this->Clear();
+	mName = path;
 	std::vector<VertexPosBoneWeight> Verts;
-	std::vector<unsigned short> Ind;
+	std::vector<unsigned int> Ind;
 	int index = 1;
 	std::ifstream file;
 	file.open(path, std::ios::in);
@@ -488,7 +498,7 @@ bool MeshFormat<VertexPosBoneWeight>::Load(const char * path)
 				temp.Position.w = 1;
 				temp.BoneIndices = vec4i(0, 0, 0, 0);
 				temp.Weights = vec4f(1, 0, 0, 0);
-				Ind.push_back((unsigned short)Verts.size());
+				Ind.push_back((unsigned int)Verts.size());
 				Verts.push_back(temp);
 			}
 		}

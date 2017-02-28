@@ -1,7 +1,11 @@
 #pragma once
 #include "..\Common\Math.h"
 #include "..\Rendering\Mesh.h"
+#include <unordered_map>
+#include "..\Physics\Physics.h"
+
 class BaseObject;
+class Transform;
 //class Mesh;
 
 enum ComponentType
@@ -24,53 +28,58 @@ class Component
 	static unsigned short mComponentCount;
 	unsigned short mComponentId;
 protected:
-	bool mIsEnabled;
+	bool mDestroyed = false;
+	bool mIsEnabled = true, mIsValid = true;
 	ComponentType mType = eCOMPONENT_MAX;
 	BaseObject* mObject = nullptr;
 public:
 	Component();
-	~Component();
-	ComponentType GetType() { return mType; };
-	bool isEnabled() { return mIsEnabled; };
-	void Disable() { mIsEnabled = false; };
-	void Enable() { mIsEnabled = true; };
+	Component(ComponentType _cType);
+	virtual ~Component();
+	inline ComponentType GetType() { return mType; };
+	inline bool IsEnabled() { return mIsEnabled; };
+	inline bool IsValid() { return mIsValid; }
+	inline void Disable() { mIsEnabled = false; };
+	inline void Enable() { mIsEnabled = true; };
 	virtual void Update() = 0;
 	virtual void Destroy() = 0;
 	void GetMatrix(matrix4& _m);
 	unsigned short GetColliderId() { return mComponentId; };
+	Transform& GetTransform();
+	Transform& GetTransform() const;
 };
 
-class Listener : Component
+class Listener : public Component
 {
 public:
+	Listener() : Component(ComponentType::eCOMPONENT_AUDIOLISTENER) {}
 	void Update() {}
 	void Destroy() {}
 };
 
-class Emitter : Component
+class Emitter :public Component
 {
 public:
-	void Play();
-	void Pause();
-	void Stop();
+	enum sfxTypes { ePlayLoop, ePauseLoop, eResumeLoop, eStopLoop, ePlaySFX };
+
+	Emitter() : Component(ComponentType::eCOMPONENT_AUDIOEMITTER)
+	{
+		mIsPaused = mIsPlaying = false;
+	}
+
+	void Play(int _id = 0);
+	void Pause(int _id = 0);
+	void Stop(int _id = 0);
+	void PlaySFX(int _id = 0);
+	void PlaySFX(int _id = 0, const vec4f* _pos = new vec4f());
+	void AddSoundEvent(sfxTypes _type, int64_t _event);
 
 	void Update();
 	void Destroy();
-};
+private:
+	bool mIsPlaying = false, mIsPaused = false;
+	std::unordered_map<sfxTypes, std::vector<int64_t>> mSFX;
 
-namespace RenderEngine {
-	struct RenderShape;
-}
-
-class MeshComponent : public Component {
-	RenderEngine::RenderShape* mShape;
-	bool mVisible;
-
-public:
-	MeshComponent(const char *_path);
-	void Update();
-	void Destroy();
-	void SetVisible(bool _vis);
 };
 
 class Collider : public Component {
@@ -79,13 +88,15 @@ public:
 		eCOLLIDER_Mesh,
 		eCOLLIDER_Sphere,
 		eCOLLIDER_Cube,
-		eCOLLIDER_Plane
+		eCOLLIDER_Plane,
+		eCOLLIDER_Button,
+		eCOLLIDER_Controller
 	};
 
-	bool mShouldMove, mColliding, mRewind;
-	vec4f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity;
-	float mMass, mElasticity, mFriction;
 	ColliderType mColliderType;
+	bool mShouldMove, mRewind;
+	vec4f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity;
+	float mMass, mElasticity, mFriction, mInvMass;
 
 	void Update();
 	void Destroy();
@@ -109,17 +120,32 @@ public:
 
 class CubeCollider : public Collider {
 public:
-	CubeCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, vec4f _min, vec4f _max);
+	CubeCollider() {}
+	CubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, vec4f _min, vec4f _max);
 	vec4f mMin, mMax, mMinOffset, mMaxOffset;
-
-	void SetPos(vec4f _newPos);
+	virtual void SetPos(vec4f _newPos);
 };
 
 class PlaneCollider : public Collider {
 public:
 	PlaneCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, float _offset, vec4f _norm);
-	vec4f mNormal;
+	vec4f mNormal, mMin, mMax;
 	float mOffset;
+};
+
+class ButtonCollider : public CubeCollider
+{
+public:
+	ButtonCollider(BaseObject* _obj, vec4f _min, vec4f _max, float _mass, float normForce, vec4f _pushNormal);
+	vec4f mPushNormal;
+	Plane mUpperBound, mLowerBound;
+};
+
+class ControllerCollider : public CubeCollider
+{
+public:
+	ControllerCollider(BaseObject* _obj, vec4f _min, vec4f _max, bool _left);
+	bool mLeft;
 };
 
 /*

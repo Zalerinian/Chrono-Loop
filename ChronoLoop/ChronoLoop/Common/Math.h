@@ -24,8 +24,20 @@ struct vec2f {
 		};
 		float xy[2];
 	};
+
 	vec2f() { x = 0; y = 0; };
 	vec2f(float _x, float _y) { x = _x; y = _y; };
+	vec2f operator-(const vec2f& _r);
+	vec2f operator-();
+	float operator*(const vec2f& _r);
+
+	float Magnitude();
+	float SquaredMagnitude();
+	vec2f Normalize();
+	float Dot(const vec2f& _r);
+	vec2f Cross();
+	bool operator==(const vec2f& _other);
+	bool operator!=(const vec2f& _other);
 };
 
 struct vec4f;
@@ -161,8 +173,6 @@ namespace Math
 	matrix4 MatrixRotateInPlace(matrix4 _self, float _x, float _y, float _z, float _rads);
 	matrix4 MatrixRotateInPlace(matrix4 _self, vec4f _axis, float _rads);
 	matrix4 MatrixRotateAround(matrix4 _self, vec4f _axis, vec4f _point, float _rads);
-	matrix4 Projection(float _aspect, float _fov, float _near, float _far);
 	matrix4 FromMatrix(vr::HmdMatrix44_t _mat);
 	matrix4 FromMatrix(vr::HmdMatrix34_t _mat);
-	matrix4 Identity();
 }

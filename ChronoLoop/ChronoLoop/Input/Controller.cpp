@@ -1,6 +1,7 @@
 //#include "stdafx.h"
 #include "Controller.h"
 #include "../Common/Logger.h"
+#include "VRInputManager.h"
 
 #define MAX(a,b) ((a) > (b) ? (a) : (b))
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
@@ -13,6 +14,7 @@ void Controller::Update() {
 	//update the contoller pose/state when called. 
 	mPrevState = mState;
 	if (mHmd != NULL) {
+		//SystemLogger::GetLog() << "[Debug] Controller update." << std::endl;
 		mValid = mHmd->GetControllerStateWithPose(mTrackingSpace, mIndex, &mState, sizeof(mState), &mPose);
 		if (mPrevState.ulButtonPressed != mState.ulButtonPressed) {
 			UpdateHairTrigger();
@@ -22,7 +24,7 @@ void Controller::Update() {
 
 void Controller::UpdateHairTrigger() {
 	mHairTriggerPrevState = mHairTriggerState;
-	float value = mState.rAxis[1].x;
+	float value = mState.rAxis[vr::k_eControllerAxis_Trigger].x;
 	if (mHairTriggerState)
 		if (value < mHairTriggerLimit - mHairTriggerDelta || value <= 0.0f)
 			mHairTriggerState = false;
@@ -56,7 +58,7 @@ void Controller::SetIndex(int _index) {
 void Controller::SetValid(bool _valid) {
 	mValid = _valid;
 }
-
+	
 #pragma endregion Private Functions
 
 #pragma region Public Functions
@@ -67,12 +69,16 @@ void Controller::SetUp(int _index, vr::IVRSystem *_vr) {
 	Update();
 }
 
-vec3f Controller::GetPosition() {
-	return mPosition;
+matrix4 Controller::GetPosition() {
+	if (GetValid()) {
+		return Math::FromMatrix(VRInputManager::Instance().iGetTrackedPositions()[GetIndex()].mDeviceToAbsoluteTracking) * VRInputManager::Instance().iGetPlayerPosition();
+	} else {
+		return Math::MatrixIdentity();
+	}
 }
 
 vec3f Controller::GetVelocity() {
-	return vec3f(mPose.vVelocity.v[0], mPose.vVelocity.v[1], mPose.vVelocity.v[2]);
+	return vec3f(mPose.vVelocity.v[0], mPose.vVelocity.v[1], -mPose.vVelocity.v[2]);
 }
 
 vec3f Controller::GetAngularVelocity() {
@@ -100,42 +106,69 @@ bool Controller::GetValid() {
 }
 
 bool Controller::GetPress(vr::EVRButtonId _id) {
+	if (!GetValid()) {
+		return false;
+	}
 	return (mState.ulButtonPressed & vr::ButtonMaskFromId(_id)) != 0;
 }
 
 bool Controller::GetPressDown(vr::EVRButtonId _id) {
+	if (!GetValid()) {
+		return false;
+	}
 	return (mState.ulButtonPressed & vr::ButtonMaskFromId(_id)) != 0 &&
 		(mPrevState.ulButtonPressed & vr::ButtonMaskFromId(_id)) == 0;
 }
 
 bool Controller::GetPressUp(vr::EVRButtonId _id) {
+	if (!GetValid()) {
+		return false;
+	}
 	return (mState.ulButtonPressed & vr::ButtonMaskFromId(_id)) == 0 &&
 		(mPrevState.ulButtonPressed & vr::ButtonMaskFromId(_id)) != 0;
 }
 
 bool Controller::GetTouch(vr::EVRButtonId _id) {
+	if (!GetValid()) {
+		return false;
+	}
 	return (mState.ulButtonTouched & vr::ButtonMaskFromId(_id)) != 0;
 }
 
 bool Controller::GetTouchDown(vr::EVRButtonId _id) {
+	if (!GetValid()) {
+		return false;
+	}
 	return (mState.ulButtonTouched & vr::ButtonMaskFromId(_id)) != 0 &&
 		(mPrevState.ulButtonTouched & vr::ButtonMaskFromId(_id)) == 0;
 }
 
 bool Controller::GetTouchUp(vr::EVRButtonId _id) {
+	if (!GetValid()) {
+		return false;
+	}
 	return (mState.ulButtonTouched & vr::ButtonMaskFromId(_id)) == 0 &&
 		(mPrevState.ulButtonTouched & vr::ButtonMaskFromId(_id)) != 0;
 }
 
 bool Controller::GetHairTrigger() {
+	if (!GetValid()) {
+		return false;
+	}
 	return mHairTriggerState;
 }
 
 bool Controller::GetHairTriggerDown() {
+	if (!GetValid()) {
+		return false;
+	}
 	return mHairTriggerState && !mHairTriggerPrevState;
 }
 
 bool Controller::GetHairTriggerUp() {
+	if (!GetValid()) {
+		return false;
+	}
 	return !mHairTriggerState && mHairTriggerPrevState;
 }
 
