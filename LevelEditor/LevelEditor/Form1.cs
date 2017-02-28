@@ -21,6 +21,8 @@ namespace LevelEditor
         private float angleX, angleY, rotSpeed;
         private Microsoft.DirectX.DirectInput.Device keyb;
         private List<ToolObject> objects = new List<ToolObject>();
+        private List<ToolObject> higharchy = new List<ToolObject>();
+        private ToolObject oldSelected = null, selectedObject = null;
         private Stopwatch fpsTimer = new Stopwatch();
         private List<long> advMillisecond = new List<long>();
         private Vector3 cameraPos = new Vector3(0, 0, 0);
@@ -33,15 +35,13 @@ namespace LevelEditor
             InitializeDevice();
             InitializeKeyboard();
             InitializeCamera();
-            objects.Add(new ToolObject(ref device));
             objects.Add(new ToolObject("Assets\\Cube.obj", "Assets\\skybox.dds", ref device));
             objects.Add(new ToolObject("Assets\\Sphere.obj", ref device));
-            objects[0].Scale(new Vector3(10, 10, 10));
-            objects[1].Scale(new Vector3(10, 10, 10));
-            objects[1].Translate(new Vector3(0, 1, 0));
-            objects[1].Invert();
-            objects[2].Scale(new Vector3(5, 5, 5));
-            objects[2].Translate(new Vector3(3.0f, 1, -1.0f));
+            for (int i = 0; i < objects.Count; i++)
+            {
+                Tree.Nodes[0].Nodes.Add(objects[i].Name);
+            }
+            higharchy.Add(new ToolObject(ref device));
             splitContainer1.BorderStyle = BorderStyle.None;
             splitContainer1.SplitterWidth = 1;
             splitContainer2.BorderStyle = BorderStyle.None;
@@ -50,8 +50,6 @@ namespace LevelEditor
             rotSpeed = 0.005f;
             angleX = angleY = 0;
             rotate = Matrix.Identity;
-            Tree.Nodes[0].Nodes.Add("test");
-            Tree.Nodes[1].Nodes.Add("test1");
         }
         private void InitializeDevice()
         {
@@ -83,7 +81,7 @@ namespace LevelEditor
             device.RenderState.CullMode = Cull.Clockwise;
             device.RenderState.ZBufferEnable = true;
             InitializeCamera();
-            foreach (ToolObject to in objects)
+            foreach (ToolObject to in higharchy)
             {
                 to.VertexDeclaration();
                 to.IndicesDeclaration();
@@ -107,13 +105,11 @@ namespace LevelEditor
         }
         private void Paint(object sender, PaintEventArgs e)
         {
-            //objects.Sort((a, b) => (Vector3.Dot(a.Position, cameraPos) / Vector3.Dot(cameraPos, cameraPos) * cameraPos).Length().CompareTo((Vector3.Dot(a.Position, cameraPos) / Vector3.Dot(cameraPos, cameraPos) * cameraPos).Length()));
             device.Clear(ClearFlags.Target, Color.Black, 1.0f, 0);
 
             device.BeginScene();
             device.VertexFormat = CustomVertex.PositionNormalTextured.Format;
-            bool cleared = false;
-            foreach (ToolObject tObj in objects)
+            foreach (ToolObject tObj in higharchy)
             {
                 device.RenderState.FillMode = tObj.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
                 device.SetStreamSource(0, tObj.VertexBuffer, 0);
@@ -121,11 +117,6 @@ namespace LevelEditor
                 device.SetTexture(0, tObj.Texture);
                 device.Transform.World = tObj.Transform;
                 device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Indices.Length, 0, tObj.Indices.Length / 3);
-                if (!cleared)
-                {
-                    //device.Clear(ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-                    cleared = true;
-                }
             }
             device.EndScene();
 
@@ -138,24 +129,27 @@ namespace LevelEditor
         }
         private void ReadKeyboard()
         {
-            Matrix pos = Matrix.Translation(cameraPos);
-            Matrix rotate = Matrix.RotationYawPitchRoll(angleY, angleX, 0);
-            Vector3 look = cameraPos + GetVector3(Vector3.Transform(new Vector3(0, 0, 1), rotate));
-            device.Transform.View = Matrix.LookAtRH(cameraPos, look, new Vector3(0, 1, 0));
-            KeyboardState keys = keyb.GetCurrentKeyboardState();
-            //objects[1].SetPosition(cameraPos);
-            if (keys[Key.W])
-                cameraPos += GetVector3(Vector3.Transform(new Vector3(0, 0, 1), rotate));
-            if (keys[Key.S])
-                cameraPos -= GetVector3(Vector3.Transform(new Vector3(0, 0, 1), rotate));
-            if (keys[Key.A])
-                cameraPos += GetVector3(Vector3.Transform(new Vector3(1, 0, 0), rotate));
-            if (keys[Key.D])
-                cameraPos -= GetVector3(Vector3.Transform(new Vector3(1, 0, 0), rotate));
-            if (keys[Key.LeftShift])
-                cameraPos.Y -= 1;
-            if (keys[Key.Space])
-                cameraPos.Y += 1;
+            if (true)
+            {
+                Matrix pos = Matrix.Translation(cameraPos);
+                Matrix rotate = Matrix.RotationYawPitchRoll(angleY, angleX, 0);
+                Vector3 look = cameraPos + GetVector3(Vector3.Transform(new Vector3(0, 0, 1), rotate));
+                device.Transform.View = Matrix.LookAtRH(cameraPos, look, new Vector3(0, 1, 0));
+                KeyboardState keys = keyb.GetCurrentKeyboardState();
+                //objects[1].SetPosition(cameraPos);
+                if (keys[Key.W])
+                    cameraPos += GetVector3(Vector3.Transform(new Vector3(0, 0, 1), rotate));
+                if (keys[Key.S])
+                    cameraPos -= GetVector3(Vector3.Transform(new Vector3(0, 0, 1), rotate));
+                if (keys[Key.A])
+                    cameraPos += GetVector3(Vector3.Transform(new Vector3(1, 0, 0), rotate));
+                if (keys[Key.D])
+                    cameraPos -= GetVector3(Vector3.Transform(new Vector3(1, 0, 0), rotate));
+                if (keys[Key.LeftShift])
+                    cameraPos.Y -= 1;
+                if (keys[Key.Space])
+                    cameraPos.Y += 1;
+            }
         }
         private void Resize(object sender, EventArgs e)
         {
@@ -172,6 +166,84 @@ namespace LevelEditor
         {
             LeftToggle.Text = LeftToggle.Text == "<" ? ">" : "<";
             splitContainer1.Panel1Collapsed = !splitContainer1.Panel1Collapsed;
+        }
+
+        private void Tree_Click(object sender, EventArgs e)
+        {
+            if (Tree.SelectedNode != null && Tree.SelectedNode.Parent != null && Tree.SelectedNode.Parent.Text == "Higharchy")
+            {
+                for (int i = 0; i < higharchy.Count; i++)
+                {
+                    if (Tree.SelectedNode.Text == higharchy[i].Name)
+                    {
+                        selectedObject = higharchy[i];
+                        UpdateSelectedData();
+                    }
+                }
+            }
+            graphicsPanel1.Focus();
+        }
+
+        private void UpdateSelectedData()
+        {
+            if (oldSelected != selectedObject)
+            {
+                nameBox.Text = selectedObject.Name;
+                posX.Value = (decimal)selectedObject.Position.X;
+                posY.Value = (decimal)selectedObject.Position.Y;
+                posZ.Value = (decimal)selectedObject.Position.Z;
+
+                rotX.Value = (decimal)selectedObject.Rotation.X;
+                rotY.Value = (decimal)selectedObject.Rotation.Y;
+                rotZ.Value = (decimal)selectedObject.Rotation.Z;
+
+                scaleX.Value = (decimal)selectedObject.Scale.X;
+                scaleY.Value = (decimal)selectedObject.Scale.Y;
+                scaleZ.Value = (decimal)selectedObject.Scale.Z;
+                oldSelected = selectedObject;
+            }
+        }
+
+        private void transform_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedObject != null && oldSelected == selectedObject)
+            {
+                selectedObject.Name = nameBox.Text;
+                selectedObject.SetPosition(new Vector3((float)posX.Value, (float)posY.Value, (float)posZ.Value));
+                selectedObject.SetScale(new    Vector3((float)scaleX.Value, (float)scaleY.Value, (float)scaleZ.Value));
+                selectedObject.SetRotate(new   Vector3((float)rotX.Value, (float)rotY.Value, (float)rotZ.Value));
+                selectedObject.VertexDeclaration();
+                selectedObject.IndicesDeclaration();
+            }
+        }
+
+        private void Tree_DoubleClick(object sender, EventArgs e)
+        {
+            for (int i = 0; i < objects.Count; i++)
+            {
+                if (Tree.SelectedNode != null && Tree.SelectedNode.Parent != null && Tree.SelectedNode.Parent.Text == "Objects" && Tree.SelectedNode.Text == objects[i].Name)
+                {
+                    higharchy.Add(new ToolObject(objects[i]));
+                    higharchy[higharchy.Count - 1].VertexDeclaration();
+                    higharchy[higharchy.Count - 1].IndicesDeclaration();
+                    Tree.Nodes[1].Nodes.Add(objects[i].Name);
+                    break;
+                } 
+
+            }
+        }
+
+        private void supress_KeyDown(object sender, KeyEventArgs e)
+        {
+            e.SuppressKeyPress = true;
+        }
+
+        private void Editor_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.T)
+                LeftToggle_Click(sender, null);
+            if (e.KeyCode == Keys.N)
+                RightToggle_Click(sender, null);
         }
 
         private void graphicsPanel1_MouseClick(object sender, MouseEventArgs e)

@@ -64,14 +64,39 @@ namespace LevelEditor
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.FpsCount = new System.Windows.Forms.ToolStripStatusLabel();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.Tree = new System.Windows.Forms.TreeView();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.graphicsPanel1 = new LevelEditor.GraphicsPanel();
             this.LeftToggle = new LevelEditor.NoFocusButton();
             this.RightToggle = new LevelEditor.NoFocusButton();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.rotZ = new System.Windows.Forms.NumericUpDown();
+            this.rotY = new System.Windows.Forms.NumericUpDown();
+            this.rotX = new System.Windows.Forms.NumericUpDown();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.scaleZ = new System.Windows.Forms.NumericUpDown();
+            this.scaleY = new System.Windows.Forms.NumericUpDown();
+            this.scaleX = new System.Windows.Forms.NumericUpDown();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.posZ = new System.Windows.Forms.NumericUpDown();
+            this.posY = new System.Windows.Forms.NumericUpDown();
+            this.posX = new System.Windows.Forms.NumericUpDown();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.componetsCheck = new System.Windows.Forms.CheckedListBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.nameBox = new System.Windows.Forms.TextBox();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.FpsCount = new System.Windows.Forms.ToolStripStatusLabel();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -79,9 +104,24 @@ namespace LevelEditor
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
             this.graphicsPanel1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.rotZ)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rotY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rotX)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.scaleZ)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.scaleY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.scaleX)).BeginInit();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.posZ)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.posY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.posX)).BeginInit();
+            this.groupBox5.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -93,7 +133,7 @@ namespace LevelEditor
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(484, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(624, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -332,15 +372,36 @@ namespace LevelEditor
             // 
             this.splitContainer1.Panel1.Controls.Add(this.Tree);
             this.splitContainer1.Panel1.ForeColor = System.Drawing.SystemColors.Control;
+            this.splitContainer1.Panel1Collapsed = true;
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(484, 337);
+            this.splitContainer1.Size = new System.Drawing.Size(624, 417);
             this.splitContainer1.SplitterDistance = 150;
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 3;
             this.splitContainer1.TabStop = false;
+            // 
+            // Tree
+            // 
+            this.Tree.CausesValidation = false;
+            this.Tree.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Tree.Location = new System.Drawing.Point(0, 0);
+            this.Tree.Name = "Tree";
+            treeNode1.Name = "Objects";
+            treeNode1.Text = "Objects";
+            treeNode2.Name = "Higharchy";
+            treeNode2.Text = "Higharchy";
+            this.Tree.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode1,
+            treeNode2});
+            this.Tree.Size = new System.Drawing.Size(150, 100);
+            this.Tree.TabIndex = 0;
+            this.Tree.TabStop = false;
+            this.Tree.Click += new System.EventHandler(this.Tree_Click);
+            this.Tree.DoubleClick += new System.EventHandler(this.Tree_DoubleClick);
+            this.Tree.Enter += new System.EventHandler(this.Tree_Click);
             // 
             // splitContainer2
             // 
@@ -354,48 +415,18 @@ namespace LevelEditor
             // splitContainer2.Panel1
             // 
             this.splitContainer2.Panel1.Controls.Add(this.graphicsPanel1);
-            this.splitContainer2.Panel2Collapsed = true;
-            this.splitContainer2.Size = new System.Drawing.Size(333, 337);
-            this.splitContainer2.SplitterDistance = 308;
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.groupBox2);
+            this.splitContainer2.Panel2.Controls.Add(this.groupBox1);
+            this.splitContainer2.Panel2.Controls.Add(this.groupBox3);
+            this.splitContainer2.Panel2.Controls.Add(this.groupBox5);
+            this.splitContainer2.Panel2.Controls.Add(this.groupBox4);
+            this.splitContainer2.Size = new System.Drawing.Size(624, 417);
+            this.splitContainer2.SplitterDistance = 479;
             this.splitContainer2.SplitterWidth = 1;
             this.splitContainer2.TabIndex = 3;
-            // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.FpsCount});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 339);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(484, 22);
-            this.statusStrip1.TabIndex = 4;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // FpsCount
-            // 
-            this.FpsCount.Name = "FpsCount";
-            this.FpsCount.Size = new System.Drawing.Size(44, 17);
-            this.FpsCount.Text = "FPS: 00";
-            // 
-            // timer1
-            // 
-            this.timer1.Enabled = true;
-            this.timer1.Interval = 1;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // Tree
-            // 
-            this.Tree.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Tree.Location = new System.Drawing.Point(0, 0);
-            this.Tree.Name = "Tree";
-            treeNode1.Name = "Objects";
-            treeNode1.Text = "Objects";
-            treeNode2.Name = "Higharchy";
-            treeNode2.Text = "Higharchy";
-            this.Tree.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2});
-            this.Tree.Size = new System.Drawing.Size(150, 337);
-            this.Tree.TabIndex = 0;
             // 
             // graphicsPanel1
             // 
@@ -404,7 +435,7 @@ namespace LevelEditor
             this.graphicsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.graphicsPanel1.Location = new System.Drawing.Point(0, 0);
             this.graphicsPanel1.Name = "graphicsPanel1";
-            this.graphicsPanel1.Size = new System.Drawing.Size(333, 337);
+            this.graphicsPanel1.Size = new System.Drawing.Size(479, 417);
             this.graphicsPanel1.TabIndex = 2;
             this.graphicsPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.Paint);
             this.graphicsPanel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseClick);
@@ -427,7 +458,7 @@ namespace LevelEditor
             // 
             this.RightToggle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.RightToggle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.RightToggle.Location = new System.Drawing.Point(307, 3);
+            this.RightToggle.Location = new System.Drawing.Point(453, 3);
             this.RightToggle.MinimumSize = new System.Drawing.Size(1, 1);
             this.RightToggle.Name = "RightToggle";
             this.RightToggle.Size = new System.Drawing.Size(23, 23);
@@ -436,17 +467,415 @@ namespace LevelEditor
             this.RightToggle.UseVisualStyleBackColor = true;
             this.RightToggle.Click += new System.EventHandler(this.RightToggle_Click);
             // 
+            // groupBox2
+            // 
+            this.groupBox2.AutoSize = true;
+            this.groupBox2.Controls.Add(this.label7);
+            this.groupBox2.Controls.Add(this.label8);
+            this.groupBox2.Controls.Add(this.label9);
+            this.groupBox2.Controls.Add(this.rotZ);
+            this.groupBox2.Controls.Add(this.rotY);
+            this.groupBox2.Controls.Add(this.rotX);
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox2.Location = new System.Drawing.Point(0, 284);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(0);
+            this.groupBox2.Size = new System.Drawing.Size(144, 72);
+            this.groupBox2.TabIndex = 9;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Rotation";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(112, 17);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(14, 13);
+            this.label7.TabIndex = 7;
+            this.label7.Text = "Z";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(62, 17);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(14, 13);
+            this.label8.TabIndex = 6;
+            this.label8.Text = "Y";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(15, 17);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(14, 13);
+            this.label9.TabIndex = 5;
+            this.label9.Text = "X";
+            // 
+            // rotZ
+            // 
+            this.rotZ.DecimalPlaces = 1;
+            this.rotZ.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.rotZ.Location = new System.Drawing.Point(98, 36);
+            this.rotZ.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.rotZ.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+            this.rotZ.Name = "rotZ";
+            this.rotZ.Size = new System.Drawing.Size(48, 20);
+            this.rotZ.TabIndex = 4;
+            this.rotZ.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
+            this.rotZ.KeyDown += new System.Windows.Forms.KeyEventHandler(this.supress_KeyDown);
+            // 
+            // rotY
+            // 
+            this.rotY.DecimalPlaces = 1;
+            this.rotY.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.rotY.Location = new System.Drawing.Point(50, 36);
+            this.rotY.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.rotY.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+            this.rotY.Name = "rotY";
+            this.rotY.Size = new System.Drawing.Size(48, 20);
+            this.rotY.TabIndex = 3;
+            this.rotY.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
+            this.rotY.KeyDown += new System.Windows.Forms.KeyEventHandler(this.supress_KeyDown);
+            // 
+            // rotX
+            // 
+            this.rotX.DecimalPlaces = 1;
+            this.rotX.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.rotX.Location = new System.Drawing.Point(2, 36);
+            this.rotX.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.rotX.Maximum = new decimal(new int[] {
+            360,
+            0,
+            0,
+            0});
+            this.rotX.Name = "rotX";
+            this.rotX.Size = new System.Drawing.Size(48, 20);
+            this.rotX.TabIndex = 2;
+            this.rotX.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
+            this.rotX.KeyDown += new System.Windows.Forms.KeyEventHandler(this.supress_KeyDown);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.AutoSize = true;
+            this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Controls.Add(this.label5);
+            this.groupBox1.Controls.Add(this.label6);
+            this.groupBox1.Controls.Add(this.scaleZ);
+            this.groupBox1.Controls.Add(this.scaleY);
+            this.groupBox1.Controls.Add(this.scaleX);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox1.Location = new System.Drawing.Point(0, 212);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(0);
+            this.groupBox1.Size = new System.Drawing.Size(144, 72);
+            this.groupBox1.TabIndex = 8;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Scale";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(112, 17);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(14, 13);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "Z";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(62, 17);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(14, 13);
+            this.label5.TabIndex = 6;
+            this.label5.Text = "Y";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(15, 17);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(14, 13);
+            this.label6.TabIndex = 5;
+            this.label6.Text = "X";
+            // 
+            // scaleZ
+            // 
+            this.scaleZ.DecimalPlaces = 1;
+            this.scaleZ.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.scaleZ.Location = new System.Drawing.Point(98, 36);
+            this.scaleZ.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.scaleZ.Minimum = new decimal(new int[] {
+            99,
+            0,
+            0,
+            -2147483648});
+            this.scaleZ.Name = "scaleZ";
+            this.scaleZ.Size = new System.Drawing.Size(48, 20);
+            this.scaleZ.TabIndex = 4;
+            this.scaleZ.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
+            this.scaleZ.KeyDown += new System.Windows.Forms.KeyEventHandler(this.supress_KeyDown);
+            // 
+            // scaleY
+            // 
+            this.scaleY.DecimalPlaces = 1;
+            this.scaleY.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.scaleY.Location = new System.Drawing.Point(50, 36);
+            this.scaleY.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.scaleY.Minimum = new decimal(new int[] {
+            99,
+            0,
+            0,
+            -2147483648});
+            this.scaleY.Name = "scaleY";
+            this.scaleY.Size = new System.Drawing.Size(48, 20);
+            this.scaleY.TabIndex = 3;
+            this.scaleY.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
+            this.scaleY.KeyDown += new System.Windows.Forms.KeyEventHandler(this.supress_KeyDown);
+            // 
+            // scaleX
+            // 
+            this.scaleX.DecimalPlaces = 1;
+            this.scaleX.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.scaleX.Location = new System.Drawing.Point(2, 36);
+            this.scaleX.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.scaleX.Minimum = new decimal(new int[] {
+            99,
+            0,
+            0,
+            -2147483648});
+            this.scaleX.Name = "scaleX";
+            this.scaleX.Size = new System.Drawing.Size(48, 20);
+            this.scaleX.TabIndex = 2;
+            this.scaleX.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
+            this.scaleX.KeyDown += new System.Windows.Forms.KeyEventHandler(this.supress_KeyDown);
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.AutoSize = true;
+            this.groupBox3.Controls.Add(this.label3);
+            this.groupBox3.Controls.Add(this.label2);
+            this.groupBox3.Controls.Add(this.label1);
+            this.groupBox3.Controls.Add(this.posZ);
+            this.groupBox3.Controls.Add(this.posY);
+            this.groupBox3.Controls.Add(this.posX);
+            this.groupBox3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox3.Location = new System.Drawing.Point(0, 140);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(0);
+            this.groupBox3.Size = new System.Drawing.Size(144, 72);
+            this.groupBox3.TabIndex = 5;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Position";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(112, 17);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(14, 13);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Z";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(62, 17);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(14, 13);
+            this.label2.TabIndex = 6;
+            this.label2.Text = "Y";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(15, 17);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(14, 13);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "X";
+            // 
+            // posZ
+            // 
+            this.posZ.DecimalPlaces = 1;
+            this.posZ.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.posZ.Location = new System.Drawing.Point(98, 36);
+            this.posZ.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.posZ.Minimum = new decimal(new int[] {
+            99,
+            0,
+            0,
+            -2147483648});
+            this.posZ.Name = "posZ";
+            this.posZ.Size = new System.Drawing.Size(48, 20);
+            this.posZ.TabIndex = 4;
+            this.posZ.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
+            this.posZ.KeyDown += new System.Windows.Forms.KeyEventHandler(this.supress_KeyDown);
+            // 
+            // posY
+            // 
+            this.posY.DecimalPlaces = 1;
+            this.posY.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.posY.Location = new System.Drawing.Point(50, 36);
+            this.posY.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.posY.Minimum = new decimal(new int[] {
+            99,
+            0,
+            0,
+            -2147483648});
+            this.posY.Name = "posY";
+            this.posY.Size = new System.Drawing.Size(48, 20);
+            this.posY.TabIndex = 3;
+            this.posY.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
+            this.posY.KeyDown += new System.Windows.Forms.KeyEventHandler(this.supress_KeyDown);
+            // 
+            // posX
+            // 
+            this.posX.DecimalPlaces = 1;
+            this.posX.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.posX.Location = new System.Drawing.Point(2, 36);
+            this.posX.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.posX.Minimum = new decimal(new int[] {
+            99,
+            0,
+            0,
+            -2147483648});
+            this.posX.Name = "posX";
+            this.posX.Size = new System.Drawing.Size(48, 20);
+            this.posX.TabIndex = 2;
+            this.posX.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
+            this.posX.KeyDown += new System.Windows.Forms.KeyEventHandler(this.supress_KeyDown);
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.componetsCheck);
+            this.groupBox5.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox5.Location = new System.Drawing.Point(0, 39);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(144, 101);
+            this.groupBox5.TabIndex = 10;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Components";
+            // 
+            // componetsCheck
+            // 
+            this.componetsCheck.BackColor = System.Drawing.SystemColors.Control;
+            this.componetsCheck.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.componetsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.componetsCheck.FormattingEnabled = true;
+            this.componetsCheck.Items.AddRange(new object[] {
+            "Collider",
+            "Renderer",
+            "Physics",
+            "Timeline"});
+            this.componetsCheck.Location = new System.Drawing.Point(3, 16);
+            this.componetsCheck.Margin = new System.Windows.Forms.Padding(0);
+            this.componetsCheck.Name = "componetsCheck";
+            this.componetsCheck.Size = new System.Drawing.Size(138, 82);
+            this.componetsCheck.TabIndex = 0;
+            this.componetsCheck.KeyDown += new System.Windows.Forms.KeyEventHandler(this.supress_KeyDown);
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.AutoSize = true;
+            this.groupBox4.Controls.Add(this.nameBox);
+            this.groupBox4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox4.Location = new System.Drawing.Point(0, 0);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(144, 39);
+            this.groupBox4.TabIndex = 0;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Name";
+            // 
+            // nameBox
+            // 
+            this.nameBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.nameBox.Location = new System.Drawing.Point(3, 16);
+            this.nameBox.Margin = new System.Windows.Forms.Padding(0);
+            this.nameBox.Name = "nameBox";
+            this.nameBox.Size = new System.Drawing.Size(138, 20);
+            this.nameBox.TabIndex = 1;
+            this.nameBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.supress_KeyDown);
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.FpsCount});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 419);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(624, 22);
+            this.statusStrip1.TabIndex = 4;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // FpsCount
+            // 
+            this.FpsCount.Name = "FpsCount";
+            this.FpsCount.Size = new System.Drawing.Size(44, 17);
+            this.FpsCount.Text = "FPS: 00";
+            // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 1;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // Editor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(484, 361);
+            this.ClientSize = new System.Drawing.Size(624, 441);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Editor";
             this.Text = "Level Editor";
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Editor_KeyDown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -454,11 +883,31 @@ namespace LevelEditor
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            this.splitContainer2.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.graphicsPanel1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.rotZ)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rotY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rotX)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.scaleZ)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.scaleY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.scaleX)).EndInit();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.posZ)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.posY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.posX)).EndInit();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.graphicsPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -505,6 +954,31 @@ namespace LevelEditor
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.ToolStripStatusLabel FpsCount;
         private System.Windows.Forms.TreeView Tree;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.NumericUpDown posX;
+        private System.Windows.Forms.TextBox nameBox;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.NumericUpDown rotZ;
+        private System.Windows.Forms.NumericUpDown rotY;
+        private System.Windows.Forms.NumericUpDown rotX;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.NumericUpDown scaleZ;
+        private System.Windows.Forms.NumericUpDown scaleY;
+        private System.Windows.Forms.NumericUpDown scaleX;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown posZ;
+        private System.Windows.Forms.NumericUpDown posY;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.CheckedListBox componetsCheck;
     }
 }
 

@@ -22,6 +22,9 @@ namespace LevelEditor
         private Material mMaterial;
         private bool mIsWireFrame;
         private Vector3 mPosition;
+        private Vector3 mRotation;
+        private Vector3 mScale;
+        private string mName;
 
         #region Properties
         public CustomVertex.PositionNormalTextured[] Vertices
@@ -64,18 +67,51 @@ namespace LevelEditor
         {
             get { return mPosition; }
         }
-        #endregion
 
+        public Vector3 Rotation
+        {
+            get { return mRotation; }
+        }
+
+        public Vector3 Scale
+        {
+            get { return mScale; }
+        }
+
+        public string Name
+        {
+            get { return mName; }
+            set { mName = value; }
+        }
+        #endregion
+        public ToolObject(ToolObject _Tool)
+        {
+            mName = _Tool.Name;
+            mTransform = _Tool.mTransform;
+            mPosition = _Tool.mPosition;
+            mRotation = _Tool.mRotation;
+            mScale = _Tool.mScale;
+            mMaterial = _Tool.mMaterial;
+            mDevice = _Tool.mDevice;
+            mIsWireFrame = _Tool.mIsWireFrame;
+            mTexture = _Tool.mTexture;
+            mVertices = _Tool.mVertices;
+            mIndices = _Tool.mIndices;
+            VertexDeclaration();
+            IndicesDeclaration();
+        }
         public ToolObject(ref Device _Device)
         {
             mTransform = Matrix.Identity;
-            mPosition = new Vector3();
+            mPosition = mRotation = new Vector3();
+            mScale = new Vector3(1, 1, 1);
             mMaterial = new Material();
             mMaterial.Diffuse = Color.White;
             mMaterial.Specular = Color.LightGray;
             mMaterial.SpecularSharpness = 15.0F;
             mDevice = _Device;
             MakeGrid();
+            AddScale(new Vector3(10, 10, 10));
             mIsWireFrame = true;
             mTexture = null;
             VertexDeclaration();
@@ -84,7 +120,8 @@ namespace LevelEditor
         public ToolObject(string _File, ref Device _Device)
         {
             mTransform = Matrix.Identity;
-            mPosition = new Vector3();
+            mPosition = mRotation = new Vector3();
+            mScale = new Vector3(1, 1, 1);
             mMaterial = new Material();
             mMaterial.Diffuse = Color.White;
             mMaterial.Specular = Color.LightGray;
@@ -99,7 +136,8 @@ namespace LevelEditor
         public ToolObject(string _File, string _Texture, ref Device _Device)
         {
             mTransform = Matrix.Identity;
-            mPosition = new Vector3();
+            mPosition = mRotation = new Vector3();
+            mScale = new Vector3(1, 1, 1);
             mMaterial = new Material();
             mMaterial.Diffuse = Color.White;
             mMaterial.Specular = Color.LightGray;
@@ -129,6 +167,9 @@ namespace LevelEditor
                     Vector3 vec = new Vector3();
                     switch (parts[0])
                     {
+                        case "o":
+                            mName = parts[1];
+                            break;
                         case "v":
                             vec.X = (float)Convert.ToDouble(parts[1]);
                             vec.Y = (float)Convert.ToDouble(parts[2]);
@@ -218,7 +259,8 @@ namespace LevelEditor
         }
         public void SetPosition(Vector3 _Pos)
         {
-            mTransform = Matrix.Scaling(new Vector3(10, 10, 10)) * Matrix.Translation(_Pos);
+            mTransform = Matrix.Scaling(mScale) * Matrix.Translation(_Pos);
+            Rotate(mRotation);
             mPosition = _Pos;
         }
         public void Rotate(Vector3 _Rotation)
@@ -226,10 +268,25 @@ namespace LevelEditor
             mTransform = Matrix.RotationX(_Rotation.X) * mTransform;
             mTransform = Matrix.RotationY(_Rotation.Y) * mTransform;
             mTransform = Matrix.RotationZ(_Rotation.Z) * mTransform;
+            mRotation += _Rotation;
         }
-        public void Scale(Vector3 _Scale)
+        public void SetRotate(Vector3 _Rotation)
+        {
+            mTransform = Matrix.Scaling(mScale) * Matrix.Translation(mPosition);
+            mTransform = Matrix.RotationX(_Rotation.X) * mTransform;
+            mTransform = Matrix.RotationY(_Rotation.Y) * mTransform;
+            mTransform = Matrix.RotationZ(_Rotation.Z) * mTransform;
+            mRotation = _Rotation;
+        }
+        public void AddScale(Vector3 _Scale)
         {
             mTransform = Matrix.Scaling(_Scale) * mTransform;
+            mScale = new Vector3(mScale.X * _Scale.X, mScale.Y * _Scale.Y, mScale.Z * _Scale.Z);
+        }
+        public void SetScale(Vector3 _Scale)
+        {
+            mScale = new Vector3(_Scale.X, _Scale.Y, _Scale.Z);
+            SetPosition(mPosition);
         }
     }
 }
