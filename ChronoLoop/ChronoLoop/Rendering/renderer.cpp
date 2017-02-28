@@ -10,6 +10,8 @@
 #include "RenderShape.h"
 #include "../Input/VRInputManager.h"
 #include "../Input/Controller.h"
+#include "../Common/Common.h"
+#include "../Common/Breakpoint.h"
 
 #define ENABLE_TEXT 0
 
@@ -221,6 +223,7 @@ namespace RenderEngine {
 
 		//create device2d 
 		ID2D1Device* Device2d;
+		HRESULT HR;
 		ThrowIfFailed(factory2->CreateDevice(*sInstance->mGIDevice, &Device2d));
 		sInstance->mDevice2D = make_shared<ID2D1Device*>(Device2d);
 
@@ -337,37 +340,26 @@ namespace RenderEngine {
 
 	void Renderer::InitializeObjectNames() {
 #if _DEBUG
-		char deviceName[] = "Main Rendering Device";
-		char contextName[] = "Main Context";
-		char swapchainName[] = "Main Swapchain";
-		char factoryName[] = "3D DXGI Factory";
-		char mainViewName[] = "Backbuffer Render Target View";
-		char mainViewTexName[] = "Backbuffer Texture";
-		char dsvName[] = "Main Depth-Stencil View";
-		char dbName[] = "Main Depth Buffer Texture";
-		char vpbName[] = "View-Projection Buffer";
-		char pBuffName[] = "Position Buffer";
-
-		(*mDevice)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(deviceName), deviceName);
-		(*mContext)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(contextName), contextName);
-		(*mChain)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(swapchainName), swapchainName);
-		(*mFactory)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(factoryName), factoryName);
-		(*mMainView)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(mainViewName), mainViewName);
-		(*mMainViewTexture)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(mainViewTexName), mainViewTexName);
-		(*mDSView)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(dsvName), dsvName);
-		(*mDepthBuffer)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(dbName), dbName);
-		(*mVPBuffer)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(vpbName), vpbName);
-		(*mPositionBuffer)->SetPrivateData(WKPDID_D3DDebugObjectName, ARRAYSIZE(pBuffName), pBuffName);
+		SetD3DName((*mDevice), "Rendering Device");
+		SetD3DName((*mContext), "Device Context");
+		SetD3DName((*mChain), "Swapchain");
+		SetD3DName((*mFactory), "DXGI Factory");
+		SetD3DName((*mMainView), "Window Render Target");
+		SetD3DName((*mMainViewTexture), "Window Rener Texture");
+		SetD3DName((*mDSView), "Main Depth-Stencil View");
+		SetD3DName((*mDepthBuffer), "Main Depth Buffer");
+		SetD3DName((*mVPBuffer), "View-Projection Constant Buffer");
+		SetD3DName((*mPositionBuffer), "Model Constant Buffer");
 #endif
 	}
 
 	void Renderer::SetStaticBuffers() {
 		(*mContext)->VSSetConstantBuffers(0, 1, mVPBuffer.get());
 		(*mContext)->VSSetConstantBuffers(1, 1, mPositionBuffer.get());
-		//(*mContext)->VSGetConstantBuffers(2, 1, nullptr); // This will crash.
-		//(*mContext)->VSGetConstantBuffers(3, 1, nullptr); // This will crash.
+		//(*mContext)->VSSetConstantBuffers(2, 1, nullptr); // This will crash. - Instance Buffer
+		//(*mContext)->VSSetConstantBuffers(3, 1, nullptr); // This will crash. - Animation Data Buffer
 
-		//(*mContext)->PSSetConstantBuffers(0, 1, nullptr); // This will crash.
+		//(*mContext)->PSSetConstantBuffers(0, 1, nullptr); // This will crash. - Light Buffer
 	}
 
 	void Renderer::RenderVR(float _delta) {
@@ -401,7 +393,7 @@ namespace RenderEngine {
 	}
 
 	void Renderer::UpdateCamera(float const _moveSpd, float const _rotSpd, float _delta) {
-#if _DEBUG
+#if _DEBUG || 1
 		if (GetActiveWindow() != *mWindow) {
 			return;
 		}
@@ -587,7 +579,6 @@ namespace RenderEngine {
 #endif
 		InitializeSamplerState();
 		SetStaticBuffers();
-
 		// TODO Eventually: Give each shape a topology enum, perhaps?
 		(*mContext)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		// TODO Eventually: Actually assign input layouts for each render shape.
@@ -613,8 +604,9 @@ namespace RenderEngine {
 		//}
 		return true;
 	}
-
+	
 	void Renderer::Render(float _deltaTime) {
+		
 		float color[4] = { 0.251f, 0.709f, 0.541f, 1 };
 		(*mContext)->ClearRenderTargetView((*mMainView), color);
 		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);

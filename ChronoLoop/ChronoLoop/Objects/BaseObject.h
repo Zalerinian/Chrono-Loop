@@ -10,7 +10,7 @@
 #include "..\Objects\Component.h"
 
 class BaseObject {
-	// The number of objects that exist in the world. ID 0 is reserved the player.
+	// The number of objects that exist in the world.
 	static unsigned int ObjectCount;
 
 private:
@@ -20,6 +20,7 @@ private:
 	std::list<BaseObject*> mChildren;
 	Transform mTransform;
 	bool mDestroyed = false;
+	
 
 	void Construct(std::string _name, Transform _transform, BaseObject* _parent);
 

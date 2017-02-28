@@ -76,10 +76,8 @@ namespace RenderEngine {
 
 		matrix4 mEyePosLeft, mEyePosRight, mEyeProjLeft, mEyeProjRight, mHMDPos, mDebugCameraPos;
 
-#if _DEBUG
 		POINT mMouseOrigin;
 		bool mIsMouseDown = false;
-#endif
 
 		matrix4 GetEye(vr::EVREye e);
 		matrix4 GetProjection(vr::EVREye e);
@@ -118,5 +116,4 @@ namespace RenderEngine {
 		inline std::shared_ptr<ID3D11DepthStencilView*> iGetDSView() { return mDSView; }
 		inline std::shared_ptr<HWND> iGetWindow() { return mWindow; }
 	};
-
 }

@@ -2,19 +2,20 @@
 #include <vector>
 #include <unordered_map>
 #include "../Objects/BaseObject.h"
+#include <bitset>
 
 
 //Componet Structs for storing;
 #pragma region ComponetStructs
 struct SnapComponent {
 	ComponentType mCompType;
+	unsigned short mBitNum;
 	unsigned short mId;
 };
 struct SnapComponent_Physics : SnapComponent {
 	vec4f mForces;
 	vec4f mVel;
 	vec4f mAcc;
-
 };
 //Add more componets when we need it
 #pragma endregion ComponetStructs
@@ -26,8 +27,7 @@ struct SnapInfo
 	unsigned short mId;	//unique id of the object
 	Transform mTransform;	//positional data of the object
 	std::vector<SnapComponent*>mComponets;
-	//TODO PAT: ADD HEADSET POSITION DATA
-	//Componet info needed
+	std::bitset<32>mBitset;	//Base object and componets enabled or disabled //0 for the baseobject and 1-31 for the components
 };
 struct SnapInfoPlayer : SnapInfo {
 	//TODO PAT: ADD HEADSET POSITION DATA
@@ -70,14 +70,15 @@ public:
 	unsigned int mCurrentGameTimeIndx = 0;
 	unsigned int GetCurrentGameTimeIndx() { return mCurrentGameTimeIndx; }
 	void AddBaseObject(BaseObject* _object, unsigned short _id);						//add to the list of recorded objects.
-	//TODO PAT: add a remove base object func that says the object has been removed in the next snap recording
 	void AddSnapshot(unsigned int _snaptime, Snapshot* _snapshot);
 	bool RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 	bool RewindMakeClone(unsigned int _snaptime);
+	void ChangeBitsetToSnap(SnapInfo* _destinfo, Component* _curComp);
 	void MoveObjectToSnap(unsigned int _snaptime,unsigned short _id);
 	void MoveAllObjectsToSnap(unsigned int _snaptime);
 	void MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime,unsigned short _id1, unsigned short _id2, unsigned short _id3);
 	void ClearTimeLine();
+	void SetComponent(SnapComponent* _destComp, BaseObject* _obj, SnapInfo* _destInfo);
 	SnapInfo* GenerateSnapInfo(BaseObject* _object, SnapInfo* _info);							//Error check agianst the BaseObject* if it is null or not
 	Snapshot* GenerateSnapShot(unsigned int _time,std::vector<BaseObject*> & _clones);
 	SnapInfoPlayer * GenerateSnapInfoPlayer();

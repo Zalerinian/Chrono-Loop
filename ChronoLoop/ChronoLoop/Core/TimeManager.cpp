@@ -20,8 +20,8 @@ TimeManager::~TimeManager() {
 }
 
 void TimeManager::Update(float _delta) {
-	//Snap Update 
 	mTimestamp += _delta;
+	mDeltaTime = _delta;
 	if (mTimestamp >= mRecordingTime) {
 		mTimestamp = 0;
 		//Generate 
@@ -30,17 +30,6 @@ void TimeManager::Update(float _delta) {
 		mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
 	}
 
-	//if (mRewindTime)
-	//{
-	//	mTimeline->RewindNoClone(mTimeline->GetCurrentGameTimeIndx() - 10);
-	//	//Tell the time manager what frame the timeline its on
-	//	mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
-	//	mRewindTime = false;
-	//}
-	//else if(mRewindMakeClone)
-	//{
-	//	mRewindMakeClone = false;
-	//}
 }
 
 TimeManager * TimeManager::Instance() {
@@ -80,21 +69,15 @@ Timeline * TimeManager::GetTimeLine() {
 }
 
 void TimeManager::RewindTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2, unsigned short _id3) {
-	//mRewindTime = true;
-	//mTimeline->RewindNoClone(mTimeline->GetCurrentGameTimeIndx() - 10);
 	mTimeline->RewindNoClone(_frame, _id1, _id2, _id3);
 	//Tell the time manager what frame the timeline its on
 	mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
 }
 
 void TimeManager::RewindMakeClone(unsigned int _frame, BaseObject* _ob1, BaseObject* _ob2, BaseObject* _ob3) {
-	//mRewindMakeClone = true;
 	if (_ob1 == nullptr || _ob2 == nullptr || _ob3 == nullptr)
 		SystemLogger::GetLog() << "When you tried to rewind time, you gave the timemanager bad BaseObject pointer(s)";
 	mTimeline->RewindMakeClone(_frame);
-	/*mTimeline->AddBaseObject(_ob1,_ob1->GetUniqueID());
-	mTimeline->AddBaseObject(_ob2, _ob3->GetUniqueID());
-	mTimeline->AddBaseObject(_ob3, _ob2->GetUniqueID());*/
 	mClones.push_back(_ob1);
 	mClones.push_back(_ob2);
 	mClones.push_back(_ob3);

@@ -15,7 +15,7 @@ struct TeleportAction : public CodeComponent {
 	bool left;
 	TeleportAction(bool _left) { left = _left; };
 
-	virtual void Start() {
+	virtual void Start() { 
 		mPlaneObject = Level::Instance()->iFindObjectWithName("plane");
 		mPlaneMesh = (MeshComponent*)mPlaneObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 	}
