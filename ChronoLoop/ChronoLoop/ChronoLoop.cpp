@@ -180,7 +180,7 @@ void Update() {
 	SphereMat2 *= MatrixTranslation(1, 2, 0);
 	SphereTransform2.SetMatrix(SphereMat2);
 	BaseObject* PhysicsSphere2 = Pool::Instance()->iGetObject()->Reset("sphere", SphereTransform2);
-	SphereCollider *BallCollider2 = new SphereCollider(PhysicsSphere2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 6.0f, 0.6f, 0.2f, 0.1f, 0.9f, 0.15f);
+	SphereCollider *BallCollider2 = new SphereCollider(PhysicsSphere2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 6.0f, 1.0f, 0.2f, 0.1f, 0.9f, 0.15f);
 	BoxCollider->AddForce(vec4f(0, 0, 0, 0));
 	CodeComponent* PlaneCollision3 = new CCElasticReactionWithPlane;
 	CodeComponent* SpheretoSphere2 = new CCElasticSphereToSphere;
