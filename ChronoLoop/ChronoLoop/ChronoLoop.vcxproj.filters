@@ -285,6 +285,9 @@
     <ClInclude Include="Actions\CCElasticReactionWithPlane.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\CCElasticSphereToSphere.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">

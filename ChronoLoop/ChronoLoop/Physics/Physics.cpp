@@ -601,21 +601,25 @@ void Physics::Update(float _time)
 						for (int k = 0; k < othercols; ++k)
 						{
 							otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
-							if (otherCol->mColliderType == Collider::eCOLLIDER_Mesh)
-							{
-								//Not sure what outnorm is used for at the moment might just stick with basic cube/sphere collisions
-								if (MovingSphereToMesh(collider->GetPos(), collider->mVelocity, ((SphereCollider*)collider)->mRadius, ((MeshCollider*)otherCol)->mMesh, _time, norm))
-								{
-									SystemLogger::GetLog() << "SPHERE TO MESH COLLISION!";
-								}
-							}
-							else if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
+							//if (otherCol->mColliderType == Collider::eCOLLIDER_Mesh)
+							//{
+							//	//Not sure what outnorm is used for at the moment might just stick with basic cube/sphere collisions
+							//	if (MovingSphereToMesh(collider->GetPos(), collider->mVelocity, ((SphereCollider*)collider)->mRadius, ((MeshCollider*)otherCol)->mMesh, _time, norm))
+							//	{
+							//		
+							//	}
+							//}
+							if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
 							{
 								Sphere s2(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
 								if (SphereToSphere(s1, s2))
 								{
-									//reflect? dissapear?
-									SystemLogger::GetLog() << "SPHERE TO SPHERE COLLISION!";
+									SystemLogger::GetLog() << "SPHERE TO SPHERE COLLISION" << std::endl;
+									for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
+									{
+										((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
+										((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+									}
 								}
 								break;
 							}
@@ -624,8 +628,7 @@ void Physics::Update(float _time)
 								AABB aabb(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
 								if (SphereToAABB(s1, aabb))
 								{
-									//reflect? dissapear?
-									SystemLogger::GetLog() << "SPHERE TO AABB COLLISION FROM SPHERE!";
+									
 								}
 								break;
 							}
@@ -633,17 +636,24 @@ void Physics::Update(float _time)
 							{
 								Plane plane(((PlaneCollider*)otherCol)->mNormal, ((PlaneCollider*)otherCol)->mOffset);
 								int result = SphereToPlane(plane, s1);
-								if (result == 1)//in front of plane
+								if (result == 2)//behind plane
 								{
-									SystemLogger::GetLog() << "SPHERE IN FRONT OF PLANE!";
-								}
-								else if (result == 2)//behind plane
-								{
-									SystemLogger::GetLog() << "SPHERE BEHIND PLANE!";
+									float bottom = ((SphereCollider*)collider)->mCenter.y - ((SphereCollider*)collider)->mRadius;
+									if (bottom < otherCol->GetPos().y)
+									{
+										float depth = bottom + otherCol->GetPos().y;
+										vec4f correction = ((PlaneCollider*)otherCol)->mNormal * (depth / (collider->mInvMass + otherCol->mInvMass)) * 0.2f;
+										collider->SetPos(collider->GetPos() - (correction * collider->mInvMass));
+									}
 								}
 								else if (result == 3)// intersecting plane
 								{
-									SystemLogger::GetLog() << "SPHERE INTERSECTING PLANE!";
+									CalcFriction(*collider, *otherCol);
+									for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
+									{
+										((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
+										((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+									}
 								}
 							}
 						}
@@ -679,8 +689,7 @@ void Physics::Update(float _time)
 								Sphere s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
 								if (SphereToAABB(s1, aabb1))
 								{
-									//reflect? dissapear?
-									SystemLogger::GetLog() << "SPHERE TO AABB COLLISION FROM AABB!";
+									
 								}
 							}
 							else if (otherCol->mColliderType == Collider::eCOLLIDER_Plane)
@@ -748,10 +757,13 @@ void Physics::Update(float _time)
 							else if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
 							{
 								Sphere s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
-								if (SphereToAABB(s1, aabb1))
+								if (collider->mShouldMove && (AabbToPlane(((ButtonCollider*)collider)->mLowerBound, aabb1) == 1) && SphereToAABB(s1, aabb1))
 								{
-									//reflect? dissapear?
-									SystemLogger::GetLog() << "SPHERE TO AABB COLLISION FROM AABB!";
+									for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
+									{
+										((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
+										((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+									}
 								}
 							}
 						}

@@ -188,7 +188,8 @@ void Timeline::ClearTimeLine() {
 				for (auto snapComps : snapInfo.second->mComponets)
 					delete snapComps;
 
-			snapInfo.second->mComponets.clear();
+			if(snapInfo.second)
+				snapInfo.second->mComponets.clear();
 
 			if (snapInfo.second)
 				delete snapInfo.second;

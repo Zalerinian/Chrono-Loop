@@ -21,6 +21,7 @@
 #include "Objects\BaseObject.h"
 #include "Actions/TeleportAction.hpp"
 #include "Actions/CCElasticReactionWithPlane.h"
+#include "Actions/CCElasticSphereToSphere.h"
 #include "Actions/CCElasticAABBtoAABB.h"
 #include "Actions/CCButtonPress.h"
 #include "Core/Level.h"
@@ -137,7 +138,7 @@ void Update() {
 
 	Transform transform;
 	transform.SetMatrix(MatrixIdentity());
-	matrix4 mat1 = MatrixTranslation(0, 1, 0);
+	matrix4 mat1 = MatrixTranslation(0, 5, 0);
 	transform.SetMatrix(mat1);
 	BaseObject* PhysicsBox = Pool::Instance()->iGetObject()->Reset("aabb", transform);//new BaseObject("aabb", transform);
 	CubeCollider *BoxCollider = new CubeCollider(PhysicsBox, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.4f, 0.1f, 0.1f, 0.9f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
@@ -155,6 +156,40 @@ void Update() {
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_TEST1);
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_TEST1);
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::PLAYBOUNCEEFFECTS);
+
+	Transform SphereTransform;
+	SphereTransform.SetMatrix(MatrixIdentity());
+	matrix4 SphereMat = MatrixScale(0.15f, 0.15f, 0.15f); 
+	SphereMat *= MatrixTranslation(2, 5, 0);
+	SphereTransform.SetMatrix(SphereMat);
+	BaseObject* PhysicsSphere = Pool::Instance()->iGetObject()->Reset("sphere", SphereTransform);
+	SphereCollider *BallCollider = new SphereCollider(PhysicsSphere, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 6.0f, 0.6f, 0.2f, 0.1f, 0.9f, 0.15f);
+	BoxCollider->AddForce(vec4f(0, 0, 0, 0));
+	CodeComponent* PlaneCollision2 = new CCElasticReactionWithPlane;
+	CodeComponent* SpheretoSphere = new CCElasticSphereToSphere;
+	//CodeComponent* BoxCollision = new CCElasticAABBtoAABB;
+	PhysicsSphere->AddComponent(BallCollider);
+	PhysicsSphere->AddComponent(SpheretoSphere);
+	PhysicsSphere->AddComponent(PlaneCollision2);
+	//PhysicsSphere->AddComponent(BoxCollision);
+	TimeManager::Instance()->AddObjectToTimeline(PhysicsSphere);
+
+	Transform SphereTransform2;
+	SphereTransform2.SetMatrix(MatrixIdentity());
+	matrix4 SphereMat2 = MatrixScale(0.15f, 0.15f, 0.15f);
+	SphereMat2 *= MatrixTranslation(1, 2, 0);
+	SphereTransform2.SetMatrix(SphereMat2);
+	BaseObject* PhysicsSphere2 = Pool::Instance()->iGetObject()->Reset("sphere", SphereTransform2);
+	SphereCollider *BallCollider2 = new SphereCollider(PhysicsSphere2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 6.0f, 0.6f, 0.2f, 0.1f, 0.9f, 0.15f);
+	BoxCollider->AddForce(vec4f(0, 0, 0, 0));
+	CodeComponent* PlaneCollision3 = new CCElasticReactionWithPlane;
+	CodeComponent* SpheretoSphere2 = new CCElasticSphereToSphere;
+	//CodeComponent* BoxCollision = new CCElasticAABBtoAABB;
+	PhysicsSphere2->AddComponent(BallCollider2);
+	PhysicsSphere2->AddComponent(PlaneCollision3);
+	PhysicsSphere->AddComponent(SpheretoSphere2);
+	//PhysicsSphere->AddComponent(BoxCollision);
+	TimeManager::Instance()->AddObjectToTimeline(PhysicsSphere2);
 
 	Transform ButtonTransform;
 	ButtonTransform.SetMatrix(MatrixIdentity());
@@ -228,8 +263,20 @@ void Update() {
 	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
 	visibleMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
 	PhysicsBox->AddComponent(visibleMesh);
-	CodeComponent *codeComponent = new BoxSnapToControllerAction();
-	PhysicsBox->AddComponent(codeComponent);
+	//CodeComponent *codeComponent = new BoxSnapToControllerAction();
+	//PhysicsBox->AddComponent(codeComponent);
+
+	MeshComponent *sphereMesh = new MeshComponent("../Resources/Sphere.obj");
+	sphereMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
+	PhysicsSphere->AddComponent(sphereMesh);
+	CodeComponent *codeComponent2 = new BoxSnapToControllerAction();
+	PhysicsSphere->AddComponent(codeComponent2);
+
+	MeshComponent *sphereMesh2 = new MeshComponent("../Resources/Sphere.obj");
+	sphereMesh2->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
+	PhysicsSphere2->AddComponent(sphereMesh2);
+	//CodeComponent *codeComponent3 = new BoxSnapToControllerAction();
+	//PhysicsSphere->AddComponent(codeComponent3);
 
 	MeshComponent *ButtonMesh = new MeshComponent("../Resources/cube.obj");
 	ButtonMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
@@ -297,6 +344,8 @@ void Update() {
 	TimeManager::Instance()->AddObjectToTimeline(headset);
 
 	Physics::Instance()->mObjects.push_back(PhysicsBox);
+	Physics::Instance()->mObjects.push_back(PhysicsSphere);
+	Physics::Instance()->mObjects.push_back(PhysicsSphere2);
 	Physics::Instance()->mObjects.push_back(Floor);
 	Physics::Instance()->mObjects.push_back(walls);
 	Physics::Instance()->mObjects.push_back(RightController);
@@ -305,6 +354,8 @@ void Update() {
 	Level::Initialize(headset, RightController, LeftController);
 	Level* L1 = Level::Instance(); 
 	L1->iAddObject(PhysicsBox);
+	L1->iAddObject(PhysicsSphere);
+	L1->iAddObject(PhysicsSphere2);
 	L1->iAddObject(Floor);
 	L1->iAddObject(RightController);
 	L1->iAddObject(walls);

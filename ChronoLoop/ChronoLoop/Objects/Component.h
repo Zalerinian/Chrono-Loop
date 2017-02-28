@@ -120,6 +120,7 @@ public:
 	SphereCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _radius);
 	vec4f mCenter;
 	float mRadius;
+	virtual void SetPos(vec4f& _other);
 };
 
 class CubeCollider : public Collider {

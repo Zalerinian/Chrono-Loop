@@ -228,6 +228,12 @@ SphereCollider::SphereCollider(BaseObject* _obj, bool _move, vec4f _gravity, flo
 	mDragForce = mVelocity * (-0.5f * mRHO * mVelocity.Magnitude3() * mDrag * mArea);
 }
 
+void SphereCollider::SetPos(vec4f & _other)
+{
+	mObject->GetTransform().GetMatrix().fourth = _other;
+	mCenter = _other;
+}
+
 CubeCollider::CubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec4f _min, vec4f _max) {
 	mObject = _obj;
 	mType = eCOMPONENT_COLLIDER;
