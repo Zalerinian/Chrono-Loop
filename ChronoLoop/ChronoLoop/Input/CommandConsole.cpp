@@ -57,7 +57,7 @@ void CommandConsole::Update()
 			tempFont = new Font(L"Times New Roman", 15, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 		}
 		else{ 
-			tempFont = new Font(L"Times New Roman", 40, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+			tempFont = new Font(L"Calibri", 40, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 		}
 		Draw::Instance().DrawTextToBitmap(
 			0.0f,
@@ -106,7 +106,7 @@ void CommandConsole::Display()
 	if(!mIsVR)
 		tempFont = new Font(L"Times New Roman", 15, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 	else
-		tempFont = new Font(L"Times New Roman", 40, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+		tempFont = new Font(L"Calibri", 40, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 
 	Draw::Instance().DrawTextToBitmap(
 		0.0f,
@@ -217,10 +217,12 @@ void CommandConsole::DisplayFPS()
 		}
 		std::wstring FPS = L"FPS: " + std::to_wstring(sInstance->mFps);
 		Font* tempFont;
-		if (!mIsVR)
+		if (!mIsVR) {
 			tempFont = new Font(L"Times New Roman", 25, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
-		else
-			tempFont = new Font(L"Times New Roman", 55, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+		}
+		else {
+			tempFont = new Font(L"Times New Roman", 40, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+		}
 
 		Draw::Instance().DrawTextToBitmap(
 			(*Draw::Instance().GetContext2D())->GetSize().width*(25.0f / 32.0f),
@@ -228,6 +230,7 @@ void CommandConsole::DisplayFPS()
 			(*Draw::Instance().GetContext2D())->GetSize().width,
 			(*Draw::Instance().GetContext2D())->GetSize().height, *tempFont,
 			FPS, *(Draw::Instance().GetScreenBitmap()).get());
+
 	}
 }
 void CommandConsole::InputFunction()

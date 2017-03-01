@@ -372,22 +372,21 @@ namespace RenderEngine {
 
 			vr::Texture_t submitTexture = { (void*)(*mMainViewTexture), vr::TextureType_DirectX, vr::ColorSpace_Auto };
 			vr::VRCompositor()->Submit(currentEye, &submitTexture);
+		#if ENABLE_TEXT
+			CommandConsole::Instance().SetVRBool(true);
+			CommandConsole::Instance().Update();
+		#endif
 		}
-		//pat added 
-#if ENABLE_TEXT
-		CommandConsole::Instance().SetVRBool(true);
-		CommandConsole::Instance().Update();
-#endif
-		//-----
 	}
 	void Renderer::RenderNoVR(float _delta) {
 		UpdateCamera(2, 2, _delta);
+
 		ProcessRenderSet();
-		//pat added 
-#if ENABLE_TEXT
+	#if ENABLE_TEXT
 		CommandConsole::Instance().SetVRBool(false);
 		CommandConsole::Instance().Update();
-#endif
+	#endif
+
 	}
 
 	void Renderer::ProcessRenderSet() {
