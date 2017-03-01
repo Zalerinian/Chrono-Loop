@@ -15,6 +15,29 @@ struct VertexPosTex
 {
 	vec4f	Position;
 	vec4f	UV;
+
+	VertexPosTex() {}
+	VertexPosTex(vec4f _pos, vec4f _uv)
+	{
+		Position = _pos;
+		UV = _uv;
+	}
+	bool operator!=(const VertexPosTex& _other) const
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			if ((Position.xyzw[i] == _other.Position.xyzw[i]) && (UV.xyzw[i] == UV.xyzw[i]))
+				return false;
+		}
+	}
+	bool operator==(const VertexPosTex& _other) const
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			if ((Position.xyzw[i] == _other.Position.xyzw[i]) && (UV.xyzw[i] == UV.xyzw[i]))
+				return true;
+		}
+	}
 };
 struct VertexPosNormTex
 {

@@ -112,6 +112,18 @@
     <Filter Include="DXTK">
       <UniqueIdentifier>{16572d88-a51f-45a6-a564-025b7a4af6ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Particles">
+      <UniqueIdentifier>{13ed9ada-07b5-49a1-948e-cf51e2147e94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Particles\Header Files">
+      <UniqueIdentifier>{44005d82-56fb-4da1-8918-4d87bb2e7cbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Particles\Source Files">
+      <UniqueIdentifier>{ae979ed3-b94a-4d13-a685-68010cbf7e88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Particles\Shaders">
+      <UniqueIdentifier>{f5399c09-a49b-4c6a-ac21-88f9c2d87ffd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\BaseObject.h">
@@ -284,6 +296,12 @@
     </ClInclude>
     <ClInclude Include="Actions\CCElasticReactionWithPlane.h">
       <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Particles\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleComponents.h">
+      <Filter>Particles\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -471,6 +489,12 @@
     <ClCompile Include="Core\Pool.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>Particles\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleComponents.cpp">
+      <Filter>Particles\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
@@ -511,6 +535,9 @@
     </FxCompile>
     <FxCompile Include="Rendering\Shaders\BasicVertex.hlsl">
       <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="GeometryShader.hlsl">
+      <Filter>Particles\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
