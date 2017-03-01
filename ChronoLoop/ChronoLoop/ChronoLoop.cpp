@@ -203,7 +203,9 @@ void Update() {
 	BallCollider2->AddForce(vec4f(0, 0, 0, 0));
 	CodeComponent* PlaneCollision3 = new CCElasticReactionWithPlane;
 	CodeComponent* SpheretoSphere2 = new CCElasticSphereToSphere;
+	CodeComponent* spheretobox2 = new CCElasticAABBtoAABB;
 	PhysicsSphere2->AddComponent(BallCollider2);
+	PhysicsSphere2->AddComponent(spheretobox2);
 	PhysicsSphere2->AddComponent(PlaneCollision3);
 	PhysicsSphere2->AddComponent(SpheretoSphere2);
 	TimeManager::Instance()->AddObjectToTimeline(PhysicsSphere2);
@@ -354,14 +356,18 @@ void Update() {
 	Exit.SetMatrix(Math::MatrixTranslation(0, -1, 0));
 	BaseObject* ExitWall = Pool::Instance()->iGetObject()->Reset("ExitWall", Exit);
 	MeshComponent *ExitMesh = new MeshComponent("../Resources/ExitDoor.obj");
+	CubeCollider* exitCol = new CubeCollider(ExitWall, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(0.859f, 0, -7.435f, 0), vec4f(3.137f, 3, -7, 0));
 	ExitMesh->AddTexture("../Resources/Doors.png", RenderEngine::eTEX_DIFFUSE);
 	ExitWall->AddComponent(ExitMesh);
+	ExitWall->AddComponent(exitCol);
 	TimeManager::Instance()->AddObjectToTimeline(ExitWall);
 
 	BaseObject* BlockDoor = Pool::Instance()->iGetObject()->Reset("BlockDoor", Door);
 	MeshComponent *DoorMesh = new MeshComponent("../Resources/BlockDoor.obj");
+	CubeCollider* doorCol = new CubeCollider(BlockDoor, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-1.358f, 0, 3.058f, 0), vec4f(-0.82f, 3, 7.574f, 0));
 	DoorMesh->AddTexture("../Resources/Doors.png", RenderEngine::eTEX_DIFFUSE);
 	BlockDoor->AddComponent(DoorMesh);
+	BlockDoor->AddComponent(doorCol);
 	TimeManager::Instance()->AddObjectToTimeline(BlockDoor);
 
 	TimeManager::Instance()->AddObjectToTimeline(headset);
