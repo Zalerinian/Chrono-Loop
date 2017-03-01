@@ -179,7 +179,7 @@ void Update() {
 	Transform SphereTransform;
 	SphereTransform.SetMatrix(MatrixIdentity());
 	matrix4 SphereMat = MatrixScale(0.15f, 0.15f, 0.15f); 
-	SphereMat *= MatrixTranslation(-3, 5, 0);
+	SphereMat *= MatrixTranslation(3, 5, 0);
 	SphereTransform.SetMatrix(SphereMat);
 	BaseObject* PhysicsSphere = Pool::Instance()->iGetObject()->Reset("sphere", SphereTransform);
 	SphereCollider *BallCollider = new SphereCollider(PhysicsSphere, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 3.0f, 0.1f, 0.2f, 0.1f, 0.03f, 0.15f);
@@ -272,13 +272,13 @@ void Update() {
 	TeleportAction *ta = new TeleportAction(false);
 	TimeManipulation* tm = new TimeManipulation(false);
 	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
-	CodeComponent* pickup = new BoxSnapToControllerAction;
-	RightController->AddComponent(pickup);
 	RightController->AddComponent(mc);
 	RightController->AddComponent(rightRaycaster);
 	RightController->AddComponent(ta);
 	RightController->AddComponent(rightConCol);
 	RightController->AddComponent(tm);
+	//CodeComponent* pickup = new BoxSnapToControllerAction();
+	//RightController->AddComponent(pickup);
 	TimeManager::Instance()->AddObjectToTimeline(RightController);
 
 	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
@@ -311,13 +311,13 @@ void Update() {
 	TeleportAction *ta2 = new TeleportAction(true);
 	TimeManipulation* tm2 = new TimeManipulation(true);
 	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
-	CodeComponent* pickup2 = new BoxSnapToControllerAction;
-	LeftController->AddComponent(pickup2);
 	LeftController->AddComponent(leftConCol);
 	LeftController->AddComponent(leftRaycaster);
 	LeftController->AddComponent(mc2);
 	LeftController->AddComponent(ta2);
 	LeftController->AddComponent(tm2);
+	//CodeComponent* pickup2 = new BoxSnapToControllerAction();
+	//LeftController->AddComponent(pickup2);
 	TimeManager::Instance()->AddObjectToTimeline(LeftController);
 	if (VREnabled) {
 		VRInputManager::Instance().iUpdate();
