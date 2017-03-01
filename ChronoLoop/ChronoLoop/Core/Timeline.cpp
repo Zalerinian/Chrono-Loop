@@ -188,7 +188,8 @@ void Timeline::ClearTimeLine() {
 				for (auto snapComps : snapInfo.second->mComponets)
 					delete snapComps;
 
-			snapInfo.second->mComponets.clear();
+			if(snapInfo.second)
+				snapInfo.second->mComponets.clear();
 
 			if (snapInfo.second)
 				delete snapInfo.second;
@@ -296,28 +297,28 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 						//If we are a clone but dont have a next movement then record one at position
 						else if (snap->mSnapinfos[id] == nullptr && id == _clones[i]->GetUniqueId()) {
 							//If change add to mSnapinfos and Updatetime
-							if (!CheckForDuplicateData(id, _b.second)) {
+							//if (!CheckForDuplicateData(id, _b.second)) {
 								snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, nullptr);
 								snap->mUpdatedtimes[id] = _time;
-							}
+							//}
 						}
 						//If we made it through the list do the normal
 						else if (id != _clones[i]->GetUniqueId() && i == _clones.size() - 1) {
 							//If change add to mSnapinfos and Updatetime
-							if (!CheckForDuplicateData(id, _b.second)) {
+							//if (!CheckForDuplicateData(id, _b.second)) {
 								snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, snap->mSnapinfos[id]);
 								snap->mUpdatedtimes[id] = _time;
-							}
+							//}
 						}
 					}
 				} else {
 					//if (snap->mSnapinfos[id] != nullptr)
 					//	delete snap->mSnapinfos[id];
 					//If change add to mSnapinfos and Updatetime
-					if (!CheckForDuplicateData(id, _b.second)) {
+					//if (!CheckForDuplicateData(id, _b.second)) {
 						snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, snap->mSnapinfos[id]);
 						snap->mUpdatedtimes[id] = _time;
-					}
+					//}
 				}
 			}
 		}

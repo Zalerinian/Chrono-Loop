@@ -113,7 +113,7 @@ struct BoxSnapToControllerAction : public CodeComponent {
 		mHeldLeft = left;
 		matrix4 m = VRInputManager::Instance().iGetController(left).GetPosition();
 		((CubeCollider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->SetPos((m).tiers[3]);
-		mObject->GetTransform().SetMatrix(m);
+		//mObject->GetTransform().SetMatrix(m);
 		((Collider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mShouldMove = false;
 	}
 
