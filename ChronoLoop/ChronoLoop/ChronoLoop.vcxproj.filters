@@ -291,6 +291,12 @@
     <ClInclude Include="Input\CommandConsole.h">
       <Filter>Input\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\CCElasticSphereToSphere.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCElasticAABBToSphere.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">

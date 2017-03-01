@@ -28,7 +28,7 @@ struct TeleportAction : public CodeComponent {
 		matrix4 mat = VRInputManager::Instance().iGetController(left).GetPosition();
 		mObject->GetTransform().SetMatrix(mat);
 
-		if (VRInputManager::Instance().iGetController(left).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Trigger)) {
+		if (VRInputManager::Instance().iGetController(left).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad)) {
 			vec4f forward(0, 0, 1, 0);
 			forward *= mObject->GetTransform().GetMatrix();
 			Triangle *tris = mPlaneMesh->GetTriangles();
