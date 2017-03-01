@@ -386,7 +386,8 @@ bool Timeline::CheckForDuplicateData(unsigned short _id, BaseObject* _object) {
 	}
 	else
 	{
-		SystemLogger::GetError() << "Patrick messed up! He tried and find a snapinfo of last recorded time and it didn't exist";
+		SystemLogger::GetError() << "Patrick mostly likely messed up! He tried and find a snapinfo of last recorded time and it didn't exist";
+		return false;
 	}
 
 	if (info->mTransform != _object->GetTransform())
