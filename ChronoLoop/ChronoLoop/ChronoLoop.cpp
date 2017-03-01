@@ -183,7 +183,7 @@ void Update() {
 	SphereTransform.SetMatrix(SphereMat);
 	BaseObject* PhysicsSphere = Pool::Instance()->iGetObject()->Reset("sphere", SphereTransform);
 	SphereCollider *BallCollider = new SphereCollider(PhysicsSphere, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 3.0f, 0.7f, 0.2f, 0.1f, 0.03f, 0.15f);
-	BallCollider->AddForce(vec4f(0, 0, 6, 0));
+	BallCollider->AddForce(vec4f(0, 0, 0, 0));
 	CodeComponent* PlaneCollision2 = new CCElasticReactionWithPlane;
 	CodeComponent* SpheretoSphere = new CCElasticSphereToSphere;
 	CodeComponent* spheretobox = new CCElasticAABBtoAABB;
