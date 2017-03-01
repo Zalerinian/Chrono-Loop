@@ -142,7 +142,7 @@ void Update() {
 	matrix4 mat1 = MatrixTranslation(0, 5, 0);
 	transform.SetMatrix(mat1);
 	BaseObject* PhysicsBox = Pool::Instance()->iGetObject()->Reset("aabb", transform);//new BaseObject("aabb", transform);
-	CubeCollider *BoxCollider = new CubeCollider(PhysicsBox, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.4f, 0.1f, 0.1f, 0.9f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
+	CubeCollider *BoxCollider = new CubeCollider(PhysicsBox, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.3f, 0.1f, 0.1f, 0.9f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
 	BoxCollider->AddForce(vec4f(0, 0, 0, 0));
 	CodeComponent* PlaneCollision = new CCElasticReactionWithPlane;
 	CodeComponent* BoxCollision = new CCElasticAABBtoAABB;
@@ -165,7 +165,7 @@ void Update() {
 	matrix4 matBox = MatrixTranslation(1, 5, 0);
 	transformBox.SetMatrix(matBox);
 	BaseObject* PhysicsBox2 = Pool::Instance()->iGetObject()->Reset("aabb2", transformBox);//new BaseObject("aabb", transform);
-	CubeCollider *BoxCollider2 = new CubeCollider(PhysicsBox2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 5.0f, 0.4f, 0.1f, 0.1f, 0.01f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
+	CubeCollider *BoxCollider2 = new CubeCollider(PhysicsBox2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 5.0f, 0.3f, 0.1f, 0.1f, 0.01f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
 	BoxCollider2->AddForce(vec4f(0, 0, 0, 0));
 	CodeComponent* PlaneCollisionBox = new CCElasticReactionWithPlane;
 	CodeComponent* BoxCollision2 = new CCElasticAABBtoAABB;
@@ -179,14 +179,16 @@ void Update() {
 	Transform SphereTransform;
 	SphereTransform.SetMatrix(MatrixIdentity());
 	matrix4 SphereMat = MatrixScale(0.15f, 0.15f, 0.15f); 
-	SphereMat *= MatrixTranslation(2, 5, 0);
+	SphereMat *= MatrixTranslation(5, 5, 4);
 	SphereTransform.SetMatrix(SphereMat);
 	BaseObject* PhysicsSphere = Pool::Instance()->iGetObject()->Reset("sphere", SphereTransform);
-	SphereCollider *BallCollider = new SphereCollider(PhysicsSphere, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 6.0f, 0.6f, 0.2f, 0.1f, 0.9f, 0.15f);
-	BoxCollider->AddForce(vec4f(0, 0, 0, 0));
+	SphereCollider *BallCollider = new SphereCollider(PhysicsSphere, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 3.0f, 0.7f, 0.2f, 0.1f, 0.03f, 0.15f);
+	BallCollider->AddForce(vec4f(0, 0, 6, 0));
 	CodeComponent* PlaneCollision2 = new CCElasticReactionWithPlane;
 	CodeComponent* SpheretoSphere = new CCElasticSphereToSphere;
+	CodeComponent* spheretobox = new CCElasticAABBtoAABB;
 	PhysicsSphere->AddComponent(BallCollider);
+	PhysicsSphere->AddComponent(spheretobox);
 	PhysicsSphere->AddComponent(SpheretoSphere);
 	PhysicsSphere->AddComponent(PlaneCollision2);
 	TimeManager::Instance()->AddObjectToTimeline(PhysicsSphere);
@@ -196,16 +198,14 @@ void Update() {
 	matrix4 SphereMat2 = MatrixScale(0.15f, 0.15f, 0.15f);
 	SphereMat2 *= MatrixTranslation(3, 5, 0);
 	SphereTransform2.SetMatrix(SphereMat2);
-	BaseObject* PhysicsSphere2 = Pool::Instance()->iGetObject()->Reset("sphere", SphereTransform2);
-	SphereCollider *BallCollider2 = new SphereCollider(PhysicsSphere2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 6.0f, 1.0f, 0.2f, 0.1f, 0.9f, 0.15f);
-	BoxCollider->AddForce(vec4f(0, 0, 0, 0));
+	BaseObject* PhysicsSphere2 = Pool::Instance()->iGetObject()->Reset("sphere2", SphereTransform2);
+	SphereCollider *BallCollider2 = new SphereCollider(PhysicsSphere2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 3.0f, 1.0f, 0.2f, 0.1f, 0.03f, 0.15f);
+	BallCollider2->AddForce(vec4f(0, 0, 0, 0));
 	CodeComponent* PlaneCollision3 = new CCElasticReactionWithPlane;
 	CodeComponent* SpheretoSphere2 = new CCElasticSphereToSphere;
-	//CodeComponent* BoxCollision = new CCElasticAABBtoAABB;
 	PhysicsSphere2->AddComponent(BallCollider2);
 	PhysicsSphere2->AddComponent(PlaneCollision3);
 	PhysicsSphere2->AddComponent(SpheretoSphere2);
-	//PhysicsSphere->AddComponent(BoxCollision);
 	TimeManager::Instance()->AddObjectToTimeline(PhysicsSphere2);
 
 	Transform ButtonTransform;

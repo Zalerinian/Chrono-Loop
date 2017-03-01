@@ -620,7 +620,6 @@ void Physics::Update(float _time)
 										((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
 									}
 								}
-								break;
 							}
 							else if (otherCol->mColliderType == Collider::eCOLLIDER_Cube)
 							{
@@ -632,7 +631,6 @@ void Physics::Update(float _time)
 										((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
 									}
 								}
-								break;
 							}
 							else if (otherCol->mColliderType == Collider::eCOLLIDER_Plane)
 							{

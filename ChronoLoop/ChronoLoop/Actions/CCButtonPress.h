@@ -21,7 +21,7 @@ struct CCButtonPress : public CodeComponent
 		if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane)
 		{
 			colliding = true;
-			//SystemLogger::GetLog() << "BUTTON PRESS";
+			
 			vec4f norm = ((ButtonCollider*)&_col)->mPushNormal;
 			AABB aabb1(((ButtonCollider*)&_col)->mMin, ((ButtonCollider*)&_col)->mMax);
 			vec4f tForce = norm * (norm * _other.mTotalForce);
