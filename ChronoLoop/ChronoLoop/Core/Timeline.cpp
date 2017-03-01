@@ -30,7 +30,11 @@ Timeline::~Timeline() {
 void Timeline::AddBaseObject(BaseObject* _object, unsigned short _id) {
 	mLiveObjects[_id] = _object;
 	ObjectLifeTime* newObject = new ObjectLifeTime();
+	if(mSnaptimes.size() != 0)
 	newObject->mBirth = mSnaptimes[mCurrentGameTimeIndx];
+	else
+	newObject->mBirth = 0;
+
 	mObjectLifeTimes[_id] = newObject;
 	
 }

@@ -91,7 +91,5 @@ void TimeManager::RewindMakeClone(unsigned int _frame, BaseObject* _ob1, BaseObj
 }
 
 void TimeManager::Destroy() {
-	
 	delete instanceTimemanager;
-	
 }
