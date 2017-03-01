@@ -11,8 +11,10 @@ CommandConsole & CommandConsole::Instance()
 	if (!sInstance)
 	{
 		sInstance = new CommandConsole();
+		sInstance->mInputThread = std::thread(&CommandConsole::InputFunction, sInstance);
 		sInstance->AddCommand(L"/HELP", sInstance->Help);
 		sInstance->AddCommand(L"/FPS", sInstance->ToggleFPS);
+		sInstance->AddCommand(L"/ALL", sInstance->ToggleAll);
 	}
 	return *sInstance;
 }
@@ -28,12 +30,12 @@ CommandConsole::CommandConsole()
 	isFPSon = false;
 	mFps = 0;
 	mFrameTime = 0.0f;
-	mInputThread = std::thread(&CommandConsole::InputFunction, this);
 	//mInputThread.join();
 }
 void CommandConsole::Update()
 {
 	KeyboardInput::Instance().CheckKeyboardButtonPress();
+
 	if (willTakeInput())
 	{
 		Draw::Instance().DrawRectangleToBitmap(0.0f,
@@ -50,7 +52,13 @@ void CommandConsole::Update()
 			D2D1::ColorF(D2D1::ColorF::Black, 9.6f),
 			*(Draw::Instance().GetScreenBitmap().get())
 		);
-		Font* tempFont = new Font(L"Times New Roman", 15, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+		Font* tempFont;
+		if (!mIsVR) {
+			tempFont = new Font(L"Times New Roman", 15, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+		}
+		else{ 
+			tempFont = new Font(L"Times New Roman", 40, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+		}
 		Draw::Instance().DrawTextToBitmap(
 			0.0f,
 			(*Draw::Instance().GetContext2D())->GetSize().height*(31.0f / 32.0f),
@@ -59,25 +67,12 @@ void CommandConsole::Update()
 			*tempFont, mCurCommand,
 			*(Draw::Instance().GetScreenBitmap()).get()
 		);
-		if (sInstance->isFPSon)
-		{
-			float _deltaTime = TimeManager::Instance()->GetDeltaTime();
-			sInstance->mFrameTime += _deltaTime;
-			if (sInstance->mFrameTime > .5f) {
-				sInstance->mFps = (int)(1000.0f / (_deltaTime * 1000));
-				sInstance->mFrameTime = 0;
-			}
-			std::wstring FPS = L"FPS: " + std::to_wstring(sInstance->mFps);
-			Font* tempFont = new Font(L"Times New Roman", 25, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_TRAILING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
-			Draw::Instance().DrawTextToBitmap(
-				(*Draw::Instance().GetContext2D())->GetSize().width*(7.0f / 8.0f),
-				(*Draw::Instance().GetContext2D())->GetSize().height*(30.0f / 32.0f),
-				(*Draw::Instance().GetContext2D())->GetSize().width,
-				(*Draw::Instance().GetContext2D())->GetSize().height, *tempFont,
-				FPS, *(Draw::Instance().GetScreenBitmap()).get());
-		}
+
 		Display();
 	}
+	TimeManager::Instance()->DisplaySnapshotCount();
+	TimeManager::Instance()->DisplayCloneCount();
+	sInstance->DisplayFPS();
 }
 bool CommandConsole::CheckCommand(std::wstring _commandName,std::wstring _item)
 {
@@ -107,7 +102,12 @@ void CommandConsole::AddCommand(std::wstring _commandName, Command _functionPtr)
 }
 void CommandConsole::Display()
 {
-	Font* tempFont = new Font(L"Times New Roman", 15, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+	Font* tempFont;
+	if(!mIsVR)
+		tempFont = new Font(L"Times New Roman", 15, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+	else
+		tempFont = new Font(L"Times New Roman", 40, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+
 	Draw::Instance().DrawTextToBitmap(
 		0.0f,
 		(*Draw::Instance().GetContext2D())->GetSize().height*(5.0f / 8.0f),
@@ -117,7 +117,14 @@ void CommandConsole::Display()
 		*(Draw::Instance().GetScreenBitmap()).get()
 	);
 }
-void CommandConsole::Help(void* _self, std::wstring _nothing)
+void CommandConsole::Toggle()
+{
+	if (mTakeInput)
+		mTakeInput = false;
+	else
+		mTakeInput = true;
+}
+void CommandConsole::Help(void* _self, std::wstring _helpFunc)
 {
 	CommandConsole* self = (CommandConsole*)_self;
 	std::list<std::wstring> temp;
@@ -129,22 +136,40 @@ void CommandConsole::Help(void* _self, std::wstring _nothing)
 	//**FOR DISPLAYING**//
 	int cnt = 0;
 	std::wstring tempDisplay;
-	if (temp.size() == 1)
-		tempDisplay = L"CURRENTLY NO OTHER COMMANDS RIGHT NOW";
-	else
+	
+		
+	if (_helpFunc == L"ALL")
+		tempDisplay = L"TURNS ON COMMANDS";
+	else if (_helpFunc == L"CLONECOUNT")
+		tempDisplay = L"DISPLAYS # OF CLONES";
+	else if (_helpFunc == L"SNAPCOUNT")
+		tempDisplay = L"DISPLAYS # OF SNAPSHOTS";
+	else if (_helpFunc == L"FPS")
+		tempDisplay = L"DISPLAYS FPS";
+	else if (_helpFunc == L"HELP")
+		tempDisplay = L"...wot";
+	else if (_helpFunc == L"/HEL")
 	{
-		std::cout << "\n";
-		for (auto iter = temp.begin(); iter != temp.end(); iter++)
+		if (temp.size() == 1)
+			tempDisplay = L"CURRENTLY NO OTHER COMMANDS RIGHT NOW";
+		else
 		{
-			if (cnt % 2 == 0) {
-				tempDisplay += (*iter) + L"\t\t";
+			std::cout << "\n";
+			for (auto iter = temp.begin(); iter != temp.end(); iter++)
+			{
+				if (cnt % 2 == 0) {
+					tempDisplay += (*iter) + L"\t\t";
+				}
+				else {
+					tempDisplay += (*iter) + L"\n";
+				}
+				cnt++;
 			}
-			else {
-				tempDisplay += (*iter) + L"\n";
-			}
-			cnt++;
 		}
 	}
+	else
+		tempDisplay = L"INVALID INPUT: " + _helpFunc + L"\nCORRECT INPUT:\n /HELP (COMMANDNAME or NOTHING)";
+
 	sInstance->DisplaySet(tempDisplay);
 }
 void CommandConsole::ToggleFPS(void * _self, std::wstring _ifOn)
@@ -159,15 +184,51 @@ void CommandConsole::ToggleFPS(void * _self, std::wstring _ifOn)
 		sInstance->DisplaySet(L"");
 	}
 	else{
-		sInstance->DisplaySet(L"INVALID INPUT:" + _ifOn + L"\nCORRECT INPUT: /FPS (ON/OFF)");
+		sInstance->DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /FPS (ON/OFF)");
 	}
 }
-void CommandConsole::Toggle()
+void CommandConsole::ToggleAll(void* _self, std::wstring _ifOn)
 {
-	if (mTakeInput)
-		mTakeInput = false;
-	else
-		mTakeInput = true;
+	if (_ifOn == L"ON") {
+		sInstance->isFPSon = true;
+		TimeManager::Instance()->SetCloneCountBool(true);
+		TimeManager::Instance()->SetSnapCountBool(true);
+		sInstance->DisplaySet(L"");
+	}
+	else if (_ifOn == L"OFF") {
+		sInstance->isFPSon = false;
+		TimeManager::Instance()->SetCloneCountBool(false);
+		TimeManager::Instance()->SetSnapCountBool(false);
+		sInstance->DisplaySet(L"");
+	}
+	else {
+		sInstance->DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /ALL (ON/OFF)");
+	}
+}
+void CommandConsole::DisplayFPS()
+{
+	if (isFPSon)
+	{
+		float _deltaTime = TimeManager::Instance()->GetDeltaTime();
+		sInstance->mFrameTime += _deltaTime;
+		if (sInstance->mFrameTime > .5f) {
+			sInstance->mFps = (int)(1000.0f / (_deltaTime * 1000));
+			sInstance->mFrameTime = 0;
+		}
+		std::wstring FPS = L"FPS: " + std::to_wstring(sInstance->mFps);
+		Font* tempFont;
+		if (!mIsVR)
+			tempFont = new Font(L"Times New Roman", 25, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+		else
+			tempFont = new Font(L"Times New Roman", 55, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+
+		Draw::Instance().DrawTextToBitmap(
+			(*Draw::Instance().GetContext2D())->GetSize().width*(25.0f / 32.0f),
+			(*Draw::Instance().GetContext2D())->GetSize().height*(30.5f / 32.0f),
+			(*Draw::Instance().GetContext2D())->GetSize().width,
+			(*Draw::Instance().GetContext2D())->GetSize().height, *tempFont,
+			FPS, *(Draw::Instance().GetScreenBitmap()).get());
+	}
 }
 void CommandConsole::InputFunction()
 {

@@ -19,13 +19,14 @@ private:
 	std::wstring mCurCommand; //A string to hold the thing that's being typed to the console
 	std::wstring mCurDisplay; //A string to display to the console
 	std::unordered_map<std::wstring, Command> mCommandLines; // Holds all of the Commands and their function pointers
-	std::thread mInputThread; 
+	std::thread mInputThread;
 
 	//Function Specific
 	bool isFPSon; //Toggle for FPS Counter
 	int mFps; //FPS display
 	float mFrameTime; 
 	
+	bool mIsVR;
 	//SystemLogger mLogger;
 public:
 	CommandConsole();
@@ -33,8 +34,12 @@ public:
 	static CommandConsole& Instance();
 	static void DestroyInstance();
 
+	//Misc.
 	bool willTakeInput() { return mTakeInput; };
 	std::wstring GetCurrentCommmand() { return mCurCommand; };
+	bool isVRon() { return mIsVR; }
+	void SetVRBool(bool _set) { mIsVR = _set; }
+
 
 
 	void Update();
@@ -52,13 +57,15 @@ public:
 
 
 	
-
-	//Function Pointer
+	void Toggle();
+	//Function Pointer / Console Commands
 	static void Help(void* _self, std::wstring _nothing);
 	static void ToggleFPS(void* _self, std::wstring _ifOn);
-	void Toggle();
-
+	static void ToggleAll(void* _self, std::wstring _ifOn);
+	void DisplayFPS();
+	//Threaded Function
 	void InputFunction();
+
 
 
 

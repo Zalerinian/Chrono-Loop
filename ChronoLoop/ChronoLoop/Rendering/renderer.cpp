@@ -280,38 +280,6 @@ namespace RenderEngine {
 
 		//(*mContext)->PSSetConstantBuffers(0, 1, nullptr); // This will crash. - Light Buffer
 	}
-
-	void Renderer::RenderVR(float _delta) {
-		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-		vr::VRCompositor()->CompositorBringToFront();
-		float color[4] = { 0.251f, 0.709f, 0.541f, 1 };
-		for (int i = 0; i < 2; ++i) {
-			vr::EVREye currentEye;
-			if (i == 0) {
-				currentEye = vr::EVREye::Eye_Left;
-			} else {
-				currentEye = vr::EVREye::Eye_Right;
-				(*mContext)->ClearRenderTargetView((*mMainView), color);
-				(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-			}
-			ViewProjectionBuffer data;
-			GetMVP(currentEye, data);
-			(*mContext)->UpdateSubresource(*mVPBuffer, 0, nullptr, (void*)&data, 0, 0);
-
-			ProcessRenderSet();
-
-			vr::Texture_t submitTexture = { (void*)(*mMainViewTexture), vr::TextureType_DirectX, vr::ColorSpace_Auto };
-			vr::VRCompositor()->Submit(currentEye, &submitTexture);
-		}
-		//pat added 
-#if ENABLE_TEXT
-		CommandConsole::Instance().Update();
-		//std::wstring FPS = L"FPS: " + to_wstring(mFps);
-		//DrawTextToBitmap(FPS, (*mScreenBitmap),.75f, .75f, 1.0f, 1.0f);
-#endif
-		//-----
-	}
-
 	void Renderer::UpdateCamera(float const _moveSpd, float const _rotSpd, float _delta) {
 #if _DEBUG || 1
 		if (GetActiveWindow() != *mWindow) {
@@ -382,16 +350,44 @@ namespace RenderEngine {
 #endif
 	}
 
+	void Renderer::RenderVR(float _delta) {
+		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+		vr::VRCompositor()->CompositorBringToFront();
+		float color[4] = { 0.251f, 0.709f, 0.541f, 1 };
+		for (int i = 0; i < 2; ++i) {
+			vr::EVREye currentEye;
+			if (i == 0) {
+				currentEye = vr::EVREye::Eye_Left;
+			}
+			else {
+				currentEye = vr::EVREye::Eye_Right;
+				(*mContext)->ClearRenderTargetView((*mMainView), color);
+				(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+			}
+			ViewProjectionBuffer data;
+			GetMVP(currentEye, data);
+			(*mContext)->UpdateSubresource(*mVPBuffer, 0, nullptr, (void*)&data, 0, 0);
+
+			ProcessRenderSet();
+
+			vr::Texture_t submitTexture = { (void*)(*mMainViewTexture), vr::TextureType_DirectX, vr::ColorSpace_Auto };
+			vr::VRCompositor()->Submit(currentEye, &submitTexture);
+		}
+		//pat added 
+#if ENABLE_TEXT
+		CommandConsole::Instance().SetVRBool(true);
+		CommandConsole::Instance().Update();
+#endif
+		//-----
+	}
 	void Renderer::RenderNoVR(float _delta) {
 		UpdateCamera(2, 2, _delta);
 		ProcessRenderSet();
 		//pat added 
 #if ENABLE_TEXT
+		CommandConsole::Instance().SetVRBool(false);
 		CommandConsole::Instance().Update();
-		//std::wstring FPS = L"FPS: " + to_wstring(mFps);
-		//DrawTextToBitmap(FPS, (*mScreenBitmap),.75f,.75f,1.0f,1.0f);
 #endif
-		//-----
 	}
 
 	void Renderer::ProcessRenderSet() {
@@ -493,13 +489,6 @@ namespace RenderEngine {
 			RenderVR(_deltaTime);
 		}
 		(*mChain)->Present(mUseVsync ? 1 : 0, 0);
-		
-		mFrameTime += _deltaTime;
-		if (mFrameTime > .5f) {
-			mFps = (int)(1000.0f / (_deltaTime * 1000));
-			mFrameTime = 0;
-
-		}
 	}
 
 #pragma endregion Public Functions
