@@ -120,6 +120,7 @@ void Timeline::SetComponent(SnapComponent* _destComp, BaseObject * _obj, SnapInf
 				ChangeBitsetToSnap(_destInfo, currComp);
 			}
 		}
+		break;
 	}
 	default:
 	{
@@ -130,6 +131,7 @@ void Timeline::SetComponent(SnapComponent* _destComp, BaseObject * _obj, SnapInf
 				ChangeBitsetToSnap(_destInfo, currComp);
 			}
 		}
+		break;
 	}
 	}
 }
@@ -213,10 +215,9 @@ void Timeline::MoveAllObjectsToSnap(unsigned int _snaptime) {
 		if (stored) {
 			destInfo = destination->mSnapinfos[id];
 		} else if (!stored) {
-			unsigned int lastUpdated = destination->mUpdatedtimes[id];
-			if (lastUpdated == 0) //assume its broken
+			if (destination->mUpdatedtimes.find(id) == destination->mUpdatedtimes.end())
 				continue;
-			destInfo = mSnapshots[lastUpdated]->mSnapinfos[id];
+			destInfo = mSnapshots[destination->mUpdatedtimes[id]]->mSnapinfos[id];
 		}
 
 		//Set Object data
@@ -238,7 +239,7 @@ void Timeline::MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime, unsigned
 	for (auto object : mLiveObjects) {
 		unsigned short id = object.second->GetUniqueID();
 		if (id == _id1 || id == _id2 || id == _id3)
-			return;
+			continue;
 		SnapInfo* destInfo;
 		//If the object doesnt have a info, then check against the list for the last snap it was updated
 		bool stored = destination->IsObjectStored(id);
@@ -301,7 +302,10 @@ SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object, SnapInfo* _info) {
 	_info->mId = _object->GetUniqueID();
 	_info->mTransform = _object->GetTransform();
 	//TODO PAT: IF AN OBJECT IS ADDED THEN REWIND TIME TO BEFORE, ADD THAT OBJECT TO THE POOL
-	//assume that if the object is in the timeline it is on.
+
+	if (mObjectLifeTimes.find(_info->mId) == mObjectLifeTimes.end())
+		_info->mBitset[0] = false;
+	else
 	_info->mBitset[0] = true;
 
 
@@ -330,7 +334,7 @@ SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object, SnapInfo* _info) {
 				temp = _object->GetComponents((ComponentType)i);
 				for (unsigned int i = 0; i < temp.size(); i++) {
 					SnapComponent* newComp = new SnapComponent;
-					newComp->mCompType = eCOMPONENT_UNKNOWN;
+					newComp->mCompType = temp[i]->GetType();
 					newComp->mBitNum = temp[i]->GetComponentNum();
 					_info->mBitset[newComp->mBitNum] = temp[i]->IsEnabled();
 					newComp->mId = temp[i]->GetColliderId();
@@ -450,9 +454,9 @@ bool Timeline::CheckForDuplicateData(unsigned short _id, BaseObject* _object) {
 	}
 	else
 	{
-		SystemLogger::GetError() << "Patrick mostly likely messed up! He tried and find a snapinfo of last recorded time and it didn't exist";
+		//SystemLogger::GetError() << "Patrick mostly likely messed up! He tried to find a snapinfo of last recorded time and it didn't exist" << std::endl;
 		//TODO PAT: IF OBJECT DIDNT EXIST AT THIS TIME IT WILL MAKE 1 == BAD
-		return false;
+		return true;
 	}
 
 	if (info->mTransform != _object->GetTransform())
