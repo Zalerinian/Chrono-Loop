@@ -29,9 +29,9 @@ struct CCButtonPress : public CodeComponent
 			vec4f accel = norm * (norm * _other.mAcceleration);
 			if(tForce * norm < 0 && vel * norm < 0 && accel * norm < 0)
 			{
-				_col.mTotalForce += tForce;
-				_col.mVelocity += vel;
-				_col.mAcceleration += vel / _time;
+				_col.mTotalForce = tForce;
+				_col.mVelocity = vel;
+				_col.mAcceleration = vel / _time;
 				if (!mBooped) {
 					Block->GetTransform().SetMatrix(Math::MatrixTranslation(0, -1, 0));
 					Exit->GetTransform().SetMatrix(Math::MatrixTranslation(0, 2, 0));
