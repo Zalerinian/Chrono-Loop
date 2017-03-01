@@ -29,6 +29,13 @@ Timeline::~Timeline() {
 
 void Timeline::AddBaseObject(BaseObject* _object, unsigned short _id) {
 	mLiveObjects[_id] = _object;
+	ObjectLifeTime* newObject = new ObjectLifeTime();
+	newObject->mBirth = mSnaptimes[mCurrentGameTimeIndx];
+	mObjectLifeTimes[_id] = newObject;
+	
+}
+void Timeline::AddPlayerBaseObject(BaseObject* _object, unsigned short _id) {
+	mLiveObjects[_id] = _object;
 }
 
 
@@ -123,13 +130,55 @@ void Timeline::SetComponent(SnapComponent* _destComp, BaseObject * _obj, SnapInf
 	}
 }
 
+void Timeline::SetCloneCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3)
+{
+	ObjectLifeTime* newObject = new ObjectLifeTime();
+	newObject->mBirth = mSnaptimes[mCurrentGameTimeIndx];
+	mObjectLifeTimes[_id1] = newObject;
+
+	ObjectLifeTime* newObject1 = new ObjectLifeTime();
+	newObject1->mBirth = mSnaptimes[mCurrentGameTimeIndx];
+	mObjectLifeTimes[_id2] = newObject1;
+
+	ObjectLifeTime* newObject2 = new ObjectLifeTime();
+	newObject2->mBirth = mSnaptimes[mCurrentGameTimeIndx];
+	mObjectLifeTimes[_id3] = newObject2;
+	
+}
+
+void Timeline::SetCloneDeathTime(unsigned short _id1, unsigned short _id2, unsigned short _id3)
+{
+	if (mObjectLifeTimes.find(_id1) != mObjectLifeTimes.end()) {
+		ObjectLifeTime* newObject = mObjectLifeTimes[_id1];
+		newObject->mDeath = mSnaptimes[mCurrentGameTimeIndx];
+		//TODO PAT: Record 1 more snap with this component in it and record death of its componets
+	}
+
+	if (mObjectLifeTimes.find(_id2) != mObjectLifeTimes.end()) {
+		ObjectLifeTime* newObject1 =mObjectLifeTimes[_id2];
+		newObject1->mDeath = mSnaptimes[mCurrentGameTimeIndx];
+	}
+
+	if (mObjectLifeTimes.find(_id3) != mObjectLifeTimes.end()) {
+		ObjectLifeTime* newObject2 = mObjectLifeTimes[_id3];
+		newObject2->mDeath = mSnaptimes[mCurrentGameTimeIndx];
+	}
+}
+
+void Timeline::SetBaseObjectDeathTime(unsigned short _id)
+{
+	if (mObjectLifeTimes.find(_id) != mObjectLifeTimes.end()) {
+		ObjectLifeTime* newObject = mObjectLifeTimes[_id];
+		newObject->mDeath = mSnaptimes[mCurrentGameTimeIndx];
+	}
+}
+
 void Timeline::MoveObjectToSnap(unsigned int _snaptime, unsigned short _id) {
 
 	Snapshot* destination = mSnapshots[_snaptime];
 	SnapInfo* destInfo;
 	//If the object doesnt have a info, then check against the list for the last snap it was updated
 	bool stored = destination->IsObjectStored(_id);
-	//TODO PAT: FIX THIS. Storing NULL== BAD
 	if (stored) {
 		destInfo = destination->mSnapinfos[_id];
 	} else if (!stored) {
@@ -229,6 +278,13 @@ void Timeline::ClearTimeLine() {
 		if (snapshot.second)
 			delete snapshot.second;
 	}
+
+	for (auto Objectlife : mObjectLifeTimes)
+	{
+		if (Objectlife.second)
+			delete Objectlife.second;
+	}
+	mObjectLifeTimes.clear();
 	mSnapshots.clear();
 	mSnaptimes.clear();
 	mLiveObjects.clear();
@@ -376,6 +432,10 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 bool Timeline::CheckForDuplicateData(unsigned short _id, BaseObject* _object) {
 	if (mCurrentGameTimeIndx == 0)
 		return false;
+	//If the object has not been made yet or is already dead return so we dont make one yet
+	if (mObjectLifeTimes.find(_id) != mObjectLifeTimes.end() && (mObjectLifeTimes[_id]->mBirth > mCurrentGameTimeIndx ||  mObjectLifeTimes[_id]->mDeath < mCurrentGameTimeIndx))
+		return true;
+
 	SnapInfo* info;
 	Snapshot* snap = mSnapshots[mSnaptimes[mCurrentGameTimeIndx]];
 	//find if the object exist
@@ -387,6 +447,7 @@ bool Timeline::CheckForDuplicateData(unsigned short _id, BaseObject* _object) {
 	else
 	{
 		SystemLogger::GetError() << "Patrick mostly likely messed up! He tried and find a snapinfo of last recorded time and it didn't exist";
+		//TODO PAT: IF OBJECT DIDNT EXIST AT THIS TIME IT WILL MAKE 1 == BAD
 		return false;
 	}
 
@@ -397,7 +458,7 @@ bool Timeline::CheckForDuplicateData(unsigned short _id, BaseObject* _object) {
 		SnapComponent* comp = info->mComponets[i];
 
 		switch (comp->mCompType) {
-			//For each of the collider in the vec
+		//For each of the collider in the vec
 		case ComponentType::eCOMPONENT_COLLIDER:
 		{
 			//Loop to find the same collider component

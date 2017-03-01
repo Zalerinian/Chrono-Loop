@@ -30,7 +30,6 @@ struct SnapInfo
 	std::bitset<32>mBitset;	//Base object and componets enabled or disabled //0 for the baseobject and 1-31 for the components
 };
 struct SnapInfoPlayer : SnapInfo {
-	//TODO PAT: ADD HEADSET POSITION DATA
 
 	matrix4 mPlayerWorldPos;
 	//Left Controller World Pos
@@ -57,19 +56,27 @@ struct Snapshot
 	bool IsObjectStored(unsigned short _id);
 };
 
+struct ObjectLifeTime
+{
+	int mBirth = -1;
+	int mDeath = INT32_MAX;
+};
+
 class Timeline
 {
 	std::vector<unsigned int> mSnaptimes;
 	std::unordered_map<unsigned int, Snapshot*> mSnapshots;		//The key will be the time they were taken (mSnapTimes)
 	std::unordered_map<unsigned short, BaseObject*> mLiveObjects;  
+	std::unordered_map<unsigned short, ObjectLifeTime*> mObjectLifeTimes;
 
 public:
 	Timeline();
 	~Timeline();
 	//Where we are at in the timeline
-	unsigned int mCurrentGameTimeIndx = 0;
-	unsigned int GetCurrentGameTimeIndx() { return mCurrentGameTimeIndx; }
+	int mCurrentGameTimeIndx = 0;
+	int GetCurrentGameTimeIndx() { return mCurrentGameTimeIndx; }
 	void AddBaseObject(BaseObject* _object, unsigned short _id);						//add to the list of recorded objects.
+	void AddPlayerBaseObject(BaseObject* _object, unsigned short _id);						//add to the player of recorded objects and .
 	void AddSnapshot(unsigned int _snaptime, Snapshot* _snapshot);
 	bool RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 	bool RewindMakeClone(unsigned int _snaptime);
@@ -79,6 +86,9 @@ public:
 	void MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime,unsigned short _id1, unsigned short _id2, unsigned short _id3);
 	void ClearTimeLine();
 	void SetComponent(SnapComponent* _destComp, BaseObject* _obj, SnapInfo* _destInfo);
+	void SetCloneCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);
+	void SetCloneDeathTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);
+	void SetBaseObjectDeathTime(unsigned short _id);
 	SnapInfo* GenerateSnapInfo(BaseObject* _object, SnapInfo* _info);							//Error check agianst the BaseObject* if it is null or not
 	Snapshot* GenerateSnapShot(unsigned int _time,std::vector<BaseObject*> & _clones);
 	SnapInfoPlayer * GenerateSnapInfoPlayer();
