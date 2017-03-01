@@ -172,7 +172,7 @@ vec4f Collider::GetPos() {
 	return mObject->GetTransform().GetMatrix().fourth;
 }
 
-void Collider::SetPos(vec4f _newPos) {
+void Collider::SetPos(const vec4f& _newPos) {
 	mObject->GetTransform().GetMatrix().fourth = _newPos;
 }
 
@@ -228,7 +228,7 @@ SphereCollider::SphereCollider(BaseObject* _obj, bool _move, vec4f _gravity, flo
 	mDragForce = mVelocity * (-0.5f * mRHO * mVelocity.Magnitude3() * mDrag * mArea);
 }
 
-void SphereCollider::SetPos(vec4f & _other)
+void SphereCollider::SetPos(const vec4f& _other)
 {
 	mObject->GetTransform().GetMatrix().fourth = _other;
 	mCenter = _other;
@@ -267,10 +267,10 @@ CubeCollider::CubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _
 	mDragForce = mVelocity * (-0.5f * mRHO * mVelocity.Magnitude3() * mDrag * mArea);
 }
 
-void CubeCollider::SetPos(vec4f _newPos) {
+void CubeCollider::SetPos(const vec4f& _newPos) {
 	mObject->GetTransform().GetMatrix().fourth = _newPos;
-	mMin = _newPos + mMinOffset;
-	mMax = _newPos + mMaxOffset;
+	mMin = mMinOffset + _newPos;
+	mMax = mMaxOffset + _newPos;
 }
 
 OrientedCubeCollider::OrientedCubeCollider(BaseObject * _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec4f _center, vec4f _xRadius, vec4f _yRadius, vec4f _zRadius, vec4f _xRotation, vec4f _yRotation, vec4f _zRotation)

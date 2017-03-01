@@ -106,7 +106,7 @@ public:
 
 	vec4f AddForce(vec4f _force) { mShouldMove = true; mForces = _force; return mForces; };
 	virtual vec4f GetPos();
-	virtual void SetPos(vec4f _newPos);
+	virtual void SetPos(const vec4f& _newPos);
 };
 
 class MeshCollider : public Collider {
@@ -120,7 +120,7 @@ public:
 	SphereCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _radius);
 	vec4f mCenter;
 	float mRadius;
-	virtual void SetPos(vec4f& _other);
+	virtual void SetPos(const vec4f& _other);
 };
 
 class CubeCollider : public Collider {
@@ -128,7 +128,7 @@ public:
 	CubeCollider() {}
 	CubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec4f _min, vec4f _max);
 	vec4f mMin, mMax, mMinOffset, mMaxOffset;
-	virtual void SetPos(vec4f _newPos);
+	virtual void SetPos(const vec4f& _newPos);
 };
 
 class OrientedCubeCollider : public Collider

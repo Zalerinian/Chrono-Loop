@@ -8,7 +8,7 @@ struct CCElasticSphereToSphere : public CodeComponent
 	bool colliding = false;
 	virtual void OnCollision(Collider& _col, Collider& _other, float _time)
 	{
-		if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane)
+		if (!colliding && _other.mColliderType == Collider::eCOLLIDER_Sphere)
 		{
 			colliding = true;
 			
