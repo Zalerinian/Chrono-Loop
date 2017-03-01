@@ -59,15 +59,17 @@ struct BoxSnapToControllerAction : public CodeComponent {
 	bool mHeld = false;
 	bool mHeldLeft = false;
 	Bootleg mBootleg;
+	ControllerCollider* mCollider = (ControllerCollider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0));
+	Collider* mPickUp = nullptr;
 
 	virtual void Update() override {
 
 		if (VRInputManager::Instance().iIsInitialized()) {
 			Controller &leftController = VRInputManager::Instance().iGetController(true), &rightController = VRInputManager::Instance().iGetController(false);
-			if (leftController.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger)) {
+			if (leftController.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger) && !mCollider->mHitting.empty()) {
 				SnapToController(true);
 				mHeldLeft = true;
-			} else if (rightController.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger)) {
+			} else if (rightController.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger) && !mCollider->mHitting.empty()) {
 				SnapToController(false);
 				mHeldLeft = false;
 			} else if (mHeld) {
@@ -112,16 +114,49 @@ struct BoxSnapToControllerAction : public CodeComponent {
 		mHeld = true;
 		mHeldLeft = left;
 		matrix4 m = VRInputManager::Instance().iGetController(left).GetPosition();
-		((CubeCollider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->SetPos((m).tiers[3]);
-		//mObject->GetTransform().SetMatrix(m);
-		((Collider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mShouldMove = false;
+
+		vec4f pos, setPos;
+		vec4f controllerPos = mCollider->GetPos();
+		bool unset = true;
+		for (auto iter = mCollider->mHitting.begin(); iter != mCollider->mHitting.end(); ++iter)
+		{
+			pos = (*iter)->GetPos();
+			if (unset)
+			{
+				setPos = pos;
+				mPickUp = (*iter);
+				unset = false;
+			}
+			else
+			{
+				float tx = pos.x - mCollider->GetPos().x;
+				float ty = pos.y - mCollider->GetPos().y;
+				float tz = pos.z - mCollider->GetPos().z;
+				float sx = setPos.x - mCollider->GetPos().x;
+				float sy = setPos.y - mCollider->GetPos().y;
+				float sz = setPos.z - mCollider->GetPos().z;
+
+				if (tx < sx || ty < sy || tz < sz)
+				{
+					setPos = pos;
+					mPickUp = (*iter);
+				}
+			}
+		}
+		
+		if (mPickUp)
+		{
+			mPickUp->SetPos((m).tiers[3]);
+			//mObject->GetTransform().SetMatrix(m);
+			mPickUp->mShouldMove = false;
+		}
 	}
 
 	virtual void ReleaseCube() {
 		vec4f force = VRInputManager::Instance().iGetController(mHeldLeft).GetVelocity();
 		force[2] *= -1; // SteamVR seems to Assume +Z goes into the screen.
-		((Collider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mVelocity = force;
-		((Collider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mShouldMove = true;
+		mPickUp->mVelocity = force;
+		mPickUp->mShouldMove = true;
 		mHeldLeft = mHeld = false;
 	}
 };

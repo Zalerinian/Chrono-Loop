@@ -782,6 +782,39 @@ void Physics::Update(float _time)
 			}
 			else if (collider->mColliderType == Collider::eCOLLIDER_Controller)//Update ControllerCollider position, do not apply physics to player
 			{
+				AABB aabb1(((CubeCollider*)collider)->mMin, ((CubeCollider*)collider)->mMax);
+				for (int j = 0; j < objs; ++j)
+				{
+					if (mObjects[j] != mObjects[i])
+					{
+						int othercols = (int)mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
+						for (int k = 0; k < othercols; ++k)
+						{
+							otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
+							if (otherCol->mColliderType == Collider::eCOLLIDER_Cube)
+							{
+								AABB aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
+								if (collider->mShouldMove && AABBtoAABB(aabb1, aabb2))
+								{
+									((ControllerCollider*)collider)->mHitting.insert(otherCol);
+								}
+								else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
+									((ControllerCollider*)collider)->mHitting.erase(otherCol);
+							}
+							else if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
+							{
+								Sphere s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
+								if (SphereToAABB(s1, aabb1))
+								{
+									((ControllerCollider*)collider)->mHitting.insert(otherCol);
+								}
+								else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
+									((ControllerCollider*)collider)->mHitting.erase(otherCol);
+							}
+						}
+					}
+				}
+
 				if (((ControllerCollider*)collider)->mLeft)
 				{
 					collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);

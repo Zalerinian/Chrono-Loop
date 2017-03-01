@@ -3,6 +3,7 @@
 #include "..\Rendering\Mesh.h"
 #include <unordered_map>
 #include "..\Physics\Physics.h"
+#include <unordered_set>
 
 class BaseObject;
 class Transform;
@@ -160,6 +161,7 @@ class ControllerCollider : public CubeCollider
 public:
 	ControllerCollider(BaseObject* _obj, vec4f _min, vec4f _max, bool _left);
 	bool mLeft;
+	std::unordered_set<Collider*> mHitting;
 };
 
 /*

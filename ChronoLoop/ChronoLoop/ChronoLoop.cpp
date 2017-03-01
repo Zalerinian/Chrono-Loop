@@ -179,10 +179,10 @@ void Update() {
 	Transform SphereTransform;
 	SphereTransform.SetMatrix(MatrixIdentity());
 	matrix4 SphereMat = MatrixScale(0.15f, 0.15f, 0.15f); 
-	SphereMat *= MatrixTranslation(5, 5, 4);
+	SphereMat *= MatrixTranslation(-3, 5, 0);
 	SphereTransform.SetMatrix(SphereMat);
 	BaseObject* PhysicsSphere = Pool::Instance()->iGetObject()->Reset("sphere", SphereTransform);
-	SphereCollider *BallCollider = new SphereCollider(PhysicsSphere, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 3.0f, 0.7f, 0.2f, 0.1f, 0.03f, 0.15f);
+	SphereCollider *BallCollider = new SphereCollider(PhysicsSphere, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 3.0f, 0.1f, 0.2f, 0.1f, 0.03f, 0.15f);
 	BallCollider->AddForce(vec4f(0, 0, 0, 0));
 	CodeComponent* PlaneCollision2 = new CCElasticReactionWithPlane;
 	CodeComponent* SpheretoSphere = new CCElasticSphereToSphere;
@@ -272,6 +272,8 @@ void Update() {
 	TeleportAction *ta = new TeleportAction(false);
 	TimeManipulation* tm = new TimeManipulation(false);
 	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
+	CodeComponent* pickup = new BoxSnapToControllerAction;
+	RightController->AddComponent(pickup);
 	RightController->AddComponent(mc);
 	RightController->AddComponent(rightRaycaster);
 	RightController->AddComponent(ta);
@@ -282,26 +284,18 @@ void Update() {
 	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
 	visibleMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
 	PhysicsBox->AddComponent(visibleMesh);
-	//CodeComponent *codeComponent = new BoxSnapToControllerAction();
-	//PhysicsBox->AddComponent(codeComponent);
 
 	MeshComponent *visibleMeshBox = new MeshComponent("../Resources/Cube.obj");
 	visibleMeshBox->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
 	PhysicsBox2->AddComponent(visibleMeshBox);
-	//CodeComponent *codeComponent = new BoxSnapToControllerAction();
-	//PhysicsBox->AddComponent(codeComponent);
 
 	MeshComponent *sphereMesh = new MeshComponent("../Resources/Sphere.obj");
 	sphereMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
 	PhysicsSphere->AddComponent(sphereMesh);
-	CodeComponent *codeComponent2 = new BoxSnapToControllerAction();
-	PhysicsSphere->AddComponent(codeComponent2);
 
 	MeshComponent *sphereMesh2 = new MeshComponent("../Resources/Sphere.obj");
 	sphereMesh2->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
 	PhysicsSphere2->AddComponent(sphereMesh2);
-	//CodeComponent *codeComponent3 = new BoxSnapToControllerAction();
-	//PhysicsSphere->AddComponent(codeComponent3);
 
 	MeshComponent *ButtonMesh = new MeshComponent("../Resources/cube.obj");
 	ButtonMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
@@ -317,6 +311,8 @@ void Update() {
 	TeleportAction *ta2 = new TeleportAction(true);
 	TimeManipulation* tm2 = new TimeManipulation(true);
 	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
+	CodeComponent* pickup2 = new BoxSnapToControllerAction;
+	LeftController->AddComponent(pickup2);
 	LeftController->AddComponent(leftConCol);
 	LeftController->AddComponent(leftRaycaster);
 	LeftController->AddComponent(mc2);
@@ -373,6 +369,8 @@ void Update() {
 	TimeManager::Instance()->AddObjectToTimeline(headset);
 
 	Physics::Instance()->mObjects.push_back(PhysicsBox);
+	Physics::Instance()->mObjects.push_back(BlockDoor);
+	Physics::Instance()->mObjects.push_back(ExitWall);
 	Physics::Instance()->mObjects.push_back(PhysicsBox2);
 	Physics::Instance()->mObjects.push_back(PhysicsSphere);
 	Physics::Instance()->mObjects.push_back(PhysicsSphere2);
