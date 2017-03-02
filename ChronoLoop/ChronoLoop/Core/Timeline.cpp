@@ -79,11 +79,11 @@ void Timeline::ChangeBitsetToSnap(SnapInfo * _destinfo, Component* _curComp) {
 		}
 		//The comp is a mesh
 		else {
-			if (_destinfo->mBitset[bitnum])
-				((MeshComponent*)_curComp)->SetVisible(true);
+			//if (_destinfo->mBitset[bitnum])
+				//((MeshComponent*)_curComp)->SetVisible(true);
 
-			else
-				((MeshComponent*)_curComp)->SetVisible(false);
+			//else
+				//((MeshComponent*)_curComp)->SetVisible(false);
 		}
 	}
 
@@ -95,7 +95,7 @@ void Timeline::ChangeBitsetToSnap(SnapInfo * _destinfo, Component* _curComp) {
 		}
 		//The comp is a mesh
 		else {
-			((MeshComponent*)_curComp)->SetVisible(false);
+			//((MeshComponent*)_curComp)->SetVisible(false);
 		}
 	}
 }
@@ -188,8 +188,9 @@ void Timeline::MoveObjectToSnap(unsigned int _snaptime, unsigned short _id) {
 	if (stored) {
 		destInfo = destination->mSnapinfos[_id];
 	} else if (!stored) {
-		unsigned int lastUpdated = destination->mUpdatedtimes[_id];
-		destInfo = mSnapshots[lastUpdated]->mSnapinfos[_id];
+		if (destination->mUpdatedtimes.find(_id) == destination->mUpdatedtimes.end())
+			return;
+		destInfo = mSnapshots[destination->mUpdatedtimes[_id]]->mSnapinfos[_id];
 	}
 
 	//Set Object data
@@ -205,7 +206,6 @@ void Timeline::MoveObjectToSnap(unsigned int _snaptime, unsigned short _id) {
 }
 
 void Timeline::MoveAllObjectsToSnap(unsigned int _snaptime) {
-	//TODO PAT: THIS DOESNT TAKE IN ACCOUNT IF SOMETHING WAS MADE IN THE FUTURE TO DELETE IT
 	Snapshot* destination = mSnapshots[_snaptime];
 	for (auto object : mLiveObjects) {
 		unsigned short id = object.second->GetUniqueID();
@@ -234,7 +234,6 @@ void Timeline::MoveAllObjectsToSnap(unsigned int _snaptime) {
 }
 
 void Timeline::MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3) {
-	//TODO PAT: THIS DOESNT TAKE IN ACCOUNT IF SOMETHING WAS MADE IN THE FUTURE or past
 	Snapshot* destination = mSnapshots[_snaptime];
 	for (auto object : mLiveObjects) {
 		unsigned short id = object.second->GetUniqueID();
@@ -246,10 +245,9 @@ void Timeline::MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime, unsigned
 		if (stored) {
 			destInfo = destination->mSnapinfos[id];
 		} else if (!stored) {
-			unsigned int lastUpdated = destination->mUpdatedtimes[id];
-			if (lastUpdated == 0) //assume its broken
+			if (destination->mUpdatedtimes.find(id) == destination->mUpdatedtimes.end())
 				continue;
-			destInfo = mSnapshots[lastUpdated]->mSnapinfos[id];
+			destInfo = mSnapshots[destination->mUpdatedtimes[id]]->mSnapinfos[id];
 		}
 		//Set Object data
 		BaseObject* baseobject = object.second;
@@ -301,8 +299,7 @@ SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object, SnapInfo* _info) {
 		_info = new SnapInfo();
 	_info->mId = _object->GetUniqueID();
 	_info->mTransform = _object->GetTransform();
-	//TODO PAT: IF AN OBJECT IS ADDED THEN REWIND TIME TO BEFORE, ADD THAT OBJECT TO THE POOL
-
+	
 	if (mObjectLifeTimes.find(_info->mId) == mObjectLifeTimes.end())
 		_info->mBitset[0] = false;
 	else
@@ -375,8 +372,11 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 		snap = mSnapshots[_time];
 		OldSnap = true;
 	}
-
+	//TODO PAT: IF AN OBJECT IS ADDED THEN REWIND TIME TO BEFORE, ADD THAT OBJECT TO THE POOL
+	//Make a func that checks the mObject lifes and delete non-clones that no longer exists. Because rewinding time should get rid of everything but clones.  
 	//If first snapshot taken
+
+	//TODO PAT: break up the logic loop here and 
 	if (mSnapshots.size() == 0) {
 		for (std::pair<unsigned short, BaseObject*> _b : mLiveObjects) {
 			if (_b.second) {
@@ -415,8 +415,6 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 						}
 					}
 				} else {
-					//if (snap->mSnapinfos[id] != nullptr)
-					//	delete snap->mSnapinfos[id];
 					//If change add to mSnapinfos and Updatetime
 					if (!CheckForDuplicateData(id, _b.second)) {
 						snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, snap->mSnapinfos[id]);
@@ -449,14 +447,14 @@ bool Timeline::CheckForDuplicateData(unsigned short _id, BaseObject* _object) {
 	//find if the object exist
 	if(snap->mSnapinfos.find(_id) !=snap->mSnapinfos.end())
 		info = mSnapshots[mSnaptimes[mCurrentGameTimeIndx]]->mSnapinfos[_id];
-	else if(mSnapshots[snap->mUpdatedtimes[_id]]->mSnapinfos.find(_id) != mSnapshots[snap->mUpdatedtimes[_id]]->mSnapinfos.end()){
+	else if(snap->mUpdatedtimes.find(_id) != snap->mUpdatedtimes.end() ){
 		info = mSnapshots[snap->mUpdatedtimes[_id]]->mSnapinfos[_id];
 	}
 	else
 	{
-		//SystemLogger::GetError() << "Patrick mostly likely messed up! He tried to find a snapinfo of last recorded time and it didn't exist" << std::endl;
-		//TODO PAT: IF OBJECT DIDNT EXIST AT THIS TIME IT WILL MAKE 1 == BAD
-		return true;
+		//if the object is not yet made(new headset or controller data) then we need to make it. This is the only exception I think
+		SystemLogger::GetLog() << _object->GetName() << std::endl;
+		return false;
 	}
 
 	if (info->mTransform != _object->GetTransform())
@@ -479,7 +477,12 @@ bool Timeline::CheckForDuplicateData(unsigned short _id, BaseObject* _object) {
 						return false;
 				}
 			}
+			break;
 		}
+		default:
+			{
+			break;
+			}
 		}
 	}
 
