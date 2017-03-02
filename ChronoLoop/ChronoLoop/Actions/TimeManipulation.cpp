@@ -83,14 +83,15 @@ void TimeManipulation::Update() {
 		//Make a clone 3 seconds ago.
 		TimeManager::Instance()->RewindMakeClone(TimeManager::Instance()->GetCurrentSnapFrame() - 30, headset, Controller1, Controller2);
 		Level::Instance()->iSetHeadsetAndControllers(headset, Controller1, Controller2);
-		TimeManager::Instance()->AddObjectToTimeline(headset);
-		TimeManager::Instance()->AddObjectToTimeline(Controller1);
-		TimeManager::Instance()->AddObjectToTimeline(Controller2);
+		//it is extreamly important that the objects are added after time rewinded because of the objectLifeTimeStruct and more..
+		TimeManager::Instance()->AddPlayerObjectToTimeline(headset);
+		TimeManager::Instance()->AddPlayerObjectToTimeline(Controller1);
+		TimeManager::Instance()->AddPlayerObjectToTimeline(Controller2);
 		mCloneCount++;
 	}
 	if (VRInputManager::Instance().iGetController(mLeft).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
 		Level* CurLev = Level::Instance();
 		TimeManager::Instance()->RewindTimeline(TimeManager::Instance()->GetCurrentSnapFrame() - 30, Level::Instance()->iGetHeadset()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID(), Level::Instance()->iGetRightController()->GetUniqueID());
 	}
-
+	
 }

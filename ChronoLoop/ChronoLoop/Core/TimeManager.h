@@ -27,6 +27,8 @@ public:
 	void Update(float _delta);
 	static TimeManager* Instance();
 	void AddObjectToTimeline(BaseObject* _obj);
+	//Add only headset and controllers to this
+	void AddPlayerObjectToTimeline(BaseObject* _obj);
 	//Clears the list of BaseObject* the Timemanager has refrence to.
 	void ClearClones();
 	//Checks and see if you can rewind to passed in frame

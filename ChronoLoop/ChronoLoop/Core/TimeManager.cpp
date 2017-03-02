@@ -1,7 +1,6 @@
 //#include "stdafx.h"
 #include "TimeManager.h"
 #include "Timeline.h"
-#include "../Input/KeyboardInput.h"
 #include "../Objects/BaseObject.h"
 #include "../Common/Logger.h"
 
@@ -44,6 +43,11 @@ void TimeManager::AddObjectToTimeline(BaseObject * _obj) {
 		mTimeline->AddBaseObject(_obj, _obj->GetUniqueId());
 }
 
+void TimeManager::AddPlayerObjectToTimeline(BaseObject * _obj) {
+	if (_obj != nullptr)
+		mTimeline->AddPlayerBaseObject(_obj, _obj->GetUniqueId());
+}
+
 void TimeManager::ClearClones() {
 	mClones.clear();
 }
@@ -81,12 +85,11 @@ void TimeManager::RewindMakeClone(unsigned int _frame, BaseObject* _ob1, BaseObj
 	mClones.push_back(_ob1);
 	mClones.push_back(_ob2);
 	mClones.push_back(_ob3);
+	mTimeline->SetCloneCreationTime(_ob1->GetUniqueId(), _ob2->GetUniqueId(), _ob3->GetUniqueId());
 	//Tell the time manager what frame the timeline its on
 	mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
 }
 
 void TimeManager::Destroy() {
-	
 	delete instanceTimemanager;
-	
 }
