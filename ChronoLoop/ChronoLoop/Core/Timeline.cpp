@@ -112,6 +112,7 @@ void Timeline::CheckforLostObjects(std::vector<BaseObject*>& mClones)
 				}
 				else if(mClones[i]->GetUniqueId() != obj.first && i == mClones.size()-1)
 				{
+					//TODO PAT: PLS REMOVWE THIS FROM LEVEL AND THOW BACK IN POOL
 					delete obj.second;
 					mObjectLifeTimes.erase(obj.first);
 					mLiveObjects.erase(obj.first);
@@ -131,13 +132,12 @@ void Timeline::SetComponent(SnapComponent* _destComp, BaseObject * _obj, SnapInf
 			Component* currComp = _obj->GetComponentIndexed(eCOMPONENT_COLLIDER, j);
 			if (currComp->GetColliderId() == _destComp->mId) {
 				((Collider*)currComp)->mRewind = true;
-				//((Collider*)currComp)->mShouldMove = false;
+				((Collider*)currComp)->mShouldMove = false;
 				((Collider*)currComp)->mAcceleration = ((SnapComponent_Physics*)_destComp)->mAcc;
 				((Collider*)currComp)->mVelocity = ((SnapComponent_Physics*)_destComp)->mVel;
 				((Collider*)currComp)->AddForce(((SnapComponent_Physics*)_destComp)->mForces);
 				((Collider*)currComp)->SetPos(*_destInfo->mTransform.GetPosition());
-				if (_obj->GetName().find("Controller") != std::string::npos)
-					SystemLogger::GetLog() << _obj->GetName() << '(' << ((Collider*)currComp)->mVelocity.x << ',' << ((Collider*)currComp)->mVelocity.y << ',' <<((Collider*)currComp)->mVelocity.z << ')' << std::endl;
+
 				//Set the bitset
 				ChangeBitsetToSnap(_destInfo, currComp);
 			}
@@ -346,9 +346,6 @@ SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object, SnapInfo* _info) {
 					newComp->mForces = ((Collider*)temp[i])->mForces;
 					newComp->mAcc = ((Collider*)temp[i])->mAcceleration;
 					newComp->mVel = ((Collider*)temp[i])->mVelocity;
-					if (_object->GetName().find("Controller") != std::string::npos)
-						SystemLogger::GetLog() << _object->GetName() << '(' << newComp->mVel.x << ',' << newComp->mVel.y << ',' << newComp->mVel.z << ')' << std::endl;
-					//Set the bitset
 					newComp->mId = temp[i]->GetColliderId();
 					_info->mComponets.push_back(newComp);
 				}
@@ -386,7 +383,6 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 	Snapshot* snap;
 	bool OldSnap = false;
 
-	
 	//We are making a new snap in the timeline
 	//If the CurrentFrame is the last one on the list, make a new one
 	if (mCurrentGameTimeIndx == mSnaptimes.size() - 1 || mSnaptimes.size() == 0) {
@@ -399,7 +395,8 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 		OldSnap = true;
 	}
 	
-	CheckforLostObjects(_clones);
+	//TODO PAT: FINISH THIS FUNC
+	//CheckforLostObjects(_clones);
 	
 	//If first snapshot taken
 	//TODO PAT: break up the logic loop here and 

@@ -83,7 +83,7 @@ void TimeManipulation::Update() {
 
 		//Make a clone 3 seconds ago.
 		TimeManager::Instance()->RewindMakeClone(TimeManager::Instance()->GetCurrentSnapFrame() - 30, headset, Controller1, Controller2);
-		Level::Instance()->iSetHeadsetAndControllers(headset, Controller1, Controller2);
+		Level::Instance()->iSetHeadsetAndControllers(headset, Controller1, Controller2,CubeColider,CubeColider2);
 		//it is extreamly important that the objects are added after time rewinded because of the objectLifeTimeStruct and more..
 		TimeManager::Instance()->AddPlayerObjectToTimeline(headset);
 		TimeManager::Instance()->AddPlayerObjectToTimeline(Controller1);
