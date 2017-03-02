@@ -277,8 +277,8 @@ void Update() {
 	RightController->AddComponent(ta);
 	RightController->AddComponent(rightConCol);
 	RightController->AddComponent(tm);
-	//CodeComponent* pickup = new BoxSnapToControllerAction();
-	//RightController->AddComponent(pickup);
+	CodeComponent* pickup = new BoxSnapToControllerAction();
+	RightController->AddComponent(pickup);
 	TimeManager::Instance()->AddObjectToTimeline(RightController);
 
 	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
@@ -316,8 +316,8 @@ void Update() {
 	LeftController->AddComponent(mc2);
 	LeftController->AddComponent(ta2);
 	LeftController->AddComponent(tm2);
-	//CodeComponent* pickup2 = new BoxSnapToControllerAction();
-	//LeftController->AddComponent(pickup2);
+	CodeComponent* pickup2 = new BoxSnapToControllerAction();
+	LeftController->AddComponent(pickup2);
 	TimeManager::Instance()->AddObjectToTimeline(LeftController);
 	if (VREnabled) {
 		VRInputManager::Instance().iUpdate();

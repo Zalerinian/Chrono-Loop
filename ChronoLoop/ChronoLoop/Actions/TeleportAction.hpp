@@ -11,12 +11,14 @@
 
 struct TeleportAction : public CodeComponent {
 	MeshComponent *mPlaneMesh;
-	BaseObject *mPlaneObject;
+	BaseObject *mPlaneObject, *mWallsObject, *mBlockObject, *mExitObject;
 	bool left;
 	TeleportAction(bool _left) { left = _left; };
 
 	virtual void Start() { 
 		mPlaneObject = Level::Instance()->iFindObjectWithName("plane");
+		mWallsObject = Level::Instance()->iFindObjectWithName("walls");
+		mBlockObject = Level::Instance()->iFindObjectWithName("BlockDoor");
 		mPlaneMesh = (MeshComponent*)mPlaneObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 	}
 

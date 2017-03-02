@@ -3,7 +3,7 @@
 #include "CodeComponent.hpp"
 #include "../Core/TimeManager.h"
 #include "../Common/Logger.h"
-
+#include <unordered_set>
 
 struct Bootleg {
 	struct Node {
@@ -59,8 +59,12 @@ struct BoxSnapToControllerAction : public CodeComponent {
 	bool mHeld = false;
 	bool mHeldLeft = false;
 	Bootleg mBootleg;
-	ControllerCollider* mCollider = (ControllerCollider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0));
+	ControllerCollider* mCollider;
 	Collider* mPickUp = nullptr;
+
+	virtual void Start() {
+		mCollider = (ControllerCollider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0));
+	}
 
 	virtual void Update() override {
 
@@ -135,7 +139,7 @@ struct BoxSnapToControllerAction : public CodeComponent {
 				float sx = setPos.x - mCollider->GetPos().x;
 				float sy = setPos.y - mCollider->GetPos().y;
 				float sz = setPos.z - mCollider->GetPos().z;
-
+		
 				if (tx < sx || ty < sy || tz < sz)
 				{
 					setPos = pos;

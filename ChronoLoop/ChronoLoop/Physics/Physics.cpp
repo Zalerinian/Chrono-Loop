@@ -814,7 +814,7 @@ void Physics::Update(float _time)
 						}
 					}
 				}
-
+				
 				if (((ControllerCollider*)collider)->mLeft)
 				{
 					collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
