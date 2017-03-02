@@ -9,7 +9,7 @@ namespace RenderEngine {
 
 class MeshComponent : public Component {
 	RenderEngine::RenderShape* mShape;
-	bool mVisible;
+	bool mVisible = true;
 
 public:
 	MeshComponent(const char *_path);

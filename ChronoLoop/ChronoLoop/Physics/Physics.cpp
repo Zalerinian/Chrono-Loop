@@ -791,23 +791,19 @@ void Physics::Update(float _time)
 						for (int k = 0; k < othercols; ++k)
 						{
 							otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
-							if (otherCol->mColliderType == Collider::eCOLLIDER_Cube)
+							if (otherCol->mShouldMove && otherCol->mColliderType == Collider::eCOLLIDER_Cube)
 							{
 								AABB aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
-								if (collider->mShouldMove && AABBtoAABB(aabb1, aabb2))
-								{
+								if (AABBtoAABB(aabb1, aabb2))
 									((ControllerCollider*)collider)->mHitting.insert(otherCol);
-								}
 								else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
 									((ControllerCollider*)collider)->mHitting.erase(otherCol);
 							}
-							else if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
+							else if (otherCol->mShouldMove && otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
 							{
 								Sphere s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
 								if (SphereToAABB(s1, aabb1))
-								{
 									((ControllerCollider*)collider)->mHitting.insert(otherCol);
-								}
 								else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
 									((ControllerCollider*)collider)->mHitting.erase(otherCol);
 							}
