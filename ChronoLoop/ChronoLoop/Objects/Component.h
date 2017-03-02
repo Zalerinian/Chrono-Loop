@@ -105,7 +105,7 @@ public:
 	void Update();
 	void Destroy();
 
-	vec4f AddForce(vec4f _force) { mShouldMove = true; mForces = _force; return mForces; };
+	vec4f AddForce(vec4f _force) { mForces = _force; return mForces; };
 	virtual vec4f GetPos();
 	virtual void SetPos(const vec4f& _newPos);
 };

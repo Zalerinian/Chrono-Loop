@@ -110,7 +110,7 @@ void Timeline::SetComponent(SnapComponent* _destComp, BaseObject * _obj, SnapInf
 			Component* currComp = _obj->GetComponentIndexed(eCOMPONENT_COLLIDER, j);
 			if (currComp->GetColliderId() == _destComp->mId) {
 				((Collider*)currComp)->mRewind = true;
-				((Collider*)currComp)->mShouldMove = false;
+				//((Collider*)currComp)->mShouldMove = false;
 				((Collider*)currComp)->mAcceleration = ((SnapComponent_Physics*)_destComp)->mAcc;
 				((Collider*)currComp)->mVelocity = ((SnapComponent_Physics*)_destComp)->mVel;
 				((Collider*)currComp)->AddForce(((SnapComponent_Physics*)_destComp)->mForces);
@@ -361,6 +361,7 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 	Snapshot* snap;
 	bool OldSnap = false;
 
+	
 	//We are making a new snap in the timeline
 	//If the CurrentFrame is the last one on the list, make a new one
 	if (mCurrentGameTimeIndx == mSnaptimes.size() - 1 || mSnaptimes.size() == 0) {
@@ -400,26 +401,26 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 						//If we are a clone but dont have a next movement then record one at position
 						else if (snap->mSnapinfos.find(id) == snap->mSnapinfos.end() && id == _clones[i]->GetUniqueId()) {
 							//If change add to mSnapinfos and Updatetime
-							//if (!CheckForDuplicateData(id, _b.second)) {
+							if (!CheckForDuplicateData(id, _b.second)) {
 								snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, nullptr);
 								snap->mUpdatedtimes[id] = _time;
-							//}
+							}
 						}
 						//If we made it through the list do the normal
 						else if (id != _clones[i]->GetUniqueId() && i == _clones.size() - 1) {
 							//If change add to mSnapinfos and Updatetime
-							//if (!CheckForDuplicateData(id, _b.second)) {
+							if (!CheckForDuplicateData(id, _b.second)) {
 								snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, snap->mSnapinfos[id]);
 								snap->mUpdatedtimes[id] = _time;
-							//}
+							}
 						}
 					}
 				} else {
 					//If change add to mSnapinfos and Updatetime
-					//if (!CheckForDuplicateData(id, _b.second)) {
+					if (!CheckForDuplicateData(id, _b.second)) {
 						snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, snap->mSnapinfos[id]);
 						snap->mUpdatedtimes[id] = _time;
-					//}
+					}
 				}
 			}
 		}

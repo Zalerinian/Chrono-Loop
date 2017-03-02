@@ -41,11 +41,13 @@ struct CCButtonPress : public CodeComponent
 					//blockCube->mMin += vec4f(0, -1, 0, 0);
 					//blockCube->mMax += vec4f(0, -1, 0, 0);
 					blockCube->SetPos(vec4f(0, -1, 0, 1));
+					blockCube->mShouldMove = false;
 
 					//Exit->GetTransform().SetMatrix(Math::MatrixTranslation(0, 2, 0));
 					//exitCube->mMin += vec4f(0, 2, 0, 0);
 					//exitCube->mMax += vec4f(0, 2, 0, 0);
 					exitCube->SetPos(vec4f(0, 2, 0, 1));
+					exitCube->mShouldMove = false;
 
 					mBooped = true;
 				}
