@@ -6,6 +6,7 @@
 #include "..\Objects\Component.h"
 #include "..\Actions\CodeComponent.hpp"
 #include "..\Input\VRInputManager.h"
+#include "../Core/Level.h"
 
 Physics* Physics::mInstance;
 
@@ -713,12 +714,18 @@ void Physics::Update(float _time) {
 					}
 				}
 
-				if (((ControllerCollider*)collider)->mLeft) {
+				if (((ControllerCollider*)collider)->mLeft &&
+					(collider->mObject->GetUniqueID() == Level::Instance()->iGetLeftController()->GetUniqueID() || 
+					collider->mObject->GetUniqueID() == Level::Instance()->iGetRightController()->GetUniqueID()))
+				{
 					collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
 					collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
 					collider->mVelocity = VRInputManager::Instance().iGetController(true).GetVelocity();
 					collider->SetPos(VRInputManager::Instance().iGetController(true).GetPosition().tiers[3]);
-				} else {
+				} else if((!(((ControllerCollider*)collider)->mLeft) &&
+					(collider->mObject->GetUniqueID() == Level::Instance()->iGetLeftController()->GetUniqueID() ||
+						collider->mObject->GetUniqueID() == Level::Instance()->iGetRightController()->GetUniqueID())))
+				{
 					collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
 					collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
 					collider->mVelocity = VRInputManager::Instance().iGetController(false).GetVelocity();

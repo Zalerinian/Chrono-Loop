@@ -115,7 +115,8 @@ void Timeline::SetComponent(SnapComponent* _destComp, BaseObject * _obj, SnapInf
 				((Collider*)currComp)->mVelocity = ((SnapComponent_Physics*)_destComp)->mVel;
 				((Collider*)currComp)->AddForce(((SnapComponent_Physics*)_destComp)->mForces);
 				((Collider*)currComp)->SetPos(*_destInfo->mTransform.GetPosition());
-
+				if (_obj->GetName().find("Controller") != std::string::npos)
+					SystemLogger::GetLog() << _obj->GetName() << '(' << ((Collider*)currComp)->mVelocity.x << ',' << ((Collider*)currComp)->mVelocity.y << ',' <<((Collider*)currComp)->mVelocity.z << ')' << std::endl;
 				//Set the bitset
 				ChangeBitsetToSnap(_destInfo, currComp);
 			}
@@ -324,6 +325,9 @@ SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object, SnapInfo* _info) {
 					newComp->mForces = ((Collider*)temp[i])->mForces;
 					newComp->mAcc = ((Collider*)temp[i])->mAcceleration;
 					newComp->mVel = ((Collider*)temp[i])->mVelocity;
+					if (_object->GetName().find("Controller") != std::string::npos)
+						SystemLogger::GetLog() << _object->GetName() << '(' << newComp->mVel.x << ',' << newComp->mVel.y << ',' << newComp->mVel.z << ')' << std::endl;
+					//Set the bitset
 					newComp->mId = temp[i]->GetColliderId();
 					_info->mComponets.push_back(newComp);
 				}

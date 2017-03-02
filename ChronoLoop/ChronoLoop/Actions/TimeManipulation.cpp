@@ -72,6 +72,7 @@ void TimeManipulation::Update() {
 		mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
 		Controller1->AddComponent(CubeColider);
 		Controller1->AddComponent(mc);
+		
 
 		BaseObject* Controller2 = Pool::Instance()->iGetObject()->Reset("Controller2 - " + std::to_string(mCloneCount)); //new BaseObject("Controller2" + std::to_string(rand), identity);
 		MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
