@@ -539,6 +539,12 @@
     <FxCompile Include="GeometryShader.hlsl">
       <Filter>Particles\Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="ParticleVertexShader.hlsl">
+      <Filter>Particles\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticlePixelShader.hlsl">
+      <Filter>Particles\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">

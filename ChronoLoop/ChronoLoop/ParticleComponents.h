@@ -1,6 +1,8 @@
 #pragma once
 #include <list>
 #include <vector>
+#include <string>
+#include "Rendering\TextureManager.h"
 #include "Rendering\Structures.h"
 #include "Common\FileIO.h"
 
@@ -16,10 +18,9 @@ struct GSParticle
 	float size;
 	float pad[3];
 };
-
 struct GSMatrix
 {
-	matrix4 world, view, proj;
+	matrix4 model, view, proj;
 };
 
 struct Particle
@@ -41,10 +42,11 @@ class ParticleEmitter
 	char* mName;
 
 private:
+	//TODO: Commptrs
+	const char* mTName;
 	ID3D11Texture2D* mTexture;
 	ID3D11ShaderResourceView* mTextureView;
-	ID3D11Buffer* mVBuffer, *mIBuffer;
-	GSMatrix mLeft, mRight;
+	ID3D11Buffer* mVBuffer;
 	//BlendMode
 	//BoundingBox
 	vec4f mPos;
@@ -67,10 +69,9 @@ public:
 	virtual ~ParticleEmitter();
 
 	ID3D11Buffer* GetVertexBuffer();
-	ID3D11Buffer* GetIndexBuffer();
 	ID3D11ShaderResourceView* GetTexture();
 
-	void SetTexture(ID3D11Texture2D* _tex);
+	void SetTexture(const char* _tex);
 	void SetLEye(matrix4 _world, matrix4 _view, matrix4 _proj);
 	void SetREye(matrix4 _world, matrix4 _view, matrix4 _proj);
 	virtual void SetParticle(Particle* _p);
