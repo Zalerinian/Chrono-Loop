@@ -202,7 +202,9 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Actions\BoxSnapToControllerAction.hpp" />
     <ClInclude Include="Actions\CCButtonPress.h" />
     <ClInclude Include="Actions\CCElasticAABBtoAABB.h" />
+    <ClInclude Include="Actions\CCElasticAABBToSphere.h" />
     <ClInclude Include="Actions\CCElasticReactionWithPlane.h" />
+    <ClInclude Include="Actions\CCElasticSphereToSphere.h" />
     <ClInclude Include="Actions\CodeComponent.hpp" />
     <ClInclude Include="Actions\GestureDetection.hpp" />
     <ClInclude Include="Actions\HeadsetFollow.hpp" />
@@ -220,6 +222,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Core\Pool.h" />
     <ClInclude Include="Core\Timeline.h" />
     <ClInclude Include="Core\TimeManager.h" />
+    <ClInclude Include="Input\CommandConsole.h" />
     <ClInclude Include="Input\Controller.h" />
     <ClInclude Include="Input\KeyboardInput.h" />
     <ClInclude Include="Input\VRInputManager.h" />
@@ -229,6 +232,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Objects\MeshComponent.h" />
     <ClInclude Include="Objects\Transform.h" />
     <ClInclude Include="Physics\Physics.h" />
+    <ClInclude Include="Rendering\Draw2D.h" />
     <ClInclude Include="Rendering\IndexBufferManager.h" />
     <ClInclude Include="Rendering\InputLayoutManager.h" />
     <ClInclude Include="Rendering\Mesh.h" />
@@ -346,6 +350,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClCompile Include="Core\Pool.cpp" />
     <ClCompile Include="Core\Timeline.cpp" />
     <ClCompile Include="Core\TimeManager.cpp" />
+    <ClCompile Include="Input\CommandConsole.cpp" />
     <ClCompile Include="Input\Controller.cpp" />
     <ClCompile Include="Input\KeyboardInput.cpp" />
     <ClCompile Include="Input\VRInputManager.cpp" />
@@ -355,6 +360,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClCompile Include="Objects\MeshComponent.cpp" />
     <ClCompile Include="Objects\Transform.cpp" />
     <ClCompile Include="Physics\Physics.cpp" />
+    <ClCompile Include="Rendering\Draw2D.cpp" />
     <ClCompile Include="Rendering\IndexBufferManager.cpp" />
     <ClCompile Include="Rendering\InputLayoutManager.cpp" />
     <ClCompile Include="Rendering\Mesh.cpp" />

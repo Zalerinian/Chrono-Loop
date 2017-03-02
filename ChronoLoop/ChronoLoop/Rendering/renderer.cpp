@@ -12,8 +12,10 @@
 #include "../Input/Controller.h"
 #include "../Common/Common.h"
 #include "../Common/Breakpoint.h"
+#include "../Input/CommandConsole.h"
+#include "../Rendering/Draw2D.h"
 
-#define ENABLE_TEXT 0
+#define ENABLE_TEXT 1
 
 
 using namespace std;
@@ -112,23 +114,7 @@ namespace RenderEngine {
 		mDevice.reset();
 
 #if ENABLE_TEXT
-		(*mTextFactory)->Release();
-		(*mDevice2D)->Release();
-		(*mGIDevice)->Release();
-		(*mContext2D)->Release();
-		(*mDWrite)->Release();
-		(*mTextformat)->Release();
-		(*mBrush)->Release();
-		(*mScreenBitmap)->Release();
-		
-		mTextFactory.reset();
-		mDevice.reset();
-		mGIDevice.reset();
-		mContext2D.reset();
-		mDWrite.reset();
-		mTextformat.reset();
-		mBrush.reset();
-		mScreenBitmap.reset();
+
 #endif
 	}
 
@@ -177,72 +163,6 @@ namespace RenderEngine {
 
 	}
 
-	void Renderer::InitializeIDWriteFactory() {
-
-		//Write Factory initalized
-		IDWriteFactory* WriteFactory;
-		ThrowIfFailed(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(WriteFactory), reinterpret_cast<IUnknown**>(&WriteFactory)));
-		sInstance->mDWrite = make_shared<IDWriteFactory*>(WriteFactory);
-
-		static const WCHAR fontName[] = L"Verdana";
-		static const FLOAT fontSize = 50;
-
-		IDWriteTextFormat* WriteFormat;
-		ThrowIfFailed(WriteFactory->CreateTextFormat(
-			fontName,
-			NULL,
-			DWRITE_FONT_WEIGHT_NORMAL,
-			DWRITE_FONT_STYLE_NORMAL,
-			DWRITE_FONT_STRETCH_NORMAL,
-			fontSize,
-			L"en-us",
-			&WriteFormat));
-		sInstance->mTextformat = make_shared<IDWriteTextFormat*>(WriteFormat);
-
-		WriteFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
-		WriteFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
-
-		//Brush for the screen
-		ID2D1SolidColorBrush* brush;
-		ThrowIfFailed((*mContext2D)->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White, 1.0f), &brush));
-		sInstance->mBrush = make_shared<ID2D1SolidColorBrush*>(brush);
-	}
-
-	void Renderer::InitializeDirect2D()
-	{
-
-		//create 2dfactory
-		ID2D1Factory1 * factory2;
-		ThrowIfFailed(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &factory2));
-		sInstance->mTextFactory = make_shared<ID2D1Factory1*>(factory2);
-
-		//createDxgiDevice
-		IDXGIDevice* DxgiDevice;
-		ThrowIfFailed((*sInstance->iGetDevice())->QueryInterface(__uuidof(IDXGIDevice), (void **)&DxgiDevice));
-		sInstance->mGIDevice = make_shared<IDXGIDevice*>(DxgiDevice);
-
-		//create device2d 
-		ID2D1Device* Device2d;
-		ThrowIfFailed(factory2->CreateDevice(*sInstance->mGIDevice, &Device2d));
-		sInstance->mDevice2D = make_shared<ID2D1Device*>(Device2d);
-
-		//create context
-		ID2D1DeviceContext* context2d;
-		ThrowIfFailed((*sInstance->mDevice2D)->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, &context2d));
-		sInstance->mContext2D = make_shared<ID2D1DeviceContext*>(context2d);
-
-	}
-
-	void Renderer::InitializeScreenBitmap()
-	{
-		//ID3D11Texture2D* backbuffer2D;
-		//ThrowIfFailed((*mChain)->GetBuffer(0, IID_PPV_ARGS(&backbuffer2D)));
-
-		//sInstance->mScreenBitmap = make_shared<ID2D1Bitmap1*>(CreateBitmapForTexture(backbuffer2D));
-		//(*mContext2D)->SetTarget((*mScreenBitmap));
-
-		sInstance->mScreenBitmap = make_shared<ID2D1Bitmap1*>(CreateBitmapForTexture((*mMainViewTexture)));
-	}
 
 	void Renderer::InitializeDXGISwapChain(HWND &_win, bool _fullscreen, int _fps, int _width, int _height) {
 		DXGI_SWAP_CHAIN_DESC scDesc;
@@ -360,83 +280,53 @@ namespace RenderEngine {
 
 		//(*mContext)->PSSetConstantBuffers(0, 1, nullptr); // This will crash. - Light Buffer
 	}
-
-	void Renderer::RenderVR(float _delta) {
-		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-		vr::VRCompositor()->CompositorBringToFront();
-		float color[4] = { 0.251f, 0.709f, 0.541f, 1 };
-		for (int i = 0; i < 2; ++i) {
-			vr::EVREye currentEye;
-			if (i == 0) {
-				currentEye = vr::EVREye::Eye_Left;
-			} else {
-				currentEye = vr::EVREye::Eye_Right;
-				(*mContext)->ClearRenderTargetView((*mMainView), color);
-				(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-			}
-			ViewProjectionBuffer data;
-			GetMVP(currentEye, data);
-			(*mContext)->UpdateSubresource(*mVPBuffer, 0, nullptr, (void*)&data, 0, 0);
-
-			ProcessRenderSet();
-
-			vr::Texture_t submitTexture = { (void*)(*mMainViewTexture), vr::TextureType_DirectX, vr::ColorSpace_Auto };
-			vr::VRCompositor()->Submit(currentEye, &submitTexture);
-		}
-		//pat added 
-#if ENABLE_TEXT
-		std::wstring FPS = L"FPS: " + to_wstring(mFps);
-		DrawTextToBitmap(FPS, (*mScreenBitmap),.75f, .75f, 1.0f, 1.0f);
-#endif
-		//-----
-	}
-
 	void Renderer::UpdateCamera(float const _moveSpd, float const _rotSpd, float _delta) {
 #if _DEBUG || 1
 		if (GetActiveWindow() != *mWindow) {
 			return;
 		}
+		if (!CommandConsole::Instance().willTakeInput())
+		{
+			//w
+			if (GetAsyncKeyState('W')) {
+				mDebugCameraPos = Math::MatrixTranslation(0, 0, -_moveSpd * _delta) * mDebugCameraPos;
+			}
+			//s
+			if (GetAsyncKeyState('S')) {
+				mDebugCameraPos = Math::MatrixTranslation(0, 0, _moveSpd * _delta) * mDebugCameraPos;
+			}
+			//a
+			if (GetAsyncKeyState('A')) {
+				mDebugCameraPos = Math::MatrixTranslation(-_moveSpd * _delta, 0, 0) * mDebugCameraPos;
+			}
+			//d
+			if (GetAsyncKeyState('D')) {
+				mDebugCameraPos = Math::MatrixTranslation(_moveSpd * _delta, 0, 0) * mDebugCameraPos;
+			}
+			// Q
+			if (GetAsyncKeyState('Q')) {
+				mDebugCameraPos = Math::MatrixRotateZ(_rotSpd * _delta) * mDebugCameraPos;
+			}
+			// E
+			if (GetAsyncKeyState('E')) {
+				mDebugCameraPos = Math::MatrixRotateZ(-_rotSpd * _delta) * mDebugCameraPos;
+			}
+			//x
+			if (GetAsyncKeyState(VK_CONTROL)) {
+				mDebugCameraPos = Math::MatrixTranslation(0, -_moveSpd * _delta, 0) * mDebugCameraPos;
+			}
 
-		//w
-		if (GetAsyncKeyState('W')) {
-			mDebugCameraPos = Math::MatrixTranslation(0, 0, -_moveSpd * _delta) * mDebugCameraPos;
+			if (GetAsyncKeyState(VK_SPACE)) {
+				mDebugCameraPos = Math::MatrixTranslation(0, _moveSpd * _delta, 0) * mDebugCameraPos;
+			}
+			if (GetAsyncKeyState(VK_LBUTTON) & 1 && !mIsMouseDown) {
+				GetCursorPos(&mMouseOrigin);
+				mIsMouseDown = true;
+			}
+			if (!GetAsyncKeyState(VK_LBUTTON)) {
+				mIsMouseDown = false;
+			}
 		}
-		//s
-		if (GetAsyncKeyState('S')) {
-			mDebugCameraPos = Math::MatrixTranslation(0, 0, _moveSpd * _delta) * mDebugCameraPos;
-		}
-		//a
-		if (GetAsyncKeyState('A')) {
-			mDebugCameraPos = Math::MatrixTranslation(-_moveSpd * _delta, 0, 0) * mDebugCameraPos;
-		}
-		//d
-		if (GetAsyncKeyState('D')) {
-			mDebugCameraPos = Math::MatrixTranslation(_moveSpd * _delta, 0, 0) * mDebugCameraPos;
-		}
-		// Q
-		if (GetAsyncKeyState('Q')) {
-			mDebugCameraPos = Math::MatrixRotateZ(_rotSpd * _delta) * mDebugCameraPos;
-		}
-		// E
-		if (GetAsyncKeyState('E')) {
-			mDebugCameraPos = Math::MatrixRotateZ(-_rotSpd * _delta) * mDebugCameraPos;
-		}
-		//x
-		if (GetAsyncKeyState(VK_CONTROL)) {
-			mDebugCameraPos = Math::MatrixTranslation(0, -_moveSpd * _delta, 0) * mDebugCameraPos;
-		}
-
-		if (GetAsyncKeyState(VK_SPACE)) {
-			mDebugCameraPos = Math::MatrixTranslation(0, _moveSpd * _delta, 0) * mDebugCameraPos;
-		}
-		if (GetAsyncKeyState(VK_LBUTTON) & 1 && !mIsMouseDown) {
-			GetCursorPos(&mMouseOrigin);
-			mIsMouseDown = true;
-		}
-		if (!GetAsyncKeyState(VK_LBUTTON)) {
-			mIsMouseDown = false;
-		}
-
 		if (mIsMouseDown) {
 			POINT now;
 			GetCursorPos(&now);
@@ -460,15 +350,43 @@ namespace RenderEngine {
 #endif
 	}
 
+	void Renderer::RenderVR(float _delta) {
+		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+		vr::VRCompositor()->CompositorBringToFront();
+		float color[4] = { 0.251f, 0.709f, 0.541f, 1 };
+		for (int i = 0; i < 2; ++i) {
+			vr::EVREye currentEye;
+			if (i == 0) {
+				currentEye = vr::EVREye::Eye_Left;
+			}
+			else {
+				currentEye = vr::EVREye::Eye_Right;
+				(*mContext)->ClearRenderTargetView((*mMainView), color);
+				(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+			}
+			ViewProjectionBuffer data;
+			GetMVP(currentEye, data);
+			(*mContext)->UpdateSubresource(*mVPBuffer, 0, nullptr, (void*)&data, 0, 0);
+
+			ProcessRenderSet();
+
+			vr::Texture_t submitTexture = { (void*)(*mMainViewTexture), vr::TextureType_DirectX, vr::ColorSpace_Auto };
+			vr::VRCompositor()->Submit(currentEye, &submitTexture);
+		#if ENABLE_TEXT
+			CommandConsole::Instance().SetVRBool(true);
+			CommandConsole::Instance().Update();
+		#endif
+		}
+	}
 	void Renderer::RenderNoVR(float _delta) {
 		UpdateCamera(2, 2, _delta);
+
 		ProcessRenderSet();
-		//pat added 
-#if ENABLE_TEXT
-		std::wstring FPS = L"FPS: " + to_wstring(mFps);
-		DrawTextToBitmap(FPS, (*mScreenBitmap),.75f,.75f,1.0f,1.0f);
-#endif
-		//-----
+	#if ENABLE_TEXT
+		CommandConsole::Instance().SetVRBool(false);
+		CommandConsole::Instance().Update();
+	#endif
+
 	}
 
 	void Renderer::ProcessRenderSet() {
@@ -484,49 +402,6 @@ namespace RenderEngine {
 		}
 	}
 
-	void Renderer::DrawTextToBitmap(std::wstring _text, ID2D1Bitmap* _bitmap, float _topLeftx, float _topLefty, float _bottomRightx, float _bottomRighty)
-	{
-		(*mContext2D)->SetTarget(_bitmap);
-		float color[4] = { 0.3f, 0.3f, 1, 1 };
-
-		// Retrieve the size of the render target.
-		D2D1_SIZE_F renderTargetSize = (*mContext2D)->GetSize();
-
-		(*mContext2D)->BeginDraw();
-		(*mContext2D)->SetTransform(D2D1::Matrix3x2F::Identity());
-
-		(*mContext2D)->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
-		(*mContext2D)->SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE_ALIASED);
-
-		(*mContext2D)->DrawText(
-			_text.c_str(),
-			(UINT32)_text.size(),
-			(*mTextformat),
-			D2D1::RectF(renderTargetSize.width*(_topLeftx), renderTargetSize.height*(_topLefty), renderTargetSize.width*(_bottomRightx), renderTargetSize.height * (_bottomRighty)),
-			(*mBrush)
-		);
-		ThrowIfFailed((*mContext2D)->EndDraw());
-	}
-
-	//IF YOU USE THIS, CLEAN UP AFTER YOURSELF
-	ID2D1Bitmap1 * Renderer::CreateBitmapForTexture(ID3D11Texture2D * _texture) {
-		//Make a bitmap
-		D2D1_BITMAP_PROPERTIES1 bitmapProperties =
-			BitmapProperties1(
-				D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
-				PixelFormat(DXGI_FORMAT_R16G16B16A16_FLOAT, D2D1_ALPHA_MODE_IGNORE),
-				0,
-				0		//defaults to 96
-			);
-
-	
-		IDXGISurface* surface;
-		ThrowIfFailed(_texture->QueryInterface(IID_IDXGISurface, (void**)&surface));
-
-		ID2D1Bitmap1* bitmap;
-		ThrowIfFailed((*mContext2D)->CreateBitmapFromDxgiSurface(surface, &bitmapProperties, &bitmap));
-		return bitmap;
-	}
 
 #pragma endregion Private Functions
 
@@ -569,9 +444,7 @@ namespace RenderEngine {
 		InitializeViews(rtvWidth, rtvHeight);
 		InitializeBuffers();
 #if ENABLE_TEXT
-		InitializeDirect2D();
-		InitializeIDWriteFactory();
-		InitializeScreenBitmap();
+
 #endif
 #if _DEBUG
 		InitializeObjectNames();
@@ -615,13 +488,6 @@ namespace RenderEngine {
 			RenderVR(_deltaTime);
 		}
 		(*mChain)->Present(mUseVsync ? 1 : 0, 0);
-		
-		mFrameTime += _deltaTime;
-		if (mFrameTime > .5f) {
-			mFps = (int)(1000.0f / (_deltaTime * 1000));
-			mFrameTime = 0;
-
-		}
 	}
 
 #pragma endregion Public Functions

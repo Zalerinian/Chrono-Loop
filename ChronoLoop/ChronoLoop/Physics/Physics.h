@@ -86,5 +86,6 @@ public:
 	vec4f			CalcPosition(vec4f& _pos, vec4f& _vel, float _time);
 	void			CalcReaction(Collider& _col1, Collider& _col2, float _time);
 	void			PlaneColReaction(Collider& _col, Collider& _plane);
+	void			CalcFriction(Collider& _col, Collider& _other);
 	//vec4f AddForce(vec4f _pos, vec4f _force, float _time);
 };

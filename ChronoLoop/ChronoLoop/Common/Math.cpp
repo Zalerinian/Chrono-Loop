@@ -189,20 +189,30 @@ float vec4f::Dot(vec4f const & _other)
 	return *this * _other;
 }
 
-float vec4f::Magnitude() const
+float vec4f::Magnitude3() const
+{
+	return sqrtf(powf(x, 2.0f) + powf(y, 2.0f) + powf(z, 2.0f));
+}
+
+float vec4f::Magnitude4() const
 {
 	return sqrtf(powf(x, 2.0f) + powf(y, 2.0f) + powf(z, 2.0f) + powf(w, 2.0f));
 }
 
-float vec4f::SquaredMagnitude() const
+float vec4f::SquaredMagnitude3() const
 {
-	return powf(Magnitude(), 2.0f);
+	return powf(Magnitude3(), 2.0f);
+}
+
+float vec4f::SquaredMagnitude4() const
+{
+	return powf(Magnitude4(), 2.0f);
 }
 
 vec4f vec4f::Normalize() const
 {
 	vec4f temp;
-	float norm = 1 / Magnitude();
+	float norm = 1 / Magnitude3();
 	for(int i = 0; i < 4; ++i)
 		temp.xyzw[i] = xyzw[i] * norm;
 	return temp;

@@ -6,6 +6,7 @@
 #include "../Core/Level.h"
 #include "../Input/VRInputManager.h"
 #include "../Rendering/TextureManager.h"
+#include "../Rendering/Draw2D.h"
 #include "../Core/Pool.h"
 #include "TimeManipulation.h"
 
@@ -34,10 +35,11 @@ void TimeManipulation::Start() {
 	txtdec.CPUAccessFlags = 0;
 	txtdec.MiscFlags = 0;
 	HRESULT hr;
-	hr = ((*RenderEngine::Renderer::Instance()->iGetDevice())->CreateTexture2D(&txtdec, NULL, &mCountTxt));
-	mCountMap = RenderEngine::Renderer::Instance()->CreateBitmapForTexture(mCountTxt);
+	hr = (*RenderEngine::Renderer::Instance()->iGetDevice())->CreateTexture2D(&txtdec, NULL, &mCountTxt);
+	mCountMap = Draw::Instance().CreateBitmapForTexture(mCountTxt);
 	//This draws to center
-	RenderEngine::Renderer::Instance()->DrawTextToBitmap(std::to_wstring(mCloneCount), mCountMap, 0.0f, 0.0f, 1.0f, 1.0f);
+	Font* tempFont = new Font(L"Times New Roman", 25, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_CENTER, DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+	Draw::Instance().DrawTextToBitmap(0.0f, 0.0f, 1.0f, 1.0f,*tempFont,std::to_wstring(mCloneCount), mCountMap);
 }
 
 void TimeManipulation::Update() {
@@ -66,16 +68,15 @@ void TimeManipulation::Update() {
 
 		BaseObject* Controller1 = Pool::Instance()->iGetObject()->Reset("Controller - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
 		MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
-		CubeCollider* CubeColider = new CubeCollider(Controller1, true, vec4f(0, 0, 0, 0), 2, 0, .2f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
+		ControllerCollider* CubeColider = new ControllerCollider(Controller1, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
 		mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
 		Controller1->AddComponent(CubeColider);
 		Controller1->AddComponent(mc);
-
-
+		
 
 		BaseObject* Controller2 = Pool::Instance()->iGetObject()->Reset("Controller2 - " + std::to_string(mCloneCount)); //new BaseObject("Controller2" + std::to_string(rand), identity);
 		MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
-		CubeCollider* CubeColider2 = new CubeCollider(Controller1, true, vec4f(0, 0, 0, 0), 2, 0, .2f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
+		ControllerCollider* CubeColider2 = new ControllerCollider(Controller2,vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 		mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
 		Controller2->AddComponent(CubeColider2);
 		Controller2->AddComponent(mc2);
@@ -90,7 +91,6 @@ void TimeManipulation::Update() {
 		mCloneCount++;
 	}
 	if (VRInputManager::Instance().iGetController(mLeft).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
-		Level* CurLev = Level::Instance();
 		TimeManager::Instance()->RewindTimeline(TimeManager::Instance()->GetCurrentSnapFrame() - 30, Level::Instance()->iGetHeadset()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID(), Level::Instance()->iGetRightController()->GetUniqueID());
 	}
 	

@@ -47,23 +47,11 @@ namespace RenderEngine {
 
 		//Pat Added
 		//DirectWrite Drawing componets
-		std::shared_ptr<ID2D1Factory1*> mTextFactory;
-		std::shared_ptr<ID2D1Device*> mDevice2D;
-		std::shared_ptr<IDXGIDevice*> mGIDevice;
-		std::shared_ptr<ID2D1DeviceContext*>mContext2D;
-		std::shared_ptr<IDWriteFactory*> mDWrite;
-		std::shared_ptr<IDWriteTextFormat*>mTextformat;
-		std::shared_ptr<ID2D1DCRenderTarget*> m2DRenderTarget;
-		std::shared_ptr<ID2D1SolidColorBrush*>mBrush;
-		std::shared_ptr<ID2D1Bitmap1*>mScreenBitmap;
 
 		void InitializeD3DDevice();
 		void InitializeDXGIFactory();
 		void InitializeDXGISwapChain(HWND &_win, bool _fullscreen, int _fps,
 																	int _width, int _height);
-		void InitializeIDWriteFactory();
-		void InitializeDirect2D();
-		void InitializeScreenBitmap();
 		int mFps = 0;
 		float mFrameTime = 0;
 
@@ -72,7 +60,6 @@ namespace RenderEngine {
 		void InitializeSamplerState();
 		void InitializeObjectNames();
 		void SetStaticBuffers();
-		void ThrowIfFailed(HRESULT hr);
 
 		matrix4 mEyePosLeft, mEyePosRight, mEyeProjLeft, mEyeProjRight, mHMDPos, mDebugCameraPos;
 
@@ -93,20 +80,16 @@ namespace RenderEngine {
 	public:
 		static Renderer* Instance();
 		static void DestroyInstance();
-		matrix4* Renderer::GetPlayerWorldPos();
 		// Instance Functions
 		bool iInitialize(HWND Window, unsigned int width, unsigned int height,
 			bool vsync, int fps, bool fullscreen, float farPlane, float nearPlane,
 			vr::IVRSystem* vrsys);
-
+		void ThrowIfFailed(HRESULT hr);
 		void AddNode(RenderShape *_node);
 		void RemoveNode(RenderShape *_node);
 		void Render(float _deltaTime);
 
 		//Draws text in 0 to 1 space
-		
-		void DrawTextToBitmap(std::wstring _text, ID2D1Bitmap* _bitmap,float _topLeftx, float _topLefty, float _bottomRightx, float _bottomRighty);
-		ID2D1Bitmap1* CreateBitmapForTexture(ID3D11Texture2D* _texture);
 
 		inline std::shared_ptr<ID3D11Device*> iGetDevice() { return mDevice; }
 		inline std::shared_ptr<ID3D11DeviceContext*> iGetContext() { return mContext; }
@@ -114,6 +97,7 @@ namespace RenderEngine {
 		inline std::shared_ptr<IDXGIFactory1*> iGetFactory() { return mFactory; }
 		inline std::shared_ptr<ID3D11RenderTargetView*> iGetRTView() { return mMainView; }
 		inline std::shared_ptr<ID3D11DepthStencilView*> iGetDSView() { return mDSView; }
+		inline std::shared_ptr<ID3D11Texture2D*> iGetRTViewTexture() { return mMainViewTexture; }
 		inline std::shared_ptr<HWND> iGetWindow() { return mWindow; }
 	};
 }

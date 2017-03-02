@@ -172,11 +172,12 @@ vec4f Collider::GetPos() {
 	return mObject->GetTransform().GetMatrix().fourth;
 }
 
-void Collider::SetPos(vec4f _newPos) {
+void Collider::SetPos(const vec4f& _newPos) {
 	mObject->GetTransform().GetMatrix().fourth = _newPos;
 }
 
-MeshCollider::MeshCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, char * _path) {
+MeshCollider::MeshCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, char * _path) {
+	mObject = _obj;
 	mType = eCOMPONENT_COLLIDER;
 	mColliderType = eCOLLIDER_Mesh;
 	mGravity = _gravity;
@@ -186,17 +187,21 @@ MeshCollider::MeshCollider(bool _move, vec4f _gravity, float _mass, float _elast
 	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	mShouldMove = _move;
 	mMass = _mass;
+	mDrag = _drag;
 	if (mMass == 0)
 		mInvMass = 0;
 	else
 		mInvMass = 1 / mMass;
+	mWeight = mGravity * mMass;
 	mRewind = false;
 	mElasticity = _elasticity;
-	mFriction = _friction;
+	mStaticFriction = _staticFriction;
+	mKineticFriction = _kineticFriction;
 	mMesh = &Mesh(_path);
 }
 
-SphereCollider::SphereCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, float _radius) {
+SphereCollider::SphereCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _radius) {
+	mObject = _obj;
 	mType = eCOMPONENT_COLLIDER;
 	mColliderType = eCOLLIDER_Sphere;
 	mGravity = _gravity;
@@ -205,18 +210,31 @@ SphereCollider::SphereCollider(bool _move, vec4f _gravity, float _mass, float _e
 	mTotalForce = mGravity;
 	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	mShouldMove = _move;
+	mRewind = false;
 	mMass = _mass;
 	if (mMass == 0)
 		mInvMass = 0;
 	else
 		mInvMass = 1 / mMass;
-	mRewind = false;
+	mWeight = mGravity * mMass;
 	mElasticity = _elasticity;
-	mFriction = _friction;
+	mStaticFriction = _staticFriction;
+	mKineticFriction = _kineticFriction;
+	mRHO = 1;
+	mDrag = _drag;
+	mCenter = GetPos();
 	mRadius = _radius;
+	mArea = 4 * DirectX::XM_PI * powf(mRadius, 2.0f);
+	mDragForce = mVelocity * (-0.5f * mRHO * mVelocity.Magnitude3() * mDrag * mArea);
 }
 
-CubeCollider::CubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, vec4f _min, vec4f _max) {
+void SphereCollider::SetPos(const vec4f& _other)
+{
+	mObject->GetTransform().GetMatrix().fourth = _other;
+	mCenter = _other;
+}
+
+CubeCollider::CubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec4f _min, vec4f _max) {
 	mObject = _obj;
 	mType = eCOMPONENT_COLLIDER;
 	mColliderType = eCOLLIDER_Cube;
@@ -232,21 +250,36 @@ CubeCollider::CubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _
 		mInvMass = 0;
 	else
 		mInvMass = 1 / mMass;
+	mWeight = mGravity * mMass;
 	mElasticity = _elasticity;
-	mFriction = _friction;
+	mStaticFriction = _staticFriction;
+	mKineticFriction = _kineticFriction;
+	mRHO = 1;
+	mDrag = _drag;
 	mMinOffset = _min;
 	mMin = _min + mObject->GetTransform().GetMatrix().fourth;
 	mMaxOffset = _max;
 	mMax = _max + mObject->GetTransform().GetMatrix().fourth;
+	float a = (mMaxOffset - mMinOffset) * vec4f(0, 0, 1, 0);
+	float b = (mMaxOffset - mMinOffset) * vec4f(0, 1, 0, 0);
+	float c = (mMaxOffset - mMinOffset) * vec4f(1, 0, 0, 0);
+	mArea = (2 * (a * b)) + (2 * (b * c)) + (2 * (a * c));
+	mDragForce = mVelocity * (-0.5f * mRHO * mVelocity.Magnitude3() * mDrag * mArea);
 }
 
-void CubeCollider::SetPos(vec4f _newPos) {
+void CubeCollider::SetPos(const vec4f& _newPos) {
 	mObject->GetTransform().GetMatrix().fourth = _newPos;
-	mMin = _newPos + mMinOffset;
-	mMax = _newPos + mMaxOffset;
+	mMin = mMinOffset + _newPos;
+	mMax = mMaxOffset + _newPos;
 }
 
-PlaneCollider::PlaneCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, float _offset, vec4f _norm) {
+OrientedCubeCollider::OrientedCubeCollider(BaseObject * _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec4f _center, vec4f _xRadius, vec4f _yRadius, vec4f _zRadius, vec4f _xRotation, vec4f _yRotation, vec4f _zRotation)
+{
+
+}
+
+PlaneCollider::PlaneCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _offset, vec4f _norm) {
+	mObject = _obj;
 	mType = eCOMPONENT_COLLIDER;
 	mColliderType = eCOLLIDER_Plane;
 	mGravity = _gravity;
@@ -261,10 +294,16 @@ PlaneCollider::PlaneCollider(bool _move, vec4f _gravity, float _mass, float _ela
 		mInvMass = 0;
 	else
 		mInvMass = 1 / mMass;
+	mWeight = mGravity * mMass;
 	mElasticity = _elasticity;
-	mFriction = _friction;
+	mStaticFriction = _staticFriction;
+	mKineticFriction = _kineticFriction;
+	mRHO = 1;
+	mDrag = _drag;
 	mOffset = _offset;
 	mNormal = _norm;
+	//mArea = ;
+	//mDragForce = mVelocity * (-0.5f * mRHO * mVelocity.Magnitude3() * mDrag * mArea);
 }
 
 ButtonCollider::ButtonCollider(BaseObject* _obj, vec4f _min, vec4f _max, float _mass, float _normForce, vec4f _pushNormal)
@@ -284,8 +323,8 @@ ButtonCollider::ButtonCollider(BaseObject* _obj, vec4f _min, vec4f _max, float _
 		mInvMass = 0;
 	else
 		mInvMass = 1 / mMass;
+	mWeight = mGravity * mMass;
 	mElasticity = 0;
-	mFriction = 0;
 	mMinOffset = _min;
 	mMin = _min + mObject->GetTransform().GetMatrix().fourth;
 	mMaxOffset = _max;

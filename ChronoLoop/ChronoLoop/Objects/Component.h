@@ -3,6 +3,7 @@
 #include "..\Rendering\Mesh.h"
 #include <unordered_map>
 #include "..\Physics\Physics.h"
+#include <unordered_set>
 
 class BaseObject;
 class Transform;
@@ -98,40 +99,51 @@ public:
 
 	ColliderType mColliderType;
 	bool mShouldMove, mRewind;
-	vec4f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity;
-	float mMass, mElasticity, mFriction, mInvMass;
+	vec4f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity, mWeight, mDragForce;
+	float mMass, mElasticity, mKineticFriction, mStaticFriction, mInvMass, mRHO, mDrag, mArea;
 
 	void Update();
 	void Destroy();
 
-	vec4f AddForce(vec4f _force) { mShouldMove = true; mForces = _force; return mForces; };
+	vec4f AddForce(vec4f _force) { mForces = _force; return mForces; };
 	virtual vec4f GetPos();
-	virtual void SetPos(vec4f _newPos);
+	virtual void SetPos(const vec4f& _newPos);
 };
 
 class MeshCollider : public Collider {
 public:
-	MeshCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, char* _path);
+	MeshCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, char* _path);
 	Mesh* mMesh;
 };
 
 class SphereCollider : public Collider {
 public:
-	SphereCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, float _radius);
+	SphereCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _radius);
+	vec4f mCenter;
 	float mRadius;
+	virtual void SetPos(const vec4f& _other);
 };
 
 class CubeCollider : public Collider {
 public:
 	CubeCollider() {}
-	CubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, vec4f _min, vec4f _max);
+	CubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec4f _min, vec4f _max);
 	vec4f mMin, mMax, mMinOffset, mMaxOffset;
-	virtual void SetPos(vec4f _newPos);
+	virtual void SetPos(const vec4f& _newPos);
+};
+
+class OrientedCubeCollider : public Collider
+{
+public:
+	OrientedCubeCollider() {}
+	OrientedCubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec4f _center, vec4f _xRadius, vec4f _yRadius, vec4f _zRadius, vec4f _xRotation, vec4f _yRotation, vec4f _zRotation);
+	vec4f mCenter, mRx, mRy, mRz;
+	vec4f mAxis[3];
 };
 
 class PlaneCollider : public Collider {
 public:
-	PlaneCollider(bool _move, vec4f _gravity, float _mass, float _elasticity, float _friction, float _offset, vec4f _norm);
+	PlaneCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _offset, vec4f _norm);
 	vec4f mNormal, mMin, mMax;
 	float mOffset;
 };
@@ -149,6 +161,7 @@ class ControllerCollider : public CubeCollider
 public:
 	ControllerCollider(BaseObject* _obj, vec4f _min, vec4f _max, bool _left);
 	bool mLeft;
+	std::unordered_set<Collider*> mHitting;
 };
 
 /*
