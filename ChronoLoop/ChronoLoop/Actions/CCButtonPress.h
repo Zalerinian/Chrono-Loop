@@ -8,14 +8,13 @@
 struct CCButtonPress : public CodeComponent
 {
 	bool colliding = false;
-	bool mBooped = false;
-
+	
 	BaseObject *Block = nullptr, *Exit = nullptr;
 	CubeCollider* blockCube, *exitCube;
 	virtual void Start() {
 		Block = Level::Instance()->iFindObjectWithName("BlockDoor");
 		Exit = Level::Instance()->iFindObjectWithName("ExitWall");
-
+		
 		blockCube = (CubeCollider*)Block->mComponents[eCOMPONENT_COLLIDER][0];
 		exitCube = (CubeCollider*)Exit->mComponents[eCOMPONENT_COLLIDER][0];
 	}
@@ -36,21 +35,11 @@ struct CCButtonPress : public CodeComponent
 				_col.mTotalForce = tForce;
 				_col.mVelocity = vel;
 				_col.mAcceleration = vel / _time;
-				if (!mBooped) {
-					//Block->GetTransform().SetMatrix(Math::MatrixTranslation(0, -1, 0));
-					//blockCube->mMin += vec4f(0, -1, 0, 0);
-					//blockCube->mMax += vec4f(0, -1, 0, 0);
-					blockCube->SetPos(vec4f(0, -1, 0, 1));
-					blockCube->mShouldMove = false;
+				blockCube->SetPos(vec4f(0, -1, 0, 1));
+				blockCube->mShouldMove = false;
 
-					//Exit->GetTransform().SetMatrix(Math::MatrixTranslation(0, 2, 0));
-					//exitCube->mMin += vec4f(0, 2, 0, 0);
-					//exitCube->mMax += vec4f(0, 2, 0, 0);
-					exitCube->SetPos(vec4f(0, 2, 0, 1));
-					exitCube->mShouldMove = false;
-
-					mBooped = true;
-				}
+				exitCube->SetPos(vec4f(0, 2, 0, 1));
+				exitCube->mShouldMove = false;
 			}
 		}
 		else

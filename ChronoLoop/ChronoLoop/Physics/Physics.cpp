@@ -698,14 +698,14 @@ void Physics::Update(float _time) {
 							if (otherCol->mShouldMove && otherCol->mColliderType == Collider::eCOLLIDER_Cube) {
 								AABB aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
 								if (AABBtoAABB(aabb1, aabb2)) {
-									SystemLogger::GetLog() << "PICKED UP CUBE" << std::endl;
+									//SystemLogger::GetLog() << "PICKED UP CUBE" << std::endl;
 									((ControllerCollider*)collider)->mHitting.insert(otherCol);
 								} else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
 									((ControllerCollider*)collider)->mHitting.erase(otherCol);
 							} else if (otherCol->mShouldMove && otherCol->mColliderType == Collider::eCOLLIDER_Sphere) {
 								Sphere s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
 								if (SphereToAABB(s1, aabb1)) {
-									SystemLogger::GetLog() << "PICKED UP SPHERE" << std::endl;
+									//SystemLogger::GetLog() << "PICKED UP SPHERE" << std::endl;
 									((ControllerCollider*)collider)->mHitting.insert(otherCol);
 								} else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
 									((ControllerCollider*)collider)->mHitting.erase(otherCol);
