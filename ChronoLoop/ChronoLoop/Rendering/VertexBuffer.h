@@ -5,7 +5,7 @@
 #include "renderer.h"
 
 
-namespace RenderEngine {
+namespace Epoch {
 	template<typename T>
 	class VertexBuffer
 	{

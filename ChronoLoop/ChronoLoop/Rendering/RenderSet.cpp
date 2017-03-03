@@ -7,7 +7,7 @@
 #include "../Common/Logger.h"
 #include <algorithm>
 
-namespace RenderEngine {
+namespace Epoch {
 	void RenderSet::AddNode(RenderNode *_node, RenderContext* _rc) {
 		if (_node->mType == RenderNode::RenderNodeType::Shape) {
 			if (((RenderShape*)_node)->mIndexCount == 0) {
@@ -25,7 +25,7 @@ namespace RenderEngine {
 			_node->mPrevious = _rc;
 		} else {
 			bool foundContext = false;
-			/*for (auto it = mContexts.begin(); it != mContexts.end(); ++it) {
+			for (auto it = mContexts.begin(); it != mContexts.end(); ++it) {
 				if (*(*it) == *_rc) {
 					foundContext = true;
 					_node->mNext = (*it)->mNext;
@@ -34,7 +34,7 @@ namespace RenderEngine {
 					(*it)->mNext = _node;
 					break;
 				}
-			}*/
+			}
 			if (!foundContext) {
 				// Insert a new context and mesh.
 				_node->mNext = nullptr;

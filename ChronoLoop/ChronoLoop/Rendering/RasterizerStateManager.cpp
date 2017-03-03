@@ -2,7 +2,7 @@
 #include "RasterizerStateManager.h"
 #include "Renderer.h"
 
-namespace RenderEngine {
+namespace Epoch {
 
 	RasterizerStateManager* RasterizerStateManager::sInstance = nullptr;
 

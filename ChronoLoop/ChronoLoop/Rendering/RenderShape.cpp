@@ -11,7 +11,7 @@
 #include <memory>
 
 
-namespace RenderEngine {
+namespace Epoch {
 
 	RenderShape::RenderShape() {
 		mType = RenderNodeType::Shape;
@@ -114,7 +114,7 @@ namespace RenderEngine {
 
 	RenderShape& RenderShape::AddTexture(const wchar_t * _path, TextureType _position) {
 		char *narrow = nullptr;
-		Engine::MakeNarrow(_path, &narrow, (unsigned int)std::wcslen(_path) + 1);
+		MakeNarrow(_path, &narrow, (unsigned int)std::wcslen(_path) + 1);
 		AddTexture(narrow, _position);
 		delete[] narrow;
 		return *this;

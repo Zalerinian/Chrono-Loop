@@ -34,6 +34,7 @@
 #include <crtdbg.h>
 #include "Actions/TimeManipulation.h"
 
+using namespace Epoch;
 
 #define CONSOLE_OVERRIDE 1
 #define FIXED_UPDATE_INTERVAL (1 / 120.0f)
@@ -82,11 +83,11 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 		VREnabled = true;
 	}
 
-	if (!RenderEngine::InitializeSystems(hwnd, 800, 600, false, 90, false, 1000, 0.1f, vrsys)) {
+	if (!InitializeSystems(hwnd, 800, 600, false, 90, false, 1000, 0.1f, vrsys)) {
 		return 1;
 	}
 
-	std::shared_ptr<ID3D11Device*> renderingDevice = RenderEngine::Renderer::Instance()->iGetDevice();
+	std::shared_ptr<ID3D11Device*> renderingDevice = Renderer::Instance()->iGetDevice();
 
 	// Update everything
 	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count());
@@ -94,10 +95,9 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 
 	// Cleanup
 	vr::VR_Shutdown();
-	RenderEngine::ShutdownSystems();
+	ShutdownSystems();
 	Level::DestroyInstance();
-	SystemLogger::CloseLog();
-	SystemLogger::CloseError();
+	SystemLogger::DestroyInstance();
 	vrsys = nullptr;
 
 #if _DEBUG
@@ -138,8 +138,7 @@ void Update() {
 	///*///////////////////////Using this to test physics//////////////////
 
 	Transform transform;
-	transform.SetMatrix(MatrixIdentity());
-	matrix4 mat1 = MatrixTranslation(0, 5, 0) * Math::MatrixScale(0.3f, 0.3f, 0.3f);
+	matrix4 mat1 = matrix4::CreateTranslation(0, 5, 0) * matrix4::CreateScale(0.3f, 0.3f, 0.3f);
 	transform.SetMatrix(mat1);
 	BaseObject* PhysicsBox = Pool::Instance()->iGetObject()->Reset("aabb", transform);//new BaseObject("aabb", transform);
 	CubeCollider *BoxCollider = new CubeCollider(PhysicsBox, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.3f, 0.1f, 0.1f, 0.1, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
@@ -161,8 +160,7 @@ void Update() {
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::PLAYBOUNCEEFFECTS);
 
 	Transform transformBox;
-	transformBox.SetMatrix(MatrixIdentity());
-	matrix4 matBox = MatrixTranslation(2, 5, 0) * Math::MatrixScale(0.3f, 0.3f, 0.3f);
+	matrix4 matBox = matrix4::CreateTranslation(2, 5, 0) * matrix4::CreateScale(0.3f, 0.3f, 0.3f);
 	transformBox.SetMatrix(matBox);
 	BaseObject* PhysicsBox2 = Pool::Instance()->iGetObject()->Reset("aabb2", transformBox);//new BaseObject("aabb", transform);
 	CubeCollider *BoxCollider2 = new CubeCollider(PhysicsBox2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 5.0f, 0.4f, 0.1f, 0.1f, 0.01f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
@@ -177,9 +175,8 @@ void Update() {
 	TimeManager::Instance()->AddObjectToTimeline(PhysicsBox2);
 
 	Transform SphereTransform;
-	SphereTransform.SetMatrix(MatrixIdentity());
-	matrix4 SphereMat = MatrixScale(0.15f, 0.15f, 0.15f); 
-	SphereMat *= MatrixTranslation(3, 5, 0);
+	matrix4 SphereMat = matrix4::CreateScale(0.15f, 0.15f, 0.15f); 
+	SphereMat *= matrix4::CreateTranslation(3, 5, 0);
 	SphereTransform.SetMatrix(SphereMat);
 	BaseObject* PhysicsSphere = Pool::Instance()->iGetObject()->Reset("sphere", SphereTransform);
 	SphereCollider *BallCollider = new SphereCollider(PhysicsSphere, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 3.0f, 0.6f, 0.2f, 0.1f, 0.03f, 0.15f);
@@ -194,9 +191,8 @@ void Update() {
 	TimeManager::Instance()->AddObjectToTimeline(PhysicsSphere);
 
 	Transform SphereTransform2;
-	SphereTransform2.SetMatrix(MatrixIdentity());
-	matrix4 SphereMat2 = MatrixScale(0.15f, 0.15f, 0.15f);
-	SphereMat2 *= MatrixTranslation(4, 5, 0);
+	matrix4 SphereMat2 = matrix4::CreateScale(0.15f, 0.15f, 0.15f);
+	SphereMat2 *= matrix4::CreateTranslation(4, 5, 0);
 	SphereTransform2.SetMatrix(SphereMat2);
 	BaseObject* PhysicsSphere2 = Pool::Instance()->iGetObject()->Reset("sphere2", SphereTransform2);
 	SphereCollider *BallCollider2 = new SphereCollider(PhysicsSphere2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 3.0f, 1.0f, 0.2f, 0.1f, 0.03f, 0.15f);
@@ -211,8 +207,7 @@ void Update() {
 	TimeManager::Instance()->AddObjectToTimeline(PhysicsSphere2);
 
 	Transform ButtonTransform;
-	ButtonTransform.SetMatrix(MatrixIdentity());
-	matrix4 ButtonMat = MatrixTranslation(-3, 0, 0);
+	matrix4 ButtonMat = matrix4::CreateTranslation(-3, 0, 0);
 	ButtonTransform.SetMatrix(ButtonMat);
 	BaseObject* Button = new BaseObject("button", ButtonTransform);
 	ButtonCollider* ButtonCol = new ButtonCollider(Button, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), 3, 1, vec4f(0,1,0,0));
@@ -222,20 +217,19 @@ void Update() {
 	TimeManager::Instance()->AddObjectToTimeline(Button);
 
 	Transform PlaneTransform;
-	PlaneTransform.SetMatrix(MatrixTranslation(0, -1, 0));
+	PlaneTransform.SetMatrix(matrix4::CreateTranslation(0, -1, 0));
 	BaseObject* Floor = Pool::Instance()->iGetObject()->Reset("plane", PlaneTransform);// new BaseObject("plane", PlaneTransform);
 	PlaneCollider* plane = new PlaneCollider(Floor, false, vec4f(0.0f, 0.0f, 0.0f, 1.0f), 10.0f, 0.1f, 0.8f, 0.7f, 0.1f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
 	MeshComponent *planeObj = new MeshComponent("../Resources/BigFloor.obj");
-	planeObj->AddTexture("../Resources/floorg.png", RenderEngine::eTEX_DIFFUSE);
+	planeObj->AddTexture("../Resources/floorg.png", eTEX_DIFFUSE);
 	Floor->AddComponent(plane);
 	Floor->AddComponent(planeObj);
 	
 	Transform identity;
-	identity.SetMatrix(Math::MatrixIdentity());
 
 	BaseObject* walls = Pool::Instance()->iGetObject()->Reset("walls", PlaneTransform);// new BaseObject("walls", PlaneTransform);
 	MeshComponent *wallMesh = new MeshComponent("../Resources/BigWall.obj");
-	wallMesh->AddTexture("../Resources/Wallg.png", RenderEngine::eTEX_DIFFUSE);
+	wallMesh->AddTexture("../Resources/Wallg.png", eTEX_DIFFUSE);
 	CubeCollider* ButtonRoomBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-7.034f, -1, -8, 1), vec4f(1.011f, 3, -7.026f, 1));
 	CubeCollider* ExitLeftWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-0.985f, -1, -9.008f, 1), vec4f(1.011f, 3, -7.026f, 1));
 	CubeCollider* ExitBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(0.985f, -1, -10.008f, 1), vec4f(3.112f, 3, -9.008f, 1));
@@ -267,10 +261,10 @@ void Update() {
 	BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("RController", identity);// new BaseObject("Controller", identity);
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 	MeshComponent *rightRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
-	rightRaycaster->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
-	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
-	TeleportAction *ta = new TeleportAction(false);
-	TimeManipulation* tm = new TimeManipulation(false);
+	rightRaycaster->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
+	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+	TeleportAction *ta = new TeleportAction(eControllerType_Primary);
+	TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
 	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 	RightController->AddComponent(mc);
 	RightController->AddComponent(rightRaycaster);
@@ -278,28 +272,28 @@ void Update() {
 	RightController->AddComponent(rightConCol);
 	RightController->AddComponent(tm);
 	CodeComponent* pickup = new BoxSnapToControllerAction();
-	((BoxSnapToControllerAction*)pickup)->mLeft = false;
+	((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
 	RightController->AddComponent(pickup);
 	TimeManager::Instance()->AddPlayerObjectToTimeline(RightController);
 
 	MeshComponent *visibleMesh = new MeshComponent("../Resources/raycube.obj");
-	visibleMesh->AddTexture("../Resources/raycube.png", RenderEngine::eTEX_DIFFUSE);
+	visibleMesh->AddTexture("../Resources/raycube.png", eTEX_DIFFUSE);
 	PhysicsBox->AddComponent(visibleMesh);
 
 	MeshComponent *visibleMeshBox = new MeshComponent("../Resources/raycube.obj");
-	visibleMeshBox->AddTexture("../Resources/raycube.png", RenderEngine::eTEX_DIFFUSE);
+	visibleMeshBox->AddTexture("../Resources/raycube.png", eTEX_DIFFUSE);
 	PhysicsBox2->AddComponent(visibleMeshBox);
 
 	MeshComponent *sphereMesh = new MeshComponent("../Resources/Sphere.obj");
-	sphereMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
+	sphereMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 	PhysicsSphere->AddComponent(sphereMesh);
 
 	MeshComponent *sphereMesh2 = new MeshComponent("../Resources/Sphere.obj");
-	sphereMesh2->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
+	sphereMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 	PhysicsSphere2->AddComponent(sphereMesh2);
 
 	MeshComponent *ButtonMesh = new MeshComponent("../Resources/cube.obj");
-	ButtonMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
+	ButtonMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 	
 	Button->AddComponent(ButtonMesh);
 
@@ -307,10 +301,10 @@ void Update() {
 	BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("LController", identity); //new BaseObject("Controller2", identity);
 	MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 	MeshComponent *leftRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
-	leftRaycaster->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
-	mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", RenderEngine::eTEX_DIFFUSE);
-	TeleportAction *ta2 = new TeleportAction(true);
-	TimeManipulation* tm2 = new TimeManipulation(true);
+	leftRaycaster->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
+	mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+	TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
+	TimeManipulation* tm2 = new TimeManipulation(eControllerType_Secondary);
 	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
 	LeftController->AddComponent(leftConCol);
 	LeftController->AddComponent(leftRaycaster);
@@ -318,12 +312,9 @@ void Update() {
 	LeftController->AddComponent(ta2);
 	LeftController->AddComponent(tm2);
 	CodeComponent* pickup2 = new BoxSnapToControllerAction();
-	((BoxSnapToControllerAction*)pickup2)->mLeft = true;
+	((BoxSnapToControllerAction*)pickup2)->mControllerRole = eControllerType_Secondary;
 	LeftController->AddComponent(pickup2);
 	TimeManager::Instance()->AddPlayerObjectToTimeline(LeftController);
-	if (VREnabled) {
-		VRInputManager::Instance().iUpdate();
-	}
 
 	//Sound Initializing---------------------------------------------------
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::INITIALIZE_Audio, 0, false));
@@ -334,7 +325,6 @@ void Update() {
 	
 	//Temp Camera OBJ
 	Transform camTrans;
-	camTrans.SetMatrix(MatrixIdentity());
 	BaseObject camObj("TempCam", camTrans);
 	Listener* ears = new Listener();
 	camObj.AddComponent(ears);
@@ -344,7 +334,7 @@ void Update() {
 
 	BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", transform); //new BaseObject("headset", transform);
 	MeshComponent *visibleMesh2 = new MeshComponent("../Resources/Cube.obj");
-	visibleMesh2->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
+	visibleMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 	visibleMesh2->SetVisible(false);
 	HeadsetFollow* hfollow = new HeadsetFollow();
 	headset->AddComponent(hfollow);
@@ -352,12 +342,12 @@ void Update() {
 	TimeManager::Instance()->AddPlayerObjectToTimeline(headset);
 
 	Transform Door, Exit;
-	Door.SetMatrix(Math::MatrixTranslation(0, 2, 0));
-	Exit.SetMatrix(Math::MatrixTranslation(0, -1, 0));
+	Door.SetMatrix(matrix4::CreateTranslation(0, 2, 0));
+	Exit.SetMatrix(matrix4::CreateTranslation(0, -1, 0));
 	BaseObject* ExitWall = Pool::Instance()->iGetObject()->Reset("ExitWall", Exit);
 	MeshComponent *ExitMesh = new MeshComponent("../Resources/ExitDoor.obj");
 	CubeCollider* exitCol = new CubeCollider(ExitWall, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(0.859f, 0, -7.435f, 0), vec4f(3.137f, 3, -7, 0));
-	ExitMesh->AddTexture("../Resources/Doors.png", RenderEngine::eTEX_DIFFUSE);
+	ExitMesh->AddTexture("../Resources/Doors.png", eTEX_DIFFUSE);
 	ExitWall->AddComponent(ExitMesh);
 	ExitWall->AddComponent(exitCol);
 	TimeManager::Instance()->AddObjectToTimeline(ExitWall);
@@ -365,13 +355,13 @@ void Update() {
 	BaseObject* BlockDoor = Pool::Instance()->iGetObject()->Reset("BlockDoor", Door);
 	MeshComponent *DoorMesh = new MeshComponent("../Resources/BlockDoor.obj");
 	CubeCollider* doorCol = new CubeCollider(BlockDoor, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-1.358f, 0, 3.058f, 0), vec4f(-0.82f, 3, 7.574f, 0));
-	DoorMesh->AddTexture("../Resources/Doors.png", RenderEngine::eTEX_DIFFUSE);
+	DoorMesh->AddTexture("../Resources/Doors.png", eTEX_DIFFUSE);
 	BlockDoor->AddComponent(DoorMesh);
 	BlockDoor->AddComponent(doorCol);
 	TimeManager::Instance()->AddObjectToTimeline(BlockDoor);
 
 	Transform downOne;
-	downOne.SetMatrix(Math::MatrixTranslation(0, -1, 0));
+	downOne.SetMatrix(matrix4::CreateTranslation(0, -1, 0));
 	BaseObject* ControlBoard = Pool::Instance()->iGetObject()->Reset("ControlsBoards", downOne);
 	MeshComponent* controlsMesh = new MeshComponent("../Resources/ControlBoard.obj");
 	controlsMesh->AddTexture("../Resources/ControlScheme.png", eTEX_DIFFUSE);
@@ -433,7 +423,7 @@ void Update() {
 
 	//*////////////////////////////////////////////////////////////////////
 	if (VREnabled) {
-		VRInputManager::Instance().iUpdate();
+		VRInputManager::GetInstance().Update();
 	}
 	
 	UpdateTime();
@@ -458,14 +448,14 @@ void Update() {
 			Level::Instance()->iUpdate();
 			
 			TimeManager::Instance()->Update(deltaTime);
-			RenderEngine::Renderer::Instance()->Render(deltaTime);
+			Renderer::Instance()->Render(deltaTime);
 			while (fixedTime >= FIXED_UPDATE_INTERVAL) {
 				Physics::Instance()->Update(FIXED_UPDATE_INTERVAL);
 				fixedTime -= FIXED_UPDATE_INTERVAL;
 			}
 
 			if (VREnabled) {
-				VRInputManager::Instance().iUpdate();
+				VRInputManager::GetInstance().Update();
 			}
 		}
 	}

@@ -13,7 +13,7 @@
 
 class InputLayoutManager;
 
-namespace RenderEngine {
+namespace Epoch {
 
 	class Renderer {
 	private:

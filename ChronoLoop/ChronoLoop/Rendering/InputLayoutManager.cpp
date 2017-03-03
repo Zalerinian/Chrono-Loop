@@ -5,7 +5,7 @@
 #include "../Common/FileIO.h"
 
 
-namespace RenderEngine {
+namespace Epoch {
 
 	InputLayoutManager* InputLayoutManager::sInstance = nullptr;
 

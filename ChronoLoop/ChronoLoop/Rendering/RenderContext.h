@@ -7,7 +7,7 @@
 
 struct ID3D11ShaderResourceView;
 
-namespace RenderEngine {
+namespace Epoch {
 
 	struct RenderContext : RenderNode {
 		RasterState mRasterState = eRS_MAX;

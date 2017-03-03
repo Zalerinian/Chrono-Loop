@@ -4,7 +4,7 @@
 #include <d3d11.h>
 #include <memory>
 
-namespace RenderEngine {
+namespace Epoch {
 
 	TextureManager* TextureManager::sInstance = nullptr;
 
@@ -49,7 +49,7 @@ namespace RenderEngine {
 		_tex->GetDesc(&texDesc);
 		CD3D11_SHADER_RESOURCE_VIEW_DESC srvDesc(_tex, D3D11_SRV_DIMENSION::D3D11_SRV_DIMENSION_TEXTURE2D, texDesc.Format);
 		ID3D11ShaderResourceView* srv;
-		(*RenderEngine::Renderer::Instance()->iGetDevice())->CreateShaderResourceView(_tex, &srvDesc, &srv);
+		(*Renderer::Instance()->iGetDevice())->CreateShaderResourceView(_tex, &srvDesc, &srv);
 		_name = typedName;
 		mTextureMap2D[_name] = std::make_pair<std::shared_ptr<ID3D11ShaderResourceView*>, std::shared_ptr<ID3D11Texture2D*>>(
 				std::make_shared<ID3D11ShaderResourceView*>(srv),

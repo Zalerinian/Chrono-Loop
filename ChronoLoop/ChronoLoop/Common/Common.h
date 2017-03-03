@@ -1,6 +1,7 @@
 #pragma once
 #include <sstream>
 
+
 #if defined(DEBUG) | defined(_DEBUG)
 #ifndef SetD3DName
 #define SetD3DName(object, name) \
@@ -16,7 +17,8 @@
 #endif
 #endif 
 
-namespace Engine {
+namespace Epoch
+{
 
 	void MakeWide(const char* _in, wchar_t **_out, unsigned int _size);
 	void MakeNarrow(const wchar_t *_in, char **_out, unsigned int _size);

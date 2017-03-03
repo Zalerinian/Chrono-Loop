@@ -6,7 +6,7 @@
 #include <memory>
 #include "../Common/Logger.h"
 
-namespace RenderEngine {
+namespace Epoch {
 
 	ShaderManager* ShaderManager::sInstance = nullptr;
 

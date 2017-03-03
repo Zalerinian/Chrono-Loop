@@ -1,11 +1,16 @@
 #include "Breakpoint.h"
 
-namespace Debug {
+namespace Epoch
+{
+	namespace Debug
+	{
 
-	void SetBreakpoint() {
+		void SetBreakpoint()
+		{
 #if _DEBUG && _MSC_VER
-		__debugbreak();
+			__debugbreak();
 #endif
-	}
+		}
 
+	}
 }

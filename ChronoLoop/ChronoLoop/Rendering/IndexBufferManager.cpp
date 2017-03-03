@@ -3,7 +3,7 @@
 #include <d3d11.h>
 #include "../Common/Common.h"
 
-namespace RenderEngine {
+namespace Epoch {
 
 	IndexBufferManager* IndexBufferManager::sInstance = nullptr;
 
@@ -18,7 +18,7 @@ namespace RenderEngine {
 		mIndexBuffer->Release();
 	}
 
-	IndexBufferManager & RenderEngine::IndexBufferManager::Instance()
+	IndexBufferManager & IndexBufferManager::Instance()
 	{
 		if (!sInstance)
 			sInstance = new IndexBufferManager();
