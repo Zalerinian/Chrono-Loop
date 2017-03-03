@@ -1,10 +1,13 @@
 #include "stdafx.h"
 #include "Level.h"
 #include "../Actions/CodeComponent.hpp"
+#include "../Objects/MeshComponent.h"
 
 Level* Level::sInstance = nullptr;
 
-Level::Level() {}
+Level::Level() 
+{
+}
 
 Level::~Level() {
 	for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
@@ -40,7 +43,7 @@ void Level::Initialize(BaseObject * _headset, BaseObject * _lController, BaseObj
 		sInstance->mHeadset = _headset;
 		sInstance->mController1 = _lController;
 		sInstance->mController2 = _rController;
-
+		CommandConsole::Instance().AddCommand(L"/WIREFRAME", ToggleEntireLevelsWireframe);
 	}
 }
 
@@ -159,4 +162,32 @@ bool Level::iOnObjectNamechange(BaseObject * _obj, std::string _name) {
 	//	}
 	//}
 	//return false;
+}
+void Level::ToggleEntireLevelsWireframe(void* _command, std::wstring _ifOn)
+{
+	CommandConsole* cc = (CommandConsole*)_command;
+	if (_ifOn == L"ON") {
+		for (auto it = sInstance->mObjectList.begin(); it != sInstance->mObjectList.end(); ++it) {
+			for (size_t x = 0; x < (*it)->GetComponents(ComponentType::eCOMPONENT_MESH).size(); ++x)
+			{
+				MeshComponent* tempMComp = (MeshComponent*)((*it)->GetComponents(ComponentType::eCOMPONENT_MESH)[x]);
+
+				tempMComp->SetRasterState(eRS_WIREFRAME);//< - This line
+			}
+		}
+		CommandConsole::Instance().DisplaySet(L"");
+	}
+	else if (_ifOn == L"OFF") {
+		for (auto it = sInstance->mObjectList.begin(); it != sInstance->mObjectList.end(); ++it) {
+			for (size_t x = 0; x < (*it)->GetComponents(ComponentType::eCOMPONENT_MESH).size(); ++x)
+			{
+				MeshComponent* tempMComp = (MeshComponent*)((*it)->GetComponents(ComponentType::eCOMPONENT_MESH)[x]);
+				tempMComp->SetRasterState(eRS_FILLED);
+			}
+		}
+		CommandConsole::Instance().DisplaySet(L"");
+	}
+	else {
+		CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /WIREFRAME (ON/OFF)");
+	}
 }

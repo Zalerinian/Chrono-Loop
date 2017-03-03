@@ -25,7 +25,7 @@ namespace RenderEngine {
 			_node->mPrevious = _rc;
 		} else {
 			bool foundContext = false;
-			for (auto it = mContexts.begin(); it != mContexts.end(); ++it) {
+			/*for (auto it = mContexts.begin(); it != mContexts.end(); ++it) {
 				if (*(*it) == *_rc) {
 					foundContext = true;
 					_node->mNext = (*it)->mNext;
@@ -34,7 +34,7 @@ namespace RenderEngine {
 					(*it)->mNext = _node;
 					break;
 				}
-			}
+			}*/
 			if (!foundContext) {
 				// Insert a new context and mesh.
 				_node->mNext = nullptr;
@@ -76,27 +76,7 @@ namespace RenderEngine {
 
 	void RenderSet::RemoveContext(std::vector<RenderContext*>::iterator _it) {
 		RenderContext* rc = (*_it);
-		if (rc->mNext && rc->mNext->mNext) {
-			// This node has two valid children.
-			if(rc->mNext->mType == RenderNode::RenderNodeType::Shape && rc->mNext->mNext->mType == RenderNode::RenderNodeType::Shape) {
-				// Both children are shapes.
-				RenderShape *child = (RenderShape*)rc->mNext, *grandchild = (RenderShape*)rc->mNext->mNext;
-				if (rc != &child->mContext) {
-					(*_it) = &child->mContext;
-				} else if (rc != &grandchild->mContext) {
-					(*_it) = &grandchild->mContext;
-				} else {
-					// Something's fucky.
-					Debug::SetBreakpoint();
-				}
-			} else {
-				// Both children are not shapes
-				mContexts.erase(_it);
-			}
-		} else {
-			// This context does not have two children
-			mContexts.erase(_it);
-		}
+		mContexts.erase(_it);
 		RemoveNode(rc);
 	}
 

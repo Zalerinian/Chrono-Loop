@@ -40,3 +40,9 @@ void MeshComponent::AddTexture(const char * _path, RenderEngine::TextureType _ty
 	RenderEngine::Renderer::Instance()->RemoveNode(mShape);
 	RenderEngine::Renderer::Instance()->AddNode(mShape);
 }
+
+void MeshComponent::SetRasterState(RenderEngine::RasterState _t) {
+	mShape->GetContext().mRasterState = _t;
+	RenderEngine::Renderer::Instance()->RemoveNode(mShape);
+	RenderEngine::Renderer::Instance()->AddNode(mShape);
+}

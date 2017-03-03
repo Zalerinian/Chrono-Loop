@@ -1,7 +1,7 @@
 #pragma once
 #include "Component.h"
 #include "../Rendering/RendererDefines.h"
-#include  "../Rendering/RenderShape.h"
+#include "../Rendering/RenderShape.h"
 
 namespace RenderEngine {
 	struct RenderShape;
@@ -20,4 +20,6 @@ public:
 	inline bool IsVisible() { return mVisible; };
 	inline Triangle *GetTriangles() { return mShape->GetTriangles(); }
 	inline size_t GetTriangleCount() { return mShape->GetTriangleCount(); }
+	inline RenderEngine::RenderContext& GetContext() { return mShape->GetContext(); }
+	void SetRasterState(RenderEngine::RasterState _t);
 };

@@ -5,6 +5,8 @@
 ///////////////////
 #include "../ChronoLoop/Objects/BaseObject.h"
 #include "../ChronoLoop/Rendering/renderer.h"
+#include "../Rendering/Draw2D.h"
+#include "../Input/CommandConsole.h"
 
 
 using namespace RenderEngine;
@@ -50,5 +52,9 @@ public:
 	void iLoadLevel();
 	void iUpdate();
 	bool iOnObjectNamechange(BaseObject* _obj, std::string _name);
+
+
+	//**CONSOLE COMMAND FUNCS**//
+	static void ToggleEntireLevelsWireframe(void * _command, std::wstring _ifOn);
 
 };
