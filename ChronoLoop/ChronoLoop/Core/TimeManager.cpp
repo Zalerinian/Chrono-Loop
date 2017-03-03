@@ -136,7 +136,7 @@ void TimeManager::ToggleSnapshotCountDisplay(void * _command, std::wstring _ifOn
 void TimeManager::DisplayCloneCount()
 {
 	if (instanceTimemanager->mCloneCountOn) {
-		std::wstring CloneCount = L"Clone(s): " + std::to_wstring(mClones.size());
+		std::wstring CloneCount = L"Clone(s): " + std::to_wstring(mClones.size() / 3);
 
 		Font* tempFont;
 		if (!CommandConsole::Instance().isVRon()) {
@@ -156,7 +156,7 @@ void TimeManager::DisplayCloneCount()
 void TimeManager::DisplaySnapshotCount()
 {
 	if (instanceTimemanager->mSnapshotCountOn) {
-		std::wstring CloneCount = L"Snapshots: " + std::to_wstring(mTimeline->mCurrentGameTimeIndx);
+		std::wstring CloneCount = L"Snapshots: " + std::to_wstring((int)(mTimeline->mCurrentGameTimeIndx * 0.1f));
 
 		Font* tempFont;
 		if (!CommandConsole::Instance().isVRon()) {
