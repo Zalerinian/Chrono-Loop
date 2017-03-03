@@ -21,7 +21,7 @@
 using namespace std;
 using namespace D2D1;
 
-namespace Epoch {
+namespace RenderEngine {
 
 	Renderer* Renderer::sInstance = nullptr;
 
@@ -64,7 +64,7 @@ namespace Epoch {
 			matEyeRight.m[0][3], matEyeRight.m[1][3], matEyeRight.m[2][3], 1.0f
 		);
 
-		return matrixObj.Invert();
+		return matrixObj.Inverse();
 	}
 
 	matrix4 Renderer::GetProjection(vr::EVREye e) {
@@ -80,16 +80,15 @@ namespace Epoch {
 	}
 
 	void Renderer::GetMVP(vr::EVREye e, ViewProjectionBuffer &data) {
-		matrix4 hmd = VRInputManager::GetInstance().GetTrackedPositions()[0].mDeviceToAbsoluteTracking;
-		matrix4 ppos = VRInputManager::GetInstance().GetPlayerPosition();
-		matrix4 hmdPos = (hmd * ppos);
-		matrix4 inverted = hmdPos.Invert();
+		matrix4 hmd = Math::FromMatrix(VRInputManager::Instance().iGetTrackedPositions()[0].mDeviceToAbsoluteTracking);
+
+		matrix4 hmdPos = (hmd * VRInputManager::Instance().iGetPlayerPosition()).Inverse();
 		if (e == vr::EVREye::Eye_Left) {
-			data.view = (inverted * mEyePosLeft).Transpose();
-			data.projection = mEyeProjLeft.Transpose();
+			data.view = Math::MatrixTranspose((hmdPos * mEyePosLeft));
+			data.projection = Math::MatrixTranspose(mEyeProjLeft);
 		} else {
-			data.view = (inverted * mEyePosRight).Transpose();
-			data.projection = mEyeProjRight.Transpose();
+			data.view = Math::MatrixTranspose((hmdPos * mEyePosRight));
+			data.projection = Math::MatrixTranspose(mEyeProjRight);
 		}
 	}
 
@@ -183,8 +182,8 @@ namespace Epoch {
 		IDXGISwapChain *chain;
 
 		ThrowIfFailed((*sInstance->mFactory)->CreateSwapChain((*sInstance->mDevice),
-																							 &scDesc,
-																							 &chain));
+																													&scDesc,
+																													&chain));
 		sInstance->mChain = make_shared<IDXGISwapChain*>(chain);
 	}
 
@@ -240,7 +239,7 @@ namespace Epoch {
 		(*mDevice)->CreateBuffer(&desc, nullptr, &pBuff);
 		mPositionBuffer = std::make_shared<ID3D11Buffer*>(pBuff);
 	}
-	
+
 	void Renderer::InitializeSamplerState() {
 		D3D11_SAMPLER_DESC sDesc;
 		memset(&sDesc, 0, sizeof(sDesc));
@@ -286,39 +285,38 @@ namespace Epoch {
 		if (GetActiveWindow() != *mWindow) {
 			return;
 		}
-		if (!CommandConsole::Instance().willTakeInput())
-		{
+		if (!CommandConsole::Instance().willTakeInput()) {
 			//w
 			if (GetAsyncKeyState('W')) {
-				mDebugCameraPos = matrix4::CreateTranslation(0, 0, -_moveSpd * _delta) * mDebugCameraPos;
+				mDebugCameraPos = Math::MatrixTranslation(0, 0, -_moveSpd * _delta) * mDebugCameraPos;
 			}
 			//s
 			if (GetAsyncKeyState('S')) {
-				mDebugCameraPos = matrix4::CreateTranslation(0, 0, _moveSpd * _delta) * mDebugCameraPos;
+				mDebugCameraPos = Math::MatrixTranslation(0, 0, _moveSpd * _delta) * mDebugCameraPos;
 			}
 			//a
 			if (GetAsyncKeyState('A')) {
-				mDebugCameraPos = matrix4::CreateTranslation(-_moveSpd * _delta, 0, 0) * mDebugCameraPos;
+				mDebugCameraPos = Math::MatrixTranslation(-_moveSpd * _delta, 0, 0) * mDebugCameraPos;
 			}
 			//d
 			if (GetAsyncKeyState('D')) {
-				mDebugCameraPos = matrix4::CreateTranslation(_moveSpd * _delta, 0, 0) * mDebugCameraPos;
+				mDebugCameraPos = Math::MatrixTranslation(_moveSpd * _delta, 0, 0) * mDebugCameraPos;
 			}
 			// Q
 			if (GetAsyncKeyState('Q')) {
-				mDebugCameraPos = matrix4::CreateZRotation(_rotSpd * _delta) * mDebugCameraPos;
+				mDebugCameraPos = Math::MatrixRotateZ(_rotSpd * _delta) * mDebugCameraPos;
 			}
 			// E
 			if (GetAsyncKeyState('E')) {
-				mDebugCameraPos = matrix4::CreateZRotation(-_rotSpd * _delta) * mDebugCameraPos;
+				mDebugCameraPos = Math::MatrixRotateZ(-_rotSpd * _delta) * mDebugCameraPos;
 			}
 			//x
 			if (GetAsyncKeyState(VK_CONTROL)) {
-				mDebugCameraPos = matrix4::CreateTranslation(0, -_moveSpd * _delta, 0) * mDebugCameraPos;
+				mDebugCameraPos = Math::MatrixTranslation(0, -_moveSpd * _delta, 0) * mDebugCameraPos;
 			}
 
 			if (GetAsyncKeyState(VK_SPACE)) {
-				mDebugCameraPos = matrix4::CreateTranslation(0, _moveSpd * _delta, 0) * mDebugCameraPos;
+				mDebugCameraPos = Math::MatrixTranslation(0, _moveSpd * _delta, 0) * mDebugCameraPos;
 			}
 			if (GetAsyncKeyState(VK_LBUTTON) & 1 && !mIsMouseDown) {
 				GetCursorPos(&mMouseOrigin);
@@ -335,7 +333,7 @@ namespace Epoch {
 				float dx = -(now.x - mMouseOrigin.x) * _rotSpd * _delta;
 				float dy = -(now.y - mMouseOrigin.y) * _rotSpd * _delta;
 
-				mDebugCameraPos = matrix4::CreateXRotation(dy) * matrix4::CreateYRotation(dx) * mDebugCameraPos;
+				mDebugCameraPos = Math::MatrixRotateX(dy) * Math::MatrixRotateY(dx) * mDebugCameraPos;
 
 				// Reset cursor to center of the window.
 				WINDOWINFO winfo;
@@ -346,7 +344,7 @@ namespace Epoch {
 			}
 		}
 
-		mVPData.view = (mDebugCameraPos).Transpose().Invert();
+		mVPData.view = Math::MatrixTranspose(mDebugCameraPos).Inverse();
 		(*mContext)->UpdateSubresource(*mVPBuffer, 0, nullptr, &mVPData, 0, 0);
 #endif
 	}
@@ -359,8 +357,7 @@ namespace Epoch {
 			vr::EVREye currentEye;
 			if (i == 0) {
 				currentEye = vr::EVREye::Eye_Left;
-			}
-			else {
+			} else {
 				currentEye = vr::EVREye::Eye_Right;
 				(*mContext)->ClearRenderTargetView((*mMainView), color);
 				(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -373,20 +370,20 @@ namespace Epoch {
 
 			vr::Texture_t submitTexture = { (void*)(*mMainViewTexture), vr::TextureType_DirectX, vr::ColorSpace_Auto };
 			vr::VRCompositor()->Submit(currentEye, &submitTexture);
-		#if ENABLE_TEXT
+#if ENABLE_TEXT
 			CommandConsole::Instance().SetVRBool(true);
 			CommandConsole::Instance().Update();
-		#endif
+#endif
 		}
 	}
 	void Renderer::RenderNoVR(float _delta) {
 		UpdateCamera(2, 2, _delta);
 
 		ProcessRenderSet();
-	#if ENABLE_TEXT
+#if ENABLE_TEXT
 		CommandConsole::Instance().SetVRBool(false);
 		CommandConsole::Instance().Update();
-	#endif
+#endif
 
 	}
 
@@ -461,10 +458,10 @@ namespace Epoch {
 
 
 		if (!mVrSystem) {
-			mDebugCameraPos = matrix4::CreateTranslation(1.9f, 0.5f, 8);
-			mVPData.projection = DirectX::XMMatrixPerspectiveFovRH(70, (float)_height / (float)_width, 0.1f, 1000);
-			mVPData.view = mDebugCameraPos.Transpose().Invert();
-			mVPData.projection = (mVPData.projection).Transpose();
+			mDebugCameraPos = Math::MatrixTranslation(1.9f, 0.5f, 8);
+			mVPData.projection.matrix = DirectX::XMMatrixPerspectiveFovRH(70, (float)_height / (float)_width, 0.1f, 1000);
+			mVPData.view = Math::MatrixTranspose(mDebugCameraPos).Inverse();
+			mVPData.projection = Math::MatrixTranspose(mVPData.projection);
 			(*mContext)->UpdateSubresource(*mVPBuffer, 0, NULL, &mVPData, 0, 0);
 			(*mContext)->VSSetConstantBuffers(0, 1, mVPBuffer.get());
 		}
@@ -477,9 +474,9 @@ namespace Epoch {
 		//}
 		return true;
 	}
-	
+
 	void Renderer::Render(float _deltaTime) {
-		
+
 		float color[4] = { 0.251f, 0.709f, 0.541f, 1 };
 		(*mContext)->ClearRenderTargetView((*mMainView), color);
 		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
