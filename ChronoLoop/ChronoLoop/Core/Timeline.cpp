@@ -132,7 +132,7 @@ void Timeline::SetComponent(SnapComponent* _destComp, BaseObject * _obj, SnapInf
 			Component* currComp = _obj->GetComponentIndexed(eCOMPONENT_COLLIDER, j);
 			if (currComp->GetColliderId() == _destComp->mId) {
 				((Collider*)currComp)->mRewind = true;
-				((Collider*)currComp)->mShouldMove = false;
+				//((Collider*)currComp)->mShouldMove = false;
 				((Collider*)currComp)->mAcceleration = ((SnapComponent_Physics*)_destComp)->mAcc;
 				((Collider*)currComp)->mVelocity = ((SnapComponent_Physics*)_destComp)->mVel;
 				((Collider*)currComp)->AddForce(((SnapComponent_Physics*)_destComp)->mForces);
