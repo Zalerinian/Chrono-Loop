@@ -139,7 +139,7 @@ void Update() {
 
 	Transform transform;
 	transform.SetMatrix(MatrixIdentity());
-	matrix4 mat1 = MatrixTranslation(0, 5, 0);
+	matrix4 mat1 = MatrixTranslation(0, 5, 0) * Math::MatrixScale(0.3f, 0.3f, 0.3f);
 	transform.SetMatrix(mat1);
 	BaseObject* PhysicsBox = Pool::Instance()->iGetObject()->Reset("aabb", transform);//new BaseObject("aabb", transform);
 	CubeCollider *BoxCollider = new CubeCollider(PhysicsBox, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.3f, 0.1f, 0.1f, 0.9f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
@@ -162,7 +162,7 @@ void Update() {
 
 	Transform transformBox;
 	transformBox.SetMatrix(MatrixIdentity());
-	matrix4 matBox = MatrixTranslation(1, 5, 0);
+	matrix4 matBox = MatrixTranslation(1, 5, 0) * Math::MatrixScale(0.3f, 0.3f, 0.3f);
 	transformBox.SetMatrix(matBox);
 	BaseObject* PhysicsBox2 = Pool::Instance()->iGetObject()->Reset("aabb2", transformBox);//new BaseObject("aabb", transform);
 	CubeCollider *BoxCollider2 = new CubeCollider(PhysicsBox2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 5.0f, 0.3f, 0.1f, 0.1f, 0.01f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
@@ -282,12 +282,12 @@ void Update() {
 	RightController->AddComponent(pickup);
 	TimeManager::Instance()->AddPlayerObjectToTimeline(RightController);
 
-	MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
-	visibleMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
+	MeshComponent *visibleMesh = new MeshComponent("../Resources/raycube.obj");
+	visibleMesh->AddTexture("../Resources/raycube.png", RenderEngine::eTEX_DIFFUSE);
 	PhysicsBox->AddComponent(visibleMesh);
 
-	MeshComponent *visibleMeshBox = new MeshComponent("../Resources/Cube.obj");
-	visibleMeshBox->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
+	MeshComponent *visibleMeshBox = new MeshComponent("../Resources/raycube.obj");
+	visibleMeshBox->AddTexture("../Resources/raycube.png", RenderEngine::eTEX_DIFFUSE);
 	PhysicsBox2->AddComponent(visibleMeshBox);
 
 	MeshComponent *sphereMesh = new MeshComponent("../Resources/Sphere.obj");
@@ -370,7 +370,18 @@ void Update() {
 	BlockDoor->AddComponent(doorCol);
 	TimeManager::Instance()->AddObjectToTimeline(BlockDoor);
 
+	Transform downOne;
+	downOne.SetMatrix(Math::MatrixTranslation(0, -1, 0));
+	BaseObject* ControlBoard = Pool::Instance()->iGetObject()->Reset("ControlsBoards", downOne);
+	MeshComponent* controlsMesh = new MeshComponent("../Resources/ControlBoard.obj");
+	controlsMesh->AddTexture("../Resources/ControlScheme.png", eTEX_DIFFUSE);
+	ControlBoard->AddComponent(controlsMesh);
 
+
+	BaseObject* WinBoard = Pool::Instance()->iGetObject()->Reset("WinBoard");
+	MeshComponent* winMesh = new MeshComponent("../Resources/WinBoard.obj");
+	winMesh->AddTexture("../Resources/youwon.png", eTEX_DIFFUSE);
+	WinBoard->AddComponent(winMesh);
 
 	Physics::Instance()->mObjects.push_back(PhysicsBox);
 	Physics::Instance()->mObjects.push_back(BlockDoor);
@@ -397,6 +408,8 @@ void Update() {
 	L1->iAddObject(Button);
 	L1->iAddObject(ExitWall);
 	L1->iAddObject(BlockDoor);
+	L1->iAddObject(ControlBoard);
+	L1->iAddObject(WinBoard);
 	L1->iCallStart();
 
 	//// Test for TextureManager::iAddTexture2D. Works nicely!

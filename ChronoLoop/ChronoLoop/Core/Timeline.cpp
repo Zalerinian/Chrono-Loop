@@ -100,28 +100,6 @@ void Timeline::ChangeBitsetToSnap(SnapInfo * _destinfo, Component* _curComp) {
 	}
 }
 
-void Timeline::CheckforLostObjects(std::vector<BaseObject*>& mClones)
-{
-	for(auto obj : mObjectLifeTimes)
-	{
-		if(obj.second->mBirth > mCurrentGameTimeIndx)
-		{
-			for (unsigned int  i = 0; i < mClones.size(); i++) {
-				if (mClones[i]->GetUniqueId() == obj.first) {
-					break;
-				}
-				else if(mClones[i]->GetUniqueId() != obj.first && i == mClones.size()-1)
-				{
-					//TODO PAT: PLS REMOVWE THIS FROM LEVEL AND THOW BACK IN POOL
-					delete obj.second;
-					mObjectLifeTimes.erase(obj.first);
-					mLiveObjects.erase(obj.first);
-				}
-			}
-		}
-	}
-}
-
 void Timeline::SetComponent(SnapComponent* _destComp, BaseObject * _obj, SnapInfo* _destInfo) {
 	switch (_destComp->mCompType) {
 		//For each of the collider in the vec
@@ -137,7 +115,7 @@ void Timeline::SetComponent(SnapComponent* _destComp, BaseObject * _obj, SnapInf
 				((Collider*)currComp)->mVelocity = ((SnapComponent_Physics*)_destComp)->mVel;
 				((Collider*)currComp)->AddForce(((SnapComponent_Physics*)_destComp)->mForces);
 				((Collider*)currComp)->SetPos(*_destInfo->mTransform.GetPosition());
-
+				
 				//Set the bitset
 				ChangeBitsetToSnap(_destInfo, currComp);
 			}
@@ -346,6 +324,8 @@ SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object, SnapInfo* _info) {
 					newComp->mForces = ((Collider*)temp[i])->mForces;
 					newComp->mAcc = ((Collider*)temp[i])->mAcceleration;
 					newComp->mVel = ((Collider*)temp[i])->mVelocity;
+			
+					//Set the bitset
 					newComp->mId = temp[i]->GetColliderId();
 					_info->mComponets.push_back(newComp);
 				}
@@ -383,6 +363,7 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 	Snapshot* snap;
 	bool OldSnap = false;
 
+	
 	//We are making a new snap in the timeline
 	//If the CurrentFrame is the last one on the list, make a new one
 	if (mCurrentGameTimeIndx == mSnaptimes.size() - 1 || mSnaptimes.size() == 0) {
@@ -394,11 +375,10 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 		snap = mSnapshots[_time];
 		OldSnap = true;
 	}
-	
-	//TODO PAT: FINISH THIS FUNC
-	//CheckforLostObjects(_clones);
-	
+	//TODO PAT: IF AN OBJECT IS ADDED THEN REWIND TIME TO BEFORE, ADD THAT OBJECT TO THE POOL
+	//Make a func that checks the mObject lifes and delete non-clones that no longer exists. Because rewinding time should get rid of everything but clones.  
 	//If first snapshot taken
+
 	//TODO PAT: break up the logic loop here and 
 	if (mSnapshots.size() == 0) {
 		for (std::pair<unsigned short, BaseObject*> _b : mLiveObjects) {
@@ -419,32 +399,30 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 						//Move clone to next frame if frame is avalible
 						if (snap->mSnapinfos.find(id) != snap->mSnapinfos.end() && id == _clones[i]->GetUniqueId()) {
 							MoveObjectToSnap(_time, id);
-							break;
 						}
 						//If we are a clone but dont have a next movement then record one at position
 						else if (snap->mSnapinfos.find(id) == snap->mSnapinfos.end() && id == _clones[i]->GetUniqueId()) {
 							//If change add to mSnapinfos and Updatetime
-							if (!CheckForDuplicateData(id, _b.second)) {
+							//if (!CheckForDuplicateData(id, _b.second)) {
 								snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, nullptr);
 								snap->mUpdatedtimes[id] = _time;
-								break;
-							}
+							//}
 						}
 						//If we made it through the list do the normal
 						else if (id != _clones[i]->GetUniqueId() && i == _clones.size() - 1) {
 							//If change add to mSnapinfos and Updatetime
-							if (!CheckForDuplicateData(id, _b.second)) {
+							//if (!CheckForDuplicateData(id, _b.second)) {
 								snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, snap->mSnapinfos[id]);
 								snap->mUpdatedtimes[id] = _time;
-							}
+							//}
 						}
 					}
 				} else {
 					//If change add to mSnapinfos and Updatetime
-					if (!CheckForDuplicateData(id, _b.second)) {
+					//if (!CheckForDuplicateData(id, _b.second)) {
 						snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, snap->mSnapinfos[id]);
 						snap->mUpdatedtimes[id] = _time;
-					}
+					//}
 				}
 			}
 		}
