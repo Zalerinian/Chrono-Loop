@@ -867,6 +867,6 @@ void Physics::Update(float _time)
 
 				collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
 			}
-		}
-	}
-}
+		}//For all colliders of object end
+	}//For all objects end
+}//Physics loop end
