@@ -306,7 +306,7 @@ namespace LevelEditor
         }
         public void Translate(Vector3 _Offset)
         {
-            mTransform = Matrix.Translation(_Offset) * mTransform;
+            mTransform = mTransform * Matrix.Translation(_Offset);
             mPosition += _Offset;
         }
         public void SetPosition(Vector3 _Pos)
@@ -316,8 +316,12 @@ namespace LevelEditor
         }
         public void Rotate(Vector3 _Rotation)
         {
-            mTransform = mTransform * Matrix.RotationYawPitchRoll(_Rotation.Y, _Rotation.X, _Rotation.Z);
             mRotation += _Rotation;
+            float circle = (360.0f * DEGREES_TO_RADIANS);
+            mRotation.X = (float)(mRotation.X - circle * Math.Round(mRotation.X / circle));
+            mRotation.Y = (float)(mRotation.Y - circle * Math.Round(mRotation.Y / circle));
+            mRotation.Z = (float)(mRotation.Z - circle * Math.Round(mRotation.Z / circle));
+            SetRotate(mRotation);
         }
         public void SetRotate(Vector3 _Rotation)
         {
@@ -328,8 +332,11 @@ namespace LevelEditor
         }
         public void AddScale(Vector3 _Scale)
         {
-            mTransform = Matrix.Scaling(_Scale) * mTransform;
-            mScale = new Vector3(mScale.X * _Scale.X, mScale.Y * _Scale.Y, mScale.Z * _Scale.Z);
+            if (Math.Abs(mScale.X * _Scale.X) < 998 && Math.Abs(mScale.Y * _Scale.Y) < 998 && Math.Abs(mScale.Z * _Scale.Z) < 998)
+            {
+                mTransform = mTransform * Matrix.Scaling(_Scale);
+                mScale = new Vector3(mScale.X * _Scale.X, mScale.Y * _Scale.Y, mScale.Z * _Scale.Z);
+            }
         }
         public void SetScale(Vector3 _Scale)
         {
