@@ -81,6 +81,8 @@ public:
 	bool RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 	bool RewindMakeClone(unsigned int _snaptime);
 	void ChangeBitsetToSnap(SnapInfo* _destinfo, Component* _curComp);
+	//This function removes non-clone objects that were created in th future
+	void CheckforLostObjects(std::vector<BaseObject*>&mClones);
 	void MoveObjectToSnap(unsigned int _snaptime,unsigned short _id);
 	void MoveAllObjectsToSnap(unsigned int _snaptime);
 	void MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime,unsigned short _id1, unsigned short _id2, unsigned short _id3);
