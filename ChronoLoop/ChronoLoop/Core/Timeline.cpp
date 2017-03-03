@@ -397,6 +397,7 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 						//Move clone to next frame if frame is avalible
 						if (snap->mSnapinfos.find(id) != snap->mSnapinfos.end() && id == _clones[i]->GetUniqueId()) {
 							MoveObjectToSnap(_time, id);
+							break;
 						}
 						//If we are a clone but dont have a next movement then record one at position
 						else if (snap->mSnapinfos.find(id) == snap->mSnapinfos.end() && id == _clones[i]->GetUniqueId()) {
@@ -404,6 +405,7 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 							if (!CheckForDuplicateData(id, _b.second)) {
 								snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, nullptr);
 								snap->mUpdatedtimes[id] = _time;
+								break;
 							}
 						}
 						//If we made it through the list do the normal
