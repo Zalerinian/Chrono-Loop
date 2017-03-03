@@ -34,8 +34,23 @@ struct CCElasticAABBtoAABB : public CodeComponent
 				norm = { -1,0,0,0 };
 			
 
+			//float avgElasticity = (_col.mElasticity + _other.mElasticity) / 2;
+			//_col.mVelocity = norm * (1 + avgElasticity);
+
+			//No velocivty in the collision normal
+			float flip = -_col.mVelocity * norm;
+			vec4f prev = _col.mVelocity;
+			prev += norm * flip;
+			_col.mVelocity = { 0,0,0,1 };
 			float avgElasticity = (_col.mElasticity + _other.mElasticity) / 2;
-			_col.mVelocity = norm * (1 + avgElasticity);
+			_col.mVelocity = norm * (1 + avgElasticity) + prev;
+
+			//float flip = -_col.mVelocity * norm;
+			//vec4f prev = _col.mVelocity;
+			//prev += norm * flip;
+			//_col.mVelocity = { 0,0,0,1 };
+			//float avgElasticity = (_col.mElasticity + _other.mElasticity) / 2;
+			//_col.mVelocity = norm * (flip * (1 - avgElasticity)) + prev;
 		}
 		else
 			colliding = false;
