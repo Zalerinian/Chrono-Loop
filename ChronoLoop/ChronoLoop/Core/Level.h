@@ -43,7 +43,7 @@ public:
 
 	//**SETTERS**//
 	void iSetId(unsigned short _set) { mId = _set; };
-	void iSetHeadsetAndControllers(BaseObject* _headset, BaseObject* _controller1, BaseObject* _controller2);
+	void iSetHeadsetAndControllers(BaseObject* _headset, BaseObject* _controller1, BaseObject* _controller2, ControllerCollider* _c1Collider, ControllerCollider* _c2Collider);
 
 	//**FUNCTIONS**//
 	void iCallStart();

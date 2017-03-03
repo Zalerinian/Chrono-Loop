@@ -70,12 +70,14 @@ struct BoxSnapToControllerAction : public CodeComponent {
 
 		if (VRInputManager::Instance().iIsInitialized()) {
 			Controller &controller = VRInputManager::Instance().iGetController(mLeft);
-			if (controller.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger) && !mHeld && !mCollider->mHitting.empty()) {
-				SnapToController();
+			if(mHeld && mPickUp != nullptr) {
+				matrix4 m = VRInputManager::Instance().iGetController(mLeft).GetPosition();
+				mPickUp->SetPos((m).tiers[3]);
+				if(!controller.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger)) {
+					ReleaseCube();
+				}
 			} else if (controller.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger) && !mHeld && !mCollider->mHitting.empty()) {
 				SnapToController();
-			} else if (mHeld) {
-				ReleaseCube();
 			}
 			if (controller.GetPressDown((vr::EVRButtonId::k_EButton_Grip))) {
 //				TimeManager::Instance()->RewindTimeline();
@@ -151,6 +153,7 @@ struct BoxSnapToControllerAction : public CodeComponent {
 				mCollider->mHitting.erase(mPickUp);
 				return;
 			}
+			mHeld = true;
 			mPickUp->SetPos((m).tiers[3]);
 			//mObject->GetTransform().SetMatrix(m);
 			mPickUp->mShouldMove = false;
