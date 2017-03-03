@@ -26,7 +26,7 @@ namespace LevelEditor
         private Vector3 mPosition;
         private Vector3 mRotation;
         private Vector3 mScale;
-        private string mName;
+        private string mName, mTextureFile, mMeshFile;
 
         #region Properties
         public CustomVertex.PositionNormalTextured[] Vertices
@@ -85,6 +85,18 @@ namespace LevelEditor
             get { return mName; }
             set { mName = value; }
         }
+
+        public string TextureFile
+        {
+            get { return mTextureFile; }
+            set { mTextureFile = value; }
+        }
+
+        public string MeshFile
+        {
+            get { return mMeshFile; }
+            set { mMeshFile = value; }
+        }
         #endregion
 
         public ToolObject(ToolObject _Tool)
@@ -100,6 +112,8 @@ namespace LevelEditor
             mTexture = _Tool.mTexture;
             mVertices = _Tool.mVertices;
             mIndices = _Tool.mIndices;
+            mTextureFile = _Tool.mTextureFile;
+            mMeshFile = _Tool.mMeshFile;
             VertexDeclaration();
             IndicesDeclaration();
         }
@@ -147,12 +161,14 @@ namespace LevelEditor
             mDevice = _Device;
             Load(_File);
             mIsWireFrame = false;
+            mTextureFile = _Texture;
             mTexture = TextureLoader.FromFile(_Device, _Texture);
             VertexDeclaration();
             IndicesDeclaration();
         }
         public void Load(string _File)
         {
+            mMeshFile = _File;
             List<Vector3> Verts = new List<Vector3>();
             List<Vector3> Norms = new List<Vector3>();
             List<Vector2> UVs = new List<Vector2>();

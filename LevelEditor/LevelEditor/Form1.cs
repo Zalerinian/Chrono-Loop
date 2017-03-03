@@ -11,6 +11,7 @@ using System.IO;
 using Microsoft.DirectX.DirectInput;
 using System.Diagnostics;
 using System.Linq;
+using System.Xml;
 
 namespace LevelEditor
 {
@@ -499,6 +500,39 @@ namespace LevelEditor
                 catch (Exception ex)
                 {
                     MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+                }
+            }
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFile = new SaveFileDialog();
+            saveFile.InitialDirectory = Application.StartupPath;
+            saveFile.Filter = "XML files (*.xml)|*.xml";
+            saveFile.FilterIndex = 1;
+            saveFile.RestoreDirectory = true;
+            if (saveFile.ShowDialog() == DialogResult.OK)
+            {
+                XmlWriterSettings settings = new XmlWriterSettings();
+                settings.Indent = true;
+                settings.OmitXmlDeclaration = true;
+                using (XmlWriter writer = XmlWriter.Create(saveFile.FileName, settings))
+                {
+                    writer.WriteStartDocument();
+                    writer.WriteStartElement("Level");
+                    foreach (ToolObject tObj in higharchy)
+                    {
+                        writer.WriteStartElement("Object");
+                        writer.WriteElementString("Name", tObj.Name);
+                        writer.WriteElementString("Mesh", tObj.MeshFile.Split('\\').Last());
+                        writer.WriteElementString("Texture", tObj.TextureFile == null ? "" : tObj.TextureFile.Split('\\').Last());
+                        writer.WriteElementString("Position", tObj.Position.X + "," + tObj.Position.Y + "," + tObj.Position.Z);
+                        writer.WriteElementString("Rotation", tObj.Rotation.X + "," + tObj.Rotation.Y + "," + tObj.Rotation.Z);
+                        writer.WriteElementString("Scale", tObj.Scale.X + "," + tObj.Scale.Y + "," + tObj.Scale.Z);
+                        writer.WriteEndElement();
+                    }
+                    writer.WriteEndElement();
+                    writer.WriteEndDocument();
                 }
             }
         }
