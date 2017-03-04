@@ -87,7 +87,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 		return 1;
 	}
 
-	std::shared_ptr<ID3D11Device*> renderingDevice = Renderer::Instance()->iGetDevice();
+	Microsoft::WRL::ComPtr<ID3D11Device> renderingDevice = Renderer::Instance()->iGetDevice();
 
 	// Update everything
 	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count());
@@ -103,7 +103,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 #if _DEBUG
 	// In debug mode, dump any remaining live DirectX objects. This list should be hopefully small at this point.
 	ID3D11Debug *debug;
-	(*renderingDevice)->QueryInterface(IID_ID3D11Debug, (void**)&debug);
+	renderingDevice.Get()->QueryInterface(IID_ID3D11Debug, (void**)&debug);
 	if (debug) {
 		OutputDebugStringA("\n\n\n");
 		debug->ReportLiveDeviceObjects(D3D11_RLDO_FLAGS::D3D11_RLDO_DETAIL);
@@ -111,9 +111,6 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 		OutputDebugStringA("\n\n\n");
 	}
 #endif
-
-	// Release the Device
-	(*renderingDevice)->Release();
 
 #if _DEBUG || CONSOLE_OVERRIDE
 	FreeConsole();
@@ -141,7 +138,7 @@ void Update() {
 	matrix4 mat1 = matrix4::CreateTranslation(0, 5, 0) * matrix4::CreateScale(0.3f, 0.3f, 0.3f);
 	transform.SetMatrix(mat1);
 	BaseObject* PhysicsBox = Pool::Instance()->iGetObject()->Reset("aabb", transform);//new BaseObject("aabb", transform);
-	CubeCollider *BoxCollider = new CubeCollider(PhysicsBox, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.3f, 0.1f, 0.1f, 0.1, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
+	CubeCollider *BoxCollider = new CubeCollider(PhysicsBox, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.3f, 0.1f, 0.1f, 0.1f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
 	BoxCollider->AddForce(vec4f(0, 0, 0, 0));
 	CodeComponent* PlaneCollision = new CCElasticReactionWithPlane;
 	CodeComponent* BoxCollision = new CCElasticAABBtoAABB;
@@ -438,7 +435,7 @@ void Update() {
 			DispatchMessage(&msg);
 		}
 		else {
-			if (GetAsyncKeyState(VK_ESCAPE) && GetActiveWindow() == *Renderer::Instance()->iGetWindow()) {
+			if (GetAsyncKeyState(VK_ESCAPE) && GetActiveWindow() == Renderer::Instance()->iGetWindow()) {
 				break;
 			}
 			Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false, (void*)nullptr));
@@ -448,7 +445,7 @@ void Update() {
 			Level::Instance()->iUpdate();
 			
 			TimeManager::Instance()->Update(deltaTime);
-			Renderer::Instance()->Render(deltaTime);
+			Renderer::Instance()->Render(deltaTime); 
 			while (fixedTime >= FIXED_UPDATE_INTERVAL) {
 				Physics::Instance()->Update(FIXED_UPDATE_INTERVAL);
 				fixedTime -= FIXED_UPDATE_INTERVAL;

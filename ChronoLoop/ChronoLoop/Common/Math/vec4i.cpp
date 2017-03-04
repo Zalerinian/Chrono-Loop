@@ -139,11 +139,11 @@ namespace Epoch {
 	}
 
 	int vec4i::Magnitude() const {
-		return sqrt(SquaredMagnitude());
+		return (int)sqrt(SquaredMagnitude());
 	}
 
 	int vec4i::SquaredMagnitude() const {
-		return pow(x, 2) + pow(y, 2) + pow(z, 2) + pow(w, 2);
+		return (int)(pow(x, 2) + pow(y, 2) + pow(z, 2) + pow(w, 2));
 	}
 
 	vec4i vec4i::Normalize() const {

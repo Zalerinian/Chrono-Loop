@@ -168,7 +168,7 @@ namespace Epoch {
 	}
 
 	float vec4f::Magnitude3() const {
-		return sqrt(SquaredMagnitude3());
+		return sqrtf(SquaredMagnitude3());
 	}
 
 	float vec4f::SquaredMagnitude() const {
