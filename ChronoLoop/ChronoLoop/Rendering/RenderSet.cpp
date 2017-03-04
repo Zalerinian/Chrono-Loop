@@ -9,12 +9,6 @@
 
 namespace Epoch {
 	void RenderSet::AddNode(RenderNode *_node, RenderContext* _rc) {
-		if (_node->mType == RenderNode::RenderNodeType::Shape) {
-			if (((RenderShape*)_node)->mIndexCount == 0) {
-				SystemLogger::GetError() << "[Error] Attempting to set render shape with 0 indices!" << std::endl;
-				Debug::SetBreakpoint();
-			}
-		}
 		if (mTail == nullptr) {
 			mContexts.push_back(_rc);
 			mHead = (RenderNode*)_rc;

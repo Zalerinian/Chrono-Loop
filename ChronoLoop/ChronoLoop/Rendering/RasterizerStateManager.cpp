@@ -24,23 +24,23 @@ namespace Epoch {
 		desc.AntialiasedLineEnable = FALSE;
 
 		ID3D11RasterizerState *state;
-		(*Renderer::Instance()->iGetDevice())->CreateRasterizerState(&desc, &state);
+		Renderer::Instance()->GetDevice()->CreateRasterizerState(&desc, &state);
 		mStates[eRS_FILLED] = state;
 
 		desc.FillMode = D3D11_FILL_WIREFRAME;
-		(*Renderer::Instance()->iGetDevice())->CreateRasterizerState(&desc, &state);
+		Renderer::Instance()->GetDevice()->CreateRasterizerState(&desc, &state);
 		mStates[eRS_WIREFRAME] = state;
 
 		desc.FrontCounterClockwise = TRUE;
-		(*Renderer::Instance()->iGetDevice())->CreateRasterizerState(&desc, &state);
+		Renderer::Instance()->GetDevice()->CreateRasterizerState(&desc, &state);
 		mStates[eRS_CCW_WIREFRAME] = state;
 
 		desc.FillMode = D3D11_FILL_SOLID;
-		(*Renderer::Instance()->iGetDevice())->CreateRasterizerState(&desc, &state);
+		Renderer::Instance()->GetDevice()->CreateRasterizerState(&desc, &state);
 		mStates[eRS_CCW] = state;
 
 		desc.FrontCounterClockwise = FALSE;
-		(*Renderer::Instance()->iGetDevice())->CreateRasterizerState(&desc, &state);
+		Renderer::Instance()->GetDevice()->CreateRasterizerState(&desc, &state);
 		mStates[eRS_NO_CULL] = state;
 
 
@@ -78,7 +78,7 @@ namespace Epoch {
 		if (rs == mCurrentState) {
 			return true;
 		}
-		(*Renderer::Instance()->iGetContext())->RSSetState(mStates[rs]);
+		Renderer::Instance()->GetContext()->RSSetState(mStates[rs]);
 		return true;
 	}
 
