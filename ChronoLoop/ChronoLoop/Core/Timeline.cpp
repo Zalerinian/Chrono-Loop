@@ -54,7 +54,7 @@ bool Timeline::RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsign
 
 	mCurrentGameTimeIndx = _snaptime;
 	MoveAllObjectsToSnapExceptPlayer(_snaptime, _id1, _id2, _id3);
-	CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
+	//CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
 	return true;
 }
 
@@ -63,7 +63,7 @@ bool Timeline::RewindMakeClone(unsigned int _snaptime) {
 		return false;
 	mCurrentGameTimeIndx = _snaptime;
 	MoveAllObjectsToSnap(_snaptime);
-	CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
+	//CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
 	return true;
 }
 
