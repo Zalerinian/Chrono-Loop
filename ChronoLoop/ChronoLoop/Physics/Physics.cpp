@@ -667,8 +667,12 @@ namespace Epoch
 											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
 										}
 
-										vec4f pos = collider->GetPos();
-										collider->SetPos(vec4f(pos.x, otherCol->GetPos().y + fabsf(((SphereCollider*)collider)->mRadius), pos.z, 1));
+										float bottom = ((SphereCollider*)collider)->mCenter.y - ((SphereCollider*)collider)->mRadius;
+										if (bottom < otherCol->GetPos().y)
+										{
+											vec4f pos = collider->GetPos();
+											collider->SetPos(vec4f(pos.x, otherCol->GetPos().y + fabsf(((SphereCollider*)collider)->mRadius), pos.z, 1));
+										}
 									}
 								}
 							}
