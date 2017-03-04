@@ -348,7 +348,6 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClCompile Include="Common\Common.cpp" />
     <ClCompile Include="Common\FileIO\FileIO_General.cpp" />
     <ClCompile Include="Common\FileIO\FileIO_Textures.cpp" />
-    <ClCompile Include="Common\LimitedList.cpp" />
     <ClCompile Include="Common\Logger.cpp" />
     <ClCompile Include="Common\Math\matrix4.cpp" />
     <ClCompile Include="Common\Math\vec2f.cpp" />

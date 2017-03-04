@@ -491,9 +491,6 @@
     <ClCompile Include="Objects\MeshComponent.cpp">
       <Filter>Objects\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Common\LimitedList.cpp">
-      <Filter>Common\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Actions\TimeManipulation.cpp">
       <Filter>Actions\Source Files</Filter>
     </ClCompile>
