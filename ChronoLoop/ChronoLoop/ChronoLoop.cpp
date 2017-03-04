@@ -258,7 +258,7 @@ void Update() {
 	BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("RController", identity);// new BaseObject("Controller", identity);
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 	MeshComponent *rightRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
-	rightRaycaster->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
+	rightRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
 	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 	TeleportAction *ta = new TeleportAction(eControllerType_Primary);
 	TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
