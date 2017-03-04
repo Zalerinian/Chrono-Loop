@@ -24,9 +24,41 @@ namespace Epoch
 
 				//vec4f norm(0,0,0,0);
 				if (center.y >= max.y)
+				{
 					norm = { 0,1,0,0 };
+
+					vec4f rest = _other.mVelocity;
+					if (fabsf(rest.x) < 0.1f && fabsf(rest.y) < 0.1f && fabsf(rest.z) < 0.1f)
+					{
+						vec4f move = _col.mVelocity;
+						if (fabsf(move.x) < 0.1f && fabsf(move.y) < 0.1f && fabsf(move.z) < 0.1f)
+							return;
+
+						vec4f normalVel = norm * -(_col.mVelocity * norm);
+						_col.mVelocity += normalVel * (1 + _col.mElasticity);
+
+						if (_col.mColliderType == Collider::eCOLLIDER_Cube)
+						{
+							if (((CubeCollider*)&_col)->mMin.y < ((CubeCollider*)&_other)->mMax.y)
+								_col.SetPos(vec4f(center.x, ((CubeCollider*)&_other)->mMax.y + fabsf(((CubeCollider*)&_col)->mMinOffset.y), center.z, 1));
+						}
+						else if (_col.mColliderType == Collider::eCOLLIDER_Sphere)
+						{
+							if (center.y - ((SphereCollider*)&_col)->mRadius < ((CubeCollider*)&_other)->mMax.y)
+								_col.SetPos(vec4f(center.x, ((CubeCollider*)&_other)->mMax.y + fabsf(((SphereCollider*)&_col)->mRadius), center.z, 1));
+						}
+						
+						return;
+					}
+				}
 				else if (center.y <= min.y)
+				{
+					vec4f rest = _col.mVelocity;
+					if (fabsf(rest.x) < 0.1f && fabsf(rest.y) < 0.1f && fabsf(rest.z) < 0.1f)
+						return;
+
 					norm = { 0,-1,0,0 };
+				}
 				else if ((center.x <= max.x && center.x >= min.x) && V.z > 0)
 					norm = { 0,0,1,0 };
 				else if ((center.x <= max.x && center.x >= min.x) && V.z < 0)
@@ -40,7 +72,7 @@ namespace Epoch
 				//float avgElasticity = (_col.mElasticity + _other.mElasticity) / 2;
 				//_col.mVelocity = norm * (1 + avgElasticity);
 
-				//No velocivty in the collision normal
+				//TODO: Fix velocivty in the collision normal direction
 				float flip = -_col.mVelocity * norm;
 				vec4f prev = _col.mVelocity;
 				prev += norm * flip;
