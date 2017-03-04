@@ -202,6 +202,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Actions\BoxSnapToControllerAction.hpp" />
     <ClInclude Include="Actions\CCButtonPress.h" />
     <ClInclude Include="Actions\CCElasticAABBtoAABB.h" />
+    <ClInclude Include="Actions\CCElasticAABBToSphere.h" />
     <ClInclude Include="Actions\CCElasticReactionWithPlane.h" />
     <ClInclude Include="Actions\CCElasticSphereToSphere.h" />
     <ClInclude Include="Actions\CodeComponent.hpp" />
@@ -217,6 +218,11 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Common\LimitedList.h" />
     <ClInclude Include="Common\Logger.h" />
     <ClInclude Include="Common\Math.h" />
+    <ClInclude Include="Common\Math\matrix4.h" />
+    <ClInclude Include="Common\Math\vec2f.h" />
+    <ClInclude Include="Common\Math\vec3f.h" />
+    <ClInclude Include="Common\Math\vec4f.h" />
+    <ClInclude Include="Common\Math\vec4i.h" />
     <ClInclude Include="Core\Level.h" />
     <ClInclude Include="Core\Pool.h" />
     <ClInclude Include="Core\Timeline.h" />
@@ -344,7 +350,11 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClCompile Include="Common\FileIO\FileIO_Textures.cpp" />
     <ClCompile Include="Common\LimitedList.cpp" />
     <ClCompile Include="Common\Logger.cpp" />
-    <ClCompile Include="Common\Math.cpp" />
+    <ClCompile Include="Common\Math\matrix4.cpp" />
+    <ClCompile Include="Common\Math\vec2f.cpp" />
+    <ClCompile Include="Common\Math\vec3f.cpp" />
+    <ClCompile Include="Common\Math\vec4f.cpp" />
+    <ClCompile Include="Common\Math\vec4i.cpp" />
     <ClCompile Include="Core\Level.cpp" />
     <ClCompile Include="Core\Pool.cpp" />
     <ClCompile Include="Core\Timeline.cpp" />

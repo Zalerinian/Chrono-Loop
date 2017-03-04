@@ -3,20 +3,25 @@
 #include "CodeComponent.hpp"
 #include "../Common/Logger.h"
 
-struct CCElasticSphereToSphere : public CodeComponent
+namespace Epoch
 {
-	bool colliding = false;
-	virtual void OnCollision(Collider& _col, Collider& _other, float _time)
+
+	struct CCElasticSphereToSphere : public CodeComponent
 	{
-		if (!colliding && _other.mColliderType == Collider::eCOLLIDER_Sphere)
+		bool colliding = false;
+		virtual void OnCollision(Collider& _col, Collider& _other, float _time)
 		{
-			colliding = true;
-			
-			float avgElasticity = (_col.mElasticity + _other.mElasticity) / 2;
-			vec4f collisionNormal = (_col.GetPos() - _other.GetPos()).Normalize();
-			_col.mVelocity += collisionNormal * (1 + _col.mElasticity);
+			if (!colliding && _other.mColliderType == Collider::eCOLLIDER_Sphere)
+			{
+				colliding = true;
+
+				float avgElasticity = (_col.mElasticity + _other.mElasticity) / 2;
+				vec4f collisionNormal = (_col.GetPos() - _other.GetPos()).Normalize();
+				_col.mVelocity += collisionNormal * (1 + avgElasticity);
+			}
+			else
+				colliding = false;
 		}
-		else
-			colliding = false;
-	}
-};
+	};
+
+}

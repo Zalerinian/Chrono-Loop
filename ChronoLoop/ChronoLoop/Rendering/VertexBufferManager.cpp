@@ -1,7 +1,7 @@
 #include "VertexBufferManager.h"
 
 
-namespace RenderEngine {
+namespace Epoch {
 
 	VertexBufferManager* VertexBufferManager::sInstance = nullptr;
 
@@ -32,28 +32,28 @@ namespace RenderEngine {
 		{
 			switch (_format)
 			{
-			case RenderEngine::eVERT_POS:
+			case eVERT_POS:
 				return sInstance->mPosBuffer.GetVertexBuffer();
 				break;
-			case RenderEngine::eVERT_POSCOLOR:
+			case eVERT_POSCOLOR:
 				return sInstance->mPosColorBuffer.GetVertexBuffer();
 				break;
-			case RenderEngine::eVERT_POSTEX:
+			case eVERT_POSTEX:
 				return sInstance->mPosTexBuffer.GetVertexBuffer();
 				break;
-			case RenderEngine::eVERT_POSNORMTEX:
+			case eVERT_POSNORMTEX:
 				return sInstance->mPosNormTexBuffer.GetVertexBuffer();
 				break;
-			case RenderEngine::eVERT_POSNORMTANTEX:
+			case eVERT_POSNORMTANTEX:
 				return sInstance->mPosNormTanTexBuffer.GetVertexBuffer();
 				break;
-			case RenderEngine::eVERT_POSBONEWEIGHT:
+			case eVERT_POSBONEWEIGHT:
 				return sInstance->mPosBoneWeightBuffer.GetVertexBuffer();
 				break;
-			case RenderEngine::eVERT_POSBONEWEIGHTNORMTEX:
+			case eVERT_POSBONEWEIGHTNORMTEX:
 				return sInstance->mPosBoneWeightNormTexBuffer.GetVertexBuffer();
 				break;
-			case RenderEngine::eVERT_POSBONEWEIGHTNORMTANTEX:
+			case eVERT_POSBONEWEIGHTNORMTANTEX:
 				return sInstance->mPosBoneWeightNormTanTexBuffer.GetVertexBuffer();
 				break;
 			default:

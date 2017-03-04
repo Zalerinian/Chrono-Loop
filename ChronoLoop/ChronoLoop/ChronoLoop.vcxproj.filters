@@ -112,6 +112,15 @@
     <Filter Include="DXTK">
       <UniqueIdentifier>{16572d88-a51f-45a6-a564-025b7a4af6ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common\Math">
+      <UniqueIdentifier>{ccc5850c-51a9-4f99-a68a-9c096952d36d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Math\Header Files">
+      <UniqueIdentifier>{d6539033-3850-4e3e-b719-9b790b4d5c70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Math\Source Files">
+      <UniqueIdentifier>{e319ddd3-329d-43fd-aeb9-fb646fc0c8fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\BaseObject.h">
@@ -291,6 +300,27 @@
     <ClInclude Include="Input\CommandConsole.h">
       <Filter>Input\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\CCElasticSphereToSphere.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCElasticAABBToSphere.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Math\matrix4.h">
+      <Filter>Common\Math\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Math\vec2f.h">
+      <Filter>Common\Math\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Math\vec3f.h">
+      <Filter>Common\Math\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Math\vec4f.h">
+      <Filter>Common\Math\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Math\vec4i.h">
+      <Filter>Common\Math\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -304,9 +334,6 @@
     </ClCompile>
     <ClCompile Include="Rendering\Shader.cpp">
       <Filter>Rendering\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\Math.cpp">
-      <Filter>Common\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ChronoLoop.cpp">
       <Filter>Core\Source Files</Filter>
@@ -484,6 +511,21 @@
     </ClCompile>
     <ClCompile Include="Input\CommandConsole.cpp">
       <Filter>Input\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Math\matrix4.cpp">
+      <Filter>Common\Math\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Math\vec2f.cpp">
+      <Filter>Common\Math\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Math\vec3f.cpp">
+      <Filter>Common\Math\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Math\vec4f.cpp">
+      <Filter>Common\Math\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Math\vec4i.cpp">
+      <Filter>Common\Math\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
