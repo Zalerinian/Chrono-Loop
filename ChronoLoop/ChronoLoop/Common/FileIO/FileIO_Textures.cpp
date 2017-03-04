@@ -16,7 +16,7 @@ namespace Epoch
 	namespace FileIO
 	{
 
-		bool LoadTexture2D(const char * _path, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>* _srv, Microsoft::WRL::ComPtr<ID3D11Texture2D>* _texture)
+		bool LoadTexture2D(const char * _path, shared_ptr<ID3D11ShaderResourceView*>* _srv, shared_ptr<ID3D11Texture2D*>* _texture)
 		{
 			if (_srv == nullptr && _texture == nullptr)
 			{
@@ -31,7 +31,7 @@ namespace Epoch
 			{
 				if (hr == E_OUTOFMEMORY)
 				{
-					SystemLogger::Fatal() << "System ran out of memory attempting to allocate storage for texture \"" << _path << "\"!" << endl;
+					SystemLogger::GetError() << "[Critial] System ran out of memory attempting to allocate storage for texture \"" << _path << "\"!" << endl;
 					delete[] buffer;
 					if (_srv)
 					{
@@ -43,13 +43,13 @@ namespace Epoch
 					}
 					return false;
 				}
-				SystemLogger::Warn() << "Requested texture \"" << _path << "\" could not be loaded as a DDS file: 0x" << hex << hr << dec << ". Attempting as WIC file..." << endl;
+				SystemLogger::GetError() << "[Warning] Requested texture \"" << _path << "\" could not be loaded as a DDS file: 0x" << hex << hr << dec << ". Attempting as WIC file..." << endl;
 				TexMetadata tMeta;
 				hr = LoadFromWICFile(buffer, 0, &tMeta, scratch);
 				delete[] buffer;
 				if (FAILED(hr))
 				{
-					SystemLogger::Error() << "Could not load texture \"" << _path << "\": 0x" << hex << hr << dec << endl;
+					SystemLogger::GetError() << "[Error] Could not load texture \"" << _path << "\": 0x" << hex << hr << dec << endl;
 					if (_srv)
 					{
 						(*_srv) = nullptr;
@@ -62,16 +62,16 @@ namespace Epoch
 				}
 				ID3D11ShaderResourceView *srv;
 				ID3D11Resource *texture;
-				hr = CreateShaderResourceView(Renderer::Instance()->GetDevice().Get(), scratch.GetImage(0, 0, 0), 1, tMeta, &srv);
+				hr = CreateShaderResourceView(*Renderer::Instance()->iGetDevice(), scratch.GetImage(0, 0, 0), 1, tMeta, &srv);
 				if (FAILED(hr))
 				{
-					SystemLogger::Error() << "Failed to create ShaderResourceView for texture \"" << _path << "\": 0x" << hex << hr << dec << endl;
+					SystemLogger::GetError() << "[Error] Failed to create ShaderResourceView for texture \"" << _path << "\": 0x" << hex << hr << dec << endl;
 					// We don't return false because the shader resource view is technically unnecessary, a texture2D might have been the goal all along.
 				}
-				hr = CreateTexture(Renderer::Instance()->GetDevice().Get(), scratch.GetImage(0, 0, 0), 1, tMeta, &texture);
+				hr = CreateTexture(*Renderer::Instance()->iGetDevice(), scratch.GetImage(0, 0, 0), 1, tMeta, &texture);
 				if (FAILED(hr))
 				{
-					SystemLogger::Error() << "Failed to create Texture2D for \"" << _path << "\": 0x" << hex << hr << dec << endl;
+					SystemLogger::GetError() << "[Error] Failed to create Texture2D for \"" << _path << "\": 0x" << hex << hr << dec << endl;
 					if (_srv)
 					{
 						(*_srv) = nullptr;
@@ -97,21 +97,21 @@ namespace Epoch
 #endif
 				if (srv != nullptr && _srv != nullptr)
 				{
-					_srv->Attach(srv);
+					(*_srv) = make_shared<ID3D11ShaderResourceView*>(srv);
 				}
 				if (texture != nullptr && _texture != nullptr)
 				{
-					_texture->Attach((ID3D11Texture2D*)texture);
+					(*_texture) = make_shared<ID3D11Texture2D*>((ID3D11Texture2D*)texture);
 				}
 				return true;
 			}
 			delete[] buffer;
 			ID3D11Resource *texture;
 			ID3D11ShaderResourceView *srv;
-			hr = CreateDDSTextureFromMemory(Renderer::Instance()->GetDevice().Get(), scratch.GetPixels(), scratch.GetPixelsSize(), &texture, &srv);
+			hr = CreateDDSTextureFromMemory(*Renderer::Instance()->iGetDevice(), scratch.GetPixels(), scratch.GetPixelsSize(), &texture, &srv);
 			if (FAILED(hr))
 			{
-				SystemLogger::Error() << "Failed to create texture and shader resource view: 0x" << hex << hr << dec << endl;
+				SystemLogger::GetError() << "[Error] Failed to create texture and shader resource view: 0x" << hex << hr << dec << endl;
 				if (_srv)
 				{
 					(*_srv) = nullptr;
@@ -133,17 +133,17 @@ namespace Epoch
 			if (_srv == nullptr)
 			{
 				// If both inputs are nullptr, the function returns false, so _texture may be assumed valid.
-				SystemLogger::Warn() << "The resource view is a nullptr, but the texture is valid. The resource view will be released now, but this ay not be the desired behavior." << endl;
+				SystemLogger::GetError() << "[Warning] The resource view is a nullptr, but the texture is valid. The resource view will be released now, but this ay not be the desired behavior." << endl;
 				srv->Release();
 			}
 
 			if (_srv)
 			{
-				_srv->Attach(srv);
+				(*_srv) = make_shared<ID3D11ShaderResourceView*>(srv);
 			}
 			if (_texture)
 			{
-				_texture->Attach((ID3D11Texture2D*)texture);
+				(*_texture) = make_shared<ID3D11Texture2D*>((ID3D11Texture2D*)texture);
 			}
 
 			return true;

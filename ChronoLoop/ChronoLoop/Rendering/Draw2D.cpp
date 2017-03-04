@@ -62,7 +62,7 @@ namespace Epoch
 
 		//createDxgiDevice
 		IDXGIDevice* DxgiDevice;
-		Renderer::Instance()->ThrowIfFailed(Renderer::Instance()->GetDevice().Get()->QueryInterface(__uuidof(IDXGIDevice), (void **)&DxgiDevice));
+		Renderer::Instance()->ThrowIfFailed((*Renderer::Instance()->iGetDevice())->QueryInterface(__uuidof(IDXGIDevice), (void **)&DxgiDevice));
 		sInstance->mGIDevice = std::make_shared<IDXGIDevice*>(DxgiDevice);
 
 		//create device2d 
@@ -88,7 +88,7 @@ namespace Epoch
 		//sInstance->mScreenBitmap = make_shared<ID2D1Bitmap1*>(CreateBitmapForTexture(backbuffer2D));
 		//(*mContext2D)->SetTarget((*mScreenBitmap));
 
-		sInstance->mScreenBitmap = std::make_shared<ID2D1Bitmap1*>(CreateBitmapForTexture(Renderer::Instance()->GetRTViewTexture().Get()));
+		sInstance->mScreenBitmap = std::make_shared<ID2D1Bitmap1*>(CreateBitmapForTexture(*Renderer::Instance()->iGetRTViewTexture()));
 	}
 	//////
 	//checks if(already in side the list)
