@@ -37,6 +37,8 @@ namespace Epoch
 						vec4f normalVel = norm * -(_col.mVelocity * norm);
 						_col.mVelocity += normalVel * (1 + _col.mElasticity);
 
+						Physics::Instance()->CalcFriction(_col, _other);
+
 						if (_col.mColliderType == Collider::eCOLLIDER_Cube)
 						{
 							if (((CubeCollider*)&_col)->mMin.y < ((CubeCollider*)&_other)->mMax.y)
