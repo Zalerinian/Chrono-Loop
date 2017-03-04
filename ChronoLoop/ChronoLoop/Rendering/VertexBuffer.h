@@ -5,7 +5,7 @@
 #include "renderer.h"
 
 
-namespace RenderEngine {
+namespace Epoch {
 	template<typename T>
 	class VertexBuffer
 	{
@@ -52,8 +52,8 @@ namespace RenderEngine {
 				memcpy((char *)(initData.pSysMem) + desc.ByteWidth, _verts, sizeof(T) * _numVerts);
 				desc.ByteWidth += sizeof(T) * _numVerts;
 				ID3D11Buffer *newBuffer;
-				(*Renderer::Instance()->iGetDevice())->CreateBuffer(&desc, &initData, &newBuffer);
-				(*Renderer::Instance()->iGetContext())->CopySubresourceRegion(newBuffer, 0, 0, 0, 0, mVertexBuffer, 0, 0);
+				Renderer::Instance()->iGetDevice()->CreateBuffer(&desc, &initData, &newBuffer);
+				Renderer::Instance()->iGetContext()->CopySubresourceRegion(newBuffer, 0, 0, 0, 0, mVertexBuffer, 0, 0);
 				mVertexBuffer->Release();
 				mVertexBuffer = newBuffer;
 				std::string name = "The Vertex Buffer, mk" + std::to_string(mOffsets.size());
@@ -72,7 +72,7 @@ namespace RenderEngine {
 
 				D3D11_SUBRESOURCE_DATA initData;
 				initData.pSysMem = _verts;
-				(*Renderer::Instance()->iGetDevice())->CreateBuffer(&desc, &initData, &mVertexBuffer);
+				Renderer::Instance()->iGetDevice()->CreateBuffer(&desc, &initData, &mVertexBuffer);
 				std::string name = "The Vertex Buffer";
 				SetD3DName(mVertexBuffer, name.c_str());
 			}

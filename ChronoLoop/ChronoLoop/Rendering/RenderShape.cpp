@@ -11,7 +11,7 @@
 #include <memory>
 
 
-namespace RenderEngine {
+namespace Epoch {
 
 	RenderShape::RenderShape() {
 		mType = RenderNodeType::Shape;
@@ -57,7 +57,7 @@ namespace RenderEngine {
 		ID3D11Buffer *tBuffer;
 		mIndexBuffer = nullptr;
 		mVertexBuffer = nullptr;
-		auto device = *Renderer::Instance()->iGetDevice().get();
+		auto device = Renderer::Instance()->iGetDevice().Get();
 		D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
 		auto verts = _mesh.GetVerts();
 		vertexBufferData.pSysMem = verts;
@@ -114,7 +114,7 @@ namespace RenderEngine {
 
 	RenderShape& RenderShape::AddTexture(const wchar_t * _path, TextureType _position) {
 		char *narrow = nullptr;
-		Engine::MakeNarrow(_path, &narrow, (unsigned int)std::wcslen(_path) + 1);
+		MakeNarrow(_path, &narrow, (unsigned int)std::wcslen(_path) + 1);
 		AddTexture(narrow, _position);
 		delete[] narrow;
 		return *this;
@@ -123,9 +123,9 @@ namespace RenderEngine {
 	void RenderShape::Render() {
 		UINT stride = sizeof(VertexPosNormTex), offset = 0;
 		ID3D11Buffer * vBuffer = VertexBufferManager::GetBuffer(eVERT_POSNORMTEX);
-		(*Renderer::Instance()->iGetContext())->IASetIndexBuffer(IndexBufferManager::GetBuffer(), DXGI_FORMAT_R32_UINT, 0);
-		(*Renderer::Instance()->iGetContext())->IASetVertexBuffers(0, 1, &vBuffer, &stride, &offset);
-		(*Renderer::Instance()->iGetContext())->DrawIndexedInstanced(mIndexCount, 1, mIndexOffset, mVertexOffset, 0);
+		Renderer::Instance()->iGetContext()->IASetIndexBuffer(IndexBufferManager::GetBuffer(), DXGI_FORMAT_R32_UINT, 0);
+		Renderer::Instance()->iGetContext()->IASetVertexBuffers(0, 1, &vBuffer, &stride, &offset);
+		Renderer::Instance()->iGetContext()->DrawIndexedInstanced(mIndexCount, 1, mIndexOffset, mVertexOffset, 0);
 	}
 
 }

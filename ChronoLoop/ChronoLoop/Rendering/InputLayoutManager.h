@@ -4,7 +4,7 @@
 
 struct ID3D11InputLayout;
 
-namespace RenderEngine {
+namespace Epoch {
 
 	class InputLayoutManager
 	{

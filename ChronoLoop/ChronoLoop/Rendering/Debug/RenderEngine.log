@@ -1,9 +1,0 @@
-﻿  renderer.cpp
-c:\users\drew\documents\full sail\capstone\chronoloop\renderengine\renderer.h(5): warning C4005: 'EXPORT': macro redefinition
-  c:\users\drew\documents\full sail\capstone\chronoloop\renderengine\stdafx.h(8): note: see previous definition of 'EXPORT'
-c:\users\drew\documents\full sail\capstone\chronoloop\renderengine\renderer.h(11): warning C4251: 'Renderer::device': class 'std::shared_ptr<ID3D11Device>' needs to have dll-interface to be used by clients of class 'Renderer'
-  c:\users\drew\documents\full sail\capstone\chronoloop\renderengine\renderer.h(11): note: see declaration of 'std::shared_ptr<ID3D11Device>'
-c:\users\drew\documents\full sail\capstone\chronoloop\renderengine\renderer.h(12): warning C4251: 'Renderer::context': class 'std::shared_ptr<ID3D11DeviceContext>' needs to have dll-interface to be used by clients of class 'Renderer'
-  c:\users\drew\documents\full sail\capstone\chronoloop\renderengine\renderer.h(12): note: see declaration of 'std::shared_ptr<ID3D11DeviceContext>'
-  RenderEngine.vcxproj -> C:\Users\Drew\Documents\Full Sail\Capstone\ChronoLoop\_Debug x86\RenderEngine.dll
-  RenderEngine.vcxproj -> C:\Users\Drew\Documents\Full Sail\Capstone\ChronoLoop\_Debug x86\PDB Files\RenderEngine.pdb (Full PDB)

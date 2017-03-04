@@ -8,7 +8,7 @@ struct ID3D11ShaderResourceView;
 struct ID3D11Texture2D;
 struct ID3D11Texture3D;
 
-namespace RenderEngine {
+namespace Epoch {
 
 	class TextureManager {
 		static TextureManager* sInstance;
