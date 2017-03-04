@@ -80,9 +80,9 @@ bool Level::iRemoveObject(BaseObject * _obj) {
 void Level::iSetHeadsetAndControllers(BaseObject * _headset, BaseObject * _controller1, BaseObject * _controller2, ControllerCollider* _c1Collider, ControllerCollider* _c2Collider) {
 	//Remove the action componets and 
 	//Set the new BaseObjects to the current controller so new objects can follow old controller movement as clones.
-	unsigned short headid = _headset->GetUniqueId();
-	unsigned short cl1id = _controller1->GetUniqueId();
-	unsigned short cl2id = _controller2->GetUniqueId();
+	unsigned short headid = _headset->GetUniqueID();
+	unsigned short cl1id = _controller1->GetUniqueID();
+	unsigned short cl2id = _controller2->GetUniqueID();
 	unsigned short c1paramCodeCollid = _c1Collider->GetColliderId();
 	unsigned short c2paramCodeCollid = _c2Collider->GetColliderId();
 
@@ -97,9 +97,9 @@ void Level::iSetHeadsetAndControllers(BaseObject * _headset, BaseObject * _contr
 	//mObjectMap[_controller1->GetName()].push_back(_controller1);
 	//mObjectMap[_controller2->GetName()].push_back(_controller2);
 
-	_headset->SetUniqueID(mHeadset->GetUniqueId());
-	_controller1->SetUniqueID(mController1->GetUniqueId());
-	_controller2->SetUniqueID(mController2->GetUniqueId());
+	_headset->SetUniqueID(mHeadset->GetUniqueID());
+	_controller1->SetUniqueID(mController1->GetUniqueID());
+	_controller2->SetUniqueID(mController2->GetUniqueID());
 	_headset->SetName(mHeadset->GetName());
 	_controller1->SetName(mController1->GetName());
 	_controller2->SetName(mController2->GetName());

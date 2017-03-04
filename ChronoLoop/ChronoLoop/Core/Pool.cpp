@@ -68,6 +68,7 @@ BaseObject * Pool::iGetObject() {
 
 void Pool::iAddObject(BaseObject * _obj) {
 	Node* n = new Node;
+	_obj->SetUniqueID(_obj->GetObjectCountandIncrement());
 	n->data = _obj;
 	n->mNext = mHead;
 	mHead = n;

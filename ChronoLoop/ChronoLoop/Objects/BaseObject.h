@@ -39,7 +39,6 @@ public:
 	BaseObject* Reset(std::string _name, Transform _transform, BaseObject* _parent);
 
 
-	inline unsigned int GetUniqueId() { return mUniqueID; }
 
 	inline std::string GetName() { return mName; };
 	void SetName(std::string _name);
@@ -59,6 +58,7 @@ public:
 	inline std::vector<Component*> GetComponents(ComponentType _type) { return mComponents[_type]; }
 	inline Component* GetComponentIndexed(ComponentType _type, unsigned int _index) { return mComponents[_type][_index]; }
 	inline unsigned int GetComponentCount(ComponentType _type) { return (unsigned int)mComponents[_type].size(); }
+	inline unsigned int GetObjectCountandIncrement() { ObjectCount++; return ObjectCount; }
 	unsigned int AddComponent(Component* _comp);
 	bool RemoveComponent(Component* _comp);
 

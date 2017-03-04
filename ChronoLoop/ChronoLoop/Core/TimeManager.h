@@ -40,6 +40,7 @@ public:
 	unsigned int GetCurrentSnapFrame();
 	//Retrieves delta time
 	float GetDeltaTime() { return mDeltaTime; }
+	std::vector<BaseObject*>& GetClonesVec() { return mClones; }
 	//Go back into time. Send in dest frame and send in player headset and conrollers id
 	void RewindTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 	//Go back into time and make clone. Send in dest frame and send in player headset and conrollers baseObjects

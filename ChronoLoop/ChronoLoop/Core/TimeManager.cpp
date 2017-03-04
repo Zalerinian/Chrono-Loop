@@ -47,12 +47,12 @@ TimeManager * TimeManager::Instance() {
 
 void TimeManager::AddObjectToTimeline(BaseObject * _obj) {
 	if (_obj != nullptr)
-		mTimeline->AddBaseObject(_obj, _obj->GetUniqueId());
+		mTimeline->AddBaseObject(_obj, _obj->GetUniqueID());
 }
 
 void TimeManager::AddPlayerObjectToTimeline(BaseObject * _obj) {
 	if (_obj != nullptr)
-		mTimeline->AddPlayerBaseObject(_obj, _obj->GetUniqueId());
+		mTimeline->AddPlayerBaseObject(_obj, _obj->GetUniqueID());
 }
 
 void TimeManager::ClearClones() {
@@ -92,7 +92,7 @@ void TimeManager::RewindMakeClone(unsigned int _frame, BaseObject* _ob1, BaseObj
 	mClones.push_back(_ob1);
 	mClones.push_back(_ob2);
 	mClones.push_back(_ob3);
-	mTimeline->SetCloneCreationTime(_ob1->GetUniqueId(), _ob2->GetUniqueId(), _ob3->GetUniqueId());
+	mTimeline->SetCloneCreationTime(_ob1->GetUniqueID(), _ob2->GetUniqueID(), _ob3->GetUniqueID());
 	//Tell the time manager what frame the timeline its on
 	mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
 }

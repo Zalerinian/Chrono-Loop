@@ -5,6 +5,7 @@
 #include "../Rendering/Renderer.h"
 #include "../Objects/MeshComponent.h"
 #include "../Common/Logger.h"
+#include "Pool.h"
 
 
 bool Snapshot::IsObjectStored(unsigned short _id) {
@@ -30,13 +31,13 @@ Timeline::~Timeline() {
 void Timeline::AddBaseObject(BaseObject* _object, unsigned short _id) {
 	mLiveObjects[_id] = _object;
 	ObjectLifeTime* newObject = new ObjectLifeTime();
-	if(mSnaptimes.size() != 0)
-	newObject->mBirth = mSnaptimes[mCurrentGameTimeIndx];
+	if (mSnaptimes.size() != 0)
+		newObject->mBirth = mSnaptimes[mCurrentGameTimeIndx];
 	else
-	newObject->mBirth = 0;
+		newObject->mBirth = 0;
 
 	mObjectLifeTimes[_id] = newObject;
-	
+
 }
 void Timeline::AddPlayerBaseObject(BaseObject* _object, unsigned short _id) {
 	mLiveObjects[_id] = _object;
@@ -53,6 +54,7 @@ bool Timeline::RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsign
 
 	mCurrentGameTimeIndx = _snaptime;
 	MoveAllObjectsToSnapExceptPlayer(_snaptime, _id1, _id2, _id3);
+	CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
 	return true;
 }
 
@@ -61,6 +63,7 @@ bool Timeline::RewindMakeClone(unsigned int _snaptime) {
 		return false;
 	mCurrentGameTimeIndx = _snaptime;
 	MoveAllObjectsToSnap(_snaptime);
+	CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
 	return true;
 }
 
@@ -88,10 +91,9 @@ void Timeline::ChangeBitsetToSnap(SnapInfo * _destinfo, Component* _curComp) {
 	}
 
 	//Object is inactive
-	else
-	{
+	else {
 		if (_curComp->GetType() != eCOMPONENT_MESH) {
-				_curComp->Disable();
+			_curComp->Disable();
 		}
 		//The comp is a mesh
 		else {
@@ -115,7 +117,7 @@ void Timeline::SetComponent(SnapComponent* _destComp, BaseObject * _obj, SnapInf
 				((Collider*)currComp)->mVelocity = ((SnapComponent_Physics*)_destComp)->mVel;
 				((Collider*)currComp)->AddForce(((SnapComponent_Physics*)_destComp)->mForces);
 				((Collider*)currComp)->SetPos(*_destInfo->mTransform.GetPosition());
-				
+
 				//Set the bitset
 				ChangeBitsetToSnap(_destInfo, currComp);
 			}
@@ -136,8 +138,7 @@ void Timeline::SetComponent(SnapComponent* _destComp, BaseObject * _obj, SnapInf
 	}
 }
 
-void Timeline::SetCloneCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3)
-{
+void Timeline::SetCloneCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3) {
 	ObjectLifeTime* newObject = new ObjectLifeTime();
 	newObject->mBirth = mSnaptimes[mCurrentGameTimeIndx];
 	mObjectLifeTimes[_id1] = newObject;
@@ -149,11 +150,10 @@ void Timeline::SetCloneCreationTime(unsigned short _id1, unsigned short _id2, un
 	ObjectLifeTime* newObject2 = new ObjectLifeTime();
 	newObject2->mBirth = mSnaptimes[mCurrentGameTimeIndx];
 	mObjectLifeTimes[_id3] = newObject2;
-	
+
 }
 
-void Timeline::SetCloneDeathTime(unsigned short _id1, unsigned short _id2, unsigned short _id3)
-{
+void Timeline::SetCloneDeathTime(unsigned short _id1, unsigned short _id2, unsigned short _id3) {
 	if (mObjectLifeTimes.find(_id1) != mObjectLifeTimes.end()) {
 		ObjectLifeTime* newObject = mObjectLifeTimes[_id1];
 		newObject->mDeath = mSnaptimes[mCurrentGameTimeIndx];
@@ -161,7 +161,7 @@ void Timeline::SetCloneDeathTime(unsigned short _id1, unsigned short _id2, unsig
 	}
 
 	if (mObjectLifeTimes.find(_id2) != mObjectLifeTimes.end()) {
-		ObjectLifeTime* newObject1 =mObjectLifeTimes[_id2];
+		ObjectLifeTime* newObject1 = mObjectLifeTimes[_id2];
 		newObject1->mDeath = mSnaptimes[mCurrentGameTimeIndx];
 	}
 
@@ -171,11 +171,29 @@ void Timeline::SetCloneDeathTime(unsigned short _id1, unsigned short _id2, unsig
 	}
 }
 
-void Timeline::SetBaseObjectDeathTime(unsigned short _id)
-{
+void Timeline::SetBaseObjectDeathTime(unsigned short _id) {
 	if (mObjectLifeTimes.find(_id) != mObjectLifeTimes.end()) {
 		ObjectLifeTime* newObject = mObjectLifeTimes[_id];
 		newObject->mDeath = mSnaptimes[mCurrentGameTimeIndx];
+	}
+}
+
+void Timeline::CheckforLostObjects(std::vector<BaseObject*>& mClones) {
+	for (auto obj : mObjectLifeTimes) {
+		if (obj.second->mBirth > mCurrentGameTimeIndx) {
+			for (unsigned int i = 0; i < mClones.size(); i++) {
+				if (mClones[i]->GetUniqueID() != obj.first && i == mClones.size() - 1) {
+					//delete the birth and death struct
+					delete obj.second;
+					//TODO PAT: ADD A FUNC TO  REMOVE AN OBJECT IN PHYSICS
+					//Physics::mInstance->
+					//add it back to the pool
+					Pool::Instance()->iAddObject(mLiveObjects[obj.first]);
+					mObjectLifeTimes.erase(obj.first);
+					mLiveObjects.erase(obj.first);
+				}
+			}
+		}
 	}
 }
 
@@ -269,8 +287,8 @@ void Timeline::ClearTimeLine() {
 				for (auto snapComps : snapInfo.second->mComponets)
 					delete snapComps;
 
-			if(snapInfo.second)
-			snapInfo.second->mComponets.clear();
+			if (snapInfo.second)
+				snapInfo.second->mComponets.clear();
 
 			if (snapInfo.second)
 				delete snapInfo.second;
@@ -282,8 +300,7 @@ void Timeline::ClearTimeLine() {
 			delete snapshot.second;
 	}
 
-	for (auto Objectlife : mObjectLifeTimes)
-	{
+	for (auto Objectlife : mObjectLifeTimes) {
 		if (Objectlife.second)
 			delete Objectlife.second;
 	}
@@ -299,11 +316,11 @@ SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object, SnapInfo* _info) {
 		_info = new SnapInfo();
 	_info->mId = _object->GetUniqueID();
 	_info->mTransform = _object->GetTransform();
-	
+
 	if (mObjectLifeTimes.find(_info->mId) == mObjectLifeTimes.end())
 		_info->mBitset[0] = false;
 	else
-	_info->mBitset[0] = true;
+		_info->mBitset[0] = true;
 
 
 	//TODO PAT: ADD MORE COMPONETS WHEN WE NEED THEM.
@@ -324,7 +341,7 @@ SnapInfo* Timeline::GenerateSnapInfo(BaseObject* _object, SnapInfo* _info) {
 					newComp->mForces = ((Collider*)temp[i])->mForces;
 					newComp->mAcc = ((Collider*)temp[i])->mAcceleration;
 					newComp->mVel = ((Collider*)temp[i])->mVelocity;
-			
+
 					//Set the bitset
 					newComp->mId = temp[i]->GetColliderId();
 					_info->mComponets.push_back(newComp);
@@ -363,7 +380,7 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 	Snapshot* snap;
 	bool OldSnap = false;
 
-	
+
 	//We are making a new snap in the timeline
 	//If the CurrentFrame is the last one on the list, make a new one
 	if (mCurrentGameTimeIndx == mSnaptimes.size() - 1 || mSnaptimes.size() == 0) {
@@ -375,8 +392,7 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 		snap = mSnapshots[_time];
 		OldSnap = true;
 	}
-	//TODO PAT: IF AN OBJECT IS ADDED THEN REWIND TIME TO BEFORE, ADD THAT OBJECT TO THE POOL
-	//Make a func that checks the mObject lifes and delete non-clones that no longer exists. Because rewinding time should get rid of everything but clones.  
+	
 	//If first snapshot taken
 
 	//TODO PAT: break up the logic loop here and 
@@ -397,32 +413,34 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 				if (_clones.size() > 0) {
 					for (unsigned int i = 0; i < _clones.size(); i++) {
 						//Move clone to next frame if frame is avalible
-						if (snap->mSnapinfos.find(id) != snap->mSnapinfos.end() && id == _clones[i]->GetUniqueId()) {
+						if (snap->mSnapinfos.find(id) != snap->mSnapinfos.end() && id == _clones[i]->GetUniqueID()) {
 							MoveObjectToSnap(_time, id);
+							break;
 						}
 						//If we are a clone but dont have a next movement then record one at position
-						else if (snap->mSnapinfos.find(id) == snap->mSnapinfos.end() && id == _clones[i]->GetUniqueId()) {
+						else if (snap->mSnapinfos.find(id) == snap->mSnapinfos.end() && id == _clones[i]->GetUniqueID()) {
 							//If change add to mSnapinfos and Updatetime
-							//if (!CheckForDuplicateData(id, _b.second)) {
-								snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, nullptr);
-								snap->mUpdatedtimes[id] = _time;
-							//}
+							if (!CheckForDuplicateData(id, _b.second)) {
+							snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, nullptr);
+							snap->mUpdatedtimes[id] = _time;
+							break;
+							}
 						}
 						//If we made it through the list do the normal
-						else if (id != _clones[i]->GetUniqueId() && i == _clones.size() - 1) {
+						else if (id != _clones[i]->GetUniqueID() && i == _clones.size() - 1) {
 							//If change add to mSnapinfos and Updatetime
-							//if (!CheckForDuplicateData(id, _b.second)) {
-								snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, snap->mSnapinfos[id]);
-								snap->mUpdatedtimes[id] = _time;
-							//}
+							if (!CheckForDuplicateData(id, _b.second)) {
+							snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, snap->mSnapinfos[id]);
+							snap->mUpdatedtimes[id] = _time;
+							}
 						}
 					}
 				} else {
 					//If change add to mSnapinfos and Updatetime
-					//if (!CheckForDuplicateData(id, _b.second)) {
-						snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, snap->mSnapinfos[id]);
-						snap->mUpdatedtimes[id] = _time;
-					//}
+					if (!CheckForDuplicateData(id, _b.second)) {
+					snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, snap->mSnapinfos[id]);
+					snap->mUpdatedtimes[id] = _time;
+					}
 				}
 			}
 		}
@@ -442,21 +460,19 @@ bool Timeline::CheckForDuplicateData(unsigned short _id, BaseObject* _object) {
 	if (mCurrentGameTimeIndx == 0)
 		return false;
 	//If the object has not been made yet or is already dead return so we dont make one yet
-	if (mObjectLifeTimes.find(_id) != mObjectLifeTimes.end() && (mObjectLifeTimes[_id]->mBirth > mCurrentGameTimeIndx ||  mObjectLifeTimes[_id]->mDeath < mCurrentGameTimeIndx))
+	if (mObjectLifeTimes.find(_id) != mObjectLifeTimes.end() && (mObjectLifeTimes[_id]->mBirth > mCurrentGameTimeIndx || mObjectLifeTimes[_id]->mDeath < mCurrentGameTimeIndx))
 		return true;
 
 	SnapInfo* info;
 	Snapshot* snap = mSnapshots[mSnaptimes[mCurrentGameTimeIndx]];
 	//find if the object exist
-	if(snap->mSnapinfos.find(_id) !=snap->mSnapinfos.end())
+	if (snap->mSnapinfos.find(_id) != snap->mSnapinfos.end())
 		info = mSnapshots[mSnaptimes[mCurrentGameTimeIndx]]->mSnapinfos[_id];
-	else if(snap->mUpdatedtimes.find(_id) != snap->mUpdatedtimes.end() ){
+	else if (snap->mUpdatedtimes.find(_id) != snap->mUpdatedtimes.end()) {
 		info = mSnapshots[snap->mUpdatedtimes[_id]]->mSnapinfos[_id];
-	}
-	else
-	{
+	} else {
 		//if the object is not yet made(new headset or controller data) then we need to make it. This is the only exception I think
-		SystemLogger::GetLog() << _object->GetName() << std::endl;
+		//SystemLogger::GetLog() << _object->GetName() << std::endl;
 		return false;
 	}
 
@@ -467,7 +483,7 @@ bool Timeline::CheckForDuplicateData(unsigned short _id, BaseObject* _object) {
 		SnapComponent* comp = info->mComponets[i];
 
 		switch (comp->mCompType) {
-		//For each of the collider in the vec
+			//For each of the collider in the vec
 		case ComponentType::eCOMPONENT_COLLIDER:
 		{
 			//Loop to find the same collider component
@@ -483,9 +499,9 @@ bool Timeline::CheckForDuplicateData(unsigned short _id, BaseObject* _object) {
 			break;
 		}
 		default:
-			{
+		{
 			break;
-			}
+		}
 		}
 	}
 
