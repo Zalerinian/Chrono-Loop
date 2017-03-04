@@ -14,7 +14,6 @@ namespace Epoch {
 	}
 
 	void InputLayoutManager::Initialize() {
-		ID3D11Device* DEVICE = *Renderer::Instance()->mDevice.get();
 		char* buffer = nullptr;
 		int bufferSize = 0;
 		D3D11_INPUT_ELEMENT_DESC PosDesc[] =
@@ -22,7 +21,7 @@ namespace Epoch {
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 		};
 		FileIO::LoadBytes("VertexLayout_POS_VS.cso", &buffer, bufferSize);
-		DEVICE->CreateInputLayout(PosDesc, ARRAYSIZE(PosDesc), buffer, bufferSize, &mInputLayouts[eVERT_POS]);
+		Renderer::Instance()->GetDevice().Get()->CreateInputLayout(PosDesc, ARRAYSIZE(PosDesc), buffer, bufferSize, &mInputLayouts[eVERT_POS]);
 		delete[] buffer;
 		D3D11_INPUT_ELEMENT_DESC PosColorDesc[] =
 		{
@@ -30,7 +29,7 @@ namespace Epoch {
 			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 		FileIO::LoadBytes("VertexLayout_POSCOLOR_VS.cso", &buffer, bufferSize);
-		DEVICE->CreateInputLayout(PosColorDesc, ARRAYSIZE(PosColorDesc), buffer, bufferSize, &mInputLayouts[eVERT_POSCOLOR]);
+		Renderer::Instance()->GetDevice().Get()->CreateInputLayout(PosColorDesc, ARRAYSIZE(PosColorDesc), buffer, bufferSize, &mInputLayouts[eVERT_POSCOLOR]);
 		delete[] buffer;
 		D3D11_INPUT_ELEMENT_DESC PosTexDesc[] =
 		{
@@ -38,7 +37,7 @@ namespace Epoch {
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 		FileIO::LoadBytes("VertexLayout_POSTEX_VS.cso", &buffer, bufferSize);
-		DEVICE->CreateInputLayout(PosTexDesc, ARRAYSIZE(PosTexDesc), buffer, bufferSize, &mInputLayouts[eVERT_POSTEX]);
+		Renderer::Instance()->GetDevice().Get()->CreateInputLayout(PosTexDesc, ARRAYSIZE(PosTexDesc), buffer, bufferSize, &mInputLayouts[eVERT_POSTEX]);
 		delete[] buffer;
 		D3D11_INPUT_ELEMENT_DESC PosNormTexDesc[] =
 		{
@@ -47,7 +46,7 @@ namespace Epoch {
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 		FileIO::LoadBytes("VertexLayout_POSNORMTEX_VS.cso", &buffer, bufferSize);
-		DEVICE->CreateInputLayout(PosNormTexDesc, ARRAYSIZE(PosNormTexDesc), buffer, bufferSize, &mInputLayouts[eVERT_POSNORMTEX]);
+		Renderer::Instance()->GetDevice().Get()->CreateInputLayout(PosNormTexDesc, ARRAYSIZE(PosNormTexDesc), buffer, bufferSize, &mInputLayouts[eVERT_POSNORMTEX]);
 		delete[] buffer;
 		D3D11_INPUT_ELEMENT_DESC PosNormTanTexDesc[] =
 		{
@@ -58,7 +57,7 @@ namespace Epoch {
 			{ "TANGENT", 1, DXGI_FORMAT_R32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 		FileIO::LoadBytes("VertexLayout_POSNORMTANTEX_VS.cso", &buffer, bufferSize);
-		DEVICE->CreateInputLayout(PosNormTanTexDesc, ARRAYSIZE(PosNormTanTexDesc), buffer, bufferSize, &mInputLayouts[eVERT_POSNORMTANTEX]);
+		Renderer::Instance()->GetDevice().Get()->CreateInputLayout(PosNormTanTexDesc, ARRAYSIZE(PosNormTanTexDesc), buffer, bufferSize, &mInputLayouts[eVERT_POSNORMTANTEX]);
 		delete[] buffer;
 		D3D11_INPUT_ELEMENT_DESC PosBoneWeightDesc[] =
 		{
@@ -67,7 +66,7 @@ namespace Epoch {
 			{ "BONEWEIGHTS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 		FileIO::LoadBytes("VertexLayout_POSBONEWEIGHT_VS.cso", &buffer, bufferSize);
-		DEVICE->CreateInputLayout(PosBoneWeightDesc, ARRAYSIZE(PosBoneWeightDesc), buffer, bufferSize, &mInputLayouts[eVERT_POSBONEWEIGHT]);
+		Renderer::Instance()->GetDevice().Get()->CreateInputLayout(PosBoneWeightDesc, ARRAYSIZE(PosBoneWeightDesc), buffer, bufferSize, &mInputLayouts[eVERT_POSBONEWEIGHT]);
 		delete[] buffer;
 		D3D11_INPUT_ELEMENT_DESC PosBoneWeightNormTexDesc[] =
 		{
@@ -78,7 +77,7 @@ namespace Epoch {
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 		FileIO::LoadBytes("VertexLayout_POSBONEWEIGHTNORMTEX_VS.cso", &buffer, bufferSize);
-		DEVICE->CreateInputLayout(PosBoneWeightNormTexDesc, ARRAYSIZE(PosBoneWeightNormTexDesc), buffer, bufferSize, &mInputLayouts[eVERT_POSBONEWEIGHTNORMTEX]);
+		Renderer::Instance()->GetDevice().Get()->CreateInputLayout(PosBoneWeightNormTexDesc, ARRAYSIZE(PosBoneWeightNormTexDesc), buffer, bufferSize, &mInputLayouts[eVERT_POSBONEWEIGHTNORMTEX]);
 		delete[] buffer;
 		D3D11_INPUT_ELEMENT_DESC PosBoneWeightNormTanTexDesc[] =
 		{
@@ -91,7 +90,7 @@ namespace Epoch {
 			{ "TANGENT", 1, DXGI_FORMAT_R32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 		FileIO::LoadBytes("VertexLayout_POSBONEWEIGHTNORMTANTEX_VS.cso", &buffer, bufferSize);
-		DEVICE->CreateInputLayout(PosBoneWeightNormTanTexDesc, ARRAYSIZE(PosBoneWeightNormTanTexDesc), buffer, bufferSize, &mInputLayouts[eVERT_POSBONEWEIGHTNORMTANTEX]);
+		Renderer::Instance()->GetDevice().Get()->CreateInputLayout(PosBoneWeightNormTanTexDesc, ARRAYSIZE(PosBoneWeightNormTanTexDesc), buffer, bufferSize, &mInputLayouts[eVERT_POSBONEWEIGHTNORMTANTEX]);
 		delete[] buffer;
 	}
 
@@ -113,7 +112,7 @@ namespace Epoch {
 	}
 
 	void InputLayoutManager::ApplyLayout(VertFormat v) {
-		(*Renderer::Instance()->iGetContext())->IASetInputLayout(mInputLayouts[v]);
-		(*Renderer::Instance()->iGetContext())->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		Renderer::Instance()->GetContext()->IASetInputLayout(mInputLayouts[v]);
+		Renderer::Instance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
 }

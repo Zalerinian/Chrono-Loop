@@ -95,23 +95,23 @@ namespace Epoch {
 	Renderer::Renderer() {}
 
 	Renderer::Renderer::~Renderer() {
-		(*mContext)->Release();
-		(*mDSView)->Release();
-		(*mDepthBuffer)->Release();
-		(*mMainView)->Release();
-		(*mFactory)->Release();
-		(*mChain)->Release();
-		// The device's release has been moved to ChronoLoop.cpp
-		(*mVPBuffer)->Release();
-		(*mPositionBuffer)->Release();
-		(*mMainViewTexture)->Release();
-		mContext.reset();
-		mDSView.reset();
-		mDepthBuffer.reset();
-		mMainView.reset();
-		mFactory.reset();
-		mChain.reset();
-		mDevice.reset();
+		//(*mContext)->Release();
+		//(*mDSView)->Release();
+		//(*mDepthBuffer)->Release();
+		//(*mMainView)->Release();
+		//(*mFactory)->Release();
+		//(*mChain)->Release();
+		//// The device's release has been moved to ChronoLoop.cpp
+		//(*mVPBuffer)->Release();
+		//(*mPositionBuffer)->Release();
+		//(*mMainViewTexture)->Release();
+		//mContext.reset();
+		//mDSView.reset();
+		//mDepthBuffer.reset();
+		//mMainView.reset();
+		//mFactory.reset();
+		//mChain.reset();
+		//mDevice.reset();
 
 #if ENABLE_TEXT
 
@@ -152,14 +152,14 @@ namespace Epoch {
 			&ctx
 		));
 
-		mDevice = make_shared<ID3D11Device*>(dev);
-		mContext = make_shared<ID3D11DeviceContext*>(ctx);
+		mDevice = dev;
+		mContext = ctx;
 	}
 
 	void Renderer::InitializeDXGIFactory() {
 		IDXGIFactory1 *factory;
 		ThrowIfFailed(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&factory));
-		mFactory = make_shared<IDXGIFactory1*>(factory);
+		mFactory = factory;
 
 	}
 
@@ -181,19 +181,19 @@ namespace Epoch {
 
 		IDXGISwapChain *chain;
 
-		ThrowIfFailed((*sInstance->mFactory)->CreateSwapChain((*sInstance->mDevice),
+		ThrowIfFailed(sInstance->mFactory->CreateSwapChain(sInstance->mDevice.Get(),
 																													&scDesc,
 																													&chain));
-		sInstance->mChain = make_shared<IDXGISwapChain*>(chain);
+		sInstance->mChain = chain;
 	}
 
 	void Renderer::InitializeViews(int _width, int _height) {
 		ID3D11Resource *bbuffer;
 		ID3D11RenderTargetView *rtv;
-		ThrowIfFailed((*mChain)->GetBuffer(0, __uuidof(bbuffer), (void**)(&bbuffer)));
-		ThrowIfFailed((*mDevice)->CreateRenderTargetView(bbuffer, NULL, &rtv));
-		mMainView = make_shared<ID3D11RenderTargetView*>(rtv);
-		mMainViewTexture = make_shared<ID3D11Texture2D*>((ID3D11Texture2D*)bbuffer);
+		ThrowIfFailed(mChain->GetBuffer(0, __uuidof(bbuffer), (void**)(&bbuffer)));
+		ThrowIfFailed(mDevice->CreateRenderTargetView(bbuffer, NULL, &rtv));
+		mMainView = rtv;
+		mMainViewTexture = ((ID3D11Texture2D*)bbuffer);
 
 		ID3D11Texture2D *depthTexture;
 		ID3D11DepthStencilView *depthView;
@@ -210,34 +210,34 @@ namespace Epoch {
 		depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 		depthStencilDesc.CPUAccessFlags = 0;
 		depthStencilDesc.MiscFlags = 0;
-		ThrowIfFailed((*mDevice)->CreateTexture2D(&depthStencilDesc, NULL, &depthTexture));
-		ThrowIfFailed((*mDevice)->CreateDepthStencilView(depthTexture, NULL, &depthView));
-		(*mContext)->OMSetRenderTargets(1, &rtv, depthView);
+		ThrowIfFailed(mDevice->CreateTexture2D(&depthStencilDesc, NULL, &depthTexture));
+		ThrowIfFailed(mDevice->CreateDepthStencilView(depthTexture, NULL, &depthView));
+		mContext->OMSetRenderTargets(1, &rtv, depthView);
 
-		mDepthBuffer = make_shared<ID3D11Texture2D*>(depthTexture);
-		mDSView = make_shared<ID3D11DepthStencilView*>(depthView);
+		mDepthBuffer = depthTexture;
+		mDSView = depthView;
 
 		// Viewport
 		DXGI_SWAP_CHAIN_DESC scd;
-		(*mChain)->GetDesc(&scd);
+		mChain->GetDesc(&scd);
 		mViewport.Width = (FLOAT)scd.BufferDesc.Width;
 		mViewport.Height = (FLOAT)scd.BufferDesc.Height;
 		mViewport.MinDepth = 0;
 		mViewport.MaxDepth = 1;
 		mViewport.TopLeftX = 0;
 		mViewport.TopLeftY = 0;
-		(*mContext)->RSSetViewports(1, &mViewport);
+		mContext->RSSetViewports(1, &mViewport);
 	}
 
 	void Renderer::InitializeBuffers() {
 		ID3D11Buffer* pBuff;
 		CD3D11_BUFFER_DESC desc(sizeof(ViewProjectionBuffer), D3D11_BIND_CONSTANT_BUFFER);
-		(*mDevice)->CreateBuffer(&desc, nullptr, &pBuff);
-		mVPBuffer = std::make_shared<ID3D11Buffer*>(pBuff);
+		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
+		mVPBuffer = pBuff;
 
 		desc.ByteWidth = sizeof(matrix4);
-		(*mDevice)->CreateBuffer(&desc, nullptr, &pBuff);
-		mPositionBuffer = std::make_shared<ID3D11Buffer*>(pBuff);
+		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
+		mPositionBuffer = pBuff;
 	}
 
 	void Renderer::InitializeSamplerState() {
@@ -252,29 +252,29 @@ namespace Epoch {
 		sDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 		ID3D11SamplerState *ss;
-		ThrowIfFailed((*mDevice)->CreateSamplerState(&sDesc, &ss));
-		mSamplerState = make_shared<ID3D11SamplerState*>(ss);
-		(*mContext)->PSSetSamplers(0, 1, &ss);
+		ThrowIfFailed(mDevice->CreateSamplerState(&sDesc, &ss));
+		mSamplerState = ss;
+		mContext->PSSetSamplers(0, 1, &ss);
 	}
 
 	void Renderer::InitializeObjectNames() {
 #if _DEBUG
-		SetD3DName((*mDevice), "Rendering Device");
-		SetD3DName((*mContext), "Device Context");
-		SetD3DName((*mChain), "Swapchain");
-		SetD3DName((*mFactory), "DXGI Factory");
-		SetD3DName((*mMainView), "Window Render Target");
-		SetD3DName((*mMainViewTexture), "Window Rener Texture");
-		SetD3DName((*mDSView), "Main Depth-Stencil View");
-		SetD3DName((*mDepthBuffer), "Main Depth Buffer");
-		SetD3DName((*mVPBuffer), "View-Projection Constant Buffer");
-		SetD3DName((*mPositionBuffer), "Model Constant Buffer");
+		SetD3DName(mDevice.Get(), "Rendering Device");
+		SetD3DName(mContext.Get(), "Device Context");
+		SetD3DName(mChain.Get(), "Swapchain");
+		SetD3DName(mFactory.Get(), "DXGI Factory");
+		SetD3DName(mMainView.Get(), "Window Render Target");
+		SetD3DName(mMainViewTexture.Get(), "Window Rener Texture");
+		SetD3DName(mDSView.Get(), "Main Depth-Stencil View");
+		SetD3DName(mDepthBuffer.Get(), "Main Depth Buffer");
+		SetD3DName(mVPBuffer.Get(), "View-Projection Constant Buffer");
+		SetD3DName(mPositionBuffer.Get(), "Model Constant Buffer");
 #endif
 	}
 
 	void Renderer::SetStaticBuffers() {
-		(*mContext)->VSSetConstantBuffers(0, 1, mVPBuffer.get());
-		(*mContext)->VSSetConstantBuffers(1, 1, mPositionBuffer.get());
+		mContext->VSSetConstantBuffers(0, 1, mVPBuffer.GetAddressOf());
+		mContext->VSSetConstantBuffers(1, 1, mPositionBuffer.GetAddressOf());
 		//(*mContext)->VSSetConstantBuffers(2, 1, nullptr); // This will crash. - Instance Buffer
 		//(*mContext)->VSSetConstantBuffers(3, 1, nullptr); // This will crash. - Animation Data Buffer
 
@@ -282,7 +282,7 @@ namespace Epoch {
 	}
 	void Renderer::UpdateCamera(float const _moveSpd, float const _rotSpd, float _delta) {
 #if _DEBUG || 1
-		if (GetActiveWindow() != *mWindow) {
+		if (GetActiveWindow() != mWindow) {
 			return;
 		}
 		if (!CommandConsole::Instance().willTakeInput()) {
@@ -338,19 +338,19 @@ namespace Epoch {
 				// Reset cursor to center of the window.
 				WINDOWINFO winfo;
 				winfo.cbSize = sizeof(WINDOWINFO);
-				GetWindowInfo(*mWindow, &winfo);
+				GetWindowInfo(mWindow, &winfo);
 				SetCursorPos((winfo.rcClient.left + winfo.rcClient.right) / 2, (winfo.rcClient.top + winfo.rcClient.bottom) / 2);
 				GetCursorPos(&mMouseOrigin);
 			}
 		}
 
 		mVPData.view = mDebugCameraPos.Transpose().Invert();
-		(*mContext)->UpdateSubresource(*mVPBuffer, 0, nullptr, &mVPData, 0, 0);
+		mContext->UpdateSubresource(mVPBuffer.Get(), 0, nullptr, &mVPData, 0, 0);
 #endif
 	}
 
 	void Renderer::RenderVR(float _delta) {
-		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 		vr::VRCompositor()->CompositorBringToFront();
 		float color[4] = { 0.251f, 0.709f, 0.541f, 1 };
 		for (int i = 0; i < 2; ++i) {
@@ -359,16 +359,16 @@ namespace Epoch {
 				currentEye = vr::EVREye::Eye_Left;
 			} else {
 				currentEye = vr::EVREye::Eye_Right;
-				(*mContext)->ClearRenderTargetView((*mMainView), color);
-				(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+				mContext->ClearRenderTargetView(mMainView.Get(), color);
+				mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 			}
 			ViewProjectionBuffer data;
 			GetMVP(currentEye, data);
-			(*mContext)->UpdateSubresource(*mVPBuffer, 0, nullptr, (void*)&data, 0, 0);
+			mContext->UpdateSubresource(mVPBuffer.Get(), 0, nullptr, (void*)&data, 0, 0);
 
 			ProcessRenderSet();
 
-			vr::Texture_t submitTexture = { (void*)(*mMainViewTexture), vr::TextureType_DirectX, vr::ColorSpace_Auto };
+			vr::Texture_t submitTexture = { (void*)mMainViewTexture.Get(), vr::TextureType_DirectX, vr::ColorSpace_Auto };
 			vr::VRCompositor()->Submit(currentEye, &submitTexture);
 #if ENABLE_TEXT
 			CommandConsole::Instance().SetVRBool(true);
@@ -393,7 +393,7 @@ namespace Epoch {
 			if (head->mType == RenderNode::RenderNodeType::Context) {
 				((RenderContext*)head)->Apply();
 			} else if (head->mType == RenderNode::RenderNodeType::Shape) {
-				(*mContext)->UpdateSubresource(*mPositionBuffer, 0, nullptr, &((RenderShape*)head)->mPosition, 0, 0);
+				mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &((RenderShape*)head)->mPosition, 0, 0);
 				((RenderShape*)head)->Render();
 			}
 			head = head->GetNext();
@@ -413,7 +413,7 @@ namespace Epoch {
 	}
 
 	bool Renderer::iInitialize(HWND _Window, unsigned int _width, unsigned int _height, bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane, vr::IVRSystem * _vrsys) {
-		mWindow = make_shared<HWND>(_Window);
+		mWindow = _Window;
 		mVrSystem = _vrsys;
 
 		int rtvWidth = _width;
@@ -450,7 +450,7 @@ namespace Epoch {
 		InitializeSamplerState();
 		SetStaticBuffers();
 		// TODO Eventually: Give each shape a topology enum, perhaps?
-		(*mContext)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		mContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		// TODO Eventually: Actually assign input layouts for each render shape.
 		InputLayoutManager::Instance().ApplyLayout(eVERT_POSNORMTEX);
 
@@ -462,8 +462,8 @@ namespace Epoch {
 			mVPData.projection.matrix = DirectX::XMMatrixPerspectiveFovRH(70, (float)_height / (float)_width, 0.1f, 1000);
 			mVPData.view = mDebugCameraPos.Transpose().Invert();
 			mVPData.projection = mVPData.projection.Transpose();
-			(*mContext)->UpdateSubresource(*mVPBuffer, 0, NULL, &mVPData, 0, 0);
-			(*mContext)->VSSetConstantBuffers(0, 1, mVPBuffer.get());
+			mContext->UpdateSubresource(mVPBuffer.Get(), 0, NULL, &mVPData, 0, 0);
+			mContext->VSSetConstantBuffers(0, 1, mVPBuffer.GetAddressOf());
 		}
 
 		//// Print out the render model names available from openVR.
@@ -478,14 +478,14 @@ namespace Epoch {
 	void Renderer::Render(float _deltaTime) {
 
 		float color[4] = { 0.251f, 0.709f, 0.541f, 1 };
-		(*mContext)->ClearRenderTargetView((*mMainView), color);
-		(*mContext)->ClearDepthStencilView((*mDSView), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+		mContext->ClearRenderTargetView(mMainView.Get(), color);
+		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 		if (nullptr == mVrSystem) {
 			RenderNoVR(_deltaTime);
 		} else {
 			RenderVR(_deltaTime);
 		}
-		(*mChain)->Present(mUseVsync ? 1 : 0, 0);
+		mChain->Present(mUseVsync ? 1 : 0, 0);
 	}
 
 #pragma endregion Public Functions

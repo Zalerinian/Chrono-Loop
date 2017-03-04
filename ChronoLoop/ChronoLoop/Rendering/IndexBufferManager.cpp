@@ -57,8 +57,8 @@ namespace Epoch {
 				memcpy((char *)(initData.pSysMem) + desc.ByteWidth, _Indices, sizeof(unsigned int) * _NumIndices);
 				desc.ByteWidth += sizeof(unsigned int) * _NumIndices;
 				ID3D11Buffer *newBuffer;
-				(*Renderer::Instance()->iGetDevice())->CreateBuffer(&desc, &initData, &newBuffer);
-				(*Renderer::Instance()->iGetContext())->CopySubresourceRegion(newBuffer, 0, 0, 0, 0, sInstance->mIndexBuffer, 0, 0);
+				Renderer::Instance()->GetDevice()->CreateBuffer(&desc, &initData, &newBuffer);
+				Renderer::Instance()->GetContext()->CopySubresourceRegion(newBuffer, 0, 0, 0, 0, sInstance->mIndexBuffer, 0, 0);
 				sInstance->mIndexBuffer->Release();
 				sInstance->mIndexBuffer = newBuffer;
 				std::string name = "The Index Buffer, mk" + std::to_string(sInstance->mOffsets.size());
@@ -77,7 +77,7 @@ namespace Epoch {
 
 				D3D11_SUBRESOURCE_DATA initData;
 				initData.pSysMem = _Indices;
-				(*Renderer::Instance()->iGetDevice())->CreateBuffer(&desc, &initData, &sInstance->mIndexBuffer);
+				Renderer::Instance()->GetDevice()->CreateBuffer(&desc, &initData, &sInstance->mIndexBuffer);
 				SetD3DName(sInstance->mIndexBuffer, "The Index Buffer");
 			}
 			sInstance->mOffsets[_Name] = offset;

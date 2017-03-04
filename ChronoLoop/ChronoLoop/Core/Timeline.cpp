@@ -473,29 +473,32 @@ namespace Epoch
 							else if (snap->mSnapinfos.find(id) == snap->mSnapinfos.end() && id == _clones[i]->GetUniqueId())
 							{
 								//If change add to mSnapinfos and Updatetime
-								//if (!CheckForDuplicateData(id, _b.second)) {
-								snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, nullptr);
-								snap->mUpdatedtimes[id] = _time;
-								//}
+								if (!CheckForDuplicateData(id, _b.second))
+								{
+									snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, nullptr);
+									snap->mUpdatedtimes[id] = _time;
+								}
 							}
 							//If we made it through the list do the normal
 							else if (id != _clones[i]->GetUniqueId() && i == _clones.size() - 1)
 							{
 								//If change add to mSnapinfos and Updatetime
-								//if (!CheckForDuplicateData(id, _b.second)) {
-								snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, snap->mSnapinfos[id]);
-								snap->mUpdatedtimes[id] = _time;
-								//}
+								if (!CheckForDuplicateData(id, _b.second))
+								{
+									snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, snap->mSnapinfos[id]);
+									snap->mUpdatedtimes[id] = _time;
+								}
 							}
 						}
 					}
 					else
 					{
 						//If change add to mSnapinfos and Updatetime
-						//if (!CheckForDuplicateData(id, _b.second)) {
-						snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, snap->mSnapinfos[id]);
-						snap->mUpdatedtimes[id] = _time;
-						//}
+						if (!CheckForDuplicateData(id, _b.second))
+						{
+							snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, snap->mSnapinfos[id]);
+							snap->mUpdatedtimes[id] = _time;
+						}
 					}
 				}
 			}
