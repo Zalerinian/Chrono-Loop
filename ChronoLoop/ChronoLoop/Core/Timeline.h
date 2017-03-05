@@ -64,6 +64,8 @@ struct ObjectLifeTime
 
 class Timeline
 {
+	//Where we are at in the timeline
+	int mCurrentGameTimeIndx = 0;
 	std::vector<unsigned int> mSnaptimes;
 	std::unordered_map<unsigned int, Snapshot*> mSnapshots;		//The key will be the time they were taken (mSnapTimes)
 	std::unordered_map<unsigned short, BaseObject*> mLiveObjects;  
@@ -72,28 +74,30 @@ class Timeline
 public:
 	Timeline();
 	~Timeline();
-	//Where we are at in the timeline
-	int mCurrentGameTimeIndx = 0;
-	int GetCurrentGameTimeIndx() { return mCurrentGameTimeIndx; }
 	void AddBaseObject(BaseObject* _object, unsigned short _id);						//add to the list of recorded objects.
 	void AddPlayerBaseObject(BaseObject* _object, unsigned short _id);						//add to the player of recorded objects and .
 	void AddSnapshot(unsigned int _snaptime, Snapshot* _snapshot);
-	bool RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
-	bool RewindMakeClone(unsigned int _snaptime);
+	void ClearTimeLine();
 	void ChangeBitsetToSnap(SnapInfo* _destinfo, Component* _curComp);
+	bool CheckForDuplicateData(unsigned short _id, BaseObject* _object);
 	//This function removes non-clone objects that were created in the future
 	void CheckforLostObjects(std::vector<BaseObject*>&mClones);
+	SnapInfo* GenerateSnapInfo(BaseObject* _object, SnapInfo* _info);							//Error check agianst the BaseObject* if it is null or not
+	Snapshot* GenerateSnapShot(unsigned int _time, std::vector<BaseObject*> & _clones);
+	SnapInfoPlayer * GenerateSnapInfoPlayer();
+	int GetCurrentGameTimeIndx() { return mCurrentGameTimeIndx; }
+	bool RewindMakeClone(unsigned int _snaptime);
+	bool RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 	void MoveObjectToSnap(unsigned int _snaptime,unsigned short _id);
 	void MoveAllObjectsToSnap(unsigned int _snaptime);
 	void MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime,unsigned short _id1, unsigned short _id2, unsigned short _id3);
-	void ClearTimeLine();
-	void SetComponent(SnapComponent* _destComp, BaseObject* _obj, SnapInfo* _destInfo);
+	void SetBaseObjectDeathTime(unsigned short _id);
 	void SetCloneCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);
 	void SetCloneDeathTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);
-	void SetBaseObjectDeathTime(unsigned short _id);
-	SnapInfo* GenerateSnapInfo(BaseObject* _object, SnapInfo* _info);							//Error check agianst the BaseObject* if it is null or not
-	Snapshot* GenerateSnapShot(unsigned int _time,std::vector<BaseObject*> & _clones);
-	SnapInfoPlayer * GenerateSnapInfoPlayer();
-	bool CheckForDuplicateData(unsigned short _id,BaseObject* _object);
+	void SetComponent(SnapComponent* _destComp, BaseObject* _obj, SnapInfo* _destInfo);
+	void SetCurrentGameTimeIndx(int _time) { mCurrentGameTimeIndx = _time; };
+	void UpdateCloneInterpolators(unsigned short _cloneid, SnapInfo* _currSnap);
+	
+	
 };
 

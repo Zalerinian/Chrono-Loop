@@ -81,6 +81,9 @@ void TimeManipulation::Update() {
 		Controller2->AddComponent(CubeColider2);
 		Controller2->AddComponent(mc2);
 
+		//
+		//KEEP THIS ORDER NO MATTER WHAT!!!! 
+		//
 		//Make a clone 3 seconds ago.
 		TimeManager::Instance()->RewindMakeClone(TimeManager::Instance()->GetCurrentSnapFrame() - 30, headset, Controller1, Controller2);
 		Level::Instance()->iSetHeadsetAndControllers(headset, Controller1, Controller2,CubeColider,CubeColider2);
@@ -88,9 +91,14 @@ void TimeManipulation::Update() {
 		Physics::Instance()->mObjects.push_back(headset);
 		Physics::Instance()->mObjects.push_back(Controller1);
 		Physics::Instance()->mObjects.push_back(Controller2);
+		//new Objects are added to the timeline to update the old player BaseObject pointers
 		TimeManager::Instance()->AddPlayerObjectToTimeline(headset);
 		TimeManager::Instance()->AddPlayerObjectToTimeline(Controller1);
 		TimeManager::Instance()->AddPlayerObjectToTimeline(Controller2);
+		//add Interpolators for the clones
+		TimeManager::Instance()->AddInterpolatorForClone(headset);
+		TimeManager::Instance()->AddInterpolatorForClone(Controller1);
+		TimeManager::Instance()->AddInterpolatorForClone(Controller2);
 		mCloneCount++;
 	}
 	if (VRInputManager::Instance().iGetController(mLeft).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {

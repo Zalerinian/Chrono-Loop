@@ -1,6 +1,8 @@
 #pragma once
 #include <chrono>
 #include <vector>
+#include "../Common/Interpolator.h"
+#include <unordered_map>
 
 class BaseObject;
 
@@ -18,6 +20,7 @@ class TimeManager
 	unsigned int mLevelTime = 0;
 	bool mRewindTime = false, mRewindMakeClone = false;
 	std::vector<BaseObject*>mClones;
+	std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneInterpolators;
 	Timeline* GetTimeLine();
 
 	//Command Console vars
@@ -27,25 +30,28 @@ class TimeManager
 	~TimeManager();
 public:
 	
-	void Update(float _delta);
-	static TimeManager* Instance();
-	void AddObjectToTimeline(BaseObject* _obj);
 	//Add only headset and controllers to this
 	void AddPlayerObjectToTimeline(BaseObject* _obj);
+	void AddObjectToTimeline(BaseObject* _obj);
+	void AddInterpolatorForClone(BaseObject* _obj);
 	//Clears the list of BaseObject* the Timemanager has refrence to.
 	void ClearClones();
 	//Checks and see if you can rewind to passed in frame
 	bool CheckRewindAvaliable(unsigned int _RewindNumOfframes);
+	static void Destroy();
 	//Returns the current snapshot indx
 	unsigned int GetCurrentSnapFrame();
 	//Retrieves delta time
 	float GetDeltaTime() { return mDeltaTime; }
+	Interpolator<matrix4>* GetCloneInterpolator(unsigned short _id);
 	std::vector<BaseObject*>& GetClonesVec() { return mClones; }
 	//Go back into time. Send in dest frame and send in player headset and conrollers id
 	void RewindTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 	//Go back into time and make clone. Send in dest frame and send in player headset and conrollers baseObjects
 	void RewindMakeClone(unsigned int _frame, BaseObject* _ob1, BaseObject* _ob2, BaseObject* _ob3);
-	static void Destroy();
+	static TimeManager* Instance();
+	void Update(float _delta);
+
 
 
 	//Function Pointer / Command Console

@@ -22,18 +22,26 @@ TimeManager::TimeManager() {
 TimeManager::~TimeManager() {
 	//Level manager will clear delete clones
 	delete mTimeline;
-	instanceTimemanager->mClones.clear();
+	ClearClones();
 }
 
 void TimeManager::Update(float _delta) {
 	mTimestamp += _delta;
 	mDeltaTime = _delta;
+
+	//If its time for a snapshot
 	if (mTimestamp >= mRecordingTime) {
 		mTimestamp = 0;
 		//Generate 
 		Snapshot* s = mTimeline->GenerateSnapShot(mLevelTime, mClones);
 		mTimeline->AddSnapshot(mLevelTime, s);
 		mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
+	}
+	
+	for(auto Interp : mCloneInterpolators)
+	{
+		if (Interp.second)
+			Interp.second->Update(mTimestamp / mRecordingTime);
 	}
 	
 }
@@ -50,6 +58,12 @@ void TimeManager::AddObjectToTimeline(BaseObject * _obj) {
 		mTimeline->AddBaseObject(_obj, _obj->GetUniqueID());
 }
 
+void TimeManager::AddInterpolatorForClone(BaseObject * _obj)
+{
+	Interpolator<matrix4>* temp = new Interpolator<matrix4>(InterpolatorType::I_Matrix4);
+	mCloneInterpolators[_obj->GetUniqueID()] = temp;
+}
+
 void TimeManager::AddPlayerObjectToTimeline(BaseObject * _obj) {
 	if (_obj != nullptr)
 		mTimeline->AddPlayerBaseObject(_obj, _obj->GetUniqueID());
@@ -57,19 +71,34 @@ void TimeManager::AddPlayerObjectToTimeline(BaseObject * _obj) {
 
 void TimeManager::ClearClones() {
 	mClones.clear();
+	//Clean up the interpolators
+	for(auto Interp: mCloneInterpolators)
+	{
+		if (Interp.second)
+			delete Interp.second;
+	}
+	mCloneInterpolators.clear();
 }
 
 bool TimeManager::CheckRewindAvaliable(unsigned int _frame)
 {
 	//wrapped
-	if (mTimeline->mCurrentGameTimeIndx - _frame > mTimeline->mCurrentGameTimeIndx)
+	if (mTimeline->GetCurrentGameTimeIndx() - _frame > mTimeline->GetCurrentGameTimeIndx())
 		return false;
 	else
 		return true;
 }
 
 unsigned int TimeManager::GetCurrentSnapFrame() {
-	return mTimeline->mCurrentGameTimeIndx;
+	return mTimeline->GetCurrentGameTimeIndx();
+}
+
+Interpolator<matrix4>* TimeManager::GetCloneInterpolator(unsigned short _id) {
+
+	if (mCloneInterpolators.find(_id) != mCloneInterpolators.end())
+		return mCloneInterpolators[_id];
+
+	return nullptr;
 }
 
 Timeline * TimeManager::GetTimeLine() {
@@ -156,7 +185,7 @@ void TimeManager::DisplayCloneCount()
 void TimeManager::DisplaySnapshotCount()
 {
 	if (instanceTimemanager->mSnapshotCountOn) {
-		std::wstring CloneCount = L"Snapshots: " + std::to_wstring(mTimeline->mCurrentGameTimeIndx);
+		std::wstring CloneCount = L"Snapshots: " + std::to_wstring(mTimeline->GetCurrentGameTimeIndx());
 
 		Font* tempFont;
 		if (!CommandConsole::Instance().isVRon()) {

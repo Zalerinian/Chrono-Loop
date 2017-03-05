@@ -138,6 +138,35 @@ void Timeline::SetComponent(SnapComponent* _destComp, BaseObject * _obj, SnapInf
 	}
 }
 
+void Timeline::UpdateCloneInterpolators(unsigned short _cloneid, SnapInfo* _currSnap)
+{
+	Snapshot* nextsnap;
+	SnapInfo* nextInfo;
+	Interpolator<matrix4>* cloneInterp = TimeManager::Instance()->GetCloneInterpolator(_cloneid);
+
+	if(mCurrentGameTimeIndx + 1 <= mSnaptimes.size() -1)
+	{
+		nextsnap = mSnapshots[mSnaptimes[mCurrentGameTimeIndx + 1]];
+		//found a clone snapinfo in the next snapshot
+		if(nextsnap->mSnapinfos.find(_cloneid) != nextsnap->mSnapinfos.end())
+		{
+			nextInfo = nextsnap->mSnapinfos[_cloneid];
+			cloneInterp->SetStart(_currSnap->mTransform.GetMatrix());
+			cloneInterp->SetEdit(_currSnap->mTransform.GetMatrix());
+			cloneInterp->SetEnd(nextInfo->mTransform.GetMatrix());
+			cloneInterp->SetActive(true);
+		}
+		else
+		{
+			cloneInterp->SetActive(false);
+		}
+	}
+	else
+	{
+		cloneInterp->SetActive(false);
+	}
+}
+
 void Timeline::SetCloneCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3) {
 	ObjectLifeTime* newObject = new ObjectLifeTime();
 	newObject->mBirth = mSnaptimes[mCurrentGameTimeIndx];
@@ -415,6 +444,8 @@ Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*
 						//Move clone to next frame if frame is avalible
 						if (snap->mSnapinfos.find(id) != snap->mSnapinfos.end() && id == _clones[i]->GetUniqueID()) {
 							MoveObjectToSnap(_time, id);
+							//Update the clone interpolators to move if there is a next next snap available.
+							UpdateCloneInterpolators(_clones[i]->GetUniqueID(), snap->mSnapinfos[id]);
 							break;
 						}
 						//If we are a clone but dont have a next movement then record one at position
