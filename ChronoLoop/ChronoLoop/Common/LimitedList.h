@@ -9,11 +9,11 @@ namespace Epoch {
 		template <class T>
 		struct Node {
 			T data;
-			Node *mNext, *mPrev;
+			Node *mNext = nullptr, *mPrev = nullptr;
 			Node<T>(T _d) : data(_d) {}
 		};
 
-		Node<T> *mHead, *mTail;
+		Node<T> *mHead = nullptr, *mTail = nullptr;
 		unsigned int mSize, mLimit = 9;
 
 	public:
@@ -56,7 +56,7 @@ namespace Epoch {
 	template <class T>
 	void LimitedList<T>::AddHead(T _value) {
 		if (mHead == nullptr) {
-			mHead = new Node<T>(_node);
+			mHead = new Node<T>(_value);
 			mTail = mHead;
 			mHead->mNext = mHead->mPrev = nullptr;
 			mSize = 1;
@@ -68,7 +68,7 @@ namespace Epoch {
 				mTail->mNext = nullptr;
 				--mSize;
 			}
-			Node<T>* n = new Node<T>(_node);
+			Node<T>* n = new Node<T>(_value);
 			n->mPrev = nullptr;
 			n->mNext = mHead;
 			mHead->mPrev = n;

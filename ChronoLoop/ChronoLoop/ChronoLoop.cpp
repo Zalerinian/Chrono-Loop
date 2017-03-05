@@ -17,6 +17,7 @@
 #include "Objects/MeshComponent.h"
 #include "Actions/HeadsetFollow.hpp"
 #include "Actions/BoxSnapToControllerAction.hpp"
+#include "Actions/GestureDetection.hpp"
 #include "Messager\Messager.h"
 #include "Objects\BaseObject.h"
 #include "Actions/TeleportAction.hpp"
@@ -262,12 +263,15 @@ void Update() {
 	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 	TeleportAction *ta = new TeleportAction(eControllerType_Primary);
 	TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
+	GestureDetection* gdr = new GestureDetection(eControllerType_Primary);
+	
 	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 	RightController->AddComponent(mc);
 	RightController->AddComponent(rightRaycaster);
 	RightController->AddComponent(ta);
 	RightController->AddComponent(rightConCol);
 	RightController->AddComponent(tm);
+	RightController->AddComponent(gdr);
 	CodeComponent* pickup = new BoxSnapToControllerAction();
 	((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
 	RightController->AddComponent(pickup);

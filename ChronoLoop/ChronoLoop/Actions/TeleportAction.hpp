@@ -7,7 +7,6 @@
 #include "../Input/VRInputManager.h"
 #include "../Core/Level.h"
 #include "../Actions/HeadsetFollow.hpp"
-#include "../Common/LimitedList.h"
 
 namespace Epoch {
 
@@ -15,7 +14,6 @@ namespace Epoch {
 		MeshComponent *mPlaneMesh, *mWallsMesh, *mBlockMesh, *mExitMesh;
 		BaseObject *mPlaneObject, *mWallsObject, *mBlockObject, *mExitObject;
 		ControllerType mControllerRole = eControllerType_Primary;
-		LimitedList<vec2f> mGestureList;
 		TeleportAction(ControllerType _t) { mControllerRole = _t; };
 
 		virtual void Start() {

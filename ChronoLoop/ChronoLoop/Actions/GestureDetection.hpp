@@ -4,51 +4,37 @@
 #include "../Input/VRInputManager.h"
 #include "../Common/LimitedList.h"
 
-namespace Epoch
-{
+namespace Epoch {
 
-	struct GestureDetection : CodeComponent
-	{
+	struct GestureDetection : CodeComponent {
+		ControllerType mControllerRole = eControllerType_Primary;
 		bool mIsHeld = false;
 		char mHolder = -1;
-		vec2f mInitialContactPoint;
-		LimitedList mList;
+		vec2f mInitialContactPoint, mZero, mInvalid;
+		LimitedList<vec2f> mList;
 
-		virtual void Update()
-		{
-			vec2f zero2f;
-			for (char i = 0; i < 2; ++i)
-			{
-				Controller &controller = VRInputManager::Instance().iGetController(i == 0);
-				if (!mIsHeld)
-				{
+		GestureDetection(ControllerType _t) : mControllerRole(_t), mInvalid(-2, -2), mInitialContactPoint(-2, -2) {}
+
+		virtual void Update() {
+			if (VRInputManager::GetInstance().IsVREnabled()) {
+
+				Controller &controller = VRInputManager::GetInstance().GetController(mControllerRole);
+				
+				if (controller.GetTouch(vr::k_EButton_SteamVR_Touchpad)) {
+					SystemLogger::Debug() << "Touchpad touched." << std::endl;
+				}
+				if (mInitialContactPoint == mInvalid) {
+					// There was no initial point
+				}
+				if (!mIsHeld) {
 					// Check to see if this controller is being touched appropriately.
-					if (controller.GetAxis() != zero2f)
-					{
+					if (controller.GetAxis() != mZero) {
 						// The controller touchpad is being touched
 						mIsHeld = true;
-						mHolder = i;
-					}
-				}
-
-				if (i == mHolder)
-				{
-					// This controller started touching the touchpad first.
-					vec2f touch = controller.GetAxis();
-					if (touch == zero2f)
-					{
-						// The touchpad has been released.
-						mIsHeld = false;
-						mHolder = -1;
-						mList.Clear();
-					}
-					else
-					{
-						// The touchpad is still being touched.
-						mList.AddHead(touch);
 					}
 				}
 			}
+
 		}
 	};
 
