@@ -321,6 +321,7 @@
     <ClInclude Include="Common\Math\vec4i.h">
       <Filter>Common\Math\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Common\Interpolator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">

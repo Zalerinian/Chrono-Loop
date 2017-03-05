@@ -35,6 +35,7 @@ namespace Epoch
 		}
 	}
 
+
 #pragma region RAY_CASTING
 
 	bool Physics::RayToTriangle(vec4f& _vert0, vec4f& _vert1, vec4f& _vert2, vec4f& _normal, vec4f& _start, vec4f& _dir, float& _time)
@@ -168,7 +169,172 @@ namespace Epoch
 #pragma endregion
 
 
-#pragma region MOVING_SPHERE
+#pragma region COLISION
+
+	//Returns 1 if on or in front of plane
+	//Returns 2 if behind plane
+	int Physics::PointToPlane(PlaneCollider& _plane, vec4f& _point)
+	{
+		float pOffset = _point * _plane.mNormal;
+		if (pOffset >= _plane.mOffset)
+			return 1;
+		return 2;
+	}
+
+	//Returns 1 if in front of plane
+	//Returns 2 if behind plane
+	//Returns 3 if intersecting plane
+	int Physics::SphereToPlane(PlaneCollider& _plane, SphereCollider& _sphere)
+	{
+		float pOffset = _sphere.mCenter * _plane.mNormal;
+		if (pOffset - _plane.mOffset > _sphere.mRadius)
+			return 1;
+		else if (pOffset - _plane.mOffset < -_sphere.mRadius)
+			return 2;
+		return 3;
+	}
+
+	//Returns 1 if in front of plane.
+	//Returns 2 if behind plane.
+	//Returns 3 if intersecting plane.
+	int Physics::AabbToPlane(PlaneCollider& _plane, CubeCollider& _aabb)
+	{
+		vec4f center = (_aabb.mMax + _aabb.mMin) * 0.5f;
+		float pOffset = center * _plane.mNormal - _plane.mOffset;
+		vec4f E = _aabb.mMax - center;
+		float r = E * _plane.mNormal;
+		SphereCollider s(center, r);
+		return SphereToPlane(_plane, s);
+	}
+
+	bool Physics::AABBtoAABB(CubeCollider& _aabb1, CubeCollider& _aabb2)
+	{
+		if (_aabb1.mMax.x < _aabb2.mMin.x || _aabb1.mMin.x > _aabb2.mMax.x)
+			return false;
+
+		if (_aabb1.mMax.y < _aabb2.mMin.y || _aabb1.mMin.y > _aabb2.mMax.y)
+			return false;
+
+		if (_aabb1.mMax.z < _aabb2.mMin.z || _aabb1.mMin.z >  _aabb2.mMax.z)
+			return false;
+
+		return true;
+	}
+
+	bool Physics::SphereToSphere(SphereCollider& _sphere1, SphereCollider& _sphere2)
+	{
+		vec4f pos = _sphere1.mCenter - _sphere2.mCenter;
+		float distance = pos.x * pos.x + pos.y * pos.y + pos.z * pos.z;
+		float minDist = _sphere1.mRadius + _sphere2.mRadius;
+
+		return distance <= (minDist * minDist);
+	}
+
+	bool Physics::SphereToAABB(SphereCollider& _sphere, CubeCollider& _aabb)
+	{
+		float X, Y, Z;
+
+		if (_sphere.mCenter.x < _aabb.mMin.x)
+			X = _aabb.mMin.x;
+		else if (_sphere.mCenter.x > _aabb.mMax.x)
+			X = _aabb.mMax.x;
+		else
+			X = _sphere.mCenter.x;
+
+		if (_sphere.mCenter.y < _aabb.mMin.y)
+			Y = _aabb.mMin.y;
+		else if (_sphere.mCenter.y > _aabb.mMax.y)
+			Y = _aabb.mMax.y;
+		else
+			Y = _sphere.mCenter.y;
+
+		if (_sphere.mCenter.z < _aabb.mMin.z)
+			Z = _aabb.mMin.z;
+		else if (_sphere.mCenter.z > _aabb.mMax.z)
+			Z = _aabb.mMax.z;
+		else
+			Z = _sphere.mCenter.z;
+
+		vec4f point = { X, Y, Z, 1.0f };
+
+		return (fabsf((point.x - _sphere.mCenter.x)) < _sphere.mRadius &&
+			fabsf((point.y - _sphere.mCenter.y)) < _sphere.mRadius &&
+			fabsf((point.z - _sphere.mCenter.z)) < _sphere.mRadius);
+	}
+
+	bool Physics::SphereToTriangle(SphereCollider& _sphere, Triangle& _tri, vec4f& _displacement)
+	{
+		float offset = (_sphere.mCenter - _tri.Vertex[0]) * _tri.Normal;
+		vec4f scaled = _tri.Normal * offset;
+		vec4f projected = _sphere.mCenter - scaled;
+		vec4f edge0 = _tri.Vertex[1] - _tri.Vertex[0];
+		vec4f edge1 = _tri.Vertex[2] - _tri.Vertex[1];
+		vec4f edge2 = _tri.Vertex[0] - _tri.Vertex[2];
+		vec4f norm0, norm1, norm2, Cpt = _sphere.mCenter;
+		norm0 = edge0 ^ _tri.Normal;
+		norm1 = edge1 ^ _tri.Normal;
+		norm2 = edge2 ^ _tri.Normal;
+		PlaneCollider plane0(norm0, _tri.Vertex[0] * norm0);
+		PlaneCollider plane1(norm1, _tri.Vertex[1] * norm1);
+		PlaneCollider plane2(norm2, _tri.Vertex[2] * norm2);
+
+		if (PointToPlane(plane0, projected) == 1 &&
+			PointToPlane(plane1, projected) == 1 &&
+			PointToPlane(plane2, projected) == 1)
+		{
+			Cpt = projected;
+		}
+		else
+		{
+			vec4f s0 = projected - _tri.Vertex[0];
+			vec4f s1 = projected - _tri.Vertex[1];
+			vec4f s2 = projected - _tri.Vertex[2];
+			float p0 = (s0 * edge0) / (edge0 * edge0);
+			float p1 = (s1 * edge1) / (edge1 * edge1);
+			float p2 = (s2 * edge2) / (edge2 * edge2);
+
+			if (p0 < 0)
+				p0 = 0;
+			else if (p0 > 1)
+				p0 = 1;
+
+			if (p1 < 1)
+				p1 = 0;
+			else if (p1 > 1)
+				p1 = 1;
+
+			if (p2 < 0)
+				p2 = 0;
+			else if (p2 > 1)
+				p2 = 1;
+
+			vec4f c0 = _tri.Vertex[0] + edge0 * p0;
+			vec4f c1 = _tri.Vertex[1] + edge1 * p1;
+			vec4f c2 = _tri.Vertex[2] + edge2 * p2;
+			float r0 = (projected - c0) * (projected - c0);
+			float r1 = (projected - c1) * (projected - c1);
+			float r2 = (projected - c2) * (projected - c2);
+
+			float min = fminf(fminf(r0, r1), r2);
+			if (min == r0)
+				Cpt = c0;
+			else if (min == r1)
+				Cpt = c1;
+			else if (min == r2)
+				Cpt = c2;
+		}
+
+		if ((Cpt - _sphere.mCenter) * (Cpt - _sphere.mCenter) < (_sphere.mRadius * _sphere.mRadius))
+		{
+			vec4f v = _sphere.mCenter - Cpt;
+			float dist = v.Magnitude3();
+			vec4f n = v.Normalize();
+			_displacement = n * (_sphere.mRadius - dist);
+			return true;
+		}
+
+		return false;
+	}
 
 	bool Physics::MovingSphereToTriangle(vec4f & _vert0, vec4f & _vert1, vec4f & _vert2, vec4f & _normal, vec4f & _start, vec4f & _dir, float _radius, float & _time, vec4f & _outNormal)
 	{
@@ -224,79 +390,31 @@ namespace Epoch
 		return bReturn;
 	}
 
-	bool Physics::MovingSphereToMesh(vec4f & _start, vec4f & _dir, float _radius, Mesh* _mesh, float & _time, vec4f & _outNormal)
-	{
-		bool bCollision = false;
-		_time = FLT_MAX;
-		float fTime = FLT_MAX;
-
-		for (unsigned int i = 0; i < _mesh->GetNumTriangles(); i++)
-		{
-			Triangle currTri = _mesh->GetTriangles()[i];
-			vec4f currNorm = _mesh->GetTriangles()[i].Normal;
-
-			if (MovingSphereToTriangle(
-				vec4f(currTri.Vertex[0]),
-				vec4f(currTri.Vertex[1]),
-				vec4f(currTri.Vertex[2]),
-				currNorm, _start, _dir, _radius, fTime, _outNormal))
-			{
-				_time = fminf(_time, fTime);
-				_outNormal = currNorm;
-				bCollision = true;
-			}
-		}
-
-		return bCollision;
-	}
-
-#pragma endregion
-
-
-#pragma region PLANE_COLISION
-
-	void Physics::BuildPlane(PlaneCollider& _plane, vec4f& _pointA, vec4f& _pointB, vec4f& _pointC)
-	{
-		_plane.mNormal = (_pointA - _pointC) ^ (_pointB - _pointA);
-		_plane.mNormal.Normalize();
-		_plane.mOffset = _pointA * _plane.mNormal;
-	}
-
-	//Returns 1 if on or in front of plane
-	//Returns 2 if behind plane
-	int Physics::PointToPlane(PlaneCollider& _plane, vec4f& _point)
-	{
-		float pOffset = _point * _plane.mNormal;
-		if (pOffset >= _plane.mOffset)
-			return 1;
-		return 2;
-	}
-
-	//Returns 1 if in front of plane
-	//Returns 2 if behind plane
-	//Returns 3 if intersecting plane
-	int Physics::SphereToPlane(PlaneCollider& _plane, SphereCollider& _sphere)
-	{
-		float pOffset = _sphere.mCenter * _plane.mNormal;
-		if (pOffset - _plane.mOffset > _sphere.mRadius)
-			return 1;
-		else if (pOffset - _plane.mOffset < -_sphere.mRadius)
-			return 2;
-		return 3;
-	}
-
-	//Returns 1 if in front of plane.
-	//Returns 2 if behind plane.
-	//Returns 3 if intersecting plane.
-	int Physics::AabbToPlane(PlaneCollider& _plane, CubeCollider& _aabb)
-	{
-		vec4f center = (_aabb.mMax + _aabb.mMin) * 0.5f;
-		float pOffset = center * _plane.mNormal - _plane.mOffset;
-		vec4f E = _aabb.mMax - center;
-		float r = E * _plane.mNormal;
-		SphereCollider s(center, r);
-		return SphereToPlane(_plane, s);
-	}
+	//bool Physics::MovingSphereToMesh(vec4f & _start, vec4f & _dir, float _radius, Mesh* _mesh, float & _time, vec4f & _outNormal)
+	//{
+	//	bool bCollision = false;
+	//	_time = FLT_MAX;
+	//	float fTime = FLT_MAX;
+	//
+	//	for (unsigned int i = 0; i < _mesh->GetNumTriangles(); i++)
+	//	{
+	//		Triangle currTri = _mesh->GetTriangles()[i];
+	//		vec4f currNorm = _mesh->GetTriangles()[i].Normal;
+	//
+	//		if (MovingSphereToTriangle(
+	//			vec4f(currTri.Vertex[0]),
+	//			vec4f(currTri.Vertex[1]),
+	//			vec4f(currTri.Vertex[2]),
+	//			currNorm, _start, _dir, _radius, fTime, _outNormal))
+	//		{
+	//			_time = fminf(_time, fTime);
+	//			_outNormal = currNorm;
+	//			bCollision = true;
+	//		}
+	//	}
+	//
+	//	return bCollision;
+	//}
 
 #pragma endregion
 
@@ -365,139 +483,6 @@ namespace Epoch
 #pragma endregion
 
 
-#pragma region MISC_COLLISION
-
-	bool Physics::AABBtoAABB(CubeCollider& _aabb1, CubeCollider& _aabb2)
-	{
-		if (_aabb1.mMax.x < _aabb2.mMin.x || _aabb1.mMin.x > _aabb2.mMax.x)
-			return false;
-
-		if (_aabb1.mMax.y < _aabb2.mMin.y || _aabb1.mMin.y > _aabb2.mMax.y)
-			return false;
-
-		if (_aabb1.mMax.z < _aabb2.mMin.z || _aabb1.mMin.z >  _aabb2.mMax.z)
-			return false;
-
-		return true;
-	}
-
-	bool Physics::SphereToSphere(SphereCollider& _sphere1, SphereCollider& _sphere2)
-	{
-		vec4f pos = _sphere1.mCenter - _sphere2.mCenter;
-		float distance = pos.x * pos.x + pos.y * pos.y + pos.z * pos.z;
-		float minDist = _sphere1.mRadius + _sphere2.mRadius;
-
-		return distance <= (minDist * minDist);
-	}
-
-	bool Physics::SphereToAABB(SphereCollider& _sphere, CubeCollider& _aabb)
-	{
-		float X, Y, Z;
-
-		if (_sphere.mCenter.x < _aabb.mMin.x)
-			X = _aabb.mMin.x;
-		else if (_sphere.mCenter.x > _aabb.mMax.x)
-			X = _aabb.mMax.x;
-		else
-			X = _sphere.mCenter.x;
-
-		if (_sphere.mCenter.y < _aabb.mMin.y)
-			Y = _aabb.mMin.y;
-		else if (_sphere.mCenter.y > _aabb.mMax.y)
-			Y = _aabb.mMax.y;
-		else
-			Y = _sphere.mCenter.y;
-
-		if (_sphere.mCenter.z < _aabb.mMin.z)
-			Z = _aabb.mMin.z;
-		else if (_sphere.mCenter.z > _aabb.mMax.z)
-			Z = _aabb.mMax.z;
-		else
-			Z = _sphere.mCenter.z;
-
-		vec4f point = { X, Y, Z, 1.0f };
-
-		return (fabsf((point.x - _sphere.mCenter.x)) < _sphere.mRadius &&
-						fabsf((point.y - _sphere.mCenter.y)) < _sphere.mRadius &&
-						fabsf((point.z - _sphere.mCenter.z)) < _sphere.mRadius);
-	}
-
-	bool Physics::SphereToTriangle(SphereCollider& _sphere, Triangle& _tri, vec4f& _displacement)
-	{
-		float offset = (_sphere.mCenter - _tri.Vertex[0]) * _tri.Normal;
-		vec4f scaled = _tri.Normal * offset;
-		vec4f projected = _sphere.mCenter - scaled;
-		vec4f edge0 = _tri.Vertex[1] - _tri.Vertex[0];
-		vec4f edge1 = _tri.Vertex[2] - _tri.Vertex[1];
-		vec4f edge2 = _tri.Vertex[0] - _tri.Vertex[2];
-		vec4f norm0, norm1, norm2, Cpt = _sphere.mCenter;
-		norm0 = edge0 ^ _tri.Normal;
-		norm1 = edge1 ^ _tri.Normal;
-		norm2 = edge2 ^ _tri.Normal;
-		PlaneCollider plane0(norm0, _tri.Vertex[0] * norm0);
-		PlaneCollider plane1(norm1, _tri.Vertex[1] * norm1);
-		PlaneCollider plane2(norm2, _tri.Vertex[2] * norm2);
-
-		if (PointToPlane(plane0, projected) == 1 &&
-				PointToPlane(plane1, projected) == 1 &&
-				PointToPlane(plane2, projected) == 1)
-		{
-			Cpt = projected;
-		}
-		else
-		{
-			vec4f s0 = projected - _tri.Vertex[0];
-			vec4f s1 = projected - _tri.Vertex[1];
-			vec4f s2 = projected - _tri.Vertex[2];
-			float p0 = (s0 * edge0) / (edge0 * edge0);
-			float p1 = (s1 * edge1) / (edge1 * edge1);
-			float p2 = (s2 * edge2) / (edge2 * edge2);
-
-			if (p0 < 0)
-				p0 = 0;
-			else if (p0 > 1)
-				p0 = 1;
-
-			if (p1 < 1)
-				p1 = 0;
-			else if (p1 > 1)
-				p1 = 1;
-
-			if (p2 < 0)
-				p2 = 0;
-			else if (p2 > 1)
-				p2 = 1;
-
-			vec4f c0 = _tri.Vertex[0] + edge0 * p0;
-			vec4f c1 = _tri.Vertex[1] + edge1 * p1;
-			vec4f c2 = _tri.Vertex[2] + edge2 * p2;
-			float r0 = (projected - c0) * (projected - c0);
-			float r1 = (projected - c1) * (projected - c1);
-			float r2 = (projected - c2) * (projected - c2);
-
-			float min = fminf(fminf(r0, r1), r2);
-			if (min == r0)
-				Cpt = c0;
-			else if (min == r1)
-				Cpt = c1;
-			else if (min == r2)
-				Cpt = c2;
-		}
-
-		if ((Cpt - _sphere.mCenter) * (Cpt - _sphere.mCenter) < (_sphere.mRadius * _sphere.mRadius))
-		{
-			vec4f v = _sphere.mCenter - Cpt;
-			float dist = v.Magnitude3();
-			vec4f n = v.Normalize();
-			_displacement = n * (_sphere.mRadius - dist);
-			return true;
-		}
-
-		return false;
-	}
-
-#pragma endregion
-
 #pragma region SIMULATION
 
 	vec4f Physics::CalcAcceleration(vec4f& _force, float _mass)
@@ -513,29 +498,6 @@ namespace Epoch
 	vec4f Physics::CalcPosition(vec4f& _pos, vec4f& _vel, float _time)
 	{
 		return _pos + _vel * _time;
-	}
-
-	void Physics::CalcReaction(Collider& _col1, Collider& _col2, float _time)
-	{
-		//float avgElasticity = (_col1.mElasticity + _col2.mElasticity) / 2;
-		//vec4f collisionNormal = _col1.GetPos() - _col2.GetPos();
-		//collisionNormal.Normalize();
-		//vec4f relativeVelocity = _col1.mVelocity - _col2.mVelocity;
-		//
-		//float impulseMagnitude3 = -(1 + avgElasticity) * _col1.mMass * _col2.mMass * (relativeVelocity * collisionNormal) / (_col1.mMass + _col2.mMass);
-		//vec4f impulse = collisionNormal * impulseMagnitude3;
-		//_col1.mImpulsiveForce = impulse / _time;
-		//_col2.mImpulsiveForce = -impulse / _time;
-		//_col1.mVelocity = _col1.mVelocity + impulse / _col1.mMass;
-		//_col2.mVelocity = _col2.mVelocity - impulse / _col2.mMass;
-		//_col1.mTotalForce = _col1.mImpulsiveForce;
-		//_col2.mTotalForce = _col2.mImpulsiveForce;
-	}
-
-	void Physics::PlaneColReaction(Collider& _col, Collider& _plane)
-	{
-		vec4f normalVel = (((PlaneCollider*)&_plane)->mNormal * (_col.mVelocity * ((PlaneCollider*)&_plane)->mNormal));
-		_col.mVelocity = (normalVel * -_col.mElasticity) + (_col.mVelocity - normalVel);
 	}
 
 	void Physics::CalcFriction(Collider& _col, vec4f& _norm, float _static, float _kinetic)
@@ -577,6 +539,7 @@ namespace Epoch
 	}
 
 #pragma endregion
+
 
 	void Physics::Update(float _time)
 	{
@@ -842,7 +805,7 @@ namespace Epoch
 
 					if (((ControllerCollider*)collider)->mLeft &&
 						(collider->mObject->GetUniqueID() == Level::Instance()->iGetLeftController()->GetUniqueID() ||
-						 collider->mObject->GetUniqueID() == Level::Instance()->iGetRightController()->GetUniqueID()))
+							collider->mObject->GetUniqueID() == Level::Instance()->iGetRightController()->GetUniqueID()))
 					{
 						collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
 						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
@@ -851,7 +814,7 @@ namespace Epoch
 					}
 					else if ((!(((ControllerCollider*)collider)->mLeft) &&
 						(collider->mObject->GetUniqueID() == Level::Instance()->iGetLeftController()->GetUniqueID() ||
-						 collider->mObject->GetUniqueID() == Level::Instance()->iGetRightController()->GetUniqueID())))
+							collider->mObject->GetUniqueID() == Level::Instance()->iGetRightController()->GetUniqueID())))
 					{
 						collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
 						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);

@@ -180,30 +180,30 @@ namespace Epoch
 		mObject->GetTransform().GetMatrix().fourth = _newPos;
 	}
 
-	MeshCollider::MeshCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, char * _path)
-	{
-		mObject = _obj;
-		mType = eCOMPONENT_COLLIDER;
-		mColliderType = eCOLLIDER_Mesh;
-		mGravity = _gravity;
-		mVelocity = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-		mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-		mTotalForce = mGravity;
-		mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-		mShouldMove = _move;
-		mMass = _mass;
-		mDrag = _drag;
-		if (mMass == 0)
-			mInvMass = 0;
-		else
-			mInvMass = 1 / mMass;
-		mWeight = mGravity * mMass;
-		mRewind = false;
-		mElasticity = _elasticity;
-		mStaticFriction = _staticFriction;
-		mKineticFriction = _kineticFriction;
-		mMesh = &Mesh(_path);
-	}
+	//MeshCollider::MeshCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, char * _path)
+	//{
+	//	mObject = _obj;
+	//	mType = eCOMPONENT_COLLIDER;
+	//	mColliderType = eCOLLIDER_Mesh;
+	//	mGravity = _gravity;
+	//	mVelocity = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+	//	mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+	//	mTotalForce = mGravity;
+	//	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+	//	mShouldMove = _move;
+	//	mMass = _mass;
+	//	mDrag = _drag;
+	//	if (mMass == 0)
+	//		mInvMass = 0;
+	//	else
+	//		mInvMass = 1 / mMass;
+	//	mWeight = mGravity * mMass;
+	//	mRewind = false;
+	//	mElasticity = _elasticity;
+	//	mStaticFriction = _staticFriction;
+	//	mKineticFriction = _kineticFriction;
+	//	mMesh = &Mesh(_path);
+	//}
 
 	SphereCollider::SphereCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _radius)
 	{

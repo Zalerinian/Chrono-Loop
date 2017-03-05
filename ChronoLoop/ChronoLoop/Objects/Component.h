@@ -125,6 +125,34 @@ namespace Epoch
 	//	Mesh* mMesh;
 	//};
 
+	class SphereCollider : public Collider
+	{
+	public:
+		SphereCollider() {}
+		SphereCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _radius);
+		SphereCollider(vec4f _pos, float _rad) { mCenter = _pos; mRadius = _rad; };
+		vec4f mCenter;
+		float mRadius;
+		virtual void SetPos(const vec4f& _other);
+	};
+
+	class PlaneCollider : public Collider
+	{
+	public:
+		PlaneCollider() {}
+		PlaneCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _offset, vec4f _norm);
+		PlaneCollider(vec4f _norm, float _offset) { mNormal = _norm; mOffset = _offset; };
+		vec4f mNormal, mMin, mMax;
+		float mOffset;
+	};
+
+	class Frustrum : public Collider
+	{
+		Frustrum() {}
+		PlaneCollider mFaces[6];
+		vec4f mPoints[8];
+	};
+
 	class CubeCollider : public Collider
 	{
 	public:
@@ -160,34 +188,6 @@ namespace Epoch
 		ControllerCollider(BaseObject* _obj, vec4f _min, vec4f _max, bool _left);
 		bool mLeft;
 		std::unordered_set<Collider*> mHitting;
-	};
-
-	class SphereCollider : public Collider
-	{
-	public:
-		SphereCollider() {}
-		SphereCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _radius);
-		SphereCollider(vec4f _pos, float _rad) { mCenter = _pos; mRadius = _rad; };
-		vec4f mCenter;
-		float mRadius;
-		virtual void SetPos(const vec4f& _other);
-	};
-
-	class PlaneCollider : public Collider
-	{
-	public:
-		PlaneCollider() {}
-		PlaneCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _offset, vec4f _norm);
-		PlaneCollider(vec4f _norm, float _offset) { mNormal = _norm; mOffset = _offset; };
-		vec4f mNormal, mMin, mMax;
-		float mOffset;
-	};
-
-	class Frustrum : public Collider
-	{
-		Frustrum() {}
-		PlaneCollider mFaces[6];
-		vec4f mPoints[8];
 	};
 
 	/*

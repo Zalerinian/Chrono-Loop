@@ -41,7 +41,6 @@ namespace Epoch
 		bool			MovingSphereToTriangle(vec4f & _vert0, vec4f & _vert1, vec4f & _vert2, vec4f & _normal, vec4f & _start, vec4f & _dir, float _radius, float & _time, vec4f & _outNormal);
 		bool			MovingSphereToMesh(vec4f & _start, vec4f & _dir, float _radius, Mesh* mesh, float & _time, vec4f & _outNormal);
 
-		void			BuildPlane(PlaneCollider& _plane, vec4f& _pointA, vec4f& _pointB, vec4f& _pointC);
 		int				PointToPlane(PlaneCollider& _plane, vec4f& _point);
 		int				SphereToPlane(PlaneCollider& _plane, SphereCollider& _sphere);
 		int				AabbToPlane(PlaneCollider& _plane, CubeCollider& _aabb);
@@ -58,9 +57,8 @@ namespace Epoch
 		vec4f			CalcAcceleration(vec4f& _force, float _mass);
 		vec4f			CalcVelocity(vec4f& _vel, vec4f& _accel, float _time);
 		vec4f			CalcPosition(vec4f& _pos, vec4f& _vel, float _time);
-		void			CalcReaction(Collider& _col1, Collider& _col2, float _time);
-		void			PlaneColReaction(Collider& _col, Collider& _plane);
 		void			CalcFriction(Collider& _col, vec4f& _norm, float _static, float _kinetic);
+		void test(float _time);
 	};
 
 }
