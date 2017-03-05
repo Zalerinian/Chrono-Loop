@@ -21,7 +21,7 @@ namespace Epoch {
 				Controller &controller = VRInputManager::GetInstance().GetController(mControllerRole);
 				
 				if (controller.GetTouch(vr::k_EButton_SteamVR_Touchpad)) {
-					SystemLogger::Debug() << "Touchpad touched." << std::endl;
+					
 				}
 				if (mInitialContactPoint == mInvalid) {
 					// There was no initial point
