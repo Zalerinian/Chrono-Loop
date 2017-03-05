@@ -117,27 +117,20 @@ namespace Epoch
 		virtual void SetPos(const vec4f& _newPos);
 	};
 
-	class MeshCollider : public Collider
-	{
-	public:
-		MeshCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, char* _path);
-		Mesh* mMesh;
-	};
-
-	class SphereCollider : public Collider
-	{
-	public:
-		SphereCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _radius);
-		vec4f mCenter;
-		float mRadius;
-		virtual void SetPos(const vec4f& _other);
-	};
+	//class MeshCollider : public Collider
+	//{
+	//public:
+	//	MeshCollider() {}
+	//	MeshCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, char* _path);
+	//	Mesh* mMesh;
+	//};
 
 	class CubeCollider : public Collider
 	{
 	public:
 		CubeCollider() {}
 		CubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec4f _min, vec4f _max);
+		CubeCollider(vec4f _min, vec4f _max) { mMin = _min; mMax = _max; };
 		vec4f mMin, mMax, mMinOffset, mMaxOffset;
 		virtual void SetPos(const vec4f& _newPos);
 	};
@@ -151,28 +144,50 @@ namespace Epoch
 		vec4f mAxis[3];
 	};
 
-	class PlaneCollider : public Collider
-	{
-	public:
-		PlaneCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _offset, vec4f _norm);
-		vec4f mNormal, mMin, mMax;
-		float mOffset;
-	};
-
 	class ButtonCollider : public CubeCollider
 	{
 	public:
+		ButtonCollider() {}
 		ButtonCollider(BaseObject* _obj, vec4f _min, vec4f _max, float _mass, float normForce, vec4f _pushNormal);
 		vec4f mPushNormal;
-		Plane mUpperBound, mLowerBound;
+		PlaneCollider mUpperBound, mLowerBound;
 	};
 
 	class ControllerCollider : public CubeCollider
 	{
 	public:
+		ControllerCollider() {}
 		ControllerCollider(BaseObject* _obj, vec4f _min, vec4f _max, bool _left);
 		bool mLeft;
 		std::unordered_set<Collider*> mHitting;
+	};
+
+	class SphereCollider : public Collider
+	{
+	public:
+		SphereCollider() {}
+		SphereCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _radius);
+		SphereCollider(vec4f _pos, float _rad) { mCenter = _pos; mRadius = _rad; };
+		vec4f mCenter;
+		float mRadius;
+		virtual void SetPos(const vec4f& _other);
+	};
+
+	class PlaneCollider : public Collider
+	{
+	public:
+		PlaneCollider() {}
+		PlaneCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _offset, vec4f _norm);
+		PlaneCollider(vec4f _norm, float _offset) { mNormal = _norm; mOffset = _offset; };
+		vec4f mNormal, mMin, mMax;
+		float mOffset;
+	};
+
+	class Frustrum : public Collider
+	{
+		Frustrum() {}
+		PlaneCollider mFaces[6];
+		vec4f mPoints[8];
 	};
 
 	/*

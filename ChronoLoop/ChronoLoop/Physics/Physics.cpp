@@ -255,7 +255,7 @@ namespace Epoch
 
 #pragma region PLANE_COLISION
 
-	void Physics::BuildPlane(Plane& _plane, vec4f& _pointA, vec4f& _pointB, vec4f& _pointC)
+	void Physics::BuildPlane(PlaneCollider& _plane, vec4f& _pointA, vec4f& _pointB, vec4f& _pointC)
 	{
 		_plane.mNormal = (_pointA - _pointC) ^ (_pointB - _pointA);
 		_plane.mNormal.Normalize();
@@ -264,7 +264,7 @@ namespace Epoch
 
 	//Returns 1 if on or in front of plane
 	//Returns 2 if behind plane
-	int Physics::PointToPlane(Plane& _plane, vec4f& _point)
+	int Physics::PointToPlane(PlaneCollider& _plane, vec4f& _point)
 	{
 		float pOffset = _point * _plane.mNormal;
 		if (pOffset >= _plane.mOffset)
@@ -275,9 +275,9 @@ namespace Epoch
 	//Returns 1 if in front of plane
 	//Returns 2 if behind plane
 	//Returns 3 if intersecting plane
-	int Physics::SphereToPlane(Plane& _plane, Sphere& _sphere)
+	int Physics::SphereToPlane(PlaneCollider& _plane, SphereCollider& _sphere)
 	{
-		float pOffset = _sphere.mPosition * _plane.mNormal;
+		float pOffset = _sphere.mCenter * _plane.mNormal;
 		if (pOffset - _plane.mOffset > _sphere.mRadius)
 			return 1;
 		else if (pOffset - _plane.mOffset < -_sphere.mRadius)
@@ -288,13 +288,13 @@ namespace Epoch
 	//Returns 1 if in front of plane.
 	//Returns 2 if behind plane.
 	//Returns 3 if intersecting plane.
-	int Physics::AabbToPlane(Plane& _plane, AABB& _aabb)
+	int Physics::AabbToPlane(PlaneCollider& _plane, CubeCollider& _aabb)
 	{
 		vec4f center = (_aabb.mMax + _aabb.mMin) * 0.5f;
 		float pOffset = center * _plane.mNormal - _plane.mOffset;
 		vec4f E = _aabb.mMax - center;
 		float r = E * _plane.mNormal;
-		Sphere s(center, r);
+		SphereCollider s(center, r);
 		return SphereToPlane(_plane, s);
 	}
 
@@ -367,7 +367,7 @@ namespace Epoch
 
 #pragma region MISC_COLLISION
 
-	bool Physics::AABBtoAABB(AABB& _aabb1, AABB& _aabb2)
+	bool Physics::AABBtoAABB(CubeCollider& _aabb1, CubeCollider& _aabb2)
 	{
 		if (_aabb1.mMax.x < _aabb2.mMin.x || _aabb1.mMin.x > _aabb2.mMax.x)
 			return false;
@@ -381,62 +381,62 @@ namespace Epoch
 		return true;
 	}
 
-	bool Physics::SphereToSphere(Sphere& _sphere1, Sphere& _sphere2)
+	bool Physics::SphereToSphere(SphereCollider& _sphere1, SphereCollider& _sphere2)
 	{
-		vec4f pos = _sphere1.mPosition - _sphere2.mPosition;
+		vec4f pos = _sphere1.mCenter - _sphere2.mCenter;
 		float distance = pos.x * pos.x + pos.y * pos.y + pos.z * pos.z;
 		float minDist = _sphere1.mRadius + _sphere2.mRadius;
 
 		return distance <= (minDist * minDist);
 	}
 
-	bool Physics::SphereToAABB(Sphere& _sphere, AABB& _aabb)
+	bool Physics::SphereToAABB(SphereCollider& _sphere, CubeCollider& _aabb)
 	{
 		float X, Y, Z;
 
-		if (_sphere.mPosition.x < _aabb.mMin.x)
+		if (_sphere.mCenter.x < _aabb.mMin.x)
 			X = _aabb.mMin.x;
-		else if (_sphere.mPosition.x > _aabb.mMax.x)
+		else if (_sphere.mCenter.x > _aabb.mMax.x)
 			X = _aabb.mMax.x;
 		else
-			X = _sphere.mPosition.x;
+			X = _sphere.mCenter.x;
 
-		if (_sphere.mPosition.y < _aabb.mMin.y)
+		if (_sphere.mCenter.y < _aabb.mMin.y)
 			Y = _aabb.mMin.y;
-		else if (_sphere.mPosition.y > _aabb.mMax.y)
+		else if (_sphere.mCenter.y > _aabb.mMax.y)
 			Y = _aabb.mMax.y;
 		else
-			Y = _sphere.mPosition.y;
+			Y = _sphere.mCenter.y;
 
-		if (_sphere.mPosition.z < _aabb.mMin.z)
+		if (_sphere.mCenter.z < _aabb.mMin.z)
 			Z = _aabb.mMin.z;
-		else if (_sphere.mPosition.z > _aabb.mMax.z)
+		else if (_sphere.mCenter.z > _aabb.mMax.z)
 			Z = _aabb.mMax.z;
 		else
-			Z = _sphere.mPosition.z;
+			Z = _sphere.mCenter.z;
 
 		vec4f point = { X, Y, Z, 1.0f };
 
-		return (fabsf((point.x - _sphere.mPosition.x)) < _sphere.mRadius &&
-						fabsf((point.y - _sphere.mPosition.y)) < _sphere.mRadius &&
-						fabsf((point.z - _sphere.mPosition.z)) < _sphere.mRadius);
+		return (fabsf((point.x - _sphere.mCenter.x)) < _sphere.mRadius &&
+						fabsf((point.y - _sphere.mCenter.y)) < _sphere.mRadius &&
+						fabsf((point.z - _sphere.mCenter.z)) < _sphere.mRadius);
 	}
 
-	bool Physics::SphereToTriangle(Sphere& _sphere, Triangle& _tri, vec4f& _displacement)
+	bool Physics::SphereToTriangle(SphereCollider& _sphere, Triangle& _tri, vec4f& _displacement)
 	{
-		float offset = (_sphere.mPosition - _tri.Vertex[0]) * _tri.Normal;
+		float offset = (_sphere.mCenter - _tri.Vertex[0]) * _tri.Normal;
 		vec4f scaled = _tri.Normal * offset;
-		vec4f projected = _sphere.mPosition - scaled;
+		vec4f projected = _sphere.mCenter - scaled;
 		vec4f edge0 = _tri.Vertex[1] - _tri.Vertex[0];
 		vec4f edge1 = _tri.Vertex[2] - _tri.Vertex[1];
 		vec4f edge2 = _tri.Vertex[0] - _tri.Vertex[2];
-		vec4f norm0, norm1, norm2, Cpt = _sphere.mPosition;
+		vec4f norm0, norm1, norm2, Cpt = _sphere.mCenter;
 		norm0 = edge0 ^ _tri.Normal;
 		norm1 = edge1 ^ _tri.Normal;
 		norm2 = edge2 ^ _tri.Normal;
-		Plane plane0(norm0, _tri.Vertex[0] * norm0);
-		Plane plane1(norm1, _tri.Vertex[1] * norm1);
-		Plane plane2(norm2, _tri.Vertex[2] * norm2);
+		PlaneCollider plane0(norm0, _tri.Vertex[0] * norm0);
+		PlaneCollider plane1(norm1, _tri.Vertex[1] * norm1);
+		PlaneCollider plane2(norm2, _tri.Vertex[2] * norm2);
 
 		if (PointToPlane(plane0, projected) == 1 &&
 				PointToPlane(plane1, projected) == 1 &&
@@ -484,9 +484,9 @@ namespace Epoch
 				Cpt = c2;
 		}
 
-		if ((Cpt - _sphere.mPosition) * (Cpt - _sphere.mPosition) < (_sphere.mRadius * _sphere.mRadius))
+		if ((Cpt - _sphere.mCenter) * (Cpt - _sphere.mCenter) < (_sphere.mRadius * _sphere.mRadius))
 		{
-			vec4f v = _sphere.mPosition - Cpt;
+			vec4f v = _sphere.mCenter - Cpt;
 			float dist = v.Magnitude3();
 			vec4f n = v.Normalize();
 			_displacement = n * (_sphere.mRadius - dist);
@@ -596,7 +596,7 @@ namespace Epoch
 
 				if (collider->mShouldMove && collider->mColliderType == Collider::eCOLLIDER_Sphere)//Check SphereCollider's collision with other objects
 				{
-					Sphere s1(((SphereCollider*)collider)->GetPos(), ((SphereCollider*)collider)->mRadius);
+					SphereCollider s1(((SphereCollider*)collider)->GetPos(), ((SphereCollider*)collider)->mRadius);
 					for (int j = 0; j < objs; ++j)
 					{
 						if (mObjects[j] != mObjects[i])
@@ -615,7 +615,7 @@ namespace Epoch
 								//}
 								if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
 								{
-									Sphere s2(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
+									SphereCollider s2(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
 									if (SphereToSphere(s1, s2))
 									{
 										for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
@@ -627,7 +627,7 @@ namespace Epoch
 								}
 								else if (otherCol->mColliderType == Collider::eCOLLIDER_Cube)
 								{
-									AABB aabb(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
+									CubeCollider aabb(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
 									if (SphereToAABB(s1, aabb))
 									{
 										for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
@@ -639,7 +639,7 @@ namespace Epoch
 								}
 								else if (otherCol->mColliderType == Collider::eCOLLIDER_Plane)
 								{
-									Plane plane(((PlaneCollider*)otherCol)->mNormal, ((PlaneCollider*)otherCol)->mOffset);
+									PlaneCollider plane(((PlaneCollider*)otherCol)->mNormal, ((PlaneCollider*)otherCol)->mOffset);
 									int result = SphereToPlane(plane, s1);
 									if (result == 2)//behind plane
 									{
@@ -680,7 +680,7 @@ namespace Epoch
 				}
 				else if (collider->mShouldMove && collider->mColliderType == Collider::eCOLLIDER_Cube)//Check CubeCollider's collision with other objects
 				{
-					AABB aabb1(((CubeCollider*)collider)->mMin, ((CubeCollider*)collider)->mMax);
+					CubeCollider aabb1(((CubeCollider*)collider)->mMin, ((CubeCollider*)collider)->mMax);
 					for (int j = 0; j < objs; ++j)
 					{
 						if (mObjects[j] != mObjects[i])
@@ -691,7 +691,7 @@ namespace Epoch
 								otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
 								if (otherCol->mColliderType == Collider::eCOLLIDER_Cube)
 								{
-									AABB aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
+									CubeCollider aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
 									//SystemLogger::GetLog() << "Collision State: " << collider->mColliding << std::endl;
 									if (collider->mShouldMove && AABBtoAABB(aabb1, aabb2))
 									{
@@ -704,7 +704,7 @@ namespace Epoch
 								}
 								else if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
 								{
-									Sphere s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
+									SphereCollider s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
 									if (SphereToAABB(s1, aabb1))
 									{
 										for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
@@ -718,7 +718,7 @@ namespace Epoch
 								{
 									if (collider->mShouldMove)
 									{
-										Plane plane(((PlaneCollider*)otherCol)->mNormal, ((PlaneCollider*)otherCol)->mOffset);
+										PlaneCollider plane(((PlaneCollider*)otherCol)->mNormal, ((PlaneCollider*)otherCol)->mOffset);
 										int result = AabbToPlane(plane, aabb1);
 										if (result == 2)//behind plane
 										{
@@ -758,8 +758,7 @@ namespace Epoch
 				}
 				else if (collider->mColliderType == Collider::eCOLLIDER_Button)//Check ButtonCollider's collision with other objects/controller
 				{
-					AABB aabb1(((ButtonCollider*)collider)->mMin, ((ButtonCollider*)collider)->mMax);
-
+					CubeCollider aabb1(((ButtonCollider*)collider)->mMin, ((ButtonCollider*)collider)->mMax);
 					if (AabbToPlane(((ButtonCollider*)collider)->mUpperBound, aabb1) != 2)
 					{
 						collider->mVelocity = { 0,0,0,0 };
@@ -777,7 +776,7 @@ namespace Epoch
 								otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
 								if (otherCol->mColliderType == Collider::eCOLLIDER_Cube || otherCol->mColliderType == Collider::eCOLLIDER_Controller)
 								{
-									AABB aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
+									CubeCollider aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
 									if (collider->mShouldMove && (AabbToPlane(((ButtonCollider*)collider)->mLowerBound, aabb1) == 1) && AABBtoAABB(aabb1, aabb2))
 									{
 										for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
@@ -789,7 +788,7 @@ namespace Epoch
 								}
 								else if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
 								{
-									Sphere s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
+									SphereCollider s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
 									if (collider->mShouldMove && (AabbToPlane(((ButtonCollider*)collider)->mLowerBound, aabb1) == 1) && SphereToAABB(s1, aabb1))
 									{
 										for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
@@ -812,7 +811,7 @@ namespace Epoch
 				}
 				else if (collider->mColliderType == Collider::eCOLLIDER_Controller)//Update ControllerCollider position, do not apply physics to player
 				{
-					AABB aabb1(((CubeCollider*)collider)->mMin, ((CubeCollider*)collider)->mMax);
+					CubeCollider aabb1(((CubeCollider*)collider)->mMin, ((CubeCollider*)collider)->mMax);
 					for (int j = 0; j < objs; ++j)
 					{
 						if (mObjects[j] != mObjects[i])
@@ -823,7 +822,7 @@ namespace Epoch
 								otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
 								if (otherCol->mShouldMove && otherCol->mColliderType == Collider::eCOLLIDER_Cube)
 								{
-									AABB aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
+									CubeCollider aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
 									if (AABBtoAABB(aabb1, aabb2))
 										((ControllerCollider*)collider)->mHitting.insert(otherCol);
 									else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
@@ -831,7 +830,7 @@ namespace Epoch
 								}
 								else if (otherCol->mShouldMove && otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
 								{
-									Sphere s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
+									SphereCollider s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
 									if (SphereToAABB(s1, aabb1))
 										((ControllerCollider*)collider)->mHitting.insert(otherCol);
 									else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
