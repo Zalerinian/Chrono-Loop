@@ -34,10 +34,20 @@ namespace Epoch
 						if (fabsf(move.x) < 0.1f && fabsf(move.y) < 0.1f && fabsf(move.z) < 0.1f)
 							return;
 
-						vec4f normalVel = norm * -(_col.mVelocity * norm);
-						_col.mVelocity += normalVel * (1 + _col.mElasticity);
+						if (_col.mVelocity.y < 0.3f)
+						{
+							_col.mVelocity.y = 0;
+							_col.mAcceleration.y = 0;
+							_col.mTotalForce.y = 0;
+							_col.mDragForce.y = 0;
+						}
+						else
+						{
+							vec4f normalVel = norm * -(_col.mVelocity * norm);
+							_col.mVelocity += normalVel * (1 + _col.mElasticity);
+						}
 
-						Physics::Instance()->CalcFriction(_col, _other);
+						Physics::Instance()->CalcFriction(_col, ((CubeCollider*)&_other)->mMax, _other.mStaticFriction, _other.mKineticFriction);
 
 						if (_col.mColliderType == Collider::eCOLLIDER_Cube)
 						{

@@ -136,7 +136,7 @@ void Update() {
 	///*///////////////////////Using this to test physics//////////////////
 
 	Transform transform;
-	matrix4 mat1 = matrix4::CreateTranslation(0, 5, 0) * matrix4::CreateScale(0.3f, 0.3f, 0.3f);
+	matrix4 mat1 = matrix4::CreateTranslation(0, 0, 0) * matrix4::CreateScale(0.3f, 0.3f, 0.3f);
 	transform.SetMatrix(mat1);
 	BaseObject* PhysicsBox = Pool::Instance()->iGetObject()->Reset("aabb", transform);//new BaseObject("aabb", transform);
 	CubeCollider *BoxCollider = new CubeCollider(PhysicsBox, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.0f, 0.1f, 0.1f, 0.1f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
@@ -158,7 +158,7 @@ void Update() {
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::PLAYBOUNCEEFFECTS);
 
 	Transform transformBox;
-	matrix4 matBox = matrix4::CreateTranslation(2, 5, 0) * matrix4::CreateScale(0.3f, 0.3f, 0.3f);
+	matrix4 matBox = matrix4::CreateTranslation(0, 5, 0) * matrix4::CreateScale(0.3f, 0.3f, 0.3f);
 	transformBox.SetMatrix(matBox);
 	BaseObject* PhysicsBox2 = Pool::Instance()->iGetObject()->Reset("aabb2", transformBox);//new BaseObject("aabb", transform);
 	CubeCollider *BoxCollider2 = new CubeCollider(PhysicsBox2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 5.0f, 0.4f, 0.1f, 0.1f, 0.01f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
