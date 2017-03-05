@@ -538,13 +538,12 @@ namespace Epoch
 		_col.mVelocity = (normalVel * -_col.mElasticity) + (_col.mVelocity - normalVel);
 	}
 
-	void Physics::CalcFriction(Collider& _col, Collider& _other)
+	void Physics::CalcFriction(Collider& _col, vec4f& _norm, float _static, float _kinetic)
 	{
-		PlaneCollider* plane = ((PlaneCollider*)&_other);
-		vec4f tangentForce = _col.mForces - (plane->mNormal * (_col.mForces * plane->mNormal));
+		vec4f tangentForce = _col.mForces - (_norm * (_col.mForces * _norm));
 		float staticFriction = 0;
-		float avgStatic = _col.mStaticFriction < _other.mStaticFriction ? _other.mStaticFriction : _col.mStaticFriction;
-		float avgKinetic = _col.mKineticFriction < _other.mKineticFriction ? _other.mKineticFriction : _col.mKineticFriction;
+		float avgStatic = _col.mStaticFriction < _static ? _static : _col.mStaticFriction;
+		float avgKinetic = _col.mKineticFriction < _kinetic ? _kinetic : _col.mKineticFriction;
 
 		if (!_col.mRewind)
 		{
@@ -650,7 +649,7 @@ namespace Epoch
 											vec4f pos = collider->GetPos();
 											collider->SetPos(vec4f(pos.x, otherCol->GetPos().y + ((CubeCollider*)collider)->mMinOffset.y, pos.z, 1));
 
-											CalcFriction(*collider, *otherCol);
+											CalcFriction(*collider, plane.mNormal, otherCol->mStaticFriction, otherCol->mKineticFriction);
 											for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
 											{
 												((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
@@ -660,7 +659,7 @@ namespace Epoch
 									}
 									else if (result == 3)// intersecting plane
 									{
-										CalcFriction(*collider, *otherCol);
+										CalcFriction(*collider, plane.mNormal, otherCol->mStaticFriction, otherCol->mKineticFriction);
 										for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
 										{
 											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
@@ -728,7 +727,7 @@ namespace Epoch
 												vec4f pos = collider->GetPos();
 												collider->SetPos(vec4f(pos.x, otherCol->GetPos().y + ((CubeCollider*)collider)->mMinOffset.y, pos.z, 1));
 
-												CalcFriction(*collider, *otherCol);
+												CalcFriction(*collider, plane.mNormal, otherCol->mStaticFriction, otherCol->mKineticFriction);
 												for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
 												{
 													((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
@@ -738,7 +737,7 @@ namespace Epoch
 										}
 										if (result == 3)// intersecting plane
 										{
-											CalcFriction(*collider, *otherCol);
+											CalcFriction(*collider, plane.mNormal, otherCol->mStaticFriction, otherCol->mKineticFriction);
 											for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
 											{
 												((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
