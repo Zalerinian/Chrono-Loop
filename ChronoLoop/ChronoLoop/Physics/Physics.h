@@ -89,7 +89,7 @@ namespace Epoch
 		vec4f			CalcPosition(vec4f& _pos, vec4f& _vel, float _time);
 		void			CalcReaction(Collider& _col1, Collider& _col2, float _time);
 		void			PlaneColReaction(Collider& _col, Collider& _plane);
-		void			CalcFriction(Collider& _col, Collider& _other);
+		void			CalcFriction(Collider& _col, vec4f& _norm, float _static, float _kinetic);
 		//vec4f AddForce(vec4f _pos, vec4f _force, float _time);
 	};
 
