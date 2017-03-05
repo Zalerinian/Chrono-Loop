@@ -17,11 +17,24 @@ namespace Epoch {
 		unsigned int mSize, mLimit = 9;
 
 	public:
+		template <class T>
+		class Iterator {
+			Node<T>* mNode;
+			Iterator<T>& operator++() { mNode = mNode->mNext; return *this; }; // Prefix operator.
+			Iterator<T>& operator--(); // Prefix operator.
+			Iterator<T>& operator++(int); // Postfix operator.
+			Iterator<T>& operator--(int); // Postfix operator.
+			T& operator*();
+			T* operator->();
+		};
+
 		bool IsFull();
 		unsigned int GetSize();
 		unsigned int GetLimit();
 		void SetLimit(unsigned int _size);
 		void AddHead(T _node);
+		T& GetHead();
+		T& GetTail();
 		T& operator[](unsigned int _index);
 		void Clear();
 		~LimitedList();
@@ -77,6 +90,16 @@ namespace Epoch {
 		}
 	}
 
+	template<class T>
+	inline T & LimitedList<T>::GetHead() {
+		return mHead->data;
+	}
+
+	template<class T>
+	inline T & LimitedList<T>::GetTail() {
+		return mTail->data;
+	}
+
 
 	template <class T>
 	T& LimitedList<T>::operator[](unsigned int _index) {
@@ -102,5 +125,11 @@ namespace Epoch {
 		Clear();
 	}
 
+	//template<class T>
+	//template<class T>
+	//LimitedList<T>::Iterator<T>& LimitedList<T>::Iterator<T>::operator--() {
+	//	// TODO: insert return statement here
+	//	return *this;
+	//}
 }
 

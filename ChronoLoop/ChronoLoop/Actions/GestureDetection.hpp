@@ -10,28 +10,28 @@ namespace Epoch {
 		ControllerType mControllerRole = eControllerType_Primary;
 		bool mIsHeld = false;
 		char mHolder = -1;
-		vec2f mInitialContactPoint, mZero, mInvalid;
+		const vec2f mInvalid;
+		vec2f mInitialContactPoint;
 		LimitedList<vec2f> mList;
 
-		GestureDetection(ControllerType _t) : mControllerRole(_t), mInvalid(-2, -2), mInitialContactPoint(-2, -2) {}
+		GestureDetection(ControllerType _t) : mControllerRole(_t), mInvalid(2, 2), mInitialContactPoint(2, 2) {}
 
 		virtual void Update() {
 			if (VRInputManager::GetInstance().IsVREnabled()) {
 
 				Controller &controller = VRInputManager::GetInstance().GetController(mControllerRole);
 				
+				if (mInitialContactPoint != mInvalid && !controller.GetTouch(vr::k_EButton_SteamVR_Touchpad)) {
+					mInitialContactPoint = mInvalid;
+					mList.Clear();
+				}
 				if (controller.GetTouch(vr::k_EButton_SteamVR_Touchpad)) {
-					
-				}
-				if (mInitialContactPoint == mInvalid) {
-					// There was no initial point
-				}
-				if (!mIsHeld) {
-					// Check to see if this controller is being touched appropriately.
-					if (controller.GetAxis() != mZero) {
-						// The controller touchpad is being touched
-						mIsHeld = true;
+					vec2f contactPoint = controller.GetAxis(vr::k_EButton_SteamVR_Touchpad);
+					mList.AddHead(contactPoint);
+					if (mInitialContactPoint == mInvalid) {
+						mInitialContactPoint = contactPoint;
 					}
+
 				}
 			}
 

@@ -50,14 +50,14 @@ namespace Epoch {
 		}
 #endif
 
-		mIndexOffset = IndexBufferManager::Instance().AddToBuffer(_mesh.GetName(), _mesh.GetIndicies(), (unsigned int)_mesh.IndicieSize());
-		mVertexOffset = VertexBufferManager::Instance().GetInternalBuffer<VertexPosNormTex>()->AddVerts(_mesh.GetName(), _mesh.GetVerts(), (unsigned int)_mesh.VertSize());
+		mIndexOffset = IndexBufferManager::GetInstance().AddToBuffer(_mesh.GetName(), _mesh.GetIndicies(), (unsigned int)_mesh.IndicieSize());
+		mVertexOffset = VertexBufferManager::Instance().GetVertexBuffer<VertexPosNormTex>()->AddVerts(_mesh.GetName(), _mesh.GetVerts(), (unsigned int)_mesh.VertSize());
 
 
 		ID3D11Buffer *tBuffer;
 		mIndexBuffer = nullptr;
 		mVertexBuffer = nullptr;
-		auto device = Renderer::Instance()->iGetDevice().Get();
+		auto device = Renderer::Instance()->GetDevice().Get();
 		D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
 		auto verts = _mesh.GetVerts();
 		vertexBufferData.pSysMem = verts;
@@ -122,10 +122,10 @@ namespace Epoch {
 
 	void RenderShape::Render() {
 		UINT stride = sizeof(VertexPosNormTex), offset = 0;
-		ID3D11Buffer * vBuffer = VertexBufferManager::GetBuffer(eVERT_POSNORMTEX);
-		Renderer::Instance()->iGetContext()->IASetIndexBuffer(IndexBufferManager::GetBuffer(), DXGI_FORMAT_R32_UINT, 0);
-		Renderer::Instance()->iGetContext()->IASetVertexBuffers(0, 1, &vBuffer, &stride, &offset);
-		Renderer::Instance()->iGetContext()->DrawIndexedInstanced(mIndexCount, 1, mIndexOffset, mVertexOffset, 0);
+		Microsoft::WRL::ComPtr<ID3D11Buffer> vBuffer = VertexBufferManager::GetBuffer(eVERT_POSNORMTEX);
+		Renderer::Instance()->GetContext()->IASetIndexBuffer(IndexBufferManager::GetBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+		Renderer::Instance()->GetContext()->IASetVertexBuffers(0, 1, vBuffer.GetAddressOf(), &stride, &offset);
+		Renderer::Instance()->GetContext()->DrawIndexedInstanced(mIndexCount, 1, mIndexOffset, mVertexOffset, 0);
 	}
 
 }

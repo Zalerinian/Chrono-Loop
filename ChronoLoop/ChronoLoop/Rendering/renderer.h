@@ -88,13 +88,13 @@ namespace Epoch {
 
 		//Draws text in 0 to 1 space
 
-		inline Microsoft::WRL::ComPtr<ID3D11Device> iGetDevice() { return mDevice; }
-		inline Microsoft::WRL::ComPtr<ID3D11DeviceContext> iGetContext() { return mContext; }
-		inline Microsoft::WRL::ComPtr<IDXGISwapChain> iGetChain() { return mChain; }
-		inline Microsoft::WRL::ComPtr<IDXGIFactory1> iGetFactory() { return mFactory; }
-		inline Microsoft::WRL::ComPtr<ID3D11RenderTargetView> iGetRTView() { return mMainView; }
-		inline Microsoft::WRL::ComPtr<ID3D11DepthStencilView> iGetDSView() { return mDSView; }
-		inline Microsoft::WRL::ComPtr<ID3D11Texture2D> iGetRTViewTexture() { return mMainViewTexture; }
-		inline HWND iGetWindow() { return mWindow; }
+		inline Microsoft::WRL::ComPtr<ID3D11Device> GetDevice() { return mDevice; }
+		inline Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetContext() { return mContext; }
+		inline Microsoft::WRL::ComPtr<IDXGISwapChain> GetChain() { return mChain; }
+		inline Microsoft::WRL::ComPtr<IDXGIFactory1> GetFactory() { return mFactory; }
+		inline Microsoft::WRL::ComPtr<ID3D11RenderTargetView> GetRTView() { return mMainView; }
+		inline Microsoft::WRL::ComPtr<ID3D11DepthStencilView> GetDSView() { return mDSView; }
+		inline Microsoft::WRL::ComPtr<ID3D11Texture2D> GetRTViewTexture() { return mMainViewTexture; }
+		inline HWND GetWindow() { return mWindow; }
 	};
 }

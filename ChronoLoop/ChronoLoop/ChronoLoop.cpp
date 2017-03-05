@@ -88,7 +88,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 		return 1;
 	}
 
-	Microsoft::WRL::ComPtr<ID3D11Device> renderingDevice = Renderer::Instance()->iGetDevice();
+	Microsoft::WRL::ComPtr<ID3D11Device> renderingDevice = Renderer::Instance()->GetDevice();
 
 	// Update everything
 	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count());
@@ -423,7 +423,7 @@ void Update() {
 	//AddedTextureDesc.CPUAccessFlags = 0;
 	//AddedTextureDesc.MiscFlags = 0;
 	//ID3D11Texture2D *AddedTex;
-	//(*Renderer::Instance()->iGetDevice())->CreateTexture2D(&AddedTextureDesc, nullptr, &AddedTex);
+	//(*Renderer::Instance()->GetDevice())->CreateTexture2D(&AddedTextureDesc, nullptr, &AddedTex);
 	//std::string AddedTextureName = "Bootleg";
 	//TextureManager::Instance()->iAddTexture2D(AddedTextureName, AddedTex, nullptr);
 	//planeObj->AddTexture(AddedTextureName.c_str(), eTEX_CUSTOM1);
@@ -445,7 +445,7 @@ void Update() {
 			DispatchMessage(&msg);
 		}
 		else {
-			if (GetAsyncKeyState(VK_ESCAPE) && GetActiveWindow() == Renderer::Instance()->iGetWindow()) {
+			if (GetAsyncKeyState(VK_ESCAPE) && GetActiveWindow() == Renderer::Instance()->GetWindow()) {
 				break;
 			}
 			Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false, (void*)nullptr));

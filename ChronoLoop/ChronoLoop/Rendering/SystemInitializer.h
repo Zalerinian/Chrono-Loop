@@ -6,9 +6,10 @@
 #include "TextureManager.h"
 #include "../Input/VRInputManager.h"
 #include "../Core/TimeManager.h"
-#include "..\Physics\Physics.h"
+#include "../Physics/Physics.h"
 #include "../Core/Pool.h"
-
+#include "../Rendering/IndexBufferManager.h"
+#include "../Rendering/VertexBufferManager.h"
 
 namespace Epoch {
 	bool InitializeSystems(HWND _Window, unsigned int _width, unsigned int _height,
@@ -23,10 +24,16 @@ namespace Epoch {
 		ShaderManager::Instance();
 		Pool::Initialize();
 		Physics::Instance();
+		IndexBufferManager::GetInstance();
+		VertexBufferManager::Instance();
 		return true;
 	}
 
 	bool ShutdownSystems() {
+		VertexBufferManager::Shutdown();
+		IndexBufferManager::DestroyInstance();
+		Physics::Destroy();
+		Pool::DestroyInstance();
 		ShaderManager::DestroyInstance();
 		VRInputManager::DestroyInstance();
 		TextureManager::DestroyInstance();
@@ -34,8 +41,6 @@ namespace Epoch {
 		TimeManager::Destroy();
 		RasterizerStateManager::DestroyInstance();
 		Renderer::DestroyInstance();
-		Pool::DestroyInstance();
-		Physics::Destroy();
 		return true;
 	}
 }
