@@ -102,10 +102,10 @@ namespace Epoch {
 	}
 
 	RenderShape& RenderShape::AddTexture(const char * _path, TextureType _position) {
-		std::shared_ptr<ID3D11ShaderResourceView*> srv;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
 		TextureManager::TextureStatus stat = TextureManager::Instance()->iGetTexture2D(_path, &srv, nullptr);
 		if (stat == TextureManager::TextureStatus::eSuccess) {
-			mContext.mTextures[_position] = srv;
+			mContext.mTextures[_position] = srv.Get();
 		} else {
 			SystemLogger::GetError() << "[Error] Failed to get synchronous texture from TextureManager!" << std::endl;
 		}

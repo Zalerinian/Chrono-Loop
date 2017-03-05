@@ -37,9 +37,9 @@ namespace Epoch
 		}
 		for (auto it = mTextures.begin(); it != mTextures.end(); ++it)
 		{
-			if (it->second.get() != nullptr)
+			if (it->second.Get() != nullptr)
 			{
-				Renderer::Instance()->GetContext()->PSSetShaderResources((UINT)it->first, 1, it->second.get());
+				Renderer::Instance()->GetContext()->PSSetShaderResources((UINT)it->first, 1, it->second.GetAddressOf());
 				//(*Renderer::Instance()->GetContext())->PSSetSamplers((UINT)it->first, 1, nullptr); //TODO: Consider adding samplers to contexts. Curently a global sampler is applied in the renderer.
 			}
 		}
@@ -65,9 +65,9 @@ namespace Epoch
 		}
 		for (auto it = mTextures.begin(); it != mTextures.end(); ++it)
 		{
-			if (it->second.get() != nullptr && from.mTextures[it->first].get() != it->second.get())
+			if (it->second.Get() != nullptr && from.mTextures[it->first].Get() != it->second.Get())
 			{
-				Renderer::Instance()->GetContext()->PSSetShaderResources((UINT)it->first, 1, it->second.get());
+				Renderer::Instance()->GetContext()->PSSetShaderResources((UINT)it->first, 1, it->second.GetAddressOf());
 			}
 		}
 	}
@@ -76,8 +76,8 @@ namespace Epoch
 	{
 		for (int i = eTEX_DIFFUSE; i < eTEX_MAX; ++i)
 		{
-			std::shared_ptr<ID3D11ShaderResourceView*> srv = other.mTextures[i];
-			if (srv.get() == nullptr || srv.get() == this->mTextures[i].get())
+			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv = other.mTextures[i];
+			if (srv.Get() == nullptr || srv.Get() == this->mTextures[i].Get())
 			{
 				// If the textures aren't different, or aren't used, we can continue on.
 				continue;

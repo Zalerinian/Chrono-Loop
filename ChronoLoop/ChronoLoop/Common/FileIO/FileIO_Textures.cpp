@@ -16,7 +16,7 @@ namespace Epoch
 	namespace FileIO
 	{
 
-		bool LoadTexture2D(const char * _path, shared_ptr<ID3D11ShaderResourceView*>* _srv, shared_ptr<ID3D11Texture2D*>* _texture)
+		bool LoadTexture2D(const char * _path, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>* _srv, Microsoft::WRL::ComPtr<ID3D11Texture2D>* _texture)
 		{
 			if (_srv == nullptr && _texture == nullptr)
 			{
@@ -97,11 +97,11 @@ namespace Epoch
 #endif
 				if (srv != nullptr && _srv != nullptr)
 				{
-					(*_srv) = make_shared<ID3D11ShaderResourceView*>(srv);
+					_srv->Attach(srv);
 				}
 				if (texture != nullptr && _texture != nullptr)
 				{
-					(*_texture) = make_shared<ID3D11Texture2D*>((ID3D11Texture2D*)texture);
+					_texture->Attach((ID3D11Texture2D*)texture);
 				}
 				return true;
 			}
@@ -139,11 +139,11 @@ namespace Epoch
 
 			if (_srv)
 			{
-				(*_srv) = make_shared<ID3D11ShaderResourceView*>(srv);
+				_srv->Attach(srv);
 			}
 			if (_texture)
 			{
-				(*_texture) = make_shared<ID3D11Texture2D*>((ID3D11Texture2D*)texture);
+				_texture->Attach((ID3D11Texture2D*)texture);
 			}
 
 			return true;
