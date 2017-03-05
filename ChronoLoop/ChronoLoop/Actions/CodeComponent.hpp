@@ -2,31 +2,39 @@
 #include "../Objects/Component.h"
 #include "..\Common\Logger.h"
 
-struct CodeComponent : public Component {
-	CodeComponent() {
-		mType = eCOMPONENT_CODE;
-	}
+namespace Epoch
+{
 
-	// This function can't be overridden, as it is required for a component to be instantiable.
-	void Destroy() {
-		OnDestroy();
-	}
-	 
-	virtual ~CodeComponent() {}
+	struct CodeComponent : public Component
+	{
+		CodeComponent()
+		{
+			mType = eCOMPONENT_CODE;
+		}
 
-	virtual void Start() {}
+		// This function can't be overridden, as it is required for a component to be instantiable.
+		void Destroy()
+		{
+			OnDestroy();
+		}
 
-	virtual void Awake() {}
+		virtual ~CodeComponent() {}
 
-	virtual void Update() {}
+		virtual void Start() {}
 
-	virtual void OnTriggerEnter(Collider& _col1, Collider& _col2) {}
+		virtual void Awake() {}
 
-	virtual void OnCollision(Collider& _col1, Collider& _col2, float _time) {}
+		virtual void Update() {}
 
-	virtual void OnDisable() {}
+		virtual void OnTriggerEnter(Collider& _col1, Collider& _col2) {}
 
-	virtual void OnEnable() {}
+		virtual void OnCollision(Collider& _col1, Collider& _col2, float _time) {}
 
-	virtual void OnDestroy() {}
-};
+		virtual void OnDisable() {}
+
+		virtual void OnEnable() {}
+
+		virtual void OnDestroy() {}
+	};
+
+}

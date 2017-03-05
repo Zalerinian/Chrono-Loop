@@ -8,7 +8,7 @@
 
 struct ID3D11Buffer;
 
-namespace RenderEngine {
+namespace Epoch {
 
 	struct RenderShape : public RenderNode {
 		friend class RenderSet;

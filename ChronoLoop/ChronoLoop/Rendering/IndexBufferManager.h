@@ -4,7 +4,7 @@
 
 struct ID3D11Buffer;
 
-namespace RenderEngine {
+namespace Epoch {
 
 	class IndexBufferManager
 	{

@@ -2,7 +2,7 @@
 #include <d3d11.h>
 #include "RendererDefines.h"
 
-namespace RenderEngine {
+namespace Epoch {
 	
 
 	class RasterizerStateManager {

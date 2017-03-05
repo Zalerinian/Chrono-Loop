@@ -1,6 +1,6 @@
 #pragma once
 
-namespace RenderEngine {
+namespace Epoch {
 
 	enum RasterState {
 		eRS_FILLED = 0,

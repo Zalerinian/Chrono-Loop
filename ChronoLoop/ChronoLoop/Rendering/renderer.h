@@ -10,38 +10,35 @@
 #include "Mesh.h"
 #include "RenderSet.h"
 #include "RenderShape.h"
+#include <wrl/client.h>
 
-class InputLayoutManager;
-
-namespace RenderEngine {
+namespace Epoch {
 
 	class Renderer {
 	private:
 		struct ViewProjectionBuffer {
 			matrix4 view, projection;
 		} mVPData;
-
-
 		static Renderer* sInstance;
 
-		friend InputLayoutManager;
+
 		// Instance members
 		// D3D11 Variables
-		std::shared_ptr<ID3D11Device*> mDevice;
-		std::shared_ptr<ID3D11DeviceContext*> mContext;
-		std::shared_ptr<IDXGISwapChain*> mChain;
-		std::shared_ptr<IDXGIFactory1*> mFactory;
-		std::shared_ptr<ID3D11RenderTargetView*> mMainView;
-		std::shared_ptr<ID3D11Texture2D*> mMainViewTexture;
-		std::shared_ptr<ID3D11DepthStencilView*> mDSView;
-		std::shared_ptr<ID3D11Texture2D*> mDepthBuffer;
-		std::shared_ptr<ID3D11SamplerState*> mSamplerState;
+		Microsoft::WRL::ComPtr<ID3D11Device> mDevice;
+		Microsoft::WRL::ComPtr<ID3D11DeviceContext> mContext;
+		Microsoft::WRL::ComPtr<IDXGISwapChain> mChain;
+		Microsoft::WRL::ComPtr<IDXGIFactory1> mFactory;
+		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mMainView;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> mMainViewTexture;
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDSView;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> mDepthBuffer;
+		Microsoft::WRL::ComPtr<ID3D11SamplerState> mSamplerState;
 		D3D11_VIEWPORT mViewport;
-		std::shared_ptr<HWND> mWindow;
+		HWND mWindow;
 
 		vr::IVRSystem* mVrSystem;
 		RenderSet mRenderSet;
-		std::shared_ptr<ID3D11Buffer*> mVPBuffer, mPositionBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mVPBuffer, mPositionBuffer;
 		bool mUseVsync = false;
 
 
@@ -91,13 +88,13 @@ namespace RenderEngine {
 
 		//Draws text in 0 to 1 space
 
-		inline std::shared_ptr<ID3D11Device*> iGetDevice() { return mDevice; }
-		inline std::shared_ptr<ID3D11DeviceContext*> iGetContext() { return mContext; }
-		inline std::shared_ptr<IDXGISwapChain*> iGetChain() { return mChain; }
-		inline std::shared_ptr<IDXGIFactory1*> iGetFactory() { return mFactory; }
-		inline std::shared_ptr<ID3D11RenderTargetView*> iGetRTView() { return mMainView; }
-		inline std::shared_ptr<ID3D11DepthStencilView*> iGetDSView() { return mDSView; }
-		inline std::shared_ptr<ID3D11Texture2D*> iGetRTViewTexture() { return mMainViewTexture; }
-		inline std::shared_ptr<HWND> iGetWindow() { return mWindow; }
+		inline Microsoft::WRL::ComPtr<ID3D11Device> iGetDevice() { return mDevice; }
+		inline Microsoft::WRL::ComPtr<ID3D11DeviceContext> iGetContext() { return mContext; }
+		inline Microsoft::WRL::ComPtr<IDXGISwapChain> iGetChain() { return mChain; }
+		inline Microsoft::WRL::ComPtr<IDXGIFactory1> iGetFactory() { return mFactory; }
+		inline Microsoft::WRL::ComPtr<ID3D11RenderTargetView> iGetRTView() { return mMainView; }
+		inline Microsoft::WRL::ComPtr<ID3D11DepthStencilView> iGetDSView() { return mDSView; }
+		inline Microsoft::WRL::ComPtr<ID3D11Texture2D> iGetRTViewTexture() { return mMainViewTexture; }
+		inline HWND iGetWindow() { return mWindow; }
 	};
 }

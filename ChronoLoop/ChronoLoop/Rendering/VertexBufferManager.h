@@ -3,7 +3,7 @@
 #include "Structures.h"
 #include "RendererDefines.h"
 #include <typeinfo>
-namespace RenderEngine {
+namespace Epoch {
 
 	class VertexBufferManager {
 	private:
