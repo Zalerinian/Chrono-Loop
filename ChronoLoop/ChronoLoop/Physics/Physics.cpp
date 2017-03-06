@@ -221,6 +221,143 @@ namespace Epoch
 		return true;
 	}
 
+	bool Epoch::Physics::OBBtoOBB(OrientedCubeCollider& _obb1, OrientedCubeCollider& _obb2)
+	{
+		vec4f T = _obb2.mCenter - _obb1.mCenter;
+
+		vec4f xRot1 = _obb1.mObject->GetTransform().GetMatrix().first;
+		vec4f yRot1 = _obb1.mObject->GetTransform().GetMatrix().second;
+		vec4f zRot1 = -_obb1.mObject->GetTransform().GetMatrix().third;
+		zRot1.w = 1;
+
+		vec4f xRot2 = _obb2.mObject->GetTransform().GetMatrix().first;
+		vec4f yRot2 = _obb2.mObject->GetTransform().GetMatrix().second;
+		vec4f zRot2 = -_obb2.mObject->GetTransform().GetMatrix().third;
+		zRot2.w = 1;
+		
+		//X1 Axis
+		if (fabsf(T * _obb1.mAxis[0]) > 
+			_obb1.mWidth +
+			fabsf(_obb2.mWidth * (xRot1 * xRot2)) +
+			fabsf(_obb2.mHeight * (xRot1 * yRot2)) +
+			fabsf(_obb2.mDepth * (xRot1 * zRot2)))
+			return false;
+
+		//Y1 Axis
+		if (fabsf(T * _obb1.mAxis[1]) > 
+			_obb1.mHeight +
+			fabsf(_obb2.mWidth * (yRot1 * xRot2)) +
+			fabsf(_obb2.mHeight * (yRot1 * yRot2)) +
+			fabsf(_obb2.mDepth * (yRot1 * zRot2)))
+			return false;
+
+		//Z1 Axis
+		if (fabsf(T * _obb1.mAxis[2]) > 
+			_obb1.mDepth +
+			fabsf(_obb2.mWidth * (zRot1 * xRot2)) +
+			fabsf(_obb2.mHeight * (zRot1 * yRot2)) +
+			fabsf(_obb2.mDepth * (zRot1 * zRot2)))
+			return false;
+
+		//X2 Axis
+		if (fabsf(T * _obb2.mAxis[0]) > 
+			fabsf(_obb1.mWidth * (xRot1 * xRot2)) +
+			fabsf(_obb1.mHeight * (yRot1 * xRot2)) +
+			fabsf(_obb1.mDepth * (zRot1 * xRot2)) +
+			_obb2.mWidth)
+			return false;
+
+		//Y2 Axis
+		if (fabsf(T * _obb2.mAxis[1]) > 
+			fabsf(_obb1.mWidth * (xRot1 * yRot2)) +
+			fabsf(_obb1.mHeight * (yRot1 * yRot2)) +
+			fabsf(_obb1.mDepth * (zRot1 * yRot2)) +
+			_obb2.mHeight)
+			return false;
+
+		//Z2 Axis
+		if (fabsf(T * _obb2.mAxis[2]) > 
+			fabsf(_obb1.mWidth * (xRot1 * zRot2)) +
+			fabsf(_obb1.mHeight * (yRot1 * zRot2)) +
+			fabsf(_obb1.mDepth * (zRot1 * zRot2)) +
+			_obb2.mDepth)
+			return false;
+
+		//X1 x X2
+		if (fabsf(((T * _obb1.mAxis[2]) * (yRot1 * xRot2)) - ((T * _obb1.mAxis[1]) * (zRot1 * xRot2))) >
+			fabsf(_obb1.mHeight * (zRot1 * xRot2)) +
+			fabsf(_obb1.mDepth * (yRot1 * xRot2)) +
+			fabsf(_obb2.mHeight * (xRot1 * zRot2)) +
+			fabsf(_obb2.mDepth * (xRot1 * yRot2)))
+			return false;
+
+		//X1 x Y2
+		if (fabsf(((T * _obb1.mAxis[2]) * (yRot1 * yRot2)) - ((T * _obb1.mAxis[1]) * (zRot1 * yRot2))) >
+			fabsf(_obb1.mHeight * (zRot1 * yRot2)) +
+			fabsf(_obb1.mDepth * (yRot1 * yRot2)) +
+			fabsf(_obb2.mWidth * (xRot1 * zRot2)) +
+			fabsf(_obb2.mDepth * (xRot1 * xRot2)))
+			return false;
+
+		//X1 x Z2
+		if (fabsf(((T * _obb1.mAxis[2]) * (yRot1 * zRot2)) - ((T * _obb1.mAxis[1]) * (zRot1 * zRot2))) >
+			fabsf(_obb1.mHeight * (zRot1 * zRot2)) +
+			fabsf(_obb1.mDepth * (yRot1 * zRot2)) +
+			fabsf(_obb2.mWidth * (xRot1 * yRot2)) +
+			fabsf(_obb2.mHeight * (xRot1 * xRot2)))
+			return false;
+
+		//Y1 x X2
+		if (fabsf(((T * _obb1.mAxis[0]) * (zRot1 * xRot2)) - ((T * _obb1.mAxis[2]) * (xRot1 * xRot2))) >
+			fabsf(_obb1.mWidth * (zRot1 * xRot2)) +
+			fabsf(_obb1.mDepth * (xRot1 * xRot2)) +
+			fabsf(_obb2.mHeight * (yRot1 * zRot2)) +
+			fabsf(_obb2.mDepth * (yRot1 * yRot2)))
+			return false;
+
+		//Y1 x Y2
+		if (fabsf(((T * _obb1.mAxis[0]) * (zRot1 * yRot2)) - ((T * _obb1.mAxis[2]) * (xRot1 * yRot2))) >
+			fabsf(_obb1.mWidth * (zRot1 * yRot2)) +
+			fabsf(_obb1.mDepth * (xRot1 * yRot2)) +
+			fabsf(_obb2.mWidth * (yRot1 * zRot2)) +
+			fabsf(_obb2.mDepth * (yRot1 * xRot2)))
+			return false;
+
+		//Y1 x Z2
+		if (fabsf(((T * _obb1.mAxis[0]) * (zRot1 * zRot2)) - ((T * _obb1.mAxis[2]) * (xRot1 * zRot2))) >
+			fabsf(_obb1.mWidth * (zRot1 * zRot2)) +
+			fabsf(_obb1.mDepth * (xRot1 * zRot2)) +
+			fabsf(_obb2.mWidth * (yRot1 * yRot2)) +
+			fabsf(_obb2.mHeight * (yRot1 * xRot2)))
+			return false;
+
+		//Z1 x X2
+		if (fabsf(((T * _obb1.mAxis[1]) * (xRot1 * xRot2)) - ((T * _obb1.mAxis[0]) * (yRot1 * xRot2))) >
+			fabsf(_obb1.mWidth * (yRot1 * xRot2)) +
+			fabsf(_obb1.mHeight * (xRot1 * xRot2)) +
+			fabsf(_obb2.mHeight * (zRot1 * zRot2)) +
+			fabsf(_obb2.mDepth * (zRot1 * yRot2)))
+			return false;
+
+		//z1 x Y2
+		if (fabsf(((T * _obb1.mAxis[1]) * (xRot1 * yRot2)) - ((T * _obb1.mAxis[0]) * (yRot1 * yRot2))) >
+			fabsf(_obb1.mWidth * (yRot1 * yRot2)) +
+			fabsf(_obb1.mHeight * (xRot1 * yRot2)) +
+			fabsf(_obb2.mWidth * (zRot1 * zRot2)) +
+			fabsf(_obb2.mDepth * (zRot1 * xRot2)))
+			return false;
+
+		//z1 x Z2
+		if (fabsf(((T * _obb1.mAxis[1]) * (xRot1 * zRot2)) - ((T * _obb1.mAxis[0]) * (yRot1 * zRot2))) >
+			fabsf(_obb1.mWidth * (yRot1 * zRot2)) +
+			fabsf(_obb1.mHeight * (xRot1 * zRot2)) +
+			fabsf(_obb2.mWidth * (zRot1 * yRot2)) +
+			fabsf(_obb2.mHeight * (zRot1 * xRot2)))
+			return false;
+
+		return true;
+	}
+
 	bool Physics::SphereToSphere(SphereCollider& _sphere1, SphereCollider& _sphere2)
 	{
 		vec4f pos = _sphere1.mCenter - _sphere2.mCenter;
@@ -713,6 +850,28 @@ namespace Epoch
 												collider->SetPos(vec4f(pos.x, otherCol->GetPos().y + fabsf(((CubeCollider*)collider)->mMinOffset.y), pos.z, 1));
 											}
 										}
+									}
+								}
+							}
+						}
+					}
+				}
+				else if (collider->mColliderType == Collider::eCOLLIDER_OrientedCube)
+				{
+					for (int j = 0; j < objs; ++j)
+					{
+						if (mObjects[j] != mObjects[i])
+						{
+							int othercols = (int)mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
+							for (int k = 0; k < othercols; ++k)
+							{
+								otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
+								if (otherCol->mColliderType == Collider::eCOLLIDER_OrientedCube)
+								{
+									if (collider->mShouldMove && OBBtoOBB(*((OrientedCubeCollider*)collider), *((OrientedCubeCollider*)otherCol)))
+									{
+										collider->mShouldMove = false;
+										otherCol->mShouldMove = false;
 									}
 								}
 							}

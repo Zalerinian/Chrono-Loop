@@ -101,7 +101,8 @@ namespace Epoch
 			eCOLLIDER_Cube,
 			eCOLLIDER_Plane,
 			eCOLLIDER_Button,
-			eCOLLIDER_Controller
+			eCOLLIDER_Controller,
+			eCOLLIDER_OrientedCube
 		};
 
 		ColliderType mColliderType;
@@ -167,9 +168,11 @@ namespace Epoch
 	{
 	public:
 		OrientedCubeCollider() {}
-		OrientedCubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec4f _center, vec4f _xRadius, vec4f _yRadius, vec4f _zRadius, vec4f _xRotation, vec4f _yRotation, vec4f _zRotation);
-		vec4f mCenter, mRx, mRy, mRz;
+		OrientedCubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _xRadius, float _yRadius, float _zRadius);
+		vec4f mCenter;
+		float mWidth, mHeight, mDepth;
 		vec4f mAxis[3];
+		virtual void SetPos(const vec4f& _newPos);
 	};
 
 	class ButtonCollider : public CubeCollider

@@ -15,6 +15,7 @@ namespace Epoch
 	class  PlaneCollider;
 	class  SphereCollider;
 	class  CubeCollider;
+	class  OrientedCubeCollider;
 	struct Triangle;
 
 	class Physics
@@ -50,6 +51,7 @@ namespace Epoch
 		//bool FrustumToAABB(Frustum& _frustum, AABB& _aabb);
 
 		bool			AABBtoAABB(CubeCollider& _aabb1, CubeCollider& _aabb2);
+		bool			OBBtoOBB(OrientedCubeCollider& _obb1, OrientedCubeCollider& _obb2);
 		bool			SphereToSphere(SphereCollider& _sphere1, SphereCollider& _sphere2);
 		bool			SphereToAABB(SphereCollider& _sphere, CubeCollider& _aabb);
 		bool			SphereToTriangle(SphereCollider& _sphere, Triangle& _tri, vec4f& _displacement);
@@ -58,7 +60,6 @@ namespace Epoch
 		vec4f			CalcVelocity(vec4f& _vel, vec4f& _accel, float _time);
 		vec4f			CalcPosition(vec4f& _pos, vec4f& _vel, float _time);
 		void			CalcFriction(Collider& _col, vec4f& _norm, float _static, float _kinetic);
-		void test(float _time);
 	};
 
 }

@@ -281,9 +281,61 @@ namespace Epoch
 		mMax = mMaxOffset + _newPos;
 	}
 
-	OrientedCubeCollider::OrientedCubeCollider(BaseObject * _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec4f _center, vec4f _xRadius, vec4f _yRadius, vec4f _zRadius, vec4f _xRotation, vec4f _yRotation, vec4f _zRotation)
+	OrientedCubeCollider::OrientedCubeCollider(BaseObject * _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _xRadius, float _yRadius, float _zRadius)
 	{
+		mObject = _obj;
+		mType = eCOMPONENT_COLLIDER;
+		mColliderType = eCOLLIDER_OrientedCube;
+		mGravity = _gravity;
+		mVelocity = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+		mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+		mTotalForce = mGravity;
+		mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+		mShouldMove = _move;
+		mRewind = false;
+		mMass = _mass;
+		if (mMass == 0)
+			mInvMass = 0;
+		else
+			mInvMass = 1 / mMass;
+		mWeight = mGravity * mMass;
+		mElasticity = _elasticity;
+		mStaticFriction = _staticFriction;
+		mKineticFriction = _kineticFriction;
+		mRHO = 1;
+		mDrag = _drag;
+		mCenter = GetPos();
+		mWidth = _xRadius;
+		mHeight = _yRadius;
+		mDepth = _zRadius;
+		mAxis[0] = mObject->GetTransform().GetMatrix().first;
+		mAxis[1] = mObject->GetTransform().GetMatrix().second;
+		mAxis[2] = -mObject->GetTransform().GetMatrix().third;
+		mAxis[2].w = 1;
 
+		vec4f maxOffset, minOffset;
+		maxOffset.x = mCenter.x + mWidth;
+		maxOffset.y = mCenter.y + mHeight;
+		maxOffset.z = mCenter.z + mDepth;
+		minOffset.x = mCenter.x - mWidth;
+		minOffset.y = mCenter.y - mHeight;
+		minOffset.z = mCenter.z - mDepth;
+
+		float a = (maxOffset - minOffset) * vec4f(0, 0, 1, 0);
+		float b = (maxOffset - minOffset) * vec4f(0, 1, 0, 0);
+		float c = (maxOffset - minOffset) * vec4f(1, 0, 0, 0);
+		mArea = (2 * (a * b)) + (2 * (b * c)) + (2 * (a * c));
+		mDragForce = mVelocity * (-0.5f * mRHO * mVelocity.Magnitude3() * mDrag * mArea);
+	}
+
+	void Epoch::OrientedCubeCollider::SetPos(const vec4f & _newPos)
+	{
+		mObject->GetTransform().GetMatrix().fourth = _newPos;
+		mCenter = _newPos;
+		mAxis[0] = mObject->GetTransform().GetMatrix().first;
+		mAxis[1] = mObject->GetTransform().GetMatrix().second;
+		mAxis[2] = -mObject->GetTransform().GetMatrix().third;
+		mAxis[2].w = 1;
 	}
 
 	PlaneCollider::PlaneCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _offset, vec4f _norm)

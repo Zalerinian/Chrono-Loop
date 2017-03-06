@@ -135,18 +135,21 @@ void Update() {
 	///*///////////////////////Using this to test physics//////////////////
 
 	Transform transform;
-	matrix4 mat1 = matrix4::CreateTranslation(0, 0, 0) * matrix4::CreateScale(0.3f, 0.3f, 0.3f);
+	vec4f vec = { 0.5, 0.5, 0, 0 };
+	matrix4 mat1 = matrix4::CreateTranslation(0, 0, 0) * matrix4::CreateScale(0.3f, 0.3f, 0.3f) * matrix4::CreateAxisRotation(vec, DirectX::XM_PI / 4);
 	transform.SetMatrix(mat1);
 	BaseObject* PhysicsBox = Pool::Instance()->iGetObject()->Reset("aabb", transform);//new BaseObject("aabb", transform);
-	CubeCollider *BoxCollider = new CubeCollider(PhysicsBox, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.0f, 0.1f, 0.1f, 0.1f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
-	BoxCollider->AddForce(vec4f(0, 0, 0, 0));
-	CodeComponent* PlaneCollision = new CCElasticReactionWithPlane;
-	CodeComponent* BoxCollision = new CCElasticAABBtoAABB;
-	CodeComponent* BoxSphereCollision = new CCElasticAABBToSphere;
-	PhysicsBox->AddComponent(BoxCollider);
-	PhysicsBox->AddComponent(PlaneCollision);
-	PhysicsBox->AddComponent(BoxCollision);
-	PhysicsBox->AddComponent(BoxSphereCollision);
+	OrientedCubeCollider* obb1 = new OrientedCubeCollider(PhysicsBox, true, vec4f(0, 0, 0, 0), 5, 0.5f, 0.1f, 0.1f, 0.01f, .075f, .075f, .075f);
+	//CubeCollider *BoxCollider = new CubeCollider(PhysicsBox, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.0f, 0.1f, 0.1f, 0.1f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
+	//BoxCollider->AddForce(vec4f(0, 0, 0, 0));
+	//CodeComponent* PlaneCollision = new CCElasticReactionWithPlane;
+	//CodeComponent* BoxCollision = new CCElasticAABBtoAABB;
+	//CodeComponent* BoxSphereCollision = new CCElasticAABBToSphere;
+	PhysicsBox->AddComponent(obb1);
+	//PhysicsBox->AddComponent(BoxCollider);
+	//PhysicsBox->AddComponent(PlaneCollision);
+	//PhysicsBox->AddComponent(BoxCollision);
+	//PhysicsBox->AddComponent(BoxSphereCollision);
 	TimeManager::Instance()->AddObjectToTimeline(PhysicsBox);
 	Emitter* aabbSound = new Emitter();
 	PhysicsBox->AddComponent(aabbSound);
@@ -157,18 +160,20 @@ void Update() {
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::PLAYBOUNCEEFFECTS);
 
 	Transform transformBox;
-	matrix4 matBox = matrix4::CreateTranslation(2, 5, 0) * matrix4::CreateScale(0.3f, 0.3f, 0.3f);
+	matrix4 matBox = matrix4::CreateZRotation(DirectX::XM_PI / 4) * matrix4::CreateTranslation(0, 5, 0) * matrix4::CreateScale(0.3f, 0.3f, 0.3f);
 	transformBox.SetMatrix(matBox);
 	BaseObject* PhysicsBox2 = Pool::Instance()->iGetObject()->Reset("aabb2", transformBox);//new BaseObject("aabb", transform);
-	CubeCollider *BoxCollider2 = new CubeCollider(PhysicsBox2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 5.0f, 0.4f, 0.1f, 0.1f, 0.01f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
-	BoxCollider2->AddForce(vec4f(0, 0, 0, 0));
-	CodeComponent* PlaneCollisionBox = new CCElasticReactionWithPlane;
-	CodeComponent* BoxCollision2 = new CCElasticAABBtoAABB;
-	CodeComponent* BoxSphereCollision2 = new CCElasticAABBToSphere;
-	PhysicsBox2->AddComponent(BoxCollider2);
-	PhysicsBox2->AddComponent(PlaneCollisionBox);
-	PhysicsBox2->AddComponent(BoxCollision2);
-	PhysicsBox2->AddComponent(BoxSphereCollision2);
+	OrientedCubeCollider* obb2 = new OrientedCubeCollider(PhysicsBox2, true, vec4f(0, -0.5, 0, 0), 5, 0.5f, 0.1f, 0.1f, 0.01f, .075f, .075f, .075f);
+	//CubeCollider *BoxCollider2 = new CubeCollider(PhysicsBox2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 5.0f, 0.4f, 0.1f, 0.1f, 0.01f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
+	//BoxCollider2->AddForce(vec4f(0, 0, 0, 0));
+	//CodeComponent* PlaneCollisionBox = new CCElasticReactionWithPlane;
+	//CodeComponent* BoxCollision2 = new CCElasticAABBtoAABB;
+	//CodeComponent* BoxSphereCollision2 = new CCElasticAABBToSphere;
+	PhysicsBox2->AddComponent(obb2);
+	//PhysicsBox2->AddComponent(BoxCollider2);
+	//PhysicsBox2->AddComponent(PlaneCollisionBox);
+	//PhysicsBox2->AddComponent(BoxCollision2);
+	//PhysicsBox2->AddComponent(BoxSphereCollision2);
 	TimeManager::Instance()->AddObjectToTimeline(PhysicsBox2);
 
 	Transform SphereTransform;
