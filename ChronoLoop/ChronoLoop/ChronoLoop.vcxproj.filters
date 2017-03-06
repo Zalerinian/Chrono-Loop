@@ -306,6 +306,9 @@
     <ClInclude Include="Actions\CCElasticAABBToSphere.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Common\Interpolator.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Common\Math\matrix4.h">
       <Filter>Common\Math\Header Files</Filter>
     </ClInclude>

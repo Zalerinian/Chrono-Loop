@@ -369,7 +369,6 @@ namespace Epoch {
 			ViewProjectionBuffer data;
 			GetMVP(currentEye, data);
 			mContext->UpdateSubresource(mVPBuffer.Get(), 0, nullptr, (void*)&data, 0, 0);
-
 			ProcessRenderSet();
 
 			vr::Texture_t submitTexture = { (void*)mMainViewTexture.Get(), vr::TextureType_DirectX, vr::ColorSpace_Auto };

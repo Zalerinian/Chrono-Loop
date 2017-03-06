@@ -59,6 +59,7 @@ namespace Epoch
 
 		inline std::list<BaseObject*> GetChildren() { return mChildren; };
 		inline void SetChildren(std::list<BaseObject*> _children) { mChildren = _children; };
+		inline unsigned int GetObjectCountandIncrement() { ObjectCount++; return ObjectCount; }
 
 		inline std::vector<Component*> GetComponents(ComponentType _type) { return mComponents[_type]; }
 		inline Component* GetComponentIndexed(ComponentType _type, unsigned int _index) { return mComponents[_type][_index]; }

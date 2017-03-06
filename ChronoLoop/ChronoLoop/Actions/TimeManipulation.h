@@ -17,6 +17,7 @@ namespace Epoch
 		static unsigned int mCloneCount;
 		ID3D11Texture2D* mCountTxt;
 		ID2D1Bitmap1* mCountMap;
+		unsigned int HotfixButtonDown = 0;
 
 	public:
 		TimeManipulation();

@@ -1,16 +1,16 @@
 #pragma once
 #include <chrono>
 #include <vector>
+#include "../Common/Interpolator.h"
+#include <unordered_map>
 
-namespace Epoch
-{
-
+namespace Epoch {
 	class BaseObject;
+
 	class Timeline;
 
 	//This class handles all game time as well as managing the Timeline
-	class TimeManager
-	{
+	class TimeManager {
 		static TimeManager* instanceTimemanager;
 		static Timeline* mTimeline;
 
@@ -20,8 +20,8 @@ namespace Epoch
 		unsigned int mLevelTime = 0;
 		bool mRewindTime = false, mRewindMakeClone = false;
 		std::vector<BaseObject*>mClones;
+		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneInterpolators;
 		Timeline* GetTimeLine();
-
 		//Command Console vars
 		bool mCloneCountOn;
 		bool mSnapshotCountOn;
@@ -29,26 +29,27 @@ namespace Epoch
 		~TimeManager();
 	public:
 
-		void Update(float _delta);
-		static TimeManager* Instance();
-		void AddObjectToTimeline(BaseObject* _obj);
 		//Add only headset and controllers to this
 		void AddPlayerObjectToTimeline(BaseObject* _obj);
+		void AddObjectToTimeline(BaseObject* _obj);
+		void AddInterpolatorForClone(BaseObject* _obj);
 		//Clears the list of BaseObject* the Timemanager has refrence to.
 		void ClearClones();
 		//Checks and see if you can rewind to passed in frame
 		bool CheckRewindAvaliable(unsigned int _RewindNumOfframes);
+		static void Destroy();
 		//Returns the current snapshot indx
 		unsigned int GetCurrentSnapFrame();
 		//Retrieves delta time
 		float GetDeltaTime() { return mDeltaTime; }
+		Interpolator<matrix4>* GetCloneInterpolator(unsigned short _id);
+		std::vector<BaseObject*>& GetClonesVec() { return mClones; };
 		//Go back into time. Send in dest frame and send in player headset and conrollers id
 		void RewindTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		//Go back into time and make clone. Send in dest frame and send in player headset and conrollers baseObjects
-		void RewindMakeClone(unsigned int _frame, BaseObject* _ob1, BaseObject* _ob2, BaseObject* _ob3);
-		static void Destroy();
-
-
+		void RewindMakeClone(unsigned int _frame, BaseObject*& _ob1, BaseObject*& _ob2, BaseObject*& _ob3);
+		static TimeManager* Instance();
+		void Update(float _delta);
 		//Function Pointer / Command Console
 		static void ToggleCloneCountDisplay(void* _command, std::wstring _ifOn);
 		static void ToggleSnapshotCountDisplay(void* _command, std::wstring _ifOn);
@@ -57,6 +58,9 @@ namespace Epoch
 
 		void SetCloneCountBool(bool _set) { mCloneCountOn = _set; }
 		void SetSnapCountBool(bool _set) { mSnapshotCountOn = _set; }
-	};
 
+
+
+		void HotfixResetTimeline();
+	};
 }

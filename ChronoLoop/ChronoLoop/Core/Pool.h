@@ -25,6 +25,7 @@ namespace Epoch
 		inline unsigned int iGetSize();
 		void iResize(unsigned int _size);
 		BaseObject* iGetObject();
+		void iRemoveObject(unsigned short _id);
 		void iAddObject(BaseObject* _obj);
 		void iClear();
 	};
