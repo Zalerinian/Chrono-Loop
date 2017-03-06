@@ -3,26 +3,25 @@
 #include "CodeComponent.hpp"
 #include "../Core/TimeManager.h"
 #include "../Common/Logger.h"
+#include "../Input//CommandConsole.h"
 #include <unordered_set>
 
 namespace Epoch
 {
-
 	struct BoxSnapToControllerAction : public CodeComponent
 	{
 		ControllerType mControllerRole = eControllerType_Primary;
 		bool mHeld = false;
+		bool mCommandSnapController = false;
 		ControllerCollider* mCollider;
 		Collider* mPickUp = nullptr;
-
-		virtual void Start()
-		{
+			
+		virtual void Start() {
 			mCollider = (ControllerCollider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0));
 		}
 
 		virtual void Update() override
 		{
-
 			if (VRInputManager::GetInstance().IsVREnabled())
 			{
 				Controller &controller = VRInputManager::GetInstance().GetController(mControllerRole);
@@ -35,9 +34,10 @@ namespace Epoch
 						ReleaseObject();
 					}
 				}
-				else if (controller.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger) && !mHeld && !mCollider->mHitting.empty())
+				else if (controller.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger) && !mHeld)
 				{
-					SomethingtoController();
+					if((!mCollider->mHitting.empty() && !CommandConsole::Instance().GetSnapBool()) || CommandConsole::Instance().GetSnapBool())
+						SomethingtoController();
 				}
 				if (controller.GetPressDown((vr::EVRButtonId::k_EButton_Grip)))
 				{
@@ -136,6 +136,5 @@ namespace Epoch
 			mPickUp->mShouldMove = true;
 			mHeld = false;
 		}
-	};
-
+	};		
 } // Epoch Namespace

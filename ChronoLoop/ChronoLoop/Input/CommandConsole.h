@@ -30,6 +30,10 @@ namespace Epoch
 		unsigned int mFpsCounter = 0;//Every 10 times it will average out the fps
 		float mFrameTime;
 
+		bool mCommandSnapController = false;
+
+
+
 
 		bool mIsVR;
 		//SystemLogger mLogger;
@@ -44,6 +48,7 @@ namespace Epoch
 		std::wstring GetCurrentCommmand() { return mCurCommand; };
 		bool isVRon() { return mIsVR; }
 		void SetVRBool(bool _set) { mIsVR = _set; }
+		bool GetSnapBool() { return mCommandSnapController; }
 
 
 
@@ -67,6 +72,7 @@ namespace Epoch
 		static void Help(void* _self, std::wstring _nothing);
 		static void ToggleFPS(void* _self, std::wstring _ifOn);
 		static void ToggleAll(void* _self, std::wstring _ifOn);
+		static void ToggleSnaping(void* _self, std::wstring _ifOn);
 		void DisplayFPS();
 		//Threaded Function
 		void InputFunction();

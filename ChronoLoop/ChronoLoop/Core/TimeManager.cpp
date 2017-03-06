@@ -93,7 +93,7 @@ namespace Epoch {
 
 	bool TimeManager::CheckRewindAvaliable(unsigned int _frame) {
 		//wrapped
-		if (mTimeline->GetCurrentGameTimeIndx() - _frame > mTimeline->GetCurrentGameTimeIndx())
+		if (mTimeline->GetCurrentGameTimeIndx() - (int)_frame > mTimeline->GetCurrentGameTimeIndx())
 			return false;
 		else
 			return true;

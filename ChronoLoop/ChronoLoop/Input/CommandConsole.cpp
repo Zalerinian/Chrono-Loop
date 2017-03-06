@@ -18,6 +18,7 @@ namespace Epoch
 			sInstance->AddCommand(L"/HELP", sInstance->Help);
 			sInstance->AddCommand(L"/FPS", sInstance->ToggleFPS);
 			sInstance->AddCommand(L"/ALL", sInstance->ToggleAll);
+			sInstance->AddCommand(L"/SNAP", sInstance->ToggleSnaping);
 		}
 		return *sInstance;
 	}
@@ -198,6 +199,21 @@ namespace Epoch
 		{
 			sInstance->DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /FPS (ON/OFF)");
 		}
+	}
+
+	void CommandConsole::ToggleSnaping(void* _self, std::wstring _ifOn)
+	{
+		CommandConsole* self = (CommandConsole*)_self;
+		if (_ifOn == L"ON") {
+			sInstance->mCommandSnapController = true;
+			sInstance->DisplaySet(L"");
+		}
+		else if (_ifOn == L"OFF") {
+			sInstance->mCommandSnapController = false;
+			sInstance->DisplaySet(L"");
+		}
+		else
+			sInstance->DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /SNAP (ON/OFF)");
 	}
 	void CommandConsole::ToggleAll(void* _self, std::wstring _ifOn)
 	{
