@@ -16,7 +16,7 @@ namespace Epoch
 		mName = _name;
 		mTransform = _transform;
 		mParent = _parent;
-		mUniqueID = BaseObject::ObjectCount++;
+		mUniqueID = ++BaseObject::ObjectCount;
 	}
 
 	BaseObject::BaseObject()

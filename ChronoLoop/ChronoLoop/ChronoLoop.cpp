@@ -206,7 +206,7 @@ void Update() {
 	Transform ButtonTransform;
 	matrix4 ButtonMat = matrix4::CreateTranslation(-3, 0, 0);
 	ButtonTransform.SetMatrix(ButtonMat);
-	BaseObject* Button = new BaseObject("button", ButtonTransform);
+	BaseObject* Button = Pool::Instance()->iGetObject()->Reset("button", ButtonTransform);
 	ButtonCollider* ButtonCol = new ButtonCollider(Button, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), 3, 1, vec4f(0,1,0,0));
 	CodeComponent* ButtonCollision = new CCButtonPress;
 	Button->AddComponent(ButtonCol);
