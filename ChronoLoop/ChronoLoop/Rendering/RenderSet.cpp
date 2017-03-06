@@ -8,6 +8,29 @@
 #include <algorithm>
 
 namespace Epoch {
+
+	GhostList<matrix4>::GhostNode* RenderSet::AddNode(RenderShape& _shape, unsigned int _rs) {
+		GhostList<matrix4>::GhostNode* node = mRenderShapes[_shape].Push(_shape.mPosition);
+		static int ImLazy = 0;
+		SystemLogger::Debug() << "Added object for a total of " << ++ImLazy << " additions. The list is currently " << mSize << " nodes in size." << std::endl;
+		// This shape casts shadows.
+		if (_rs & RenderStage_Shadows) {
+			mShadowSet.insert(_shape);
+		}
+
+		// This shape draws onto the screen normally.
+		if (_rs & RenderStage_Diffuse) {
+			mDiffuseSet.insert(_shape);
+		}
+
+		// This shape draws only at the post processing stage.
+		// I don't even know what to put here :|
+		if (_rs & RenderStage_PostProcess) {
+			mPostSet.insert(_shape);
+		}
+		return node;
+	}
+
 	void RenderSet::AddNode(RenderNode *_node, RenderContext* _rc) {
 		if (_node->mType == RenderNode::RenderNodeType::Shape) {
 			if (((RenderShape*)_node)->mIndexCount == 0) {
@@ -97,6 +120,14 @@ namespace Epoch {
 	
 	const RenderNode * RenderSet::GetHead() {
 		return mHead;
+	}
+
+	std::map<RenderShape, GhostList<matrix4>>::iterator RenderSet::Begin() {
+		return mRenderShapes.begin();
+	}
+
+	std::map<RenderShape, GhostList<matrix4>>::iterator RenderSet::End() {
+		return mRenderShapes.end();
 	}
 
 	RenderSet::~RenderSet() {

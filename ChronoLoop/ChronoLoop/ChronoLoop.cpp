@@ -97,7 +97,6 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	// Cleanup
 	vr::VR_Shutdown();
 	ShutdownSystems();
-	Level::DestroyInstance();
 	SystemLogger::DestroyInstance();
 	vrsys = nullptr;
 
@@ -159,7 +158,6 @@ void Update() {
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_TEST1);
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_TEST1);
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::PLAYBOUNCEEFFECTS);
-	TimeManager::Instance()->AddObjectToTimeline(PhysicsBox);
 
 
 	// The second box
@@ -179,7 +177,6 @@ void Update() {
 	PhysicsBox2->AddComponent(PlaneCollisionBox);
 	PhysicsBox2->AddComponent(BoxCollision2);
 	PhysicsBox2->AddComponent(BoxSphereCollision2);
-	TimeManager::Instance()->AddObjectToTimeline(PhysicsBox2);
 
 
 	// The first sphere
@@ -193,7 +190,6 @@ void Update() {
 	CodeComponent* PlaneCollision2 = new CCElasticReactionWithPlane;
 	CodeComponent* SpheretoSphere = new CCElasticSphereToSphere;
 	CodeComponent* spheretobox = new CCElasticAABBtoAABB;
-	TimeManager::Instance()->AddObjectToTimeline(PhysicsSphere);
 	MeshComponent *sphereMesh = new MeshComponent("../Resources/Sphere.obj");
 	sphereMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 	PhysicsSphere->AddComponent(BallCollider);
@@ -222,7 +218,6 @@ void Update() {
 	PhysicsSphere2->AddComponent(spheretobox2);
 	PhysicsSphere2->AddComponent(PlaneCollision3);
 	PhysicsSphere2->AddComponent(SpheretoSphere2);
-	TimeManager::Instance()->AddObjectToTimeline(PhysicsSphere2);
 
 
 	//The pushbutton.
@@ -237,7 +232,6 @@ void Update() {
 	Button->AddComponent(ButtonMesh);
 	Button->AddComponent(ButtonCol);
 	Button->AddComponent(ButtonCollision);
-	TimeManager::Instance()->AddObjectToTimeline(Button);
 
 
 	// The level's floor
@@ -357,7 +351,6 @@ void Update() {
 	ExitMesh->AddTexture("../Resources/Doors.png", eTEX_DIFFUSE);
 	ExitWall->AddComponent(ExitMesh);
 	ExitWall->AddComponent(exitCol);
-	TimeManager::Instance()->AddObjectToTimeline(ExitWall);
 
 	BaseObject* BlockDoor = Pool::Instance()->iGetObject()->Reset("BlockDoor", Door);
 	MeshComponent *DoorMesh = new MeshComponent("../Resources/BlockDoor.obj");
@@ -365,7 +358,6 @@ void Update() {
 	DoorMesh->AddTexture("../Resources/Doors.png", eTEX_DIFFUSE);
 	BlockDoor->AddComponent(DoorMesh);
 	BlockDoor->AddComponent(doorCol);
-	TimeManager::Instance()->AddObjectToTimeline(BlockDoor);
 
 	Transform downOne;
 	downOne.SetMatrix(matrix4::CreateTranslation(0, -1, 0));
@@ -391,6 +383,13 @@ void Update() {
 	Physics::Instance()->mObjects.push_back(RightController);
 	Physics::Instance()->mObjects.push_back(LeftController);
 	Physics::Instance()->mObjects.push_back(Button);
+	TimeManager::Instance()->AddObjectToTimeline(PhysicsBox);
+	TimeManager::Instance()->AddObjectToTimeline(PhysicsBox2);
+	TimeManager::Instance()->AddObjectToTimeline(PhysicsSphere);
+	TimeManager::Instance()->AddObjectToTimeline(PhysicsSphere2);
+	TimeManager::Instance()->AddObjectToTimeline(Button);
+	TimeManager::Instance()->AddObjectToTimeline(ExitWall);
+	TimeManager::Instance()->AddObjectToTimeline(BlockDoor);
 	Level::Initialize(headset, RightController, LeftController);
 	Level* L1 = Level::Instance(); 
 	L1->iAddObject(PhysicsBox);

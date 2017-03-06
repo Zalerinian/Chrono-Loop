@@ -5,8 +5,7 @@
 #include <memory>
 #include <unordered_map>
 #include <wrl/client.h>
-
-struct ID3D11ShaderResourceView;
+#include <d3d11.h>
 
 namespace Epoch {
 
@@ -22,7 +21,9 @@ namespace Epoch {
 		~RenderContext();
 		void Apply();
 		void Apply(RenderContext& from);
-		bool operator==(RenderContext& other);
+		virtual bool operator==(RenderContext& other);
+		virtual bool operator==(const RenderContext& _other) const;
+		virtual bool operator!=(RenderContext& _other);
 	};
 
 }

@@ -82,7 +82,7 @@ namespace Epoch {
 			bool vsync, int fps, bool fullscreen, float farPlane, float nearPlane,
 			vr::IVRSystem* vrsys);
 		void ThrowIfFailed(HRESULT hr);
-		void AddNode(RenderShape *_node);
+		GhostList<matrix4>::GhostNode* AddNode(RenderShape *_node);
 		void RemoveNode(RenderShape *_node);
 		void Render(float _deltaTime);
 

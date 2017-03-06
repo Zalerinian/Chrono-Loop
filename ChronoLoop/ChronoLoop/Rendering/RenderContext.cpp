@@ -96,4 +96,29 @@ namespace Epoch
 		return true;
 	}
 
+	bool RenderContext::operator==(const RenderContext & _other) const {
+		for (int i = eTEX_DIFFUSE; i < eTEX_MAX; ++i) {
+			if (_other.mTextures.count(i) != 0) {
+				if (_other.mTextures.at(i).Get() == nullptr ||
+					(this->mTextures.count(i) != 0 && _other.mTextures.at(i).Get() == this->mTextures.at(i).Get())) {
+					continue;
+				}
+				return false;
+			}
+		}
+
+		if (mRasterState != _other.mRasterState ||
+				mVertexFormat != _other.mVertexFormat ||
+				mPixelShaderFormat != _other.mPixelShaderFormat ||
+				mVertexShaderFormat != _other.mVertexShaderFormat) {
+			return false;
+		}
+
+		return true;
+	}
+
+	bool Epoch::RenderContext::operator!=(RenderContext & _other) {
+		return !(this->operator==(_other));
+	}
+
 }

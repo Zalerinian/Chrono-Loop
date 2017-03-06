@@ -10,6 +10,7 @@
 #include "../Core/Pool.h"
 #include "../Rendering/IndexBufferManager.h"
 #include "../Rendering/VertexBufferManager.h"
+#include "../Core/Level.h"
 
 namespace Epoch {
 	bool InitializeSystems(HWND _Window, unsigned int _width, unsigned int _height,
@@ -26,10 +27,12 @@ namespace Epoch {
 		Physics::Instance();
 		IndexBufferManager::GetInstance();
 		VertexBufferManager::Instance();
+		// Level is initialized in ChronoLoop
 		return true;
 	}
 
 	bool ShutdownSystems() {
+		Level::DestroyInstance();
 		VertexBufferManager::Shutdown();
 		IndexBufferManager::DestroyInstance();
 		Physics::Destroy();

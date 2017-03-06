@@ -321,6 +321,9 @@
     <ClInclude Include="Common\Math\vec4i.h">
       <Filter>Common\Math\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Common\GhostList.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">

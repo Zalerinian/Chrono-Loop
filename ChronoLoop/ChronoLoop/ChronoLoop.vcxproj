@@ -215,6 +215,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Common\FileIO.h" />
     <ClInclude Include="Common\FileIO\FileIO_General.h" />
     <ClInclude Include="Common\FileIO\FileIO_Textures.h" />
+    <ClInclude Include="Common\GhostList.h" />
     <ClInclude Include="Common\LimitedList.h" />
     <ClInclude Include="Common\Logger.h" />
     <ClInclude Include="Common\Math.h" />
