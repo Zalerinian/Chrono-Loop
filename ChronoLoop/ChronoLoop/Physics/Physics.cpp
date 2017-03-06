@@ -871,7 +871,6 @@ namespace Epoch
 									if (collider->mShouldMove && OBBtoOBB(*((OrientedCubeCollider*)collider), *((OrientedCubeCollider*)otherCol)))
 									{
 										collider->mShouldMove = false;
-										otherCol->mShouldMove = false;
 									}
 								}
 							}
