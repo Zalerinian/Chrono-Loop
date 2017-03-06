@@ -99,7 +99,7 @@ namespace Epoch
 		return false;
 	}
 
-void Level::iSetHeadsetAndControllers(BaseObject * _headset, BaseObject * _controller1, BaseObject * _controller2, ControllerCollider* _c1Collider, ControllerCollider* _c2Collider) {
+void Level::iSetHeadsetAndControllers(BaseObject *& _headset, BaseObject *& _controller1, BaseObject *& _controller2, ControllerCollider* _c1Collider, ControllerCollider* _c2Collider) {
 	//Remove the action componets and 
 	//Set the new BaseObjects to the current controller so new objects can follow old controller movement as clones.
 	unsigned short headid = _headset->GetUniqueID();

@@ -78,7 +78,7 @@ namespace Epoch
 			BaseObject* Controller2 = Pool::Instance()->iGetObject()->Reset("Controller - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
 			MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 			ControllerCollider* CubeColider2 = new ControllerCollider(Controller2, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
-			mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+			mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 			Controller2->AddComponent(CubeColider2);
 			Controller2->AddComponent(mc2);
 
@@ -102,6 +102,28 @@ namespace Epoch
 			TimeManager::Instance()->AddInterpolatorForClone(Controller1);
 			TimeManager::Instance()->AddInterpolatorForClone(Controller2);
 			mCloneCount++;
+		}
+
+		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
+			int frameRewind = 30;
+			if (!TimeManager::Instance()->CheckRewindAvaliable(frameRewind))
+				return;
+
+			TimeManager::Instance()->RewindTimeline(TimeManager::Instance()->GetCurrentSnapFrame() - frameRewind, Level::Instance()->iGetHeadset()->GetUniqueID(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());
+		}
+
+		if (GetAsyncKeyState(VK_END) & 1 || VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::k_EButton_SteamVR_Touchpad)) 
+		{
+			HotfixButtonDown++;
+			if(HotfixButtonDown > 169)
+			{
+				HotfixButtonDown = 0;
+				TimeManager::Instance()->HotfixResetTimeline();
+			}
+		}
+		else
+		{
+			HotfixButtonDown = 0;
 		}
 	};
 } // Epoch Namespace

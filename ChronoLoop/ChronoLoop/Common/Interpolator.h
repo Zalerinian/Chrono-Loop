@@ -26,11 +26,13 @@ namespace  Epoch {
 	public:
 		Interpolator(InterpolatorType _InterpType);
 		~Interpolator();
+		Type GetEdit() { return mEdit; };
 		//Pass a refrence of the varable you want the interpolator to change
 		void SetActive(bool _bool) { mActive = _bool; };
 		void SetEdit(Type & _edit) { mEdit = _edit; };
 		void SetStart(Type _start) { mStart = _start; };
 		void SetEnd(Type _end) { mEnd = _end; };
+		void SetType(InterpolatorType _type) { mType = _type; };
 		void Update(float _ratio);
 		Type Interpolate(Type& _origin, Type& destination, float _ratio);
 
@@ -46,7 +48,7 @@ namespace  Epoch {
 	inline void Interpolator<Type>::Update(float _ratio) {
 		if (!mActive)
 			return;
-
+		//SystemLogger::GetLog() << _ratio << std::endl;
 		mEdit = Interpolate(mStart, mEnd, _ratio);
 	}
 
@@ -60,11 +62,10 @@ namespace  Epoch {
 
 	template<>
 	inline matrix4 Interpolator<matrix4>::Interpolate(matrix4 & _start, matrix4 & _end, float _ratio) {
-
 		matrix4 temp;
 		for (unsigned int c = 0; c < 4; c++) {
 			for (unsigned int r = 0; r < 4; r++) {
-				temp[c][r] = _start[c][r] + _ratio * (_end[c][r] - _start[c][r]);
+				temp[c][r] = _start[c][r] + (_ratio * (_end[c][r] - _start[c][r]));
 			}
 		}
 		return temp;

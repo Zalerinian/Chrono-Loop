@@ -47,7 +47,7 @@ namespace Epoch {
 		//Go back into time. Send in dest frame and send in player headset and conrollers id
 		void RewindTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		//Go back into time and make clone. Send in dest frame and send in player headset and conrollers baseObjects
-		void RewindMakeClone(unsigned int _frame, BaseObject* _ob1, BaseObject* _ob2, BaseObject* _ob3);
+		void RewindMakeClone(unsigned int _frame, BaseObject*& _ob1, BaseObject*& _ob2, BaseObject*& _ob3);
 		static TimeManager* Instance();
 		void Update(float _delta);
 		//Function Pointer / Command Console

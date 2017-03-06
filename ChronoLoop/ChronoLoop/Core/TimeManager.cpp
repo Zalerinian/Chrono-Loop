@@ -7,6 +7,7 @@
 #include "../Input/CommandConsole.h"
 #include "../Core/Pool.h"
 #include "../Core/Level.h"
+#include "../Input/VRInputManager.h"
 
 namespace Epoch {
 
@@ -42,13 +43,18 @@ namespace Epoch {
 			mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
 		}
 
+		//SystemLogger::GetLog() << mTimestamp / mRecordingTime << std::endl; 
 		for (auto Interp : mCloneInterpolators) {
 			if (Interp.second)
 				Interp.second->Update(mTimestamp / mRecordingTime);
-		}
 
-		if (GetAsyncKeyState(VK_END) & 1) {
-			HotfixResetTimeline();
+			for(int i = 0; i < mClones.size(); ++i)
+			{
+				if(Interp.first == mClones[i]->GetUniqueID())
+				{
+					mClones[i]->GetTransform().SetMatrix(Interp.second->GetEdit());
+				}
+			}
 		}
 
 	}
@@ -70,7 +76,7 @@ namespace Epoch {
 		mCloneInterpolators[_obj->GetUniqueID()] = temp;
 	}
 
-	void TimeManager::AddPlayerObjectToTimeline(BaseObject * _obj) {
+	void TimeManager::AddPlayerObjectToTimeline(BaseObject *  _obj) {
 		if (_obj != nullptr)
 			mTimeline->AddPlayerBaseObject(_obj, _obj->GetUniqueID());
 	}
@@ -118,7 +124,7 @@ namespace Epoch {
 		mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
 	}
 
-	void TimeManager::RewindMakeClone(unsigned int _frame, BaseObject* _ob1, BaseObject* _ob2, BaseObject* _ob3) {
+	void TimeManager::RewindMakeClone(unsigned int _frame, BaseObject*& _ob1, BaseObject*& _ob2, BaseObject*& _ob3) {
 		if (_ob1 == nullptr || _ob2 == nullptr || _ob3 == nullptr)
 			SystemLogger::GetLog() << "When you tried to rewind time, you gave the timemanager bad BaseObject pointer(s)";
 		mTimeline->RewindMakeClone(_frame);
@@ -221,5 +227,7 @@ namespace Epoch {
 			Pool::Instance()->iRemoveObject(mClones[i]->GetUniqueID());
 		}
 		ClearClones();
-	}
+	
+		VRInputManager::GetInstance().GetPlayerPosition()[3].Set(1.9f, -1.0f, 8, 1.0f);
+	}													 
 }

@@ -93,7 +93,7 @@ namespace Epoch {
 		void SetCloneDeathTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void SetComponent(SnapComponent* _destComp, BaseObject* _obj, SnapInfo* _destInfo);
 		void SetCurrentGameTimeIndx(int _time) { mCurrentGameTimeIndx = _time; };
-		void UpdateCloneInterpolators(unsigned short _cloneid, SnapInfo* _currSnap);
+		void UpdateCloneInterpolators(unsigned short _cloneid, SnapInfo* _currSnap, float _currTime);
 	};
 
 }
