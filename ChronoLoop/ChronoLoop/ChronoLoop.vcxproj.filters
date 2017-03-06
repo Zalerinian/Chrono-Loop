@@ -121,6 +121,9 @@
     <Filter Include="Common\Math\Source Files">
       <UniqueIdentifier>{e319ddd3-329d-43fd-aeb9-fb646fc0c8fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Pathing">
+      <UniqueIdentifier>{da18cf7b-b051-46bb-99bd-b0009ed433fc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\BaseObject.h">
@@ -320,6 +323,12 @@
     </ClInclude>
     <ClInclude Include="Common\Math\vec4i.h">
       <Filter>Common\Math\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NavMesh.h">
+      <Filter>Pathing</Filter>
+    </ClInclude>
+    <ClInclude Include="PathPlanning.h">
+      <Filter>Pathing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -526,6 +535,12 @@
     </ClCompile>
     <ClCompile Include="Common\Math\vec4i.cpp">
       <Filter>Common\Math\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NavMesh.cpp">
+      <Filter>Pathing</Filter>
+    </ClCompile>
+    <ClCompile Include="PathPlanning.cpp">
+      <Filter>Pathing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

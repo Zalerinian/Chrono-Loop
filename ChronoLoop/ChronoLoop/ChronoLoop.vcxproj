@@ -232,10 +232,12 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Input\KeyboardInput.h" />
     <ClInclude Include="Input\VRInputManager.h" />
     <ClInclude Include="Messager\Messager.h" />
+    <ClInclude Include="NavMesh.h" />
     <ClInclude Include="Objects\BaseObject.h" />
     <ClInclude Include="Objects\Component.h" />
     <ClInclude Include="Objects\MeshComponent.h" />
     <ClInclude Include="Objects\Transform.h" />
+    <ClInclude Include="PathPlanning.h" />
     <ClInclude Include="Physics\Physics.h" />
     <ClInclude Include="Rendering\Draw2D.h" />
     <ClInclude Include="Rendering\IndexBufferManager.h" />
@@ -364,10 +366,12 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClCompile Include="Input\KeyboardInput.cpp" />
     <ClCompile Include="Input\VRInputManager.cpp" />
     <ClCompile Include="Messager\Messager.cpp" />
+    <ClCompile Include="NavMesh.cpp" />
     <ClCompile Include="Objects\BaseObject.cpp" />
     <ClCompile Include="Objects\Component.cpp" />
     <ClCompile Include="Objects\MeshComponent.cpp" />
     <ClCompile Include="Objects\Transform.cpp" />
+    <ClCompile Include="PathPlanning.cpp" />
     <ClCompile Include="Physics\Physics.cpp" />
     <ClCompile Include="Rendering\Draw2D.cpp" />
     <ClCompile Include="Rendering\IndexBufferManager.cpp" />
