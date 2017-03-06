@@ -18,6 +18,7 @@
 #include "Actions/HeadsetFollow.hpp"
 #include "Actions/BoxSnapToControllerAction.hpp"
 #include "Messager\Messager.h"
+#include "ParticleSystem.h"
 #include "Objects\BaseObject.h"
 #include "Actions/TeleportAction.hpp"
 #include "Actions/CCElasticReactionWithPlane.h"
@@ -159,7 +160,7 @@ void Update() {
 	matrix4 ButtonMat = MatrixTranslation(-3, 0, 0);
 	ButtonTransform.SetMatrix(ButtonMat);
 	BaseObject* Button = new BaseObject("button", ButtonTransform);
-	ButtonCollider* ButtonCol = new ButtonCollider(Button, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), 3, 1, vec4f(0,1,0,0));
+	ButtonCollider* ButtonCol = new ButtonCollider(Button, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), 3, 1, vec4f(0, 1, 0, 0));
 	CodeComponent* ButtonCollision = new CCButtonPress;
 	Button->AddComponent(ButtonCol);
 	Button->AddComponent(ButtonCollision);
@@ -168,31 +169,31 @@ void Update() {
 	Transform PlaneTransform;
 	PlaneTransform.SetMatrix(MatrixTranslation(0, -1, 0));
 	BaseObject* Floor = Pool::Instance()->iGetObject()->Reset("plane", PlaneTransform);// new BaseObject("plane", PlaneTransform);
-	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, 0.0f, 0.0f, 1.0f), 10.0f, 0.5f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
+	PlaneCollider* plane = new PlaneCollider(false, vec4f(0.0f, 0.0f, 0.0f, 1.0f), 10.0f, 0.5f, 0.5f, -1.0f, vec4f(0.0f, 1.0f, 0.0f, 1.0f));
 	MeshComponent *planeObj = new MeshComponent("../Resources/BigFloor.obj");
 	planeObj->AddTexture("../Resources/floorg.png", RenderEngine::eTEX_DIFFUSE);
 	Floor->AddComponent(plane);
 	Floor->AddComponent(planeObj);
-	
+
 	Transform identity;
 	identity.SetMatrix(Math::MatrixIdentity());
 
 	BaseObject* walls = Pool::Instance()->iGetObject()->Reset("walls", PlaneTransform);// new BaseObject("walls", PlaneTransform);
 	MeshComponent *wallMesh = new MeshComponent("../Resources/BigWall.obj");
 	wallMesh->AddTexture("../Resources/Wallg.png", RenderEngine::eTEX_DIFFUSE);
-	CubeCollider* ButtonRoomBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(-7.034f, -1, -8, 1), vec4f(1.011f, 2, -7.026f, 1));
-	CubeCollider* ExitLeftWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(-0.985f, -1, -9.008f, 1), vec4f(1.011f, 2, -7.026f, 1));
-	CubeCollider* ExitBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(0.985f, -1, -10.008f, 1), vec4f(3.112f, 2, -9.008f, 1));
-	CubeCollider* ExitRightWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(3.112f, -1, -9.008f, 1), vec4f(4.112f, 2, -6.991f, 1));
-	CubeCollider* MainBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(4.112f, -1, -7.991f, 1), vec4f(7.036f, 2, -6.991f, 1));
-	CubeCollider* RightWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(7.036f, -1, -6.991f, 1), vec4f(8.036f, 2, 7.142f, 1));
-	CubeCollider* MainFrontWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(3.063f, -1, 7.142f, 1), vec4f(8.036f, 2, 8.142f, 1));
-	CubeCollider* EnterRightWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(3.063f, -1, 7.142f, 1), vec4f(4.063f, 2, 9.055f, 1));
-	CubeCollider* EnterBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(0.918f, -1, 9.055f, 1), vec4f(4.063f, 2, 10.055f, 1));
-	CubeCollider* EnterLeftWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(-0.918f, -1, 7.014f, 1), vec4f(0.918f, 2, 9.055f, 1));
-	CubeCollider* ButtonRoomFrontWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(-7.054f, -1, 7.014f, 1), vec4f(0.918f, -1, 8.014f, 1));
-	CubeCollider* LeftWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(-8.054f, -1, -7.014f, 1), vec4f(-7.054f, 2, 7.014f, 1));
-	CubeCollider* DividerWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, vec4f(-1.273f, -1, -7.022f, 1), vec4f(-0.871f, 2, 3.125f, 1));
+	CubeCollider* ButtonRoomBackWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, vec4f(-7.034f, -1, -8, 1), vec4f(1.011f, 2, -7.026f, 1));
+	CubeCollider* ExitLeftWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, vec4f(-0.985f, -1, -9.008f, 1), vec4f(1.011f, 2, -7.026f, 1));
+	CubeCollider* ExitBackWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, vec4f(0.985f, -1, -10.008f, 1), vec4f(3.112f, 2, -9.008f, 1));
+	CubeCollider* ExitRightWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, vec4f(3.112f, -1, -9.008f, 1), vec4f(4.112f, 2, -6.991f, 1));
+	CubeCollider* MainBackWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, vec4f(4.112f, -1, -7.991f, 1), vec4f(7.036f, 2, -6.991f, 1));
+	CubeCollider* RightWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, vec4f(7.036f, -1, -6.991f, 1), vec4f(8.036f, 2, 7.142f, 1));
+	CubeCollider* MainFrontWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, vec4f(3.063f, -1, 7.142f, 1), vec4f(8.036f, 2, 8.142f, 1));
+	CubeCollider* EnterRightWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, vec4f(3.063f, -1, 7.142f, 1), vec4f(4.063f, 2, 9.055f, 1));
+	CubeCollider* EnterBackWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, vec4f(0.918f, -1, 9.055f, 1), vec4f(4.063f, 2, 10.055f, 1));
+	CubeCollider* EnterLeftWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, vec4f(-0.918f, -1, 7.014f, 1), vec4f(0.918f, 2, 9.055f, 1));
+	CubeCollider* ButtonRoomFrontWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, vec4f(-7.054f, -1, 7.014f, 1), vec4f(0.918f, -1, 8.014f, 1));
+	CubeCollider* LeftWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, vec4f(-8.054f, -1, -7.014f, 1), vec4f(-7.054f, 2, 7.014f, 1));
+	CubeCollider* DividerWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, vec4f(-1.273f, -1, -7.022f, 1), vec4f(-0.871f, 2, 3.125f, 1));
 	walls->AddComponent(ButtonRoomBackWall);
 	walls->AddComponent(ExitLeftWall);
 	walls->AddComponent(ExitBackWall);
@@ -228,7 +229,7 @@ void Update() {
 
 	MeshComponent *ButtonMesh = new MeshComponent("../Resources/cube.obj");
 	ButtonMesh->AddTexture("../Resources/cube_texture.png", RenderEngine::eTEX_DIFFUSE);
-	
+
 	Button->AddComponent(ButtonMesh);
 
 	//pat added
@@ -253,7 +254,7 @@ void Update() {
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::SET_BasePath, 0, false, (void*)new m_Path(_basePath)));
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_initSB)));
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
-	
+
 	//Temp Camera OBJ
 	Transform camTrans;
 	camTrans.SetMatrix((VRInputManager::Instance()).iGetPlayerWorldPos());
@@ -297,7 +298,7 @@ void Update() {
 	TimeManager::Instance()->HotFixAddClone(ExitWall);
 	TimeManager::Instance()->HotFixAddClone(BlockDoor);
 	Level::Initialize(headset, RightController, LeftController);
-	Level* L1 = Level::Instance(); 
+	Level* L1 = Level::Instance();
 	L1->iAddObject(PhysicsBox);
 	L1->iAddObject(Floor);
 	L1->iAddObject(RightController);
@@ -328,11 +329,16 @@ void Update() {
 	//TextureManager::Instance()->iAddTexture2D(AddedTextureName, AddedTex, nullptr);
 	//planeObj->AddTexture(AddedTextureName.c_str(), eTEX_CUSTOM1);
 
+	ParticleEmitter* emitMe = new ParticleEmitter(0, -1, 1000, 0, vec4f(0, 0, 0, 0));
+	emitMe->SetParticle(new Particle());
+	emitMe->SetTexture("../Resources/SampleParticle.png");
+	ParticleSystem::Instance()->AddEmitter(emitMe);
+	ParticleSystem::Instance()->SetMatrices(MatrixIdentity(), MatrixIdentity(), MatrixIdentity(), MatrixIdentity(), MatrixIdentity(), MatrixIdentity());
 	//*////////////////////////////////////////////////////////////////////
 	if (VREnabled) {
 		VRInputManager::Instance().iUpdate();
 	}
-	
+
 	while (true) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			// Handle windows message.
@@ -347,11 +353,11 @@ void Update() {
 				break;
 			}
 			Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false, (void*)nullptr));
-
+			ParticleSystem::Instance()->Update();
 			//SystemLogger::GetLog() << "[Debug] Regular Update " << std::endl;
 			UpdateTime();
 			Level::Instance()->iUpdate();
-			
+
 			TimeManager::Instance()->Update(deltaTime);
 			RenderEngine::Renderer::Instance()->Render(deltaTime);
 			Physics::Instance()->Update(deltaTime);

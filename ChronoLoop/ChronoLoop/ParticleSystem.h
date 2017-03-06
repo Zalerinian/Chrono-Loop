@@ -1,10 +1,13 @@
 #pragma once
 #include <vector>
 #include "ParticleComponents.h"
+#include "Rendering\InputLayoutManager.h"
 
 struct ID3D11GeometryShader;
 struct ID3D11VertexShader;
 struct ID3D11PixelShader;
+struct ID3D11InputLayout;
+
 
 class ParticleSystem
 {
@@ -16,6 +19,7 @@ private:
 	ID3D11VertexShader* mVShader;
 	ID3D11PixelShader* mPShader;
 	ID3D11Buffer* mVBuff;
+	ID3D11InputLayout* mILayout;
 	GSMatrix mLeft, mRight;
 
 	ParticleSystem();

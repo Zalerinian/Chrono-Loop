@@ -1,11 +1,13 @@
 
 cbuffer GSMatrix : register(b0)
 {
-	matrix model;
 	matrix view;
 	matrix proj;
 }
-
+cbuffer Model : register(b1)
+{
+	matrix model;
+}
 
 struct GSParticle
 {

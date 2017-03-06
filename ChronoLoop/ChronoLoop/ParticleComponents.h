@@ -10,7 +10,7 @@
 struct ID3D11Texture2D;
 struct ID3D11ShaderResourceView;
 struct ID3D11Buffer;
-
+struct ID3D11InputLayout;
 
 struct GSParticle
 {
@@ -20,7 +20,7 @@ struct GSParticle
 };
 struct GSMatrix
 {
-	matrix4 model, view, proj;
+	matrix4 model;
 };
 
 struct Particle
@@ -32,8 +32,10 @@ struct Particle
 	bool mActive;
 	
 	//Constructors
-
+	Particle();
 	Particle(int _life, float _size, vec4f _pos, vec4f _color);
+
+	Particle& operator=(const Particle& _other);
 };
 
 class ParticleEmitter
@@ -44,9 +46,10 @@ class ParticleEmitter
 private:
 	//TODO: Commptrs
 	const char* mTName;
-	ID3D11Texture2D* mTexture;
-	ID3D11ShaderResourceView* mTextureView;
+	std::shared_ptr<ID3D11ShaderResourceView*> tv;
+	std::shared_ptr<ID3D11Texture2D*> text;
 	ID3D11Buffer* mVBuffer;
+	ID3D11InputLayout* mILayout;
 	//BlendMode
 	//BoundingBox
 	vec4f mPos;
@@ -59,7 +62,7 @@ private:
 
 	virtual void UpdateParticle(Particle* _p);
 	void CreateBuffers();
-	void CreateTexureResource();
+	void CreateTextureResource();
 	void UpdateBuffers();
 	void CleanUpParticles();
 	void EmitParticles();
@@ -72,8 +75,6 @@ public:
 	ID3D11ShaderResourceView* GetTexture();
 
 	void SetTexture(const char* _tex);
-	void SetLEye(matrix4 _world, matrix4 _view, matrix4 _proj);
-	void SetREye(matrix4 _world, matrix4 _view, matrix4 _proj);
 	virtual void SetParticle(Particle* _p);
 
 	virtual void Update(float _delta);

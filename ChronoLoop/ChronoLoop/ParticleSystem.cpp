@@ -5,7 +5,8 @@ ParticleSystem* ParticleSystem::mSystem = nullptr;
 
 ParticleSystem::ParticleSystem()
 {
-
+	SetGeometryShader();
+	SetVertexPixelShader();
 }
 ParticleSystem::~ParticleSystem()
 {
@@ -44,6 +45,16 @@ void ParticleSystem::SetVertexPixelShader()
 	FileIO::LoadBytes("ParticleVertexShader.cso", &buffer, bytes);
 	(*RenderEngine::Renderer::Instance()->iGetDevice())->CreateVertexShader(buffer, bytes, nullptr, &mVShader);
 
+	D3D11_INPUT_ELEMENT_DESC iDesc[] =
+	{
+		{ "SV_POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "SIZE", 0, DXGI_FORMAT_R32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{"USELESS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+	};
+
+	(*RenderEngine::Renderer::Instance()->iGetDevice())->CreateInputLayout(iDesc, ARRAYSIZE(iDesc), buffer, bytes, &mILayout);
+
+
 	FileIO::LoadBytes("ParticlePixelShader.cso", &buffer, bytes);
 	(*RenderEngine::Renderer::Instance()->iGetDevice())->CreatePixelShader(buffer, bytes, nullptr, &mPShader);
 
@@ -54,12 +65,8 @@ void ParticleSystem::SetVertexPixelShader()
 void ParticleSystem::SetMatrices(matrix4 _lmodel, matrix4 _lview, matrix4 _lproj, matrix4 _rmodel, matrix4 _rview, matrix4 _rproj)
 {
 	mLeft.model = _lmodel;
-	mLeft.view = _lview;
-	mLeft.proj = _lproj;
 
 	mRight.model = _rmodel;
-	mRight.view = _rview;
-	mRight.proj = _rproj;
 }
 
 void ParticleSystem::Update()
@@ -74,40 +81,37 @@ void ParticleSystem::Update()
 void ParticleSystem::Render()
 {
 	//TODO: Set up and render
+	if (mPEmitters.size() == 0)
+		return;
 	auto cntxt = (*RenderEngine::Renderer::Instance()->iGetContext());
 	//Do for both eyes?
-
+	cntxt->IASetInputLayout(mILayout);
 	cntxt->VSSetShader(mVShader, NULL, 0);
-	ID3D11Buffer* buff = mVBuff;
-	cntxt->VSSetConstantBuffers(0, 1, &buff);
+	//ID3D11Buffer* buff = mVBuff;
+	//cntxt->VSSetConstantBuffers(0, 1, &buff);
 	cntxt->GSSetShader(mGeometryShader, NULL, 0);
 	cntxt->PSSetShader(mPShader, NULL, 0);
-	for (int eye = 0; eye < 2; eye++)
+	cntxt->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+	//cntxt->UpdateSubresource(mVBuff, 1, NULL, &mLeft, 0, 0);
+	for (int i = 0; i < mPEmitters.size(); i++)
 	{
-		if (eye == 0)
-			cntxt->UpdateSubresource(mVBuff, 0, NULL, &mLeft, 0, 0);
-		else
-			cntxt->UpdateSubresource(mVBuff, 0, NULL, &mRight, 0, 0);
-
-		for (int i = 0; i < mPEmitters.size(); i++)
-		{
-			//Set vbuffer and gbuffer
-			UINT stride = sizeof(GSParticle);
-			UINT offset = 0;
-			ID3D11Buffer* buffer = mPEmitters[i]->GetVertexBuffer();
-			cntxt->IASetVertexBuffers(0, 1, &buffer, &stride, &offset);
-			ID3D11ShaderResourceView* srv = mPEmitters[i]->GetTexture();
-			cntxt->PSSetShaderResources(0, 1, &srv);
-			//draw call
-			cntxt->Draw(mPEmitters.size(), 0);
-			//Unset gbuffer
-		}
+		//Set vbuffer and gbuffer
+		UINT stride = sizeof(GSParticle);
+		UINT offset = 0;
+		ID3D11Buffer* buffer = mPEmitters[i]->GetVertexBuffer();
+		cntxt->IASetVertexBuffers(0, 1, &buffer, &stride, &offset);
+		ID3D11ShaderResourceView* srv = mPEmitters[i]->GetTexture();
+		cntxt->PSSetShaderResources(0, 1, &srv);
+		//draw call
+		cntxt->Draw(mPEmitters.size(), 0);
+		//Unset gbuffer
 	}
+	cntxt->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	cntxt->IASetInputLayout(RenderEngine::InputLayoutManager::Instance().GetInputLayout(RenderEngine::VertFormat::eVERT_POSNORMTEX));
 	cntxt->GSSetShader(NULL, NULL, 0);
 	cntxt->VSSetShader(NULL, NULL, 0);
 	cntxt->PSSetShader(NULL, NULL, 0);
 	cntxt->VSSetConstantBuffers(0, 0, NULL);
-
 }
 
 void ParticleSystem::AddEmitter(ParticleEmitter* _pemitter)
