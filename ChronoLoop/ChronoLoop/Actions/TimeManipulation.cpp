@@ -63,8 +63,8 @@ namespace Epoch
 			Transform identity;
 
 			BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset - " + std::to_string(mCloneCount), identity); //new BaseObject("headset" + std::to_string(rand), identity);
-			MeshComponent *visibleMesh = new MeshComponent("../Resources/Cube.obj");
-			visibleMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
+			MeshComponent *visibleMesh = new MeshComponent("../Resources/Robot.obj");
+			visibleMesh->AddTexture("../Resources/RobotTexture.png", eTEX_DIFFUSE);
 			headset->AddComponent(visibleMesh);
 
 
