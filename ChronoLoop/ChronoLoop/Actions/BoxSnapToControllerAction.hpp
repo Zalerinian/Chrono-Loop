@@ -32,12 +32,12 @@ namespace Epoch
 					mPickUp->SetPos(m.Position);
 					if (!controller.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger))
 					{
-						ReleaseCube();
+						ReleaseObject();
 					}
 				}
 				else if (controller.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger) && !mHeld && !mCollider->mHitting.empty())
 				{
-					SnapToController();
+					SomethingtoController();
 				}
 				if (controller.GetPressDown((vr::EVRButtonId::k_EButton_Grip)))
 				{
@@ -77,7 +77,7 @@ namespace Epoch
 			//mObject->GetTransform().SetMatrix(Math::MatrixRotateInPlace(mObject->GetTransform().GetMatrix(), 1, 0, 0, DirectX::XM_PI / 1024.0f));
 		}
 
-		virtual void SnapToController()
+		virtual void SomethingtoController()
 		{
 			mHeld = true;
 			matrix4 m = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
@@ -128,7 +128,7 @@ namespace Epoch
 			}
 		}
 
-		virtual void ReleaseCube()
+		virtual void ReleaseObject()
 		{
 			vec4f force = VRInputManager::GetInstance().GetController(mControllerRole).GetVelocity();
 			force[2] *= -1; // SteamVR seems to Assume +Z goes into the screen.
