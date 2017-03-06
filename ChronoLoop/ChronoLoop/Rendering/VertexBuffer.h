@@ -5,7 +5,7 @@
 #include "renderer.h"
 
 
-namespace RenderEngine {
+namespace Epoch {
 	template<typename T>
 	class VertexBuffer
 	{
@@ -35,12 +35,12 @@ namespace RenderEngine {
 	unsigned int VertexBuffer<T>::AddVerts(std::string _name, const T * _verts, unsigned int _numVerts)
 	{
 		unsigned int offset = 0;
-		if (mOffsets.count(_Name) > 0)
-			offset = mOffsets.at(_Name);
+		if (mOffsets.count(_name) > 0)
+			offset = mOffsets.at(_name);
 		else
 		{
 			if (mVertexBuffer)
-			{
+			{ 
 				D3D11_BUFFER_DESC desc;
 				mVertexBuffer->GetDesc(&desc);
 
@@ -49,20 +49,22 @@ namespace RenderEngine {
 				unsigned int newSize = oldSize + _numVerts;
 				offset = oldSize;
 				initData.pSysMem = new T[newSize];
-				memcpy((char *)(initData.pSysMem) + desc.ByteWidth, _Indices, sizeof(T) * _NumIndices);
-				desc.ByteWidth = sizeof(T) * _NumIndices;
+				memcpy((char *)(initData.pSysMem) + desc.ByteWidth, _verts, sizeof(T) * _numVerts);
+				desc.ByteWidth += sizeof(T) * _numVerts;
 				ID3D11Buffer *newBuffer;
-				(*Renderer::Instance()->GetDevice())->CreateBuffer(&desc, &initData, &newBuffer);
-				(*Renderer::Instance()->GetContext())->CopySubresourceRegion(newBuffer, 0, 0, 0, 0, mVertexBuffer, 0, 0);
+				Renderer::Instance()->iGetDevice()->CreateBuffer(&desc, &initData, &newBuffer);
+				Renderer::Instance()->iGetContext()->CopySubresourceRegion(newBuffer, 0, 0, 0, 0, mVertexBuffer, 0, 0);
 				mVertexBuffer->Release();
 				mVertexBuffer = newBuffer;
+				std::string name = "The Vertex Buffer, mk" + std::to_string(mOffsets.size());
+				SetD3DName(mVertexBuffer, name.c_str());
 				delete[] initData.pSysMem;
 			}
 			else
 			{
 				D3D11_BUFFER_DESC desc;
 				desc.Usage = D3D11_USAGE_DEFAULT;
-				desc.ByteWidth = sizeof(t) * _numVerts;
+				desc.ByteWidth = sizeof(T) * _numVerts;
 				desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 				desc.CPUAccessFlags = 0;
 				desc.MiscFlags = 0;
@@ -70,9 +72,11 @@ namespace RenderEngine {
 
 				D3D11_SUBRESOURCE_DATA initData;
 				initData.pSysMem = _verts;
-				(*Renderer::Instance()->GetDevice())->CreateBuffer(&desc, &initData, &mVertexBuffer);
+				Renderer::Instance()->iGetDevice()->CreateBuffer(&desc, &initData, &mVertexBuffer);
+				std::string name = "The Vertex Buffer";
+				SetD3DName(mVertexBuffer, name.c_str());
 			}
-			mOffsets[_Name] = offset;
+			mOffsets[_name] = offset;
 		}
 		return offset;
 	}

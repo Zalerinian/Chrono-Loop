@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-namespace RenderEngine {
+namespace Epoch {
 	struct RenderNode;
 	struct RenderContext;
 	struct RenderShape;

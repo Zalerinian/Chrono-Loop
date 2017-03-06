@@ -2,80 +2,62 @@
 //#include "stdafx.h"
 #include "../Common/Math.h"
 
-struct VertexPos
+namespace Epoch
 {
-	vec4f	Position;
-};
-struct VertexPosColor
-{
-	vec4f	Position;
-	vec4f	Color;
-};
-struct VertexPosTex
-{
-	vec4f	Position;
-	vec4f	UV;
 
-	VertexPosTex() {}
-	VertexPosTex(vec4f _pos, vec4f _uv)
+	struct VertexPos
 	{
-		Position = _pos;
-		UV = _uv;
-	}
-	bool operator!=(const VertexPosTex& _other) const
+		vec4f	Position;
+	};
+	struct VertexPosColor
 	{
-		for (int i = 0; i < 4; i++)
-		{
-			if ((Position.xyzw[i] == _other.Position.xyzw[i]) && (UV.xyzw[i] == UV.xyzw[i]))
-				return false;
-		}
-	}
-	bool operator==(const VertexPosTex& _other) const
+		vec4f	Position;
+		vec4f	Color;
+	};
+	struct VertexPosTex
 	{
-		for (int i = 0; i < 4; i++)
-		{
-			if ((Position.xyzw[i] == _other.Position.xyzw[i]) && (UV.xyzw[i] == UV.xyzw[i]))
-				return true;
-		}
-	}
-};
-struct VertexPosNormTex
-{
-	vec4f	Position;
-	vec4f	Normal;
-	vec4f	UV;
-};
-struct VertexPosNormTanTex
-{
-	vec4f	Position;
-	vec4f	Normal;
-	vec4f	UV;
-	vec4f	Tangent;
-	float	Determinant;
-};
-struct VertexPosBoneWeight
-{
-	vec4f	Position;
-	vec4i	BoneIndices;
-	vec4f	Weights;
-};
-struct VertexPosBoneWeightNormTex
-{
-	vec4f	Position;
-	vec4i	BoneIndices;
-	vec4f	Weights;
-	vec4f	Normal;
-	vec4f	UV;
-	VertexPosBoneWeightNormTex() {};
-};
-struct VertexPosBoneWeightNormTanTex
-{
-	vec4f	Position;
-	vec4f	Normal;
-	vec4f	UV;
-	vec4i	BoneIndices;
-	vec4f	Weights;
-	vec4f	Tangent;
-	float	Determinant;
-	VertexPosBoneWeightNormTanTex() {};
-};
+		vec4f	Position;
+		vec4f	UV;
+	};
+	struct VertexPosNormTex
+	{
+		vec4f	Position;
+		vec4f	Normal;
+		vec4f	UV;
+	};
+	struct VertexPosNormTanTex
+	{
+		vec4f	Position;
+		vec4f	Normal;
+		vec4f	UV;
+		vec4f	Tangent;
+		float	Determinant;
+	};
+	struct VertexPosBoneWeight
+	{
+		vec4f	Position;
+		vec4i	BoneIndices;
+		vec4f	Weights;
+	};
+	struct VertexPosBoneWeightNormTex
+	{
+		vec4f	Position;
+		vec4i	BoneIndices;
+		vec4f	Weights;
+		vec4f	Normal;
+		vec4f	UV;
+		VertexPosBoneWeightNormTex() {};
+	};
+	struct VertexPosBoneWeightNormTanTex
+	{
+		vec4f	Position;
+		vec4f	Normal;
+		vec4f	UV;
+		vec4i	BoneIndices;
+		vec4f	Weights;
+		vec4f	Tangent;
+		float	Determinant;
+		VertexPosBoneWeightNormTanTex() {};
+	};
+
+}

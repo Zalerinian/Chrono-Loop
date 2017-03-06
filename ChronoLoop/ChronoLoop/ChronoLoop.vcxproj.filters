@@ -112,17 +112,14 @@
     <Filter Include="DXTK">
       <UniqueIdentifier>{16572d88-a51f-45a6-a564-025b7a4af6ff}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Particles">
-      <UniqueIdentifier>{13ed9ada-07b5-49a1-948e-cf51e2147e94}</UniqueIdentifier>
+    <Filter Include="Common\Math">
+      <UniqueIdentifier>{ccc5850c-51a9-4f99-a68a-9c096952d36d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Particles\Header Files">
-      <UniqueIdentifier>{44005d82-56fb-4da1-8918-4d87bb2e7cbd}</UniqueIdentifier>
+    <Filter Include="Common\Math\Header Files">
+      <UniqueIdentifier>{d6539033-3850-4e3e-b719-9b790b4d5c70}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Particles\Source Files">
-      <UniqueIdentifier>{ae979ed3-b94a-4d13-a685-68010cbf7e88}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Particles\Shaders">
-      <UniqueIdentifier>{f5399c09-a49b-4c6a-ac21-88f9c2d87ffd}</UniqueIdentifier>
+    <Filter Include="Common\Math\Source Files">
+      <UniqueIdentifier>{e319ddd3-329d-43fd-aeb9-fb646fc0c8fa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -297,11 +294,35 @@
     <ClInclude Include="Actions\CCElasticReactionWithPlane.h">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleSystem.h">
-      <Filter>Particles\Header Files</Filter>
+    <ClInclude Include="Rendering\Draw2D.h">
+      <Filter>Rendering\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleComponents.h">
-      <Filter>Particles\Header Files</Filter>
+    <ClInclude Include="Input\CommandConsole.h">
+      <Filter>Input\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCElasticSphereToSphere.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCElasticAABBToSphere.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Interpolator.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Math\matrix4.h">
+      <Filter>Common\Math\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Math\vec2f.h">
+      <Filter>Common\Math\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Math\vec3f.h">
+      <Filter>Common\Math\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Math\vec4f.h">
+      <Filter>Common\Math\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Math\vec4i.h">
+      <Filter>Common\Math\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -316,9 +337,6 @@
     </ClCompile>
     <ClCompile Include="Rendering\Shader.cpp">
       <Filter>Rendering\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\Math.cpp">
-      <Filter>Common\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ChronoLoop.cpp">
       <Filter>Core\Source Files</Filter>
@@ -416,7 +434,6 @@
     <ClCompile Include="Messager\Messager.cpp">
       <Filter>Messanger\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Input\KeyboardInput.cpp" />
     <ClCompile Include="Input\Controller.cpp">
       <Filter>Input\Source Files</Filter>
     </ClCompile>
@@ -489,11 +506,29 @@
     <ClCompile Include="Core\Pool.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleSystem.cpp">
-      <Filter>Particles\Source Files</Filter>
+    <ClCompile Include="Rendering\Draw2D.cpp">
+      <Filter>Rendering\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleComponents.cpp">
-      <Filter>Particles\Source Files</Filter>
+    <ClCompile Include="Input\KeyboardInput.cpp">
+      <Filter>Input\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\CommandConsole.cpp">
+      <Filter>Input\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Math\matrix4.cpp">
+      <Filter>Common\Math\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Math\vec2f.cpp">
+      <Filter>Common\Math\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Math\vec3f.cpp">
+      <Filter>Common\Math\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Math\vec4f.cpp">
+      <Filter>Common\Math\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Math\vec4i.cpp">
+      <Filter>Common\Math\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -536,14 +571,8 @@
     <FxCompile Include="Rendering\Shaders\BasicVertex.hlsl">
       <Filter>Rendering\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="GeometryShader.hlsl">
-      <Filter>Particles\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="ParticleVertexShader.hlsl">
-      <Filter>Particles\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="ParticlePixelShader.hlsl">
-      <Filter>Particles\Shaders</Filter>
+    <FxCompile Include="Rendering\Shaders\InstancedVertex64.hlsl">
+      <Filter>Rendering\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

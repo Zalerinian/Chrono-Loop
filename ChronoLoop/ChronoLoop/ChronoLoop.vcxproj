@@ -135,7 +135,8 @@
       <AdditionalDependencies>openvr_api.lib;D2d1.lib;DWrite.lib;d3d11.lib;dxgi.lib;windowscodecs.lib;AkSoundEngineDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outputpath)openvr_api.dll"</Command>
+      <Command>xcopy /y /d /e "$(solutiondir)Additional Libraries\$(configuration)" "$(outputpath)"
+echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outputpath)openvr_api.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -185,7 +186,8 @@
       <AdditionalDependencies>openvr_api.lib;D2d1.lib;DWrite.lib;d3d11.lib;dxgi.lib;windowscodecs.lib;AkSoundEngineDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outputpath)openvr_api.dll"</Command>
+      <Command>xcopy /y /d /e "$(solutiondir)Additional Libraries\$(configuration)" "$(outputpath)"
+echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outputpath)openvr_api.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -200,7 +202,9 @@
     <ClInclude Include="Actions\BoxSnapToControllerAction.hpp" />
     <ClInclude Include="Actions\CCButtonPress.h" />
     <ClInclude Include="Actions\CCElasticAABBtoAABB.h" />
+    <ClInclude Include="Actions\CCElasticAABBToSphere.h" />
     <ClInclude Include="Actions\CCElasticReactionWithPlane.h" />
+    <ClInclude Include="Actions\CCElasticSphereToSphere.h" />
     <ClInclude Include="Actions\CodeComponent.hpp" />
     <ClInclude Include="Actions\GestureDetection.hpp" />
     <ClInclude Include="Actions\HeadsetFollow.hpp" />
@@ -211,13 +215,20 @@
     <ClInclude Include="Common\FileIO.h" />
     <ClInclude Include="Common\FileIO\FileIO_General.h" />
     <ClInclude Include="Common\FileIO\FileIO_Textures.h" />
+    <ClInclude Include="Common\Interpolator.h" />
     <ClInclude Include="Common\LimitedList.h" />
     <ClInclude Include="Common\Logger.h" />
     <ClInclude Include="Common\Math.h" />
+    <ClInclude Include="Common\Math\matrix4.h" />
+    <ClInclude Include="Common\Math\vec2f.h" />
+    <ClInclude Include="Common\Math\vec3f.h" />
+    <ClInclude Include="Common\Math\vec4f.h" />
+    <ClInclude Include="Common\Math\vec4i.h" />
     <ClInclude Include="Core\Level.h" />
     <ClInclude Include="Core\Pool.h" />
     <ClInclude Include="Core\Timeline.h" />
     <ClInclude Include="Core\TimeManager.h" />
+    <ClInclude Include="Input\CommandConsole.h" />
     <ClInclude Include="Input\Controller.h" />
     <ClInclude Include="Input\KeyboardInput.h" />
     <ClInclude Include="Input\VRInputManager.h" />
@@ -229,6 +240,7 @@
     <ClInclude Include="ParticleComponents.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="Physics\Physics.h" />
+    <ClInclude Include="Rendering\Draw2D.h" />
     <ClInclude Include="Rendering\IndexBufferManager.h" />
     <ClInclude Include="Rendering\InputLayoutManager.h" />
     <ClInclude Include="Rendering\Mesh.h" />
@@ -341,11 +353,16 @@
     <ClCompile Include="Common\FileIO\FileIO_Textures.cpp" />
     <ClCompile Include="Common\LimitedList.cpp" />
     <ClCompile Include="Common\Logger.cpp" />
-    <ClCompile Include="Common\Math.cpp" />
+    <ClCompile Include="Common\Math\matrix4.cpp" />
+    <ClCompile Include="Common\Math\vec2f.cpp" />
+    <ClCompile Include="Common\Math\vec3f.cpp" />
+    <ClCompile Include="Common\Math\vec4f.cpp" />
+    <ClCompile Include="Common\Math\vec4i.cpp" />
     <ClCompile Include="Core\Level.cpp" />
     <ClCompile Include="Core\Pool.cpp" />
     <ClCompile Include="Core\Timeline.cpp" />
     <ClCompile Include="Core\TimeManager.cpp" />
+    <ClCompile Include="Input\CommandConsole.cpp" />
     <ClCompile Include="Input\Controller.cpp" />
     <ClCompile Include="Input\KeyboardInput.cpp" />
     <ClCompile Include="Input\VRInputManager.cpp" />
@@ -357,6 +374,7 @@
     <ClCompile Include="ParticleComponents.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Physics\Physics.cpp" />
+    <ClCompile Include="Rendering\Draw2D.cpp" />
     <ClCompile Include="Rendering\IndexBufferManager.cpp" />
     <ClCompile Include="Rendering\InputLayoutManager.cpp" />
     <ClCompile Include="Rendering\Mesh.cpp" />
@@ -414,6 +432,16 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\InstancedVertex64.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Rendering\Shaders\TexturedPixel.hlsl">

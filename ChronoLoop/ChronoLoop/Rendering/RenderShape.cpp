@@ -6,10 +6,12 @@
 #include "../Common/Common.h"
 #include "../Common/Logger.h"
 #include "TextureManager.h"
+#include "VertexBufferManager.h"
+#include "IndexBufferManager.h"
 #include <memory>
 
 
-namespace RenderEngine {
+namespace Epoch {
 
 	RenderShape::RenderShape() {
 		mType = RenderNodeType::Shape;
@@ -47,10 +49,15 @@ namespace RenderEngine {
 			SystemLogger::GetError() << "[Error] Attempting to load an empty mesh in RenderShape!" << std::endl;
 		}
 #endif
+
+		mIndexOffset = IndexBufferManager::Instance().AddToBuffer(_mesh.GetName(), _mesh.GetIndicies(), (unsigned int)_mesh.IndicieSize());
+		mVertexOffset = VertexBufferManager::Instance().GetInternalBuffer<VertexPosNormTex>()->AddVerts(_mesh.GetName(), _mesh.GetVerts(), (unsigned int)_mesh.VertSize());
+
+
 		ID3D11Buffer *tBuffer;
 		mIndexBuffer = nullptr;
 		mVertexBuffer = nullptr;
-		auto device = *Renderer::Instance()->iGetDevice().get();
+		auto device = Renderer::Instance()->iGetDevice().Get();
 		D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
 		auto verts = _mesh.GetVerts();
 		vertexBufferData.pSysMem = verts;
@@ -65,7 +72,7 @@ namespace RenderEngine {
 		indexBufferData.pSysMem = _mesh.GetIndicies();
 		indexBufferData.SysMemPitch = 0;
 		indexBufferData.SysMemSlicePitch = 0;
-		CD3D11_BUFFER_DESC indexBufferDesc((UINT)_mesh.IndicieSize() * sizeof(unsigned short), D3D11_BIND_INDEX_BUFFER);
+		CD3D11_BUFFER_DESC indexBufferDesc((UINT)_mesh.IndicieSize() * sizeof(unsigned int), D3D11_BIND_INDEX_BUFFER);
 		result = device->CreateBuffer(&indexBufferDesc, &indexBufferData, &tBuffer);
 		mIndexBuffer = std::make_shared<ID3D11Buffer*>(tBuffer);
 	}
@@ -107,7 +114,7 @@ namespace RenderEngine {
 
 	RenderShape& RenderShape::AddTexture(const wchar_t * _path, TextureType _position) {
 		char *narrow = nullptr;
-		Engine::MakeNarrow(_path, &narrow, (unsigned int)std::wcslen(_path) + 1);
+		MakeNarrow(_path, &narrow, (unsigned int)std::wcslen(_path) + 1);
 		AddTexture(narrow, _position);
 		delete[] narrow;
 		return *this;
@@ -115,9 +122,10 @@ namespace RenderEngine {
 
 	void RenderShape::Render() {
 		UINT stride = sizeof(VertexPosNormTex), offset = 0;
-		(*Renderer::Instance()->iGetContext())->IASetIndexBuffer(*mIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-		(*Renderer::Instance()->iGetContext())->IASetVertexBuffers(0, 1, mVertexBuffer.get(), &stride, &offset);
-		(*Renderer::Instance()->iGetContext())->DrawIndexed(mIndexCount, 0, 0);
+		ID3D11Buffer * vBuffer = VertexBufferManager::GetBuffer(eVERT_POSNORMTEX);
+		Renderer::Instance()->iGetContext()->IASetIndexBuffer(IndexBufferManager::GetBuffer(), DXGI_FORMAT_R32_UINT, 0);
+		Renderer::Instance()->iGetContext()->IASetVertexBuffers(0, 1, &vBuffer, &stride, &offset);
+		Renderer::Instance()->iGetContext()->DrawIndexedInstanced(mIndexCount, 1, mIndexOffset, mVertexOffset, 0);
 	}
 
 }

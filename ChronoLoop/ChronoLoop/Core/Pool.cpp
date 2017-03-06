@@ -1,85 +1,133 @@
 #include "Pool.h"
 #include "../Common/Logger.h"
 
-Pool* Pool::sInstance = nullptr;
+namespace Epoch
+{
 
-Pool::Pool(int _capacity) {
-	iResize(_capacity);
-}
+	Pool* Pool::sInstance = nullptr;
 
-Pool::~Pool() {
-	iClear();
-}
-
-Pool * Pool::Instance() {
-	return sInstance;
-}
-
-void Pool::Initialize(unsigned int _size) {
-	if (nullptr == sInstance) {
-		sInstance = new Pool(_size);
-	}
-}
-
-void Pool::DestroyInstance() {
-	if (sInstance != nullptr) {
-		delete sInstance;
-		sInstance = nullptr;
-	}
-}
-
-inline unsigned int Pool::iGetSize() {
-	return mSize;
-}
-
-void Pool::iResize(unsigned int _size) {
-	if (_size > 5000) {
-		SystemLogger::GetError() << "[Warning] The size of the pool has been set to " << _size << ", which is pretty big. Was this intentional?" << std::endl;
-	}
-	if (_size < mSize) {
-		// Delete objects to reach the size.
-		while (_size < mSize) {
-			delete iGetObject();
-		}
-	} else if(_size > mSize) {
-		// Add more objects to meet the size
-		while (_size > mSize) {
-			iAddObject(new BaseObject);
-		}
-	}
-}
-
-BaseObject * Pool::iGetObject() {
-	if(mSize == 0)
+	Pool::Pool(int _capacity)
 	{
-		// TODO: Actually implement capacity.
-		iResize(50);
+		iResize(_capacity);
 	}
-	if (mHead != nullptr) {
-		Node* n = mHead;
-		mHead = mHead->mNext;
-		BaseObject* obj = n->data;
-		delete n;
-		--mSize;
-		return obj;
-	}
-	return nullptr;
-}
 
-void Pool::iAddObject(BaseObject * _obj) {
-	Node* n = new Node;
-	n->data = _obj;
-	n->mNext = mHead;
-	mHead = n;
-	++mSize;
-}
-
-void Pool::iClear() {
-	Node *n = mHead, *t = nullptr;
-	while (n != nullptr) {
-		t = n;
-		n = n->mNext;
-		delete t->data;
-		delete t;
+	Pool::~Pool()
+	{
+		iClear();
 	}
+
+	Pool * Pool::Instance()
+	{
+		return sInstance;
+	}
+
+	void Pool::Initialize(unsigned int _size)
+	{
+		if (nullptr == sInstance)
+		{
+			sInstance = new Pool(_size);
+		}
+	}
+
+	void Pool::DestroyInstance()
+	{
+		if (sInstance != nullptr)
+		{
+			delete sInstance;
+			sInstance = nullptr;
+		}
+	}
+
+	inline unsigned int Pool::iGetSize()
+	{
+		return mSize;
+	}
+
+	void Pool::iResize(unsigned int _size)
+	{
+		if (_size > 5000)
+		{
+			SystemLogger::GetError() << "[Warning] The size of the pool has been set to " << _size << ", which is pretty big. Was this intentional?" << std::endl;
+		}
+		if (_size < mSize)
+		{
+			// Delete objects to reach the size.
+			while (_size < mSize)
+			{
+				delete iGetObject();
+			}
+		}
+		else if (_size > mSize)
+		{
+			// Add more objects to meet the size
+			while (_size > mSize)
+			{
+				iAddObject(new BaseObject);
+			}
+		}
+	}
+
+	BaseObject * Pool::iGetObject()
+	{
+		if (mSize == 0)
+		{
+			// TODO: Actually implement capacity.
+			iResize(50);
+		}
+		if (mHead != nullptr)
+		{
+			Node* n = mHead;
+			mHead = mHead->mNext;
+			BaseObject* obj = n->data;
+			delete n;
+			--mSize;
+			return obj;
+		}
+		return nullptr;
+	}
+
+	void Pool::iRemoveObject(unsigned short _id)
+	{
+			Node *n = mHead, *t = nullptr;
+		while (n != nullptr) {
+			//if head
+			if(n->data->GetUniqueID() == _id && mHead->data->GetUniqueID() == _id)
+			{
+				mHead = n->mNext;
+				delete n;
+				return;
+			}
+			else if(n->data->GetUniqueID() == _id)
+			{
+				t->mNext = n->mNext;
+				delete n;
+				return;
+			}
+			t = n;
+			n = n->mNext;
+		}
+	}
+
+	void Pool::iAddObject(BaseObject * _obj)
+	{
+		Node* n = new Node;
+		//Todo Pat: Find a better way to reassign ids so it doesnt skip
+		_obj->SetUniqueID(_obj->GetObjectCountandIncrement());
+		n->data = _obj;
+		n->mNext = mHead;
+		mHead = n;
+		++mSize;
+	}
+
+	void Pool::iClear() {
+		Node *n = mHead, *t = nullptr;
+		while (n != nullptr) {
+			t = n;
+			n = n->mNext;
+			delete t->data;
+			delete t;
+		}
+	}
+
+
 }

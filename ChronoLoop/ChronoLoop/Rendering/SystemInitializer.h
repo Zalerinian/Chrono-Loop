@@ -10,7 +10,7 @@
 #include "../Core/Pool.h"
 
 
-namespace RenderEngine {
+namespace Epoch {
 	bool InitializeSystems(HWND _Window, unsigned int _width, unsigned int _height,
 												 bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane,
 												 vr::IVRSystem* _vrsys) {
@@ -19,10 +19,7 @@ namespace RenderEngine {
 		TimeManager::Instance();
 		InputLayoutManager::Instance();
 		TextureManager::Instance();
-		if (_vrsys) {
-			VRInputManager::Instance();
-			VRInputManager::Initialize(_vrsys);
-		}
+		VRInputManager::Initialize(_vrsys);
 		ShaderManager::Instance();
 		Pool::Initialize();
 		Physics::Instance();
@@ -31,7 +28,7 @@ namespace RenderEngine {
 
 	bool ShutdownSystems() {
 		ShaderManager::DestroyInstance();
-		VRInputManager::Shutdown();
+		VRInputManager::DestroyInstance();
 		TextureManager::DestroyInstance();
 		InputLayoutManager::DestroyInstance();
 		TimeManager::Destroy();

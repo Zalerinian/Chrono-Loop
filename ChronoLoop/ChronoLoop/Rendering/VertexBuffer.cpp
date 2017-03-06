@@ -1,6 +1,6 @@
 #include "VertexBuffer.h"
 
 
-namespace RenderEngine {
+namespace Epoch {
 
 }

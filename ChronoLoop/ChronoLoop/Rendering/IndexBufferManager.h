@@ -1,15 +1,15 @@
 #pragma once
 #include <string>
-#include <map>
+#include <unordered_map>
 
 struct ID3D11Buffer;
 
-namespace RenderEngine {
+namespace Epoch {
 
 	class IndexBufferManager
 	{
 		static IndexBufferManager *sInstance;
-		std::map<std::string, unsigned int> mOffsets;
+		std::unordered_map<std::string, unsigned int> mOffsets;
 		ID3D11Buffer* mIndexBuffer;
 		IndexBufferManager();
 		~IndexBufferManager();

@@ -7,7 +7,7 @@
 #include "../Common/Logger.h"
 #include <algorithm>
 
-namespace RenderEngine {
+namespace Epoch {
 	void RenderSet::AddNode(RenderNode *_node, RenderContext* _rc) {
 		if (_node->mType == RenderNode::RenderNodeType::Shape) {
 			if (((RenderShape*)_node)->mIndexCount == 0) {
@@ -76,27 +76,7 @@ namespace RenderEngine {
 
 	void RenderSet::RemoveContext(std::vector<RenderContext*>::iterator _it) {
 		RenderContext* rc = (*_it);
-		if (rc->mNext && rc->mNext->mNext) {
-			// This node has two valid children.
-			if(rc->mNext->mType == RenderNode::RenderNodeType::Shape && rc->mNext->mNext->mType == RenderNode::RenderNodeType::Shape) {
-				// Both children are shapes.
-				RenderShape *child = (RenderShape*)rc->mNext, *grandchild = (RenderShape*)rc->mNext->mNext;
-				if (rc != &child->mContext) {
-					(*_it) = &child->mContext;
-				} else if (rc != &grandchild->mContext) {
-					(*_it) = &grandchild->mContext;
-				} else {
-					// Something's fucky.
-					Debug::SetBreakpoint();
-				}
-			} else {
-				// Both children are not shapes
-				mContexts.erase(_it);
-			}
-		} else {
-			// This context does not have two children
-			mContexts.erase(_it);
-		}
+		mContexts.erase(_it);
 		RemoveNode(rc);
 	}
 

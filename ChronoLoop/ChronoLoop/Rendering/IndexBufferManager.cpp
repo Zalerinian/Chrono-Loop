@@ -1,9 +1,9 @@
 #include "IndexBufferManager.h"
 #include "renderer.h"
 #include <d3d11.h>
+#include "../Common/Common.h"
 
-
-namespace RenderEngine {
+namespace Epoch {
 
 	IndexBufferManager* IndexBufferManager::sInstance = nullptr;
 
@@ -18,7 +18,7 @@ namespace RenderEngine {
 		mIndexBuffer->Release();
 	}
 
-	IndexBufferManager & RenderEngine::IndexBufferManager::Instance()
+	IndexBufferManager & IndexBufferManager::Instance()
 	{
 		if (!sInstance)
 			sInstance = new IndexBufferManager();
@@ -55,12 +55,14 @@ namespace RenderEngine {
 				offset = oldSize;
 				initData.pSysMem = new unsigned int[newSize];
 				memcpy((char *)(initData.pSysMem) + desc.ByteWidth, _Indices, sizeof(unsigned int) * _NumIndices);
-				desc.ByteWidth = sizeof(unsigned int) * _NumIndices;
+				desc.ByteWidth += sizeof(unsigned int) * _NumIndices;
 				ID3D11Buffer *newBuffer;
-				(*Renderer::Instance()->iGetDevice())->CreateBuffer(&desc, &initData, &newBuffer);
-				(*Renderer::Instance()->iGetContext())->CopySubresourceRegion(newBuffer, 0, 0, 0, 0, sInstance->mIndexBuffer, 0, 0);
+				Renderer::Instance()->iGetDevice()->CreateBuffer(&desc, &initData, &newBuffer);
+				Renderer::Instance()->iGetContext()->CopySubresourceRegion(newBuffer, 0, 0, 0, 0, sInstance->mIndexBuffer, 0, 0);
 				sInstance->mIndexBuffer->Release();
 				sInstance->mIndexBuffer = newBuffer;
+				std::string name = "The Index Buffer, mk" + std::to_string(sInstance->mOffsets.size());
+				SetD3DName(sInstance->mIndexBuffer, name.c_str());
 				delete[] initData.pSysMem;
 			}
 			else
@@ -75,7 +77,8 @@ namespace RenderEngine {
 
 				D3D11_SUBRESOURCE_DATA initData;
 				initData.pSysMem = _Indices;
-				(*Renderer::Instance()->iGetDevice())->CreateBuffer(&desc, &initData, &sInstance->mIndexBuffer);
+				Renderer::Instance()->iGetDevice()->CreateBuffer(&desc, &initData, &sInstance->mIndexBuffer);
+				SetD3DName(sInstance->mIndexBuffer, "The Index Buffer");
 			}
 			sInstance->mOffsets[_Name] = offset;
 		}

@@ -2,10 +2,10 @@
 #include "VertexBuffer.h"
 #include "Structures.h"
 #include "RendererDefines.h"
-namespace RenderEngine {
+#include <typeinfo>
+namespace Epoch {
 
-	class VertexBufferManager
-	{
+	class VertexBufferManager {
 	private:
 		VertexBuffer<VertexPos>						mPosBuffer;
 		VertexBuffer<VertexPosColor>				mPosColorBuffer;
@@ -23,6 +23,13 @@ namespace RenderEngine {
 		static VertexBufferManager& Instance();
 		static void Shutdown();
 		static ID3D11Buffer* GetBuffer(VertFormat _format);
-	};
 
+		template<class T>
+		static VertexBuffer<T>* GetInternalBuffer() {
+			if (!sInstance) {
+				return nullptr;
+			}
+			return &sInstance->mPosNormTexBuffer;
+		}
+	};
 }
