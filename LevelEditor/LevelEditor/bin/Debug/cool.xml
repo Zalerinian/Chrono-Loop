@@ -1,0 +1,26 @@
+﻿<Level>
+  <Object>
+    <Name>Cube.001</Name>
+    <Mesh>Cube.obj</Mesh>
+    <Texture>skybox.dds</Texture>
+    <Position>5.373922,9.817053,0</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>3.740073,1,1</Scale>
+  </Object>
+  <Object>
+    <Name>Cube_Cube.001</Name>
+    <Mesh>Cube.obj</Mesh>
+    <Texture>cube_texture.png</Texture>
+    <Position>0,0,2.871872</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>22.11864,11.49264,1</Scale>
+  </Object>
+  <Object>
+    <Name>test</Name>
+    <Mesh>Cube.obj</Mesh>
+    <Texture>cube_texture.png</Texture>
+    <Position>5.9,0,-3.911393</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>22.11864,11.49264,1</Scale>
+  </Object>
+</Level>
