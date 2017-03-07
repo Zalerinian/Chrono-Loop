@@ -27,6 +27,7 @@
 #include "Actions/CCButtonPress.h"
 #include "Core/Level.h"
 #include "Common/Logger.h"
+#include "ParticleSystem.h"
 //#include "Rendering/TextureManager.h"
 
 #define _CRTDBG_MAP_ALLOC
@@ -172,7 +173,7 @@ void Update() {
 	TimeManager::Instance()->AddObjectToTimeline(PhysicsBox2);
 
 	Transform SphereTransform;
-	matrix4 SphereMat = matrix4::CreateScale(0.15f, 0.15f, 0.15f); 
+	matrix4 SphereMat = matrix4::CreateScale(0.15f, 0.15f, 0.15f);
 	SphereMat *= matrix4::CreateTranslation(3, 5, 0);
 	SphereTransform.SetMatrix(SphereMat);
 	BaseObject* PhysicsSphere = Pool::Instance()->iGetObject()->Reset("sphere", SphereTransform);
@@ -207,7 +208,7 @@ void Update() {
 	matrix4 ButtonMat = matrix4::CreateTranslation(-3, 0, 0);
 	ButtonTransform.SetMatrix(ButtonMat);
 	BaseObject* Button = Pool::Instance()->iGetObject()->Reset("button", ButtonTransform);
-	ButtonCollider* ButtonCol = new ButtonCollider(Button, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), 3, 1, vec4f(0,1,0,0));
+	ButtonCollider* ButtonCol = new ButtonCollider(Button, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), 3, 1, vec4f(0, 1, 0, 0));
 	CodeComponent* ButtonCollision = new CCButtonPress;
 	Button->AddComponent(ButtonCol);
 	Button->AddComponent(ButtonCollision);
@@ -216,30 +217,30 @@ void Update() {
 	Transform PlaneTransform;
 	PlaneTransform.SetMatrix(matrix4::CreateTranslation(0, -1, 0));
 	BaseObject* Floor = Pool::Instance()->iGetObject()->Reset("plane", PlaneTransform);// new BaseObject("plane", PlaneTransform);
-	PlaneCollider* plane = new PlaneCollider(Floor, false, vec4f(0.0f, 0.0f, 0.0f, 1.0f), 10.0f, 0.1f, 0.8f, 0.7f, 0.1f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
+	PlaneCollider* plane = new PlaneCollider(Floor, false, vec4f(0.0f, 0.0f, 0.0f, 1.0f), 10.0f, 0.1f, 0.8f, 0.7f, 0.1f, -1.0f, vec4f(0.0f, 1.0f, 0.0f, 1.0f));
 	MeshComponent *planeObj = new MeshComponent("../Resources/BigFloor.obj");
 	planeObj->AddTexture("../Resources/floorg.png", eTEX_DIFFUSE);
 	Floor->AddComponent(plane);
 	Floor->AddComponent(planeObj);
-	
+
 	Transform identity;
 
 	BaseObject* walls = Pool::Instance()->iGetObject()->Reset("walls", PlaneTransform);// new BaseObject("walls", PlaneTransform);
 	MeshComponent *wallMesh = new MeshComponent("../Resources/BigWall.obj");
 	wallMesh->AddTexture("../Resources/Wallg.png", eTEX_DIFFUSE);
-	CubeCollider* ButtonRoomBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-7.034f, -1, -8, 1), vec4f(1.011f, 3, -7.026f, 1));
-	CubeCollider* ExitLeftWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-0.985f, -1, -9.008f, 1), vec4f(1.011f, 3, -7.026f, 1));
-	CubeCollider* ExitBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(0.985f, -1, -10.008f, 1), vec4f(3.112f, 3, -9.008f, 1));
-	CubeCollider* ExitRightWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(3.112f, -1, -9.008f, 1), vec4f(4.112f, 3, -6.991f, 1));
-	CubeCollider* MainBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(4.112f, -1, -7.991f, 1), vec4f(7.036f, 3, -6.991f, 1));
-	CubeCollider* RightWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(7.036f, -1, -6.991f, 1), vec4f(8.036f, 3, 7.142f, 1));
-	CubeCollider* MainFrontWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(3.063f, -1, 7.142f, 1), vec4f(8.036f, 3, 8.142f, 1));
-	CubeCollider* EnterRightWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(3.063f, -1, 7.142f, 1), vec4f(4.063f, 3, 9.055f, 1));
-	CubeCollider* EnterBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(0.918f, -1, 9.055f, 1), vec4f(4.063f, 3, 10.055f, 1));
-	CubeCollider* EnterLeftWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-0.918f, -1, 7.014f, 1), vec4f(0.918f, 3, 9.055f, 1));
-	CubeCollider* ButtonRoomFrontWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-7.054f, -1, 7.014f, 1), vec4f(0.918f, 3, 8.014f, 1));
-	CubeCollider* LeftWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-8.054f, -1, -7.014f, 1), vec4f(-7.054f, 3, 7.014f, 1));
-	CubeCollider* DividerWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-1.273f, -1, -7.022f, 1), vec4f(-0.871f, 3, 3.125f, 1));
+	CubeCollider* ButtonRoomBackWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-7.034f, -1, -8, 1), vec4f(1.011f, 3, -7.026f, 1));
+	CubeCollider* ExitLeftWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-0.985f, -1, -9.008f, 1), vec4f(1.011f, 3, -7.026f, 1));
+	CubeCollider* ExitBackWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(0.985f, -1, -10.008f, 1), vec4f(3.112f, 3, -9.008f, 1));
+	CubeCollider* ExitRightWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(3.112f, -1, -9.008f, 1), vec4f(4.112f, 3, -6.991f, 1));
+	CubeCollider* MainBackWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(4.112f, -1, -7.991f, 1), vec4f(7.036f, 3, -6.991f, 1));
+	CubeCollider* RightWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(7.036f, -1, -6.991f, 1), vec4f(8.036f, 3, 7.142f, 1));
+	CubeCollider* MainFrontWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(3.063f, -1, 7.142f, 1), vec4f(8.036f, 3, 8.142f, 1));
+	CubeCollider* EnterRightWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(3.063f, -1, 7.142f, 1), vec4f(4.063f, 3, 9.055f, 1));
+	CubeCollider* EnterBackWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(0.918f, -1, 9.055f, 1), vec4f(4.063f, 3, 10.055f, 1));
+	CubeCollider* EnterLeftWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-0.918f, -1, 7.014f, 1), vec4f(0.918f, 3, 9.055f, 1));
+	CubeCollider* ButtonRoomFrontWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-7.054f, -1, 7.014f, 1), vec4f(0.918f, 3, 8.014f, 1));
+	CubeCollider* LeftWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-8.054f, -1, -7.014f, 1), vec4f(-7.054f, 3, 7.014f, 1));
+	CubeCollider* DividerWall = new CubeCollider(walls, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-1.273f, -1, -7.022f, 1), vec4f(-0.871f, 3, 3.125f, 1));
 	walls->AddComponent(ButtonRoomBackWall);
 	walls->AddComponent(ExitLeftWall);
 	walls->AddComponent(ExitBackWall);
@@ -291,7 +292,7 @@ void Update() {
 
 	MeshComponent *ButtonMesh = new MeshComponent("../Resources/cube.obj");
 	ButtonMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
-	
+
 	Button->AddComponent(ButtonMesh);
 
 	//pat added
@@ -319,7 +320,7 @@ void Update() {
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::SET_BasePath, 0, false, (void*)new m_Path(_basePath)));
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_initSB)));
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
-	
+
 	//Temp Camera OBJ
 	Transform camTrans;
 	BaseObject camObj("TempCam", camTrans);
@@ -382,7 +383,7 @@ void Update() {
 	Physics::Instance()->mObjects.push_back(LeftController);
 	Physics::Instance()->mObjects.push_back(Button);
 	Level::Initialize(headset, RightController, LeftController);
-	Level* L1 = Level::Instance(); 
+	Level* L1 = Level::Instance();
 	L1->iAddObject(PhysicsBox);
 	L1->iAddObject(PhysicsBox2);
 	L1->iAddObject(PhysicsSphere);
@@ -398,6 +399,12 @@ void Update() {
 	L1->iAddObject(ControlBoard);
 	L1->iAddObject(WinBoard);
 	L1->iCallStart();
+
+	ParticleEmitter* emit;
+	emit = new ParticleEmitter(0, -1, 300, 5, vec4f(0, 0, 0, 0));
+	emit->SetParticle(new Particle(100, 1.0, vec4f(0, 0, 0, 0), vec4f(1, 1, 1, 1)));
+	emit->SetTexture("../Resources/SampleParticle.png");
+	ParticleSystem::Instance()->AddEmitter(emit);
 
 	//// Test for TextureManager::iAddTexture2D. Works nicely!
 	//D3D11_TEXTURE2D_DESC AddedTextureDesc;
@@ -422,7 +429,7 @@ void Update() {
 	if (VREnabled) {
 		VRInputManager::GetInstance().Update();
 	}
-	
+
 	UpdateTime();
 	fixedTime = 0;
 	while (true) {
@@ -443,9 +450,10 @@ void Update() {
 			//SystemLogger::GetLog() << "[Debug] Regular Update " << std::endl;
 			UpdateTime();
 			Level::Instance()->iUpdate();
-			
+
 			TimeManager::Instance()->Update(deltaTime);
-			Renderer::Instance()->Render(deltaTime); 
+			Renderer::Instance()->Render(deltaTime);
+			ParticleSystem::Instance()->Update();
 			while (fixedTime >= FIXED_UPDATE_INTERVAL) {
 				Physics::Instance()->Update(FIXED_UPDATE_INTERVAL);
 				fixedTime -= FIXED_UPDATE_INTERVAL;

@@ -121,6 +121,18 @@
     <Filter Include="Common\Math\Source Files">
       <UniqueIdentifier>{e319ddd3-329d-43fd-aeb9-fb646fc0c8fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Particles">
+      <UniqueIdentifier>{159d63e9-a8e5-4572-b414-1bf599e96dea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Particles\Header Files">
+      <UniqueIdentifier>{6ea5f63f-ad26-4b2a-a4e7-ef619b5fd6b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Particles\Source Files">
+      <UniqueIdentifier>{e478f85e-76f9-4e0f-ae55-5337a363ef60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Particles\Shaders">
+      <UniqueIdentifier>{3e8d6a0b-c3af-43e3-9a54-2491174d650a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\BaseObject.h">
@@ -323,6 +335,12 @@
     </ClInclude>
     <ClInclude Include="Common\Math\vec4i.h">
       <Filter>Common\Math\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleComponents.h">
+      <Filter>Particles\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Particles\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -530,6 +548,12 @@
     <ClCompile Include="Common\Math\vec4i.cpp">
       <Filter>Common\Math\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleComponents.cpp">
+      <Filter>Particles\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>Particles\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
@@ -573,6 +597,15 @@
     </FxCompile>
     <FxCompile Include="Rendering\Shaders\InstancedVertex64.hlsl">
       <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticleVertexShader.hlsl">
+      <Filter>Particles\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="GeometryShader.hlsl">
+      <Filter>Particles\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticlePixelShader.hlsl">
+      <Filter>Particles\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

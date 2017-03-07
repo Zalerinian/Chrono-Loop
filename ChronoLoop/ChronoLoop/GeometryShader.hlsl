@@ -20,10 +20,10 @@ void main(
 {
 	GSOutput element;
 	float4 temp[4];
-	temp[0] = float4(input[0].pos.xyz, 1) + float4(input[0].size, input[0].size, 0, 0);
-	temp[1] = float4(input[0].pos.xyz, 1) + float4(input[0].size, -input[0].size, 0, 0);
-	temp[2] = float4(input[0].pos.xyz, 1) + float4(-input[0].size, -input[0].size, 0, 0);
-	temp[3] = float4(input[0].pos.xyz, 1) + float4(-input[0].size, input[0].size, 0, 0);
+	temp[0] = float4(input[0].pos) + float4(-input[0].size, input[0].size, 0, 0);
+	temp[1] = float4(input[0].pos) + float4(input[0].size, input[0].size, 0, 0);
+	temp[2] = float4(input[0].pos) + float4(-input[0].size, -input[0].size, 0, 0);
+	temp[3] = float4(input[0].pos) + float4(input[0].size, -input[0].size, 0, 0);
 
 	element.pos = temp[0];
 	element.uv = float4(0, 0, 0, 0);
