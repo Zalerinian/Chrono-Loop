@@ -358,6 +358,14 @@ namespace Epoch
 		return true;
 	}
 
+	bool Epoch::Physics::OBBtoPlane(OrientedCubeCollider & _obb, PlaneCollider & _plane)
+	{
+		return fabsf((_obb.mCenter * _plane.mNormal) - _plane.mOffset) <=
+					 (_obb.mWidth * fabsf(_obb.mAxis[0].Magnitude())) +
+					 (_obb.mHeight * fabsf(_obb.mAxis[1].Magnitude())) +
+					 (_obb.mDepth * fabsf(_obb.mAxis[2].Magnitude()));
+	}
+
 	bool Physics::SphereToSphere(SphereCollider& _sphere1, SphereCollider& _sphere2)
 	{
 		vec4f pos = _sphere1.mCenter - _sphere2.mCenter;
@@ -869,6 +877,13 @@ namespace Epoch
 								if (otherCol->mColliderType == Collider::eCOLLIDER_OrientedCube)
 								{
 									if (collider->mShouldMove && OBBtoOBB(*((OrientedCubeCollider*)collider), *((OrientedCubeCollider*)otherCol)))
+									{
+										collider->mShouldMove = false;
+									}
+								}
+								else if (otherCol->mColliderType == Collider::eCOLLIDER_Plane)
+								{
+									if (collider->mShouldMove && OBBtoPlane(*((OrientedCubeCollider*)collider), *((PlaneCollider*)otherCol)))
 									{
 										collider->mShouldMove = false;
 									}

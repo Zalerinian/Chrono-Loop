@@ -135,7 +135,7 @@ void Update() {
 	///*///////////////////////Using this to test physics//////////////////
 
 	Transform transform;
-	vec4f vec = { 0.5, 0.5, 0, 0 };
+	vec4f vec = { 0, 1, 1, 0 };
 	matrix4 mat1 = matrix4::CreateTranslation(0, 0, 0) * matrix4::CreateScale(0.3f, 0.3f, 0.3f) * matrix4::CreateAxisRotation(vec, DirectX::XM_PI / 4);
 	transform.SetMatrix(mat1);
 	BaseObject* PhysicsBox = Pool::Instance()->iGetObject()->Reset("aabb", transform);//new BaseObject("aabb", transform);
@@ -160,7 +160,9 @@ void Update() {
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::PLAYBOUNCEEFFECTS);
 
 	Transform transformBox;
-	matrix4 matBox = matrix4::CreateZRotation(DirectX::XM_PI / 4) * matrix4::CreateTranslation(0, 5, 0) * matrix4::CreateScale(0.3f, 0.3f, 0.3f);
+	vec4f vec2 = { 1, 1, 0, 0 };
+
+	matrix4 matBox = matrix4::CreateAxisRotation(vec2, DirectX::XM_PI / 4) * matrix4::CreateTranslation(2, 5, 0) * matrix4::CreateScale(0.3f, 0.3f, 0.3f);
 	transformBox.SetMatrix(matBox);
 	BaseObject* PhysicsBox2 = Pool::Instance()->iGetObject()->Reset("aabb2", transformBox);//new BaseObject("aabb", transform);
 	OrientedCubeCollider* obb2 = new OrientedCubeCollider(PhysicsBox2, true, vec4f(0, -0.5, 0, 0), 5, 0.5f, 0.1f, 0.1f, 0.01f, .075f, .075f, .075f);

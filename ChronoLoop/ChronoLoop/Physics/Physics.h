@@ -52,6 +52,7 @@ namespace Epoch
 
 		bool			AABBtoAABB(CubeCollider& _aabb1, CubeCollider& _aabb2);
 		bool			OBBtoOBB(OrientedCubeCollider& _obb1, OrientedCubeCollider& _obb2);
+		bool			OBBtoPlane(OrientedCubeCollider& _obb, PlaneCollider& _plane);
 		bool			SphereToSphere(SphereCollider& _sphere1, SphereCollider& _sphere2);
 		bool			SphereToAABB(SphereCollider& _sphere, CubeCollider& _aabb);
 		bool			SphereToTriangle(SphereCollider& _sphere, Triangle& _tri, vec4f& _displacement);
