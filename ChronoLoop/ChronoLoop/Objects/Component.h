@@ -82,7 +82,7 @@ namespace Epoch
 		void Pause(int _id = 0);
 		void Stop(int _id = 0);
 		void PlaySFX(int _id = 0);
-		void PlaySFX(int _id = 0, const vec4f* _pos = new vec4f());
+		void PlaySFX(int _id, const vec4f* _pos);
 		void AddSoundEvent(sfxTypes _type, int64_t _event);
 
 		void Update();

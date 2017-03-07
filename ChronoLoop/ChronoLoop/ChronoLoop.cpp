@@ -149,13 +149,15 @@ void Update() {
 	PhysicsBox->AddComponent(BoxCollision);
 	PhysicsBox->AddComponent(BoxSphereCollision);
 	TimeManager::Instance()->AddObjectToTimeline(PhysicsBox);
-	Emitter* aabbSound = new Emitter();
+	Emitter* aabbSound = new Emitter(), *aabbSound2 = new Emitter(), *sphere1sound = new Emitter();
 	PhysicsBox->AddComponent(aabbSound);
-	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_TEST1);
-	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_TEST1);
-	aabbSound->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_TEST1);
-	aabbSound->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_TEST1);
+	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_TEST2);
+	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_TEST2);
+	aabbSound->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_TEST2);
+	aabbSound->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_TEST2);
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::PLAYBOUNCEEFFECTS);
+	aabbSound2->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::PLAYBOUNCEEFFECTS);
+	sphere1sound->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::PLAYBOUNCEEFFECTS);
 
 	Transform transformBox;
 	matrix4 matBox = matrix4::CreateTranslation(2, 5, 0) * matrix4::CreateScale(0.3f, 0.3f, 0.3f);
@@ -170,6 +172,7 @@ void Update() {
 	PhysicsBox2->AddComponent(PlaneCollisionBox);
 	PhysicsBox2->AddComponent(BoxCollision2);
 	PhysicsBox2->AddComponent(BoxSphereCollision2);
+	PhysicsBox2->AddComponent(aabbSound2);
 	TimeManager::Instance()->AddObjectToTimeline(PhysicsBox2);
 
 	Transform SphereTransform;
@@ -202,6 +205,7 @@ void Update() {
 	PhysicsSphere2->AddComponent(spheretobox2);
 	PhysicsSphere2->AddComponent(PlaneCollision3);
 	PhysicsSphere2->AddComponent(SpheretoSphere2);
+	PhysicsSphere2->AddComponent(sphere1sound);
 	TimeManager::Instance()->AddObjectToTimeline(PhysicsSphere2);
 
 	Transform ButtonTransform;
@@ -322,10 +326,10 @@ void Update() {
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
 
 	//Temp Camera OBJ
-	Transform camTrans;
-	BaseObject camObj("TempCam", camTrans);
+	//Transform camTrans;
+	//BaseObject camObj("TempCam", camTrans);
 	Listener* ears = new Listener();
-	camObj.AddComponent(ears);
+	//camObj.AddComponent(ears);
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(ears, "Listener")));
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(aabbSound, "aabbS")));
 	aabbSound->Play();
@@ -337,6 +341,7 @@ void Update() {
 	HeadsetFollow* hfollow = new HeadsetFollow();
 	headset->AddComponent(hfollow);
 	headset->AddComponent(visibleMesh2);
+	headset->AddComponent(ears);
 	TimeManager::Instance()->AddPlayerObjectToTimeline(headset);
 
 	Transform Door, Exit;
@@ -400,11 +405,11 @@ void Update() {
 	L1->iAddObject(WinBoard);
 	L1->iCallStart();
 
-	ParticleEmitter* emit;
-	emit = new ParticleEmitter(0, -1, 300, 5, vec4f(0, 0, 0, 0));
-	emit->SetParticle(new Particle(100, 1.0, vec4f(0, 0, 0, 0), vec4f(1, 1, 1, 1)));
-	emit->SetTexture("../Resources/SampleParticle.png");
-	ParticleSystem::Instance()->AddEmitter(emit);
+	//ParticleEmitter* emit;
+	//emit = new ParticleEmitter(0, -1, 300, 5, vec4f(0, 0, 0, 0));
+	//emit->SetParticle(new Particle(100, 1.0, vec4f(0, 0, 0, 0), vec4f(1, 1, 1, 1)));
+	//emit->SetTexture("../Resources/SampleParticle.png");
+	//ParticleSystem::Instance()->AddEmitter(emit);
 
 	//// Test for TextureManager::iAddTexture2D. Works nicely!
 	//D3D11_TEXTURE2D_DESC AddedTextureDesc;
