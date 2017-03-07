@@ -404,14 +404,26 @@ namespace Epoch {
 
 
 		for (auto it = mRenderSet.Begin(); it != mRenderSet.End(); ++it) {
+			RenderShape& shape = *it;
+			GhostList<matrix4>& list = it(shape);
 			std::vector<matrix4> positions;
-			it->second.GetData(positions);
+			list.GetData(positions);
 			if (positions.size() > 0) {
-				it->first.GetContext().Apply();
+				shape.GetContext().Apply();
 				mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[0], 0, 0);
-				it->first.Render();
+				shape.Render();
 			}
 		}
+
+		//for (auto it = mRenderSet.Begin(); it != mRenderSet.End(); ++it) {
+		//	std::vector<matrix4> positions;
+		//	it->second.GetData(positions);
+		//	if (positions.size() > 0) {
+		//		it->first.GetContext().Apply();
+		//		mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[0], 0, 0);
+		//		it->first.Render();
+		//	}
+		//}
 	}
 
 
@@ -421,7 +433,7 @@ namespace Epoch {
 
 	GhostList<matrix4>::GhostNode* Renderer::AddNode(RenderShape *_node) {
 		mRenderSet.AddNode(_node, &_node->GetContext());
-		return mRenderSet.AddNode(_node, 3);
+		return mRenderSet.AddNode(*_node, 3);
 	}
 	void Renderer::RemoveNode(RenderShape *_node) {
 		mRenderSet.RemoveShape(_node);

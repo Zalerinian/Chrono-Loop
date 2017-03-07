@@ -1,6 +1,7 @@
 #pragma once
 #include "Math.h"
 #include "Logger.h"
+#include "..\Rendering\RenderSet.h"
 
 namespace Epoch {
 
@@ -20,7 +21,7 @@ namespace Epoch {
 		template <class T>
 		class Iterator {
 			Node<T>* mNode;
-			Iterator<T>& operator++() { mNode = mNode->mNext; return *this; }; // Prefix operator.
+			Iterator<T>& operator++() { mNode = mNode->mNext; return *this; }
 			Iterator<T>& operator--(); // Prefix operator.
 			Iterator<T>& operator++(int); // Postfix operator.
 			Iterator<T>& operator--(int); // Postfix operator.

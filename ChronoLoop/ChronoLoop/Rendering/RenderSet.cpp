@@ -31,7 +31,7 @@ namespace Epoch {
 		if (_rs & RenderStage_PostProcess) {
 			mPostSet.insert(_shape);
 		}
-		return mRenderShapes[_shape].Push(_shape.mPosition);;
+		return mRenderShapes[_shape].Push(_shape.mPosition);
 	}
 
 	void RenderSet::AddNode(RenderNode *_node, RenderContext* _rc) {
@@ -127,7 +127,19 @@ namespace Epoch {
 
 	void RenderSet::SortNodes() {
 		// TODO make a better sorting algorithm, becuase this probably sucks.
-		std::sort(mKeys.begin(), mKeys.end());
+		//std::sort(mKeys.begin(), mKeys.end());
+	}
+
+	RenderSet::Iterator RenderSet::Begin() {
+		Iterator it(this);
+		it.mIndex = 0;
+		return it;
+	}
+
+	RenderSet::Iterator RenderSet::End() {
+		Iterator it(this);
+		it.mIndex = (unsigned int)mKeys.size();
+		return it;
 	}
 
 	RenderSet::~RenderSet() {
@@ -140,4 +152,48 @@ namespace Epoch {
 		}
 	}
 
+
+	// Iterator code!
+	// --Prefix
+	RenderSet::Iterator& RenderSet::Iterator::operator--() {
+		--mIndex;
+		return *this;
+	}
+
+	// ++Prefix
+	RenderSet::Iterator& RenderSet::Iterator::operator++() {
+		++mIndex;
+		return *this;
+	}
+
+	// Postfix--
+	RenderSet::Iterator RenderSet::Iterator::operator--(int) {
+		RenderSet::Iterator i(mSet);
+		i.mIndex = mIndex--;
+		return i;
+	}
+
+	// Postfix++
+	RenderSet::Iterator RenderSet::Iterator::operator++(int) {
+		RenderSet::Iterator i(mSet);
+		i.mIndex = mIndex++;
+		return i;
+	}
+
+	// Get the RenderShape key.
+	RenderShape& RenderSet::Iterator::operator*() {
+		return mSet->mKeys[mIndex];
+	}
+
+	// Get the Ghostlist Value.
+	GhostList<matrix4>& RenderSet::Iterator::operator()(RenderShape& _shape) {
+		return mSet->mRenderShapes[_shape];
+	}
+	bool RenderSet::Iterator::operator==(const Iterator & _it) {
+		return this->mIndex == _it.mIndex && this->mSet == _it.mSet;
+	}
+
+	bool RenderSet::Iterator::operator!=(const Iterator & _it) {
+		return this->mIndex != _it.mIndex || this->mSet != _it.mSet;
+	}
 }
