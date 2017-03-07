@@ -10,9 +10,12 @@
 namespace Epoch {
 
 	GhostList<matrix4>::GhostNode* RenderSet::AddNode(RenderShape& _shape, unsigned int _rs) {
-		GhostList<matrix4>::GhostNode* node = mRenderShapes[_shape].Push(_shape.mPosition);
+		auto location = std::find(mKeys.begin(), mKeys.end(), _shape);
+		if (location == mKeys.end()) {
+			mKeys.push_back(_shape);
+		}
 		static int ImLazy = 0;
-		SystemLogger::Debug() << "Added object for a total of " << ++ImLazy << " additions. The list is currently " << mSize << " nodes in size." << std::endl;
+		SystemLogger::Debug() << "Added object for a total of " << ++ImLazy << " additions. The list currently has " << (mSize + 1) << " nodes." << std::endl;
 		// This shape casts shadows.
 		if (_rs & RenderStage_Shadows) {
 			mShadowSet.insert(_shape);
@@ -28,7 +31,7 @@ namespace Epoch {
 		if (_rs & RenderStage_PostProcess) {
 			mPostSet.insert(_shape);
 		}
-		return node;
+		return mRenderShapes[_shape].Push(_shape.mPosition);;
 	}
 
 	void RenderSet::AddNode(RenderNode *_node, RenderContext* _rc) {
@@ -122,12 +125,9 @@ namespace Epoch {
 		return mHead;
 	}
 
-	std::map<RenderShape, GhostList<matrix4>>::iterator RenderSet::Begin() {
-		return mRenderShapes.begin();
-	}
-
-	std::map<RenderShape, GhostList<matrix4>>::iterator RenderSet::End() {
-		return mRenderShapes.end();
+	void RenderSet::SortNodes() {
+		// TODO make a better sorting algorithm, becuase this probably sucks.
+		std::sort(mKeys.begin(), mKeys.end());
 	}
 
 	RenderSet::~RenderSet() {

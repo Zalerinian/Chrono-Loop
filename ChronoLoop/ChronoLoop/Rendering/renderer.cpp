@@ -391,16 +391,16 @@ namespace Epoch {
 	}
 
 	void Renderer::ProcessRenderSet() {
-		const RenderNode* head = mRenderSet.GetHead();
-		while (head != nullptr) {
-			if (head->mType == RenderNode::RenderNodeType::Context) {
-				((RenderContext*)head)->Apply();
-			} else if (head->mType == RenderNode::RenderNodeType::Shape) {
-				mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &((RenderShape*)head)->mPosition, 0, 0);
-				((RenderShape*)head)->Render();
-			}
-			head = head->GetNext();
-		}
+		//const RenderNode* head = mRenderSet.GetHead();
+		//while (head != nullptr) {
+		//	if (head->mType == RenderNode::RenderNodeType::Context) {
+		//		((RenderContext*)head)->Apply();
+		//	} else if (head->mType == RenderNode::RenderNodeType::Shape) {
+		//		mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &((RenderShape*)head)->mPosition, 0, 0);
+		//		((RenderShape*)head)->Render();
+		//	}
+		//	head = head->GetNext();
+		//}
 
 
 		for (auto it = mRenderSet.Begin(); it != mRenderSet.End(); ++it) {
@@ -421,7 +421,7 @@ namespace Epoch {
 
 	GhostList<matrix4>::GhostNode* Renderer::AddNode(RenderShape *_node) {
 		mRenderSet.AddNode(_node, &_node->GetContext());
-		return mRenderSet.AddNode(*_node, 3);
+		return mRenderSet.AddNode(_node, 3);
 	}
 	void Renderer::RemoveNode(RenderShape *_node) {
 		mRenderSet.RemoveShape(_node);

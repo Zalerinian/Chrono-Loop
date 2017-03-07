@@ -15,6 +15,17 @@ namespace Epoch
 		//	mTextures.insert(std::pair<int, ID3D11ShaderResourceView*>(1, nullptr));
 	}
 
+	RenderContext::RenderContext(const RenderContext & _copy) {
+		mRasterState = _copy.mRasterState;
+		mVertexFormat = _copy.mVertexFormat;
+		mPixelShaderFormat = _copy.mPixelShaderFormat;
+		mVertexShaderFormat = _copy.mVertexShaderFormat;
+		mType = _copy.mType;
+		for (auto it = _copy.mTextures.begin(); it != _copy.mTextures.end(); ++it) {
+			mTextures[it->first] = it->second;
+		}
+	}
+
 	RenderContext::~RenderContext() {}
 
 	void RenderContext::Apply()
@@ -94,6 +105,18 @@ namespace Epoch
 		}
 
 		return true;
+	}
+
+	RenderContext & RenderContext::operator=(const RenderContext & _other) {
+		mRasterState = _other.mRasterState;
+		mVertexFormat = _other.mVertexFormat;
+		mPixelShaderFormat = _other.mPixelShaderFormat;
+		mVertexShaderFormat = _other.mVertexShaderFormat;
+		mType = _other.mType;
+		for (auto it = _other.mTextures.begin(); it != _other.mTextures.end(); ++it) {
+			mTextures[it->first] = it->second;
+		}
+		return *this;
 	}
 
 	bool RenderContext::operator==(const RenderContext & _other) const {

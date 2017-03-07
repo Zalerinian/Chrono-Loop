@@ -48,7 +48,7 @@ namespace std {
 	struct less<Epoch::RenderShape> {
 		bool operator()(const Epoch::RenderShape& _lhs, const Epoch::RenderShape& _rhs) const {
 			// TODO: Create a good sorting algorithm for render shapes. Currently, the objects are not sorted.
-			return _lhs.mVertexOffset < _rhs.mVertexOffset;
+			return _lhs.mVertexOffset < _rhs.mVertexOffset || _lhs.mContext == _rhs.mContext;
 		}
 	};
 

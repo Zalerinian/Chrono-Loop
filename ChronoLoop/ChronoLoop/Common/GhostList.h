@@ -1,6 +1,7 @@
 #pragma once
 #include "Logger.h"
 #include <vector>
+#include "../Common/Math.h"
 
 namespace Epoch {
 
@@ -86,6 +87,20 @@ namespace Epoch {
 		GhostNode *n = mHead;
 		while (n != nullptr) {
 			_data.push_back(n->data);
+			n = n->mNext;
+		}
+		if (_data.size() != mSize) {
+			SystemLogger::Error() << "Something has gone wrong creating the data list: The resulting size is not what was expected. Is something corrupt?" << std::endl;
+		}
+	}
+
+	template<>
+	inline void GhostList<matrix4>::GetData(std::vector<matrix4>& _data) {
+		_data.clear();
+		_data.reserve(mSize); 
+		GhostNode *n = mHead;
+		while (n != nullptr) {
+			_data.push_back(n->data.Transpose());
 			n = n->mNext;
 		}
 		if (_data.size() != mSize) {

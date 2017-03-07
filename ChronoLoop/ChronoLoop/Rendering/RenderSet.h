@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <unordered_set>
 #include "RenderShape.h"
 #include "../Common/GhostList.h"
@@ -15,7 +15,7 @@ namespace Epoch {
 
 	class RenderSet {
 
-		std::map<RenderShape, GhostList<matrix4>> mRenderShapes;
+		std::unordered_map<RenderShape, GhostList<matrix4>> mRenderShapes;
 		std::unordered_set<RenderShape> mShadowSet;
 		std::unordered_set<RenderShape> mDiffuseSet;
 		std::unordered_set<RenderShape> mPostSet;
@@ -23,6 +23,7 @@ namespace Epoch {
 		RenderNode *mHead = nullptr, *mTail = nullptr;
 		unsigned int mSize = 0;
 		std::vector<RenderContext*> mContexts;
+		std::vector<RenderShape> mKeys;
 
 	public:
 		GhostList<matrix4>::GhostNode* AddNode(RenderShape& _shape, unsigned int _rs = RenderStage_Shadows | RenderStage_Diffuse);
@@ -32,9 +33,8 @@ namespace Epoch {
 		void RemoveShape(RenderShape* _node);
 		void ClearSet();
 		const RenderNode *GetHead();
-		std::map<RenderShape, GhostList<matrix4>>::iterator Begin();
-		std::map<RenderShape, GhostList<matrix4>>::iterator End();
-
+		void SortNodes();
+		
 		~RenderSet();
 	};
 }
