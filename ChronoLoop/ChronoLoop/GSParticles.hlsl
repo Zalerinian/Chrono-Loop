@@ -36,12 +36,12 @@ void main(
 	output.Append(element);
 
 	element.pos = temp[2];
-	element.uv = float4(1, 1, 0, 0);
+	element.uv = float4(0, 1, 0, 0);
 
 	output.Append(element);
 
 	element.pos = temp[3];
-	element.uv = float4(0, 1, 0, 0);
+	element.uv = float4(1, 1, 0, 0);
 
 	output.Append(element);
 

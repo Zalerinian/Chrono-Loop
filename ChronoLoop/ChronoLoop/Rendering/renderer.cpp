@@ -14,7 +14,7 @@
 #include "../Common/Breakpoint.h"
 #include "../Input/CommandConsole.h"
 #include "../Rendering/Draw2D.h"
-
+#include "../ParticleSystem.h"
 #define ENABLE_TEXT 1
 
 
@@ -391,29 +391,29 @@ namespace Epoch {
 	}
 
 	void Renderer::ProcessRenderSet() {
-		//const RenderNode* head = mRenderSet.GetHead();
-		//while (head != nullptr) {
-		//	if (head->mType == RenderNode::RenderNodeType::Context) {
-		//		((RenderContext*)head)->Apply();
-		//	} else if (head->mType == RenderNode::RenderNodeType::Shape) {
-		//		mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &((RenderShape*)head)->mPosition, 0, 0);
-		//		((RenderShape*)head)->Render();
-		//	}
-		//	head = head->GetNext();
-		//}
-
-
-		for (auto it = mRenderSet.Begin(); it != mRenderSet.End(); ++it) {
-			RenderShape& shape = *it;
-			GhostList<matrix4>& list = it(shape);
-			std::vector<matrix4> positions;
-			list.GetData(positions);
-			if (positions.size() > 0) {
-				shape.GetContext().Apply();
-				mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[0], 0, 0);
-				shape.Render();
+		const RenderNode* head = mRenderSet.GetHead();
+		while (head != nullptr) {
+			if (head->mType == RenderNode::RenderNodeType::Context) {
+				((RenderContext*)head)->Apply();
+			} else if (head->mType == RenderNode::RenderNodeType::Shape) {
+				mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &((RenderShape*)head)->mPosition, 0, 0);
+				((RenderShape*)head)->Render();
 			}
+			head = head->GetNext();
 		}
+
+
+		//for (auto it = mRenderSet.Begin(); it != mRenderSet.End(); ++it) {
+		//	RenderShape& shape = *it;
+		//	GhostList<matrix4>& list = it(shape);
+		//	std::vector<matrix4> positions;
+		//	list.GetData(positions);
+		//	if (positions.size() > 0) {
+		//		shape.GetContext().Apply();
+		//		mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[0], 0, 0);
+		//		shape.Render();
+		//	}
+		//}
 
 		//for (auto it = mRenderSet.Begin(); it != mRenderSet.End(); ++it) {
 		//	std::vector<matrix4> positions;
@@ -512,6 +512,7 @@ namespace Epoch {
 		} else {
 			RenderVR(_deltaTime);
 		}
+		ParticleSystem::Instance()->Update();
 		mChain->Present(mUseVsync ? 1 : 0, 0);
 	}
 

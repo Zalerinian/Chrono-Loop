@@ -13,6 +13,6 @@ SamplerState samp : register(s0);
 float4 main(GSOutput input) : SV_TARGET
 {
 	float4 col = text2D.Sample(samp, input.uv.xy);
-
-	return float4(0,1,1,0);
+	clip(col.a - 0.25);
+	return col;
 }

@@ -36,9 +36,9 @@ namespace Epoch
 	{
 		char* buffer;
 		int bytes = 0;
-		FileIO::LoadBytes("GeometryShader.cso", &buffer, bytes);
+		FileIO::LoadBytes("GSParticles.cso", &buffer, bytes);
 
-		Renderer::Instance()->iGetDevice()->CreateGeometryShader(buffer, bytes, nullptr, &mGeometryShader);
+		Renderer::Instance()->GetDevice()->CreateGeometryShader(buffer, bytes, nullptr, &mGeometryShader);
 	}
 	void ParticleSystem::SetVertexPixelShader()
 	{
@@ -46,7 +46,7 @@ namespace Epoch
 		int bytes = 0;
 
 		FileIO::LoadBytes("ParticleVertexShader.cso", &buffer, bytes);
-		Renderer::Instance()->iGetDevice()->CreateVertexShader(buffer, bytes, nullptr, &mVShader);
+		Renderer::Instance()->GetDevice()->CreateVertexShader(buffer, bytes, nullptr, &mVShader);
 
 		D3D11_INPUT_ELEMENT_DESC iDesc[] =
 		{
@@ -55,14 +55,14 @@ namespace Epoch
 			{"USELESS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 		};
 
-		Renderer::Instance()->iGetDevice()->CreateInputLayout(iDesc, ARRAYSIZE(iDesc), buffer, bytes, &mILayout);
+		Renderer::Instance()->GetDevice()->CreateInputLayout(iDesc, ARRAYSIZE(iDesc), buffer, bytes, &mILayout);
 
 
 		FileIO::LoadBytes("ParticlePixelShader.cso", &buffer, bytes);
-		Renderer::Instance()->iGetDevice()->CreatePixelShader(buffer, bytes, nullptr, &mPShader);
+		Renderer::Instance()->GetDevice()->CreatePixelShader(buffer, bytes, nullptr, &mPShader);
 
 		CD3D11_BUFFER_DESC desc(sizeof(GSMatrix), D3D11_BIND_CONSTANT_BUFFER);
-		Renderer::Instance()->iGetDevice()->CreateBuffer(&desc, NULL, &mVBuff);
+		Renderer::Instance()->GetDevice()->CreateBuffer(&desc, NULL, &mVBuff);
 	}
 
 	void ParticleSystem::SetMatrices(matrix4 _lmodel, matrix4 _lview, matrix4 _lproj, matrix4 _rmodel, matrix4 _rview, matrix4 _rproj)
@@ -86,7 +86,7 @@ namespace Epoch
 		//TODO: Set up and render
 		if (mPEmitters.size() == 0)
 			return;
-		auto cntxt = Renderer::Instance()->iGetContext();
+		auto cntxt = Renderer::Instance()->GetContext();
 		//Do for both eyes?
 		cntxt->IASetInputLayout(mILayout);
 		cntxt->VSSetShader(mVShader, NULL, 0);

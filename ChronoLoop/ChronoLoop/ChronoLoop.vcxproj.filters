@@ -601,10 +601,10 @@
     <FxCompile Include="ParticleVertexShader.hlsl">
       <Filter>Particles\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="GeometryShader.hlsl">
+    <FxCompile Include="ParticlePixelShader.hlsl">
       <Filter>Particles\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="ParticlePixelShader.hlsl">
+    <FxCompile Include="GSParticles.hlsl">
       <Filter>Particles\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

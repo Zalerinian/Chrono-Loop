@@ -78,7 +78,7 @@ namespace Epoch
 		for (int i = 0; i < mGParticles.size(); i++)
 		{
 			GSParticle vp;
-			vp.pos = vec4f(7, 1, 5, 7);
+			vp.pos = vec4f(0,0,0,0);
 			vp.size = 0;
 			mGParticles[i] = vp;
 		}
@@ -97,13 +97,13 @@ namespace Epoch
 		vData.SysMemPitch = 0;
 		vData.SysMemSlicePitch = 0;
 
-		Renderer::Instance()->iGetDevice()->CreateBuffer(&vDesc, &vData, &mVBuffer);
+		Renderer::Instance()->GetDevice()->CreateBuffer(&vDesc, &vData, &mVBuffer);
 	}
 
 	void ParticleEmitter::CreateTextureResource()
 	{
 		//TODO: UNCOMMENT THIS -Patrick
-		//TextureManager::Instance()->iGetTexture2D(mTName, &tv, &text);
+		TextureManager::Instance()->iGetTexture2D(mTName, &tv, &text);
 	}
 
 	ID3D11Buffer* ParticleEmitter::GetVertexBuffer()
@@ -183,11 +183,11 @@ namespace Epoch
 			mGParticles[i] = gps;
 		}
 
-		Renderer::Instance()->iGetContext()->Map(mVBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mRes);
+		Renderer::Instance()->GetContext()->Map(mVBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mRes);
 		
 		memcpy(mRes.pData, mGParticles.data(), sizeof(GSParticle) * mGParticles.size());
 		//Graphics 2 slides
-		Renderer::Instance()->iGetContext()->Unmap(mVBuffer, 0);
+		Renderer::Instance()->GetContext()->Unmap(mVBuffer, 0);
 	}
 
 	void ParticleEmitter::CleanUpParticles()
@@ -218,20 +218,18 @@ namespace Epoch
 			{
 				//TODO: Relative to emitter
 				float x, y, z;
-				x = fmodf((float)rand(), 6.0) - 3.0;
-				y = fmodf((float)rand(), 6.0) - 3.0;
-				z = fmodf((float)rand(), 6.0) - 3.0;
-
+				x = -3.0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0 - (-3.0))));
+				y = -3.0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0 - (-3.0))));
+				z = -3.0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0 - (-3.0))));
 				Particle* p = new Particle();
 				*p = *mBase;
 				p->mPos = vec4f(x, y, z, 1);
 				p->mPos += mPos;
-
-				x = fmodf((float)rand(), 6.0) - 3.0;
-				y = fmodf((float)rand(), 6.0) - 3.0;
-				z = fmodf((float)rand(), 6.0) - 3.0;
-
-				p->mVelocity = vec4f(0, .001, 0, 0);
+				
+				x = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.025 - 0)));
+				y = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.025 - 0)));
+				z = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.025 - 0)));
+				p->mVelocity = vec4f(x, y, z, 0);
 				mParticles.push_back(p);
 			}
 		}

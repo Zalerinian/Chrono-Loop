@@ -145,7 +145,6 @@ void Update() {
 	CodeComponent* PlaneCollision = new CCElasticReactionWithPlane;
 	CodeComponent* BoxCollision = new CCElasticAABBtoAABB;
 	CodeComponent* BoxSphereCollision = new CCElasticAABBToSphere;
-	Emitter* aabbSound = new Emitter();
 	MeshComponent *visibleMesh = new MeshComponent("../Resources/raycube.obj");
 	visibleMesh->AddTexture("../Resources/raycube.png", eTEX_DIFFUSE);
 	PhysicsBox->AddComponent(visibleMesh);
@@ -417,7 +416,7 @@ void Update() {
 
 	ParticleEmitter* emit;
 	emit = new ParticleEmitter(0, -1, 300, 5, vec4f(0, 5, 0, 0));
-	emit->SetParticle(new Particle(4000, 1.0, vec4f(0, 0, 0, 0), vec4f(0, 0, 0, 0)));
+	emit->SetParticle(new Particle(4000, .25, vec4f(0, 0, 0, 0), vec4f(0, 0, 0, 0)));
 	emit->SetTexture("../Resources/SampleParticle.png");
 	ParticleSystem::Instance()->AddEmitter(emit);
 
@@ -468,7 +467,6 @@ void Update() {
 
 			TimeManager::Instance()->Update(deltaTime);
 			Renderer::Instance()->Render(deltaTime);
-			ParticleSystem::Instance()->Update();
 			while (fixedTime >= FIXED_UPDATE_INTERVAL) {
 				Physics::Instance()->Update(FIXED_UPDATE_INTERVAL);
 				fixedTime -= FIXED_UPDATE_INTERVAL;
