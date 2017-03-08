@@ -135,164 +135,209 @@ void Update() {
 	///*///////////////////////Using this to test physics//////////////////
 
 	Transform transform;
-	matrix4 mat1 = matrix4::CreateTranslation(0, 0, 0) * matrix4::CreateScale(0.3f, 0.3f, 0.3f);
-	transform.SetMatrix(mat1);
-	BaseObject* PhysicsBox = Pool::Instance()->iGetObject()->Reset("aabb", transform);//new BaseObject("aabb", transform);
-	CubeCollider *BoxCollider = new CubeCollider(PhysicsBox, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.0f, 0.1f, 0.1f, 0.1f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
-	BoxCollider->AddForce(vec4f(0, 0, 0, 0));
-	CodeComponent* PlaneCollision = new CCElasticReactionWithPlane;
-	CodeComponent* BoxCollision = new CCElasticAABBtoAABB;
-	CodeComponent* BoxSphereCollision = new CCElasticAABBToSphere;
-	PhysicsBox->AddComponent(BoxCollider);
-	PhysicsBox->AddComponent(PlaneCollision);
-	PhysicsBox->AddComponent(BoxCollision);
-	PhysicsBox->AddComponent(BoxSphereCollision);
-	TimeManager::Instance()->AddObjectToTimeline(PhysicsBox);
-	Emitter* aabbSound = new Emitter();
-	PhysicsBox->AddComponent(aabbSound);
-	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_TEST1);
-	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_TEST1);
-	aabbSound->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_TEST1);
-	aabbSound->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_TEST1);
-	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::PLAYBOUNCEEFFECTS);
-
-	Transform transformBox;
-	matrix4 matBox = matrix4::CreateTranslation(2, 5, 0) * matrix4::CreateScale(0.3f, 0.3f, 0.3f);
-	transformBox.SetMatrix(matBox);
-	BaseObject* PhysicsBox2 = Pool::Instance()->iGetObject()->Reset("aabb2", transformBox);//new BaseObject("aabb", transform);
-	CubeCollider *BoxCollider2 = new CubeCollider(PhysicsBox2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 5.0f, 0.4f, 0.1f, 0.1f, 0.01f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
-	BoxCollider2->AddForce(vec4f(0, 0, 0, 0));
-	CodeComponent* PlaneCollisionBox = new CCElasticReactionWithPlane;
-	CodeComponent* BoxCollision2 = new CCElasticAABBtoAABB;
-	CodeComponent* BoxSphereCollision2 = new CCElasticAABBToSphere;
-	PhysicsBox2->AddComponent(BoxCollider2);
-	PhysicsBox2->AddComponent(PlaneCollisionBox);
-	PhysicsBox2->AddComponent(BoxCollision2);
-	PhysicsBox2->AddComponent(BoxSphereCollision2);
-	TimeManager::Instance()->AddObjectToTimeline(PhysicsBox2);
-
-	Transform SphereTransform;
-	matrix4 SphereMat = matrix4::CreateScale(0.15f, 0.15f, 0.15f); 
-	SphereMat *= matrix4::CreateTranslation(3, 5, 0);
-	SphereTransform.SetMatrix(SphereMat);
-	BaseObject* PhysicsSphere = Pool::Instance()->iGetObject()->Reset("sphere", SphereTransform);
-	SphereCollider *BallCollider = new SphereCollider(PhysicsSphere, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 3.0f, 0.4f, 0.2f, 0.1f, 0.03f, 0.15f);
-	BallCollider->AddForce(vec4f(0, 0, 0, 0));
-	CodeComponent* PlaneCollision2 = new CCElasticReactionWithPlane;
-	CodeComponent* SpheretoSphere = new CCElasticSphereToSphere;
-	CodeComponent* spheretobox = new CCElasticAABBtoAABB;
-	PhysicsSphere->AddComponent(BallCollider);
-	PhysicsSphere->AddComponent(spheretobox);
-	PhysicsSphere->AddComponent(SpheretoSphere);
-	PhysicsSphere->AddComponent(PlaneCollision2);
-	TimeManager::Instance()->AddObjectToTimeline(PhysicsSphere);
-
-	Transform SphereTransform2;
-	matrix4 SphereMat2 = matrix4::CreateScale(0.15f, 0.15f, 0.15f);
-	SphereMat2 *= matrix4::CreateTranslation(4, 5, 0);
-	SphereTransform2.SetMatrix(SphereMat2);
-	BaseObject* PhysicsSphere2 = Pool::Instance()->iGetObject()->Reset("sphere2", SphereTransform2);
-	SphereCollider *BallCollider2 = new SphereCollider(PhysicsSphere2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 3.0f, 1.0f, 0.2f, 0.1f, 0.03f, 0.15f);
-	BallCollider2->AddForce(vec4f(0, 0, 0, 0));
-	CodeComponent* PlaneCollision3 = new CCElasticReactionWithPlane;
-	CodeComponent* SpheretoSphere2 = new CCElasticSphereToSphere;
-	CodeComponent* spheretobox2 = new CCElasticAABBtoAABB;
-	PhysicsSphere2->AddComponent(BallCollider2);
-	PhysicsSphere2->AddComponent(spheretobox2);
-	PhysicsSphere2->AddComponent(PlaneCollision3);
-	PhysicsSphere2->AddComponent(SpheretoSphere2);
-	TimeManager::Instance()->AddObjectToTimeline(PhysicsSphere2);
-
-	Transform ButtonTransform;
-	matrix4 ButtonMat = matrix4::CreateTranslation(-3, 0, 0);
-	ButtonTransform.SetMatrix(ButtonMat);
-	BaseObject* Button = new BaseObject("button", ButtonTransform);
-	ButtonCollider* ButtonCol = new ButtonCollider(Button, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), 3, 1, vec4f(0,1,0,0));
-	CodeComponent* ButtonCollision = new CCButtonPress;
-	Button->AddComponent(ButtonCol);
-	Button->AddComponent(ButtonCollision);
-	TimeManager::Instance()->AddObjectToTimeline(Button);
-
-	Transform PlaneTransform;
-	PlaneTransform.SetMatrix(matrix4::CreateTranslation(0, -1, 0));
-	BaseObject* Floor = Pool::Instance()->iGetObject()->Reset("plane", PlaneTransform);// new BaseObject("plane", PlaneTransform);
-	PlaneCollider* plane = new PlaneCollider(Floor, false, vec4f(0.0f, 0.0f, 0.0f, 1.0f), 10.0f, 0.1f, 0.8f, 0.7f, 0.1f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
-	MeshComponent *planeObj = new MeshComponent("../Resources/BigFloor.obj");
-	planeObj->AddTexture("../Resources/floorg.png", eTEX_DIFFUSE);
-	Floor->AddComponent(plane);
-	Floor->AddComponent(planeObj);
-	
+	//matrix4 mat1 = matrix4::CreateTranslation(0, 0, 0) * matrix4::CreateScale(0.3f, 0.3f, 0.3f);
+	//transform.SetMatrix(mat1);
+	//BaseObject* PhysicsBox = Pool::Instance()->iGetObject()->Reset("aabb", transform);//new BaseObject("aabb", transform);
+	//CubeCollider *BoxCollider = new CubeCollider(PhysicsBox, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 10.0f, 0.0f, 0.1f, 0.1f, 0.1f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
+	//BoxCollider->AddForce(vec4f(0, 0, 0, 0));
+	//CodeComponent* PlaneCollision = new CCElasticReactionWithPlane;
+	//CodeComponent* BoxCollision = new CCElasticAABBtoAABB;
+	//CodeComponent* BoxSphereCollision = new CCElasticAABBToSphere;
+	//PhysicsBox->AddComponent(BoxCollider);
+	//PhysicsBox->AddComponent(PlaneCollision);
+	//PhysicsBox->AddComponent(BoxCollision);
+	//PhysicsBox->AddComponent(BoxSphereCollision);
+	//TimeManager::Instance()->AddObjectToTimeline(PhysicsBox);
+	//Emitter* aabbSound = new Emitter();
+	//PhysicsBox->AddComponent(aabbSound);
+	//aabbSound->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_TEST1);
+	//aabbSound->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_TEST1);
+	//aabbSound->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_TEST1);
+	//aabbSound->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_TEST1);
+	//aabbSound->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::PLAYBOUNCEEFFECTS);
+	//
+	//Transform transformBox;
+	//matrix4 matBox = matrix4::CreateTranslation(2, 5, 0) * matrix4::CreateScale(0.3f, 0.3f, 0.3f);
+	//transformBox.SetMatrix(matBox);
+	//BaseObject* PhysicsBox2 = Pool::Instance()->iGetObject()->Reset("aabb2", transformBox);//new BaseObject("aabb", transform);
+	//CubeCollider *BoxCollider2 = new CubeCollider(PhysicsBox2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 5.0f, 0.4f, 0.1f, 0.1f, 0.01f, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f));
+	//BoxCollider2->AddForce(vec4f(0, 0, 0, 0));
+	//CodeComponent* PlaneCollisionBox = new CCElasticReactionWithPlane;
+	//CodeComponent* BoxCollision2 = new CCElasticAABBtoAABB;
+	//CodeComponent* BoxSphereCollision2 = new CCElasticAABBToSphere;
+	//PhysicsBox2->AddComponent(BoxCollider2);
+	//PhysicsBox2->AddComponent(PlaneCollisionBox);
+	//PhysicsBox2->AddComponent(BoxCollision2);
+	//PhysicsBox2->AddComponent(BoxSphereCollision2);
+	//TimeManager::Instance()->AddObjectToTimeline(PhysicsBox2);
+	//
+	//Transform SphereTransform;
+	//matrix4 SphereMat = matrix4::CreateScale(0.15f, 0.15f, 0.15f); 
+	//SphereMat *= matrix4::CreateTranslation(3, 5, 0);
+	//SphereTransform.SetMatrix(SphereMat);
+	//BaseObject* PhysicsSphere = Pool::Instance()->iGetObject()->Reset("sphere", SphereTransform);
+	//SphereCollider *BallCollider = new SphereCollider(PhysicsSphere, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 3.0f, 0.4f, 0.2f, 0.1f, 0.03f, 0.15f);
+	//BallCollider->AddForce(vec4f(0, 0, 0, 0));
+	//CodeComponent* PlaneCollision2 = new CCElasticReactionWithPlane;
+	//CodeComponent* SpheretoSphere = new CCElasticSphereToSphere;
+	//CodeComponent* spheretobox = new CCElasticAABBtoAABB;
+	//PhysicsSphere->AddComponent(BallCollider);
+	//PhysicsSphere->AddComponent(spheretobox);
+	//PhysicsSphere->AddComponent(SpheretoSphere);
+	//PhysicsSphere->AddComponent(PlaneCollision2);
+	//TimeManager::Instance()->AddObjectToTimeline(PhysicsSphere);
+	//
+	//Transform SphereTransform2;
+	//matrix4 SphereMat2 = matrix4::CreateScale(0.15f, 0.15f, 0.15f);
+	//SphereMat2 *= matrix4::CreateTranslation(4, 5, 0);
+	//SphereTransform2.SetMatrix(SphereMat2);
+	//BaseObject* PhysicsSphere2 = Pool::Instance()->iGetObject()->Reset("sphere2", SphereTransform2);
+	//SphereCollider *BallCollider2 = new SphereCollider(PhysicsSphere2, true, vec4f(0.0f, -9.8f, 0.0f, 1.0f), 3.0f, 1.0f, 0.2f, 0.1f, 0.03f, 0.15f);
+	//BallCollider2->AddForce(vec4f(0, 0, 0, 0));
+	//CodeComponent* PlaneCollision3 = new CCElasticReactionWithPlane;
+	//CodeComponent* SpheretoSphere2 = new CCElasticSphereToSphere;
+	//CodeComponent* spheretobox2 = new CCElasticAABBtoAABB;
+	//PhysicsSphere2->AddComponent(BallCollider2);
+	//PhysicsSphere2->AddComponent(spheretobox2);
+	//PhysicsSphere2->AddComponent(PlaneCollision3);
+	//PhysicsSphere2->AddComponent(SpheretoSphere2);
+	//TimeManager::Instance()->AddObjectToTimeline(PhysicsSphere2);
+	//
+	//Transform ButtonTransform;
+	//matrix4 ButtonMat = matrix4::CreateTranslation(-3, 0, 0);
+	//ButtonTransform.SetMatrix(ButtonMat);
+	//BaseObject* Button = new BaseObject("button", ButtonTransform);
+	//ButtonCollider* ButtonCol = new ButtonCollider(Button, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), 3, 1, vec4f(0,1,0,0));
+	//CodeComponent* ButtonCollision = new CCButtonPress;
+	//Button->AddComponent(ButtonCol);
+	//Button->AddComponent(ButtonCollision);
+	//TimeManager::Instance()->AddObjectToTimeline(Button);
+	//
+	//Transform PlaneTransform;
+	//PlaneTransform.SetMatrix(matrix4::CreateTranslation(0, -1, 0));
+	//BaseObject* Floor = Pool::Instance()->iGetObject()->Reset("plane", PlaneTransform);// new BaseObject("plane", PlaneTransform);
+	//PlaneCollider* plane = new PlaneCollider(Floor, false, vec4f(0.0f, 0.0f, 0.0f, 1.0f), 10.0f, 0.1f, 0.8f, 0.7f, 0.1f, -1.0f, vec4f(0.0f, 1.0f, 0.0f , 1.0f));
+	//MeshComponent *planeObj = new MeshComponent("../Resources/BigFloor.obj");
+	//planeObj->AddTexture("../Resources/floorg.png", eTEX_DIFFUSE);
+	//Floor->AddComponent(plane);
+	//Floor->AddComponent(planeObj);
+	//
 	Transform identity;
+	//
+	//BaseObject* walls = Pool::Instance()->iGetObject()->Reset("walls", PlaneTransform);// new BaseObject("walls", PlaneTransform);
+	//MeshComponent *wallMesh = new MeshComponent("../Resources/BigWall.obj");
+	//wallMesh->AddTexture("../Resources/Wallg.png", eTEX_DIFFUSE);
+	//CubeCollider* ButtonRoomBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-7.034f, -1, -8, 1), vec4f(1.011f, 3, -7.026f, 1));
+	//CubeCollider* ExitLeftWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-0.985f, -1, -9.008f, 1), vec4f(1.011f, 3, -7.026f, 1));
+	//CubeCollider* ExitBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(0.985f, -1, -10.008f, 1), vec4f(3.112f, 3, -9.008f, 1));
+	//CubeCollider* ExitRightWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(3.112f, -1, -9.008f, 1), vec4f(4.112f, 3, -6.991f, 1));
+	//CubeCollider* MainBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(4.112f, -1, -7.991f, 1), vec4f(7.036f, 3, -6.991f, 1));
+	//CubeCollider* RightWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(7.036f, -1, -6.991f, 1), vec4f(8.036f, 3, 7.142f, 1));
+	//CubeCollider* MainFrontWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(3.063f, -1, 7.142f, 1), vec4f(8.036f, 3, 8.142f, 1));
+	//CubeCollider* EnterRightWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(3.063f, -1, 7.142f, 1), vec4f(4.063f, 3, 9.055f, 1));
+	//CubeCollider* EnterBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(0.918f, -1, 9.055f, 1), vec4f(4.063f, 3, 10.055f, 1));
+	//CubeCollider* EnterLeftWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-0.918f, -1, 7.014f, 1), vec4f(0.918f, 3, 9.055f, 1));
+	//CubeCollider* ButtonRoomFrontWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-7.054f, -1, 7.014f, 1), vec4f(0.918f, 3, 8.014f, 1));
+	//CubeCollider* LeftWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-8.054f, -1, -7.014f, 1), vec4f(-7.054f, 3, 7.014f, 1));
+	//CubeCollider* DividerWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-1.273f, -1, -7.022f, 1), vec4f(-0.871f, 3, 3.125f, 1));
+	//walls->AddComponent(ButtonRoomBackWall);
+	//walls->AddComponent(ExitLeftWall);
+	//walls->AddComponent(ExitBackWall);
+	//walls->AddComponent(ExitRightWall);
+	//walls->AddComponent(MainBackWall);
+	//walls->AddComponent(RightWall);
+	//walls->AddComponent(MainFrontWall);
+	//walls->AddComponent(EnterRightWall);
+	//walls->AddComponent(EnterBackWall);
+	//walls->AddComponent(EnterLeftWall);
+	//walls->AddComponent(ButtonRoomFrontWall);
+	//walls->AddComponent(LeftWall);
+	//walls->AddComponent(DividerWall);
+	//walls->AddComponent(wallMesh);
 
-	BaseObject* walls = Pool::Instance()->iGetObject()->Reset("walls", PlaneTransform);// new BaseObject("walls", PlaneTransform);
-	MeshComponent *wallMesh = new MeshComponent("../Resources/BigWall.obj");
-	wallMesh->AddTexture("../Resources/Wallg.png", eTEX_DIFFUSE);
-	CubeCollider* ButtonRoomBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-7.034f, -1, -8, 1), vec4f(1.011f, 3, -7.026f, 1));
-	CubeCollider* ExitLeftWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-0.985f, -1, -9.008f, 1), vec4f(1.011f, 3, -7.026f, 1));
-	CubeCollider* ExitBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(0.985f, -1, -10.008f, 1), vec4f(3.112f, 3, -9.008f, 1));
-	CubeCollider* ExitRightWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(3.112f, -1, -9.008f, 1), vec4f(4.112f, 3, -6.991f, 1));
-	CubeCollider* MainBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(4.112f, -1, -7.991f, 1), vec4f(7.036f, 3, -6.991f, 1));
-	CubeCollider* RightWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(7.036f, -1, -6.991f, 1), vec4f(8.036f, 3, 7.142f, 1));
-	CubeCollider* MainFrontWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(3.063f, -1, 7.142f, 1), vec4f(8.036f, 3, 8.142f, 1));
-	CubeCollider* EnterRightWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(3.063f, -1, 7.142f, 1), vec4f(4.063f, 3, 9.055f, 1));
-	CubeCollider* EnterBackWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(0.918f, -1, 9.055f, 1), vec4f(4.063f, 3, 10.055f, 1));
-	CubeCollider* EnterLeftWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-0.918f, -1, 7.014f, 1), vec4f(0.918f, 3, 9.055f, 1));
-	CubeCollider* ButtonRoomFrontWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-7.054f, -1, 7.014f, 1), vec4f(0.918f, 3, 8.014f, 1));
-	CubeCollider* LeftWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-8.054f, -1, -7.014f, 1), vec4f(-7.054f, 3, 7.014f, 1));
-	CubeCollider* DividerWall = new CubeCollider(walls, false, vec4f(0,0,0,0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-1.273f, -1, -7.022f, 1), vec4f(-0.871f, 3, 3.125f, 1));
-	walls->AddComponent(ButtonRoomBackWall);
-	walls->AddComponent(ExitLeftWall);
-	walls->AddComponent(ExitBackWall);
-	walls->AddComponent(ExitRightWall);
-	walls->AddComponent(MainBackWall);
-	walls->AddComponent(RightWall);
-	walls->AddComponent(MainFrontWall);
-	walls->AddComponent(EnterRightWall);
-	walls->AddComponent(EnterBackWall);
-	walls->AddComponent(EnterLeftWall);
-	walls->AddComponent(ButtonRoomFrontWall);
-	walls->AddComponent(LeftWall);
-	walls->AddComponent(DividerWall);
-	walls->AddComponent(wallMesh);
+	Transform chamberTransform;
+	matrix4 cmat = matrix4::CreateScale(1, 2, 1);
+	chamberTransform.SetMatrix(cmat);
+	BaseObject* chamber = Pool::Instance()->iGetObject()->Reset("chamber", chamberTransform);// new BaseObject("walls", PlaneTransform);
+	MeshComponent *chamberMesh = new MeshComponent("../Resources/mmChamber.obj");
+	chamberMesh->AddTexture("../Resources/Doors.png", eTEX_DIFFUSE);
+	chamber->AddComponent(chamberMesh);
+
+	BaseObject* mmRoom = Pool::Instance()->iGetObject()->Reset("mmRoom", identity);// new BaseObject("walls", PlaneTransform);
+	MeshComponent *mmRoomMesh = new MeshComponent("../Resources/mmRoom.obj");
+	mmRoomMesh->AddTexture("../Resources/Floorg.png", eTEX_DIFFUSE);
+	mmRoom->AddComponent(mmRoomMesh);
+
+	Transform buttonTransform;
+	matrix4 buttonmat = matrix4::CreateScale(.5f, .5f, 1) * matrix4::CreateTranslation(0,2,-2);
+	buttonTransform.SetMatrix(buttonmat);
+	BaseObject* mmStart = Pool::Instance()->iGetObject()->Reset("mmStart", buttonTransform);// new BaseObject("walls", PlaneTransform);
+	MeshComponent *mmStartMesh = new MeshComponent("../Resources/PlaneButton.obj");
+	mmStartMesh->AddTexture("../Resources/start.png", eTEX_DIFFUSE);
+	mmStart->AddComponent(mmStartMesh);
+
+	Transform buttonTransform2;
+	matrix4 buttonmat2 = matrix4::CreateScale(.5f, .5f, 1) * matrix4::CreateYRotation(-DirectX::XM_PI / 2) * matrix4::CreateTranslation(2, 2, 0);
+	buttonTransform2.SetMatrix(buttonmat2);
+	BaseObject* mmExit = Pool::Instance()->iGetObject()->Reset("mmExit", buttonTransform2);// new BaseObject("walls", PlaneTransform);
+	MeshComponent *mmExitMesh = new MeshComponent("../Resources/PlaneButton.obj");
+	mmExitMesh->AddTexture("../Resources/exit.png", eTEX_DIFFUSE);
+	mmExit->AddComponent(mmExitMesh);
+
+	Transform mmfloorTransform;
+	matrix4 mmfloormat = matrix4::CreateTranslation(0, -10, 0);
+	mmfloorTransform.SetMatrix(mmfloormat);
+	BaseObject* mmfloor = Pool::Instance()->iGetObject()->Reset("mmFloor", mmfloorTransform);// new BaseObject("walls", PlaneTransform);
+	MeshComponent *mmfloorMesh = new MeshComponent("../Resources/mmFloor.obj");
+	mmfloorMesh->AddTexture("../Resources/Floorg.png", eTEX_DIFFUSE);
+	mmfloor->AddComponent(mmfloorMesh);
+
+	Transform mmdoorTransform;
+	matrix4 mmdoormat = matrix4::CreateScale(1, 1.5f, .5f) * matrix4::CreateTranslation(0, -10, -2.5f);
+	mmdoorTransform.SetMatrix(mmdoormat);
+	BaseObject* mmdoor = Pool::Instance()->iGetObject()->Reset("mmdoor", mmdoorTransform);// new BaseObject("walls", PlaneTransform);
+	MeshComponent *mmdoorMesh = new MeshComponent("../Resources/mmDoor.obj");
+	mmdoorMesh->AddTexture("../Resources/Doors.png", eTEX_DIFFUSE);
+	mmdoor->AddComponent(mmdoorMesh);
 
 	BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("RController", identity);// new BaseObject("Controller", identity);
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 	MeshComponent *rightRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
 	rightRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
 	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
-	TeleportAction *ta = new TeleportAction(eControllerType_Primary);
-	TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
+	//TeleportAction *ta = new TeleportAction(eControllerType_Primary);
+	//TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
 	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 	RightController->AddComponent(mc);
 	RightController->AddComponent(rightRaycaster);
-	RightController->AddComponent(ta);
+	//RightController->AddComponent(ta);
 	RightController->AddComponent(rightConCol);
-	RightController->AddComponent(tm);
+	//RightController->AddComponent(tm);
 	CodeComponent* pickup = new BoxSnapToControllerAction();
 	((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
 	RightController->AddComponent(pickup);
 	TimeManager::Instance()->AddPlayerObjectToTimeline(RightController);
 
-	MeshComponent *visibleMesh = new MeshComponent("../Resources/raycube.obj");
-	visibleMesh->AddTexture("../Resources/raycube.png", eTEX_DIFFUSE);
-	PhysicsBox->AddComponent(visibleMesh);
-
-	MeshComponent *visibleMeshBox = new MeshComponent("../Resources/raycube.obj");
-	visibleMeshBox->AddTexture("../Resources/raycube.png", eTEX_DIFFUSE);
-	PhysicsBox2->AddComponent(visibleMeshBox);
-
-	MeshComponent *sphereMesh = new MeshComponent("../Resources/Sphere.obj");
-	sphereMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
-	PhysicsSphere->AddComponent(sphereMesh);
-
-	MeshComponent *sphereMesh2 = new MeshComponent("../Resources/Sphere.obj");
-	sphereMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
-	PhysicsSphere2->AddComponent(sphereMesh2);
-
-	MeshComponent *ButtonMesh = new MeshComponent("../Resources/cube.obj");
-	ButtonMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
-	
-	Button->AddComponent(ButtonMesh);
+	//MeshComponent *visibleMesh = new MeshComponent("../Resources/raycube.obj");
+	//visibleMesh->AddTexture("../Resources/raycube.png", eTEX_DIFFUSE);
+	//PhysicsBox->AddComponent(visibleMesh);
+	//
+	//MeshComponent *visibleMeshBox = new MeshComponent("../Resources/raycube.obj");
+	//visibleMeshBox->AddTexture("../Resources/raycube.png", eTEX_DIFFUSE);
+	//PhysicsBox2->AddComponent(visibleMeshBox);
+	//
+	//MeshComponent *sphereMesh = new MeshComponent("../Resources/Sphere.obj");
+	//sphereMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
+	//PhysicsSphere->AddComponent(sphereMesh);
+	//
+	//MeshComponent *sphereMesh2 = new MeshComponent("../Resources/Sphere.obj");
+	//sphereMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
+	//PhysicsSphere2->AddComponent(sphereMesh2);
+	//
+	//MeshComponent *ButtonMesh = new MeshComponent("../Resources/cube.obj");
+	//ButtonMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
+	//
+	//Button->AddComponent(ButtonMesh);
 
 	//pat added
 	BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("LController", identity); //new BaseObject("Controller2", identity);
@@ -300,13 +345,13 @@ void Update() {
 	MeshComponent *leftRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
 	leftRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
 	mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
-	TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
+	//TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
 	TimeManipulation* tm2 = new TimeManipulation(eControllerType_Secondary);
 	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
 	LeftController->AddComponent(leftConCol);
 	LeftController->AddComponent(leftRaycaster);
 	LeftController->AddComponent(mc2);
-	LeftController->AddComponent(ta2);
+	//LeftController->AddComponent(ta2);
 	LeftController->AddComponent(tm2);
 	CodeComponent* pickup2 = new BoxSnapToControllerAction();
 	((BoxSnapToControllerAction*)pickup2)->mControllerRole = eControllerType_Secondary;
@@ -326,8 +371,8 @@ void Update() {
 	Listener* ears = new Listener();
 	camObj.AddComponent(ears);
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(ears, "Listener")));
-	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(aabbSound, "aabbS")));
-	aabbSound->Play();
+	//Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(aabbSound, "aabbS")));
+	//aabbSound->Play();
 
 	BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", transform); //new BaseObject("headset", transform);
 	MeshComponent *visibleMesh2 = new MeshComponent("../Resources/Cube.obj");
@@ -338,66 +383,81 @@ void Update() {
 	headset->AddComponent(visibleMesh2);
 	TimeManager::Instance()->AddPlayerObjectToTimeline(headset);
 
-	Transform Door, Exit;
-	Door.SetMatrix(matrix4::CreateTranslation(0, 2, 0));
-	Exit.SetMatrix(matrix4::CreateTranslation(0, -1, 0));
-	BaseObject* ExitWall = Pool::Instance()->iGetObject()->Reset("ExitWall", Exit);
-	MeshComponent *ExitMesh = new MeshComponent("../Resources/ExitDoor.obj");
-	CubeCollider* exitCol = new CubeCollider(ExitWall, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(0.859f, 0, -7.435f, 0), vec4f(3.137f, 3, -7, 0));
-	ExitMesh->AddTexture("../Resources/Doors.png", eTEX_DIFFUSE);
-	ExitWall->AddComponent(ExitMesh);
-	ExitWall->AddComponent(exitCol);
-	TimeManager::Instance()->AddObjectToTimeline(ExitWall);
+	//Transform Door, Exit;
+	//Door.SetMatrix(matrix4::CreateTranslation(0, 2, 0));
+	//Exit.SetMatrix(matrix4::CreateTranslation(0, -1, 0));
+	//BaseObject* ExitWall = Pool::Instance()->iGetObject()->Reset("ExitWall", Exit);
+	//MeshComponent *ExitMesh = new MeshComponent("../Resources/ExitDoor.obj");
+	//CubeCollider* exitCol = new CubeCollider(ExitWall, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(0.859f, 0, -7.435f, 0), vec4f(3.137f, 3, -7, 0));
+	//ExitMesh->AddTexture("../Resources/Doors.png", eTEX_DIFFUSE);
+	//ExitWall->AddComponent(ExitMesh);
+	//ExitWall->AddComponent(exitCol);
+	//TimeManager::Instance()->AddObjectToTimeline(ExitWall);
+	//
+	//BaseObject* BlockDoor = Pool::Instance()->iGetObject()->Reset("BlockDoor", Door);
+	//MeshComponent *DoorMesh = new MeshComponent("../Resources/BlockDoor.obj");
+	//CubeCollider* doorCol = new CubeCollider(BlockDoor, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-1.358f, 0, 3.058f, 0), vec4f(-0.82f, 3, 7.574f, 0));
+	//DoorMesh->AddTexture("../Resources/Doors.png", eTEX_DIFFUSE);
+	//BlockDoor->AddComponent(DoorMesh);
+	//BlockDoor->AddComponent(doorCol);
+	//TimeManager::Instance()->AddObjectToTimeline(BlockDoor);
+	//
+	//Transform downOne;
+	//downOne.SetMatrix(matrix4::CreateTranslation(0, -1, 0));
+	//BaseObject* ControlBoard = Pool::Instance()->iGetObject()->Reset("ControlsBoards", downOne);
+	//MeshComponent* controlsMesh = new MeshComponent("../Resources/ControlBoard.obj");
+	//controlsMesh->AddTexture("../Resources/ControlScheme.png", eTEX_DIFFUSE);
+	//ControlBoard->AddComponent(controlsMesh);
+	//
+	//
+	//BaseObject* WinBoard = Pool::Instance()->iGetObject()->Reset("WinBoard", downOne);
+	//MeshComponent* winMesh = new MeshComponent("../Resources/WinBoard.obj");
+	//winMesh->AddTexture("../Resources/youwon.png", eTEX_DIFFUSE);
+	//WinBoard->AddComponent(winMesh);
 
-	BaseObject* BlockDoor = Pool::Instance()->iGetObject()->Reset("BlockDoor", Door);
-	MeshComponent *DoorMesh = new MeshComponent("../Resources/BlockDoor.obj");
-	CubeCollider* doorCol = new CubeCollider(BlockDoor, false, vec4f(0, 0, 0, 0), 10, 0, .2f, 0.3f, 0.04f, vec4f(-1.358f, 0, 3.058f, 0), vec4f(-0.82f, 3, 7.574f, 0));
-	DoorMesh->AddTexture("../Resources/Doors.png", eTEX_DIFFUSE);
-	BlockDoor->AddComponent(DoorMesh);
-	BlockDoor->AddComponent(doorCol);
-	TimeManager::Instance()->AddObjectToTimeline(BlockDoor);
-
-	Transform downOne;
-	downOne.SetMatrix(matrix4::CreateTranslation(0, -1, 0));
-	BaseObject* ControlBoard = Pool::Instance()->iGetObject()->Reset("ControlsBoards", downOne);
-	MeshComponent* controlsMesh = new MeshComponent("../Resources/ControlBoard.obj");
-	controlsMesh->AddTexture("../Resources/ControlScheme.png", eTEX_DIFFUSE);
-	ControlBoard->AddComponent(controlsMesh);
-
-
-	BaseObject* WinBoard = Pool::Instance()->iGetObject()->Reset("WinBoard", downOne);
-	MeshComponent* winMesh = new MeshComponent("../Resources/WinBoard.obj");
-	winMesh->AddTexture("../Resources/youwon.png", eTEX_DIFFUSE);
-	WinBoard->AddComponent(winMesh);
-
-	Physics::Instance()->mObjects.push_back(PhysicsBox);
-	Physics::Instance()->mObjects.push_back(BlockDoor);
-	Physics::Instance()->mObjects.push_back(ExitWall);
-	Physics::Instance()->mObjects.push_back(PhysicsBox2);
-	Physics::Instance()->mObjects.push_back(PhysicsSphere);
-	Physics::Instance()->mObjects.push_back(PhysicsSphere2);
-	Physics::Instance()->mObjects.push_back(Floor);
-	Physics::Instance()->mObjects.push_back(walls);
+	//Physics::Instance()->mObjects.push_back(PhysicsBox);
+	//Physics::Instance()->mObjects.push_back(BlockDoor);
+	//Physics::Instance()->mObjects.push_back(ExitWall);
+	//Physics::Instance()->mObjects.push_back(PhysicsBox2);
+	//Physics::Instance()->mObjects.push_back(PhysicsSphere);
+	//Physics::Instance()->mObjects.push_back(PhysicsSphere2);
+	//Physics::Instance()->mObjects.push_back(Floor);
+	//Physics::Instance()->mObjects.push_back(walls);
 	Physics::Instance()->mObjects.push_back(RightController);
 	Physics::Instance()->mObjects.push_back(LeftController);
-	Physics::Instance()->mObjects.push_back(Button);
+	//Physics::Instance()->mObjects.push_back(Button);
+	//Level::Initialize(headset, RightController, LeftController);
+	//Level* L1 = Level::Instance(); 
+	//L1->iAddObject(PhysicsBox);
+	//L1->iAddObject(PhysicsBox2);
+	//L1->iAddObject(PhysicsSphere);
+	//L1->iAddObject(PhysicsSphere2);
+	//L1->iAddObject(Floor);
+	//L1->iAddObject(RightController);
+	//L1->iAddObject(walls);
+	//L1->iAddObject(headset);
+	//L1->iAddObject(LeftController);
+	//L1->iAddObject(Button);
+	//L1->iAddObject(ExitWall);
+	//L1->iAddObject(BlockDoor);
+	//L1->iAddObject(ControlBoard);
+	//L1->iAddObject(WinBoard);
+	//L1->iCallStart();
+
 	Level::Initialize(headset, RightController, LeftController);
-	Level* L1 = Level::Instance(); 
-	L1->iAddObject(PhysicsBox);
-	L1->iAddObject(PhysicsBox2);
-	L1->iAddObject(PhysicsSphere);
-	L1->iAddObject(PhysicsSphere2);
-	L1->iAddObject(Floor);
-	L1->iAddObject(RightController);
-	L1->iAddObject(walls);
-	L1->iAddObject(headset);
-	L1->iAddObject(LeftController);
-	L1->iAddObject(Button);
-	L1->iAddObject(ExitWall);
-	L1->iAddObject(BlockDoor);
-	L1->iAddObject(ControlBoard);
-	L1->iAddObject(WinBoard);
-	L1->iCallStart();
+	Level* MainMenu = Level::Instance();
+	MainMenu->iAddObject(RightController);
+	MainMenu->iAddObject(headset);
+	MainMenu->iAddObject(LeftController);
+	MainMenu->iAddObject(chamber);
+	MainMenu->iAddObject(mmRoom);
+	MainMenu->iAddObject(mmfloor);
+	MainMenu->iAddObject(mmStart);
+	MainMenu->iAddObject(mmExit);
+	MainMenu->iAddObject(mmdoor);
+	MainMenu->iCallStart();
+	VRInputManager::GetInstance().GetPlayerPosition().Position = vec4f(0, 1, 0, 1);
+	//MainMenu->iAddObject(Floor);
 
 	//// Test for TextureManager::iAddTexture2D. Works nicely!
 	//D3D11_TEXTURE2D_DESC AddedTextureDesc;
@@ -425,7 +485,7 @@ void Update() {
 	
 	UpdateTime();
 	fixedTime = 0;
-	while (true) {
+	while (Level::Instance()->ChronoLoop) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			// Handle windows message.
 			if (msg.message == WM_QUIT) {

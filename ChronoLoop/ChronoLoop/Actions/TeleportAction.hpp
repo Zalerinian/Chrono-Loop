@@ -37,7 +37,7 @@ namespace Epoch
 				return;
 			}
 			// I'm lazy so, let's just set this thing's position to the controller's position.
-			matrix4 mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
+			matrix4 mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();	
 			mObject->GetTransform().SetMatrix(mat);
 
 			if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad))

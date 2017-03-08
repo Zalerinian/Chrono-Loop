@@ -29,6 +29,8 @@ namespace Epoch
 		Level();
 		~Level();
 	public:
+		bool ChronoLoop = true;
+
 		static Level* Instance();
 		static void DestroyInstance();
 		static void Initialize(BaseObject *_headset, BaseObject *_lController, BaseObject *_rController);
