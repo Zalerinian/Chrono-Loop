@@ -131,7 +131,7 @@ void Update() {
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
 
-
+	//_CrtSetBreakAlloc(22971);
 	// TODO: Replace all this with a level to run.
 	///*///////////////////////Using this to test physics//////////////////
 
@@ -415,8 +415,8 @@ void Update() {
 	L1->iCallStart();
 
 	ParticleEmitter* emit;
-	emit = new ParticleEmitter(0, -1, 300, 5, vec4f(0, 5, 0, 0));
-	emit->SetParticle(new Particle(4000, .25, vec4f(0, 0, 0, 0), vec4f(0, 0, 0, 0)));
+	emit = new ParticleEmitter(0, -1, 30000, 5, vec4f(0, 5, 0, 0));
+	emit->SetParticle(new Particle(1500, .25, vec4f(0, 0, 0, 0), vec4f(0, 0, 0, 0)));
 	emit->SetTexture("../Resources/SampleParticle.png");
 	ParticleSystem::Instance()->AddEmitter(emit);
 
@@ -460,7 +460,6 @@ void Update() {
 				break;
 			}
 			Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false, (void*)nullptr));
-
 			//SystemLogger::GetLog() << "[Debug] Regular Update " << std::endl;
 			UpdateTime();
 			Level::Instance()->iUpdate();
@@ -478,6 +477,7 @@ void Update() {
 		}
 	}
 	Messager::Destroy();
+	ParticleSystem::Destroy();
 
 }
 

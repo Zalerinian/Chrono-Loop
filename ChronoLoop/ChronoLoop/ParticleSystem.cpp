@@ -17,6 +17,11 @@ namespace Epoch
 			delete emit;
 
 		mPEmitters.clear();
+		mILayout->Release();
+		mVBuff->Release();
+		mVShader->Release();
+		mGeometryShader->Release();
+		mPShader->Release();
 	}
 
 	ParticleSystem* ParticleSystem::Instance()

@@ -86,7 +86,8 @@ namespace Epoch {
 		if (e == vr::EVREye::Eye_Left) {
 			data.view = (hmdPos * mEyePosLeft).Transpose();
 			data.projection = mEyeProjLeft.Transpose();
-		} else {
+		}
+		else {
 			data.view = (hmdPos * mEyePosRight).Transpose();
 			data.projection = mEyeProjRight.Transpose();
 		}
@@ -182,8 +183,8 @@ namespace Epoch {
 		IDXGISwapChain *chain;
 
 		ThrowIfFailed(mFactory->CreateSwapChain(mDevice.Get(),
-																						&scDesc,
-																						&chain));
+			&scDesc,
+			&chain));
 		mChain.Attach(chain);
 	}
 
@@ -361,7 +362,8 @@ namespace Epoch {
 			vr::EVREye currentEye;
 			if (i == 0) {
 				currentEye = vr::EVREye::Eye_Left;
-			} else {
+			}
+			else {
 				currentEye = vr::EVREye::Eye_Right;
 				mContext->ClearRenderTargetView(mMainView.Get(), color);
 				mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -370,6 +372,7 @@ namespace Epoch {
 			GetMVP(currentEye, data);
 			mContext->UpdateSubresource(mVPBuffer.Get(), 0, nullptr, (void*)&data, 0, 0);
 			ProcessRenderSet();
+			ParticleSystem::Instance()->Update();
 
 			vr::Texture_t submitTexture = { (void*)mMainViewTexture.Get(), vr::TextureType_DirectX, vr::ColorSpace_Auto };
 			vr::VRCompositor()->Submit(currentEye, &submitTexture);
@@ -395,7 +398,8 @@ namespace Epoch {
 		while (head != nullptr) {
 			if (head->mType == RenderNode::RenderNodeType::Context) {
 				((RenderContext*)head)->Apply();
-			} else if (head->mType == RenderNode::RenderNodeType::Shape) {
+			}
+			else if (head->mType == RenderNode::RenderNodeType::Shape) {
 				mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &((RenderShape*)head)->mPosition, 0, 0);
 				((RenderShape*)head)->Render();
 			}
@@ -509,10 +513,11 @@ namespace Epoch {
 		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 		if (nullptr == mVrSystem) {
 			RenderNoVR(_deltaTime);
-		} else {
+			ParticleSystem::Instance()->Update();
+		}
+		else {
 			RenderVR(_deltaTime);
 		}
-		ParticleSystem::Instance()->Update();
 		mChain->Present(mUseVsync ? 1 : 0, 0);
 	}
 

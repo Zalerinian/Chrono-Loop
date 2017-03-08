@@ -41,7 +41,7 @@ namespace Epoch
 
 		Particle& operator=(const Particle& _other);
 	};
-
+	//TODO: Use particle color, re-structure shaders and struct
 	class ParticleEmitter
 	{
 		long mID;
@@ -52,7 +52,6 @@ namespace Epoch
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> tv;
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> text;
 		ID3D11Buffer* mVBuffer;
-		ID3D11InputLayout* mILayout;
 		//BlendMode
 		//BoundingBox
 		vec4f mPos;
@@ -81,7 +80,13 @@ namespace Epoch
 		void SetTexture(const char* _tex);
 		virtual void SetParticle(Particle* _p);
 
-		virtual void Update(float _delta);
+		void Update(float _delta);
 
+	};
+
+	class VolumeEmitter : public ParticleEmitter
+	{
+		//TODO: Bounding volume bools and structs, use unions
+		virtual void UpdateParticle(Particle* _p);
 	};
 }

@@ -63,11 +63,14 @@ namespace Epoch
 	ParticleEmitter::~ParticleEmitter()
 	{
 		delete mBase;
+		mTName = nullptr;
 		mBase = nullptr;
 		for (Particle* p : mParticles)
 			delete p;
 		mParticles.clear();
 		mTotalParticles = mMaxParticles = 0;
+		mVBuffer->Release();
+		
 	}
 
 	void ParticleEmitter::CreateBuffers()
@@ -203,7 +206,7 @@ namespace Epoch
 				iter = mParticles.erase(iter);
 				if (iter == mParticles.end())
 					break;
-				//delete temp;
+				delete temp;
 			}
 		}
 	}
@@ -212,7 +215,7 @@ namespace Epoch
 	{
 		static int total = 0;
 
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < mPerSec; i++)
 		{
 			if (mParticles.size() < mMaxParticles && (total < mTotalParticles || mTotalParticles == -1))
 			{
@@ -223,8 +226,9 @@ namespace Epoch
 				z = -3.0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0 - (-3.0))));
 				Particle* p = new Particle();
 				*p = *mBase;
-				p->mPos = vec4f(x, y, z, 1);
+				p->mPos = vec4f(0,0,0, 1);
 				p->mPos += mPos;
+				p->mSize = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0 - 0)));
 				
 				x = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.025 - 0)));
 				y = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.025 - 0)));
