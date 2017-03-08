@@ -59,7 +59,7 @@ namespace Epoch {
 
 		//Update inputTimeLine
 		InputTimeline::InputNode* temp = VRInputManager::GetInstance().GetInputTimeline()->GetCurr();
-		while(temp->mNext && temp->mNext->mData.mLastFrame < mLevelTime)
+		while(temp && temp->mNext && temp->mNext->mData.mLastFrame < mLevelTime)
 		{
 			if(temp->mNext->mData.mTime < (mTimestamp / RecordingRate))
 			{

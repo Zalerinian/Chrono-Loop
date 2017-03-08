@@ -20,8 +20,8 @@ namespace Epoch {
 			InputData mData;
 		};
 	private:
-		InputNode* mHead;
-		InputNode* mCurrent;
+		InputNode* mHead = nullptr;
+		InputNode* mCurrent = nullptr;
 	public:
 		InputTimeline();
 		~InputTimeline();
