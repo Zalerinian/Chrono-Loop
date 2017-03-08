@@ -55,19 +55,23 @@ namespace Epoch {
 			mRightController.mIndex = mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_RightHand);
 			if (mRightController.GetIndex() > 0) {
 				mRightController.Update();
+				mRightController.UpdateGestures();
 				SystemLogger::Info() << "Right Controller connected at index " << mRightController.GetIndex() << std::endl;
 			}
 		} else {
 			mRightController.Update();
+			mRightController.UpdateGestures();
 		}
 		if (mLeftController.GetIndex() < 0) {
 			mLeftController.mIndex = mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand);
 			if (mLeftController.GetIndex() > 0) {
 				mLeftController.Update();
+				mLeftController.UpdateGestures();
 				SystemLogger::Info() << "Left Controller connected at index " << mLeftController.GetIndex() << std::endl;
 			}
 		} else {
 			mLeftController.Update();
+			mLeftController.UpdateGestures();
 		}
 		vr::VRCompositor()->WaitGetPoses(mPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
 	}

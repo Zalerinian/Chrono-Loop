@@ -18,7 +18,7 @@ namespace Epoch {
 		if (mPrevState.ulButtonPressed != mState.ulButtonPressed) {
 			UpdateHairTrigger();
 		}
-		UpdateGestures();
+
 	}
 
 	void Controller::UpdateHairTrigger() {
@@ -32,12 +32,14 @@ namespace Epoch {
 					mHairTriggerState = true;
 
 		mHairTriggerLimit = mHairTriggerState ? MAX(mHairTriggerLimit, value) : MIN(mHairTriggerLimit, value);
+		
 	}
 	void Controller::UpdateGestures()
 	{
 
-		vec2f touch = this->GetAxis(vr::EVRButtonId::k_EButton_SteamVR_Touchpad);
-		if ((powf((touch.x), 2) + powf((touch.y), 2)) < 0.64f) //0.64f = 0.8f ^ 2
+		vec2f touch = this->GetAxis();
+		//((powf((touch.x), 2)/0.16f) + (powf((touch.y), 2)/0.25)) <= 1
+		if ((powf((touch.x), 2) + powf((touch.y), 2)) < 0.25f) //0.25f = 0.5f ^ 2
 		{
 			//SystemLogger::GetLog() << "Inside the Circle" << std::endl;
 			//SystemLogger::GetLog() << "(" << touch.x << "," << touch.y << ")" << std::endl;
@@ -46,27 +48,43 @@ namespace Epoch {
 		else{
 			//SystemLogger::GetLog() << "Outside the Circle" << std::endl;
 			
-			if (InitialPos.x == -2 || InitialPos == touch) {
-				SystemLogger::GetLog() << "First Touch Recognized";
+			if (InitialPos.x == -2) {
+				SystemLogger::GetLog() << "First Touch Recognized" << std::endl;
 				InitialPos = touch;
 				return;
 			}
 			gestureCnt++;
-			if(gestureCnt == 8){
+			if(gestureCnt == 5){
 				gestureCnt = 0;
 				vec2f CurPos = touch;
 				vec2f line = InitialPos * 2;
 				vec2f clockwise = line.Cross().Normalize();
 
-				vec2f diff = (CurPos - InitialPos).Normalize();
-				if(diff.SquaredMagnitude() >= 0.01f){
-					if (diff * clockwise < 0)
+
+					
+				vec2f diff = (CurPos - InitialPos);
+				//float temp = diff.SquaredMagnitude();
+				if(diff.x >= 0.05f || diff.y >= 0.05f){
+					float slope = (CurPos.y - InitialPos.y) / (CurPos.x - InitialPos.x);
+					if ((slope >= 4 || slope <= -4) &&
+						(CurPos.y > 0.5f || CurPos.y < -0.5f) &&
+						(CurPos.x < 0.3f && CurPos.x > -0.3f)) {
+						SystemLogger::GetLog() << "Vertical Wrongness" << std::endl;
+						return;
+					}
+					if ((slope <= 0.25f && slope >= -0.25f) &&
+						(CurPos.x > 0.5f || CurPos.x < -0.5f) &&
+						(CurPos.y < 0.3f && CurPos.y > -0.3f)) {
+						SystemLogger::GetLog() << "Horizontal Wrongness" << std::endl;
+						return;
+					}
+					if (diff * clockwise > 0)
 						SystemLogger::GetLog() << "Somewhat Clockwise" << std::endl;
-					else if (diff * clockwise > 0) {
+					else if (diff * clockwise < 0) {
 						SystemLogger::GetLog() << "Somewhat Counter-Clockwise" << std::endl;
 					}
 				}
-
+				InitialPos = CurPos;
 			}
 
 		}
