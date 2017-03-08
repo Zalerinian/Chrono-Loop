@@ -11,20 +11,24 @@ namespace Epoch
 	{
 		mType = eCOMPONENT_MESH;
 		mShape = new RenderShape(_path, true, ePS_TEXTURED, eVS_TEXTURED);
-		Renderer::Instance()->AddNode(mShape);
+		mNode = Renderer::Instance()->AddNode(mShape);
 	}
 
 	void MeshComponent::Update()
 	{
-
 		mObject->GetTransform().GetMatrix(mShape->mPosition);
 		mShape->mPosition = mShape->mPosition.Transpose();
+		if (mNode) {
+			mNode->data = mShape->mPosition.Transpose();
+		}
+		int bullshit = 7;
 	}
 
 	void MeshComponent::Destroy()
 	{
 		mDestroyed = true;
 		Renderer::Instance()->RemoveNode(mShape);
+		delete mNode;
 		delete mShape;
 	}
 
@@ -35,13 +39,15 @@ namespace Epoch
 		// invisible.
 		// Side thought: Make the render set actually a list of MeshComponents, since they have shapes and direct
 		// access to the position of the object.
-		if (_vis)
+		if (_vis && mNode == nullptr)
 		{
-			Renderer::Instance()->AddNode(mShape);
+			mNode = Renderer::Instance()->AddNode(mShape);
 		}
 		else
 		{
 			Renderer::Instance()->RemoveNode(mShape);
+			delete mNode;
+			mNode = nullptr;
 		}
 	}
 
@@ -49,14 +55,16 @@ namespace Epoch
 	{
 		mShape->AddTexture(_path, _type);
 		Renderer::Instance()->RemoveNode(mShape);
-		Renderer::Instance()->AddNode(mShape);
+		delete mNode;
+		mNode = Renderer::Instance()->AddNode(mShape);
 	}
 
 	void MeshComponent::SetRasterState(RasterState _t)
 	{
 		mShape->GetContext().mRasterState = _t;
 		Renderer::Instance()->RemoveNode(mShape);
-		Renderer::Instance()->AddNode(mShape);
+		delete mNode;
+		mNode = Renderer::Instance()->AddNode(mShape);
 	}
 
 }
