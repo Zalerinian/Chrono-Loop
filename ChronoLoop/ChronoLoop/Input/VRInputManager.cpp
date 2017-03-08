@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "VrInputManager.h"
 #include "../Common/Logger.h"
+#include "../Core/TimeManager.h"
+#include "../Core/Level.h"
 
 namespace Epoch {
 
@@ -46,6 +48,7 @@ namespace Epoch {
 		mRightController.Setup(rightID);
 		mLeftController.Setup(leftID);
 		mPlayerPosition = matrix4::CreateTranslation(2, -1, 8);
+		mInputTimeline = new InputTimeline();
 	}
 
 	VIM::~VIM() {}
@@ -70,6 +73,26 @@ namespace Epoch {
 			mLeftController.Update();
 		}
 		vr::VRCompositor()->WaitGetPoses(mPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
+
+		//Update InputSnap TweenTime 
+		mTweenTimestamp+= TimeManager::Instance()->GetDeltaTime();
+		if(mTweenTimestamp >= RecordingRate)
+		{
+			mTweenTimestamp -= RecordingRate;
+		}
+		mSnapTweenTime = mTweenTimestamp / RecordingRate;
+
+		//Pull vr events to find button press or up
+		vr::VREvent_t tempEvent;
+		//if there is a event avaliable and the game is focused
+		while(mVRSystem->PollNextEvent(&tempEvent, sizeof(tempEvent) && !mVRSystem->IsInputFocusCapturedByAnotherProcess()))
+		{
+			if(tempEvent.eventType == vr::EVREventType::VREvent_ButtonPress || tempEvent.eventType == vr::EVREventType::VREvent_ButtonUnpress)
+			{
+				AddInputNode(&tempEvent);
+			}
+		}
+
 	}
 
 	Controller& VIM::GetController(ControllerType _t) {
@@ -77,6 +100,56 @@ namespace Epoch {
 			return _t == eControllerType_Primary ? mLeftController : mRightController;
 		} else {
 			return _t == eControllerType_Primary ? mRightController : mLeftController;
+		}
+	}
+
+	void VIM::AddInputNode(vr::VREvent_t* _event )
+	{
+		InputTimeline::InputNode* node = new InputTimeline::InputNode();
+		mInputTimeline->Insert(node);
+		node->mData.mLastFrame = TimeManager::Instance()->GetCurrentSnapFrame();
+		node->mData.mButton = (vr::EVRButtonId)_event->data.controller.button;
+
+		if (_event->eventType == vr::EVREventType::VREvent_ButtonPress) {
+			if (node->mPrev && (node->mPrev->mData.mButtonState == -1 || node->mPrev->mData.mButtonState == 0)) {
+				node->mData.mButtonState = 0;
+			} else {
+				node->mData.mButtonState = -1;
+			}
+		} else if (_event->eventType == vr::EVREventType::VREvent_ButtonUnpress) {
+			node->mData.mButtonState = 1;
+		}
+
+		if (_event->trackedDeviceIndex == mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand))
+			node->mData.mControllerId = Level::Instance()->iGetLeftController()->GetUniqueId();
+		else
+			node->mData.mControllerId = Level::Instance()->iGetRightController()->GetUniqueId();
+	}
+
+	//Todo PAT: UPDATE CURRENT AFTER REWIND
+	//TODO PAT: THIS NEEDS TO BE CALLED AFTER THE SWAPPING OF IDS
+	void VIM::RewindInputTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2)
+	{
+		InputTimeline::InputNode* temp = mInputTimeline->GetCurr();
+		while(temp->mPrev)
+		{
+			mInputTimeline->SetCurr(temp);
+			//Have reached the point we want to stop
+			if(temp->mData.mLastFrame < _frame && temp->mData.mControllerId != _id1 && temp->mData.mControllerId != _id2)
+			{
+				break;
+			}
+			//Delete old controller input
+			if(temp->mData.mControllerId == _id1 || temp->mData.mControllerId == _id2)
+			{
+				InputTimeline::InputNode* del = temp;
+				temp = temp->mPrev;
+				temp->mNext = del->mNext;
+				del->mNext->mPrev = temp;
+				delete del;
+			}
+			else
+			temp = temp->mPrev;
 		}
 	}
 

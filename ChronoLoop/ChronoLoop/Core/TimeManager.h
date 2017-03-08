@@ -3,6 +3,7 @@
 #include <vector>
 #include "../Common/Interpolator.h"
 #include <unordered_map>
+#define RecordingRate .1f // 1/10th of a second in milliseconds 
 
 namespace Epoch {
 	class BaseObject;
@@ -14,7 +15,7 @@ namespace Epoch {
 		static TimeManager* instanceTimemanager;
 		static Timeline* mTimeline;
 
-		float mRecordingTime = .1f;		// 1/10th of a second in milliseconds 
+
 		float mlastRecordedTime = 0, mTimestamp = 0;
 		float mDeltaTime;
 		unsigned int mLevelTime = 0;
@@ -38,6 +39,7 @@ namespace Epoch {
 		//Checks and see if you can rewind to passed in frame
 		bool CheckRewindAvaliable(unsigned int _RewindNumOfframes);
 		static void Destroy();
+		bool DoesCloneExist(unsigned int _id,unsigned int _frame);
 		//Returns the current snapshot indx
 		unsigned int GetCurrentSnapFrame();
 		//Retrieves delta time

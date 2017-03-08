@@ -61,7 +61,7 @@ namespace  Epoch {
 
 
 	template<>
-	inline matrix4 Interpolator<matrix4>::Interpolate(matrix4 & _start, matrix4 & _end, float _ratio) {
+	 inline matrix4 Interpolator<matrix4>::Interpolate(matrix4 & _start, matrix4 & _end, float _ratio) {
 		matrix4 temp;
 		for (unsigned int c = 0; c < 4; c++) {
 			for (unsigned int r = 0; r < 4; r++) {

@@ -324,6 +324,9 @@
     <ClInclude Include="Common\Math\vec4i.h">
       <Filter>Common\Math\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Input\InputTimeline.h">
+      <Filter>Input\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -529,6 +532,9 @@
     </ClCompile>
     <ClCompile Include="Common\Math\vec4i.cpp">
       <Filter>Common\Math\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\InputTimeline.cpp">
+      <Filter>Input\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

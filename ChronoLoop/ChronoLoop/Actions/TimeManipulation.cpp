@@ -87,7 +87,7 @@ namespace Epoch
 			//KEEP THIS ORDER NO MATTER WHAT!!!! 
 			//
 			//Make a clone 3 seconds ago.
-			TimeManager::Instance()->RewindMakeClone(TimeManager::Instance()->GetCurrentSnapFrame() - 30, headset, Controller1, Controller2);
+			TimeManager::Instance()->RewindMakeClone(TimeManager::Instance()->GetCurrentSnapFrame() - frameRewind, headset, Controller1, Controller2);
 			Level::Instance()->iSetHeadsetAndControllers(headset, Controller1, Controller2, CubeColider, CubeColider2);
 			//it is extreamly important that the objects are added after time rewinded because of the objectLifeTimeStruct and more..
 			Physics::Instance()->mObjects.push_back(headset);
@@ -97,6 +97,8 @@ namespace Epoch
 			TimeManager::Instance()->AddPlayerObjectToTimeline(headset);
 			TimeManager::Instance()->AddPlayerObjectToTimeline(Controller1);
 			TimeManager::Instance()->AddPlayerObjectToTimeline(Controller2);
+			//Rewind InputTime
+			VRInputManager::GetInstance().RewindInputTimeline(TimeManager::Instance()->GetCurrentSnapFrame(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());
 			//add Interpolators for the clones
 			TimeManager::Instance()->AddInterpolatorForClone(headset);
 			TimeManager::Instance()->AddInterpolatorForClone(Controller1);
@@ -110,6 +112,7 @@ namespace Epoch
 				return;
 
 			TimeManager::Instance()->RewindTimeline(TimeManager::Instance()->GetCurrentSnapFrame() - frameRewind, Level::Instance()->iGetHeadset()->GetUniqueID(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());
+			VRInputManager::GetInstance().RewindInputTimeline(TimeManager::Instance()->GetCurrentSnapFrame(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());
 		}
 
 		if (GetAsyncKeyState(VK_END) & 1 || VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::k_EButton_SteamVR_Touchpad)) 

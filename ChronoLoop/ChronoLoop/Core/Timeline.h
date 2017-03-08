@@ -78,6 +78,7 @@ namespace Epoch {
 		bool CheckForDuplicateData(unsigned short _id, BaseObject* _object);
 		//This function removes non-clone objects that were created in the future
 		void CheckforLostObjects(std::vector<BaseObject*>&mClones);
+		ObjectLifeTime* GetObjectLifetime(unsigned short _id);
 		SnapInfo* GenerateSnapInfo(BaseObject* _object, SnapInfo* _info);							//Error check agianst the BaseObject* if it is null or not
 		Snapshot* GenerateSnapShot(unsigned int _time, std::vector<BaseObject*> & _clones);
 		SnapInfoPlayer * GenerateSnapInfoPlayer();
