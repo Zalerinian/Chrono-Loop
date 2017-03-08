@@ -1,3 +1,4 @@
+#pragma once
 #include "Math.h"
 #include "Logger.h"
 
@@ -11,7 +12,8 @@ namespace  Epoch {
 	};
 
 	template <class Type>
-	class Interpolator {
+	class Interpolator
+	{
 		bool mActive = false;
 		//Easing func* 
 		void * mTimeFuc;

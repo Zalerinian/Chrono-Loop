@@ -25,6 +25,7 @@
 #include "Actions/CCElasticAABBtoAABB.h"
 #include "Actions/CCElasticAABBToSphere.h"
 #include "Actions/CCButtonPress.h"
+#include "Actions/MainMenuBT.h"
 #include "Core/Level.h"
 #include "Common/Logger.h"
 //#include "Rendering/TextureManager.h"
@@ -306,11 +307,13 @@ void Update() {
 	rightRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
 	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 	//TeleportAction *ta = new TeleportAction(eControllerType_Primary);
+	MainMenuBT *bt = new MainMenuBT(eControllerType_Primary);
 	//TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
 	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 	RightController->AddComponent(mc);
 	RightController->AddComponent(rightRaycaster);
 	//RightController->AddComponent(ta);
+	RightController->AddComponent(bt);
 	RightController->AddComponent(rightConCol);
 	//RightController->AddComponent(tm);
 	CodeComponent* pickup = new BoxSnapToControllerAction();
@@ -346,13 +349,15 @@ void Update() {
 	leftRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
 	mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 	//TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
-	TimeManipulation* tm2 = new TimeManipulation(eControllerType_Secondary);
+	MainMenuBT *bt2 = new MainMenuBT(eControllerType_Secondary);
+	//TimeManipulation* tm2 = new TimeManipulation(eControllerType_Secondary);
 	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
 	LeftController->AddComponent(leftConCol);
 	LeftController->AddComponent(leftRaycaster);
 	LeftController->AddComponent(mc2);
 	//LeftController->AddComponent(ta2);
-	LeftController->AddComponent(tm2);
+	LeftController->AddComponent(bt2);
+	//LeftController->AddComponent(tm2);
 	CodeComponent* pickup2 = new BoxSnapToControllerAction();
 	((BoxSnapToControllerAction*)pickup2)->mControllerRole = eControllerType_Secondary;
 	LeftController->AddComponent(pickup2);

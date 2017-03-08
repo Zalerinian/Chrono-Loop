@@ -8,17 +8,19 @@
 #include "../Core/Level.h"
 #include "../Actions/HeadsetFollow.hpp"
 #include "..\Common\Interpolator.h"
+
 namespace Epoch
 {
 
 	struct MainMenuBT : public CodeComponent
 	{
+		MainMenuBT(ControllerType _t) { mControllerRole = _t; };
+
 		Interpolator<matrix4>* mChamberInterp = new Interpolator<matrix4>(InterpolatorType::I_Matrix4);
 		Interpolator<matrix4>* mPlayerInterp = new Interpolator<matrix4>(InterpolatorType::I_Matrix4);
 		MeshComponent *mChamberMesh, *mStartMesh, *mExitMesh, *mFloorMesh, *mRoomMesh;
 		BaseObject *mChamberObject, *mStartObject, *mExitObject, *mFloorObject, *mRoomObject;
 		ControllerType mControllerRole = eControllerType_Primary;
-		MainMenuBT(ControllerType _t) { mControllerRole = _t; };
 
 		float tTime;
 
