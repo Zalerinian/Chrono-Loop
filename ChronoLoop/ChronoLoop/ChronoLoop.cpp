@@ -405,11 +405,11 @@ void Update() {
 	L1->iAddObject(WinBoard);
 	L1->iCallStart();
 
-	//ParticleEmitter* emit;
-	//emit = new ParticleEmitter(0, -1, 300, 5, vec4f(0, 0, 0, 0));
-	//emit->SetParticle(new Particle(100, 1.0, vec4f(0, 0, 0, 0), vec4f(1, 1, 1, 1)));
-	//emit->SetTexture("../Resources/SampleParticle.png");
-	//ParticleSystem::Instance()->AddEmitter(emit);
+	ParticleEmitter* emit;
+	emit = new ParticleEmitter(0, -1, 300, 5, vec4f(0, 5, 0, 0));
+	emit->SetParticle(new Particle(4000, 1.0, vec4f(0, 0, 0, 0), vec4f(0, 0, 0, 0)));
+	emit->SetTexture("../Resources/SampleParticle.png");
+	ParticleSystem::Instance()->AddEmitter(emit);
 
 	//// Test for TextureManager::iAddTexture2D. Works nicely!
 	//D3D11_TEXTURE2D_DESC AddedTextureDesc;

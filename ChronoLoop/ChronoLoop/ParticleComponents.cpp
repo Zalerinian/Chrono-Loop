@@ -30,7 +30,7 @@ namespace Epoch
 		mLife = _life;
 		mSize = _size;
 		mPos = _pos;
-		mSColor =_scolor;
+		mSColor = _scolor;
 		mEColor = _ecolor;
 		mVelocity = vec4f(0, 0, 0, 0);
 		mActive = true;
@@ -130,7 +130,6 @@ namespace Epoch
 	{
 		mBase = _p;
 	}
-
 	void ParticleEmitter::Update(float _delta)
 	{
 		CleanUpParticles();
@@ -156,7 +155,7 @@ namespace Epoch
 	{
 		D3D11_MAPPED_SUBRESOURCE mRes;
 		//mGParticles.clear();
-		mGParticles.resize(mMaxParticles);
+		//mGParticles.resize(mMaxParticles);
 		//ZeroMemory(mGParticles.data(), sizeof(GSParticle) * mGParticles.size());
 
 		GSParticle gps;
@@ -177,10 +176,16 @@ namespace Epoch
 			}
 			i++;
 		}
+		for (; i < mGParticles.size(); i++)
+		{
+			gps.pos = vec4f(0, 0, 0, 0);
+			gps.size = 0;
+			mGParticles[i] = gps;
+		}
 
 		Renderer::Instance()->iGetContext()->Map(mVBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mRes);
-
-		memcpy(mRes.pData, &mGParticles[0], sizeof(GSParticle) * mGParticles.size());
+		
+		memcpy(mRes.pData, mGParticles.data(), sizeof(GSParticle) * mGParticles.size());
 		//Graphics 2 slides
 		Renderer::Instance()->iGetContext()->Unmap(mVBuffer, 0);
 	}
@@ -192,7 +197,8 @@ namespace Epoch
 		{
 			if ((*iter)->mActive == false)
 			{
-				i = mGParticles.erase(i);
+				(*i).pos = vec4f(0, 0, 0, 0);
+				(*i).size = 0;
 				Particle* temp = (*iter);
 				iter = mParticles.erase(iter);
 				if (iter == mParticles.end())
@@ -217,14 +223,15 @@ namespace Epoch
 				z = fmodf((float)rand(), 6.0) - 3.0;
 
 				Particle* p = new Particle();
-				p = mBase;
+				*p = *mBase;
 				p->mPos = vec4f(x, y, z, 1);
+				p->mPos += mPos;
 
 				x = fmodf((float)rand(), 6.0) - 3.0;
 				y = fmodf((float)rand(), 6.0) - 3.0;
 				z = fmodf((float)rand(), 6.0) - 3.0;
 
-				p->mVelocity = vec4f(x, y, z, 1);
+				p->mVelocity = vec4f(0, .001, 0, 0);
 				mParticles.push_back(p);
 			}
 		}
