@@ -28,7 +28,7 @@ namespace LevelEditor
         private Color mColor;
         private List<ToolObjectColor> mChildren;
         private bool mSelected;
-
+        private bool mIsSolid = true;
         #region Properties
         public CustomVertex.PositionNormalColored[] Vertices
         {
@@ -128,6 +128,12 @@ namespace LevelEditor
                     ObjectColor = mColor;
                 mSelected = value;
             }
+        }
+
+        public bool IsSolid
+        {
+            get { return mIsSolid; }
+            set { mIsSolid = value; }
         }
         #endregion
 

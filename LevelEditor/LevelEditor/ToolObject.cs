@@ -26,7 +26,8 @@ namespace LevelEditor
         private Vector3 mPosition;
         private Vector3 mRotation;
         private Vector3 mScale;
-        private string mName, mTextureFile, mMeshFile;
+        private string mName, mTextureFile, mMeshFile, mColliderType;
+        private ToolObjectColor mCollider = null;
 
         #region Properties
         public CustomVertex.PositionNormalTextured[] Vertices
@@ -97,6 +98,18 @@ namespace LevelEditor
             get { return mMeshFile; }
             set { mMeshFile = value; }
         }
+
+        public ToolObjectColor Collider
+        {
+            get { return mCollider; }
+            set { mCollider = value; }
+        }
+
+        public string ColliderType
+        {
+            get { return mColliderType; }
+            set { mColliderType = value; }
+        }
         #endregion
 
         public ToolObject(ToolObject _Tool)
@@ -127,7 +140,6 @@ namespace LevelEditor
             mMaterial.Specular = Color.LightGray;
             mMaterial.SpecularSharpness = 15.0F;
             mDevice = _Device;
-            MakeGrid();
             mIsWireFrame = true;
             mTexture = null;
             VertexDeclaration();
@@ -240,40 +252,43 @@ namespace LevelEditor
             _out = new Vector3();
             Vector3 end = _end;
             bool hit = false;
-            for (int i = 0; i < mIndices.Length; i += 3)
+            if (mIndices != null)
             {
-                Vector3 norm = TriNormal(i);
-                if (Vector3.Dot(_start, norm) - Vector3.Dot(mVertices[mIndices[i]].Position, norm) < 0)
-                    continue;
-                if (Vector3.Dot(end, norm) - Vector3.Dot(mVertices[mIndices[i]].Position, norm) > 0)
-                    continue;
-                //Plane intersection
-                float D0 = Vector3.Dot(norm, _start);
-                float D1 = Vector3.Dot(norm, mVertices[mIndices[i]].Position);
-                float D2 = D0 - D1;
-                Vector3 L = end - _start;
-                float D3 = Vector3.Dot(norm, L);
-                Vector3 CP = _start + (L * (-1.0f * (D2 / D3)));
-                //Point in triangle
-                bool outside = false;
-                for (int j = 0; j < 3; j++)
+                for (int i = 0; i < mIndices.Length; i += 3)
                 {
-                    if (outside)
+                    Vector3 norm = TriNormal(i);
+                    if (Vector3.Dot(_start, norm) - Vector3.Dot(mVertices[mIndices[i]].Position, norm) < 0)
                         continue;
-                    Vector3 Edge0 = mVertices[mIndices[i + ((j + 1) % 3)]].Position - mVertices[mIndices[i + j]].Position;
-                    Vector3 Normal0 = Vector3.Cross(Edge0, norm);
+                    if (Vector3.Dot(end, norm) - Vector3.Dot(mVertices[mIndices[i]].Position, norm) > 0)
+                        continue;
+                    //Plane intersection
+                    float D0 = Vector3.Dot(norm, _start);
+                    float D1 = Vector3.Dot(norm, mVertices[mIndices[i]].Position);
+                    float D2 = D0 - D1;
+                    Vector3 L = end - _start;
+                    float D3 = Vector3.Dot(norm, L);
+                    Vector3 CP = _start + (L * (-1.0f * (D2 / D3)));
+                    //Point in triangle
+                    bool outside = false;
+                    for (int j = 0; j < 3; j++)
+                    {
+                        if (outside)
+                            continue;
+                        Vector3 Edge0 = mVertices[mIndices[i + ((j + 1) % 3)]].Position - mVertices[mIndices[i + j]].Position;
+                        Vector3 Normal0 = Vector3.Cross(Edge0, norm);
 
-                    if (Vector3.Dot(CP - mVertices[mIndices[i + j]].Position, Normal0) > 0)
-                        outside = true;
+                        if (Vector3.Dot(CP - mVertices[mIndices[i + j]].Position, Normal0) > 0)
+                            outside = true;
+                    }
+                    if (!outside)
+                    {
+                        end = CP;
+                        hit = true;
+                    }
                 }
-                if (!outside)
-                {
-                    end = CP;
-                    hit = true;
-                }
+                if (hit)
+                    _out = end;
             }
-            if (hit)
-                _out = end;
             return hit;
         }
         public void Invert()
@@ -312,13 +327,19 @@ namespace LevelEditor
         }
         public void VertexDeclaration()
         {
-            mVertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionNormalTextured), mVertices.Length, mDevice, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionNormalTextured.Format, Pool.Default);
-            mVertexBuffer.SetData(mVertices, 0, LockFlags.None);
+            if (mVertices != null)
+            {
+                mVertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionNormalTextured), mVertices.Length, mDevice, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionNormalTextured.Format, Pool.Default);
+                mVertexBuffer.SetData(mVertices, 0, LockFlags.None);
+            }
         }
         public void IndicesDeclaration()
         {
-            mIndexBuffer = new IndexBuffer(typeof(int), mIndices.Length * sizeof(int), mDevice, Usage.WriteOnly, Pool.Default);
-            mIndexBuffer.SetData(mIndices, 0, LockFlags.None);
+            if (mIndices != null)
+            {
+                mIndexBuffer = new IndexBuffer(typeof(int), mIndices.Length * sizeof(int), mDevice, Usage.WriteOnly, Pool.Default);
+                mIndexBuffer.SetData(mIndices, 0, LockFlags.None);
+            }
         }
         public void Translate(Vector3 _Offset)
         {

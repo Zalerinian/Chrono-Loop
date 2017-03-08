@@ -25,13 +25,14 @@ namespace LevelEditor
         private List<ToolObject> higharchy = new List<ToolObject>();
         private List<ToolObjectColor> debugObjs = new List<ToolObjectColor>();
         private ToolObject oldSelected = null, selectedObject = null;
+        private ToolObjectColor selectedCollider = null;
         private Stopwatch fpsTimer = new Stopwatch();
         private List<long> advMillisecond = new List<long>();
         private Vector3 cameraPos = new Vector3(0, 0, 0), prevHit = new Vector3(0, 0, 0), curHit = new Vector3(0, 0, 0);
         private Vector2 prevMouse, curMouse;
         private int selectedIndex = 0;
         private bool canMove = false, grab = false, snap = false;
-        private string selectedName = string.Empty;
+        private string selectedName = string.Empty, colliderType = string.Empty;
         Matrix gizmoScale = Matrix.Identity;
         Matrix rotate = Matrix.Identity;
 
@@ -41,6 +42,8 @@ namespace LevelEditor
             InitializeDevice();
             InitializeKeyboard();
             InitializeCamera();
+            objects.Add(new ToolObject(ref device));
+            objects[0].Name = "Empty";
             objects.Add(new ToolObject("Assets\\Cube.obj", "Assets\\skybox.dds", ref device));
             objects.Add(new ToolObject("Assets\\Sphere.obj", ref device));
             for (int i = 0; i < objects.Count; i++)
@@ -102,6 +105,11 @@ namespace LevelEditor
             {
                 to.VertexDeclaration();
                 to.IndicesDeclaration();
+                if (to.Collider != null)
+                {
+                    to.Collider.VertexDeclaration();
+                    to.Collider.IndicesDeclaration();
+                }
             }
         }
         private void InitializeCamera()
@@ -141,12 +149,31 @@ namespace LevelEditor
                     device.RenderState.AlphaBlendEnable = false;
             foreach (ToolObject tObj in higharchy)
             {
-                device.RenderState.FillMode = tObj.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
-                device.SetStreamSource(0, tObj.VertexBuffer, 0);
-                device.Indices = tObj.IndexBuffer;
-                device.SetTexture(0, tObj.Texture);
-                device.Transform.World = tObj.Transform;
-                device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Indices.Length, 0, tObj.Indices.Length / 3);
+                if (tObj.Vertices != null)
+                {
+                    device.RenderState.FillMode = tObj.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
+                    device.SetStreamSource(0, tObj.VertexBuffer, 0);
+                    device.Indices = tObj.IndexBuffer;
+                    device.SetTexture(0, tObj.Texture);
+                    device.Transform.World = tObj.Transform;
+                    device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Indices.Length, 0, tObj.Indices.Length / 3);
+                }
+                if (tObj.Collider != null)
+                {
+                    device.VertexFormat = CustomVertex.PositionNormalColored.Format;
+                    device.RenderState.CullMode = Cull.None;
+                    device.RenderState.FillMode = tObj.Collider.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
+                    device.SetStreamSource(0, tObj.Collider.VertexBuffer, 0);
+                    device.Indices = tObj.Collider.IndexBuffer;
+                    device.SetTexture(0, null);
+                    if (tObj.ColliderType == "OBB")
+                        device.Transform.World = tObj.Collider.Transform * tObj.Transform;
+                    else
+                        device.Transform.World = Matrix.Translation(tObj.Position) * tObj.Collider.Transform;
+                    device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Collider.Indices.Length, 0, tObj.Collider.Indices.Length / 3);
+                    device.VertexFormat = CustomVertex.PositionNormalTextured.Format;
+                    device.RenderState.CullMode = Cull.Clockwise;
+                }
             }
             //Axis Gizmo
             if (selectedObject != null)
@@ -205,11 +232,15 @@ namespace LevelEditor
                     if (selection >= 0)
                     {
                         selectedObject = higharchy[selection];
+                        selectedCollider = null;
+                        selectedIndex = selection;
                         UpdateSelectedData();
                     }
                     else
                     {
                         selectedObject = null;
+                        selectedCollider = null;
+                        selectedIndex = selection;
                         UpdateSelectedData();
                     }
                 }
@@ -439,7 +470,7 @@ namespace LevelEditor
                 if (keys[Key.Space])
                     cameraPos.Y += 0.5f;
                 snap = keys[Key.LeftAlt];
-                if (selectedObject != null)
+                if (selectedObject != null || selectedCollider != null)
                 {
                     Vector3 dMove = new Vector3();
                     if (keys[Key.UpArrow])
@@ -447,10 +478,13 @@ namespace LevelEditor
                     if (keys[Key.Down])
                         dMove += (new Vector3(0, 0, -1));
                     if (keys[Key.Right])
-                        dMove += (new Vector3(-1, 0, 0));
-                    if (keys[Key.Left])
                         dMove += (new Vector3(1, 0, 0));
-                    selectedObject.Translate(dMove);
+                    if (keys[Key.Left])
+                        dMove += (new Vector3(-1, 0, 0));
+                    if (selectedCollider != null)
+                        selectedCollider.Translate(dMove);
+                    else if (selectedObject != null)
+                        selectedObject.Translate(dMove);
                     UpdateSelectedData();
                 }
             }
@@ -524,17 +558,84 @@ namespace LevelEditor
                     {
                         writer.WriteStartElement("Object");
                         writer.WriteElementString("Name", tObj.Name);
-                        writer.WriteElementString("Mesh", tObj.MeshFile.Split('\\').Last());
-                        writer.WriteElementString("Texture", tObj.TextureFile == null ? "" : tObj.TextureFile.Split('\\').Last());
+                        if (tObj.MeshFile != null)
+                            writer.WriteElementString("Mesh", tObj.MeshFile.Split('\\').Last());
+                        if (tObj.TextureFile != null)
+                            writer.WriteElementString("Texture", tObj.TextureFile == null ? "" : tObj.TextureFile.Split('\\').Last());
                         writer.WriteElementString("Position", tObj.Position.X + "," + tObj.Position.Y + "," + tObj.Position.Z);
                         writer.WriteElementString("Rotation", tObj.Rotation.X + "," + tObj.Rotation.Y + "," + tObj.Rotation.Z);
                         writer.WriteElementString("Scale", tObj.Scale.X + "," + tObj.Scale.Y + "," + tObj.Scale.Z);
+                        writer.WriteStartElement("Components");
+                        if (tObj.Collider != null)
+                        {
+                            writer.WriteStartElement("Collider");
+                            writer.WriteElementString("Type", tObj.ColliderType);
+                            writer.WriteElementString("Trigger", tObj.Collider.IsSolid ? "False" : "True");
+                            writer.WriteElementString("Position", tObj.Collider.Position.X + "," + tObj.Collider.Position.Y + "," + tObj.Collider.Position.Z);
+                            if (tObj.ColliderType == "OBB")
+                            {
+                                writer.WriteElementString("Rotation", tObj.Collider.Rotation.X + "," + tObj.Collider.Rotation.Y + "," + tObj.Collider.Rotation.Z);
+                                writer.WriteElementString("Scale", tObj.Collider.Scale.X + "," + tObj.Collider.Scale.Y + "," + tObj.Collider.Scale.Z);
+                            }
+                            else
+                                writer.WriteElementString("Radius", tObj.Collider.Scale.X.ToString());
+                            writer.WriteEndElement();
+                        }
+                        writer.WriteEndElement();
                         writer.WriteEndElement();
                     }
                     writer.WriteEndElement();
                     writer.WriteEndDocument();
                 }
             }
+        }
+
+        private void Trigger_CheckedChanged(object sender, EventArgs e)
+        {
+            selectedCollider.IsSolid = !Trigger.Checked;
+        }
+
+        private void componetsCheck_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (selectedObject != null)
+            {
+                switch (e.Index)
+                {
+                    case 0:
+                        if (selectedObject.Collider == null && e.NewValue == CheckState.Checked)
+                        {
+                            selectedObject.Collider = new ToolObjectColor("Assets\\Cube.obj", Color.Red, ref device);
+                            selectedObject.ColliderType = "OBB";
+                            selectedObject.Collider.IsWireFrame = true;
+                            selectedObject.Collider.Name = "Collider";
+                            Tree.Nodes[1].Nodes[selectedIndex].Nodes.Add("Collider");
+                        }
+                        if (selectedObject.Collider != null && e.NewValue == CheckState.Unchecked && selectedObject.ColliderType == "OBB")
+                        {
+                            selectedObject.Collider = null;
+                            Tree.Nodes[1].Nodes[selectedIndex].Nodes.RemoveAt(0);
+                        }
+                        break;
+                    case 1:
+                        if (selectedObject.Collider == null && e.NewValue == CheckState.Checked)
+                        {
+                            selectedObject.Collider = new ToolObjectColor("Assets\\Sphere.obj", Color.Red, ref device);
+                            selectedObject.ColliderType = "Sphere";
+                            selectedObject.Collider.IsWireFrame = true;
+                            selectedObject.Collider.Name = "Collider";
+                            Tree.Nodes[1].Nodes[selectedIndex].Nodes.Add("Collider");
+                        }
+                        if (selectedObject.Collider != null && e.NewValue == CheckState.Unchecked && selectedObject.ColliderType == "Sphere")
+                        {
+                            selectedObject.Collider = null;
+                            Tree.Nodes[1].Nodes[selectedIndex].Nodes.RemoveAt(0);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            graphicsPanel1.Focus();
         }
 
         private void graphicsPanel1_MouseUp(object sender, MouseEventArgs e)
@@ -549,7 +650,19 @@ namespace LevelEditor
             {
                 selectedIndex = Tree.SelectedNode.Index;
                 selectedObject = higharchy[selectedIndex];
+                selectedCollider = null;
                 UpdateSelectedData();
+            }
+            else if (Tree.SelectedNode != null && Tree.SelectedNode.Parent != null && Tree.SelectedNode.Parent.Text != "Higharchy" && Tree.SelectedNode.Parent.Text != "Objects")
+            {
+                if (higharchy[Tree.SelectedNode.Parent.Index].Name == Tree.SelectedNode.Parent.Text)
+                {
+                    selectedIndex = Tree.SelectedNode.Parent.Index;
+                    selectedObject = null;
+                    selectedCollider = higharchy[Tree.SelectedNode.Parent.Index].Collider;
+                    colliderType = higharchy[Tree.SelectedNode.Parent.Index].ColliderType;
+                    UpdateSelectedData();
+                }
             }
             graphicsPanel1.Focus();
         }
@@ -576,8 +689,40 @@ namespace LevelEditor
 
         private void UpdateSelectedData()
         {
-            if (selectedObject != null)
+            if (selectedCollider != null)
             {
+                groupBox5.Visible = false;
+                Trigger.Visible = true;
+                Trigger.Checked = !selectedCollider.IsSolid;
+                nameBox.Text = selectedCollider.Name;
+                posX.Value = (decimal)selectedCollider.Position.X;
+                posY.Value = (decimal)selectedCollider.Position.Y;
+                posZ.Value = (decimal)selectedCollider.Position.Z;
+
+                rotX.Value = (decimal)(selectedCollider.Rotation.X * ToolObject.RADIANS_TO_DEGREES);
+                rotY.Value = (decimal)(selectedCollider.Rotation.Y * ToolObject.RADIANS_TO_DEGREES);
+                rotZ.Value = (decimal)(selectedCollider.Rotation.Z * ToolObject.RADIANS_TO_DEGREES);
+                if (colliderType == "OBB")
+                {
+                    groupBox1.Visible = true;
+                    groupBox6.Visible = false;
+                    scaleX.Value = (decimal)selectedCollider.Scale.X;
+                    scaleY.Value = (decimal)selectedCollider.Scale.Y;
+                    scaleZ.Value = (decimal)selectedCollider.Scale.Z;
+                }
+                else
+                {
+                    groupBox1.Visible = false;
+                    groupBox6.Visible = true;
+                    Radius.Value = (decimal)selectedCollider.Scale.X;
+                }
+            }
+            else if (selectedObject != null)
+            {
+                groupBox6.Visible = false;
+                groupBox5.Visible = true;
+                groupBox1.Visible = true;
+                Trigger.Visible = false;
                 nameBox.Text = selectedObject.Name;
                 posX.Value = (decimal)selectedObject.Position.X;
                 posY.Value = (decimal)selectedObject.Position.Y;
@@ -590,9 +735,26 @@ namespace LevelEditor
                 scaleX.Value = (decimal)selectedObject.Scale.X;
                 scaleY.Value = (decimal)selectedObject.Scale.Y;
                 scaleZ.Value = (decimal)selectedObject.Scale.Z;
+                if (selectedObject.Collider != null)
+                {
+                    componetsCheck.SetItemChecked(selectedObject.ColliderType == "OBB" ? 0 : 1, true);
+                    componetsCheck.SetItemChecked(selectedObject.ColliderType != "OBB" ? 0 : 1, false);
+                }
+                else
+                {
+                    for (int i = 0; i < 3; i++)
+                        componetsCheck.SetItemChecked(i, false);
+                }
             }
             else
             {
+                groupBox6.Visible = false;
+                groupBox5.Visible = true;
+                groupBox1.Visible = true;
+                Trigger.Visible = false;
+                componetsCheck.ClearSelected();
+                for (int i = 0; i < 3; i++)
+                    componetsCheck.SetItemChecked(i, false);
                 nameBox.Text = string.Empty;
                 posX.Value = 0;
                 posY.Value = 0;
@@ -627,6 +789,17 @@ namespace LevelEditor
                 selectedObject.SetPosition(new Vector3((float)posX.Value, (float)posY.Value, (float)posZ.Value));
                 selectedObject.SetScale(new Vector3((float)scaleX.Value, (float)scaleY.Value, (float)scaleZ.Value));
                 selectedObject.SetRotate(new Vector3((float)rotX.Value * ToolObject.DEGREES_TO_RADIANS, (float)rotY.Value * ToolObject.DEGREES_TO_RADIANS, (float)rotZ.Value * ToolObject.DEGREES_TO_RADIANS));
+            }
+            else if (selectedCollider != null && oldSelected == selectedObject)
+            {
+                Tree.Nodes[1].Nodes[selectedIndex].Nodes[0].Text = nameBox.Text;
+                selectedCollider.Name = nameBox.Text;
+                selectedCollider.SetPosition(new Vector3((float)posX.Value, (float)posY.Value, (float)posZ.Value));
+                if (colliderType == "OBB")
+                    selectedCollider.SetScale(new Vector3((float)scaleX.Value, (float)scaleY.Value, (float)scaleZ.Value));
+                else
+                    selectedCollider.SetScale(new Vector3((float)Radius.Value, (float)Radius.Value, (float)Radius.Value));
+                selectedCollider.SetRotate(new Vector3((float)rotX.Value * ToolObject.DEGREES_TO_RADIANS, (float)rotY.Value * ToolObject.DEGREES_TO_RADIANS, (float)rotZ.Value * ToolObject.DEGREES_TO_RADIANS));
             }
         }
 
