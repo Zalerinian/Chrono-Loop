@@ -32,7 +32,7 @@ namespace Epoch {
 		inline Triangle* GetTriangles() { return mMesh.GetTriangles(); }
 		inline size_t GetTriangleCount() { return mMesh.GetNumTriangles(); }
 
-		void Render() const;
+		void Render(UINT _instanceCount = 1) const;
 
 		bool operator==(const RenderShape& _other) const;
 

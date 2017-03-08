@@ -21,7 +21,6 @@ namespace Epoch
 		if (mNode) {
 			mNode->data = mShape->mPosition.Transpose();
 		}
-		int bullshit = 7;
 	}
 
 	void MeshComponent::Destroy()

@@ -449,6 +449,11 @@ void Update() {
 			}
 			Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false, (void*)nullptr));
 
+			for (unsigned int i = 0; i < 50; ++i) {
+				// Simulated context comparison for performance analysis
+				visibleMesh->GetContext() == ExitMesh->GetContext();
+			}
+
 			//SystemLogger::GetLog() << "[Debug] Regular Update " << std::endl;
 			UpdateTime();
 			Level::Instance()->iUpdate();

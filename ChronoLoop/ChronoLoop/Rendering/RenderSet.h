@@ -3,7 +3,8 @@
 #include <unordered_map>
 #include <unordered_set>
 #include "RenderShape.h"
-#include "../Common/GhostList.h"
+#include "RenderList.h"
+#include <list>
 
 namespace Epoch {
 	struct RenderNode;
@@ -14,10 +15,6 @@ namespace Epoch {
 		RenderStage_PostProcess = 4;
 
 	class RenderSet {
-		std::unordered_map<RenderShape, GhostList<matrix4>> mRenderShapes;
-		std::unordered_set<RenderShape> mShadowSet;
-		std::unordered_set<RenderShape> mDiffuseSet;
-		std::unordered_set<RenderShape> mPostSet;
 
 		RenderNode *mHead = nullptr, *mTail = nullptr;
 		unsigned int mSize = 0;
@@ -25,6 +22,7 @@ namespace Epoch {
 		std::vector<RenderShape> mKeys;
 
 	public:
+		std::list<RenderList*> mRenderList;
 		class Iterator {
 			unsigned int mIndex = 0;
 			RenderSet* mSet = nullptr;
@@ -42,6 +40,7 @@ namespace Epoch {
 			bool operator!=(const Iterator& _it);
 		};
 
+		GhostList<matrix4>::GhostNode* AddShape(RenderShape& _shape);
 		GhostList<matrix4>::GhostNode* AddNode(RenderShape& _shape, unsigned int _rs = RenderStage_Shadows | RenderStage_Diffuse);
 		void AddNode(RenderNode* _node, RenderContext *_rc);
 		void RemoveNode(RenderNode* _node);

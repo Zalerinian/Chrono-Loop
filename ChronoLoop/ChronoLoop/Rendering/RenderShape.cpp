@@ -105,12 +105,12 @@ namespace Epoch {
 		return *this;
 	}
 
-	void RenderShape::Render() const {
+	void RenderShape::Render(UINT _instanceCount) const {
 		UINT stride = sizeof(VertexPosNormTex), offset = 0;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> vBuffer = VertexBufferManager::GetBuffer(eVERT_POSNORMTEX);
 		Renderer::Instance()->GetContext()->IASetIndexBuffer(IndexBufferManager::GetBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
 		Renderer::Instance()->GetContext()->IASetVertexBuffers(0, 1, vBuffer.GetAddressOf(), &stride, &offset);
-		Renderer::Instance()->GetContext()->DrawIndexedInstanced(mIndexCount, 1, mIndexOffset, mVertexOffset, 0);
+		Renderer::Instance()->GetContext()->DrawIndexedInstanced(mIndexCount, _instanceCount, mIndexOffset, mVertexOffset, 0);
 	}
 
 	bool RenderShape::operator==(const RenderShape & _other) const {

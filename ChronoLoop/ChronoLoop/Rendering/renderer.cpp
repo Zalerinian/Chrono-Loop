@@ -239,7 +239,7 @@ namespace Epoch {
 
 
 		// Model position buffer
-		desc.ByteWidth = sizeof(matrix4);
+		desc.ByteWidth = sizeof(matrix4) * 256;
 		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
 		mPositionBuffer.Attach(pBuff);
 	}
@@ -397,33 +397,21 @@ namespace Epoch {
 		//		((RenderContext*)head)->Apply();
 		//	} else if (head->mType == RenderNode::RenderNodeType::Shape) {
 		//		mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &((RenderShape*)head)->mPosition, 0, 0);
-		//		((RenderShape*)head)->Render();
+		//		((RenderShape*)head)->Render(1);
 		//	}
 		//	head = head->GetNext();
 		//}
 
-
-		for (auto it = mRenderSet.Begin(); it != mRenderSet.End(); ++it) {
-			RenderShape& shape = *it;
-			GhostList<matrix4>& list = it(shape);
-			std::vector<matrix4> positions;
-			list.GetData(positions);
+		std::vector<matrix4> positions;
+		positions.reserve(256);
+		for (auto it = mRenderSet.mRenderList.begin(); it != mRenderSet.mRenderList.end(); ++it) {
+			(*it)->mPositions.GetData(positions);
 			if (positions.size() > 0) {
-				shape.GetContext().Apply();
-				mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[0], 0, 0);
-				shape.Render();
+				(*it)->mShape.GetContext().Apply();
+				mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, positions.data(), 0, 0);
+				(*it)->mShape.Render((UINT)positions.size());
 			}
 		}
-
-		//for (auto it = mRenderSet.Begin(); it != mRenderSet.End(); ++it) {
-		//	std::vector<matrix4> positions;
-		//	it->second.GetData(positions);
-		//	if (positions.size() > 0) {
-		//		it->first.GetContext().Apply();
-		//		mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[0], 0, 0);
-		//		it->first.Render();
-		//	}
-		//}
 	}
 
 
@@ -433,7 +421,8 @@ namespace Epoch {
 
 	GhostList<matrix4>::GhostNode* Renderer::AddNode(RenderShape *_node) {
 		mRenderSet.AddNode(_node, &_node->GetContext());
-		return mRenderSet.AddNode(*_node, 3);
+		//return mRenderSet.AddNode(*_node, 3);
+		return mRenderSet.AddShape(*_node);
 	}
 	void Renderer::RemoveNode(RenderShape *_node) {
 		mRenderSet.RemoveShape(_node);
