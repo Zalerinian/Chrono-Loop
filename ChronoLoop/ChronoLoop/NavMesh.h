@@ -10,7 +10,7 @@ namespace Epoch
 	public:
 		std::vector<Triangle> mTriangles;
 		std::vector<unsigned int> mEdgeIndicies;//points to the triangle that is on the edge of a triangle
-		std::vector<unsigned int> mEdgeAmount;//should never exceed 3
+		//std::vector<unsigned int> mEdgeAmount;//should never exceed 3
 
 		NavMesh();
 		~NavMesh();

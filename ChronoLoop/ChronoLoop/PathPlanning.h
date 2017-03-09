@@ -11,8 +11,8 @@ namespace Epoch
 	struct SearchTri
 	{
 		Triangle* mCur;
-		std::vector<Triangle*> mTouching;
-		std::vector<float> mTouchingCosts;
+		Triangle* mTouching[3];
+		float mTouchingCosts[3];
 
 		SearchTri(){
 			mCur = nullptr;
@@ -20,7 +20,7 @@ namespace Epoch
 		SearchTri(Triangle* _currentTri) {
 			mCur = _currentTri;
 		}
-		float GetTouchingCost(Triangle* _curr, Triangle* _edge) {
+		static float GetTouchingCost(Triangle* _curr, Triangle* _edge) {
 			return (_curr->Centeroid - _edge->Centeroid).Magnitude();
 		}
 	};
@@ -32,6 +32,10 @@ namespace Epoch
 		PlannerTri(){
 			mParent = nullptr;
 			mSearch = nullptr;
+		}
+		PlannerTri(SearchTri* _search) {
+			mParent = nullptr;
+			mSearch = _search;
 		}
 		PlannerTri(PlannerTri* _parent,SearchTri* _search) {
 			mParent = _parent;
@@ -46,7 +50,7 @@ namespace Epoch
 		std::unordered_map<SearchTri*, PlannerTri*> mVisited;//Tris that were visited
 		std::queue<PlannerTri*> mOpen;//Current Open Tris
 		std::vector<Triangle const*> mSolution;
-		SearchTri* mStart, mGoal;
+		SearchTri* mStart, *mGoal;
 		NavMesh* mNevMash;
 		bool isDone = false;
 
@@ -54,7 +58,7 @@ namespace Epoch
 		bool GreedyBestFirst(SearchTri* _start, SearchTri* _end);
 		void Shutdown();
 		void exit();
-		void enter(vec4f _start,vec4f _goal);
+		void enter(Triangle* _start, Triangle* _goal);
 
 		bool isGreater(PlannerTri* const &lhs, PlannerTri* const & rhs) { return (lhs->mHeuristicCost > rhs->mHeuristicCost); }
 		float GetEstimate(Triangle* _start, Triangle* _end) { return (_end->Centeroid - _start->Centeroid).Magnitude(); }
