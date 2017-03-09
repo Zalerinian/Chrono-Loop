@@ -152,14 +152,14 @@ namespace Epoch {
 			&ctx
 		));
 
-		mDevice = dev;
-		mContext = ctx;
+		mDevice.Attach(dev);
+		mContext.Attach(ctx);
 	}
 
 	void Renderer::InitializeDXGIFactory() {
 		IDXGIFactory1 *factory;
 		ThrowIfFailed(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&factory));
-		mFactory = factory;
+		mFactory.Attach(factory);
 
 	}
 
@@ -181,10 +181,10 @@ namespace Epoch {
 
 		IDXGISwapChain *chain;
 
-		ThrowIfFailed(sInstance->mFactory->CreateSwapChain(sInstance->mDevice.Get(),
-																													&scDesc,
-																													&chain));
-		sInstance->mChain = chain;
+		ThrowIfFailed(mFactory->CreateSwapChain(mDevice.Get(),
+																						&scDesc,
+																						&chain));
+		mChain.Attach(chain);
 	}
 
 	void Renderer::InitializeViews(int _width, int _height) {
@@ -192,8 +192,8 @@ namespace Epoch {
 		ID3D11RenderTargetView *rtv;
 		ThrowIfFailed(mChain->GetBuffer(0, __uuidof(bbuffer), (void**)(&bbuffer)));
 		ThrowIfFailed(mDevice->CreateRenderTargetView(bbuffer, NULL, &rtv));
-		mMainView = rtv;
-		mMainViewTexture = ((ID3D11Texture2D*)bbuffer);
+		mMainView.Attach(rtv);
+		mMainViewTexture.Attach((ID3D11Texture2D*)bbuffer);
 
 		ID3D11Texture2D *depthTexture;
 		ID3D11DepthStencilView *depthView;
@@ -214,8 +214,8 @@ namespace Epoch {
 		ThrowIfFailed(mDevice->CreateDepthStencilView(depthTexture, NULL, &depthView));
 		mContext->OMSetRenderTargets(1, &rtv, depthView);
 
-		mDepthBuffer = depthTexture;
-		mDSView = depthView;
+		mDepthBuffer.Attach(depthTexture);
+		mDSView.Attach(depthView);
 
 		// Viewport
 		DXGI_SWAP_CHAIN_DESC scd;
@@ -231,13 +231,17 @@ namespace Epoch {
 
 	void Renderer::InitializeBuffers() {
 		ID3D11Buffer* pBuff;
+
+		// View-Projction buffer
 		CD3D11_BUFFER_DESC desc(sizeof(ViewProjectionBuffer), D3D11_BIND_CONSTANT_BUFFER);
 		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
-		mVPBuffer = pBuff;
+		mVPBuffer.Attach(pBuff);
 
-		desc.ByteWidth = sizeof(matrix4);
+
+		// Model position buffer
+		desc.ByteWidth = sizeof(matrix4) * 256;
 		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
-		mPositionBuffer = pBuff;
+		mPositionBuffer.Attach(pBuff);
 	}
 
 	void Renderer::InitializeSamplerState() {
@@ -253,7 +257,7 @@ namespace Epoch {
 
 		ID3D11SamplerState *ss;
 		ThrowIfFailed(mDevice->CreateSamplerState(&sDesc, &ss));
-		mSamplerState = ss;
+		mSamplerState.Attach(ss);
 		mContext->PSSetSamplers(0, 1, &ss);
 	}
 
@@ -264,7 +268,7 @@ namespace Epoch {
 		SetD3DName(mChain.Get(), "Swapchain");
 		SetD3DName(mFactory.Get(), "DXGI Factory");
 		SetD3DName(mMainView.Get(), "Window Render Target");
-		SetD3DName(mMainViewTexture.Get(), "Window Rener Texture");
+		SetD3DName(mMainViewTexture.Get(), "Window Render Texture");
 		SetD3DName(mDSView.Get(), "Main Depth-Stencil View");
 		SetD3DName(mDepthBuffer.Get(), "Main Depth Buffer");
 		SetD3DName(mVPBuffer.Get(), "View-Projection Constant Buffer");
@@ -365,7 +369,6 @@ namespace Epoch {
 			ViewProjectionBuffer data;
 			GetMVP(currentEye, data);
 			mContext->UpdateSubresource(mVPBuffer.Get(), 0, nullptr, (void*)&data, 0, 0);
-
 			ProcessRenderSet();
 
 			vr::Texture_t submitTexture = { (void*)mMainViewTexture.Get(), vr::TextureType_DirectX, vr::ColorSpace_Auto };
@@ -388,15 +391,29 @@ namespace Epoch {
 	}
 
 	void Renderer::ProcessRenderSet() {
-		const RenderNode* head = mRenderSet.GetHead();
-		while (head != nullptr) {
-			if (head->mType == RenderNode::RenderNodeType::Context) {
-				((RenderContext*)head)->Apply();
-			} else if (head->mType == RenderNode::RenderNodeType::Shape) {
-				mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &((RenderShape*)head)->mPosition, 0, 0);
-				((RenderShape*)head)->Render();
+		//const RenderNode* head = mRenderSet.GetHead();
+		//while (head != nullptr) {
+		//	if (head->mType == RenderNode::RenderNodeType::Context) {
+		//		((RenderContext*)head)->Apply();
+		//	} else if (head->mType == RenderNode::RenderNodeType::Shape) {
+		//		mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &((RenderShape*)head)->mPosition, 0, 0);
+		//		((RenderShape*)head)->Render(1);
+		//	}
+		//	head = head->GetNext();
+		//}
+
+		// TODO: Make a ShaderLimits.h file that has macros for the number of instances and other such arrays a shader supports.
+		std::vector<matrix4> positions;
+		positions.reserve(256);
+		for (auto it = mRenderSet.mRenderList.begin(); it != mRenderSet.mRenderList.end(); ++it) {
+			(*it)->mPositions.GetData(positions);
+			unsigned int offset = 0;
+			while (positions.size() - offset <= positions.size()) {
+				(*it)->mShape.GetContext().Apply();
+				mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, positions.data() + offset, 0, 0);
+				(*it)->mShape.Render((UINT)positions.size());
+				offset += 256;
 			}
-			head = head->GetNext();
 		}
 	}
 
@@ -405,8 +422,10 @@ namespace Epoch {
 
 #pragma region Public Functions
 
-	void Renderer::AddNode(RenderShape *_node) {
+	GhostList<matrix4>::GhostNode* Renderer::AddNode(RenderShape *_node) {
 		mRenderSet.AddNode(_node, &_node->GetContext());
+		//return mRenderSet.AddNode(*_node, 3);
+		return mRenderSet.AddShape(*_node);
 	}
 	void Renderer::RemoveNode(RenderShape *_node) {
 		mRenderSet.RemoveShape(_node);

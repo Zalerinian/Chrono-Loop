@@ -162,11 +162,11 @@ namespace Epoch
 			else
 			{
 				std::cout << "\n";
-				for (auto iter = temp.begin(); iter != temp.end(); iter++)
+				for (auto iter = temp.begin(); iter != temp.end(); ++iter)
 				{
 					if (cnt % 2 == 0)
 					{
-						tempDisplay += (*iter) + L"\t\t";
+						tempDisplay += (*iter) + L" ";
 					}
 					else
 					{

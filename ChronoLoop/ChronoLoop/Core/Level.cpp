@@ -99,7 +99,7 @@ namespace Epoch
 		return false;
 	}
 
-void Level::iSetHeadsetAndControllers(BaseObject * _headset, BaseObject * _controller1, BaseObject * _controller2, ControllerCollider* _c1Collider, ControllerCollider* _c2Collider) {
+void Level::iSetHeadsetAndControllers(BaseObject *& _headset, BaseObject *& _controller1, BaseObject *& _controller2, ControllerCollider* _c1Collider, ControllerCollider* _c2Collider) {
 	//Remove the action componets and 
 	//Set the new BaseObjects to the current controller so new objects can follow old controller movement as clones.
 	unsigned short headid = _headset->GetUniqueID();
@@ -151,9 +151,9 @@ void Level::iSetHeadsetAndControllers(BaseObject * _headset, BaseObject * _contr
 		mObjectList.push_back(_controller2);
 
 		////Add the headset and controllers to the time manager with their new ids
-		TimeManager::Instance()->AddPlayerObjectToTimeline(mHeadset);
-		TimeManager::Instance()->AddPlayerObjectToTimeline(mController1);
-		TimeManager::Instance()->AddPlayerObjectToTimeline(mController2);
+		TimeManager::Instance()->AddObjectToTimeline(mHeadset);
+		TimeManager::Instance()->AddObjectToTimeline(mController1);
+		TimeManager::Instance()->AddObjectToTimeline(mController2);
 
 	}
 

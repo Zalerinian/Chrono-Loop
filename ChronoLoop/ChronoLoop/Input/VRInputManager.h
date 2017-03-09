@@ -3,6 +3,7 @@
 #include "Controller.h"
 #include "../Common/Math.h"
 #include <utility>
+#include "InputTimeline.h"
 
 namespace Epoch {
 
@@ -18,7 +19,10 @@ namespace Epoch {
 		vr::TrackedDevicePose_t mPoses[vr::k_unMaxTrackedDeviceCount];
 		vr::IVRSystem* mVRSystem;
 		bool mIsLeftPrimary = false;
-		
+		InputTimeline* mInputTimeline;
+		float mTweenTimestamp = 0;
+		float mSnapTweenTime = 0;
+
 		VIM(vr::IVRSystem* _vr);
 		~VIM();
 	
@@ -26,6 +30,9 @@ namespace Epoch {
 	public:
 		void Update();
 		Controller& GetController(ControllerType _t);
+		void AddInputNode(vr::VREvent_t* _event);
+		void RewindInputTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2);
+		InputTimeline* GetInputTimeline() { return mInputTimeline; };
 		inline unsigned int GetTrackedDeviceCount() { return vr::k_unMaxTrackedDeviceCount; }
 		inline vr::TrackedDevicePose_t* GetTrackedPositions() { return mPoses; }
 		inline matrix4& GetPlayerPosition() { return mPlayerPosition; }

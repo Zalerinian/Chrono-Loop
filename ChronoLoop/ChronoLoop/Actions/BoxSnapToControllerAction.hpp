@@ -14,6 +14,7 @@ namespace Epoch
 		bool mHeld = false;
 		ControllerCollider* mCollider;
 		Collider* mPickUp = nullptr;
+		InputTimeline::InputNode* mInput;
 
 		virtual void Start()
 		{
@@ -22,9 +23,27 @@ namespace Epoch
 
 		virtual void Update() override
 		{
-
-			if (VRInputManager::GetInstance().IsVREnabled())
+			/*if (VRInputManager::GetInstance().GetInputTimeline()->GetCurr() && VRInputManager::GetInstance().GetInputTimeline()->GetCurr()->mData.mControllerId == mObject->GetUniqueId())
 			{
+				mInput = VRInputManager::GetInstance().GetInputTimeline()->GetCurr();
+			}*/
+			//SystemLogger::GetLog() << mCollider->mHitting.size() << std::endl;
+			if (VRInputManager::GetInstance().IsVREnabled() /*&& mInput*/)
+			{
+				/*if (mHeld && mPickUp != nullptr)
+				{
+				matrix4 m = mObject->GetTransform().GetMatrix();
+				mPickUp->SetPos(m.Position);
+					if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == 1)
+					{
+					ReleaseObject();
+					}
+				}
+				else if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == -1 && !mHeld && !mCollider->mHitting.empty())
+				{
+				SomethingtoController();
+				}*/
+			
 				Controller &controller = VRInputManager::GetInstance().GetController(mControllerRole);
 				if (mHeld && mPickUp != nullptr)
 				{
@@ -32,21 +51,14 @@ namespace Epoch
 					mPickUp->SetPos(m.Position);
 					if (!controller.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger))
 					{
-						ReleaseCube();
+						ReleaseObject();
 					}
 				}
 				else if (controller.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger) && !mHeld && !mCollider->mHitting.empty())
 				{
-					SnapToController();
+					SomethingtoController();
 				}
-				if (controller.GetPressDown((vr::EVRButtonId::k_EButton_Grip)))
-				{
-					//				TimeManager::Instance()->RewindTimeline();
-				}
-				else if (controller.GetPressDown((vr::EVRButtonId::k_EButton_Grip)))
-				{
-					//			TimeManager::Instance()->RewindTimeline();
-				}
+			
 
 #pragma region Gestures
 				//vec2f touch = leftController.GetAxis();
@@ -77,10 +89,11 @@ namespace Epoch
 			//mObject->GetTransform().SetMatrix(Math::MatrixRotateInPlace(mObject->GetTransform().GetMatrix(), 1, 0, 0, DirectX::XM_PI / 1024.0f));
 		}
 
-		virtual void SnapToController()
+		virtual void SomethingtoController()
 		{
 			mHeld = true;
-			matrix4 m = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
+			//matrix4 m = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
+			matrix4 m = mObject->GetTransform().GetMatrix();
 
 			vec4f pos, setPos;
 			vec4f controllerPos = mCollider->GetPos();
@@ -128,7 +141,7 @@ namespace Epoch
 			}
 		}
 
-		virtual void ReleaseCube()
+		virtual void ReleaseObject()
 		{
 			vec4f force = VRInputManager::GetInstance().GetController(mControllerRole).GetVelocity();
 			force[2] *= -1; // SteamVR seems to Assume +Z goes into the screen.
