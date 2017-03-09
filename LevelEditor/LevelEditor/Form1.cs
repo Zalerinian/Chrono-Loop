@@ -513,7 +513,7 @@ namespace LevelEditor
             OpenFileDialog openFileDialog2 = new OpenFileDialog();
 
             openFileDialog1.InitialDirectory = Application.StartupPath;
-            openFileDialog1.Filter = "Object files (*.obj)|*.obj";
+            openFileDialog1.Filter = "XML files (*.xml)|*.xml|Object files (*.obj)|*.obj";
             openFileDialog1.FilterIndex = 1;
             openFileDialog1.RestoreDirectory = true;
 
@@ -521,14 +521,167 @@ namespace LevelEditor
             {
                 try
                 {
-                    openFileDialog2.InitialDirectory = Application.StartupPath;
-                    openFileDialog2.Filter = "Texture files (*.png)|*.png";
-                    openFileDialog2.FilterIndex = 1;
-                    openFileDialog2.RestoreDirectory = true;
-                    if (openFileDialog2.ShowDialog() == DialogResult.OK)
+                    if (Path.GetExtension(openFileDialog1.FileName) == ".xml")
                     {
-                        objects.Add(new ToolObject(openFileDialog1.FileName, openFileDialog2.FileName, ref device));
-                        Tree.Nodes[0].Nodes.Add(objects.Last().Name);
+                        XmlReaderSettings settings = new XmlReaderSettings();
+                        settings.DtdProcessing = DtdProcessing.Parse;
+                        XmlReader reader = XmlReader.Create(openFileDialog1.FileName, settings);
+                        reader.MoveToContent();
+                        string element = string.Empty, mesh = string.Empty, texutre = string.Empty;
+                        ToolObject addition = new ToolObject(ref device);
+                        bool collider = false;
+                        while (reader.Read())
+                        {
+                            string[] parts = { };
+                            Vector3 point = new Vector3();
+                            switch (reader.NodeType)
+                            {
+                                case XmlNodeType.Element:
+                                    switch (reader.Name)
+                                    {
+                                        case "Object":
+                                            addition = new ToolObject(ref device);
+                                            addition.IsWireFrame = false;
+                                            mesh = texutre = string.Empty;
+                                            collider = false;
+                                            break;
+                                        case "Collider":
+                                            addition.Collider = new ToolObjectColor(ref device);
+                                            addition.Collider.IsWireFrame = true;
+                                            collider = true;
+                                            break;
+                                        default:
+                                            element = reader.Name;
+                                            break;
+                                    }
+                                    break;
+                                case XmlNodeType.Text:
+                                    switch (element)
+                                    {
+                                        case "Name":
+                                            addition.Name = reader.Value;
+                                            break;
+                                        case "Mesh":
+                                            if (File.Exists("Assets\\" + reader.Value))
+                                                addition.Load("Assets\\" + reader.Value);
+                                            else
+                                            {
+                                                openFileDialog2.Title = "Please find \"" + reader.Value + "\"";
+                                                openFileDialog2.InitialDirectory = Application.StartupPath;
+                                                openFileDialog2.Filter = "Object files (*.obj)|*.obj";
+                                                openFileDialog2.FilterIndex = 1;
+                                                openFileDialog2.RestoreDirectory = true;
+                                                if (openFileDialog2.ShowDialog() == DialogResult.OK)
+                                                    addition.Load(openFileDialog2.FileName);
+                                            }
+                                            mesh = addition.MeshFile;
+                                            break;
+                                        case "Texture":
+                                            if (File.Exists("Assets\\" + reader.Value))
+                                                addition.loadTexture("Assets\\" + reader.Value);
+                                            else
+                                            {
+                                                openFileDialog2.Title = "Please find \"" + reader.Value + "\"";
+                                                openFileDialog2.InitialDirectory = Application.StartupPath;
+                                                openFileDialog2.Filter = "Texture files (*.png)|*.png";
+                                                openFileDialog2.FilterIndex = 1;
+                                                openFileDialog2.RestoreDirectory = true;
+                                                if (openFileDialog2.ShowDialog() == DialogResult.OK)
+                                                    addition.loadTexture(openFileDialog2.FileName);
+                                            }
+                                            texutre = addition.TextureFile;
+                                            bool contained = false;
+                                            for (int i = 0; i < objects.Count; i++)
+                                                if (objects[i].MeshFile == mesh && objects[i].TextureFile == texutre)
+                                                    contained = true;
+                                            if (!contained)
+                                                objects.Add(new ToolObject(mesh, texutre, ref device));
+                                            break;
+                                        case "Position":
+                                            parts = reader.Value.Split(',');
+                                            point.X = float.Parse(parts[0]);
+                                            point.Y = float.Parse(parts[1]);
+                                            point.Z = float.Parse(parts[2]);
+                                            if (collider)
+                                                addition.Collider.SetPosition(point);
+                                            else
+                                                addition.SetPosition(point);
+                                            break;
+                                        case "Rotation":
+                                            parts = reader.Value.Split(',');
+                                            point.X = float.Parse(parts[0]);
+                                            point.Y = float.Parse(parts[1]);
+                                            point.Z = float.Parse(parts[2]);
+                                            if (collider)
+                                                addition.Collider.SetRotate(point);
+                                            else
+                                                addition.SetRotate(point);
+                                            break;
+                                        case "Scale":
+                                            parts = reader.Value.Split(',');
+                                            point.X = float.Parse(parts[0]);
+                                            point.Y = float.Parse(parts[1]);
+                                            point.Z = float.Parse(parts[2]);
+                                            if (collider)
+                                                addition.Collider.SetScale(point);
+                                            else
+                                                addition.SetScale(point);
+                                            break;
+                                        case "Type":
+                                            addition.ColliderType = reader.Value;
+                                            if (reader.Value == "Sphere")
+                                                addition.Collider.Load("Assets\\Sphere.obj");
+                                            else
+                                                addition.Collider.Load("Assets\\Cube.obj");
+                                            break;
+                                        case "Trigger":
+                                            if (reader.Value == "True")
+                                                addition.Collider.IsSolid = false;
+                                            else
+                                                addition.Collider.IsSolid = true;
+                                            break;
+                                        case "Radius":
+                                            float radius = float.Parse(reader.Value);
+                                            addition.Collider.SetScale(new Vector3(radius, radius, radius));
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    break;
+                                case XmlNodeType.EndElement:
+                                    switch (reader.Name)
+                                    {
+                                        case "Object":
+                                            higharchy.Add(addition);
+                                            Tree.Nodes[1].Nodes.Add(higharchy.Last().Name);
+                                            Tree.Nodes[1].Expand();
+                                            if (addition.Collider != null)
+                                            {
+                                                Tree.Nodes[1].LastNode.Nodes.Add("Collider");
+                                                addition.Collider.ObjectColor = Color.Red;
+                                            }
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        HandleResetEvent(null, null);
+                    }
+                    else
+                    {
+                        openFileDialog2.InitialDirectory = Application.StartupPath;
+                        openFileDialog2.Filter = "Texture files (*.png)|*.png";
+                        openFileDialog2.FilterIndex = 1;
+                        openFileDialog2.RestoreDirectory = true;
+                        if (openFileDialog2.ShowDialog() == DialogResult.OK)
+                        {
+                            objects.Add(new ToolObject(openFileDialog1.FileName, openFileDialog2.FileName, ref device));
+                            Tree.Nodes[0].Nodes.Add(objects.Last().Name);
+                        }
                     }
                 }
                 catch (Exception ex)

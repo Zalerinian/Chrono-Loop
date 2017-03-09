@@ -1,8 +1,6 @@
 ﻿<Level>
   <Object>
     <Name>Empty</Name>
-    <Mesh>EMPTY</Mesh>
-    <Texture />
     <Position>-7.428534,0,0</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
@@ -35,7 +33,6 @@
   <Object>
     <Name>Icosphere</Name>
     <Mesh>Sphere.obj</Mesh>
-    <Texture />
     <Position>0,0,-7.132091</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1.6,4.2,1</Scale>

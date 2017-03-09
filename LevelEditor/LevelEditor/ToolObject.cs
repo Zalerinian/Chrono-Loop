@@ -172,11 +172,18 @@ namespace LevelEditor
             mMaterial.SpecularSharpness = 0.0F;
             mDevice = _Device;
             Load(_File);
+            loadTexture(_Texture);
             mIsWireFrame = false;
-            mTextureFile = _Texture;
-            mTexture = TextureLoader.FromFile(_Device, _Texture);
             VertexDeclaration();
             IndicesDeclaration();
+        }
+        public void loadTexture(string _File)
+        {
+            if (_File != null && _File != string.Empty)
+            {
+                mTextureFile = _File;
+                mTexture = TextureLoader.FromFile(mDevice, _File);
+            }
         }
         public void Load(string _File)
         {
