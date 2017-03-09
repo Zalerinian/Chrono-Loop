@@ -120,10 +120,10 @@ namespace Epoch {
 				SystemLogger::GetLog() << std::to_string(_event->data.controller.button) << " Button Down" << std::endl;
 			}*/
 			node->mData.mButtonState = -1;
-			SystemLogger::GetLog() << std::to_string(_event->data.controller.button) << " Button Down:";
+			//SystemLogger::GetLog() << std::to_string(_event->data.controller.button) << " Button Down:";
 		} else if (_event->eventType == vr::EVREventType::VREvent_ButtonUnpress) {
 			node->mData.mButtonState = 1;
-			SystemLogger::GetLog() <<  std::to_string(_event->data.controller.button) << " Up:";
+			//SystemLogger::GetLog() <<  std::to_string(_event->data.controller.button) << " Up:";
 		}
 
 		if (_event->trackedDeviceIndex == mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand)) {

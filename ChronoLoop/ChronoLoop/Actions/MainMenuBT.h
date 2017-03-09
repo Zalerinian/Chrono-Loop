@@ -34,13 +34,13 @@ namespace Epoch
 			mExitObject = Level::Instance()->iFindObjectWithName("mmExit");
 			mFloorObject = Level::Instance()->iFindObjectWithName("mmFloor");
 			mRoomObject = Level::Instance()->iFindObjectWithName("mmRoom");
-			mCubeObject = Level::Instance()->iFindObjectWithName("mmCube");
+			//mCubeObject = Level::Instance()->iFindObjectWithName("mmCube");
 
-			mChamberMesh = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mStartMesh = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			mChamberMesh = (MeshComponent*)mChamberObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			mStartMesh = (MeshComponent*)mStartObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			mExitMesh = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mFloorMesh = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mRoomMesh = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			mFloorMesh = (MeshComponent*)mFloorObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			mRoomMesh = (MeshComponent*)mRoomObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 
 		}
 
@@ -121,7 +121,7 @@ namespace Epoch
 					}
 				}
 			}
-			else if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad))
+			else if (mChamberMesh->GetTransform().GetPosition()->y < -9.9f && VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad))
 			{
 				vec4f forward(0, 0, 1, 0);
 				forward *= mObject->GetTransform().GetMatrix();
@@ -151,7 +151,7 @@ namespace Epoch
 				{
 					if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, forward, meshTime))
 					{
-						if (meshTime < wallTime && mChamberMesh->GetTransform().GetPosition()->y < -9.9f)
+						if (meshTime < wallTime)
 						{
 							forward *= meshTime;
 							VRInputManager::GetInstance().GetPlayerPosition()[3][0] += forward[0]; // x
@@ -169,9 +169,9 @@ namespace Epoch
 			if (mBooped) 
 			{
 				tTime += TimeManager::Instance()->GetDeltaTime();
-				if (tTime <= 10) {
-					mChamberInterp->Update(tTime / 10.0f);
-					mPlayerInterp->Update(tTime / 10.0f);
+				if (tTime <= 15) {
+					mChamberInterp->Update(tTime / 15.0f);
+					mPlayerInterp->Update(tTime / 15.0f);
 				}
 			}
 		}

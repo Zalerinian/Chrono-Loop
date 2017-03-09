@@ -205,6 +205,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Actions\CCElasticAABBToSphere.h" />
     <ClInclude Include="Actions\CCElasticReactionWithPlane.h" />
     <ClInclude Include="Actions\CCElasticSphereToSphere.h" />
+    <ClInclude Include="Actions\CCEnterLevel.h" />
     <ClInclude Include="Actions\CodeComponent.hpp" />
     <ClInclude Include="Actions\GestureDetection.hpp" />
     <ClInclude Include="Actions\HeadsetFollow.hpp" />
