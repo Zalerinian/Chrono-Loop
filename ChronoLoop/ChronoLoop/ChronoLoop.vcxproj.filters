@@ -330,6 +330,9 @@
     <ClInclude Include="Rendering\RenderList.h">
       <Filter>Rendering\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Input\InputTimeline.h">
+      <Filter>Input\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -535,6 +538,9 @@
     </ClCompile>
     <ClCompile Include="Rendering\RenderList.cpp">
       <Filter>Rendering\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\InputTimeline.cpp">
+      <Filter>Input\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

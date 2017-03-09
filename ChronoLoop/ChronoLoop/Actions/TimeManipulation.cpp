@@ -61,10 +61,11 @@ namespace Epoch
 			SystemLogger::GetLog() << "[Debug] A clone is being made, please hold: " << mCloneCount << " | Is left: " << mControllerRole << std::endl;
 
 			Transform identity;
+			
 
-			BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset - " + std::to_string(mCloneCount), identity); //new BaseObject("headset" + std::to_string(rand), identity);
-			MeshComponent *visibleMesh = new MeshComponent("../Resources/Robot.obj");
-			visibleMesh->AddTexture("../Resources/RobotTexture.png", eTEX_DIFFUSE);
+			BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset - " + std::to_string(mCloneCount),  identity ); //new BaseObject("headset" + std::to_string(rand), identity);
+			MeshComponent *visibleMesh = new MeshComponent("../Resources/Clone.obj");
+			visibleMesh->AddTexture("../Resources/CloneTexture.png", eTEX_DIFFUSE);
 			headset->AddComponent(visibleMesh);
 
 
@@ -87,16 +88,18 @@ namespace Epoch
 			//KEEP THIS ORDER NO MATTER WHAT!!!! 
 			//
 			//Make a clone 3 seconds ago.
-			TimeManager::Instance()->RewindMakeClone(TimeManager::Instance()->GetCurrentSnapFrame() - 30, headset, Controller1, Controller2);
+			TimeManager::Instance()->RewindMakeClone(TimeManager::Instance()->GetCurrentSnapFrame() - frameRewind, headset, Controller1, Controller2);
 			Level::Instance()->iSetHeadsetAndControllers(headset, Controller1, Controller2, CubeColider, CubeColider2);
 			//it is extreamly important that the objects are added after time rewinded because of the objectLifeTimeStruct and more..
 			Physics::Instance()->mObjects.push_back(headset);
 			Physics::Instance()->mObjects.push_back(Controller1);
 			Physics::Instance()->mObjects.push_back(Controller2);
 			//new Objects are added to the timeline to update the old player BaseObject pointers
-			TimeManager::Instance()->AddPlayerObjectToTimeline(headset);
-			TimeManager::Instance()->AddPlayerObjectToTimeline(Controller1);
-			TimeManager::Instance()->AddPlayerObjectToTimeline(Controller2);
+			TimeManager::Instance()->UpdatePlayerObjectInTimeline(headset);
+			TimeManager::Instance()->UpdatePlayerObjectInTimeline(Controller1);
+			TimeManager::Instance()->UpdatePlayerObjectInTimeline(Controller2);
+			//Rewind InputTime
+			VRInputManager::GetInstance().RewindInputTimeline(TimeManager::Instance()->GetCurrentSnapFrame(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());
 			//add Interpolators for the clones
 			TimeManager::Instance()->AddInterpolatorForClone(headset);
 			TimeManager::Instance()->AddInterpolatorForClone(Controller1);
@@ -110,6 +113,7 @@ namespace Epoch
 				return;
 
 			TimeManager::Instance()->RewindTimeline(TimeManager::Instance()->GetCurrentSnapFrame() - frameRewind, Level::Instance()->iGetHeadset()->GetUniqueID(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());
+			VRInputManager::GetInstance().RewindInputTimeline(TimeManager::Instance()->GetCurrentSnapFrame(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());
 		}
 
 		if (GetAsyncKeyState(VK_END) & 1 || VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::k_EButton_SteamVR_Touchpad)) 
