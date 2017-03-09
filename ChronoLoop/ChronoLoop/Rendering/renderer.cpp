@@ -402,14 +402,17 @@ namespace Epoch {
 		//	head = head->GetNext();
 		//}
 
+		// TODO: Make a ShaderLimits.h file that has macros for the number of instances and other such arrays a shader supports.
 		std::vector<matrix4> positions;
 		positions.reserve(256);
 		for (auto it = mRenderSet.mRenderList.begin(); it != mRenderSet.mRenderList.end(); ++it) {
 			(*it)->mPositions.GetData(positions);
-			if (positions.size() > 0) {
+			unsigned int offset = 0;
+			while (positions.size() - offset <= positions.size()) {
 				(*it)->mShape.GetContext().Apply();
-				mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, positions.data(), 0, 0);
+				mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, positions.data() + offset, 0, 0);
 				(*it)->mShape.Render((UINT)positions.size());
+				offset += 256;
 			}
 		}
 	}
