@@ -42,7 +42,7 @@ namespace Epoch {
 		if ((powf((touch.x), 2) + powf((touch.y), 2)) < 0.25f) //0.25f = 0.5f ^ 2
 		{
 			//SystemLogger::GetLog() << "Inside the Circle" << std::endl;
-			//SystemLogger::GetLog() << "(" << touch.x << "," << touch.y << ")" << std::endl;
+
 			InitialPos.x = -2;
 		}
 		else{
@@ -57,14 +57,15 @@ namespace Epoch {
 			if(gestureCnt == 5){
 				gestureCnt = 0;
 				vec2f CurPos = touch;
-				vec2f line = InitialPos * 2;
-				vec2f clockwise = line.Cross().Normalize();
+				//SystemLogger::GetLog() << "InitialPos: (" << InitialPos.x << "," << InitialPos.y << ")" << "CurPos: (" << CurPos.x << "," << CurPos.y << ")" << std::endl;
+				vec2f line = InitialPos.Cross();
+				//vec2f negativeline = (InitialPos * -1).Cross();
 
 
 					
 				vec2f diff = (CurPos - InitialPos);
 				//float temp = diff.SquaredMagnitude();
-				if(diff.x >= 0.05f || diff.y >= 0.05f){
+				if(diff.x >= 0.05f || diff.y >= 0.05f  || diff.x <= -0.05f || diff.y <= -0.05f){
 					float slope = (CurPos.y - InitialPos.y) / (CurPos.x - InitialPos.x);
 					if ((slope >= 4 || slope <= -4) &&
 						(CurPos.y > 0.5f || CurPos.y < -0.5f) &&
@@ -78,9 +79,9 @@ namespace Epoch {
 						SystemLogger::GetLog() << "Horizontal Wrongness" << std::endl;
 						return;
 					}
-					if (diff * clockwise > 0)
+					if (diff * line > 0)
 						SystemLogger::GetLog() << "Somewhat Clockwise" << std::endl;
-					else if (diff * clockwise < 0) {
+					else if (diff * line < 0) {
 						SystemLogger::GetLog() << "Somewhat Counter-Clockwise" << std::endl;
 					}
 				}
