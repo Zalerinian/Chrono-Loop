@@ -187,6 +187,12 @@ namespace Epoch
 		_comp->mObject = this;
 		mComponents[_comp->GetType()].push_back(_comp);
 		_comp->mComponentNum = (unsigned short)mComponents.size();	//sets the component number for knowing the position in the bitset
+		
+		//If level has already started call start on new component
+		if(_comp->GetType() == eCOMPONENT_CODE && TimeManager::Instance()->GetTotalSnapsmade() > 0)
+		{
+			((CodeComponent*)_comp)->Start();
+		}
 		return (unsigned int)mComponents[_comp->GetType()].size();
 	}
 

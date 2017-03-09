@@ -30,6 +30,7 @@ namespace Epoch {
 		void Insert(InputNode* _data);
 		InputNode* GetHead() { return mHead; };
 		InputNode* GetCurr() { return mCurrent; };
+		void DisplayTimeline();
 		void SetCurr(InputNode* _set) { mCurrent = _set; };
 		void Clear();
 

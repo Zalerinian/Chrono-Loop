@@ -16,7 +16,7 @@ namespace Epoch {
 		static Timeline* mTimeline;
 
 
-		float mlastRecordedTime = 0, mTimestamp = 0;
+		float mTimestamp = 0;
 		float mDeltaTime = 0;
 		unsigned int mLevelTime = 0;
 		bool mRewindTime = false, mRewindMakeClone = false;
@@ -46,6 +46,7 @@ namespace Epoch {
 		float GetDeltaTime() { return mDeltaTime; }
 		Interpolator<matrix4>* GetCloneInterpolator(unsigned short _id);
 		std::vector<BaseObject*>& GetClonesVec() { return mClones; };
+		unsigned int GetTotalSnapsmade();
 		//Go back into time. Send in dest frame and send in player headset and conrollers id
 		void RewindTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		//Go back into time and make clone. Send in dest frame and send in player headset and conrollers baseObjects
