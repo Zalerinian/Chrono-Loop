@@ -23,29 +23,28 @@ namespace Epoch
 
 		virtual void Update() override
 		{
-			if (VRInputManager::GetInstance().GetInputTimeline()->GetCurr()->mData.mControllerId == mObject->GetUniqueId())
+			/*if (VRInputManager::GetInstance().GetInputTimeline()->GetCurr() && VRInputManager::GetInstance().GetInputTimeline()->GetCurr()->mData.mControllerId == mObject->GetUniqueId())
 			{
 				mInput = VRInputManager::GetInstance().GetInputTimeline()->GetCurr();
-			}
-
-			if (VRInputManager::GetInstance().IsVREnabled())
+			}*/
+			//SystemLogger::GetLog() << mCollider->mHitting.size() << std::endl;
+			if (VRInputManager::GetInstance().IsVREnabled() /*&& mInput*/)
 			{
-				Controller &controller = VRInputManager::GetInstance().GetController(mControllerRole);
-				if (mHeld && mPickUp != nullptr)
+				/*if (mHeld && mPickUp != nullptr)
 				{
 				matrix4 m = mObject->GetTransform().GetMatrix();
 				mPickUp->SetPos(m.Position);
-				if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == 1)
-				{
-				ReleaseObject();
-				}
+					if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == 1)
+					{
+					ReleaseObject();
+					}
 				}
 				else if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == -1 && !mHeld && !mCollider->mHitting.empty())
 				{
 				SomethingtoController();
-				}
-
-				/*Controller &controller = VRInputManager::GetInstance().GetController(mControllerRole);
+				}*/
+			
+				Controller &controller = VRInputManager::GetInstance().GetController(mControllerRole);
 				if (mHeld && mPickUp != nullptr)
 				{
 					matrix4 m = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
@@ -58,7 +57,7 @@ namespace Epoch
 				else if (controller.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger) && !mHeld && !mCollider->mHitting.empty())
 				{
 					SomethingtoController();
-				}*/
+				}
 			
 
 #pragma region Gestures

@@ -262,6 +262,7 @@ void Update() {
 	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 	TeleportAction *ta = new TeleportAction(eControllerType_Primary);
 	TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
+	//TODO SOMEONE: REPLACE THE BOOLEAN WITH THE CORRECT ONE FROM STEAMVR
 	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 	RightController->AddComponent(mc);
 	RightController->AddComponent(rightRaycaster);
@@ -302,7 +303,7 @@ void Update() {
 	mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 	TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
 	TimeManipulation* tm2 = new TimeManipulation(eControllerType_Secondary);
-	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
+	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true );
 	LeftController->AddComponent(leftConCol);
 	LeftController->AddComponent(leftRaycaster);
 	LeftController->AddComponent(mc2);

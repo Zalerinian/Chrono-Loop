@@ -20,7 +20,7 @@ namespace  Epoch {
 		float mDuration = -1; //In seconds
 		float mTimeElasped = 0;
 		//This is the value the interpolator will edit and change for you
-		Type mEdit;
+		Type* mEdit;
 		Type mStart;
 		Type mEnd;
 		InterpolatorType mType;
@@ -28,15 +28,15 @@ namespace  Epoch {
 	public:
 		Interpolator(InterpolatorType _InterpType);
 		~Interpolator();
-		Type GetEdit() { return mEdit; };
+		Type* GetEdit() { return mEdit; };
 		//Pass a refrence of the varable you want the interpolator to change
 		void SetActive(bool _bool) { mActive = _bool; };
-		void SetEdit(Type & _edit) { mEdit = _edit; };
+		void SetEdit(Type & _edit) { mEdit = &_edit; };
 		void SetStart(Type _start) { mStart = _start; };
 		void SetEnd(Type _end) { mEnd = _end; };
 		void SetType(InterpolatorType _type) { mType = _type; };
 		void Update(float _ratio);
-		Type Interpolate(Type& _origin, Type& destination, float _ratio);
+		void Interpolate(Type& _origin, Type& destination,Type& _edit, float _ratio);
 
 	};
 
@@ -51,11 +51,11 @@ namespace  Epoch {
 		if (!mActive)
 			return;
 		//SystemLogger::GetLog() << _ratio << std::endl;
-		mEdit = Interpolate(mStart, mEnd, _ratio);
+	Interpolate(mStart, mEnd, *mEdit, _ratio);
 	}
 
 	template <class Type>
-	Type Interpolator<Type>::Interpolate(Type& _origin, Type& destination, float _ratio) {
+	void Interpolator<Type>::Interpolate(Type& _origin, Type& destination, Type& _edit, float _ratio) {
 
 		//Generic Solution:
 		SystemLogger::GetLog() << "You Tried to interpolate with a wrong interpolator type";
@@ -63,24 +63,22 @@ namespace  Epoch {
 
 
 	template<>
-	 inline matrix4 Interpolator<matrix4>::Interpolate(matrix4 & _start, matrix4 & _end, float _ratio) {
-		matrix4 temp;
+	 inline void Interpolator<matrix4>::Interpolate(matrix4 & _start, matrix4 & _end, matrix4 & _edit, float _ratio) {
+	
 		for (unsigned int c = 0; c < 4; c++) {
 			for (unsigned int r = 0; r < 4; r++) {
-				temp[c][r] = _start[c][r] + (_ratio * (_end[c][r] - _start[c][r]));
+				_edit[c][r] = _start[c][r] + (_ratio * (_end[c][r] - _start[c][r]));
 			}
 		}
-		return temp;
 	}
 
 	template<>
-	inline vec4f Interpolator<vec4f>::Interpolate(vec4f & _start, vec4f & _end, float _ratio) {
+	inline void Interpolator<vec4f>::Interpolate(vec4f & _start, vec4f & _end, vec4f & _edit, float _ratio) {
 
-		vec4f temp;
 		for (unsigned int i = 0; i < 4; i++) {
-			temp[i] = _start[i] + _ratio * (_end[i] - _start[i]);
+			_edit[i] = _start[i] + _ratio * (_end[i] - _start[i]);
 		}
-		return temp;
+	
 	}
 }
 

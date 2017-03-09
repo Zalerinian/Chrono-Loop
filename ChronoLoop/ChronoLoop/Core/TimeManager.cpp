@@ -52,13 +52,6 @@ namespace Epoch {
 			if (Interp.second)
 				Interp.second->Update(mTimestamp / RecordingRate);
 
-			for(int i = 0; i < mClones.size(); ++i)
-			{
-				if(Interp.first == mClones[i]->GetUniqueID())
-				{
-					mClones[i]->GetTransform().SetMatrix(Interp.second->GetEdit());
-				}
-			}
 		}
 
 		//Update inputTimeLine
