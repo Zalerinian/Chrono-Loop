@@ -12,6 +12,7 @@ cbuffer Model : register(b1)
 struct GSParticle
 {
 	float4 pos : SV_POSITION;
+	float4 col : COLOR;
 	float size : SIZE;
 	float3 pad : USELESS;
 };
@@ -28,7 +29,9 @@ GSParticle main(GSParticle input)
 	pos = mul(pos, proj);
 
 	output.pos = pos;
+	output.col = input.col;
 	output.size = input.size;
+	output.pad = input.pad;
 
 	return output;
 }

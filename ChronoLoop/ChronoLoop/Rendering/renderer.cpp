@@ -372,7 +372,7 @@ namespace Epoch {
 			GetMVP(currentEye, data);
 			mContext->UpdateSubresource(mVPBuffer.Get(), 0, nullptr, (void*)&data, 0, 0);
 			ProcessRenderSet();
-			ParticleSystem::Instance()->Update();
+			ParticleSystem::Instance()->Render();
 
 			vr::Texture_t submitTexture = { (void*)mMainViewTexture.Get(), vr::TextureType_DirectX, vr::ColorSpace_Auto };
 			vr::VRCompositor()->Submit(currentEye, &submitTexture);
@@ -513,7 +513,7 @@ namespace Epoch {
 		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 		if (nullptr == mVrSystem) {
 			RenderNoVR(_deltaTime);
-			ParticleSystem::Instance()->Update();
+			ParticleSystem::Instance()->Render();
 		}
 		else {
 			RenderVR(_deltaTime);

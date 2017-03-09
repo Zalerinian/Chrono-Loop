@@ -18,6 +18,7 @@ namespace Epoch
 	struct GSParticle
 	{
 		vec4f pos;
+		vec4f col;
 		float size;
 		float pad[3];
 	};
@@ -28,7 +29,7 @@ namespace Epoch
 
 	struct Particle
 	{
-		int mLife;
+		int mLife, mMaxLife;
 		float mSize;
 		vec4f mPos, mPrevPos, mVelocity;
 		vec4f mSColor, mEColor, mCurColor;
@@ -41,13 +42,12 @@ namespace Epoch
 
 		Particle& operator=(const Particle& _other);
 	};
-	//TODO: Use particle color, re-structure shaders and struct
 	class ParticleEmitter
 	{
 		long mID;
 		char* mName;
 
-	private:
+	protected:
 		const char* mTName;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> tv;
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> text;
@@ -59,7 +59,7 @@ namespace Epoch
 		Particle* mBase;
 		std::list<Particle*> mParticles;
 		std::vector<GSParticle> mGParticles;
-		int mTotalParticles, mMaxParticles, mPerSec;
+		int mTotalParticles, mMaxParticles, mPerSec; 
 		vec4f mStartColor, mEndColor;
 
 		virtual void UpdateParticle(Particle* _p);
@@ -87,6 +87,34 @@ namespace Epoch
 	class VolumeEmitter : public ParticleEmitter
 	{
 		//TODO: Bounding volume bools and structs, use unions
+		enum eVolume {eNONE = -1, eAABB, eSPHERE, eCYLINDER};
+		struct bvAABB
+		{
+			vec4f min, max;
+		};
+		struct bvSPHERE
+		{
+			float radius;
+		};
+		struct bvCylinder
+		{
+			//TODO: Cylinder?
+		};
+
+		eVolume mBoundingVolume;
+		union
+		{
+			bvAABB mRect;
+			bvSPHERE mSphr;
+			bvCylinder mCylndr;
+		};
+
+		VolumeEmitter();
+		VolumeEmitter(int _numParticles, int _totalp, int _maxp, int _persec, vec4f _pos);
+
+		void SetBoundingVolume(float _l, float _w, float _h);
+		void SetBoundingVolume(float _r);
+		void SetBoundingVolume();
 		virtual void UpdateParticle(Particle* _p);
 	};
 }

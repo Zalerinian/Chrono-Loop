@@ -9,28 +9,28 @@ namespace Epoch
 
 	Particle::Particle()
 	{
-		mLife = 1000;
+		mLife = mMaxLife = 1000;
 		mSize = 1.0f;
 		mPos = vec4f(0, 0, 0, 0);
 		mVelocity = vec4f(0, 0, 0, 0);
-		mSColor = mEColor = vec4f(1, 1, 1, 1);
+		mSColor = mEColor = mCurColor = vec4f(1, 1, 1, 1);
 		mActive = true;
 	}
 	Particle::Particle(int _life, float _size, vec4f _pos, vec4f _color)
 	{
-		mLife = _life;
+		mLife = mMaxLife = _life;
 		mSize = _size;
 		mPos = _pos;
-		mSColor = mEColor = _color;
+		mSColor = mEColor = mCurColor= _color;
 		mVelocity = vec4f(0, 0, 0, 0);
 		mActive = true;
 	}
 	Particle::Particle(int _life, float _size, vec4f _pos, vec4f _scolor, vec4f _ecolor)
 	{
-		mLife = _life;
+		mLife = mMaxLife = _life;
 		mSize = _size;
 		mPos = _pos;
-		mSColor = _scolor;
+		mSColor = mCurColor = _scolor;
 		mEColor = _ecolor;
 		mVelocity = vec4f(0, 0, 0, 0);
 		mActive = true;
@@ -39,10 +39,12 @@ namespace Epoch
 	Particle& Particle::operator=(const Particle& _other)
 	{
 		mLife = _other.mLife;
+		mMaxLife = _other.mMaxLife;
 		mSize = _other.mSize;
 		mPos = _other.mPos;
 		mSColor = _other.mSColor;
 		mEColor = _other.mEColor;
+		mCurColor = _other.mCurColor;
 		mActive = _other.mActive;
 
 		return *this;
@@ -70,7 +72,7 @@ namespace Epoch
 		mParticles.clear();
 		mTotalParticles = mMaxParticles = 0;
 		mVBuffer->Release();
-		
+
 	}
 
 	void ParticleEmitter::CreateBuffers()
@@ -81,7 +83,7 @@ namespace Epoch
 		for (int i = 0; i < mGParticles.size(); i++)
 		{
 			GSParticle vp;
-			vp.pos = vec4f(0,0,0,0);
+			vp.pos = vec4f(0, 0, 0, 0);
 			vp.size = 0;
 			mGParticles[i] = vp;
 		}
@@ -150,6 +152,7 @@ namespace Epoch
 		if (_p->mActive)
 		{
 			_p->mPos = _p->mPos + _p->mVelocity;
+			_p->mCurColor += (_p->mEColor - _p->mSColor) *  (1 - ((float)_p->mLife / (float)_p->mMaxLife)) / 100.0f;
 			_p->mLife--;
 		}
 	}
@@ -169,12 +172,14 @@ namespace Epoch
 			{
 				gps.pos = (*iter)->mPos;
 				gps.size = (*iter)->mSize;
+				gps.col = (*iter)->mCurColor;
 				mGParticles[i] = gps;
 			}
 			else
 			{
 				gps.pos = vec4f(0, 0, 0, 0);
 				gps.size = 0;
+				gps.col = vec4f(0, 0, 0, 0);
 				mGParticles[i] = gps;
 			}
 			i++;
@@ -183,11 +188,12 @@ namespace Epoch
 		{
 			gps.pos = vec4f(0, 0, 0, 0);
 			gps.size = 0;
+			gps.col = vec4f(0, 0, 0, 0);
 			mGParticles[i] = gps;
 		}
 
 		Renderer::Instance()->GetContext()->Map(mVBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mRes);
-		
+
 		memcpy(mRes.pData, mGParticles.data(), sizeof(GSParticle) * mGParticles.size());
 		//Graphics 2 slides
 		Renderer::Instance()->GetContext()->Unmap(mVBuffer, 0);
@@ -219,17 +225,16 @@ namespace Epoch
 		{
 			if (mParticles.size() < mMaxParticles && (total < mTotalParticles || mTotalParticles == -1))
 			{
-				//TODO: Relative to emitter
 				float x, y, z;
 				x = -3.0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0 - (-3.0))));
 				y = -3.0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0 - (-3.0))));
 				z = -3.0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0 - (-3.0))));
 				Particle* p = new Particle();
 				*p = *mBase;
-				p->mPos = vec4f(0,0,0, 1);
+				p->mPos = vec4f(0, 0, 0, 1);
 				p->mPos += mPos;
 				p->mSize = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0 - 0)));
-				
+
 				x = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.025 - 0)));
 				y = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.025 - 0)));
 				z = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.025 - 0)));
@@ -238,4 +243,36 @@ namespace Epoch
 			}
 		}
 	}
+
+	//Volume Emitter------------------------------------------------------
+
+	void VolumeEmitter::UpdateParticle(Particle* _p)
+	{
+
+	}
+
+	void VolumeEmitter::SetBoundingVolume(float _l, float _w, float _h)
+	{
+		vec4f MIN, MAX;
+		MIN = MAX = mPos;
+		MIN.x += _l / 2.0f;
+		MIN.y += _h / 2.0f;
+		MIN.z += _w / 2.0f;
+
+		MAX.x -= _l / 2.0f;
+		MAX.y -= _h / 2.0f;
+		MAX.z -= _w / 2.0f;
+
+		mRect.min = MIN;
+		mRect.max = MAX;
+	}
+	void VolumeEmitter::SetBoundingVolume(float _r)
+	{
+		mSphr.radius = _r;
+	}
+	void VolumeEmitter::SetBoundingVolume()
+	{
+
+	}
+
 }

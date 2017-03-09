@@ -416,7 +416,7 @@ void Update() {
 
 	ParticleEmitter* emit;
 	emit = new ParticleEmitter(0, -1, 30000, 5, vec4f(0, 5, 0, 0));
-	emit->SetParticle(new Particle(1500, .25, vec4f(0, 0, 0, 0), vec4f(0, 0, 0, 0)));
+	emit->SetParticle(new Particle(1500, .25, vec4f(0, 0, 0, 0), vec4f(0, 0, 0, 0), vec4f(1,0,1,1)));
 	emit->SetTexture("../Resources/SampleParticle.png");
 	ParticleSystem::Instance()->AddEmitter(emit);
 
@@ -459,12 +459,13 @@ void Update() {
 			if (GetAsyncKeyState(VK_ESCAPE) && GetActiveWindow() == Renderer::Instance()->GetWindow()) {
 				break;
 			}
-			Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false, (void*)nullptr));
+			//Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false, (void*)nullptr));
 			//SystemLogger::GetLog() << "[Debug] Regular Update " << std::endl;
 			UpdateTime();
 			Level::Instance()->iUpdate();
 
 			TimeManager::Instance()->Update(deltaTime);
+			ParticleSystem::Instance()->Update();
 			Renderer::Instance()->Render(deltaTime);
 			while (fixedTime >= FIXED_UPDATE_INTERVAL) {
 				Physics::Instance()->Update(FIXED_UPDATE_INTERVAL);

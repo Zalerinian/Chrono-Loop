@@ -647,5 +647,6 @@
     <None Include="..\DXTK\DirectXTex.inl">
       <Filter>DXTK</Filter>
     </None>
+    <None Include="LightFunctions.hlsli" />
   </ItemGroup>
 </Project>
