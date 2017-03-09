@@ -19,8 +19,9 @@ namespace Epoch
 		Interpolator<matrix4>* mChamberInterp = new Interpolator<matrix4>(InterpolatorType::I_Matrix4);
 		Interpolator<matrix4>* mPlayerInterp = new Interpolator<matrix4>(InterpolatorType::I_Matrix4);
 		MeshComponent *mChamberMesh, *mStartMesh, *mExitMesh, *mFloorMesh, *mRoomMesh;
-		BaseObject *mChamberObject, *mStartObject, *mExitObject, *mFloorObject, *mRoomObject;
+		BaseObject *mChamberObject, *mStartObject, *mExitObject, *mFloorObject, *mRoomObject, *mCubeObject;
 		ControllerType mControllerRole = eControllerType_Primary;
+		bool mBooped = false;
 
 		float tTime;
 
@@ -33,6 +34,7 @@ namespace Epoch
 			mExitObject = Level::Instance()->iFindObjectWithName("mmExit");
 			mFloorObject = Level::Instance()->iFindObjectWithName("mmFloor");
 			mRoomObject = Level::Instance()->iFindObjectWithName("mmRoom");
+			mCubeObject = Level::Instance()->iFindObjectWithName("mmCube");
 
 			mChamberMesh = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			mStartMesh = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
@@ -52,37 +54,66 @@ namespace Epoch
 			matrix4 mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
 			mObject->GetTransform().SetMatrix(mat);
 
+
+			//// Here lies the code to make a tiny little cube move to where you raycast (currently only works on the star and exit planes).
+			//MeshComponent* meshes[] = { mStartMesh, mExitMesh };
+			//BaseObject* objects[] = { mStartObject, mExitObject };
+			//vec4f awdforward(0, 0, 1, 0);
+			//for (int i = 0; i < ARRAYSIZE(objects); ++i) {
+			//	awdforward.Set(0, 0, 1, 0);
+			//	matrix4 inverse = (mat * objects[i]->GetTransform().GetMatrix().Invert());
+			//	vec4f meshPos = (inverse).Position;
+			//	awdforward *= inverse;
+			//	Triangle *tris = meshes[i]->GetTriangles();
+			//	size_t numTris = meshes[i]->GetTriangleCount();
+			//	for (unsigned int j = 0; j < numTris; ++j) {
+			//		float hitTime;
+			//		if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, awdforward, hitTime)) {
+			//			mCubeObject->GetTransform().SetMatrix(matrix4::CreateScale(0.1f, 0.1f, 0.1f) * mat);
+			//			mCubeObject->GetTransform().GetMatrix().Position.x += (vec4f(0, 0, 1, 0) * mat).x * hitTime;
+			//			mCubeObject->GetTransform().GetMatrix().Position.y += (vec4f(0, 0, 1, 0) * mat).y * hitTime;
+			//			mCubeObject->GetTransform().GetMatrix().Position.z += (vec4f(0, 0, 1, 0) * mat).z * hitTime;
+			//		}
+			//	}
+			//}
+
+
+
+
 			if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Trigger))
 			{
-				vec4f forward(0, 0, 1, 0);
-				forward *= mObject->GetTransform().GetMatrix();
 				MeshComponent* meshes[] = { mStartMesh, mExitMesh };
 				BaseObject* objects[] = { mStartObject, mExitObject };
 				for (int i = 0; i < ARRAYSIZE(meshes); ++i)
 				{
-					vec4f meshPos = (mat * objects[i]->GetTransform().GetMatrix().Invert()).Position;
+					vec4f forward;
+					forward.Set(0, 0, 1, 0);
+					matrix4 inverse = (mat * objects[i]->GetTransform().GetMatrix().Invert());
+					vec4f meshPos = inverse.Position;
+					forward *= inverse;
 					Triangle *tris = meshes[i]->GetTriangles();
 					size_t numTris = meshes[i]->GetTriangleCount();
-					for (unsigned int i = 0; i < numTris; ++i)
+					for (unsigned int j = 0; j < numTris; ++j)
 					{
 						float hitTime;
-						if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, meshPos, forward, hitTime))
+						if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, forward, hitTime))
 						{
 							if (i == 0)
 							{
 								matrix4 mat = mChamberObject->GetTransform().GetMatrix();
 								mChamberInterp->SetEdit(mChamberObject->GetTransform().GetMatrix());
 								mChamberInterp->SetStart(mat);
-								mat += matrix4::CreateTranslation(0, -10, 0);
+								mat *= matrix4::CreateTranslation(0, -10, 0);
 								mChamberInterp->SetEnd(mat);
 								mChamberInterp->SetActive(true);
 
 								mat = VRInputManager::GetInstance().GetPlayerPosition();
-								mChamberInterp->SetEdit(VRInputManager::GetInstance().GetPlayerPosition());
-								mChamberInterp->SetStart(mat);
-								mat += matrix4::CreateTranslation(0, -10, 0);
-								mChamberInterp->SetEnd(mat);
-								mChamberInterp->SetActive(true);
+								mPlayerInterp->SetEdit(VRInputManager::GetInstance().GetPlayerPosition());
+								mPlayerInterp->SetStart(mat);
+								mat *= matrix4::CreateTranslation(0, -10, 0);
+								mPlayerInterp->SetEnd(mat);
+								mPlayerInterp->SetActive(true);
+								mBooped = true;
 							}
 							else if (i == 1)
 								Level::Instance()->ChronoLoop = false;
@@ -135,11 +166,13 @@ namespace Epoch
 				}
 			}
 
-			tTime += TimeManager::Instance()->GetDeltaTime();
-			if (tTime >= 10)
+			if (mBooped) 
 			{
-				mChamberInterp->Update(tTime / 10);
-				mPlayerInterp->Update(tTime / 10);
+				tTime += TimeManager::Instance()->GetDeltaTime();
+				if (tTime <= 10) {
+					mChamberInterp->Update(tTime / 10.0f);
+					mPlayerInterp->Update(tTime / 10.0f);
+				}
 			}
 		}
 
@@ -151,3 +184,4 @@ namespace Epoch
 	};
 
 }
+

@@ -259,7 +259,7 @@ void Update() {
 	Transform chamberTransform;
 	matrix4 cmat = matrix4::CreateScale(1, 2, 1);
 	chamberTransform.SetMatrix(cmat);
-	BaseObject* chamber = Pool::Instance()->iGetObject()->Reset("chamber", chamberTransform);// new BaseObject("walls", PlaneTransform);
+	BaseObject* chamber = Pool::Instance()->iGetObject()->Reset("mmChamber", chamberTransform);// new BaseObject("walls", PlaneTransform);
 	MeshComponent *chamberMesh = new MeshComponent("../Resources/mmChamber.obj");
 	chamberMesh->AddTexture("../Resources/Doors.png", eTEX_DIFFUSE);
 	chamber->AddComponent(chamberMesh);
@@ -276,6 +276,14 @@ void Update() {
 	MeshComponent *mmStartMesh = new MeshComponent("../Resources/PlaneButton.obj");
 	mmStartMesh->AddTexture("../Resources/start.png", eTEX_DIFFUSE);
 	mmStart->AddComponent(mmStartMesh);
+
+	Transform cubeScale;
+	cubeScale.SetMatrix(matrix4::CreateScale(0.01f, 0.01f, 0.01f));
+	BaseObject* mmCube = Pool::Instance()->iGetObject()->Reset("mmCube", cubeScale);// new BaseObject("walls", PlaneTransform);
+	MeshComponent *mmCubeMesh = new MeshComponent("../Resources/Cube.obj");
+	mmCubeMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
+	mmCube->AddComponent(mmCubeMesh);
+
 
 	Transform buttonTransform2;
 	matrix4 buttonmat2 = matrix4::CreateScale(.5f, .5f, 1) * matrix4::CreateYRotation(-DirectX::XM_PI / 2) * matrix4::CreateTranslation(2, 2, 0);
@@ -460,8 +468,9 @@ void Update() {
 	MainMenu->iAddObject(mmStart);
 	MainMenu->iAddObject(mmExit);
 	MainMenu->iAddObject(mmdoor);
+	MainMenu->iAddObject(mmCube);
 	MainMenu->iCallStart();
-	VRInputManager::GetInstance().GetPlayerPosition().Position = vec4f(0, 1, 0, 1);
+	VRInputManager::GetInstance().GetPlayerPosition().Position = vec4f(0, 0, 0, 1);
 	//MainMenu->iAddObject(Floor);
 
 	//// Test for TextureManager::iAddTexture2D. Works nicely!
