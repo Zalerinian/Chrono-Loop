@@ -61,10 +61,11 @@ namespace Epoch
 			SystemLogger::GetLog() << "[Debug] A clone is being made, please hold: " << mCloneCount << " | Is left: " << mControllerRole << std::endl;
 
 			Transform identity;
+			
 
-			BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset - " + std::to_string(mCloneCount), identity); //new BaseObject("headset" + std::to_string(rand), identity);
-			MeshComponent *visibleMesh = new MeshComponent("../Resources/Robot.obj");
-			visibleMesh->AddTexture("../Resources/RobotTexture.png", eTEX_DIFFUSE);
+			BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset - " + std::to_string(mCloneCount),  identity ); //new BaseObject("headset" + std::to_string(rand), identity);
+			MeshComponent *visibleMesh = new MeshComponent("../Resources/Clone.obj");
+			visibleMesh->AddTexture("../Resources/CloneTexture.png", eTEX_DIFFUSE);
 			headset->AddComponent(visibleMesh);
 
 
@@ -94,9 +95,9 @@ namespace Epoch
 			Physics::Instance()->mObjects.push_back(Controller1);
 			Physics::Instance()->mObjects.push_back(Controller2);
 			//new Objects are added to the timeline to update the old player BaseObject pointers
-			TimeManager::Instance()->AddPlayerObjectToTimeline(headset);
-			TimeManager::Instance()->AddPlayerObjectToTimeline(Controller1);
-			TimeManager::Instance()->AddPlayerObjectToTimeline(Controller2);
+			TimeManager::Instance()->UpdatePlayerObjectInTimeline(headset);
+			TimeManager::Instance()->UpdatePlayerObjectInTimeline(Controller1);
+			TimeManager::Instance()->UpdatePlayerObjectInTimeline(Controller2);
 			//Rewind InputTime
 			VRInputManager::GetInstance().RewindInputTimeline(TimeManager::Instance()->GetCurrentSnapFrame(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());
 			//add Interpolators for the clones

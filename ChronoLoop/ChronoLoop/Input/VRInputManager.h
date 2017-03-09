@@ -20,8 +20,8 @@ namespace Epoch {
 		vr::IVRSystem* mVRSystem;
 		bool mIsLeftPrimary = false;
 		InputTimeline* mInputTimeline;
-		float mTweenTimestamp;
-		float mSnapTweenTime;
+		float mTweenTimestamp = 0;
+		float mSnapTweenTime = 0;
 
 		VIM(vr::IVRSystem* _vr);
 		~VIM();

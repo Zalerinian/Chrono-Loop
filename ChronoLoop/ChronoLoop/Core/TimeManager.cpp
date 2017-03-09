@@ -8,6 +8,7 @@
 #include "../Core/Pool.h"
 #include "../Core/Level.h"
 #include "../Input/VRInputManager.h"
+#include "../Common/Breakpoint.h"
 
 namespace Epoch {
 
@@ -37,6 +38,9 @@ namespace Epoch {
 		//If its time for a snapshot
 		if (mTimestamp >= RecordingRate) {
 			mTimestamp -= RecordingRate;
+		#if _DEBUG
+			mTimestamp = 0;
+		#endif
 			//Generate 
 			Snapshot* s = mTimeline->GenerateSnapShot(mLevelTime, mClones);
 			mTimeline->AddSnapshot(mLevelTime, s);
@@ -61,13 +65,14 @@ namespace Epoch {
 		InputTimeline::InputNode* temp = VRInputManager::GetInstance().GetInputTimeline()->GetCurr();
 		while(temp && temp->mNext && temp->mNext->mData.mLastFrame < mLevelTime)
 		{
-			if(temp->mNext->mData.mTime < (mTimestamp / RecordingRate))
+			if(temp->mNext->mData.mLastFrame <  temp->mNext->mData.mLastFrame || (temp->mNext->mData.mLastFrame == temp->mNext->mData.mLastFrame && temp->mNext->mData.mTime < (mTimestamp / RecordingRate)))
 			{
 				for (unsigned int i = 0; i < mClones.size(); i++) {
 					if (mClones[i]->GetUniqueId() == temp->mNext->mData.mControllerId)
 					{
 						if(DoesCloneExist(mClones[i]->GetUniqueId(),mLevelTime))
 						{
+							int poop = 1;
 							//TODO PAT: WRITE SOMETHING BASED OFF THE ACTION	
 						}
 					}
@@ -100,9 +105,9 @@ namespace Epoch {
 		mCloneInterpolators[_obj->GetUniqueID()] = temp;
 	}
 
-	void TimeManager::AddPlayerObjectToTimeline(BaseObject *  _obj) {
+	void TimeManager::UpdatePlayerObjectInTimeline(BaseObject *  _obj) {
 		if (_obj != nullptr)
-			mTimeline->AddPlayerBaseObject(_obj, _obj->GetUniqueID());
+			mTimeline->UpdatePlayerBaseObject(_obj, _obj->GetUniqueID());
 	}
 
 	void TimeManager::ClearClones() {

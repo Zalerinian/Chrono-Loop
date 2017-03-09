@@ -271,7 +271,7 @@ void Update() {
 	CodeComponent* pickup = new BoxSnapToControllerAction();
 	((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
 	RightController->AddComponent(pickup);
-	TimeManager::Instance()->AddPlayerObjectToTimeline(RightController);
+	TimeManager::Instance()->AddObjectToTimeline(RightController);
 
 	MeshComponent *visibleMesh = new MeshComponent("../Resources/raycube.obj");
 	visibleMesh->AddTexture("../Resources/raycube.png", eTEX_DIFFUSE);
@@ -311,7 +311,7 @@ void Update() {
 	CodeComponent* pickup2 = new BoxSnapToControllerAction();
 	((BoxSnapToControllerAction*)pickup2)->mControllerRole = eControllerType_Secondary;
 	LeftController->AddComponent(pickup2);
-	TimeManager::Instance()->AddPlayerObjectToTimeline(LeftController);
+	TimeManager::Instance()->AddObjectToTimeline(LeftController);
 
 	//Sound Initializing---------------------------------------------------
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::INITIALIZE_Audio, 0, false));
@@ -336,7 +336,7 @@ void Update() {
 	HeadsetFollow* hfollow = new HeadsetFollow();
 	headset->AddComponent(hfollow);
 	headset->AddComponent(visibleMesh2);
-	TimeManager::Instance()->AddPlayerObjectToTimeline(headset);
+	TimeManager::Instance()->AddObjectToTimeline(headset);
 
 	Transform Door, Exit;
 	Door.SetMatrix(matrix4::CreateTranslation(0, 2, 0));

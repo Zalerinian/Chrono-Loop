@@ -39,7 +39,7 @@ namespace Epoch {
 		mObjectLifeTimes[_id] = newObject;
 
 	}
-	void Timeline::AddPlayerBaseObject(BaseObject* _object, unsigned short _id) {
+	void Timeline::UpdatePlayerBaseObject(BaseObject* _object, unsigned short _id) {
 		mLiveObjects[_id] = _object;
 	}
 

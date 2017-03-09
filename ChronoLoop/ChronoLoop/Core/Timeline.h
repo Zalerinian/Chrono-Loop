@@ -71,7 +71,7 @@ namespace Epoch {
 		Timeline();
 		~Timeline();
 		void AddBaseObject(BaseObject* _object, unsigned short _id);						//add to the list of recorded objects.
-		void AddPlayerBaseObject(BaseObject* _object, unsigned short _id);						//add to the player of recorded objects and .
+		void UpdatePlayerBaseObject(BaseObject* _object, unsigned short _id);						//add to the player of recorded objects and .
 		void AddSnapshot(unsigned int _snaptime, Snapshot* _snapshot);
 		void ClearTimeLine();
 		void ChangeBitsetToSnap(SnapInfo* _destinfo, Component* _curComp);

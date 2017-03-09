@@ -17,7 +17,7 @@ namespace Epoch {
 
 
 		float mlastRecordedTime = 0, mTimestamp = 0;
-		float mDeltaTime;
+		float mDeltaTime = 0;
 		unsigned int mLevelTime = 0;
 		bool mRewindTime = false, mRewindMakeClone = false;
 		std::vector<BaseObject*>mClones;
@@ -31,7 +31,7 @@ namespace Epoch {
 	public:
 
 		//Add only headset and controllers to this
-		void AddPlayerObjectToTimeline(BaseObject* _obj);
+		void UpdatePlayerObjectInTimeline(BaseObject* _obj);
 		void AddObjectToTimeline(BaseObject* _obj);
 		void AddInterpolatorForClone(BaseObject* _obj);
 		//Clears the list of BaseObject* the Timemanager has refrence to.

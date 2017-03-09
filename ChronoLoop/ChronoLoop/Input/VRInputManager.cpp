@@ -75,7 +75,7 @@ namespace Epoch {
 		vr::VRCompositor()->WaitGetPoses(mPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
 
 		//Update InputSnap TweenTime 
-		mTweenTimestamp+= TimeManager::Instance()->GetDeltaTime();
+		mTweenTimestamp += TimeManager::Instance()->GetDeltaTime();
 		if(mTweenTimestamp >= RecordingRate)
 		{
 			mTweenTimestamp -= RecordingRate;
@@ -83,13 +83,13 @@ namespace Epoch {
 		mSnapTweenTime = mTweenTimestamp / RecordingRate;
 
 		//Pull vr events to find button press or up
-		vr::VREvent_t* tempEvent = new vr::VREvent_t();
+		vr::VREvent_t tempEvent;
 		//if there is a event avaliable and the game is focused
-		while(mVRSystem->PollNextEvent(tempEvent, sizeof(tempEvent)) && !mVRSystem->IsInputFocusCapturedByAnotherProcess())
+		while(mVRSystem->PollNextEvent(&tempEvent, sizeof(tempEvent)) && !mVRSystem->IsInputFocusCapturedByAnotherProcess())
 		{
-			if(tempEvent->eventType == vr::EVREventType::VREvent_ButtonPress || tempEvent->eventType == vr::EVREventType::VREvent_ButtonUnpress)
+			if(tempEvent.eventType == vr::EVREventType::VREvent_ButtonPress || tempEvent.eventType == vr::EVREventType::VREvent_ButtonUnpress)
 			{
-				AddInputNode(tempEvent);
+				AddInputNode(&tempEvent);
 			}
 		}
 
@@ -109,21 +109,32 @@ namespace Epoch {
 		mInputTimeline->Insert(node);
 		node->mData.mLastFrame = TimeManager::Instance()->GetCurrentSnapFrame();
 		node->mData.mButton = (vr::EVRButtonId)_event->data.controller.button;
+		node->mData.mTime = mSnapTweenTime;
 
 		if (_event->eventType == vr::EVREventType::VREvent_ButtonPress) {
-			if (node->mPrev && (node->mPrev->mData.mButtonState == -1 || node->mPrev->mData.mButtonState == 0)) {
+			/*if (node->mPrev && (node->mPrev->mData.mButtonState == -1 || node->mPrev->mData.mButtonState == 0)) {
 				node->mData.mButtonState = 0;
+				SystemLogger::GetLog() << std::to_string(_event->data.controller.button) << " Button Press" << std::endl;
 			} else {
 				node->mData.mButtonState = -1;
-			}
+				SystemLogger::GetLog() << std::to_string(_event->data.controller.button) << " Button Down" << std::endl;
+			}*/
+			node->mData.mButtonState = -1;
+			//SystemLogger::GetLog() << std::to_string(_event->data.controller.button) << " Button Down" << std::endl;
 		} else if (_event->eventType == vr::EVREventType::VREvent_ButtonUnpress) {
 			node->mData.mButtonState = 1;
+			//SystemLogger::GetLog() <<  std::to_string(_event->data.controller.button) << " Up" << std::endl;
 		}
 
-		if (_event->trackedDeviceIndex == mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand))
+		if (_event->trackedDeviceIndex == mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand)) {
 			node->mData.mControllerId = Level::Instance()->iGetLeftController()->GetUniqueId();
-		else
+			//SystemLogger::GetLog() << "Lefthand" << std::endl;
+		}
+		else {
 			node->mData.mControllerId = Level::Instance()->iGetRightController()->GetUniqueId();
+			//SystemLogger::GetLog() <<  "Righthand" << std::endl;
+		}
+		SystemLogger::GetLog() << node->mData.mControllerId << std::endl;
 	}
 
 	//Todo PAT: UPDATE CURRENT AFTER REWIND
@@ -131,11 +142,11 @@ namespace Epoch {
 	void VIM::RewindInputTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2)
 	{
 		InputTimeline::InputNode* temp = mInputTimeline->GetCurr();
+		//SystemLogger::GetLog() << "Rewind to " << _frame << std::endl;
 		while(temp->mPrev)
 		{
-			mInputTimeline->SetCurr(temp);
 			//Have reached the point we want to stop
-			if(temp->mData.mLastFrame < _frame && temp->mData.mControllerId != _id1 && temp->mData.mControllerId != _id2)
+			if(temp->mData.mLastFrame < _frame)
 			{
 				break;
 			}
@@ -145,11 +156,14 @@ namespace Epoch {
 				InputTimeline::InputNode* del = temp;
 				temp = temp->mPrev;
 				temp->mNext = del->mNext;
+				if(del->mNext)
 				del->mNext->mPrev = temp;
 				delete del;
 			}
 			else
 			temp = temp->mPrev;
+
+			mInputTimeline->SetCurr(temp);
 		}
 	}
 

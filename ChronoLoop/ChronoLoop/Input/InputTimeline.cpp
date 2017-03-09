@@ -37,6 +37,14 @@ namespace Epoch {
 
 	void InputTimeline::Insert(InputNode * _data)
 	{
+		/*SystemLogger::GetLog().flush();
+		InputNode* temp2 = mHead;
+		while(temp2)
+		{
+			SystemLogger::GetLog() << temp2->mData.mLastFrame << ":" << temp2->mData.mTime << std::endl;
+			temp2 = temp2->mNext;
+		}*/
+
 		if (!mCurrent) {
 			Push_back(_data);
 			return;
