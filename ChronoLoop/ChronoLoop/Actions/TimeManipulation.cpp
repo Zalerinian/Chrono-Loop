@@ -9,6 +9,7 @@
 #include "../Rendering/Draw2D.h"
 #include "../Core/Pool.h"
 #include "TimeManipulation.h"
+#include "BoxSnapToControllerAction.hpp"
 
 namespace Epoch
 {
@@ -69,19 +70,23 @@ namespace Epoch
 			headset->AddComponent(visibleMesh);
 
 
-			BaseObject* Controller1 = Pool::Instance()->iGetObject()->Reset("Controller - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
+			BaseObject* Controller1 = Pool::Instance()->iGetObject()->Reset("Controller1 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
 			MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 			ControllerCollider* CubeColider = new ControllerCollider(Controller1, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
 			mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 			Controller1->AddComponent(CubeColider);
+			BoxSnapToControllerAction* SN1 = new BoxSnapToControllerAction();
 			Controller1->AddComponent(mc);
+			Controller1->AddComponent(SN1);
 
-			BaseObject* Controller2 = Pool::Instance()->iGetObject()->Reset("Controller - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
+			BaseObject* Controller2 = Pool::Instance()->iGetObject()->Reset("Controller2 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
 			MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 			ControllerCollider* CubeColider2 = new ControllerCollider(Controller2, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 			mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 			Controller2->AddComponent(CubeColider2);
+			BoxSnapToControllerAction* SN2 = new BoxSnapToControllerAction();
 			Controller2->AddComponent(mc2);
+			Controller2->AddComponent(SN2);
 
 
 			//

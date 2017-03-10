@@ -55,28 +55,26 @@ namespace Epoch {
 		}
 
 		//Update inputTimeLine
-		InputTimeline::InputNode* temp = VRInputManager::GetInstance().GetInputTimeline()->GetCurr();
-		while(temp && temp->mNext && temp->mNext->mData.mLastFrame < mLevelTime)
-		{
-			if(temp->mNext->mData.mLastFrame <  temp->mNext->mData.mLastFrame || (temp->mNext->mData.mLastFrame == temp->mNext->mData.mLastFrame && temp->mNext->mData.mTime < (mTimestamp / RecordingRate)))
-			{
-				for (unsigned int i = 0; i < mClones.size(); i++) {
-					if (mClones[i]->GetUniqueId() == temp->mNext->mData.mControllerId)
-					{
-						if(DoesCloneExist(mClones[i]->GetUniqueId(),mLevelTime))
-						{
-							int poop = 1;
-							//TODO PAT: WRITE SOMETHING BASED OFF THE ACTION	
+		if (VRInputManager::GetInstance().IsVREnabled()) {
+			InputTimeline::InputNode* temp = VRInputManager::GetInstance().GetInputTimeline()->GetCurr();
+			while (temp && temp->mNext && temp->mNext->mData.mLastFrame < mLevelTime) {
+				if (temp->mData.mLastFrame < temp->mNext->mData.mLastFrame || (temp->mData.mLastFrame == temp->mNext->mData.mLastFrame && (temp->mNext->mData.mTime < (mTimestamp / RecordingRate)))) {
+					for (unsigned int i = 0; i < mClones.size(); i++) {
+						if (mClones[i]->GetUniqueId() == temp->mNext->mData.mControllerId) {
+							if (DoesCloneExist(mClones[i]->GetUniqueId(), mLevelTime)) {
+								SystemLogger::GetLog() << "Clone:" << "id " << temp->mData.mControllerId << " " << temp->mNext->mData.mButton << ':' << temp->mNext->mData.mButtonState << std::endl;
+							} else {
+								SystemLogger::GetLog() << "Found false" << std::endl;
+							}
 						}
 					}
+					VRInputManager::GetInstance().GetInputTimeline()->SetCurr(temp->mNext);
+					temp = temp->mNext;
+				} else {
+					break;
 				}
-				VRInputManager::GetInstance().GetInputTimeline()->SetCurr(temp->mNext);
-				temp = temp->mNext;
+
 			}
-			else {
-				break;
-			}
-			
 		}
 
 	}
@@ -133,6 +131,10 @@ namespace Epoch {
 		return nullptr;
 	}
 
+	unsigned int TimeManager::GetTotalSnapsmade() {
+		return mTimeline->GetTotalSnaps();
+	}
+
 	Timeline * TimeManager::GetTimeLine() {
 		if (!mTimeline) {
 			mTimeline = new Timeline();
@@ -164,7 +166,7 @@ namespace Epoch {
 
 	bool TimeManager::DoesCloneExist(unsigned int _id, unsigned int _frame) {
 		ObjectLifeTime* lifetemp = mTimeline->GetObjectLifetime(_id);
-		if (lifetemp && lifetemp->mBirth < mTimestamp && lifetemp->mDeath > mTimestamp)
+		if (lifetemp && lifetemp->mBirth < _frame && lifetemp->mDeath > _frame)
 		{
 			return true;
 		}

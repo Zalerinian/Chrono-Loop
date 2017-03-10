@@ -120,7 +120,7 @@ namespace Epoch {
 					//((MeshComponent*)_curComp)->SetVisible(true);
 
 				//else
-					//((MeshComponent*)_curComp)->SetVisible(false);
+				//	((MeshComponent*)_curComp)->SetVisible(false);
 			}
 		}
 

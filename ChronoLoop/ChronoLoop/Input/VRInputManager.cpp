@@ -87,7 +87,7 @@ namespace Epoch {
 		//if there is a event avaliable and the game is focused
 		while(mVRSystem->PollNextEvent(&tempEvent, sizeof(tempEvent)) && !mVRSystem->IsInputFocusCapturedByAnotherProcess())
 		{
-			if(tempEvent.eventType == vr::EVREventType::VREvent_ButtonPress || tempEvent.eventType == vr::EVREventType::VREvent_ButtonUnpress)
+			if((tempEvent.eventType == vr::EVREventType::VREvent_ButtonPress || tempEvent.eventType == vr::EVREventType::VREvent_ButtonUnpress) && tempEvent.data.controller.button != vr::k_EButton_Grip  && tempEvent.data.controller.button != vr::k_EButton_ApplicationMenu)
 			{
 				AddInputNode(&tempEvent);
 			}
@@ -106,7 +106,6 @@ namespace Epoch {
 	void VIM::AddInputNode(vr::VREvent_t* _event )
 	{
 		InputTimeline::InputNode* node = new InputTimeline::InputNode();
-		mInputTimeline->Insert(node);
 		node->mData.mLastFrame = TimeManager::Instance()->GetCurrentSnapFrame();
 		node->mData.mButton = (vr::EVRButtonId)_event->data.controller.button;
 		node->mData.mTime = mSnapTweenTime;
@@ -125,25 +124,28 @@ namespace Epoch {
 			node->mData.mButtonState = 1;
 			//SystemLogger::GetLog() <<  std::to_string(_event->data.controller.button) << " Up:";
 		}
-
+		//TODO PAT: FIX THIS
 		if (_event->trackedDeviceIndex == mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand)) {
-			node->mData.mControllerId = Level::Instance()->iGetLeftController()->GetUniqueId();
+			node->mData.mControllerId = Level::Instance()->iGetRightController()->GetUniqueId();
 			//SystemLogger::GetLog() << "Lefthand" << std::endl;
 		}
 		else {
-			node->mData.mControllerId = Level::Instance()->iGetRightController()->GetUniqueId();
+			node->mData.mControllerId = Level::Instance()->iGetLeftController()->GetUniqueId();
 			//SystemLogger::GetLog() <<  "Righthand" << std::endl;
 		}
-		SystemLogger::GetLog() << node->mData.mControllerId << std::endl;
+		//SystemLogger::GetLog() << node->mData.mControllerId << std::endl;
+		mInputTimeline->Insert(node);
+		mInputTimeline->DisplayTimeline();
 	}
 
 	//Todo PAT: UPDATE CURRENT AFTER REWIND
 	//TODO PAT: THIS NEEDS TO BE CALLED AFTER THE SWAPPING OF IDS
 	void VIM::RewindInputTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2)
 	{
+	
 		InputTimeline::InputNode* temp = mInputTimeline->GetCurr();
 		//SystemLogger::GetLog() << "Rewind to " << _frame << std::endl;
-		while(temp->mPrev)
+		while(temp && temp->mPrev)
 		{
 			//Have reached the point we want to stop
 			if(temp->mData.mLastFrame < _frame)
@@ -165,6 +167,9 @@ namespace Epoch {
 
 			mInputTimeline->SetCurr(temp);
 		}
+
+		mInputTimeline->DisplayTimeline();
+		SystemLogger::GetLog() << "Rewinded to before " << _frame << std::endl;
 	}
 
 }
