@@ -59,7 +59,8 @@ namespace Epoch {
 		void SetCloneCountBool(bool _set) { mCloneCountOn = _set; }
 		void SetSnapCountBool(bool _set) { mSnapshotCountOn = _set; }
 
-
+		void BrowseTimeline(int _gesture, int _frameRewind);
+		void MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC);
 
 		void HotfixResetTimeline();
 	};

@@ -1,6 +1,7 @@
 //#include "stdafx.h"
 #include "Controller.h"
 #include "../Common/Logger.h"
+#include "../Core/Level.h"
 #include "VRInputManager.h"
 
 namespace Epoch {
@@ -34,61 +35,67 @@ namespace Epoch {
 		mHairTriggerLimit = mHairTriggerState ? MAX(mHairTriggerLimit, value) : MIN(mHairTriggerLimit, value);
 		
 	}
-	void Controller::UpdateGestures()
+	//////
+	// -1 = Counter Clockwise
+	//  0 = Not Ready/Not Valid
+	//  1 = Clockwise
+	//////
+	int Controller::CheckGesture(bool _isLeft)
 	{
+		if ((Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused() && _isLeft) || (Level::Instance()->iGetRightTimeManinpulator()->isTimePaused() && !_isLeft)) {
 
-		vec2f touch = this->GetAxis();
-		//((powf((touch.x), 2)/0.16f) + (powf((touch.y), 2)/0.25)) <= 1
-		if ((powf((touch.x), 2) + powf((touch.y), 2)) < 0.25f) //0.25f = 0.5f ^ 2
-		{
-			//SystemLogger::GetLog() << "Inside the Circle" << std::endl;
+			vec2f touch = this->GetAxis();
+			if ((powf((touch.x), 2) + powf((touch.y), 2)) < 0.25f) //0.25f = 0.5f ^ 2
+			{
+				//SystemLogger::GetLog() << "Inside the Circle" << std::endl;
 
-			InitialPos.x = -2;
-		}
-		else{
-			//SystemLogger::GetLog() << "Outside the Circle" << std::endl;
-			
-			if (InitialPos.x == -2) {
-				SystemLogger::GetLog() << "First Touch Recognized" << std::endl;
-				InitialPos = touch;
-				return;
+				InitialPos.x = -2;
 			}
-			gestureCnt++;
-			if(gestureCnt == 5){
-				gestureCnt = 0;
-				vec2f CurPos = touch;
-				//SystemLogger::GetLog() << "InitialPos: (" << InitialPos.x << "," << InitialPos.y << ")" << "CurPos: (" << CurPos.x << "," << CurPos.y << ")" << std::endl;
-				vec2f line = InitialPos.Cross();
-				//vec2f negativeline = (InitialPos * -1).Cross();
+			else {
+				//SystemLogger::GetLog() << "Outside the Circle" << std::endl;
 
-
-					
-				vec2f diff = (CurPos - InitialPos);
-				//float temp = diff.SquaredMagnitude();
-				if(diff.x >= 0.05f || diff.y >= 0.05f  || diff.x <= -0.05f || diff.y <= -0.05f){
-					float slope = (CurPos.y - InitialPos.y) / (CurPos.x - InitialPos.x);
-					if ((slope >= 4 || slope <= -4) &&
-						(CurPos.y > 0.5f || CurPos.y < -0.5f) &&
-						(CurPos.x < 0.3f && CurPos.x > -0.3f)) {
-						SystemLogger::GetLog() << "Vertical Wrongness" << std::endl;
-						return;
-					}
-					if ((slope <= 0.25f && slope >= -0.25f) &&
-						(CurPos.x > 0.5f || CurPos.x < -0.5f) &&
-						(CurPos.y < 0.3f && CurPos.y > -0.3f)) {
-						SystemLogger::GetLog() << "Horizontal Wrongness" << std::endl;
-						return;
-					}
-					if (diff * line > 0)
-						SystemLogger::GetLog() << "Somewhat Clockwise" << std::endl;
-					else if (diff * line < 0) {
-						SystemLogger::GetLog() << "Somewhat Counter-Clockwise" << std::endl;
-					}
+				if (InitialPos.x == -2) {
+					//SystemLogger::GetLog() << "First Touch Recognized" << std::endl;
+					InitialPos = touch;
+					return 0;
 				}
-				InitialPos = CurPos;
-			}
+				gestureCnt++;
+				if (gestureCnt == 10) {
+					gestureCnt = 0;
+					//SystemLogger::GetLog() << "InitialPos: (" << InitialPos.x << "," << InitialPos.y << ")" << "CurPos: (" << CurPos.x << "," << CurPos.y << ")" << std::endl;
+					vec2f CurPos = touch;
+					vec2f line = InitialPos.Cross();
+					vec2f diff = (CurPos - InitialPos);
 
+					if (diff.x >= 0.05f || diff.y >= 0.05f || diff.x <= -0.05f || diff.y <= -0.05f) {
+						float slope = (CurPos.y - InitialPos.y) / (CurPos.x - InitialPos.x);
+						if ((slope >= 4 || slope <= -4) &&
+							(CurPos.y > 0.5f || CurPos.y < -0.5f) &&
+							(CurPos.x < 0.3f && CurPos.x > -0.3f)) {
+							SystemLogger::GetLog() << "Vertical Wrongness" << std::endl;
+							return 0;
+						}
+						if ((slope <= 0.25f && slope >= -0.25f) &&
+							(CurPos.x > 0.5f || CurPos.x < -0.5f) &&
+							(CurPos.y < 0.3f && CurPos.y > -0.3f)) {
+							SystemLogger::GetLog() << "Horizontal Wrongness" << std::endl;
+							return 0;
+						}
+						InitialPos = CurPos;
+						if (diff * line > 0) {
+							SystemLogger::GetLog() << "Somewhat Clockwise" << std::endl;
+							return 1;
+						}
+						else if (diff * line < 0) {
+							SystemLogger::GetLog() << "Somewhat Counter-Clockwise" << std::endl;
+							return -1;
+						}
+					}
+
+				}
+			}
 		}
+		return 0;
 	}
 
 	vec2f Controller::GetAxis(vr::EVRButtonId buttonId) {

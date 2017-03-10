@@ -6,6 +6,7 @@
 #include "../ChronoLoop/Objects/BaseObject.h"
 #include "../ChronoLoop/Rendering/renderer.h"
 #include "../Rendering/Draw2D.h"
+#include "../Actions/TimeManipulation.h"
 #include "../Input/CommandConsole.h"
 
 
@@ -19,6 +20,7 @@ namespace Epoch
 		BaseObject* mHeadset;
 		BaseObject* mController1;
 		BaseObject* mController2;
+		TimeManipulation* mTMComponent1, *mTMComponent2;
 		//yea.... make a list or welcome to the hell of random
 		//Change the name at position and DO NOT RE-INSERT
 		//std::unordered_map<std::string, std::vector<BaseObject*>> mObjectMap;
@@ -43,7 +45,8 @@ namespace Epoch
 		inline BaseObject* iGetHeadset() { return mHeadset; }
 		inline BaseObject* iGetLeftController() { return mController1; }
 		inline BaseObject* iGetRightController() { return mController2; }
-
+		TimeManipulation* iGetLeftTimeManinpulator() { return mTMComponent1; }
+		TimeManipulation* iGetRightTimeManinpulator() { return mTMComponent2; }
 
 		//**SETTERS**//
 		void iSetId(unsigned short _set) { mId = _set; };

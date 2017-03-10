@@ -105,11 +105,12 @@ namespace Epoch
 		}
 
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
-			int frameRewind = 30;
-			if (!TimeManager::Instance()->CheckRewindAvaliable(frameRewind))
-				return;
+			if (mPauseTime)
+				mPauseTime = false;
+			else
+				mPauseTime = true;
 
-			TimeManager::Instance()->RewindTimeline(TimeManager::Instance()->GetCurrentSnapFrame() - frameRewind, Level::Instance()->iGetHeadset()->GetUniqueID(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());
+
 		}
 
 		if (GetAsyncKeyState(VK_END) & 1 || VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::k_EButton_SteamVR_Touchpad)) 

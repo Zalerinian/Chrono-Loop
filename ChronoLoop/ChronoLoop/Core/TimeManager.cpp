@@ -31,28 +31,31 @@ namespace Epoch {
 	}
 
 	void TimeManager::Update(float _delta) {
-		mTimestamp += _delta;
-		mDeltaTime = _delta;
+		if (!Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused() && !Level::Instance()->iGetRightTimeManinpulator()->isTimePaused()) {
 
-		//If its time for a snapshot
-		if (mTimestamp >= mRecordingTime) {
-			mTimestamp = 0;
-			//Generate 
-			Snapshot* s = mTimeline->GenerateSnapShot(mLevelTime, mClones);
-			mTimeline->AddSnapshot(mLevelTime, s);
-			mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
-		}
+			mTimestamp += _delta;
+			mDeltaTime = _delta;
 
-		//SystemLogger::GetLog() << mTimestamp / mRecordingTime << std::endl; 
-		for (auto Interp : mCloneInterpolators) {
-			if (Interp.second)
-				Interp.second->Update(mTimestamp / mRecordingTime);
+			//If its time for a snapshot
+			if (mTimestamp >= mRecordingTime) {
+				mTimestamp = 0;
+				//Generate 
+				Snapshot* s = mTimeline->GenerateSnapShot(mLevelTime, mClones);
+				mTimeline->AddSnapshot(mLevelTime, s);
+				mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
+			}
 
-			for(int i = 0; i < mClones.size(); ++i)
-			{
-				if(Interp.first == mClones[i]->GetUniqueID())
+			//SystemLogger::GetLog() << mTimestamp / mRecordingTime << std::endl; 
+			for (auto Interp : mCloneInterpolators) {
+				if (Interp.second)
+					Interp.second->Update(mTimestamp / mRecordingTime);
+
+				for (int i = 0; i < mClones.size(); ++i)
 				{
-					mClones[i]->GetTransform().SetMatrix(Interp.second->GetEdit());
+					if (Interp.first == mClones[i]->GetUniqueID())
+					{
+						mClones[i]->GetTransform().SetMatrix(Interp.second->GetEdit());
+					}
 				}
 			}
 		}
@@ -203,6 +206,26 @@ namespace Epoch {
 
 
 		}
+	}
+	void TimeManager::BrowseTimeline(int _gesture, int _frameRewind)
+	{
+
+		if (_gesture == 0 || instanceTimemanager->CheckRewindAvaliable(_frameRewind))
+			return;
+		if (_gesture == -1)
+			_frameRewind *= -1;
+
+		//instanceTimemanager->
+		instanceTimemanager->MoveAllObjectExceptPlayer(
+			instanceTimemanager->GetCurrentSnapFrame() - _frameRewind,
+			Level::Instance()->iGetHeadset()->GetUniqueID(),
+			Level::Instance()->iGetRightController()->GetUniqueID(),
+			Level::Instance()->iGetLeftController()->GetUniqueID());
+
+	}
+	void TimeManager::MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC)
+	{
+		GetTimeLine()->MoveAllObjectsToSnapExceptPlayer(_snaptime, _headset, _leftC, _rightC);
 	}
 	void TimeManager::HotfixResetTimeline() {
 		RewindTimeline(0, Level::Instance()->iGetLeftController()->GetUniqueID(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetHeadset()->GetUniqueID());

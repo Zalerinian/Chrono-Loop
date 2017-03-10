@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "VrInputManager.h"
 #include "../Common/Logger.h"
+#include "../Core/TimeManager.h"
 
 namespace Epoch {
 
@@ -51,27 +52,32 @@ namespace Epoch {
 	VIM::~VIM() {}
 
 	void VIM::Update() {
+		int GestureCheck = 0;
 		if (mRightController.GetIndex() < 0) {
 			mRightController.mIndex = mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_RightHand);
 			if (mRightController.GetIndex() > 0) {
 				mRightController.Update();
-				mRightController.UpdateGestures();
+				GestureCheck = mRightController.CheckGesture(false);
+				TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
 				SystemLogger::Info() << "Right Controller connected at index " << mRightController.GetIndex() << std::endl;
 			}
 		} else {
 			mRightController.Update();
-			mRightController.UpdateGestures();
+			GestureCheck = mRightController.CheckGesture(false);
+			TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
 		}
 		if (mLeftController.GetIndex() < 0) {
 			mLeftController.mIndex = mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand);
 			if (mLeftController.GetIndex() > 0) {
 				mLeftController.Update();
-				mLeftController.UpdateGestures();
+				GestureCheck = mLeftController.CheckGesture(true);
+				TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
 				SystemLogger::Info() << "Left Controller connected at index " << mLeftController.GetIndex() << std::endl;
 			}
 		} else {
 			mLeftController.Update();
-			mLeftController.UpdateGestures();
+			GestureCheck = mLeftController.CheckGesture(true);
+			TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
 		}
 		vr::VRCompositor()->WaitGetPoses(mPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
 	}
