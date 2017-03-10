@@ -83,6 +83,7 @@ namespace Epoch {
 		Snapshot* GenerateSnapShot(unsigned int _time, std::vector<BaseObject*> & _clones);
 		SnapInfoPlayer * GenerateSnapInfoPlayer();
 		int GetCurrentGameTimeIndx() { return mCurrentGameTimeIndx; }
+		unsigned int GetTotalSnaps() { return mSnapshots.size(); };
 		void HotFixResetLevel();
 		bool RewindMakeClone(unsigned int _snaptime);
 		bool RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);

@@ -37,13 +37,6 @@ namespace Epoch {
 
 	void InputTimeline::Insert(InputNode * _data)
 	{
-		/*SystemLogger::GetLog().flush();
-		InputNode* temp2 = mHead;
-		while(temp2)
-		{
-			SystemLogger::GetLog() << temp2->mData.mLastFrame << ":" << temp2->mData.mTime << std::endl;
-			temp2 = temp2->mNext;
-		}*/
 
 		if (!mCurrent) {
 			Push_back(_data);
@@ -88,6 +81,27 @@ namespace Epoch {
 		
 	}
 
+
+	void InputTimeline::DisplayTimeline()
+	{
+		int num = 0;
+		while(num < 10)
+		{
+			SystemLogger::GetLog() << std::endl;
+			num++;
+		}
+		InputNode* temp2 = mHead;
+		while (temp2) {
+			if (temp2 == mCurrent) {
+				SystemLogger::GetLog() << temp2->mData.mControllerId << ":" <<temp2->mData.mLastFrame << ":" << temp2->mData.mTime << "<-Curr" << std::endl;
+			}
+			else
+			{
+				SystemLogger::GetLog() << temp2->mData.mControllerId << ":" << temp2->mData.mLastFrame << ":" << temp2->mData.mTime << std::endl;
+			}
+			temp2 = temp2->mNext;
+		}
+	}
 
 	void InputTimeline::Clear()
 	{
