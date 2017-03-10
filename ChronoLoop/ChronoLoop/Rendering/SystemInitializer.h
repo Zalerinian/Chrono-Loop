@@ -6,35 +6,44 @@
 #include "TextureManager.h"
 #include "../Input/VRInputManager.h"
 #include "../Core/TimeManager.h"
-#include "..\Physics\Physics.h"
+#include "../Physics/Physics.h"
+#include "../Core/Pool.h"
+#include "../Rendering/IndexBufferManager.h"
+#include "../Rendering/VertexBufferManager.h"
+#include "../Core/Level.h"
 
-namespace RenderEngine {
+namespace Epoch {
 	bool InitializeSystems(HWND _Window, unsigned int _width, unsigned int _height,
 												 bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane,
 												 vr::IVRSystem* _vrsys) {
-		Renderer::Instance()->Initialize(_Window, _width, _height, _vsync, _fps, _fullscreen, _farPlane, _nearPlane, _vrsys);
+		Renderer::Instance()->iInitialize(_Window, _width, _height, _vsync, _fps, _fullscreen, _farPlane, _nearPlane, _vrsys);
 		RasterizerStateManager::Instance();
 		TimeManager::Instance();
 		InputLayoutManager::Instance();
 		TextureManager::Instance();
-		if (_vrsys) {
-			VRInputManager::Instance();
-			VRInputManager::Initialize(_vrsys);
-		}
+		VRInputManager::Initialize(_vrsys);
 		ShaderManager::Instance();
+		Pool::Initialize();
 		Physics::Instance();
+		IndexBufferManager::GetInstance();
+		VertexBufferManager::Instance();
+		// Level is initialized in ChronoLoop
 		return true;
 	}
 
 	bool ShutdownSystems() {
+		Level::DestroyInstance();
+		VertexBufferManager::Shutdown();
+		IndexBufferManager::DestroyInstance();
+		Physics::Destroy();
+		Pool::DestroyInstance();
 		ShaderManager::DestroyInstance();
-		VRInputManager::Shutdown();
+		VRInputManager::DestroyInstance();
 		TextureManager::DestroyInstance();
 		InputLayoutManager::DestroyInstance();
 		TimeManager::Destroy();
 		RasterizerStateManager::DestroyInstance();
 		Renderer::DestroyInstance();
-		Physics::Destroy();
 		return true;
 	}
 }

@@ -1,8 +1,15 @@
 Food that has been "harmed" during the production of ChronoLoop
-  - Subs: 1
-  - Pizzas: 0
+  - Subs: 4
+  - Pizzas: 2 (Hot 'n Ready) | 0 (otherwise)
   - Fried Chicken: 12
   - Moe's Steak Bowl: 1
   - Moe's Burrito: 1
+  - Breadsticks: 16
+  - Naked Chicken chalupa: 1
+  - Ryan's Roast: 1?
+  - Patricks's Toast: 4
+  -
+  -
+  -
   - 
   - 

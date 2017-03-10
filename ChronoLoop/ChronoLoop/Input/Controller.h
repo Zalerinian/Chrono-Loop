@@ -3,63 +3,63 @@
 #include "../Objects/Transform.h"
 #include "../Common/Math.h"
 
-typedef unsigned long ulong;
+namespace Epoch {
 
-class Controller {
-private:
-	vr::IVRSystem* mHmd;
-	int mIndex;
-	bool mValid;
-	vr::VRControllerState_t mState, mPrevState;
-	vec3f mPosition;
+	typedef unsigned long ulong;
 
-	vr::ETrackingUniverseOrigin mTrackingSpace = vr::TrackingUniverseStanding;
+	class Controller {
+	private:
+		int mIndex = -1;
+		bool mValid = false;
+		vr::VRControllerState_t mState, mPrevState;
+		vec3f mPosition;
 
-	float mHairTriggerDelta;
-	float mHairTriggerLimit; //trigger dead zone
-	bool mHairTriggerState, mHairTriggerPrevState;
-	void SetIndex(int index);
-	void SetValid(bool valid);
+		vr::ETrackingUniverseOrigin mTrackingSpace = vr::TrackingUniverseStanding;
 
-	friend class VRInputManager;
-public:
+		float mHairTriggerDZ = 0.1f;
+		float mHairTriggerLimit;
+		bool mHairTriggerState, mHairTriggerPrevState;
+		void Setup(int _index);
 
-	vr::TrackedDevicePose_t mPose;
-	Controller();
-	~Controller() {};
-	void Update();
-	void SetUp(int _index, vr::IVRSystem* _vr);
+		friend class VIM;
+	public:
 
-	//transforms
-	vec3f GetPosition();
-	vec3f GetVelocity();
-	vec3f GetAngularVelocity();
+		vr::TrackedDevicePose_t mPose;
+		Controller();
+		~Controller() {};
+		void Update();
 
-	vr::VRControllerState_t GetState();
-	vr::VRControllerState_t GetPrevState();
-	vr::TrackedDevicePose_t GetPose();
+		//transforms
+		matrix4 GetPosition();
+		vec3f GetVelocity();
+		vec3f GetAngularVelocity();
 
-	//Getters and Setters
-	int GetIndex();
-	bool GetValid();
+		vr::VRControllerState_t GetState();
+		vr::VRControllerState_t GetPrevState();
+		vr::TrackedDevicePose_t GetPose();
 
-	//controller input
-	bool GetPress(vr::EVRButtonId buttonId);
-	bool GetPressDown(vr::EVRButtonId buttonId);
-	bool GetPressUp(vr::EVRButtonId buttonId);
+		//Getters and Setters
+		int GetIndex();
+		bool GetValid();
 
-	bool GetTouch(vr::EVRButtonId buttonId);
-	bool GetTouchDown(vr::EVRButtonId buttonId);
-	bool GetTouchUp(vr::EVRButtonId buttonId);
+		//controller input
+		bool GetPress(vr::EVRButtonId buttonId);
+		bool GetPressDown(vr::EVRButtonId buttonId);
+		bool GetPressUp(vr::EVRButtonId buttonId);
 
-	//Trigger
-	void UpdateHairTrigger();
-	bool GetHairTrigger();
-	bool GetHairTriggerDown();
-	bool GetHairTriggerUp();
+		bool GetTouch(vr::EVRButtonId buttonId);
+		bool GetTouchDown(vr::EVRButtonId buttonId);
+		bool GetTouchUp(vr::EVRButtonId buttonId);
 
-	//mostly for touchpad
-	vec2f GetAxis(vr::EVRButtonId buttonId = vr::k_EButton_SteamVR_Touchpad);
-	void TriggerHapticPulse(int duration_micro_sec = 500, vr::EVRButtonId buttonId = vr::k_EButton_SteamVR_Touchpad);
-};
+		//Trigger
+		void UpdateHairTrigger();
+		bool GetHairTrigger();
+		bool GetHairTriggerDown();
+		bool GetHairTriggerUp();
 
+		//mostly for touchpad
+		vec2f GetAxis(vr::EVRButtonId buttonId = vr::k_EButton_SteamVR_Touchpad);
+		void TriggerHapticPulse(int duration_micro_sec = 500, vr::EVRButtonId buttonId = vr::k_EButton_SteamVR_Touchpad);
+	};
+
+}

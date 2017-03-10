@@ -5,7 +5,7 @@
 struct ID3D11PixelShader;
 struct ID3D11VertexShader;
 
-namespace RenderEngine {
+namespace Epoch {
 
 	class ShaderManager {
 		static ShaderManager* sInstance;

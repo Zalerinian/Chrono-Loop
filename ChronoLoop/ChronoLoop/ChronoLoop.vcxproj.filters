@@ -91,18 +91,6 @@
     <Filter Include="Rendering\Source Files\Managers">
       <UniqueIdentifier>{4309e908-8f28-4b2b-9cab-2df4b234807b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DXTK">
-      <UniqueIdentifier>{16572d88-a51f-45a6-a564-025b7a4af6ff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Levels">
-      <UniqueIdentifier>{b49f92a9-24c1-4e42-8e4a-b0d3243fa29a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Levels\Header Files">
-      <UniqueIdentifier>{6b3a7d00-40b8-4a02-99bc-e0fdb2c6e209}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Levels\Source Files">
-      <UniqueIdentifier>{44d77786-9078-4fd2-96e0-8d872606fb6d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common\FileIO">
       <UniqueIdentifier>{4c95a99f-2d97-4b8d-913a-3425865ce968}</UniqueIdentifier>
     </Filter>
@@ -116,10 +104,22 @@
       <UniqueIdentifier>{48beaf3c-0f0e-4a07-9918-0972a580a156}</UniqueIdentifier>
     </Filter>
     <Filter Include="Actions\Header Files">
-      <UniqueIdentifier>{40394fa7-5ad7-4f4d-b45d-9766ac66b0f3}</UniqueIdentifier>
+      <UniqueIdentifier>{b1a8acac-397e-47cc-b4fc-e9ed3fa3f3ff}</UniqueIdentifier>
     </Filter>
     <Filter Include="Actions\Source Files">
-      <UniqueIdentifier>{1c502cf1-5084-4abb-a940-cc43b5710b51}</UniqueIdentifier>
+      <UniqueIdentifier>{d74cdf54-647c-40f6-835b-2e969a5cdd29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DXTK">
+      <UniqueIdentifier>{16572d88-a51f-45a6-a564-025b7a4af6ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Math">
+      <UniqueIdentifier>{ccc5850c-51a9-4f99-a68a-9c096952d36d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Math\Header Files">
+      <UniqueIdentifier>{d6539033-3850-4e3e-b719-9b790b4d5c70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Math\Source Files">
+      <UniqueIdentifier>{e319ddd3-329d-43fd-aeb9-fb646fc0c8fa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -143,9 +143,6 @@
     </ClInclude>
     <ClInclude Include="Rendering\Structures.h">
       <Filter>Rendering\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Messager\Message.h">
-      <Filter>Messanger\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Messager\Messager.h">
       <Filter>Messanger\Header Files</Filter>
@@ -216,12 +213,6 @@
     <ClInclude Include="Core\TimeManager.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Levels\BaseLevel.h">
-      <Filter>Levels\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Levels\LevelManager.h">
-      <Filter>Levels\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Input\KeyboardInput.h">
       <Filter>Input\Header Files</Filter>
     </ClInclude>
@@ -255,14 +246,98 @@
     <ClInclude Include="Rendering\TextureManager.h">
       <Filter>Rendering\Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\Action.h">
+    <ClInclude Include="Objects\MeshComponent.h">
       <Filter>Objects\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\BoxSnapToControllerAction.h">
+    <ClInclude Include="Actions\BoxSnapToControllerAction.hpp">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CodeComponent.hpp">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\TeleportAction.hpp">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\IndexBufferManager.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\VertexBuffer.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\VertexBufferManager.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\GestureDetection.hpp">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\LimitedList.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\TimeManipulation.h">
       <Filter>Actions\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\CodeComponent.h">
-      <Filter>Objects\Header Files</Filter>
+    <ClInclude Include="Core\Level.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\HeadsetFollow.hpp">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Pool.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCButtonPress.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCElasticAABBtoAABB.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCElasticReactionWithPlane.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Draw2D.h">
+      <Filter>Rendering\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\CommandConsole.h">
+      <Filter>Input\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCElasticSphereToSphere.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCElasticAABBToSphere.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Interpolator.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Math\matrix4.h">
+      <Filter>Common\Math\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Math\vec2f.h">
+      <Filter>Common\Math\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Math\vec3f.h">
+      <Filter>Common\Math\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Math\vec4f.h">
+      <Filter>Common\Math\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Math\vec4i.h">
+      <Filter>Common\Math\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\GhostList.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RenderList.h">
+      <Filter>Rendering\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\InputTimeline.h">
+      <Filter>Input\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCEnterLevel.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\MainMenuBT.h">
+      <Filter>Actions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -277,9 +352,6 @@
     </ClCompile>
     <ClCompile Include="Rendering\Shader.cpp">
       <Filter>Rendering\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\Math.cpp">
-      <Filter>Common\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ChronoLoop.cpp">
       <Filter>Core\Source Files</Filter>
@@ -374,6 +446,12 @@
     <ClCompile Include="Rendering\RenderShape.cpp">
       <Filter>Rendering\Source Files\Nodes</Filter>
     </ClCompile>
+    <ClCompile Include="Messager\Messager.cpp">
+      <Filter>Messanger\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\Controller.cpp">
+      <Filter>Input\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Input\VRInputManager.cpp">
       <Filter>Input\Source Files</Filter>
     </ClCompile>
@@ -382,12 +460,6 @@
     </ClCompile>
     <ClCompile Include="Core\TimeManager.cpp">
       <Filter>Core\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Levels\LevelManager.cpp">
-      <Filter>Levels\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Levels\BaseLevel.cpp">
-      <Filter>Levels\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Input\KeyboardInput.cpp">
       <Filter>Input\Source Files</Filter>
@@ -425,17 +497,56 @@
     <ClCompile Include="Rendering\Mesh.cpp">
       <Filter>Rendering\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Rendering\IndexBufferManager.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\VertexBufferManager.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\VertexBuffer.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
+    </ClCompile>
     <ClCompile Include="Objects\MeshComponent.cpp">
       <Filter>Objects\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\Action.cpp">
-      <Filter>Objects\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Actions\BoxSnapToControllerAction.cpp">
+    <ClCompile Include="Actions\TimeManipulation.cpp">
       <Filter>Actions\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\CodeComponent.cpp">
-      <Filter>Objects\Source Files</Filter>
+    <ClCompile Include="Core\Level.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Pool.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Draw2D.cpp">
+      <Filter>Rendering\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\KeyboardInput.cpp">
+      <Filter>Input\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\CommandConsole.cpp">
+      <Filter>Input\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Math\matrix4.cpp">
+      <Filter>Common\Math\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Math\vec2f.cpp">
+      <Filter>Common\Math\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Math\vec3f.cpp">
+      <Filter>Common\Math\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Math\vec4f.cpp">
+      <Filter>Common\Math\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Math\vec4i.cpp">
+      <Filter>Common\Math\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\RenderList.cpp">
+      <Filter>Rendering\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\InputTimeline.cpp">
+      <Filter>Input\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -476,6 +587,9 @@
       <Filter>Rendering\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Rendering\Shaders\BasicVertex.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\InstancedVertex64.hlsl">
       <Filter>Rendering\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
