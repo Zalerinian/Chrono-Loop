@@ -333,8 +333,10 @@
     <ClInclude Include="Input\InputTimeline.h">
       <Filter>Input\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\MainMenuBT.h" />
     <ClInclude Include="Actions\CCEnterLevel.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\MainMenuBT.h">
       <Filter>Actions</Filter>
     </ClInclude>
   </ItemGroup>

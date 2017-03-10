@@ -96,7 +96,7 @@ namespace Epoch
 					for (unsigned int j = 0; j < numTris; ++j)
 					{
 						float hitTime;
-						if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, forward, hitTime))
+						if (Level::Instance()->flip && Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, forward, hitTime))
 						{
 							if (i == 0)
 							{
@@ -114,6 +114,7 @@ namespace Epoch
 								mPlayerInterp->SetEnd(mat);
 								mPlayerInterp->SetActive(true);
 								mBooped = true;
+								Level::Instance()->flip = false;
 							}
 							else if (i == 1)
 								Level::Instance()->ChronoLoop = false;
