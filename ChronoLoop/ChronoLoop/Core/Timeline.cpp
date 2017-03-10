@@ -39,7 +39,7 @@ namespace Epoch {
 		mObjectLifeTimes[_id] = newObject;
 
 	}
-	void Timeline::AddPlayerBaseObject(BaseObject* _object, unsigned short _id) {
+	void Timeline::UpdatePlayerBaseObject(BaseObject* _object, unsigned short _id) {
 		mLiveObjects[_id] = _object;
 	}
 
@@ -54,6 +54,11 @@ namespace Epoch {
 
 		mCurrentGameTimeIndx = _snaptime;
 		MoveAllObjectsToSnapExceptPlayer(_snaptime, _id1, _id2, _id3);
+		//Set interpolators back and turn off;
+		//std::vector<BaseObject*>clones = TimeManager::Instance()->GetClonesVec();
+		//for (unsigned int i = 0; i < clones.size(); i++) {
+		//	UpdateCloneInterpolators(clones[i]->GetUniqueId(), nullptr, _snaptime);
+		//}
 		//CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
 		return true;
 	}
@@ -87,6 +92,11 @@ namespace Epoch {
 			return false;
 		mCurrentGameTimeIndx = _snaptime;
 		MoveAllObjectsToSnap(_snaptime);
+		//Set interpolators back and turn off
+	//std::vector<BaseObject*>clones = TimeManager::Instance()->GetClonesVec();
+	//for (unsigned int i = 0; i < clones.size(); i++) {
+	//	UpdateCloneInterpolators(clones[i]->GetUniqueId(), nullptr, _snaptime);
+	//}
 		//CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
 		return true;
 	}
@@ -166,6 +176,10 @@ namespace Epoch {
 		Snapshot* nextsnap;
 		SnapInfo* nextInfo;
 		Interpolator<matrix4>* cloneInterp = TimeManager::Instance()->GetCloneInterpolator(_cloneid);
+
+		if (mObjectLifeTimes.find(_cloneid) != mObjectLifeTimes.end() && (mObjectLifeTimes[_cloneid]->mBirth > mCurrentGameTimeIndx || mObjectLifeTimes[_cloneid]->mDeath < mCurrentGameTimeIndx))
+			cloneInterp->SetActive(false);
+
 		cloneInterp->SetType(InterpolatorType::I_Matrix4);
 		if (_currTime + 1 <= mSnaptimes.size() - 1) {
 			nextsnap = mSnapshots[mSnaptimes[_currTime + 1]];
@@ -249,6 +263,13 @@ namespace Epoch {
 				}
 			}
 		}
+	}
+
+	ObjectLifeTime * Timeline::GetObjectLifetime(unsigned short _id) {
+		if (mObjectLifeTimes.find(_id) != mObjectLifeTimes.end())
+			return mObjectLifeTimes[_id];
+
+		return nullptr;
 	}
 
 	void Timeline::MoveObjectToSnap(unsigned int _snaptime, unsigned short _id) {

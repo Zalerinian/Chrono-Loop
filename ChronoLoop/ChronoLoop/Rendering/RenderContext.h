@@ -4,8 +4,8 @@
 #include "RendererDefines.h"
 #include <memory>
 #include <unordered_map>
-
-struct ID3D11ShaderResourceView;
+#include <wrl/client.h>
+#include <d3d11.h>
 
 namespace Epoch {
 
@@ -15,13 +15,17 @@ namespace Epoch {
 		PixelShaderFormat mPixelShaderFormat = ePS_MAX;
 		VertexShaderFormat mVertexShaderFormat = eVS_MAX;
 		//RenderEye mEye = eEYE_MAX;
-		std::unordered_map<int, std::shared_ptr<ID3D11ShaderResourceView*>> mTextures;
+		std::unordered_map<int, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> mTextures;
 
 		RenderContext();
+		RenderContext(const RenderContext& _copy);
 		~RenderContext();
 		void Apply();
 		void Apply(RenderContext& from);
-		bool operator==(RenderContext& other);
+		virtual bool operator==(RenderContext& other);
+		virtual RenderContext& operator=(const RenderContext& _other);
+		virtual bool operator==(const RenderContext& _other) const;
+		virtual bool operator!=(RenderContext& _other);
 	};
 
 }

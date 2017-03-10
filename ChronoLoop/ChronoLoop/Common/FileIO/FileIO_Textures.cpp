@@ -16,7 +16,7 @@ namespace Epoch
 	namespace FileIO
 	{
 
-		bool LoadTexture2D(const char * _path, shared_ptr<ID3D11ShaderResourceView*>* _srv, shared_ptr<ID3D11Texture2D*>* _texture)
+		bool LoadTexture2D(const char * _path, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>* _srv, Microsoft::WRL::ComPtr<ID3D11Texture2D>* _texture)
 		{
 			if (_srv == nullptr && _texture == nullptr)
 			{
@@ -62,13 +62,13 @@ namespace Epoch
 				}
 				ID3D11ShaderResourceView *srv;
 				ID3D11Resource *texture;
-				hr = CreateShaderResourceView(Renderer::Instance()->iGetDevice().Get(), scratch.GetImage(0, 0, 0), 1, tMeta, &srv);
+				hr = CreateShaderResourceView(Renderer::Instance()->GetDevice().Get(), scratch.GetImage(0, 0, 0), 1, tMeta, &srv);
 				if (FAILED(hr))
 				{
 					SystemLogger::GetError() << "[Error] Failed to create ShaderResourceView for texture \"" << _path << "\": 0x" << hex << hr << dec << endl;
 					// We don't return false because the shader resource view is technically unnecessary, a texture2D might have been the goal all along.
 				}
-				hr = CreateTexture(Renderer::Instance()->iGetDevice().Get(), scratch.GetImage(0, 0, 0), 1, tMeta, &texture);
+				hr = CreateTexture(Renderer::Instance()->GetDevice().Get(), scratch.GetImage(0, 0, 0), 1, tMeta, &texture);
 				if (FAILED(hr))
 				{
 					SystemLogger::GetError() << "[Error] Failed to create Texture2D for \"" << _path << "\": 0x" << hex << hr << dec << endl;
@@ -97,18 +97,18 @@ namespace Epoch
 #endif
 				if (srv != nullptr && _srv != nullptr)
 				{
-					(*_srv) = make_shared<ID3D11ShaderResourceView*>(srv);
+					_srv->Attach(srv);
 				}
 				if (texture != nullptr && _texture != nullptr)
 				{
-					(*_texture) = make_shared<ID3D11Texture2D*>((ID3D11Texture2D*)texture);
+					_texture->Attach((ID3D11Texture2D*)texture);
 				}
 				return true;
 			}
 			delete[] buffer;
 			ID3D11Resource *texture;
 			ID3D11ShaderResourceView *srv;
-			hr = CreateDDSTextureFromMemory(Renderer::Instance()->iGetDevice().Get(), scratch.GetPixels(), scratch.GetPixelsSize(), &texture, &srv);
+			hr = CreateDDSTextureFromMemory(Renderer::Instance()->GetDevice().Get(), scratch.GetPixels(), scratch.GetPixelsSize(), &texture, &srv);
 			if (FAILED(hr))
 			{
 				SystemLogger::GetError() << "[Error] Failed to create texture and shader resource view: 0x" << hex << hr << dec << endl;
@@ -139,11 +139,11 @@ namespace Epoch
 
 			if (_srv)
 			{
-				(*_srv) = make_shared<ID3D11ShaderResourceView*>(srv);
+				_srv->Attach(srv);
 			}
 			if (_texture)
 			{
-				(*_texture) = make_shared<ID3D11Texture2D*>((ID3D11Texture2D*)texture);
+				_texture->Attach((ID3D11Texture2D*)texture);
 			}
 
 			return true;

@@ -35,14 +35,18 @@ namespace Epoch {
 
 
 	vec2f Controller::GetAxis(vr::EVRButtonId buttonId) {
-		Update();
+		if (!GetValid()) {
+			return vec2f(0, 0);
+		}
 		int axisId = (int)buttonId - (int)vr::k_EButton_Axis0;
 		return vec2f(mState.rAxis[axisId].x, mState.rAxis[axisId].y);
 	}
 
 	void Controller::TriggerHapticPulse(int duration_micro_sec, vr::EVRButtonId buttonId) {
+		if (GetValid()) {
 			int axisId = (int)buttonId - (int)vr::k_EButton_Axis0;
 			VRInputManager::GetInstance().GetVRSystem()->TriggerHapticPulse(mIndex, axisId, (char)duration_micro_sec);
+		}
 	}
 
 #pragma region Private Functions

@@ -187,6 +187,7 @@ namespace Epoch
 		_comp->mObject = this;
 		mComponents[_comp->GetType()].push_back(_comp);
 		_comp->mComponentNum = (unsigned short)mComponents.size();	//sets the component number for knowing the position in the bitset
+		_comp->OnAddedToObject();
 		return (unsigned int)mComponents[_comp->GetType()].size();
 	}
 
