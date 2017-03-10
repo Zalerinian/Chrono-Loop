@@ -13,6 +13,7 @@
 #include "../Core/Level.h"
 #include "../Rendering/MeshCache.h"
 #include "../Input/CommandConsole.h"
+#include "../Input/KeyboardInput.h"
 
 namespace Epoch {
 	bool InitializeSystems(HWND _Window, unsigned int _width, unsigned int _height,
@@ -32,10 +33,12 @@ namespace Epoch {
 		// Level is initialized in ChronoLoop
 		MeshCache::GetInstance();
 		CommandConsole::Instance();
+		KeyboardInput::Instance();
 		return true;
 	}
 
 	bool ShutdownSystems() {
+		KeyboardInput::DestroyInstance();
 		CommandConsole::DestroyInstance();
 		MeshCache::DestroyInstance();
 		Level::DestroyInstance();
