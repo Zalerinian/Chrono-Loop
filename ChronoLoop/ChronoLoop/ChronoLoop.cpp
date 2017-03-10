@@ -264,6 +264,7 @@ void Update() {
 
 	Level::Initialize(headset, RightController, LeftController);
 	Level* MainMenu = Level::Instance();
+	MainMenu->iLoadLevel("collider.xml");
 	MainMenu->iAddObject(RightController);
 	MainMenu->iAddObject(headset);
 	MainMenu->iAddObject(LeftController);

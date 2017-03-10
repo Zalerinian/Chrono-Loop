@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Level.h"
+#include <iostream>
 #include "../Actions/CodeComponent.hpp"
 #include "../Objects/MeshComponent.h"
 #include "../tinyxml/tinyxml.h"
@@ -178,14 +179,114 @@ void Level::iSetHeadsetAndControllers(BaseObject *& _headset, BaseObject *& _con
 
 	void Level::iLoadLevel(std::string _file)
 	{
-		TiXmlDocument doc(_file.c_str());
-		bool loaded = doc.LoadFile();
-		if (loaded)
+		// Load the xml file, I put your XML in a file named test.xml
+		TiXmlDocument XMLdoc(_file.c_str());
+		bool loadOkay = XMLdoc.LoadFile();
+		if (loadOkay)
 		{
-			doc.
+			std::cout << _file.c_str() << " loaded" << std::endl;
+			TiXmlElement *pRoot, *pObject, *pData, *pApp, *pLineFormat;
+			pRoot = XMLdoc.FirstChildElement("Level");
+			if (pRoot)
+			{
+				// Parse objects
+				pObject = pRoot->FirstChildElement("Object");
+				while (pObject)
+				{
+					std::string elementType, name, meshFile, textureFile, colliderType;
+					vec4f position, rotation, scale, colliderPosition, colliderScale;
+					bool collider = false, trigger = false;
+					pData = pObject->FirstChildElement();
+					while (pData)
+					{
+						switch (pData->Type())
+						{
+						case TiXmlNode::NodeType::TINYXML_ELEMENT:
+							std::cout << "Element: '" << pData->Value() << "'" << std::endl;
+							elementType = std::string(pData->Value());
+							if (elementType == "Collider")
+								collider = true;
+							pData = (TiXmlElement*)pData->FirstChild();
+							break;
+						case TiXmlNode::NodeType::TINYXML_TEXT:
+							std::cout << "Value: '" << pData->Value() << "'" << std::endl;
+							if (elementType == "Name")
+								name = pData->Value();
+							else if (elementType == "Mesh")
+								meshFile = pData->Value();
+							else if (elementType == "Texture")
+								textureFile = pData->Value();
+							else if (elementType == "Position")
+							{
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value());
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									if (collider)
+										colliderPosition.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									else
+										position.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+							}
+							else if (elementType == "Rotation")
+							{
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value());
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									rotation.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+							}
+							else if (elementType == "Scale")
+							{
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value());
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									if (collider)
+										colliderScale.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									else
+										scale.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+							}
+							else if (elementType == "Type")
+								colliderType = pData->Value();
+							else if (elementType == "Trigger")
+								trigger = pData->Value() == "True";
+							else if (elementType == "Radius")
+							{
+								float radius = std::strtof(pData->Value(), nullptr);
+								colliderScale = vec4f(radius, radius, radius, 1);
+							}
+							pData = pData->Parent()->NextSiblingElement();
+							break;
+						default:
+							break;
+						}
+					}
+					std::cout << "Element: name= '" << pObject->Value() << "'" << std::endl;
+					pObject = pObject->NextSiblingElement("Object");
+				}
+
+				std::cout << std::endl;
+			}
+			else
+			{
+				std::cout << "Cannot find 'Configuration' node" << std::endl;
+			}
 		}
-		else
-			return;
 	}
 
 	void Level::iUpdate()
