@@ -71,13 +71,14 @@ namespace Epoch {
 		Timeline();
 		~Timeline();
 		void AddBaseObject(BaseObject* _object, unsigned short _id);						//add to the list of recorded objects.
-		void AddPlayerBaseObject(BaseObject* _object, unsigned short _id);						//add to the player of recorded objects and .
+		void UpdatePlayerBaseObject(BaseObject* _object, unsigned short _id);						//add to the player of recorded objects and .
 		void AddSnapshot(unsigned int _snaptime, Snapshot* _snapshot);
 		void ClearTimeLine();
 		void ChangeBitsetToSnap(SnapInfo* _destinfo, Component* _curComp);
 		bool CheckForDuplicateData(unsigned short _id, BaseObject* _object);
 		//This function removes non-clone objects that were created in the future
 		void CheckforLostObjects(std::vector<BaseObject*>&mClones);
+		ObjectLifeTime* GetObjectLifetime(unsigned short _id);
 		SnapInfo* GenerateSnapInfo(BaseObject* _object, SnapInfo* _info);							//Error check agianst the BaseObject* if it is null or not
 		Snapshot* GenerateSnapShot(unsigned int _time, std::vector<BaseObject*> & _clones);
 		SnapInfoPlayer * GenerateSnapInfoPlayer();

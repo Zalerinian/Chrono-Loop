@@ -205,9 +205,11 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Actions\CCElasticAABBToSphere.h" />
     <ClInclude Include="Actions\CCElasticReactionWithPlane.h" />
     <ClInclude Include="Actions\CCElasticSphereToSphere.h" />
+    <ClInclude Include="Actions\CCEnterLevel.h" />
     <ClInclude Include="Actions\CodeComponent.hpp" />
     <ClInclude Include="Actions\GestureDetection.hpp" />
     <ClInclude Include="Actions\HeadsetFollow.hpp" />
+    <ClInclude Include="Actions\MainMenuBT.h" />
     <ClInclude Include="Actions\TeleportAction.hpp" />
     <ClInclude Include="Actions\TimeManipulation.h" />
     <ClInclude Include="Common\Breakpoint.h" />
@@ -231,6 +233,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Core\TimeManager.h" />
     <ClInclude Include="Input\CommandConsole.h" />
     <ClInclude Include="Input\Controller.h" />
+    <ClInclude Include="Input\InputTimeline.h" />
     <ClInclude Include="Input\KeyboardInput.h" />
     <ClInclude Include="Input\VRInputManager.h" />
     <ClInclude Include="Messager\Messager.h" />
@@ -363,6 +366,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClCompile Include="Core\TimeManager.cpp" />
     <ClCompile Include="Input\CommandConsole.cpp" />
     <ClCompile Include="Input\Controller.cpp" />
+    <ClCompile Include="Input\InputTimeline.cpp" />
     <ClCompile Include="Input\KeyboardInput.cpp" />
     <ClCompile Include="Input\VRInputManager.cpp" />
     <ClCompile Include="Messager\Messager.cpp" />

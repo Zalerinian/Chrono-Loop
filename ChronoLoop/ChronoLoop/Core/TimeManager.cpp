@@ -8,6 +8,7 @@
 #include "../Core/Pool.h"
 #include "../Core/Level.h"
 #include "../Input/VRInputManager.h"
+#include "../Common/Breakpoint.h"
 
 namespace Epoch {
 
@@ -35,8 +36,11 @@ namespace Epoch {
 		mDeltaTime = _delta;
 
 		//If its time for a snapshot
-		if (mTimestamp >= mRecordingTime) {
+		if (mTimestamp >= RecordingRate) {
+			mTimestamp -= RecordingRate;
+		#if _DEBUG
 			mTimestamp = 0;
+		#endif
 			//Generate 
 			Snapshot* s = mTimeline->GenerateSnapShot(mLevelTime, mClones);
 			mTimeline->AddSnapshot(mLevelTime, s);
@@ -46,15 +50,33 @@ namespace Epoch {
 		//SystemLogger::GetLog() << mTimestamp / mRecordingTime << std::endl; 
 		for (auto Interp : mCloneInterpolators) {
 			if (Interp.second)
-				Interp.second->Update(mTimestamp / mRecordingTime);
+				Interp.second->Update(mTimestamp / RecordingRate);
 
-			for(int i = 0; i < mClones.size(); ++i)
+		}
+
+		//Update inputTimeLine
+		InputTimeline::InputNode* temp = VRInputManager::GetInstance().GetInputTimeline()->GetCurr();
+		while(temp && temp->mNext && temp->mNext->mData.mLastFrame < mLevelTime)
+		{
+			if(temp->mNext->mData.mLastFrame <  temp->mNext->mData.mLastFrame || (temp->mNext->mData.mLastFrame == temp->mNext->mData.mLastFrame && temp->mNext->mData.mTime < (mTimestamp / RecordingRate)))
 			{
-				if(Interp.first == mClones[i]->GetUniqueID())
-				{
-					mClones[i]->GetTransform().SetMatrix(Interp.second->GetEdit());
+				for (unsigned int i = 0; i < mClones.size(); i++) {
+					if (mClones[i]->GetUniqueId() == temp->mNext->mData.mControllerId)
+					{
+						if(DoesCloneExist(mClones[i]->GetUniqueId(),mLevelTime))
+						{
+							int poop = 1;
+							//TODO PAT: WRITE SOMETHING BASED OFF THE ACTION	
+						}
+					}
 				}
+				VRInputManager::GetInstance().GetInputTimeline()->SetCurr(temp->mNext);
+				temp = temp->mNext;
 			}
+			else {
+				break;
+			}
+			
 		}
 
 	}
@@ -76,9 +98,9 @@ namespace Epoch {
 		mCloneInterpolators[_obj->GetUniqueID()] = temp;
 	}
 
-	void TimeManager::AddPlayerObjectToTimeline(BaseObject *  _obj) {
+	void TimeManager::UpdatePlayerObjectInTimeline(BaseObject *  _obj) {
 		if (_obj != nullptr)
-			mTimeline->AddPlayerBaseObject(_obj, _obj->GetUniqueID());
+			mTimeline->UpdatePlayerBaseObject(_obj, _obj->GetUniqueID());
 	}
 
 	void TimeManager::ClearClones() {
@@ -138,6 +160,15 @@ namespace Epoch {
 
 	void TimeManager::Destroy() {
 		delete instanceTimemanager;
+	}
+
+	bool TimeManager::DoesCloneExist(unsigned int _id, unsigned int _frame) {
+		ObjectLifeTime* lifetemp = mTimeline->GetObjectLifetime(_id);
+		if (lifetemp && lifetemp->mBirth < mTimestamp && lifetemp->mDeath > mTimestamp)
+		{
+			return true;
+		}
+		return false;
 	}
 
 	void TimeManager::ToggleCloneCountDisplay(void * _command, std::wstring _ifOn) {
