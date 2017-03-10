@@ -67,7 +67,7 @@ void UpdateTime();
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	//_CrtSetBreakAlloc(7251);
-	if (!InitializeWindow(hInstance, nCmdShow, 800, 600, true)) {
+	if (!InitializeWindow(hInstance, nCmdShow, 1366, 720, true)) {
 		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
 		return 2;
 	}
@@ -515,7 +515,7 @@ bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, b
 		WndClassName,                        //Name of our windows class
 		L"Chrono::Loop",                     //Name in the title bar of our window
 		WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME, //style of our window
-		600, 150,                            //Top left corner of window
+		200, 200,                            //Top left corner of window
 		width,                               //Width of our window
 		height,                              //Height of our window
 		NULL,                                //Handle to parent window

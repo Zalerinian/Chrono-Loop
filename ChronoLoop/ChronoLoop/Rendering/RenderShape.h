@@ -19,10 +19,13 @@ namespace Epoch {
 		RenderShape(Mesh& _mesh);
 		RenderShape(const RenderShape& _other);
 		RenderShape(const char* _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs);
+		RenderShape(const char* _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs, GeometryShaderFormat _gs);
 		~RenderShape();
 		void Load(Mesh& _mesh);
 		void Load(const char* _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs);
+		void Load(const char* _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs, GeometryShaderFormat _gs);
 		void SetShaders(PixelShaderFormat pf, VertexShaderFormat vf);
+		void SetShaders(PixelShaderFormat pf, VertexShaderFormat vf, GeometryShaderFormat _gf);
 
 		inline RenderContext &GetContext() { return mContext; }
 		inline RenderContext GetContext() const { return mContext; }

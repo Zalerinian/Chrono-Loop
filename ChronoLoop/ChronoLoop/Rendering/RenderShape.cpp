@@ -46,6 +46,11 @@ namespace Epoch {
 		Load(_path, _invert, _ps, _vs);
 	}
 
+	RenderShape::RenderShape(const char * _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs, GeometryShaderFormat _gs) {
+		mType = RenderNodeType::Shape;
+		Load(_path, _invert, _ps, _vs, _gs);
+	}
+
 	RenderShape::~RenderShape() {
 	}
 	
@@ -71,6 +76,16 @@ namespace Epoch {
 		Load(mMesh);
 		SetShaders(_ps, _vs);
 	}
+
+	void RenderShape::Load(const char * _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs, GeometryShaderFormat _gs) {
+		mName = std::string("Shape: ") + _path;
+		mMesh.Load(_path);
+		if (_invert) {
+			mMesh.Invert();
+		}
+		Load(mMesh);
+		SetShaders(_ps, _vs, _gs);
+	}
 	
 	void RenderShape::SetShaders(PixelShaderFormat pf, VertexShaderFormat vf)
 	{
@@ -84,6 +99,24 @@ namespace Epoch {
 		}
 		mContext.mVertexShaderFormat = vf;
 		mContext.mPixelShaderFormat = pf;
+	}
+
+	void RenderShape::SetShaders(PixelShaderFormat pf, VertexShaderFormat vf, GeometryShaderFormat _gf) {
+		if (pf < ePS_BASIC || pf >= ePS_MAX) {
+			SystemLogger::GetError() << "[Error] Invalid Pixel shader enumation at RenderShape::SetShaders: " << pf << ". Forcing to ePS_MAX!" << std::endl;
+			pf = ePS_MAX;
+		}
+		if (vf < eVS_BASIC || vf >= eVS_MAX) {
+			SystemLogger::GetError() << "[Error] Invalid Vertex Shader enumation at RenderShape::SetShaders: " << vf << ". Forcing to eVS_MAX!" << std::endl;
+			vf = eVS_MAX;
+		}
+		if (_gf < eGS_PosNormTex || _gf >= eGS_MAX) {
+			SystemLogger::Error() << "Invalid Geometry Shader enumation at RenderShape::SetShaders: " << _gf << ". Forcing to eVS_MAX!" << std::endl;
+			_gf = eGS_MAX;
+		}
+		mContext.mVertexShaderFormat = vf;
+		mContext.mPixelShaderFormat = pf;
+		mContext.mGeoShaderFormat = _gf;
 	}
 
 	RenderShape& RenderShape::AddTexture(const char * _path, TextureType _position) {
