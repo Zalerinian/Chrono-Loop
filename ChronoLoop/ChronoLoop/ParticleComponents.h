@@ -22,6 +22,10 @@ namespace Epoch
 		float size;
 		float pad[3];
 	};
+	struct ParticleData
+	{
+		vec4f pos, vel;
+	};
 	struct GSMatrix
 	{
 		matrix4 model;
@@ -99,6 +103,10 @@ namespace Epoch
 		struct bvCylinder
 		{
 			//TODO: Cylinder?
+			float radius;
+			float length;
+			vec4f top, bottom;
+			int orientation; //0 - Y, 1 - X, 2 - Z
 		};
 
 		eVolume mBoundingVolume;
@@ -108,13 +116,17 @@ namespace Epoch
 			bvSPHERE mSphr;
 			bvCylinder mCylndr;
 		};
-
+	public:
 		VolumeEmitter();
 		VolumeEmitter(int _numParticles, int _totalp, int _maxp, int _persec, vec4f _pos);
 
 		void SetBoundingVolume(float _l, float _w, float _h);
 		void SetBoundingVolume(float _r);
-		void SetBoundingVolume();
+		void SetBoundingVolume(float _r, float _h, int _dir);
+	private:
 		virtual void UpdateParticle(Particle* _p);
+		void BindToAABB(Particle* _p);
+		void BindToSPHR(Particle* _p);
+		void BindToCYL(Particle* _p);
 	};
 }

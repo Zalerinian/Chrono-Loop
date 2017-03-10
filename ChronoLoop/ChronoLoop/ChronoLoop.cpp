@@ -414,11 +414,24 @@ void Update() {
 	L1->iAddObject(WinBoard);
 	L1->iCallStart();
 
-	ParticleEmitter* emit;
-	emit = new ParticleEmitter(0, -1, 30000, 5, vec4f(0, 5, 0, 0));
-	emit->SetParticle(new Particle(1500, .25, vec4f(0, 0, 0, 0), vec4f(0, 0, 0, 0), vec4f(1,0,1,1)));
-	emit->SetTexture("../Resources/SampleParticle.png");
+	VolumeEmitter* emit, * emit2, *emit3;
+	emit = new VolumeEmitter(0, -1, 10000, 50, vec4f(0, 5, 0, 0));
+	emit->SetBoundingVolume(3.0);
+	emit->SetParticle(new Particle(1500, .25, vec4f(0, 0, 0, 0), vec4f(0, 0, 0, 0), vec4f(1, 0, 1, 1)));
+	emit->SetTexture("../Resources/BasicCircleP.png");
+
+	emit2 = new VolumeEmitter(0, -1, 10000, 20, vec4f(-5, 5, 0, 0));
+	emit2->SetBoundingVolume(3.0);
+	emit2->SetParticle(new Particle(1500, .25, vec4f(0, 0, 0, 0), vec4f(1, 1, 1, 1), vec4f(0, 1, 1, 1)));
+	emit2->SetTexture("../Resources/BasicCircleP.png");
+	
+	//emit3 = new VolumeEmitter(0, -1, 10000, 5, vec4f(5, 5, 0, 0));
+	//emit3->SetBoundingVolume(3.0);
+	//emit3->SetParticle(new Particle(1500, .25, vec4f(0, 0, 0, 0), vec4f(1, 1, 1, 1), vec4f(0, 1, 1, 1)));
+	//emit3->SetTexture("../Resources/BasicCircleP.png");
 	ParticleSystem::Instance()->AddEmitter(emit);
+	ParticleSystem::Instance()->AddEmitter(emit2);
+	//ParticleSystem::Instance()->AddEmitter(emit3);
 
 	//// Test for TextureManager::iAddTexture2D. Works nicely!
 	//D3D11_TEXTURE2D_DESC AddedTextureDesc;

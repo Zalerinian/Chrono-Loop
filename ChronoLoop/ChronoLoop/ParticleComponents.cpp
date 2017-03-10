@@ -21,7 +21,7 @@ namespace Epoch
 		mLife = mMaxLife = _life;
 		mSize = _size;
 		mPos = _pos;
-		mSColor = mEColor = mCurColor= _color;
+		mSColor = mEColor = mCurColor = _color;
 		mVelocity = vec4f(0, 0, 0, 0);
 		mActive = true;
 	}
@@ -151,8 +151,9 @@ namespace Epoch
 			_p->mActive = false;
 		if (_p->mActive)
 		{
+			_p->mPrevPos = _p->mPos;
 			_p->mPos = _p->mPos + _p->mVelocity;
-			_p->mCurColor += (_p->mEColor - _p->mSColor) *  (1 - ((float)_p->mLife / (float)_p->mMaxLife)) / 100.0f;
+			//_p->mCurColor += (_p->mEColor - _p->mSColor) *  (1 - ((float)_p->mLife / (float)_p->mMaxLife)) / 100.0f;
 			_p->mLife--;
 		}
 	}
@@ -233,11 +234,11 @@ namespace Epoch
 				*p = *mBase;
 				p->mPos = vec4f(0, 0, 0, 1);
 				p->mPos += mPos;
-				p->mSize = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0 - 0)));
+				p->mSize = .1 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.25 - .1)));
 
-				x = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.025 - 0)));
-				y = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.025 - 0)));
-				z = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.025 - 0)));
+				x = -.05 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05 - -.05)));
+				y = -.05 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05 - -.05)));
+				z = -.05 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05 - -.05)));
 				p->mVelocity = vec4f(x, y, z, 0);
 				mParticles.push_back(p);
 			}
@@ -246,13 +247,41 @@ namespace Epoch
 
 	//Volume Emitter------------------------------------------------------
 
-	void VolumeEmitter::UpdateParticle(Particle* _p)
+	VolumeEmitter::VolumeEmitter(int _numParticles, int _totalp, int _maxp, int _persec, vec4f _pos) : ParticleEmitter(_numParticles, _totalp, _maxp, _persec, _pos)
 	{
 
 	}
 
+	void VolumeEmitter::UpdateParticle(Particle* _p)
+	{
+		switch (mBoundingVolume)
+		{
+		case Epoch::VolumeEmitter::eNONE:
+			break;
+		case Epoch::VolumeEmitter::eAABB:
+		{
+			BindToAABB(_p);
+		}
+		break;
+		case Epoch::VolumeEmitter::eSPHERE:
+		{
+			BindToSPHR(_p);
+		}
+		break;
+		case Epoch::VolumeEmitter::eCYLINDER:
+		{
+			BindToCYL(_p);
+		}
+		break;
+		default:
+			break;
+		}
+		ParticleEmitter::UpdateParticle(_p);
+	}
+
 	void VolumeEmitter::SetBoundingVolume(float _l, float _w, float _h)
 	{
+		mBoundingVolume = eVolume::eAABB;
 		vec4f MIN, MAX;
 		MIN = MAX = mPos;
 		MIN.x += _l / 2.0f;
@@ -268,11 +297,111 @@ namespace Epoch
 	}
 	void VolumeEmitter::SetBoundingVolume(float _r)
 	{
+		mBoundingVolume = eVolume::eSPHERE;
 		mSphr.radius = _r;
 	}
-	void VolumeEmitter::SetBoundingVolume()
+	void VolumeEmitter::SetBoundingVolume(float _r, float _h, int _dir)
 	{
+		mBoundingVolume = eVolume::eCYLINDER;
 
+		float d = _h / 2.0f;
+		mCylndr.radius = _r;
+		mCylndr.length = _h;
+		mCylndr.orientation = (_dir < 0 || _dir > 2) ? 0 : _dir;
+		mCylndr.top = mCylndr.bottom = mPos;
+		switch (mCylndr.orientation)
+		{
+		case 0:
+		{
+			mCylndr.top.y += d;
+			mCylndr.bottom.y -= d;
+		}
+		break;
+		case 1:
+		{
+			mCylndr.top.x += d;
+			mCylndr.bottom.x -= d;
+		}
+		break;
+		case 2:
+		{
+			mCylndr.top.z += d;
+			mCylndr.bottom.z -= d;
+		}
+		break;
+		default:
+			break;
+		}
 	}
 
+	void VolumeEmitter::BindToAABB(Particle* _p)
+	{
+		float x = _p->mPos.x, y = _p->mPos.y, z = _p->mPos.z;
+
+		if (x < mRect.min.x || x > mRect.max.x)
+		{
+			_p->mVelocity.x += (_p->mVelocity.x < 0) ? -.1 : .1;
+			_p->mVelocity.x *= -1;
+		}
+		if (y < mRect.min.y || y > mRect.max.y)
+		{
+			_p->mVelocity.y += (_p->mVelocity.y < 0) ? -.1 : .1;
+			_p->mVelocity.y *= -1;
+		}
+		if (z < mRect.min.z || z > mRect.max.z)
+		{
+			_p->mVelocity.z += (_p->mVelocity.z < 0) ? -.1 : .1;
+			_p->mVelocity.z *= -1;
+		}
+	}
+	void VolumeEmitter::BindToSPHR(Particle* _p)
+	{
+		float r = mSphr.radius;
+		float d = (_p->mPos - mPos).Magnitude();
+
+		if (d > r)
+			_p->mVelocity *= -1;
+		
+	}
+	void VolumeEmitter::BindToCYL(Particle* _p)
+	{
+		//TODO: Is broken
+		float offset = mCylndr.length / 2.0f;
+		float r = mCylndr.radius;
+		vec4f dir = (mCylndr.top - mCylndr.bottom);
+		float rat = dir.Dot(_p->mPos);
+		if (rat < 0)
+			rat = 0;
+		else if (rat > 1)
+			rat = 1;
+		vec4f point = mCylndr.bottom + (dir * rat);
+		float d = (point - _p->mPos).Magnitude();
+
+		if (d > r)
+			_p->mVelocity *= -1;
+
+		/*switch (mCylndr.orientation)
+		{
+		case 0:
+		{
+			if (_p->mPos.y > mCylndr.top.y || _p->mPos.y < mCylndr.bottom.y)
+				_p->mVelocity.y *= -1;
+		}
+		break;
+		case 1:
+		{
+			if (_p->mPos.x > mCylndr.top.x || _p->mPos.x < mCylndr.bottom.x)
+				_p->mVelocity.x *= -1;
+		}
+		break;
+		case 2:
+		{
+			if (_p->mPos.z > mCylndr.top.z || _p->mPos.z < mCylndr.bottom.z)
+				_p->mVelocity.z *= -1;
+		}
+		break;
+		default:
+			break;
+		}*/
+	}
 }
