@@ -107,9 +107,14 @@ namespace Epoch
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
 			if (mPauseTime) {
 				mPauseTime = false;
+				TimeManager::Instance()->RewindTimeline(
+					TimeManager::Instance()->GetCurrentSnapFrame(),
+					Level::Instance()->iGetHeadset()->GetUniqueID(),
+					Level::Instance()->iGetRightController()->GetUniqueID(),
+					Level::Instance()->iGetLeftController()->GetUniqueID());
 			}
 			else {
-				Epoch::TimeManager::Instance()->SetTempSnapHolder();
+				Epoch::TimeManager::Instance()->SetTempCurSnap();
 				mPauseTime = true;
 			}
 		}

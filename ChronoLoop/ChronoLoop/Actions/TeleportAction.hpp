@@ -88,10 +88,12 @@ namespace Epoch
 						}
 					}
 				}
-				if (((Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused()) || (Level::Instance()->iGetRightTimeManinpulator()->isTimePaused()))) {
+				bool right = Level::Instance()->iGetRightTimeManinpulator()->isTimePaused();
+				bool left = Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused();
+				if (left || right){
 
 					TimeManager::Instance()->RewindTimeline(
-						TimeManager::Instance()->GetCurrentSnapFrame() - 1,
+						TimeManager::Instance()->GetTempCurSnap(),
 						Level::Instance()->iGetHeadset()->GetUniqueID(),
 						Level::Instance()->iGetRightController()->GetUniqueID(),
 						Level::Instance()->iGetLeftController()->GetUniqueID());

@@ -46,7 +46,8 @@ namespace Epoch {
 		float GetDeltaTime() { return mDeltaTime; }
 		Interpolator<matrix4>* GetCloneInterpolator(unsigned short _id);
 		std::vector<BaseObject*>& GetClonesVec() { return mClones; };
-		void SetTempSnapHolder() { mtempCurSnapFrame = GetCurrentSnapFrame(); };
+		int GetTempCurSnap() { return mtempCurSnapFrame; };
+		void SetTempCurSnap() { mtempCurSnapFrame = GetCurrentSnapFrame(); };
 		//Go back into time. Send in dest frame and send in player headset and conrollers id
 		void RewindTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		//Go back into time and make clone. Send in dest frame and send in player headset and conrollers baseObjects
