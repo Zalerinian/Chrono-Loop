@@ -172,7 +172,7 @@ namespace Epoch {
 		}
 	}
 
-	void Timeline::UpdateCloneInterpolators(unsigned short _cloneid, SnapInfo* _currSnap, float _currTime) {
+	void Timeline::UpdateCloneInterpolators(unsigned short _cloneid, SnapInfo* _currSnap, unsigned int _currTime) {
 		Snapshot* nextsnap;
 		SnapInfo* nextInfo;
 		Interpolator<matrix4>* cloneInterp = TimeManager::Instance()->GetCloneInterpolator(_cloneid);

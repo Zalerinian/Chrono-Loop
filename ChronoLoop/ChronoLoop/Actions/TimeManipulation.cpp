@@ -54,7 +54,7 @@ namespace Epoch
 		//	mTexturedApplied = true;
 		//}
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu)) {
-			int frameRewind = 1;
+			int frameRewind = 30;
 
 			if (!TimeManager::Instance()->CheckRewindAvaliable(frameRewind))
 				return;
@@ -113,7 +113,7 @@ namespace Epoch
 		}
 
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
-			int frameRewind = 1;
+			int frameRewind = 30;
 			if (!TimeManager::Instance()->CheckRewindAvaliable(frameRewind))
 				return;
 

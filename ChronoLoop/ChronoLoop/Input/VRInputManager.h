@@ -32,6 +32,7 @@ namespace Epoch {
 		Controller& GetController(ControllerType _t);
 		void AddInputNode(vr::VREvent_t* _event);
 		void RewindInputTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2);
+		InputTimeline::InputNode * FindLastInput(unsigned short _id);
 		InputTimeline* GetInputTimeline() { return mInputTimeline; };
 		inline unsigned int GetTrackedDeviceCount() { return vr::k_unMaxTrackedDeviceCount; }
 		inline vr::TrackedDevicePose_t* GetTrackedPositions() { return mPoses; }
