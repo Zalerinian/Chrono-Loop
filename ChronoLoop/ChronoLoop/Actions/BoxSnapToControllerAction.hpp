@@ -19,7 +19,7 @@ namespace Epoch {
 		}
 
 		virtual void Update() override {
-			if (VRInputManager::GetInstance().GetInputTimeline()->GetCurr() && VRInputManager::GetInstance().GetInputTimeline()->GetCurr()->mData.mControllerId == mObject->GetUniqueId())
+			if (VRInputManager::GetInstance().IsVREnabled() && VRInputManager::GetInstance().GetInputTimeline()->GetCurr() && VRInputManager::GetInstance().GetInputTimeline()->GetCurr()->mData.mControllerId == mObject->GetUniqueId())
 			{
 				mInput = VRInputManager::GetInstance().GetInputTimeline()->GetCurr();
 			}

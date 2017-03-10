@@ -55,31 +55,26 @@ namespace Epoch {
 		}
 
 		//Update inputTimeLine
-		InputTimeline::InputNode* temp = VRInputManager::GetInstance().GetInputTimeline()->GetCurr();
-		while(temp && temp->mNext && temp->mNext->mData.mLastFrame < mLevelTime)
-		{
-			if(temp->mData.mLastFrame <  temp->mNext->mData.mLastFrame || (temp->mData.mLastFrame == temp->mNext->mData.mLastFrame && (temp->mNext->mData.mTime < (mTimestamp / RecordingRate))))
-			{
-				for (unsigned int i = 0; i < mClones.size(); i++) {
-					if (mClones[i]->GetUniqueId() == temp->mNext->mData.mControllerId)
-					{
-						if(DoesCloneExist(mClones[i]->GetUniqueId(),mLevelTime))
-						{
-							SystemLogger::GetLog() << "Clone:"<< "id " <<temp->mData.mControllerId << " " << temp->mNext->mData.mButton << ':' << temp->mNext->mData.mButtonState <<std::endl;
-						}
-						else
-						{
-							SystemLogger::GetLog() << "Found false" << std::endl;
+		if (VRInputManager::GetInstance().IsVREnabled()) {
+			InputTimeline::InputNode* temp = VRInputManager::GetInstance().GetInputTimeline()->GetCurr();
+			while (temp && temp->mNext && temp->mNext->mData.mLastFrame < mLevelTime) {
+				if (temp->mData.mLastFrame < temp->mNext->mData.mLastFrame || (temp->mData.mLastFrame == temp->mNext->mData.mLastFrame && (temp->mNext->mData.mTime < (mTimestamp / RecordingRate)))) {
+					for (unsigned int i = 0; i < mClones.size(); i++) {
+						if (mClones[i]->GetUniqueId() == temp->mNext->mData.mControllerId) {
+							if (DoesCloneExist(mClones[i]->GetUniqueId(), mLevelTime)) {
+								SystemLogger::GetLog() << "Clone:" << "id " << temp->mData.mControllerId << " " << temp->mNext->mData.mButton << ':' << temp->mNext->mData.mButtonState << std::endl;
+							} else {
+								SystemLogger::GetLog() << "Found false" << std::endl;
+							}
 						}
 					}
+					VRInputManager::GetInstance().GetInputTimeline()->SetCurr(temp->mNext);
+					temp = temp->mNext;
+				} else {
+					break;
 				}
-				VRInputManager::GetInstance().GetInputTimeline()->SetCurr(temp->mNext);
-				temp = temp->mNext;
+
 			}
-			else {
-				break;
-			}
-			
 		}
 
 	}

@@ -17,7 +17,7 @@ namespace Epoch {
 		Controller mRightController;
 		matrix4 mPlayerPosition;
 		vr::TrackedDevicePose_t mPoses[vr::k_unMaxTrackedDeviceCount];
-		vr::IVRSystem* mVRSystem;
+		vr::IVRSystem* mVRSystem = nullptr;
 		bool mIsLeftPrimary = false;
 		InputTimeline* mInputTimeline;
 		float mTweenTimestamp = 0;
