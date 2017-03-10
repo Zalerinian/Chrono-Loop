@@ -15,8 +15,8 @@ namespace Epoch {
 			short mButtonState;
 		};
 		struct InputNode {
-			InputNode* mNext;
-			InputNode* mPrev;
+			InputNode* mNext = nullptr;
+			InputNode* mPrev = nullptr;
 			InputData mData;
 		};
 	private:
