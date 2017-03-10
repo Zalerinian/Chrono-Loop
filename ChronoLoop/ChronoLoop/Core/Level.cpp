@@ -54,14 +54,14 @@ namespace Epoch
 			sInstance->mController2 = _rController;
 			
 			std::vector<Component*> codes1 = sInstance->mController1->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
-			for (size_t x = 0; codes1.size(); ++x)
+			for (size_t x = 0; x < codes1.size(); ++x)
 			{
 				if (dynamic_cast<TimeManipulation*>(codes1[x])) {
 					sInstance->mTMComponent1 = ((TimeManipulation*)codes1[x]);
 				}
 			}
 			std::vector<Component*> codes2 = sInstance->mController2->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
-			for (size_t x = 0; codes2.size(); ++x)
+			for (size_t x = 0; x < codes2.size(); ++x)
 			{
 				if (dynamic_cast<TimeManipulation*>(codes2[x])) {
 					sInstance->mTMComponent2 = ((TimeManipulation*)codes2[x]);

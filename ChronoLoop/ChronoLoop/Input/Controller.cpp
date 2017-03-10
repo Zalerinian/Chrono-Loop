@@ -40,9 +40,9 @@ namespace Epoch {
 	//  0 = Not Ready/Not Valid
 	//  1 = Clockwise
 	//////
-	int Controller::CheckGesture(bool _isLeft)
+	int Controller::CheckGesture()
 	{
-		if ((Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused() && _isLeft) || (Level::Instance()->iGetRightTimeManinpulator()->isTimePaused() && !_isLeft)) {
+		if ((Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused()) || (Level::Instance()->iGetRightTimeManinpulator()->isTimePaused())) {
 
 			vec2f touch = this->GetAxis();
 			if ((powf((touch.x), 2) + powf((touch.y), 2)) < 0.25f) //0.25f = 0.5f ^ 2
@@ -60,7 +60,7 @@ namespace Epoch {
 					return 0;
 				}
 				gestureCnt++;
-				if (gestureCnt == 10) {
+				if (gestureCnt == 5) {
 					gestureCnt = 0;
 					//SystemLogger::GetLog() << "InitialPos: (" << InitialPos.x << "," << InitialPos.y << ")" << "CurPos: (" << CurPos.x << "," << CurPos.y << ")" << std::endl;
 					vec2f CurPos = touch;

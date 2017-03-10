@@ -88,18 +88,19 @@ namespace Epoch
 						}
 					}
 				}
-			}
-			if ((Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused()) || (Level::Instance()->iGetRightTimeManinpulator()->isTimePaused())) {
+				if (((Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused()) || (Level::Instance()->iGetRightTimeManinpulator()->isTimePaused()))) {
 
-				TimeManager::Instance()->RewindTimeline(
-					TimeManager::Instance()->GetCurrentSnapFrame() - 1,
-					Level::Instance()->iGetHeadset()->GetUniqueID(),
-					Level::Instance()->iGetRightController()->GetUniqueID(),
-					Level::Instance()->iGetLeftController()->GetUniqueID());
+					TimeManager::Instance()->RewindTimeline(
+						TimeManager::Instance()->GetCurrentSnapFrame() - 1,
+						Level::Instance()->iGetHeadset()->GetUniqueID(),
+						Level::Instance()->iGetRightController()->GetUniqueID(),
+						Level::Instance()->iGetLeftController()->GetUniqueID());
 
-				Level::Instance()->iGetLeftTimeManinpulator()->makeTimePaused(false);
-				Level::Instance()->iGetRightTimeManinpulator()->makeTimePaused(false);
+					Level::Instance()->iGetLeftTimeManinpulator()->makeTimePaused(false);
+					Level::Instance()->iGetRightTimeManinpulator()->makeTimePaused(false);
+				}
 			}
+
 		}
 	};
 }

@@ -57,26 +57,26 @@ namespace Epoch {
 			mRightController.mIndex = mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_RightHand);
 			if (mRightController.GetIndex() > 0) {
 				mRightController.Update();
-				GestureCheck = mRightController.CheckGesture(false);
+				GestureCheck = mRightController.CheckGesture();
 				TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
 				SystemLogger::Info() << "Right Controller connected at index " << mRightController.GetIndex() << std::endl;
 			}
 		} else {
 			mRightController.Update();
-			GestureCheck = mRightController.CheckGesture(false);
+			GestureCheck = mRightController.CheckGesture();
 			TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
 		}
 		if (mLeftController.GetIndex() < 0) {
 			mLeftController.mIndex = mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand);
 			if (mLeftController.GetIndex() > 0) {
 				mLeftController.Update();
-				GestureCheck = mLeftController.CheckGesture(true);
+				GestureCheck = mLeftController.CheckGesture();
 				TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
 				SystemLogger::Info() << "Left Controller connected at index " << mLeftController.GetIndex() << std::endl;
 			}
 		} else {
 			mLeftController.Update();
-			GestureCheck = mLeftController.CheckGesture(true);
+			GestureCheck = mLeftController.CheckGesture();
 			TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
 		}
 		vr::VRCompositor()->WaitGetPoses(mPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);

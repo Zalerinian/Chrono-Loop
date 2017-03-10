@@ -96,6 +96,7 @@ namespace Epoch {
 
 	bool TimeManager::CheckRewindAvaliable(unsigned int _frame) {
 		//wrapped
+		unsigned int temp = mTimeline->GetCurrentGameTimeIndx() - (int)_frame;
 		if (mTimeline->GetCurrentGameTimeIndx() - (int)_frame > mTimeline->GetCurrentGameTimeIndx())
 			return false;
 		else
@@ -210,17 +211,23 @@ namespace Epoch {
 	void TimeManager::BrowseTimeline(int _gesture, int _frameRewind)
 	{
 
-		if (_gesture == 0 || instanceTimemanager->CheckRewindAvaliable(_frameRewind))
+		unsigned int temp = instanceTimemanager->GetCurrentSnapFrame();
+		if (_gesture == 0)
 			return;
-		if (_gesture == -1)
+		if (_gesture == 1)
 			_frameRewind *= -1;
+		if (mtempCurSnapFrame > mTimeline->GetCurrentGameTimeIndx())
+			return;
 
-		//instanceTimemanager->
+
+		if((mtempCurSnapFrame != 0 && _gesture == -1) || (mtempCurSnapFrame != temp && _gesture == 1))
+			mtempCurSnapFrame -= _frameRewind;
 		instanceTimemanager->MoveAllObjectExceptPlayer(
-			instanceTimemanager->GetCurrentSnapFrame() - _frameRewind,
+			mtempCurSnapFrame,
 			Level::Instance()->iGetHeadset()->GetUniqueID(),
-			Level::Instance()->iGetRightController()->GetUniqueID(),
-			Level::Instance()->iGetLeftController()->GetUniqueID());
+			Level::Instance()->iGetLeftController()->GetUniqueID(),
+			Level::Instance()->iGetRightController()->GetUniqueID());
+
 
 	}
 	void TimeManager::MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC)

@@ -31,7 +31,7 @@ namespace Epoch {
 		Controller();
 		~Controller() {};
 		void Update();
-		int CheckGesture(bool isLeft);
+		int CheckGesture();
 		//transforms
 		matrix4 GetPosition();
 		vec3f GetVelocity();

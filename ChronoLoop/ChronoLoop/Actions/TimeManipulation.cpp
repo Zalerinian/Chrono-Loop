@@ -105,12 +105,13 @@ namespace Epoch
 		}
 
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
-			if (mPauseTime)
+			if (mPauseTime) {
 				mPauseTime = false;
-			else
+			}
+			else {
+				Epoch::TimeManager::Instance()->SetTempSnapHolder();
 				mPauseTime = true;
-
-
+			}
 		}
 
 		if (GetAsyncKeyState(VK_END) & 1 || VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::k_EButton_SteamVR_Touchpad)) 

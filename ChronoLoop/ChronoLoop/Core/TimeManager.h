@@ -18,6 +18,8 @@ namespace Epoch {
 		float mlastRecordedTime = 0, mTimestamp = 0;
 		float mDeltaTime;
 		unsigned int mLevelTime = 0;
+		//DO NOT TOUCH
+		int mtempCurSnapFrame = 0;
 		bool mRewindTime = false, mRewindMakeClone = false;
 		std::vector<BaseObject*>mClones;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneInterpolators;
@@ -44,6 +46,7 @@ namespace Epoch {
 		float GetDeltaTime() { return mDeltaTime; }
 		Interpolator<matrix4>* GetCloneInterpolator(unsigned short _id);
 		std::vector<BaseObject*>& GetClonesVec() { return mClones; };
+		void SetTempSnapHolder() { mtempCurSnapFrame = GetCurrentSnapFrame(); };
 		//Go back into time. Send in dest frame and send in player headset and conrollers id
 		void RewindTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		//Go back into time and make clone. Send in dest frame and send in player headset and conrollers baseObjects

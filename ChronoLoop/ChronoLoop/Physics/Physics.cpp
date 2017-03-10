@@ -581,8 +581,9 @@ namespace Epoch
 
 	void Physics::Update(float _time)
 	{
-
-		if (!Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused() && !Level::Instance()->iGetRightTimeManinpulator()->isTimePaused()) {
+		bool right = Level::Instance()->iGetRightTimeManinpulator()->isTimePaused();
+		bool left = Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused();
+		if (!left && !right) {
 			//SystemLogger::GetLog() << _time << std::endl;
 			Collider* collider;
 			Collider* otherCol;
