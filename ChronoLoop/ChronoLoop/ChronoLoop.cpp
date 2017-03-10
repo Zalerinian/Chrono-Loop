@@ -278,8 +278,8 @@ void Update() {
 	VRInputManager::GetInstance().GetPlayerPosition().Position = vec4f(0, 0, 0, 1);
 
 #pragma endregion
-
-#pragma region LEVEL 1
+	
+#pragma region LEVEL_1
 
 	//Transform transform;
 	//matrix4 mat1 = matrix4::CreateTranslation(0, 0, 0) * matrix4::CreateScale(0.3f, 0.3f, 0.3f);
