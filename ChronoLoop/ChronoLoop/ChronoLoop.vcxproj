@@ -246,6 +246,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Rendering\IndexBufferManager.h" />
     <ClInclude Include="Rendering\InputLayoutManager.h" />
     <ClInclude Include="Rendering\Mesh.h" />
+    <ClInclude Include="Rendering\MeshCache.h" />
     <ClInclude Include="Rendering\RasterizerStateManager.h" />
     <ClInclude Include="Rendering\RenderContext.h" />
     <ClInclude Include="Rendering\Renderer.h" />
@@ -379,6 +380,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClCompile Include="Rendering\IndexBufferManager.cpp" />
     <ClCompile Include="Rendering\InputLayoutManager.cpp" />
     <ClCompile Include="Rendering\Mesh.cpp" />
+    <ClCompile Include="Rendering\MeshCache.cpp" />
     <ClCompile Include="Rendering\RasterizerStateManager.cpp" />
     <ClCompile Include="Rendering\RenderContext.cpp" />
     <ClCompile Include="Rendering\Renderer.cpp" />

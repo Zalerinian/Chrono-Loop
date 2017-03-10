@@ -10,7 +10,6 @@ namespace Epoch {
 
 	struct RenderShape : public RenderNode {
 		friend class RenderSet;
-		friend struct std::less<RenderShape>;
 		unsigned int mIndexCount = 0, mVertexOffset = 0, mIndexOffset = 0;
 
 		matrix4 mPosition;
@@ -21,7 +20,7 @@ namespace Epoch {
 		RenderShape(const char* _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs);
 		RenderShape(const char* _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs, GeometryShaderFormat _gs);
 		~RenderShape();
-		void Load(Mesh& _mesh);
+		void Load(Mesh *_mesh);
 		void Load(const char* _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs);
 		void Load(const char* _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs, GeometryShaderFormat _gs);
 		void SetShaders(PixelShaderFormat pf, VertexShaderFormat vf);
@@ -32,8 +31,8 @@ namespace Epoch {
 
 		RenderShape& AddTexture(const char* _path, TextureType _position);
 		RenderShape& AddTexture(const wchar_t* _path, TextureType _position);
-		inline Triangle* GetTriangles() { return mMesh.GetTriangles(); }
-		inline size_t GetTriangleCount() { return mMesh.GetNumTriangles(); }
+		inline Triangle* GetTriangles() { return mMesh->GetTriangles(); }
+		inline size_t GetTriangleCount() { return mMesh->GetNumTriangles(); }
 
 		void Render(UINT _instanceCount = 1) const;
 
@@ -41,24 +40,7 @@ namespace Epoch {
 
 	protected:
 		RenderContext mContext;
-		Mesh mMesh;
+		Mesh* mMesh;
 	};
 
-}
-
-namespace std {
-	template<>
-	struct less<Epoch::RenderShape> {
-		bool operator()(const Epoch::RenderShape& _lhs, const Epoch::RenderShape& _rhs) const {
-			// TODO: Create a good sorting algorithm for render shapes. Currently, the objects are not sorted.
-			return _lhs.mVertexOffset < _rhs.mVertexOffset || _lhs.mContext == _rhs.mContext;
-		}
-	};
-
-	template <>
-	struct hash<Epoch::RenderShape> {
-		size_t operator()(const Epoch::RenderShape& _shape) const {
-			return (size_t)_shape.mVertexOffset;
-		}
-	};
 }

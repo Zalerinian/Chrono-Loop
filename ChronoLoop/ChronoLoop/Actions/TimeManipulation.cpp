@@ -120,7 +120,7 @@ namespace Epoch
 			TimeManager::Instance()->RewindTimeline(TimeManager::Instance()->GetCurrentSnapFrame() - frameRewind, Level::Instance()->iGetHeadset()->GetUniqueID(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());
 			VRInputManager::GetInstance().RewindInputTimeline(TimeManager::Instance()->GetCurrentSnapFrame(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());
 		}
-
+		
 		if (GetAsyncKeyState(VK_END) & 1 || VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::k_EButton_SteamVR_Touchpad)) 
 		{
 			HotfixButtonDown++;

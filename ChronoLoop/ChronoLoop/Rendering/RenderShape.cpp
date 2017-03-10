@@ -8,6 +8,7 @@
 #include "TextureManager.h"
 #include "VertexBufferManager.h"
 #include "IndexBufferManager.h"
+#include "MeshCache.h"
 #include <memory>
 
 
@@ -21,7 +22,7 @@ namespace Epoch {
 	}
 	
 	RenderShape::RenderShape(Mesh & _mesh) {
-		this->Load(_mesh);
+		this->Load(&_mesh);
 		mNext = nullptr;
 		mType = RenderNodeType::Shape;
 		mContext.mRasterState = eRS_MAX;
@@ -54,24 +55,24 @@ namespace Epoch {
 	RenderShape::~RenderShape() {
 	}
 	
-	void RenderShape::Load(Mesh & _mesh) {
+	void RenderShape::Load(Mesh *_mesh) {
 #if _DEBUG
-		if (_mesh.VertSize() == 0) {
+		if (_mesh->VertSize() == 0) {
 			Debug::SetBreakpoint();
 			SystemLogger::GetError() << "[Error] Attempting to load an empty mesh in RenderShape!" << std::endl;
 		}
 #endif
 
-		mIndexOffset = IndexBufferManager::GetInstance().AddToBuffer(_mesh.GetName(), _mesh.GetIndicies(), (unsigned int)_mesh.IndicieSize());
-		mVertexOffset = VertexBufferManager::Instance().GetVertexBuffer<VertexPosNormTex>()->AddVerts(_mesh.GetName(), _mesh.GetVerts(), (unsigned int)_mesh.VertSize());
-		mIndexCount = (unsigned int)_mesh.VertSize();
+		mIndexOffset = IndexBufferManager::GetInstance().AddToBuffer(_mesh->GetName(), _mesh->GetIndicies(), (unsigned int)_mesh->IndicieSize());
+		mVertexOffset = VertexBufferManager::Instance().GetVertexBuffer<VertexPosNormTex>()->AddVerts(_mesh->GetName(), _mesh->GetVerts(), (unsigned int)_mesh->VertSize());
+		mIndexCount = (unsigned int)_mesh->VertSize();
 	}
 
 	void RenderShape::Load(const char * _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs) {
 		mName = std::string("Shape: ") + _path;
-		mMesh.Load(_path);
+		mMesh = MeshCache::GetInstance().GetMesh(_path);
 		if (_invert) {
-			mMesh.Invert();
+			mMesh->Invert();
 		}
 		Load(mMesh);
 		SetShaders(_ps, _vs);
@@ -79,9 +80,9 @@ namespace Epoch {
 
 	void RenderShape::Load(const char * _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs, GeometryShaderFormat _gs) {
 		mName = std::string("Shape: ") + _path;
-		mMesh.Load(_path);
+		mMesh = MeshCache::GetInstance().GetMesh(_path);
 		if (_invert) {
-			mMesh.Invert();
+			mMesh->Invert();
 		}
 		Load(mMesh);
 		SetShaders(_ps, _vs, _gs);

@@ -135,7 +135,7 @@ namespace Epoch {
 		}
 		//SystemLogger::GetLog() << node->mData.mControllerId << std::endl;
 		mInputTimeline->Insert(node);
-		mInputTimeline->DisplayTimeline();
+		//mInputTimeline->DisplayTimeline();
 	}
 
 	//Todo PAT: UPDATE CURRENT AFTER REWIND
@@ -168,7 +168,7 @@ namespace Epoch {
 			mInputTimeline->SetCurr(temp);
 		}
 
-		mInputTimeline->DisplayTimeline();
+		//mInputTimeline->DisplayTimeline();
 		SystemLogger::GetLog() << "Rewinded to before " << _frame << std::endl;
 	}
 
