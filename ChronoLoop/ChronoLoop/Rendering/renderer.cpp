@@ -84,7 +84,9 @@ namespace Epoch {
 		matrix4 hmdPos = (hmd * VRInputManager::GetInstance().GetPlayerPosition()).Invert();
 
 		mVPLeftData.view = (hmdPos * mEyePosLeft).Transpose();
+		mVPLeftData.projection = mEyeProjLeft.Transpose();
 		mVPRightData.view = (hmdPos * mEyePosRight).Transpose();
+		mVPRightData.projection = mEyeProjRight.Transpose();
 	}
 
 	void Renderer::UpdateGSBuffers() {
@@ -360,6 +362,7 @@ namespace Epoch {
 
 	void Renderer::RenderVR(float _delta) {
 		vr::VRCompositor()->CompositorBringToFront();
+			UpdateViewProjection();
 			UpdateGSBuffers();
 			ProcessRenderSet();
 
@@ -407,6 +410,9 @@ namespace Epoch {
 		//}
 
 		// TODO: Make a ShaderLimits.h file that has macros for the number of instances and other such arrays a shader supports.
+
+		// Big TODO: When rendering more than 256 instances of a given mesh, there is a pretty good chance the game
+		// will crash due to copying garbage memory into the graphics driver for the buffer's contents. Fix that.
 		std::vector<matrix4> positions;
 		positions.reserve(256);
 		for (auto it = mRenderSet.Begin(); it != mRenderSet.End(); ++it) {
@@ -416,7 +422,7 @@ namespace Epoch {
 				while (positions.size() - offset <= positions.size()) {
 					(*it)->mShape.GetContext().Apply();
 					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, positions.data() + offset, 0, 0);
-					(*it)->mShape.Render((UINT)positions.size());
+					(*it)->mShape.Render((UINT)positions.size() - offset);
 					offset += 256;
 				}
 			}

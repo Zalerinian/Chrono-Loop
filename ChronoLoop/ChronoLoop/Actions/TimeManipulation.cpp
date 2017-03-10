@@ -53,7 +53,7 @@ namespace Epoch
 		//	mTexturedApplied = true;
 		//}
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu)) {
-			int frameRewind = 30;
+			int frameRewind = 1;
 
 			if (!TimeManager::Instance()->CheckRewindAvaliable(frameRewind))
 				return;
@@ -87,7 +87,7 @@ namespace Epoch
 			//KEEP THIS ORDER NO MATTER WHAT!!!! 
 			//
 			//Make a clone 3 seconds ago.
-			TimeManager::Instance()->RewindMakeClone(TimeManager::Instance()->GetCurrentSnapFrame() - 30, headset, Controller1, Controller2);
+			TimeManager::Instance()->RewindMakeClone(TimeManager::Instance()->GetCurrentSnapFrame() - frameRewind, headset, Controller1, Controller2);
 			Level::Instance()->iSetHeadsetAndControllers(headset, Controller1, Controller2, CubeColider, CubeColider2);
 			//it is extreamly important that the objects are added after time rewinded because of the objectLifeTimeStruct and more..
 			Physics::Instance()->mObjects.push_back(headset);
@@ -105,7 +105,7 @@ namespace Epoch
 		}
 
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
-			int frameRewind = 30;
+			int frameRewind = 1;
 			if (!TimeManager::Instance()->CheckRewindAvaliable(frameRewind))
 				return;
 
