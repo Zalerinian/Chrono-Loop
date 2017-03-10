@@ -262,6 +262,8 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Rendering\VertexBufferManager.h" />
     <ClInclude Include="Rendering\TextureManager.h" />
     <ClInclude Include="Sound\SoundEngine.h" />
+    <ClInclude Include="tinyxml\tinystr.h" />
+    <ClInclude Include="tinyxml\tinyxml.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\DXTK\BC.cpp">
@@ -392,6 +394,10 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClCompile Include="Rendering\VertexBufferManager.cpp" />
     <ClCompile Include="Rendering\TextureManager.cpp" />
     <ClCompile Include="Sound\SoundEngine.cpp" />
+    <ClCompile Include="tinyxml\tinystr.cpp" />
+    <ClCompile Include="tinyxml\tinyxml.cpp" />
+    <ClCompile Include="tinyxml\tinyxmlerror.cpp" />
+    <ClCompile Include="tinyxml\tinyxmlparser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\BasicPixel.hlsl">

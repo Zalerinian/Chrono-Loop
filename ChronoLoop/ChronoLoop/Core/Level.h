@@ -55,6 +55,7 @@ namespace Epoch
 		//**FUNCTIONS**//
 		void iCallStart();
 		void iLoadLevel();
+		void iLoadLevel(std::string _file);
 		void iUpdate();
 		bool iOnObjectNamechange(BaseObject* _obj, std::string _name);
 

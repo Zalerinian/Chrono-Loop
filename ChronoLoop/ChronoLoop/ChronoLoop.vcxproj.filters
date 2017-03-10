@@ -121,6 +121,9 @@
     <Filter Include="Common\Math\Source Files">
       <UniqueIdentifier>{e319ddd3-329d-43fd-aeb9-fb646fc0c8fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TinyXML">
+      <UniqueIdentifier>{53fc744b-a487-4d1f-be86-54c8fc76ef21}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\BaseObject.h">
@@ -339,6 +342,12 @@
     <ClInclude Include="Actions\MainMenuBT.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="tinyxml\tinystr.h">
+      <Filter>TinyXML</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyxml\tinyxml.h">
+      <Filter>TinyXML</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -547,6 +556,18 @@
     </ClCompile>
     <ClCompile Include="Input\InputTimeline.cpp">
       <Filter>Input\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml\tinystr.cpp">
+      <Filter>TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml\tinyxml.cpp">
+      <Filter>TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml\tinyxmlerror.cpp">
+      <Filter>TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml\tinyxmlparser.cpp">
+      <Filter>TinyXML</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

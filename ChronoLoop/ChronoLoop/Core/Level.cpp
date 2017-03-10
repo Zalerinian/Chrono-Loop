@@ -2,6 +2,8 @@
 #include "Level.h"
 #include "../Actions/CodeComponent.hpp"
 #include "../Objects/MeshComponent.h"
+#include "../tinyxml/tinyxml.h"
+#include "../tinyxml/tinystr.h"
 
 namespace Epoch
 {
@@ -174,6 +176,18 @@ void Level::iSetHeadsetAndControllers(BaseObject *& _headset, BaseObject *& _con
 		//*TODO: Insert Code Here When we Get to It**//
 	}
 
+	void Level::iLoadLevel(std::string _file)
+	{
+		TiXmlDocument doc(_file.c_str());
+		bool loaded = doc.LoadFile();
+		if (loaded)
+		{
+			doc.
+		}
+		else
+			return;
+	}
+
 	void Level::iUpdate()
 	{
 		//*Insert Code Here When we Get to It**//
@@ -198,6 +212,7 @@ void Level::iSetHeadsetAndControllers(BaseObject *& _headset, BaseObject *& _con
 		//}
 		//return false;
 	}
+
 	void Level::ToggleEntireLevelsWireframe(void* _command, std::wstring _ifOn)
 	{
 		CommandConsole* cc = (CommandConsole*)_command;
