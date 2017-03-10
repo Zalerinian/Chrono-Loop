@@ -21,9 +21,10 @@ namespace Epoch {
 	MC::MC() {}
 
 	MC::~MC() {
-		while (mMeshCache.begin() != mMeshCache.end()) {
-			mMeshCache.erase(mMeshCache.begin());
+		for (auto it = mMeshCache.begin(); it != mMeshCache.end(); ++it) {
+			delete it->second;
 		}
+		mMeshCache.clear();
 	}
 
 
