@@ -39,7 +39,7 @@ namespace Epoch
 		txtdec.CPUAccessFlags = 0;
 		txtdec.MiscFlags = 0;
 		HRESULT hr;
-		hr = Renderer::Instance()->GetDevice().Get()->CreateTexture2D(&txtdec, NULL, &mCountTxt);
+		hr = Renderer::Instance()->iGetDevice().Get()->CreateTexture2D(&txtdec, NULL, &mCountTxt);
 		mCountMap = Draw::Instance().CreateBitmapForTexture(mCountTxt);
 		//This draws to center
 		Font* tempFont = new Font(L"Times New Roman", 25, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_CENTER, DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
@@ -54,7 +54,7 @@ namespace Epoch
 		//	mTexturedApplied = true;
 		//}
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu)) {
-			int frameRewind = 1;
+			int frameRewind = 30;
 
 			if (!TimeManager::Instance()->CheckRewindAvaliable(frameRewind))
 				return;
@@ -113,7 +113,7 @@ namespace Epoch
 		}
 
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
-			int frameRewind = 1;
+			int frameRewind = 30;
 			if (!TimeManager::Instance()->CheckRewindAvaliable(frameRewind))
 				return;
 

@@ -1,24 +1,25 @@
 #pragma once
 #include <vector>
-#include <unordered_map>
-#include <unordered_set>
-#include "RenderShape.h"
-#include "RenderList.h"
-#include <list>
 
 namespace Epoch {
+	struct RenderNode;
+	struct RenderContext;
+	struct RenderShape;
 
 	class RenderSet {
+		RenderNode *mHead = nullptr, *mTail = nullptr;
 		unsigned int mSize = 0;
-		std::list<RenderList*> mRenderList;
+		std::vector<RenderContext*> mContexts;
 
 	public:
-		GhostList<matrix4>::GhostNode* AddShape(RenderShape& _shape);
+		//RenderSet(); // Maybe have a constructor that reserves a smallish number of renderer contexts so it doesn't have to expand on demand?
+		void AddNode(RenderNode* _node, RenderContext *_rc);
+		void RemoveNode(RenderNode* _node);
+		void RemoveContext(std::vector<RenderContext*>::iterator _it);
+		void RemoveShape(RenderShape* _node);
 		void ClearSet();
-		//void SortNodes();
-		std::list<RenderList*>::iterator Begin();
-		std::list<RenderList*>::iterator End();
-		
+		const RenderNode *GetHead();
+
 		~RenderSet();
 	};
 }

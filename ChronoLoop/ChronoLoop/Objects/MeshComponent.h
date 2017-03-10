@@ -2,7 +2,6 @@
 #include "Component.h"
 #include "../Rendering/RendererDefines.h"
 #include "../Rendering/RenderShape.h"
-#include "../Common/GhostList.h"
 
 namespace Epoch
 {
@@ -10,14 +9,13 @@ namespace Epoch
 
 	class MeshComponent : public Component
 	{
-		GhostList<matrix4>::GhostNode* mNode;
 		RenderShape* mShape;
 		bool mVisible = true;
 
 	public:
 		MeshComponent(const char *_path);
-		virtual void Update() override;
-		virtual void Destroy() override;
+		void Update();
+		void Destroy();
 		void SetVisible(bool _vis);
 		void AddTexture(const char *_path, TextureType _type);
 		inline bool IsVisible() { return mVisible; };

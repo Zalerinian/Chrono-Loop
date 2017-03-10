@@ -18,7 +18,7 @@ namespace Epoch {
 	private:
 		struct ViewProjectionBuffer {
 			matrix4 view, projection;
-		} mVPLeftData, mVPRightData;
+		} mVPData;
 		static Renderer* sInstance;
 
 
@@ -33,7 +33,7 @@ namespace Epoch {
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDSView;
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> mDepthBuffer;
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> mSamplerState;
-		D3D11_VIEWPORT mLeftViewport, mRightViewport;
+		D3D11_VIEWPORT mViewport;
 		HWND mWindow;
 
 		vr::IVRSystem* mVrSystem;
@@ -65,8 +65,7 @@ namespace Epoch {
 
 		matrix4 GetEye(vr::EVREye e);
 		matrix4 GetProjection(vr::EVREye e);
-		void UpdateViewProjection();
-		void UpdateGSBuffers();
+		void GetMVP(vr::EVREye e, ViewProjectionBuffer &data);
 		
 		void RenderVR(float _delta);
 		void UpdateCamera(float const moveSpd, float const rotSpd, float delta);
@@ -83,18 +82,19 @@ namespace Epoch {
 			bool vsync, int fps, bool fullscreen, float farPlane, float nearPlane,
 			vr::IVRSystem* vrsys);
 		void ThrowIfFailed(HRESULT hr);
-		GhostList<matrix4>::GhostNode* AddNode(RenderShape *_node);
+		void AddNode(RenderShape *_node);
+		void RemoveNode(RenderShape *_node);
 		void Render(float _deltaTime);
 
 		//Draws text in 0 to 1 space
 
-		inline Microsoft::WRL::ComPtr<ID3D11Device> GetDevice() { return mDevice; }
-		inline Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetContext() { return mContext; }
-		inline Microsoft::WRL::ComPtr<IDXGISwapChain> GetChain() { return mChain; }
-		inline Microsoft::WRL::ComPtr<IDXGIFactory1> GetFactory() { return mFactory; }
-		inline Microsoft::WRL::ComPtr<ID3D11RenderTargetView> GetRTView() { return mMainView; }
-		inline Microsoft::WRL::ComPtr<ID3D11DepthStencilView> GetDSView() { return mDSView; }
-		inline Microsoft::WRL::ComPtr<ID3D11Texture2D> GetRTViewTexture() { return mMainViewTexture; }
-		inline HWND GetWindow() { return mWindow; }
+		inline Microsoft::WRL::ComPtr<ID3D11Device> iGetDevice() { return mDevice; }
+		inline Microsoft::WRL::ComPtr<ID3D11DeviceContext> iGetContext() { return mContext; }
+		inline Microsoft::WRL::ComPtr<IDXGISwapChain> iGetChain() { return mChain; }
+		inline Microsoft::WRL::ComPtr<IDXGIFactory1> iGetFactory() { return mFactory; }
+		inline Microsoft::WRL::ComPtr<ID3D11RenderTargetView> iGetRTView() { return mMainView; }
+		inline Microsoft::WRL::ComPtr<ID3D11DepthStencilView> iGetDSView() { return mDSView; }
+		inline Microsoft::WRL::ComPtr<ID3D11Texture2D> iGetRTViewTexture() { return mMainViewTexture; }
+		inline HWND iGetWindow() { return mWindow; }
 	};
 }

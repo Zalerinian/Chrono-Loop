@@ -3,36 +3,44 @@
 #include <string>
 #include <d3d11.h>
 #include "renderer.h"
-#include <wrl/client.h>
+
 
 namespace Epoch {
 	template<typename T>
-	class VertexBuffer {
+	class VertexBuffer
+	{
 	private:
 		std::map<std::string, unsigned int> mOffsets;
-		Microsoft::WRL::ComPtr<ID3D11Buffer> mVertexBuffer;
+		ID3D11Buffer* mVertexBuffer;
 	public:
 		VertexBuffer();
 		~VertexBuffer();
 		unsigned int AddVerts(std::string _name, const T *_verts, unsigned int _numVerts);
-		Microsoft::WRL::ComPtr<ID3D11Buffer> const GetBuffer();
+		ID3D11Buffer *const GetVertexBuffer();
 	};
 
 	template<typename T>
-	VertexBuffer<T>::VertexBuffer() {
+	VertexBuffer<T>::VertexBuffer()
+	{
 		mVertexBuffer = nullptr;
 	}
 
 	template<typename T>
-	VertexBuffer<T>::~VertexBuffer() {}
+	VertexBuffer<T>::~VertexBuffer()
+	{
+		mVertexBuffer->Release();
+	}
 
 	template<typename T>
-	unsigned int VertexBuffer<T>::AddVerts(std::string _name, const T * _verts, unsigned int _numVerts) {
+	unsigned int VertexBuffer<T>::AddVerts(std::string _name, const T * _verts, unsigned int _numVerts)
+	{
 		unsigned int offset = 0;
 		if (mOffsets.count(_name) > 0)
 			offset = mOffsets.at(_name);
-		else {
-			if (mVertexBuffer) {
+		else
+		{
+			if (mVertexBuffer)
+			{ 
 				D3D11_BUFFER_DESC desc;
 				mVertexBuffer->GetDesc(&desc);
 
@@ -44,13 +52,16 @@ namespace Epoch {
 				memcpy((char *)(initData.pSysMem) + desc.ByteWidth, _verts, sizeof(T) * _numVerts);
 				desc.ByteWidth += sizeof(T) * _numVerts;
 				ID3D11Buffer *newBuffer;
-				Renderer::Instance()->GetDevice()->CreateBuffer(&desc, &initData, &newBuffer);
-				Renderer::Instance()->GetContext()->CopySubresourceRegion(newBuffer, 0, 0, 0, 0, mVertexBuffer.Get(), 0, 0);
-				mVertexBuffer.Attach(newBuffer);
+				Renderer::Instance()->iGetDevice()->CreateBuffer(&desc, &initData, &newBuffer);
+				Renderer::Instance()->iGetContext()->CopySubresourceRegion(newBuffer, 0, 0, 0, 0, mVertexBuffer, 0, 0);
+				mVertexBuffer->Release();
+				mVertexBuffer = newBuffer;
 				std::string name = "The Vertex Buffer, mk" + std::to_string(mOffsets.size());
-				SetD3DName(mVertexBuffer.Get(), name.c_str());
+				SetD3DName(mVertexBuffer, name.c_str());
 				delete[] initData.pSysMem;
-			} else {
+			}
+			else
+			{
 				D3D11_BUFFER_DESC desc;
 				desc.Usage = D3D11_USAGE_DEFAULT;
 				desc.ByteWidth = sizeof(T) * _numVerts;
@@ -61,16 +72,17 @@ namespace Epoch {
 
 				D3D11_SUBRESOURCE_DATA initData;
 				initData.pSysMem = _verts;
-				Renderer::Instance()->GetDevice()->CreateBuffer(&desc, &initData, mVertexBuffer.GetAddressOf());
+				Renderer::Instance()->iGetDevice()->CreateBuffer(&desc, &initData, &mVertexBuffer);
 				std::string name = "The Vertex Buffer";
-				SetD3DName(mVertexBuffer.Get(), name.c_str());
+				SetD3DName(mVertexBuffer, name.c_str());
 			}
 			mOffsets[_name] = offset;
 		}
 		return offset;
 	}
 	template<typename T>
-	Microsoft::WRL::ComPtr<ID3D11Buffer> const VertexBuffer<T>::GetBuffer() {
+	ID3D11Buffer * const VertexBuffer<T>::GetVertexBuffer()
+	{
 		return mVertexBuffer;
 	}
 }

@@ -37,26 +37,25 @@ namespace Epoch
 				return;
 			}
 			// I'm lazy so, let's just set this thing's position to the controller's position.
-			matrix4 mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();	
+			matrix4 mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
 			mObject->GetTransform().SetMatrix(mat);
 
 			if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad))
 			{
 				vec4f forward(0, 0, 1, 0);
+				forward *= mObject->GetTransform().GetMatrix();
 				MeshComponent* meshes[] = { mWallsMesh, mBlockMesh, mExitMesh };
 				BaseObject* objects[] = { mWallsObject, mBlockObject, mExitObject };
 				float meshTime = 0, wallTime = FLT_MAX;
 				for (int i = 0; i < ARRAYSIZE(meshes); ++i)
 				{
-					matrix4 inverse = (mat * objects[i]->GetTransform().GetMatrix().Invert());
-					vec4f meshPos = inverse.Position;
-					forward *= inverse;
+					vec4f meshPos = (mat * objects[i]->GetTransform().GetMatrix().Invert()).Position;
 					Triangle *tris = meshes[i]->GetTriangles();
 					size_t numTris = meshes[i]->GetTriangleCount();
-					for (unsigned int j = 0; j < numTris; ++j)
+					for (unsigned int i = 0; i < numTris; ++i)
 					{
 						float hitTime = FLT_MAX;
-						Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, forward, hitTime);
+						Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, meshPos, forward, hitTime);
 						if (hitTime < wallTime)
 						{
 							wallTime = hitTime;

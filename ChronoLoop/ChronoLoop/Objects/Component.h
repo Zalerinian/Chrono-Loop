@@ -47,6 +47,8 @@ namespace Epoch
 		inline bool IsValid() { return mIsValid; }
 		inline void Disable() { mIsEnabled = false; };
 		inline void Enable() { mIsEnabled = true; };
+		virtual void Update() = 0;
+		virtual void Destroy() = 0;
 		unsigned short GetComponentNum() { return mComponentNum; }
 		void GetMatrix(matrix4& _m);
 		unsigned short GetColliderId() { return mComponentId; };
@@ -55,11 +57,6 @@ namespace Epoch
 		BaseObject* GetBaseObject() { return mObject; };
 		//Dont call this unless you are absolutly sure you know what you are doing
 		inline void SetComponentId(unsigned short _id) { mComponentId = _id; }
-
-		// Virtual functions for child classes
-		virtual void Update() = 0;
-		virtual void Destroy() = 0;
-		virtual void OnAddedToObject() {}
 	};
 
 	class Listener : public Component
