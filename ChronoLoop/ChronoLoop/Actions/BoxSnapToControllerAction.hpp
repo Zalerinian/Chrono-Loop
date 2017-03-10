@@ -12,16 +12,23 @@ namespace Epoch {
 		bool mHeld = false;
 		ControllerCollider* mCollider;
 		Collider* mPickUp = nullptr;
-		InputTimeline::InputNode* mInput;
+		InputTimeline::InputNode* mInput = nullptr;
 
 		virtual void Start() {
 			mCollider = (ControllerCollider*)(mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0));
 		}
 
 		virtual void Update() override {
-			if (VRInputManager::GetInstance().IsVREnabled() && VRInputManager::GetInstance().GetInputTimeline()->GetCurr() && VRInputManager::GetInstance().GetInputTimeline()->GetCurr()->mData.mControllerId == mObject->GetUniqueId())
+			if (VRInputManager::GetInstance().IsVREnabled() && mCollider)
 			{
-				mInput = VRInputManager::GetInstance().GetInputTimeline()->GetCurr();
+				InputTimeline::InputNode*temp = VRInputManager::GetInstance().FindLastInput(mCollider->GetBaseObject()->GetUniqueID());
+				//This is gross but i dont know how to get around this without storing mheld and should move in timeline
+				if (mInput && temp && mPickUp && temp->mData.mLastFrame < mInput->mData.mLastFrame) {
+					mHeld = false;
+					mPickUp->mShouldMove = true;
+				}
+
+				mInput = temp;
 			}
 			//SystemLogger::GetLog() << mCollider->mHitting.size() << std::endl;
 			if (VRInputManager::GetInstance().IsVREnabled() && mInput) {
