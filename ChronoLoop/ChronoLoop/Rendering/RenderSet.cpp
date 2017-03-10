@@ -33,6 +33,12 @@ namespace Epoch {
 	}
 
 	RenderSet::~RenderSet() {
+		for (auto it = mRenderList.begin(); it != mRenderList.end(); ++it) {
+			if ((*it)->mPositions.GetSize() > 0) {
+				SystemLogger::Warn() << "Looks like there are still nodes in the render list?" << std::endl;
+			}
+			delete *it;
+		}
 	}
 
 } // Epoch Namespace
