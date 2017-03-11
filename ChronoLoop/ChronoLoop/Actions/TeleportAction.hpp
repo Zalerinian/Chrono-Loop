@@ -63,10 +63,12 @@ namespace Epoch
 						}
 					}
 				}
-
 				Triangle *tris = mPlaneMesh->GetTriangles();
 				size_t numTris = mPlaneMesh->GetTriangleCount();
-				vec4f position = (mat * mPlaneObject->GetTransform().GetMatrix().Invert()).Position;
+				matrix4 inverse = (mat * mPlaneObject->GetTransform().GetMatrix().Invert());
+				vec4f position = inverse.Position;
+				forward.Set(0, 0, 1, 0);
+				forward *= inverse;
 				for (unsigned int i = 0; i < numTris; ++i)
 				{
 					if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, forward, meshTime))

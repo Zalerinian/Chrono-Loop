@@ -415,6 +415,7 @@ namespace Epoch
 		mMaxOffset = _max;
 		mMax = _max + mObject->GetTransform().GetMatrix().fourth;
 		mShouldMove = false;
+		mIsTrigger = false;
 		mRewind = false;
 
 		mMass = 2;

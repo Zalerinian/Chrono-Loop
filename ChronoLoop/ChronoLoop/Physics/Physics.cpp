@@ -703,7 +703,6 @@ namespace Epoch
 				collider->mTotalForce = collider->mForces + collider->mWeight + collider->mDragForce;
 				if (collider->mIsTrigger || collider->mShouldMove)
 				{
-
 					if (collider->mColliderType == Collider::eCOLLIDER_Sphere)//Check SphereCollider's collision with other objects
 					{
 						SphereCollider s1(((SphereCollider*)collider)->GetPos(), ((SphereCollider*)collider)->mRadius);
@@ -792,6 +791,13 @@ namespace Epoch
 											}
 										}
 									}
+									if (collider->mIsTrigger && otherCol->mColliderType == Collider::eCOLLIDER_Controller) 
+									{
+										for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f) 
+										{
+											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+										}
+									}
 								}
 							}
 						}
@@ -873,6 +879,13 @@ namespace Epoch
 												vec4f pos = collider->GetPos();
 												collider->SetPos(vec4f(pos.x, otherCol->GetPos().y + fabsf(((CubeCollider*)collider)->mMinOffset.y), pos.z, 1));
 											}
+										}
+									}
+									if (collider->mIsTrigger && otherCol->mColliderType == Collider::eCOLLIDER_Controller) 
+									{
+										for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f) 
+										{
+											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
 										}
 									}
 								}
