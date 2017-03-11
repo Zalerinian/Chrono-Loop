@@ -241,15 +241,7 @@ namespace Epoch {
 		RewindTimeline(0, Level::Instance()->iGetLeftController()->GetUniqueID(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetHeadset()->GetUniqueID());
 		mTimeline->HotFixResetLevel();
 		for (int i = 0; i < mClones.size(); ++i) {
-			std::vector<Component*> components = mClones[i]->GetComponents(eCOMPONENT_COLLIDER);
-			for (int j = 0; j < components.size(); ++j) {
-				components[j]->Destroy();
-			}
-
-			 components = mClones[i]->GetComponents(eCOMPONENT_MESH);
-			for (int j = 0; j < components.size(); ++j) {
-				components[j]->Destroy();
-			}
+			mClones[i]->RemoveAllComponents();
 
 			for (int k = 0; k < Physics::Instance()->mObjects.size(); ++k) {
 				if (Physics::Instance()->mObjects[k]->GetUniqueID() == mClones[i]->GetUniqueID()) {

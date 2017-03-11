@@ -6,6 +6,7 @@
 #include "../Objects/MeshComponent.h"
 #include "../Common/Logger.h"
 #include "Pool.h"
+#include "Level.h"
 
 namespace Epoch {
 	bool Snapshot::IsObjectStored(unsigned short _id) {
@@ -54,12 +55,16 @@ namespace Epoch {
 
 		mCurrentGameTimeIndx = _snaptime;
 		MoveAllObjectsToSnapExceptPlayer(_snaptime, _id1, _id2, _id3);
+
 		//Set interpolators back and turn off;
-		//std::vector<BaseObject*>clones = TimeManager::Instance()->GetClonesVec();
-		//for (unsigned int i = 0; i < clones.size(); i++) {
-		//	UpdateCloneInterpolators(clones[i]->GetUniqueId(), nullptr, _snaptime);
-		//}
-		//CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
+		std::vector<BaseObject*>clones = TimeManager::Instance()->GetClonesVec();
+		for (unsigned int i = 0; i < clones.size(); i++) {
+			Interpolator<matrix4>* temp = TimeManager::Instance()->GetCloneInterpolator(clones[i]->GetUniqueID());
+			if (temp)
+				temp->SetActive(false);
+		}
+
+		CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
 		return true;
 	}
 
@@ -92,12 +97,16 @@ namespace Epoch {
 			return false;
 		mCurrentGameTimeIndx = _snaptime;
 		MoveAllObjectsToSnap(_snaptime);
+
 		//Set interpolators back and turn off
-	//std::vector<BaseObject*>clones = TimeManager::Instance()->GetClonesVec();
-	//for (unsigned int i = 0; i < clones.size(); i++) {
-	//	UpdateCloneInterpolators(clones[i]->GetUniqueId(), nullptr, _snaptime);
-	//}
-		//CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
+		std::vector<BaseObject*>clones = TimeManager::Instance()->GetClonesVec();
+		for (unsigned int i = 0; i < clones.size(); i++) {
+			Interpolator<matrix4>* temp = TimeManager::Instance()->GetCloneInterpolator(clones[i]->GetUniqueID());
+			if (temp)
+				temp->SetActive(false);
+		}
+
+		CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
 		return true;
 	}
 
@@ -245,18 +254,30 @@ namespace Epoch {
 			newObject->mDeath = mSnaptimes[mCurrentGameTimeIndx];
 		}
 	}
-
+	
+	//This hasn't been tested yet
 	void Timeline::CheckforLostObjects(std::vector<BaseObject*>& mClones) {
 		for (auto obj : mObjectLifeTimes) {
 			if (obj.second->mBirth > mCurrentGameTimeIndx) {
 				for (unsigned int i = 0; i < mClones.size(); i++) {
+					if (mClones[i]->GetUniqueID() == obj.first || Level::Instance()->iGetLeftController()->GetUniqueID() == obj.first || Level::Instance()->iGetHeadset()->GetUniqueID() == obj.first || Level::Instance()->iGetRightController()->GetUniqueID() == obj.first)
+						break;
+
 					if (mClones[i]->GetUniqueID() != obj.first && i == mClones.size() - 1) {
 						//delete the birth and death struct
 						delete obj.second;
-						//TODO PAT: ADD A FUNC TO  REMOVE AN OBJECT IN PHYSICS
-						//Physics::mInstance->
+					
+						//get rid of object if its in physics
+						for (int k = 0; k < Physics::Instance()->mObjects.size(); ++k) {
+							if (Physics::Instance()->mObjects[k]->GetUniqueID() == obj.first) {
+								Physics::Instance()->mObjects.erase(Physics::Instance()->mObjects.begin() + k);
+							}
+						}
+
+						mLiveObjects[obj.first]->RemoveAllComponents();
+						
 						//add it back to the pool
-						Pool::Instance()->iAddObject(mLiveObjects[obj.first]);
+						Pool::Instance()->iRemoveObject(obj.first);
 						mObjectLifeTimes.erase(obj.first);
 						mLiveObjects.erase(obj.first);
 					}

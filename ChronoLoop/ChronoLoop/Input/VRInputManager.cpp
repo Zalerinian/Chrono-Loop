@@ -131,8 +131,7 @@ namespace Epoch {
 		//mInputTimeline->DisplayTimeline();
 	}
 
-	//Todo PAT: UPDATE CURRENT AFTER REWIND
-	//TODO PAT: THIS NEEDS TO BE CALLED AFTER THE SWAPPING OF IDS
+	
 	void VIM::RewindInputTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2)
 	{
 	

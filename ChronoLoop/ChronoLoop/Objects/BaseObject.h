@@ -66,6 +66,7 @@ namespace Epoch
 		inline unsigned int GetComponentCount(ComponentType _type) { return (unsigned int)mComponents[_type].size(); }
 		unsigned int AddComponent(Component* _comp);
 		bool RemoveComponent(Component* _comp);
+		void RemoveAllComponents();
 
 		//**FUNCTION**//
 		inline void AddChild(BaseObject* _obj) { mChildren.push_back(_obj); };
