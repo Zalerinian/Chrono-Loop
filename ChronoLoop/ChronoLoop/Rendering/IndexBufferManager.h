@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <unordered_map>
+#include <wrl/client.h>
 
 struct ID3D11Buffer;
 
@@ -10,13 +11,13 @@ namespace Epoch {
 	{
 		static IndexBufferManager *sInstance;
 		std::unordered_map<std::string, unsigned int> mOffsets;
-		ID3D11Buffer* mIndexBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mIndexBuffer;
 		IndexBufferManager();
 		~IndexBufferManager();
 	public:
-		static IndexBufferManager& Instance();
-		static void Shutdown();
-		static ID3D11Buffer* GetBuffer();
+		static IndexBufferManager& GetInstance();
+		static void DestroyInstance();
+		static Microsoft::WRL::ComPtr<ID3D11Buffer> GetBuffer();
 		static unsigned int AddToBuffer(std::string _Name, const unsigned int* _Indices, unsigned int _NumIndices);
 	};
 }

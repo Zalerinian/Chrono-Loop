@@ -28,18 +28,30 @@ namespace Epoch {
 		mContext.mVertexFormat = eVERT_POSNORMTEX;
 	}
 
+	RenderShape::RenderShape(const RenderShape & _other) {
+		this->mContext = _other.mContext;
+		this->mIndexCount = _other.mIndexCount;
+		this->mIndexOffset = _other.mIndexOffset;
+		this->mMesh = _other.mMesh;
+		this->mName = _other.mName;
+		this->mNext = _other.mNext;
+		this->mPosition = _other.mPosition;
+		this->mPrevious = _other.mPrevious;
+		this->mType = _other.mType;
+		this->mVertexOffset = _other.mVertexOffset;
+	}
+
 	RenderShape::RenderShape(const char * _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs) {
 		mType = RenderNodeType::Shape;
 		Load(_path, _invert, _ps, _vs);
 	}
 
+	RenderShape::RenderShape(const char * _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs, GeometryShaderFormat _gs) {
+		mType = RenderNodeType::Shape;
+		Load(_path, _invert, _ps, _vs, _gs);
+	}
+
 	RenderShape::~RenderShape() {
-		if (mVertexBuffer.get() != nullptr) {
-			(*mVertexBuffer)->Release();
-		}
-		if (mIndexBuffer.get() != nullptr) {
-			(*mIndexBuffer)->Release();
-		}
 	}
 	
 	void RenderShape::Load(Mesh & _mesh) {
@@ -50,31 +62,9 @@ namespace Epoch {
 		}
 #endif
 
-		mIndexOffset = IndexBufferManager::Instance().AddToBuffer(_mesh.GetName(), _mesh.GetIndicies(), (unsigned int)_mesh.IndicieSize());
-		mVertexOffset = VertexBufferManager::Instance().GetInternalBuffer<VertexPosNormTex>()->AddVerts(_mesh.GetName(), _mesh.GetVerts(), (unsigned int)_mesh.VertSize());
-
-
-		ID3D11Buffer *tBuffer;
-		mIndexBuffer = nullptr;
-		mVertexBuffer = nullptr;
-		auto device = Renderer::Instance()->iGetDevice().Get();
-		D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
-		auto verts = _mesh.GetVerts();
-		vertexBufferData.pSysMem = verts;
-		vertexBufferData.SysMemPitch = 0;
-		vertexBufferData.SysMemSlicePitch = 0;
-		CD3D11_BUFFER_DESC vertexBufferDesc((UINT)_mesh.VertSize() * sizeof(VertexPosNormTex), D3D11_BIND_VERTEX_BUFFER);
-		HRESULT result = device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &tBuffer);
-		mVertexBuffer = std::make_shared<ID3D11Buffer*>(tBuffer);
-		//Index Buffer
+		mIndexOffset = IndexBufferManager::GetInstance().AddToBuffer(_mesh.GetName(), _mesh.GetIndicies(), (unsigned int)_mesh.IndicieSize());
+		mVertexOffset = VertexBufferManager::Instance().GetVertexBuffer<VertexPosNormTex>()->AddVerts(_mesh.GetName(), _mesh.GetVerts(), (unsigned int)_mesh.VertSize());
 		mIndexCount = (unsigned int)_mesh.VertSize();
-		D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
-		indexBufferData.pSysMem = _mesh.GetIndicies();
-		indexBufferData.SysMemPitch = 0;
-		indexBufferData.SysMemSlicePitch = 0;
-		CD3D11_BUFFER_DESC indexBufferDesc((UINT)_mesh.IndicieSize() * sizeof(unsigned int), D3D11_BIND_INDEX_BUFFER);
-		result = device->CreateBuffer(&indexBufferDesc, &indexBufferData, &tBuffer);
-		mIndexBuffer = std::make_shared<ID3D11Buffer*>(tBuffer);
 	}
 
 	void RenderShape::Load(const char * _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs) {
@@ -85,6 +75,16 @@ namespace Epoch {
 		}
 		Load(mMesh);
 		SetShaders(_ps, _vs);
+	}
+
+	void RenderShape::Load(const char * _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs, GeometryShaderFormat _gs) {
+		mName = std::string("Shape: ") + _path;
+		mMesh.Load(_path);
+		if (_invert) {
+			mMesh.Invert();
+		}
+		Load(mMesh);
+		SetShaders(_ps, _vs, _gs);
 	}
 	
 	void RenderShape::SetShaders(PixelShaderFormat pf, VertexShaderFormat vf)
@@ -101,11 +101,29 @@ namespace Epoch {
 		mContext.mPixelShaderFormat = pf;
 	}
 
+	void RenderShape::SetShaders(PixelShaderFormat pf, VertexShaderFormat vf, GeometryShaderFormat _gf) {
+		if (pf < ePS_BASIC || pf >= ePS_MAX) {
+			SystemLogger::GetError() << "[Error] Invalid Pixel shader enumation at RenderShape::SetShaders: " << pf << ". Forcing to ePS_MAX!" << std::endl;
+			pf = ePS_MAX;
+		}
+		if (vf < eVS_BASIC || vf >= eVS_MAX) {
+			SystemLogger::GetError() << "[Error] Invalid Vertex Shader enumation at RenderShape::SetShaders: " << vf << ". Forcing to eVS_MAX!" << std::endl;
+			vf = eVS_MAX;
+		}
+		if (_gf < eGS_PosNormTex || _gf >= eGS_MAX) {
+			SystemLogger::Error() << "Invalid Geometry Shader enumation at RenderShape::SetShaders: " << _gf << ". Forcing to eVS_MAX!" << std::endl;
+			_gf = eGS_MAX;
+		}
+		mContext.mVertexShaderFormat = vf;
+		mContext.mPixelShaderFormat = pf;
+		mContext.mGeoShaderFormat = _gf;
+	}
+
 	RenderShape& RenderShape::AddTexture(const char * _path, TextureType _position) {
-		std::shared_ptr<ID3D11ShaderResourceView*> srv;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
 		TextureManager::TextureStatus stat = TextureManager::Instance()->iGetTexture2D(_path, &srv, nullptr);
 		if (stat == TextureManager::TextureStatus::eSuccess) {
-			mContext.mTextures[_position] = srv;
+			mContext.mTextures[_position] = srv.Get();
 		} else {
 			SystemLogger::GetError() << "[Error] Failed to get synchronous texture from TextureManager!" << std::endl;
 		}
@@ -120,12 +138,18 @@ namespace Epoch {
 		return *this;
 	}
 
-	void RenderShape::Render() {
+	void RenderShape::Render(UINT _instanceCount) const {
 		UINT stride = sizeof(VertexPosNormTex), offset = 0;
-		ID3D11Buffer * vBuffer = VertexBufferManager::GetBuffer(eVERT_POSNORMTEX);
-		Renderer::Instance()->iGetContext()->IASetIndexBuffer(IndexBufferManager::GetBuffer(), DXGI_FORMAT_R32_UINT, 0);
-		Renderer::Instance()->iGetContext()->IASetVertexBuffers(0, 1, &vBuffer, &stride, &offset);
-		Renderer::Instance()->iGetContext()->DrawIndexedInstanced(mIndexCount, 1, mIndexOffset, mVertexOffset, 0);
+		Microsoft::WRL::ComPtr<ID3D11Buffer> vBuffer = VertexBufferManager::GetBuffer(eVERT_POSNORMTEX);
+		Renderer::Instance()->GetContext()->IASetIndexBuffer(IndexBufferManager::GetBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
+		Renderer::Instance()->GetContext()->IASetVertexBuffers(0, 1, vBuffer.GetAddressOf(), &stride, &offset);
+		Renderer::Instance()->GetContext()->DrawIndexedInstanced(mIndexCount, _instanceCount, mIndexOffset, mVertexOffset, 0);
+	}
+
+	bool RenderShape::operator==(const RenderShape & _other) const {
+		return mVertexOffset == _other.mVertexOffset &&
+			mIndexOffset == _other.mIndexOffset &&
+			mContext == _other.mContext;
 	}
 
 }

@@ -29,6 +29,9 @@ namespace Epoch
 		Level();
 		~Level();
 	public:
+		bool ChronoLoop = true;
+		bool flip = true;
+
 		static Level* Instance();
 		static void DestroyInstance();
 		static void Initialize(BaseObject *_headset, BaseObject *_lController, BaseObject *_rController);
@@ -47,7 +50,7 @@ namespace Epoch
 
 		//**SETTERS**//
 		void iSetId(unsigned short _set) { mId = _set; };
-		void iSetHeadsetAndControllers(BaseObject* _headset, BaseObject* _controller1, BaseObject* _controller2, ControllerCollider* _c1Collider, ControllerCollider* _c2Collider);
+		void iSetHeadsetAndControllers(BaseObject*& _headset, BaseObject*& _controller1, BaseObject*& _controller2, ControllerCollider* _c1Collider, ControllerCollider* _c2Collider);
 
 		//**FUNCTIONS**//
 		void iCallStart();

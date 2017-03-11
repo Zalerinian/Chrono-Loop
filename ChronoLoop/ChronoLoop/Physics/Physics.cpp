@@ -786,7 +786,7 @@ namespace Epoch
 						}
 					}
 				}
-				else if (collider->mShouldMove && collider->mColliderType == Collider::eCOLLIDER_Cube)//Check CubeCollider's collision with other objects
+				else if (collider->mColliderType == Collider::eCOLLIDER_Cube)//Check CubeCollider's collision with other objects
 				{
 					CubeCollider aabb1(((CubeCollider*)collider)->mMin, ((CubeCollider*)collider)->mMax);
 					for (int j = 0; j < objs; ++j)
@@ -801,7 +801,7 @@ namespace Epoch
 								{
 									CubeCollider aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
 									//SystemLogger::GetLog() << "Collision State: " << collider->mColliding << std::endl;
-									if (collider->mShouldMove && AABBtoAABB(aabb1, aabb2))
+									if (AABBtoAABB(aabb1, aabb2))
 									{
 										for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
 										{
@@ -996,7 +996,7 @@ namespace Epoch
 					}
 				}
 
-				if (collider->mShouldMove && collider->mColliderType != Collider::eCOLLIDER_Controller)
+				if (collider->mColliderType != Collider::eCOLLIDER_Controller)
 				{
 					if (collider->mShouldMove || !collider->mRewind)
 					{

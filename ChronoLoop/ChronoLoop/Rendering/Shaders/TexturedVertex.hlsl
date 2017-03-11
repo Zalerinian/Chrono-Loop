@@ -1,12 +1,7 @@
 #include "VertexLayouts.hlsli"
 
-cbuffer VPBuffer : register(b0) {
-	matrix view;
-	matrix proj;
-}
-
-cbuffer ModelBuffer : register(b1) {
-	matrix model;
+cbuffer ModelBuffer : register(b0) {
+	matrix model[256];
 }
 
 struct PSI
@@ -16,14 +11,10 @@ struct PSI
 	float4 texCoord :	COLOR;
 };
 
-PSI main(VERTEX_POSNORMTEX input) {
+PSI main(VERTEX_POSNORMTEX input, uint id : SV_InstanceID) {
 	PSI output;
-	float4 pos = input.position;
-	pos = mul(pos, model);
-	pos = mul(pos, view);
-	pos = mul(pos, proj);
-	output.position = pos;
-	output.normal = mul(input.normal, model);
+	output.position = mul(input.position, model[id]);
+	output.normal = mul(input.normal, model[id]);
 	output.texCoord = input.texCoord;
 	return output;
 }

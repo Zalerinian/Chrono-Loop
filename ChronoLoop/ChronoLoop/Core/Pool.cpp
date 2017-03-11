@@ -86,25 +86,48 @@ namespace Epoch
 		return nullptr;
 	}
 
+	void Pool::iRemoveObject(unsigned short _id)
+	{
+			Node *n = mHead, *t = nullptr;
+		while (n != nullptr) {
+			//if head
+			if(n->data->GetUniqueID() == _id && mHead->data->GetUniqueID() == _id)
+			{
+				mHead = n->mNext;
+				delete n;
+				return;
+			}
+			else if(n->data->GetUniqueID() == _id)
+			{
+				t->mNext = n->mNext;
+				delete n;
+				return;
+			}
+			t = n;
+			n = n->mNext;
+		}
+	}
+
 	void Pool::iAddObject(BaseObject * _obj)
 	{
 		Node* n = new Node;
+		//Todo Pat: Find a better way to reassign ids so it doesnt skip
+		_obj->SetUniqueID(_obj->GetObjectCountandIncrement());
 		n->data = _obj;
 		n->mNext = mHead;
 		mHead = n;
 		++mSize;
 	}
 
-	void Pool::iClear()
-	{
+	void Pool::iClear() {
 		Node *n = mHead, *t = nullptr;
-		while (n != nullptr)
-		{
+		while (n != nullptr) {
 			t = n;
 			n = n->mNext;
 			delete t->data;
 			delete t;
 		}
 	}
+
 
 }

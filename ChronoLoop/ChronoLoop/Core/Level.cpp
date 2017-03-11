@@ -99,15 +99,14 @@ namespace Epoch
 		return false;
 	}
 
-	void Level::iSetHeadsetAndControllers(BaseObject * _headset, BaseObject * _controller1, BaseObject * _controller2, ControllerCollider* _c1Collider, ControllerCollider* _c2Collider)
-	{
-		//Remove the action componets and 
-		//Set the new BaseObjects to the current controller so new objects can follow old controller movement as clones.
-		unsigned short headid = _headset->GetUniqueId();
-		unsigned short cl1id = _controller1->GetUniqueId();
-		unsigned short cl2id = _controller2->GetUniqueId();
-		unsigned short c1paramCodeCollid = _c1Collider->GetColliderId();
-		unsigned short c2paramCodeCollid = _c2Collider->GetColliderId();
+void Level::iSetHeadsetAndControllers(BaseObject *& _headset, BaseObject *& _controller1, BaseObject *& _controller2, ControllerCollider* _c1Collider, ControllerCollider* _c2Collider) {
+	//Remove the action componets and 
+	//Set the new BaseObjects to the current controller so new objects can follow old controller movement as clones.
+	unsigned short headid = _headset->GetUniqueID();
+	unsigned short cl1id = _controller1->GetUniqueID();
+	unsigned short cl2id = _controller2->GetUniqueID();
+	unsigned short c1paramCodeCollid = _c1Collider->GetColliderId();
+	unsigned short c2paramCodeCollid = _c2Collider->GetColliderId();
 
 		Component* controller1Collider = mController1->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
 		Component* controller2Collider = mController2->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
@@ -120,14 +119,23 @@ namespace Epoch
 		//mObjectMap[_controller1->GetName()].push_back(_controller1);
 		//mObjectMap[_controller2->GetName()].push_back(_controller2);
 
-		_headset->SetUniqueID(mHeadset->GetUniqueId());
-		_controller1->SetUniqueID(mController1->GetUniqueId());
-		_controller2->SetUniqueID(mController2->GetUniqueId());
-		_headset->SetName(mHeadset->GetName());
-		_controller1->SetName(mController1->GetName());
-		_controller2->SetName(mController2->GetName());
-		_c1Collider->SetComponentId(controller1Collider->GetColliderId());
-		_c2Collider->SetComponentId(controller2Collider->GetColliderId());
+	_headset->SetUniqueID(mHeadset->GetUniqueID());
+	_controller1->SetUniqueID(mController1->GetUniqueID());
+	_controller2->SetUniqueID(mController2->GetUniqueID());
+	_headset->SetName(mHeadset->GetName());
+	_controller1->SetName(mController1->GetName());
+	_controller2->SetName(mController2->GetName());
+	_c1Collider->SetComponentId(controller1Collider->GetColliderId());
+	_c2Collider->SetComponentId(controller2Collider->GetColliderId());
+	
+	mHeadset->SetUniqueID(headid);
+	mController1->SetUniqueID(cl1id);
+	mController2->SetUniqueID(cl2id);
+	mHeadset->SetName(headname);
+	mController1->SetName(Controller1name);
+	mController2->SetName(Controller2name);
+	controller1Collider->SetComponentId(c1paramCodeCollid);
+	controller2Collider->SetComponentId(c2paramCodeCollid);
 
 		mHeadset->SetUniqueID(headid);
 		mController1->SetUniqueID(cl1id);
@@ -143,9 +151,9 @@ namespace Epoch
 		mObjectList.push_back(_controller2);
 
 		////Add the headset and controllers to the time manager with their new ids
-		TimeManager::Instance()->AddPlayerObjectToTimeline(mHeadset);
-		TimeManager::Instance()->AddPlayerObjectToTimeline(mController1);
-		TimeManager::Instance()->AddPlayerObjectToTimeline(mController2);
+		TimeManager::Instance()->AddObjectToTimeline(mHeadset);
+		TimeManager::Instance()->AddObjectToTimeline(mController1);
+		TimeManager::Instance()->AddObjectToTimeline(mController2);
 
 	}
 

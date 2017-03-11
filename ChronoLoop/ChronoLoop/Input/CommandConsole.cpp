@@ -162,11 +162,11 @@ namespace Epoch
 			else
 			{
 				std::cout << "\n";
-				for (auto iter = temp.begin(); iter != temp.end(); iter++)
+				for (auto iter = temp.begin(); iter != temp.end(); ++iter)
 				{
 					if (cnt % 2 == 0)
 					{
-						tempDisplay += (*iter) + L"\t\t";
+						tempDisplay += (*iter) + L" ";
 					}
 					else
 					{
@@ -220,37 +220,37 @@ namespace Epoch
 			sInstance->DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /ALL (ON/OFF)");
 		}
 	}
-	 void CommandConsole::DisplayFPS()
-    {
-        if (isFPSon)
-        {
-            float _deltaTime = TimeManager::Instance()->GetDeltaTime();
-            sInstance->mFrameTime += _deltaTime;
-            if (sInstance->mFrameTime > .5f)
-            {
-                sInstance->tempFps += (int)(1000.0f / (_deltaTime * 1000));
-                sInstance->mFrameTime = 0;
-                sInstance->mFpsCounter++;
-                sInstance->mFps = (int)(sInstance->tempFps / sInstance->mFpsCounter);
-            }
-            Font* tempFont;
-            if (!mIsVR)
-            {
-                tempFont = new Font(L"Times New Roman", 25, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
-            }
-            else
-            {
-                tempFont = new Font(L"Times New Roman", 40, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
-            }
+	void CommandConsole::DisplayFPS()
+	{
+		if (isFPSon)
+		{
+			float _deltaTime = TimeManager::Instance()->GetDeltaTime();
+			sInstance->mFrameTime += _deltaTime;
+			if (sInstance->mFrameTime > .5f)
+			{
+				sInstance->tempFps += (int)(1000.0f / (_deltaTime * 1000));
+				sInstance->mFrameTime = 0;
+				sInstance->mFpsCounter++;
+				sInstance->mFps = (int)(sInstance->tempFps / sInstance->mFpsCounter);
+			}
+			Font* tempFont;
+			if (!mIsVR)
+			{
+				tempFont = new Font(L"Times New Roman", 25, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+			}
+			else
+			{
+				tempFont = new Font(L"Times New Roman", 40, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+			}
 
-            std::wstring FPS = L"FPS: " + std::to_wstring(sInstance->mFps);
-            Draw::Instance().DrawTextToBitmap(
-                (*Draw::Instance().GetContext2D())->GetSize().width*(25.0f / 32.0f),
-                (*Draw::Instance().GetContext2D())->GetSize().height*(30.5f / 32.0f),
-                (*Draw::Instance().GetContext2D())->GetSize().width,
-                (*Draw::Instance().GetContext2D())->GetSize().height, *tempFont,
-                FPS, *(Draw::Instance().GetScreenBitmap()).get());
-        }
+			std::wstring FPS = L"FPS: " + std::to_wstring(sInstance->mFps);
+			Draw::Instance().DrawTextToBitmap(
+				(*Draw::Instance().GetContext2D())->GetSize().width*(25.0f / 32.0f),
+				(*Draw::Instance().GetContext2D())->GetSize().height*(30.5f / 32.0f),
+				(*Draw::Instance().GetContext2D())->GetSize().width,
+				(*Draw::Instance().GetContext2D())->GetSize().height, *tempFont,
+				FPS, *(Draw::Instance().GetScreenBitmap()).get());
+		}
 	}
 	void CommandConsole::InputFunction()
 	{

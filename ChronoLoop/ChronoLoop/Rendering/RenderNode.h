@@ -21,6 +21,8 @@ namespace Epoch {
 		inline RenderNode* GetPrevious() const { return mPrevious; }
 		inline RenderNode& SetNext(RenderNode* n) { mNext = n; return *this; }
 		inline RenderNode& SetPrevious(RenderNode *n) { mPrevious = n; return *this; }
+		inline void SetName(std::string _n) { mName = _n; }
+		inline std::string GetName() { return mName; }
 	protected:
 		std::string mName;
 		RenderNode* mNext, *mPrevious;

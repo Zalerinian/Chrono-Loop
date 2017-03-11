@@ -14,7 +14,7 @@ namespace Epoch {
 	}
 
 	void InputLayoutManager::Initialize() {
-		ID3D11Device* DEVICE = Renderer::Instance()->iGetDevice().Get();
+		ID3D11Device* DEVICE = Renderer::Instance()->GetDevice().Get();
 		char* buffer = nullptr;
 		int bufferSize = 0;
 		D3D11_INPUT_ELEMENT_DESC PosDesc[] =
@@ -113,7 +113,7 @@ namespace Epoch {
 	}
 
 	void InputLayoutManager::ApplyLayout(VertFormat v) {
-		Renderer::Instance()->iGetContext()->IASetInputLayout(mInputLayouts[v]);
-		Renderer::Instance()->iGetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		Renderer::Instance()->GetContext()->IASetInputLayout(mInputLayouts[v]);
+		Renderer::Instance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
 }
