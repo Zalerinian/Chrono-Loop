@@ -17,14 +17,14 @@
     <Name>Cube.001</Name>
     <Mesh>Cube.obj</Mesh>
     <Texture>skybox.dds</Texture>
-    <Position>0,0,7.917261</Position>
-    <Rotation>0,0,0</Rotation>
+    <Position>7.48746,0,7.917261</Position>
+    <Rotation>0,1.156749,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components>
       <Collider>
         <Type>OBB</Type>
         <Trigger>True</Trigger>
-        <Position>0,0,0</Position>
+        <Position>3,0,0</Position>
         <Rotation>0,0,0</Rotation>
         <Scale>3.6,1,1</Scale>
       </Collider>
@@ -34,7 +34,7 @@
     <Name>Icosphere</Name>
     <Mesh>Sphere.obj</Mesh>
     <Position>0,0,-7.132091</Position>
-    <Rotation>0,0,0</Rotation>
+    <Rotation>-0.993966,0,0</Rotation>
     <Scale>1.6,4.2,1</Scale>
     <Components>
       <Collider>
@@ -42,7 +42,7 @@
         <Trigger>False</Trigger>
         <Position>0,0,0</Position>
         <Rotation>0,0,0</Rotation>
-        <Scale>1,1,1</Scale>
+        <Scale>3.6,1,1</Scale>
       </Collider>
     </Components>
   </Object>

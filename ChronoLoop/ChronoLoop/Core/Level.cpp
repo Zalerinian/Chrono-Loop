@@ -220,7 +220,7 @@ void Level::iSetHeadsetAndControllers(BaseObject *& _headset, BaseObject *& _con
 							{
 								size_t pos = 0;
 								int i = 0;
-								std::string s = std::string(pData->Value());
+								std::string s = std::string(pData->Value()) + ',';
 								while ((pos = s.find(",")) != std::string::npos)
 								{
 									std::string token = s.substr(0, pos);
@@ -236,7 +236,7 @@ void Level::iSetHeadsetAndControllers(BaseObject *& _headset, BaseObject *& _con
 							{
 								size_t pos = 0;
 								int i = 0;
-								std::string s = std::string(pData->Value());
+								std::string s = std::string(pData->Value()) + ',';
 								while ((pos = s.find(",")) != std::string::npos)
 								{
 									std::string token = s.substr(0, pos);
@@ -249,7 +249,7 @@ void Level::iSetHeadsetAndControllers(BaseObject *& _headset, BaseObject *& _con
 							{
 								size_t pos = 0;
 								int i = 0;
-								std::string s = std::string(pData->Value());
+								std::string s = std::string(pData->Value()) + ',';
 								while ((pos = s.find(",")) != std::string::npos)
 								{
 									std::string token = s.substr(0, pos);
