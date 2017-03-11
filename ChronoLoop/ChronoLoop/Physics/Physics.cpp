@@ -701,130 +701,142 @@ namespace Epoch
 			{
 				collider = (Collider*)mObjects[i]->mComponents[eCOMPONENT_COLLIDER][x];
 				collider->mTotalForce = collider->mForces + collider->mWeight + collider->mDragForce;
-
-				if (collider->mShouldMove && collider->mColliderType == Collider::eCOLLIDER_Sphere)//Check SphereCollider's collision with other objects
+				if (collider->mIsTrigger || collider->mShouldMove)
 				{
-					SphereCollider s1(((SphereCollider*)collider)->GetPos(), ((SphereCollider*)collider)->mRadius);
-					for (int j = 0; j < objs; ++j)
-					{
-						if (mObjects[j] != mObjects[i])
-						{
-							int othercols = (int)mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
-							for (int k = 0; k < othercols; ++k)
-							{
-								otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
-								//if (otherCol->mColliderType == Collider::eCOLLIDER_Mesh)
-								//{
-								//	//Not sure what outnorm is used for at the moment might just stick with basic cube/sphere collisions
-								//	if (MovingSphereToMesh(collider->GetPos(), collider->mVelocity, ((SphereCollider*)collider)->mRadius, ((MeshCollider*)otherCol)->mMesh, _time, norm))
-								//	{
-								//		
-								//	}
-								//}
-								if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
-								{
-									SphereCollider s2(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
-									if (SphereToSphere(s1, s2))
-									{
-										for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
-										{
-											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
-											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
-										}
-									}
-								}
-								else if (otherCol->mColliderType == Collider::eCOLLIDER_Cube)
-								{
-									CubeCollider aabb(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
-									if (SphereToAABB(s1, aabb))
-									{
-										for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
-										{
-											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
-											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
-										}
-									}
-								}
-								else if (otherCol->mColliderType == Collider::eCOLLIDER_Plane)
-								{
-									PlaneCollider plane(((PlaneCollider*)otherCol)->mNormal, ((PlaneCollider*)otherCol)->mOffset);
-									int result = SphereToPlane(plane, s1);
-									if (result == 2)//behind plane
-									{
-										float bottom = ((SphereCollider*)collider)->mCenter.y - ((SphereCollider*)collider)->mRadius;
-										if (bottom < otherCol->GetPos().y)
-										{
-											vec4f pos = collider->GetPos();
-											collider->SetPos(vec4f(pos.x, otherCol->GetPos().y + ((CubeCollider*)collider)->mMinOffset.y, pos.z, 1));
 
-											CalcFriction(*collider, plane.mNormal, otherCol->mStaticFriction, otherCol->mKineticFriction);
+					if (collider->mColliderType == Collider::eCOLLIDER_Sphere)//Check SphereCollider's collision with other objects
+					{
+						SphereCollider s1(((SphereCollider*)collider)->GetPos(), ((SphereCollider*)collider)->mRadius);
+						for (int j = 0; j < objs; ++j)
+						{
+							if (mObjects[j] != mObjects[i])
+							{
+								int othercols = (int)mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
+								for (int k = 0; k < othercols; ++k)
+								{
+									otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
+									//if (otherCol->mColliderType == Collider::eCOLLIDER_Mesh)
+									//{
+									//	//Not sure what outnorm is used for at the moment might just stick with basic cube/sphere collisions
+									//	if (MovingSphereToMesh(collider->GetPos(), collider->mVelocity, ((SphereCollider*)collider)->mRadius, ((MeshCollider*)otherCol)->mMesh, _time, norm))
+									//	{
+									//		
+									//	}
+									//}
+									if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
+									{
+										SphereCollider s2(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
+										if (SphereToSphere(s1, s2))
+										{
 											for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
 											{
-												((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
-												((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+												if(collider->mIsTrigger)
+													((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+												else
+													((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
 											}
 										}
 									}
-									else if (result == 3)// intersecting plane
+									else if (otherCol->mColliderType == Collider::eCOLLIDER_Cube)
 									{
-										CalcFriction(*collider, plane.mNormal, otherCol->mStaticFriction, otherCol->mKineticFriction);
-										for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
+										CubeCollider aabb(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
+										if (SphereToAABB(s1, aabb))
 										{
-											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
-											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+											for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
+											{
+												if (collider->mIsTrigger)
+													((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+												else
+													((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
+											}
 										}
-
-										float bottom = ((SphereCollider*)collider)->mCenter.y - ((SphereCollider*)collider)->mRadius;
-										if (bottom < otherCol->GetPos().y)
+									}
+									else if (otherCol->mColliderType == Collider::eCOLLIDER_Plane)
+									{
+										PlaneCollider plane(((PlaneCollider*)otherCol)->mNormal, ((PlaneCollider*)otherCol)->mOffset);
+										int result = SphereToPlane(plane, s1);
+										if (result == 2)//behind plane
 										{
-											vec4f pos = collider->GetPos();
-											collider->SetPos(vec4f(pos.x, otherCol->GetPos().y + fabsf(((SphereCollider*)collider)->mRadius), pos.z, 1));
+											float bottom = ((SphereCollider*)collider)->mCenter.y - ((SphereCollider*)collider)->mRadius;
+											if (bottom < otherCol->GetPos().y)
+											{
+												vec4f pos = collider->GetPos();
+												collider->SetPos(vec4f(pos.x, otherCol->GetPos().y + ((CubeCollider*)collider)->mMinOffset.y, pos.z, 1));
+
+												CalcFriction(*collider, plane.mNormal, otherCol->mStaticFriction, otherCol->mKineticFriction);
+												for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
+												{
+													if (collider->mIsTrigger)
+														((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+													else
+														((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
+												}
+											}
+										}
+										else if (result == 3)// intersecting plane
+										{
+											CalcFriction(*collider, plane.mNormal, otherCol->mStaticFriction, otherCol->mKineticFriction);
+											for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
+											{
+												if (collider->mIsTrigger)
+													((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+												else
+													((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
+											}
+
+											float bottom = ((SphereCollider*)collider)->mCenter.y - ((SphereCollider*)collider)->mRadius;
+											if (bottom < otherCol->GetPos().y)
+											{
+												vec4f pos = collider->GetPos();
+												collider->SetPos(vec4f(pos.x, otherCol->GetPos().y + fabsf(((SphereCollider*)collider)->mRadius), pos.z, 1));
+											}
 										}
 									}
 								}
 							}
 						}
 					}
-				}
-				else if (collider->mColliderType == Collider::eCOLLIDER_Cube)//Check CubeCollider's collision with other objects
-				{
-					CubeCollider aabb1(((CubeCollider*)collider)->mMin, ((CubeCollider*)collider)->mMax);
-					for (int j = 0; j < objs; ++j)
+					else if (collider->mColliderType == Collider::eCOLLIDER_Cube)//Check CubeCollider's collision with other objects
 					{
-						if (mObjects[j] != mObjects[i])
+						CubeCollider aabb1(((CubeCollider*)collider)->mMin, ((CubeCollider*)collider)->mMax);
+						for (int j = 0; j < objs; ++j)
 						{
-							int othercols = (int)mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
-							for (int k = 0; k < othercols; ++k)
+							if (mObjects[j] != mObjects[i])
 							{
-								otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
-								if (otherCol->mColliderType == Collider::eCOLLIDER_Cube)
+								int othercols = (int)mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
+								for (int k = 0; k < othercols; ++k)
 								{
-									CubeCollider aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
-									//SystemLogger::GetLog() << "Collision State: " << collider->mColliding << std::endl;
-									if (AABBtoAABB(aabb1, aabb2))
+									otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
+									if (otherCol->mColliderType == Collider::eCOLLIDER_Cube)
 									{
-										for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
+										CubeCollider aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
+										//SystemLogger::GetLog() << "Collision State: " << collider->mColliding << std::endl;
+										if (AABBtoAABB(aabb1, aabb2))
 										{
-											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
-											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+											for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
+											{
+												if (collider->mIsTrigger)
+													((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+												else
+													((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
+											}
 										}
 									}
-								}
-								else if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
-								{
-									SphereCollider s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
-									if (SphereToAABB(s1, aabb1))
+									else if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
 									{
-										for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
+										SphereCollider s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
+										if (SphereToAABB(s1, aabb1))
 										{
-											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
-											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+											for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
+											{
+												if (collider->mIsTrigger)
+													((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+												else
+													((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
+											}
 										}
 									}
-								}
-								else if (otherCol->mColliderType == Collider::eCOLLIDER_Plane)
-								{
-									if (collider->mShouldMove)
+									else if (otherCol->mColliderType == Collider::eCOLLIDER_Plane)
 									{
 										PlaneCollider plane(((PlaneCollider*)otherCol)->mNormal, ((PlaneCollider*)otherCol)->mOffset);
 										int result = AabbToPlane(plane, aabb1);
@@ -838,8 +850,10 @@ namespace Epoch
 												CalcFriction(*collider, plane.mNormal, otherCol->mStaticFriction, otherCol->mKineticFriction);
 												for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
 												{
-													((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
-													((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+													if (collider->mIsTrigger)
+														((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+													else
+														((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
 												}
 											}
 										}
@@ -848,8 +862,10 @@ namespace Epoch
 											CalcFriction(*collider, plane.mNormal, otherCol->mStaticFriction, otherCol->mKineticFriction);
 											for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
 											{
-												((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
-												((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+												if (collider->mIsTrigger)
+													((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+												else
+													((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
 											}
 
 											if (((CubeCollider*)collider)->mMin.y < otherCol->GetPos().y)
@@ -863,86 +879,86 @@ namespace Epoch
 							}
 						}
 					}
-				}
-				else if (collider->mColliderType == Collider::eCOLLIDER_OrientedCube)
-				{
-					for (int j = 0; j < objs; ++j)
+					else if (collider->mColliderType == Collider::eCOLLIDER_OrientedCube)
 					{
-						if (mObjects[j] != mObjects[i])
+						for (int j = 0; j < objs; ++j)
 						{
-							int othercols = (int)mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
-							for (int k = 0; k < othercols; ++k)
+							if (mObjects[j] != mObjects[i])
 							{
-								otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
-								if (otherCol->mColliderType == Collider::eCOLLIDER_OrientedCube)
+								int othercols = (int)mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
+								for (int k = 0; k < othercols; ++k)
 								{
-									if (collider->mShouldMove && OBBtoOBB(*((OrientedCubeCollider*)collider), *((OrientedCubeCollider*)otherCol)))
+									otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
+									if (otherCol->mColliderType == Collider::eCOLLIDER_OrientedCube)
 									{
-										collider->mShouldMove = false;
-									}
-								}
-								else if (otherCol->mColliderType == Collider::eCOLLIDER_Plane)
-								{
-									if (collider->mShouldMove && OBBtoPlane(*((OrientedCubeCollider*)collider), *((PlaneCollider*)otherCol)))
-									{
-										collider->mShouldMove = false;
-									}
-								}
-							}
-						}
-					}
-				}
-				else if (collider->mColliderType == Collider::eCOLLIDER_Button)//Check ButtonCollider's collision with other objects/controller
-				{
-					CubeCollider aabb1(((ButtonCollider*)collider)->mMin, ((ButtonCollider*)collider)->mMax);
-					if (AabbToPlane(((ButtonCollider*)collider)->mUpperBound, aabb1) != 2)
-					{
-						collider->mVelocity = { 0,0,0,0 };
-						collider->mAcceleration = { 0,0,0,0 };
-						collider->mTotalForce = { 0,0,0,0 };
-					}
-
-					for (int j = 0; j < objs; ++j)
-					{
-						if (mObjects[j] != mObjects[i])
-						{
-							int othercols = (int)mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
-							for (int k = 0; k < othercols; ++k)
-							{
-								otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
-								if (otherCol->mColliderType == Collider::eCOLLIDER_Cube || otherCol->mColliderType == Collider::eCOLLIDER_Controller)
-								{
-									CubeCollider aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
-									if (collider->mShouldMove && (AabbToPlane(((ButtonCollider*)collider)->mLowerBound, aabb1) == 1) && AABBtoAABB(aabb1, aabb2))
-									{
-										for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
+										if (OBBtoOBB(*((OrientedCubeCollider*)collider), *((OrientedCubeCollider*)otherCol)))
 										{
-											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
-											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+											collider->mShouldMove = false;
 										}
 									}
-								}
-								else if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
-								{
-									SphereCollider s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
-									if (collider->mShouldMove && (AabbToPlane(((ButtonCollider*)collider)->mLowerBound, aabb1) == 1) && SphereToAABB(s1, aabb1))
+									else if (otherCol->mColliderType == Collider::eCOLLIDER_Plane)
 									{
-										for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
+										if (OBBtoPlane(*((OrientedCubeCollider*)collider), *((PlaneCollider*)otherCol)))
 										{
-											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
-											((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+											collider->mShouldMove = false;
 										}
 									}
 								}
 							}
 						}
 					}
-
-					if (AabbToPlane(((ButtonCollider*)collider)->mLowerBound, aabb1) != 1)
+					else if (collider->mColliderType == Collider::eCOLLIDER_Button)//Check ButtonCollider's collision with other objects/controller
 					{
-						collider->mVelocity = -collider->mVelocity;
-						collider->mAcceleration = -collider->mAcceleration;
-						collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
+						CubeCollider aabb1(((ButtonCollider*)collider)->mMin, ((ButtonCollider*)collider)->mMax);
+						if (AabbToPlane(((ButtonCollider*)collider)->mUpperBound, aabb1) != 2)
+						{
+							collider->mVelocity = { 0,0,0,0 };
+							collider->mAcceleration = { 0,0,0,0 };
+							collider->mTotalForce = { 0,0,0,0 };
+						}
+
+						for (int j = 0; j < objs; ++j)
+						{
+							if (mObjects[j] != mObjects[i])
+							{
+								int othercols = (int)mObjects[j]->mComponents[eCOMPONENT_COLLIDER].size();
+								for (int k = 0; k < othercols; ++k)
+								{
+									otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
+									if (otherCol->mColliderType == Collider::eCOLLIDER_Cube || otherCol->mColliderType == Collider::eCOLLIDER_Controller)
+									{
+										CubeCollider aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
+										if ((AabbToPlane(((ButtonCollider*)collider)->mLowerBound, aabb1) == 1) && AABBtoAABB(aabb1, aabb2))
+										{
+											for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
+											{
+												((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
+												((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+											}
+										}
+									}
+									else if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
+									{
+										SphereCollider s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
+										if ((AabbToPlane(((ButtonCollider*)collider)->mLowerBound, aabb1) == 1) && SphereToAABB(s1, aabb1))
+										{
+											for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
+											{
+												((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
+												((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+											}
+										}
+									}
+								}
+							}
+						}
+
+						if (AabbToPlane(((ButtonCollider*)collider)->mLowerBound, aabb1) != 1)
+						{
+							collider->mVelocity = -collider->mVelocity;
+							collider->mAcceleration = -collider->mAcceleration;
+							collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
+						}
 					}
 				}
 				else if (collider->mColliderType == Collider::eCOLLIDER_Controller)//Update ControllerCollider position, do not apply physics to player
@@ -956,21 +972,24 @@ namespace Epoch
 							for (int k = 0; k < othercols; ++k)
 							{
 								otherCol = (Collider*)mObjects[j]->mComponents[eCOMPONENT_COLLIDER][k];
-								if (otherCol->mShouldMove && otherCol->mColliderType == Collider::eCOLLIDER_Cube)
+								if (otherCol->mShouldMove)
 								{
-									CubeCollider aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
-									if (AABBtoAABB(aabb1, aabb2))
-										((ControllerCollider*)collider)->mHitting.insert(otherCol);
-									else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
-										((ControllerCollider*)collider)->mHitting.erase(otherCol);
-								}
-								else if (otherCol->mShouldMove && otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
-								{
-									SphereCollider s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
-									if (SphereToAABB(s1, aabb1))
-										((ControllerCollider*)collider)->mHitting.insert(otherCol);
-									else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
-										((ControllerCollider*)collider)->mHitting.erase(otherCol);
+									if (otherCol->mColliderType == Collider::eCOLLIDER_Cube)
+									{
+										CubeCollider aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
+										if (AABBtoAABB(aabb1, aabb2))
+											((ControllerCollider*)collider)->mHitting.insert(otherCol);
+										else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
+											((ControllerCollider*)collider)->mHitting.erase(otherCol);
+									}
+									else if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
+									{
+										SphereCollider s1(otherCol->GetPos(), ((SphereCollider*)otherCol)->mRadius);
+										if (SphereToAABB(s1, aabb1))
+											((ControllerCollider*)collider)->mHitting.insert(otherCol);
+										else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
+											((ControllerCollider*)collider)->mHitting.erase(otherCol);
+									}
 								}
 							}
 						}
@@ -996,20 +1015,17 @@ namespace Epoch
 					}
 				}
 
-				if (collider->mColliderType != Collider::eCOLLIDER_Controller)
+				if (collider->mShouldMove && !collider->mRewind)
 				{
-					if (collider->mShouldMove || !collider->mRewind)
-					{
-						collider->mDragForce = collider->mVelocity * (-0.5f * collider->mRHO * collider->mVelocity.Magnitude3() * collider->mDrag * collider->mArea);
-						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
-						collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
-						collider->mRewind = false;
+					collider->mDragForce = collider->mVelocity * (-0.5f * collider->mRHO * collider->mVelocity.Magnitude3() * collider->mDrag * collider->mArea);
+					collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
+					collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
+					collider->mRewind = false;
 
-						if (!collider->mRewind && fabs(collider->mForces.x) < 0.01f && fabsf(collider->mForces.y) < 0.01f && fabsf(collider->mForces.z) < 0.01f)
-							collider->mForces = { 0,0,0,0 };
-						else
-							collider->mForces *= 0.99f;
-					}
+					if (!collider->mRewind && fabs(collider->mForces.x) < 0.01f && fabsf(collider->mForces.y) < 0.01f && fabsf(collider->mForces.z) < 0.01f)
+						collider->mForces = { 0,0,0,0 };
+					else
+						collider->mForces *= 0.99f;
 
 					collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
 				}

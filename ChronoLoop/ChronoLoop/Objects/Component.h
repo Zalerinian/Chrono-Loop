@@ -110,7 +110,7 @@ namespace Epoch
 		};
 
 		ColliderType mColliderType;
-		bool mShouldMove, mRewind;
+		bool mShouldMove, mIsTrigger, mRewind;
 		vec4f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity, mWeight, mDragForce;
 		float mMass, mElasticity, mKineticFriction, mStaticFriction, mInvMass, mRHO, mDrag, mArea;
 
@@ -134,7 +134,7 @@ namespace Epoch
 	{
 	public:
 		SphereCollider() {}
-		SphereCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _radius);
+		SphereCollider(BaseObject* _obj, bool _move, bool _trigger, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _radius);
 		SphereCollider(vec4f _pos, float _rad) { mCenter = _pos; mRadius = _rad; };
 		vec4f mCenter;
 		float mRadius;
@@ -145,7 +145,7 @@ namespace Epoch
 	{
 	public:
 		PlaneCollider() {}
-		PlaneCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _offset, vec4f _norm);
+		PlaneCollider(BaseObject* _obj, bool _move, bool _trigger, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _offset, vec4f _norm);
 		PlaneCollider(vec4f _norm, float _offset) { mNormal = _norm; mOffset = _offset; };
 		vec4f mNormal, mMin, mMax;
 		float mOffset;
@@ -162,7 +162,7 @@ namespace Epoch
 	{
 	public:
 		CubeCollider() {}
-		CubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec4f _min, vec4f _max);
+		CubeCollider(BaseObject* _obj, bool _move, bool _trigger, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec4f _min, vec4f _max);
 		CubeCollider(vec4f _min, vec4f _max) { mMin = _min; mMax = _max; };
 		vec4f mMin, mMax, mMinOffset, mMaxOffset;
 		virtual void SetPos(const vec4f& _newPos);
@@ -172,7 +172,7 @@ namespace Epoch
 	{
 	public:
 		OrientedCubeCollider() {}
-		OrientedCubeCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _xRadius, float _yRadius, float _zRadius);
+		OrientedCubeCollider(BaseObject* _obj, bool _move, bool _trigger, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _xRadius, float _yRadius, float _zRadius);
 		vec4f mCenter;
 		float mWidth, mHeight, mDepth;
 		vec4f mAxis[3];
