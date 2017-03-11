@@ -22,10 +22,6 @@ namespace Epoch
 		float size;
 		float pad[3];
 	};
-	struct ParticleData
-	{
-		vec4f pos, vel;
-	};
 	struct GSMatrix
 	{
 		matrix4 model;

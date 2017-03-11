@@ -607,9 +607,6 @@
     <FxCompile Include="GSParticles.hlsl">
       <Filter>Particles\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="BasicParticleCS.hlsl">
-      <Filter>Particles\Shaders</Filter>
-    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
