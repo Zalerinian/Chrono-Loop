@@ -111,8 +111,6 @@ namespace Epoch
 	void Pool::iAddObject(BaseObject * _obj)
 	{
 		Node* n = new Node;
-		//Todo Pat: Find a better way to reassign ids so it doesnt skip
-		_obj->SetUniqueID(_obj->GetObjectCountandIncrement());
 		n->data = _obj;
 		n->mNext = mHead;
 		mHead = n;
