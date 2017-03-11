@@ -56,10 +56,9 @@ namespace Epoch {
 
 		while(temp)
 		{
-
 			//If greater than current but there is no next
 			//Move Current pointer if we don't have a next so we can continue to record.
-			if (_data->mData.mLastFrame >= temp->mData.mLastFrame && (_data->mData.mLastFrame == temp->mData.mLastFrame && _data->mData.mTime > temp->mData.mTime) && !temp->mNext)
+			if ((_data->mData.mLastFrame >= temp->mData.mLastFrame || (_data->mData.mLastFrame == temp->mData.mLastFrame && _data->mData.mTime > temp->mData.mTime)) && !temp->mNext)
 			{
 				Push_back(_data);
 				return;
