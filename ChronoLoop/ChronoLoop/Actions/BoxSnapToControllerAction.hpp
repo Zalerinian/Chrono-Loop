@@ -21,15 +21,23 @@ namespace Epoch {
 		virtual void Update() override {
 			if (VRInputManager::GetInstance().IsVREnabled() && VRInputManager::GetInstance().GetInputTimeline()->GetCurr() && VRInputManager::GetInstance().GetInputTimeline()->GetCurr()->mData.mControllerId == mObject->GetUniqueId())
 			{
-				mInput = VRInputManager::GetInstance().GetInputTimeline()->GetCurr();
+				InputTimeline::InputNode*temp = VRInputManager::GetInstance().FindLastInput(mCollider->GetBaseObject()->GetUniqueID());
+				//This is gross but i dont know how to get around this without storing mheld and should move in timeline
+				if (mInput && temp && mPickUp && (temp->mData.mLastFrame < mInput->mData.mLastFrame || (temp->mData.mLastFrame == mInput->mData.mLastFrame && temp->mData.mTime < mInput->mData.mTime))) {
+					mHeld = false;
+					mPickUp->mShouldMove = true;
+					SystemLogger::GetLog() << "Should move on:: Old: snap = " << mInput->mData.mLastFrame << " time= " << mInput->mData.mTime << "   New: snap = " << temp->mData.mLastFrame << " time= " << temp->mData.mTime << std::endl;
+				}
+
+				mInput = temp;
 			}
 			//SystemLogger::GetLog() << mCollider->mHitting.size() << std::endl;
 			if (VRInputManager::GetInstance().IsVREnabled() && mInput) {
-
 				if (mHeld && mPickUp != nullptr) {
 					matrix4 m = mObject->GetTransform().GetMatrix();
 					mPickUp->SetPos(m.Position);
-					if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == 1) {
+					if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == 1 && mHeld) {
+						SystemLogger::GetLog() << "Id: " << mCollider->GetBaseObject()->GetUniqueId() << " Released object" << std::endl;
 						ReleaseObject();
 					}
 				} else if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == -1 && !mHeld && !mCollider->mHitting.empty()) {

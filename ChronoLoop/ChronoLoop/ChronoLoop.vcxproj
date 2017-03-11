@@ -228,6 +228,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Common\Math\vec4f.h" />
     <ClInclude Include="Common\Math\vec4i.h" />
     <ClInclude Include="Core\Level.h" />
+    <ClInclude Include="Core\LevelManager.h" />
     <ClInclude Include="Core\Pool.h" />
     <ClInclude Include="Core\Timeline.h" />
     <ClInclude Include="Core\TimeManager.h" />
@@ -246,6 +247,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Rendering\IndexBufferManager.h" />
     <ClInclude Include="Rendering\InputLayoutManager.h" />
     <ClInclude Include="Rendering\Mesh.h" />
+    <ClInclude Include="Rendering\MeshCache.h" />
     <ClInclude Include="Rendering\RasterizerStateManager.h" />
     <ClInclude Include="Rendering\RenderContext.h" />
     <ClInclude Include="Rendering\Renderer.h" />
@@ -361,6 +363,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClCompile Include="Common\Math\vec4f.cpp" />
     <ClCompile Include="Common\Math\vec4i.cpp" />
     <ClCompile Include="Core\Level.cpp" />
+    <ClCompile Include="Core\LevelManager.cpp" />
     <ClCompile Include="Core\Pool.cpp" />
     <ClCompile Include="Core\Timeline.cpp" />
     <ClCompile Include="Core\TimeManager.cpp" />
@@ -379,6 +382,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClCompile Include="Rendering\IndexBufferManager.cpp" />
     <ClCompile Include="Rendering\InputLayoutManager.cpp" />
     <ClCompile Include="Rendering\Mesh.cpp" />
+    <ClCompile Include="Rendering\MeshCache.cpp" />
     <ClCompile Include="Rendering\RasterizerStateManager.cpp" />
     <ClCompile Include="Rendering\RenderContext.cpp" />
     <ClCompile Include="Rendering\Renderer.cpp" />

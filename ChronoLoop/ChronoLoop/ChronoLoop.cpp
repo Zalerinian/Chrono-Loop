@@ -67,7 +67,7 @@ void UpdateTime();
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(7251);
+	//_CrtSetBreakAlloc(11892);
 	if (!InitializeWindow(hInstance, nCmdShow, 1366, 720, true)) {
 		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
 		return 2;
@@ -530,8 +530,8 @@ void Update() {
 	Physics::Instance()->mObjects.push_back(RightController);
 	Physics::Instance()->mObjects.push_back(LeftController);
 	Physics::Instance()->mObjects.push_back(Button);
-	Level::Initialize(headset, RightController, LeftController);
 	
+	Level::Initialize(headset, RightController, LeftController);
 	Level* L1 = Level::Instance(); 
 	L1->iAddObject(PhysicsBox);
 	L1->iAddObject(PhysicsBox2);

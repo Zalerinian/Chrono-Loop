@@ -59,6 +59,10 @@ namespace Epoch
 			mNeed = _shit;
 		}
 
+		~Message() {
+			delete mNeed;
+		}
+
 #pragma region Operator Overrides
 
 		//Is older

@@ -1,9 +1,9 @@
 #pragma once
-#include "Renderer.h"
-#include "RasterizerStateManager.h"
-#include "ShaderManager.h"
-#include "InputLayoutManager.h"
-#include "TextureManager.h"
+#include "../Rendering/Renderer.h"
+#include "../Rendering/RasterizerStateManager.h"
+#include "../Rendering/ShaderManager.h"
+#include "../Rendering/InputLayoutManager.h"
+#include "../Rendering/TextureManager.h"
 #include "../Input/VRInputManager.h"
 #include "../Core/TimeManager.h"
 #include "../Physics/Physics.h"
@@ -11,6 +11,9 @@
 #include "../Rendering/IndexBufferManager.h"
 #include "../Rendering/VertexBufferManager.h"
 #include "../Core/Level.h"
+#include "../Rendering/MeshCache.h"
+#include "../Input/CommandConsole.h"
+#include "../Input/KeyboardInput.h"
 
 namespace Epoch {
 	bool InitializeSystems(HWND _Window, unsigned int _width, unsigned int _height,
@@ -28,10 +31,16 @@ namespace Epoch {
 		IndexBufferManager::GetInstance();
 		VertexBufferManager::Instance();
 		// Level is initialized in ChronoLoop
+		MeshCache::GetInstance();
+		CommandConsole::Instance();
+		KeyboardInput::Instance();
 		return true;
 	}
 
 	bool ShutdownSystems() {
+		KeyboardInput::DestroyInstance();
+		CommandConsole::DestroyInstance();
+		MeshCache::DestroyInstance();
 		Level::DestroyInstance();
 		VertexBufferManager::Shutdown();
 		IndexBufferManager::DestroyInstance();

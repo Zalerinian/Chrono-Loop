@@ -172,4 +172,22 @@ namespace Epoch {
 		//SystemLogger::GetLog() << "Rewinded to before " << _frame << std::endl;
 	}
 
+	InputTimeline::InputNode * VIM::FindLastInput(unsigned short _id) {
+
+		InputTimeline::InputNode* temp = mInputTimeline->GetCurr();
+		while (temp) {
+			if (temp->mData.mControllerId == _id) {
+				return temp;
+			}
+			if (temp->mPrev) {
+				temp = temp->mPrev;
+			}
+			if (!temp->mPrev) {
+				return nullptr;
+			}
+		}
+		return nullptr;
+	}
+
+
 }

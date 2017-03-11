@@ -16,6 +16,7 @@ namespace Epoch
 
 	private:
 		bool mTakeInput; //On/Off switch
+		bool mTerminateThread = false;
 
 		static CommandConsole* sInstance;
 		std::wstring mCurCommand; //A string to hold the thing that's being typed to the console
@@ -34,7 +35,7 @@ namespace Epoch
 		//SystemLogger mLogger;
 	public:
 		CommandConsole();
-		~CommandConsole() {};
+		~CommandConsole() { mTerminateThread = true; mInputThread.join(); };
 		static CommandConsole& Instance();
 		static void DestroyInstance();
 
