@@ -39,7 +39,7 @@
 using namespace Epoch;
 
 #define CONSOLE_OVERRIDE 1
-#define FIXED_UPDATE_INTERVAL (1 / 120.0f)
+#define FIXED_UPDATE_INTERVAL (1 / 180.0f)
 
 HWND hwnd;
 LPCTSTR WndClassName = L"ChronoWindow";
