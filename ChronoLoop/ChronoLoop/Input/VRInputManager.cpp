@@ -117,13 +117,15 @@ namespace Epoch {
 			node->mData.mButtonState = 1;
 			//SystemLogger::GetLog() <<  std::to_string(_event->data.controller.button) << " Up:";
 		}
-		//TODO PAT: FIX THIS
+
 		if (_event->trackedDeviceIndex == mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand)) {
-			node->mData.mControllerId = Level::Instance()->iGetRightController()->GetUniqueId();
+			node->mData.mControllerId = Level::Instance()->iGetLeftController()->GetUniqueId();
+			node->mData.mVelocity = mLeftController.GetVelocity();
 			//SystemLogger::GetLog() << "Lefthand" << std::endl;
 		}
 		else {
-			node->mData.mControllerId = Level::Instance()->iGetLeftController()->GetUniqueId();
+			node->mData.mControllerId = Level::Instance()->iGetRightController()->GetUniqueId();
+			node->mData.mVelocity = mRightController.GetVelocity();
 			//SystemLogger::GetLog() <<  "Righthand" << std::endl;
 		}
 		//SystemLogger::GetLog() << node->mData.mControllerId << std::endl;

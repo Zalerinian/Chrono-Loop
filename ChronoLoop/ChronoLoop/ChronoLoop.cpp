@@ -382,7 +382,7 @@ void Update() {
 	Physics::Instance()->mObjects.push_back(RightController);
 	Physics::Instance()->mObjects.push_back(LeftController);
 	Physics::Instance()->mObjects.push_back(Button);
-	Level::Initialize(headset, RightController, LeftController);
+	Level::Initialize(headset,LeftController, RightController);
 	Level* L1 = Level::Instance(); 
 	L1->iAddObject(PhysicsBox);
 	L1->iAddObject(PhysicsBox2);

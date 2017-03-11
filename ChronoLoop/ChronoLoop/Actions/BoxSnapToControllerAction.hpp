@@ -135,7 +135,7 @@ namespace Epoch {
 
 		virtual void ReleaseObject() {
 			//vec4f force = VRInputManager::GetInstance().GetController(mControllerRole).GetVelocity();
-			vec4f force = mCollider->mVelocity;
+			vec4f force = mInput->mData.mVelocity;
 			force[2] *= -1; // SteamVR seems to Assume +Z goes into the screen.
 			mPickUp->mVelocity = force;
 			mPickUp->mShouldMove = true;

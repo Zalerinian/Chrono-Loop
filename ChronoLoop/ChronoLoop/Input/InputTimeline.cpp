@@ -42,43 +42,42 @@ namespace Epoch {
 			Push_back(_data);
 			return;
 		}
-		//mCurrent is the last in the list
-		if(mCurrent == mHead || !mCurrent->mNext)
-		{
-			Push_back(_data);
+
+		InputNode* temp = mCurrent;
+
+		//Add to the head 
+		if (temp == mHead && (_data->mData.mLastFrame <= mHead->mData.mLastFrame || (_data->mData.mLastFrame == mHead->mData.mLastFrame && _data->mData.mTime < mHead->mData.mTime))) {
+			_data->mNext = mHead;
+			_data->mPrev = nullptr;
+			mCurrent = _data;
+			mHead = _data;
 			return;
 		}
-		InputNode* temp = mCurrent;
+
 		while(temp)
 		{
-			//Add to the head 
-			if(temp == mHead && _data->mData.mLastFrame == mHead->mData.mLastFrame && _data->mData.mTime < mHead->mData.mTime)
-			{
-				_data->mNext = mHead;
-				_data->mPrev = nullptr;
-				mCurrent = _data;
-				mHead = _data;
-			}
+
 			//If greater than current but there is no next
 			//Move Current pointer if we don't have a next so we can continue to record.
-			else if (_data->mData.mLastFrame >= temp->mData.mLastFrame && _data->mData.mTime > temp->mData.mTime && !temp->mNext)
+			if (_data->mData.mLastFrame >= temp->mData.mLastFrame && (_data->mData.mLastFrame == temp->mData.mLastFrame && _data->mData.mTime > temp->mData.mTime) && !temp->mNext)
 			{
 				Push_back(_data);
 				return;
 			}
 			//if greatr than temp but less then next
-			else if(_data->mData.mLastFrame >= temp->mData.mLastFrame && _data->mData.mTime > temp->mData.mTime && temp->mNext && _data->mData.mLastFrame <= temp->mNext->mData.mLastFrame && _data->mData.mTime < temp->mNext->mData.mTime)
+			if((_data->mData.mLastFrame >= temp->mData.mLastFrame || (_data->mData.mLastFrame == temp->mData.mLastFrame && _data->mData.mTime > temp->mData.mTime)) && temp->mNext && 
+				(_data->mData.mLastFrame <= temp->mNext->mData.mLastFrame || (_data->mData.mLastFrame == temp->mNext->mData.mLastFrame && _data->mData.mTime < temp->mNext->mData.mTime)))
 			{
 				temp->mNext->mPrev = _data;
 				_data->mNext = temp->mNext;
 				_data->mPrev = temp;
 				temp->mNext = _data;
-
+				return;
 			}
-
 			temp = temp->mNext;
 		}
 		
+		SystemLogger::GetLog() << "ERROR: Adding input failed to find a spot";
 	}
 
 
