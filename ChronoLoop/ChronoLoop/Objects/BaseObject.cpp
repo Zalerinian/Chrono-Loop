@@ -88,7 +88,9 @@ namespace Epoch {
 				continue;
 			}
 			for (auto cIt = it->second.begin(); cIt != it->second.end(); ++cIt) {
-				(*cIt)->Update();
+				if ((*cIt)->IsEnabled()) {
+					(*cIt)->Update();
+				}
 			}
 		}
 	}
@@ -111,11 +113,7 @@ namespace Epoch {
 	}
 
 	void BaseObject::SetName(std::string _name) {
-		if (Level::Instance()->iOnObjectNamechange(this, _name)) {
-			mName = _name;
-		} else {
-			SystemLogger::Error() << "A name change was requested for an object that did not exist in the level." << std::endl;
-		}
+		mName = _name;
 	}
 
 	unsigned int BaseObject::AddComponent(Component * _comp) {

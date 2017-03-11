@@ -51,10 +51,16 @@ namespace Epoch {
 
 		inline void Disable() {
 			mIsEnabled = false;
+			if (mType == eCOMPONENT_CODE) {
+				((CodeComponent*)this)->OnDisable();
+			}
 		}
 
 		inline void Enable() {
 			mIsEnabled = true;
+			if (mType == eCOMPONENT_CODE) {
+				((CodeComponent*)this)->OnEnable();
+			}
 		}
 
 		inline unsigned short GetComponentIndex() {
@@ -78,7 +84,6 @@ namespace Epoch {
 		// Virtual functions for child classes
 		virtual void Update() = 0;
 		virtual void Destroy() = 0;
-		virtual void OnAddedToObject() {}
 	};
 
 	class Listener : public Component {

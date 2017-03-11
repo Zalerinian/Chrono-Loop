@@ -342,6 +342,9 @@
     <ClInclude Include="Rendering\MeshCache.h">
       <Filter>Rendering\Header Files\Managers</Filter>
     </ClInclude>
+    <ClInclude Include="Core\LevelManager.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -553,6 +556,9 @@
     </ClCompile>
     <ClCompile Include="Rendering\MeshCache.cpp">
       <Filter>Rendering\Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\LevelManager.cpp">
+      <Filter>Core\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
