@@ -102,7 +102,7 @@ namespace Epoch {
 	}
 
 	void Timeline::ChangeBitsetToSnap(SnapInfo * _destinfo, Component* _curComp) {
-		unsigned short bitnum = _curComp->GetComponentIndex();
+		unsigned short bitnum = _curComp->GetComponentNum();
 
 		//Object is active
 		if (_destinfo->mBitset[0]) {
@@ -408,7 +408,7 @@ namespace Epoch {
 					for (unsigned int i = 0; i < temp.size(); i++) {
 						SnapComponent_Physics* newComp = new SnapComponent_Physics();
 						newComp->mCompType = eCOMPONENT_COLLIDER;
-						newComp->mBitNum = temp[i]->GetComponentIndex();
+						newComp->mBitNum = temp[i]->GetComponentNum();
 						_info->mBitset[newComp->mBitNum] = temp[i]->IsEnabled();
 						////Dont waste cycles if component is not enabled
 						//if (!_info->mBitset[newComp->mBitNum])
@@ -426,7 +426,7 @@ namespace Epoch {
 					for (unsigned int i = 0; i < temp.size(); i++) {
 						SnapComponent* newComp = new SnapComponent;
 						newComp->mCompType = temp[i]->GetType();
-						newComp->mBitNum = temp[i]->GetComponentIndex();
+						newComp->mBitNum = temp[i]->GetComponentNum();
 						_info->mBitset[newComp->mBitNum] = temp[i]->IsEnabled();
 						newComp->mId = temp[i]->GetColliderId();
 						_info->mComponets.push_back(newComp);

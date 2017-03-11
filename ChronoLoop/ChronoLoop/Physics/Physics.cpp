@@ -944,10 +944,7 @@ namespace Epoch
 										if ((AabbToPlane(((ButtonCollider*)collider)->mLowerBound, aabb1) == 1) && AABBtoAABB(aabb1, aabb2))
 										{
 											for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
-											{
 												((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
-												((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
-											}
 										}
 									}
 									else if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
@@ -956,10 +953,7 @@ namespace Epoch
 										if ((AabbToPlane(((ButtonCollider*)collider)->mLowerBound, aabb1) == 1) && SphereToAABB(s1, aabb1))
 										{
 											for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f)
-											{
 												((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
-												((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
-											}
 										}
 									}
 								}
