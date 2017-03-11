@@ -62,9 +62,9 @@ namespace Epoch {
 					for (unsigned int i = 0; i < mClones.size(); i++) {
 						if (mClones[i]->GetUniqueId() == temp->mNext->mData.mControllerId) {
 							if (DoesCloneExist(mClones[i]->GetUniqueId(), mLevelTime)) {
-								//SystemLogger::GetLog() << "Clone:" << "id " << temp->mData.mControllerId << " " << temp->mNext->mData.mButton << ':' << temp->mNext->mData.mButtonState << std::endl;
+								//	SystemLogger::GetLog() << "Clone:" << "id " << temp->mData.mControllerId << " " << temp->mNext->mData.mButton << ':' << temp->mNext->mData.mButtonState << std::endl;
 							} else {
-								//SystemLogger::GetLog() << "Found false" << std::endl;
+								//	SystemLogger::GetLog() << "Found false" << std::endl;
 							}
 						}
 					}
@@ -166,11 +166,11 @@ namespace Epoch {
 
 	bool TimeManager::DoesCloneExist(unsigned int _id, unsigned int _frame) {
 		ObjectLifeTime* lifetemp = mTimeline->GetObjectLifetime(_id);
-		if (lifetemp && lifetemp->mBirth < _frame && lifetemp->mDeath > _frame)
-		{
+		if (lifetemp && (unsigned int)lifetemp->mBirth < _frame && (unsigned int)lifetemp->mDeath > _frame) {
 			return true;
 		}
 		return false;
+
 	}
 
 	void TimeManager::ToggleCloneCountDisplay(void * _command, std::wstring _ifOn) {
