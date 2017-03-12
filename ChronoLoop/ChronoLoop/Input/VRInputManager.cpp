@@ -126,11 +126,11 @@ namespace Epoch {
 		}
 		//TODO PAT: FIX THIS
 		if (_event->trackedDeviceIndex == mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand)) {
-			node->mData.mControllerId = Level::Instance()->iGetRightController()->GetUniqueId();
+			node->mData.mControllerId = Level::Instance()->iGetLeftController()->GetUniqueId();
 			//SystemLogger::GetLog() << "Lefthand" << std::endl;
 		}
 		else {
-			node->mData.mControllerId = Level::Instance()->iGetLeftController()->GetUniqueId();
+			node->mData.mControllerId = Level::Instance()->iGetRightController()->GetUniqueId();
 			//SystemLogger::GetLog() <<  "Righthand" << std::endl;
 		}
 		//SystemLogger::GetLog() << node->mData.mControllerId << std::endl;
