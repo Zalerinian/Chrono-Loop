@@ -4,6 +4,7 @@
 #include "../Core/TimeManager.h"
 #include "../Common/Logger.h"
 #include "../Input//CommandConsole.h"
+#include "../Core/Level.h"
 #include <unordered_set>
 
 namespace Epoch
@@ -25,7 +26,7 @@ namespace Epoch
 			if (VRInputManager::GetInstance().IsVREnabled())
 			{
 				Controller &controller = VRInputManager::GetInstance().GetController(mControllerRole);
-				if (mHeld && mPickUp != nullptr)
+				if (mHeld && mPickUp != nullptr && (!Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused() && !Level::Instance()->iGetRightTimeManinpulator()->isTimePaused()))
 				{
 					matrix4 m = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
 					mPickUp->SetPos(m.Position);
