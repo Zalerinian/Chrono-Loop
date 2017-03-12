@@ -87,11 +87,14 @@ namespace Epoch {
 
 		//Pull vr events to find button press or up
 		vr::VREvent_t tempEvent;
-
-		bool right = Level::Instance()->iGetRightTimeManinpulator()->isTimePaused();
-		bool left = Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused();
+		bool right = false;
+		bool left = false;
+		if (Level::Instance()->iGetRightTimeManinpulator() != nullptr || Level::Instance()->iGetLeftTimeManinpulator() != nullptr) {
+			bool right = Level::Instance()->iGetRightTimeManinpulator()->isTimePaused();
+			bool left = Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused();
+		}
 		//if there is a event avaliable and the game is focused
-		while (mVRSystem->PollNextEvent(&tempEvent, sizeof(tempEvent)) && !mVRSystem->IsInputFocusCapturedByAnotherProcess()  && !left && !right) {
+		while (mVRSystem->PollNextEvent(&tempEvent, sizeof(tempEvent)) && !mVRSystem->IsInputFocusCapturedByAnotherProcess()  && (!left && !right) ) {
 			if ((tempEvent.eventType == vr::EVREventType::VREvent_ButtonPress || tempEvent.eventType == vr::EVREventType::VREvent_ButtonUnpress) && tempEvent.data.controller.button != vr::k_EButton_Grip  && tempEvent.data.controller.button != vr::k_EButton_ApplicationMenu) {
 				AddInputNode(&tempEvent);
 			}

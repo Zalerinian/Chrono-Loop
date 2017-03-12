@@ -32,49 +32,52 @@ namespace Epoch {
 	}
 
 	void TimeManager::Update(float _delta) {
-		if (!Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused() && !Level::Instance()->iGetRightTimeManinpulator()->isTimePaused()) {
+		if (Level::Instance()->iGetRightTimeManinpulator() != nullptr || Level::Instance()->iGetLeftTimeManinpulator() != nullptr) {
 
-			mTimestamp += _delta;
-			mDeltaTime = _delta;
+			if (!Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused() && !Level::Instance()->iGetRightTimeManinpulator()->isTimePaused()) {
 
-			//If its time for a snapshot
-			if (mTimestamp >= RecordingRate) {
-				mTimestamp -= RecordingRate;
-			#if _DEBUG
-				mTimestamp = 0;
-			#endif
-				//Generate 
-				Snapshot* s = mTimeline->GenerateSnapShot(mLevelTime, mClones);
-				mTimeline->AddSnapshot(mLevelTime, s);
-				mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
-			}
+				mTimestamp += _delta;
+				mDeltaTime = _delta;
 
-			//SystemLogger::GetLog() << mTimestamp / mRecordingTime << std::endl; 
-			for (auto Interp : mCloneInterpolators) {
-				if (Interp.second)
-					Interp.second->Update(mTimestamp / RecordingRate);
+				//If its time for a snapshot
+				if (mTimestamp >= RecordingRate) {
+					mTimestamp -= RecordingRate;
+				#if _DEBUG
+					mTimestamp = 0;
+				#endif
+					//Generate 
+					Snapshot* s = mTimeline->GenerateSnapShot(mLevelTime, mClones);
+					mTimeline->AddSnapshot(mLevelTime, s);
+					mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
+				}
 
-				//Update inputTimeLine
-				//This updates curr pointer of the input timeline along with the current time in the Timeline 
-				if (VRInputManager::GetInstance().IsVREnabled()) {
-					InputTimeline::InputNode* temp = VRInputManager::GetInstance().GetInputTimeline()->GetCurr();
-					while (temp && temp->mNext && temp->mNext->mData.mLastFrame < mLevelTime) {
-						if (temp->mData.mLastFrame < temp->mNext->mData.mLastFrame || (temp->mData.mLastFrame == temp->mNext->mData.mLastFrame && (temp->mNext->mData.mTime < (mTimestamp / RecordingRate)))) {
-							for (unsigned int i = 0; i < mClones.size(); i++) {
-								if (mClones[i]->GetUniqueId() == temp->mNext->mData.mControllerId) {
-									if (DoesCloneExist(mClones[i]->GetUniqueId(), mLevelTime)) {
-										//	SystemLogger::GetLog() << "Clone:" << "id " << temp->mData.mControllerId << " " << temp->mNext->mData.mButton << ':' << temp->mNext->mData.mButtonState << std::endl;
-									} else {
-										//	SystemLogger::GetLog() << "Found false" << std::endl;
+				//SystemLogger::GetLog() << mTimestamp / mRecordingTime << std::endl; 
+				for (auto Interp : mCloneInterpolators) {
+					if (Interp.second)
+						Interp.second->Update(mTimestamp / RecordingRate);
+
+					//Update inputTimeLine
+					//This updates curr pointer of the input timeline along with the current time in the Timeline 
+					if (VRInputManager::GetInstance().IsVREnabled()) {
+						InputTimeline::InputNode* temp = VRInputManager::GetInstance().GetInputTimeline()->GetCurr();
+						while (temp && temp->mNext && temp->mNext->mData.mLastFrame < mLevelTime) {
+							if (temp->mData.mLastFrame < temp->mNext->mData.mLastFrame || (temp->mData.mLastFrame == temp->mNext->mData.mLastFrame && (temp->mNext->mData.mTime < (mTimestamp / RecordingRate)))) {
+								for (unsigned int i = 0; i < mClones.size(); i++) {
+									if (mClones[i]->GetUniqueId() == temp->mNext->mData.mControllerId) {
+										if (DoesCloneExist(mClones[i]->GetUniqueId(), mLevelTime)) {
+											//	SystemLogger::GetLog() << "Clone:" << "id " << temp->mData.mControllerId << " " << temp->mNext->mData.mButton << ':' << temp->mNext->mData.mButtonState << std::endl;
+										} else {
+											//	SystemLogger::GetLog() << "Found false" << std::endl;
+										}
 									}
 								}
+								VRInputManager::GetInstance().GetInputTimeline()->SetCurr(temp->mNext);
+								temp = temp->mNext;
+							} else {
+								break;
 							}
-							VRInputManager::GetInstance().GetInputTimeline()->SetCurr(temp->mNext);
-							temp = temp->mNext;
-						} else {
-							break;
-						}
 
+						}
 					}
 				}
 			}
