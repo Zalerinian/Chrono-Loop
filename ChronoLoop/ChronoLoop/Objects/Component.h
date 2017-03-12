@@ -49,19 +49,9 @@ namespace Epoch {
 			return mIsEnabled;
 		}
 
-		inline void Disable() {
-			mIsEnabled = false;
-			if (mType == eCOMPONENT_CODE) {
-				((CodeComponent*)this)->OnDisable();
-			}
-		}
+		virtual void Enable();
 
-		inline void Enable() {
-			mIsEnabled = true;
-			if (mType == eCOMPONENT_CODE) {
-				((CodeComponent*)this)->OnEnable();
-			}
-		}
+		virtual void Disable();
 
 		inline unsigned short GetComponentIndex() {
 			return mComponentIndex;

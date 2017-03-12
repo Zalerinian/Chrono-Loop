@@ -30,6 +30,14 @@ namespace Epoch
 	Transform& Component::GetTransform() { return mObject->GetTransform(); }
 	Transform& Component::GetTransform() const { return mObject->GetTransform(); }
 
+	void Component::Enable() {
+		mIsEnabled = true;
+	}
+
+	void Component::Disable() {
+		mIsEnabled = false;
+	}
+
 #pragma endregion
 	//------------------------------------------------------------
 	//Listener----------------------------------------------------
