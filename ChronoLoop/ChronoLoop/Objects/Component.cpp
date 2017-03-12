@@ -214,7 +214,6 @@ namespace Epoch
 		mRadius = _radius;
 		mShouldMove = _move;
 		mIsTrigger = _trigger;
-		mRewind = false;
 
 		mGravity = _gravity;
 		mVelocity = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
@@ -253,7 +252,6 @@ namespace Epoch
 		mMax = _max + mObject->GetTransform().GetMatrix().fourth;
 		mIsTrigger = _trigger;
 		mShouldMove = _move;
-		mRewind = false;
 
 		mGravity = _gravity;
 		mVelocity = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
@@ -296,7 +294,6 @@ namespace Epoch
 		mAxis[2].w = 1;
 		mShouldMove = _move;
 		mIsTrigger = _trigger;
-		mRewind = false;
 
 		mGravity = _gravity;
 		mVelocity = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
@@ -352,7 +349,6 @@ namespace Epoch
 		mNormal = _norm;
 		mShouldMove = _move;
 		mIsTrigger = _trigger;
-		mRewind = false;
 
 		mGravity = _gravity;
 		mVelocity = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
@@ -389,7 +385,7 @@ namespace Epoch
 		mLowerBound.mNormal = mPushNormal;
 		mLowerBound.mOffset = (mMin - mMax) * mPushNormal * 2;
 		mShouldMove = true;
-		mRewind = false;
+		mIsTrigger = false;
 
 		mGravity = _pushNormal * _normForce;
 		mVelocity = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
@@ -416,7 +412,6 @@ namespace Epoch
 		mMax = _max + mObject->GetTransform().GetMatrix().fourth;
 		mShouldMove = false;
 		mIsTrigger = false;
-		mRewind = false;
 
 		mMass = 2;
 		mForces = vec4f(0, 0, 0, 0);

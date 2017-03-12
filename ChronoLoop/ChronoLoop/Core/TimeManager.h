@@ -19,7 +19,7 @@ namespace Epoch {
 		float mTimestamp = 0;
 		float mDeltaTime = 0;
 		unsigned int mLevelTime = 0;
-		bool mRewindTime = false, mRewindMakeClone = false;
+		bool mRewindMakeClone = false;
 		std::vector<BaseObject*>mClones;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneInterpolators;
 		Timeline* GetTimeLine();
@@ -39,7 +39,7 @@ namespace Epoch {
 		//Checks and see if you can rewind to passed in frame
 		bool CheckRewindAvaliable(unsigned int _RewindNumOfframes);
 		static void Destroy();
-		bool DoesCloneExist(unsigned int _id,unsigned int _frame);
+		bool DoesCloneExist(unsigned short _id, unsigned int _frame);
 		//Returns the current snapshot indx
 		unsigned int GetCurrentSnapFrame();
 		//Retrieves delta time

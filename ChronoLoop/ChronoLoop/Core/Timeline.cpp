@@ -6,6 +6,7 @@
 #include "../Objects/MeshComponent.h"
 #include "../Common/Logger.h"
 #include "Pool.h"
+#include "Level.h"
 
 namespace Epoch {
 	bool Snapshot::IsObjectStored(unsigned short _id) {
@@ -54,20 +55,22 @@ namespace Epoch {
 
 		mCurrentGameTimeIndx = _snaptime;
 		MoveAllObjectsToSnapExceptPlayer(_snaptime, _id1, _id2, _id3);
+
 		//Set interpolators back and turn off;
-		//std::vector<BaseObject*>clones = TimeManager::Instance()->GetClonesVec();
-		//for (unsigned int i = 0; i < clones.size(); i++) {
-		//	UpdateCloneInterpolators(clones[i]->GetUniqueId(), nullptr, _snaptime);
-		//}
-		//CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
+		std::vector<BaseObject*>clones = TimeManager::Instance()->GetClonesVec();
+		for (unsigned int i = 0; i < clones.size(); i++) {
+			Interpolator<matrix4>* temp = TimeManager::Instance()->GetCloneInterpolator(clones[i]->GetUniqueID());
+			if (temp)
+				temp->SetActive(false);
+		}
+
+		CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
 		return true;
 	}
 
-	void Timeline::HotFixResetLevel()
-	{
+	void Timeline::HotFixResetLevel() {
 		std::vector<BaseObject*>clones = TimeManager::Instance()->GetClonesVec();
-		for(auto lifespan: mObjectLifeTimes)
-		{
+		for (auto lifespan : mObjectLifeTimes) {
 			//Delete the creation of the clones
 			//Clones should only have been born after 0
 			if (lifespan.second && lifespan.second->mBirth > 0)
@@ -75,8 +78,7 @@ namespace Epoch {
 		}
 
 		for (auto objects = mLiveObjects.begin(); objects != mLiveObjects.end(); ++objects) {
-			for (unsigned int i = 0; i < clones.size(); ++i)
-			{
+			for (unsigned int i = 0; i < clones.size(); ++i) {
 				if ((*objects).second && (*objects).second->GetUniqueID() == clones[i]->GetUniqueID()) {
 					auto tempIter = (*objects);
 					++objects;
@@ -84,7 +86,7 @@ namespace Epoch {
 				}
 			}
 		}
-	
+
 	}
 
 	bool Timeline::RewindMakeClone(unsigned int _snaptime) {
@@ -92,12 +94,16 @@ namespace Epoch {
 			return false;
 		mCurrentGameTimeIndx = _snaptime;
 		MoveAllObjectsToSnap(_snaptime);
+
 		//Set interpolators back and turn off
-	//std::vector<BaseObject*>clones = TimeManager::Instance()->GetClonesVec();
-	//for (unsigned int i = 0; i < clones.size(); i++) {
-	//	UpdateCloneInterpolators(clones[i]->GetUniqueId(), nullptr, _snaptime);
-	//}
-		//CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
+		std::vector<BaseObject*>clones = TimeManager::Instance()->GetClonesVec();
+		for (unsigned int i = 0; i < clones.size(); i++) {
+			Interpolator<matrix4>* temp = TimeManager::Instance()->GetCloneInterpolator(clones[i]->GetUniqueID());
+			if (temp)
+				temp->SetActive(false);
+		}
+
+		CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
 		return true;
 	}
 
@@ -117,7 +123,7 @@ namespace Epoch {
 			//The comp is a mesh
 			else {
 				//if (_destinfo->mBitset[bitnum])
-					//((MeshComponent*)_curComp)->SetVisible(true);
+				//((MeshComponent*)_curComp)->SetVisible(true);
 
 				//else
 				//	((MeshComponent*)_curComp)->SetVisible(false);
@@ -145,7 +151,7 @@ namespace Epoch {
 			for (unsigned int j = 0; j < _obj->GetComponentCount(eCOMPONENT_COLLIDER); j++) {
 				Component* currComp = _obj->GetComponentIndexed(eCOMPONENT_COLLIDER, j);
 				if (currComp->GetColliderId() == _destComp->mId) {
-					((Collider*)currComp)->mRewind = true;
+					//((Collider*)currComp)->mRewind = true;
 					//((Collider*)currComp)->mShouldMove = false;
 					((Collider*)currComp)->mAcceleration = ((SnapComponent_Physics*)_destComp)->mAcc;
 					((Collider*)currComp)->mVelocity = ((SnapComponent_Physics*)_destComp)->mVel;
@@ -191,8 +197,7 @@ namespace Epoch {
 				cloneInterp->SetActive(true);
 				//Loop to find the same clone's baseObject
 				std::vector<BaseObject*> clones = TimeManager::Instance()->GetClonesVec();
-				for (int i = 0; i < clones.size(); ++i)
-				{
+				for (int i = 0; i < clones.size(); ++i) {
 					if (_cloneid == clones[i]->GetUniqueID()) {
 						cloneInterp->SetEdit(clones[i]->GetTransform().GetMatrix());
 						break;
@@ -246,17 +251,29 @@ namespace Epoch {
 		}
 	}
 
+	//This hasn't been tested yet
 	void Timeline::CheckforLostObjects(std::vector<BaseObject*>& mClones) {
 		for (auto obj : mObjectLifeTimes) {
 			if (obj.second->mBirth > mCurrentGameTimeIndx) {
 				for (unsigned int i = 0; i < mClones.size(); i++) {
+					if (mClones[i]->GetUniqueID() == obj.first || Level::Instance()->iGetLeftController()->GetUniqueID() == obj.first || Level::Instance()->iGetHeadset()->GetUniqueID() == obj.first || Level::Instance()->iGetRightController()->GetUniqueID() == obj.first)
+						break;
+
 					if (mClones[i]->GetUniqueID() != obj.first && i == mClones.size() - 1) {
 						//delete the birth and death struct
 						delete obj.second;
-						//TODO PAT: ADD A FUNC TO  REMOVE AN OBJECT IN PHYSICS
-						//Physics::mInstance->
+
+						//get rid of object if its in physics
+						for (int k = 0; k < Physics::Instance()->mObjects.size(); ++k) {
+							if (Physics::Instance()->mObjects[k]->GetUniqueID() == obj.first) {
+								Physics::Instance()->mObjects.erase(Physics::Instance()->mObjects.begin() + k);
+							}
+						}
+
+						mLiveObjects[obj.first]->RemoveAllComponents();
+
 						//add it back to the pool
-						Pool::Instance()->iAddObject(mLiveObjects[obj.first]);
+						Pool::Instance()->iRemoveObject(obj.first);
 						mObjectLifeTimes.erase(obj.first);
 						mLiveObjects.erase(obj.first);
 					}

@@ -25,7 +25,7 @@ namespace Epoch {
 
 		VIM(vr::IVRSystem* _vr);
 		~VIM();
-	
+
 		friend class VRInputManager;
 	public:
 		void Update();
@@ -34,6 +34,7 @@ namespace Epoch {
 		void RewindInputTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2);
 		InputTimeline::InputNode * FindLastInput(unsigned short _id);
 		InputTimeline* GetInputTimeline() { return mInputTimeline; };
+
 		inline unsigned int GetTrackedDeviceCount() { return vr::k_unMaxTrackedDeviceCount; }
 		inline vr::TrackedDevicePose_t* GetTrackedPositions() { return mPoses; }
 		inline matrix4& GetPlayerPosition() { return mPlayerPosition; }
@@ -41,11 +42,11 @@ namespace Epoch {
 		inline bool IsVREnabled() const { return mVRSystem != nullptr; }
 		inline vr::IVRSystem* GetVRSystem() { return mVRSystem; }
 	};
-	
+
 	class VRInputManager {
 	private:
 		static VIM* sInstance;
-	
+
 		VRInputManager();
 		~VRInputManager();
 	public:
