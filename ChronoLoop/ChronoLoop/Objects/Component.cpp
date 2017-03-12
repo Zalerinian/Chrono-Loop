@@ -414,8 +414,8 @@ namespace Epoch
 		mIsTrigger = false;
 
 		mMass = 2;
-		mForces = vec4f(0, 0, 0, 0);
-		mGravity = vec4f(0, 0, 0, 0);
+		mForces = vec4f(0, -1, 0, 0);
+		mGravity = vec4f(0, -2.0f, 0, 0);
 		mType = eCOMPONENT_COLLIDER;
 		mColliderType = eCOLLIDER_Controller;
 		mTotalForce = { 0,-2,0,0 };
