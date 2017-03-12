@@ -101,6 +101,17 @@ namespace Epoch {
 		}
 	}
 
+	void InputTimeline::SetCurr(InputNode * _set)
+	{
+		//assume nothing is in the InputTimeline
+		if (!_set) {
+			mCurrent = nullptr;
+			mHead = nullptr;
+		}
+		else
+			mCurrent = _set; 
+	}
+
 	void InputTimeline::Clear()
 	{
 		InputNode* temp = mHead;

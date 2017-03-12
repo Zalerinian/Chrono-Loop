@@ -55,6 +55,7 @@ namespace Epoch {
 		}
 
 		//Update inputTimeLine
+		//This updates curr pointer of the input timeline along with the current time in the Timeline 
 		if (VRInputManager::GetInstance().IsVREnabled()) {
 			InputTimeline::InputNode* temp = VRInputManager::GetInstance().GetInputTimeline()->GetCurr();
 			while (temp && temp->mNext && temp->mNext->mData.mLastFrame < mLevelTime) {

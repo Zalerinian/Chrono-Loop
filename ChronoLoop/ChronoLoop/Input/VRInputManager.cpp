@@ -139,7 +139,7 @@ namespace Epoch {
 	
 		InputTimeline::InputNode* temp = mInputTimeline->GetCurr();
 		//SystemLogger::GetLog() << "Rewind to " << _frame << std::endl;
-		while(temp && temp->mPrev)
+		while(temp)
 		{
 			//Have reached the point we want to stop
 			if(temp->mData.mLastFrame < _frame)
@@ -147,17 +147,22 @@ namespace Epoch {
 				break;
 			}
 			//Delete old controller input
-			if(temp->mData.mControllerId == _id1 || temp->mData.mControllerId == _id2)
-			{
+			if (temp->mData.mControllerId == _id1 || temp->mData.mControllerId == _id2) {
 				InputTimeline::InputNode* del = temp;
-				temp = temp->mPrev;
-				temp->mNext = del->mNext;
-				if(del->mNext)
-				del->mNext->mPrev = temp;
+				if (temp->mPrev) {
+					temp = temp->mPrev;
+					temp->mNext = del->mNext;
+					if (del->mNext)
+						del->mNext->mPrev = temp;
+				} else {
+					//SystemLogger::GetLog() << "End of the input Timeline" << std::endl;
+					temp = nullptr;
+				}
 				delete del;
-			}
-			else
-			temp = temp->mPrev;
+			} else if (temp->mPrev) {
+				temp = temp->mPrev;
+			} else
+				break;
 
 			mInputTimeline->SetCurr(temp);
 		}
