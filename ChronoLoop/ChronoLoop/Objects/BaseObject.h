@@ -9,11 +9,9 @@
 #include "..\Core\TimeManager.h"
 #include "..\Objects\Component.h"
 
-namespace Epoch
-{
+namespace Epoch {
 
-	class BaseObject
-	{
+	class BaseObject {
 		// The number of objects that exist in the world.
 		static unsigned int ObjectCount;
 
@@ -43,27 +41,61 @@ namespace Epoch
 		BaseObject* Reset(std::string _name, Transform _transform, BaseObject* _parent);
 
 
-		inline unsigned int GetUniqueId() { return mUniqueID; }
+		inline unsigned int GetUniqueId() {
+			return mUniqueID;
+		}
 
-		inline std::string GetName() { return mName; };
 		void SetName(std::string _name);
+		inline std::string GetName() {
+			return mName;
+		};
 
-		inline BaseObject* GetParent() { return mParent; };
-		inline void SetParent(BaseObject* _parent) { mParent = _parent; };
 
-		inline Transform& GetTransform() { return mTransform; };
-		inline void SetTransform(Transform _transform) { mTransform = _transform; };
+		inline BaseObject* GetParent() {
+			return mParent;
+		};
 
-		inline unsigned int GetUniqueID() { return mUniqueID; };
-		inline void SetUniqueID(unsigned short _id) { mUniqueID = _id; };
+		inline void SetParent(BaseObject* _parent) {
+			mParent = _parent;
+		};
 
-		inline std::list<BaseObject*> GetChildren() { return mChildren; };
-		inline void SetChildren(std::list<BaseObject*> _children) { mChildren = _children; };
-		inline unsigned int GetObjectCountandIncrement() { ObjectCount++; return ObjectCount; }
+		inline Transform& GetTransform() {
+			return mTransform;
+		};
 
-		inline std::vector<Component*> GetComponents(ComponentType _type) { return mComponents[_type]; }
-		inline Component* GetComponentIndexed(ComponentType _type, unsigned int _index) { return mComponents[_type][_index]; }
-		inline unsigned int GetComponentCount(ComponentType _type) { return (unsigned int)mComponents[_type].size(); }
+		inline void SetTransform(Transform _transform) {
+			mTransform = _transform;
+		}
+
+		inline unsigned int GetUniqueID() {
+			return mUniqueID;
+		};
+		
+		inline void SetUniqueID(unsigned short _id) {
+			mUniqueID = _id;
+		};
+
+		inline std::list<BaseObject*> GetChildren() { 
+			return mChildren;
+		}
+
+		inline void SetChildren(std::list<BaseObject*> _children) {
+			mChildren = _children;
+		}
+
+		inline std::vector<Component*> GetComponents(ComponentType _type) {
+			return mComponents[_type];
+		}
+
+		inline Component* GetComponentIndexed(ComponentType _type, unsigned int _index) {
+			return mComponents[_type][_index];
+		}
+
+		inline unsigned int GetComponentCount(ComponentType _type) {
+			return (unsigned int)mComponents[_type].size();
+		}
+
+
 		unsigned int AddComponent(Component* _comp);
 		bool RemoveComponent(Component* _comp);
 		void RemoveAllComponents();

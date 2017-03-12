@@ -19,9 +19,6 @@ namespace Epoch
 		BaseObject* mHeadset;
 		BaseObject* mController1;
 		BaseObject* mController2;
-		//yea.... make a list or welcome to the hell of random
-		//Change the name at position and DO NOT RE-INSERT
-		//std::unordered_map<std::string, std::vector<BaseObject*>> mObjectMap;
 		std::list<BaseObject*> mObjectList;
 		unsigned short mId;
 
@@ -53,7 +50,6 @@ namespace Epoch
 		void iCallStart();
 		void iLoadLevel();
 		void iUpdate();
-		bool iOnObjectNamechange(BaseObject* _obj, std::string _name);
 
 
 		//**CONSOLE COMMAND FUNCS**//

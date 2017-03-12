@@ -35,6 +35,16 @@ namespace Epoch
 		virtual void OnEnable() {}
 
 		virtual void OnDestroy() {}
+
+		virtual void Disable() {
+			mIsEnabled = false;
+			this->OnDisable();
+		}
+
+		virtual void Enable() {
+			mIsEnabled = true;
+			this->OnEnable();
+		}
 	};
 
 }

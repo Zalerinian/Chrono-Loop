@@ -16,6 +16,7 @@ namespace Epoch
 
 	private:
 		bool mTakeInput; //On/Off switch
+		bool mTerminateThread = false;
 
 		static CommandConsole* sInstance;
 		std::wstring mCurCommand; //A string to hold the thing that's being typed to the console
@@ -25,14 +26,16 @@ namespace Epoch
 
 		//Function Specific
 		bool isFPSon; //Toggle for FPS Counter
-		int mFps; //FPS display
+		int mFps = 0; //FPS display
+		int tempFps = 0;
+		unsigned int mFpsCounter = 0;//Every 10 times it will average out the fps
 		float mFrameTime;
 
 		bool mIsVR;
 		//SystemLogger mLogger;
 	public:
 		CommandConsole();
-		~CommandConsole() {};
+		~CommandConsole() { mTerminateThread = true; mInputThread.join(); };
 		static CommandConsole& Instance();
 		static void DestroyInstance();
 

@@ -16,6 +16,7 @@ del /q /s "_Build\bin64\*.ipdb"
 del /q /s "_Build\bin64\*.iobj"
 del /q /s "_Build\bin64\*.pdb"
 del /q /s "_Build\bin64\PDB Files"
+del /q /s "_Build\Resources\*.mtl"
 
 
 echo ////////////////////////////////////

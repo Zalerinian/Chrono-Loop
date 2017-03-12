@@ -39,7 +39,7 @@ namespace Epoch
 		txtdec.CPUAccessFlags = 0;
 		txtdec.MiscFlags = 0;
 		HRESULT hr;
-		hr = Renderer::Instance()->iGetDevice().Get()->CreateTexture2D(&txtdec, NULL, &mCountTxt);
+		hr = Renderer::Instance()->GetDevice().Get()->CreateTexture2D(&txtdec, NULL, &mCountTxt);
 		mCountMap = Draw::Instance().CreateBitmapForTexture(mCountTxt);
 		//This draws to center
 		Font* tempFont = new Font(L"Times New Roman", 25, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_CENTER, DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
@@ -120,7 +120,7 @@ namespace Epoch
 			TimeManager::Instance()->RewindTimeline(TimeManager::Instance()->GetCurrentSnapFrame() - frameRewind, Level::Instance()->iGetHeadset()->GetUniqueID(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());
 			VRInputManager::GetInstance().RewindInputTimeline(TimeManager::Instance()->GetCurrentSnapFrame(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());
 		}
-
+		
 		if (GetAsyncKeyState(VK_END) & 1 || VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::k_EButton_SteamVR_Touchpad)) 
 		{
 			HotfixButtonDown++;
