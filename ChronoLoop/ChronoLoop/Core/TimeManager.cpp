@@ -253,7 +253,7 @@ namespace Epoch {
 			Pool::Instance()->iRemoveObject(mClones[i]->GetUniqueID());
 		}
 		ClearClones();
-	
+
 		VRInputManager::GetInstance().GetPlayerPosition()[3].Set(1.9f, -1.0f, 8, 1.0f);
-	}													 
+	}
 }

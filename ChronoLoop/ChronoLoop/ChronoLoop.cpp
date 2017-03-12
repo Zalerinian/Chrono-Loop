@@ -25,6 +25,8 @@
 #include "Actions/CCElasticAABBtoAABB.h"
 #include "Actions/CCElasticAABBToSphere.h"
 #include "Actions/CCButtonPress.h"
+#include "Actions\CCEnterLevel.h"
+#include "Actions/MainMenuBT.h"
 #include "Core/Level.h"
 #include "Common/Logger.h"
 //#include "Rendering/TextureManager.h"
@@ -65,8 +67,8 @@ void UpdateTime();
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(11892);
-	if (!InitializeWindow(hInstance, nCmdShow, 800, 600, true)) {
+	//_CrtSetBreakAlloc(863805);
+	if (!InitializeWindow(hInstance, nCmdShow, 1366, 720, true)) {
 		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
 		return 2;
 	}
@@ -300,7 +302,11 @@ void Update() {
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_TEST1);
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_TEST1);
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::PLAYBOUNCEEFFECTS);
-
+	MeshComponent *visibleMesh = new MeshComponent("../Resources/raycube.obj");
+	visibleMesh->AddTexture("../Resources/raycube.png", eTEX_DIFFUSE);
+	PhysicsBox->AddComponent(visibleMesh);
+	
+	
 	Transform transformBox;
 	vec4f vec2 = { 1, 1, 0, 0 };
 	
@@ -319,7 +325,11 @@ void Update() {
 	PhysicsBox2->AddComponent(BoxCollision2);
 	PhysicsBox2->AddComponent(BoxSphereCollision2);
 	TimeManager::Instance()->AddObjectToTimeline(PhysicsBox2);
-
+	MeshComponent *visibleMeshBox = new MeshComponent("../Resources/raycube.obj");
+	visibleMeshBox->AddTexture("../Resources/raycube.png", eTEX_DIFFUSE);
+	PhysicsBox2->AddComponent(visibleMeshBox);
+	
+	
 	Transform SphereTransform;
 	matrix4 SphereMat = matrix4::CreateScale(0.15f, 0.15f, 0.15f); 
 	SphereMat *= matrix4::CreateTranslation(3, 5, 0);
@@ -335,7 +345,11 @@ void Update() {
 	PhysicsSphere->AddComponent(SpheretoSphere);
 	PhysicsSphere->AddComponent(PlaneCollision2);
 	TimeManager::Instance()->AddObjectToTimeline(PhysicsSphere);
-
+	MeshComponent *sphereMesh = new MeshComponent("../Resources/Sphere.obj");
+	sphereMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
+	PhysicsSphere->AddComponent(sphereMesh);
+	
+	
 	Transform SphereTransform2;
 	matrix4 SphereMat2 = matrix4::CreateScale(0.15f, 0.15f, 0.15f);
 	SphereMat2 *= matrix4::CreateTranslation(4, 5, 0);
@@ -351,17 +365,24 @@ void Update() {
 	PhysicsSphere2->AddComponent(PlaneCollision3);
 	PhysicsSphere2->AddComponent(SpheretoSphere2);
 	TimeManager::Instance()->AddObjectToTimeline(PhysicsSphere2);
-
+	MeshComponent *sphereMesh2 = new MeshComponent("../Resources/Sphere.obj");
+	sphereMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
+	PhysicsSphere2->AddComponent(sphereMesh2);
+	
+	
 	Transform ButtonTransform;
 	matrix4 ButtonMat = matrix4::CreateTranslation(-3, 0, 0);
 	ButtonTransform.SetMatrix(ButtonMat);
-	BaseObject* Button = Pool::Instance()->iGetObject()->Reset("button", ButtonTransform);
+	BaseObject* Button = new BaseObject("button", ButtonTransform);
 	ButtonCollider* ButtonCol = new ButtonCollider(Button, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), 3, 1, vec4f(0,1,0,0));
 	CodeComponent* ButtonCollision = new CCButtonPress;
 	Button->AddComponent(ButtonCol);
 	Button->AddComponent(ButtonCollision);
 	TimeManager::Instance()->AddObjectToTimeline(Button);
-
+	MeshComponent *ButtonMesh = new MeshComponent("../Resources/cube.obj");
+	ButtonMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
+	Button->AddComponent(ButtonMesh);
+	
 	Transform PlaneTransform;
 	PlaneTransform.SetMatrix(matrix4::CreateTranslation(0, -1, 0));
 	BaseObject* Floor = Pool::Instance()->iGetObject()->Reset("plane", PlaneTransform);// new BaseObject("plane", PlaneTransform);
@@ -372,7 +393,7 @@ void Update() {
 	Floor->AddComponent(planeObj);
 	
 	Transform identity;
-
+	
 	BaseObject* walls = Pool::Instance()->iGetObject()->Reset("walls", PlaneTransform);// new BaseObject("walls", PlaneTransform);
 	MeshComponent *wallMesh = new MeshComponent("../Resources/BigWall.obj");
 	wallMesh->AddTexture("../Resources/Wallg.png", eTEX_DIFFUSE);
@@ -443,7 +464,6 @@ void Update() {
 	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 	TeleportAction *ta = new TeleportAction(eControllerType_Primary);
 	TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
-	//TODO SOMEONE: REPLACE THE BOOLEAN WITH THE CORRECT ONE FROM STEAMVR
 	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 	RightController->AddComponent(mc);
 	RightController->AddComponent(rightRaycaster);
@@ -454,28 +474,7 @@ void Update() {
 	((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
 	RightController->AddComponent(pickup);
 	TimeManager::Instance()->AddObjectToTimeline(RightController);
-
-	MeshComponent *visibleMesh = new MeshComponent("../Resources/raycube.obj");
-	visibleMesh->AddTexture("../Resources/raycube.png", eTEX_DIFFUSE);
-	PhysicsBox->AddComponent(visibleMesh);
-
-	MeshComponent *visibleMeshBox = new MeshComponent("../Resources/raycube.obj");
-	visibleMeshBox->AddTexture("../Resources/raycube.png", eTEX_DIFFUSE);
-	PhysicsBox2->AddComponent(visibleMeshBox);
-
-	MeshComponent *sphereMesh = new MeshComponent("../Resources/Sphere.obj");
-	sphereMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
-	PhysicsSphere->AddComponent(sphereMesh);
-
-	MeshComponent *sphereMesh2 = new MeshComponent("../Resources/Sphere.obj");
-	sphereMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
-	PhysicsSphere2->AddComponent(sphereMesh2);
-
-	MeshComponent *ButtonMesh = new MeshComponent("../Resources/cube.obj");
-	ButtonMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 	
-	Button->AddComponent(ButtonMesh);
-
 	//pat added
 	BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("LController", identity); //new BaseObject("Controller2", identity);
 	MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
@@ -484,7 +483,7 @@ void Update() {
 	mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 	TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
 	TimeManipulation* tm2 = new TimeManipulation(eControllerType_Secondary);
-	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true );
+	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
 	LeftController->AddComponent(leftConCol);
 	LeftController->AddComponent(leftRaycaster);
 	LeftController->AddComponent(mc2);
@@ -494,7 +493,7 @@ void Update() {
 	((BoxSnapToControllerAction*)pickup2)->mControllerRole = eControllerType_Secondary;
 	LeftController->AddComponent(pickup2);
 	TimeManager::Instance()->AddObjectToTimeline(LeftController);
-
+	
 	//Sound Initializing---------------------------------------------------
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::INITIALIZE_Audio, 0, false));
 	//Soundbanks
@@ -508,9 +507,9 @@ void Update() {
 	Listener* ears = new Listener();
 	camObj.AddComponent(ears);
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(ears, "Listener")));
-	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(aabbSound, "aabbS")));
-	aabbSound->Play();
-
+	//Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(aabbSound, "aabbS")));
+	//aabbSound->Play();
+	
 	BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", transform); //new BaseObject("headset", transform);
 	MeshComponent *visibleMesh2 = new MeshComponent("../Resources/Cube.obj");
 	visibleMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
@@ -519,8 +518,7 @@ void Update() {
 	headset->AddComponent(hfollow);
 	headset->AddComponent(visibleMesh2);
 	TimeManager::Instance()->AddObjectToTimeline(headset);
-
-
+	
 	Physics::Instance()->mObjects.push_back(PhysicsBox);
 	Physics::Instance()->mObjects.push_back(BlockDoor);
 	Physics::Instance()->mObjects.push_back(ExitWall);
@@ -551,6 +549,8 @@ void Update() {
 	L1->iAddObject(WinBoard);
 	L1->iCallStart();
 
+#pragma endregion
+
 	//// Test for TextureManager::iAddTexture2D. Works nicely!
 	//D3D11_TEXTURE2D_DESC AddedTextureDesc;
 	//AddedTextureDesc.Width = 800;
@@ -577,7 +577,7 @@ void Update() {
 	
 	UpdateTime();
 	fixedTime = 0;
-	while (true) {
+	while (Level::Instance()->ChronoLoop) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			// Handle windows message.
 			if (msg.message == WM_QUIT) {
@@ -653,7 +653,7 @@ bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, b
 		WndClassName,                        //Name of our windows class
 		L"Chrono::Loop",                     //Name in the title bar of our window
 		WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME, //style of our window
-		600, 150,                            //Top left corner of window
+		200, 200,                            //Top left corner of window
 		width,                               //Width of our window
 		height,                              //Height of our window
 		NULL,                                //Handle to parent window

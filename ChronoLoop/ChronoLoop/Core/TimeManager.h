@@ -19,7 +19,7 @@ namespace Epoch {
 		float mTimestamp = 0;
 		float mDeltaTime = 0;
 		unsigned int mLevelTime = 0;
-		bool mRewindTime = false, mRewindMakeClone = false;
+		bool mRewindMakeClone = false;
 		std::vector<BaseObject*>mClones;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneInterpolators;
 		Timeline* GetTimeLine();

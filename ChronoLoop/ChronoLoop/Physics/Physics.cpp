@@ -652,15 +652,12 @@ namespace Epoch
 		float avgStatic = _col.mStaticFriction < _static ? _static : _col.mStaticFriction;
 		float avgKinetic = _col.mKineticFriction < _kinetic ? _kinetic : _col.mKineticFriction;
 
-		if (!_col.mRewind)
-		{
-			if (fabs(_col.mVelocity.x) < 0.1f)
-				_col.mVelocity.x = 0;
-			if (fabsf(_col.mVelocity.y) < 0.1f)
-				_col.mVelocity.y = 0;
-			if (fabsf(_col.mVelocity.z) < 0.1f)
-				_col.mVelocity.z = 0;
-		}
+		if (fabs(_col.mVelocity.x) < 0.1f)
+			_col.mVelocity.x = 0;
+		if (fabsf(_col.mVelocity.y) < 0.1f)
+			_col.mVelocity.y = 0;
+		if (fabsf(_col.mVelocity.z) < 0.1f)
+			_col.mVelocity.z = 0;
 
 		if (fabsf(_col.mVelocity.Magnitude3()) < 0.001f)
 		{
@@ -1022,14 +1019,13 @@ namespace Epoch
 					}
 				}
 
-				if (collider->mShouldMove && !collider->mRewind)
+				if (collider->mShouldMove)
 				{
 					collider->mDragForce = collider->mVelocity * (-0.5f * collider->mRHO * collider->mVelocity.Magnitude3() * collider->mDrag * collider->mArea);
 					collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
 					collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
-					collider->mRewind = false;
 
-					if (!collider->mRewind && fabs(collider->mForces.x) < 0.01f && fabsf(collider->mForces.y) < 0.01f && fabsf(collider->mForces.z) < 0.01f)
+					if (fabs(collider->mForces.x) < 0.01f && fabsf(collider->mForces.y) < 0.01f && fabsf(collider->mForces.z) < 0.01f)
 						collider->mForces = { 0,0,0,0 };
 					else
 						collider->mForces *= 0.99f;

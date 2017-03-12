@@ -21,7 +21,7 @@ namespace Epoch {
 #pragma endregion ComponetStructs
 
 
-//Extracted values from BaseObjects and its componets
+	//Extracted values from BaseObjects and its componets
 	struct SnapInfo {
 		unsigned short mId;	//unique id of the object
 		Transform mTransform;	//positional data of the object

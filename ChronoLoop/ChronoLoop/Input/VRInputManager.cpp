@@ -7,11 +7,11 @@
 namespace Epoch {
 
 	VIM* VRInputManager::sInstance = nullptr;
-	
+
 	VIM& VRInputManager::GetInstance() {
 		return *sInstance;
 	}
-	
+
 	void VRInputManager::Initialize(vr::IVRSystem * _vr) {
 		if (nullptr == sInstance) {
 			if (nullptr == _vr) {
@@ -20,16 +20,16 @@ namespace Epoch {
 			sInstance = new VIM(_vr);
 		}
 	}
-	
+
 	void VRInputManager::DestroyInstance() {
 		if (nullptr != sInstance) {
 			delete sInstance;
 			sInstance = nullptr;
 		}
 	}
-	
+
 	VRInputManager::VRInputManager() {}
-	
+
 	VRInputManager::~VRInputManager() {}
 
 
@@ -76,8 +76,7 @@ namespace Epoch {
 
 		//Update InputSnap TweenTime 
 		mTweenTimestamp += TimeManager::Instance()->GetDeltaTime();
-		if(mTweenTimestamp >= RecordingRate)
-		{
+		if (mTweenTimestamp >= RecordingRate) {
 			mTweenTimestamp -= RecordingRate;
 		}
 		mSnapTweenTime = mTweenTimestamp / RecordingRate;
@@ -85,10 +84,8 @@ namespace Epoch {
 		//Pull vr events to find button press or up
 		vr::VREvent_t tempEvent;
 		//if there is a event avaliable and the game is focused
-		while(mVRSystem->PollNextEvent(&tempEvent, sizeof(tempEvent)) && !mVRSystem->IsInputFocusCapturedByAnotherProcess())
-		{
-			if((tempEvent.eventType == vr::EVREventType::VREvent_ButtonPress || tempEvent.eventType == vr::EVREventType::VREvent_ButtonUnpress) && tempEvent.data.controller.button != vr::k_EButton_Grip  && tempEvent.data.controller.button != vr::k_EButton_ApplicationMenu)
-			{
+		while (mVRSystem->PollNextEvent(&tempEvent, sizeof(tempEvent)) && !mVRSystem->IsInputFocusCapturedByAnotherProcess()) {
+			if ((tempEvent.eventType == vr::EVREventType::VREvent_ButtonPress || tempEvent.eventType == vr::EVREventType::VREvent_ButtonUnpress) && tempEvent.data.controller.button != vr::k_EButton_Grip  && tempEvent.data.controller.button != vr::k_EButton_ApplicationMenu) {
 				AddInputNode(&tempEvent);
 			}
 		}
@@ -103,8 +100,7 @@ namespace Epoch {
 		}
 	}
 
-	void VIM::AddInputNode(vr::VREvent_t* _event )
-	{
+	void VIM::AddInputNode(vr::VREvent_t* _event) {
 		InputTimeline::InputNode* node = new InputTimeline::InputNode();
 		node->mData.mLastFrame = TimeManager::Instance()->GetCurrentSnapFrame();
 		node->mData.mButton = (vr::EVRButtonId)_event->data.controller.button;
@@ -122,8 +118,7 @@ namespace Epoch {
 			node->mData.mControllerId = Level::Instance()->iGetLeftController()->GetUniqueId();
 			node->mData.mVelocity = mLeftController.GetVelocity();
 			//SystemLogger::GetLog() << "Lefthand" << std::endl;
-		}
-		else {
+		} else {
 			node->mData.mControllerId = Level::Instance()->iGetRightController()->GetUniqueId();
 			node->mData.mVelocity = mRightController.GetVelocity();
 			//SystemLogger::GetLog() <<  "Righthand" << std::endl;
@@ -133,17 +128,14 @@ namespace Epoch {
 		//mInputTimeline->DisplayTimeline();
 	}
 
-	
-	void VIM::RewindInputTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2)
-	{
-	
+
+	void VIM::RewindInputTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2) {
+
 		InputTimeline::InputNode* temp = mInputTimeline->GetCurr();
 		//SystemLogger::GetLog() << "Rewind to " << _frame << std::endl;
-		while(temp)
-		{
+		while (temp) {
 			//Have reached the point we want to stop
-			if(temp->mData.mLastFrame < _frame)
-			{
+			if (temp->mData.mLastFrame < _frame) {
 				break;
 			}
 			//Delete old controller input

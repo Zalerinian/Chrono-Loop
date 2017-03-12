@@ -19,14 +19,13 @@ namespace Epoch {
 		}
 
 		virtual void Update() override {
-			if (VRInputManager::GetInstance().IsVREnabled() && mCollider)
-			{
+			if (VRInputManager::GetInstance().IsVREnabled() && mCollider) {
 				InputTimeline::InputNode*temp = VRInputManager::GetInstance().FindLastInput(mCollider->GetBaseObject()->GetUniqueID());
 				//This is gross but i dont know how to get around this without storing mheld and should move in timeline
 				if (mInput && temp && mPickUp && (temp->mData.mLastFrame < mInput->mData.mLastFrame || (temp->mData.mLastFrame == mInput->mData.mLastFrame && temp->mData.mTime < mInput->mData.mTime))) {
 					mHeld = false;
 					mPickUp->mShouldMove = true;
-				//	SystemLogger::GetLog() << "Should move on:: Old: snap = " << mInput->mData.mLastFrame << " time= " << mInput->mData.mTime << "   New: snap = " << temp->mData.mLastFrame << " time= " << temp->mData.mTime << std::endl;
+					//	SystemLogger::GetLog() << "Should move on:: Old: snap = " << mInput->mData.mLastFrame << " time= " << mInput->mData.mTime << "   New: snap = " << temp->mData.mLastFrame << " time= " << temp->mData.mTime << std::endl;
 				}
 
 				mInput = temp;
@@ -47,43 +46,43 @@ namespace Epoch {
 				/*Controller &controller = VRInputManager::GetInstance().GetController(mControllerRole);
 				if (mHeld && mPickUp != nullptr)
 				{
-					matrix4 m = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
-					mPickUp->SetPos(m.Position);
-					if (!controller.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger))
-					{
-						ReleaseObject();
-					}
+				matrix4 m = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
+				mPickUp->SetPos(m.Position);
+				if (!controller.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger))
+				{
+				ReleaseObject();
+				}
 				}
 				else if (controller.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger) && !mHeld && !mCollider->mHitting.empty())
 				{
-					SomethingtoController();
+				SomethingtoController();
 				}
-			*/
+				*/
 
 			#pragma region Gestures
-			//vec2f touch = leftController.GetAxis();
-			//mBootleg.AddHead(touch);
+				//vec2f touch = leftController.GetAxis();
+				//mBootleg.AddHead(touch);
 
-			////SystemLogger::GetLog() << "(" << touch.x << "," << touch.y << ")" << std::endl;
-			//if (mBootleg.mSize == mBootleg.mLimit) {
-			//	// Get initial point, get vector from it's negation (v - (-v)), and then cross it (v.y, -v.x)
-			//	vec2f initialPoint = mBootleg[0];
-			//	vec2f line = (initialPoint - (-initialPoint));
-			//	vec2f counterClockwise = line.Cross().Normalize();
+				////SystemLogger::GetLog() << "(" << touch.x << "," << touch.y << ")" << std::endl;
+				//if (mBootleg.mSize == mBootleg.mLimit) {
+				//	// Get initial point, get vector from it's negation (v - (-v)), and then cross it (v.y, -v.x)
+				//	vec2f initialPoint = mBootleg[0];
+				//	vec2f line = (initialPoint - (-initialPoint));
+				//	vec2f counterClockwise = line.Cross().Normalize();
 
-			//	vec2f pointEight = mBootleg[8];
-			//	vec2f leg = (pointEight - initialPoint);
-			//	vec2f nLeg = leg.Normalize();
-			//	if (leg.SquaredMagnitude() >= 0.01f) {
-			//		if (nLeg * counterClockwise < 0) {
-			//			SystemLogger::GetLog() << "Somewhat Clockwise" << std::endl;
-			//		}
-			//		if (nLeg * counterClockwise > 0) {
-			//			SystemLogger::GetLog() << "Somewhat Counter-Clockwise" << std::endl;
-			//		}
-			//	}
-			//}
-			//SystemLogger::GetLog() << "[Debug] Touchpad Axis: (" << touch.x << ", " << touch.y << ")" << std::endl;
+				//	vec2f pointEight = mBootleg[8];
+				//	vec2f leg = (pointEight - initialPoint);
+				//	vec2f nLeg = leg.Normalize();
+				//	if (leg.SquaredMagnitude() >= 0.01f) {
+				//		if (nLeg * counterClockwise < 0) {
+				//			SystemLogger::GetLog() << "Somewhat Clockwise" << std::endl;
+				//		}
+				//		if (nLeg * counterClockwise > 0) {
+				//			SystemLogger::GetLog() << "Somewhat Counter-Clockwise" << std::endl;
+				//		}
+				//	}
+				//}
+				//SystemLogger::GetLog() << "[Debug] Touchpad Axis: (" << touch.x << ", " << touch.y << ")" << std::endl;
 			#pragma endregion Gestures
 			}
 			//mObject->GetTransform().SetMatrix(Math::MatrixRotateInPlace(mObject->GetTransform().GetMatrix(), 1, 0, 0, DirectX::XM_PI / 1024.0f));

@@ -27,7 +27,7 @@ namespace Epoch {
 	public:
 		InputTimeline();
 		~InputTimeline();
-		
+
 		void Push_back(InputNode* _new);
 		void Insert(InputNode* _data);
 		InputNode* GetHead() { return mHead; };

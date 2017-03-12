@@ -154,14 +154,12 @@ namespace Epoch {
 		}
 		return false;
 	}
-
-	void BaseObject::RemoveAllComponents()
-	{
+	void BaseObject::RemoveAllComponents() {
 		std::vector<Component*> components = this->GetComponents(eCOMPONENT_COLLIDER);
 		for (int j = 0; j < components.size(); ++j) {
 			components[j]->Destroy();
 		}
-		
+
 		components = this->GetComponents(eCOMPONENT_AUDIOEMITTER);
 		for (int j = 0; j < components.size(); ++j) {
 			components[j]->Destroy();
@@ -181,7 +179,7 @@ namespace Epoch {
 		for (int j = 0; j < components.size(); ++j) {
 			components[j]->Destroy();
 		}
-		
+
 		components = this->GetComponents(eCOMPONENT_UI);
 		for (int j = 0; j < components.size(); ++j) {
 			components[j]->Destroy();
@@ -193,6 +191,9 @@ namespace Epoch {
 		}
 
 	}
+
+
+	
 
 	//void BaseObject::AddComponent(ComponentType _type, Component* _comp)
 	//{

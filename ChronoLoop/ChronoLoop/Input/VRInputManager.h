@@ -25,7 +25,7 @@ namespace Epoch {
 
 		VIM(vr::IVRSystem* _vr);
 		~VIM();
-	
+
 		friend class VRInputManager;
 	public:
 		void Update();
@@ -42,11 +42,11 @@ namespace Epoch {
 		inline bool IsVREnabled() const { return mVRSystem != nullptr; }
 		inline vr::IVRSystem* GetVRSystem() { return mVRSystem; }
 	};
-	
+
 	class VRInputManager {
 	private:
 		static VIM* sInstance;
-	
+
 		VRInputManager();
 		~VRInputManager();
 	public:
