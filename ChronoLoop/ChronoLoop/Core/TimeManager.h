@@ -16,10 +16,10 @@ namespace Epoch {
 		static Timeline* mTimeline;
 
 
-		float mlastRecordedTime = 0, mTimestamp = 0;
+		float mTimestamp = 0;
 		float mDeltaTime = 0;
 		unsigned int mLevelTime = 0;
-		bool mRewindTime = false, mRewindMakeClone = false;
+		bool mRewindMakeClone = false;
 		int mtempCurSnapFrame = 0;
 		std::vector<BaseObject*>mClones;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneInterpolators;
@@ -40,7 +40,7 @@ namespace Epoch {
 		//Checks and see if you can rewind to passed in frame
 		bool CheckRewindAvaliable(unsigned int _RewindNumOfframes);
 		static void Destroy();
-		bool DoesCloneExist(unsigned int _id,unsigned int _frame);
+		bool DoesCloneExist(unsigned short _id, unsigned int _frame);
 		//Returns the current snapshot indx
 		unsigned int GetCurrentSnapFrame();
 		//Retrieves delta time
@@ -49,6 +49,7 @@ namespace Epoch {
 		std::vector<BaseObject*>& GetClonesVec() { return mClones; };
 		int GetTempCurSnap() { return mtempCurSnapFrame; };
 		void SetTempCurSnap() { mtempCurSnapFrame = GetCurrentSnapFrame(); };
+		unsigned int GetTotalSnapsmade();
 		//Go back into time. Send in dest frame and send in player headset and conrollers id
 		void RewindTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		//Go back into time and make clone. Send in dest frame and send in player headset and conrollers baseObjects

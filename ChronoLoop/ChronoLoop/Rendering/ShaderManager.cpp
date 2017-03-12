@@ -53,6 +53,17 @@ namespace Epoch {
 			mVertexShaders[eVS_TEXTURED] = std::make_shared<ID3D11VertexShader*>(vs);
 			delete[] buffer;
 		}
+
+		// Create geometry shaders
+		ID3D11GeometryShader *gs;
+		if (!FileIO::LoadBytes("GSDuplicateMesh.cso", &buffer, byteSize)) {
+			SystemLogger::Error() << "An error has occurred when trying to read TexturedVertex.cso. Chances are the file is missing or has been renamed. The shader will be null, and may result in a crash." << std::endl;
+			mGeoShaders[eGS_PosNormTex] = nullptr;
+		} else {
+			Renderer::Instance()->GetDevice()->CreateGeometryShader(buffer, byteSize, nullptr, &gs);
+			mGeoShaders[eGS_PosNormTex].Attach(gs);
+			delete[] buffer;
+		}
 	}
 
 	ShaderManager::~ShaderManager() {
@@ -82,6 +93,10 @@ namespace Epoch {
 
 	void ShaderManager::ApplyPShader(PixelShaderFormat f) {
 		Renderer::Instance()->GetContext()->PSSetShader(*mPixelShaders[f], nullptr, 0);
+	}
+
+	void ShaderManager::ApplyGShader(GeometryShaderFormat _f) {
+		Renderer::Instance()->GetContext()->GSSetShader(mGeoShaders[_f].Get(), nullptr, 0);
 	}
 
 	std::shared_ptr<ID3D11PixelShader*> ShaderManager::GetPixelShader(PixelShaderFormat f) {

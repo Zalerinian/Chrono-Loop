@@ -54,17 +54,18 @@ namespace Epoch {
 				if (Interp.second)
 					Interp.second->Update(mTimestamp / RecordingRate);
 
-			}
-
-			//Update inputTimeLine
+		//Update inputTimeLine
+		//This updates curr pointer of the input timeline along with the current time in the Timeline 
+		if (VRInputManager::GetInstance().IsVREnabled()) {
 			InputTimeline::InputNode* temp = VRInputManager::GetInstance().GetInputTimeline()->GetCurr();
 			while (temp && temp->mNext && temp->mNext->mData.mLastFrame < mLevelTime) {
-				if (temp->mNext->mData.mLastFrame < temp->mNext->mData.mLastFrame || (temp->mNext->mData.mLastFrame == temp->mNext->mData.mLastFrame && temp->mNext->mData.mTime < (mTimestamp / RecordingRate))) {
+				if (temp->mData.mLastFrame < temp->mNext->mData.mLastFrame || (temp->mData.mLastFrame == temp->mNext->mData.mLastFrame && (temp->mNext->mData.mTime < (mTimestamp / RecordingRate)))) {
 					for (unsigned int i = 0; i < mClones.size(); i++) {
 						if (mClones[i]->GetUniqueId() == temp->mNext->mData.mControllerId) {
 							if (DoesCloneExist(mClones[i]->GetUniqueId(), mLevelTime)) {
-								int poop = 1;
-								//TODO PAT: WRITE SOMETHING BASED OFF THE ACTION	
+								//	SystemLogger::GetLog() << "Clone:" << "id " << temp->mData.mControllerId << " " << temp->mNext->mData.mButton << ':' << temp->mNext->mData.mButtonState << std::endl;
+							} else {
+								//	SystemLogger::GetLog() << "Found false" << std::endl;
 							}
 						}
 					}
@@ -130,6 +131,10 @@ namespace Epoch {
 		return nullptr;
 	}
 
+	unsigned int TimeManager::GetTotalSnapsmade() {
+		return mTimeline->GetTotalSnaps();
+	}
+
 	Timeline * TimeManager::GetTimeLine() {
 		if (!mTimeline) {
 			mTimeline = new Timeline();
@@ -159,13 +164,13 @@ namespace Epoch {
 		delete instanceTimemanager;
 	}
 
-	bool TimeManager::DoesCloneExist(unsigned int _id, unsigned int _frame) {
+	bool TimeManager::DoesCloneExist(unsigned short _id, unsigned int _frame) {
 		ObjectLifeTime* lifetemp = mTimeline->GetObjectLifetime(_id);
-		if (lifetemp && lifetemp->mBirth < mTimestamp && lifetemp->mDeath > mTimestamp)
-		{
+		if (lifetemp && (unsigned int)lifetemp->mBirth < _frame && (unsigned int)lifetemp->mDeath > _frame) {
 			return true;
 		}
 		return false;
+
 	}
 
 	void TimeManager::ToggleCloneCountDisplay(void * _command, std::wstring _ifOn) {
@@ -260,15 +265,7 @@ namespace Epoch {
 		RewindTimeline(0, Level::Instance()->iGetLeftController()->GetUniqueID(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetHeadset()->GetUniqueID());
 		mTimeline->HotFixResetLevel();
 		for (int i = 0; i < mClones.size(); ++i) {
-			std::vector<Component*> components = mClones[i]->GetComponents(eCOMPONENT_COLLIDER);
-			for (int j = 0; j < components.size(); ++j) {
-				components[j]->Destroy();
-			}
-
-			 components = mClones[i]->GetComponents(eCOMPONENT_MESH);
-			for (int j = 0; j < components.size(); ++j) {
-				components[j]->Destroy();
-			}
+			mClones[i]->RemoveAllComponents();
 
 			for (int k = 0; k < Physics::Instance()->mObjects.size(); ++k) {
 				if (Physics::Instance()->mObjects[k]->GetUniqueID() == mClones[i]->GetUniqueID()) {
@@ -279,7 +276,7 @@ namespace Epoch {
 			Pool::Instance()->iRemoveObject(mClones[i]->GetUniqueID());
 		}
 		ClearClones();
-	
+
 		VRInputManager::GetInstance().GetPlayerPosition()[3].Set(1.9f, -1.0f, 8, 1.0f);
-	}													 
+	}
 }

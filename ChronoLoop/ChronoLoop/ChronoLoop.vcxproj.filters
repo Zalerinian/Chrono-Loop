@@ -333,6 +333,18 @@
     <ClInclude Include="Input\InputTimeline.h">
       <Filter>Input\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\CCEnterLevel.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\MainMenuBT.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\MeshCache.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\LevelManager.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -542,6 +554,12 @@
     <ClCompile Include="Input\InputTimeline.cpp">
       <Filter>Input\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Rendering\MeshCache.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\LevelManager.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
@@ -584,6 +602,9 @@
       <Filter>Rendering\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Rendering\Shaders\InstancedVertex64.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\GSDuplicateMesh.hlsl">
       <Filter>Rendering\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

@@ -14,6 +14,7 @@ namespace Epoch {
 		VertFormat mVertexFormat = eVERT_MAX;
 		PixelShaderFormat mPixelShaderFormat = ePS_MAX;
 		VertexShaderFormat mVertexShaderFormat = eVS_MAX;
+		GeometryShaderFormat mGeoShaderFormat = eGS_MAX;
 		//RenderEye mEye = eEYE_MAX;
 		std::unordered_map<int, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> mTextures;
 

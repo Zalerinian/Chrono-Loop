@@ -1,4 +1,5 @@
 #include <openvr.h>
+#include "../Common/Math/vec3f.h"
 
 namespace Epoch {
 
@@ -13,6 +14,7 @@ namespace Epoch {
 			vr::EVRButtonId mButton;
 			//-1:Down 0:Press 1:Up
 			short mButtonState;
+			vec3f mVelocity;
 		};
 		struct InputNode {
 			InputNode* mNext;
@@ -25,12 +27,13 @@ namespace Epoch {
 	public:
 		InputTimeline();
 		~InputTimeline();
-		
+
 		void Push_back(InputNode* _new);
 		void Insert(InputNode* _data);
 		InputNode* GetHead() { return mHead; };
 		InputNode* GetCurr() { return mCurrent; };
-		void SetCurr(InputNode* _set) { mCurrent = _set; };
+		void DisplayTimeline();
+		void SetCurr(InputNode* _set);
 		void Clear();
 
 	};

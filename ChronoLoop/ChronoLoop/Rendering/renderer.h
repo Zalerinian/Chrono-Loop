@@ -18,7 +18,7 @@ namespace Epoch {
 	private:
 		struct ViewProjectionBuffer {
 			matrix4 view, projection;
-		} mVPData;
+		} mVPLeftData, mVPRightData;
 		static Renderer* sInstance;
 
 
@@ -33,7 +33,7 @@ namespace Epoch {
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDSView;
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> mDepthBuffer;
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> mSamplerState;
-		D3D11_VIEWPORT mViewport;
+		D3D11_VIEWPORT mLeftViewport, mRightViewport;
 		HWND mWindow;
 
 		vr::IVRSystem* mVrSystem;
@@ -65,7 +65,8 @@ namespace Epoch {
 
 		matrix4 GetEye(vr::EVREye e);
 		matrix4 GetProjection(vr::EVREye e);
-		void GetMVP(vr::EVREye e, ViewProjectionBuffer &data);
+		void UpdateViewProjection();
+		void UpdateGSBuffers();
 		
 		void RenderVR(float _delta);
 		void UpdateCamera(float const moveSpd, float const rotSpd, float delta);
@@ -83,7 +84,6 @@ namespace Epoch {
 			vr::IVRSystem* vrsys);
 		void ThrowIfFailed(HRESULT hr);
 		GhostList<matrix4>::GhostNode* AddNode(RenderShape *_node);
-		void RemoveNode(RenderShape *_node);
 		void Render(float _deltaTime);
 
 		//Draws text in 0 to 1 space

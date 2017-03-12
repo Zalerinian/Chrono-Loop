@@ -31,6 +31,9 @@ namespace Epoch
 		Level();
 		~Level();
 	public:
+		bool ChronoLoop = true;
+		bool flip = true;
+
 		static Level* Instance();
 		static void DestroyInstance();
 		static void Initialize(BaseObject *_headset, BaseObject *_lController, BaseObject *_rController);
@@ -57,7 +60,6 @@ namespace Epoch
 		void iCallStart();
 		void iLoadLevel();
 		void iUpdate();
-		bool iOnObjectNamechange(BaseObject* _obj, std::string _name);
 
 
 		//**CONSOLE COMMAND FUNCS**//

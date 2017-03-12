@@ -36,9 +36,7 @@ namespace Epoch {
 	};
 
 	template<class T>
-	inline GhostList<T>::~GhostList() {
-		int i = 0;
-	}
+	inline GhostList<T>::~GhostList() {}
 
 	template<class T>
 	typename GhostList<T>::GhostNode* GhostList<T>::Push(T& _data) {

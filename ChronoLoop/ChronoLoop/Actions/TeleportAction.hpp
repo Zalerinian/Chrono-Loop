@@ -45,7 +45,9 @@ namespace Epoch {
 					BaseObject* objects[] = { mWallsObject, mBlockObject, mExitObject };
 					float meshTime = 0, wallTime = FLT_MAX;
 					for (int i = 0; i < ARRAYSIZE(meshes); ++i) {
-						vec4f meshPos = (mat * objects[i]->GetTransform().GetMatrix().Invert()).Position;
+						matrix4 inverse = (mat * objects[i]->GetTransform().GetMatrix().Invert());
+						vec4f meshPos = inverse.Position;
+						forward *= inverse;
 						Triangle *tris = meshes[i]->GetTriangles();
 						size_t numTris = meshes[i]->GetTriangleCount();
 						for (unsigned int i = 0; i < numTris; ++i) {
@@ -57,19 +59,21 @@ namespace Epoch {
 						}
 					}
 
-					Triangle *tris = mPlaneMesh->GetTriangles();
-					size_t numTris = mPlaneMesh->GetTriangleCount();
-					vec4f position = (mat * mPlaneObject->GetTransform().GetMatrix().Invert()).Position;
-					for (unsigned int i = 0; i < numTris; ++i) {
-						if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, forward, meshTime)) {
-							if (meshTime < wallTime) {
-								forward *= meshTime;
-								VRInputManager::GetInstance().GetPlayerPosition()[3][0] += forward[0]; // x
-								VRInputManager::GetInstance().GetPlayerPosition()[3][2] += forward[2]; // z
-								//VRInputManager::Instance().iGetPlayerPosition()[3][3] += forward[3]; // w
-							} else {
-								SystemLogger::GetLog() << "[DEBUG] Can't let you do that, Starfox." << std::endl;
-							}
+				Triangle *tris = mPlaneMesh->GetTriangles();
+				size_t numTris = mPlaneMesh->GetTriangleCount();
+				matrix4 inverse = (mat * mPlaneObject->GetTransform().GetMatrix().Invert());
+				vec4f position = inverse.Position;
+				forward.Set(0, 0, 1, 0);
+				forward *= inverse;
+				for (unsigned int i = 0; i < numTris; ++i) {
+					if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, forward, meshTime)) {
+						if (meshTime < wallTime) {
+							forward *= meshTime;
+							VRInputManager::GetInstance().GetPlayerPosition()[3][0] += forward[0]; // x
+							VRInputManager::GetInstance().GetPlayerPosition()[3][2] += forward[2]; // z
+																								   //VRInputManager::Instance().iGetPlayerPosition()[3][3] += forward[3]; // w
+						} else {
+							SystemLogger::GetLog() << "[DEBUG] Can't let you do that, Starfox." << std::endl;
 						}
 					}
 				}
