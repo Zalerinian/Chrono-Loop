@@ -55,6 +55,7 @@ namespace Epoch {
 		}
 
 		//Update inputTimeLine
+		//This updates curr pointer of the input timeline along with the current time in the Timeline 
 		if (VRInputManager::GetInstance().IsVREnabled()) {
 			InputTimeline::InputNode* temp = VRInputManager::GetInstance().GetInputTimeline()->GetCurr();
 			while (temp && temp->mNext && temp->mNext->mData.mLastFrame < mLevelTime) {
@@ -164,7 +165,7 @@ namespace Epoch {
 		delete instanceTimemanager;
 	}
 
-	bool TimeManager::DoesCloneExist(unsigned int _id, unsigned int _frame) {
+	bool TimeManager::DoesCloneExist(unsigned short _id, unsigned int _frame) {
 		ObjectLifeTime* lifetemp = mTimeline->GetObjectLifetime(_id);
 		if (lifetemp && (unsigned int)lifetemp->mBirth < _frame && (unsigned int)lifetemp->mDeath > _frame) {
 			return true;
@@ -241,15 +242,7 @@ namespace Epoch {
 		RewindTimeline(0, Level::Instance()->iGetLeftController()->GetUniqueID(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetHeadset()->GetUniqueID());
 		mTimeline->HotFixResetLevel();
 		for (int i = 0; i < mClones.size(); ++i) {
-			std::vector<Component*> components = mClones[i]->GetComponents(eCOMPONENT_COLLIDER);
-			for (int j = 0; j < components.size(); ++j) {
-				components[j]->Destroy();
-			}
-
-			 components = mClones[i]->GetComponents(eCOMPONENT_MESH);
-			for (int j = 0; j < components.size(); ++j) {
-				components[j]->Destroy();
-			}
+			mClones[i]->RemoveAllComponents();
 
 			for (int k = 0; k < Physics::Instance()->mObjects.size(); ++k) {
 				if (Physics::Instance()->mObjects[k]->GetUniqueID() == mClones[i]->GetUniqueID()) {
@@ -260,7 +253,7 @@ namespace Epoch {
 			Pool::Instance()->iRemoveObject(mClones[i]->GetUniqueID());
 		}
 		ClearClones();
-	
+
 		VRInputManager::GetInstance().GetPlayerPosition()[3].Set(1.9f, -1.0f, 8, 1.0f);
-	}													 
+	}
 }

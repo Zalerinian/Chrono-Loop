@@ -154,5 +154,42 @@ namespace Epoch {
 		}
 		return false;
 	}
+	void BaseObject::RemoveAllComponents() {
+		std::vector<Component*> components = this->GetComponents(eCOMPONENT_COLLIDER);
+		for (int j = 0; j < components.size(); ++j) {
+			components[j]->Destroy();
+		}
+
+		components = this->GetComponents(eCOMPONENT_AUDIOEMITTER);
+		for (int j = 0; j < components.size(); ++j) {
+			components[j]->Destroy();
+		}
+
+		components = this->GetComponents(eCOMPONENT_AUDIOLISTENER);
+		for (int j = 0; j < components.size(); ++j) {
+			components[j]->Destroy();
+		}
+
+		components = this->GetComponents(eCOMPONENT_CODE);
+		for (int j = 0; j < components.size(); ++j) {
+			components[j]->Destroy();
+		}
+
+		components = this->GetComponents(eCOMPONENT_MESH);
+		for (int j = 0; j < components.size(); ++j) {
+			components[j]->Destroy();
+		}
+
+		components = this->GetComponents(eCOMPONENT_UI);
+		for (int j = 0; j < components.size(); ++j) {
+			components[j]->Destroy();
+		}
+
+		components = this->GetComponents(eCOMPONENT_UNKNOWN);
+		for (int j = 0; j < components.size(); ++j) {
+			components[j]->Destroy();
+		}
+
+	}
 
 }

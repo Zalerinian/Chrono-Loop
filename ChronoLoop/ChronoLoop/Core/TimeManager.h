@@ -39,7 +39,7 @@ namespace Epoch {
 		//Checks and see if you can rewind to passed in frame
 		bool CheckRewindAvaliable(unsigned int _RewindNumOfframes);
 		static void Destroy();
-		bool DoesCloneExist(unsigned int _id,unsigned int _frame);
+		bool DoesCloneExist(unsigned short _id, unsigned int _frame);
 		//Returns the current snapshot indx
 		unsigned int GetCurrentSnapFrame();
 		//Retrieves delta time
