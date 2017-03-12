@@ -4,6 +4,8 @@
 #include <d2d1_1.h>
 #include "../Actions/CodeComponent.hpp"
 #include "../Rendering/Renderer.h"
+#include "../Input/VRInputManager.h"
+
 
 namespace Epoch
 {
@@ -14,6 +16,8 @@ namespace Epoch
 		ControllerType mControllerRole = eControllerType_Primary;
 		int mCount = 0;
 		bool mTexturedApplied = false;
+		bool mPauseTime = false;
+
 		static unsigned int mCloneCount;
 		ID3D11Texture2D* mCountTxt;
 		ID2D1Bitmap1* mCountMap;
@@ -23,6 +27,8 @@ namespace Epoch
 		TimeManipulation();
 		TimeManipulation(ControllerType _t) { mControllerRole = _t; };
 		~TimeManipulation();
+		bool isTimePaused() { return mPauseTime; };
+		void makeTimePaused(bool _isPaused) { mPauseTime = _isPaused; };
 		void Start();
 		void Update();
 	};

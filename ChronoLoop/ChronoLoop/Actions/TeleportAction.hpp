@@ -6,6 +6,8 @@
 #include "../Physics/Physics.h"
 #include "../Input/VRInputManager.h"
 #include "../Core/Level.h"
+#include "../Core/TimeManager.h"
+
 #include "../Actions/HeadsetFollow.hpp"
 
 namespace Epoch {
@@ -36,38 +38,53 @@ namespace Epoch {
 			mObject->GetTransform().SetMatrix(mat);
 
 			if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad)) {
-				vec4f forward(0, 0, 1, 0);
-				forward *= mObject->GetTransform().GetMatrix();
-				MeshComponent* meshes[] = { mWallsMesh, mBlockMesh, mExitMesh };
-				BaseObject* objects[] = { mWallsObject, mBlockObject, mExitObject };
-				float meshTime = 0, wallTime = FLT_MAX;
-				for (int i = 0; i < ARRAYSIZE(meshes); ++i) {
-					vec4f meshPos = (mat * objects[i]->GetTransform().GetMatrix().Invert()).Position;
-					Triangle *tris = meshes[i]->GetTriangles();
-					size_t numTris = meshes[i]->GetTriangleCount();
+				if (!Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused() && !Level::Instance()->iGetRightTimeManinpulator()->isTimePaused()) {
+					vec4f forward(0, 0, 1, 0);
+					forward *= mObject->GetTransform().GetMatrix();
+					MeshComponent* meshes[] = { mWallsMesh, mBlockMesh, mExitMesh };
+					BaseObject* objects[] = { mWallsObject, mBlockObject, mExitObject };
+					float meshTime = 0, wallTime = FLT_MAX;
+					for (int i = 0; i < ARRAYSIZE(meshes); ++i) {
+						vec4f meshPos = (mat * objects[i]->GetTransform().GetMatrix().Invert()).Position;
+						Triangle *tris = meshes[i]->GetTriangles();
+						size_t numTris = meshes[i]->GetTriangleCount();
+						for (unsigned int i = 0; i < numTris; ++i) {
+							float hitTime = FLT_MAX;
+							Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, meshPos, forward, hitTime);
+							if (hitTime < wallTime) {
+								wallTime = hitTime;
+							}
+						}
+					}
+
+					Triangle *tris = mPlaneMesh->GetTriangles();
+					size_t numTris = mPlaneMesh->GetTriangleCount();
+					vec4f position = (mat * mPlaneObject->GetTransform().GetMatrix().Invert()).Position;
 					for (unsigned int i = 0; i < numTris; ++i) {
-						float hitTime = FLT_MAX;
-						Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, meshPos, forward, hitTime);
-						if (hitTime < wallTime) {
-							wallTime = hitTime;
+						if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, forward, meshTime)) {
+							if (meshTime < wallTime) {
+								forward *= meshTime;
+								VRInputManager::GetInstance().GetPlayerPosition()[3][0] += forward[0]; // x
+								VRInputManager::GetInstance().GetPlayerPosition()[3][2] += forward[2]; // z
+								//VRInputManager::Instance().iGetPlayerPosition()[3][3] += forward[3]; // w
+							} else {
+								SystemLogger::GetLog() << "[DEBUG] Can't let you do that, Starfox." << std::endl;
+							}
 						}
 					}
 				}
+				bool right = Level::Instance()->iGetRightTimeManinpulator()->isTimePaused();
+				bool left = Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused();
+				if (left || right) {
 
-				Triangle *tris = mPlaneMesh->GetTriangles();
-				size_t numTris = mPlaneMesh->GetTriangleCount();
-				vec4f position = (mat * mPlaneObject->GetTransform().GetMatrix().Invert()).Position;
-				for (unsigned int i = 0; i < numTris; ++i) {
-					if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, forward, meshTime)) {
-						if (meshTime < wallTime) {
-							forward *= meshTime;
-							VRInputManager::GetInstance().GetPlayerPosition()[3][0] += forward[0]; // x
-							VRInputManager::GetInstance().GetPlayerPosition()[3][2] += forward[2]; // z
-							//VRInputManager::Instance().iGetPlayerPosition()[3][3] += forward[3]; // w
-						} else {
-							SystemLogger::GetLog() << "[DEBUG] Can't let you do that, Starfox." << std::endl;
-						}
-					}
+					TimeManager::Instance()->RewindTimeline(
+						TimeManager::Instance()->GetTempCurSnap(),
+						Level::Instance()->iGetHeadset()->GetUniqueID(),
+						Level::Instance()->iGetRightController()->GetUniqueID(),
+						Level::Instance()->iGetLeftController()->GetUniqueID());
+
+					Level::Instance()->iGetLeftTimeManinpulator()->makeTimePaused(false);
+					Level::Instance()->iGetRightTimeManinpulator()->makeTimePaused(false);
 				}
 			}
 		}

@@ -20,6 +20,7 @@ namespace Epoch {
 		float mDeltaTime = 0;
 		unsigned int mLevelTime = 0;
 		bool mRewindTime = false, mRewindMakeClone = false;
+		int mtempCurSnapFrame = 0;
 		std::vector<BaseObject*>mClones;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneInterpolators;
 		Timeline* GetTimeLine();
@@ -46,6 +47,8 @@ namespace Epoch {
 		float GetDeltaTime() { return mDeltaTime; }
 		Interpolator<matrix4>* GetCloneInterpolator(unsigned short _id);
 		std::vector<BaseObject*>& GetClonesVec() { return mClones; };
+		int GetTempCurSnap() { return mtempCurSnapFrame; };
+		void SetTempCurSnap() { mtempCurSnapFrame = GetCurrentSnapFrame(); };
 		//Go back into time. Send in dest frame and send in player headset and conrollers id
 		void RewindTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		//Go back into time and make clone. Send in dest frame and send in player headset and conrollers baseObjects
@@ -57,6 +60,9 @@ namespace Epoch {
 		static void ToggleSnapshotCountDisplay(void* _command, std::wstring _ifOn);
 		void DisplayCloneCount();
 		void DisplaySnapshotCount();
+
+		void BrowseTimeline(int _gesture, int _frameRewind);
+		void MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC);
 
 		void SetCloneCountBool(bool _set) { mCloneCountOn = _set; }
 		void SetSnapCountBool(bool _set) { mSnapshotCountOn = _set; }

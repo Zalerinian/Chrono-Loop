@@ -54,6 +54,7 @@ namespace Epoch {
 	VIM::~VIM() {}
 
 	void VIM::Update() {
+		int GestureCheck = 0;
 		if (mRightController.GetIndex() < 0) {
 			mRightController.mIndex = mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_RightHand);
 			if (mRightController.GetIndex() > 0) {
@@ -73,7 +74,10 @@ namespace Epoch {
 			mLeftController.Update();
 		}
 		vr::VRCompositor()->WaitGetPoses(mPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
-
+		GestureCheck = mRightController.CheckGesture();
+		TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
+		GestureCheck = mLeftController.CheckGesture();
+		TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
 		//Update InputSnap TweenTime 
 		mTweenTimestamp += TimeManager::Instance()->GetDeltaTime();
 		if(mTweenTimestamp >= RecordingRate)
@@ -84,8 +88,11 @@ namespace Epoch {
 
 		//Pull vr events to find button press or up
 		vr::VREvent_t tempEvent;
+
+		bool right = Level::Instance()->iGetRightTimeManinpulator()->isTimePaused();
+		bool left = Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused();
 		//if there is a event avaliable and the game is focused
-		while(mVRSystem->PollNextEvent(&tempEvent, sizeof(tempEvent)) && !mVRSystem->IsInputFocusCapturedByAnotherProcess())
+		while(mVRSystem->PollNextEvent(&tempEvent, sizeof(tempEvent)) && !mVRSystem->IsInputFocusCapturedByAnotherProcess() && !left && !right)
 		{
 			if(tempEvent.eventType == vr::EVREventType::VREvent_ButtonPress || tempEvent.eventType == vr::EVREventType::VREvent_ButtonUnpress)
 			{
