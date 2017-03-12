@@ -1,32 +1,25 @@
 ﻿<Level>
   <Object>
-    <Name>Empty</Name>
-    <Position>0,0,6.189872</Position>
+    <Name>Cube.001</Name>
+    <Mesh>Cube.obj</Mesh>
+    <Texture>skybox.dds</Texture>
+    <Position>0,0,5.921665</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components>
       <Collider>
         <Type>OBB</Type>
-        <Trigger>False</Trigger>
+        <Trigger>True</Trigger>
         <Position>0,0,0</Position>
-        <Rotation>0.1413,0,0</Rotation>
-        <Scale>2.6,1,1</Scale>
-      </Collider>
-    </Components>
-  </Object>
-  <Object>
-    <Name>Cube.001</Name>
-    <Mesh>Cube.obj</Mesh>
-    <Texture>skybox.dds</Texture>
-    <Position>0,0,0</Position>
-    <Rotation>0,0,0</Rotation>
-    <Scale>1,1,1</Scale>
-    <Components>
-      <Collider>
-        <Type>Sphere</Type>
-        <Trigger>False</Trigger>
-        <Position>3.5,0,0</Position>
-        <Radius>3.9</Radius>
+        <Rotation>0.1500223,0,0</Rotation>
+        <Scale>1,5.4,1</Scale>
+        <Gravity>9.8,0,0</Gravity>
+        <Movable>False</Movable>
+        <Mass>0.8</Mass>
+        <Elasticity>0</Elasticity>
+        <StaticFriction>0</StaticFriction>
+        <KeneticFriction>0</KeneticFriction>
+        <Drag>0</Drag>
       </Collider>
     </Components>
   </Object>
