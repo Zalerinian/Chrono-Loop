@@ -56,7 +56,7 @@ namespace Epoch {
 				//SystemLogger::GetLog() << mTimestamp / mRecordingTime << std::endl; 
 				for (auto Interp : mCloneInterpolators) {
 					if (Interp.second)
-						Interp.second->Update(mTimestamp / RecordingRate);
+						Interp.second->Update(_delta);
 
 					//Update inputTimeLine
 					//This updates curr pointer of the input timeline along with the current time in the Timeline 
@@ -98,7 +98,7 @@ namespace Epoch {
 		}
 
 		void TimeManager::AddInterpolatorForClone(BaseObject * _obj) {
-			Interpolator<matrix4>* temp = new Interpolator<matrix4>(InterpolatorType::I_Matrix4);
+			Interpolator<matrix4>* temp = new Interpolator<matrix4>();
 			mCloneInterpolators[_obj->GetUniqueID()] = temp;
 		}
 

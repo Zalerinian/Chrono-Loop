@@ -16,8 +16,8 @@ namespace Epoch
 	{
 		MainMenuBT(ControllerType _t) { mControllerRole = _t; };
 
-		Interpolator<matrix4>* mChamberInterp = new Interpolator<matrix4>(InterpolatorType::I_Matrix4);
-		Interpolator<matrix4>* mPlayerInterp = new Interpolator<matrix4>(InterpolatorType::I_Matrix4);
+		Interpolator<matrix4>* mChamberInterp = new Interpolator<matrix4>();
+		Interpolator<matrix4>* mPlayerInterp = new Interpolator<matrix4>();
 		MeshComponent *mChamberMesh, *mStartMesh, *mExitMesh, *mFloorMesh, *mRoomMesh;
 		BaseObject *mChamberObject, *mStartObject, *mExitObject, *mFloorObject, *mRoomObject, *mCubeObject;
 		ControllerType mControllerRole = eControllerType_Primary;

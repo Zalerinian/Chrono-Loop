@@ -20,7 +20,7 @@ namespace Epoch {
 		TeleportAction(ControllerType _t) { mControllerRole = _t; };
 
 		virtual void Start() {
-			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
+			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			mPlaneObject  = cLevel->FindObjectWithName("plane");
 			mWallsObject  = cLevel->FindObjectWithName("walls");
 			mBlockObject  = cLevel->FindObjectWithName("BlockDoor");

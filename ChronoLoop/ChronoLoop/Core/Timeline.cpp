@@ -186,7 +186,6 @@ namespace Epoch {
 		if (mObjectLifeTimes.find(_cloneid) != mObjectLifeTimes.end() && (mObjectLifeTimes[_cloneid]->mBirth > mCurrentGameTimeIndx || mObjectLifeTimes[_cloneid]->mDeath < mCurrentGameTimeIndx))
 			cloneInterp->SetActive(false);
 
-		cloneInterp->SetType(InterpolatorType::I_Matrix4);
 		if (_currTime + 1 <= mSnaptimes.size() - 1) {
 			nextsnap = mSnapshots[mSnaptimes[_currTime + 1]];
 			//found a clone snapinfo in the next snapshot
