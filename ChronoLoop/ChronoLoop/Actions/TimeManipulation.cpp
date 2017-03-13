@@ -109,13 +109,24 @@ namespace Epoch
 		}
 
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
-			int frameRewind = 30;
+			/*int frameRewind = 30;
 			if (!TimeManager::Instance()->CheckRewindAvaliable(frameRewind))
 				return;
 
-
-			TimeManager::Instance()->RewindTimeline(TimeManager::Instance()->GetCurrentSnapFrame() - frameRewind, currentLevel->GetHeadset()->GetUniqueID(), currentLevel->GetRightController()->GetUniqueID(), currentLevel->GetLeftController()->GetUniqueID());
-			VRInputManager::GetInstance().RewindInputTimeline(TimeManager::Instance()->GetCurrentSnapFrame(), currentLevel->GetRightController()->GetUniqueID(), currentLevel->GetLeftController()->GetUniqueID());
+			TimeManager::Instance()->RewindTimeline(TimeManager::Instance()->GetCurrentSnapFrame() - frameRewind, Level::Instance()->iGetHeadset()->GetUniqueID(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());
+			VRInputManager::GetInstance().RewindInputTimeline(TimeManager::Instance()->GetCurrentSnapFrame(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());*/
+			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
+			if (mPauseTime) {
+				mPauseTime = false;
+				TimeManager::Instance()->RewindTimeline(
+					TimeManager::Instance()->GetCurrentSnapFrame(),
+					cLevel->GetHeadset()->GetUniqueID(),
+					cLevel->GetRightController()->GetUniqueID(),
+					cLevel->GetLeftController()->GetUniqueID());
+			} else {
+				TimeManager::Instance()->SetTempCurSnap();
+				mPauseTime = true;
+			}
 		}
 		
 		if (GetAsyncKeyState(VK_END) & 1 || VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::k_EButton_SteamVR_Touchpad)) 

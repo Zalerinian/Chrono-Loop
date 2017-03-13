@@ -6,6 +6,7 @@
 #include "../ChronoLoop/Objects/BaseObject.h"
 #include "../ChronoLoop/Rendering/renderer.h"
 #include "../Rendering/Draw2D.h"
+#include "../Actions/TimeManipulation.h"
 #include "../Input/CommandConsole.h"
 
 
@@ -18,6 +19,7 @@ namespace Epoch
 		BaseObject* mHeadset;
 		BaseObject* mController1;
 		BaseObject* mController2;
+		TimeManipulation* mTMComponent1 = nullptr, *mTMComponent2 = nullptr;
 		std::list<BaseObject*> mObjectList;
 		unsigned short mId;
 
@@ -26,7 +28,7 @@ namespace Epoch
 		Level();
 		~Level();
 		bool ChronoLoop = true;
-		bool flip = true;
+		bool mmflip = true;
 
 		void Initialize(BaseObject *_headset, BaseObject *_lController, BaseObject *_rController);
 
@@ -40,6 +42,8 @@ namespace Epoch
 		inline BaseObject* GetHeadset() { return mHeadset; }
 		inline BaseObject* GetLeftController() { return mController1; }
 		inline BaseObject* GetRightController() { return mController2; }
+		TimeManipulation* GetLeftTimeManinpulator() { return mTMComponent1; }
+		TimeManipulation* GetRightTimeManinpulator() { return mTMComponent2; }
 
 
 		//**SETTERS**//

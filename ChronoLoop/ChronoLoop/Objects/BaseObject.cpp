@@ -128,7 +128,7 @@ namespace Epoch {
 		}
 		_comp->mObject = this;
 		mComponents[_comp->GetType()].push_back(_comp);
-		_comp->mComponentIndex = (unsigned short)mComponents.size();	//sets the component number for knowing the position in the bitset
+		_comp->mComponentNum = (unsigned short)mComponents.size();	//sets the component number for knowing the position in the bitset
 
 		//If level has already started call start on new component
 		if (_comp->GetType() == eCOMPONENT_CODE && TimeManager::Instance()->GetTotalSnapsmade() > 0) {

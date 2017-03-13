@@ -57,27 +57,27 @@ namespace Epoch
 			mObject->GetTransform().SetMatrix(mat);
 
 
-			//// Here lies the code to make a tiny little cube move to where you raycast (currently only works on the star and exit planes).
-			//MeshComponent* meshes[] = { mStartMesh, mExitMesh };
-			//BaseObject* objects[] = { mStartObject, mExitObject };
-			//vec4f awdforward(0, 0, 1, 0);
-			//for (int i = 0; i < ARRAYSIZE(objects); ++i) {
-			//	awdforward.Set(0, 0, 1, 0);
-			//	matrix4 inverse = (mat * objects[i]->GetTransform().GetMatrix().Invert());
-			//	vec4f meshPos = (inverse).Position;
-			//	awdforward *= inverse;
-			//	Triangle *tris = meshes[i]->GetTriangles();
-			//	size_t numTris = meshes[i]->GetTriangleCount();
-			//	for (unsigned int j = 0; j < numTris; ++j) {
-			//		float hitTime;
-			//		if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, awdforward, hitTime)) {
-			//			mCubeObject->GetTransform().SetMatrix(matrix4::CreateScale(0.1f, 0.1f, 0.1f) * mat);
-			//			mCubeObject->GetTransform().GetMatrix().Position.x += (vec4f(0, 0, 1, 0) * mat).x * hitTime;
-			//			mCubeObject->GetTransform().GetMatrix().Position.y += (vec4f(0, 0, 1, 0) * mat).y * hitTime;
-			//			mCubeObject->GetTransform().GetMatrix().Position.z += (vec4f(0, 0, 1, 0) * mat).z * hitTime;
-			//		}
-			//	}
-			//}
+			// Here lies the code to make a tiny little cube move to where you raycast (currently only works on the star and exit planes).
+			MeshComponent* meshes[] = { mStartMesh, mExitMesh };
+			BaseObject* objects[] = { mStartObject, mExitObject };
+			vec4f awdforward(0, 0, 1, 0);
+			for (int i = 0; i < ARRAYSIZE(objects); ++i) {
+				awdforward.Set(0, 0, 1, 0);
+				matrix4 inverse = (mat * objects[i]->GetTransform().GetMatrix().Invert());
+				vec4f meshPos = inverse.Position;
+				awdforward *= inverse;
+				Triangle *tris = meshes[i]->GetTriangles();
+				size_t numTris = meshes[i]->GetTriangleCount();
+				for (unsigned int j = 0; j < numTris; ++j) {
+					float hitTime;
+					if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, awdforward, hitTime)) {
+						mCubeObject->GetTransform().SetMatrix(matrix4::CreateScale(0.1f, 0.1f, 0.1f) * mat);
+						mCubeObject->GetTransform().GetMatrix().Position.x += (vec4f(0, 0, 1, 0) * mat).x * hitTime;
+						mCubeObject->GetTransform().GetMatrix().Position.y += (vec4f(0, 0, 1, 0) * mat).y * hitTime;
+						mCubeObject->GetTransform().GetMatrix().Position.z += (vec4f(0, 0, 1, 0) * mat).z * hitTime;
+					}
+				}
+			}
 
 
 
@@ -88,8 +88,7 @@ namespace Epoch
 				BaseObject* objects[] = { mStartObject, mExitObject };
 				for (int i = 0; i < ARRAYSIZE(meshes); ++i)
 				{
-					vec4f forward;
-					forward.Set(0, 0, 1, 0);
+					vec4f forward(0, 0, 1, 0);
 					matrix4 inverse = (mat * objects[i]->GetTransform().GetMatrix().Invert());
 					vec4f meshPos = inverse.Position;
 					forward *= inverse;
@@ -98,7 +97,7 @@ namespace Epoch
 					for (unsigned int j = 0; j < numTris; ++j)
 					{
 						float hitTime;
-						if (cLevel->flip && Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, forward, hitTime))
+						if (cLevel->mmflip && Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, forward, hitTime))
 						{
 							if (i == 0)
 							{
@@ -116,7 +115,7 @@ namespace Epoch
 								mPlayerInterp->SetEnd(mat);
 								mPlayerInterp->SetActive(true);
 								mBooped = true;
-								cLevel->flip = false;
+								cLevel->mmflip = false;
 							}
 							else if (i == 1)
 								cLevel->ChronoLoop = false;
@@ -171,6 +170,7 @@ namespace Epoch
 
 			if (mBooped) 
 			{
+				SystemLogger::Debug() << tTime << "  |  " << TimeManager::Instance()->GetDeltaTime() << std::endl;
 				tTime += TimeManager::Instance()->GetDeltaTime();
 				if (tTime <= 15) {
 					mChamberInterp->Update(tTime / 15.0f);
