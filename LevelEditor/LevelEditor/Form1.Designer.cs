@@ -66,6 +66,29 @@ namespace LevelEditor
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Tree = new System.Windows.Forms.TreeView();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.graphicsPanel1 = new LevelEditor.GraphicsPanel();
+            this.LeftToggle = new LevelEditor.NoFocusButton();
+            this.RightToggle = new LevelEditor.NoFocusButton();
+            this.MoveCheck = new System.Windows.Forms.CheckBox();
+            this.Trigger = new System.Windows.Forms.CheckBox();
+            this.Physics = new System.Windows.Forms.GroupBox();
+            this.Drag = new System.Windows.Forms.NumericUpDown();
+            this.MassL = new System.Windows.Forms.Label();
+            this.DragL = new System.Windows.Forms.Label();
+            this.Mass = new System.Windows.Forms.NumericUpDown();
+            this.KeneticF = new System.Windows.Forms.NumericUpDown();
+            this.ElasticityL = new System.Windows.Forms.Label();
+            this.KeneticL = new System.Windows.Forms.Label();
+            this.Elasticity = new System.Windows.Forms.NumericUpDown();
+            this.StaticF = new System.Windows.Forms.NumericUpDown();
+            this.StaticL = new System.Windows.Forms.Label();
+            this.ExtraVector = new System.Windows.Forms.GroupBox();
+            this.ExtraX = new System.Windows.Forms.NumericUpDown();
+            this.label10 = new System.Windows.Forms.Label();
+            this.ExtraY = new System.Windows.Forms.NumericUpDown();
+            this.label11 = new System.Windows.Forms.Label();
+            this.ExtraZ = new System.Windows.Forms.NumericUpDown();
+            this.label12 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -80,6 +103,8 @@ namespace LevelEditor
             this.scaleZ = new System.Windows.Forms.NumericUpDown();
             this.scaleY = new System.Windows.Forms.NumericUpDown();
             this.scaleX = new System.Windows.Forms.NumericUpDown();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.Radius = new System.Windows.Forms.NumericUpDown();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -91,15 +116,7 @@ namespace LevelEditor
             this.componetsCheck = new System.Windows.Forms.CheckedListBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.nameBox = new System.Windows.Forms.TextBox();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.FpsCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.Radius = new System.Windows.Forms.NumericUpDown();
-            this.graphicsPanel1 = new LevelEditor.GraphicsPanel();
-            this.LeftToggle = new LevelEditor.NoFocusButton();
-            this.RightToggle = new LevelEditor.NoFocusButton();
-            this.Trigger = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -109,6 +126,17 @@ namespace LevelEditor
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.graphicsPanel1.SuspendLayout();
+            this.Physics.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Drag)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Mass)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.KeneticF)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Elasticity)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.StaticF)).BeginInit();
+            this.ExtraVector.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ExtraX)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ExtraY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ExtraZ)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rotZ)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rotY)).BeginInit();
@@ -117,16 +145,14 @@ namespace LevelEditor
             ((System.ComponentModel.ISupportInitialize)(this.scaleZ)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scaleY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scaleX)).BeginInit();
+            this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Radius)).BeginInit();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.posZ)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.posY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.posX)).BeginInit();
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
-            this.groupBox6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Radius)).BeginInit();
-            this.graphicsPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -431,7 +457,11 @@ namespace LevelEditor
             // 
             // splitContainer2.Panel2
             // 
+            this.splitContainer2.Panel2.AutoScroll = true;
+            this.splitContainer2.Panel2.Controls.Add(this.MoveCheck);
             this.splitContainer2.Panel2.Controls.Add(this.Trigger);
+            this.splitContainer2.Panel2.Controls.Add(this.Physics);
+            this.splitContainer2.Panel2.Controls.Add(this.ExtraVector);
             this.splitContainer2.Panel2.Controls.Add(this.groupBox2);
             this.splitContainer2.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer2.Panel2.Controls.Add(this.groupBox6);
@@ -439,9 +469,393 @@ namespace LevelEditor
             this.splitContainer2.Panel2.Controls.Add(this.groupBox5);
             this.splitContainer2.Panel2.Controls.Add(this.groupBox4);
             this.splitContainer2.Size = new System.Drawing.Size(473, 417);
-            this.splitContainer2.SplitterDistance = 325;
+            this.splitContainer2.SplitterDistance = 313;
             this.splitContainer2.SplitterWidth = 1;
             this.splitContainer2.TabIndex = 3;
+            // 
+            // graphicsPanel1
+            // 
+            this.graphicsPanel1.Controls.Add(this.LeftToggle);
+            this.graphicsPanel1.Controls.Add(this.RightToggle);
+            this.graphicsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.graphicsPanel1.Location = new System.Drawing.Point(0, 0);
+            this.graphicsPanel1.Name = "graphicsPanel1";
+            this.graphicsPanel1.Size = new System.Drawing.Size(313, 417);
+            this.graphicsPanel1.TabIndex = 2;
+            this.graphicsPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.Paint);
+            this.graphicsPanel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseClick);
+            this.graphicsPanel1.MouseLeave += new System.EventHandler(this.graphicsPanel1_MouseLeave);
+            this.graphicsPanel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseMove);
+            this.graphicsPanel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseUp);
+            this.graphicsPanel1.Resize += new System.EventHandler(this.Resize);
+            // 
+            // LeftToggle
+            // 
+            this.LeftToggle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.LeftToggle.Location = new System.Drawing.Point(3, 3);
+            this.LeftToggle.MinimumSize = new System.Drawing.Size(1, 1);
+            this.LeftToggle.Name = "LeftToggle";
+            this.LeftToggle.Size = new System.Drawing.Size(23, 23);
+            this.LeftToggle.TabIndex = 1;
+            this.LeftToggle.Text = "<";
+            this.LeftToggle.UseVisualStyleBackColor = true;
+            this.LeftToggle.Click += new System.EventHandler(this.LeftToggle_Click);
+            // 
+            // RightToggle
+            // 
+            this.RightToggle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.RightToggle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.RightToggle.Location = new System.Drawing.Point(287, 3);
+            this.RightToggle.MinimumSize = new System.Drawing.Size(1, 1);
+            this.RightToggle.Name = "RightToggle";
+            this.RightToggle.Size = new System.Drawing.Size(23, 23);
+            this.RightToggle.TabIndex = 0;
+            this.RightToggle.Text = ">";
+            this.RightToggle.UseVisualStyleBackColor = true;
+            this.RightToggle.Click += new System.EventHandler(this.RightToggle_Click);
+            // 
+            // MoveCheck
+            // 
+            this.MoveCheck.AutoSize = true;
+            this.MoveCheck.Dock = System.Windows.Forms.DockStyle.Top;
+            this.MoveCheck.Location = new System.Drawing.Point(0, 617);
+            this.MoveCheck.Name = "MoveCheck";
+            this.MoveCheck.Size = new System.Drawing.Size(142, 17);
+            this.MoveCheck.TabIndex = 13;
+            this.MoveCheck.Text = "Can Move";
+            this.MoveCheck.UseVisualStyleBackColor = true;
+            this.MoveCheck.Visible = false;
+            this.MoveCheck.CheckedChanged += new System.EventHandler(this.Trigger_CheckedChanged);
+            // 
+            // Trigger
+            // 
+            this.Trigger.AutoSize = true;
+            this.Trigger.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Trigger.Location = new System.Drawing.Point(0, 600);
+            this.Trigger.Name = "Trigger";
+            this.Trigger.Size = new System.Drawing.Size(142, 17);
+            this.Trigger.TabIndex = 12;
+            this.Trigger.Text = "Trigger";
+            this.Trigger.UseVisualStyleBackColor = true;
+            this.Trigger.Visible = false;
+            this.Trigger.CheckedChanged += new System.EventHandler(this.Trigger_CheckedChanged);
+            // 
+            // Physics
+            // 
+            this.Physics.AutoSize = true;
+            this.Physics.Controls.Add(this.Drag);
+            this.Physics.Controls.Add(this.MassL);
+            this.Physics.Controls.Add(this.DragL);
+            this.Physics.Controls.Add(this.Mass);
+            this.Physics.Controls.Add(this.KeneticF);
+            this.Physics.Controls.Add(this.ElasticityL);
+            this.Physics.Controls.Add(this.KeneticL);
+            this.Physics.Controls.Add(this.Elasticity);
+            this.Physics.Controls.Add(this.StaticF);
+            this.Physics.Controls.Add(this.StaticL);
+            this.Physics.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Physics.Location = new System.Drawing.Point(0, 441);
+            this.Physics.Name = "Physics";
+            this.Physics.Size = new System.Drawing.Size(142, 159);
+            this.Physics.TabIndex = 1;
+            this.Physics.TabStop = false;
+            this.Physics.Text = "Pysics";
+            this.Physics.Visible = false;
+            // 
+            // Drag
+            // 
+            this.Drag.DecimalPlaces = 1;
+            this.Drag.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.Drag.Location = new System.Drawing.Point(41, 120);
+            this.Drag.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.Drag.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
+            this.Drag.Minimum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            -2147483648});
+            this.Drag.Name = "Drag";
+            this.Drag.Size = new System.Drawing.Size(104, 20);
+            this.Drag.TabIndex = 28;
+            this.Drag.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.Drag.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
+            // 
+            // MassL
+            // 
+            this.MassL.AutoSize = true;
+            this.MassL.Location = new System.Drawing.Point(6, 18);
+            this.MassL.Name = "MassL";
+            this.MassL.Size = new System.Drawing.Size(32, 13);
+            this.MassL.TabIndex = 21;
+            this.MassL.Text = "Mass";
+            // 
+            // DragL
+            // 
+            this.DragL.AutoSize = true;
+            this.DragL.Location = new System.Drawing.Point(6, 122);
+            this.DragL.Name = "DragL";
+            this.DragL.Size = new System.Drawing.Size(30, 13);
+            this.DragL.TabIndex = 29;
+            this.DragL.Text = "Drag";
+            // 
+            // Mass
+            // 
+            this.Mass.DecimalPlaces = 1;
+            this.Mass.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.Mass.Location = new System.Drawing.Point(41, 16);
+            this.Mass.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.Mass.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
+            this.Mass.Minimum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            -2147483648});
+            this.Mass.Name = "Mass";
+            this.Mass.Size = new System.Drawing.Size(104, 20);
+            this.Mass.TabIndex = 8;
+            this.Mass.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.Mass.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
+            // 
+            // KeneticF
+            // 
+            this.KeneticF.DecimalPlaces = 1;
+            this.KeneticF.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.KeneticF.Location = new System.Drawing.Point(89, 94);
+            this.KeneticF.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.KeneticF.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
+            this.KeneticF.Minimum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            -2147483648});
+            this.KeneticF.Name = "KeneticF";
+            this.KeneticF.Size = new System.Drawing.Size(56, 20);
+            this.KeneticF.TabIndex = 26;
+            this.KeneticF.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.KeneticF.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
+            // 
+            // ElasticityL
+            // 
+            this.ElasticityL.AutoSize = true;
+            this.ElasticityL.Location = new System.Drawing.Point(6, 44);
+            this.ElasticityL.Name = "ElasticityL";
+            this.ElasticityL.Size = new System.Drawing.Size(48, 13);
+            this.ElasticityL.TabIndex = 23;
+            this.ElasticityL.Text = "Elasticity";
+            // 
+            // KeneticL
+            // 
+            this.KeneticL.AutoSize = true;
+            this.KeneticL.Location = new System.Drawing.Point(6, 96);
+            this.KeneticL.Name = "KeneticL";
+            this.KeneticL.Size = new System.Drawing.Size(80, 13);
+            this.KeneticL.TabIndex = 27;
+            this.KeneticL.Text = "Kenetic Friction";
+            // 
+            // Elasticity
+            // 
+            this.Elasticity.DecimalPlaces = 1;
+            this.Elasticity.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.Elasticity.Location = new System.Drawing.Point(57, 42);
+            this.Elasticity.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.Elasticity.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
+            this.Elasticity.Minimum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            -2147483648});
+            this.Elasticity.Name = "Elasticity";
+            this.Elasticity.Size = new System.Drawing.Size(88, 20);
+            this.Elasticity.TabIndex = 22;
+            this.Elasticity.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.Elasticity.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
+            // 
+            // StaticF
+            // 
+            this.StaticF.DecimalPlaces = 1;
+            this.StaticF.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.StaticF.Location = new System.Drawing.Point(80, 68);
+            this.StaticF.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.StaticF.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
+            this.StaticF.Minimum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            -2147483648});
+            this.StaticF.Name = "StaticF";
+            this.StaticF.Size = new System.Drawing.Size(65, 20);
+            this.StaticF.TabIndex = 24;
+            this.StaticF.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.StaticF.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
+            // 
+            // StaticL
+            // 
+            this.StaticL.AutoSize = true;
+            this.StaticL.Location = new System.Drawing.Point(6, 70);
+            this.StaticL.Name = "StaticL";
+            this.StaticL.Size = new System.Drawing.Size(71, 13);
+            this.StaticL.TabIndex = 25;
+            this.StaticL.Text = "Static Friction";
+            // 
+            // ExtraVector
+            // 
+            this.ExtraVector.AutoSize = true;
+            this.ExtraVector.Controls.Add(this.ExtraX);
+            this.ExtraVector.Controls.Add(this.label10);
+            this.ExtraVector.Controls.Add(this.ExtraY);
+            this.ExtraVector.Controls.Add(this.label11);
+            this.ExtraVector.Controls.Add(this.ExtraZ);
+            this.ExtraVector.Controls.Add(this.label12);
+            this.ExtraVector.Dock = System.Windows.Forms.DockStyle.Top;
+            this.ExtraVector.Location = new System.Drawing.Point(0, 367);
+            this.ExtraVector.Name = "ExtraVector";
+            this.ExtraVector.Size = new System.Drawing.Size(142, 74);
+            this.ExtraVector.TabIndex = 20;
+            this.ExtraVector.TabStop = false;
+            this.ExtraVector.Text = "ExtraVector";
+            this.ExtraVector.Visible = false;
+            // 
+            // ExtraX
+            // 
+            this.ExtraX.DecimalPlaces = 1;
+            this.ExtraX.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.ExtraX.Location = new System.Drawing.Point(2, 35);
+            this.ExtraX.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.ExtraX.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
+            this.ExtraX.Minimum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            -2147483648});
+            this.ExtraX.Name = "ExtraX";
+            this.ExtraX.Size = new System.Drawing.Size(48, 20);
+            this.ExtraX.TabIndex = 14;
+            this.ExtraX.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(112, 16);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(14, 13);
+            this.label10.TabIndex = 19;
+            this.label10.Text = "Z";
+            // 
+            // ExtraY
+            // 
+            this.ExtraY.DecimalPlaces = 1;
+            this.ExtraY.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.ExtraY.Location = new System.Drawing.Point(50, 35);
+            this.ExtraY.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.ExtraY.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
+            this.ExtraY.Minimum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            -2147483648});
+            this.ExtraY.Name = "ExtraY";
+            this.ExtraY.Size = new System.Drawing.Size(48, 20);
+            this.ExtraY.TabIndex = 15;
+            this.ExtraY.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(62, 16);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(14, 13);
+            this.label11.TabIndex = 18;
+            this.label11.Text = "Y";
+            // 
+            // ExtraZ
+            // 
+            this.ExtraZ.DecimalPlaces = 1;
+            this.ExtraZ.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.ExtraZ.Location = new System.Drawing.Point(98, 35);
+            this.ExtraZ.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.ExtraZ.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
+            this.ExtraZ.Minimum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            -2147483648});
+            this.ExtraZ.Name = "ExtraZ";
+            this.ExtraZ.Size = new System.Drawing.Size(48, 20);
+            this.ExtraZ.TabIndex = 16;
+            this.ExtraZ.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(15, 16);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(14, 13);
+            this.label12.TabIndex = 17;
+            this.label12.Text = "X";
             // 
             // groupBox2
             // 
@@ -456,7 +870,7 @@ namespace LevelEditor
             this.groupBox2.Location = new System.Drawing.Point(0, 295);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBox2.Size = new System.Drawing.Size(147, 72);
+            this.groupBox2.Size = new System.Drawing.Size(142, 72);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Rotation";
@@ -579,7 +993,7 @@ namespace LevelEditor
             this.groupBox1.Location = new System.Drawing.Point(0, 223);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBox1.Size = new System.Drawing.Size(147, 72);
+            this.groupBox1.Size = new System.Drawing.Size(142, 72);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Scale";
@@ -689,6 +1103,44 @@ namespace LevelEditor
             this.scaleX.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
             this.scaleX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.supress_KeyDown);
             // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.Radius);
+            this.groupBox6.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox6.Location = new System.Drawing.Point(0, 183);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(142, 40);
+            this.groupBox6.TabIndex = 11;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Radius";
+            this.groupBox6.Visible = false;
+            // 
+            // Radius
+            // 
+            this.Radius.DecimalPlaces = 1;
+            this.Radius.Dock = System.Windows.Forms.DockStyle.Top;
+            this.Radius.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.Radius.Location = new System.Drawing.Point(3, 16);
+            this.Radius.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.Radius.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
+            this.Radius.Minimum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            -2147483648});
+            this.Radius.Name = "Radius";
+            this.Radius.Size = new System.Drawing.Size(136, 20);
+            this.Radius.TabIndex = 8;
+            this.Radius.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
+            // 
             // groupBox3
             // 
             this.groupBox3.AutoSize = true;
@@ -702,7 +1154,7 @@ namespace LevelEditor
             this.groupBox3.Location = new System.Drawing.Point(0, 111);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBox3.Size = new System.Drawing.Size(147, 72);
+            this.groupBox3.Size = new System.Drawing.Size(142, 72);
             this.groupBox3.TabIndex = 5;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Position";
@@ -818,7 +1270,7 @@ namespace LevelEditor
             this.groupBox5.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox5.Location = new System.Drawing.Point(0, 39);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(147, 72);
+            this.groupBox5.Size = new System.Drawing.Size(142, 72);
             this.groupBox5.TabIndex = 10;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Components";
@@ -836,7 +1288,7 @@ namespace LevelEditor
             this.componetsCheck.Location = new System.Drawing.Point(3, 16);
             this.componetsCheck.Margin = new System.Windows.Forms.Padding(0);
             this.componetsCheck.Name = "componetsCheck";
-            this.componetsCheck.Size = new System.Drawing.Size(141, 53);
+            this.componetsCheck.Size = new System.Drawing.Size(136, 53);
             this.componetsCheck.TabIndex = 1;
             this.componetsCheck.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.componetsCheck_ItemCheck);
             // 
@@ -847,7 +1299,7 @@ namespace LevelEditor
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox4.Location = new System.Drawing.Point(0, 0);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(147, 39);
+            this.groupBox4.Size = new System.Drawing.Size(142, 39);
             this.groupBox4.TabIndex = 0;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Name";
@@ -858,26 +1310,10 @@ namespace LevelEditor
             this.nameBox.Location = new System.Drawing.Point(3, 16);
             this.nameBox.Margin = new System.Windows.Forms.Padding(0);
             this.nameBox.Name = "nameBox";
-            this.nameBox.Size = new System.Drawing.Size(141, 20);
+            this.nameBox.Size = new System.Drawing.Size(136, 20);
             this.nameBox.TabIndex = 0;
             this.nameBox.TextChanged += new System.EventHandler(this.transform_ValueChanged);
             this.nameBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.nameBox_KeyDown);
-            // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.FpsCount});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 419);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(624, 22);
-            this.statusStrip1.TabIndex = 4;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // FpsCount
-            // 
-            this.FpsCount.Name = "FpsCount";
-            this.FpsCount.Size = new System.Drawing.Size(44, 17);
-            this.FpsCount.Text = "FPS: 00";
             // 
             // timer1
             // 
@@ -885,104 +1321,11 @@ namespace LevelEditor
             this.timer1.Interval = 1;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // groupBox6
-            // 
-            this.groupBox6.Controls.Add(this.Radius);
-            this.groupBox6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox6.Location = new System.Drawing.Point(0, 183);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(147, 40);
-            this.groupBox6.TabIndex = 11;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Radius";
-            this.groupBox6.Visible = false;
-            // 
-            // Radius
-            // 
-            this.Radius.DecimalPlaces = 1;
-            this.Radius.Dock = System.Windows.Forms.DockStyle.Top;
-            this.Radius.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.Radius.Location = new System.Drawing.Point(3, 16);
-            this.Radius.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.Radius.Maximum = new decimal(new int[] {
-            999,
-            0,
-            0,
-            0});
-            this.Radius.Minimum = new decimal(new int[] {
-            999,
-            0,
-            0,
-            -2147483648});
-            this.Radius.Name = "Radius";
-            this.Radius.Size = new System.Drawing.Size(141, 20);
-            this.Radius.TabIndex = 8;
-            this.Radius.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
-            // 
-            // graphicsPanel1
-            // 
-            this.graphicsPanel1.Controls.Add(this.LeftToggle);
-            this.graphicsPanel1.Controls.Add(this.RightToggle);
-            this.graphicsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.graphicsPanel1.Location = new System.Drawing.Point(0, 0);
-            this.graphicsPanel1.Name = "graphicsPanel1";
-            this.graphicsPanel1.Size = new System.Drawing.Size(325, 417);
-            this.graphicsPanel1.TabIndex = 2;
-            this.graphicsPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.Paint);
-            this.graphicsPanel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseClick);
-            this.graphicsPanel1.MouseLeave += new System.EventHandler(this.graphicsPanel1_MouseLeave);
-            this.graphicsPanel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseMove);
-            this.graphicsPanel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseUp);
-            this.graphicsPanel1.Resize += new System.EventHandler(this.Resize);
-            // 
-            // LeftToggle
-            // 
-            this.LeftToggle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.LeftToggle.Location = new System.Drawing.Point(3, 3);
-            this.LeftToggle.MinimumSize = new System.Drawing.Size(1, 1);
-            this.LeftToggle.Name = "LeftToggle";
-            this.LeftToggle.Size = new System.Drawing.Size(23, 23);
-            this.LeftToggle.TabIndex = 1;
-            this.LeftToggle.Text = "<";
-            this.LeftToggle.UseVisualStyleBackColor = true;
-            this.LeftToggle.Click += new System.EventHandler(this.LeftToggle_Click);
-            // 
-            // RightToggle
-            // 
-            this.RightToggle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.RightToggle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.RightToggle.Location = new System.Drawing.Point(299, 3);
-            this.RightToggle.MinimumSize = new System.Drawing.Size(1, 1);
-            this.RightToggle.Name = "RightToggle";
-            this.RightToggle.Size = new System.Drawing.Size(23, 23);
-            this.RightToggle.TabIndex = 0;
-            this.RightToggle.Text = ">";
-            this.RightToggle.UseVisualStyleBackColor = true;
-            this.RightToggle.Click += new System.EventHandler(this.RightToggle_Click);
-            // 
-            // Trigger
-            // 
-            this.Trigger.AutoSize = true;
-            this.Trigger.Dock = System.Windows.Forms.DockStyle.Top;
-            this.Trigger.Location = new System.Drawing.Point(0, 367);
-            this.Trigger.Name = "Trigger";
-            this.Trigger.Size = new System.Drawing.Size(147, 17);
-            this.Trigger.TabIndex = 12;
-            this.Trigger.Text = "Trigger";
-            this.Trigger.UseVisualStyleBackColor = true;
-            this.Trigger.Visible = false;
-            this.Trigger.CheckedChanged += new System.EventHandler(this.Trigger_CheckedChanged);
-            // 
             // Editor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(624, 441);
-            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -1000,6 +1343,19 @@ namespace LevelEditor
             this.splitContainer2.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.graphicsPanel1.ResumeLayout(false);
+            this.Physics.ResumeLayout(false);
+            this.Physics.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Drag)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Mass)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.KeneticF)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Elasticity)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.StaticF)).EndInit();
+            this.ExtraVector.ResumeLayout(false);
+            this.ExtraVector.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ExtraX)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ExtraY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ExtraZ)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rotZ)).EndInit();
@@ -1010,6 +1366,8 @@ namespace LevelEditor
             ((System.ComponentModel.ISupportInitialize)(this.scaleZ)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.scaleY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.scaleX)).EndInit();
+            this.groupBox6.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.Radius)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.posZ)).EndInit();
@@ -1018,11 +1376,6 @@ namespace LevelEditor
             this.groupBox5.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
-            this.groupBox6.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.Radius)).EndInit();
-            this.graphicsPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1063,11 +1416,9 @@ namespace LevelEditor
         private GraphicsPanel graphicsPanel1;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.StatusStrip statusStrip1;
         private NoFocusButton RightToggle;
         private NoFocusButton LeftToggle;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.ToolStripStatusLabel FpsCount;
         private System.Windows.Forms.TreeView Tree;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.NumericUpDown posX;
@@ -1097,6 +1448,25 @@ namespace LevelEditor
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.NumericUpDown Radius;
         private System.Windows.Forms.CheckBox Trigger;
+        private System.Windows.Forms.CheckBox MoveCheck;
+        private System.Windows.Forms.GroupBox Physics;
+        private System.Windows.Forms.NumericUpDown Drag;
+        private System.Windows.Forms.Label MassL;
+        private System.Windows.Forms.Label DragL;
+        private System.Windows.Forms.NumericUpDown Mass;
+        private System.Windows.Forms.NumericUpDown KeneticF;
+        private System.Windows.Forms.Label ElasticityL;
+        private System.Windows.Forms.Label KeneticL;
+        private System.Windows.Forms.NumericUpDown Elasticity;
+        private System.Windows.Forms.NumericUpDown StaticF;
+        private System.Windows.Forms.Label StaticL;
+        private System.Windows.Forms.GroupBox ExtraVector;
+        private System.Windows.Forms.NumericUpDown ExtraX;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.NumericUpDown ExtraY;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.NumericUpDown ExtraZ;
+        private System.Windows.Forms.Label label12;
     }
 }
 

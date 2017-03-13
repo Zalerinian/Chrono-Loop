@@ -20,15 +20,13 @@ namespace LevelEditor
         private VertexBuffer mVertexBuffer;
         private Matrix mTransform;
         private Device mDevice;
-        private bool mIsWireFrame;
-        private Vector3 mPosition;
-        private Vector3 mRotation;
-        private Vector3 mScale;
+        private Vector3 mPosition, mRotation, mScale, mGravity;
         private string mName;
         private Color mColor;
         private List<ToolObjectColor> mChildren;
-        private bool mSelected;
-        private bool mIsSolid = true;
+        private bool mIsWireFrame, mSelected, mIsSolid = true, mCanMove = false;
+        private float mMass, mElasticity, mStaticF, mKeneticF, mDrag;
+
         #region Properties
         public CustomVertex.PositionNormalColored[] Vertices
         {
@@ -134,6 +132,48 @@ namespace LevelEditor
         {
             get { return mIsSolid; }
             set { mIsSolid = value; }
+        }
+
+        public float Mass
+        {
+            get { return mMass; }
+            set { mMass = value; }
+        }
+
+        public float Elasticity
+        {
+            get { return mElasticity; }
+            set { mElasticity = value; }
+        }
+
+        public float StaticF
+        {
+            get { return mStaticF; }
+            set { mStaticF = value; }
+        }
+
+        public float KeneticF
+        {
+            get { return mKeneticF; }
+            set { mKeneticF = value; }
+        }
+
+        public float Drag
+        {
+            get { return mDrag; }
+            set { mDrag = value; }
+        }
+
+        public Vector3 Gravity
+        {
+            get { return mGravity; }
+            set { mGravity = value; }
+        }
+
+        public bool CanMove
+        {
+            get { return mCanMove; }
+            set { mCanMove = value; }
         }
         #endregion
 

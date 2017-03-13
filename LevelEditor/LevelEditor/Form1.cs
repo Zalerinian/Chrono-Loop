@@ -144,13 +144,13 @@ namespace LevelEditor
             device.Transform.World = debugObjs[0].Transform;
             device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, debugObjs[0].Indices.Length, 0, debugObjs[0].Indices.Length / 3);
             //Scene
-            device.VertexFormat = CustomVertex.PositionNormalTextured.Format;
-            device.RenderState.CullMode = Cull.Clockwise;
                     device.RenderState.AlphaBlendEnable = false;
             foreach (ToolObject tObj in higharchy)
             {
                 if (tObj.Vertices != null)
                 {
+                    device.VertexFormat = CustomVertex.PositionNormalTextured.Format;
+                    device.RenderState.CullMode = Cull.Clockwise;
                     device.RenderState.FillMode = tObj.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
                     device.SetStreamSource(0, tObj.VertexBuffer, 0);
                     device.Indices = tObj.IndexBuffer;
@@ -171,8 +171,6 @@ namespace LevelEditor
                     else
                         device.Transform.World = Matrix.Translation(tObj.Position) * tObj.Collider.Transform;
                     device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Collider.Indices.Length, 0, tObj.Collider.Indices.Length / 3);
-                    device.VertexFormat = CustomVertex.PositionNormalTextured.Format;
-                    device.RenderState.CullMode = Cull.Clockwise;
                 }
             }
             //Axis Gizmo
@@ -732,6 +730,13 @@ namespace LevelEditor
                             }
                             else
                                 writer.WriteElementString("Radius", tObj.Collider.Scale.X.ToString());
+                            writer.WriteElementString("Gravity", tObj.Collider.Gravity.X + "," + tObj.Collider.Gravity.Y + "," + tObj.Collider.Gravity.Z);
+                            writer.WriteElementString("Movable", tObj.Collider.CanMove ? "False" : "True");
+                            writer.WriteElementString("Mass", tObj.Collider.Mass.ToString());
+                            writer.WriteElementString("Elasticity", tObj.Collider.Elasticity.ToString());
+                            writer.WriteElementString("StaticFriction", tObj.Collider.StaticF.ToString());
+                            writer.WriteElementString("KeneticFriction", tObj.Collider.KeneticF.ToString());
+                            writer.WriteElementString("Drag", tObj.Collider.Drag.ToString());
                             writer.WriteEndElement();
                         }
                         writer.WriteEndElement();
@@ -746,6 +751,7 @@ namespace LevelEditor
         private void Trigger_CheckedChanged(object sender, EventArgs e)
         {
             selectedCollider.IsSolid = !Trigger.Checked;
+            selectedCollider.CanMove = MoveCheck.Checked;
         }
 
         private void componetsCheck_ItemCheck(object sender, ItemCheckEventArgs e)
@@ -846,15 +852,30 @@ namespace LevelEditor
             {
                 groupBox5.Visible = false;
                 Trigger.Visible = true;
+                MoveCheck.Visible = true;
+                Physics.Visible = true;
+                ExtraVector.Visible = true;
+                ExtraVector.Text = "Gravity";
                 Trigger.Checked = !selectedCollider.IsSolid;
                 nameBox.Text = selectedCollider.Name;
-                posX.Value = (decimal)selectedCollider.Position.X;
-                posY.Value = (decimal)selectedCollider.Position.Y;
-                posZ.Value = (decimal)selectedCollider.Position.Z;
+                posX.Value =        (decimal)selectedCollider.Position.X;
+                posY.Value =        (decimal)selectedCollider.Position.Y;
+                posZ.Value =        (decimal)selectedCollider.Position.Z;
 
-                rotX.Value = (decimal)(selectedCollider.Rotation.X * ToolObject.RADIANS_TO_DEGREES);
-                rotY.Value = (decimal)(selectedCollider.Rotation.Y * ToolObject.RADIANS_TO_DEGREES);
-                rotZ.Value = (decimal)(selectedCollider.Rotation.Z * ToolObject.RADIANS_TO_DEGREES);
+                rotX.Value =        (decimal)(selectedCollider.Rotation.X * ToolObject.RADIANS_TO_DEGREES);
+                rotY.Value =        (decimal)(selectedCollider.Rotation.Y * ToolObject.RADIANS_TO_DEGREES);
+                rotZ.Value =        (decimal)(selectedCollider.Rotation.Z * ToolObject.RADIANS_TO_DEGREES);
+
+                ExtraX.Value =      (decimal)selectedCollider.Gravity.X;
+                ExtraY.Value =      (decimal)selectedCollider.Gravity.Y;
+                ExtraZ.Value =      (decimal)selectedCollider.Gravity.Z;
+
+                Mass.Value =        (decimal)selectedCollider.Mass;
+                Elasticity.Value =  (decimal)selectedCollider.Elasticity;
+                StaticF.Value =     (decimal)selectedCollider.StaticF;
+                KeneticF.Value =    (decimal)selectedCollider.KeneticF;
+                Drag.Value =        (decimal)selectedCollider.Drag;
+
                 if (colliderType == "OBB")
                 {
                     groupBox1.Visible = true;
@@ -876,18 +897,20 @@ namespace LevelEditor
                 groupBox5.Visible = true;
                 groupBox1.Visible = true;
                 Trigger.Visible = false;
+                Physics.Visible = false;
+                MoveCheck.Visible = false;
                 nameBox.Text = selectedObject.Name;
-                posX.Value = (decimal)selectedObject.Position.X;
-                posY.Value = (decimal)selectedObject.Position.Y;
-                posZ.Value = (decimal)selectedObject.Position.Z;
+                posX.Value =    (decimal)selectedObject.Position.X;
+                posY.Value =    (decimal)selectedObject.Position.Y;
+                posZ.Value =    (decimal)selectedObject.Position.Z;
 
-                rotX.Value = (decimal)(selectedObject.Rotation.X * ToolObject.RADIANS_TO_DEGREES);
-                rotY.Value = (decimal)(selectedObject.Rotation.Y * ToolObject.RADIANS_TO_DEGREES);
-                rotZ.Value = (decimal)(selectedObject.Rotation.Z * ToolObject.RADIANS_TO_DEGREES);
+                rotX.Value =    (decimal)(selectedObject.Rotation.X * ToolObject.RADIANS_TO_DEGREES);
+                rotY.Value =    (decimal)(selectedObject.Rotation.Y * ToolObject.RADIANS_TO_DEGREES);
+                rotZ.Value =    (decimal)(selectedObject.Rotation.Z * ToolObject.RADIANS_TO_DEGREES);
 
-                scaleX.Value = (decimal)selectedObject.Scale.X;
-                scaleY.Value = (decimal)selectedObject.Scale.Y;
-                scaleZ.Value = (decimal)selectedObject.Scale.Z;
+                scaleX.Value =  (decimal)selectedObject.Scale.X;
+                scaleY.Value =  (decimal)selectedObject.Scale.Y;
+                scaleZ.Value =  (decimal)selectedObject.Scale.Z;
                 if (selectedObject.Collider != null)
                 {
                     componetsCheck.SetItemChecked(selectedObject.ColliderType == "OBB" ? 0 : 1, true);
@@ -905,6 +928,8 @@ namespace LevelEditor
                 groupBox5.Visible = true;
                 groupBox1.Visible = true;
                 Trigger.Visible = false;
+                Physics.Visible = false;
+                MoveCheck.Visible = false;
                 componetsCheck.ClearSelected();
                 for (int i = 0; i < 3; i++)
                     componetsCheck.SetItemChecked(i, false);
@@ -947,6 +972,12 @@ namespace LevelEditor
             {
                 Tree.Nodes[1].Nodes[selectedIndex].Nodes[0].Text = nameBox.Text;
                 selectedCollider.Name = nameBox.Text;
+                selectedCollider.Gravity = new Vector3((float)ExtraX.Value, (float)ExtraY.Value, (float)ExtraZ.Value);
+                selectedCollider.Mass = (float)Mass.Value;
+                selectedCollider.Elasticity = (float)Elasticity.Value;
+                selectedCollider.StaticF = (float)StaticF.Value;
+                selectedCollider.KeneticF = (float)KeneticF.Value;
+                selectedCollider.Drag = (float)Drag.Value;
                 selectedCollider.SetPosition(new Vector3((float)posX.Value, (float)posY.Value, (float)posZ.Value));
                 if (colliderType == "OBB")
                     selectedCollider.SetScale(new Vector3((float)scaleX.Value, (float)scaleY.Value, (float)scaleZ.Value));
@@ -977,18 +1008,6 @@ namespace LevelEditor
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            fpsTimer.Stop();
-            advMillisecond.Add(fpsTimer.ElapsedMilliseconds);
-            if (advMillisecond.Count >= 5)
-            {
-                long adv = 0;
-                foreach (long l in advMillisecond)
-                    adv += l;
-                adv /= advMillisecond.Count;
-                FpsCount.Text = "FPS: " + (1000 / adv);
-            }
-            fpsTimer.Reset();
-            fpsTimer.Start();
             graphicsPanel1.Invalidate();
         }
     }
