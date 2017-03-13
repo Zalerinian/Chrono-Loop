@@ -166,10 +166,10 @@ namespace LevelEditor
                     device.SetStreamSource(0, tObj.Collider.VertexBuffer, 0);
                     device.Indices = tObj.Collider.IndexBuffer;
                     device.SetTexture(0, null);
-                    if (tObj.ColliderType == "OBB")
-                        device.Transform.World = tObj.Collider.Transform * tObj.Transform;
-                    else
+                    if (tObj.ColliderType == "Sphere")
                         device.Transform.World = Matrix.Translation(tObj.Position) * tObj.Collider.Transform;
+                    else
+                        device.Transform.World = tObj.Collider.Transform * tObj.Transform;
                     device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Collider.Indices.Length, 0, tObj.Collider.Indices.Length / 3);
                 }
             }
@@ -723,20 +723,39 @@ namespace LevelEditor
                             writer.WriteElementString("Type", tObj.ColliderType);
                             writer.WriteElementString("Trigger", tObj.Collider.IsSolid ? "False" : "True");
                             writer.WriteElementString("Position", tObj.Collider.Position.X + "," + tObj.Collider.Position.Y + "," + tObj.Collider.Position.Z);
-                            if (tObj.ColliderType == "OBB")
+                            if (tObj.ColliderType == "Sphere")
+                                writer.WriteElementString("Radius", tObj.Collider.Scale.X.ToString());
+                            else
                             {
                                 writer.WriteElementString("Rotation", tObj.Collider.Rotation.X + "," + tObj.Collider.Rotation.Y + "," + tObj.Collider.Rotation.Z);
                                 writer.WriteElementString("Scale", tObj.Collider.Scale.X + "," + tObj.Collider.Scale.Y + "," + tObj.Collider.Scale.Z);
                             }
-                            else
-                                writer.WriteElementString("Radius", tObj.Collider.Scale.X.ToString());
-                            writer.WriteElementString("Gravity", tObj.Collider.Gravity.X + "," + tObj.Collider.Gravity.Y + "," + tObj.Collider.Gravity.Z);
-                            writer.WriteElementString("Movable", tObj.Collider.CanMove ? "False" : "True");
-                            writer.WriteElementString("Mass", tObj.Collider.Mass.ToString());
-                            writer.WriteElementString("Elasticity", tObj.Collider.Elasticity.ToString());
-                            writer.WriteElementString("StaticFriction", tObj.Collider.StaticF.ToString());
-                            writer.WriteElementString("KeneticFriction", tObj.Collider.KeneticF.ToString());
-                            writer.WriteElementString("Drag", tObj.Collider.Drag.ToString());
+                            if (tObj.ColliderType == "Sphere" || tObj.ColliderType == "OBB")
+                            {
+                                writer.WriteElementString("Gravity", tObj.Collider.Gravity.X + "," + tObj.Collider.Gravity.Y + "," + tObj.Collider.Gravity.Z);
+                                writer.WriteElementString("Movable", tObj.Collider.CanMove ? "False" : "True");
+                                writer.WriteElementString("Mass", tObj.Collider.Mass.ToString());
+                                writer.WriteElementString("Elasticity", tObj.Collider.Elasticity.ToString());
+                                writer.WriteElementString("StaticFriction", tObj.Collider.StaticF.ToString());
+                                writer.WriteElementString("KeneticFriction", tObj.Collider.KeneticF.ToString());
+                                writer.WriteElementString("Drag", tObj.Collider.Drag.ToString());
+                            }
+                            else if (tObj.ColliderType == "Plane")
+                            {
+                                writer.WriteElementString("Normal", tObj.Collider.Gravity.X + "," + tObj.Collider.Gravity.Y + "," + tObj.Collider.Gravity.Z);
+                                writer.WriteElementString("Movable", tObj.Collider.CanMove ? "False" : "True");
+                                writer.WriteElementString("Mass", tObj.Collider.Mass.ToString());
+                                writer.WriteElementString("Elasticity", tObj.Collider.Elasticity.ToString());
+                                writer.WriteElementString("StaticFriction", tObj.Collider.StaticF.ToString());
+                                writer.WriteElementString("KeneticFriction", tObj.Collider.KeneticF.ToString());
+                                writer.WriteElementString("Drag", tObj.Collider.Drag.ToString());
+                            }
+                            else if (tObj.ColliderType == "Button")
+                            {
+                                writer.WriteElementString("PushNormal", tObj.Collider.Gravity.X + "," + tObj.Collider.Gravity.Y + "," + tObj.Collider.Gravity.Z);
+                                writer.WriteElementString("Mass", tObj.Collider.Mass.ToString());
+                                writer.WriteElementString("NormalForce", tObj.Collider.StaticF.ToString());
+                            }
                             writer.WriteEndElement();
                         }
                         writer.WriteEndElement();
@@ -785,6 +804,36 @@ namespace LevelEditor
                             Tree.Nodes[1].Nodes[selectedIndex].Nodes.Add("Collider");
                         }
                         if (selectedObject.Collider != null && e.NewValue == CheckState.Unchecked && selectedObject.ColliderType == "Sphere")
+                        {
+                            selectedObject.Collider = null;
+                            Tree.Nodes[1].Nodes[selectedIndex].Nodes.RemoveAt(0);
+                        }
+                        break;
+                    case 2:
+                        if (selectedObject.Collider == null && e.NewValue == CheckState.Checked)
+                        {
+                            selectedObject.Collider = new ToolObjectColor("Assets\\Plane.obj", Color.Red, ref device);
+                            selectedObject.ColliderType = "Plane";
+                            selectedObject.Collider.IsWireFrame = true;
+                            selectedObject.Collider.Name = "Collider";
+                            Tree.Nodes[1].Nodes[selectedIndex].Nodes.Add("Collider");
+                        }
+                        if (selectedObject.Collider != null && e.NewValue == CheckState.Unchecked && selectedObject.ColliderType == "Plane")
+                        {
+                            selectedObject.Collider = null;
+                            Tree.Nodes[1].Nodes[selectedIndex].Nodes.RemoveAt(0);
+                        }
+                        break;
+                    case 3:
+                        if (selectedObject.Collider == null && e.NewValue == CheckState.Checked)
+                        {
+                            selectedObject.Collider = new ToolObjectColor("Assets\\Cube.obj", Color.Red, ref device);
+                            selectedObject.ColliderType = "Button";
+                            selectedObject.Collider.IsWireFrame = true;
+                            selectedObject.Collider.Name = "Collider";
+                            Tree.Nodes[1].Nodes[selectedIndex].Nodes.Add("Collider");
+                        }
+                        if (selectedObject.Collider != null && e.NewValue == CheckState.Unchecked && selectedObject.ColliderType == "Button")
                         {
                             selectedObject.Collider = null;
                             Tree.Nodes[1].Nodes[selectedIndex].Nodes.RemoveAt(0);
@@ -855,7 +904,12 @@ namespace LevelEditor
                 MoveCheck.Visible = true;
                 Physics.Visible = true;
                 ExtraVector.Visible = true;
-                ExtraVector.Text = "Gravity";
+                if (colliderType == "Plane")
+                    ExtraVector.Text = "Normal";
+                else if (colliderType == "Button")
+                    ExtraVector.Text = "Push Normal";
+                else
+                    ExtraVector.Text = "Gravity";
                 Trigger.Checked = !selectedCollider.IsSolid;
                 nameBox.Text = selectedCollider.Name;
                 posX.Value =        (decimal)selectedCollider.Position.X;
@@ -870,6 +924,24 @@ namespace LevelEditor
                 ExtraY.Value =      (decimal)selectedCollider.Gravity.Y;
                 ExtraZ.Value =      (decimal)selectedCollider.Gravity.Z;
 
+                if (colliderType == "Button")
+                {
+                    Mass.Visible = MassL.Visible = true;
+                    StaticL.Text = "Normal Force";
+                    StaticL.Visible = StaticF.Visible = true;
+                    ElasticityL.Visible = Elasticity.Visible = false;
+                    KeneticL.Visible = KeneticF.Visible = false;
+                    DragL.Visible = Drag.Visible = false;
+                }
+                else
+                {
+                    StaticL.Text = "Static Force";
+                    Mass.Visible = MassL.Visible = true;
+                    StaticL.Visible = StaticF.Visible = true;
+                    ElasticityL.Visible = Elasticity.Visible = true;
+                    KeneticL.Visible = KeneticF.Visible = true;
+                    DragL.Visible = Drag.Visible = true;
+                }
                 Mass.Value =        (decimal)selectedCollider.Mass;
                 Elasticity.Value =  (decimal)selectedCollider.Elasticity;
                 StaticF.Value =     (decimal)selectedCollider.StaticF;
@@ -884,7 +956,7 @@ namespace LevelEditor
                     scaleY.Value = (decimal)selectedCollider.Scale.Y;
                     scaleZ.Value = (decimal)selectedCollider.Scale.Z;
                 }
-                else
+                else if (colliderType == "Spheres")
                 {
                     groupBox1.Visible = false;
                     groupBox6.Visible = true;
@@ -913,12 +985,14 @@ namespace LevelEditor
                 scaleZ.Value =  (decimal)selectedObject.Scale.Z;
                 if (selectedObject.Collider != null)
                 {
-                    componetsCheck.SetItemChecked(selectedObject.ColliderType == "OBB" ? 0 : 1, true);
-                    componetsCheck.SetItemChecked(selectedObject.ColliderType != "OBB" ? 0 : 1, false);
+                    componetsCheck.SetItemChecked(0, selectedObject.ColliderType == "OBB" ?    true : false);
+                    componetsCheck.SetItemChecked(1, selectedObject.ColliderType == "Sphere" ? true : false);
+                    componetsCheck.SetItemChecked(2, selectedObject.ColliderType == "Plane" ?  true : false);
+                    componetsCheck.SetItemChecked(3, selectedObject.ColliderType == "Button" ? true : false);
                 }
                 else
                 {
-                    for (int i = 0; i < 3; i++)
+                    for (int i = 0; i < 4; i++)
                         componetsCheck.SetItemChecked(i, false);
                 }
             }
@@ -931,7 +1005,7 @@ namespace LevelEditor
                 Physics.Visible = false;
                 MoveCheck.Visible = false;
                 componetsCheck.ClearSelected();
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < 4; i++)
                     componetsCheck.SetItemChecked(i, false);
                 nameBox.Text = string.Empty;
                 posX.Value = 0;
@@ -979,10 +1053,10 @@ namespace LevelEditor
                 selectedCollider.KeneticF = (float)KeneticF.Value;
                 selectedCollider.Drag = (float)Drag.Value;
                 selectedCollider.SetPosition(new Vector3((float)posX.Value, (float)posY.Value, (float)posZ.Value));
-                if (colliderType == "OBB")
-                    selectedCollider.SetScale(new Vector3((float)scaleX.Value, (float)scaleY.Value, (float)scaleZ.Value));
-                else
+                if (colliderType == "Sphere")
                     selectedCollider.SetScale(new Vector3((float)Radius.Value, (float)Radius.Value, (float)Radius.Value));
+                else
+                    selectedCollider.SetScale(new Vector3((float)scaleX.Value, (float)scaleY.Value, (float)scaleZ.Value));
                 selectedCollider.SetRotate(new Vector3((float)rotX.Value * ToolObject.DEGREES_TO_RADIANS, (float)rotY.Value * ToolObject.DEGREES_TO_RADIANS, (float)rotZ.Value * ToolObject.DEGREES_TO_RADIANS));
             }
         }

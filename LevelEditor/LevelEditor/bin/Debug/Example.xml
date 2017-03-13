@@ -3,19 +3,37 @@
     <Name>Cube.001</Name>
     <Mesh>Cube.obj</Mesh>
     <Texture>skybox.dds</Texture>
-    <Position>0,0,5.921665</Position>
+    <Position>0,0,12.52721</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components>
       <Collider>
-        <Type>OBB</Type>
-        <Trigger>True</Trigger>
+        <Type>Button</Type>
+        <Trigger>False</Trigger>
         <Position>0,0,0</Position>
-        <Rotation>0.1500223,0,0</Rotation>
-        <Scale>1,5.4,1</Scale>
-        <Gravity>9.8,0,0</Gravity>
-        <Movable>False</Movable>
-        <Mass>0.8</Mass>
+        <Rotation>0,0,0</Rotation>
+        <Scale>0,0,0</Scale>
+        <PushNormal>6,0,0</PushNormal>
+        <Mass>0</Mass>
+        <NormalForce>0</NormalForce>
+      </Collider>
+    </Components>
+  </Object>
+  <Object>
+    <Name>Empty</Name>
+    <Position>-8.16811,0,0</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components>
+      <Collider>
+        <Type>Plane</Type>
+        <Trigger>False</Trigger>
+        <Position>0,0,0</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>1,1,1</Scale>
+        <Normal>0,0,0</Normal>
+        <Movable>True</Movable>
+        <Mass>0</Mass>
         <Elasticity>0</Elasticity>
         <StaticFriction>0</StaticFriction>
         <KeneticFriction>0</KeneticFriction>

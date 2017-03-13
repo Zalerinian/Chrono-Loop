@@ -194,7 +194,8 @@ void Level::iSetHeadsetAndControllers(BaseObject *& _headset, BaseObject *& _con
 				while (pObject)
 				{
 					std::string elementType, name, meshFile, textureFile, colliderType;
-					vec4f position, rotation, scale, colliderPosition, colliderScale;
+					vec4f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity;
+					float mass, elasticity, staticF, keneticF, normF, drag;
 					bool collider = false, trigger = false;
 					pData = pObject->FirstChildElement();
 					while (pData)
@@ -269,6 +270,55 @@ void Level::iSetHeadsetAndControllers(BaseObject *& _headset, BaseObject *& _con
 							{
 								float radius = std::strtof(pData->Value(), nullptr);
 								colliderScale = vec4f(radius, radius, radius, 1);
+							}
+							else if (elementType == "Mass")
+								mass = std::strtof(pData->Value(), nullptr);
+							else if (elementType == "Elasticity")
+								elasticity = std::strtof(pData->Value(), nullptr);
+							else if (elementType == "StaticFriction")
+								staticF = std::strtof(pData->Value(), nullptr);
+							else if (elementType == "KeneticFriction")
+								keneticF = std::strtof(pData->Value(), nullptr);
+							else if (elementType == "Drag")
+								drag = std::strtof(pData->Value(), nullptr);
+							else if (elementType == "Normal")
+							{
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									normal.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+							}
+							else if (elementType == "PushNormal")
+							{
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									pushNorm.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+							}
+							else if (elementType == "Gravity")
+							{
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									gravity.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
 							}
 							pData = pData->Parent()->NextSiblingElement();
 							break;
