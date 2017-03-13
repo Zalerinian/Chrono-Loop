@@ -4,9 +4,7 @@
 #include "../Objects/MeshComponent.h"
 
 namespace Epoch {
-
-	Level* Level::sInstance = nullptr;
-
+	
 	Level::Level() {}
 
 	Level::~Level() {
@@ -26,25 +24,11 @@ namespace Epoch {
 		//mObjectMap.clear();
 	}
 
-	Level *Level::Instance() {
-		return sInstance;
-	}
-
-	void Level::DestroyInstance() {
-		if (sInstance != nullptr) {
-			delete sInstance;
-			sInstance = nullptr;
-		}
-	}
-
 	void Level::Initialize(BaseObject * _headset, BaseObject * _lController, BaseObject * _rController) {
-		if (nullptr == sInstance) {
-			sInstance = new Level;
-			sInstance->mHeadset = _headset;
-			sInstance->mController1 = _lController;
-			sInstance->mController2 = _rController;
-			CommandConsole::Instance().AddCommand(L"/WIREFRAME", ToggleEntireLevelsWireframe);
-		}
+		mHeadset = _headset;
+		mController1 = _lController;
+		mController2 = _rController;
+		CommandConsole::Instance().AddCommand(L"/WIREFRAME", ToggleEntireLevelsWireframe);
 	}
 
 	BaseObject * Level::iFindObjectWithName(std::string _name) {
@@ -80,7 +64,7 @@ namespace Epoch {
 		return false;
 	}
 
-	void Level::iSetHeadsetAndControllers(BaseObject *& _headset, BaseObject *& _controller1, BaseObject *& _controller2, ControllerCollider* _c1Collider, ControllerCollider* _c2Collider) {
+	void Level::SetHeadsetAndControllers(BaseObject *& _headset, BaseObject *& _controller1, BaseObject *& _controller2, ControllerCollider* _c1Collider, ControllerCollider* _c2Collider) {
 		//Remove the action componets and 
 		//Set the new BaseObjects to the current controller so new objects can follow old controller movement as clones.
 		unsigned short headid = _headset->GetUniqueID();
@@ -138,7 +122,7 @@ namespace Epoch {
 
 	}
 
-	void Level::iCallStart() {
+	void Level::CallStart() {
 		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
 			auto codes = (*it)->GetComponents(eCOMPONENT_CODE);
 			for (auto oit = codes.begin(); oit != codes.end(); ++oit) {
@@ -147,11 +131,11 @@ namespace Epoch {
 		}
 	}
 
-	void Level::iLoadLevel() {
+	void Level::LoadLevel() {
 		//*TODO: Insert Code Here When we Get to It**//
 	}
 
-	void Level::iUpdate() {
+	void Level::Update() {
 		//*Insert Code Here When we Get to It**//
 		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
 			(*it)->Update();
@@ -162,7 +146,7 @@ namespace Epoch {
 	void Level::ToggleEntireLevelsWireframe(void* _command, std::wstring _ifOn) {
 		CommandConsole* cc = (CommandConsole*)_command;
 		if (_ifOn == L"ON") {
-			for (auto it = sInstance->mObjectList.begin(); it != sInstance->mObjectList.end(); ++it) {
+			for (auto it = mObjectList.begin(); it != sInstance->mObjectList.end(); ++it) {
 				for (size_t x = 0; x < (*it)->GetComponents(ComponentType::eCOMPONENT_MESH).size(); ++x) {
 					MeshComponent* tempMComp = (MeshComponent*)((*it)->GetComponents(ComponentType::eCOMPONENT_MESH)[x]);
 
@@ -171,7 +155,7 @@ namespace Epoch {
 			}
 			CommandConsole::Instance().DisplaySet(L"");
 		} else if (_ifOn == L"OFF") {
-			for (auto it = sInstance->mObjectList.begin(); it != sInstance->mObjectList.end(); ++it) {
+			for (auto it = mObjectList.begin(); it != sInstance->mObjectList.end(); ++it) {
 				for (size_t x = 0; x < (*it)->GetComponents(ComponentType::eCOMPONENT_MESH).size(); ++x) {
 					MeshComponent* tempMComp = (MeshComponent*)((*it)->GetComponents(ComponentType::eCOMPONENT_MESH)[x]);
 					tempMComp->SetRasterState(eRS_FILLED);

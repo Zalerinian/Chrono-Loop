@@ -526,7 +526,8 @@ void Update() {
 	Physics::Instance()->mObjects.push_back(RightController);
 	Physics::Instance()->mObjects.push_back(LeftController);
 	Physics::Instance()->mObjects.push_back(Button);
-	
+
+	Level* L1 = new Level;
 	Level::Initialize(headset, RightController, LeftController);
 	Level* L1 = Level::Instance(); 
 	L1->iAddObject(PhysicsBox);
@@ -543,7 +544,7 @@ void Update() {
 	L1->iAddObject(BlockDoor);
 	L1->iAddObject(ControlBoard);
 	L1->iAddObject(WinBoard);
-	L1->iCallStart();
+	L1->CallStart();
 
 #pragma endregion
 

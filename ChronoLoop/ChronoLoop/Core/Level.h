@@ -15,7 +15,6 @@ namespace Epoch
 
 	class Level
 	{
-		static Level* sInstance;
 		BaseObject* mHeadset;
 		BaseObject* mController1;
 		BaseObject* mController2;
@@ -23,15 +22,13 @@ namespace Epoch
 		unsigned short mId;
 
 
+	public:
 		Level();
 		~Level();
-	public:
 		bool ChronoLoop = true;
 		bool flip = true;
 
-		static Level* Instance();
-		static void DestroyInstance();
-		static void Initialize(BaseObject *_headset, BaseObject *_lController, BaseObject *_rController);
+		void Initialize(BaseObject *_headset, BaseObject *_lController, BaseObject *_rController);
 
 		//**GETTERS**//
 		BaseObject* iFindObjectWithName(std::string _name);
@@ -46,17 +43,16 @@ namespace Epoch
 
 
 		//**SETTERS**//
-		void iSetId(unsigned short _set) { mId = _set; };
-		void iSetHeadsetAndControllers(BaseObject*& _headset, BaseObject*& _controller1, BaseObject*& _controller2, ControllerCollider* _c1Collider, ControllerCollider* _c2Collider);
+		void SetId(unsigned short _set) { mId = _set; };
+		void SetHeadsetAndControllers(BaseObject*& _headset, BaseObject*& _controller1, BaseObject*& _controller2, ControllerCollider* _c1Collider, ControllerCollider* _c2Collider);
 
 		//**FUNCTIONS**//
-		void iCallStart();
-		void iLoadLevel();
-		void iUpdate();
-
+		void CallStart();
+		void LoadLevel();
+		void Update();
 
 		//**CONSOLE COMMAND FUNCS**//
-		static void ToggleEntireLevelsWireframe(void * _command, std::wstring _ifOn);
+		void ToggleEntireLevelsWireframe(void * _command, std::wstring _ifOn);
 
 	};
 

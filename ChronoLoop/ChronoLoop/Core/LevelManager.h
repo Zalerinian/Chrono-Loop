@@ -16,6 +16,8 @@ namespace Epoch {
 			Error
 		};
 
+
+		void SetCurrentLevel(Level* _level);
 		Level* GetCurrentLevel();
 		LevelStatus LoadLevelAsync(const char* _path, Level* _out);
 	};

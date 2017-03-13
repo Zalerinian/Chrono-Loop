@@ -18,7 +18,11 @@ namespace Epoch {
 		}
 	}
 
-	Level * LM::GetCurrentLevel() {
+	void LM::SetCurrentLevel(Level* _level) {
+		mCurrentLevel = _level;
+	}
+
+	Level* LM::GetCurrentLevel() {
 		return mCurrentLevel;
 	}
 
