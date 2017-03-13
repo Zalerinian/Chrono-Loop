@@ -20,7 +20,17 @@ namespace Epoch {
 
 		virtual void Update() override {
 			if (VRInputManager::GetInstance().IsVREnabled() && mCollider) {
-				InputTimeline::InputNode*temp = VRInputManager::GetInstance().FindLastInput(mCollider->GetBaseObject()->GetUniqueID());
+
+				bool right = Level::Instance()->iGetRightTimeManinpulator()->isTimePaused();
+				bool left = Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused();
+				InputTimeline::InputNode*temp;
+				if (right || left) {
+					temp = VRInputManager::GetInstance().FindLastInput(mCollider->GetBaseObject()->GetUniqueID(), true);
+				}
+				else {
+					temp = VRInputManager::GetInstance().FindLastInput(mCollider->GetBaseObject()->GetUniqueID(), false);
+				}
+
 				//This is gross but i dont know how to get around this without storing mheld and should move in timeline
 				if (mInput && temp && mPickUp && (temp->mData.mLastFrame < mInput->mData.mLastFrame || (temp->mData.mLastFrame == mInput->mData.mLastFrame && temp->mData.mTime < mInput->mData.mTime))) {
 					mHeld = false;
