@@ -504,6 +504,7 @@ namespace LevelEditor
                     mChildren[i].VertexDeclaration();
             if (mVertices != null)
             {
+                mVertexBuffer.Dispose();
                 mVertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionNormalColored), mVertices.Length, mDevice, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionNormalColored.Format, Pool.Default);
                 mVertexBuffer.SetData(mVertices, 0, LockFlags.None);
             }
@@ -515,6 +516,7 @@ namespace LevelEditor
                     mChildren[i].IndicesDeclaration();
             if (mIndices != null)
             {
+                mIndexBuffer.Dispose();
                 mIndexBuffer = new IndexBuffer(typeof(int), mIndices.Length * sizeof(int), mDevice, Usage.WriteOnly, Pool.Default);
                 mIndexBuffer.SetData(mIndices, 0, LockFlags.None);
             }

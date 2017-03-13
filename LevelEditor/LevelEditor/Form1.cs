@@ -739,6 +739,7 @@ namespace LevelEditor
                                 writer.WriteElementString("Rotation", tObj.Collider.Rotation.X + "," + tObj.Collider.Rotation.Y + "," + tObj.Collider.Rotation.Z);
                                 writer.WriteElementString("Scale", tObj.Collider.Scale.X + "," + tObj.Collider.Scale.Y + "," + tObj.Collider.Scale.Z);
                             }
+                            writer.WriteElementString("Move", tObj.Collider.CanMove ? "True" : "False");
                             if (tObj.ColliderType == "Sphere" || tObj.ColliderType == "OBB")
                             {
                                 writer.WriteElementString("Gravity", tObj.Collider.Gravity.X + "," + tObj.Collider.Gravity.Y + "," + tObj.Collider.Gravity.Z);
