@@ -72,11 +72,12 @@ namespace LevelEditor
             {
                 PresentParameters presentParams = new PresentParameters();
                 presentParams.Windowed = true;
-                presentParams.SwapEffect = SwapEffect.Discard;
+                presentParams.SwapEffect = SwapEffect.Copy;
+                presentParams.EnableAutoDepthStencil = true;
+                presentParams.AutoDepthStencilFormat = DepthFormat.D16;
                 device = new Microsoft.DirectX.Direct3D.Device(0, Microsoft.DirectX.Direct3D.DeviceType.Hardware, this.graphicsPanel1, CreateFlags.SoftwareVertexProcessing, presentParams);
                 device.RenderState.FillMode = FillMode.Solid;
                 device.RenderState.CullMode = Cull.Clockwise;
-                device.RenderState.ZBufferEnable = true;
                 device.DeviceReset += new EventHandler(HandleResetEvent);
             }
             catch (GraphicsException exception)
@@ -130,6 +131,8 @@ namespace LevelEditor
         }
         private void Paint(object sender, PaintEventArgs e)
         {
+            device.RenderState.ZBufferEnable = true;
+            device.Clear(ClearFlags.ZBuffer, 0, 1.0f, 0);
             device.Clear(ClearFlags.Target, Color.Black, 1.0f, 0);
 
             device.BeginScene();
@@ -158,6 +161,11 @@ namespace LevelEditor
                     device.Transform.World = tObj.Transform;
                     device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Indices.Length, 0, tObj.Indices.Length / 3);
                 }
+            }
+            //Axis Gizmo
+            device.Clear(ClearFlags.ZBuffer, 0, 1.0f, 0);
+            foreach (ToolObject tObj in higharchy)
+            {
                 if (tObj.Collider != null)
                 {
                     device.VertexFormat = CustomVertex.PositionNormalColored.Format;
@@ -173,7 +181,6 @@ namespace LevelEditor
                     device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Collider.Indices.Length, 0, tObj.Collider.Indices.Length / 3);
                 }
             }
-            //Axis Gizmo
             if (selectedObject != null)
             {
                 device.VertexFormat = CustomVertex.PositionNormalColored.Format;
@@ -194,6 +201,8 @@ namespace LevelEditor
             device.EndScene();
 
             device.Present();
+            device.RenderState.ZBufferEnable = false;
+            device.RenderState.UseWBuffer = true;
             ReadKeyboard();
         }
 
