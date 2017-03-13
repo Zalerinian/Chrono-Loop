@@ -192,4 +192,12 @@ namespace Epoch {
 
 	}
 
+
+	
+
+	//void BaseObject::AddComponent(ComponentType _type, Component* _comp)
+	//{
+	//	mComponents[_type].push_back(_comp);
+	//}
+
 }

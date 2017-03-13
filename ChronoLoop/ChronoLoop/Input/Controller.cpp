@@ -67,13 +67,13 @@ namespace Epoch {
 								(CurPos.y > 0.5f || CurPos.y < -0.5f) &&
 								(CurPos.x < 0.3f && CurPos.x > -0.3f)) {
 								SystemLogger::GetLog() << "Vertical Wrongness" << std::endl;
-								return 0;
+								return 2;
 							}
 							if ((slope <= 0.25f && slope >= -0.25f) &&
 								(CurPos.x > 0.5f || CurPos.x < -0.5f) &&
 								(CurPos.y < 0.3f && CurPos.y > -0.3f)) {
 								SystemLogger::GetLog() << "Horizontal Wrongness" << std::endl;
-								return 0;
+								return 3;
 							}
 							InitialPos = CurPos;
 							if (diff * line > 0) {
@@ -93,18 +93,14 @@ namespace Epoch {
 	}
 
 	vec2f Controller::GetAxis(vr::EVRButtonId buttonId) {
-		if (!GetValid()) {
-			return vec2f(0, 0);
-		}
+		Update();
 		int axisId = (int)buttonId - (int)vr::k_EButton_Axis0;
 		return vec2f(mState.rAxis[axisId].x, mState.rAxis[axisId].y);
 	}
 
 	void Controller::TriggerHapticPulse(int duration_micro_sec, vr::EVRButtonId buttonId) {
-		if (GetValid()) {
 			int axisId = (int)buttonId - (int)vr::k_EButton_Axis0;
 			VRInputManager::GetInstance().GetVRSystem()->TriggerHapticPulse(mIndex, axisId, (char)duration_micro_sec);
-		}
 	}
 
 #pragma region Private Functions

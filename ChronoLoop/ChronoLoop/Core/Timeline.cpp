@@ -89,6 +89,11 @@ namespace Epoch {
 
 	}
 
+	void Timeline::RemoveFromTimeline(unsigned short _id)
+	{
+		mLiveObjects.erase(_id);
+	}
+
 	bool Timeline::RewindMakeClone(unsigned int _snaptime) {
 		if (_snaptime < 0 || _snaptime > mSnaptimes.size() - 1)
 			return false;
@@ -250,6 +255,7 @@ namespace Epoch {
 			newObject->mDeath = mSnaptimes[mCurrentGameTimeIndx];
 		}
 	}
+	
 
 	//This hasn't been tested yet
 	void Timeline::CheckforLostObjects(std::vector<BaseObject*>& mClones) {

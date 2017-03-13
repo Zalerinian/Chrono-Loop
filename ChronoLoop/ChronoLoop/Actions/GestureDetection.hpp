@@ -4,37 +4,51 @@
 #include "../Input/VRInputManager.h"
 #include "../Common/LimitedList.h"
 
-namespace Epoch {
+namespace Epoch
+{
 
-	struct GestureDetection : CodeComponent {
-		ControllerType mControllerRole = eControllerType_Primary;
+	struct GestureDetection : CodeComponent
+	{
 		bool mIsHeld = false;
 		char mHolder = -1;
-		const vec2f mInvalid;
 		vec2f mInitialContactPoint;
-		LimitedList<vec2f> mList;
+		LimitedList mList;
 
-		GestureDetection(ControllerType _t) : mControllerRole(_t), mInvalid(2, 2), mInitialContactPoint(2, 2) {}
+		virtual void Update()
+		{
+			vec2f zero2f;
+			for (char i = 0; i < 2; ++i)
+			{
+				Controller &controller = VRInputManager::Instance().iGetController(i == 0);
+				if (!mIsHeld)
+				{
+					// Check to see if this controller is being touched appropriately.
+					if (controller.GetAxis() != zero2f)
+					{
+						// The controller touchpad is being touched
+						mIsHeld = true;
+						mHolder = i;
+					}
+				}
 
-		virtual void Update() {
-		//	if (VRInputManager::GetInstance().IsVREnabled()) {
-
-		//		Controller &controller = VRInputManager::GetInstance().GetController(mControllerRole);
-		//		
-		//		if (mInitialContactPoint != mInvalid && !controller.GetTouch(vr::k_EButton_SteamVR_Touchpad)) {
-		//			mInitialContactPoint = mInvalid;
-		//			mList.Clear();
-		//		}
-		//		if (controller.GetTouch(vr::k_EButton_SteamVR_Touchpad)) {
-		//			vec2f contactPoint = controller.GetAxis(vr::k_EButton_SteamVR_Touchpad);
-		//			mList.AddHead(contactPoint);
-		//			if (mInitialContactPoint == mInvalid) {
-		//				mInitialContactPoint = contactPoint;
-		//			}
-
-		//		}
-		//	}
-
+				if (i == mHolder)
+				{
+					// This controller started touching the touchpad first.
+					vec2f touch = controller.GetAxis();
+					if (touch == zero2f)
+					{
+						// The touchpad has been released.
+						mIsHeld = false;
+						mHolder = -1;
+						mList.Clear();
+					}
+					else
+					{
+						// The touchpad is still being touched.
+						mList.AddHead(touch);
+					}
+				}
+			}
 		}
 	};
 

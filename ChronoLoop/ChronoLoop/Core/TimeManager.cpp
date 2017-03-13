@@ -6,9 +6,10 @@
 #include "../Rendering/Draw2D.h"
 #include "../Input/CommandConsole.h"
 #include "../Core/Pool.h"
-#include "../Core/LevelManager.h"
+#include "../Core/Level.h"
 #include "../Input/VRInputManager.h"
 #include "../Common/Breakpoint.h"
+#include "LevelManager.h"
 
 namespace Epoch {
 
@@ -32,14 +33,12 @@ namespace Epoch {
 	}
 
 	void TimeManager::Update(float _delta) {
-		// TODO: This is needed in order for the main menu to work. This is kinda a jank way to make it work, so we shoud fix that.
-		mDeltaTime = _delta;
-		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
-		if (cLevel->GetRightTimeManinpulator() != nullptr || cLevel->GetLeftTimeManinpulator() != nullptr) {
+		if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManinpulator() != nullptr || LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManinpulator() != nullptr) {
 
-			if (!cLevel->GetLeftTimeManinpulator()->isTimePaused() && !cLevel->GetRightTimeManinpulator()->isTimePaused()) {
+			if (!LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManinpulator()->isTimePaused() && !LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManinpulator()->isTimePaused()) {
 
 				mTimestamp += _delta;
+				mDeltaTime = _delta;
 
 				//If its time for a snapshot
 				if (mTimestamp >= RecordingRate) {
@@ -125,6 +124,39 @@ namespace Epoch {
 				return true;
 		}
 
+		void TimeManager::DeleteClone(unsigned short _id1)
+	{
+			Clonepair pair;
+			pair.mCur = _id1;
+			FindOtherClones(pair);
+			bool del = false;
+			for (int i = 0; i < mClones.size(); ) {
+				del = false;
+				if (mClones[i]->GetUniqueId() == _id1 || mClones[i]->GetUniqueId() == pair.mOther1 || mClones[i]->GetUniqueId() == pair.mOther2) {
+					mClones[i]->RemoveAllComponents();
+
+
+					for (int k = 0; k < Physics::Instance()->mObjects.size(); ++k) {
+						if (Physics::Instance()->mObjects[k]->GetUniqueID() == mClones[i]->GetUniqueID()) {
+							//I know I could have just iterated through it with an iterator but im lazy and tired
+							Physics::Instance()->mObjects.erase(Physics::Instance()->mObjects.begin() + k);
+							break;
+						}
+					}
+
+					//This doesnt delete the input left of the clone. We may not want to do that to minimize delete calls
+					
+					//Remove it from being tracked by timeline
+					mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueId());
+					Pool::Instance()->iRemoveObject(mClones[i]->GetUniqueID());
+					mClones.erase(mClones.begin() + i);
+					del = true;
+				}
+				if (!del)
+					i++;
+			}
+	}
+
 		unsigned int TimeManager::GetCurrentSnapFrame() {
 			return mTimeline->GetCurrentGameTimeIndx();
 		}
@@ -177,6 +209,36 @@ namespace Epoch {
 			}
 			return false;
 
+		}
+
+		void TimeManager::FindOtherClones(Clonepair & _pair)
+		{
+			ObjectLifeTime* curr = mTimeline->GetObjectLifetime(_pair.mCur);
+			if (!curr)
+				return;
+			bool pair1 = false;
+
+			for (unsigned int i = 0; i < mClones.size(); i++) {
+				if (mClones[i]->GetUniqueId() == _pair.mCur)
+					continue;
+				ObjectLifeTime* temp = mTimeline->GetObjectLifetime(mClones[i]->GetUniqueId());
+				if(temp &&temp->mBirth == curr->mBirth && (mClones[i]->GetName().find("Headset") != std::string::npos || mClones[i]->GetName().find("Controller") != std::string::npos))
+				{
+				
+					if(!pair1)
+					{
+						_pair.mOther1 = mClones[i]->GetUniqueId();
+						pair1 = true;
+					}
+					else
+					{
+						//found the last pair
+						_pair.mOther2 = mClones[i]->GetUniqueId();
+						return;
+					}
+
+				}
+			}
 		}
 
 		void TimeManager::ToggleCloneCountDisplay(void * _command, std::wstring _ifOn) {
@@ -245,30 +307,39 @@ namespace Epoch {
 		}
 		void TimeManager::BrowseTimeline(int _gesture, int _frameRewind) {
 
+
+
 			unsigned int temp = instanceTimemanager->GetCurrentSnapFrame();
 			if (_gesture == 0)
 				return;
-			if (_gesture == 1)
+			else if (_gesture == 1)
 				_frameRewind *= -1;
+			else if (_gesture == 2) {
+				LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManinpulator()->RaycastCloneCheck();
+				LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManinpulator()->RaycastCloneCheck();
+				return;
+			}
+
 			if (mtempCurSnapFrame > mTimeline->GetCurrentGameTimeIndx())
 				return;
 
-			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
+
 			if ((mtempCurSnapFrame != 0 && _gesture == -1) || (mtempCurSnapFrame != temp && _gesture == 1))
 				mtempCurSnapFrame -= _frameRewind;
 			instanceTimemanager->MoveAllObjectExceptPlayer(
 				mtempCurSnapFrame,
-				cLevel->GetHeadset()->GetUniqueID(),
-				cLevel->GetLeftController()->GetUniqueID(),
-				cLevel->GetRightController()->GetUniqueID());
+				LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetUniqueID(),
+				LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueID(),
+				LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueID());
+
+		
+
 		}
 		void TimeManager::MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC) {
 			GetTimeLine()->MoveAllObjectsToSnapExceptPlayer(_snaptime, _headset, _leftC, _rightC);
 		}
-
 		void TimeManager::HotfixResetTimeline() {
-			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
-			RewindTimeline(0, cLevel->GetLeftController()->GetUniqueID(), cLevel->GetRightController()->GetUniqueID(), cLevel->GetHeadset()->GetUniqueID());
+			RewindTimeline(0, LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueID(), LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueID(), LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetUniqueID());
 			mTimeline->HotFixResetLevel();
 			for (int i = 0; i < mClones.size(); ++i) {
 				mClones[i]->RemoveAllComponents();
@@ -279,9 +350,14 @@ namespace Epoch {
 						Physics::Instance()->mObjects.erase(Physics::Instance()->mObjects.begin() + k);
 					}
 				}
+				//Remove it from being tracked by timeline
+				mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueId());
+
 				Pool::Instance()->iRemoveObject(mClones[i]->GetUniqueID());
 			}
 			ClearClones();
+
+
 
 			VRInputManager::GetInstance().GetPlayerPosition()[3].Set(1.9f, -1.0f, 8, 1.0f);
 		}

@@ -27,6 +27,7 @@ namespace Epoch
 		TimeManipulation();
 		TimeManipulation(ControllerType _t) { mControllerRole = _t; };
 		~TimeManipulation();
+		void RaycastCloneCheck();
 		bool isTimePaused() { return mPauseTime; };
 		void makeTimePaused(bool _isPaused) { mPauseTime = _isPaused; };
 		void Start();

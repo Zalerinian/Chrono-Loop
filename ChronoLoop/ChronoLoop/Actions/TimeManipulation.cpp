@@ -19,6 +19,8 @@ namespace Epoch
 
 	TimeManipulation::~TimeManipulation() {}
 
+	
+
 	unsigned int TimeManipulation::mCloneCount = 0;
 
 
@@ -59,13 +61,13 @@ namespace Epoch
 
 			Transform identity;
 			
-
-			BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset - " + std::to_string(mCloneCount),  identity ); //new BaseObject("headset" + std::to_string(rand), identity);
+			//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
+			BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - " + std::to_string(mCloneCount),  identity ); //new BaseObject("headset" + std::to_string(rand), identity);
 			MeshComponent *visibleMesh = new MeshComponent("../Resources/Clone.obj");
 			visibleMesh->AddTexture("../Resources/CloneTexture.png", eTEX_DIFFUSE);
 			headset->AddComponent(visibleMesh);
 
-
+			//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
 			BaseObject* Controller1 = Pool::Instance()->iGetObject()->Reset("Controller1 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
 			MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 			ControllerCollider* CubeColider = new ControllerCollider(Controller1, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
@@ -75,6 +77,7 @@ namespace Epoch
 			Controller1->AddComponent(mc);
 			Controller1->AddComponent(SN1);
 
+			//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
 			BaseObject* Controller2 = Pool::Instance()->iGetObject()->Reset("Controller2 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
 			MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 			ControllerCollider* CubeColider2 = new ControllerCollider(Controller2, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
@@ -123,6 +126,8 @@ namespace Epoch
 					cLevel->GetHeadset()->GetUniqueID(),
 					cLevel->GetRightController()->GetUniqueID(),
 					cLevel->GetLeftController()->GetUniqueID());
+				
+				
 			} else {
 				TimeManager::Instance()->SetTempCurSnap();
 				mPauseTime = true;
@@ -143,4 +148,30 @@ namespace Epoch
 			HotfixButtonDown = 0;
 		}
 	};
+
+	void TimeManipulation::RaycastCloneCheck() {
+		matrix4 mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
+		mObject->GetTransform().SetMatrix(mat);
+
+			std::vector<BaseObject*> clones = TimeManager::Instance()->GetClonesVec();
+		
+			for (int i = 0; i < clones.size(); ++i) {
+				MeshComponent* mesh = (MeshComponent*)clones[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
+				vec4f forward;
+				forward.Set(0, 0, 1, 0);
+				matrix4 inverse = (mat * clones[i]->GetTransform().GetMatrix().Invert());
+				vec4f meshPos = inverse.Position;
+				forward *= inverse;
+				Triangle *tris = mesh->GetTriangles();
+				size_t numTris = mesh->GetTriangleCount();
+				for (unsigned int j = 0; j < numTris; ++j) {
+					float hitTime;
+					if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, forward, hitTime)) {
+							TimeManager::Instance()->DeleteClone(clones[i]->GetUniqueId());
+							return;
+					}
+				}
+			}
+		}
+	
 } // Epoch Namespace

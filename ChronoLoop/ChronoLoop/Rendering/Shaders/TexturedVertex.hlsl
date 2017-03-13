@@ -13,7 +13,9 @@ struct PSI
 
 PSI main(VERTEX_POSNORMTEX input, uint id : SV_InstanceID) {
 	PSI output;
-	output.position = mul(input.position, model[id]);
+	float4 pos = input.position;
+	pos = mul(pos, model[id]);
+	output.position = pos;
 	output.normal = mul(input.normal, model[id]);
 	output.texCoord = input.texCoord;
 	return output;

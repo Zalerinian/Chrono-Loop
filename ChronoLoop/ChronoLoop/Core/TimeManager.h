@@ -10,6 +10,13 @@ namespace Epoch {
 
 	class Timeline;
 
+	//made this to find other baseobjects of the same clone
+	struct Clonepair
+	{
+		unsigned short mCur;
+		unsigned short mOther1;
+		unsigned short mOther2;
+	};
 	//This class handles all game time as well as managing the Timeline
 	class TimeManager {
 		static TimeManager* instanceTimemanager;
@@ -39,8 +46,10 @@ namespace Epoch {
 		void ClearClones();
 		//Checks and see if you can rewind to passed in frame
 		bool CheckRewindAvaliable(unsigned int _RewindNumOfframes);
+		void DeleteClone(unsigned short _id1);
 		static void Destroy();
-		bool DoesCloneExist(unsigned short _id, unsigned int _frame);
+		bool DoesCloneExist(unsigned short _id,unsigned int _frame);
+		void FindOtherClones(Clonepair& _pair);
 		//Returns the current snapshot indx
 		unsigned int GetCurrentSnapFrame();
 		//Retrieves delta time
