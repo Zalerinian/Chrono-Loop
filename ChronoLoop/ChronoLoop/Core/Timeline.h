@@ -21,7 +21,7 @@ namespace Epoch {
 #pragma endregion ComponetStructs
 
 
-//Extracted values from BaseObjects and its componets
+	//Extracted values from BaseObjects and its componets
 	struct SnapInfo {
 		unsigned short mId;	//unique id of the object
 		Transform mTransform;	//positional data of the object
@@ -55,13 +55,13 @@ namespace Epoch {
 	};
 
 	struct ObjectLifeTime {
-		int mBirth = -1;
-		int mDeath = INT32_MAX;
+		unsigned int mBirth = 0;
+		unsigned int mDeath = INT32_MAX;
 	};
 
 	class Timeline {
 		//Where we are at in the timeline
-		int mCurrentGameTimeIndx = 0;
+		unsigned int mCurrentGameTimeIndx = 0;
 		std::vector<unsigned int> mSnaptimes;
 		std::unordered_map<unsigned int, Snapshot*> mSnapshots;		//The key will be the time they were taken (mSnapTimes)
 		std::unordered_map<unsigned short, BaseObject*> mLiveObjects;
@@ -71,17 +71,19 @@ namespace Epoch {
 		Timeline();
 		~Timeline();
 		void AddBaseObject(BaseObject* _object, unsigned short _id);						//add to the list of recorded objects.
-		void AddPlayerBaseObject(BaseObject* _object, unsigned short _id);						//add to the player of recorded objects and .
+		void UpdatePlayerBaseObject(BaseObject* _object, unsigned short _id);						//add to the player of recorded objects and .
 		void AddSnapshot(unsigned int _snaptime, Snapshot* _snapshot);
 		void ClearTimeLine();
 		void ChangeBitsetToSnap(SnapInfo* _destinfo, Component* _curComp);
 		bool CheckForDuplicateData(unsigned short _id, BaseObject* _object);
 		//This function removes non-clone objects that were created in the future
 		void CheckforLostObjects(std::vector<BaseObject*>&mClones);
+		ObjectLifeTime* GetObjectLifetime(unsigned short _id);
 		SnapInfo* GenerateSnapInfo(BaseObject* _object, SnapInfo* _info);							//Error check agianst the BaseObject* if it is null or not
 		Snapshot* GenerateSnapShot(unsigned int _time, std::vector<BaseObject*> & _clones);
 		SnapInfoPlayer * GenerateSnapInfoPlayer();
-		int GetCurrentGameTimeIndx() { return mCurrentGameTimeIndx; }
+		unsigned int GetCurrentGameTimeIndx() { return mCurrentGameTimeIndx; }
+		unsigned int GetTotalSnaps() { return (unsigned int)mSnapshots.size(); };
 		void HotFixResetLevel();
 		bool RewindMakeClone(unsigned int _snaptime);
 		bool RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
@@ -93,7 +95,7 @@ namespace Epoch {
 		void SetCloneDeathTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void SetComponent(SnapComponent* _destComp, BaseObject* _obj, SnapInfo* _destInfo);
 		void SetCurrentGameTimeIndx(int _time) { mCurrentGameTimeIndx = _time; };
-		void UpdateCloneInterpolators(unsigned short _cloneid, SnapInfo* _currSnap, float _currTime);
+		void UpdateCloneInterpolators(unsigned short _cloneid, SnapInfo* _currSnap, unsigned int _currTime);
 	};
 
 }

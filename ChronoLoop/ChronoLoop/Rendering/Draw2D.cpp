@@ -14,14 +14,6 @@ namespace Epoch
 
 	Draw::~Draw()
 	{
-		for (std::pair<unsigned int, std::pair<Font, IDWriteTextFormat*>> x : mFonts)
-		{
-			x.second.second->Release();
-		}
-		for (std::pair<unsigned int, std::pair<D2D1::ColorF, ID2D1SolidColorBrush*>> x : mColorBrushes)
-		{
-			x.second.second->Release();
-		}
 		(*mTextFactory)->Release();
 		(*mDevice2D)->Release();
 		(*mGIDevice)->Release();
@@ -70,7 +62,7 @@ namespace Epoch
 
 		//createDxgiDevice
 		IDXGIDevice* DxgiDevice;
-		Renderer::Instance()->ThrowIfFailed(Renderer::Instance()->iGetDevice().Get()->QueryInterface(__uuidof(IDXGIDevice), (void **)&DxgiDevice));
+		Renderer::Instance()->ThrowIfFailed(Renderer::Instance()->GetDevice().Get()->QueryInterface(__uuidof(IDXGIDevice), (void **)&DxgiDevice));
 		sInstance->mGIDevice = std::make_shared<IDXGIDevice*>(DxgiDevice);
 
 		//create device2d 
@@ -90,7 +82,13 @@ namespace Epoch
 	}
 	void Draw::InitializeScreenBitmap()
 	{
-		sInstance->mScreenBitmap = std::make_shared<ID2D1Bitmap1*>(CreateBitmapForTexture(Renderer::Instance()->iGetRTViewTexture().Get()));
+		//ID3D11Texture2D* backbuffer2D;
+		//ThrowIfFailed((*mChain)->GetBuffer(0, IID_PPV_ARGS(&backbuffer2D)));
+
+		//sInstance->mScreenBitmap = make_shared<ID2D1Bitmap1*>(CreateBitmapForTexture(backbuffer2D));
+		//(*mContext2D)->SetTarget((*mScreenBitmap));
+
+		sInstance->mScreenBitmap = std::make_shared<ID2D1Bitmap1*>(CreateBitmapForTexture(Renderer::Instance()->GetRTViewTexture().Get()));
 	}
 	//////
 	//checks if(already in side the list)
@@ -103,6 +101,11 @@ namespace Epoch
 			if (x.second.first == _font)
 				return;
 		}
+		//for (std::pair <Font, IDWriteTextFormat*> x : mFonts)
+		//{
+		//	if (x.first == _font)
+		//		return;
+		//}
 		CreateNewTextFormat(_font);
 	}
 	//////
@@ -161,6 +164,7 @@ namespace Epoch
 			&WriteFormat));
 		mFonts.insert({ mFontIDs,std::pair<Font, IDWriteTextFormat*>(_font,WriteFormat) });
 		mFontIDs++;
+		//mFonts.insert({_font,WriteFormat });
 
 		return WriteFormat;
 	}
@@ -191,7 +195,7 @@ namespace Epoch
 			_text.c_str(),
 			(UINT32)_text.size(),
 			(tempTF),
-			D2D1::RectF(_left, _top, _right, _bottom),
+			D2D1::RectF(_left, _top, _right, _bottom),//renderTargetSize.width*(3.0f/4.0f), renderTargetSize.height*(3.0f/4.0f), renderTargetSize.width, renderTargetSize.height
 			GetBrush(tempColor)
 		);
 		Renderer::Instance()->ThrowIfFailed((*mContext2D)->EndDraw());
@@ -210,9 +214,13 @@ namespace Epoch
 		(*mContext2D)->SetTransform(D2D1::Matrix3x2F::Identity());
 		(*mContext2D)->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
 
-		D2D1_RECT_F rectangle = D2D1::RectF(_left, _top, _right, _bottom);
+		//(*mContext2D)->CreateSolidColorBrush(
+		//	D2D1::Point2F(100.0f, 100.1f),
+		//	75.0f,
+		//	50.0f);
+		D2D1_RECT_F rectangle = D2D1::RectF(_left, _top, _right, _bottom);//0.0f, renderTargetSize.height*(3.0f / 4.0f), renderTargetSize.width*(1.0f / 4.0f), renderTargetSize.height
 		ID2D1SolidColorBrush* brush;
-		Renderer::Instance()->ThrowIfFailed((*mContext2D)->CreateSolidColorBrush(_color, &brush));
+		Renderer::Instance()->ThrowIfFailed((*mContext2D)->CreateSolidColorBrush(_color, &brush));//D2D1::ColorF(D2D1::ColorF::LightGray,0.7f)
 
 		(*mContext2D)->FillRectangle(&rectangle, brush);
 		(*mContext2D)->DrawRectangle(&rectangle, brush);

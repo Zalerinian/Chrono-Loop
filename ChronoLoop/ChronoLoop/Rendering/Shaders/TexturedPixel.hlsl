@@ -21,6 +21,5 @@ float4 main(PSI input) : SV_TARGET
 	float4 diffuseColor = tDiffuse.Sample(diffuseFilter, input.texCoord.xy);
 	//float4 diffuseColor = float4(1, 1, 1, 1);
 	clip(diffuseColor.a - 0.25);
-
 	return diffuseColor;
 }

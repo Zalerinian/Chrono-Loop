@@ -5,50 +5,33 @@
 #include "../Common/Breakpoint.h"
 #include "../Core/Level.h"
 
-namespace Epoch
-{
+namespace Epoch {
+	unsigned int BaseObject::ObjectCount = 0;
 
-	// 0 is reserved for the player.
-	unsigned int BaseObject::ObjectCount = 1;
-
-	void BaseObject::Construct(std::string _name, Transform _transform, BaseObject* _parent)
-	{
+	void BaseObject::Construct(std::string _name, Transform _transform, BaseObject* _parent) {
 		mName = _name;
 		mTransform = _transform;
 		mParent = _parent;
 		mUniqueID = ++BaseObject::ObjectCount;
 	}
 
-	BaseObject::BaseObject()
-	{
+	BaseObject::BaseObject() {
 		Construct("", Transform(), nullptr);
 	}
 
-	BaseObject::BaseObject(std::string _name)
-	{
+	BaseObject::BaseObject(std::string _name) {
 		Construct(_name, Transform(), nullptr);
 	}
-	BaseObject::BaseObject(std::string _name, Transform _transform)
-	{
+	BaseObject::BaseObject(std::string _name, Transform _transform) {
 		Construct(_name, _transform, nullptr);
 	}
 
-	BaseObject::BaseObject(std::string _name, Transform _transform, BaseObject * _parent)
-	{
+	BaseObject::BaseObject(std::string _name, Transform _transform, BaseObject * _parent) {
 		Construct(_name, _transform, _parent);
 	}
 
-	BaseObject::~BaseObject()
-	{
-		if (mDestroyed)
-		{
-			SystemLogger::GetError() << "[FATAL] Deleting an object that is marked as destroyed!" << std::endl;
-			Debug::SetBreakpoint();
-		}
-		else
-		{
-			Destroy();
-		}
+	BaseObject::~BaseObject() {
+		Destroy();
 	}
 
 	//BaseObject BaseObject::Clone()
@@ -72,142 +55,97 @@ namespace Epoch
 	//	return _clone;
 	//}
 
-	BaseObject& BaseObject::operator=(BaseObject& _equals)
-	{
-		mUniqueID = _equals.mUniqueID;
-		mName = _equals.mName;
-		mParent = _equals.mParent;
-		mChildren = _equals.mChildren;
-		mTransform = _equals.mTransform;
-		mComponents = _equals.mComponents;
+	BaseObject& BaseObject::operator=(BaseObject& _equals) {
+		if (&_equals != this) {
+			mUniqueID = _equals.mUniqueID;
+			mName = _equals.mName;
+			mParent = _equals.mParent;
+			mChildren = _equals.mChildren;
+			mTransform = _equals.mTransform;
+			mComponents = _equals.mComponents;
+		}
 		return *this;
 	}
 
-	void BaseObject::Destroy()
-	{
-		if (mDestroyed)
-		{
-			SystemLogger::GetError() << "[Error] Attempting to destroy an object that is already marked as destroyed." << std::endl;
-			return;
-		}
+	void BaseObject::Destroy() {
 		mParent = nullptr;
-		for (auto iter = mComponents.begin(); iter != mComponents.end(); ++iter)
-		{
-			for (int i = 0; i < iter->second.size(); ++i)
-			{
+		for (auto it = mChildren.begin(); it != mChildren.end(); ++it) {
+			delete (*it);
+		}
+		mChildren.clear();
+		for (auto iter = mComponents.begin(); iter != mComponents.end(); ++iter) {
+			for (int i = 0; i < iter->second.size(); ++i) {
 				iter->second[i]->Destroy();
 				delete iter->second[i];
 			}
 		}
 		mComponents.clear();
-		for (auto it = mChildren.begin(); it != mChildren.end(); ++it)
-		{
-			delete (*it);
-		}
-		mChildren.clear();
-		mDestroyed = true;
 	}
 
-	void BaseObject::Update()
-	{
-		if (mDestroyed)
-		{
-			SystemLogger::GetError() << "[Error] Attempting to update an object that is already marked as destroyed." << std::endl;
-			return;
-		}
-		for (auto it = mComponents.begin(); it != mComponents.end(); ++it)
-		{
-			if (it->first == eCOMPONENT_COLLIDER)
-			{
+	void BaseObject::Update() {
+		for (auto it = mComponents.begin(); it != mComponents.end(); ++it) {
+			if (it->first == eCOMPONENT_COLLIDER) {
 				continue;
 			}
-			for (auto cIt = it->second.begin(); cIt != it->second.end(); ++cIt)
-			{
-				(*cIt)->Update();
+			for (auto cIt = it->second.begin(); cIt != it->second.end(); ++cIt) {
+				if ((*cIt)->IsEnabled()) {
+					(*cIt)->Update();
+				}
 			}
 		}
 	}
 
-	BaseObject * BaseObject::Reset(std::string _name)
-	{
-		Reset(_name, Transform(), nullptr);
+	BaseObject * BaseObject::Reset(std::string _name) {
+		return Reset(_name, Transform(), nullptr);
+	}
+
+	BaseObject * BaseObject::Reset(std::string _name, Transform _transform) {
+		return Reset(_name, _transform, nullptr);
+	}
+
+	BaseObject * BaseObject::Reset(std::string _name, Transform _transform, BaseObject * _parent) {
+		// This will increment the object's ID, which is needed for the timeline to function properly with objects obtained from the pool.
+		Construct(_name, _transform, _parent);
+		//mName = _name;
+		//mTransform = _transform;
+		//mParent = _parent;
 		return this;
 	}
 
-	BaseObject * BaseObject::Reset(std::string _name, Transform _transform)
-	{
-		Reset(_name, _transform, nullptr);
-		return this;
-	}
-
-	BaseObject * BaseObject::Reset(std::string _name, Transform _transform, BaseObject * _parent)
-	{
+	void BaseObject::SetName(std::string _name) {
 		mName = _name;
-		mTransform = _transform;
-		mParent = _parent;
-		return this;
 	}
 
-	void BaseObject::SetName(std::string _name)
-	{
-		if (Level::Instance()->iOnObjectNamechange(this, _name))
-		{
-			mName = _name;
-		}
-		else
-		{
-			SystemLogger::GetError() << "[Error] A name change was requested for an object that did not exist in the level." << std::endl;
-		}
-	}
-
-	unsigned int BaseObject::AddComponent(Component * _comp)
-	{
-		if (mDestroyed)
-		{
-			SystemLogger::GetError() << "[Error] Attempting to add a compontnet to an object that is already marked as destroyed." << std::endl;
+	unsigned int BaseObject::AddComponent(Component * _comp) {
+		if (_comp->GetType() == eCOMPONENT_MAX) {
+			SystemLogger::Error() << "Trying to add a component with an invalid type. This is not allowed, returning -1U." << std::endl;
 			return -1;
 		}
-		if (_comp->GetType() == eCOMPONENT_MAX)
-		{
-			SystemLogger::GetError() << "[Error] Trying to add a component with an invalid type. This is not allowed, returning -1U." << std::endl;
-			return -1;
-		}
-		if (!_comp->IsValid())
-		{
-			SystemLogger::GetError() << "[Error] Attempted to add a component that is marked invalid. It will be deleted." << std::endl;
-			delete _comp;
-			return -1;
-		}
-		if (mComponents.size() + 1 > 30)
-		{
-			SystemLogger::GetError() << "[Error] Attempted to add a component after reaching the max amount you can add. Deleting this component" << std::endl;
+		if (mComponents.size() + 1 > 30) {
+			SystemLogger::Error() << "Attempted to add a component after reaching the max amount you can add. Deleting this component" << std::endl;
 			delete _comp;
 			return -1;
 		}
 		_comp->mObject = this;
 		mComponents[_comp->GetType()].push_back(_comp);
 		_comp->mComponentNum = (unsigned short)mComponents.size();	//sets the component number for knowing the position in the bitset
+
+		//If level has already started call start on new component
+		if (_comp->GetType() == eCOMPONENT_CODE && TimeManager::Instance()->GetTotalSnapsmade() > 0) {
+			((CodeComponent*)_comp)->Start();
+		}
 		return (unsigned int)mComponents[_comp->GetType()].size();
 	}
 
-	bool BaseObject::RemoveComponent(Component * _comp)
-	{
-		if (mDestroyed)
-		{
-			SystemLogger::GetError() << "[Error] Attempting to remove a component from an object that is already marked as destroyed." << std::endl;
-			return false;
-		}
-		if (_comp->GetType() == eCOMPONENT_MAX)
-		{
-			SystemLogger::GetError() << "[Error] Trying to remove a component with an invalid type. This is not allowed, returning -1U." << std::endl;
+	bool BaseObject::RemoveComponent(Component * _comp) {
+		if (_comp->GetType() >= eCOMPONENT_MAX) {
+			SystemLogger::Error() << "Trying to remove a component with an invalid type. This is undefined." << std::endl;
 			return false;
 		}
 		ComponentType type = _comp->GetType();
 		unsigned int size = (unsigned int)mComponents[type].size();
-		for (auto it = mComponents[type].begin(); it != mComponents[type].end(); ++it)
-		{
-			if ((*it) == _comp)
-			{
+		for (auto it = mComponents[type].begin(); it != mComponents[type].end(); ++it) {
+			if ((*it) == _comp) {
 				(*it)->Destroy();
 				delete (*it);
 				mComponents[type].erase(it);
@@ -216,10 +154,42 @@ namespace Epoch
 		}
 		return false;
 	}
+	void BaseObject::RemoveAllComponents() {
+		std::vector<Component*> components = this->GetComponents(eCOMPONENT_COLLIDER);
+		for (int j = 0; j < components.size(); ++j) {
+			components[j]->Destroy();
+		}
 
-	//void BaseObject::AddComponent(ComponentType _type, Component* _comp)
-	//{
-	//	mComponents[_type].push_back(_comp);
-	//}
+		components = this->GetComponents(eCOMPONENT_AUDIOEMITTER);
+		for (int j = 0; j < components.size(); ++j) {
+			components[j]->Destroy();
+		}
+
+		components = this->GetComponents(eCOMPONENT_AUDIOLISTENER);
+		for (int j = 0; j < components.size(); ++j) {
+			components[j]->Destroy();
+		}
+
+		components = this->GetComponents(eCOMPONENT_CODE);
+		for (int j = 0; j < components.size(); ++j) {
+			components[j]->Destroy();
+		}
+
+		components = this->GetComponents(eCOMPONENT_MESH);
+		for (int j = 0; j < components.size(); ++j) {
+			components[j]->Destroy();
+		}
+
+		components = this->GetComponents(eCOMPONENT_UI);
+		for (int j = 0; j < components.size(); ++j) {
+			components[j]->Destroy();
+		}
+
+		components = this->GetComponents(eCOMPONENT_UNKNOWN);
+		for (int j = 0; j < components.size(); ++j) {
+			components[j]->Destroy();
+		}
+
+	}
 
 }

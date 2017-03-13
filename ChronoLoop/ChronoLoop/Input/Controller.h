@@ -21,7 +21,8 @@ namespace Epoch {
 		bool mHairTriggerState, mHairTriggerPrevState;
 		void Setup(int _index);
 
-		vec2f InitialPos = {-2,-2};//-2Slow-2Furious
+
+		vec2f InitialPos = { -2,-2 };//-2Slow-2Furious
 		unsigned int gestureCnt = 0;
 
 		friend class VIM;
@@ -32,6 +33,7 @@ namespace Epoch {
 		~Controller() {};
 		void Update();
 		int CheckGesture();
+
 		//transforms
 		matrix4 GetPosition();
 		vec3f GetVelocity();
@@ -64,4 +66,5 @@ namespace Epoch {
 		vec2f GetAxis(vr::EVRButtonId buttonId = vr::k_EButton_SteamVR_Touchpad);
 		void TriggerHapticPulse(int duration_micro_sec = 500, vr::EVRButtonId buttonId = vr::k_EButton_SteamVR_Touchpad);
 	};
+
 }

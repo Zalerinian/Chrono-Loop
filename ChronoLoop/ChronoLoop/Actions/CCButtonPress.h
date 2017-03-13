@@ -30,7 +30,7 @@ namespace Epoch
 				colliding = true;
 
 				vec4f norm = ((ButtonCollider*)&_col)->mPushNormal;
-				AABB aabb1(((ButtonCollider*)&_col)->mMin, ((ButtonCollider*)&_col)->mMax);
+				CubeCollider aabb1(((ButtonCollider*)&_col)->mMin, ((ButtonCollider*)&_col)->mMax);
 				vec4f tForce = norm * (norm * _other.mTotalForce);
 				vec4f vel = norm * (norm * _other.mVelocity);
 				vec4f accel = norm * (norm * _other.mAcceleration);

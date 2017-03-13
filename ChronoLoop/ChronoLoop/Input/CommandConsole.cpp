@@ -270,7 +270,7 @@ namespace Epoch
 	}
 	void CommandConsole::InputFunction()
 	{
-		while (true)
+		while (!mTerminateThread)
 		{
 			if (mTakeInput && GetAsyncKeyState(VK_RETURN) & 0x1)
 			{
