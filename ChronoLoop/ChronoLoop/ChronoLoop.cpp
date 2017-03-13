@@ -204,7 +204,7 @@ void Update() {
 	MeshComponent *rightRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
 	rightRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
 	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
-	MainMenuBT *bt = new MainMenuBT();
+	MainMenuBT *bt = new MainMenuBT(eControllerType_Primary);
 	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 	RightController->AddComponent(mc);
 	RightController->AddComponent(rightRaycaster);

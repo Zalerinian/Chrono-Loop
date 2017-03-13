@@ -330,10 +330,10 @@ namespace Epoch {
 					{
 						std::string path = "../Resources/";
 						path.append(meshFile);
-						MeshComponent* mesh = new MeshComponent(path.c_str);
+						MeshComponent* mesh = new MeshComponent(path.c_str());
 						path = "../Resources/";
 						path.append(textureFile);
-						mesh->AddTexture(path.c_str, eTEX_DIFFUSE);
+						mesh->AddTexture(path.c_str(), eTEX_DIFFUSE);
 						obj->AddComponent(mesh);
 					}
 

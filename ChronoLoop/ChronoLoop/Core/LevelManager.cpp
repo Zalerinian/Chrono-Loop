@@ -54,7 +54,7 @@ namespace Epoch {
 		}
 		else if (mLevelStatus == LoadStatus::None)
 		{
-			std::thread(&ThreadLoadLevel, std::string(_path));
+			std::thread(&LM::ThreadLoadLevel, this, std::string(_path));
 			mMutex.unlock();
 			return LevelStatus::Loading;
 		}
