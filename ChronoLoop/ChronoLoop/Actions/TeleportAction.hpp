@@ -17,14 +17,15 @@ namespace Epoch {
 		TeleportAction(ControllerType _t) { mControllerRole = _t; };
 
 		virtual void Start() {
-			mPlaneObject = Level::Instance()->iFindObjectWithName("plane");
-			mWallsObject = Level::Instance()->iFindObjectWithName("walls");
-			mBlockObject = Level::Instance()->iFindObjectWithName("BlockDoor");
-			mExitObject = Level::Instance()->iFindObjectWithName("ExitWall");
-			mPlaneMesh = (MeshComponent*)mPlaneObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mWallsMesh = (MeshComponent*)mWallsObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mBlockMesh = (MeshComponent*)mBlockObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mExitMesh = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
+			mPlaneObject  = cLevel->FindObjectWithName("plane");
+			mWallsObject  = cLevel->FindObjectWithName("walls");
+			mBlockObject  = cLevel->FindObjectWithName("BlockDoor");
+			mExitObject   = cLevel->FindObjectWithName("ExitWall");
+			mPlaneMesh    = (MeshComponent*)mPlaneObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			mWallsMesh    = (MeshComponent*)mWallsObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			mBlockMesh    = (MeshComponent*)mBlockObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			mExitMesh     = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 		}
 
 		virtual void Update() {

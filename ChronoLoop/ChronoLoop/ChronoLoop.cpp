@@ -98,7 +98,6 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	// Cleanup
 	vr::VR_Shutdown();
 	ShutdownSystems();
-	Level::DestroyInstance();
 	SystemLogger::DestroyInstance();
 	vrsys = nullptr;
 
@@ -528,22 +527,22 @@ void Update() {
 	Physics::Instance()->mObjects.push_back(Button);
 
 	Level* L1 = new Level;
-	Level::Initialize(headset, LeftController, RightController);
-	Level* L1 = Level::Instance(); 
-	L1->iAddObject(PhysicsBox);
-	L1->iAddObject(PhysicsBox2);
-	L1->iAddObject(PhysicsSphere);
-	L1->iAddObject(PhysicsSphere2);
-	L1->iAddObject(Floor);
-	L1->iAddObject(RightController);
-	L1->iAddObject(walls);
-	L1->iAddObject(headset);
-	L1->iAddObject(LeftController);
-	L1->iAddObject(Button);
-	L1->iAddObject(ExitWall);
-	L1->iAddObject(BlockDoor);
-	L1->iAddObject(ControlBoard);
-	L1->iAddObject(WinBoard);
+	LevelManager::GetInstance().SetCurrentLevel(L1);
+	L1->Initialize(headset, LeftController, RightController);
+	L1->AddObject(PhysicsBox);
+	L1->AddObject(PhysicsBox2);
+	L1->AddObject(PhysicsSphere);
+	L1->AddObject(PhysicsSphere2);
+	L1->AddObject(Floor);
+	L1->AddObject(RightController);
+	L1->AddObject(walls);
+	L1->AddObject(headset);
+	L1->AddObject(LeftController);
+	L1->AddObject(Button);
+	L1->AddObject(ExitWall);
+	L1->AddObject(BlockDoor);
+	L1->AddObject(ControlBoard);
+	L1->AddObject(WinBoard);
 	L1->CallStart();
 
 #pragma endregion
@@ -574,7 +573,7 @@ void Update() {
 	
 	UpdateTime();
 	fixedTime = 0;
-	while (Level::Instance()->ChronoLoop) {
+	while (LevelManager::GetInstance().GetCurrentLevel()->ChronoLoop) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			// Handle windows message.
 			if (msg.message == WM_QUIT) {
@@ -591,7 +590,7 @@ void Update() {
 
 			//SystemLogger::GetLog() << "[Debug] Regular Update " << std::endl;
 			UpdateTime();
-			Level::Instance()->iUpdate();
+			LevelManager::GetInstance().GetCurrentLevel()->Update();
 			
 			TimeManager::Instance()->Update(deltaTime);
 			Renderer::Instance()->Render(deltaTime); 

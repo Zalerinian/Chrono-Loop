@@ -2,7 +2,7 @@
 #include "VrInputManager.h"
 #include "../Common/Logger.h"
 #include "../Core/TimeManager.h"
-#include "../Core/Level.h"
+#include "../Core/LevelManager.h"
 
 namespace Epoch {
 
@@ -101,6 +101,7 @@ namespace Epoch {
 	}
 
 	void VIM::AddInputNode(vr::VREvent_t* _event) {
+		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 		InputTimeline::InputNode* node = new InputTimeline::InputNode();
 		node->mData.mLastFrame = TimeManager::Instance()->GetCurrentSnapFrame();
 		node->mData.mButton = (vr::EVRButtonId)_event->data.controller.button;
@@ -115,11 +116,11 @@ namespace Epoch {
 		}
 
 		if (_event->trackedDeviceIndex == mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand)) {
-			node->mData.mControllerId = Level::Instance()->iGetLeftController()->GetUniqueId();
+			node->mData.mControllerId = cLevel->GetLeftController()->GetUniqueId();
 			node->mData.mVelocity = mLeftController.GetVelocity();
 			//SystemLogger::GetLog() << "Lefthand" << std::endl;
 		} else {
-			node->mData.mControllerId = Level::Instance()->iGetRightController()->GetUniqueId();
+			node->mData.mControllerId = cLevel->GetRightController()->GetUniqueId();
 			node->mData.mVelocity = mRightController.GetVelocity();
 			//SystemLogger::GetLog() <<  "Righthand" << std::endl;
 		}

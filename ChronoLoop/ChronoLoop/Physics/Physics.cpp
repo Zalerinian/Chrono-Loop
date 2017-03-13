@@ -6,7 +6,7 @@
 #include "..\Objects\Component.h"
 #include "..\Actions\CodeComponent.hpp"
 #include "..\Input\VRInputManager.h"
-#include "..\Core\Level.h"
+#include "..\Core\LevelManager.h"
 
 namespace Epoch {
 
@@ -734,16 +734,17 @@ namespace Epoch {
 						}
 					}
 
+					Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 					if (((ControllerCollider*)collider)->mLeft &&
-						(collider->mObject->GetUniqueID() == Level::Instance()->iGetLeftController()->GetUniqueID() ||
-							collider->mObject->GetUniqueID() == Level::Instance()->iGetRightController()->GetUniqueID())) {
+						(collider->mObject->GetUniqueID() == cLevel->GetLeftController()->GetUniqueID() ||
+							collider->mObject->GetUniqueID() == cLevel->GetRightController()->GetUniqueID())) {
 						collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
 						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
 						collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetVelocity();
 						collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPosition().Position);
 					} else if ((!(((ControllerCollider*)collider)->mLeft) &&
-						(collider->mObject->GetUniqueID() == Level::Instance()->iGetLeftController()->GetUniqueID() ||
-							collider->mObject->GetUniqueID() == Level::Instance()->iGetRightController()->GetUniqueID()))) {
+						(collider->mObject->GetUniqueID() == cLevel->GetLeftController()->GetUniqueID() ||
+							collider->mObject->GetUniqueID() == cLevel->GetRightController()->GetUniqueID()))) {
 						collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
 						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
 						collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Primary).GetVelocity();

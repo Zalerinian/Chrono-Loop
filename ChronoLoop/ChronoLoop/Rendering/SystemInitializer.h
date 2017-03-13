@@ -10,7 +10,7 @@
 #include "../Core/Pool.h"
 #include "../Rendering/IndexBufferManager.h"
 #include "../Rendering/VertexBufferManager.h"
-#include "../Core/Level.h"
+#include "../Core/LevelManager.h"
 #include "../Rendering/MeshCache.h"
 #include "../Input/CommandConsole.h"
 #include "../Input/KeyboardInput.h"
@@ -41,7 +41,7 @@ namespace Epoch {
 		KeyboardInput::DestroyInstance();
 		CommandConsole::DestroyInstance();
 		MeshCache::DestroyInstance();
-		Level::DestroyInstance();
+		LevelManager::DestroyInstance();
 		VertexBufferManager::Shutdown();
 		IndexBufferManager::DestroyInstance();
 		Physics::Destroy();

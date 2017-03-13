@@ -14,10 +14,12 @@ namespace Epoch
 
 		BaseObject *Block = nullptr, *Exit = nullptr;
 		CubeCollider* blockCube, *exitCube;
+		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
+
 		virtual void Start()
 		{
-			Block = Level::Instance()->iFindObjectWithName("BlockDoor");
-			Exit = Level::Instance()->iFindObjectWithName("ExitWall");
+			Block = cLevel->FindObjectWithName("BlockDoor");
+			Exit = cLevel->FindObjectWithName("ExitWall");
 
 			blockCube = (CubeCollider*)Block->mComponents[eCOMPONENT_COLLIDER][0];
 			exitCube = (CubeCollider*)Exit->mComponents[eCOMPONENT_COLLIDER][0];

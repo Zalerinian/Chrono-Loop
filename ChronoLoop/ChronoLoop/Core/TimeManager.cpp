@@ -6,7 +6,7 @@
 #include "../Rendering/Draw2D.h"
 #include "../Input/CommandConsole.h"
 #include "../Core/Pool.h"
-#include "../Core/Level.h"
+#include "../Core/LevelManager.h"
 #include "../Input/VRInputManager.h"
 #include "../Common/Breakpoint.h"
 
@@ -239,7 +239,8 @@ namespace Epoch {
 		}
 	}
 	void TimeManager::HotfixResetTimeline() {
-		RewindTimeline(0, Level::Instance()->iGetLeftController()->GetUniqueID(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetHeadset()->GetUniqueID());
+		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
+		RewindTimeline(0, cLevel->GetLeftController()->GetUniqueID(), cLevel->GetRightController()->GetUniqueID(), cLevel->GetHeadset()->GetUniqueID());
 		mTimeline->HotFixResetLevel();
 		for (int i = 0; i < mClones.size(); ++i) {
 			mClones[i]->RemoveAllComponents();

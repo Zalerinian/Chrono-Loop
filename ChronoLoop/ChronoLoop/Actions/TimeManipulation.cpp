@@ -3,7 +3,7 @@
 #include "../Objects/MeshComponent.h"
 #include "../Actions/CodeComponent.hpp"
 #include "../Objects/BaseObject.h"
-#include "../Core/Level.h"
+#include "../Core/LevelManager.h"
 #include "../Input/VRInputManager.h"
 #include "../Rendering/TextureManager.h"
 #include "../Rendering/Draw2D.h"
@@ -47,12 +47,8 @@ namespace Epoch
 	}
 
 	void TimeManipulation::Update() {
-		//std::string textureName = std::string("Clone") + std::to_string(mCloneCount);
-		//if (!mTexturedApplied) {
-		//	TextureManager::Instance()->iAddTexture2D(textureName, mCountTxt, nullptr);
-		//	//((MeshComponent*)BaseObject::GetObjectByName("plane")->GetComponentIndexed(eCOMPONENT_MESH, 0))->AddTexture(textureName.c_str(), eTEX_CUSTOM1);
-		//	mTexturedApplied = true;
-		//}
+		Level* currentLevel = LevelManager::GetInstance().GetCurrentLevel();
+		
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu)) {
 			int frameRewind = 30;
 
@@ -94,7 +90,7 @@ namespace Epoch
 			//
 			//Make a clone 3 seconds ago.
 			TimeManager::Instance()->RewindMakeClone(TimeManager::Instance()->GetCurrentSnapFrame() - frameRewind, headset, Controller1, Controller2);
-			Level::Instance()->iSetHeadsetAndControllers(headset, Controller1, Controller2, CubeColider, CubeColider2);
+			currentLevel->SetHeadsetAndControllers(headset, Controller1, Controller2, CubeColider, CubeColider2);
 			//it is extreamly important that the objects are added after time rewinded because of the objectLifeTimeStruct and more..
 			Physics::Instance()->mObjects.push_back(headset);
 			Physics::Instance()->mObjects.push_back(Controller1);
@@ -104,7 +100,7 @@ namespace Epoch
 			TimeManager::Instance()->UpdatePlayerObjectInTimeline(Controller1);
 			TimeManager::Instance()->UpdatePlayerObjectInTimeline(Controller2);
 			//Rewind InputTime
-			VRInputManager::GetInstance().RewindInputTimeline(TimeManager::Instance()->GetCurrentSnapFrame(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());
+			VRInputManager::GetInstance().RewindInputTimeline(TimeManager::Instance()->GetCurrentSnapFrame(), currentLevel->GetRightController()->GetUniqueID(), currentLevel->GetLeftController()->GetUniqueID());
 			//add Interpolators for the clones
 			TimeManager::Instance()->AddInterpolatorForClone(headset);
 			TimeManager::Instance()->AddInterpolatorForClone(Controller1);
@@ -117,8 +113,9 @@ namespace Epoch
 			if (!TimeManager::Instance()->CheckRewindAvaliable(frameRewind))
 				return;
 
-			TimeManager::Instance()->RewindTimeline(TimeManager::Instance()->GetCurrentSnapFrame() - frameRewind, Level::Instance()->iGetHeadset()->GetUniqueID(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());
-			VRInputManager::GetInstance().RewindInputTimeline(TimeManager::Instance()->GetCurrentSnapFrame(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());
+
+			TimeManager::Instance()->RewindTimeline(TimeManager::Instance()->GetCurrentSnapFrame() - frameRewind, currentLevel->GetHeadset()->GetUniqueID(), currentLevel->GetRightController()->GetUniqueID(), currentLevel->GetLeftController()->GetUniqueID());
+			VRInputManager::GetInstance().RewindInputTimeline(TimeManager::Instance()->GetCurrentSnapFrame(), currentLevel->GetRightController()->GetUniqueID(), currentLevel->GetLeftController()->GetUniqueID());
 		}
 		
 		if (GetAsyncKeyState(VK_END) & 1 || VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::k_EButton_SteamVR_Touchpad)) 

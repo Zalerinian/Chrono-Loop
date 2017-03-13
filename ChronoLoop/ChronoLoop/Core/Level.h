@@ -31,15 +31,15 @@ namespace Epoch
 		void Initialize(BaseObject *_headset, BaseObject *_lController, BaseObject *_rController);
 
 		//**GETTERS**//
-		BaseObject* iFindObjectWithName(std::string _name);
-		std::vector<BaseObject*> iFindAllObjectsWithName(std::string _name);
-		std::list<BaseObject*> iGetLevelObjects() { return mObjectList; };
-		void iAddObject(BaseObject* _obj);
-		bool iRemoveObject(BaseObject* _obj);
-		unsigned short iGetId() { return mId; };
-		inline BaseObject* iGetHeadset() { return mHeadset; }
-		inline BaseObject* iGetLeftController() { return mController1; }
-		inline BaseObject* iGetRightController() { return mController2; }
+		BaseObject* FindObjectWithName(std::string _name);
+		std::vector<BaseObject*> FindAllObjectsWithName(std::string _name);
+		std::list<BaseObject*> GetLevelObjects() { return mObjectList; };
+		void AddObject(BaseObject* _obj);
+		bool RemoveObject(BaseObject* _obj);
+		unsigned short GetId() { return mId; };
+		inline BaseObject* GetHeadset() { return mHeadset; }
+		inline BaseObject* GetLeftController() { return mController1; }
+		inline BaseObject* GetRightController() { return mController2; }
 
 
 		//**SETTERS**//

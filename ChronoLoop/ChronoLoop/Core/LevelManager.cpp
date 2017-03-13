@@ -4,11 +4,11 @@ namespace Epoch {
 
 	LM* LevelManager::sInstance = nullptr;
 
-	LM* LevelManager::GetInstance() {
+	LM& LevelManager::GetInstance() {
 		if (nullptr == sInstance) {
 			sInstance = new LM;
 		}
-		return sInstance;
+		return *sInstance;
 	}
 
 	void LevelManager::DestroyInstance() {

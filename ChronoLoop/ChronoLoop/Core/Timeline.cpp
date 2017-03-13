@@ -6,7 +6,7 @@
 #include "../Objects/MeshComponent.h"
 #include "../Common/Logger.h"
 #include "Pool.h"
-#include "Level.h"
+#include "LevelManager.h"
 
 namespace Epoch {
 	bool Snapshot::IsObjectStored(unsigned short _id) {
@@ -253,10 +253,11 @@ namespace Epoch {
 
 	//This hasn't been tested yet
 	void Timeline::CheckforLostObjects(std::vector<BaseObject*>& mClones) {
+		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 		for (auto obj : mObjectLifeTimes) {
 			if (obj.second->mBirth > mCurrentGameTimeIndx) {
 				for (unsigned int i = 0; i < mClones.size(); i++) {
-					if (mClones[i]->GetUniqueID() == obj.first || Level::Instance()->iGetLeftController()->GetUniqueID() == obj.first || Level::Instance()->iGetHeadset()->GetUniqueID() == obj.first || Level::Instance()->iGetRightController()->GetUniqueID() == obj.first)
+					if (mClones[i]->GetUniqueID() == obj.first || cLevel->GetLeftController()->GetUniqueID() == obj.first || cLevel->GetHeadset()->GetUniqueID() == obj.first || cLevel->GetRightController()->GetUniqueID() == obj.first)
 						break;
 
 					if (mClones[i]->GetUniqueID() != obj.first && i == mClones.size() - 1) {

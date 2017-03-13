@@ -21,20 +21,22 @@ namespace Epoch
 		MeshComponent *mChamberMesh, *mStartMesh, *mExitMesh, *mFloorMesh, *mRoomMesh;
 		BaseObject *mChamberObject, *mStartObject, *mExitObject, *mFloorObject, *mRoomObject, *mCubeObject;
 		ControllerType mControllerRole = eControllerType_Primary;
+		Level* cLevel = nullptr;
 		bool mBooped = false;
 
 		float tTime;
 
 		virtual void Start()
 		{
-			tTime = 0;
+			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
-			mChamberObject = Level::Instance()->iFindObjectWithName("mmChamber");
-			mStartObject = Level::Instance()->iFindObjectWithName("mmStart");
-			mExitObject = Level::Instance()->iFindObjectWithName("mmExit");
-			mFloorObject = Level::Instance()->iFindObjectWithName("mmFloor");
-			mRoomObject = Level::Instance()->iFindObjectWithName("mmRoom");
-			//mCubeObject = Level::Instance()->iFindObjectWithName("mmCube");
+			tTime = 0;
+			mChamberObject = cLevel->FindObjectWithName("mmChamber");
+			mStartObject = cLevel->FindObjectWithName("mmStart");
+			mExitObject = cLevel->FindObjectWithName("mmExit");
+			mFloorObject = cLevel->FindObjectWithName("mmFloor");
+			mRoomObject = cLevel->FindObjectWithName("mmRoom");
+			//mCubeObject = cLevel->FindObjectWithName("mmCube");
 
 			mChamberMesh = (MeshComponent*)mChamberObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			mStartMesh = (MeshComponent*)mStartObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
@@ -96,7 +98,7 @@ namespace Epoch
 					for (unsigned int j = 0; j < numTris; ++j)
 					{
 						float hitTime;
-						if (Level::Instance()->flip && Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, forward, hitTime))
+						if (cLevel->flip && Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, forward, hitTime))
 						{
 							if (i == 0)
 							{
@@ -114,10 +116,10 @@ namespace Epoch
 								mPlayerInterp->SetEnd(mat);
 								mPlayerInterp->SetActive(true);
 								mBooped = true;
-								Level::Instance()->flip = false;
+								cLevel->flip = false;
 							}
 							else if (i == 1)
-								Level::Instance()->ChronoLoop = false;
+								cLevel->ChronoLoop = false;
 						}
 					}
 				}

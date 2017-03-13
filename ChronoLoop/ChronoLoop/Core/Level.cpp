@@ -28,10 +28,10 @@ namespace Epoch {
 		mHeadset = _headset;
 		mController1 = _lController;
 		mController2 = _rController;
-		CommandConsole::Instance().AddCommand(L"/WIREFRAME", ToggleEntireLevelsWireframe);
+		//CommandConsole::Instance().AddCommand(L"/WIREFRAME", ToggleEntireLevelsWireframe);
 	}
 
-	BaseObject * Level::iFindObjectWithName(std::string _name) {
+	BaseObject * Level::FindObjectWithName(std::string _name) {
 		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
 			if ((*it)->GetName() == _name) {
 				return *it;
@@ -40,7 +40,7 @@ namespace Epoch {
 		return nullptr;
 	}
 
-	std::vector<BaseObject*> Level::iFindAllObjectsWithName(std::string _name) {
+	std::vector<BaseObject*> Level::FindAllObjectsWithName(std::string _name) {
 		std::vector<BaseObject*> objects;
 		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
 			if ((*it)->GetName() == _name) {
@@ -50,11 +50,11 @@ namespace Epoch {
 		return objects;
 	}
 
-	void Level::iAddObject(BaseObject * _obj) {
+	void Level::AddObject(BaseObject * _obj) {
 		mObjectList.push_back(_obj);
 	}
 
-	bool Level::iRemoveObject(BaseObject * _obj) {
+	bool Level::RemoveObject(BaseObject * _obj) {
 		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
 			if ((*it) == _obj) {
 				mObjectList.erase(it);
@@ -144,27 +144,27 @@ namespace Epoch {
 
 
 	void Level::ToggleEntireLevelsWireframe(void* _command, std::wstring _ifOn) {
-		CommandConsole* cc = (CommandConsole*)_command;
-		if (_ifOn == L"ON") {
-			for (auto it = mObjectList.begin(); it != sInstance->mObjectList.end(); ++it) {
-				for (size_t x = 0; x < (*it)->GetComponents(ComponentType::eCOMPONENT_MESH).size(); ++x) {
-					MeshComponent* tempMComp = (MeshComponent*)((*it)->GetComponents(ComponentType::eCOMPONENT_MESH)[x]);
-
-					tempMComp->SetRasterState(eRS_WIREFRAME);//< - This line
-				}
-			}
-			CommandConsole::Instance().DisplaySet(L"");
-		} else if (_ifOn == L"OFF") {
-			for (auto it = mObjectList.begin(); it != sInstance->mObjectList.end(); ++it) {
-				for (size_t x = 0; x < (*it)->GetComponents(ComponentType::eCOMPONENT_MESH).size(); ++x) {
-					MeshComponent* tempMComp = (MeshComponent*)((*it)->GetComponents(ComponentType::eCOMPONENT_MESH)[x]);
-					tempMComp->SetRasterState(eRS_FILLED);
-				}
-			}
-			CommandConsole::Instance().DisplaySet(L"");
-		} else {
-			CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /WIREFRAME (ON/OFF)");
-		}
+		//CommandConsole* cc = (CommandConsole*)_command;
+		//if (_ifOn == L"ON") {
+		//	for (auto it = mObjectList.begin(); it != sInstance->mObjectList.end(); ++it) {
+		//		for (size_t x = 0; x < (*it)->GetComponents(ComponentType::eCOMPONENT_MESH).size(); ++x) {
+		//			MeshComponent* tempMComp = (MeshComponent*)((*it)->GetComponents(ComponentType::eCOMPONENT_MESH)[x]);
+		//
+		//			tempMComp->SetRasterState(eRS_WIREFRAME);//< - This line
+		//		}
+		//	}
+		//	CommandConsole::Instance().DisplaySet(L"");
+		//} else if (_ifOn == L"OFF") {
+		//	for (auto it = mObjectList.begin(); it != sInstance->mObjectList.end(); ++it) {
+		//		for (size_t x = 0; x < (*it)->GetComponents(ComponentType::eCOMPONENT_MESH).size(); ++x) {
+		//			MeshComponent* tempMComp = (MeshComponent*)((*it)->GetComponents(ComponentType::eCOMPONENT_MESH)[x]);
+		//			tempMComp->SetRasterState(eRS_FILLED);
+		//		}
+		//	}
+		//	CommandConsole::Instance().DisplaySet(L"");
+		//} else {
+		//	CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /WIREFRAME (ON/OFF)");
+		//}
 	}
 
 } // Epoch Namespace

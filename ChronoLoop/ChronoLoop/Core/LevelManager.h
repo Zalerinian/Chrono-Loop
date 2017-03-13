@@ -1,9 +1,7 @@
 #pragma once
+#include "Level.h"
 
 namespace Epoch {
-	class Level;
-
-
 
 	class LM {
 		Level* mCurrentLevel = nullptr;
@@ -23,11 +21,12 @@ namespace Epoch {
 	};
 
 
+
 	class LevelManager {
 		static LM* sInstance;
 	
 	public:
-		static LM* GetInstance();
+		static LM& GetInstance();
 		static void DestroyInstance();
 	};
 }
