@@ -20,7 +20,7 @@ namespace Epoch {
 		TeleportAction(ControllerType _t) { mControllerRole = _t; };
 
 		virtual void Start() {
-			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
+			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			mPlaneObject  = cLevel->FindObjectWithName("plane");
 			mWallsObject  = cLevel->FindObjectWithName("walls");
 			mBlockObject  = cLevel->FindObjectWithName("BlockDoor");
@@ -39,9 +39,14 @@ namespace Epoch {
 			// I'm lazy so, let's just set this thing's position to the controller's position.
 			matrix4 mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
 			mObject->GetTransform().SetMatrix(mat);
-			bool right = cLevel->GetRightTimeManinpulator()->isTimePaused();
-			bool left = cLevel->GetLeftTimeManinpulator()->isTimePaused();
+			bool right = false;
+			bool left = false;
 
+			if (cLevel->GetRightTimeManinpulator() != nullptr || cLevel->GetLeftTimeManinpulator() != nullptr) {
+				right = cLevel->GetRightTimeManinpulator()->isTimePaused();
+				left = cLevel->GetLeftTimeManinpulator()->isTimePaused();
+			}
+			
 			if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad)) {
 				if (!left && !right) {
 					vec4f forward(0, 0, 1, 0);

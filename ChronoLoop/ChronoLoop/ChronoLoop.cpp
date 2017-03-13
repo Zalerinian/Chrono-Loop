@@ -38,8 +38,8 @@
 #include <crtdbg.h>
 
 using namespace Epoch;
-#define LEVEL_1 0
-#define MAINMENU 1
+#define LEVEL_1 1
+#define MAINMENU 0
 #define CONSOLE_OVERRIDE 1
 #define FIXED_UPDATE_INTERVAL (1 / 180.0f)
 
@@ -534,7 +534,6 @@ void Update() {
 	Physics::Instance()->mObjects.push_back(Button);
 
 	Level* L1 = new Level;
-	LevelManager::GetInstance().SetCurrentLevel(L1);
 	L1->Initialize(headset, LeftController, RightController);
 	L1->AddObject(PhysicsBox);
 	L1->AddObject(PhysicsBox2);
@@ -550,6 +549,7 @@ void Update() {
 	L1->AddObject(BlockDoor);
 	L1->AddObject(ControlBoard);
 	L1->AddObject(WinBoard);
+	LevelManager::GetInstance().SetCurrentLevel(L1);
 	L1->CallStart();
 
 #endif
