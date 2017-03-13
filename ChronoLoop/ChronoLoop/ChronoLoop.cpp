@@ -37,8 +37,8 @@
 #include "Actions/TimeManipulation.h"
 
 using namespace Epoch;
-#define LEVEL_1 1
-#define MAINMENU 0
+#define LEVEL_1 0
+#define MAINMENU 1
 #define CONSOLE_OVERRIDE 1
 #define FIXED_UPDATE_INTERVAL (1 / 180.0f)
 
@@ -163,12 +163,12 @@ void Update() {
 	mmStartMesh->AddTexture("../Resources/start.png", eTEX_DIFFUSE);
 	mmStart->AddComponent(mmStartMesh);
 	
-	//Transform cubeScale;
-	//cubeScale.SetMatrix(matrix4::CreateScale(0.01f, 0.01f, 0.01f));
-	//BaseObject* mmCube = Pool::Instance()->iGetObject()->Reset("mmCube", cubeScale);// new BaseObject("walls", PlaneTransform);
-	//MeshComponent *mmCubeMesh = new MeshComponent("../Resources/Cube.obj");
-	//mmCubeMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
-	//mmCube->AddComponent(mmCubeMesh);
+	Transform cubeScale;
+	cubeScale.SetMatrix(matrix4::CreateScale(0.01f, 0.01f, 0.01f));
+	BaseObject* mmCube = Pool::Instance()->iGetObject()->Reset("mmCube", cubeScale);// new BaseObject("walls", PlaneTransform);
+	MeshComponent *mmCubeMesh = new MeshComponent("../Resources/Cube.obj");
+	mmCubeMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
+	mmCube->AddComponent(mmCubeMesh);
 	
 	
 	Transform buttonTransform2;
@@ -271,7 +271,7 @@ void Update() {
 	MainMenu->iAddObject(mmStart);
 	MainMenu->iAddObject(mmExit);
 	MainMenu->iAddObject(mmdoor);
-	//MainMenu->iAddObject(mmCube);
+	MainMenu->iAddObject(mmCube);
 	MainMenu->iCallStart();
 	VRInputManager::GetInstance().GetPlayerPosition().Position = vec4f(0, 0, 0, 1);
 

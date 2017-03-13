@@ -21,8 +21,12 @@ namespace Epoch {
 		virtual void Update() override {
 			if (VRInputManager::GetInstance().IsVREnabled() && mCollider) {
 
-				bool right = Level::Instance()->iGetRightTimeManinpulator()->isTimePaused();
-				bool left = Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused();
+				bool right = false;
+				bool left = false;
+				if (Level::Instance()->iGetRightTimeManinpulator() != nullptr || Level::Instance()->iGetLeftTimeManinpulator() != nullptr) {
+					right = Level::Instance()->iGetRightTimeManinpulator()->isTimePaused();
+					left = Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused();
+				}
 				InputTimeline::InputNode*temp;
 				if (right || left) {
 					temp = VRInputManager::GetInstance().FindLastInput(mCollider->GetBaseObject()->GetUniqueID(), true);

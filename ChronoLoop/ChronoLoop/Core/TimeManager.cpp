@@ -32,12 +32,13 @@ namespace Epoch {
 	}
 
 	void TimeManager::Update(float _delta) {
+		// TODO: This is needed in order for the main menu to work. This is kinda a jank way to make it work, so we shoud fix that.
+		mDeltaTime = _delta;
 		if (Level::Instance()->iGetRightTimeManinpulator() != nullptr || Level::Instance()->iGetLeftTimeManinpulator() != nullptr) {
 
 			if (!Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused() && !Level::Instance()->iGetRightTimeManinpulator()->isTimePaused()) {
 
 				mTimestamp += _delta;
-				mDeltaTime = _delta;
 
 				//If its time for a snapshot
 				if (mTimestamp >= RecordingRate) {

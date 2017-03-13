@@ -32,7 +32,7 @@ namespace Epoch
 		~Level();
 	public:
 		bool ChronoLoop = true;
-		bool flip = true;
+		bool mmflip = true;
 
 		static Level* Instance();
 		static void DestroyInstance();

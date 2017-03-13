@@ -803,8 +803,11 @@ namespace Epoch {
 											}
 										}
 										if (collider->mIsTrigger && otherCol->mColliderType == Collider::eCOLLIDER_Controller) {
-											for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f) {
-												((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+											CubeCollider aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
+											if (AABBtoAABB(aabb1, aabb2)) {
+												for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f) {
+													((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+												}
 											}
 										}
 									}
