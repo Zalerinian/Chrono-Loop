@@ -8,6 +8,7 @@
 #include "../Core/Level.h"
 #include "../Actions/HeadsetFollow.hpp"
 #include "..\Common\Interpolator.h"
+#include "../Core/LevelManager.h"
 
 namespace Epoch
 {

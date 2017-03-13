@@ -121,6 +121,9 @@
     <Filter Include="Common\Math\Source Files">
       <UniqueIdentifier>{e319ddd3-329d-43fd-aeb9-fb646fc0c8fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="tinyxml">
+      <UniqueIdentifier>{566a6f5f-b2dd-4d06-98da-ea26e6040ad3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\BaseObject.h">
@@ -345,6 +348,12 @@
     <ClInclude Include="Core\LevelManager.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="tinyxml\tinystr.h">
+      <Filter>tinyxml</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyxml\tinyxml.h">
+      <Filter>tinyxml</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -559,6 +568,18 @@
     </ClCompile>
     <ClCompile Include="Core\LevelManager.cpp">
       <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml\tinystr.cpp">
+      <Filter>tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml\tinyxml.cpp">
+      <Filter>tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml\tinyxmlerror.cpp">
+      <Filter>tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml\tinyxmlparser.cpp">
+      <Filter>tinyxml</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

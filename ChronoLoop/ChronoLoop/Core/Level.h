@@ -45,14 +45,13 @@ namespace Epoch
 		TimeManipulation* GetLeftTimeManinpulator() { return mTMComponent1; }
 		TimeManipulation* GetRightTimeManinpulator() { return mTMComponent2; }
 
-
 		//**SETTERS**//
 		void SetId(unsigned short _set) { mId = _set; };
 		void SetHeadsetAndControllers(BaseObject*& _headset, BaseObject*& _controller1, BaseObject*& _controller2, ControllerCollider* _c1Collider, ControllerCollider* _c2Collider);
 
 		//**FUNCTIONS**//
 		void CallStart();
-		void LoadLevel();
+		void LoadLevel(std::string _file);
 		void Update();
 
 		//**CONSOLE COMMAND FUNCS**//

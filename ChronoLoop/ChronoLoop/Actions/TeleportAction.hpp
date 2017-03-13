@@ -7,7 +7,7 @@
 #include "../Input/VRInputManager.h"
 #include "../Core/Level.h"
 #include "../Core/TimeManager.h"
-
+#include "../Core/LevelManager.h"
 #include "../Actions/HeadsetFollow.hpp"
 
 namespace Epoch {

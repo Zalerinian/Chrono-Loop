@@ -12,18 +12,20 @@
 #include <ctime>
 #include <chrono>
 #include <d3d11.h>
-#include "Actions\CodeComponent.hpp"
 #include "Common/Math.h"
 #include "Objects/MeshComponent.h"
-#include "Actions/HeadsetFollow.hpp"
-#include "Actions/BoxSnapToControllerAction.hpp"
+
 #include "Messager\Messager.h"
 #include "Objects\BaseObject.h"
 #include "Actions/TeleportAction.hpp"
 #include "Actions/CCElasticReactionWithPlane.h"
+#include "Actions/BoxSnapToControllerAction.hpp"
 #include "Actions/CCElasticSphereToSphere.h"
 #include "Actions/CCElasticAABBtoAABB.h"
 #include "Actions/CCElasticAABBToSphere.h"
+#include "Actions/TimeManipulation.h"
+#include "Actions/HeadsetFollow.hpp"
+#include "Actions\CodeComponent.hpp"
 #include "Actions/CCButtonPress.h"
 #include "Actions\CCEnterLevel.h"
 #include "Actions/MainMenuBT.h"
@@ -34,7 +36,6 @@
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
-#include "Actions/TimeManipulation.h"
 
 using namespace Epoch;
 #define LEVEL_1 0
@@ -203,7 +204,7 @@ void Update() {
 	MeshComponent *rightRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
 	rightRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
 	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
-	MainMenuBT *bt = new MainMenuBT(eControllerType_Primary);
+	MainMenuBT *bt = new MainMenuBT();
 	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 	RightController->AddComponent(mc);
 	RightController->AddComponent(rightRaycaster);

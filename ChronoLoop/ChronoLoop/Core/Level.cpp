@@ -1,7 +1,20 @@
 #include "stdafx.h"
 #include "Level.h"
-#include "../Actions/CodeComponent.hpp"
+#include "../Actions/TeleportAction.hpp"
+#include "../Actions/CCElasticReactionWithPlane.h"
+#include "../Actions/BoxSnapToControllerAction.hpp"
+#include "../Actions/CCElasticSphereToSphere.h"
+#include "../Actions/CCElasticAABBtoAABB.h"
+#include "../Actions/CCElasticAABBToSphere.h"
+#include "../Actions/TimeManipulation.h"
+#include "../Actions/HeadsetFollow.hpp"
+#include "../Actions\CodeComponent.hpp"
+#include "../Actions/CCButtonPress.h"
+#include "../Actions\CCEnterLevel.h"
+#include "../Actions/MainMenuBT.h"
 #include "../Objects/MeshComponent.h"
+#include "../tinyxml/tinyxml.h"
+#include "../tinyxml/tinystr.h"
 
 namespace Epoch {
 	
@@ -146,8 +159,264 @@ namespace Epoch {
 		}
 	}
 
-	void Level::LoadLevel() {
-		//*TODO: Insert Code Here When we Get to It**//
+	void Level::LoadLevel(std::string _file) 
+	{
+		// Load the xml file, I put your XML in a file named test.xml
+		TiXmlDocument XMLdoc(_file.c_str());
+		bool loadOkay = XMLdoc.LoadFile();
+		if (loadOkay)
+		{
+			SystemLogger::GetLog() << _file.c_str() << " loaded" << std::endl;
+			TiXmlElement *pRoot, *pObject, *pData, *pApp, *pLineFormat;
+			pRoot = XMLdoc.FirstChildElement("Level");
+			if (pRoot)
+			{
+				// Parse objects
+				pObject = pRoot->FirstChildElement("Object");
+				while (pObject)
+				{
+					std::vector<std::string> codeComs;
+					std::string elementType, name, meshFile, textureFile, colliderType;
+					vec4f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity;
+					float mass, elasticity, staticF, kineticF, normF, drag, radius;
+					bool collider = false, trigger = false, canMove;
+					pData = pObject->FirstChildElement();
+					while (pData)
+					{
+						switch (pData->Type())
+						{
+						case TiXmlNode::NodeType::TINYXML_ELEMENT:
+							SystemLogger::GetLog() << "Element: '" << pData->Value() << "'" << std::endl;
+							elementType = std::string(pData->Value());
+							if (elementType == "Collider")
+								collider = true;
+							pData = (TiXmlElement*)pData->FirstChild();
+							break;
+						case TiXmlNode::NodeType::TINYXML_TEXT:
+							SystemLogger::GetLog() << "Value: '" << pData->Value() << "'" << std::endl;
+							if (elementType == "Name")
+								name = pData->Value();
+							else if (elementType == "Mesh")
+								meshFile = pData->Value();
+							else if (elementType == "Texture")
+								textureFile = pData->Value();
+							else if (elementType == "Position")
+							{
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									if (collider)
+										colliderPosition.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									else
+										position.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+							}
+							else if (elementType == "Rotation")
+							{
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									rotation.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+							}
+							else if (elementType == "Scale")
+							{
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									if (collider)
+										colliderScale.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									else
+										scale.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+							}
+							else if (elementType == "Move")
+								canMove = pData->Value() == "True";
+							else if (elementType == "Type")
+								colliderType = pData->Value();
+							else if (elementType == "Trigger")
+								trigger = pData->Value() == "True";
+							else if (elementType == "Radius")
+							{
+								radius = std::strtof(pData->Value(), nullptr);
+								colliderScale = vec4f(radius, radius, radius, 1);
+							}
+							else if (elementType == "Mass")
+								mass = std::strtof(pData->Value(), nullptr);
+							else if (elementType == "Elasticity")
+								elasticity = std::strtof(pData->Value(), nullptr);
+							else if (elementType == "StaticFriction")
+								staticF = std::strtof(pData->Value(), nullptr);
+							else if (elementType == "KeneticFriction")
+								kineticF = std::strtof(pData->Value(), nullptr);
+							else if (elementType == "Drag")
+								drag = std::strtof(pData->Value(), nullptr);
+							else if (elementType == "Code")
+								codeComs.push_back(pData->Value());
+							else if (elementType == "Normal")
+							{
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									normal.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+							}
+							else if (elementType == "PushNormal")
+							{
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									pushNorm.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+							}
+							else if (elementType == "Gravity")
+							{
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									gravity.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+							}
+							
+							pData = pData->Parent()->NextSiblingElement();
+							break;
+						default:
+							break;
+						}
+					}
+					SystemLogger::GetLog() << "Element: name= '" << pObject->Value() << "'" << std::endl;
+
+					
+					Transform transform;
+					matrix4 mat = matrix4::CreateScale(scale.x, scale.y, scale.z) * 
+								  matrix4::CreateXRotation(rotation.x) * 
+								  matrix4::CreateYRotation(rotation.y) * 
+								  matrix4::CreateZRotation(rotation.z) * 
+								  matrix4::CreateTranslation(position.x, position.y, position.z);
+
+					BaseObject* obj = new BaseObject(name, transform);
+
+					if (!meshFile.empty())
+					{
+						std::string path = "../Resources/";
+						path.append(meshFile);
+						MeshComponent* mesh = new MeshComponent(path.c_str);
+						path = "../Resources/";
+						path.append(textureFile);
+						mesh->AddTexture(path.c_str, eTEX_DIFFUSE);
+						obj->AddComponent(mesh);
+					}
+
+					if (colliderType == "OBB")
+					{
+						vec4f min = colliderPosition - vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1);
+						vec4f max = colliderPosition + vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1);
+						CubeCollider* col = new CubeCollider(obj, canMove, trigger, gravity, mass, elasticity, staticF, kineticF, drag, min, max);
+						obj->AddComponent(col);
+					}
+					else if (colliderType == "Sphere")
+					{
+						SphereCollider* col = new SphereCollider(obj, canMove, trigger, gravity, mass, elasticity, staticF, kineticF, drag, radius);
+						obj->AddComponent(col);
+					}
+					else if (colliderType == "Button")
+					{
+						vec4f min = colliderPosition - vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1);
+						vec4f max = colliderPosition + vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1);
+						ButtonCollider* col = new ButtonCollider(obj, min, max, mass, normF, pushNorm);
+						obj->AddComponent(col);
+					}
+					else if (colliderType == "Plane")
+					{
+						PlaneCollider* col = new PlaneCollider(obj, canMove, trigger, gravity, mass, elasticity, staticF, kineticF, drag, (position * normal), normal);
+						obj->AddComponent(col);
+					}
+
+					for (int i = 0; i < codeComs.size(); ++i)
+					{
+						if (codeComs[i] == "BoxSnapToController")
+						{
+							BoxSnapToControllerAction* code = new BoxSnapToControllerAction();
+							obj->AddComponent(code);
+						}
+						else if (codeComs[i] == "ButtonPress")
+						{
+							CCButtonPress* code = new CCButtonPress();
+							obj->AddComponent(code);
+						}
+						else if (codeComs[i] == "AABBtoAABB")
+						{
+							CCElasticAABBtoAABB* code = new CCElasticAABBtoAABB();
+							obj->AddComponent(code);
+						}
+						else if (codeComs[i] == "AABBtoSphere")
+						{
+							CCElasticAABBToSphere* code = new CCElasticAABBToSphere();
+							obj->AddComponent(code);
+						}
+						else if (codeComs[i] == "ElasticPlane")
+						{
+							CCElasticReactionWithPlane* code = new CCElasticReactionWithPlane();
+							obj->AddComponent(code);
+						}
+						else if (codeComs[i] == "SpheretoSphere")
+						{
+							CCElasticSphereToSphere* code = new CCElasticSphereToSphere();
+							obj->AddComponent(code);
+						}
+						else if (codeComs[i] == "EnterLevel")
+						{
+							CCEnterLevel* code = new CCEnterLevel();
+							obj->AddComponent(code);
+						}
+						else if (codeComs[i] == "HeadsetFollow")
+						{
+							HeadsetFollow* code = new HeadsetFollow();
+							obj->AddComponent(code);
+						}
+					}
+
+					AddObject(obj);
+					pObject = pObject->NextSiblingElement("Object");
+				}
+
+				SystemLogger::GetLog() << std::endl;
+			}
+			else
+			{
+				SystemLogger::GetLog() << "Cannot find 'Configuration' node" << std::endl;
+			}
+		}
 	}
 
 	void Level::Update() {
