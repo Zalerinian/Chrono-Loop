@@ -12,7 +12,7 @@ namespace Epoch {
 
 	private:
 		unsigned int mSize = 0;
-		typename GhostNode *mHead, *mTail;
+		typename GhostNode *mHead = nullptr, *mTail = nullptr;
 
 	public:
 		class GhostNode {
@@ -27,13 +27,16 @@ namespace Epoch {
 			~GhostNode();
 			T data;
 		};
-
+		~GhostList();
 		typename GhostNode* Push(T& _data);
 		const typename GhostNode* GetHead();
 		unsigned int GetSize();
 		void GetData(std::vector<T>& _data);
 
 	};
+
+	template<class T>
+	inline GhostList<T>::~GhostList() {}
 
 	template<class T>
 	typename GhostList<T>::GhostNode* GhostList<T>::Push(T& _data) {
@@ -52,21 +55,6 @@ namespace Epoch {
 			mTail->mNext = node;
 			mTail = node;
 		}
-
-
-
-		/*if (mTail == nullptr) {
-			if (mHead != nullptr) {
-				SystemLogger::Error() << "Something's wrong with the head of the Ghost List..." << std::endl;
-			}
-			mHead = mTail = node;
-			node->mPrev = node->mNext = nullptr;
-		} else {
-			mTail->mNext = node;
-			node->mPrev = mTail;
-			node->mNext = nullptr;
-			mTail = node;
-		}*/
 		return node;
 	}
 
@@ -82,7 +70,7 @@ namespace Epoch {
 
 	template<class T>
 	void GhostList<T>::GetData(std::vector<T>& _data) {
-		_data.clear();
+		//_data.clear();
 		_data.reserve(mSize);
 		GhostNode *n = mHead;
 		while (n != nullptr) {

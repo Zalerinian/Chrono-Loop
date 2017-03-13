@@ -1,9 +1,11 @@
 #pragma once
 #include "RendererDefines.h"
 #include <memory>
+#include <wrl/client.h>
 
 struct ID3D11PixelShader;
 struct ID3D11VertexShader;
+struct ID3D11GeometryShader;
 
 namespace Epoch {
 
@@ -11,7 +13,7 @@ namespace Epoch {
 		static ShaderManager* sInstance;
 		std::shared_ptr<ID3D11PixelShader*> mPixelShaders[ePS_MAX];
 		std::shared_ptr<ID3D11VertexShader*> mVertexShaders[eVS_MAX];
-
+		Microsoft::WRL::ComPtr<ID3D11GeometryShader> mGeoShaders[eGS_MAX];
 
 
 		ShaderManager();
@@ -22,6 +24,7 @@ namespace Epoch {
 		
 		void ApplyVShader(VertexShaderFormat f);
 		void ApplyPShader(PixelShaderFormat f);
+		void ApplyGShader(GeometryShaderFormat _f);
 	
 		// Public Instance Functions
 		std::shared_ptr<ID3D11PixelShader*> GetPixelShader(PixelShaderFormat f);

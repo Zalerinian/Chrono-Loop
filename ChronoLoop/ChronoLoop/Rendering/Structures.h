@@ -60,4 +60,21 @@ namespace Epoch
 		VertexPosBoneWeightNormTanTex() {};
 	};
 
+	struct DirectionalLight
+	{
+		vec4f Direction;
+		vec4f Color;
+	};
+	struct PointLight
+	{
+		vec4f Position;
+		vec4f Color;
+	};
+	struct SpotLight
+	{
+		vec4f ConeDirection;
+		vec4f Position;
+		vec4f Color;
+		float ConeRatio;
+	};
 }

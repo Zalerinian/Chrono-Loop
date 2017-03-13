@@ -205,9 +205,11 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Actions\CCElasticAABBToSphere.h" />
     <ClInclude Include="Actions\CCElasticReactionWithPlane.h" />
     <ClInclude Include="Actions\CCElasticSphereToSphere.h" />
+    <ClInclude Include="Actions\CCEnterLevel.h" />
     <ClInclude Include="Actions\CodeComponent.hpp" />
     <ClInclude Include="Actions\GestureDetection.hpp" />
     <ClInclude Include="Actions\HeadsetFollow.hpp" />
+    <ClInclude Include="Actions\MainMenuBT.h" />
     <ClInclude Include="Actions\TeleportAction.hpp" />
     <ClInclude Include="Actions\TimeManipulation.h" />
     <ClInclude Include="Common\Breakpoint.h" />
@@ -226,11 +228,13 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Common\Math\vec4f.h" />
     <ClInclude Include="Common\Math\vec4i.h" />
     <ClInclude Include="Core\Level.h" />
+    <ClInclude Include="Core\LevelManager.h" />
     <ClInclude Include="Core\Pool.h" />
     <ClInclude Include="Core\Timeline.h" />
     <ClInclude Include="Core\TimeManager.h" />
     <ClInclude Include="Input\CommandConsole.h" />
     <ClInclude Include="Input\Controller.h" />
+    <ClInclude Include="Input\InputTimeline.h" />
     <ClInclude Include="Input\KeyboardInput.h" />
     <ClInclude Include="Input\VRInputManager.h" />
     <ClInclude Include="Messager\Messager.h" />
@@ -245,10 +249,12 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Rendering\IndexBufferManager.h" />
     <ClInclude Include="Rendering\InputLayoutManager.h" />
     <ClInclude Include="Rendering\Mesh.h" />
+    <ClInclude Include="Rendering\MeshCache.h" />
     <ClInclude Include="Rendering\RasterizerStateManager.h" />
     <ClInclude Include="Rendering\RenderContext.h" />
     <ClInclude Include="Rendering\Renderer.h" />
     <ClInclude Include="Rendering\RendererDefines.h" />
+    <ClInclude Include="Rendering\RenderList.h" />
     <ClInclude Include="Rendering\RenderNode.h" />
     <ClInclude Include="Rendering\RenderSet.h" />
     <ClInclude Include="Rendering\RenderShape.h" />
@@ -359,11 +365,13 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClCompile Include="Common\Math\vec4f.cpp" />
     <ClCompile Include="Common\Math\vec4i.cpp" />
     <ClCompile Include="Core\Level.cpp" />
+    <ClCompile Include="Core\LevelManager.cpp" />
     <ClCompile Include="Core\Pool.cpp" />
     <ClCompile Include="Core\Timeline.cpp" />
     <ClCompile Include="Core\TimeManager.cpp" />
     <ClCompile Include="Input\CommandConsole.cpp" />
     <ClCompile Include="Input\Controller.cpp" />
+    <ClCompile Include="Input\InputTimeline.cpp" />
     <ClCompile Include="Input\KeyboardInput.cpp" />
     <ClCompile Include="Input\VRInputManager.cpp" />
     <ClCompile Include="Messager\Messager.cpp" />
@@ -378,9 +386,11 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClCompile Include="Rendering\IndexBufferManager.cpp" />
     <ClCompile Include="Rendering\InputLayoutManager.cpp" />
     <ClCompile Include="Rendering\Mesh.cpp" />
+    <ClCompile Include="Rendering\MeshCache.cpp" />
     <ClCompile Include="Rendering\RasterizerStateManager.cpp" />
     <ClCompile Include="Rendering\RenderContext.cpp" />
     <ClCompile Include="Rendering\Renderer.cpp" />
+    <ClCompile Include="Rendering\RenderList.cpp" />
     <ClCompile Include="Rendering\RenderNode.cpp" />
     <ClCompile Include="Rendering\RenderSet.cpp" />
     <ClCompile Include="Rendering\RenderShape.cpp" />
@@ -432,6 +442,16 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\GSDuplicateMesh.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Rendering\Shaders\InstancedVertex64.hlsl">
@@ -575,7 +595,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
   </ItemGroup>
   <ItemGroup>
     <None Include="..\DXTK\DirectXTex.inl" />
-    <None Include="LightFunctions.hlsli" />
+    <None Include="Rendering\Shaders\LightFunctions.hlsli" />
     <None Include="Rendering\Shaders\VertexLayouts.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

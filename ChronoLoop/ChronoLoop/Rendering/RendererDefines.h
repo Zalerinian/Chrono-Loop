@@ -35,6 +35,11 @@ namespace Epoch {
 		eVS_MAX
 	};
 
+	enum GeometryShaderFormat {
+		eGS_PosNormTex = 0,
+		eGS_MAX
+	};
+
 	enum TextureType {
 		eTEX_DIFFUSE = 0,
 		eTEX_NORMAL,

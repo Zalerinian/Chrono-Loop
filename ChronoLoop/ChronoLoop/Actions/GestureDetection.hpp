@@ -17,23 +17,23 @@ namespace Epoch {
 		GestureDetection(ControllerType _t) : mControllerRole(_t), mInvalid(2, 2), mInitialContactPoint(2, 2) {}
 
 		virtual void Update() {
-			if (VRInputManager::GetInstance().IsVREnabled()) {
+		//	if (VRInputManager::GetInstance().IsVREnabled()) {
 
-				Controller &controller = VRInputManager::GetInstance().GetController(mControllerRole);
-				
-				if (mInitialContactPoint != mInvalid && !controller.GetTouch(vr::k_EButton_SteamVR_Touchpad)) {
-					mInitialContactPoint = mInvalid;
-					mList.Clear();
-				}
-				if (controller.GetTouch(vr::k_EButton_SteamVR_Touchpad)) {
-					vec2f contactPoint = controller.GetAxis(vr::k_EButton_SteamVR_Touchpad);
-					mList.AddHead(contactPoint);
-					if (mInitialContactPoint == mInvalid) {
-						mInitialContactPoint = contactPoint;
-					}
+		//		Controller &controller = VRInputManager::GetInstance().GetController(mControllerRole);
+		//		
+		//		if (mInitialContactPoint != mInvalid && !controller.GetTouch(vr::k_EButton_SteamVR_Touchpad)) {
+		//			mInitialContactPoint = mInvalid;
+		//			mList.Clear();
+		//		}
+		//		if (controller.GetTouch(vr::k_EButton_SteamVR_Touchpad)) {
+		//			vec2f contactPoint = controller.GetAxis(vr::k_EButton_SteamVR_Touchpad);
+		//			mList.AddHead(contactPoint);
+		//			if (mInitialContactPoint == mInvalid) {
+		//				mInitialContactPoint = contactPoint;
+		//			}
 
-				}
-			}
+		//		}
+		//	}
 
 		}
 	};

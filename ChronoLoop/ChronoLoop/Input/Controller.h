@@ -21,6 +21,10 @@ namespace Epoch {
 		bool mHairTriggerState, mHairTriggerPrevState;
 		void Setup(int _index);
 
+
+		vec2f InitialPos = { -2,-2 };//-2Slow-2Furious
+		unsigned int gestureCnt = 0;
+
 		friend class VIM;
 	public:
 
@@ -28,6 +32,7 @@ namespace Epoch {
 		Controller();
 		~Controller() {};
 		void Update();
+		int CheckGesture();
 
 		//transforms
 		matrix4 GetPosition();
