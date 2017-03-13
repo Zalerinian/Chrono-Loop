@@ -88,6 +88,11 @@ namespace Epoch {
 						Level::Instance()->iGetRightController()->GetUniqueID(),
 						Level::Instance()->iGetLeftController()->GetUniqueID());
 
+					VRInputManager::GetInstance().RewindInputTimeline(
+						TimeManager::Instance()->GetTempCurSnap(),
+						Level::Instance()->iGetRightController()->GetUniqueID(),
+						Level::Instance()->iGetLeftController()->GetUniqueID());
+
 					Level::Instance()->iGetLeftTimeManinpulator()->makeTimePaused(false);
 					Level::Instance()->iGetRightTimeManinpulator()->makeTimePaused(false);
 				}

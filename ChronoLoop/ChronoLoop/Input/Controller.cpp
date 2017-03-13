@@ -52,7 +52,7 @@ namespace Epoch {
 						return 0;
 					}
 					gestureCnt++;
-					if (gestureCnt == 5) {
+					if (gestureCnt == 3) {
 						gestureCnt = 0;
 						//SystemLogger::GetLog() << "InitialPos: (" << InitialPos.x << "," << InitialPos.y << ")" << "CurPos: (" << CurPos.x << "," << CurPos.y << ")" << std::endl;
 						vec2f CurPos = touch;

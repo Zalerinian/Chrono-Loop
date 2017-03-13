@@ -94,7 +94,7 @@ namespace Epoch {
 			bool left = Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused();
 		}
 		//if there is a event avaliable and the game is focused
-		while (mVRSystem->PollNextEvent(&tempEvent, sizeof(tempEvent)) && !mVRSystem->IsInputFocusCapturedByAnotherProcess()  && (!left && !right) ) {
+		while (mVRSystem->PollNextEvent(&tempEvent, sizeof(tempEvent)) && !mVRSystem->IsInputFocusCapturedByAnotherProcess() && (!left && !right)) {
 			if ((tempEvent.eventType == vr::EVREventType::VREvent_ButtonPress || tempEvent.eventType == vr::EVREventType::VREvent_ButtonUnpress) && tempEvent.data.controller.button != vr::k_EButton_Grip  && tempEvent.data.controller.button != vr::k_EButton_ApplicationMenu) {
 				AddInputNode(&tempEvent);
 			}
@@ -173,9 +173,48 @@ namespace Epoch {
 		//SystemLogger::GetLog() << "Rewinded to before " << _frame << std::endl;
 	}
 
-	InputTimeline::InputNode * VIM::FindLastInput(unsigned short _id) {
+	void VIM::MoveInputTimeline(unsigned int _frame) {
 
 		InputTimeline::InputNode* temp = mInputTimeline->GetCurr();
+		//SystemLogger::GetLog() << "Rewind to " << _frame << std::endl;
+		while (temp) {
+			//Have reached the point we want to stop
+			if (temp->mData.mLastFrame < _frame) {
+				break;
+			}
+			if (temp->mPrev) {
+				temp = temp->mPrev;
+			} else if (!temp->mPrev) {
+				break;
+			}
+		mInputTimeline->SetCurr(temp);
+		}
+		//mInputTimeline->DisplayTimeline();
+		//SystemLogger::GetLog() << "Rewinded to before " << _frame << std::endl;
+	}
+	//_fromTempCurrent is if you want to go back to current of rewind action
+	InputTimeline::InputNode * VIM::FindLastInput(unsigned short _id, bool _fromTempCurrent) {
+		InputTimeline::InputNode* temp = mInputTimeline->GetCurr();
+
+		if(_fromTempCurrent)
+		{
+			//find the spot where its before mTempCurrentGameIndx
+			unsigned int frame = TimeManager::Instance()->GetTempCurSnap();
+			temp = mInputTimeline->GetCurr();
+			while(temp)
+			{
+				//Have reached the point we want to stop
+				if (temp->mData.mLastFrame < frame) {
+					break;
+				}
+				if (temp->mPrev) {
+					temp = temp->mPrev;
+				} else if (!temp->mPrev) {
+					break;
+				}
+			}
+		}
+
 		while (temp) {
 			if (temp->mData.mControllerId == _id) {
 				return temp;

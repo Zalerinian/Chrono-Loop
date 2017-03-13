@@ -259,8 +259,6 @@ namespace Epoch {
 				Level::Instance()->iGetHeadset()->GetUniqueID(),
 				Level::Instance()->iGetLeftController()->GetUniqueID(),
 				Level::Instance()->iGetRightController()->GetUniqueID());
-
-
 		}
 		void TimeManager::MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC) {
 			GetTimeLine()->MoveAllObjectsToSnapExceptPlayer(_snaptime, _headset, _leftC, _rightC);
