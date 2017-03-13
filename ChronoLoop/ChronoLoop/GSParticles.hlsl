@@ -21,7 +21,7 @@ void main(
 )
 {
 	GSOutput element;
-	float4 temp[4];
+	float4 temp[8];
 	temp[0] = float4(input[0].pos) + float4(-input[0].size, input[0].size, 0, 0);
 	temp[1] = float4(input[0].pos) + float4(input[0].size, input[0].size, 0, 0);
 	temp[2] = float4(input[0].pos) + float4(-input[0].size, -input[0].size, 0, 0);
@@ -47,5 +47,4 @@ void main(
 	element.uv = float4(1, 1, 0, 0);
 
 	output.Append(element);
-
 }

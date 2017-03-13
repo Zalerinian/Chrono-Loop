@@ -21,7 +21,6 @@ namespace Epoch
 		ID3D11PixelShader* mPShader;
 		ID3D11Buffer* mVBuff;
 		ID3D11InputLayout* mILayout;
-		GSMatrix mLeft, mRight;
 
 		ParticleSystem();
 		~ParticleSystem();
@@ -30,7 +29,6 @@ namespace Epoch
 		static ParticleSystem* Instance();
 		static void Destroy();
 
-		void SetMatrices(matrix4 _lmodel, matrix4 _lview, matrix4 _lproj, matrix4 _rmodel, matrix4 _rview, matrix4 _rproj);
 		void SetGeometryShader();
 		void SetVertexPixelShader();
 

@@ -30,7 +30,8 @@ namespace Epoch
 	struct Particle
 	{
 		int mLife, mMaxLife;
-		float mSize;
+		//TODO: Opacity and Rotation over time??
+		float mSize; //TODO: Size over time?
 		vec4f mPos, mPrevPos, mVelocity;
 		vec4f mSColor, mEColor, mCurColor;
 		bool mActive;
@@ -54,6 +55,7 @@ namespace Epoch
 		ID3D11Buffer* mVBuffer;
 		//BlendMode
 		//BoundingBox
+		//TODO: Make this attachable, basically a position pointer
 		vec4f mPos;
 
 		Particle* mBase;
@@ -61,6 +63,9 @@ namespace Epoch
 		std::vector<GSParticle> mGParticles;
 		int mTotalParticles, mMaxParticles, mPerSec; 
 		vec4f mStartColor, mEndColor;
+		bool mIsAnimated;
+		float mOffset;
+		//TODO: If animated, need to send offset to geometry shader or pixel shader
 
 		virtual void UpdateParticle(Particle* _p);
 		void CreateBuffers();
@@ -70,7 +75,9 @@ namespace Epoch
 		void EmitParticles();
 
 	public:
-		ParticleEmitter(int _numParticles, int _totalp, int _maxp, int _persec, vec4f _pos);
+		bool mActive;
+
+		ParticleEmitter(int _totalp, int _maxp, int _persec, vec4f _pos);
 		virtual ~ParticleEmitter();
 
 		ID3D11Buffer* GetVertexBuffer();
@@ -78,6 +85,7 @@ namespace Epoch
 		int GetVertexCount();
 
 		void SetTexture(const char* _tex);
+		void SetTexture(const char* _tex, bool _animate, float offset);
 		virtual void SetParticle(Particle* _p);
 
 		void Update(float _delta);
@@ -114,7 +122,7 @@ namespace Epoch
 		};
 	public:
 		VolumeEmitter();
-		VolumeEmitter(int _numParticles, int _totalp, int _maxp, int _persec, vec4f _pos);
+		VolumeEmitter(int _totalp, int _maxp, int _persec, vec4f _pos);
 
 		void SetBoundingVolume(float _l, float _w, float _h);
 		void SetBoundingVolume(float _r);

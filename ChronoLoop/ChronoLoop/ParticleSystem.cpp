@@ -71,19 +71,23 @@ namespace Epoch
 		Renderer::Instance()->GetDevice()->CreateBuffer(&desc, NULL, &mVBuff);
 	}
 
-	void ParticleSystem::SetMatrices(matrix4 _lmodel, matrix4 _lview, matrix4 _lproj, matrix4 _rmodel, matrix4 _rview, matrix4 _rproj)
-	{
-		mLeft.model = _lmodel;
-
-		mRight.model = _rmodel;
-	}
-
 	void ParticleSystem::Update()
 	{
 		//TODO: Update emitters
 		//float dt = TimeManager::Instance()->GetDeltaTime();
 		for (ParticleEmitter* emit : mPEmitters)
-			emit->Update(0);
+		{
+			if (emit->mActive)
+				emit->Update(0);
+		}
+		for (int i =0; i < mPEmitters.size(); i++)
+		{
+			if (mPEmitters[i]->mActive == false)
+			{
+				RemoveEmitter(mPEmitters[i]);
+				i--;
+			}
+		}
 	}
 
 	void ParticleSystem::Render()

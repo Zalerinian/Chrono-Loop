@@ -52,13 +52,13 @@ namespace Epoch
 
 	//Base Particle Emitter---------------------------------------------
 
-	ParticleEmitter::ParticleEmitter(int _numParticles, int _totalp, int _maxp, int _persec, vec4f _pos)
+	ParticleEmitter::ParticleEmitter(int _totalp, int _maxp, int _persec, vec4f _pos)
 	{
-		mParticles.resize(_numParticles);
 		mTotalParticles = _totalp;
 		mMaxParticles = _maxp;
 		mPerSec = _persec;
 		mPos = _pos;
+		mActive = true;
 		CreateBuffers();
 	}
 
@@ -137,6 +137,8 @@ namespace Epoch
 	}
 	void ParticleEmitter::Update(float _delta)
 	{
+		if (mActive == false)
+			return;
 		CleanUpParticles();
 		EmitParticles();
 		for (Particle* p : mParticles)
@@ -153,7 +155,7 @@ namespace Epoch
 		{
 			_p->mPrevPos = _p->mPos;
 			_p->mPos = _p->mPos + _p->mVelocity;
-			//_p->mCurColor += (_p->mEColor - _p->mSColor) *  (1 - ((float)_p->mLife / (float)_p->mMaxLife)) / 100.0f;
+			_p->mCurColor += (_p->mEColor - _p->mSColor) *  (1 - ((float)_p->mLife / (float)_p->mMaxLife)) / 100.0f;
 			_p->mLife--;
 		}
 	}
@@ -224,6 +226,11 @@ namespace Epoch
 
 		for (int i = 0; i < mPerSec; i++)
 		{
+			if (total >= mTotalParticles && mTotalParticles != -1 && mParticles.size() == 0)
+			{
+				mActive = false;
+				break;
+			}
 			if (mParticles.size() < mMaxParticles && (total < mTotalParticles || mTotalParticles == -1))
 			{
 				float x, y, z;
@@ -241,13 +248,14 @@ namespace Epoch
 				z = -.05 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05 - -.05)));
 				p->mVelocity = vec4f(x, y, z, 0);
 				mParticles.push_back(p);
+				total++;
 			}
 		}
 	}
 
 	//Volume Emitter------------------------------------------------------
 
-	VolumeEmitter::VolumeEmitter(int _numParticles, int _totalp, int _maxp, int _persec, vec4f _pos) : ParticleEmitter(_numParticles, _totalp, _maxp, _persec, _pos)
+	VolumeEmitter::VolumeEmitter(int _totalp, int _maxp, int _persec, vec4f _pos) : ParticleEmitter(_totalp, _maxp, _persec, _pos)
 	{
 
 	}
