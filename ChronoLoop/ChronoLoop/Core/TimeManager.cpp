@@ -128,8 +128,9 @@ namespace Epoch {
 			Clonepair pair;
 			pair.mCur = _id1;
 			FindOtherClones(pair);
-			for (int i = 0; i < mClones.size(); ++i) {
-
+			bool del = false;
+			for (int i = 0; i < mClones.size(); ) {
+				del = false;
 				if (mClones[i]->GetUniqueId() == _id1 || mClones[i]->GetUniqueId() == pair.mOther1 || mClones[i]->GetUniqueId() == pair.mOther2) {
 					mClones[i]->RemoveAllComponents();
 
@@ -138,6 +139,7 @@ namespace Epoch {
 						if (Physics::Instance()->mObjects[k]->GetUniqueID() == mClones[i]->GetUniqueID()) {
 							//I know I could have just iterated through it with an iterator but im lazy and tired
 							Physics::Instance()->mObjects.erase(Physics::Instance()->mObjects.begin() + k);
+							break;
 						}
 					}
 
@@ -147,7 +149,10 @@ namespace Epoch {
 					mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueId());
 					Pool::Instance()->iRemoveObject(mClones[i]->GetUniqueID());
 					mClones.erase(mClones.begin() + i);
+					del = true;
 				}
+				if (!del)
+					i++;
 			}
 	}
 
@@ -210,14 +215,15 @@ namespace Epoch {
 			ObjectLifeTime* curr = mTimeline->GetObjectLifetime(_pair.mCur);
 			if (!curr)
 				return;
+			bool pair1 = false;
 
 			for (unsigned int i = 0; i < mClones.size(); i++) {
-				bool pair1 = false;
 				if (mClones[i]->GetUniqueId() == _pair.mCur)
 					continue;
 				ObjectLifeTime* temp = mTimeline->GetObjectLifetime(mClones[i]->GetUniqueId());
 				if(temp &&temp->mBirth == curr->mBirth && (mClones[i]->GetName().find("Headset") != std::string::npos || mClones[i]->GetName().find("Controller") != std::string::npos))
 				{
+				
 					if(!pair1)
 					{
 						_pair.mOther1 = mClones[i]->GetUniqueId();
@@ -300,11 +306,19 @@ namespace Epoch {
 		}
 		void TimeManager::BrowseTimeline(int _gesture, int _frameRewind) {
 
+
+
 			unsigned int temp = instanceTimemanager->GetCurrentSnapFrame();
 			if (_gesture == 0)
 				return;
-			if (_gesture == 1)
+			else if (_gesture == 1)
 				_frameRewind *= -1;
+			else if (_gesture == 2) {
+				Level::Instance()->iGetRightTimeManinpulator()->RaycastCloneCheck();
+				Level::Instance()->iGetLeftTimeManinpulator()->RaycastCloneCheck();
+				return;
+			}
+
 			if (mtempCurSnapFrame > mTimeline->GetCurrentGameTimeIndx())
 				return;
 
@@ -316,6 +330,9 @@ namespace Epoch {
 				Level::Instance()->iGetHeadset()->GetUniqueID(),
 				Level::Instance()->iGetLeftController()->GetUniqueID(),
 				Level::Instance()->iGetRightController()->GetUniqueID());
+
+		
+
 		}
 		void TimeManager::MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC) {
 			GetTimeLine()->MoveAllObjectsToSnapExceptPlayer(_snaptime, _headset, _leftC, _rightC);

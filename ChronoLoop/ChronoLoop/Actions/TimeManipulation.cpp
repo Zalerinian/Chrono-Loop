@@ -130,7 +130,7 @@ namespace Epoch
 					Level::Instance()->iGetRightController()->GetUniqueID(),
 					Level::Instance()->iGetLeftController()->GetUniqueID());
 				
-				RaycastCloneCheck();
+				
 			} else {
 				TimeManager::Instance()->SetTempCurSnap();
 				mPauseTime = true;
@@ -156,7 +156,6 @@ namespace Epoch
 		matrix4 mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
 		mObject->GetTransform().SetMatrix(mat);
 
-		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Trigger)) {
 			std::vector<BaseObject*> clones = TimeManager::Instance()->GetClonesVec();
 		
 			for (int i = 0; i < clones.size(); ++i) {
@@ -171,18 +170,11 @@ namespace Epoch
 				for (unsigned int j = 0; j < numTris; ++j) {
 					float hitTime;
 					if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, forward, hitTime)) {
-						
-						if(VRInputManager::GetInstance().GetController(eControllerType_Primary).CheckGesture() == 2)
-						{
 							TimeManager::Instance()->DeleteClone(clones[i]->GetUniqueId());
-						}
-						else if(VRInputManager::GetInstance().GetController(eControllerType_Secondary).CheckGesture() == 2)
-						{
-							VRInputManager::GetInstance().GetController(eControllerType_Secondary).CheckGesture() == 2;
-						}
+							return;
 					}
 				}
 			}
 		}
-	}
+	
 } // Epoch Namespace
