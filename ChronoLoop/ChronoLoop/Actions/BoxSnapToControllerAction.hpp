@@ -19,11 +19,12 @@ namespace Epoch {
 		}
 
 		virtual void Update() override {
+			bool right = Level::Instance()->iGetRightTimeManinpulator()->isTimePaused();
+			bool left = Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused();
 			if (VRInputManager::GetInstance().IsVREnabled() && mCollider) {
 
-				bool right = Level::Instance()->iGetRightTimeManinpulator()->isTimePaused();
-				bool left = Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused();
 				InputTimeline::InputNode*temp;
+
 				if (right || left) {
 					temp = VRInputManager::GetInstance().FindLastInput(mCollider->GetBaseObject()->GetUniqueID(), true);
 				}
@@ -33,8 +34,15 @@ namespace Epoch {
 
 				//This is gross but i dont know how to get around this without storing mheld and should move in timeline
 				if (mInput && temp && mPickUp && (temp->mData.mLastFrame < mInput->mData.mLastFrame || (temp->mData.mLastFrame == mInput->mData.mLastFrame && temp->mData.mTime < mInput->mData.mTime))) {
-					mHeld = false;
+					if ((left || right)) {
+						mHeld = false;
+					}
+					else if (!left && !right) {
+						mHeld = true;
+					}
+
 					mPickUp->mShouldMove = true;
+
 					//	SystemLogger::GetLog() << "Should move on:: Old: snap = " << mInput->mData.mLastFrame << " time= " << mInput->mData.mTime << "   New: snap = " << temp->mData.mLastFrame << " time= " << temp->mData.mTime << std::endl;
 				}
 
@@ -49,7 +57,7 @@ namespace Epoch {
 						SystemLogger::GetLog() << "Id: " << mCollider->GetBaseObject()->GetUniqueId() << " Released object" << std::endl;
 						ReleaseObject();
 					}
-				} else if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == -1 && !mHeld && !mCollider->mHitting.empty()) {
+				} else if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == -1 && !mHeld && !mCollider->mHitting.empty() && !left && !right) {
 					SomethingtoController();
 				}
 
