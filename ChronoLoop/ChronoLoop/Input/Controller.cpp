@@ -73,7 +73,7 @@ namespace Epoch {
 								(CurPos.x > 0.5f || CurPos.x < -0.5f) &&
 								(CurPos.y < 0.3f && CurPos.y > -0.3f)) {
 								SystemLogger::GetLog() << "Horizontal Wrongness" << std::endl;
-								return 3;
+								return 0;
 							}
 							InitialPos = CurPos;
 							if (diff * line > 0) {
