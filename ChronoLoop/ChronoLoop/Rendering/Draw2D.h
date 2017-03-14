@@ -42,7 +42,7 @@ namespace Epoch
 		}
 		~Font()
 		{
-
+			
 		}
 		bool operator==(Font _equals)
 		{

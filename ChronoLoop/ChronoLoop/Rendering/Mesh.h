@@ -16,6 +16,7 @@ namespace Epoch
 	{
 		vec4f Vertex[3];
 		vec4f Normal;
+		vec4f Centeroid;
 	};
 
 	template<typename T>
@@ -122,6 +123,7 @@ namespace Epoch
 				temp.Vertex[0] = mUniqueVerts[mIndicies[(i * 3) + 0]].Position;
 				temp.Vertex[1] = mUniqueVerts[mIndicies[(i * 3) + 1]].Position;
 				temp.Vertex[2] = mUniqueVerts[mIndicies[(i * 3) + 2]].Position;
+				temp.Centeroid = (temp.Vertex[0] + temp.Vertex[1] + temp.Vertex[2]) / 3;
 				mTriangles.push_back(temp);
 			}
 		}

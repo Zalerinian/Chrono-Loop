@@ -19,17 +19,20 @@ namespace Epoch {
 		}
 
 		virtual void Update() override {
-			if (VRInputManager::GetInstance().IsVREnabled() && mCollider) {
-				Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
+			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
-				bool right = false;
-				bool left = false;
-				if (cLevel->GetRightTimeManinpulator() != nullptr || cLevel->GetLeftTimeManinpulator() != nullptr) {
-					right = cLevel->GetRightTimeManinpulator()->isTimePaused();
-					left = cLevel->GetLeftTimeManinpulator()->isTimePaused();
-				}
+			bool mRight = false;
+			bool mLeft = false;
+			if (cLevel->GetRightTimeManinpulator() != nullptr || cLevel->GetLeftTimeManinpulator() != nullptr) {
+				mRight = cLevel->GetRightTimeManinpulator()->isTimePaused();
+				mLeft = cLevel->GetLeftTimeManinpulator()->isTimePaused();
+			}
+			if (VRInputManager::GetInstance().IsVREnabled() && mCollider) {
+
+
 				InputTimeline::InputNode*temp;
-				if (right || left) {
+
+				if (mRight || mLeft) {
 					temp = VRInputManager::GetInstance().FindLastInput(mCollider->GetBaseObject()->GetUniqueID(), true);
 				}
 				else {
@@ -37,9 +40,18 @@ namespace Epoch {
 				}
 
 				//This is gross but i dont know how to get around this without storing mheld and should move in timeline
-				if (mInput && temp && mPickUp && (temp->mData.mLastFrame < mInput->mData.mLastFrame || (temp->mData.mLastFrame == mInput->mData.mLastFrame && temp->mData.mTime < mInput->mData.mTime))) {
-					mHeld = false;
+				if (mInput && temp && mPickUp && 
+					(temp->mData.mLastFrame < mInput->mData.mLastFrame || 
+					(temp->mData.mLastFrame == mInput->mData.mLastFrame && temp->mData.mTime < mInput->mData.mTime))) {
+					if ((mLeft || mRight)) {
+						mHeld = false;
+					}
+					else if (!mLeft && !mRight) {
+						mHeld = true;
+					}
+
 					mPickUp->mShouldMove = true;
+
 					//	SystemLogger::GetLog() << "Should move on:: Old: snap = " << mInput->mData.mLastFrame << " time= " << mInput->mData.mTime << "   New: snap = " << temp->mData.mLastFrame << " time= " << temp->mData.mTime << std::endl;
 				}
 
@@ -50,11 +62,11 @@ namespace Epoch {
 				if (mHeld && mPickUp != nullptr) {
 					matrix4 m = mObject->GetTransform().GetMatrix();
 					mPickUp->SetPos(m.Position);
-					if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == 1 && mHeld) {
+					if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == 1 && mHeld || (mLeft || mRight)) {
 						SystemLogger::GetLog() << "Id: " << mCollider->GetBaseObject()->GetUniqueId() << " Released object" << std::endl;
 						ReleaseObject();
 					}
-				} else if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == -1 && !mHeld && !mCollider->mHitting.empty()) {
+				} else if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == -1 && !mHeld && !mCollider->mHitting.empty() && (!mLeft && !mRight)) {
 					SomethingtoController();
 				}
 

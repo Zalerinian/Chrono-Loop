@@ -193,7 +193,7 @@ namespace Epoch {
 
 		cloneInterp->SetType(InterpolatorType::I_Matrix4);
 		if (_currTime + 1 <= mSnaptimes.size() - 1) {
-			nextsnap = mSnapshots[mSnaptimes[_currTime + 1]];
+			nextsnap = mSnapshots[mSnaptimes[(unsigned int)_currTime + 1]];
 			//found a clone snapinfo in the next snapshot
 			if (nextsnap->mSnapinfos.find(_cloneid) != nextsnap->mSnapinfos.end()) {
 				nextInfo = nextsnap->mSnapinfos[_cloneid];
@@ -515,7 +515,7 @@ namespace Epoch {
 							if (snap->mSnapinfos.find(id) != snap->mSnapinfos.end() && id == _clones[i]->GetUniqueID()) {
 								MoveObjectToSnap(_time, id);
 								//Update the clone interpolators to move if there is a next next snap available.
-								UpdateCloneInterpolators(_clones[i]->GetUniqueID(), snap->mSnapinfos[id], _time);
+								UpdateCloneInterpolators(_clones[i]->GetUniqueID(), snap->mSnapinfos[id], (float)_time);
 								break;
 							}
 							//If we are a clone but dont have a next movement then record one at position
