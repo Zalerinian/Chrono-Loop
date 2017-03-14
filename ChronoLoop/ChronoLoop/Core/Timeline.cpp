@@ -191,14 +191,12 @@ namespace Epoch {
 			//found a clone snapinfo in the next snapshot
 			if (nextsnap->mSnapinfos.find(_cloneid) != nextsnap->mSnapinfos.end()) {
 				nextInfo = nextsnap->mSnapinfos[_cloneid];
-				cloneInterp->SetStart(_currSnap->mTransform.GetMatrix());
-				cloneInterp->SetEnd(nextInfo->mTransform.GetMatrix());
 				cloneInterp->SetActive(true);
 				//Loop to find the same clone's baseObject
 				std::vector<BaseObject*> clones = TimeManager::Instance()->GetClonesVec();
 				for (int i = 0; i < clones.size(); ++i) {
 					if (_cloneid == clones[i]->GetUniqueID()) {
-						cloneInterp->SetEdit(clones[i]->GetTransform().GetMatrix());
+						cloneInterp->Prepare(0.1f, _currSnap->mTransform.GetMatrix(), nextInfo->mTransform.GetMatrix(), clones[i]->GetTransform().GetMatrix());
 						break;
 					}
 				}

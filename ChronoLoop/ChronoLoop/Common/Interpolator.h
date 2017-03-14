@@ -34,7 +34,7 @@ namespace  Epoch {
 		inline void SetActive(bool _bool) { mActive = _bool; };
 		inline void SetEasingFunction(EasingFunction _m) { mEasingFunction = _m; }
 		void Prepare(float _duration, Type& _start, Type& _end, Type& _edit);
-		void Update(float _deltaTime);
+		bool Update(float _deltaTime);
 		void Interpolate();
 	};
 
@@ -56,15 +56,16 @@ namespace  Epoch {
 	inline Interpolator<Type>::~Interpolator() {}
 
 	template<class Type>
-	inline void Interpolator<Type>::Update(float _deltaTime) {
+	inline bool Interpolator<Type>::Update(float _deltaTime) {
 		if (!mActive)
-			return;
+			return false;
 		if (mDuration <= 0) {
 			SystemLogger::Error() << "The duration for an interpolator is invalid: " << mDuration << std::endl;
-			return;
+			return false;
 		}
 		mTweenTime += _deltaTime;
 		Interpolate();
+		return fabsf(mTweenTime - mDuration) < 0.001f;
 	}
 
 	template <class Type>

@@ -8,6 +8,7 @@
 #include "../Core/Level.h"
 #include "../Actions/HeadsetFollow.hpp"
 #include "..\Common\Interpolator.h"
+#include "../Common/EasingFunctions.h"
 
 namespace Epoch
 {
@@ -24,19 +25,18 @@ namespace Epoch
 		Level* cLevel = nullptr;
 		bool mBooped = false;
 
-		float tTime;
-
 		virtual void Start()
 		{
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
-			tTime = 0;
 			mChamberObject = cLevel->FindObjectWithName("mmChamber");
 			mStartObject = cLevel->FindObjectWithName("mmStart");
 			mExitObject = cLevel->FindObjectWithName("mmExit");
 			mFloorObject = cLevel->FindObjectWithName("mmFloor");
 			mRoomObject = cLevel->FindObjectWithName("mmRoom");
 			//mCubeObject = cLevel->FindObjectWithName("mmCube");
+
+			mChamberInterp->SetEasingFunction(Easing::BounceInOut);
 
 			mChamberMesh = (MeshComponent*)mChamberObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			mStartMesh = (MeshComponent*)mStartObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
@@ -102,17 +102,11 @@ namespace Epoch
 							if (i == 0)
 							{
 								matrix4 mat = mChamberObject->GetTransform().GetMatrix();
-								mChamberInterp->SetEdit(mChamberObject->GetTransform().GetMatrix());
-								mChamberInterp->SetStart(mat);
-								mat *= matrix4::CreateTranslation(0, -10, 0);
-								mChamberInterp->SetEnd(mat);
+								mChamberInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(0, -10, 0), mChamberObject->GetTransform().GetMatrix());
 								mChamberInterp->SetActive(true);
 
 								mat = VRInputManager::GetInstance().GetPlayerPosition();
-								mPlayerInterp->SetEdit(VRInputManager::GetInstance().GetPlayerPosition());
-								mPlayerInterp->SetStart(mat);
-								mat *= matrix4::CreateTranslation(0, -10, 0);
-								mPlayerInterp->SetEnd(mat);
+								mPlayerInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(0, -10, 0), VRInputManager::GetInstance().GetPlayerPosition());
 								mPlayerInterp->SetActive(true);
 								mBooped = true;
 								cLevel->mmflip = false;
@@ -158,11 +152,10 @@ namespace Epoch
 							forward *= meshTime;
 							VRInputManager::GetInstance().GetPlayerPosition()[3][0] += forward[0]; // x
 							VRInputManager::GetInstance().GetPlayerPosition()[3][2] += forward[2]; // z
-																								   //VRInputManager::Instance().iGetPlayerPosition()[3][3] += forward[3]; // w
 						}
 						else
 						{
-							SystemLogger::GetLog() << "[DEBUG] Can't let you do that, Starfox." << std::endl;
+							SystemLogger::Debug() << "Can't let you do that, Starfox." << std::endl;
 						}
 					}
 				}
@@ -170,12 +163,12 @@ namespace Epoch
 
 			if (mBooped) 
 			{
-				SystemLogger::Debug() << tTime << "  |  " << TimeManager::Instance()->GetDeltaTime() << std::endl;
-				tTime += TimeManager::Instance()->GetDeltaTime();
-				if (tTime <= 15) {
-					mChamberInterp->Update(tTime / 15.0f);
-					mPlayerInterp->Update(tTime / 15.0f);
-				}
+					mChamberInterp->Update(TimeManager::Instance()->GetDeltaTime());
+					bool complete = mPlayerInterp->Update(TimeManager::Instance()->GetDeltaTime());
+					if (complete)
+					{
+						mBooped = false;
+					}
 			}
 		}
 
