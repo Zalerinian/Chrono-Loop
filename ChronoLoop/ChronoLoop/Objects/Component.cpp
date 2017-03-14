@@ -104,6 +104,7 @@ namespace Epoch
 
 	void Emitter::PlaySFX(int _id)
 	{
+		//TODO: DOUBLE CHECK THIS
 		if (_id < 0 || _id > mSFX[ePlaySFX].size() - 1)
 			return;
 

@@ -296,16 +296,24 @@ void Update() {
 	PhysicsBox->AddComponent(BoxCollision);
 	PhysicsBox->AddComponent(BoxSphereCollision);
 	TimeManager::Instance()->AddObjectToTimeline(PhysicsBox);
-	Emitter* aabbSound = new Emitter();
+	Emitter* aabbSound = new Emitter(), *aabbs2 = new Emitter(), *ss1 = new Emitter(), *ss2 = new Emitter();
 	PhysicsBox->AddComponent(aabbSound);
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_TEST1);
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_TEST1);
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_TEST1);
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_TEST1);
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::PLAYBOUNCEEFFECTS);
+	aabbs2->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_TEST1);
+	aabbs2->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_TEST1);
+	aabbs2->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_TEST1);
+	aabbs2->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_TEST1);
+	aabbs2->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::PLAYBOUNCEEFFECTS);
+	ss1->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::PLAYBOUNCEEFFECTS);
+	ss2->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::PLAYBOUNCEEFFECTS);
 	MeshComponent *visibleMesh = new MeshComponent("../Resources/raycube.obj");
 	visibleMesh->AddTexture("../Resources/raycube.png", eTEX_DIFFUSE);
 	PhysicsBox->AddComponent(visibleMesh);
+	PhysicsBox->AddComponent(aabbSound);
 	
 	
 	Transform transformBox;
@@ -329,7 +337,7 @@ void Update() {
 	MeshComponent *visibleMeshBox = new MeshComponent("../Resources/raycube.obj");
 	visibleMeshBox->AddTexture("../Resources/raycube.png", eTEX_DIFFUSE);
 	PhysicsBox2->AddComponent(visibleMeshBox);
-	
+	PhysicsBox2->AddComponent(aabbs2);
 	
 	Transform SphereTransform;
 	matrix4 SphereMat = matrix4::CreateScale(0.15f, 0.15f, 0.15f); 
@@ -349,7 +357,7 @@ void Update() {
 	MeshComponent *sphereMesh = new MeshComponent("../Resources/Sphere.obj");
 	sphereMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 	PhysicsSphere->AddComponent(sphereMesh);
-	
+	PhysicsSphere->AddComponent(ss1);
 	
 	Transform SphereTransform2;
 	matrix4 SphereMat2 = matrix4::CreateScale(0.15f, 0.15f, 0.15f);
@@ -369,6 +377,7 @@ void Update() {
 	MeshComponent *sphereMesh2 = new MeshComponent("../Resources/Sphere.obj");
 	sphereMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 	PhysicsSphere2->AddComponent(sphereMesh2);
+	PhysicsSphere2->AddComponent(ss2);
 	
 	
 	Transform ButtonTransform;
@@ -508,8 +517,11 @@ void Update() {
 	Listener* ears = new Listener();
 	camObj.AddComponent(ears);
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(ears, "Listener")));
-	//Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(aabbSound, "aabbS")));
-	//aabbSound->Play();
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(aabbSound, "aabbS")));
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(aabbs2, "aabbS2")));
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(ss1, "ss1")));
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(ss2, "ss2")));
+	aabbSound->Play();
 	
 	BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", transform); //new BaseObject("headset", transform);
 	MeshComponent *visibleMesh2 = new MeshComponent("../Resources/Cube.obj");

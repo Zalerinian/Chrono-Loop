@@ -50,7 +50,7 @@ float4 main(PSI input) : SV_TARGET
 
 	color = l1 + l2 + l3;
 
-	return saturate(color) * diffuseColor;
+	return (saturate(color) + float4(.25,.25,.25,.25))  * diffuseColor;
 }
 
 //Empty object, light component
