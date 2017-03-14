@@ -114,8 +114,15 @@ namespace LevelEditor
 
         public List<string> Components
         {
-            get { return mComponents; }
-            set { mComponents = value; }
+            get
+            {
+                return mComponents;
+            }
+
+            set
+            {
+                mComponents = value;
+            }
         }
         #endregion
 
@@ -343,6 +350,8 @@ namespace LevelEditor
         {
             if (mVertices != null)
             {
+                if (mVertexBuffer != null)
+                    mVertexBuffer.Dispose();
                 mVertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionNormalTextured), mVertices.Length, mDevice, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionNormalTextured.Format, Pool.Default);
                 mVertexBuffer.SetData(mVertices, 0, LockFlags.None);
             }
@@ -351,6 +360,8 @@ namespace LevelEditor
         {
             if (mIndices != null)
             {
+                if (mIndexBuffer != null)
+                    mIndexBuffer.Dispose();
                 mIndexBuffer = new IndexBuffer(typeof(int), mIndices.Length * sizeof(int), mDevice, Usage.WriteOnly, Pool.Default);
                 mIndexBuffer.SetData(mIndices, 0, LockFlags.None);
             }

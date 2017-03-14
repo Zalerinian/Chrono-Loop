@@ -25,7 +25,7 @@ namespace LevelEditor
         private List<ToolObject> higharchy = new List<ToolObject>();
         private List<ToolObjectColor> debugObjs = new List<ToolObjectColor>();
         private ToolObject oldSelected = null, selectedObject = null;
-        private ToolObjectColor selectedCollider = null;
+        private ToolObjectColor selectedCollider = null, oldSelectedCollider = null;
         private Stopwatch fpsTimer = new Stopwatch();
         private List<long> advMillisecond = new List<long>();
         private Vector3 cameraPos = new Vector3(0, 0, 0), prevHit = new Vector3(0, 0, 0), curHit = new Vector3(0, 0, 0);
@@ -534,7 +534,7 @@ namespace LevelEditor
                         settings.DtdProcessing = DtdProcessing.Parse;
                         XmlReader reader = XmlReader.Create(openFileDialog1.FileName, settings);
                         reader.MoveToContent();
-                        string element = string.Empty, mesh = string.Empty, texutre = string.Empty;
+                        string element = string.Empty, mesh = string.Empty, texutre = string.Empty, name = string.Empty;
                         ToolObject addition = new ToolObject(ref device);
                         bool collider = false;
                         while (reader.Read())
@@ -566,7 +566,7 @@ namespace LevelEditor
                                     switch (element)
                                     {
                                         case "Name":
-                                            addition.Name = reader.Value;
+                                            name = reader.Value;
                                             break;
                                         case "Mesh":
                                             if (File.Exists("Assets\\" + reader.Value))
@@ -638,8 +638,11 @@ namespace LevelEditor
                                             addition.ColliderType = reader.Value;
                                             if (reader.Value == "Sphere")
                                                 addition.Collider.Load("Assets\\Sphere.obj");
-                                            else
+                                            else if (reader.Value == "OBB" || reader.Value == "Button")
                                                 addition.Collider.Load("Assets\\Cube.obj");
+                                            else
+                                                addition.Collider.Load("Assets\\Plane.obj");
+                                            addition.Collider.Name = "Collider";
                                             break;
                                         case "Trigger":
                                             if (reader.Value == "True")
@@ -692,6 +695,7 @@ namespace LevelEditor
                                     switch (reader.Name)
                                     {
                                         case "Object":
+                                            addition.Name = name;
                                             higharchy.Add(addition);
                                             Tree.Nodes[1].Nodes.Add(higharchy.Last().Name);
                                             Tree.Nodes[1].Expand();
@@ -1117,6 +1121,8 @@ namespace LevelEditor
             }
             if (oldSelected != selectedObject)
                 oldSelected = selectedObject;
+            if (oldSelectedCollider != selectedCollider)
+                oldSelectedCollider = selectedCollider;
         }
 
         private void nameBox_KeyDown(object sender, KeyEventArgs e)
@@ -1137,7 +1143,7 @@ namespace LevelEditor
                 selectedObject.SetScale(new Vector3((float)scaleX.Value, (float)scaleY.Value, (float)scaleZ.Value));
                 selectedObject.SetRotate(new Vector3((float)rotX.Value * ToolObject.DEGREES_TO_RADIANS, (float)rotY.Value * ToolObject.DEGREES_TO_RADIANS, (float)rotZ.Value * ToolObject.DEGREES_TO_RADIANS));
             }
-            else if (selectedCollider != null && oldSelected == selectedObject)
+            else if (selectedCollider != null && oldSelectedCollider == selectedCollider)
             {
                 Tree.Nodes[1].Nodes[selectedIndex].Nodes[0].Text = nameBox.Text;
                 selectedCollider.Name = nameBox.Text;

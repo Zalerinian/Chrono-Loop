@@ -15,7 +15,22 @@
     <Position>0,0,0</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
-    <Components />
+    <Components>
+      <Collider>
+        <Type>OBB</Type>
+        <Trigger>False</Trigger>
+        <Position>5.8,0.5,4.9</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>1,1.5,3.2</Scale>
+        <Move>False</Move>
+        <Gravity>0,0,0</Gravity>
+        <Mass>0</Mass>
+        <Elasticity>0</Elasticity>
+        <StaticFriction>0</StaticFriction>
+        <KeneticFriction>0</KeneticFriction>
+        <Drag>0</Drag>
+      </Collider>
+    </Components>
   </Object>
   <Object>
     <Name>Floor</Name>
@@ -34,7 +49,7 @@
         <Move>False</Move>
         <Normal>0,1,0</Normal>
         <Mass>10</Mass>
-        <Elasticity>0.11</Elasticity>
+        <Elasticity>0.1</Elasticity>
         <StaticFriction>0.6</StaticFriction>
         <KeneticFriction>0.8</KeneticFriction>
         <Drag>0</Drag>
@@ -141,7 +156,22 @@
     <Position>0,0,0</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
-    <Components />
+    <Components>
+      <Collider>
+        <Type>OBB</Type>
+        <Trigger>False</Trigger>
+        <Position>-2.6,-0.5,8.1</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>0.3,0.7,0.3</Scale>
+        <Move>False</Move>
+        <Gravity>0,0,0</Gravity>
+        <Mass>0</Mass>
+        <Elasticity>0</Elasticity>
+        <StaticFriction>0</StaticFriction>
+        <KeneticFriction>0</KeneticFriction>
+        <Drag>0</Drag>
+      </Collider>
+    </Components>
   </Object>
   <Object>
     <Name>Button</Name>
@@ -150,6 +180,49 @@
     <Position>0,0,0</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
+    <Components>
+      <Collider>
+        <Type>Button</Type>
+        <Trigger>False</Trigger>
+        <Position>-2.7,0.5,8.1</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>0.3,0.1,0.3</Scale>
+        <Move>False</Move>
+        <PushNormal>0,0,0</PushNormal>
+        <Mass>0</Mass>
+        <NormalForce>0</NormalForce>
+      </Collider>
+    </Components>
+  </Object>
+  <Object>
+    <Name>Erase This</Name>
+    <Mesh>Cube.obj</Mesh>
+    <Texture>skybox.dds</Texture>
+    <Position>22.97381,0,-1.520742</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
     <Components />
+  </Object>
+  <Object>
+    <Name>ServerCollider2</Name>
+    <Position>0,0,0</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components>
+      <Collider>
+        <Type>OBB</Type>
+        <Trigger>False</Trigger>
+        <Position>-10.8,0.5,5</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>1,1.5,3.3</Scale>
+        <Move>False</Move>
+        <Gravity>0,0,0</Gravity>
+        <Mass>0</Mass>
+        <Elasticity>0</Elasticity>
+        <StaticFriction>0</StaticFriction>
+        <KeneticFriction>0</KeneticFriction>
+        <Drag>0</Drag>
+      </Collider>
+    </Components>
   </Object>
 </Level>
