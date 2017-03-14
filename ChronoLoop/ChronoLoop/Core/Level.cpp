@@ -265,9 +265,13 @@ namespace Epoch {
 							else if (elementType == "KeneticFriction")
 								kineticF = std::strtof(pData->Value(), nullptr);
 							else if (elementType == "Drag")
+							{
 								drag = std::strtof(pData->Value(), nullptr);
-							else if (elementType == "Code")
-								codeComs.push_back(pData->Value());
+								//if (pData->Parent()->Parent()->NextSiblingElement())
+								//	pData = pData->Parent()->Parent()->NextSiblingElement();
+								//else
+								//	pData = nullptr;
+							}
 							else if (elementType == "Normal")
 							{
 								size_t pos = 0;
@@ -307,8 +311,12 @@ namespace Epoch {
 									s.erase(0, pos + 1);
 								}
 							}
-							
-							pData = pData->Parent()->NextSiblingElement();
+							else if(elementType == "NormalForce")
+								normF = std::strtof(pData->Value(),nullptr);
+							else
+								codeComs.push_back(elementType);
+							if (pData != nullptr)
+								pData = pData->Parent()->NextSiblingElement();
 							break;
 						default:
 							break;
