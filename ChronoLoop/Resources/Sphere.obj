@@ -1,7 +1,7 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
 mtllib Sphere.mtl
-g default
+o sphere
 v 0.148778 -0.987688 -0.048341
 v 0.126558 -0.987688 -0.091950
 v 0.091950 -0.987688 -0.126558

@@ -97,7 +97,6 @@ D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\A
 E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\LevelEditor.exe.config
 E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.exe
 E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.pdb
-E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\energyField.png
 E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\enrgyField.png
 E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\fieldGen.png
 E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\floor.png
@@ -142,3 +141,8 @@ E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEdit
 E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.Editor.resources
 E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.Properties.Resources.resources
 E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.csproj.GenerateResource.Cache
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Door2.obj
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\DoorEmiters2.obj
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\DoorFrame2.obj
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\red.png
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\white.png
