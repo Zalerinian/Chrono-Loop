@@ -536,6 +536,11 @@ namespace LevelEditor
                         reader.MoveToContent();
                         string element = string.Empty, mesh = string.Empty, texutre = string.Empty, name = string.Empty;
                         ToolObject addition = new ToolObject(ref device);
+                        List<string> loaded = new List<string>();
+                        foreach (ToolObject tObj in objects)
+                        {
+                            loaded.Add(tObj.Name);
+                        }
                         bool collider = false;
                         while (reader.Read())
                         {
@@ -602,7 +607,10 @@ namespace LevelEditor
                                                 if (objects[i].MeshFile == mesh && objects[i].TextureFile == texutre)
                                                     contained = true;
                                             if (!contained)
+                                            {
                                                 objects.Add(new ToolObject(mesh, texutre, ref device));
+                                                Tree.Nodes[0].Nodes.Add(objects.Last().Name);
+                                            }
                                             break;
                                         case "Position":
                                             parts = reader.Value.Split(',');
@@ -654,6 +662,8 @@ namespace LevelEditor
                                             float radius = float.Parse(reader.Value);
                                             addition.Collider.SetScale(new Vector3(radius, radius, radius));
                                             break;
+                                        case "PushNormal":
+                                        case "Normal":
                                         case "Gravity":
                                             parts = reader.Value.Split(',');
                                             point.X = float.Parse(parts[0]);
@@ -664,19 +674,13 @@ namespace LevelEditor
                                         case "Move":
                                             addition.Collider.CanMove = reader.Value == "True";
                                             break;
-                                        case "Normal":
-                                            parts = reader.Value.Split(',');
-                                            point.X = float.Parse(parts[0]);
-                                            point.Y = float.Parse(parts[1]);
-                                            point.Z = float.Parse(parts[2]);
-                                            addition.Collider.Gravity = point;
-                                            break;
                                         case "Mass":
                                             addition.Collider.Mass = float.Parse(reader.Value);
                                             break;
                                         case "Elasticity":
                                             addition.Collider.Elasticity = float.Parse(reader.Value);
                                             break;
+                                        case "NormalForce":
                                         case "StaticFriction":
                                             addition.Collider.StaticF = float.Parse(reader.Value);
                                             break;
@@ -704,6 +708,12 @@ namespace LevelEditor
                                                 Tree.Nodes[1].LastNode.Nodes.Add("Collider");
                                                 addition.Collider.ObjectColor = Color.Red;
                                             }
+                                            //if (!loaded.Contains(name))
+                                            //{
+                                            //    objects.Add(new ToolObject(mesh, texutre, ref device));
+                                            //    Tree.Nodes[0].Nodes.Add(objects.Last().Name);
+                                            //    loaded.Add(name);
+                                            //}
                                             break;
                                         default:
                                             break;
@@ -855,8 +865,11 @@ namespace LevelEditor
 
         private void Trigger_CheckedChanged(object sender, EventArgs e)
         {
-            selectedCollider.IsSolid = !Trigger.Checked;
-            selectedCollider.CanMove = MoveCheck.Checked;
+            if (selectedCollider != null && oldSelectedCollider == selectedCollider)
+            {
+                selectedCollider.IsSolid = !Trigger.Checked;
+                selectedCollider.CanMove = MoveCheck.Checked;
+            }
         }
 
         private void componetsCheck_ItemCheck(object sender, ItemCheckEventArgs e)
@@ -1017,6 +1030,8 @@ namespace LevelEditor
                 ExtraX.Value =      (decimal)selectedCollider.Gravity.X;
                 ExtraY.Value =      (decimal)selectedCollider.Gravity.Y;
                 ExtraZ.Value =      (decimal)selectedCollider.Gravity.Z;
+
+                MoveCheck.Checked = selectedCollider.CanMove;
 
                 if (colliderType == "Button")
                 {
