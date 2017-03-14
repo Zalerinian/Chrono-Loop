@@ -85,9 +85,11 @@ namespace Epoch {
 		}
 	}
 		TimeManager * TimeManager::Instance() {
-			if (!instanceTimemanager)
+			if (!instanceTimemanager) {
 				instanceTimemanager = new TimeManager();
 
+				instanceTimemanager->AddAllTexturesToQueue();
+			}
 			return instanceTimemanager;
 		}
 
@@ -101,6 +103,30 @@ namespace Epoch {
 			mCloneInterpolators[_obj->GetUniqueID()] = temp;
 		}
 
+		void TimeManager::AddAllTexturesToQueue()
+	{
+			instanceTimemanager->mUnassignedTextures.push("../Resources/CloneTexture.png");
+			instanceTimemanager->mUnassignedTextures.push("../Resources/CloneTexture_Green.png");
+			instanceTimemanager->mUnassignedTextures.push("../Resources/CloneTexture_Orange.png");
+			instanceTimemanager->mUnassignedTextures.push("../Resources/CloneTexture_Pink.png");
+			instanceTimemanager->mUnassignedTextures.push("../Resources/CloneTexture_Purple.png");
+			instanceTimemanager->mUnassignedTextures.push("../Resources/CloneTexture_Red.png");
+			instanceTimemanager->mUnassignedTextures.push("../Resources/CloneTexture_White.png");
+			instanceTimemanager->mUnassignedTextures.push("../Resources/CloneTexture_Yellow.png");
+			instanceTimemanager->mUnassignedTextures.push("../Resources/CloneTexture_Brown.png");
+			instanceTimemanager->mUnassignedTextures.push("../Resources/CloneTexture_Grey.png");
+	}
+
+		void TimeManager::AssignTextureToClone(unsigned short _id)
+	{
+			if (mUnassignedTextures.empty())
+				AddAllTexturesToQueue();
+
+			std::string temp = mUnassignedTextures.front();
+			mCloneTextures[_id] =temp;
+			mUnassignedTextures.pop();
+	}
+
 		void TimeManager::UpdatePlayerObjectInTimeline(BaseObject *  _obj) {
 			if (_obj != nullptr)
 				mTimeline->UpdatePlayerBaseObject(_obj, _obj->GetUniqueID());
@@ -108,6 +134,8 @@ namespace Epoch {
 
 		void TimeManager::ClearClones() {
 			mClones.clear();
+			ClearTexturesfromQueue();
+			AddAllTexturesToQueue();
 			//Clean up the interpolators
 			for (auto Interp : mCloneInterpolators) {
 				if (Interp.second)
@@ -115,6 +143,14 @@ namespace Epoch {
 			}
 			mCloneInterpolators.clear();
 		}
+
+		void TimeManager::ClearTexturesfromQueue()
+	{
+		while(!mUnassignedTextures.empty())
+		{
+			mUnassignedTextures.pop();
+		}
+	}
 
 		bool TimeManager::CheckRewindAvaliable(unsigned int _frame) {
 			//wrapped
@@ -135,7 +171,6 @@ namespace Epoch {
 				if (mClones[i]->GetUniqueId() == _id1 || mClones[i]->GetUniqueId() == pair.mOther1 || mClones[i]->GetUniqueId() == pair.mOther2) {
 					mClones[i]->RemoveAllComponents();
 
-
 					for (int k = 0; k < Physics::Instance()->mObjects.size(); ++k) {
 						if (Physics::Instance()->mObjects[k]->GetUniqueID() == mClones[i]->GetUniqueID()) {
 							//I know I could have just iterated through it with an iterator but im lazy and tired
@@ -143,9 +178,13 @@ namespace Epoch {
 							break;
 						}
 					}
-
 					//This doesnt delete the input left of the clone. We may not want to do that to minimize delete calls
-					
+
+					if(mCloneTextures.find(mClones[i]->GetUniqueId()) != mCloneTextures.end())
+					{
+						mUnassignedTextures.push(mCloneTextures[i]);
+						mCloneTextures.erase(mClones[i]->GetUniqueId());
+					}
 					//Remove it from being tracked by timeline
 					mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueId());
 					Pool::Instance()->iRemoveObject(mClones[i]->GetUniqueID());
@@ -169,16 +208,23 @@ namespace Epoch {
 			return nullptr;
 		}
 
+		std::string TimeManager::GetNextTexture() {
+			if (mUnassignedTextures.empty())
+				AddAllTexturesToQueue();
+
+			return mUnassignedTextures.front(); 
+		}
+
 		unsigned int TimeManager::GetTotalSnapsmade() {
 			return mTimeline->GetTotalSnaps();
 		}
 
-		Timeline * TimeManager::GetTimeLine() {
+		/*Timeline * TimeManager::GetTimeLine() {
 			if (!mTimeline) {
 				mTimeline = new Timeline();
 			};
 			return mTimeline;
-		}
+		}*/
 
 		void TimeManager::RewindTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2, unsigned short _id3) {
 			mTimeline->RewindNoClone(_frame, _id1, _id2, _id3);
@@ -332,12 +378,11 @@ namespace Epoch {
 				LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueID(),
 				LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueID());
 
-		
-
 		}
 		void TimeManager::MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC) {
-			GetTimeLine()->MoveAllObjectsToSnapExceptPlayer(_snaptime, _headset, _leftC, _rightC);
+			mTimeline->MoveAllObjectsToSnapExceptPlayer(_snaptime, _headset, _leftC, _rightC);
 		}
+
 		void TimeManager::HotfixResetTimeline() {
 			RewindTimeline(0, LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueID(), LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueID(), LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetUniqueID());
 			mTimeline->HotFixResetLevel();
@@ -354,6 +399,7 @@ namespace Epoch {
 				mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueId());
 
 				Pool::Instance()->iRemoveObject(mClones[i]->GetUniqueID());
+				mCloneTextures.erase(mClones[i]->GetUniqueId());
 			}
 			ClearClones();
 

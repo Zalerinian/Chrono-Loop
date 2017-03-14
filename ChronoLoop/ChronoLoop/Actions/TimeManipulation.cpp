@@ -46,10 +46,9 @@ namespace Epoch
 			//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
 			BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - " + std::to_string(mCloneCount),  identity ); //new BaseObject("headset" + std::to_string(rand), identity);
 			MeshComponent *visibleMesh = new MeshComponent("../Resources/Clone.obj");
-			visibleMesh->AddTexture(mTextures[mCurrTexture].c_str(), eTEX_DIFFUSE);
+
+			visibleMesh->AddTexture(TimeManager::Instance()->GetNextTexture().c_str(), eTEX_DIFFUSE);
 			headset->AddComponent(visibleMesh);
-			++mCurrTexture;
-			mCurrTexture %= 10;
 
 			//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
 			BaseObject* Controller1 = Pool::Instance()->iGetObject()->Reset("Controller1 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
@@ -92,6 +91,10 @@ namespace Epoch
 			TimeManager::Instance()->AddInterpolatorForClone(headset);
 			TimeManager::Instance()->AddInterpolatorForClone(Controller1);
 			TimeManager::Instance()->AddInterpolatorForClone(Controller2);
+			
+			TimeManager::Instance()->AssignTextureToClone(headset->GetUniqueId());
+			
+
 			mCloneCount++;
 		}
 

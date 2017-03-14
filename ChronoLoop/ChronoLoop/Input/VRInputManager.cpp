@@ -72,12 +72,12 @@ namespace Epoch {
 			}
 		} else {
 			mLeftController.Update();
+
 		}
 		vr::VRCompositor()->WaitGetPoses(mPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
-		GestureCheck = mRightController.CheckGesture();
-		TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
-		GestureCheck = mLeftController.CheckGesture();
-		TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
+
+		CheckGesters();
+
 		//Update InputSnap TweenTime 
 		mTweenTimestamp += TimeManager::Instance()->GetDeltaTime();
 		if (mTweenTimestamp >= RecordingRate) {
@@ -129,10 +129,12 @@ namespace Epoch {
 		if (_event->trackedDeviceIndex == mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand)) {
 			node->mData.mControllerId = cLevel->GetLeftController()->GetUniqueId();
 			node->mData.mVelocity = mLeftController.GetVelocity();
+			node->mData.mPrimary = mIsLeftPrimary;
 			//SystemLogger::GetLog() << "Lefthand" << std::endl;
 		} else {
 			node->mData.mControllerId = cLevel->GetRightController()->GetUniqueId();
 			node->mData.mVelocity = mRightController.GetVelocity();
+			node->mData.mPrimary = !mIsLeftPrimary;
 			//SystemLogger::GetLog() <<  "Righthand" << std::endl;
 		}
 		//SystemLogger::GetLog() << node->mData.mControllerId << std::endl;
@@ -229,6 +231,24 @@ namespace Epoch {
 			}
 		}
 		return nullptr;
+	}
+
+	void VIM::CheckGesters() {
+		//Time Gester
+		if (LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManinpulator()->isTimePaused() || LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManinpulator()->isTimePaused()) {
+			int GestureCheck;
+			GestureCheck = mRightController.CheckGesture();
+			TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
+			//Shake right controller
+			if (GestureCheck == 1) {
+				mRightController.TriggerHapticPulse(10, vr::k_EButton_Axis0);
+			}
+			GestureCheck = mLeftController.CheckGesture();
+			if (GestureCheck == 1) {
+				mLeftController.TriggerHapticPulse(10, vr::k_EButton_Axis0);
+			}
+			TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
+		}
 	}
 
 
