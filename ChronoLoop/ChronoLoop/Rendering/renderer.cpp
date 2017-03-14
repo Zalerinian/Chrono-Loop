@@ -366,6 +366,7 @@ namespace Epoch {
 			UpdateGSBuffers();
 			ProcessRenderSet();
 
+
 			vr::Texture_t submitTexture = { (void*)mMainViewTexture.Get(), vr::TextureType_DirectX, vr::ColorSpace_Auto };
 			vr::VRTextureBounds_t boundary;
 			boundary.uMin = 0.0f;
