@@ -26,6 +26,7 @@ namespace Epoch {
 	}
 
 	void MeshComponent::Destroy() {
+		SystemLogger::Debug() << "Destroying shape " << mShape->GetName() << std::endl;
 		DESTROY_NODE(mNode);
 		delete mShape;
 	}
