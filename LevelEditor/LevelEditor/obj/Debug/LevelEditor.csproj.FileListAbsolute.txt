@@ -59,12 +59,6 @@ D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\L
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\AxisGizmo.obj
 D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\AxisGizmo.obj
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Plane.obj
-E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\energyField.png
-E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\enrgyField.png
-E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\fieldGen.png
-E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\wallTextureM.png
-E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\wallTextureS.png
-E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\floor.png
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Button.obj
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\buttonstand.obj
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Celling.obj
@@ -74,7 +68,6 @@ E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\D
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\floor.obj
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\servers.obj
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\walls.obj
-E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\grey.png
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\skybox.dds
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Sphere.obj
 D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\energyField.png
@@ -94,3 +87,14 @@ D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\A
 D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Plane.obj
 D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Servers.obj
 D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Walls.obj
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Door2.obj
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\DoorEmiters2.obj
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\DoorFrame2.obj
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\red.png
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\white.png
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\enrgyField.png
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\fieldGen.png
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\floor.png
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\grey.png
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\wallTextureM.png
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\wallTextureS.png

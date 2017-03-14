@@ -161,11 +161,6 @@ namespace LevelEditor
                     device.Transform.World = tObj.Transform;
                     device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Indices.Length, 0, tObj.Indices.Length / 3);
                 }
-            }
-            //Axis Gizmo
-            device.Clear(ClearFlags.ZBuffer, 0, 1.0f, 0);
-            foreach (ToolObject tObj in higharchy)
-            {
                 if (tObj.Collider != null)
                 {
                     device.VertexFormat = CustomVertex.PositionNormalColored.Format;
@@ -181,6 +176,8 @@ namespace LevelEditor
                     device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Collider.Indices.Length, 0, tObj.Collider.Indices.Length / 3);
                 }
             }
+            //Axis Gizmo
+            device.Clear(ClearFlags.ZBuffer, 0, 1.0f, 0);
             if (selectedObject != null)
             {
                 device.VertexFormat = CustomVertex.PositionNormalColored.Format;
@@ -524,7 +521,7 @@ namespace LevelEditor
 
             openFileDialog1.InitialDirectory = Application.StartupPath;
             openFileDialog1.Filter = "XML files (*.xml)|*.xml|Object files (*.obj)|*.obj";
-            openFileDialog1.FilterIndex = 1;
+            openFileDialog1.FilterIndex = 2;
             openFileDialog1.RestoreDirectory = true;
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -654,7 +651,40 @@ namespace LevelEditor
                                             float radius = float.Parse(reader.Value);
                                             addition.Collider.SetScale(new Vector3(radius, radius, radius));
                                             break;
+                                        case "Gravity":
+                                            parts = reader.Value.Split(',');
+                                            point.X = float.Parse(parts[0]);
+                                            point.Y = float.Parse(parts[1]);
+                                            point.Z = float.Parse(parts[2]);
+                                            addition.Collider.Gravity = point;
+                                            break;
+                                        case "Move":
+                                            addition.Collider.CanMove = reader.Value == "True";
+                                            break;
+                                        case "Normal":
+                                            parts = reader.Value.Split(',');
+                                            point.X = float.Parse(parts[0]);
+                                            point.Y = float.Parse(parts[1]);
+                                            point.Z = float.Parse(parts[2]);
+                                            addition.Collider.Gravity = point;
+                                            break;
+                                        case "Mass":
+                                            addition.Collider.Mass = float.Parse(reader.Value);
+                                            break;
+                                        case "Elasticity":
+                                            addition.Collider.Elasticity = float.Parse(reader.Value);
+                                            break;
+                                        case "StaticFriction":
+                                            addition.Collider.StaticF = float.Parse(reader.Value);
+                                            break;
+                                        case "KeneticFriction":
+                                            addition.Collider.KeneticF = float.Parse(reader.Value);
+                                            break;
+                                        case "Drag":
+                                            addition.Collider.Drag = float.Parse(reader.Value);
+                                            break;
                                         default:
+                                            addition.Components.Add(element);
                                             break;
                                     }
                                     break;
@@ -746,7 +776,6 @@ namespace LevelEditor
                             if (tObj.ColliderType == "Sphere" || tObj.ColliderType == "OBB")
                             {
                                 writer.WriteElementString("Gravity", tObj.Collider.Gravity.X + "," + tObj.Collider.Gravity.Y + "," + tObj.Collider.Gravity.Z);
-                                writer.WriteElementString("Movable", tObj.Collider.CanMove ? "False" : "True");
                                 writer.WriteElementString("Mass", tObj.Collider.Mass.ToString());
                                 writer.WriteElementString("Elasticity", tObj.Collider.Elasticity.ToString());
                                 writer.WriteElementString("StaticFriction", tObj.Collider.StaticF.ToString());
@@ -756,7 +785,6 @@ namespace LevelEditor
                             else if (tObj.ColliderType == "Plane")
                             {
                                 writer.WriteElementString("Normal", tObj.Collider.Gravity.X + "," + tObj.Collider.Gravity.Y + "," + tObj.Collider.Gravity.Z);
-                                writer.WriteElementString("Movable", tObj.Collider.CanMove ? "False" : "True");
                                 writer.WriteElementString("Mass", tObj.Collider.Mass.ToString());
                                 writer.WriteElementString("Elasticity", tObj.Collider.Elasticity.ToString());
                                 writer.WriteElementString("StaticFriction", tObj.Collider.StaticF.ToString());

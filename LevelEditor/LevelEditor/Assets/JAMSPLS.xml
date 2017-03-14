@@ -31,10 +31,10 @@
         <Position>0,-1,0</Position>
         <Rotation>0,0,0</Rotation>
         <Scale>1,1,1</Scale>
-        <Move>False</Move>
+        <Move>True</Move>
         <Normal>0,1,0</Normal>
         <Mass>10</Mass>
-        <Elasticity>0.11</Elasticity>
+        <Elasticity>0.01</Elasticity>
         <StaticFriction>0.6</StaticFriction>
         <KeneticFriction>0.8</KeneticFriction>
         <Drag>0</Drag>
@@ -126,7 +126,7 @@
     </Components>
   </Object>
   <Object>
-    <Name>pCube59_polySurface64</Name>
+    <Name>Ceiling</Name>
     <Mesh>Ceiling.obj</Mesh>
     <Texture>floor.png</Texture>
     <Position>0,0,0</Position>
