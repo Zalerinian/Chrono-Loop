@@ -2,6 +2,7 @@
 #include "Level.h"
 #include "../Actions/CodeComponent.hpp"
 #include "../Objects/MeshComponent.h"
+#include "../Common/Settings.h"
 
 namespace Epoch {
 	
@@ -12,23 +13,13 @@ namespace Epoch {
 			delete *it;
 		}
 		mObjectList.clear();
-
-		//for (auto iter = mObjectMap.begin(); iter != mObjectMap.end(); ++iter) { 
-		//	for (int i = 0; i < iter->second.size(); ++i) {
-		//		// TODO: Put objects back in the object pool.
-		//		// Since this is a singleton and this is only destroyed when closing 
-		//		// the program, would it be more efficient to just delete them directly?
-		//		delete iter->second[i];
-		//	}
-		//}
-		//mObjectMap.clear();
 	}
 
 	void Level::Initialize(BaseObject * _headset, BaseObject * _lController, BaseObject * _rController) {
 		mHeadset = _headset;
 		mController1 = _lController;
 		mController2 = _rController;
-		//CommandConsole::Instance().AddCommand(L"/WIREFRAME", ToggleEntireLevelsWireframe);
+		CommandConsole::Instance().AddCommand(L"/WIREFRAME", ToggleEntireLevelsWireframe);
 		std::vector<Component*> codes1 = mController1->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
 		for (size_t x = 0; x < codes1.size(); ++x) {
 			if (dynamic_cast<TimeManipulation*>(codes1[x])) {
@@ -159,27 +150,16 @@ namespace Epoch {
 
 
 	void Level::ToggleEntireLevelsWireframe(void* _command, std::wstring _ifOn) {
-		//CommandConsole* cc = (CommandConsole*)_command;
-		//if (_ifOn == L"ON") {
-		//	for (auto it = mObjectList.begin(); it != sInstance->mObjectList.end(); ++it) {
-		//		for (size_t x = 0; x < (*it)->GetComponents(ComponentType::eCOMPONENT_MESH).size(); ++x) {
-		//			MeshComponent* tempMComp = (MeshComponent*)((*it)->GetComponents(ComponentType::eCOMPONENT_MESH)[x]);
-		//
-		//			tempMComp->SetRasterState(eRS_WIREFRAME);//< - This line
-		//		}
-		//	}
-		//	CommandConsole::Instance().DisplaySet(L"");
-		//} else if (_ifOn == L"OFF") {
-		//	for (auto it = mObjectList.begin(); it != sInstance->mObjectList.end(); ++it) {
-		//		for (size_t x = 0; x < (*it)->GetComponents(ComponentType::eCOMPONENT_MESH).size(); ++x) {
-		//			MeshComponent* tempMComp = (MeshComponent*)((*it)->GetComponents(ComponentType::eCOMPONENT_MESH)[x]);
-		//			tempMComp->SetRasterState(eRS_FILLED);
-		//		}
-		//	}
-		//	CommandConsole::Instance().DisplaySet(L"");
-		//} else {
-		//	CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /WIREFRAME (ON/OFF)");
-		//}
+		CommandConsole* cc = (CommandConsole*)_command;
+		if (_ifOn == L"ON") {
+			Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_WIREFRAME);
+			CommandConsole::Instance().DisplaySet(L"");
+		} else if (_ifOn == L"OFF") {
+			Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_MAX);
+			CommandConsole::Instance().DisplaySet(L"");
+		} else {
+			CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /WIREFRAME (ON/OFF)");
+		}
 	}
 
 } // Epoch Namespace

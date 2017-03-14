@@ -239,6 +239,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Common\Math\vec3f.h" />
     <ClInclude Include="Common\Math\vec4f.h" />
     <ClInclude Include="Common\Math\vec4i.h" />
+    <ClInclude Include="Common\Settings.h" />
     <ClInclude Include="Core\Level.h" />
     <ClInclude Include="Core\LevelManager.h" />
     <ClInclude Include="Core\Pool.h" />
@@ -385,6 +386,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClCompile Include="Common\Math\vec3f.cpp" />
     <ClCompile Include="Common\Math\vec4f.cpp" />
     <ClCompile Include="Common\Math\vec4i.cpp" />
+    <ClCompile Include="Common\Settings.cpp" />
     <ClCompile Include="Core\Level.cpp" />
     <ClCompile Include="Core\LevelManager.cpp" />
     <ClCompile Include="Core\Pool.cpp" />

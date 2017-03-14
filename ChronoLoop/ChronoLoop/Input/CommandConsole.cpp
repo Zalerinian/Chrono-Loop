@@ -4,6 +4,7 @@
 #include "../Rendering/Draw2D.h"
 #include "../Core/TimeManager.h"
 #include <iostream>
+#include "../Common/Settings.h"
 
 namespace Epoch
 {
@@ -30,7 +31,6 @@ namespace Epoch
 	CommandConsole::CommandConsole()
 	{
 		mTakeInput = false;
-		isFPSon = false;
 		mFps = 0;
 		mFrameTime = 0.0f;
 		//mInputThread.join();
@@ -186,12 +186,12 @@ namespace Epoch
 		CommandConsole* self = (CommandConsole*)_self;
 		if (_ifOn == L"ON")
 		{
-			sInstance->isFPSon = true;
+			Settings::GetInstance().SetBool("FPSCounter", true);
 			sInstance->DisplaySet(L"");
 		}
 		else if (_ifOn == L"OFF")
 		{
-			sInstance->isFPSon = false;
+			Settings::GetInstance().SetBool("FPSCounter", false);
 			sInstance->DisplaySet(L"");
 		}
 		else
@@ -203,16 +203,16 @@ namespace Epoch
 	{
 		if (_ifOn == L"ON")
 		{
-			sInstance->isFPSon = true;
-			TimeManager::Instance()->SetCloneCountBool(true);
-			TimeManager::Instance()->SetSnapCountBool(true);
+			Settings::GetInstance().SetBool("FPSCounter", true);
+			Settings::GetInstance().SetBool("CloneCounter", true);
+			Settings::GetInstance().SetBool("SnapCounter", true);
 			sInstance->DisplaySet(L"");
 		}
 		else if (_ifOn == L"OFF")
 		{
-			sInstance->isFPSon = false;
-			TimeManager::Instance()->SetCloneCountBool(false);
-			TimeManager::Instance()->SetSnapCountBool(false);
+			Settings::GetInstance().SetBool("FPSCounter", false);
+			Settings::GetInstance().SetBool("CloneCounter", false);
+			Settings::GetInstance().SetBool("SnapCounter", false);
 			sInstance->DisplaySet(L"");
 		}
 		else
@@ -222,7 +222,7 @@ namespace Epoch
 	}
 	void CommandConsole::DisplayFPS()
 	{
-		if (isFPSon)
+		if (Settings::GetInstance().GetBool("FPSCounter"))
 		{
 			float _deltaTime = TimeManager::Instance()->GetDeltaTime();
 			sInstance->mFrameTime += _deltaTime;

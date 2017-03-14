@@ -4,6 +4,7 @@
 #include "RasterizerStateManager.h"
 #include "ShaderManager.h"
 #include "InputLayoutManager.h"
+#include "../Common/Settings.h"
 
 namespace Epoch {
 
@@ -31,6 +32,9 @@ namespace Epoch {
 		if (mRasterState != eRS_MAX) {
 			RasterizerStateManager::Instance()->ApplyState(mRasterState);
 		}
+		if (Settings::GetInstance().GetInt("RasterizerStateOverride") != eRS_MAX) {
+			RasterizerStateManager::Instance()->ApplyState((RasterState)Settings::GetInstance().GetInt("RasterizerStateOverride"));
+		}
 		if (mVertexFormat != eVERT_MAX) {
 			InputLayoutManager::Instance().ApplyLayout(mVertexFormat);
 		}
@@ -54,6 +58,9 @@ namespace Epoch {
 	void RenderContext::Apply(RenderContext & from) {
 		if (mRasterState != eRS_MAX && mRasterState != from.mRasterState) {
 			RasterizerStateManager::Instance()->ApplyState(mRasterState);
+		}
+		if (Settings::GetInstance().GetInt("RasterizerStateOverride") != eRS_MAX) {
+			RasterizerStateManager::Instance()->ApplyState((RasterState)Settings::GetInstance().GetInt("RasterizerStateOverride"));
 		}
 		if (mVertexFormat != eVERT_MAX && mVertexFormat != from.mVertexFormat) {
 			InputLayoutManager::Instance().ApplyLayout(mVertexFormat);

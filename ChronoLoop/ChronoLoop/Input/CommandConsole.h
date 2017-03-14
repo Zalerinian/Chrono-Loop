@@ -25,7 +25,6 @@ namespace Epoch
 		std::thread mInputThread;
 
 		//Function Specific
-		bool isFPSon; //Toggle for FPS Counter
 		int mFps = 0; //FPS display
 		int tempFps = 0;
 		unsigned int mFpsCounter = 0;//Every 10 times it will average out the fps
