@@ -8,6 +8,7 @@
 #include "../Core/Level.h"
 #include "../Actions/HeadsetFollow.hpp"
 #include "..\Common\Interpolator.h"
+#include "../Core/LevelManager.h"
 
 namespace Epoch
 {
@@ -21,20 +22,22 @@ namespace Epoch
 		MeshComponent *mChamberMesh, *mStartMesh, *mExitMesh, *mFloorMesh, *mRoomMesh;
 		BaseObject *mChamberObject, *mStartObject, *mExitObject, *mFloorObject, *mRoomObject, *mCubeObject;
 		ControllerType mControllerRole = eControllerType_Primary;
+		Level* cLevel = nullptr;
 		bool mBooped = false;
 
 		float tTime;
 
 		virtual void Start()
 		{
-			tTime = 0;
+			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
-			mChamberObject = Level::Instance()->iFindObjectWithName("mmChamber");
-			mStartObject = Level::Instance()->iFindObjectWithName("mmStart");
-			mExitObject = Level::Instance()->iFindObjectWithName("mmExit");
-			mFloorObject = Level::Instance()->iFindObjectWithName("mmFloor");
-			mRoomObject = Level::Instance()->iFindObjectWithName("mmRoom");
-			//mCubeObject = Level::Instance()->iFindObjectWithName("mmCube");
+			tTime = 0;
+			mChamberObject = cLevel->FindObjectWithName("mmChamber");
+			mStartObject = cLevel->FindObjectWithName("mmStart");
+			mExitObject = cLevel->FindObjectWithName("mmExit");
+			mFloorObject = cLevel->FindObjectWithName("mmFloor");
+			mRoomObject = cLevel->FindObjectWithName("mmRoom");
+			//mCubeObject = cLevel->FindObjectWithName("mmCube");
 
 			mChamberMesh = (MeshComponent*)mChamberObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			mStartMesh = (MeshComponent*)mStartObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
@@ -55,14 +58,14 @@ namespace Epoch
 			mObject->GetTransform().SetMatrix(mat);
 
 
-			//// Here lies the code to make a tiny little cube move to where you raycast (currently only works on the star and exit planes).
+			// Here lies the code to make a tiny little cube move to where you raycast (currently only works on the star and exit planes).
 			//MeshComponent* meshes[] = { mStartMesh, mExitMesh };
 			//BaseObject* objects[] = { mStartObject, mExitObject };
 			//vec4f awdforward(0, 0, 1, 0);
 			//for (int i = 0; i < ARRAYSIZE(objects); ++i) {
 			//	awdforward.Set(0, 0, 1, 0);
 			//	matrix4 inverse = (mat * objects[i]->GetTransform().GetMatrix().Invert());
-			//	vec4f meshPos = (inverse).Position;
+			//	vec4f meshPos = inverse.Position;
 			//	awdforward *= inverse;
 			//	Triangle *tris = meshes[i]->GetTriangles();
 			//	size_t numTris = meshes[i]->GetTriangleCount();
@@ -86,8 +89,7 @@ namespace Epoch
 				BaseObject* objects[] = { mStartObject, mExitObject };
 				for (int i = 0; i < ARRAYSIZE(meshes); ++i)
 				{
-					vec4f forward;
-					forward.Set(0, 0, 1, 0);
+					vec4f forward(0, 0, 1, 0);
 					matrix4 inverse = (mat * objects[i]->GetTransform().GetMatrix().Invert());
 					vec4f meshPos = inverse.Position;
 					forward *= inverse;
@@ -96,7 +98,7 @@ namespace Epoch
 					for (unsigned int j = 0; j < numTris; ++j)
 					{
 						float hitTime;
-						if (Level::Instance()->flip && Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, forward, hitTime))
+						if (cLevel->mmflip && Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, forward, hitTime))
 						{
 							if (i == 0)
 							{
@@ -114,10 +116,10 @@ namespace Epoch
 								mPlayerInterp->SetEnd(mat);
 								mPlayerInterp->SetActive(true);
 								mBooped = true;
-								Level::Instance()->flip = false;
+								cLevel->mmflip = false;
 							}
 							else if (i == 1)
-								Level::Instance()->ChronoLoop = false;
+								cLevel->ChronoLoop = false;
 						}
 					}
 				}
@@ -169,6 +171,7 @@ namespace Epoch
 
 			if (mBooped) 
 			{
+				SystemLogger::Debug() << tTime << "  |  " << TimeManager::Instance()->GetDeltaTime() << std::endl;
 				tTime += TimeManager::Instance()->GetDeltaTime();
 				if (tTime <= 15) {
 					mChamberInterp->Update(tTime / 15.0f);

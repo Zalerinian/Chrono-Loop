@@ -16,6 +16,7 @@ namespace Epoch
 
 	private:
 		bool mTakeInput; //On/Off switch
+		bool mTerminateThread = false;
 
 		static CommandConsole* sInstance;
 		std::wstring mCurCommand; //A string to hold the thing that's being typed to the console
@@ -25,14 +26,21 @@ namespace Epoch
 
 		//Function Specific
 		bool isFPSon; //Toggle for FPS Counter
-		int mFps; //FPS display
+		int mFps = 0; //FPS display
+		int tempFps = 0;
+		unsigned int mFpsCounter = 0;//Every 10 times it will average out the fps
 		float mFrameTime;
+
+		bool mCommandSnapController = false;
+
+
+
 
 		bool mIsVR;
 		//SystemLogger mLogger;
 	public:
 		CommandConsole();
-		~CommandConsole() {};
+		~CommandConsole() { mTerminateThread = true; mInputThread.join(); };
 		static CommandConsole& Instance();
 		static void DestroyInstance();
 
@@ -41,6 +49,7 @@ namespace Epoch
 		std::wstring GetCurrentCommmand() { return mCurCommand; };
 		bool isVRon() { return mIsVR; }
 		void SetVRBool(bool _set) { mIsVR = _set; }
+		bool GetSnapBool() { return mCommandSnapController; }
 
 
 
@@ -64,6 +73,7 @@ namespace Epoch
 		static void Help(void* _self, std::wstring _nothing);
 		static void ToggleFPS(void* _self, std::wstring _ifOn);
 		static void ToggleAll(void* _self, std::wstring _ifOn);
+		static void ToggleSnaping(void* _self, std::wstring _ifOn);
 		void DisplayFPS();
 		//Threaded Function
 		void InputFunction();

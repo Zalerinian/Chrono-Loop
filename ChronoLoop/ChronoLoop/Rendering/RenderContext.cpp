@@ -18,6 +18,7 @@ namespace Epoch {
 		mVertexFormat = _copy.mVertexFormat;
 		mPixelShaderFormat = _copy.mPixelShaderFormat;
 		mVertexShaderFormat = _copy.mVertexShaderFormat;
+		mGeoShaderFormat = _copy.mGeoShaderFormat;
 		mType = _copy.mType;
 		for (auto it = _copy.mTextures.begin(); it != _copy.mTextures.end(); ++it) {
 			mTextures[it->first] = it->second;
@@ -38,6 +39,9 @@ namespace Epoch {
 		}
 		if (mVertexShaderFormat != eVS_MAX) {
 			ShaderManager::Instance()->ApplyVShader(mVertexShaderFormat);
+		}
+		if (mGeoShaderFormat != eGS_MAX) {
+			ShaderManager::Instance()->ApplyGShader(mGeoShaderFormat);
 		}
 		for (auto it = mTextures.begin(); it != mTextures.end(); ++it) {
 			if (it->second.Get() != nullptr) {
@@ -60,6 +64,9 @@ namespace Epoch {
 		if (mVertexShaderFormat != eVS_MAX && mVertexShaderFormat != from.mVertexShaderFormat) {
 			ShaderManager::Instance()->ApplyVShader(mVertexShaderFormat);
 		}
+		if (mGeoShaderFormat != eGS_MAX && mGeoShaderFormat != from.mGeoShaderFormat) {
+			ShaderManager::Instance()->ApplyGShader(mGeoShaderFormat);
+		}
 		for (auto it = mTextures.begin(); it != mTextures.end(); ++it) {
 			if (it->second.Get() != nullptr && from.mTextures[it->first].Get() != it->second.Get()) {
 				Renderer::Instance()->GetContext()->PSSetShaderResources((UINT)it->first, 1, it->second.GetAddressOf());
@@ -79,7 +86,8 @@ namespace Epoch {
 		if (mRasterState != other.mRasterState ||
 				mVertexFormat != other.mVertexFormat ||
 				mPixelShaderFormat != other.mPixelShaderFormat ||
-				mVertexShaderFormat != other.mVertexShaderFormat) {
+				mVertexShaderFormat != other.mVertexShaderFormat ||
+				mGeoShaderFormat != other.mGeoShaderFormat) {
 			return false;
 		}
 
@@ -91,6 +99,7 @@ namespace Epoch {
 		mVertexFormat = _other.mVertexFormat;
 		mPixelShaderFormat = _other.mPixelShaderFormat;
 		mVertexShaderFormat = _other.mVertexShaderFormat;
+		mGeoShaderFormat = _other.mGeoShaderFormat;
 		mType = _other.mType;
 		for (auto it = _other.mTextures.begin(); it != _other.mTextures.end(); ++it) {
 			mTextures[it->first] = it->second;
@@ -112,7 +121,8 @@ namespace Epoch {
 		if (mRasterState != _other.mRasterState ||
 				mVertexFormat != _other.mVertexFormat ||
 				mPixelShaderFormat != _other.mPixelShaderFormat ||
-				mVertexShaderFormat != _other.mVertexShaderFormat) {
+				mVertexShaderFormat != _other.mVertexShaderFormat ||
+				mGeoShaderFormat != _other.mGeoShaderFormat) {
 			return false;
 		}
 

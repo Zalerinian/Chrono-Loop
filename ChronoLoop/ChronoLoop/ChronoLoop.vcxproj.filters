@@ -324,14 +324,20 @@
     <ClInclude Include="Common\Math\vec4i.h">
       <Filter>Common\Math\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Input\InputTimeline.h">
+      <Filter>Input\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\MeshCache.h">
+      <Filter>Rendering\Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\LevelManager.h">
+      <Filter>Core\Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Common\GhostList.h">
       <Filter>Common\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Rendering\RenderList.h">
       <Filter>Rendering\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Input\InputTimeline.h">
-      <Filter>Input\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Actions\CCEnterLevel.h">
       <Filter>Actions</Filter>
@@ -512,6 +518,9 @@
     <ClCompile Include="Objects\MeshComponent.cpp">
       <Filter>Objects\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Common\LimitedList.cpp">
+      <Filter>Common\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Actions\TimeManipulation.cpp">
       <Filter>Actions\Source Files</Filter>
     </ClCompile>
@@ -545,11 +554,17 @@
     <ClCompile Include="Common\Math\vec4i.cpp">
       <Filter>Common\Math\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rendering\RenderList.cpp">
-      <Filter>Rendering\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Input\InputTimeline.cpp">
       <Filter>Input\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\MeshCache.cpp">
+      <Filter>Rendering\Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\LevelManager.cpp">
+      <Filter>Core\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\RenderList.cpp">
+      <Filter>Rendering\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -593,6 +608,9 @@
       <Filter>Rendering\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Rendering\Shaders\InstancedVertex64.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\GSDuplicateMesh.hlsl">
       <Filter>Rendering\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

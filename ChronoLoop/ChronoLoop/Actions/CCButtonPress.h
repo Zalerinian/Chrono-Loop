@@ -14,10 +14,13 @@ namespace Epoch
 
 		BaseObject *Block = nullptr, *Exit = nullptr;
 		CubeCollider* blockCube, *exitCube;
+		Level* cLevel;
+
 		virtual void Start()
 		{
-			Block = Level::Instance()->iFindObjectWithName("BlockDoor");
-			Exit = Level::Instance()->iFindObjectWithName("ExitWall");
+			cLevel = LevelManager::GetInstance().GetCurrentLevel();
+			Block = cLevel->FindObjectWithName("BlockDoor");
+			Exit = cLevel->FindObjectWithName("ExitWall");
 
 			blockCube = (CubeCollider*)Block->mComponents[eCOMPONENT_COLLIDER][0];
 			exitCube = (CubeCollider*)Exit->mComponents[eCOMPONENT_COLLIDER][0];
@@ -30,7 +33,7 @@ namespace Epoch
 				colliding = true;
 
 				vec4f norm = ((ButtonCollider*)&_col)->mPushNormal;
-				AABB aabb1(((ButtonCollider*)&_col)->mMin, ((ButtonCollider*)&_col)->mMax);
+				CubeCollider aabb1(((ButtonCollider*)&_col)->mMin, ((ButtonCollider*)&_col)->mMax);
 				vec4f tForce = norm * (norm * _other.mTotalForce);
 				vec4f vel = norm * (norm * _other.mVelocity);
 				vec4f accel = norm * (norm * _other.mAcceleration);
