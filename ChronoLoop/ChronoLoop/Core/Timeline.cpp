@@ -515,7 +515,7 @@ namespace Epoch {
 							if (snap->mSnapinfos.find(id) != snap->mSnapinfos.end() && id == _clones[i]->GetUniqueID()) {
 								MoveObjectToSnap(_time, id);
 								//Update the clone interpolators to move if there is a next next snap available.
-								UpdateCloneInterpolators(_clones[i]->GetUniqueID(), snap->mSnapinfos[id], (float)_time);
+								UpdateCloneInterpolators(_clones[i]->GetUniqueID(), snap->mSnapinfos[id], _time);
 								break;
 							}
 							//If we are a clone but dont have a next movement then record one at position
