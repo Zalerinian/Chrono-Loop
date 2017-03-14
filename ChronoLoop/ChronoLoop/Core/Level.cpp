@@ -179,7 +179,7 @@ namespace Epoch {
 					std::string elementType, name, meshFile, textureFile, colliderType;
 					vec4f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity;
 					float mass, elasticity, staticF, kineticF, normF, drag, radius;
-					bool collider = false, trigger = false, canMove;
+					bool collider = false, trigger = false, canMove, physical = false;
 					pData = pObject->FirstChildElement();
 					while (pData)
 					{
@@ -339,6 +339,7 @@ namespace Epoch {
 
 					if (colliderType == "OBB")
 					{
+						physical = true;
 						vec4f min = colliderPosition - vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1);
 						vec4f max = colliderPosition + vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1);
 						CubeCollider* col = new CubeCollider(obj, canMove, trigger, gravity, mass, elasticity, staticF, kineticF, drag, min, max);
@@ -346,11 +347,15 @@ namespace Epoch {
 					}
 					else if (colliderType == "Sphere")
 					{
+						physical = true;
+
 						SphereCollider* col = new SphereCollider(obj, canMove, trigger, gravity, mass, elasticity, staticF, kineticF, drag, radius);
 						obj->AddComponent(col);
 					}
 					else if (colliderType == "Button")
 					{
+						physical = true;
+
 						vec4f min = colliderPosition - vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1);
 						vec4f max = colliderPosition + vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1);
 						ButtonCollider* col = new ButtonCollider(obj, min, max, mass, normF, pushNorm);
@@ -358,7 +363,9 @@ namespace Epoch {
 					}
 					else if (colliderType == "Plane")
 					{
-						PlaneCollider* col = new PlaneCollider(obj, canMove, trigger, gravity, mass, elasticity, staticF, kineticF, drag, (position * normal), normal);
+						physical = true;
+
+						PlaneCollider* col = new PlaneCollider(obj, canMove, trigger, vec4f(0,0,0,0), mass, elasticity, staticF, kineticF, drag, (position * normal), normal);
 						obj->AddComponent(col);
 					}
 
@@ -405,6 +412,9 @@ namespace Epoch {
 							obj->AddComponent(code);
 						}
 					}
+
+					if (physical)
+						Physics::Instance()->mObjects.push_back(obj);
 
 					AddObject(obj);
 					pObject = pObject->NextSiblingElement("Object");

@@ -38,7 +38,7 @@
 #include <crtdbg.h>
 
 using namespace Epoch;
-#define LEVEL_1 1
+#define LEVEL_1 0
 #define MAINMENU 0
 #define CONSOLE_OVERRIDE 1
 #define FIXED_UPDATE_INTERVAL (1 / 180.0f)
