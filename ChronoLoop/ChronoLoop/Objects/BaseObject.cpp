@@ -85,7 +85,7 @@ namespace Epoch {
 	void BaseObject::Update() {
 		for (auto it = mComponents.begin(); it != mComponents.end(); ++it) {
 			if (it->first == eCOMPONENT_COLLIDER) {
-				continue;
+				//continue;
 			}
 			for (auto cIt = it->second.begin(); cIt != it->second.end(); ++cIt) {
 				if ((*cIt)->IsEnabled()) {

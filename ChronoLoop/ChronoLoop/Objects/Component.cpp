@@ -2,6 +2,7 @@
 #include "Component.h"
 #include "BaseObject.h"
 #include "..\Messager\Messager.h"
+#include "../Rendering/renderer.h"
 
 namespace Epoch
 {
@@ -274,6 +275,18 @@ namespace Epoch
 		float c = (mMaxOffset - mMinOffset) * vec4f(1, 0, 0, 0);
 		mArea = (2 * (a * b)) + (2 * (b * c)) + (2 * (a * c));
 		mDragForce = mVelocity * (-0.5f * mRHO * mVelocity.Magnitude3() * mDrag * mArea);
+		mShape = new RenderShape("../Resources/UnitCube.obj", true, ePS_TEXTURED, eVS_TEXTURED, eGS_PosNormTex);
+		mShape->GetContext().mRasterState = eRS_WIREFRAME;
+	}
+
+	void CubeCollider::Update() {
+		if (mNode == nullptr) {
+			mNode = Renderer::Instance()->AddNode(mShape);
+		}
+		vec4f size = mMax - mMin;
+		matrix4 pos = matrix4::CreateScale(size.x, size.y, size.z);
+		pos.Position = (mMax - mMin) / 2 + mMin;
+		mNode->data = pos;
 	}
 
 	void CubeCollider::SetPos(const vec4f& _newPos)
@@ -400,6 +413,8 @@ namespace Epoch
 			mInvMass = 1 / mMass;
 		mWeight = mGravity * mMass;
 		mElasticity = 0;
+		mShape = new RenderShape("../Resources/UnitCube.obj", true, ePS_TEXTURED, eVS_TEXTURED, eGS_PosNormTex);
+		mShape->GetContext().mRasterState = eRS_WIREFRAME;
 	}
 
 	ControllerCollider::ControllerCollider(BaseObject* _obj, vec4f _min, vec4f _max, bool _left)
@@ -420,6 +435,8 @@ namespace Epoch
 		mColliderType = eCOLLIDER_Controller;
 		mTotalForce = { 0,-2,0,0 };
 		mAcceleration = { 0,-2,0,0 };
+		mShape = new RenderShape("../Resources/UnitCube.obj", true, ePS_TEXTURED, eVS_TEXTURED, eGS_PosNormTex);
+		mShape->GetContext().mRasterState = eRS_WIREFRAME;
 	}
 
 }
