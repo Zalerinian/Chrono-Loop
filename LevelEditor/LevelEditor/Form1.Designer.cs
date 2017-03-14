@@ -31,8 +31,8 @@ namespace LevelEditor
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor));
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Objects");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Higharchy");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Objects");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Higharchy");
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -66,6 +66,9 @@ namespace LevelEditor
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Tree = new System.Windows.Forms.TreeView();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.graphicsPanel1 = new LevelEditor.GraphicsPanel();
+            this.LeftToggle = new LevelEditor.NoFocusButton();
+            this.RightToggle = new LevelEditor.NoFocusButton();
             this.MoveCheck = new System.Windows.Forms.CheckBox();
             this.Trigger = new System.Windows.Forms.CheckBox();
             this.Physics = new System.Windows.Forms.GroupBox();
@@ -114,9 +117,6 @@ namespace LevelEditor
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.nameBox = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.graphicsPanel1 = new LevelEditor.GraphicsPanel();
-            this.LeftToggle = new LevelEditor.NoFocusButton();
-            this.RightToggle = new LevelEditor.NoFocusButton();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -126,6 +126,7 @@ namespace LevelEditor
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.graphicsPanel1.SuspendLayout();
             this.Physics.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Drag)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Mass)).BeginInit();
@@ -152,7 +153,6 @@ namespace LevelEditor
             ((System.ComponentModel.ISupportInitialize)(this.posX)).BeginInit();
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
-            this.graphicsPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -427,13 +427,13 @@ namespace LevelEditor
             this.Tree.Indent = 15;
             this.Tree.Location = new System.Drawing.Point(0, 0);
             this.Tree.Name = "Tree";
-            treeNode3.Name = "Objects";
-            treeNode3.Text = "Objects";
-            treeNode4.Name = "Higharchy";
-            treeNode4.Text = "Higharchy";
+            treeNode1.Name = "Objects";
+            treeNode1.Text = "Objects";
+            treeNode2.Name = "Higharchy";
+            treeNode2.Text = "Higharchy";
             this.Tree.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode3,
-            treeNode4});
+            treeNode1,
+            treeNode2});
             this.Tree.ShowLines = false;
             this.Tree.Size = new System.Drawing.Size(150, 417);
             this.Tree.TabIndex = 0;
@@ -469,9 +469,50 @@ namespace LevelEditor
             this.splitContainer2.Panel2.Controls.Add(this.groupBox5);
             this.splitContainer2.Panel2.Controls.Add(this.groupBox4);
             this.splitContainer2.Size = new System.Drawing.Size(473, 417);
-            this.splitContainer2.SplitterDistance = 316;
+            this.splitContainer2.SplitterDistance = 319;
             this.splitContainer2.SplitterWidth = 1;
             this.splitContainer2.TabIndex = 3;
+            // 
+            // graphicsPanel1
+            // 
+            this.graphicsPanel1.Controls.Add(this.LeftToggle);
+            this.graphicsPanel1.Controls.Add(this.RightToggle);
+            this.graphicsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.graphicsPanel1.Location = new System.Drawing.Point(0, 0);
+            this.graphicsPanel1.Name = "graphicsPanel1";
+            this.graphicsPanel1.Size = new System.Drawing.Size(319, 417);
+            this.graphicsPanel1.TabIndex = 2;
+            this.graphicsPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.Paint);
+            this.graphicsPanel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseClick);
+            this.graphicsPanel1.MouseLeave += new System.EventHandler(this.graphicsPanel1_MouseLeave);
+            this.graphicsPanel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseMove);
+            this.graphicsPanel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseUp);
+            this.graphicsPanel1.Resize += new System.EventHandler(this.Resize);
+            // 
+            // LeftToggle
+            // 
+            this.LeftToggle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.LeftToggle.Location = new System.Drawing.Point(3, 3);
+            this.LeftToggle.MinimumSize = new System.Drawing.Size(1, 1);
+            this.LeftToggle.Name = "LeftToggle";
+            this.LeftToggle.Size = new System.Drawing.Size(23, 23);
+            this.LeftToggle.TabIndex = 1;
+            this.LeftToggle.Text = "<";
+            this.LeftToggle.UseVisualStyleBackColor = true;
+            this.LeftToggle.Click += new System.EventHandler(this.LeftToggle_Click);
+            // 
+            // RightToggle
+            // 
+            this.RightToggle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.RightToggle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.RightToggle.Location = new System.Drawing.Point(293, 3);
+            this.RightToggle.MinimumSize = new System.Drawing.Size(1, 1);
+            this.RightToggle.Name = "RightToggle";
+            this.RightToggle.Size = new System.Drawing.Size(23, 23);
+            this.RightToggle.TabIndex = 0;
+            this.RightToggle.Text = ">";
+            this.RightToggle.UseVisualStyleBackColor = true;
+            this.RightToggle.Click += new System.EventHandler(this.RightToggle_Click);
             // 
             // MoveCheck
             // 
@@ -479,7 +520,7 @@ namespace LevelEditor
             this.MoveCheck.Dock = System.Windows.Forms.DockStyle.Top;
             this.MoveCheck.Location = new System.Drawing.Point(0, 617);
             this.MoveCheck.Name = "MoveCheck";
-            this.MoveCheck.Size = new System.Drawing.Size(139, 17);
+            this.MoveCheck.Size = new System.Drawing.Size(136, 17);
             this.MoveCheck.TabIndex = 13;
             this.MoveCheck.Text = "Can Move";
             this.MoveCheck.UseVisualStyleBackColor = true;
@@ -492,7 +533,7 @@ namespace LevelEditor
             this.Trigger.Dock = System.Windows.Forms.DockStyle.Top;
             this.Trigger.Location = new System.Drawing.Point(0, 600);
             this.Trigger.Name = "Trigger";
-            this.Trigger.Size = new System.Drawing.Size(139, 17);
+            this.Trigger.Size = new System.Drawing.Size(136, 17);
             this.Trigger.TabIndex = 12;
             this.Trigger.Text = "Trigger";
             this.Trigger.UseVisualStyleBackColor = true;
@@ -515,7 +556,7 @@ namespace LevelEditor
             this.Physics.Dock = System.Windows.Forms.DockStyle.Top;
             this.Physics.Location = new System.Drawing.Point(0, 441);
             this.Physics.Name = "Physics";
-            this.Physics.Size = new System.Drawing.Size(139, 159);
+            this.Physics.Size = new System.Drawing.Size(136, 159);
             this.Physics.TabIndex = 1;
             this.Physics.TabStop = false;
             this.Physics.Text = "Pysics";
@@ -708,7 +749,7 @@ namespace LevelEditor
             this.ExtraVector.Dock = System.Windows.Forms.DockStyle.Top;
             this.ExtraVector.Location = new System.Drawing.Point(0, 367);
             this.ExtraVector.Name = "ExtraVector";
-            this.ExtraVector.Size = new System.Drawing.Size(139, 74);
+            this.ExtraVector.Size = new System.Drawing.Size(136, 74);
             this.ExtraVector.TabIndex = 20;
             this.ExtraVector.TabStop = false;
             this.ExtraVector.Text = "ExtraVector";
@@ -829,7 +870,7 @@ namespace LevelEditor
             this.groupBox2.Location = new System.Drawing.Point(0, 295);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBox2.Size = new System.Drawing.Size(139, 72);
+            this.groupBox2.Size = new System.Drawing.Size(136, 72);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Rotation";
@@ -952,7 +993,7 @@ namespace LevelEditor
             this.groupBox1.Location = new System.Drawing.Point(0, 223);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBox1.Size = new System.Drawing.Size(139, 72);
+            this.groupBox1.Size = new System.Drawing.Size(136, 72);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Scale";
@@ -1068,7 +1109,7 @@ namespace LevelEditor
             this.groupBox6.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox6.Location = new System.Drawing.Point(0, 183);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(139, 40);
+            this.groupBox6.Size = new System.Drawing.Size(136, 40);
             this.groupBox6.TabIndex = 11;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Radius";
@@ -1096,7 +1137,7 @@ namespace LevelEditor
             0,
             -2147483648});
             this.Radius.Name = "Radius";
-            this.Radius.Size = new System.Drawing.Size(133, 20);
+            this.Radius.Size = new System.Drawing.Size(130, 20);
             this.Radius.TabIndex = 8;
             this.Radius.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
             // 
@@ -1113,7 +1154,7 @@ namespace LevelEditor
             this.groupBox3.Location = new System.Drawing.Point(0, 111);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBox3.Size = new System.Drawing.Size(139, 72);
+            this.groupBox3.Size = new System.Drawing.Size(136, 72);
             this.groupBox3.TabIndex = 5;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Position";
@@ -1229,7 +1270,7 @@ namespace LevelEditor
             this.groupBox5.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox5.Location = new System.Drawing.Point(0, 39);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(139, 72);
+            this.groupBox5.Size = new System.Drawing.Size(136, 72);
             this.groupBox5.TabIndex = 10;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Components";
@@ -1244,11 +1285,22 @@ namespace LevelEditor
             "Box Collider",
             "Sphere Collider",
             "Plane Collider",
-            "Button Collider"});
+            "Button Collider",
+            "Box Snap",
+            "Button Press",
+            "AABB to AABB",
+            "AABB to Sphere",
+            "Elastic Plane",
+            "Sphere to Sphere",
+            "Enter Level",
+            "Gesture",
+            "Headset Follow",
+            "Main Menu",
+            "Teleport"});
             this.componetsCheck.Location = new System.Drawing.Point(3, 16);
             this.componetsCheck.Margin = new System.Windows.Forms.Padding(0);
             this.componetsCheck.Name = "componetsCheck";
-            this.componetsCheck.Size = new System.Drawing.Size(133, 53);
+            this.componetsCheck.Size = new System.Drawing.Size(130, 53);
             this.componetsCheck.TabIndex = 1;
             this.componetsCheck.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.componetsCheck_ItemCheck);
             // 
@@ -1259,7 +1311,7 @@ namespace LevelEditor
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox4.Location = new System.Drawing.Point(0, 0);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(139, 39);
+            this.groupBox4.Size = new System.Drawing.Size(136, 39);
             this.groupBox4.TabIndex = 0;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Name";
@@ -1270,7 +1322,7 @@ namespace LevelEditor
             this.nameBox.Location = new System.Drawing.Point(3, 16);
             this.nameBox.Margin = new System.Windows.Forms.Padding(0);
             this.nameBox.Name = "nameBox";
-            this.nameBox.Size = new System.Drawing.Size(133, 20);
+            this.nameBox.Size = new System.Drawing.Size(130, 20);
             this.nameBox.TabIndex = 0;
             this.nameBox.TextChanged += new System.EventHandler(this.transform_ValueChanged);
             this.nameBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.nameBox_KeyDown);
@@ -1280,47 +1332,6 @@ namespace LevelEditor
             this.timer1.Enabled = true;
             this.timer1.Interval = 1;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // graphicsPanel1
-            // 
-            this.graphicsPanel1.Controls.Add(this.LeftToggle);
-            this.graphicsPanel1.Controls.Add(this.RightToggle);
-            this.graphicsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.graphicsPanel1.Location = new System.Drawing.Point(0, 0);
-            this.graphicsPanel1.Name = "graphicsPanel1";
-            this.graphicsPanel1.Size = new System.Drawing.Size(316, 417);
-            this.graphicsPanel1.TabIndex = 2;
-            this.graphicsPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.Paint);
-            this.graphicsPanel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseClick);
-            this.graphicsPanel1.MouseLeave += new System.EventHandler(this.graphicsPanel1_MouseLeave);
-            this.graphicsPanel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseMove);
-            this.graphicsPanel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseUp);
-            this.graphicsPanel1.Resize += new System.EventHandler(this.Resize);
-            // 
-            // LeftToggle
-            // 
-            this.LeftToggle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.LeftToggle.Location = new System.Drawing.Point(3, 3);
-            this.LeftToggle.MinimumSize = new System.Drawing.Size(1, 1);
-            this.LeftToggle.Name = "LeftToggle";
-            this.LeftToggle.Size = new System.Drawing.Size(23, 23);
-            this.LeftToggle.TabIndex = 1;
-            this.LeftToggle.Text = "<";
-            this.LeftToggle.UseVisualStyleBackColor = true;
-            this.LeftToggle.Click += new System.EventHandler(this.LeftToggle_Click);
-            // 
-            // RightToggle
-            // 
-            this.RightToggle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.RightToggle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.RightToggle.Location = new System.Drawing.Point(290, 3);
-            this.RightToggle.MinimumSize = new System.Drawing.Size(1, 1);
-            this.RightToggle.Name = "RightToggle";
-            this.RightToggle.Size = new System.Drawing.Size(23, 23);
-            this.RightToggle.TabIndex = 0;
-            this.RightToggle.Text = ">";
-            this.RightToggle.UseVisualStyleBackColor = true;
-            this.RightToggle.Click += new System.EventHandler(this.RightToggle_Click);
             // 
             // Editor
             // 
@@ -1344,6 +1355,7 @@ namespace LevelEditor
             this.splitContainer2.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.graphicsPanel1.ResumeLayout(false);
             this.Physics.ResumeLayout(false);
             this.Physics.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Drag)).EndInit();
@@ -1376,7 +1388,6 @@ namespace LevelEditor
             this.groupBox5.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
-            this.graphicsPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

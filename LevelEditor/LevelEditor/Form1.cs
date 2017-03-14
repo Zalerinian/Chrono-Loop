@@ -492,7 +492,10 @@ namespace LevelEditor
                         selectedCollider.Translate(dMove);
                     else if (selectedObject != null)
                         selectedObject.Translate(dMove);
-                    UpdateSelectedData();
+                    if (dMove.LengthSq() > 0.01)
+                    {
+                        UpdateSelectedData();
+                    }
                 }
             }
         }
@@ -767,6 +770,47 @@ namespace LevelEditor
                                 writer.WriteElementString("NormalForce", tObj.Collider.StaticF.ToString());
                             }
                             writer.WriteEndElement();
+                            foreach (string str in tObj.Components)
+                            {
+                                switch (str)
+                                {
+                                    case "Box Snap":
+                                        writer.WriteElementString("BoxSnapToController", "Enabled");
+                                        break;
+                                    case "Button Press":
+                                        writer.WriteElementString("ButtonPress", "Enabled");
+                                        break;
+                                    case "AABB to AABB":
+                                        writer.WriteElementString("AABBtoAABB", "Enabled");
+                                        break;
+                                    case "AABB to Sphere":
+                                        writer.WriteElementString("AABBtoSphere", "Enabled");
+                                        break;
+                                    case "Elastic Plane":
+                                        writer.WriteElementString("ElasticPlane", "Enabled");
+                                        break;
+                                    case "Sphere to Sphere":
+                                        writer.WriteElementString("SpheretoSphere", "Enabled");
+                                        break;
+                                    case "Enter Level":
+                                        writer.WriteElementString("EnterLevel", "Enabled");
+                                        break;
+                                    case "Gesture":
+                                        writer.WriteElementString("Gesture", "Enabled");
+                                        break;
+                                    case "Headset Follow":
+                                        writer.WriteElementString("HeadsetFollow", "Enabled");
+                                        break;
+                                    case "Main Menu":
+                                        writer.WriteElementString("MainMenu", "Enabled");
+                                        break;
+                                    case "Teleport":
+                                        writer.WriteElementString("Teleport", "Enabled");
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
                         }
                         writer.WriteEndElement();
                         writer.WriteEndElement();
@@ -850,6 +894,14 @@ namespace LevelEditor
                         }
                         break;
                     default:
+                        if (e.NewValue == CheckState.Checked)
+                        {
+                            selectedObject.Components.Add((string)componetsCheck.Items[e.Index]);
+                        }
+                        else if (e.NewValue == CheckState.Unchecked)
+                        {
+                            selectedObject.Components.Remove((string)componetsCheck.Items[e.Index]);
+                        }
                         break;
                 }
             }
@@ -993,6 +1045,11 @@ namespace LevelEditor
                 scaleX.Value =  (decimal)selectedObject.Scale.X;
                 scaleY.Value =  (decimal)selectedObject.Scale.Y;
                 scaleZ.Value =  (decimal)selectedObject.Scale.Z;
+                for (int i = 4; i < 14; i++)
+                    if (selectedObject.Components.Contains((string)componetsCheck.Items[i]))
+                        componetsCheck.SetItemChecked(i, true);
+                    else
+                        componetsCheck.SetItemChecked(i, false);
                 if (selectedObject.Collider != null)
                 {
                     componetsCheck.SetItemChecked(0, selectedObject.ColliderType == "OBB" ?    true : false);
@@ -1002,7 +1059,7 @@ namespace LevelEditor
                 }
                 else
                 {
-                    for (int i = 0; i < 4; i++)
+                    for (int i = 0; i < 14; i++)
                         componetsCheck.SetItemChecked(i, false);
                 }
             }
@@ -1015,7 +1072,7 @@ namespace LevelEditor
                 Physics.Visible = false;
                 MoveCheck.Visible = false;
                 componetsCheck.ClearSelected();
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 14; i++)
                     componetsCheck.SetItemChecked(i, false);
                 nameBox.Text = string.Empty;
                 posX.Value = 0;

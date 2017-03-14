@@ -28,6 +28,7 @@ namespace LevelEditor
         private Vector3 mScale;
         private string mName, mTextureFile, mMeshFile, mColliderType;
         private ToolObjectColor mCollider = null;
+        private List<string> mComponents = new List<string>();
 
         #region Properties
         public CustomVertex.PositionNormalTextured[] Vertices
@@ -109,6 +110,12 @@ namespace LevelEditor
         {
             get { return mColliderType; }
             set { mColliderType = value; }
+        }
+
+        public List<string> Components
+        {
+            get { return mComponents; }
+            set { mComponents = value; }
         }
         #endregion
 
