@@ -34,9 +34,10 @@ namespace Epoch
 			mExitObject = cLevel->FindObjectWithName("mmExit");
 			mFloorObject = cLevel->FindObjectWithName("mmFloor");
 			mRoomObject = cLevel->FindObjectWithName("mmRoom");
-			//mCubeObject = cLevel->FindObjectWithName("mmCube");
+			mCubeObject = cLevel->FindObjectWithName("mmCube");
 
-			mChamberInterp->SetEasingFunction(Easing::BounceInOut);
+			mChamberInterp->SetEasingFunction(Easing::CubicInOut);
+			mPlayerInterp->SetEasingFunction(Easing::CubicInOut);
 
 			mChamberMesh = (MeshComponent*)mChamberObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			mStartMesh = (MeshComponent*)mStartObject->GetComponentIndexed(eCOMPONENT_MESH, 0);

@@ -36,6 +36,7 @@ namespace  Epoch {
 		void Prepare(float _duration, Type& _start, Type& _end, Type& _edit);
 		bool Update(float _deltaTime);
 		void Interpolate();
+		inline float GetProgress() { return mTweenTime / mDuration; }
 	};
 
 	template <class Type>
@@ -63,9 +64,12 @@ namespace  Epoch {
 			SystemLogger::Error() << "The duration for an interpolator is invalid: " << mDuration << std::endl;
 			return false;
 		}
+		if (GetProgress() >= 1.1f) {
+			SystemLogger::Warn() << "The interpolator is still running! It is " << (GetProgress() * 100) << "% complete!" << std::endl;
+		}
 		mTweenTime += _deltaTime;
 		Interpolate();
-		return fabsf(mTweenTime - mDuration) < 0.001f;
+		return mTweenTime >= mDuration;
 	}
 
 	template <class Type>
@@ -89,7 +93,7 @@ namespace  Epoch {
 	inline void Interpolator<matrix4>::Interpolate() {
 		for (unsigned int c = 0; c < 4; c++) {
 			for (unsigned int r = 0; r < 4; r++) {
-				(*mEdit)[c][r] = mEasingFunction(mTweenTime, mStart[c][r], (mStart[c][r] - mEnd[c][r]), mDuration);
+				(*mEdit)[c][r] = mEasingFunction(mTweenTime, mStart[c][r], (mEnd[c][r] - mStart[c][r]), mDuration);
 			}
 		}
 	}
@@ -97,7 +101,7 @@ namespace  Epoch {
 	template<>
 	inline void Interpolator<vec4f>::Interpolate() {
 		for (unsigned int i = 0; i < 4; i++) {
-			(*mEdit)[i] = mEasingFunction(mTweenTime, mStart[i], (mStart[i] - mEnd[i]), mDuration);
+			(*mEdit)[i] = mEasingFunction(mTweenTime, mStart[i], (mEnd[i] - mStart[i]), mDuration);
 		}
 
 	}
