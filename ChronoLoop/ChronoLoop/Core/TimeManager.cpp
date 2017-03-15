@@ -319,7 +319,7 @@ namespace Epoch {
 				return;
 			}
 
-			if (mtempCurSnapFrame > mTimeline->GetCurrentGameTimeIndx())
+			if ((unsigned int)mtempCurSnapFrame > mTimeline->GetCurrentGameTimeIndx())
 				return;
 
 
