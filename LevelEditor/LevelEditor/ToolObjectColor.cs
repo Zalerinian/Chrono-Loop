@@ -24,7 +24,7 @@ namespace LevelEditor
         private string mName;
         private Color mColor;
         private List<ToolObjectColor> mChildren;
-        private bool mIsWireFrame, mSelected, mIsSolid = true, mCanMove = false;
+        private bool mIsWireFrame, mSelected, mIsSolid = true, mCanMove = false, mVisible = true;
         private float mMass, mElasticity, mStaticF, mKeneticF, mDrag;
 
         #region Properties
@@ -174,6 +174,12 @@ namespace LevelEditor
         {
             get { return mCanMove; }
             set { mCanMove = value; }
+        }
+
+        public bool Visible
+        {
+            get { return mVisible; }
+            set { mVisible = value; }
         }
         #endregion
 
