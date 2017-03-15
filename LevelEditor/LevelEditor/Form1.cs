@@ -1111,7 +1111,7 @@ namespace LevelEditor
                     scaleY.Value = (decimal)selectedCollider.Scale.Y;
                     scaleZ.Value = (decimal)selectedCollider.Scale.Z;
                 }
-                else if (colliderType == "Spheres")
+                else if (colliderType == "Sphere")
                 {
                     groupBox1.Visible = false;
                     groupBox6.Visible = true;
