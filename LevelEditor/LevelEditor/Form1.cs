@@ -814,6 +814,20 @@ namespace LevelEditor
             }
         }
 
+        private void colorSelect_Click(object sender, EventArgs e)
+        {
+            if (selectedCollider != null)
+            {
+                ColorDialog newColor = new ColorDialog();
+                newColor.Color = selectedCollider.ObjectColor;
+                if (newColor.ShowDialog() == DialogResult.OK)
+                {
+                    selectedCollider.ObjectColor = newColor.Color;
+                    UpdateSelectedData();
+                }
+            }
+        }
+
         private void saveLevel(string file)
         {
             XmlWriterSettings settings = new XmlWriterSettings();
@@ -1085,6 +1099,7 @@ namespace LevelEditor
             {
                 groupBox5.Visible = false;
                 TextureBox.Visible = false;
+                colorSelect.Visible = true;
                 Trigger.Visible = true;
                 MoveCheck.Visible = true;
                 visibleCheck.Visible = true;
@@ -1112,6 +1127,7 @@ namespace LevelEditor
 
                 MoveCheck.Checked = selectedCollider.CanMove;
                 visibleCheck.Checked = selectedCollider.Visible;
+                colorSelect.BackColor = selectedCollider.ObjectColor;
 
                 if (colliderType == "Button")
                 {
@@ -1159,6 +1175,7 @@ namespace LevelEditor
                 groupBox5.Visible = true;
                 groupBox1.Visible = true;
                 Trigger.Visible = false;
+                colorSelect.Visible = false;
                 Physics.Visible = false;
                 visibleCheck.Visible = false;
                 MoveCheck.Visible = false;
@@ -1199,6 +1216,7 @@ namespace LevelEditor
                 groupBox6.Visible = false;
                 groupBox5.Visible = true;
                 groupBox1.Visible = true;
+                colorSelect.Visible = false;
                 Trigger.Visible = false;
                 visibleCheck.Visible = false;
                 Physics.Visible = false;

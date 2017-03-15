@@ -118,6 +118,7 @@ namespace LevelEditor
             this.textureFileBox = new System.Windows.Forms.TextBox();
             this.changeTexture = new System.Windows.Forms.Button();
             this.visibleCheck = new System.Windows.Forms.CheckBox();
+            this.colorSelect = new System.Windows.Forms.Button();
             this.graphicsPanel1 = new LevelEditor.GraphicsPanel();
             this.LeftToggle = new LevelEditor.NoFocusButton();
             this.RightToggle = new LevelEditor.NoFocusButton();
@@ -467,6 +468,7 @@ namespace LevelEditor
             this.splitContainer2.Panel2.Controls.Add(this.visibleCheck);
             this.splitContainer2.Panel2.Controls.Add(this.MoveCheck);
             this.splitContainer2.Panel2.Controls.Add(this.Trigger);
+            this.splitContainer2.Panel2.Controls.Add(this.colorSelect);
             this.splitContainer2.Panel2.Controls.Add(this.Physics);
             this.splitContainer2.Panel2.Controls.Add(this.ExtraVector);
             this.splitContainer2.Panel2.Controls.Add(this.groupBox2);
@@ -485,7 +487,7 @@ namespace LevelEditor
             // 
             this.MoveCheck.AutoSize = true;
             this.MoveCheck.Dock = System.Windows.Forms.DockStyle.Top;
-            this.MoveCheck.Location = new System.Drawing.Point(0, 669);
+            this.MoveCheck.Location = new System.Drawing.Point(0, 694);
             this.MoveCheck.Name = "MoveCheck";
             this.MoveCheck.Size = new System.Drawing.Size(127, 17);
             this.MoveCheck.TabIndex = 13;
@@ -498,7 +500,7 @@ namespace LevelEditor
             // 
             this.Trigger.AutoSize = true;
             this.Trigger.Dock = System.Windows.Forms.DockStyle.Top;
-            this.Trigger.Location = new System.Drawing.Point(0, 652);
+            this.Trigger.Location = new System.Drawing.Point(0, 677);
             this.Trigger.Name = "Trigger";
             this.Trigger.Size = new System.Drawing.Size(127, 17);
             this.Trigger.TabIndex = 12;
@@ -1341,13 +1343,30 @@ namespace LevelEditor
             // 
             this.visibleCheck.AutoSize = true;
             this.visibleCheck.Dock = System.Windows.Forms.DockStyle.Top;
-            this.visibleCheck.Location = new System.Drawing.Point(0, 686);
+            this.visibleCheck.Location = new System.Drawing.Point(0, 711);
             this.visibleCheck.Name = "visibleCheck";
             this.visibleCheck.Size = new System.Drawing.Size(127, 17);
             this.visibleCheck.TabIndex = 21;
             this.visibleCheck.Text = "Visible";
             this.visibleCheck.UseVisualStyleBackColor = true;
+            this.visibleCheck.Visible = false;
             this.visibleCheck.CheckedChanged += new System.EventHandler(this.Trigger_CheckedChanged);
+            // 
+            // colorSelect
+            // 
+            this.colorSelect.AutoSize = true;
+            this.colorSelect.BackColor = System.Drawing.Color.Red;
+            this.colorSelect.Dock = System.Windows.Forms.DockStyle.Top;
+            this.colorSelect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.colorSelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.colorSelect.Location = new System.Drawing.Point(0, 652);
+            this.colorSelect.Name = "colorSelect";
+            this.colorSelect.Size = new System.Drawing.Size(127, 25);
+            this.colorSelect.TabIndex = 8;
+            this.colorSelect.Text = "Color";
+            this.colorSelect.UseVisualStyleBackColor = false;
+            this.colorSelect.Visible = false;
+            this.colorSelect.Click += new System.EventHandler(this.colorSelect_Click);
             // 
             // graphicsPanel1
             // 
@@ -1542,6 +1561,7 @@ namespace LevelEditor
         private System.Windows.Forms.Button changeTexture;
         private System.Windows.Forms.TextBox textureFileBox;
         private System.Windows.Forms.CheckBox visibleCheck;
+        private System.Windows.Forms.Button colorSelect;
     }
 }
 
