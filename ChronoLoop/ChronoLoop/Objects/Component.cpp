@@ -58,7 +58,7 @@ namespace Epoch
 
 	void Emitter::Play(int _id)
 	{
-		if (_id < 0 || _id > mSFX[ePlayLoop].size() - 1)
+		if (_id < 0 || _id > mSFX[ePlayLoop].size() - 1 || mSFX[ePlayLoop].size() == 0)
 			return;
 		if (mIsSounds[_id].first)
 			return;
@@ -70,7 +70,7 @@ namespace Epoch
 
 	void Emitter::Pause(int _id)
 	{
-		if (_id < 0 || _id > mSFX[ePauseLoop].size() - 1 || mSFX[eResumeLoop].size() - 1)
+		if (_id < 0 || _id > mSFX[ePauseLoop].size() - 1 || mSFX[eResumeLoop].size() - 1 || mSFX[eResumeLoop].size() == 0 || mSFX[ePauseLoop].size() == 0)
 			return;
 
 		if (mIsSounds[_id].second)
@@ -91,7 +91,7 @@ namespace Epoch
 
 	void Emitter::Stop(int _id)
 	{
-		if (_id < 0 || _id > mSFX[eStopLoop].size() - 1)
+		if (_id < 0 || _id > mSFX[eStopLoop].size() - 1 || mSFX[eStopLoop].size() == 0)
 			return;
 		if (!mIsSounds[_id].first)
 			return;
@@ -105,7 +105,7 @@ namespace Epoch
 	void Emitter::PlaySFX(int _id)
 	{
 		//TODO: DOUBLE CHECK THIS
-		if (_id < 0 || _id > mSFX[ePlaySFX].size() - 1)
+		if (_id < 0 || _id > mSFX[ePlaySFX].size() - 1 || mSFX[ePlaySFX].size() == 0)
 			return;
 
 		const vec4f * pos = GetTransform().GetPosition();
@@ -115,7 +115,7 @@ namespace Epoch
 	}
 	void Emitter::PlaySFX(int _id, const vec4f* _pos)
 	{
-		if (_id < 0 || _id > mSFX[ePlaySFX].size() - 1)
+		if (_id < 0 || _id > mSFX[ePlaySFX].size() - 1 || mSFX[ePlaySFX].size() == 0)
 			return;
 
 		const vec4f * pos = _pos;

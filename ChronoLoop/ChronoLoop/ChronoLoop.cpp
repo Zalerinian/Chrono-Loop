@@ -29,6 +29,7 @@
 #include "Actions/MainMenuBT.h"
 #include "Core/Level.h"
 #include "Common/Logger.h"
+#include "ParticleSystem.h"
 //#include "Rendering/TextureManager.h"
 
 #define _CRTDBG_MAP_ALLOC
@@ -133,10 +134,9 @@ void Update() {
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
 
-
 	// TODO: Replace all this with a level to run.
 	///*///////////////////////Using this to test physics//////////////////
-
+	//_CrtSetBreakAlloc(12003);
 #if MAINMENU
 
 	Transform transform;
@@ -297,7 +297,6 @@ void Update() {
 	PhysicsBox->AddComponent(BoxSphereCollision);
 	TimeManager::Instance()->AddObjectToTimeline(PhysicsBox);
 	Emitter* aabbSound = new Emitter(), *aabbs2 = new Emitter(), *ss1 = new Emitter(), *ss2 = new Emitter();
-	PhysicsBox->AddComponent(aabbSound);
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_TEST1);
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_TEST1);
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_TEST1);
@@ -564,6 +563,11 @@ void Update() {
 
 #endif
 
+	ParticleEmitter* emit = new ParticleEmitter(-1, 2000, 10, vec4f());
+	emit->SetTexture("../Resources/BasicCircleP.png");
+	emit->SetParticle(new Particle(500, .5, vec4f(), vec4f(.5,.1,1,0), vec4f(.75,1,.2,1)));
+	ParticleSystem::Instance()->AddEmitter(emit);
+
 	//// Test for TextureManager::iAddTexture2D. Works nicely!
 	//D3D11_TEXTURE2D_DESC AddedTextureDesc;
 	//AddedTextureDesc.Width = 800;
@@ -608,7 +612,7 @@ void Update() {
 			//SystemLogger::GetLog() << "[Debug] Regular Update " << std::endl;
 			UpdateTime();
 			Level::Instance()->iUpdate();
-			
+			ParticleSystem::Instance()->Update();
 			TimeManager::Instance()->Update(deltaTime);
 			Renderer::Instance()->Render(deltaTime); 
 			while (fixedTime >= FIXED_UPDATE_INTERVAL) {
@@ -622,6 +626,7 @@ void Update() {
 		}
 	}
 	Messager::Destroy();
+	ParticleSystem::Destroy();
 
 }
 

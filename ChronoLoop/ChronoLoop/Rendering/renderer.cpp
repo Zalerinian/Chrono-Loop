@@ -14,7 +14,7 @@
 #include "../Common/Breakpoint.h"
 #include "../Input/CommandConsole.h"
 #include "../Rendering/Draw2D.h"
-
+#include "../ParticleSystem.h"
 #define ENABLE_TEXT 1
 
 
@@ -194,8 +194,8 @@ namespace Epoch {
 		IDXGISwapChain *chain;
 
 		ThrowIfFailed(mFactory->CreateSwapChain(mDevice.Get(),
-																						&scDesc,
-																						&chain));
+			&scDesc,
+			&chain));
 		mChain.Attach(chain);
 	}
 
@@ -311,7 +311,7 @@ namespace Epoch {
 		//mSLBufferS.Attach(pBuff);
 
 		//TODO: GET RID OF THIS
-		mDLData.Color = vec4f(.5, .5, .5, 1);
+		mDLData.Color = vec4f(.25, .25, .25, 1);
 		mDLData.Direction = vec4f(0, -1, 0, 0);
 
 		mPLData.Position = vec4f(0, 0, 0, 0);
@@ -322,7 +322,6 @@ namespace Epoch {
 		mSLData.Position = vec4f(3, 4, 0, 0);
 		mSLData.ConeRatio = .5;
 		UpdateLBuffers();
-
 	}
 
 	void Renderer::InitializeSamplerState() {
@@ -365,7 +364,7 @@ namespace Epoch {
 	void Renderer::SetStaticBuffers() {
 		mContext->GSSetConstantBuffers(0, 1, mVPBuffer.GetAddressOf());
 		mContext->VSSetConstantBuffers(0, 1, mPositionBuffer.GetAddressOf());
-		ID3D11Buffer* buffs[] = { mDLBuffer.Get(), mPLBuffer.Get(), mSLBuffer.Get()};
+		ID3D11Buffer* buffs[] = { mDLBuffer.Get(), mPLBuffer.Get(), mSLBuffer.Get() };
 		mContext->PSSetConstantBuffers(0, 3, buffs);
 		//(*mContext)->VSSetConstantBuffers(2, 1, nullptr); // This will crash. - Instance Buffer
 		//(*mContext)->VSSetConstantBuffers(3, 1, nullptr); // This will crash. - Animation Data Buffer
@@ -462,23 +461,23 @@ namespace Epoch {
 	}
 	void Renderer::RenderVR(float _delta) {
 		vr::VRCompositor()->CompositorBringToFront();
-			UpdateViewProjection();
-			UpdateGSBuffers();
-			UpdateLBuffers();
-			ProcessRenderSet();
+		UpdateViewProjection();
+		UpdateGSBuffers();
+		UpdateLBuffers();
+		ProcessRenderSet();
 
-			vr::Texture_t submitTexture = { (void*)mMainViewTexture.Get(), vr::TextureType_DirectX, vr::ColorSpace_Auto };
-			vr::VRTextureBounds_t boundary;
-			boundary.uMin = 0.0f;
-			boundary.uMax = 0.5f;
-			boundary.vMin = 0.0f;
-			boundary.vMax = 1.0f;
+		vr::Texture_t submitTexture = { (void*)mMainViewTexture.Get(), vr::TextureType_DirectX, vr::ColorSpace_Auto };
+		vr::VRTextureBounds_t boundary;
+		boundary.uMin = 0.0f;
+		boundary.uMax = 0.5f;
+		boundary.vMin = 0.0f;
+		boundary.vMax = 1.0f;
 
-			vr::VRCompositor()->Submit(vr::EVREye::Eye_Left, &submitTexture, &boundary);
+		vr::VRCompositor()->Submit(vr::EVREye::Eye_Left, &submitTexture, &boundary);
 
-			boundary.uMin = 0.5f;
-			boundary.uMax = 1.0;
-			vr::VRCompositor()->Submit(vr::EVREye::Eye_Right, &submitTexture, &boundary);
+		boundary.uMin = 0.5f;
+		boundary.uMax = 1.0;
+		vr::VRCompositor()->Submit(vr::EVREye::Eye_Right, &submitTexture, &boundary);
 
 #if ENABLE_TEXT
 		CommandConsole::Instance().SetVRBool(true);
@@ -530,7 +529,7 @@ namespace Epoch {
 		}
 	}
 
-		
+
 #pragma endregion Private Functions
 
 #pragma region Public Functions
@@ -605,9 +604,11 @@ namespace Epoch {
 		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 		if (nullptr == mVrSystem) {
 			RenderNoVR(_deltaTime);
-		} else {
+		}
+		else {
 			RenderVR(_deltaTime);
 		}
+		ParticleSystem::Instance()->Render();
 		mChain->Present(mUseVsync ? 1 : 0, 0);
 	}
 
