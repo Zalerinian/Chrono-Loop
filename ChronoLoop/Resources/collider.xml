@@ -1,4 +1,4 @@
-﻿<Level>
+<Level>
   <Object>
     <Name>Walls</Name>
     <Mesh>Walls.obj</Mesh>
@@ -467,7 +467,7 @@
     </Components>
   </Object>
   <Object>
-    <Name>cube</Name>
+    <Name>cube1</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
     <Position>-3.658071,-0.7,-0.4</Position>
@@ -477,7 +477,6 @@
       <AABBtoAABB>Enabled</AABBtoAABB>
       <AABBtoSphere>Enabled</AABBtoSphere>
       <ElasticPlane>Enabled</ElasticPlane>
-      <BoxSnapToController>Enabled</BoxSnapToController>
       <Collider>
         <Type>OBB</Type>
         <Trigger>False</Trigger>
@@ -495,14 +494,13 @@
     </Components>
   </Object>
   <Object>
-    <Name>cube</Name>
+    <Name>cube2</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
     <Position>-4.334168,-0.7,-0.4</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>0.5,0.5,0.5</Scale>
     <Components>
-      <BoxSnapToController>Enabled</BoxSnapToController>
       <AABBtoAABB>Enabled</AABBtoAABB>
       <AABBtoSphere>Enabled</AABBtoSphere>
       <ElasticPlane>Enabled</ElasticPlane>
@@ -523,14 +521,13 @@
     </Components>
   </Object>
   <Object>
-    <Name>cube</Name>
+    <Name>cube3</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
     <Position>-4.083114,-0.7,-0.9436073</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>0.5,0.5,0.5</Scale>
     <Components>
-      <BoxSnapToController>Enabled</BoxSnapToController>
       <AABBtoAABB>Enabled</AABBtoAABB>
       <AABBtoSphere>Enabled</AABBtoSphere>
       <ElasticPlane>Enabled</ElasticPlane>
@@ -551,14 +548,13 @@
     </Components>
   </Object>
   <Object>
-    <Name>cube</Name>
+    <Name>cube4</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
     <Position>-4.083114,-0.19,-0.599088</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>0.4985516,0.5,0.5</Scale>
     <Components>
-      <BoxSnapToController>Enabled</BoxSnapToController>
       <AABBtoAABB>Enabled</AABBtoAABB>
       <AABBtoSphere>Enabled</AABBtoSphere>
       <ElasticPlane>Enabled</ElasticPlane>
@@ -589,7 +585,6 @@
       <AABBtoAABB>Enabled</AABBtoAABB>
       <ElasticPlane>Enabled</ElasticPlane>
       <SpheretoSphere>Enabled</SpheretoSphere>
-      <BoxSnapToController>Enabled</BoxSnapToController>
       <Collider>
         <Type>Sphere</Type>
         <Trigger>False</Trigger>

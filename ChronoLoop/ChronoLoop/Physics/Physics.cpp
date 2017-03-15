@@ -704,9 +704,9 @@ namespace Epoch {
 											if (result == 2)//behind plane
 											{
 												float bottom = ((SphereCollider*)collider)->mCenter.y - ((SphereCollider*)collider)->mRadius;
-												if (bottom < otherCol->GetPos().y) {
+												if (bottom < ((PlaneCollider*)otherCol)->mOffset) {
 													vec4f pos = collider->GetPos();
-													collider->SetPos(vec4f(pos.x, otherCol->GetPos().y + ((CubeCollider*)collider)->mMinOffset.y, pos.z, 1));
+													collider->SetPos(vec4f(pos.x, ((PlaneCollider*)otherCol)->mOffset + ((SphereCollider*)collider)->mRadius, pos.z, 1));
 
 													CalcFriction(*collider, plane.mNormal, otherCol->mStaticFriction, otherCol->mKineticFriction);
 													for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f) {
@@ -727,9 +727,9 @@ namespace Epoch {
 												}
 
 												float bottom = ((SphereCollider*)collider)->mCenter.y - ((SphereCollider*)collider)->mRadius;
-												if (bottom < otherCol->GetPos().y) {
+												if (bottom < ((PlaneCollider*)otherCol)->mOffset) {
 													vec4f pos = collider->GetPos();
-													collider->SetPos(vec4f(pos.x, otherCol->GetPos().y + fabsf(((SphereCollider*)collider)->mRadius), pos.z, 1));
+													collider->SetPos(vec4f(pos.x, ((PlaneCollider*)otherCol)->mOffset + ((SphereCollider*)collider)->mRadius, pos.z, 1));
 												}
 											}
 										}
@@ -777,7 +777,7 @@ namespace Epoch {
 											{
 												if (((CubeCollider*)collider)->mMin.y < otherCol->GetPos().y) {
 													vec4f pos = collider->GetPos();
-													collider->SetPos(vec4f(pos.x, otherCol->GetPos().y + ((CubeCollider*)collider)->mMinOffset.y, pos.z, 1));
+													collider->SetPos(vec4f(pos.x, ((PlaneCollider*)otherCol)->mOffset + ((CubeCollider*)collider)->mMinOffset.y, pos.z, 1));
 
 													CalcFriction(*collider, plane.mNormal, otherCol->mStaticFriction, otherCol->mKineticFriction);
 													for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f) {
@@ -798,9 +798,9 @@ namespace Epoch {
 														((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
 												}
 
-												if (((CubeCollider*)collider)->mMin.y < otherCol->GetPos().y) {
+												if (((CubeCollider*)collider)->mMin.y < ((PlaneCollider*)otherCol)->mOffset) {
 													vec4f pos = collider->GetPos();
-													collider->SetPos(vec4f(pos.x, otherCol->GetPos().y + fabsf(((CubeCollider*)collider)->mMinOffset.y), pos.z, 1));
+													collider->SetPos(vec4f(pos.x, ((PlaneCollider*)otherCol)->mOffset + fabsf(((CubeCollider*)collider)->mMinOffset.y), pos.z, 1));
 												}
 											}
 										}
@@ -837,9 +837,9 @@ namespace Epoch {
 						{
 							CubeCollider aabb1(((ButtonCollider*)collider)->mMin, ((ButtonCollider*)collider)->mMax);
 							if (AabbToPlane(((ButtonCollider*)collider)->mUpperBound, aabb1) != 2) {
-								collider->mVelocity = { 0,0,0,0 };
-								collider->mAcceleration = { 0,0,0,0 };
-								collider->mTotalForce = { 0,0,0,0 };
+								collider->mVelocity = { 0,0,0,1 };
+								collider->mAcceleration = { 0,0,0,1 };
+								collider->mTotalForce = { 0,0,0,1 };
 							}
 
 							for (int j = 0; j < objs; ++j) {
@@ -939,7 +939,7 @@ namespace Epoch {
 						collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
 
 						if (fabs(collider->mForces.x) < 0.01f && fabsf(collider->mForces.y) < 0.01f && fabsf(collider->mForces.z) < 0.01f)
-							collider->mForces = { 0,0,0,0 };
+							collider->mForces = { 0,0,0,1 };
 						else
 							collider->mForces *= 0.99f;
 

@@ -177,7 +177,7 @@ namespace Epoch {
 				{
 					std::vector<std::string> codeComs;
 					std::string elementType, name, meshFile, textureFile, colliderType;
-					vec4f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity;
+					vec4f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity(0, -9.81f, 0, 1);
 					float mass, elasticity, staticF, kineticF, normF, drag, radius;
 					bool collider = false, trigger = false, canMove, physical = false;
 					pData = pObject->FirstChildElement();
@@ -246,7 +246,11 @@ namespace Epoch {
 								}
 							}
 							else if (elementType == "Move")
-								canMove = pData->Value() == "True";
+							{
+								std::string temp(pData->Value());
+								canMove = temp.find("True") != std::string::npos;
+								int thing = 0;
+							}
 							else if (elementType == "Type")
 								colliderType = pData->Value();
 							else if (elementType == "Trigger")
@@ -300,21 +304,23 @@ namespace Epoch {
 							}
 							else if (elementType == "Gravity")
 							{
-								size_t pos = 0;
-								int i = 0;
-								std::string s = std::string(pData->Value()) + ',';
-								while ((pos = s.find(",")) != std::string::npos)
-								{
-									std::string token = s.substr(0, pos);
-									gravity.xyzw[i] = std::strtof(token.c_str(), nullptr);
-									i++;
-									s.erase(0, pos + 1);
-								}
+								//size_t pos = 0;
+								//int i = 0;
+								//std::string s = std::string(pData->Value()) + ',';
+								//while ((pos = s.find(",")) != std::string::npos)
+								//{
+								//	std::string token = s.substr(0, pos);
+								//	gravity.xyzw[i] = std::strtof(token.c_str(), nullptr);
+								//	gravity.w = 1;
+								//	i++;
+								//	s.erase(0, pos + 1);
+								//}
 							}
 							else if(elementType == "NormalForce")
 								normF = std::strtof(pData->Value(),nullptr);
 							else
 								codeComs.push_back(elementType);
+
 							if (pData != nullptr)
 								pData = pData->Parent()->NextSiblingElement();
 							break;
@@ -331,7 +337,7 @@ namespace Epoch {
 								  matrix4::CreateYRotation(rotation.y) * 
 								  matrix4::CreateZRotation(rotation.z) * 
 								  matrix4::CreateTranslation(position.x, position.y, position.z);
-
+					transform.SetMatrix(mat);
 					BaseObject* obj = new BaseObject(name, transform);
 
 					if (!meshFile.empty())
@@ -373,7 +379,7 @@ namespace Epoch {
 					{
 						physical = true;
 
-						PlaneCollider* col = new PlaneCollider(obj, canMove, trigger, vec4f(0,0,0,0), mass, elasticity, staticF, kineticF, drag, (position * normal), normal);
+						PlaneCollider* col = new PlaneCollider(obj, canMove, trigger, vec4f(0,0,0,0), mass, elasticity, staticF, kineticF, drag, -1, normal);//TODO: Fix offset
 						obj->AddComponent(col);
 					}
 
