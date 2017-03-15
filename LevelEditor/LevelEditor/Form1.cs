@@ -38,6 +38,10 @@ namespace LevelEditor
         Matrix gizmoScale = Matrix.Identity;
         Matrix rotate = Matrix.Identity;
 
+        // Variables added by Drew
+        private string mCurrentFilename = string.Empty;
+        private bool mCurrentFileChanged = false;
+
         public Editor()
         {
             InitializeComponent();
@@ -539,7 +543,6 @@ namespace LevelEditor
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Stream myStream = null;
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
             OpenFileDialog openFileDialog2 = new OpenFileDialog(); 
 
@@ -774,7 +777,10 @@ namespace LevelEditor
                             }
                         }
                         loaded = true;
+                        SetFilepath(currentFile);
+                        SetFileEdited(false);
                         HandleResetEvent(null, null);
+                        reader.Close();
                     }
                     else
                     {
@@ -806,6 +812,15 @@ namespace LevelEditor
             if (currentFile != string.Empty)
             {
                 saveLevel(currentFile);
+            } else {
+                SaveFileDialog file = new SaveFileDialog();
+                file.InitialDirectory = Application.StartupPath;
+                file.Filter = "XML Level Files (*.xml)|*.xml";
+                file.FilterIndex = 1;
+                file.RestoreDirectory = true;
+                if(file.ShowDialog() == DialogResult.OK) {
+                    saveLevel(file.FileName);
+                }
             }
         }
 
@@ -948,6 +963,7 @@ namespace LevelEditor
                 writer.WriteEndElement();
                 writer.WriteEndDocument();
                 writer.Close();
+                SetFileEdited(false);
             }
         }
 
@@ -1250,6 +1266,8 @@ namespace LevelEditor
                 oldSelected = selectedObject;
             if (oldSelectedCollider != selectedCollider)
                 oldSelectedCollider = selectedCollider;
+
+            SetFileEdited(true);
         }
 
         private void nameBox_KeyDown(object sender, KeyEventArgs e)
@@ -1323,5 +1341,25 @@ namespace LevelEditor
             fpsTimer.Reset();
             fpsTimer.Start();
         }
-    }
-}
+
+
+        private void SetFilepath(string _filepath) {
+            mCurrentFilename = _filepath;
+            if(_filepath.Length > 45) {
+                _filepath = "..." + _filepath.Substring(_filepath.Length - 45);
+            }
+            _filepath = "Level Editor - " + _filepath;
+            Text = _filepath;
+        }
+
+        private void SetFileEdited(bool _edited) {
+            if(_edited && !mCurrentFileChanged) {
+                Text = Text + "*";
+            } else if(!_edited && mCurrentFileChanged) {
+                Text = Text.Substring(0, Text.Length - 1);
+            }
+            mCurrentFileChanged = _edited;
+        }
+
+    } // Class
+} // Namespace
