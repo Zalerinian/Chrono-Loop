@@ -2,7 +2,6 @@
 
 namespace Epoch
 {
-
 	Messager* Messager::mMessager = nullptr;
 	//std::priority_queue<Message*, std::vector<Message*>> Messager::msgQueue = std::priority_queue<Message*, std::vector<Message*>>();
 	//std::queue<Message*> Messager::msgQueue = std::queue<Message*>();
@@ -79,26 +78,11 @@ namespace Epoch
 	{
 		switch (_msg->mType)
 		{
-			case msgTypes::mSound:
-			{
-				ProcessSound(_msg);
-			}
-			break;
-			/*case msgTypes::mRender:
-			{
-				ProcessRender(_msg);
-			}
-			break;
-			case msgTypes::mInput:
-			{
-				ProcessInput(_msg);
-			}
-			break;
-			case msgTypes::mPhysics:
-			{
-				ProcessPhysics(_msg);
-			}
-			break;*/
+		case msgTypes::mSound:
+		{
+			ProcessSound(_msg);
+		}
+		break;
 		}
 	}
 
@@ -106,95 +90,83 @@ namespace Epoch
 	{
 		switch (_msg->smType)
 		{
-			case INITIALIZE_Audio:
-			{
-				AudioWrapper::GetInstance().Initialize();
-			}
-			break;
-			case SHUTDOWN_Audio:
-			{
-				AudioWrapper::GetInstance().Shutdown();
-			}
-			break;
-			case UPDATE_Audio:
-			{
-				if (AudioWrapper::GetInstance().IsInitialized())
-					AudioWrapper::GetInstance().Update();
-			}
-			break;
-			case ADD_Listener:
-			{
-				m_Listener* lisn = (m_Listener*)(_msg->mNeed);
-				AudioWrapper::GetInstance().AddListener(lisn->mListener, lisn->mName);
-			}
-			break;
-			case REMOVE_Listener:
-			{
-				Listener* mLis = (Listener*)(_msg->mNeed);
-				AudioWrapper::GetInstance().RemoveListener(mLis);
-			}
-			break;
-			case ADD_Emitter:
-			{
-				m_Emitter* emit = (m_Emitter*)(_msg->mNeed);
-				AudioWrapper::GetInstance().AddEmitter(emit->mEmitter, emit->mName);
-			}
-			break;
-			case REMOVE_Emitter:
-			{
-				Emitter* emit = (Emitter*)(_msg->mNeed);
-				AudioWrapper::GetInstance().RemoveEmitter(emit);
-			}
-			break;
-			case MAKEEVENT_Event:
-			{
-				m_Event* evnt = (m_Event*)(_msg->mNeed);
-				AudioWrapper::GetInstance().MakeEvent(evnt->mID, evnt->mEmitter);
-			}
-			break;
-			case MAKEEVENT_Loc:
-			{
-				m_LocEvent* lEvent = (m_LocEvent*)(_msg->mNeed);
-				AudioWrapper::GetInstance().MakeEventAtLocation(lEvent->mID, lEvent->mPos);
-			}
-			break;
-			case MAKEEVENT_Listener:
-			{
-				m_EventListener * evnt = (m_EventListener*)(_msg->mNeed);
-				AudioWrapper::GetInstance().MakeEventAtListener(evnt->mID, evnt->mLID);
-			}
-			break;
-			case SET_BasePath:
-			{
-				m_Path* pth = (m_Path*)(_msg->mNeed);
-				AudioWrapper::GetInstance().SetBasePath(pth->mPath);
-			}
-			break;
-			case ADD_Soundbank:
-			{
-				m_Path* pth = (m_Path*)(_msg->mNeed);
-				AudioWrapper::GetInstance().LoadSoundBank(pth->mPath);
-			}
-			break;
-			case REMOVE_Soundbank:
-			{
-				m_Path* pth = (m_Path*)(_msg->mNeed);
-				AudioWrapper::GetInstance().UnloadSoundBank(pth->mPath);
-			}
-			break;
+		case INITIALIZE_Audio:
+		{
+			AudioWrapper::GetInstance().Initialize();
 		}
-	}
-	void Messager::ProcessRender(Message* _msg)
-	{
-
-	}
-	void Messager::ProcessPhysics(Message* _msg)
-	{
-
-	}
-	void Messager::ProcessInput(Message* _msg)
-	{
-
+		break;
+		case SHUTDOWN_Audio:
+		{
+			AudioWrapper::GetInstance().Shutdown();
+		}
+		break;
+		case UPDATE_Audio:
+		{
+			if (AudioWrapper::GetInstance().IsInitialized())
+				AudioWrapper::GetInstance().Update();
+		}
+		break;
+		case ADD_Listener:
+		{
+			m_Listener* lisn = (m_Listener*)(_msg->mNeed);
+			AudioWrapper::GetInstance().AddListener(lisn->mListener, lisn->mName);
+		}
+		break;
+		case REMOVE_Listener:
+		{
+			Listener* mLis = (Listener*)(_msg->mNeed);
+			AudioWrapper::GetInstance().RemoveListener(mLis);
+		}
+		break;
+		case ADD_Emitter:
+		{
+			m_Emitter* emit = (m_Emitter*)(_msg->mNeed);
+			AudioWrapper::GetInstance().AddEmitter(emit->mEmitter, emit->mName);
+		}
+		break;
+		case REMOVE_Emitter:
+		{
+			Emitter* emit = (Emitter*)(_msg->mNeed);
+			AudioWrapper::GetInstance().RemoveEmitter(emit);
+		}
+		break;
+		case MAKEEVENT_Event:
+		{
+			m_Event* evnt = (m_Event*)(_msg->mNeed);
+			AudioWrapper::GetInstance().MakeEvent(evnt->mID, evnt->mEmitter);
+		}
+		break;
+		case MAKEEVENT_Loc:
+		{
+			m_LocEvent* lEvent = (m_LocEvent*)(_msg->mNeed);
+			AudioWrapper::GetInstance().MakeEventAtLocation(lEvent->mID, lEvent->mPos);
+		}
+		break;
+		case MAKEEVENT_Listener:
+		{
+			m_EventListener * evnt = (m_EventListener*)(_msg->mNeed);
+			AudioWrapper::GetInstance().MakeEventAtListener(evnt->mID, evnt->mLID);
+		}
+		break;
+		case SET_BasePath:
+		{
+			m_Path* pth = (m_Path*)(_msg->mNeed);
+			AudioWrapper::GetInstance().SetBasePath(pth->mPath);
+		}
+		break;
+		case ADD_Soundbank:
+		{
+			m_Path* pth = (m_Path*)(_msg->mNeed);
+			AudioWrapper::GetInstance().LoadSoundBank(pth->mPath);
+		}
+		break;
+		case REMOVE_Soundbank:
+		{
+			m_Path* pth = (m_Path*)(_msg->mNeed);
+			AudioWrapper::GetInstance().UnloadSoundBank(pth->mPath);
+		}
+		break;
+		}
 	}
 
 }
