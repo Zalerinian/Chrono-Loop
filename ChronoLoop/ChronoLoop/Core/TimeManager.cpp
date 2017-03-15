@@ -105,26 +105,26 @@ namespace Epoch {
 
 		void TimeManager::AddAllTexturesToQueue()
 	{
-			instanceTimemanager->mUnassignedTextures.push("../Resources/CloneTexture.png");
-			instanceTimemanager->mUnassignedTextures.push("../Resources/CloneTexture_Green.png");
-			instanceTimemanager->mUnassignedTextures.push("../Resources/CloneTexture_Orange.png");
-			instanceTimemanager->mUnassignedTextures.push("../Resources/CloneTexture_Pink.png");
-			instanceTimemanager->mUnassignedTextures.push("../Resources/CloneTexture_Purple.png");
-			instanceTimemanager->mUnassignedTextures.push("../Resources/CloneTexture_Red.png");
-			instanceTimemanager->mUnassignedTextures.push("../Resources/CloneTexture_White.png");
-			instanceTimemanager->mUnassignedTextures.push("../Resources/CloneTexture_Yellow.png");
-			instanceTimemanager->mUnassignedTextures.push("../Resources/CloneTexture_Brown.png");
-			instanceTimemanager->mUnassignedTextures.push("../Resources/CloneTexture_Grey.png");
+			for (unsigned int i = 0; i < mCloneTextureBitset.size(); i++) {
+				mCloneTextureBitset[i] = false;
+			}
 	}
 
 		void TimeManager::AssignTextureToClone(unsigned short _id)
 	{
-			if (mUnassignedTextures.empty())
-				AddAllTexturesToQueue();
+			for (unsigned int i = 0; i < mCloneTextureBitset.size(); i++) {
+				if(mCloneTextureBitset[i] == false)
+				{
+					mCloneTextureBitset[i] = true;
+					mCloneTextures[_id] = i;
+				}
+				if (mCloneTextureBitset[i] == true && mCloneTextureBitset.size() - 1)
+				{
+				AddAllTexturesToQueue();	
+				}
+			}
 
-			std::string temp = mUnassignedTextures.front();
-			mCloneTextures[_id] =temp;
-			mUnassignedTextures.pop();
+		
 	}
 
 		void TimeManager::UpdatePlayerObjectInTimeline(BaseObject *  _obj) {
@@ -134,7 +134,6 @@ namespace Epoch {
 
 		void TimeManager::ClearClones() {
 			mClones.clear();
-			ClearTexturesfromQueue();
 			AddAllTexturesToQueue();
 			//Clean up the interpolators
 			for (auto Interp : mCloneInterpolators) {
@@ -144,13 +143,6 @@ namespace Epoch {
 			mCloneInterpolators.clear();
 		}
 
-		void TimeManager::ClearTexturesfromQueue()
-	{
-		while(!mUnassignedTextures.empty())
-		{
-			mUnassignedTextures.pop();
-		}
-	}
 
 		bool TimeManager::CheckRewindAvaliable(unsigned int _frame) {
 			//wrapped
@@ -182,7 +174,7 @@ namespace Epoch {
 
 					if(mCloneTextures.find(mClones[i]->GetUniqueId()) != mCloneTextures.end())
 					{
-						mUnassignedTextures.push(mCloneTextures[i]);
+						mCloneTextureBitset[mCloneTextures[i]] = false;
 						mCloneTextures.erase(mClones[i]->GetUniqueId());
 					}
 					//Remove it from being tracked by timeline
@@ -209,10 +201,23 @@ namespace Epoch {
 		}
 
 		std::string TimeManager::GetNextTexture() {
-			if (mUnassignedTextures.empty())
-				AddAllTexturesToQueue();
-
-			return mUnassignedTextures.front(); 
+			for (unsigned int i = 0; i < mCloneTextureBitset.size(); i++) {
+				if (mCloneTextureBitset[i] == false) {
+					TimeManipulation* left = LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManinpulator();
+					TimeManipulation* right = LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManinpulator();
+					if (left) {
+						return left->GetTexture(i);
+					} else if (right) {
+						return right->GetTexture(i);
+					}
+				}
+				if (mCloneTextureBitset[i] == true && mCloneTextureBitset.size() - 1) {
+					AddAllTexturesToQueue();
+					 return GetNextTexture();
+				}
+			}
+			//Default to plain if something goes wrong
+			return "../Resources/CloneTexture.png";
 		}
 
 		unsigned int TimeManager::GetTotalSnapsmade() {

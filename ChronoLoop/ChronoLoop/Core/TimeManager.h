@@ -4,6 +4,7 @@
 #include "../Common/Interpolator.h"
 #include <unordered_map>
 #include <queue>
+#include <bitset>
 #define RecordingRate .1f // 1/10th of a second in milliseconds 
 
 namespace Epoch {
@@ -33,8 +34,10 @@ namespace Epoch {
 		//container of objects
 		std::vector<BaseObject*>mClones;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneInterpolators;
-		std::queue<std::string>mUnassignedTextures;
-		std::unordered_map<unsigned short, std::string>mCloneTextures;
+		
+		std::bitset<10>mCloneTextureBitset;
+		//Pass in baseobject id to get bitset location
+		std::unordered_map<unsigned short, unsigned int>mCloneTextures;
 
 		//Timeline* GetTimeLine();
 
@@ -53,7 +56,6 @@ namespace Epoch {
 		void AssignTextureToClone(unsigned short _id);
 		//Clears the list of BaseObject* the Timemanager has refrence to.
 		void ClearClones();
-		void ClearTexturesfromQueue();
 		//Checks and see if you can rewind to passed in frame
 		bool CheckRewindAvaliable(unsigned int _RewindNumOfframes);
 		void DeleteClone(unsigned short _id1);

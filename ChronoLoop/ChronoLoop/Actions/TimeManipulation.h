@@ -25,8 +25,8 @@ namespace Epoch
 		static unsigned short mCurrTexture;
 		std::string mTextures[10] = { "../Resources/CloneTexture.png",
 			"../Resources/CloneTexture_Green.png",
-			"../Resources/CloneTexture_Orange.png",
 			"../Resources/CloneTexture_Pink.png",
+			"../Resources/CloneTexture_Orange.png",
 			"../Resources/CloneTexture_Purple.png",
 			"../Resources/CloneTexture_Red.png",
 			"../Resources/CloneTexture_White.png",
@@ -38,6 +38,7 @@ namespace Epoch
 		TimeManipulation();
 		TimeManipulation(ControllerType _t) { mControllerRole = _t; };
 		~TimeManipulation();
+		std::string GetTexture(unsigned short _indx) { return mTextures[_indx]; }
 		void RaycastCloneCheck();
 		bool isTimePaused() { return mPauseTime; };
 		void makeTimePaused(bool _isPaused) { mPauseTime = _isPaused; };
