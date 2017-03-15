@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Xml;
 
+
 namespace LevelEditor
 {
     public partial class Editor : Form
@@ -457,52 +458,40 @@ namespace LevelEditor
                 Matrix rotate = Matrix.RotationYawPitchRoll(angleY, angleX, 0);
                 Vector3 look = cameraPos + GetVector3(Vector3.Transform(new Vector3(0, 0, 1), rotate));
                 device.Transform.View = Matrix.LookAtRH(cameraPos, look, new Vector3(0, 1, 0));
-
+                float MovementScale = 1;
+                if(keys[Key.LeftControl]) {
+                    MovementScale *= 0.2f;
+                }
+                if(keys[Key.LeftAlt]) {
+                    MovementScale *= 5;
+                }
                 if (keys[Key.W]) {
                     Vector3 movement = new Vector3(0, 0, 0.5f);
-                    if(keys[Key.LeftControl]) {
-                        movement.Multiply(0.2f);
-                    }
-                    if(keys[Key.LeftAlt]) {
-                        movement.Multiply(5);
-                    }
+                    movement.Multiply(MovementScale);
                     cameraPos += GetVector3(Vector3.Transform(movement, rotate));
                 }
                 if (keys[Key.S]) {
                     Vector3 movement = new Vector3(0, 0, 0.5f);
-                    if (keys[Key.LeftControl]) {
-                        movement.Multiply(0.2f);
-                    }
-                    if (keys[Key.LeftAlt]) {
-                        movement.Multiply(5);
-                    }
+                    movement.Multiply(MovementScale);
                     cameraPos -= GetVector3(Vector3.Transform(movement, rotate));
                 }
                 if (keys[Key.A]) {
                     Vector3 movement = new Vector3(0.5f, 0, 0);
-                    if (keys[Key.LeftControl]) {
-                        movement.Multiply(0.2f);
-                    }
-                    if (keys[Key.LeftAlt]) {
-                        movement.Multiply(5);
-                    }
+                    movement.Multiply(MovementScale);
                     cameraPos += GetVector3(Vector3.Transform(movement, rotate));
                 }
                 if (keys[Key.D]) {
                     Vector3 movement = new Vector3(0.5f, 0, 0);
-                    if (keys[Key.LeftControl]) {
-                        movement.Multiply(0.2f);
-                    }
-                    if (keys[Key.LeftAlt]) {
-                        movement.Multiply(5);
-                    }
+                    movement.Multiply(MovementScale);
                     cameraPos -= GetVector3(Vector3.Transform(movement, rotate));
                 }
 
+                MovementScale *= 0.5f;
+
                 if (keys[Key.LeftShift])
-                    cameraPos.Y -= 0.5f;
+                    cameraPos.Y -= MovementScale;
                 if (keys[Key.Space])
-                    cameraPos.Y += 0.5f;
+                    cameraPos.Y += MovementScale;
                 snap = keys[Key.LeftAlt];
                 if ((selectedObject != null || selectedCollider != null) && canMove)
                 {
