@@ -3,7 +3,6 @@
 #include <vector>
 #include "../Common/Interpolator.h"
 #include <unordered_map>
-#include <queue>
 #include <bitset>
 #define RecordingRate .1f // 1/10th of a second in milliseconds 
 
@@ -41,9 +40,6 @@ namespace Epoch {
 
 		//Timeline* GetTimeLine();
 
-		//Command Console vars
-		bool mCloneCountOn;
-		bool mSnapshotCountOn;
 		TimeManager();
 		~TimeManager();
 	public:
@@ -86,11 +82,6 @@ namespace Epoch {
 
 		void BrowseTimeline(int _gesture, int _frameRewind);
 		void MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC);
-
-		void SetCloneCountBool(bool _set) { mCloneCountOn = _set; }
-		void SetSnapCountBool(bool _set) { mSnapshotCountOn = _set; }
-
-
 
 		void HotfixResetTimeline();
 	};

@@ -14,11 +14,16 @@
 #include "../Rendering/MeshCache.h"
 #include "../Input/CommandConsole.h"
 #include "../Input/KeyboardInput.h"
+#include "../Common/Settings.h"
+#include "../Rendering/RendererDefines.h"
 
 namespace Epoch {
 	bool InitializeSystems(HWND _Window, unsigned int _width, unsigned int _height,
 												 bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane,
 												 vr::IVRSystem* _vrsys) {
+		Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_MAX);
+
+
 		Renderer::Instance()->iInitialize(_Window, _width, _height, _vsync, _fps, _fullscreen, _farPlane, _nearPlane, _vrsys);
 		RasterizerStateManager::Instance();
 		TimeManager::Instance();
@@ -53,6 +58,7 @@ namespace Epoch {
 		TimeManager::Destroy();
 		RasterizerStateManager::DestroyInstance();
 		Renderer::DestroyInstance();
+		Settings::DestroyInstance();
 		return true;
 	}
 }

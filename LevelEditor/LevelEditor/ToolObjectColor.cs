@@ -24,7 +24,7 @@ namespace LevelEditor
         private string mName;
         private Color mColor;
         private List<ToolObjectColor> mChildren;
-        private bool mIsWireFrame, mSelected, mIsSolid = true, mCanMove = false;
+        private bool mIsWireFrame, mSelected, mIsSolid = true, mCanMove = false, mVisible = true;
         private float mMass, mElasticity, mStaticF, mKeneticF, mDrag;
 
         #region Properties
@@ -174,6 +174,12 @@ namespace LevelEditor
         {
             get { return mCanMove; }
             set { mCanMove = value; }
+        }
+
+        public bool Visible
+        {
+            get { return mVisible; }
+            set { mVisible = value; }
         }
         #endregion
 
@@ -504,7 +510,8 @@ namespace LevelEditor
                     mChildren[i].VertexDeclaration();
             if (mVertices != null)
             {
-                mVertexBuffer.Dispose();
+                if (mVertexBuffer != null)
+                    mVertexBuffer.Dispose();
                 mVertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionNormalColored), mVertices.Length, mDevice, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionNormalColored.Format, Pool.Default);
                 mVertexBuffer.SetData(mVertices, 0, LockFlags.None);
             }
@@ -516,7 +523,8 @@ namespace LevelEditor
                     mChildren[i].IndicesDeclaration();
             if (mIndices != null)
             {
-                mIndexBuffer.Dispose();
+                if (mIndexBuffer != null)
+                    mIndexBuffer.Dispose();
                 mIndexBuffer = new IndexBuffer(typeof(int), mIndices.Length * sizeof(int), mDevice, Usage.WriteOnly, Pool.Default);
                 mIndexBuffer.SetData(mIndices, 0, LockFlags.None);
             }

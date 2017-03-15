@@ -55,7 +55,7 @@ namespace Epoch
 		void Update();
 
 		//**CONSOLE COMMAND FUNCS**//
-		void ToggleEntireLevelsWireframe(void * _command, std::wstring _ifOn);
+		static void ToggleEntireLevelsWireframe(void * _command, std::wstring _ifOn);
 
 	};
 

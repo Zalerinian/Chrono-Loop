@@ -2,10 +2,10 @@
 #include "Component.h"
 #include "BaseObject.h"
 #include "..\Messager\Messager.h"
+#include "../Rendering/renderer.h"
 
 namespace Epoch
 {
-
 	// 0 is reserved for the player.
 	unsigned short Component::mComponentCount = 0;
 
@@ -61,12 +61,12 @@ namespace Epoch
 	{
 		if (_id < 0 || _id > mSFX[ePlayLoop].size() - 1)
 			return;
-		if (mIsPlaying)
+		if (mIsSounds[_id].first)
 			return;
 		m_Event* evnt = new m_Event(mSFX[ePlayLoop][_id], this);
 		Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
 		Messager::Instance().SendInMessage(msg);
-		mIsPlaying = true;
+		mIsSounds[_id].first = true;
 	}
 
 	void Emitter::Pause(int _id)
@@ -74,19 +74,19 @@ namespace Epoch
 		if (_id < 0 || _id > mSFX[ePauseLoop].size() - 1 || mSFX[eResumeLoop].size() - 1)
 			return;
 
-		if (mIsPaused)
+		if (mIsSounds[_id].second)
 		{
 			m_Event* evnt = new m_Event(mSFX[eResumeLoop][_id], this);
 			Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
 			Messager::Instance().SendInMessage(msg);
-			mIsPaused = false;
+			mIsSounds[_id].second = false;
 		}
 		else
 		{
 			m_Event* evnt = new m_Event(mSFX[ePauseLoop][_id], this);
 			Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
 			Messager::Instance().SendInMessage(msg);
-			mIsPaused = true;
+			mIsSounds[_id].second = true;
 		}
 	}
 
@@ -94,17 +94,18 @@ namespace Epoch
 	{
 		if (_id < 0 || _id > mSFX[eStopLoop].size() - 1)
 			return;
-		if (!mIsPlaying)
+		if (!mIsSounds[_id].first)
 			return;
 		m_Event* evnt = new m_Event(mSFX[eStopLoop][_id], this);
 		Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
 		Messager::Instance().SendInMessage(msg);
-		mIsPlaying = false;
+		mIsSounds[_id].first = false;
 
 	}
 
 	void Emitter::PlaySFX(int _id)
 	{
+		//TODO: DOUBLE CHECK THIS
 		if (_id < 0 || _id > mSFX[ePlaySFX].size() - 1)
 			return;
 
@@ -124,40 +125,42 @@ namespace Epoch
 		Messager::Instance().SendInMessage(msg);
 	}
 
-
 	void Emitter::AddSoundEvent(sfxTypes _type, int64_t _event)
 	{
 		switch (_type)
 		{
-			case sfxTypes::ePlayLoop:
-			{
-				mSFX[_type].push_back(_event);
-			}
-			break;
-			case sfxTypes::ePauseLoop:
-			{
-				mSFX[_type].push_back(_event);
-			}
-			break;
-			case sfxTypes::eResumeLoop:
-			{
-				mSFX[_type].push_back(_event);
-			}
-			break;
-			case sfxTypes::eStopLoop:
-			{
-				mSFX[_type].push_back(_event);
-			}
-			break;
-			case sfxTypes::ePlaySFX:
-			{
-				mSFX[_type].push_back(_event);
-			}
-			break;
+		case sfxTypes::ePlayLoop:
+		{
+			mSFX[_type].push_back(_event);
+		}
+		break;
+		case sfxTypes::ePauseLoop:
+		{
+			mSFX[_type].push_back(_event);
+		}
+		break;
+		case sfxTypes::eResumeLoop:
+		{
+			mSFX[_type].push_back(_event);
+		}
+		break;
+		case sfxTypes::eStopLoop:
+		{
+			mSFX[_type].push_back(_event);
+		}
+		break;
+		case sfxTypes::ePlaySFX:
+		{
+			mSFX[_type].push_back(_event);
+		}
+		break;
+		}
 
+		if (_type != sfxTypes::ePlaySFX)
+		{
+			mIsSounds.push_back(std::pair<bool, bool>(false, false));
 		}
 	}
-
 
 	void Emitter::Destroy()
 	{
@@ -274,6 +277,18 @@ namespace Epoch
 		float c = (mMaxOffset - mMinOffset) * vec4f(1, 0, 0, 0);
 		mArea = (2 * (a * b)) + (2 * (b * c)) + (2 * (a * c));
 		mDragForce = mVelocity * (-0.5f * mRHO * mVelocity.Magnitude3() * mDrag * mArea);
+		mShape = new RenderShape("../Resources/UnitCube.obj", true, ePS_TEXTURED, eVS_TEXTURED, eGS_PosNormTex);
+		mShape->GetContext().mRasterState = eRS_WIREFRAME;
+	}
+
+	void CubeCollider::Update() {
+		if (mNode == nullptr) {
+			mNode = Renderer::Instance()->AddNode(mShape);
+		}
+		vec4f size = mMax - mMin;
+		matrix4 pos = matrix4::CreateScale(size.x, size.y, size.z);
+		pos.Position = (mMax - mMin) / 2 + mMin;
+		mNode->data = pos;
 	}
 
 	void CubeCollider::SetPos(const vec4f& _newPos)
@@ -400,6 +415,8 @@ namespace Epoch
 			mInvMass = 1 / mMass;
 		mWeight = mGravity * mMass;
 		mElasticity = 0;
+		mShape = new RenderShape("../Resources/UnitCube.obj", true, ePS_TEXTURED, eVS_TEXTURED, eGS_PosNormTex);
+		mShape->GetContext().mRasterState = eRS_WIREFRAME;
 	}
 
 	ControllerCollider::ControllerCollider(BaseObject* _obj, vec4f _min, vec4f _max, bool _left)
@@ -420,6 +437,8 @@ namespace Epoch
 		mColliderType = eCOLLIDER_Controller;
 		mTotalForce = { 0,-2,0,0 };
 		mAcceleration = { 0,-2,0,0 };
+		mShape = new RenderShape("../Resources/UnitCube.obj", true, ePS_TEXTURED, eVS_TEXTURED, eGS_PosNormTex);
+		mShape->GetContext().mRasterState = eRS_WIREFRAME;
 	}
 
 }

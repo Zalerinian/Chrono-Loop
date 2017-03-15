@@ -10,6 +10,7 @@
 #include "../Input/VRInputManager.h"
 #include "../Common/Breakpoint.h"
 #include "LevelManager.h"
+#include "../Common/Settings.h"
 
 namespace Epoch {
 
@@ -18,8 +19,6 @@ namespace Epoch {
 
 	TimeManager::TimeManager() {
 		mTimeline = new Timeline();
-		mCloneCountOn = false;
-		mSnapshotCountOn = false;
 		mCloneTextureBitset.set(false);
 		CommandConsole::Instance().AddCommand(L"/CLONECOUNT", ToggleCloneCountDisplay);
 		CommandConsole::Instance().AddCommand(L"/SNAPCOUNT", ToggleSnapshotCountDisplay);
@@ -56,7 +55,7 @@ namespace Epoch {
 				//SystemLogger::GetLog() << mTimestamp / mRecordingTime << std::endl; 
 				for (auto Interp : mCloneInterpolators) {
 					if (Interp.second)
-						Interp.second->Update(mTimestamp / RecordingRate);
+						Interp.second->Update(_delta);
 
 					//Update inputTimeLine
 					//This updates curr pointer of the input timeline along with the current time in the Timeline 
@@ -100,7 +99,7 @@ namespace Epoch {
 		}
 
 		void TimeManager::AddInterpolatorForClone(BaseObject * _obj) {
-			Interpolator<matrix4>* temp = new Interpolator<matrix4>(InterpolatorType::I_Matrix4);
+			Interpolator<matrix4>* temp = new Interpolator<matrix4>();
 			mCloneInterpolators[_obj->GetUniqueID()] = temp;
 		}
 
@@ -307,10 +306,10 @@ namespace Epoch {
 		void TimeManager::ToggleCloneCountDisplay(void * _command, std::wstring _ifOn) {
 			CommandConsole* cc = (CommandConsole*)_command;
 			if (_ifOn == L"ON") {
-				instanceTimemanager->mCloneCountOn = true;
+				Settings::GetInstance().SetBool("CloneCounter", true);
 				CommandConsole::Instance().DisplaySet(L"");
 			} else if (_ifOn == L"OFF") {
-				instanceTimemanager->mCloneCountOn = false;
+				Settings::GetInstance().SetBool("CloneCounter", false);
 				CommandConsole::Instance().DisplaySet(L"");
 
 			} else {
@@ -320,10 +319,10 @@ namespace Epoch {
 		void TimeManager::ToggleSnapshotCountDisplay(void * _command, std::wstring _ifOn) {
 			CommandConsole* cc = (CommandConsole*)_command;
 			if (_ifOn == L"ON") {
-				instanceTimemanager->mSnapshotCountOn = true;
+				Settings::GetInstance().SetBool("SnapCounter", true);
 				CommandConsole::Instance().DisplaySet(L"");
 			} else if (_ifOn == L"OFF") {
-				instanceTimemanager->mSnapshotCountOn = false;
+				Settings::GetInstance().SetBool("SnapCounter", false);
 				CommandConsole::Instance().DisplaySet(L"");
 
 			} else {
@@ -331,7 +330,7 @@ namespace Epoch {
 			}
 		}
 		void TimeManager::DisplayCloneCount() {
-			if (instanceTimemanager->mCloneCountOn) {
+			if (Settings::GetInstance().GetBool("CloneCounter")) {
 				std::wstring CloneCount = L"Clone(s): " + std::to_wstring(mClones.size());
 
 				Font* tempFont;
@@ -349,7 +348,7 @@ namespace Epoch {
 			}
 		}
 		void TimeManager::DisplaySnapshotCount() {
-			if (instanceTimemanager->mSnapshotCountOn) {
+			if (Settings::GetInstance().GetBool("SnapCounter")) {
 				std::wstring CloneCount = L"Snapshots: " + std::to_wstring(mTimeline->GetCurrentGameTimeIndx());
 
 				Font* tempFont;
@@ -369,9 +368,6 @@ namespace Epoch {
 			}
 		}
 		void TimeManager::BrowseTimeline(int _gesture, int _frameRewind) {
-
-
-
 			unsigned int temp = instanceTimemanager->GetCurrentSnapFrame();
 			if (_gesture == 0)
 				return;

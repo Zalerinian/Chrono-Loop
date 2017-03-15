@@ -14,6 +14,7 @@ struct GSOutput
 	float4 position : SV_POSITION;
 	float4 normal : NORMAL0;
 	float4 texCoord : COLOR;
+	float4 wpos : WORLDPOS;
 	uint viewport : SV_ViewportArrayIndex;
 };
 
@@ -22,6 +23,7 @@ struct GSInput
 	float4 position : SV_POSITION;
 	float4 normal : NORMAL0;
 	float4 texCoord : COLOR;
+	float4 wpos : WORLDPOS;
 };
 
 [maxvertexcount(6)]
@@ -36,6 +38,7 @@ void main(triangle GSInput input[3], inout TriangleStream<GSOutput> TriStream)
 		output.position = mul(mul(input[i].position, eyes[0].view), eyes[0].projection);
 		output.normal = input[i].normal;
 		output.texCoord = input[i].texCoord;
+		output.wpos = input[i].wpos;
 		output.viewport = 0;
 		TriStream.Append(output);
 	}
@@ -48,6 +51,7 @@ void main(triangle GSInput input[3], inout TriangleStream<GSOutput> TriStream)
 		output.position = mul(mul(input[j].position, eyes[1].view), eyes[1].projection);
 		output.normal = input[j].normal;
 		output.texCoord = input[j].texCoord;
+		output.wpos = input[j].wpos;
 		output.viewport = 1;
 		TriStream.Append(output);
 	}
