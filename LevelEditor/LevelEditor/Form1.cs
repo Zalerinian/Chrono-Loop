@@ -436,6 +436,7 @@ namespace LevelEditor
                                 break;
                         }
                     }
+                    UpdateSelectedData();
                     break;
                 case MouseButtons.None:
                     break;
@@ -498,9 +499,7 @@ namespace LevelEditor
                     else if (selectedObject != null)
                         selectedObject.Translate(dMove);
                     if (dMove.LengthSq() > 0.01)
-                    {
                         UpdateSelectedData();
-                    }
                 }
             }
             if (keys[Key.Delete] && selectedObject != null)
@@ -508,6 +507,7 @@ namespace LevelEditor
                 Tree.Nodes[1].Nodes.RemoveAt(higharchy.IndexOf(selectedObject));
                 higharchy.Remove(selectedObject);
                 selectedObject = null;
+                UpdateSelectedData();
             }
         }
         private void Resize(object sender, EventArgs e)
@@ -544,6 +544,7 @@ namespace LevelEditor
                 {
                     if (Path.GetExtension(openFileDialog1.FileName) == ".xml")
                     {
+                        loaded = false;
                         XmlReaderSettings settings = new XmlReaderSettings();
                         settings.DtdProcessing = DtdProcessing.Parse;
                         currentFile = openFileDialog1.FileName;
@@ -762,6 +763,7 @@ namespace LevelEditor
                                     break;
                             }
                         }
+                        loaded = true;
                         HandleResetEvent(null, null);
                     }
                     else
@@ -1031,13 +1033,9 @@ namespace LevelEditor
                         break;
                     default:
                         if (e.NewValue == CheckState.Checked)
-                        {
                             selectedObject.Components.Add((string)componetsCheck.Items[e.Index]);
-                        }
                         else if (e.NewValue == CheckState.Unchecked)
-                        {
                             selectedObject.Components.Remove((string)componetsCheck.Items[e.Index]);
-                        }
                         break;
                 }
             }
