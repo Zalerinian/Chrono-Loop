@@ -74,11 +74,11 @@ namespace Epoch
 	void ParticleSystem::Update()
 	{
 		//TODO: Update emitters
-		//float dt = TimeManager::Instance()->GetDeltaTime();
+		float dt = TimeManager::Instance()->GetDeltaTime();
 		for (ParticleEmitter* emit : mPEmitters)
 		{
 			if (emit->mActive)
-				emit->Update(0);
+				emit->Update(dt);
 		}
 		for (int i =0; i < mPEmitters.size(); i++)
 		{

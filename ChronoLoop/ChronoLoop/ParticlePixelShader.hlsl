@@ -39,11 +39,11 @@ float4 main(GSOutput input) : SV_TARGET
 	clip(col.a - .25);
 	col *= input.col;
 
-	l1 = ApplyDirectionalLight(dir, input.normal, dcol, dcol);
+	/*l1 = ApplyDirectionalLight(dir, input.normal, dcol, dcol);
 	l2 = ApplyPointLight(ppos, input.wpos, input.normal, pcol, dcol);
 	l3 = ApplySpotLight(input.normal, slpos, input.wpos, cdir, cratio, slcol, dcol);
 
-	color = l1 + l2 + l3;
+	color = l1 + l2 + l3;*/
 
 	return (saturate(color) + float4(.25, .25, .25, .25)) * col;
 }

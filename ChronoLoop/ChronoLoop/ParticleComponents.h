@@ -31,7 +31,7 @@ namespace Epoch
 	{
 		int mLife, mMaxLife;
 		//TODO: Opacity and Rotation over time??
-		float mSize; //TODO: Size over time?
+		float mSize, mFSize, mSSize;
 		vec4f mPos, mPrevPos, mVelocity;
 		vec4f mSColor, mEColor, mCurColor;
 		bool mActive;
@@ -39,7 +39,7 @@ namespace Epoch
 		//Constructors
 		Particle();
 		Particle(int _life, float _size, vec4f _pos, vec4f _color);
-		Particle(int _life, float _size, vec4f _pos, vec4f _scolor, vec4f _ecolor);
+		Particle(int _life, float _size, float _msize, vec4f _pos, vec4f _scolor, vec4f _ecolor);
 
 		Particle& operator=(const Particle& _other);
 	};
@@ -61,18 +61,18 @@ namespace Epoch
 		Particle* mBase;
 		std::list<Particle*> mParticles;
 		std::vector<GSParticle> mGParticles;
-		int mTotalParticles, mMaxParticles, mPerSec; 
+		int mTotalParticles, mMaxParticles, mPerSec;
 		vec4f mStartColor, mEndColor;
 		bool mIsAnimated;
 		float mOffset;
 		//TODO: If animated, need to send offset to geometry shader or pixel shader
 
-		virtual void UpdateParticle(Particle* _p);
+		virtual void UpdateParticle(Particle* _p, float _delta);
 		void CreateBuffers();
 		void CreateTextureResource();
 		void UpdateBuffers();
 		void CleanUpParticles();
-		void EmitParticles();
+		virtual void EmitParticles();
 
 	public:
 		bool mActive;
@@ -95,7 +95,7 @@ namespace Epoch
 	class VolumeEmitter : public ParticleEmitter
 	{
 		//TODO: Bounding volume bools and structs, use unions
-		enum eVolume {eNONE = -1, eAABB, eSPHERE, eCYLINDER};
+		enum eVolume { eNONE = -1, eAABB, eSPHERE, eCYLINDER };
 		struct bvAABB
 		{
 			vec4f min, max;
@@ -128,9 +128,35 @@ namespace Epoch
 		void SetBoundingVolume(float _r);
 		void SetBoundingVolume(float _r, float _h, int _dir);
 	private:
-		virtual void UpdateParticle(Particle* _p);
+		virtual void UpdateParticle(Particle* _p, float _delta);
 		void BindToAABB(Particle* _p);
 		void BindToSPHR(Particle* _p);
 		void BindToCYL(Particle* _p);
+	};
+
+	class RadialEmitter : public ParticleEmitter
+	{
+
+		float mYLRate, mYHRate;
+
+	public:
+		RadialEmitter();
+		RadialEmitter(int _totalp, int _maxp, int _persec, vec4f _pos);
+	private:
+		virtual void UpdateParticle(Particle* _p, float _delta);
+		virtual void EmitParticles();
+
+	};
+
+	class Patrick : public ParticleEmitter
+	{
+	public:
+		float y1, y2;
+
+		Patrick();
+		Patrick(int _totalp, int _maxp, int _persec, vec4f _pos);
+	private:
+		virtual void UpdateParticle(Particle* _p, float _delta);
+		virtual void EmitParticles();
 	};
 }
