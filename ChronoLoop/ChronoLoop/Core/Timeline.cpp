@@ -346,7 +346,27 @@ namespace Epoch {
 			}
 		}
 	}
-
+	void Timeline::InterpAllObjectsToSnapExceptPlayer(unsigned int _fromSnapTime, unsigned int _toSnapTime, unsigned short _id1, unsigned short _id2, unsigned short _id3) 
+	{
+		Snapshot* _from = mSnapshots[_fromSnapTime];
+		Snapshot* _to = mSnapshots[_toSnapTime];
+		for (auto object : mLiveObjects) {
+			unsigned short id = object.second->GetUniqueID();
+			if (id == _id1 || id == _id2 || id == _id3)
+				continue;
+			SnapInfo* destInfo;
+			//If the object doesnt have a info, 
+			//then check against the list for the last snap it was updated
+			bool stored = _to->IsObjectStored(id);
+			if (stored) {
+				destInfo = _to->mSnapinfos[id];
+			} else if (!stored) {
+				if (_to->mUpdatedtimes.find(id) == _to->mUpdatedtimes.end())
+					continue;
+				destInfo = mSnapshots[_to->mUpdatedtimes[id]]->mSnapinfos[id];
+			}
+		}
+	}
 	void Timeline::MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3) {
 		Snapshot* destination = mSnapshots[_snaptime];
 		for (auto object : mLiveObjects) {
@@ -374,8 +394,6 @@ namespace Epoch {
 			}
 		}
 	}
-
-
 	void Timeline::ClearTimeLine() {
 		for (auto snapshot : mSnapshots) {
 			for (auto snapInfo : snapshot.second->mSnapinfos) {
