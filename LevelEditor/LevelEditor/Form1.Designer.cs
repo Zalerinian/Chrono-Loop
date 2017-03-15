@@ -32,7 +32,7 @@ namespace LevelEditor
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor));
             System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Objects");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Higharchy");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Hierarchy");
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -436,8 +436,8 @@ namespace LevelEditor
             this.Tree.Name = "Tree";
             treeNode1.Name = "Objects";
             treeNode1.Text = "Objects";
-            treeNode2.Name = "Higharchy";
-            treeNode2.Text = "Higharchy";
+            treeNode2.Name = "Hierarchy";
+            treeNode2.Text = "Hierarchy";
             this.Tree.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode1,
             treeNode2});

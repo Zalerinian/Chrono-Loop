@@ -541,7 +541,7 @@ namespace LevelEditor
         {
             Stream myStream = null;
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
-            OpenFileDialog openFileDialog2 = new OpenFileDialog();
+            OpenFileDialog openFileDialog2 = new OpenFileDialog(); 
 
             openFileDialog1.InitialDirectory = Application.StartupPath;
             openFileDialog1.Filter = "Compatible Files (*.xml, *.obj)|*.xml;*.obj";
@@ -1060,14 +1060,14 @@ namespace LevelEditor
 
         private void Tree_Click(object sender, EventArgs e)
         {
-            if (Tree.SelectedNode != null && Tree.SelectedNode.Parent != null && Tree.SelectedNode.Parent.Text == "Higharchy")
+            if (Tree.SelectedNode != null && Tree.SelectedNode.Parent != null && Tree.SelectedNode.Parent.Text == "Hierarchy")
             {
                 selectedIndex = Tree.SelectedNode.Index;
                 selectedObject = higharchy[selectedIndex];
                 selectedCollider = null;
                 UpdateSelectedData();
             }
-            else if (Tree.SelectedNode != null && Tree.SelectedNode.Parent != null && Tree.SelectedNode.Parent.Text != "Higharchy" && Tree.SelectedNode.Parent.Text != "Objects")
+            else if (Tree.SelectedNode != null && Tree.SelectedNode.Parent != null && Tree.SelectedNode.Parent.Text != "Hierarchy" && Tree.SelectedNode.Parent.Text != "Objects")
             {
                 if (higharchy[Tree.SelectedNode.Parent.Index].Name == Tree.SelectedNode.Parent.Text)
                 {
@@ -1091,7 +1091,7 @@ namespace LevelEditor
                 Tree.Nodes[1].Nodes.Add(objects[Tree.SelectedNode.Index].Name);
                 Tree.Nodes[1].Expand();
             }
-            else if (Tree.SelectedNode != null && Tree.SelectedNode.Parent != null && Tree.SelectedNode.Parent.Text == "Higharchy" && Tree.SelectedNode.Index < higharchy.Count)
+            else if (Tree.SelectedNode != null && Tree.SelectedNode.Parent != null && Tree.SelectedNode.Parent.Text == "Hierarchy" && Tree.SelectedNode.Index < higharchy.Count)
             {
                 higharchy.Add(new ToolObject(higharchy[Tree.SelectedNode.Index]));
                 higharchy[higharchy.Count - 1].VertexDeclaration();
