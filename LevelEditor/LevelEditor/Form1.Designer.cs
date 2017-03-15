@@ -117,10 +117,10 @@ namespace LevelEditor
             this.TextureBox = new System.Windows.Forms.GroupBox();
             this.textureFileBox = new System.Windows.Forms.TextBox();
             this.changeTexture = new System.Windows.Forms.Button();
+            this.visibleCheck = new System.Windows.Forms.CheckBox();
             this.graphicsPanel1 = new LevelEditor.GraphicsPanel();
             this.LeftToggle = new LevelEditor.NoFocusButton();
             this.RightToggle = new LevelEditor.NoFocusButton();
-            this.visibleCheck = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -1337,6 +1337,18 @@ namespace LevelEditor
             this.changeTexture.UseVisualStyleBackColor = true;
             this.changeTexture.Click += new System.EventHandler(this.changeTexture_Click);
             // 
+            // visibleCheck
+            // 
+            this.visibleCheck.AutoSize = true;
+            this.visibleCheck.Dock = System.Windows.Forms.DockStyle.Top;
+            this.visibleCheck.Location = new System.Drawing.Point(0, 686);
+            this.visibleCheck.Name = "visibleCheck";
+            this.visibleCheck.Size = new System.Drawing.Size(127, 17);
+            this.visibleCheck.TabIndex = 21;
+            this.visibleCheck.Text = "Visible";
+            this.visibleCheck.UseVisualStyleBackColor = true;
+            this.visibleCheck.CheckedChanged += new System.EventHandler(this.Trigger_CheckedChanged);
+            // 
             // graphicsPanel1
             // 
             this.graphicsPanel1.Controls.Add(this.LeftToggle);
@@ -1377,18 +1389,6 @@ namespace LevelEditor
             this.RightToggle.Text = ">";
             this.RightToggle.UseVisualStyleBackColor = true;
             this.RightToggle.Click += new System.EventHandler(this.RightToggle_Click);
-            // 
-            // visibleCheck
-            // 
-            this.visibleCheck.AutoSize = true;
-            this.visibleCheck.Dock = System.Windows.Forms.DockStyle.Top;
-            this.visibleCheck.Location = new System.Drawing.Point(0, 686);
-            this.visibleCheck.Name = "visibleCheck";
-            this.visibleCheck.Size = new System.Drawing.Size(127, 17);
-            this.visibleCheck.TabIndex = 21;
-            this.visibleCheck.Text = "Visible";
-            this.visibleCheck.UseVisualStyleBackColor = true;
-            this.visibleCheck.CheckedChanged += new System.EventHandler(this.Trigger_CheckedChanged);
             // 
             // Editor
             // 

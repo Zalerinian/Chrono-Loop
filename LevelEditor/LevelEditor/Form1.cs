@@ -1266,11 +1266,6 @@ namespace LevelEditor
 
         private void supress_KeyDown(object sender, KeyPressEventArgs e)
         {
-            int i = 0;
-            if (!int.TryParse(e.KeyChar.ToString(), out i) && e.KeyChar != '\b')
-            {
-                e.Handled = true;
-            }
         }
 
         private void Editor_KeyDown(object sender, KeyEventArgs e)
