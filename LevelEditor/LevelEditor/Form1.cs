@@ -454,13 +454,13 @@ namespace LevelEditor
         }
         private void ReadKeyboard()
         {
+            KeyboardState keys = keyb.GetCurrentKeyboardState();
             if (canMove)
             {
                 Matrix pos = Matrix.Translation(cameraPos);
                 Matrix rotate = Matrix.RotationYawPitchRoll(angleY, angleX, 0);
                 Vector3 look = cameraPos + GetVector3(Vector3.Transform(new Vector3(0, 0, 1), rotate));
                 device.Transform.View = Matrix.LookAtRH(cameraPos, look, new Vector3(0, 1, 0));
-                KeyboardState keys = keyb.GetCurrentKeyboardState();
                 if (keys[Key.W])
                     cameraPos += GetVector3(Vector3.Transform(new Vector3(0, 0, 0.5f), rotate));
                 if (keys[Key.S])
@@ -494,6 +494,12 @@ namespace LevelEditor
                         UpdateSelectedData();
                     }
                 }
+            }
+            if (keys[Key.Delete] && selectedObject != null)
+            {
+                Tree.Nodes[1].Nodes.RemoveAt(higharchy.IndexOf(selectedObject));
+                higharchy.Remove(selectedObject);
+                selectedObject = null;
             }
         }
         private void Resize(object sender, EventArgs e)
@@ -691,7 +697,42 @@ namespace LevelEditor
                                             addition.Collider.Drag = float.Parse(reader.Value);
                                             break;
                                         default:
-                                            addition.Components.Add(element);
+                                            switch (element)
+                                            {
+                                                case "BoxSnapToController":
+                                                    addition.Components.Add("Box Snap");
+                                                    break;
+                                                case "ButtonPress":
+                                                    addition.Components.Add("Button Press");
+                                                    break;
+                                                case "AABBtoAABB":
+                                                    addition.Components.Add("AABB to AABB");
+                                                    break;
+                                                case "AABBtoSphere":
+                                                    addition.Components.Add("AABB to Sphere");
+                                                    break;
+                                                case "ElasticPlane":
+                                                    addition.Components.Add("Elastic Plane");
+                                                    break;
+                                                case "SpheretoSphere":
+                                                    addition.Components.Add("Sphere to Sphere");
+                                                    break;
+                                                case "EnterLevel":
+                                                    addition.Components.Add("Enter Level");
+                                                    break;
+                                                case "Gesture":
+                                                    addition.Components.Add("Gesture");
+                                                    break;
+                                                case "HeadsetFollow":
+                                                    addition.Components.Add("Headset Follow");
+                                                    break;
+                                                case "MainMenu":
+                                                    addition.Components.Add("Main Menu");
+                                                    break;
+                                                case "Teleport":
+                                                    addition.Components.Add("Teleport");
+                                                    break;
+                                            }
                                             break;
                                     }
                                     break;
@@ -773,6 +814,47 @@ namespace LevelEditor
                         writer.WriteElementString("Rotation", tObj.Rotation.X + "," + tObj.Rotation.Y + "," + tObj.Rotation.Z);
                         writer.WriteElementString("Scale", tObj.Scale.X + "," + tObj.Scale.Y + "," + tObj.Scale.Z);
                         writer.WriteStartElement("Components");
+                        foreach (string str in tObj.Components)
+                        {
+                            switch (str)
+                            {
+                                case "Box Snap":
+                                    writer.WriteElementString("BoxSnapToController", "Enabled");
+                                    break;
+                                case "Button Press":
+                                    writer.WriteElementString("ButtonPress", "Enabled");
+                                    break;
+                                case "AABB to AABB":
+                                    writer.WriteElementString("AABBtoAABB", "Enabled");
+                                    break;
+                                case "AABB to Sphere":
+                                    writer.WriteElementString("AABBtoSphere", "Enabled");
+                                    break;
+                                case "Elastic Plane":
+                                    writer.WriteElementString("ElasticPlane", "Enabled");
+                                    break;
+                                case "Sphere to Sphere":
+                                    writer.WriteElementString("SpheretoSphere", "Enabled");
+                                    break;
+                                case "Enter Level":
+                                    writer.WriteElementString("EnterLevel", "Enabled");
+                                    break;
+                                case "Gesture":
+                                    writer.WriteElementString("Gesture", "Enabled");
+                                    break;
+                                case "Headset Follow":
+                                    writer.WriteElementString("HeadsetFollow", "Enabled");
+                                    break;
+                                case "Main Menu":
+                                    writer.WriteElementString("MainMenu", "Enabled");
+                                    break;
+                                case "Teleport":
+                                    writer.WriteElementString("Teleport", "Enabled");
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
                         if (tObj.Collider != null)
                         {
                             writer.WriteStartElement("Collider");
@@ -812,47 +894,6 @@ namespace LevelEditor
                                 writer.WriteElementString("NormalForce", tObj.Collider.StaticF.ToString());
                             }
                             writer.WriteEndElement();
-                            foreach (string str in tObj.Components)
-                            {
-                                switch (str)
-                                {
-                                    case "Box Snap":
-                                        writer.WriteElementString("BoxSnapToController", "Enabled");
-                                        break;
-                                    case "Button Press":
-                                        writer.WriteElementString("ButtonPress", "Enabled");
-                                        break;
-                                    case "AABB to AABB":
-                                        writer.WriteElementString("AABBtoAABB", "Enabled");
-                                        break;
-                                    case "AABB to Sphere":
-                                        writer.WriteElementString("AABBtoSphere", "Enabled");
-                                        break;
-                                    case "Elastic Plane":
-                                        writer.WriteElementString("ElasticPlane", "Enabled");
-                                        break;
-                                    case "Sphere to Sphere":
-                                        writer.WriteElementString("SpheretoSphere", "Enabled");
-                                        break;
-                                    case "Enter Level":
-                                        writer.WriteElementString("EnterLevel", "Enabled");
-                                        break;
-                                    case "Gesture":
-                                        writer.WriteElementString("Gesture", "Enabled");
-                                        break;
-                                    case "Headset Follow":
-                                        writer.WriteElementString("HeadsetFollow", "Enabled");
-                                        break;
-                                    case "Main Menu":
-                                        writer.WriteElementString("MainMenu", "Enabled");
-                                        break;
-                                    case "Teleport":
-                                        writer.WriteElementString("Teleport", "Enabled");
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            }
                         }
                         writer.WriteEndElement();
                         writer.WriteEndElement();
