@@ -32,7 +32,7 @@ namespace LevelEditor
         private Vector2 prevMouse, curMouse;
         private int selectedIndex = 0;
         private bool canMove = false, grab = false, snap = false;
-        private string selectedName = string.Empty, colliderType = string.Empty;
+        private string selectedName = string.Empty, colliderType = string.Empty, currentFile = string.Empty;
         Matrix gizmoScale = Matrix.Identity;
         Matrix rotate = Matrix.Identity;
 
@@ -538,15 +538,11 @@ namespace LevelEditor
                     {
                         XmlReaderSettings settings = new XmlReaderSettings();
                         settings.DtdProcessing = DtdProcessing.Parse;
+                        currentFile = openFileDialog1.FileName;
                         XmlReader reader = XmlReader.Create(openFileDialog1.FileName, settings);
                         reader.MoveToContent();
                         string element = string.Empty, mesh = string.Empty, texutre = string.Empty, name = string.Empty;
                         ToolObject addition = new ToolObject(ref device);
-                        List<string> loaded = new List<string>();
-                        foreach (ToolObject tObj in objects)
-                        {
-                            loaded.Add(tObj.Name);
-                        }
                         bool collider = false;
                         while (reader.Read())
                         {
@@ -749,12 +745,6 @@ namespace LevelEditor
                                                 Tree.Nodes[1].LastNode.Nodes.Add("Collider");
                                                 addition.Collider.ObjectColor = Color.Red;
                                             }
-                                            //if (!loaded.Contains(name))
-                                            //{
-                                            //    objects.Add(new ToolObject(mesh, texutre, ref device));
-                                            //    Tree.Nodes[0].Nodes.Add(objects.Last().Name);
-                                            //    loaded.Add(name);
-                                            //}
                                             break;
                                         default:
                                             break;
@@ -786,6 +776,125 @@ namespace LevelEditor
             }
         }
 
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (currentFile != string.Empty)
+            {
+                saveLevel(currentFile);
+            }
+        }
+
+        private void saveLevel(string file)
+        {
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.OmitXmlDeclaration = true;
+            using (XmlWriter writer = XmlWriter.Create(file, settings))
+            {
+                writer.WriteStartDocument();
+                writer.WriteStartElement("Level");
+                foreach (ToolObject tObj in higharchy)
+                {
+                    writer.WriteStartElement("Object");
+                    writer.WriteElementString("Name", tObj.Name);
+                    if (tObj.MeshFile != null)
+                        writer.WriteElementString("Mesh", tObj.MeshFile.Split('\\').Last());
+                    if (tObj.TextureFile != null)
+                        writer.WriteElementString("Texture", tObj.TextureFile == null ? "" : tObj.TextureFile.Split('\\').Last());
+                    writer.WriteElementString("Position", tObj.Position.X + "," + tObj.Position.Y + "," + tObj.Position.Z);
+                    writer.WriteElementString("Rotation", tObj.Rotation.X + "," + tObj.Rotation.Y + "," + tObj.Rotation.Z);
+                    writer.WriteElementString("Scale", tObj.Scale.X + "," + tObj.Scale.Y + "," + tObj.Scale.Z);
+                    writer.WriteStartElement("Components");
+                    foreach (string str in tObj.Components)
+                    {
+                        switch (str)
+                        {
+                            case "Box Snap":
+                                writer.WriteElementString("BoxSnapToController", "Enabled");
+                                break;
+                            case "Button Press":
+                                writer.WriteElementString("ButtonPress", "Enabled");
+                                break;
+                            case "AABB to AABB":
+                                writer.WriteElementString("AABBtoAABB", "Enabled");
+                                break;
+                            case "AABB to Sphere":
+                                writer.WriteElementString("AABBtoSphere", "Enabled");
+                                break;
+                            case "Elastic Plane":
+                                writer.WriteElementString("ElasticPlane", "Enabled");
+                                break;
+                            case "Sphere to Sphere":
+                                writer.WriteElementString("SpheretoSphere", "Enabled");
+                                break;
+                            case "Enter Level":
+                                writer.WriteElementString("EnterLevel", "Enabled");
+                                break;
+                            case "Gesture":
+                                writer.WriteElementString("Gesture", "Enabled");
+                                break;
+                            case "Headset Follow":
+                                writer.WriteElementString("HeadsetFollow", "Enabled");
+                                break;
+                            case "Main Menu":
+                                writer.WriteElementString("MainMenu", "Enabled");
+                                break;
+                            case "Teleport":
+                                writer.WriteElementString("Teleport", "Enabled");
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    if (tObj.Collider != null)
+                    {
+                        writer.WriteStartElement("Collider");
+                        writer.WriteElementString("Type", tObj.ColliderType);
+                        writer.WriteElementString("Trigger", tObj.Collider.IsSolid ? "False" : "True");
+                        writer.WriteElementString("Position", tObj.Collider.Position.X + "," + tObj.Collider.Position.Y + "," + tObj.Collider.Position.Z);
+                        if (tObj.ColliderType == "Sphere")
+                            writer.WriteElementString("Radius", tObj.Collider.Scale.X.ToString());
+                        else
+                        {
+                            writer.WriteElementString("Rotation", tObj.Collider.Rotation.X + "," + tObj.Collider.Rotation.Y + "," + tObj.Collider.Rotation.Z);
+                            writer.WriteElementString("Scale", tObj.Collider.Scale.X + "," + tObj.Collider.Scale.Y + "," + tObj.Collider.Scale.Z);
+                        }
+                        writer.WriteElementString("Move", tObj.Collider.CanMove ? "True" : "False");
+                        if (tObj.ColliderType == "Sphere" || tObj.ColliderType == "OBB")
+                        {
+                            writer.WriteElementString("Gravity", tObj.Collider.Gravity.X + "," + tObj.Collider.Gravity.Y + "," + tObj.Collider.Gravity.Z);
+                            writer.WriteElementString("Mass", tObj.Collider.Mass.ToString());
+                            writer.WriteElementString("Elasticity", tObj.Collider.Elasticity.ToString());
+                            writer.WriteElementString("StaticFriction", tObj.Collider.StaticF.ToString());
+                            writer.WriteElementString("KeneticFriction", tObj.Collider.KeneticF.ToString());
+                            writer.WriteElementString("Drag", tObj.Collider.Drag.ToString());
+                        }
+                        else if (tObj.ColliderType == "Plane")
+                        {
+                            writer.WriteElementString("Normal", tObj.Collider.Gravity.X + "," + tObj.Collider.Gravity.Y + "," + tObj.Collider.Gravity.Z);
+                            writer.WriteElementString("Mass", tObj.Collider.Mass.ToString());
+                            writer.WriteElementString("Elasticity", tObj.Collider.Elasticity.ToString());
+                            writer.WriteElementString("StaticFriction", tObj.Collider.StaticF.ToString());
+                            writer.WriteElementString("KeneticFriction", tObj.Collider.KeneticF.ToString());
+                            writer.WriteElementString("Drag", tObj.Collider.Drag.ToString());
+                        }
+                        else if (tObj.ColliderType == "Button")
+                        {
+                            writer.WriteElementString("PushNormal", tObj.Collider.Gravity.X + "," + tObj.Collider.Gravity.Y + "," + tObj.Collider.Gravity.Z);
+                            writer.WriteElementString("Mass", tObj.Collider.Mass.ToString());
+                            writer.WriteElementString("NormalForce", tObj.Collider.StaticF.ToString());
+                        }
+                        writer.WriteEndElement();
+                    }
+                    writer.WriteEndElement();
+                    writer.WriteEndElement();
+                }
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+                writer.Close();
+            }
+        }
+
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFile = new SaveFileDialog();
@@ -795,112 +904,8 @@ namespace LevelEditor
             saveFile.RestoreDirectory = true;
             if (saveFile.ShowDialog() == DialogResult.OK)
             {
-                XmlWriterSettings settings = new XmlWriterSettings();
-                settings.Indent = true;
-                settings.OmitXmlDeclaration = true;
-                using (XmlWriter writer = XmlWriter.Create(saveFile.FileName, settings))
-                {
-                    writer.WriteStartDocument();
-                    writer.WriteStartElement("Level");
-                    foreach (ToolObject tObj in higharchy)
-                    {
-                        writer.WriteStartElement("Object");
-                        writer.WriteElementString("Name", tObj.Name);
-                        if (tObj.MeshFile != null)
-                            writer.WriteElementString("Mesh", tObj.MeshFile.Split('\\').Last());
-                        if (tObj.TextureFile != null)
-                            writer.WriteElementString("Texture", tObj.TextureFile == null ? "" : tObj.TextureFile.Split('\\').Last());
-                        writer.WriteElementString("Position", tObj.Position.X + "," + tObj.Position.Y + "," + tObj.Position.Z);
-                        writer.WriteElementString("Rotation", tObj.Rotation.X + "," + tObj.Rotation.Y + "," + tObj.Rotation.Z);
-                        writer.WriteElementString("Scale", tObj.Scale.X + "," + tObj.Scale.Y + "," + tObj.Scale.Z);
-                        writer.WriteStartElement("Components");
-                        foreach (string str in tObj.Components)
-                        {
-                            switch (str)
-                            {
-                                case "Box Snap":
-                                    writer.WriteElementString("BoxSnapToController", "Enabled");
-                                    break;
-                                case "Button Press":
-                                    writer.WriteElementString("ButtonPress", "Enabled");
-                                    break;
-                                case "AABB to AABB":
-                                    writer.WriteElementString("AABBtoAABB", "Enabled");
-                                    break;
-                                case "AABB to Sphere":
-                                    writer.WriteElementString("AABBtoSphere", "Enabled");
-                                    break;
-                                case "Elastic Plane":
-                                    writer.WriteElementString("ElasticPlane", "Enabled");
-                                    break;
-                                case "Sphere to Sphere":
-                                    writer.WriteElementString("SpheretoSphere", "Enabled");
-                                    break;
-                                case "Enter Level":
-                                    writer.WriteElementString("EnterLevel", "Enabled");
-                                    break;
-                                case "Gesture":
-                                    writer.WriteElementString("Gesture", "Enabled");
-                                    break;
-                                case "Headset Follow":
-                                    writer.WriteElementString("HeadsetFollow", "Enabled");
-                                    break;
-                                case "Main Menu":
-                                    writer.WriteElementString("MainMenu", "Enabled");
-                                    break;
-                                case "Teleport":
-                                    writer.WriteElementString("Teleport", "Enabled");
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        if (tObj.Collider != null)
-                        {
-                            writer.WriteStartElement("Collider");
-                            writer.WriteElementString("Type", tObj.ColliderType);
-                            writer.WriteElementString("Trigger", tObj.Collider.IsSolid ? "False" : "True");
-                            writer.WriteElementString("Position", tObj.Collider.Position.X + "," + tObj.Collider.Position.Y + "," + tObj.Collider.Position.Z);
-                            if (tObj.ColliderType == "Sphere")
-                                writer.WriteElementString("Radius", tObj.Collider.Scale.X.ToString());
-                            else
-                            {
-                                writer.WriteElementString("Rotation", tObj.Collider.Rotation.X + "," + tObj.Collider.Rotation.Y + "," + tObj.Collider.Rotation.Z);
-                                writer.WriteElementString("Scale", tObj.Collider.Scale.X + "," + tObj.Collider.Scale.Y + "," + tObj.Collider.Scale.Z);
-                            }
-                            writer.WriteElementString("Move", tObj.Collider.CanMove ? "True" : "False");
-                            if (tObj.ColliderType == "Sphere" || tObj.ColliderType == "OBB")
-                            {
-                                writer.WriteElementString("Gravity", tObj.Collider.Gravity.X + "," + tObj.Collider.Gravity.Y + "," + tObj.Collider.Gravity.Z);
-                                writer.WriteElementString("Mass", tObj.Collider.Mass.ToString());
-                                writer.WriteElementString("Elasticity", tObj.Collider.Elasticity.ToString());
-                                writer.WriteElementString("StaticFriction", tObj.Collider.StaticF.ToString());
-                                writer.WriteElementString("KeneticFriction", tObj.Collider.KeneticF.ToString());
-                                writer.WriteElementString("Drag", tObj.Collider.Drag.ToString());
-                            }
-                            else if (tObj.ColliderType == "Plane")
-                            {
-                                writer.WriteElementString("Normal", tObj.Collider.Gravity.X + "," + tObj.Collider.Gravity.Y + "," + tObj.Collider.Gravity.Z);
-                                writer.WriteElementString("Mass", tObj.Collider.Mass.ToString());
-                                writer.WriteElementString("Elasticity", tObj.Collider.Elasticity.ToString());
-                                writer.WriteElementString("StaticFriction", tObj.Collider.StaticF.ToString());
-                                writer.WriteElementString("KeneticFriction", tObj.Collider.KeneticF.ToString());
-                                writer.WriteElementString("Drag", tObj.Collider.Drag.ToString());
-                            }
-                            else if (tObj.ColliderType == "Button")
-                            {
-                                writer.WriteElementString("PushNormal", tObj.Collider.Gravity.X + "," + tObj.Collider.Gravity.Y + "," + tObj.Collider.Gravity.Z);
-                                writer.WriteElementString("Mass", tObj.Collider.Mass.ToString());
-                                writer.WriteElementString("NormalForce", tObj.Collider.StaticF.ToString());
-                            }
-                            writer.WriteEndElement();
-                        }
-                        writer.WriteEndElement();
-                        writer.WriteEndElement();
-                    }
-                    writer.WriteEndElement();
-                    writer.WriteEndDocument();
-                }
+                currentFile = saveFile.FileName;
+                saveLevel(saveFile.FileName);
             }
         }
 

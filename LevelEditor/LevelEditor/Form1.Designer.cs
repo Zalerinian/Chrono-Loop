@@ -191,7 +191,7 @@ namespace LevelEditor
             this.newToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.newToolStripMenuItem.Text = "&New";
             // 
             // openToolStripMenuItem
@@ -200,14 +200,14 @@ namespace LevelEditor
             this.openToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.openToolStripMenuItem.Text = "&Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // toolStripSeparator
             // 
             this.toolStripSeparator.Name = "toolStripSeparator";
-            this.toolStripSeparator.Size = new System.Drawing.Size(143, 6);
+            this.toolStripSeparator.Size = new System.Drawing.Size(149, 6);
             // 
             // saveToolStripMenuItem
             // 
@@ -215,20 +215,21 @@ namespace LevelEditor
             this.saveToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveToolStripMenuItem.Text = "&Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveAsToolStripMenuItem.Text = "Save &As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(143, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
             // printToolStripMenuItem
             // 
@@ -236,7 +237,7 @@ namespace LevelEditor
             this.printToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.printToolStripMenuItem.Name = "printToolStripMenuItem";
             this.printToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-            this.printToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.printToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.printToolStripMenuItem.Text = "&Print";
             // 
             // printPreviewToolStripMenuItem
@@ -244,18 +245,18 @@ namespace LevelEditor
             this.printPreviewToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("printPreviewToolStripMenuItem.Image")));
             this.printPreviewToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.printPreviewToolStripMenuItem.Name = "printPreviewToolStripMenuItem";
-            this.printPreviewToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.printPreviewToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.printPreviewToolStripMenuItem.Text = "Print Pre&view";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(143, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             // 
             // editToolStripMenuItem
@@ -469,7 +470,7 @@ namespace LevelEditor
             this.splitContainer2.Panel2.Controls.Add(this.groupBox5);
             this.splitContainer2.Panel2.Controls.Add(this.groupBox4);
             this.splitContainer2.Size = new System.Drawing.Size(473, 417);
-            this.splitContainer2.SplitterDistance = 322;
+            this.splitContainer2.SplitterDistance = 325;
             this.splitContainer2.SplitterWidth = 1;
             this.splitContainer2.TabIndex = 3;
             // 
@@ -480,7 +481,7 @@ namespace LevelEditor
             this.graphicsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.graphicsPanel1.Location = new System.Drawing.Point(0, 0);
             this.graphicsPanel1.Name = "graphicsPanel1";
-            this.graphicsPanel1.Size = new System.Drawing.Size(322, 417);
+            this.graphicsPanel1.Size = new System.Drawing.Size(325, 417);
             this.graphicsPanel1.TabIndex = 2;
             this.graphicsPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.Paint);
             this.graphicsPanel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseClick);
@@ -505,7 +506,7 @@ namespace LevelEditor
             // 
             this.RightToggle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.RightToggle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.RightToggle.Location = new System.Drawing.Point(296, 3);
+            this.RightToggle.Location = new System.Drawing.Point(299, 3);
             this.RightToggle.MinimumSize = new System.Drawing.Size(1, 1);
             this.RightToggle.Name = "RightToggle";
             this.RightToggle.Size = new System.Drawing.Size(23, 23);
@@ -520,7 +521,7 @@ namespace LevelEditor
             this.MoveCheck.Dock = System.Windows.Forms.DockStyle.Top;
             this.MoveCheck.Location = new System.Drawing.Point(0, 617);
             this.MoveCheck.Name = "MoveCheck";
-            this.MoveCheck.Size = new System.Drawing.Size(133, 17);
+            this.MoveCheck.Size = new System.Drawing.Size(130, 17);
             this.MoveCheck.TabIndex = 13;
             this.MoveCheck.Text = "Can Move";
             this.MoveCheck.UseVisualStyleBackColor = true;
@@ -533,7 +534,7 @@ namespace LevelEditor
             this.Trigger.Dock = System.Windows.Forms.DockStyle.Top;
             this.Trigger.Location = new System.Drawing.Point(0, 600);
             this.Trigger.Name = "Trigger";
-            this.Trigger.Size = new System.Drawing.Size(133, 17);
+            this.Trigger.Size = new System.Drawing.Size(130, 17);
             this.Trigger.TabIndex = 12;
             this.Trigger.Text = "Trigger";
             this.Trigger.UseVisualStyleBackColor = true;
@@ -556,7 +557,7 @@ namespace LevelEditor
             this.Physics.Dock = System.Windows.Forms.DockStyle.Top;
             this.Physics.Location = new System.Drawing.Point(0, 441);
             this.Physics.Name = "Physics";
-            this.Physics.Size = new System.Drawing.Size(133, 159);
+            this.Physics.Size = new System.Drawing.Size(130, 159);
             this.Physics.TabIndex = 1;
             this.Physics.TabStop = false;
             this.Physics.Text = "Pysics";
@@ -749,7 +750,7 @@ namespace LevelEditor
             this.ExtraVector.Dock = System.Windows.Forms.DockStyle.Top;
             this.ExtraVector.Location = new System.Drawing.Point(0, 367);
             this.ExtraVector.Name = "ExtraVector";
-            this.ExtraVector.Size = new System.Drawing.Size(133, 74);
+            this.ExtraVector.Size = new System.Drawing.Size(130, 74);
             this.ExtraVector.TabIndex = 20;
             this.ExtraVector.TabStop = false;
             this.ExtraVector.Text = "ExtraVector";
@@ -870,7 +871,7 @@ namespace LevelEditor
             this.groupBox2.Location = new System.Drawing.Point(0, 295);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBox2.Size = new System.Drawing.Size(133, 72);
+            this.groupBox2.Size = new System.Drawing.Size(130, 72);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Rotation";
@@ -993,7 +994,7 @@ namespace LevelEditor
             this.groupBox1.Location = new System.Drawing.Point(0, 223);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBox1.Size = new System.Drawing.Size(133, 72);
+            this.groupBox1.Size = new System.Drawing.Size(130, 72);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Scale";
@@ -1109,7 +1110,7 @@ namespace LevelEditor
             this.groupBox6.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox6.Location = new System.Drawing.Point(0, 183);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(133, 40);
+            this.groupBox6.Size = new System.Drawing.Size(130, 40);
             this.groupBox6.TabIndex = 11;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Radius";
@@ -1137,7 +1138,7 @@ namespace LevelEditor
             0,
             -2147483648});
             this.Radius.Name = "Radius";
-            this.Radius.Size = new System.Drawing.Size(127, 20);
+            this.Radius.Size = new System.Drawing.Size(124, 20);
             this.Radius.TabIndex = 8;
             this.Radius.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
             // 
@@ -1154,7 +1155,7 @@ namespace LevelEditor
             this.groupBox3.Location = new System.Drawing.Point(0, 111);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBox3.Size = new System.Drawing.Size(133, 72);
+            this.groupBox3.Size = new System.Drawing.Size(130, 72);
             this.groupBox3.TabIndex = 5;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Position";
@@ -1270,7 +1271,7 @@ namespace LevelEditor
             this.groupBox5.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox5.Location = new System.Drawing.Point(0, 39);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(133, 72);
+            this.groupBox5.Size = new System.Drawing.Size(130, 72);
             this.groupBox5.TabIndex = 10;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Components";
@@ -1300,7 +1301,7 @@ namespace LevelEditor
             this.componetsCheck.Location = new System.Drawing.Point(3, 16);
             this.componetsCheck.Margin = new System.Windows.Forms.Padding(0);
             this.componetsCheck.Name = "componetsCheck";
-            this.componetsCheck.Size = new System.Drawing.Size(127, 53);
+            this.componetsCheck.Size = new System.Drawing.Size(124, 53);
             this.componetsCheck.TabIndex = 1;
             this.componetsCheck.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.componetsCheck_ItemCheck);
             // 
@@ -1311,7 +1312,7 @@ namespace LevelEditor
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox4.Location = new System.Drawing.Point(0, 0);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(133, 39);
+            this.groupBox4.Size = new System.Drawing.Size(130, 39);
             this.groupBox4.TabIndex = 0;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Name";
@@ -1322,7 +1323,7 @@ namespace LevelEditor
             this.nameBox.Location = new System.Drawing.Point(3, 16);
             this.nameBox.Margin = new System.Windows.Forms.Padding(0);
             this.nameBox.Name = "nameBox";
-            this.nameBox.Size = new System.Drawing.Size(127, 20);
+            this.nameBox.Size = new System.Drawing.Size(124, 20);
             this.nameBox.TabIndex = 0;
             this.nameBox.TextChanged += new System.EventHandler(this.transform_ValueChanged);
             this.nameBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.nameBox_KeyDown);
