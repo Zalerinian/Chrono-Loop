@@ -136,8 +136,8 @@ namespace LevelEditor
 
         public Changes()
         {
-            mSelected = MCreatedObject = MDestroyedObject = null;
-            mSelectedCollider = MCreatedCollider = MDestroyedCollider = null;
+            mSelected = mCreatedObject = mDestroyedObject = null;
+            mSelectedCollider = mCreatedCollider = mDestroyedCollider = null;
             mPosition = mRotation = mScale = mExtra = Vector3.Empty;
             mMove = mTrigger = false;
             mVisible = true;
