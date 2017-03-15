@@ -1,0 +1,110 @@
+﻿<Level>
+  <Object>
+    <Name>Button</Name>
+    <Mesh>Button.obj</Mesh>
+    <Texture>red.png</Texture>
+    <Position>-3.037201,1.1,8.1</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Walls</Name>
+    <Mesh>Walls.obj</Mesh>
+    <Texture>wallTextureM.png</Texture>
+    <Position>0,0,0</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Buttonstand</Name>
+    <Mesh>Buttonstand.obj</Mesh>
+    <Texture>white.png</Texture>
+    <Position>-3.003416,0,8.112746</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,0.85,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Door1</Name>
+    <Mesh>Door1.obj</Mesh>
+    <Texture>enrgyField.png</Texture>
+    <Position>2.430154,0,0.3991617</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>DoorFrame1</Name>
+    <Mesh>DoorFrame1.obj</Mesh>
+    <Texture>grey.png</Texture>
+    <Position>2.417033,0,0.3837723</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>DoorEmitter1</Name>
+    <Mesh>DoorEmiters1.obj</Mesh>
+    <Texture>grey.png</Texture>
+    <Position>2.389792,0,0.2014169</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>DoorEmitter2</Name>
+    <Mesh>DoorEmiters2.obj</Mesh>
+    <Texture>grey.png</Texture>
+    <Position>-11.85776,0,-4.255154</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>DoorFrame2</Name>
+    <Mesh>DoorFrame2.obj</Mesh>
+    <Texture>grey.png</Texture>
+    <Position>-12.0548,0,-4.253664</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Door2</Name>
+    <Mesh>Door2.obj</Mesh>
+    <Texture>enrgyField.png</Texture>
+    <Position>-12.06773,0,-4.282874</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Servers</Name>
+    <Mesh>Servers.obj</Mesh>
+    <Texture>grey.png</Texture>
+    <Position>-2.678491,0,5.218486</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Floor</Name>
+    <Mesh>Floor.obj</Mesh>
+    <Texture>floor.png</Texture>
+    <Position>0,0,0</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Ceiling</Name>
+    <Mesh>Ceiling.obj</Mesh>
+    <Texture>grey.png</Texture>
+    <Position>0,2.9,0</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+</Level>

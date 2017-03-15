@@ -1,6 +1,7 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
 g default
+o Sphere
 v 0.000000 0.000000 0.000000
 v 0.723607 0.552780 0.525725
 v -0.276388 0.552780 0.850649
