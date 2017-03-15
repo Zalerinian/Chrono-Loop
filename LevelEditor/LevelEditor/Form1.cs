@@ -1246,10 +1246,11 @@ namespace LevelEditor
 
         private void nameBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.Handled = e.SuppressKeyPress = true;
-            }
+            if (!canMove)
+                if (e.KeyCode == Keys.Enter)
+                    e.Handled = e.SuppressKeyPress = true;
+            else
+                    e.Handled = e.SuppressKeyPress = true;
         }
 
         private void transform_ValueChanged(object sender, EventArgs e)
