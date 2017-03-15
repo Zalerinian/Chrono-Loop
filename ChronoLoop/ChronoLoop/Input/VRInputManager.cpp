@@ -150,6 +150,9 @@ namespace Epoch {
 		while (temp) {
 			//Have reached the point we want to stop
 			if (temp->mData.mLastFrame < _frame) {
+				if ((temp->mData.mControllerId == _id1 || temp->mData.mControllerId == _id2) && temp->mData.mButtonState == -1)
+					temp->mData.mButtonState = 1;
+
 				break;
 			}
 			//Delete old controller input

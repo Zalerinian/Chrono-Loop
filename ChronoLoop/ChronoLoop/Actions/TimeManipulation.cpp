@@ -120,14 +120,44 @@ namespace Epoch
 				mPauseTime = true;
 			}
 		}
-		
-		if (GetAsyncKeyState(VK_END) & 1 || VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::k_EButton_SteamVR_Touchpad)) 
-		{
-			HotfixButtonDown++;
-			if(HotfixButtonDown > 169)
+		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::k_EButton_SteamVR_Touchpad)) {
+			bool right = false;
+			bool left = false;
+			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
+
+			if (cLevel->GetRightTimeManinpulator() != nullptr || cLevel->GetLeftTimeManinpulator() != nullptr) {
+				right = cLevel->GetRightTimeManinpulator()->isTimePaused();
+				left = cLevel->GetLeftTimeManinpulator()->isTimePaused();
+			}
+
+			if (left || right) {
+
+				TimeManager::Instance()->RewindTimeline(
+					TimeManager::Instance()->GetTempCurSnap(),
+					cLevel->GetHeadset()->GetUniqueID(),
+					cLevel->GetRightController()->GetUniqueID(),
+					cLevel->GetLeftController()->GetUniqueID());
+
+				VRInputManager::GetInstance().RewindInputTimeline(
+					TimeManager::Instance()->GetTempCurSnap(),
+					cLevel->GetRightController()->GetUniqueID(),
+					cLevel->GetLeftController()->GetUniqueID());
+
+				cLevel->GetLeftTimeManinpulator()->makeTimePaused(false);
+				cLevel->GetRightTimeManinpulator()->makeTimePaused(false);
+			}
+
+			if(GetAsyncKeyState(VK_END) & 1)
+			{
+				HotfixButtonDown++;
+				if (HotfixButtonDown > 169) {
+					HotfixButtonDown = 0;
+					TimeManager::Instance()->HotfixResetTimeline();
+				}
+			}
+			else
 			{
 				HotfixButtonDown = 0;
-				TimeManager::Instance()->HotfixResetTimeline();
 			}
 		}
 		else
