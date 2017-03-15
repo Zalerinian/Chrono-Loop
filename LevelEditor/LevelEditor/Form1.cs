@@ -1320,6 +1320,19 @@ namespace LevelEditor
         private void timer1_Tick(object sender, EventArgs e)
         {
             graphicsPanel1.Invalidate();
+            fpsTimer.Stop();
+            advMillisecond.Add(fpsTimer.ElapsedMilliseconds);
+            if (advMillisecond.Count >= 5) {
+                long adv = 0;
+                foreach (long l in advMillisecond)
+                    adv += l;
+                adv /= advMillisecond.Count;
+                //FpsCount.Text = "FPS: " + (1000 / adv);
+                Debug.Print("FPS: " + (1000 / adv));
+                advMillisecond.Clear();
+            }
+            fpsTimer.Reset();
+            fpsTimer.Start();
         }
     }
 }
