@@ -393,6 +393,10 @@
     <ClInclude Include="Common\Settings.h">
       <Filter>Common\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="NavMesh.h" />
+    <ClInclude Include="PathPlanning.h" />
+    <ClInclude Include="tinyxml\tinystr.h" />
+    <ClInclude Include="tinyxml\tinyxml.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -643,6 +647,15 @@
     </ClCompile>
     <ClCompile Include="Common\Settings.cpp">
       <Filter>Common\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NavMesh.cpp" />
+    <ClCompile Include="PathPlanning.cpp" />
+    <ClCompile Include="tinyxml\tinystr.cpp" />
+    <ClCompile Include="tinyxml\tinyxml.cpp" />
+    <ClCompile Include="tinyxml\tinyxmlerror.cpp" />
+    <ClCompile Include="tinyxml\tinyxmlparser.cpp" />
+    <ClCompile Include="Rendering\RenderList.cpp">
+      <Filter>Rendering\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

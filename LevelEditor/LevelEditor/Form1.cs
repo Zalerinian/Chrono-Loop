@@ -31,8 +31,9 @@ namespace LevelEditor
         private Vector3 cameraPos = new Vector3(0, 0, 0), prevHit = new Vector3(0, 0, 0), curHit = new Vector3(0, 0, 0);
         private Vector2 prevMouse, curMouse;
         private int selectedIndex = 0;
-        private bool canMove = false, grab = false, snap = false;
-        private string selectedName = string.Empty, colliderType = string.Empty;
+        private bool canMove = false, grab = false, snap = false, loaded = true;
+        private string selectedName = string.Empty, colliderType = string.Empty, currentFile = string.Empty;
+        private Texture defaultTexture;
         Matrix gizmoScale = Matrix.Identity;
         Matrix rotate = Matrix.Identity;
 
@@ -42,9 +43,10 @@ namespace LevelEditor
             InitializeDevice();
             InitializeKeyboard();
             InitializeCamera();
+            defaultTexture = TextureLoader.FromFile(device, "Assets\\default.dds");
             objects.Add(new ToolObject(ref device));
             objects[0].Name = "Empty";
-            objects.Add(new ToolObject("Assets\\Cube.obj", "Assets\\skybox.dds", ref device));
+            objects.Add(new ToolObject("Assets\\Cube.obj", ref device));
             objects.Add(new ToolObject("Assets\\Sphere.obj", ref device));
             for (int i = 0; i < objects.Count; i++)
             {
@@ -146,34 +148,40 @@ namespace LevelEditor
             device.Indices = debugObjs[0].IndexBuffer;
             device.Transform.World = debugObjs[0].Transform;
             device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, debugObjs[0].Indices.Length, 0, debugObjs[0].Indices.Length / 3);
-            //Scene
-                    device.RenderState.AlphaBlendEnable = false;
-            foreach (ToolObject tObj in higharchy)
+            if (loaded)
             {
-                if (tObj.Vertices != null)
+                //Scene
+                device.RenderState.AlphaBlendEnable = false;
+                foreach (ToolObject tObj in higharchy)
                 {
-                    device.VertexFormat = CustomVertex.PositionNormalTextured.Format;
-                    device.RenderState.CullMode = Cull.Clockwise;
-                    device.RenderState.FillMode = tObj.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
-                    device.SetStreamSource(0, tObj.VertexBuffer, 0);
-                    device.Indices = tObj.IndexBuffer;
-                    device.SetTexture(0, tObj.Texture);
-                    device.Transform.World = tObj.Transform;
-                    device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Indices.Length, 0, tObj.Indices.Length / 3);
-                }
-                if (tObj.Collider != null)
-                {
-                    device.VertexFormat = CustomVertex.PositionNormalColored.Format;
-                    device.RenderState.CullMode = Cull.None;
-                    device.RenderState.FillMode = tObj.Collider.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
-                    device.SetStreamSource(0, tObj.Collider.VertexBuffer, 0);
-                    device.Indices = tObj.Collider.IndexBuffer;
-                    device.SetTexture(0, null);
-                    if (tObj.ColliderType == "Sphere")
-                        device.Transform.World = Matrix.Translation(tObj.Position) * tObj.Collider.Transform;
-                    else
-                        device.Transform.World = tObj.Collider.Transform * tObj.Transform;
-                    device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Collider.Indices.Length, 0, tObj.Collider.Indices.Length / 3);
+                    if (tObj.Vertices != null)
+                    {
+                        device.VertexFormat = CustomVertex.PositionNormalTextured.Format;
+                        device.RenderState.CullMode = Cull.Clockwise;
+                        device.RenderState.FillMode = tObj.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
+                        device.SetStreamSource(0, tObj.VertexBuffer, 0);
+                        device.Indices = tObj.IndexBuffer;
+                        if (tObj.Texture == null)
+                            device.SetTexture(0, defaultTexture);
+                        else
+                            device.SetTexture(0, tObj.Texture);
+                        device.Transform.World = tObj.Transform;
+                        device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Indices.Length, 0, tObj.Indices.Length / 3);
+                    }
+                    if (tObj.Collider != null && tObj.Collider.Visible == true)
+                    {
+                        device.VertexFormat = CustomVertex.PositionNormalColored.Format;
+                        device.RenderState.CullMode = Cull.None;
+                        device.RenderState.FillMode = tObj.Collider.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
+                        device.SetStreamSource(0, tObj.Collider.VertexBuffer, 0);
+                        device.Indices = tObj.Collider.IndexBuffer;
+                        device.SetTexture(0, null);
+                        if (tObj.ColliderType == "Sphere")
+                            device.Transform.World = Matrix.Translation(tObj.Position) * tObj.Collider.Transform;
+                        else
+                            device.Transform.World = tObj.Collider.Transform * tObj.Transform;
+                        device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Collider.Indices.Length, 0, tObj.Collider.Indices.Length / 3);
+                    }
                 }
             }
             //Axis Gizmo
@@ -185,7 +193,7 @@ namespace LevelEditor
                 device.SetTexture(0, null);
                 device.RenderState.AlphaBlendEnable = true;
                 float scale = (cameraPos - selectedObject.Position).Length();
-                gizmoScale = Matrix.Scaling(Vector3.Maximize(new Vector3(scale, scale, scale) * 0.05f, new Vector3(1,1,1)));
+                gizmoScale = Matrix.Scaling(Vector3.Maximize(new Vector3(scale, scale, scale) * 0.05f, new Vector3(0.05f, 0.05f, 0.05f)));
                 foreach (ToolObjectColor tObj2 in debugObjs[1].Children)
                 {
                     device.RenderState.FillMode = tObj2.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
@@ -319,65 +327,52 @@ namespace LevelEditor
                         near = new Vector3(curMouse.X, curMouse.Y, 0);
                         far = new Vector3(curMouse.X, curMouse.Y, 1);
                         Vector3 pos = selectedObject.Position;
+
+
+                        Matrix ViewMatrix = device.Transform.View;
+                        ViewMatrix.Invert();
+                        Vector2 mouseDirection = curMouse - prevMouse;
+                        Vector4 mouse4 = new Vector4(mouseDirection.X, mouseDirection.Y, 0, 0);
+                        mouse4.Transform(ViewMatrix);
+                        mouse4.Normalize();
+
+                        Vector3 dir3 = new Vector3(mouse4.X, mouse4.Y, mouse4.Z);
+                        float Magnitude = mouseDirection.Length() * 0.01f * gizmoScale.M11;
+                        dir3.Normalize();
+                        mouseDirection.Normalize();
+                        float dotProduct = 0;
                         switch (selectedName)
                         {
                             case "TranslateX":
-                                prevHit = curHit;
-                                curHit = RaycastPlane(near, far, selectedObject.Position, new Vector3(0, 1, 0));
-                                dh = (prevHit - curHit) * 0.75f;
-                                if (snap)
-                                {
-                                    dh = (prevHit - curHit);
-                                    if (Math.Abs(Math.Round(dh.X, 1)) * 2 > 1)
-                                    {
-                                        selectedObject.SetPosition(new Vector3((float)Math.Floor(pos.X + 0.1f) + (-dh.X < 0 ? -1 : 1), pos.Y, pos.Z));
-                                        prevHit = curHit;
-                                    }
-                                }
-                                else
-                                {
-                                    dh = (prevHit - curHit) * 0.75f;
-                                    selectedObject.Translate(new Vector3(-dh.X, 0, 0));
-                                    prevHit = curHit;
+                                Vector4 left4 = new Vector4(1, 0, 0, 0);
+                                left4.Transform(ViewMatrix);
+
+                                Vector3 left = new Vector3(left4.X, left4.Y, left4.Z);
+                                dotProduct = Vector3.Dot(left, dir3);
+                                if (Math.Abs(dotProduct) >= 0.9) {
+                                    // Going in the same direction, mostly.
+                                    selectedObject.Translate(new Vector3(Magnitude * Math.Sign(mouse4.X), 0, 0));
                                 }
                                 break;
                             case "TranslateY":
-                                prevHit = curHit;
-                                curHit = RaycastPlane(near, far, selectedObject.Position, new Vector3(1, 0, 0));
-                                dh = (prevHit - curHit) * 0.75f;
-                                if (snap)
-                                {
-                                    dh = (prevHit - curHit);
-                                    if (Math.Abs(Math.Round(dh.Y, 1)) * 2 > 1)
-                                    {
-                                        selectedObject.SetPosition(new Vector3(pos.X, (float)Math.Floor(pos.Y + 0.1f) + (-dh.Y < 0 ? -1 : 1), pos.Z));
-                                        prevHit = curHit;
-                                    }
+                                Vector4 up4 = new Vector4(0, 1, 0, 0);
+                                up4.Transform(ViewMatrix);
+
+                                Vector3 up = new Vector3(up4.X, up4.Y, up4.Z);
+                                dotProduct = Vector3.Dot(up, dir3);
+                                if (Math.Abs(dotProduct) >= 0.9f) {
+                                    selectedObject.Translate(new Vector3(0, Magnitude * -Math.Sign(mouse4.Y), 0));
                                 }
-                                else
-                                {
-                                    dh = (prevHit - curHit) * 0.75f;
-                                    selectedObject.Translate(new Vector3(0, -dh.Y, 0));
-                                    prevHit = curHit;
-                                }
+                           
                                 break;
                             case "TranslateZ":
-                                curHit = RaycastPlane(near, far, selectedObject.Position, new Vector3(0, 1, 0));
-                                dh = (prevHit - curHit) * 0.75f;
-                                if (snap)
-                                {
-                                    dh = (prevHit - curHit);
-                                    if (Math.Abs(Math.Round(dh.Z, 1)) * 2 > 1)
-                                    {
-                                        selectedObject.SetPosition(new Vector3(pos.X, pos.Y, (float)Math.Floor(pos.Z + 0.1f) + (-dh.Z < 0 ? -1 : 1)));
-                                        prevHit = curHit;
-                                    }
-                                }
-                                else
-                                {
-                                    dh = (prevHit - curHit) * 0.75f;
-                                    selectedObject.Translate(new Vector3(0, 0, -dh.Z));
-                                    prevHit = curHit;
+                                Vector4 forward4 = new Vector4(1, 0, 0, 0);
+                                forward4.Transform(ViewMatrix);
+
+                                Vector3 forward = new Vector3(forward4.X, forward4.Y, forward4.Z);
+                                dotProduct = Vector3.Dot(forward, dir3);
+                                if (Math.Abs(dotProduct) >= 0.9f) {
+                                    selectedObject.Translate(new Vector3(0, 0, Magnitude * Math.Sign(mouse4.Z)));
                                 }
                                 break;
                             case "TranslateXZ":
@@ -428,6 +423,7 @@ namespace LevelEditor
                                 break;
                         }
                     }
+                    UpdateSelectedData();
                     break;
                 case MouseButtons.None:
                     break;
@@ -454,27 +450,61 @@ namespace LevelEditor
         }
         private void ReadKeyboard()
         {
+            KeyboardState keys = keyb.GetCurrentKeyboardState();
             if (canMove)
             {
                 Matrix pos = Matrix.Translation(cameraPos);
                 Matrix rotate = Matrix.RotationYawPitchRoll(angleY, angleX, 0);
                 Vector3 look = cameraPos + GetVector3(Vector3.Transform(new Vector3(0, 0, 1), rotate));
                 device.Transform.View = Matrix.LookAtRH(cameraPos, look, new Vector3(0, 1, 0));
-                KeyboardState keys = keyb.GetCurrentKeyboardState();
-                if (keys[Key.W])
-                    cameraPos += GetVector3(Vector3.Transform(new Vector3(0, 0, 0.5f), rotate));
-                if (keys[Key.S])
-                    cameraPos -= GetVector3(Vector3.Transform(new Vector3(0, 0, 0.5f), rotate));
-                if (keys[Key.A])
-                    cameraPos += GetVector3(Vector3.Transform(new Vector3(0.5f, 0, 0), rotate));
-                if (keys[Key.D])
-                    cameraPos -= GetVector3(Vector3.Transform(new Vector3(0.5f, 0, 0), rotate));
+
+                if (keys[Key.W]) {
+                    Vector3 movement = new Vector3(0, 0, 0.5f);
+                    if(keys[Key.LeftControl]) {
+                        movement.Multiply(0.2f);
+                    }
+                    if(keys[Key.LeftAlt]) {
+                        movement.Multiply(5);
+                    }
+                    cameraPos += GetVector3(Vector3.Transform(movement, rotate));
+                }
+                if (keys[Key.S]) {
+                    Vector3 movement = new Vector3(0, 0, 0.5f);
+                    if (keys[Key.LeftControl]) {
+                        movement.Multiply(0.2f);
+                    }
+                    if (keys[Key.LeftAlt]) {
+                        movement.Multiply(5);
+                    }
+                    cameraPos -= GetVector3(Vector3.Transform(movement, rotate));
+                }
+                if (keys[Key.A]) {
+                    Vector3 movement = new Vector3(0.5f, 0, 0);
+                    if (keys[Key.LeftControl]) {
+                        movement.Multiply(0.2f);
+                    }
+                    if (keys[Key.LeftAlt]) {
+                        movement.Multiply(5);
+                    }
+                    cameraPos += GetVector3(Vector3.Transform(movement, rotate));
+                }
+                if (keys[Key.D]) {
+                    Vector3 movement = new Vector3(0.5f, 0, 0);
+                    if (keys[Key.LeftControl]) {
+                        movement.Multiply(0.2f);
+                    }
+                    if (keys[Key.LeftAlt]) {
+                        movement.Multiply(5);
+                    }
+                    cameraPos -= GetVector3(Vector3.Transform(movement, rotate));
+                }
+
                 if (keys[Key.LeftShift])
                     cameraPos.Y -= 0.5f;
                 if (keys[Key.Space])
                     cameraPos.Y += 0.5f;
                 snap = keys[Key.LeftAlt];
-                if (selectedObject != null || selectedCollider != null)
+                if ((selectedObject != null || selectedCollider != null) && canMove)
                 {
                     Vector3 dMove = new Vector3();
                     if (keys[Key.UpArrow])
@@ -490,10 +520,15 @@ namespace LevelEditor
                     else if (selectedObject != null)
                         selectedObject.Translate(dMove);
                     if (dMove.LengthSq() > 0.01)
-                    {
                         UpdateSelectedData();
-                    }
                 }
+            }
+            if (keys[Key.Delete] && selectedObject != null)
+            {
+                Tree.Nodes[1].Nodes.RemoveAt(higharchy.IndexOf(selectedObject));
+                higharchy.Remove(selectedObject);
+                selectedObject = null;
+                UpdateSelectedData();
             }
         }
         private void Resize(object sender, EventArgs e)
@@ -520,8 +555,8 @@ namespace LevelEditor
             OpenFileDialog openFileDialog2 = new OpenFileDialog();
 
             openFileDialog1.InitialDirectory = Application.StartupPath;
-            openFileDialog1.Filter = "XML files (*.xml)|*.xml|Object files (*.obj)|*.obj";
-            openFileDialog1.FilterIndex = 2;
+            openFileDialog1.Filter = "Compatible Files (*.xml, *.obj)|*.xml;*.obj";
+            openFileDialog1.FilterIndex = 1;
             openFileDialog1.RestoreDirectory = true;
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -530,17 +565,14 @@ namespace LevelEditor
                 {
                     if (Path.GetExtension(openFileDialog1.FileName) == ".xml")
                     {
+                        loaded = false;
                         XmlReaderSettings settings = new XmlReaderSettings();
                         settings.DtdProcessing = DtdProcessing.Parse;
+                        currentFile = openFileDialog1.FileName;
                         XmlReader reader = XmlReader.Create(openFileDialog1.FileName, settings);
                         reader.MoveToContent();
                         string element = string.Empty, mesh = string.Empty, texutre = string.Empty, name = string.Empty;
                         ToolObject addition = new ToolObject(ref device);
-                        List<string> loaded = new List<string>();
-                        foreach (ToolObject tObj in objects)
-                        {
-                            loaded.Add(tObj.Name);
-                        }
                         bool collider = false;
                         while (reader.Read())
                         {
@@ -691,7 +723,42 @@ namespace LevelEditor
                                             addition.Collider.Drag = float.Parse(reader.Value);
                                             break;
                                         default:
-                                            addition.Components.Add(element);
+                                            switch (element)
+                                            {
+                                                case "BoxSnapToController":
+                                                    addition.Components.Add("Box Snap");
+                                                    break;
+                                                case "ButtonPress":
+                                                    addition.Components.Add("Button Press");
+                                                    break;
+                                                case "AABBtoAABB":
+                                                    addition.Components.Add("AABB to AABB");
+                                                    break;
+                                                case "AABBtoSphere":
+                                                    addition.Components.Add("AABB to Sphere");
+                                                    break;
+                                                case "ElasticPlane":
+                                                    addition.Components.Add("Elastic Plane");
+                                                    break;
+                                                case "SpheretoSphere":
+                                                    addition.Components.Add("Sphere to Sphere");
+                                                    break;
+                                                case "EnterLevel":
+                                                    addition.Components.Add("Enter Level");
+                                                    break;
+                                                case "Gesture":
+                                                    addition.Components.Add("Gesture");
+                                                    break;
+                                                case "HeadsetFollow":
+                                                    addition.Components.Add("Headset Follow");
+                                                    break;
+                                                case "MainMenu":
+                                                    addition.Components.Add("Main Menu");
+                                                    break;
+                                                case "Teleport":
+                                                    addition.Components.Add("Teleport");
+                                                    break;
+                                            }
                                             break;
                                     }
                                     break;
@@ -708,12 +775,6 @@ namespace LevelEditor
                                                 Tree.Nodes[1].LastNode.Nodes.Add("Collider");
                                                 addition.Collider.ObjectColor = Color.Red;
                                             }
-                                            //if (!loaded.Contains(name))
-                                            //{
-                                            //    objects.Add(new ToolObject(mesh, texutre, ref device));
-                                            //    Tree.Nodes[0].Nodes.Add(objects.Last().Name);
-                                            //    loaded.Add(name);
-                                            //}
                                             break;
                                         default:
                                             break;
@@ -723,6 +784,7 @@ namespace LevelEditor
                                     break;
                             }
                         }
+                        loaded = true;
                         HandleResetEvent(null, null);
                     }
                     else
@@ -736,12 +798,167 @@ namespace LevelEditor
                             objects.Add(new ToolObject(openFileDialog1.FileName, openFileDialog2.FileName, ref device));
                             Tree.Nodes[0].Nodes.Add(objects.Last().Name);
                         }
+                        else
+                        {
+                            objects.Add(new ToolObject(openFileDialog1.FileName, ref device));
+                            Tree.Nodes[0].Nodes.Add(objects.Last().Name);
+                        }
                     }
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
                 }
+            }
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (currentFile != string.Empty)
+            {
+                saveLevel(currentFile);
+            }
+        }
+
+        private void changeTexture_Click(object sender, EventArgs e)
+        {
+            if (selectedObject != null)
+            {
+                OpenFileDialog file = new OpenFileDialog();
+                file.InitialDirectory = Application.StartupPath;
+                file.Filter = "Texture files (*.png)|*.png";
+                file.FilterIndex = 1;
+                file.RestoreDirectory = true;
+                if (file.ShowDialog() == DialogResult.OK)
+                {
+                    selectedObject.loadTexture(file.FileName);
+                    textureFileBox.Text = selectedObject.TextureFile;
+                }
+            }
+        }
+
+        private void colorSelect_Click(object sender, EventArgs e)
+        {
+            if (selectedCollider != null)
+            {
+                ColorDialog newColor = new ColorDialog();
+                newColor.Color = selectedCollider.ObjectColor;
+                if (newColor.ShowDialog() == DialogResult.OK)
+                {
+                    selectedCollider.ObjectColor = newColor.Color;
+                    UpdateSelectedData();
+                }
+            }
+        }
+
+        private void saveLevel(string file)
+        {
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.OmitXmlDeclaration = true;
+            using (XmlWriter writer = XmlWriter.Create(file, settings))
+            {
+                writer.WriteStartDocument();
+                writer.WriteStartElement("Level");
+                foreach (ToolObject tObj in higharchy)
+                {
+                    writer.WriteStartElement("Object");
+                    writer.WriteElementString("Name", tObj.Name);
+                    if (tObj.MeshFile != null)
+                        writer.WriteElementString("Mesh", tObj.MeshFile.Split('\\').Last());
+                    if (tObj.TextureFile != null)
+                        writer.WriteElementString("Texture", tObj.TextureFile == null ? "" : tObj.TextureFile.Split('\\').Last());
+                    writer.WriteElementString("Position", tObj.Position.X + "," + tObj.Position.Y + "," + tObj.Position.Z);
+                    writer.WriteElementString("Rotation", tObj.Rotation.X + "," + tObj.Rotation.Y + "," + tObj.Rotation.Z);
+                    writer.WriteElementString("Scale", tObj.Scale.X + "," + tObj.Scale.Y + "," + tObj.Scale.Z);
+                    writer.WriteStartElement("Components");
+                    foreach (string str in tObj.Components)
+                    {
+                        switch (str)
+                        {
+                            case "Box Snap":
+                                writer.WriteElementString("BoxSnapToController", "Enabled");
+                                break;
+                            case "Button Press":
+                                writer.WriteElementString("ButtonPress", "Enabled");
+                                break;
+                            case "AABB to AABB":
+                                writer.WriteElementString("AABBtoAABB", "Enabled");
+                                break;
+                            case "AABB to Sphere":
+                                writer.WriteElementString("AABBtoSphere", "Enabled");
+                                break;
+                            case "Elastic Plane":
+                                writer.WriteElementString("ElasticPlane", "Enabled");
+                                break;
+                            case "Sphere to Sphere":
+                                writer.WriteElementString("SpheretoSphere", "Enabled");
+                                break;
+                            case "Enter Level":
+                                writer.WriteElementString("EnterLevel", "Enabled");
+                                break;
+                            case "Gesture":
+                                writer.WriteElementString("Gesture", "Enabled");
+                                break;
+                            case "Headset Follow":
+                                writer.WriteElementString("HeadsetFollow", "Enabled");
+                                break;
+                            case "Main Menu":
+                                writer.WriteElementString("MainMenu", "Enabled");
+                                break;
+                            case "Teleport":
+                                writer.WriteElementString("Teleport", "Enabled");
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    if (tObj.Collider != null)
+                    {
+                        writer.WriteStartElement("Collider");
+                        writer.WriteElementString("Type", tObj.ColliderType);
+                        writer.WriteElementString("Trigger", tObj.Collider.IsSolid ? "False" : "True");
+                        writer.WriteElementString("Position", tObj.Collider.Position.X + "," + tObj.Collider.Position.Y + "," + tObj.Collider.Position.Z);
+                        if (tObj.ColliderType == "Sphere")
+                            writer.WriteElementString("Radius", tObj.Collider.Scale.X.ToString());
+                        else
+                        {
+                            writer.WriteElementString("Rotation", tObj.Collider.Rotation.X + "," + tObj.Collider.Rotation.Y + "," + tObj.Collider.Rotation.Z);
+                            writer.WriteElementString("Scale", tObj.Collider.Scale.X + "," + tObj.Collider.Scale.Y + "," + tObj.Collider.Scale.Z);
+                        }
+                        writer.WriteElementString("Move", tObj.Collider.CanMove ? "True" : "False");
+                        if (tObj.ColliderType == "Sphere" || tObj.ColliderType == "OBB")
+                        {
+                            writer.WriteElementString("Gravity", tObj.Collider.Gravity.X + "," + tObj.Collider.Gravity.Y + "," + tObj.Collider.Gravity.Z);
+                            writer.WriteElementString("Mass", tObj.Collider.Mass.ToString());
+                            writer.WriteElementString("Elasticity", tObj.Collider.Elasticity.ToString());
+                            writer.WriteElementString("StaticFriction", tObj.Collider.StaticF.ToString());
+                            writer.WriteElementString("KeneticFriction", tObj.Collider.KeneticF.ToString());
+                            writer.WriteElementString("Drag", tObj.Collider.Drag.ToString());
+                        }
+                        else if (tObj.ColliderType == "Plane")
+                        {
+                            writer.WriteElementString("Normal", tObj.Collider.Gravity.X + "," + tObj.Collider.Gravity.Y + "," + tObj.Collider.Gravity.Z);
+                            writer.WriteElementString("Mass", tObj.Collider.Mass.ToString());
+                            writer.WriteElementString("Elasticity", tObj.Collider.Elasticity.ToString());
+                            writer.WriteElementString("StaticFriction", tObj.Collider.StaticF.ToString());
+                            writer.WriteElementString("KeneticFriction", tObj.Collider.KeneticF.ToString());
+                            writer.WriteElementString("Drag", tObj.Collider.Drag.ToString());
+                        }
+                        else if (tObj.ColliderType == "Button")
+                        {
+                            writer.WriteElementString("PushNormal", tObj.Collider.Gravity.X + "," + tObj.Collider.Gravity.Y + "," + tObj.Collider.Gravity.Z);
+                            writer.WriteElementString("Mass", tObj.Collider.Mass.ToString());
+                            writer.WriteElementString("NormalForce", tObj.Collider.StaticF.ToString());
+                        }
+                        writer.WriteEndElement();
+                    }
+                    writer.WriteEndElement();
+                    writer.WriteEndElement();
+                }
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+                writer.Close();
             }
         }
 
@@ -754,113 +971,8 @@ namespace LevelEditor
             saveFile.RestoreDirectory = true;
             if (saveFile.ShowDialog() == DialogResult.OK)
             {
-                XmlWriterSettings settings = new XmlWriterSettings();
-                settings.Indent = true;
-                settings.OmitXmlDeclaration = true;
-                using (XmlWriter writer = XmlWriter.Create(saveFile.FileName, settings))
-                {
-                    writer.WriteStartDocument();
-                    writer.WriteStartElement("Level");
-                    foreach (ToolObject tObj in higharchy)
-                    {
-                        writer.WriteStartElement("Object");
-                        writer.WriteElementString("Name", tObj.Name);
-                        if (tObj.MeshFile != null)
-                            writer.WriteElementString("Mesh", tObj.MeshFile.Split('\\').Last());
-                        if (tObj.TextureFile != null)
-                            writer.WriteElementString("Texture", tObj.TextureFile == null ? "" : tObj.TextureFile.Split('\\').Last());
-                        writer.WriteElementString("Position", tObj.Position.X + "," + tObj.Position.Y + "," + tObj.Position.Z);
-                        writer.WriteElementString("Rotation", tObj.Rotation.X + "," + tObj.Rotation.Y + "," + tObj.Rotation.Z);
-                        writer.WriteElementString("Scale", tObj.Scale.X + "," + tObj.Scale.Y + "," + tObj.Scale.Z);
-                        writer.WriteStartElement("Components");
-                        foreach (string str in tObj.Components)
-                        {
-                            switch (str)
-                            {
-                                case "Box Snap":
-                                    writer.WriteElementString("BoxSnapToController", "Enabled");
-                                    break;
-                                case "Button Press":
-                                    writer.WriteElementString("ButtonPress", "Enabled");
-                                    break;
-                                case "AABB to AABB":
-                                    writer.WriteElementString("AABBtoAABB", "Enabled");
-                                    break;
-                                case "AABB to Sphere":
-                                    writer.WriteElementString("AABBtoSphere", "Enabled");
-                                    break;
-                                case "Elastic Plane":
-                                    writer.WriteElementString("ElasticPlane", "Enabled");
-                                    break;
-                                case "Sphere to Sphere":
-                                    writer.WriteElementString("SpheretoSphere", "Enabled");
-                                    break;
-                                case "Enter Level":
-                                    writer.WriteElementString("EnterLevel", "Enabled");
-                                    break;
-                                case "Gesture":
-                                    writer.WriteElementString("Gesture", "Enabled");
-                                    break;
-                                case "Headset Follow":
-                                    writer.WriteElementString("HeadsetFollow", "Enabled");
-                                    break;
-                                case "Main Menu":
-                                    writer.WriteElementString("MainMenu", "Enabled");
-                                    break;
-                                case "Teleport":
-                                    writer.WriteElementString("Teleport", "Enabled");
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        if (tObj.Collider != null)
-                        {
-                            writer.WriteStartElement("Collider");
-                            writer.WriteElementString("Type", tObj.ColliderType);
-                            writer.WriteElementString("Trigger", tObj.Collider.IsSolid ? "False" : "True");
-                            writer.WriteElementString("Position", tObj.Collider.Position.X + "," + tObj.Collider.Position.Y + "," + tObj.Collider.Position.Z);
-                            if (tObj.ColliderType == "Sphere")
-                                writer.WriteElementString("Radius", tObj.Collider.Scale.X.ToString());
-                            else
-                            {
-                                writer.WriteElementString("Rotation", tObj.Collider.Rotation.X + "," + tObj.Collider.Rotation.Y + "," + tObj.Collider.Rotation.Z);
-                                writer.WriteElementString("Scale", tObj.Collider.Scale.X + "," + tObj.Collider.Scale.Y + "," + tObj.Collider.Scale.Z);
-                            }
-                            writer.WriteElementString("Move", tObj.Collider.CanMove ? "True" : "False");
-                            if (tObj.ColliderType == "Sphere" || tObj.ColliderType == "OBB")
-                            {
-                                writer.WriteElementString("Gravity", tObj.Collider.Gravity.X + "," + tObj.Collider.Gravity.Y + "," + tObj.Collider.Gravity.Z);
-                                writer.WriteElementString("Mass", tObj.Collider.Mass.ToString());
-                                writer.WriteElementString("Elasticity", tObj.Collider.Elasticity.ToString());
-                                writer.WriteElementString("StaticFriction", tObj.Collider.StaticF.ToString());
-                                writer.WriteElementString("KeneticFriction", tObj.Collider.KeneticF.ToString());
-                                writer.WriteElementString("Drag", tObj.Collider.Drag.ToString());
-                            }
-                            else if (tObj.ColliderType == "Plane")
-                            {
-                                writer.WriteElementString("Normal", tObj.Collider.Gravity.X + "," + tObj.Collider.Gravity.Y + "," + tObj.Collider.Gravity.Z);
-                                writer.WriteElementString("Mass", tObj.Collider.Mass.ToString());
-                                writer.WriteElementString("Elasticity", tObj.Collider.Elasticity.ToString());
-                                writer.WriteElementString("StaticFriction", tObj.Collider.StaticF.ToString());
-                                writer.WriteElementString("KeneticFriction", tObj.Collider.KeneticF.ToString());
-                                writer.WriteElementString("Drag", tObj.Collider.Drag.ToString());
-                            }
-                            else if (tObj.ColliderType == "Button")
-                            {
-                                writer.WriteElementString("PushNormal", tObj.Collider.Gravity.X + "," + tObj.Collider.Gravity.Y + "," + tObj.Collider.Gravity.Z);
-                                writer.WriteElementString("Mass", tObj.Collider.Mass.ToString());
-                                writer.WriteElementString("NormalForce", tObj.Collider.StaticF.ToString());
-                            }
-                            writer.WriteEndElement();
-                            
-                        }
-                        writer.WriteEndElement();
-                        writer.WriteEndElement();
-                    }
-                    writer.WriteEndElement();
-                    writer.WriteEndDocument();
-                }
+                currentFile = saveFile.FileName;
+                saveLevel(saveFile.FileName);
             }
         }
 
@@ -870,6 +982,7 @@ namespace LevelEditor
             {
                 selectedCollider.IsSolid = !Trigger.Checked;
                 selectedCollider.CanMove = MoveCheck.Checked;
+                selectedCollider.Visible = visibleCheck.Checked;
             }
         }
 
@@ -941,13 +1054,9 @@ namespace LevelEditor
                         break;
                     default:
                         if (e.NewValue == CheckState.Checked)
-                        {
                             selectedObject.Components.Add((string)componetsCheck.Items[e.Index]);
-                        }
                         else if (e.NewValue == CheckState.Unchecked)
-                        {
                             selectedObject.Components.Remove((string)componetsCheck.Items[e.Index]);
-                        }
                         break;
                 }
             }
@@ -1008,8 +1117,11 @@ namespace LevelEditor
             if (selectedCollider != null)
             {
                 groupBox5.Visible = false;
+                TextureBox.Visible = false;
+                colorSelect.Visible = true;
                 Trigger.Visible = true;
                 MoveCheck.Visible = true;
+                visibleCheck.Visible = true;
                 Physics.Visible = true;
                 ExtraVector.Visible = true;
                 if (colliderType == "Plane")
@@ -1033,6 +1145,8 @@ namespace LevelEditor
                 ExtraZ.Value =      (decimal)selectedCollider.Gravity.Z;
 
                 MoveCheck.Checked = selectedCollider.CanMove;
+                visibleCheck.Checked = selectedCollider.Visible;
+                colorSelect.BackColor = selectedCollider.ObjectColor;
 
                 if (colliderType == "Button")
                 {
@@ -1066,7 +1180,7 @@ namespace LevelEditor
                     scaleY.Value = (decimal)selectedCollider.Scale.Y;
                     scaleZ.Value = (decimal)selectedCollider.Scale.Z;
                 }
-                else if (colliderType == "Spheres")
+                else if (colliderType == "Sphere")
                 {
                     groupBox1.Visible = false;
                     groupBox6.Visible = true;
@@ -1075,11 +1189,14 @@ namespace LevelEditor
             }
             else if (selectedObject != null)
             {
+                TextureBox.Visible = true;
                 groupBox6.Visible = false;
                 groupBox5.Visible = true;
                 groupBox1.Visible = true;
                 Trigger.Visible = false;
+                colorSelect.Visible = false;
                 Physics.Visible = false;
+                visibleCheck.Visible = false;
                 MoveCheck.Visible = false;
                 nameBox.Text = selectedObject.Name;
                 posX.Value =    (decimal)selectedObject.Position.X;
@@ -1093,6 +1210,7 @@ namespace LevelEditor
                 scaleX.Value =  (decimal)selectedObject.Scale.X;
                 scaleY.Value =  (decimal)selectedObject.Scale.Y;
                 scaleZ.Value =  (decimal)selectedObject.Scale.Z;
+                textureFileBox.Text = selectedObject.Texture != null ? selectedObject.TextureFile : "None";
                 for (int i = 4; i < 14; i++)
                     if (selectedObject.Components.Contains((string)componetsCheck.Items[i]))
                         componetsCheck.SetItemChecked(i, true);
@@ -1113,10 +1231,13 @@ namespace LevelEditor
             }
             else
             {
+                TextureBox.Visible = true;
                 groupBox6.Visible = false;
                 groupBox5.Visible = true;
                 groupBox1.Visible = true;
+                colorSelect.Visible = false;
                 Trigger.Visible = false;
+                visibleCheck.Visible = false;
                 Physics.Visible = false;
                 MoveCheck.Visible = false;
                 componetsCheck.ClearSelected();
@@ -1134,6 +1255,7 @@ namespace LevelEditor
                 scaleX.Value = 0;
                 scaleY.Value = 0;
                 scaleZ.Value = 0;
+                textureFileBox.Text = "None";
             }
             if (oldSelected != selectedObject)
                 oldSelected = selectedObject;
@@ -1143,10 +1265,13 @@ namespace LevelEditor
 
         private void nameBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
+            if (!canMove)
             {
-                e.Handled = e.SuppressKeyPress = true;
+                if (e.KeyCode == Keys.Enter)
+                    e.Handled = e.SuppressKeyPress = true;
             }
+            else
+                e.Handled = e.SuppressKeyPress = true;
         }
 
         private void transform_ValueChanged(object sender, EventArgs e)
@@ -1181,11 +1306,6 @@ namespace LevelEditor
 
         private void supress_KeyDown(object sender, KeyPressEventArgs e)
         {
-            int i = 0;
-            if (!int.TryParse(e.KeyChar.ToString(), out i) && e.KeyChar != '\b')
-            {
-                e.Handled = true;
-            }
         }
 
         private void Editor_KeyDown(object sender, KeyEventArgs e)

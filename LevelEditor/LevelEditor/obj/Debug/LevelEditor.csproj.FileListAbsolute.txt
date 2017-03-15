@@ -206,7 +206,6 @@ C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debu
 C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\floor.png
 C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\grey.png
 C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\red.png
-C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\skybox.dds
 C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\wallTextureM.png
 C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\wallTextureS.png
 C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\white.png
@@ -250,3 +249,4 @@ C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\obj\Debu
 C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\obj\Debug\LevelEditor.Editor.resources
 C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\obj\Debug\LevelEditor.Properties.Resources.resources
 C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\obj\Debug\LevelEditor.csproj.GenerateResource.Cache
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\default.dds
