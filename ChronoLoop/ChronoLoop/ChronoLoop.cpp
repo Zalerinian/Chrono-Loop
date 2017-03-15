@@ -87,7 +87,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 		VREnabled = true;
 	}
 
-	if (!InitializeSystems(hwnd, 800, 600, false, 90, false, 1000, 0.1f, vrsys)) {
+	if (!InitializeSystems(hwnd, 1366, 720, false, 90, false, 1000, 0.1f, vrsys)) {
 		return 1;
 	}
 
