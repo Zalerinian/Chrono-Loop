@@ -47,42 +47,42 @@ namespace Epoch {
 					return 0;
 				}
 				gestureCnt++;
-				if (gestureCnt == 3)
-				{
+				if (gestureCnt == 4) {
 					gestureCnt = 0;
 					//vec2f CurPos,line,diff;
 					vec2f CurPos = touch;
 					vec2f line = InitialPos.Cross();
 					vec2f diff = (CurPos - InitialPos);
-					if (diff.x >= 0.05f || diff.y >= 0.05f || diff.x <= -0.05f || diff.y <= -0.05f) 
-					{
+					if (diff.x >= 0.05f || diff.y >= 0.05f || diff.x <= -0.05f || diff.y <= -0.05f) {
 						float slope = (CurPos.y - InitialPos.y) / (CurPos.x - InitialPos.x);
-						if ((slope >= 4 || slope <= -4) &&
+						if ((slope >= 3 || slope <= -3) &&
 							(CurPos.x < 0.3f && CurPos.x > -0.3f)) {
 							SystemLogger::GetLog() << "Vertical Wrongness" << std::endl;
 							return 2;
 						}
-						if ((slope <= 0.25f && slope >= -0.25f) &&
+						if ((slope <= 0.33f && slope >= -0.33f) &&
 							(CurPos.y < 0.3f && CurPos.y > -0.3f)) {
 							SystemLogger::GetLog() << "Horizontal Wrongness" << std::endl;
 							return 0;
 						}
 						InitialPos = CurPos;
-						if((powf((CurPos.x), 2) + powf((CurPos.y), 2)) > 0.25f)
-						{
+						if ((powf((CurPos.x), 2) + powf((CurPos.y), 2)) > 0.25f) {
 							//SystemLogger::GetLog() << "Outside the Circle" << std::endl;
 							//SystemLogger::GetLog() << "Difference: " << diff << std::endl; 
-							SystemLogger::GetLog() << "InitialPos: (" << InitialPos.x << "," << InitialPos.y << ")" << "\nCurPos: (" << CurPos.x << "," << CurPos.y << ")" << std::endl;
+							//SystemLogger::GetLog() << "InitialPos: (" << InitialPos.x << "," << InitialPos.y << ")" << "\nCurPos: (" << CurPos.x << "," << CurPos.y << ")" << std::endl;
 							if (diff * line > 0) {
 								SystemLogger::GetLog() << "Somewhat Clockwise" << std::endl;
+								this->TriggerHapticPulse(200, vr::k_EButton_SteamVR_Touchpad);
 								return 1;
 							} else if (diff * line < 0) {
 								SystemLogger::GetLog() << "Somewhat Counter-Clockwise" << std::endl;
+								this->TriggerHapticPulse(200, vr::k_EButton_SteamVR_Touchpad);
+
 								return -1;
 							}
 						}
 					}
-					
+
 				}
 			}
 		}
@@ -95,9 +95,9 @@ namespace Epoch {
 		return vec2f(mState.rAxis[axisId].x, mState.rAxis[axisId].y);
 	}
 
-	void Controller::TriggerHapticPulse(int duration_micro_sec, vr::EVRButtonId buttonId) {
+	void Controller::TriggerHapticPulse(unsigned short duration_micro_sec, vr::EVRButtonId buttonId) {
 			int axisId = (int)buttonId - (int)vr::k_EButton_Axis0;
-			VRInputManager::GetInstance().GetVRSystem()->TriggerHapticPulse(mIndex, axisId, (char)duration_micro_sec);
+			VRInputManager::GetInstance().GetVRSystem()->TriggerHapticPulse(mIndex, (uint32_t)axisId, duration_micro_sec);
 	}
 
 #pragma region Private Functions

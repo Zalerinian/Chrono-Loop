@@ -21,10 +21,10 @@ namespace Epoch {
 
 		virtual void Start() {
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
-			mPlaneObject  = cLevel->FindObjectWithName("plane");
-			mWallsObject  = cLevel->FindObjectWithName("walls");
-			mBlockObject  = cLevel->FindObjectWithName("BlockDoor");
-			mExitObject   = cLevel->FindObjectWithName("ExitWall");
+			mPlaneObject  = cLevel->FindObjectWithName("Floor");
+			mWallsObject  = cLevel->FindObjectWithName("Walls");
+			mBlockObject  = cLevel->FindObjectWithName("Door1");
+			mExitObject   = cLevel->FindObjectWithName("Door2");
 			mPlaneMesh    = (MeshComponent*)mPlaneObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			mWallsMesh    = (MeshComponent*)mWallsObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			mBlockMesh    = (MeshComponent*)mBlockObject->GetComponentIndexed(eCOMPONENT_MESH, 0);

@@ -191,20 +191,17 @@ namespace Epoch {
 		if (mObjectLifeTimes.find(_cloneid) != mObjectLifeTimes.end() && (mObjectLifeTimes[_cloneid]->mBirth > mCurrentGameTimeIndx || mObjectLifeTimes[_cloneid]->mDeath < mCurrentGameTimeIndx))
 			cloneInterp->SetActive(false);
 
-		cloneInterp->SetType(InterpolatorType::I_Matrix4);
 		if (_currTime + 1 <= mSnaptimes.size() - 1) {
 			nextsnap = mSnapshots[mSnaptimes[(unsigned int)_currTime + 1]];
 			//found a clone snapinfo in the next snapshot
 			if (nextsnap->mSnapinfos.find(_cloneid) != nextsnap->mSnapinfos.end()) {
 				nextInfo = nextsnap->mSnapinfos[_cloneid];
-				cloneInterp->SetStart(_currSnap->mTransform.GetMatrix());
-				cloneInterp->SetEnd(nextInfo->mTransform.GetMatrix());
 				cloneInterp->SetActive(true);
 				//Loop to find the same clone's baseObject
 				std::vector<BaseObject*> clones = TimeManager::Instance()->GetClonesVec();
 				for (int i = 0; i < clones.size(); ++i) {
 					if (_cloneid == clones[i]->GetUniqueID()) {
-						cloneInterp->SetEdit(clones[i]->GetTransform().GetMatrix());
+						cloneInterp->Prepare(0.1f, _currSnap->mTransform.GetMatrix(), nextInfo->mTransform.GetMatrix(), clones[i]->GetTransform().GetMatrix());
 						break;
 					}
 				}
@@ -349,7 +346,27 @@ namespace Epoch {
 			}
 		}
 	}
-
+	void Timeline::InterpAllObjectsToSnapExceptPlayer(unsigned int _fromSnapTime, unsigned int _toSnapTime, unsigned short _id1, unsigned short _id2, unsigned short _id3) 
+	{
+		Snapshot* _from = mSnapshots[_fromSnapTime];
+		Snapshot* _to = mSnapshots[_toSnapTime];
+		for (auto object : mLiveObjects) {
+			unsigned short id = object.second->GetUniqueID();
+			if (id == _id1 || id == _id2 || id == _id3)
+				continue;
+			SnapInfo* destInfo;
+			//If the object doesnt have a info, 
+			//then check against the list for the last snap it was updated
+			bool stored = _to->IsObjectStored(id);
+			if (stored) {
+				destInfo = _to->mSnapinfos[id];
+			} else if (!stored) {
+				if (_to->mUpdatedtimes.find(id) == _to->mUpdatedtimes.end())
+					continue;
+				destInfo = mSnapshots[_to->mUpdatedtimes[id]]->mSnapinfos[id];
+			}
+		}
+	}
 	void Timeline::MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3) {
 		Snapshot* destination = mSnapshots[_snaptime];
 		for (auto object : mLiveObjects) {
@@ -377,8 +394,6 @@ namespace Epoch {
 			}
 		}
 	}
-
-
 	void Timeline::ClearTimeLine() {
 		for (auto snapshot : mSnapshots) {
 			for (auto snapInfo : snapshot.second->mSnapinfos) {

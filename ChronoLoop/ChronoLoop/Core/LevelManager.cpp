@@ -21,10 +21,6 @@ namespace Epoch {
 
 	void LM::ThreadLoadLevel(std::string _path)
 	{
-		mMutex.lock();
-		mLevelStatus = LoadStatus::Loading;
-		mMutex.unlock();
-
 		mLoadingLevel = new Level;
 
 		// Actually load the level here
@@ -54,7 +50,8 @@ namespace Epoch {
 		}
 		else if (mLevelStatus == LoadStatus::None)
 		{
-			std::thread(&LM::ThreadLoadLevel, this, std::string(_path));
+			mLevelStatus = LoadStatus::Loading;
+			std::thread(&LM::ThreadLoadLevel, this, std::string(_path)).detach();
 			mMutex.unlock();
 			return LevelStatus::Loading;
 		}

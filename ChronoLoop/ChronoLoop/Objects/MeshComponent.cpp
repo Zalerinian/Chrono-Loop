@@ -16,6 +16,7 @@ namespace Epoch {
 	MeshComponent::MeshComponent(const char * _path) {
 		mType = eCOMPONENT_MESH;
 		mShape = new RenderShape(_path, true, ePS_TEXTURED, eVS_TEXTURED, eGS_PosNormTex);
+		mShape->GetContext().mRasterState = eRS_FILLED;
 		mNode = Renderer::Instance()->AddNode(mShape);
 	}
 

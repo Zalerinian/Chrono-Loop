@@ -15,6 +15,7 @@
 #include "../Objects/MeshComponent.h"
 #include "../tinyxml/tinyxml.h"
 #include "../tinyxml/tinystr.h"
+#include "../Common/Settings.h"
 
 namespace Epoch {
 	
@@ -25,23 +26,13 @@ namespace Epoch {
 			delete *it;
 		}
 		mObjectList.clear();
-
-		//for (auto iter = mObjectMap.begin(); iter != mObjectMap.end(); ++iter) { 
-		//	for (int i = 0; i < iter->second.size(); ++i) {
-		//		// TODO: Put objects back in the object pool.
-		//		// Since this is a singleton and this is only destroyed when closing 
-		//		// the program, would it be more efficient to just delete them directly?
-		//		delete iter->second[i];
-		//	}
-		//}
-		//mObjectMap.clear();
 	}
 
 	void Level::Initialize(BaseObject * _headset, BaseObject * _lController, BaseObject * _rController) {
 		mHeadset = _headset;
 		mController1 = _lController;
 		mController2 = _rController;
-		//CommandConsole::Instance().AddCommand(L"/WIREFRAME", ToggleEntireLevelsWireframe);
+		CommandConsole::Instance().AddCommand(L"/WIREFRAME", ToggleEntireLevelsWireframe);
 		std::vector<Component*> codes1 = mController1->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
 		for (size_t x = 0; x < codes1.size(); ++x) {
 			if (dynamic_cast<TimeManipulation*>(codes1[x])) {
@@ -177,9 +168,9 @@ namespace Epoch {
 				{
 					std::vector<std::string> codeComs;
 					std::string elementType, name, meshFile, textureFile, colliderType;
-					vec4f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity;
+					vec4f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity(0, -9.81f, 0, 1);
 					float mass, elasticity, staticF, kineticF, normF, drag, radius;
-					bool collider = false, trigger = false, canMove;
+					bool collider = false, trigger = false, canMove, physical = false;
 					pData = pObject->FirstChildElement();
 					while (pData)
 					{
@@ -246,7 +237,11 @@ namespace Epoch {
 								}
 							}
 							else if (elementType == "Move")
-								canMove = pData->Value() == "True";
+							{
+								std::string temp(pData->Value());
+								canMove = temp.find("True") != std::string::npos;
+								int thing = 0;
+							}
 							else if (elementType == "Type")
 								colliderType = pData->Value();
 							else if (elementType == "Trigger")
@@ -265,9 +260,13 @@ namespace Epoch {
 							else if (elementType == "KeneticFriction")
 								kineticF = std::strtof(pData->Value(), nullptr);
 							else if (elementType == "Drag")
+							{
 								drag = std::strtof(pData->Value(), nullptr);
-							else if (elementType == "Code")
-								codeComs.push_back(pData->Value());
+								if (pData->Parent()->Parent()->NextSiblingElement())
+									pData = pData->Parent()->Parent()->NextSiblingElement();
+								else
+									pData = nullptr;
+							}
 							else if (elementType == "Normal")
 							{
 								size_t pos = 0;
@@ -303,12 +302,18 @@ namespace Epoch {
 								{
 									std::string token = s.substr(0, pos);
 									gravity.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									gravity.w = 1;
 									i++;
 									s.erase(0, pos + 1);
 								}
 							}
-							
-							pData = pData->Parent()->NextSiblingElement();
+							else if(elementType == "NormalForce")
+								normF = std::strtof(pData->Value(),nullptr);
+							else
+								codeComs.push_back(elementType);
+
+							if (pData != nullptr)
+								pData = pData->Parent()->NextSiblingElement();
 							break;
 						default:
 							break;
@@ -323,7 +328,7 @@ namespace Epoch {
 								  matrix4::CreateYRotation(rotation.y) * 
 								  matrix4::CreateZRotation(rotation.z) * 
 								  matrix4::CreateTranslation(position.x, position.y, position.z);
-
+					transform.SetMatrix(mat);
 					BaseObject* obj = new BaseObject(name, transform);
 
 					if (!meshFile.empty())
@@ -339,26 +344,33 @@ namespace Epoch {
 
 					if (colliderType == "OBB")
 					{
-						vec4f min = colliderPosition - vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1);
-						vec4f max = colliderPosition + vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1);
+						physical = true;
+						vec4f min = colliderPosition - vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1) + vec4f(0, colliderScale.y, 0, 0);
+						vec4f max = colliderPosition + vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1) + vec4f(0, colliderScale.y, 0, 0);
 						CubeCollider* col = new CubeCollider(obj, canMove, trigger, gravity, mass, elasticity, staticF, kineticF, drag, min, max);
 						obj->AddComponent(col);
 					}
 					else if (colliderType == "Sphere")
 					{
+						physical = true;
+
 						SphereCollider* col = new SphereCollider(obj, canMove, trigger, gravity, mass, elasticity, staticF, kineticF, drag, radius);
 						obj->AddComponent(col);
 					}
 					else if (colliderType == "Button")
 					{
-						vec4f min = colliderPosition - vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1);
-						vec4f max = colliderPosition + vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1);
+						physical = true;
+
+						vec4f min = colliderPosition - vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1) + vec4f(0, colliderScale.y, 0, 0);
+						vec4f max = colliderPosition + vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1) + vec4f(0, colliderScale.y, 0, 0);
 						ButtonCollider* col = new ButtonCollider(obj, min, max, mass, normF, pushNorm);
 						obj->AddComponent(col);
 					}
 					else if (colliderType == "Plane")
 					{
-						PlaneCollider* col = new PlaneCollider(obj, canMove, trigger, gravity, mass, elasticity, staticF, kineticF, drag, (position * normal), normal);
+						physical = true;
+
+						PlaneCollider* col = new PlaneCollider(obj, canMove, trigger, vec4f(0,0,0,0), mass, elasticity, staticF, kineticF, drag, -1, normal);//TODO: Fix offset
 						obj->AddComponent(col);
 					}
 
@@ -406,6 +418,9 @@ namespace Epoch {
 						}
 					}
 
+					if (physical)
+						Physics::Instance()->mObjects.push_back(obj);
+
 					AddObject(obj);
 					pObject = pObject->NextSiblingElement("Object");
 				}
@@ -428,27 +443,16 @@ namespace Epoch {
 
 
 	void Level::ToggleEntireLevelsWireframe(void* _command, std::wstring _ifOn) {
-		//CommandConsole* cc = (CommandConsole*)_command;
-		//if (_ifOn == L"ON") {
-		//	for (auto it = mObjectList.begin(); it != sInstance->mObjectList.end(); ++it) {
-		//		for (size_t x = 0; x < (*it)->GetComponents(ComponentType::eCOMPONENT_MESH).size(); ++x) {
-		//			MeshComponent* tempMComp = (MeshComponent*)((*it)->GetComponents(ComponentType::eCOMPONENT_MESH)[x]);
-		//
-		//			tempMComp->SetRasterState(eRS_WIREFRAME);//< - This line
-		//		}
-		//	}
-		//	CommandConsole::Instance().DisplaySet(L"");
-		//} else if (_ifOn == L"OFF") {
-		//	for (auto it = mObjectList.begin(); it != sInstance->mObjectList.end(); ++it) {
-		//		for (size_t x = 0; x < (*it)->GetComponents(ComponentType::eCOMPONENT_MESH).size(); ++x) {
-		//			MeshComponent* tempMComp = (MeshComponent*)((*it)->GetComponents(ComponentType::eCOMPONENT_MESH)[x]);
-		//			tempMComp->SetRasterState(eRS_FILLED);
-		//		}
-		//	}
-		//	CommandConsole::Instance().DisplaySet(L"");
-		//} else {
-		//	CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /WIREFRAME (ON/OFF)");
-		//}
+		CommandConsole* cc = (CommandConsole*)_command;
+		if (_ifOn == L"ON") {
+			Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_WIREFRAME);
+			CommandConsole::Instance().DisplaySet(L"");
+		} else if (_ifOn == L"OFF") {
+			Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_MAX);
+			CommandConsole::Instance().DisplaySet(L"");
+		} else {
+			CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /WIREFRAME (ON/OFF)");
+		}
 	}
 
 } // Epoch Namespace

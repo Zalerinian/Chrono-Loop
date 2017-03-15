@@ -64,7 +64,7 @@ namespace Epoch {
 
 		//mostly for touchpad
 		vec2f GetAxis(vr::EVRButtonId buttonId = vr::k_EButton_SteamVR_Touchpad);
-		void TriggerHapticPulse(int duration_micro_sec = 500, vr::EVRButtonId buttonId = vr::k_EButton_SteamVR_Touchpad);
+		void TriggerHapticPulse(unsigned short duration_micro_sec = 500, vr::EVRButtonId buttonId = vr::k_EButton_SteamVR_Touchpad);
 	};
 
 }
