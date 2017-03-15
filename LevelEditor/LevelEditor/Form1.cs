@@ -185,7 +185,7 @@ namespace LevelEditor
                 device.SetTexture(0, null);
                 device.RenderState.AlphaBlendEnable = true;
                 float scale = (cameraPos - selectedObject.Position).Length();
-                gizmoScale = Matrix.Scaling(Vector3.Maximize(new Vector3(scale, scale, scale) * 0.05f, new Vector3(1,1,1)));
+                gizmoScale = Matrix.Scaling(Vector3.Maximize(new Vector3(scale, scale, scale) * 0.05f, new Vector3(0.05f, 0.05f, 0.05f)));
                 foreach (ToolObjectColor tObj2 in debugObjs[1].Children)
                 {
                     device.RenderState.FillMode = tObj2.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
@@ -319,65 +319,52 @@ namespace LevelEditor
                         near = new Vector3(curMouse.X, curMouse.Y, 0);
                         far = new Vector3(curMouse.X, curMouse.Y, 1);
                         Vector3 pos = selectedObject.Position;
+
+
+                        Matrix ViewMatrix = device.Transform.View;
+                        ViewMatrix.Invert();
+                        Vector2 mouseDirection = curMouse - prevMouse;
+                        Vector4 mouse4 = new Vector4(mouseDirection.X, mouseDirection.Y, 0, 0);
+                        mouse4.Transform(ViewMatrix);
+                        mouse4.Normalize();
+
+                        Vector3 dir3 = new Vector3(mouse4.X, mouse4.Y, mouse4.Z);
+                        float Magnitude = mouseDirection.Length() * 0.01f * gizmoScale.M11;
+                        dir3.Normalize();
+                        mouseDirection.Normalize();
+                        float dotProduct = 0;
                         switch (selectedName)
                         {
                             case "TranslateX":
-                                prevHit = curHit;
-                                curHit = RaycastPlane(near, far, selectedObject.Position, new Vector3(0, 1, 0));
-                                dh = (prevHit - curHit) * 0.75f;
-                                if (snap)
-                                {
-                                    dh = (prevHit - curHit);
-                                    if (Math.Abs(Math.Round(dh.X, 1)) * 2 > 1)
-                                    {
-                                        selectedObject.SetPosition(new Vector3((float)Math.Floor(pos.X + 0.1f) + (-dh.X < 0 ? -1 : 1), pos.Y, pos.Z));
-                                        prevHit = curHit;
-                                    }
-                                }
-                                else
-                                {
-                                    dh = (prevHit - curHit) * 0.75f;
-                                    selectedObject.Translate(new Vector3(-dh.X, 0, 0));
-                                    prevHit = curHit;
+                                Vector4 left4 = new Vector4(1, 0, 0, 0);
+                                left4.Transform(ViewMatrix);
+
+                                Vector3 left = new Vector3(left4.X, left4.Y, left4.Z);
+                                dotProduct = Vector3.Dot(left, dir3);
+                                if (Math.Abs(dotProduct) >= 0.9) {
+                                    // Going in the same direction, mostly.
+                                    selectedObject.Translate(new Vector3(Magnitude * Math.Sign(mouse4.X), 0, 0));
                                 }
                                 break;
                             case "TranslateY":
-                                prevHit = curHit;
-                                curHit = RaycastPlane(near, far, selectedObject.Position, new Vector3(1, 0, 0));
-                                dh = (prevHit - curHit) * 0.75f;
-                                if (snap)
-                                {
-                                    dh = (prevHit - curHit);
-                                    if (Math.Abs(Math.Round(dh.Y, 1)) * 2 > 1)
-                                    {
-                                        selectedObject.SetPosition(new Vector3(pos.X, (float)Math.Floor(pos.Y + 0.1f) + (-dh.Y < 0 ? -1 : 1), pos.Z));
-                                        prevHit = curHit;
-                                    }
+                                Vector4 up4 = new Vector4(0, 1, 0, 0);
+                                up4.Transform(ViewMatrix);
+
+                                Vector3 up = new Vector3(up4.X, up4.Y, up4.Z);
+                                dotProduct = Vector3.Dot(up, dir3);
+                                if (Math.Abs(dotProduct) >= 0.9f) {
+                                    selectedObject.Translate(new Vector3(0, Magnitude * -Math.Sign(mouse4.Y), 0));
                                 }
-                                else
-                                {
-                                    dh = (prevHit - curHit) * 0.75f;
-                                    selectedObject.Translate(new Vector3(0, -dh.Y, 0));
-                                    prevHit = curHit;
-                                }
+                           
                                 break;
                             case "TranslateZ":
-                                curHit = RaycastPlane(near, far, selectedObject.Position, new Vector3(0, 1, 0));
-                                dh = (prevHit - curHit) * 0.75f;
-                                if (snap)
-                                {
-                                    dh = (prevHit - curHit);
-                                    if (Math.Abs(Math.Round(dh.Z, 1)) * 2 > 1)
-                                    {
-                                        selectedObject.SetPosition(new Vector3(pos.X, pos.Y, (float)Math.Floor(pos.Z + 0.1f) + (-dh.Z < 0 ? -1 : 1)));
-                                        prevHit = curHit;
-                                    }
-                                }
-                                else
-                                {
-                                    dh = (prevHit - curHit) * 0.75f;
-                                    selectedObject.Translate(new Vector3(0, 0, -dh.Z));
-                                    prevHit = curHit;
+                                Vector4 forward4 = new Vector4(1, 0, 0, 0);
+                                forward4.Transform(ViewMatrix);
+
+                                Vector3 forward = new Vector3(forward4.X, forward4.Y, forward4.Z);
+                                dotProduct = Vector3.Dot(forward, dir3);
+                                if (Math.Abs(dotProduct) >= 0.9f) {
+                                    selectedObject.Translate(new Vector3(0, 0, Magnitude * Math.Sign(mouse4.Z)));
                                 }
                                 break;
                             case "TranslateXZ":
