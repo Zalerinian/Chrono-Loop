@@ -76,7 +76,7 @@ namespace Epoch {
 								return 1;
 							} else if (diff * line < 0) {
 								SystemLogger::GetLog() << "Somewhat Counter-Clockwise" << std::endl;
-								this->TriggerHapticPulse(200,vr::k_EButton_SteamVR_Touchpad);
+								this->TriggerHapticPulse(200, vr::k_EButton_SteamVR_Touchpad);
 
 								return -1;
 							}
