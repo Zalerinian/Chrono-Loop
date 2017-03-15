@@ -26,6 +26,7 @@ namespace LevelEditor
         private Vector3 mPosition;
         private Vector3 mRotation;
         private Vector3 mScale;
+        private Vector3 mMin, mMax;
         private string mName, mTextureFile, mMeshFile, mColliderType;
         private ToolObjectColor mCollider = null;
         private List<string> mComponents = new List<string>();
@@ -141,6 +142,8 @@ namespace LevelEditor
             mIndices = _Tool.mIndices;
             mTextureFile = _Tool.mTextureFile;
             mMeshFile = _Tool.mMeshFile;
+            mMin = _Tool.mMin;
+            mMax = _Tool.mMax;
             VertexDeclaration();
             IndicesDeclaration();
         }
@@ -156,6 +159,8 @@ namespace LevelEditor
             mDevice = _Device;
             mIsWireFrame = true;
             mTexture = null;
+            mMin = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+            mMax = new Vector3(float.MinValue, float.MinValue, float.MinValue);
             VertexDeclaration();
             IndicesDeclaration();
         }
@@ -172,6 +177,8 @@ namespace LevelEditor
             Load(_File);
             mIsWireFrame = false;
             mTexture = null;
+            mMin = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+            mMax = new Vector3(float.MinValue, float.MinValue, float.MinValue);
             VertexDeclaration();
             IndicesDeclaration();
         }
@@ -188,6 +195,8 @@ namespace LevelEditor
             Load(_File);
             loadTexture(_Texture);
             mIsWireFrame = false;
+            mMin = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+            mMax = new Vector3(float.MinValue, float.MinValue, float.MinValue);
             VertexDeclaration();
             IndicesDeclaration();
         }
@@ -356,6 +365,15 @@ namespace LevelEditor
                     mVertexBuffer.Dispose();
                 mVertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionNormalTextured), mVertices.Length, mDevice, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionNormalTextured.Format, Pool.Default);
                 mVertexBuffer.SetData(mVertices, 0, LockFlags.None);
+                for(int i = 0; i < mVertices.Length; ++i) {
+                    mMin.X = Math.Min(mVertices[i].X, mMin.X);
+                    mMin.Y = Math.Min(mVertices[i].Y, mMin.Y);
+                    mMin.Z = Math.Min(mVertices[i].Z, mMin.Z);
+
+                    mMax.X = Math.Max(mVertices[i].X, mMax.X);
+                    mMax.Y = Math.Max(mVertices[i].Y, mMax.Y);
+                    mMax.Z = Math.Max(mVertices[i].Z, mMax.Z);
+                }
             }
         }
         public void IndicesDeclaration()
