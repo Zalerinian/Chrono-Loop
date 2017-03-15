@@ -170,7 +170,7 @@ namespace Epoch {
 					std::string elementType, name, meshFile, textureFile, colliderType;
 					vec4f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity(0, -9.81f, 0, 1);
 					float mass, elasticity, staticF, kineticF, normF, drag, radius;
-					bool collider = false, trigger = false, canMove, physical = false;
+					bool collider = false, trigger = false, canMove = false, physical = false;
 					pData = pObject->FirstChildElement();
 					while (pData)
 					{
@@ -370,7 +370,7 @@ namespace Epoch {
 					{
 						physical = true;
 
-						PlaneCollider* col = new PlaneCollider(obj, canMove, trigger, vec4f(0,0,0,0), mass, elasticity, staticF, kineticF, drag, -1, normal);//TODO: Fix offset
+						PlaneCollider* col = new PlaneCollider(obj, canMove, trigger, vec4f(0,0,0,0), mass, elasticity, staticF, kineticF, drag, fabsf((colliderPosition + position) * normal), normal);//TODO: Fix offset
 						obj->AddComponent(col);
 					}
 
@@ -421,6 +421,9 @@ namespace Epoch {
 					if (physical)
 						Physics::Instance()->mObjects.push_back(obj);
 
+					if (canMove)
+						TimeManager::Instance()->AddObjectToTimeline(obj);
+					
 					AddObject(obj);
 					pObject = pObject->NextSiblingElement("Object");
 				}

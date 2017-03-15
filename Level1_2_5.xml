@@ -3,10 +3,13 @@
     <Name>Button</Name>
     <Mesh>Button.obj</Mesh>
     <Texture>red.png</Texture>
-    <Position>-3,1.1,8.1</Position>
+    <Position>-2.981852,1.2,8.091076</Position>
     <Rotation>0,0,0</Rotation>
-    <Scale>1,1,1</Scale>
+    <Scale>1,1,1.079898</Scale>
     <Components>
+      <ButtonPress>Enabled</ButtonPress>
+      <ButtonPress>Enabled</ButtonPress>
+      <ButtonPress>Enabled</ButtonPress>
       <ButtonPress>Enabled</ButtonPress>
       <ButtonPress>Enabled</ButtonPress>
       <ButtonPress>Enabled</ButtonPress>
@@ -44,15 +47,15 @@
       <Collider>
         <Type>OBB</Type>
         <Trigger>False</Trigger>
-        <Position>0,0,0</Position>
+        <Position>0,-0.1,0</Position>
         <Rotation>0,0,0</Rotation>
         <Scale>0.3,0.625,0.3</Scale>
         <Move>False</Move>
         <Gravity>0,0,0</Gravity>
-        <Mass>0</Mass>
-        <Elasticity>0</Elasticity>
-        <StaticFriction>0</StaticFriction>
-        <KeneticFriction>0</KeneticFriction>
+        <Mass>10</Mass>
+        <Elasticity>0.01</Elasticity>
+        <StaticFriction>0.01</StaticFriction>
+        <KeneticFriction>0.01</KeneticFriction>
         <Drag>0</Drag>
       </Collider>
     </Components>
@@ -151,98 +154,41 @@
     <Components />
   </Object>
   <Object>
-    <Name>Floor</Name>
-    <Mesh>Floor.obj</Mesh>
-    <Texture>floor.png</Texture>
-    <Position>0,0,0</Position>
-    <Rotation>0,0,0</Rotation>
-    <Scale>1,1,1</Scale>
-    <Components>
-      <Collider>
-        <Type>Plane</Type>
-        <Trigger>False</Trigger>
-        <Position>0,0,0</Position>
-        <Rotation>0,0,0</Rotation>
-        <Scale>1,1,1</Scale>
-        <Move>False</Move>
-        <Normal>0,0,0</Normal>
-        <Mass>0</Mass>
-        <Elasticity>0</Elasticity>
-        <StaticFriction>0</StaticFriction>
-        <KeneticFriction>0</KeneticFriction>
-        <Drag>0</Drag>
-      </Collider>
-    </Components>
-  </Object>
-  <Object>
-    <Name>Ceiling</Name>
-    <Mesh>Ceiling.obj</Mesh>
-    <Texture>grey.png</Texture>
-    <Position>-2.4,3,0.2</Position>
-    <Rotation>0,0,0</Rotation>
-    <Scale>1,1,1</Scale>
-    <Components>
-      <Collider>
-        <Type>Plane</Type>
-        <Trigger>False</Trigger>
-        <Position>2.4,3,0.2</Position>
-        <Rotation>0,0,0</Rotation>
-        <Scale>1,1,1</Scale>
-        <Move>False</Move>
-        <Normal>0,0,0</Normal>
-        <Mass>0</Mass>
-        <Elasticity>0</Elasticity>
-        <StaticFriction>0</StaticFriction>
-        <KeneticFriction>0</KeneticFriction>
-        <Drag>0</Drag>
-      </Collider>
-    </Components>
-  </Object>
-  <Object>
     <Name>cube.001</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
-    <Position>-0.1915693,0.2,-1.074129</Position>
+    <Position>-0.0915693,0.3,-1.074129</Position>
     <Rotation>0,0,0</Rotation>
-    <Scale>0.4,0.4,0.4</Scale>
+    <Scale>0.6,0.6,0.6</Scale>
     <Components>
+      <AABBtoAABB>Enabled</AABBtoAABB>
+      <AABBtoSphere>Enabled</AABBtoSphere>
+      <ElasticPlane>Enabled</ElasticPlane>
+      <AABBtoAABB>Enabled</AABBtoAABB>
+      <AABBtoSphere>Enabled</AABBtoSphere>
+      <ElasticPlane>Enabled</ElasticPlane>
+      <AABBtoAABB>Enabled</AABBtoAABB>
+      <AABBtoSphere>Enabled</AABBtoSphere>
+      <ElasticPlane>Enabled</ElasticPlane>
+      <AABBtoAABB>Enabled</AABBtoAABB>
+      <AABBtoSphere>Enabled</AABBtoSphere>
+      <ElasticPlane>Enabled</ElasticPlane>
+      <AABBtoAABB>Enabled</AABBtoAABB>
+      <AABBtoSphere>Enabled</AABBtoSphere>
+      <ElasticPlane>Enabled</ElasticPlane>
       <Collider>
         <Type>OBB</Type>
         <Trigger>False</Trigger>
         <Position>0,-0.5,0</Position>
         <Rotation>0,0,0</Rotation>
         <Scale>0.5,0.5,0.5</Scale>
-        <Move>False</Move>
-        <Gravity>0,0,0</Gravity>
-        <Mass>0</Mass>
-        <Elasticity>0</Elasticity>
-        <StaticFriction>0</StaticFriction>
-        <KeneticFriction>0</KeneticFriction>
-        <Drag>0</Drag>
-      </Collider>
-    </Components>
-  </Object>
-  <Object>
-    <Name>cube.002</Name>
-    <Mesh>raycube.obj</Mesh>
-    <Texture>raycube.png</Texture>
-    <Position>-0.7103295,0.2,-1.168419</Position>
-    <Rotation>0,0,0</Rotation>
-    <Scale>0.4,0.4,0.4</Scale>
-    <Components>
-      <Collider>
-        <Type>OBB</Type>
-        <Trigger>False</Trigger>
-        <Position>0,-0.5,0</Position>
-        <Rotation>0,0,0</Rotation>
-        <Scale>0.5,0.5,0.5</Scale>
-        <Move>False</Move>
-        <Gravity>0,0,0</Gravity>
-        <Mass>0</Mass>
-        <Elasticity>0</Elasticity>
-        <StaticFriction>0</StaticFriction>
-        <KeneticFriction>0</KeneticFriction>
-        <Drag>0</Drag>
+        <Move>True</Move>
+        <Gravity>0,-9.810001,0</Gravity>
+        <Mass>7</Mass>
+        <Elasticity>0.2</Elasticity>
+        <StaticFriction>0.01</StaticFriction>
+        <KeneticFriction>0.01</KeneticFriction>
+        <Drag>0.5</Drag>
       </Collider>
     </Components>
   </Object>
@@ -250,23 +196,32 @@
     <Name>cube.003</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
-    <Position>-0.4631901,0.6,-0.9703025</Position>
+    <Position>-0.3552956,0.2361,-1.613836</Position>
     <Rotation>0,0,0</Rotation>
-    <Scale>0.4606586,0.4,0.4</Scale>
+    <Scale>0.4,0.4,0.4</Scale>
     <Components>
+      <AABBtoAABB>Enabled</AABBtoAABB>
+      <AABBtoSphere>Enabled</AABBtoSphere>
+      <ElasticPlane>Enabled</ElasticPlane>
+      <AABBtoAABB>Enabled</AABBtoAABB>
+      <AABBtoSphere>Enabled</AABBtoSphere>
+      <ElasticPlane>Enabled</ElasticPlane>
+      <AABBtoAABB>Enabled</AABBtoAABB>
+      <AABBtoSphere>Enabled</AABBtoSphere>
+      <ElasticPlane>Enabled</ElasticPlane>
       <Collider>
         <Type>OBB</Type>
         <Trigger>False</Trigger>
         <Position>0,-0.5,0</Position>
         <Rotation>0,0,0</Rotation>
         <Scale>0.5,0.5,0.5</Scale>
-        <Move>False</Move>
-        <Gravity>0,0,0</Gravity>
-        <Mass>0</Mass>
-        <Elasticity>0</Elasticity>
-        <StaticFriction>0</StaticFriction>
-        <KeneticFriction>0</KeneticFriction>
-        <Drag>0</Drag>
+        <Move>True</Move>
+        <Gravity>0,-9.810001,0</Gravity>
+        <Mass>4</Mass>
+        <Elasticity>0.3</Elasticity>
+        <StaticFriction>0.01</StaticFriction>
+        <KeneticFriction>0.01</KeneticFriction>
+        <Drag>0.3</Drag>
       </Collider>
     </Components>
   </Object>
@@ -274,23 +229,29 @@
     <Name>cube.004</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
-    <Position>-0.5576431,0.2,-0.6894538</Position>
+    <Position>-0.64188,0.2,-0.8889667</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>0.4,0.4,0.4</Scale>
     <Components>
+      <AABBtoAABB>Enabled</AABBtoAABB>
+      <AABBtoSphere>Enabled</AABBtoSphere>
+      <ElasticPlane>Enabled</ElasticPlane>
+      <AABBtoAABB>Enabled</AABBtoAABB>
+      <AABBtoSphere>Enabled</AABBtoSphere>
+      <ElasticPlane>Enabled</ElasticPlane>
       <Collider>
         <Type>OBB</Type>
         <Trigger>False</Trigger>
         <Position>0,-0.5,0</Position>
         <Rotation>0,0,0</Rotation>
         <Scale>0.5,0.5,0.5</Scale>
-        <Move>False</Move>
-        <Gravity>0,0,0</Gravity>
-        <Mass>0</Mass>
-        <Elasticity>0</Elasticity>
-        <StaticFriction>0</StaticFriction>
-        <KeneticFriction>0</KeneticFriction>
-        <Drag>0</Drag>
+        <Move>True</Move>
+        <Gravity>0,-9.810001,0</Gravity>
+        <Mass>5</Mass>
+        <Elasticity>0.3</Elasticity>
+        <StaticFriction>0.01</StaticFriction>
+        <KeneticFriction>0.01</KeneticFriction>
+        <Drag>0.2</Drag>
       </Collider>
     </Components>
   </Object>
@@ -576,6 +537,57 @@
         <Elasticity>0</Elasticity>
         <StaticFriction>0</StaticFriction>
         <KeneticFriction>0</KeneticFriction>
+        <Drag>0</Drag>
+      </Collider>
+    </Components>
+  </Object>
+  <Object>
+    <Name>Floor</Name>
+    <Mesh>Floor.obj</Mesh>
+    <Texture>floor.png</Texture>
+    <Position>0,0,0</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components>
+      <Collider>
+        <Type>Plane</Type>
+        <Trigger>False</Trigger>
+        <Position>0,0,0</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>1,1,1</Scale>
+        <Move>False</Move>
+        <Normal>0,0,0</Normal>
+        <Mass>0</Mass>
+        <Elasticity>0</Elasticity>
+        <StaticFriction>0</StaticFriction>
+        <KeneticFriction>0</KeneticFriction>
+        <Drag>0</Drag>
+      </Collider>
+    </Components>
+  </Object>
+  <Object>
+    <Name>cube.002</Name>
+    <Mesh>raycube.obj</Mesh>
+    <Texture>raycube.png</Texture>
+    <Position>-0.0915693,0.9180011,-1.074129</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>0.4,0.4,0.4</Scale>
+    <Components>
+      <AABBtoAABB>Enabled</AABBtoAABB>
+      <AABBtoSphere>Enabled</AABBtoSphere>
+      <ElasticPlane>Enabled</ElasticPlane>
+      <Collider>
+        <Type>OBB</Type>
+        <Trigger>False</Trigger>
+        <Position>0,-0.5,0</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>0.5,0.5,0.5</Scale>
+        <Move>True</Move>
+        <Gravity>0,0,0</Gravity>
+        <Mass>2</Mass>
+        <Elasticity>0.4</Elasticity>
+        <StaticFriction>0.01</StaticFriction>
+        <KeneticFriction>0.01</KeneticFriction>
         <Drag>0</Drag>
       </Collider>
     </Components>
