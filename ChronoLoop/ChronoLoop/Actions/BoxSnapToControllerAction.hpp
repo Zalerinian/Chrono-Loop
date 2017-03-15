@@ -43,13 +43,6 @@ namespace Epoch {
 				if (mInput && temp && mPickUp && 
 					(temp->mData.mLastFrame < mInput->mData.mLastFrame || 
 					(temp->mData.mLastFrame == mInput->mData.mLastFrame && temp->mData.mTime < mInput->mData.mTime))) {
-					if ((mLeft || mRight)) {
-						mHeld = false;
-					}
-					else if (!mLeft && !mRight) {
-						mHeld = true;
-					}
-
 					mPickUp->mShouldMove = true;
 
 					//	SystemLogger::GetLog() << "Should move on:: Old: snap = " << mInput->mData.mLastFrame << " time= " << mInput->mData.mTime << "   New: snap = " << temp->mData.mLastFrame << " time= " << temp->mData.mTime << std::endl;

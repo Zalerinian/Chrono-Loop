@@ -150,7 +150,6 @@ G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\enrgyFi
 G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\fieldGen.png
 G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\floor.png
 G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\grey.png
-G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\skybox.dds
 G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\wallTextureM.png
 G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\wallTextureS.png
 G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\AxisGizmo.obj
@@ -250,3 +249,4 @@ C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\obj\Debu
 C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\obj\Debug\LevelEditor.Properties.Resources.resources
 C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\obj\Debug\LevelEditor.csproj.GenerateResource.Cache
 C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\default.dds
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\default.dds

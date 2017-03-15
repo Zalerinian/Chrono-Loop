@@ -129,13 +129,13 @@ namespace Epoch {
 		if (_event->trackedDeviceIndex == mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand)) {
 			node->mData.mControllerId = cLevel->GetLeftController()->GetUniqueId();
 			node->mData.mVelocity = mLeftController.GetVelocity();
-			//SystemLogger::GetLog() << "Lefthand" << std::endl;
+			SystemLogger::GetLog() << "Lefthand" << std::endl;
 		} else {
 			node->mData.mControllerId = cLevel->GetRightController()->GetUniqueId();
 			node->mData.mVelocity = mRightController.GetVelocity();
-			//SystemLogger::GetLog() <<  "Righthand" << std::endl;
+			SystemLogger::GetLog() <<  "Righthand" << std::endl;
 		}
-		//SystemLogger::GetLog() << node->mData.mControllerId << std::endl;
+		SystemLogger::GetLog() << node->mData.mControllerId << std::endl;
 		mInputTimeline->Insert(node);
 		//mInputTimeline->DisplayTimeline();
 	}
