@@ -196,6 +196,8 @@ namespace LevelEditor
             if (_File != null && _File != string.Empty)
             {
                 mTextureFile = _File;
+                if (mTexture != null)
+                    mTexture.Dispose();
                 mTexture = TextureLoader.FromFile(mDevice, _File);
             }
         }

@@ -31,8 +31,9 @@ namespace LevelEditor
         private Vector3 cameraPos = new Vector3(0, 0, 0), prevHit = new Vector3(0, 0, 0), curHit = new Vector3(0, 0, 0);
         private Vector2 prevMouse, curMouse;
         private int selectedIndex = 0;
-        private bool canMove = false, grab = false, snap = false;
+        private bool canMove = false, grab = false, snap = false, loaded = true;
         private string selectedName = string.Empty, colliderType = string.Empty, currentFile = string.Empty;
+        private Texture defaultTexture;
         Matrix gizmoScale = Matrix.Identity;
         Matrix rotate = Matrix.Identity;
 
@@ -42,6 +43,7 @@ namespace LevelEditor
             InitializeDevice();
             InitializeKeyboard();
             InitializeCamera();
+            defaultTexture = TextureLoader.FromFile(device, "Assets\\default.dds");
             objects.Add(new ToolObject(ref device));
             objects[0].Name = "Empty";
             objects.Add(new ToolObject("Assets\\Cube.obj", "Assets\\skybox.dds", ref device));
@@ -146,53 +148,59 @@ namespace LevelEditor
             device.Indices = debugObjs[0].IndexBuffer;
             device.Transform.World = debugObjs[0].Transform;
             device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, debugObjs[0].Indices.Length, 0, debugObjs[0].Indices.Length / 3);
-            //Scene
-                    device.RenderState.AlphaBlendEnable = false;
-            foreach (ToolObject tObj in higharchy)
+            if (loaded)
             {
-                if (tObj.Vertices != null)
+                //Scene
+                device.RenderState.AlphaBlendEnable = false;
+                foreach (ToolObject tObj in higharchy)
                 {
-                    device.VertexFormat = CustomVertex.PositionNormalTextured.Format;
-                    device.RenderState.CullMode = Cull.Clockwise;
-                    device.RenderState.FillMode = tObj.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
-                    device.SetStreamSource(0, tObj.VertexBuffer, 0);
-                    device.Indices = tObj.IndexBuffer;
-                    device.SetTexture(0, tObj.Texture);
-                    device.Transform.World = tObj.Transform;
-                    device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Indices.Length, 0, tObj.Indices.Length / 3);
+                    if (tObj.Vertices != null)
+                    {
+                        device.VertexFormat = CustomVertex.PositionNormalTextured.Format;
+                        device.RenderState.CullMode = Cull.Clockwise;
+                        device.RenderState.FillMode = tObj.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
+                        device.SetStreamSource(0, tObj.VertexBuffer, 0);
+                        device.Indices = tObj.IndexBuffer;
+                        if (tObj.Texture == null)
+                            device.SetTexture(0, defaultTexture);
+                        else
+                            device.SetTexture(0, tObj.Texture);
+                        device.Transform.World = tObj.Transform;
+                        device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Indices.Length, 0, tObj.Indices.Length / 3);
+                    }
+                    if (tObj.Collider != null)
+                    {
+                        device.VertexFormat = CustomVertex.PositionNormalColored.Format;
+                        device.RenderState.CullMode = Cull.None;
+                        device.RenderState.FillMode = tObj.Collider.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
+                        device.SetStreamSource(0, tObj.Collider.VertexBuffer, 0);
+                        device.Indices = tObj.Collider.IndexBuffer;
+                        device.SetTexture(0, null);
+                        if (tObj.ColliderType == "Sphere")
+                            device.Transform.World = Matrix.Translation(tObj.Position) * tObj.Collider.Transform;
+                        else
+                            device.Transform.World = tObj.Collider.Transform * tObj.Transform;
+                        device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Collider.Indices.Length, 0, tObj.Collider.Indices.Length / 3);
+                    }
                 }
-                if (tObj.Collider != null)
+                //Axis Gizmo
+                device.Clear(ClearFlags.ZBuffer, 0, 1.0f, 0);
+                if (selectedObject != null)
                 {
                     device.VertexFormat = CustomVertex.PositionNormalColored.Format;
                     device.RenderState.CullMode = Cull.None;
-                    device.RenderState.FillMode = tObj.Collider.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
-                    device.SetStreamSource(0, tObj.Collider.VertexBuffer, 0);
-                    device.Indices = tObj.Collider.IndexBuffer;
                     device.SetTexture(0, null);
-                    if (tObj.ColliderType == "Sphere")
-                        device.Transform.World = Matrix.Translation(tObj.Position) * tObj.Collider.Transform;
-                    else
-                        device.Transform.World = tObj.Collider.Transform * tObj.Transform;
-                    device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Collider.Indices.Length, 0, tObj.Collider.Indices.Length / 3);
-                }
-            }
-            //Axis Gizmo
-            device.Clear(ClearFlags.ZBuffer, 0, 1.0f, 0);
-            if (selectedObject != null)
-            {
-                device.VertexFormat = CustomVertex.PositionNormalColored.Format;
-                device.RenderState.CullMode = Cull.None;
-                device.SetTexture(0, null);
-                device.RenderState.AlphaBlendEnable = true;
-                float scale = (cameraPos - selectedObject.Position).Length();
-                gizmoScale = Matrix.Scaling(Vector3.Maximize(new Vector3(scale, scale, scale) * 0.05f, new Vector3(1,1,1)));
-                foreach (ToolObjectColor tObj2 in debugObjs[1].Children)
-                {
-                    device.RenderState.FillMode = tObj2.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
-                    device.SetStreamSource(0, tObj2.VertexBuffer, 0);
-                    device.Indices = tObj2.IndexBuffer;
-                    device.Transform.World = gizmoScale * Matrix.Translation(selectedObject.Position) * debugObjs[1].Transform * tObj2.Transform;
-                    device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj2.Indices.Length, 0, tObj2.Indices.Length / 3);
+                    device.RenderState.AlphaBlendEnable = true;
+                    float scale = (cameraPos - selectedObject.Position).Length();
+                    gizmoScale = Matrix.Scaling(Vector3.Maximize(new Vector3(scale, scale, scale) * 0.05f, new Vector3(1,1,1)));
+                    foreach (ToolObjectColor tObj2 in debugObjs[1].Children)
+                    {
+                        device.RenderState.FillMode = tObj2.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
+                        device.SetStreamSource(0, tObj2.VertexBuffer, 0);
+                        device.Indices = tObj2.IndexBuffer;
+                        device.Transform.World = gizmoScale * Matrix.Translation(selectedObject.Position) * debugObjs[1].Transform * tObj2.Transform;
+                        device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj2.Indices.Length, 0, tObj2.Indices.Length / 3);
+                    }
                 }
             }
             device.EndScene();
@@ -767,6 +775,11 @@ namespace LevelEditor
                             objects.Add(new ToolObject(openFileDialog1.FileName, openFileDialog2.FileName, ref device));
                             Tree.Nodes[0].Nodes.Add(objects.Last().Name);
                         }
+                        else
+                        {
+                            objects.Add(new ToolObject(openFileDialog1.FileName, ref device));
+                            Tree.Nodes[0].Nodes.Add(objects.Last().Name);
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -781,6 +794,23 @@ namespace LevelEditor
             if (currentFile != string.Empty)
             {
                 saveLevel(currentFile);
+            }
+        }
+
+        private void changeTexture_Click(object sender, EventArgs e)
+        {
+            if (selectedObject != null)
+            {
+                OpenFileDialog file = new OpenFileDialog();
+                file.InitialDirectory = Application.StartupPath;
+                file.Filter = "Texture files (*.png)|*.png";
+                file.FilterIndex = 1;
+                file.RestoreDirectory = true;
+                if (file.ShowDialog() == DialogResult.OK)
+                {
+                    selectedObject.loadTexture(file.FileName);
+                    textureFileBox.Text = selectedObject.TextureFile;
+                }
             }
         }
 
@@ -1053,6 +1083,7 @@ namespace LevelEditor
             if (selectedCollider != null)
             {
                 groupBox5.Visible = false;
+                TextureBox.Visible = false;
                 Trigger.Visible = true;
                 MoveCheck.Visible = true;
                 Physics.Visible = true;
@@ -1120,6 +1151,7 @@ namespace LevelEditor
             }
             else if (selectedObject != null)
             {
+                TextureBox.Visible = true;
                 groupBox6.Visible = false;
                 groupBox5.Visible = true;
                 groupBox1.Visible = true;
@@ -1138,6 +1170,7 @@ namespace LevelEditor
                 scaleX.Value =  (decimal)selectedObject.Scale.X;
                 scaleY.Value =  (decimal)selectedObject.Scale.Y;
                 scaleZ.Value =  (decimal)selectedObject.Scale.Z;
+                textureFileBox.Text = selectedObject.Texture != null ? selectedObject.TextureFile : "None";
                 for (int i = 4; i < 14; i++)
                     if (selectedObject.Components.Contains((string)componetsCheck.Items[i]))
                         componetsCheck.SetItemChecked(i, true);
@@ -1158,6 +1191,7 @@ namespace LevelEditor
             }
             else
             {
+                TextureBox.Visible = true;
                 groupBox6.Visible = false;
                 groupBox5.Visible = true;
                 groupBox1.Visible = true;
@@ -1179,6 +1213,7 @@ namespace LevelEditor
                 scaleX.Value = 0;
                 scaleY.Value = 0;
                 scaleZ.Value = 0;
+                textureFileBox.Text = "None";
             }
             if (oldSelected != selectedObject)
                 oldSelected = selectedObject;
