@@ -46,7 +46,7 @@ namespace LevelEditor
             defaultTexture = TextureLoader.FromFile(device, "Assets\\default.dds");
             objects.Add(new ToolObject(ref device));
             objects[0].Name = "Empty";
-            objects.Add(new ToolObject("Assets\\Cube.obj", "Assets\\skybox.dds", ref device));
+            objects.Add(new ToolObject("Assets\\Cube.obj", ref device));
             objects.Add(new ToolObject("Assets\\Sphere.obj", ref device));
             for (int i = 0; i < objects.Count; i++)
             {
