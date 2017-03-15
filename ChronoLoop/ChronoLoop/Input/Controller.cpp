@@ -98,9 +98,9 @@ namespace Epoch {
 		return vec2f(mState.rAxis[axisId].x, mState.rAxis[axisId].y);
 	}
 
-	void Controller::TriggerHapticPulse(int duration_micro_sec, vr::EVRButtonId buttonId) {
+	void Controller::TriggerHapticPulse(unsigned short duration_micro_sec, vr::EVRButtonId buttonId) {
 			int axisId = (int)buttonId - (int)vr::k_EButton_Axis0;
-			VRInputManager::GetInstance().GetVRSystem()->TriggerHapticPulse(mIndex, axisId, (char)duration_micro_sec);
+			VRInputManager::GetInstance().GetVRSystem()->TriggerHapticPulse(mIndex, axisId, duration_micro_sec);
 	}
 
 #pragma region Private Functions

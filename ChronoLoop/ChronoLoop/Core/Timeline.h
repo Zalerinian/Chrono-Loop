@@ -28,22 +28,24 @@ namespace Epoch {
 		std::vector<SnapComponent*>mComponets;
 		std::bitset<32>mBitset;	//Base object and componets enabled or disabled //0 for the baseobject and 1-31 for the components
 	};
-	struct SnapInfoPlayer : SnapInfo {
 
-		matrix4 mPlayerWorldPos;
-		//Left Controller World Pos
-		matrix4 mLCWorldPos;
-		//Right Controller World Pos
-		matrix4 mRCWorldPos;
+	
+	//struct SnapInfoPlayer : SnapInfo {
 
-		SnapInfoPlayer() {};
-		SnapInfoPlayer(matrix4 _playerWorldPos, matrix4 _leftController, matrix4 _rightController) {
-			mPlayerWorldPos = _playerWorldPos;
-			mLCWorldPos = _leftController;
-			mRCWorldPos = _rightController;
-		}
+	//	matrix4 mPlayerWorldPos;
+	//	//Left Controller World Pos
+	//	matrix4 mLCWorldPos;
+	//	//Right Controller World Pos
+	//	matrix4 mRCWorldPos;
 
-	};
+	//	SnapInfoPlayer() {};
+	//	SnapInfoPlayer(matrix4 _playerWorldPos, matrix4 _leftController, matrix4 _rightController) {
+	//		mPlayerWorldPos = _playerWorldPos;
+	//		mLCWorldPos = _leftController;
+	//		mRCWorldPos = _rightController;
+	//	}
+
+	//};
 
 	//If you rewind time and there is no snapshot for your object that means nothing changed from the last 
 	struct Snapshot {
@@ -81,7 +83,7 @@ namespace Epoch {
 		ObjectLifeTime* GetObjectLifetime(unsigned short _id);
 		SnapInfo* GenerateSnapInfo(BaseObject* _object, SnapInfo* _info);							//Error check agianst the BaseObject* if it is null or not
 		Snapshot* GenerateSnapShot(unsigned int _time, std::vector<BaseObject*> & _clones);
-		SnapInfoPlayer * GenerateSnapInfoPlayer();
+		//SnapInfoPlayer * GenerateSnapInfoPlayer();
 		unsigned int GetCurrentGameTimeIndx() { return mCurrentGameTimeIndx; }
 		unsigned int GetTotalSnaps() { return (unsigned int)mSnapshots.size(); };
 		void HotFixResetLevel();

@@ -244,11 +244,11 @@ namespace Epoch {
 			TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
 			//Shake right controller
 			if (GestureCheck == 1) {
-				mRightController.TriggerHapticPulse(10, vr::k_EButton_Axis0);
+				mRightController.TriggerHapticPulse(200, vr::k_EButton_Axis0);
 			}
 			GestureCheck = mLeftController.CheckGesture();
 			if (GestureCheck == 1) {
-				mLeftController.TriggerHapticPulse(10, vr::k_EButton_Axis0);
+				mLeftController.TriggerHapticPulse(200, vr::k_EButton_Axis0);
 			}
 			TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
 		}

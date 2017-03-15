@@ -20,6 +20,7 @@ namespace Epoch {
 		mTimeline = new Timeline();
 		mCloneCountOn = false;
 		mSnapshotCountOn = false;
+		mCloneTextureBitset.set(false);
 		CommandConsole::Instance().AddCommand(L"/CLONECOUNT", ToggleCloneCountDisplay);
 		CommandConsole::Instance().AddCommand(L"/SNAPCOUNT", ToggleSnapshotCountDisplay);
 
@@ -117,14 +118,23 @@ namespace Epoch {
 				{
 					mCloneTextureBitset[i] = true;
 					mCloneTextures[_id] = i;
+					break;
 				}
-				if (mCloneTextureBitset[i] == true && mCloneTextureBitset.size() - 1)
+				if (mCloneTextureBitset[i] == false && mCloneTextureBitset.size() - 1)
 				{
-				AddAllTexturesToQueue();	
+					AddAllTexturesToQueue();	
 				}
 			}
 
-		
+			SystemLogger::GetLog() << "Bitset:";
+			for (unsigned int i = 0; i < mCloneTextureBitset.size(); i++)
+			{
+				if(mCloneTextureBitset[i] == true)
+					SystemLogger::GetLog() << "1";
+				else
+					SystemLogger::GetLog() << "0";
+			}
+			SystemLogger::GetLog() << std::endl;
 	}
 
 		void TimeManager::UpdatePlayerObjectInTimeline(BaseObject *  _obj) {
@@ -206,12 +216,14 @@ namespace Epoch {
 					TimeManipulation* left = LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManinpulator();
 					TimeManipulation* right = LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManinpulator();
 					if (left) {
+						SystemLogger::GetLog() << "LeftController returned " << left->GetTexture(i) << std::endl;
 						return left->GetTexture(i);
 					} else if (right) {
+						SystemLogger::GetLog() << "Right Controller returned " << right->GetTexture(i) << std::endl;
 						return right->GetTexture(i);
 					}
 				}
-				if (mCloneTextureBitset[i] == true && mCloneTextureBitset.size() - 1) {
+				if (mCloneTextureBitset[i] == 1 && mCloneTextureBitset.size() - 1) {
 					AddAllTexturesToQueue();
 					 return GetNextTexture();
 				}
