@@ -168,7 +168,7 @@ namespace LevelEditor
                         device.Transform.World = tObj.Transform;
                         device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Indices.Length, 0, tObj.Indices.Length / 3);
                     }
-                    if (tObj.Collider != null)
+                    if (tObj.Collider != null && tObj.Collider.Visible == true)
                     {
                         device.VertexFormat = CustomVertex.PositionNormalColored.Format;
                         device.RenderState.CullMode = Cull.None;
@@ -945,6 +945,7 @@ namespace LevelEditor
             {
                 selectedCollider.IsSolid = !Trigger.Checked;
                 selectedCollider.CanMove = MoveCheck.Checked;
+                selectedCollider.Visible = visibleCheck.Checked;
             }
         }
 
@@ -1086,6 +1087,7 @@ namespace LevelEditor
                 TextureBox.Visible = false;
                 Trigger.Visible = true;
                 MoveCheck.Visible = true;
+                visibleCheck.Visible = true;
                 Physics.Visible = true;
                 ExtraVector.Visible = true;
                 if (colliderType == "Plane")
@@ -1109,6 +1111,7 @@ namespace LevelEditor
                 ExtraZ.Value =      (decimal)selectedCollider.Gravity.Z;
 
                 MoveCheck.Checked = selectedCollider.CanMove;
+                visibleCheck.Checked = selectedCollider.Visible;
 
                 if (colliderType == "Button")
                 {
@@ -1157,6 +1160,7 @@ namespace LevelEditor
                 groupBox1.Visible = true;
                 Trigger.Visible = false;
                 Physics.Visible = false;
+                visibleCheck.Visible = false;
                 MoveCheck.Visible = false;
                 nameBox.Text = selectedObject.Name;
                 posX.Value =    (decimal)selectedObject.Position.X;
@@ -1196,6 +1200,7 @@ namespace LevelEditor
                 groupBox5.Visible = true;
                 groupBox1.Visible = true;
                 Trigger.Visible = false;
+                visibleCheck.Visible = false;
                 Physics.Visible = false;
                 MoveCheck.Visible = false;
                 componetsCheck.ClearSelected();

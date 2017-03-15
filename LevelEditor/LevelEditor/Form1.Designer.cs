@@ -120,6 +120,7 @@ namespace LevelEditor
             this.graphicsPanel1 = new LevelEditor.GraphicsPanel();
             this.LeftToggle = new LevelEditor.NoFocusButton();
             this.RightToggle = new LevelEditor.NoFocusButton();
+            this.visibleCheck = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -463,6 +464,7 @@ namespace LevelEditor
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.AutoScroll = true;
+            this.splitContainer2.Panel2.Controls.Add(this.visibleCheck);
             this.splitContainer2.Panel2.Controls.Add(this.MoveCheck);
             this.splitContainer2.Panel2.Controls.Add(this.Trigger);
             this.splitContainer2.Panel2.Controls.Add(this.Physics);
@@ -1376,6 +1378,18 @@ namespace LevelEditor
             this.RightToggle.UseVisualStyleBackColor = true;
             this.RightToggle.Click += new System.EventHandler(this.RightToggle_Click);
             // 
+            // visibleCheck
+            // 
+            this.visibleCheck.AutoSize = true;
+            this.visibleCheck.Dock = System.Windows.Forms.DockStyle.Top;
+            this.visibleCheck.Location = new System.Drawing.Point(0, 686);
+            this.visibleCheck.Name = "visibleCheck";
+            this.visibleCheck.Size = new System.Drawing.Size(127, 17);
+            this.visibleCheck.TabIndex = 21;
+            this.visibleCheck.Text = "Visible";
+            this.visibleCheck.UseVisualStyleBackColor = true;
+            this.visibleCheck.CheckedChanged += new System.EventHandler(this.Trigger_CheckedChanged);
+            // 
             // Editor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1527,6 +1541,7 @@ namespace LevelEditor
         private System.Windows.Forms.GroupBox TextureBox;
         private System.Windows.Forms.Button changeTexture;
         private System.Windows.Forms.TextBox textureFileBox;
+        private System.Windows.Forms.CheckBox visibleCheck;
     }
 }
 
