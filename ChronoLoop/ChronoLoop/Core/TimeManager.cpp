@@ -181,10 +181,10 @@ namespace Epoch {
 						}
 					}
 					//This doesnt delete the input left of the clone. We may not want to do that to minimize delete calls
-
-					if(mCloneTextures.find(mClones[i]->GetUniqueId()) != mCloneTextures.end())
+					std::unordered_map<unsigned short, unsigned int>::iterator textureIterator = mCloneTextures.find(mClones[i]->GetUniqueId());
+					if(textureIterator != mCloneTextures.end())
 					{
-						mCloneTextureBitset[mCloneTextures[i]] = false;
+						mCloneTextureBitset[textureIterator->second] = false;
 						mCloneTextures.erase(mClones[i]->GetUniqueId());
 					}
 					//Remove it from being tracked by timeline
@@ -223,7 +223,7 @@ namespace Epoch {
 						return right->GetTexture(i);
 					}
 				}
-				if (mCloneTextureBitset[i] == 1 && mCloneTextureBitset.size() - 1) {
+				if (mCloneTextureBitset[i] == 1 && i == mCloneTextureBitset.size() - 1) {
 					AddAllTexturesToQueue();
 					 return GetNextTexture();
 				}
