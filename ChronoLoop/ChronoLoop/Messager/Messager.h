@@ -10,18 +10,13 @@
 
 namespace Epoch
 {
+	enum msgTypes { NONE = -1, mSound };
 
-	enum msgTypes { NONE = -1, mSound, mRender, mInput, mPhysics };
-
-	enum soundMsg
-	{
+	enum soundMsg {
 		INITIALIZE_Audio, SHUTDOWN_Audio, UPDATE_Audio, ADD_Listener, REMOVE_Listener,
 		ADD_Emitter, REMOVE_Emitter, MAKEEVENT_Loc, MAKEEVENT_Listener, MAKEEVENT_Event,
 		SET_BasePath, ADD_Soundbank, REMOVE_Soundbank
 	};
-	enum renderMsg {};
-	enum inputMsg {};
-	enum physicsMsg {};
 
 	struct Message
 	{
@@ -34,9 +29,6 @@ namespace Epoch
 		{
 			int num;
 			soundMsg smType;
-			renderMsg rmTypes;
-			inputMsg imTypes;
-			physicsMsg pmTypes;
 		};
 
 		//Pointer to the struct *ugh*
@@ -128,9 +120,6 @@ namespace Epoch
 		void ProcessMessage(Message* _msg);
 
 		void ProcessSound(Message* _msg);
-		void ProcessRender(Message* _msg);
-		void ProcessPhysics(Message* _msg);
-		void ProcessInput(Message* _msg);
 		Messager();
 		Messager(const Messager& _newMsger) {}
 		Messager& operator=(const Messager& _m) { return *this; }
@@ -143,8 +132,6 @@ namespace Epoch
 		void Initialize();
 		void Process();
 	};
-
-	//Bullshit Structs
 
 	//Sound Func Structs--------------------
 	struct m_Path
@@ -160,7 +147,7 @@ namespace Epoch
 		AudioEvent mID;
 		const vec4f* mPos;
 
-		m_LocEvent() {}
+		m_LocEvent() { }
 		m_LocEvent(AudioEvent _id, const vec4f* _pos) { mID = _id; mPos = _pos; }
 	};
 
@@ -169,7 +156,7 @@ namespace Epoch
 		AudioEvent mID;
 		Emitter* mEmitter;
 
-		m_Event() {}
+		m_Event() { }
 		m_Event(AudioEvent _id, Emitter* _emitter) { mID = _id; mEmitter = _emitter; }
 	};
 
@@ -208,5 +195,4 @@ namespace Epoch
 		m_FLT(float _scale = 1.0f) { mScale = _scale; }
 	};
 	//-------------------------------------
-
 }

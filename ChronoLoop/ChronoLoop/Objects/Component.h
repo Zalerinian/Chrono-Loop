@@ -8,7 +8,6 @@
 
 namespace Epoch
 {
-
 	class BaseObject;
 	class Transform;
 	//class Mesh;
@@ -79,20 +78,20 @@ namespace Epoch
 
 		Emitter() : Component(ComponentType::eCOMPONENT_AUDIOEMITTER)
 		{
-			mIsPaused = mIsPlaying = false;
+
 		}
 
 		void Play(int _id = 0);
 		void Pause(int _id = 0);
 		void Stop(int _id = 0);
 		void PlaySFX(int _id = 0);
-		void PlaySFX(int _id = 0, const vec4f* _pos = new vec4f());
+		void PlaySFX(int _id, const vec4f* _pos);
 		void AddSoundEvent(sfxTypes _type, int64_t _event);
 
 		void Update();
 		void Destroy();
 	private:
-		bool mIsPlaying = false, mIsPaused = false;
+		std::vector<std::pair<bool, bool>> mIsSounds;
 		std::unordered_map<sfxTypes, std::vector<int64_t>> mSFX;
 
 	};
@@ -203,6 +202,16 @@ namespace Epoch
 		std::unordered_set<Collider*> mHitting;
 	};
 
+	class Light : public Component
+	{
+		union
+		{
+			DirectionalLight mDL;
+			SpotLight mSL;
+			PointLight mPL;
+		};
+	};
+
 	/*
 	business entity- gmail, twitter, facebook, steam account
 	art, audio, marketing, designer students ?
@@ -211,5 +220,4 @@ namespace Epoch
 	gdserv.fullsail.com:8080
 	install doc, follow it
 	*/
-
 }

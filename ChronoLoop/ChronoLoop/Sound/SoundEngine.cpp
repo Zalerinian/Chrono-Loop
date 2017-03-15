@@ -7,6 +7,7 @@
 #include <string>
 #include <sstream>
 #include "../Common/Math.h"
+#include "../Common/Logger.h"
 #include "../Objects/Component.h"
 #include "../Objects/BaseObject.h"
 
@@ -58,7 +59,7 @@ namespace Epoch
 
 		if (eResult != AK_Success)
 		{
-			std::cout << "Initializing sound failed. Game will now run without sound" << std::endl;
+			SystemLogger::GetLog() << "Initializing sound failed. Game will now run without sound\n";
 			SOUNDENGINE_DLL::Term();
 			return false;
 		}
