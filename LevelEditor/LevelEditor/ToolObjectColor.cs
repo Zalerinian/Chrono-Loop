@@ -295,7 +295,7 @@ namespace LevelEditor
         public void LoadGizmo(string _File)
         {
             ToolObjectColor obj = new ToolObjectColor(ref mDevice);
-            int vertOffset = 0, normOffset = 0;
+            //int vertOffset = 0, normOffset = 0;
             List<Vector3> Verts = new List<Vector3>();
             List<Vector3> Norms = new List<Vector3>();
             List<CustomVertex.PositionNormalColored> vertices = new List<CustomVertex.PositionNormalColored>();
