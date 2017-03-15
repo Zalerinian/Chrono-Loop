@@ -28,6 +28,7 @@ namespace LevelEditor
         private Vector3 mScale;
         private string mName, mTextureFile, mMeshFile, mColliderType;
         private ToolObjectColor mCollider = null;
+        private List<string> mComponents = new List<string>();
 
         #region Properties
         public CustomVertex.PositionNormalTextured[] Vertices
@@ -110,6 +111,19 @@ namespace LevelEditor
             get { return mColliderType; }
             set { mColliderType = value; }
         }
+
+        public List<string> Components
+        {
+            get
+            {
+                return mComponents;
+            }
+
+            set
+            {
+                mComponents = value;
+            }
+        }
         #endregion
 
         public ToolObject(ToolObject _Tool)
@@ -182,6 +196,8 @@ namespace LevelEditor
             if (_File != null && _File != string.Empty)
             {
                 mTextureFile = _File;
+                if (mTexture != null)
+                    mTexture.Dispose();
                 mTexture = TextureLoader.FromFile(mDevice, _File);
             }
         }
@@ -336,6 +352,8 @@ namespace LevelEditor
         {
             if (mVertices != null)
             {
+                if (mVertexBuffer != null)
+                    mVertexBuffer.Dispose();
                 mVertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionNormalTextured), mVertices.Length, mDevice, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionNormalTextured.Format, Pool.Default);
                 mVertexBuffer.SetData(mVertices, 0, LockFlags.None);
             }
@@ -344,6 +362,8 @@ namespace LevelEditor
         {
             if (mIndices != null)
             {
+                if (mIndexBuffer != null)
+                    mIndexBuffer.Dispose();
                 mIndexBuffer = new IndexBuffer(typeof(int), mIndices.Length * sizeof(int), mDevice, Usage.WriteOnly, Pool.Default);
                 mIndexBuffer.SetData(mIndices, 0, LockFlags.None);
             }
