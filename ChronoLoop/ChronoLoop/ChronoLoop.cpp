@@ -48,7 +48,7 @@ LPCTSTR WndClassName = L"ChronoWindow";
 HINSTANCE hInst;
 bool VREnabled = false;
 
-const wchar_t* _basePath = L"../ChronoLoop/Sound/Sound/Soundbanks/";
+const wchar_t* _basePath = L"../Resources/audio/";
 const wchar_t* _initSB = L"Init.bnk";
 const wchar_t* _aSB = L"Test_Soundbank.bnk";
 

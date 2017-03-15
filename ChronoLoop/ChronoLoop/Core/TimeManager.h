@@ -31,9 +31,6 @@ namespace Epoch {
 		std::vector<BaseObject*>mClones;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneInterpolators;
 		Timeline* GetTimeLine();
-		//Command Console vars
-		bool mCloneCountOn;
-		bool mSnapshotCountOn;
 		TimeManager();
 		~TimeManager();
 	public:
@@ -73,11 +70,6 @@ namespace Epoch {
 
 		void BrowseTimeline(int _gesture, int _frameRewind);
 		void MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC);
-
-		void SetCloneCountBool(bool _set) { mCloneCountOn = _set; }
-		void SetSnapCountBool(bool _set) { mSnapshotCountOn = _set; }
-
-
 
 		void HotfixResetTimeline();
 	};

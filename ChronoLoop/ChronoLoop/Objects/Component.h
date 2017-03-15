@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include "..\Physics\Physics.h"
 #include <unordered_set>
+#include "../Rendering/RenderSet.h"	
 
 namespace Epoch
 {
@@ -115,8 +116,8 @@ namespace Epoch
 		vec4f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity, mWeight, mDragForce;
 		float mMass, mElasticity, mKineticFriction, mStaticFriction, mInvMass, mRHO, mDrag, mArea;
 
-		void Update();
-		void Destroy();
+		virtual void Update();
+		virtual void Destroy();
 
 		vec4f AddForce(vec4f _force) { mForces = _force; return mForces; };
 		virtual vec4f GetPos();
@@ -166,6 +167,10 @@ namespace Epoch
 		CubeCollider(BaseObject* _obj, bool _move, bool _trigger, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec4f _min, vec4f _max);
 		CubeCollider(vec4f _min, vec4f _max) { mMin = _min; mMax = _max; };
 		vec4f mMin, mMax, mMinOffset, mMaxOffset;
+		RenderShape* mShape;
+		GhostList<matrix4>::GhostNode* mNode = nullptr;
+		virtual void Update();
+
 		virtual void SetPos(const vec4f& _newPos);
 	};
 
