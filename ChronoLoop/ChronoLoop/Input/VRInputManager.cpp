@@ -2,7 +2,7 @@
 #include "VrInputManager.h"
 #include "../Common/Logger.h"
 #include "../Core/TimeManager.h"
-#include "../Core/Level.h"
+#include "../Core/LevelManager.h"
 
 namespace Epoch {
 
@@ -47,7 +47,7 @@ namespace Epoch {
 		SystemLogger::Info() << "Left controller ID:  " << leftID << std::endl;
 		mRightController.Setup(rightID);
 		mLeftController.Setup(leftID);
-		mPlayerPosition = matrix4::CreateTranslation(2, -1, 8);
+		mPlayerPosition = matrix4::CreateTranslation(8, 0, -4);
 		mInputTimeline = new InputTimeline();
 	}
 
@@ -85,13 +85,14 @@ namespace Epoch {
 		}
 		mSnapTweenTime = mTweenTimestamp / RecordingRate;
 
+		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 		//Pull vr events to find button press or up
 		vr::VREvent_t tempEvent;
 		bool right = false;
 		bool left = false;
-		if (Level::Instance()->iGetRightTimeManinpulator() != nullptr || Level::Instance()->iGetLeftTimeManinpulator() != nullptr) {
-			bool right = Level::Instance()->iGetRightTimeManinpulator()->isTimePaused();
-			bool left = Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused();
+		if (cLevel->GetRightTimeManinpulator() != nullptr || cLevel->GetLeftTimeManinpulator() != nullptr) {
+			bool right = cLevel->GetRightTimeManinpulator()->isTimePaused();
+			bool left = cLevel->GetLeftTimeManinpulator()->isTimePaused();
 		}
 		//if there is a event avaliable and the game is focused
 		while (mVRSystem->PollNextEvent(&tempEvent, sizeof(tempEvent)) && !mVRSystem->IsInputFocusCapturedByAnotherProcess() && (!left && !right)) {
@@ -111,6 +112,7 @@ namespace Epoch {
 	}
 
 	void VIM::AddInputNode(vr::VREvent_t* _event) {
+		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 		InputTimeline::InputNode* node = new InputTimeline::InputNode();
 		node->mData.mLastFrame = TimeManager::Instance()->GetCurrentSnapFrame();
 		node->mData.mButton = (vr::EVRButtonId)_event->data.controller.button;
@@ -125,11 +127,11 @@ namespace Epoch {
 		}
 
 		if (_event->trackedDeviceIndex == mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand)) {
-			node->mData.mControllerId = Level::Instance()->iGetLeftController()->GetUniqueId();
+			node->mData.mControllerId = cLevel->GetLeftController()->GetUniqueId();
 			node->mData.mVelocity = mLeftController.GetVelocity();
 			//SystemLogger::GetLog() << "Lefthand" << std::endl;
 		} else {
-			node->mData.mControllerId = Level::Instance()->iGetRightController()->GetUniqueId();
+			node->mData.mControllerId = cLevel->GetRightController()->GetUniqueId();
 			node->mData.mVelocity = mRightController.GetVelocity();
 			//SystemLogger::GetLog() <<  "Righthand" << std::endl;
 		}

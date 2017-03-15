@@ -19,7 +19,6 @@ namespace Epoch
 		void Scale(float x, float y, float z) { this->mMatrix = matrix4::CreateScale(x, y, z); };
 
 		inline matrix4& GetMatrix() { return mMatrix; };
-		inline void GetTransposedMatrix(matrix4& _filler) { _filler = mMatrix.Transpose(); }
 		inline void GetMatrix(matrix4& _filler) { _filler = mMatrix; }
 		inline void SetMatrix(matrix4& _mat) { mMatrix = _mat; };
 		//**GETTERS**//

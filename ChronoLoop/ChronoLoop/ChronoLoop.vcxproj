@@ -214,6 +214,18 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Actions\TimeManipulation.h" />
     <ClInclude Include="Common\Breakpoint.h" />
     <ClInclude Include="Common\Common.h" />
+    <ClInclude Include="Common\EasingFunctions.h" />
+    <ClInclude Include="Common\Easing\Back.h" />
+    <ClInclude Include="Common\Easing\Bounce.h" />
+    <ClInclude Include="Common\Easing\Circ.h" />
+    <ClInclude Include="Common\Easing\Cubic.h" />
+    <ClInclude Include="Common\Easing\Elastic.h" />
+    <ClInclude Include="Common\Easing\Expo.h" />
+    <ClInclude Include="Common\Easing\Linear.h" />
+    <ClInclude Include="Common\Easing\Quad.h" />
+    <ClInclude Include="Common\Easing\Quart.h" />
+    <ClInclude Include="Common\Easing\Quint.h" />
+    <ClInclude Include="Common\Easing\Sine.h" />
     <ClInclude Include="Common\FileIO.h" />
     <ClInclude Include="Common\FileIO\FileIO_General.h" />
     <ClInclude Include="Common\FileIO\FileIO_Textures.h" />
@@ -227,6 +239,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Common\Math\vec3f.h" />
     <ClInclude Include="Common\Math\vec4f.h" />
     <ClInclude Include="Common\Math\vec4i.h" />
+    <ClInclude Include="Common\Settings.h" />
     <ClInclude Include="Core\Level.h" />
     <ClInclude Include="Core\LevelManager.h" />
     <ClInclude Include="Core\Pool.h" />
@@ -266,6 +279,8 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Rendering\VertexBufferManager.h" />
     <ClInclude Include="Rendering\TextureManager.h" />
     <ClInclude Include="Sound\SoundEngine.h" />
+    <ClInclude Include="tinyxml\tinystr.h" />
+    <ClInclude Include="tinyxml\tinyxml.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\DXTK\BC.cpp">
@@ -356,14 +371,27 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClCompile Include="ChronoLoop.cpp" />
     <ClCompile Include="Common\Breakpoint.cpp" />
     <ClCompile Include="Common\Common.cpp" />
+    <ClCompile Include="Common\Easing\Back.cpp" />
+    <ClCompile Include="Common\Easing\Bounce.cpp" />
+    <ClCompile Include="Common\Easing\Circ.cpp" />
+    <ClCompile Include="Common\Easing\Cubic.cpp" />
+    <ClCompile Include="Common\Easing\Elastic.cpp" />
+    <ClCompile Include="Common\Easing\Expo.cpp" />
+    <ClCompile Include="Common\Easing\Linear.cpp" />
+    <ClCompile Include="Common\Easing\Quad.cpp" />
+    <ClCompile Include="Common\Easing\Quart.cpp" />
+    <ClCompile Include="Common\Easing\Quint.cpp" />
+    <ClCompile Include="Common\Easing\Sine.cpp" />
     <ClCompile Include="Common\FileIO\FileIO_General.cpp" />
     <ClCompile Include="Common\FileIO\FileIO_Textures.cpp" />
+    <ClCompile Include="Common\LimitedList.cpp" />
     <ClCompile Include="Common\Logger.cpp" />
     <ClCompile Include="Common\Math\matrix4.cpp" />
     <ClCompile Include="Common\Math\vec2f.cpp" />
     <ClCompile Include="Common\Math\vec3f.cpp" />
     <ClCompile Include="Common\Math\vec4f.cpp" />
     <ClCompile Include="Common\Math\vec4i.cpp" />
+    <ClCompile Include="Common\Settings.cpp" />
     <ClCompile Include="Core\Level.cpp" />
     <ClCompile Include="Core\LevelManager.cpp" />
     <ClCompile Include="Core\Pool.cpp" />
@@ -400,6 +428,10 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClCompile Include="Rendering\VertexBufferManager.cpp" />
     <ClCompile Include="Rendering\TextureManager.cpp" />
     <ClCompile Include="Sound\SoundEngine.cpp" />
+    <ClCompile Include="tinyxml\tinystr.cpp" />
+    <ClCompile Include="tinyxml\tinyxml.cpp" />
+    <ClCompile Include="tinyxml\tinyxmlerror.cpp" />
+    <ClCompile Include="tinyxml\tinyxmlparser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\BasicPixel.hlsl">
@@ -425,10 +457,10 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <FxCompile Include="Rendering\Shaders\GSDuplicateMesh.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
     </FxCompile>

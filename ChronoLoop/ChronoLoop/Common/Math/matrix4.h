@@ -32,8 +32,7 @@ namespace Epoch {
 		};
 
 		matrix4();
-		matrix4(const matrix4& _copy);
-		//matrix4(matrix4& _copy);
+		matrix4(matrix4& _copy);
 		matrix4(float _11, float _12, float _13, float _14, float _21, float _22, float _23, float _24, float _31, float _32, float _33, float _34, float _41, float _42, float _43, float _44);
 		matrix4(DirectX::XMMATRIX _xm);
 		matrix4(vr::HmdMatrix44_t& _m);

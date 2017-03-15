@@ -1,8 +1,8 @@
 #pragma once
-#include "Actions/CodeComponent.hpp"
-#include "Objects/MeshComponent.h"
-#include "Objects/BaseObject.h"
-#include "Input/VRInputManager.h"
+#include "CodeComponent.hpp"
+#include "../Objects/MeshComponent.h"
+#include "../Objects/BaseObject.h"
+#include "../Input/VRInputManager.h"
 
 namespace Epoch
 {

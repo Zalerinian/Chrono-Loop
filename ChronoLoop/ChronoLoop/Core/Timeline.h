@@ -85,10 +85,12 @@ namespace Epoch {
 		unsigned int GetCurrentGameTimeIndx() { return mCurrentGameTimeIndx; }
 		unsigned int GetTotalSnaps() { return (unsigned int)mSnapshots.size(); };
 		void HotFixResetLevel();
+		void RemoveFromTimeline(unsigned short _id);
 		bool RewindMakeClone(unsigned int _snaptime);
 		bool RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void MoveObjectToSnap(unsigned int _snaptime, unsigned short _id);
 		void MoveAllObjectsToSnap(unsigned int _snaptime);
+		void InterpAllObjectsToSnapExceptPlayer(unsigned int _fromSnapTime, unsigned int _toSnapTime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void SetBaseObjectDeathTime(unsigned short _id);
 		void SetCloneCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);

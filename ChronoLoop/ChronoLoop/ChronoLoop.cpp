@@ -12,18 +12,20 @@
 #include <ctime>
 #include <chrono>
 #include <d3d11.h>
-#include "Actions\CodeComponent.hpp"
 #include "Common/Math.h"
 #include "Objects/MeshComponent.h"
-#include "Actions/HeadsetFollow.hpp"
-#include "Actions/BoxSnapToControllerAction.hpp"
+
 #include "Messager\Messager.h"
 #include "Objects\BaseObject.h"
 #include "Actions/TeleportAction.hpp"
 #include "Actions/CCElasticReactionWithPlane.h"
+#include "Actions/BoxSnapToControllerAction.hpp"
 #include "Actions/CCElasticSphereToSphere.h"
 #include "Actions/CCElasticAABBtoAABB.h"
 #include "Actions/CCElasticAABBToSphere.h"
+#include "Actions/TimeManipulation.h"
+#include "Actions/HeadsetFollow.hpp"
+#include "Actions\CodeComponent.hpp"
 #include "Actions/CCButtonPress.h"
 #include "Actions\CCEnterLevel.h"
 #include "Actions/MainMenuBT.h"
@@ -34,10 +36,9 @@
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
-#include "Actions/TimeManipulation.h"
 
 using namespace Epoch;
-#define LEVEL_1 1
+#define LEVEL_1 0
 #define MAINMENU 0
 #define CONSOLE_OVERRIDE 1
 #define FIXED_UPDATE_INTERVAL (1 / 180.0f)
@@ -47,7 +48,7 @@ LPCTSTR WndClassName = L"ChronoWindow";
 HINSTANCE hInst;
 bool VREnabled = false;
 
-const wchar_t* _basePath = L"../ChronoLoop/Sound/Sound/Soundbanks/";
+const wchar_t* _basePath = L"../Resources/audio/";
 const wchar_t* _initSB = L"Init.bnk";
 const wchar_t* _aSB = L"Test_Soundbank.bnk";
 
@@ -86,7 +87,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 		VREnabled = true;
 	}
 
-	if (!InitializeSystems(hwnd, 800, 600, false, 90, false, 1000, 0.1f, vrsys)) {
+	if (!InitializeSystems(hwnd, 1366, 720, false, 90, false, 1000, 0.1f, vrsys)) {
 		return 1;
 	}
 
@@ -99,7 +100,6 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	// Cleanup
 	vr::VR_Shutdown();
 	ShutdownSystems();
-	Level::DestroyInstance();
 	SystemLogger::DestroyInstance();
 	vrsys = nullptr;
 
@@ -163,12 +163,12 @@ void Update() {
 	mmStartMesh->AddTexture("../Resources/start.png", eTEX_DIFFUSE);
 	mmStart->AddComponent(mmStartMesh);
 	
-	//Transform cubeScale;
-	//cubeScale.SetMatrix(matrix4::CreateScale(0.01f, 0.01f, 0.01f));
-	//BaseObject* mmCube = Pool::Instance()->iGetObject()->Reset("mmCube", cubeScale);// new BaseObject("walls", PlaneTransform);
-	//MeshComponent *mmCubeMesh = new MeshComponent("../Resources/Cube.obj");
-	//mmCubeMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
-	//mmCube->AddComponent(mmCubeMesh);
+	Transform cubeScale;
+	cubeScale.SetMatrix(matrix4::CreateScale(0.01f, 0.01f, 0.01f));
+	BaseObject* mmCube = Pool::Instance()->iGetObject()->Reset("mmCube", cubeScale);// new BaseObject("walls", PlaneTransform);
+	MeshComponent *mmCubeMesh = new MeshComponent("../Resources/Cube.obj");
+	mmCubeMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
+	mmCube->AddComponent(mmCubeMesh);
 	
 	
 	Transform buttonTransform2;
@@ -260,19 +260,20 @@ void Update() {
 	Physics::Instance()->mObjects.push_back(LeftController);
 	Physics::Instance()->mObjects.push_back(mmdoor);
 	
-	Level::Initialize(headset, RightController, LeftController);
-	Level* MainMenu = Level::Instance();
-	MainMenu->iAddObject(RightController);
-	MainMenu->iAddObject(headset);
-	MainMenu->iAddObject(LeftController);
-	MainMenu->iAddObject(chamber);
-	MainMenu->iAddObject(mmRoom);
-	MainMenu->iAddObject(mmfloor);
-	MainMenu->iAddObject(mmStart);
-	MainMenu->iAddObject(mmExit);
-	MainMenu->iAddObject(mmdoor);
-	//MainMenu->iAddObject(mmCube);
-	MainMenu->iCallStart();
+	Level* MainMenu = new Level;
+	MainMenu->Initialize(headset, RightController, LeftController);
+	LevelManager::GetInstance().SetCurrentLevel(MainMenu);
+	MainMenu->AddObject(RightController);
+	MainMenu->AddObject(headset);
+	MainMenu->AddObject(LeftController);
+	MainMenu->AddObject(chamber);
+	MainMenu->AddObject(mmRoom);
+	MainMenu->AddObject(mmfloor);
+	MainMenu->AddObject(mmStart);
+	MainMenu->AddObject(mmExit);
+	MainMenu->AddObject(mmdoor);
+	MainMenu->AddObject(mmCube);
+	MainMenu->CallStart();
 	VRInputManager::GetInstance().GetPlayerPosition().Position = vec4f(0, 0, 0, 1);
 
 #endif
@@ -296,16 +297,24 @@ void Update() {
 	PhysicsBox->AddComponent(BoxCollision);
 	PhysicsBox->AddComponent(BoxSphereCollision);
 	TimeManager::Instance()->AddObjectToTimeline(PhysicsBox);
-	Emitter* aabbSound = new Emitter();
+	Emitter* aabbSound = new Emitter(), *aabbs2 = new Emitter(), *ss1 = new Emitter(), *ss2 = new Emitter();
 	PhysicsBox->AddComponent(aabbSound);
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_TEST1);
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_TEST1);
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_TEST1);
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_TEST1);
 	aabbSound->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::PLAYBOUNCEEFFECTS);
+	aabbs2->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_TEST1);
+	aabbs2->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_TEST1);
+	aabbs2->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_TEST1);
+	aabbs2->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_TEST1);
+	aabbs2->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::PLAYBOUNCEEFFECTS);
+	ss1->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::PLAYBOUNCEEFFECTS);
+	ss2->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::PLAYBOUNCEEFFECTS);
 	MeshComponent *visibleMesh = new MeshComponent("../Resources/raycube.obj");
 	visibleMesh->AddTexture("../Resources/raycube.png", eTEX_DIFFUSE);
 	PhysicsBox->AddComponent(visibleMesh);
+	PhysicsBox->AddComponent(aabbSound);
 	
 	
 	Transform transformBox;
@@ -329,7 +338,7 @@ void Update() {
 	MeshComponent *visibleMeshBox = new MeshComponent("../Resources/raycube.obj");
 	visibleMeshBox->AddTexture("../Resources/raycube.png", eTEX_DIFFUSE);
 	PhysicsBox2->AddComponent(visibleMeshBox);
-	
+	PhysicsBox2->AddComponent(aabbs2);
 	
 	Transform SphereTransform;
 	matrix4 SphereMat = matrix4::CreateScale(0.15f, 0.15f, 0.15f); 
@@ -349,7 +358,7 @@ void Update() {
 	MeshComponent *sphereMesh = new MeshComponent("../Resources/Sphere.obj");
 	sphereMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 	PhysicsSphere->AddComponent(sphereMesh);
-	
+	PhysicsSphere->AddComponent(ss1);
 	
 	Transform SphereTransform2;
 	matrix4 SphereMat2 = matrix4::CreateScale(0.15f, 0.15f, 0.15f);
@@ -369,6 +378,7 @@ void Update() {
 	MeshComponent *sphereMesh2 = new MeshComponent("../Resources/Sphere.obj");
 	sphereMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 	PhysicsSphere2->AddComponent(sphereMesh2);
+	PhysicsSphere2->AddComponent(ss2);
 	
 	
 	Transform ButtonTransform;
@@ -508,8 +518,11 @@ void Update() {
 	Listener* ears = new Listener();
 	camObj.AddComponent(ears);
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(ears, "Listener")));
-	//Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(aabbSound, "aabbS")));
-	//aabbSound->Play();
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(aabbSound, "aabbS")));
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(aabbs2, "aabbS2")));
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(ss1, "ss1")));
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(ss2, "ss2")));
+	aabbSound->Play();
 	
 	BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", transform); //new BaseObject("headset", transform);
 	MeshComponent *visibleMesh2 = new MeshComponent("../Resources/Cube.obj");
@@ -531,26 +544,116 @@ void Update() {
 	Physics::Instance()->mObjects.push_back(RightController);
 	Physics::Instance()->mObjects.push_back(LeftController);
 	Physics::Instance()->mObjects.push_back(Button);
-	
-	Level::Initialize(headset, LeftController, RightController);
-	Level* L1 = Level::Instance(); 
-	L1->iAddObject(PhysicsBox);
-	L1->iAddObject(PhysicsBox2);
-	L1->iAddObject(PhysicsSphere);
-	L1->iAddObject(PhysicsSphere2);
-	L1->iAddObject(Floor);
-	L1->iAddObject(RightController);
-	L1->iAddObject(walls);
-	L1->iAddObject(headset);
-	L1->iAddObject(LeftController);
-	L1->iAddObject(Button);
-	L1->iAddObject(ExitWall);
-	L1->iAddObject(BlockDoor);
-	L1->iAddObject(ControlBoard);
-	L1->iAddObject(WinBoard);
-	L1->iCallStart();
+
+	Level* L1 = new Level;
+	L1->Initialize(headset, LeftController, RightController);
+	L1->AddObject(PhysicsBox);
+	L1->AddObject(PhysicsBox2);
+	L1->AddObject(PhysicsSphere);
+	L1->AddObject(PhysicsSphere2);
+	L1->AddObject(Floor);
+	L1->AddObject(RightController);
+	L1->AddObject(walls);
+	L1->AddObject(headset);
+	L1->AddObject(LeftController);
+	L1->AddObject(Button);
+	L1->AddObject(ExitWall);
+	L1->AddObject(BlockDoor);
+	L1->AddObject(ControlBoard);
+	L1->AddObject(WinBoard);
+	LevelManager::GetInstance().SetCurrentLevel(L1);
+	L1->CallStart();
 
 #endif
+
+	
+	//Sound Initializing---------------------------------------------------
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::INITIALIZE_Audio, 0, false));
+	//Soundbanks
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::SET_BasePath, 0, false, (void*)new m_Path(_basePath)));
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_initSB)));
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
+
+	//Temp Camera OBJ
+	Transform camTrans;
+	BaseObject camObj("TempCam", camTrans);
+	Listener* ears = new Listener();
+	camObj.AddComponent(ears);
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(ears, "Listener")));
+	//Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(aabbSound, "aabbS")));
+	//aabbSound->Play();
+
+	Transform identity, transform;
+	BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("RController", identity);// new BaseObject("Controller", identity);
+	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
+	MeshComponent *rightRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
+	rightRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
+	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+	TeleportAction *ta = new TeleportAction(eControllerType_Primary);
+	TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
+	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
+	RightController->AddComponent(mc);
+	RightController->AddComponent(rightRaycaster);
+	RightController->AddComponent(ta);
+	RightController->AddComponent(rightConCol);
+	RightController->AddComponent(tm);
+	BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
+	((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
+	RightController->AddComponent(pickup);
+	TimeManager::Instance()->AddObjectToTimeline(RightController);
+
+	//pat added
+	BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("LController", identity); //new BaseObject("Controller2", identity);
+	MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
+	MeshComponent *leftRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
+	leftRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
+	mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+	TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
+	TimeManipulation* tm2 = new TimeManipulation(eControllerType_Secondary);
+	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
+	LeftController->AddComponent(leftConCol);
+	LeftController->AddComponent(leftRaycaster);
+	LeftController->AddComponent(mc2);
+	LeftController->AddComponent(ta2);
+	LeftController->AddComponent(tm2);
+	BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
+	((BoxSnapToControllerAction*)pickup2)->mControllerRole = eControllerType_Secondary;
+	LeftController->AddComponent(pickup2);
+	TimeManager::Instance()->AddObjectToTimeline(LeftController);
+
+
+	BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", transform); //new BaseObject("headset", transform);
+	MeshComponent *visibleMesh2 = new MeshComponent("../Resources/Cube.obj");
+	visibleMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
+	visibleMesh2->SetVisible(false);
+	HeadsetFollow* hfollow = new HeadsetFollow();
+	headset->AddComponent(hfollow);
+	headset->AddComponent(visibleMesh2);
+	TimeManager::Instance()->AddObjectToTimeline(headset);
+
+	Physics::Instance()->mObjects.push_back(RightController);
+	Physics::Instance()->mObjects.push_back(LeftController);
+
+	matrix4 mat1 = matrix4::CreateScale(0.3f, 0.3f, 0.3f);
+	transform.SetMatrix(mat1);
+	BaseObject* PhysicsBox = Pool::Instance()->iGetObject()->Reset("aabb", transform);
+	MeshComponent *visibleMesh = new MeshComponent("../Resources/raycube.obj");
+	visibleMesh->AddTexture("../Resources/raycube.png", eTEX_DIFFUSE);
+	PhysicsBox->AddComponent(visibleMesh);
+
+	Level* L1;
+
+	while (LevelManager::GetInstance().LoadLevelAsync("../../Level1_2_5.xml", &L1) != Epoch::LM::LevelStatus::Success) {}
+	//while (LevelManager::GetInstance().LoadLevelAsync("../Resources/collider.xml", &L1) != Epoch::LM::LevelStatus::Success) {}
+	L1->Initialize(headset, LeftController, RightController);
+	L1->AddObject(RightController);
+	L1->AddObject(headset);
+	L1->AddObject(LeftController);
+	L1->AddObject(PhysicsBox);
+	//LevelManager::GetInstance().LoadLevelAsync("../Resources/LEVEL1/collider.xml", &L1);
+	LevelManager::GetInstance().SetCurrentLevel(L1);
+	L1->CallStart();
+	
 
 	//// Test for TextureManager::iAddTexture2D. Works nicely!
 	//D3D11_TEXTURE2D_DESC AddedTextureDesc;
@@ -578,7 +681,7 @@ void Update() {
 	
 	UpdateTime();
 	fixedTime = 0;
-	while (Level::Instance()->ChronoLoop) {
+	while (LevelManager::GetInstance().GetCurrentLevel()->ChronoLoop) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			// Handle windows message.
 			if (msg.message == WM_QUIT) {
@@ -595,7 +698,7 @@ void Update() {
 
 			//SystemLogger::GetLog() << "[Debug] Regular Update " << std::endl;
 			UpdateTime();
-			Level::Instance()->iUpdate();
+			LevelManager::GetInstance().GetCurrentLevel()->Update();
 			
 			TimeManager::Instance()->Update(deltaTime);
 			Renderer::Instance()->Render(deltaTime); 

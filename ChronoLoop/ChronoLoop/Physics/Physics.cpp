@@ -6,7 +6,7 @@
 #include "..\Objects\Component.h"
 #include "..\Actions\CodeComponent.hpp"
 #include "..\Input\VRInputManager.h"
-#include "..\Core\Level.h"
+#include "..\Core\LevelManager.h"
 
 namespace Epoch {
 
@@ -640,12 +640,14 @@ namespace Epoch {
 
 
 	void Physics::Update(float _time) {
+		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
 		bool right = false;
 		bool left = false;
-		if (Level::Instance()->iGetRightTimeManinpulator() != nullptr || Level::Instance()->iGetLeftTimeManinpulator() != nullptr) {
-			right = Level::Instance()->iGetRightTimeManinpulator()->isTimePaused();
-			left = Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused();
+
+		if (cLevel->GetRightTimeManinpulator() != nullptr || cLevel->GetLeftTimeManinpulator() != nullptr) {
+			right = cLevel->GetRightTimeManinpulator()->isTimePaused();
+			left = cLevel->GetLeftTimeManinpulator()->isTimePaused();
 		}
 		if (!left && !right) {
 			//SystemLogger::GetLog() << _time << std::endl;
@@ -702,9 +704,9 @@ namespace Epoch {
 											if (result == 2)//behind plane
 											{
 												float bottom = ((SphereCollider*)collider)->mCenter.y - ((SphereCollider*)collider)->mRadius;
-												if (bottom < otherCol->GetPos().y) {
+												if (bottom < ((PlaneCollider*)otherCol)->mOffset) {
 													vec4f pos = collider->GetPos();
-													collider->SetPos(vec4f(pos.x, otherCol->GetPos().y + ((CubeCollider*)collider)->mMinOffset.y, pos.z, 1));
+													collider->SetPos(vec4f(pos.x, ((PlaneCollider*)otherCol)->mOffset + ((SphereCollider*)collider)->mRadius, pos.z, 1));
 
 													CalcFriction(*collider, plane.mNormal, otherCol->mStaticFriction, otherCol->mKineticFriction);
 													for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f) {
@@ -725,9 +727,9 @@ namespace Epoch {
 												}
 
 												float bottom = ((SphereCollider*)collider)->mCenter.y - ((SphereCollider*)collider)->mRadius;
-												if (bottom < otherCol->GetPos().y) {
+												if (bottom < ((PlaneCollider*)otherCol)->mOffset) {
 													vec4f pos = collider->GetPos();
-													collider->SetPos(vec4f(pos.x, otherCol->GetPos().y + fabsf(((SphereCollider*)collider)->mRadius), pos.z, 1));
+													collider->SetPos(vec4f(pos.x, ((PlaneCollider*)otherCol)->mOffset + ((SphereCollider*)collider)->mRadius, pos.z, 1));
 												}
 											}
 										}
@@ -775,7 +777,7 @@ namespace Epoch {
 											{
 												if (((CubeCollider*)collider)->mMin.y < otherCol->GetPos().y) {
 													vec4f pos = collider->GetPos();
-													collider->SetPos(vec4f(pos.x, otherCol->GetPos().y + ((CubeCollider*)collider)->mMinOffset.y, pos.z, 1));
+													collider->SetPos(vec4f(pos.x, ((PlaneCollider*)otherCol)->mOffset + ((CubeCollider*)collider)->mMinOffset.y, pos.z, 1));
 
 													CalcFriction(*collider, plane.mNormal, otherCol->mStaticFriction, otherCol->mKineticFriction);
 													for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f) {
@@ -796,15 +798,18 @@ namespace Epoch {
 														((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnCollision(*collider, *otherCol, _time);
 												}
 
-												if (((CubeCollider*)collider)->mMin.y < otherCol->GetPos().y) {
+												if (((CubeCollider*)collider)->mMin.y < ((PlaneCollider*)otherCol)->mOffset) {
 													vec4f pos = collider->GetPos();
-													collider->SetPos(vec4f(pos.x, otherCol->GetPos().y + fabsf(((CubeCollider*)collider)->mMinOffset.y), pos.z, 1));
+													collider->SetPos(vec4f(pos.x, ((PlaneCollider*)otherCol)->mOffset + fabsf(((CubeCollider*)collider)->mMinOffset.y), pos.z, 1));
 												}
 											}
 										}
 										if (collider->mIsTrigger && otherCol->mColliderType == Collider::eCOLLIDER_Controller) {
-											for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f) {
-												((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+											CubeCollider aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
+											if (AABBtoAABB(aabb1, aabb2)) {
+												for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f) {
+													((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+												}
 											}
 										}
 									}
@@ -832,9 +837,9 @@ namespace Epoch {
 						{
 							CubeCollider aabb1(((ButtonCollider*)collider)->mMin, ((ButtonCollider*)collider)->mMax);
 							if (AabbToPlane(((ButtonCollider*)collider)->mUpperBound, aabb1) != 2) {
-								collider->mVelocity = { 0,0,0,0 };
-								collider->mAcceleration = { 0,0,0,0 };
-								collider->mTotalForce = { 0,0,0,0 };
+								collider->mVelocity = { 0,0,0,1 };
+								collider->mAcceleration = { 0,0,0,1 };
+								collider->mTotalForce = { 0,0,0,1 };
 							}
 
 							for (int j = 0; j < objs; ++j) {
@@ -893,15 +898,15 @@ namespace Epoch {
 						}
 
 						if (((ControllerCollider*)collider)->mLeft &&
-							(collider->mObject->GetUniqueID() == Level::Instance()->iGetLeftController()->GetUniqueID() ||
-								collider->mObject->GetUniqueID() == Level::Instance()->iGetRightController()->GetUniqueID())) {
+							(collider->mObject->GetUniqueID() == cLevel->GetLeftController()->GetUniqueID() ||
+								collider->mObject->GetUniqueID() == cLevel->GetRightController()->GetUniqueID())) {
 							collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
 							collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
 							collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetVelocity();
 							collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPosition().Position);
 						} else if ((!(((ControllerCollider*)collider)->mLeft) &&
-							(collider->mObject->GetUniqueID() == Level::Instance()->iGetLeftController()->GetUniqueID() ||
-								collider->mObject->GetUniqueID() == Level::Instance()->iGetRightController()->GetUniqueID()))) {
+							(collider->mObject->GetUniqueID() == cLevel->GetLeftController()->GetUniqueID() ||
+								collider->mObject->GetUniqueID() == cLevel->GetRightController()->GetUniqueID()))) {
 							collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
 							collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
 							collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Primary).GetVelocity();
@@ -909,13 +914,32 @@ namespace Epoch {
 						}
 					}
 
+					Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
+					if (((ControllerCollider*)collider)->mLeft &&
+						(collider->mObject->GetUniqueID() == cLevel->GetLeftController()->GetUniqueID() ||
+							collider->mObject->GetUniqueID() == cLevel->GetRightController()->GetUniqueID())) {
+						collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
+						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
+						collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetVelocity();
+						collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPosition().Position);
+					} else if ((!(((ControllerCollider*)collider)->mLeft) &&
+						(collider->mObject->GetUniqueID() == cLevel->GetLeftController()->GetUniqueID() ||
+							collider->mObject->GetUniqueID() == cLevel->GetRightController()->GetUniqueID()))) {
+						collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
+						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
+						collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Primary).GetVelocity();
+						collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPosition().Position);
+					}
+				}
+
+				if (collider->mShouldMove && collider->mColliderType != Collider::eCOLLIDER_Controller) {
 					if (collider->mShouldMove) {
 						collider->mDragForce = collider->mVelocity * (-0.5f * collider->mRHO * collider->mVelocity.Magnitude3() * collider->mDrag * collider->mArea);
 						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
 						collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
 
 						if (fabs(collider->mForces.x) < 0.01f && fabsf(collider->mForces.y) < 0.01f && fabsf(collider->mForces.z) < 0.01f)
-							collider->mForces = { 0,0,0,0 };
+							collider->mForces = { 0,0,0,1 };
 						else
 							collider->mForces *= 0.99f;
 

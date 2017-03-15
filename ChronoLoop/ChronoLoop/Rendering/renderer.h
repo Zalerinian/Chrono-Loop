@@ -20,7 +20,10 @@ namespace Epoch {
 			matrix4 view, projection;
 		} mVPLeftData, mVPRightData;
 		static Renderer* sInstance;
-
+		//TODO: Light buffers
+		DirectionalLight mDLData;
+		PointLight mPLData;
+		SpotLight mSLData;
 
 		// Instance members
 		// D3D11 Variables
@@ -39,8 +42,16 @@ namespace Epoch {
 		vr::IVRSystem* mVrSystem;
 		RenderSet mRenderSet;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mVPBuffer, mPositionBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mDLBuffer, mPLBuffer, mSLBuffer;
 		bool mUseVsync = false;
-
+		//ShadowMap 1 - Directional, 2 - Point, 3 - Spot
+		Microsoft::WRL::ComPtr<ID3D11VertexShader> mShadowVS;
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mSDSView1, mSDSView2, mSDSView3;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> mShadowTextures1, mShadowTextures2, mShadowTextures3;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mShadowSRV1, mShadowSRV2, mShadowSRV3;
+		Microsoft::WRL::ComPtr<ID3D11SamplerState> mSSamplerState;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mDLBufferS, mPLBufferS, mSLBufferS;
+		ViewProjectionBuffer mSLVPB, mDLVPB, mPLVPB;
 
 		//Pat Added
 		//DirectWrite Drawing componets
@@ -67,6 +78,8 @@ namespace Epoch {
 		matrix4 GetProjection(vr::EVREye e);
 		void UpdateViewProjection();
 		void UpdateGSBuffers();
+		void UpdateLBuffers();
+		void RenderShadowMaps(float _delta);
 		
 		void RenderVR(float _delta);
 		void UpdateCamera(float const moveSpd, float const rotSpd, float delta);

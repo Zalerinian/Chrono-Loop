@@ -7,7 +7,7 @@
 #include "../Input/VRInputManager.h"
 #include "../Core/Level.h"
 #include "../Core/TimeManager.h"
-
+#include "../Core/LevelManager.h"
 #include "../Actions/HeadsetFollow.hpp"
 
 namespace Epoch {
@@ -16,29 +16,37 @@ namespace Epoch {
 		MeshComponent *mPlaneMesh, *mWallsMesh, *mBlockMesh, *mExitMesh;
 		BaseObject *mPlaneObject, *mWallsObject, *mBlockObject, *mExitObject;
 		ControllerType mControllerRole = eControllerType_Primary;
+		Level* cLevel = nullptr;
 		TeleportAction(ControllerType _t) { mControllerRole = _t; };
 
 		virtual void Start() {
-			mPlaneObject = Level::Instance()->iFindObjectWithName("plane");
-			mWallsObject = Level::Instance()->iFindObjectWithName("walls");
-			mBlockObject = Level::Instance()->iFindObjectWithName("BlockDoor");
-			mExitObject = Level::Instance()->iFindObjectWithName("ExitWall");
-			mPlaneMesh = (MeshComponent*)mPlaneObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mWallsMesh = (MeshComponent*)mWallsObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mBlockMesh = (MeshComponent*)mBlockObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mExitMesh = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			cLevel = LevelManager::GetInstance().GetCurrentLevel();
+			mPlaneObject  = cLevel->FindObjectWithName("Floor");
+			mWallsObject  = cLevel->FindObjectWithName("Walls");
+			mBlockObject  = cLevel->FindObjectWithName("Door1");
+			mExitObject   = cLevel->FindObjectWithName("Door2");
+			mPlaneMesh    = (MeshComponent*)mPlaneObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			mWallsMesh    = (MeshComponent*)mWallsObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			mBlockMesh    = (MeshComponent*)mBlockObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			mExitMesh     = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 		}
 
 		virtual void Update() {
 			if (!VRInputManager::GetInstance().IsVREnabled()) {
 				return;
 			}
+
 			// I'm lazy so, let's just set this thing's position to the controller's position.
 			matrix4 mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
 			mObject->GetTransform().SetMatrix(mat);
-			bool right = Level::Instance()->iGetRightTimeManinpulator()->isTimePaused();
-			bool left = Level::Instance()->iGetLeftTimeManinpulator()->isTimePaused();
+			bool right = false;
+			bool left = false;
 
+			if (cLevel->GetRightTimeManinpulator() != nullptr || cLevel->GetLeftTimeManinpulator() != nullptr) {
+				right = cLevel->GetRightTimeManinpulator()->isTimePaused();
+				left = cLevel->GetLeftTimeManinpulator()->isTimePaused();
+			}
+			
 			if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad)) {
 				if (!left && !right) {
 					vec4f forward(0, 0, 1, 0);
@@ -84,17 +92,17 @@ namespace Epoch {
 
 					TimeManager::Instance()->RewindTimeline(
 						TimeManager::Instance()->GetTempCurSnap(),
-						Level::Instance()->iGetHeadset()->GetUniqueID(),
-						Level::Instance()->iGetRightController()->GetUniqueID(),
-						Level::Instance()->iGetLeftController()->GetUniqueID());
+						cLevel->GetHeadset()->GetUniqueID(),
+						cLevel->GetRightController()->GetUniqueID(),
+						cLevel->GetLeftController()->GetUniqueID());
 
 					VRInputManager::GetInstance().RewindInputTimeline(
 						TimeManager::Instance()->GetTempCurSnap(),
-						Level::Instance()->iGetRightController()->GetUniqueID(),
-						Level::Instance()->iGetLeftController()->GetUniqueID());
+						cLevel->GetRightController()->GetUniqueID(),
+						cLevel->GetLeftController()->GetUniqueID());
 
-					Level::Instance()->iGetLeftTimeManinpulator()->makeTimePaused(false);
-					Level::Instance()->iGetRightTimeManinpulator()->makeTimePaused(false);
+					cLevel->GetLeftTimeManinpulator()->makeTimePaused(false);
+					cLevel->GetRightTimeManinpulator()->makeTimePaused(false);
 				}
 			}
 		}

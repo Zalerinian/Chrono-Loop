@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="11" SoundbankVersion="120">
+	<RootPaths>
+		<ProjectRoot>D:\College\NthDimensionalSound\NthDimensional\</ProjectRoot>
+		<SourceFilesRoot>D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>D:\College\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</SoundBanksRoot>
+		<ExternalSourcesInputFile></ExternalSourcesInputFile>
+		<ExternalSourcesOutputRoot>D:\College\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
+	</RootPaths>
+	<DialogueEvents/>
+	<StreamedFiles/>
+	<MediaFilesNotInAnyBank/>
+	<SoundBanks>
+		<SoundBank Id="1355168291" Language="SFX">
+			<ObjectPath>Init</ObjectPath>
+			<ShortName>Init</ShortName>
+			<Path>Init.bnk</Path>
+		</SoundBank>
+		<SoundBank Id="4154996803" Language="SFX">
+			<ObjectPath>\SoundBanks\Default Work Unit\Test_Soundbank</ObjectPath>
+			<ShortName>Test_Soundbank</ShortName>
+			<Path>Test_Soundbank.bnk</Path>
+			<IncludedEvents>
+				<Event Id="1888362325" Name="PAUSE_Test1" ObjectPath="\Events\Default Work Unit\PAUSE_Test1"/>
+				<Event Id="1888362326" Name="PAUSE_Test2" ObjectPath="\Events\Default Work Unit\PAUSE_Test2"/>
+				<Event Id="3759155919" Name="PLAY_Test1" ObjectPath="\Events\Default Work Unit\PLAY_Test1"/>
+				<Event Id="3759155916" Name="PLAY_Test2" ObjectPath="\Events\Default Work Unit\PLAY_Test2"/>
+				<Event Id="3909886823" Name="PlayBounceEffects" ObjectPath="\Events\Default Work Unit\PlayBounceEffects"/>
+				<Event Id="1235130312" Name="RESUME_Test1" ObjectPath="\Events\Default Work Unit\RESUME_Test1"/>
+				<Event Id="1235130315" Name="RESUME_Test2" ObjectPath="\Events\Default Work Unit\RESUME_Test2"/>
+				<Event Id="2011175805" Name="STOP_Test1" ObjectPath="\Events\Default Work Unit\STOP_Test1"/>
+				<Event Id="2011175806" Name="STOP_Test2" ObjectPath="\Events\Default Work Unit\STOP_Test2"/>
+			</IncludedEvents>
+			<IncludedMemoryFiles>
+				<File Id="306683277" Language="SFX">
+					<ShortName>Bounce-SoundBible.wav</ShortName>
+					<Path>SFX\Bounce-SoundBible_9E69E797.wem</Path>
+				</File>
+				<File Id="868747748" Language="SFX">
+					<ShortName>Kevin_MacLeod_-_02_-_Impact_Andante.wav</ShortName>
+					<Path>SFX\Kevin_MacLeod_-_02_-_Impact_Andante_4B8CC0C5.wem</Path>
+				</File>
+				<File Id="919470358" Language="SFX">
+					<ShortName>Kevin_MacLeod_-_Crossing_the_Divide.wav</ShortName>
+					<Path>SFX\Kevin_MacLeod_-_Crossing_the_Divide_9E69E797.wem</Path>
+				</File>
+			</IncludedMemoryFiles>
+		</SoundBank>
+	</SoundBanks>
+</SoundBanksInfo>

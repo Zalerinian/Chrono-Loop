@@ -1,7 +1,7 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
 mtllib raycube.mtl
-g default
+o cube
 v -0.333333 -0.500000 0.500000
 v 0.333333 -0.500000 0.500000
 v -0.333333 0.500000 0.500000
