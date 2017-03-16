@@ -170,7 +170,7 @@ namespace Epoch {
 					std::string elementType, name, meshFile, textureFile, colliderType;
 					vec4f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity(0, -9.81f, 0, 1);
 					float mass, elasticity, staticF, kineticF, normF, drag, radius;
-					bool collider = false, trigger = false, canMove, physical = false;
+					bool collider = false, trigger = false, canMove = false, physical = false;
 					pData = pObject->FirstChildElement();
 					while (pData)
 					{
@@ -262,10 +262,10 @@ namespace Epoch {
 							else if (elementType == "Drag")
 							{
 								drag = std::strtof(pData->Value(), nullptr);
-								//if (pData->Parent()->Parent()->NextSiblingElement())
-								//	pData = pData->Parent()->Parent()->NextSiblingElement();
-								//else
-								//	pData = nullptr;
+								if (pData->Parent()->Parent()->NextSiblingElement())
+									pData = pData->Parent()->Parent()->NextSiblingElement();
+								else
+									pData = nullptr;
 							}
 							else if (elementType == "Normal")
 							{
@@ -295,17 +295,17 @@ namespace Epoch {
 							}
 							else if (elementType == "Gravity")
 							{
-								//size_t pos = 0;
-								//int i = 0;
-								//std::string s = std::string(pData->Value()) + ',';
-								//while ((pos = s.find(",")) != std::string::npos)
-								//{
-								//	std::string token = s.substr(0, pos);
-								//	gravity.xyzw[i] = std::strtof(token.c_str(), nullptr);
-								//	gravity.w = 1;
-								//	i++;
-								//	s.erase(0, pos + 1);
-								//}
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									gravity.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									gravity.w = 1;
+									i++;
+									s.erase(0, pos + 1);
+								}
 							}
 							else if(elementType == "NormalForce")
 								normF = std::strtof(pData->Value(),nullptr);
@@ -345,8 +345,9 @@ namespace Epoch {
 					if (colliderType == "OBB")
 					{
 						physical = true;
-						vec4f min = colliderPosition - vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1) + vec4f(0, colliderScale.y, 0, 0);
-						vec4f max = colliderPosition + vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1) + vec4f(0, colliderScale.y, 0, 0);
+						vec4f offset = vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1) / 2;
+						vec4f min = colliderPosition - offset;
+						vec4f max = colliderPosition + offset;
 						CubeCollider* col = new CubeCollider(obj, canMove, trigger, gravity, mass, elasticity, staticF, kineticF, drag, min, max);
 						obj->AddComponent(col);
 					}
@@ -370,7 +371,7 @@ namespace Epoch {
 					{
 						physical = true;
 
-						PlaneCollider* col = new PlaneCollider(obj, canMove, trigger, vec4f(0,0,0,0), mass, elasticity, staticF, kineticF, drag, -1, normal);//TODO: Fix offset
+						PlaneCollider* col = new PlaneCollider(obj, canMove, trigger, vec4f(0,0,0,0), mass, elasticity, staticF, kineticF, drag, fabsf((colliderPosition + position) * normal), normal);//TODO: Fix offset
 						obj->AddComponent(col);
 					}
 
@@ -421,6 +422,9 @@ namespace Epoch {
 					if (physical)
 						Physics::Instance()->mObjects.push_back(obj);
 
+					if (canMove)
+						TimeManager::Instance()->AddObjectToTimeline(obj);
+					
 					AddObject(obj);
 					pObject = pObject->NextSiblingElement("Object");
 				}

@@ -22,7 +22,7 @@ namespace Epoch {
 		void Setup(int _index);
 
 
-		vec2f InitialPos = { -2,-2 };//-2Slow-2Furious
+		vec2f InitialPos = { 0,0 };
 		unsigned int gestureCnt = 0;
 
 		friend class VIM;

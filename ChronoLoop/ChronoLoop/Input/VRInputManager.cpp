@@ -47,7 +47,7 @@ namespace Epoch {
 		SystemLogger::Info() << "Left controller ID:  " << leftID << std::endl;
 		mRightController.Setup(rightID);
 		mLeftController.Setup(leftID);
-		mPlayerPosition = matrix4::CreateTranslation(2, -1, 8);
+		mPlayerPosition = matrix4::CreateTranslation(8, 0, -4);
 		mInputTimeline = new InputTimeline();
 	}
 
@@ -137,7 +137,7 @@ namespace Epoch {
 			node->mData.mPrimary = !mIsLeftPrimary;
 			//SystemLogger::GetLog() <<  "Righthand" << std::endl;
 		}
-		//SystemLogger::GetLog() << node->mData.mControllerId << std::endl;
+		SystemLogger::GetLog() << node->mData.mControllerId << std::endl;
 		mInputTimeline->Insert(node);
 		//mInputTimeline->DisplayTimeline();
 	}
@@ -244,11 +244,11 @@ namespace Epoch {
 			TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
 			//Shake right controller
 			if (GestureCheck == 1) {
-				mRightController.TriggerHapticPulse(200, vr::k_EButton_Axis0);
+				mRightController.TriggerHapticPulse(400, vr::k_EButton_Axis0);
 			}
 			GestureCheck = mLeftController.CheckGesture();
 			if (GestureCheck == 1) {
-				mLeftController.TriggerHapticPulse(200, vr::k_EButton_Axis0);
+				mLeftController.TriggerHapticPulse(400, vr::k_EButton_Axis0);
 			}
 			TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
 		}

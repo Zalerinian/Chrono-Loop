@@ -123,6 +123,7 @@ namespace LevelEditor
             this.graphicsPanel1 = new LevelEditor.GraphicsPanel();
             this.LeftToggle = new LevelEditor.NoFocusButton();
             this.RightToggle = new LevelEditor.NoFocusButton();
+            this.cbTimelineRecord = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -159,6 +160,7 @@ namespace LevelEditor
             this.TextureBox.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            this.groupBox7.SuspendLayout();
             this.graphicsPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -1372,6 +1374,7 @@ namespace LevelEditor
             // 
             // groupBox7
             // 
+            this.groupBox7.Controls.Add(this.cbTimelineRecord);
             this.groupBox7.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.groupBox7.Location = new System.Drawing.Point(0, 728);
             this.groupBox7.Name = "groupBox7";
@@ -1421,6 +1424,16 @@ namespace LevelEditor
             this.RightToggle.Text = ">";
             this.RightToggle.UseVisualStyleBackColor = true;
             this.RightToggle.Click += new System.EventHandler(this.RightToggle_Click);
+            // 
+            // cbTimelineRecord
+            // 
+            this.cbTimelineRecord.AutoSize = true;
+            this.cbTimelineRecord.Location = new System.Drawing.Point(0, 0);
+            this.cbTimelineRecord.Name = "cbTimelineRecord";
+            this.cbTimelineRecord.Size = new System.Drawing.Size(130, 17);
+            this.cbTimelineRecord.TabIndex = 0;
+            this.cbTimelineRecord.Text = "Recorded By Timeline";
+            this.cbTimelineRecord.UseVisualStyleBackColor = true;
             // 
             // Editor
             // 
@@ -1478,6 +1491,8 @@ namespace LevelEditor
             this.groupBox5.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.groupBox7.ResumeLayout(false);
+            this.groupBox7.PerformLayout();
             this.graphicsPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -1576,6 +1591,7 @@ namespace LevelEditor
         private System.Windows.Forms.CheckBox visibleCheck;
         private System.Windows.Forms.Button colorSelect;
         private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.CheckBox cbTimelineRecord;
     }
 }
 

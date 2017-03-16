@@ -185,7 +185,8 @@ namespace Epoch {
 		vec4f E = _aabb.mMax - center;
 		float r = E * _plane.mNormal;
 		SphereCollider s(center, r);
-		return SphereToPlane(_plane, s);
+		int t = SphereToPlane(_plane, s);
+		return t;
 	}
 
 	bool Physics::AABBtoAABB(CubeCollider& _aabb1, CubeCollider& _aabb2) {
