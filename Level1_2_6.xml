@@ -65,7 +65,7 @@
     <Name>Door1</Name>
     <Mesh>Door1.obj</Mesh>
     <Texture>enrgyField.png</Texture>
-    <Position>2.430154,0,0.3991617</Position>
+    <Position>2.430154,2.6,0.3991617</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components>
@@ -210,6 +210,9 @@
     <Rotation>0,0,0</Rotation>
     <Scale>0.4,0.4,0.4</Scale>
     <Components>
+      <AABBtoAABB>Enabled</AABBtoAABB>
+      <AABBtoSphere>Enabled</AABBtoSphere>
+      <ElasticPlane>Enabled</ElasticPlane>
       <AABBtoAABB>Enabled</AABBtoAABB>
       <AABBtoSphere>Enabled</AABBtoSphere>
       <ElasticPlane>Enabled</ElasticPlane>
@@ -584,7 +587,7 @@
     <Texture>raycube.png</Texture>
     <Position>-0.0915693,0.9180011,-1.074129</Position>
     <Rotation>0,0,0</Rotation>
-    <Scale>0.4,0.4,0.4</Scale>
+    <Scale>0.3,0.3,0.3</Scale>
     <Components>
       <AABBtoAABB>Enabled</AABBtoAABB>
       <AABBtoSphere>Enabled</AABBtoSphere>
