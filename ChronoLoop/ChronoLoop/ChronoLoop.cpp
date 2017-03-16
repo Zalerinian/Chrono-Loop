@@ -601,8 +601,6 @@ void Update() {
 	BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
 	((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
 	RightController->AddComponent(pickup);
-	WIHAMIH* hittingRight = new WIHAMIH;
-	RightController->AddComponent(hittingRight);
 	TimeManager::Instance()->AddObjectToTimeline(RightController);
 
 	//pat added
@@ -622,8 +620,6 @@ void Update() {
 	BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
 	((BoxSnapToControllerAction*)pickup2)->mControllerRole = eControllerType_Secondary;
 	LeftController->AddComponent(pickup2);
-	WIHAMIH* hittingLeft = new WIHAMIH;
-	LeftController->AddComponent(hittingLeft);
 	TimeManager::Instance()->AddObjectToTimeline(LeftController);
 
 
