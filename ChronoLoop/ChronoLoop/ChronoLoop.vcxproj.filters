@@ -130,6 +130,9 @@
     <Filter Include="Common\Easing\Source Files">
       <UniqueIdentifier>{051b87d1-fce5-4caf-9b5f-f3909184eaae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Particles">
+      <UniqueIdentifier>{a1f02d0e-5ef8-44d3-8749-fa5351c55aff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\BaseObject.h">
@@ -403,6 +406,12 @@
     <ClInclude Include="Actions\WhatInHellAmIHitting.hpp">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Particles\ParticleSystem.h">
+      <Filter>Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Particles\ParticleComponents.h">
+      <Filter>Particles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -663,6 +672,12 @@
     <ClCompile Include="Rendering\RenderList.cpp">
       <Filter>Rendering\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Particles\ParticleSystem.cpp">
+      <Filter>Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="Particles\ParticleComponents.cpp">
+      <Filter>Particles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
@@ -709,6 +724,15 @@
     </FxCompile>
     <FxCompile Include="Rendering\Shaders\GSDuplicateMesh.hlsl">
       <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Particles\GSParticles.hlsl">
+      <Filter>Particles</Filter>
+    </FxCompile>
+    <FxCompile Include="Particles\ParticlePixelShader.hlsl">
+      <Filter>Particles</Filter>
+    </FxCompile>
+    <FxCompile Include="Particles\ParticleVertexShader.hlsl">
+      <Filter>Particles</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

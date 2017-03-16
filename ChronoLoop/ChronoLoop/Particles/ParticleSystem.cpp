@@ -1,7 +1,7 @@
 #include "ParticleSystem.h"
-#include "Rendering\renderer.h"
-#include "Core\TimeManager.h"
-
+#include "../Rendering\renderer.h"
+#include "../Core\TimeManager.h"
+#include "../Rendering/RasterizerStateManager.h"
 namespace Epoch
 {
 	ParticleSystem* ParticleSystem::mSystem = nullptr;
@@ -74,11 +74,11 @@ namespace Epoch
 	void ParticleSystem::Update()
 	{
 		//TODO: Update emitters
-		//float dt = TimeManager::Instance()->GetDeltaTime();
+		float dt = TimeManager::Instance()->GetDeltaTime();
 		for (ParticleEmitter* emit : mPEmitters)
 		{
 			if (emit->mActive)
-				emit->Update(0);
+				emit->Update(dt);
 		}
 		for (int i =0; i < mPEmitters.size(); i++)
 		{
@@ -96,7 +96,7 @@ namespace Epoch
 		if (mPEmitters.size() == 0)
 			return;
 		auto cntxt = Renderer::Instance()->GetContext();
-		//Do for both eyes?
+		RasterizerStateManager::Instance()->ApplyState(RasterState::eRS_FILLED);
 		cntxt->IASetInputLayout(mILayout);
 		cntxt->VSSetShader(mVShader, NULL, 0);
 		//ID3D11Buffer* buff = mVBuff;
