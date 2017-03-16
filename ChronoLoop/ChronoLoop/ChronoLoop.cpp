@@ -636,7 +636,7 @@ void Update() {
 
 	Level* L1;
 
-	while (LevelManager::GetInstance().LoadLevelAsync("../Level1_2_6.xml", &L1) != Epoch::LM::LevelStatus::Success) {}
+	while (LevelManager::GetInstance().LoadLevelAsync("../Resources/Level1_2_6.xml", &L1) != Epoch::LM::LevelStatus::Success) {}
 	//while (LevelManager::GetInstance().LoadLevelAsync("../Resources/collider.xml", &L1) != Epoch::LM::LevelStatus::Success) {}
 	L1->Initialize(headset, LeftController, RightController);
 	L1->AddObject(RightController);

@@ -282,13 +282,13 @@ namespace Epoch
 	}
 
 	void CubeCollider::Update() {
-		if (mNode == nullptr) {
-			mNode = Renderer::Instance()->AddNode(mShape);
-		}
-		vec4f size = mMax - mMin;
-		matrix4 pos = matrix4::CreateScale(size.x, size.y, size.z);
-		pos.Position = (mMax - mMin) / 2 + mMin;
-		mNode->data = pos;
+		//if (mNode == nullptr) {
+		//	mNode = Renderer::Instance()->AddNode(mShape);
+		//}
+		//vec4f size = mMax - mMin;
+		//matrix4 pos = matrix4::CreateScale(size.x, size.y, size.z);
+		//pos.Position = (mMax - mMin) / 2 + mMin;
+		//mNode->data = pos;
 	}
 
 	void CubeCollider::SetPos(const vec4f& _newPos)
