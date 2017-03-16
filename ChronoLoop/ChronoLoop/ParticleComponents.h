@@ -43,6 +43,7 @@ namespace Epoch
 
 		Particle& operator=(const Particle& _other);
 	};
+
 	class ParticleEmitter
 	{
 		long mID;

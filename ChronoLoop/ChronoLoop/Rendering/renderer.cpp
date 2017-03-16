@@ -602,13 +602,13 @@ namespace Epoch {
 		float color[4] = { 0.251f, 0.709f, 0.541f, 1 };
 		mContext->ClearRenderTargetView(mMainView.Get(), color);
 		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+		ParticleSystem::Instance()->Render();
 		if (nullptr == mVrSystem) {
 			RenderNoVR(_deltaTime);
 		}
 		else {
 			RenderVR(_deltaTime);
 		}
-		ParticleSystem::Instance()->Render();
 		mChain->Present(mUseVsync ? 1 : 0, 0);
 	}
 

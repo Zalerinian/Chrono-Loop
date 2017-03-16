@@ -245,11 +245,11 @@ namespace Epoch
 				*p = *mBase;
 				p->mPos = vec4f(0, 0, 0, 1);
 				p->mPos += mPos;
-				//p->mSize = .1 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.25 - .1)));
+				p->mSize = .1 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.25 - .1)));
 
-				x = -.05 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05 - -.05)));
-				y = -.05 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05 - -.05)));
-				z = -.05 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05 - -.05)));
+				x = -3 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3 - -3)));
+				y = -3 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3 - -3)));
+				z = -3 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3 - -3)));
 				p->mVelocity = vec4f(x, y, z, 0);
 				mParticles.push_back(p);
 				total++;
