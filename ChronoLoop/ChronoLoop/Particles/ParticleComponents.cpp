@@ -126,7 +126,7 @@ namespace Epoch
 
 	int ParticleEmitter::GetVertexCount()
 	{
-		return mGParticles.size();
+		return (int)mGParticles.size();
 	}
 	void ParticleEmitter::SetTexture(const char* _tex)
 	{
@@ -238,18 +238,18 @@ namespace Epoch
 			if (mParticles.size() < mMaxParticles && (total < mTotalParticles || mTotalParticles == -1))
 			{
 				float x, y, z;
-				x = -3.0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0 - (-3.0))));
-				y = -3.0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0 - (-3.0))));
-				z = -3.0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0 - (-3.0))));
+				x = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - (-3.0f))));
+				y = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - (-3.0f))));
+				z = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - (-3.0f))));
 				Particle* p = new Particle();
 				*p = *mBase;
 				p->mPos = vec4f(0, 0, 0, 1);
 				p->mPos += mPos;
-				p->mSize = .1 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.25 - .1)));
+				p->mSize = .1f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.25f - .1f)));
 
-				x = -3 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3 - -3)));
-				y = -3 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3 - -3)));
-				z = -3 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3 - -3)));
+				x = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - -3.0f)));
+				y = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - -3.0f)));
+				z = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - -3.0f)));
 				p->mVelocity = vec4f(x, y, z, 0);
 				mParticles.push_back(p);
 				total++;
@@ -352,18 +352,18 @@ namespace Epoch
 
 		if (x < mRect.min.x || x > mRect.max.x)
 		{
-			_p->mVelocity.x += (_p->mVelocity.x < 0) ? -.1 : .1;
-			_p->mVelocity.x *= -1;
+			_p->mVelocity.x += (_p->mVelocity.x < 0) ? -.1f : .1f;
+			_p->mVelocity.x *= -1.0f;
 		}
 		if (y < mRect.min.y || y > mRect.max.y)
 		{
-			_p->mVelocity.y += (_p->mVelocity.y < 0) ? -.1 : .1;
-			_p->mVelocity.y *= -1;
+			_p->mVelocity.y += (_p->mVelocity.y < 0) ? -.1f : .1f;
+			_p->mVelocity.y *= -1.0f;
 		}
 		if (z < mRect.min.z || z > mRect.max.z)
 		{
-			_p->mVelocity.z += (_p->mVelocity.z < 0) ? -.1 : .1;
-			_p->mVelocity.z *= -1;
+			_p->mVelocity.z += (_p->mVelocity.z < 0) ? -.1f : .1f;
+			_p->mVelocity.z *= -1.0f;
 		}
 	}
 	void VolumeEmitter::BindToSPHR(Particle* _p)
@@ -427,7 +427,7 @@ namespace Epoch
 	void RadialEmitter::UpdateParticle(Particle* _p, float _delta)
 	{
 		ParticleEmitter::UpdateParticle(_p, _delta);
-		_p->mVelocity.y += .0001 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.001 - .0001)));;
+		_p->mVelocity.y += .0001f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.001f - .0001f)));;
 	}
 
 	void RadialEmitter::EmitParticles()
@@ -444,18 +444,18 @@ namespace Epoch
 			if (mParticles.size() < mMaxParticles && (total < mTotalParticles || mTotalParticles == -1))
 			{
 				float x, y, z;
-				x = -3.0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0 - (-3.0))));
-				y = -3.0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0 - (-3.0))));
-				z = -3.0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0 - (-3.0))));
+				x = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - (-3.0f))));
+				y = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - (-3.0f))));
+				z = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - (-3.0f))));
 				Particle* p = new Particle();
 				*p = *mBase;
 				p->mPos = vec4f(0, 0, 0, 1);
 				p->mPos += mPos;
 				//p->mSize = .1 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.25 - .1)));
 
-				x = -.05 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05 - -.05)));
-				y = -.05 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05 - -.05)));
-				z = -.05 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05 - -.05)));
+				x = -.05f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05f - -.05f)));
+				y = -.05f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05f - -.05f)));
+				z = -.05f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05f - -.05f)));
 				p->mVelocity = vec4f(x, 0, z, 0);
 				mParticles.push_back(p);
 				total++;
@@ -488,18 +488,18 @@ namespace Epoch
 			if (mParticles.size() < mMaxParticles && (total < mTotalParticles || mTotalParticles == -1))
 			{
 				float x, y, z;
-				x = -1.25 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1.25 - (-1.25))));
-				y = -3.0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0 - (-3.0))));
-				z = -1.25 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1.25 - (-1.25))));
+				x = -1.25f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1.25f - (-1.25f))));
+				y = -3.0f+ static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - (-3.0f))));
+				z = -1.25f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1.25f - (-1.25f))));
 				Particle* p = new Particle();
 				*p = *mBase;
 				p->mPos = vec4f(x, 0, z, 1);
 				p->mPos += mPos;
 				//p->mSize = .1 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.25 - .1)));
 
-				x = -.05 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05 - -.05)));
+				x = -.05f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05f - -.05f)));
 				y = y1 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (y2 - y1)));
-				z = -.05 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05 - -.05)));
+				z = -.05f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05f - -.05f)));
 				p->mVelocity = vec4f(0, y, 0, 0);
 				mParticles.push_back(p);
 				total++;
