@@ -136,7 +136,7 @@
             this.gbCollider.Dock = System.Windows.Forms.DockStyle.Top;
             this.gbCollider.Location = new System.Drawing.Point(0, 0);
             this.gbCollider.Name = "gbCollider";
-            this.gbCollider.Size = new System.Drawing.Size(324, 159);
+            this.gbCollider.Size = new System.Drawing.Size(341, 159);
             this.gbCollider.TabIndex = 0;
             this.gbCollider.TabStop = false;
             this.gbCollider.Text = "[]Collider Base Component";
@@ -148,7 +148,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.udKineticFriction.Location = new System.Drawing.Point(90, 130);
             this.udKineticFriction.Name = "udKineticFriction";
-            this.udKineticFriction.Size = new System.Drawing.Size(211, 20);
+            this.udKineticFriction.Size = new System.Drawing.Size(228, 20);
             this.udKineticFriction.TabIndex = 9;
             // 
             // udStaticFriction
@@ -157,7 +157,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.udStaticFriction.Location = new System.Drawing.Point(90, 103);
             this.udStaticFriction.Name = "udStaticFriction";
-            this.udStaticFriction.Size = new System.Drawing.Size(211, 20);
+            this.udStaticFriction.Size = new System.Drawing.Size(228, 20);
             this.udStaticFriction.TabIndex = 8;
             // 
             // udDrag
@@ -166,7 +166,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.udDrag.Location = new System.Drawing.Point(90, 77);
             this.udDrag.Name = "udDrag";
-            this.udDrag.Size = new System.Drawing.Size(211, 20);
+            this.udDrag.Size = new System.Drawing.Size(228, 20);
             this.udDrag.TabIndex = 7;
             // 
             // udElasticity
@@ -175,7 +175,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.udElasticity.Location = new System.Drawing.Point(90, 49);
             this.udElasticity.Name = "udElasticity";
-            this.udElasticity.Size = new System.Drawing.Size(211, 20);
+            this.udElasticity.Size = new System.Drawing.Size(228, 20);
             this.udElasticity.TabIndex = 6;
             // 
             // udMass
@@ -184,7 +184,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.udMass.Location = new System.Drawing.Point(90, 20);
             this.udMass.Name = "udMass";
-            this.udMass.Size = new System.Drawing.Size(211, 20);
+            this.udMass.Size = new System.Drawing.Size(228, 20);
             this.udMass.TabIndex = 5;
             // 
             // lbKineticFriction
@@ -268,7 +268,7 @@
             this.gbBoxCollider.Dock = System.Windows.Forms.DockStyle.Top;
             this.gbBoxCollider.Location = new System.Drawing.Point(0, 159);
             this.gbBoxCollider.Name = "gbBoxCollider";
-            this.gbBoxCollider.Size = new System.Drawing.Size(324, 260);
+            this.gbBoxCollider.Size = new System.Drawing.Size(341, 260);
             this.gbBoxCollider.TabIndex = 1;
             this.gbBoxCollider.TabStop = false;
             this.gbBoxCollider.Text = "[]BoxCollider Component";
@@ -595,7 +595,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDown1.Location = new System.Drawing.Point(90, 230);
             this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(211, 20);
+            this.numericUpDown1.Size = new System.Drawing.Size(228, 20);
             this.numericUpDown1.TabIndex = 9;
             // 
             // numericUpDown2
@@ -604,7 +604,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDown2.Location = new System.Drawing.Point(90, 203);
             this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(211, 20);
+            this.numericUpDown2.Size = new System.Drawing.Size(228, 20);
             this.numericUpDown2.TabIndex = 8;
             // 
             // numericUpDown3
@@ -613,7 +613,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDown3.Location = new System.Drawing.Point(90, 177);
             this.numericUpDown3.Name = "numericUpDown3";
-            this.numericUpDown3.Size = new System.Drawing.Size(211, 20);
+            this.numericUpDown3.Size = new System.Drawing.Size(228, 20);
             this.numericUpDown3.TabIndex = 7;
             // 
             // numericUpDown4
@@ -622,7 +622,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDown4.Location = new System.Drawing.Point(90, 149);
             this.numericUpDown4.Name = "numericUpDown4";
-            this.numericUpDown4.Size = new System.Drawing.Size(211, 20);
+            this.numericUpDown4.Size = new System.Drawing.Size(228, 20);
             this.numericUpDown4.TabIndex = 6;
             // 
             // numericUpDown5
@@ -631,7 +631,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDown5.Location = new System.Drawing.Point(90, 120);
             this.numericUpDown5.Name = "numericUpDown5";
-            this.numericUpDown5.Size = new System.Drawing.Size(211, 20);
+            this.numericUpDown5.Size = new System.Drawing.Size(228, 20);
             this.numericUpDown5.TabIndex = 5;
             // 
             // label1
@@ -698,7 +698,7 @@
             this.gbPlaneCollider.Dock = System.Windows.Forms.DockStyle.Top;
             this.gbPlaneCollider.Location = new System.Drawing.Point(0, 419);
             this.gbPlaneCollider.Name = "gbPlaneCollider";
-            this.gbPlaneCollider.Size = new System.Drawing.Size(324, 220);
+            this.gbPlaneCollider.Size = new System.Drawing.Size(341, 220);
             this.gbPlaneCollider.TabIndex = 2;
             this.gbPlaneCollider.TabStop = false;
             this.gbPlaneCollider.Text = "[]PlaneCollider component";
@@ -717,7 +717,7 @@
             this.pnPlaneNormal.Controls.Add(this.mLbNX);
             this.pnPlaneNormal.Location = new System.Drawing.Point(90, 43);
             this.pnPlaneNormal.Name = "pnPlaneNormal";
-            this.pnPlaneNormal.Size = new System.Drawing.Size(211, 34);
+            this.pnPlaneNormal.Size = new System.Drawing.Size(228, 34);
             this.pnPlaneNormal.TabIndex = 34;
             this.pnPlaneNormal.Visible = false;
             // 
@@ -823,7 +823,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.udPlaneOffset.Location = new System.Drawing.Point(90, 17);
             this.udPlaneOffset.Name = "udPlaneOffset";
-            this.udPlaneOffset.Size = new System.Drawing.Size(211, 20);
+            this.udPlaneOffset.Size = new System.Drawing.Size(228, 20);
             this.udPlaneOffset.TabIndex = 12;
             // 
             // mLbNormal
@@ -850,7 +850,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDown6.Location = new System.Drawing.Point(90, 193);
             this.numericUpDown6.Name = "numericUpDown6";
-            this.numericUpDown6.Size = new System.Drawing.Size(211, 20);
+            this.numericUpDown6.Size = new System.Drawing.Size(228, 20);
             this.numericUpDown6.TabIndex = 9;
             // 
             // numericUpDown7
@@ -859,7 +859,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDown7.Location = new System.Drawing.Point(90, 166);
             this.numericUpDown7.Name = "numericUpDown7";
-            this.numericUpDown7.Size = new System.Drawing.Size(211, 20);
+            this.numericUpDown7.Size = new System.Drawing.Size(228, 20);
             this.numericUpDown7.TabIndex = 8;
             // 
             // numericUpDown8
@@ -868,7 +868,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDown8.Location = new System.Drawing.Point(90, 140);
             this.numericUpDown8.Name = "numericUpDown8";
-            this.numericUpDown8.Size = new System.Drawing.Size(211, 20);
+            this.numericUpDown8.Size = new System.Drawing.Size(228, 20);
             this.numericUpDown8.TabIndex = 7;
             // 
             // numericUpDown9
@@ -877,7 +877,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDown9.Location = new System.Drawing.Point(90, 112);
             this.numericUpDown9.Name = "numericUpDown9";
-            this.numericUpDown9.Size = new System.Drawing.Size(211, 20);
+            this.numericUpDown9.Size = new System.Drawing.Size(228, 20);
             this.numericUpDown9.TabIndex = 6;
             // 
             // pudMass
@@ -886,7 +886,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pudMass.Location = new System.Drawing.Point(90, 83);
             this.pudMass.Name = "pudMass";
-            this.pudMass.Size = new System.Drawing.Size(211, 20);
+            this.pudMass.Size = new System.Drawing.Size(228, 20);
             this.pudMass.TabIndex = 5;
             // 
             // label6
@@ -939,15 +939,13 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(341, 461);
+            this.ClientSize = new System.Drawing.Size(358, 461);
             this.Controls.Add(this.gbPlaneCollider);
             this.Controls.Add(this.gbBoxCollider);
             this.Controls.Add(this.gbCollider);
             this.MinimumSize = new System.Drawing.Size(340, 500);
             this.Name = "TestPositionForm";
             this.Text = "TestPositionForm";
-            this.ClientSizeChanged += new System.EventHandler(this.TestPositionForm_ClientSizeChanged);
-            this.SizeChanged += new System.EventHandler(this.TestPositionForm_SizeChanged);
             this.Click += new System.EventHandler(this.TestPositionForm_Click);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.TestPositionForm_Paint);
             this.Resize += new System.EventHandler(this.TestPositionForm_Resize);

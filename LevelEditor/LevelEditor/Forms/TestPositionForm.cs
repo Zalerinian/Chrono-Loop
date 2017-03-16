@@ -31,7 +31,7 @@ namespace LevelEditor {
 
             Padding p = new Padding(0);
             Padding = p;
-            //TestPositionForm_Resize(null, null);
+            TestPositionForm_Resize(null, null);
         }
 
         private void TestPositionForm_Click(object sender, EventArgs e) {
@@ -52,14 +52,6 @@ namespace LevelEditor {
                 dimensions.Height = box.Height;
                 box.Size = dimensions;
             }
-        }
-
-        private void TestPositionForm_ClientSizeChanged(object sender, EventArgs e) {
-            
-        }
-
-        private void TestPositionForm_SizeChanged(object sender, EventArgs e) {
-            
         }
 
         private void TestPositionForm_Paint(object sender, PaintEventArgs e) {
