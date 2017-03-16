@@ -168,7 +168,7 @@ namespace Epoch {
 				{
 					std::vector<std::string> codeComs;
 					std::string elementType, name, meshFile, textureFile, colliderType;
-					vec4f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity(0, -9.81f, 0, 1);
+					vec4f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity;
 					float mass, elasticity, staticF, kineticF, normF, drag, radius;
 					bool collider = false, trigger = false, canMove = false, physical = false;
 					pData = pObject->FirstChildElement();
@@ -200,9 +200,15 @@ namespace Epoch {
 								{
 									std::string token = s.substr(0, pos);
 									if (collider)
+									{
 										colliderPosition.xyzw[i] = std::strtof(token.c_str(), nullptr);
+										colliderPosition.w = 1;
+									}
 									else
+									{
 										position.xyzw[i] = std::strtof(token.c_str(), nullptr);
+										position.w = 1;
+									}
 									i++;
 									s.erase(0, pos + 1);
 								}
@@ -219,6 +225,7 @@ namespace Epoch {
 									i++;
 									s.erase(0, pos + 1);
 								}
+								rotation.w = 1;
 							}
 							else if (elementType == "Scale")
 							{
@@ -229,9 +236,15 @@ namespace Epoch {
 								{
 									std::string token = s.substr(0, pos);
 									if (collider)
+									{
 										colliderScale.xyzw[i] = std::strtof(token.c_str(), nullptr);
+										colliderScale.w = 1;
+									}
 									else
+									{
 										scale.xyzw[i] = std::strtof(token.c_str(), nullptr);
+										scale.w = 1;
+									}
 									i++;
 									s.erase(0, pos + 1);
 								}
@@ -279,6 +292,7 @@ namespace Epoch {
 									i++;
 									s.erase(0, pos + 1);
 								}
+								normal.w = 1;
 							}
 							else if (elementType == "PushNormal")
 							{
@@ -292,6 +306,7 @@ namespace Epoch {
 									i++;
 									s.erase(0, pos + 1);
 								}
+								pushNorm.w = 1;
 							}
 							else if (elementType == "Gravity")
 							{
@@ -302,10 +317,10 @@ namespace Epoch {
 								{
 									std::string token = s.substr(0, pos);
 									gravity.xyzw[i] = std::strtof(token.c_str(), nullptr);
-									gravity.w = 1;
 									i++;
 									s.erase(0, pos + 1);
 								}
+								gravity.w = 1;
 							}
 							else if(elementType == "NormalForce")
 								normF = std::strtof(pData->Value(),nullptr);
