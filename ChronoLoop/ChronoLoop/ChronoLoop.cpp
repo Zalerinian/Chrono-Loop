@@ -575,14 +575,15 @@ void Update() {
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_initSB)));
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
 
-	//Temp Camera OBJ
-	Transform camTrans;
-	BaseObject camObj("TempCam", camTrans);
 	Listener* ears = new Listener();
-	camObj.AddComponent(ears);
+	Emitter* ambient = new Emitter();
+	ambient->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_TEST2);
+	ambient->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_TEST2);
+	ambient->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_TEST2);
+	ambient->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_TEST2);
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(ears, "Listener")));
-	//Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(aabbSound, "aabbS")));
-	//aabbSound->Play();
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(ambient, "ambiance")));
+	
 
 	Transform identity, transform;
 	BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("RController", identity);// new BaseObject("Controller", identity);
@@ -598,6 +599,8 @@ void Update() {
 	RightController->AddComponent(ta);
 	RightController->AddComponent(rightConCol);
 	RightController->AddComponent(tm);
+	RightController->AddComponent(ambient);
+	ambient->Play();
 	BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
 	((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
 	RightController->AddComponent(pickup);
@@ -630,6 +633,7 @@ void Update() {
 	HeadsetFollow* hfollow = new HeadsetFollow();
 	headset->AddComponent(hfollow);
 	headset->AddComponent(visibleMesh2);
+	headset->AddComponent(ears);
 	TimeManager::Instance()->AddObjectToTimeline(headset);
 
 	Physics::Instance()->mObjects.push_back(RightController);
