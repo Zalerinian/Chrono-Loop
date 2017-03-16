@@ -27,9 +27,11 @@ namespace Epoch {
 		float mDeltaTime = 0;
 		unsigned int mLevelTime = 0;
 		bool mRewindMakeClone = false;
+		bool mShouldUpdateInterpolators = false;
 		int mtempCurSnapFrame = 0;
 		std::vector<BaseObject*>mClones;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneInterpolators;
+		std::unordered_map<unsigned short, Interpolator<matrix4>*>mObjectInterpolators; 
 		Timeline* GetTimeLine();
 		TimeManager();
 		~TimeManager();
@@ -39,6 +41,7 @@ namespace Epoch {
 		void UpdatePlayerObjectInTimeline(BaseObject* _obj);
 		void AddObjectToTimeline(BaseObject* _obj);
 		void AddInterpolatorForClone(BaseObject* _obj);
+		void AddInterpolatorToObject(BaseObject* _obj);
 		//Clears the list of BaseObject* the Timemanager has refrence to.
 		void ClearClones();
 		//Checks and see if you can rewind to passed in frame
@@ -52,6 +55,7 @@ namespace Epoch {
 		//Retrieves delta time
 		float GetDeltaTime() { return mDeltaTime; }
 		Interpolator<matrix4>* GetCloneInterpolator(unsigned short _id);
+		Interpolator<matrix4>* GetObjectInterpolator(unsigned short _id);
 		std::vector<BaseObject*>& GetClonesVec() { return mClones; };
 		int GetTempCurSnap() { return mtempCurSnapFrame; };
 		void SetTempCurSnap() { mtempCurSnapFrame = GetCurrentSnapFrame(); };

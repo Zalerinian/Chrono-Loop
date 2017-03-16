@@ -90,7 +90,6 @@ namespace Epoch {
 		bool RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void MoveObjectToSnap(unsigned int _snaptime, unsigned short _id);
 		void MoveAllObjectsToSnap(unsigned int _snaptime);
-		void InterpAllObjectsToSnapExceptPlayer(unsigned int _fromSnapTime, unsigned int _toSnapTime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void SetBaseObjectDeathTime(unsigned short _id);
 		void SetCloneCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);
@@ -98,6 +97,7 @@ namespace Epoch {
 		void SetComponent(SnapComponent* _destComp, BaseObject* _obj, SnapInfo* _destInfo);
 		void SetCurrentGameTimeIndx(int _time) { mCurrentGameTimeIndx = _time; };
 		void UpdateCloneInterpolators(unsigned short _cloneid, SnapInfo* _currSnap, unsigned int _currTime);
+		void PrepareAllObjectInterpolators(unsigned int _fromSnapTime, unsigned int _toSnapTime);
 	};
 
 }

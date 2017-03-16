@@ -74,10 +74,12 @@ namespace Epoch {
 			mLeftController.Update();
 		}
 		vr::VRCompositor()->WaitGetPoses(mPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
+
 		GestureCheck = mRightController.CheckGesture();
 		TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
 		GestureCheck = mLeftController.CheckGesture();
 		TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
+
 		//Update InputSnap TweenTime 
 		mTweenTimestamp += TimeManager::Instance()->GetDeltaTime();
 		if (mTweenTimestamp >= RecordingRate) {

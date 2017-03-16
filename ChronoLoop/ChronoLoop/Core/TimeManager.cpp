@@ -92,14 +92,21 @@ namespace Epoch {
 
 		void TimeManager::AddObjectToTimeline(BaseObject * _obj) {
 			if (_obj != nullptr)
+			{
 				mTimeline->AddBaseObject(_obj, _obj->GetUniqueID());
+				if (_obj != LevelManager::GetInstance().GetCurrentLevel()->GetLeftController() || _obj != LevelManager::GetInstance().GetCurrentLevel()->GetRightController())
+					instanceTimemanager->AddInterpolatorToObject(_obj);
+			}
 		}
 
 		void TimeManager::AddInterpolatorForClone(BaseObject * _obj) {
 			Interpolator<matrix4>* temp = new Interpolator<matrix4>();
 			mCloneInterpolators[_obj->GetUniqueID()] = temp;
 		}
-
+		void TimeManager::AddInterpolatorToObject(BaseObject* _obj) {
+			Interpolator<matrix4>* temp = new Interpolator<matrix4>();
+			mObjectInterpolators[_obj->GetUniqueID()] = temp;
+		}
 		void TimeManager::UpdatePlayerObjectInTimeline(BaseObject *  _obj) {
 			if (_obj != nullptr)
 				mTimeline->UpdatePlayerBaseObject(_obj, _obj->GetUniqueID());
@@ -167,7 +174,11 @@ namespace Epoch {
 
 			return nullptr;
 		}
-
+		Interpolator<matrix4>* TimeManager::GetObjectInterpolator(unsigned short _id) {
+			if (mObjectInterpolators.find(_id) != mObjectInterpolators.end())
+				return mObjectInterpolators[_id];
+			return nullptr;
+		}
 		unsigned int TimeManager::GetTotalSnapsmade() {
 			return mTimeline->GetTotalSnaps();
 		}
@@ -306,7 +317,15 @@ namespace Epoch {
 		}
 		void TimeManager::BrowseTimeline(int _gesture, int _frameRewind) {
 
-
+			if (mShouldUpdateInterpolators) {
+				for (auto it : mObjectInterpolators)
+				{
+					bool complete = it.second->Update(GetDeltaTime());
+					if (complete)
+						mShouldUpdateInterpolators = false;
+				}
+				return;
+			}
 
 			unsigned int temp = instanceTimemanager->GetCurrentSnapFrame();
 			if (_gesture == 0)
@@ -323,13 +342,18 @@ namespace Epoch {
 				return;
 
 
-			if ((mtempCurSnapFrame != 0 && _gesture == -1) || (mtempCurSnapFrame != temp && _gesture == 1))
+			if ((mtempCurSnapFrame != 0 && _gesture == -1) || (mtempCurSnapFrame != temp && _gesture == 1)) {
+				int placeHolder = mtempCurSnapFrame;
 				mtempCurSnapFrame -= _frameRewind;
-			instanceTimemanager->MoveAllObjectExceptPlayer(
-				mtempCurSnapFrame,
-				LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetUniqueID(),
-				LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueID(),
-				LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueID());
+
+				instanceTimemanager->GetTimeLine()->PrepareAllObjectInterpolators(placeHolder, mtempCurSnapFrame);
+				mShouldUpdateInterpolators = true;
+				//instanceTimemanager->MoveAllObjectExceptPlayer(
+				//	mtempCurSnapFrame,
+				//	LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetUniqueID(),
+				//	LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueID(),
+				//	LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueID());
+			}
 
 		
 

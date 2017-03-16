@@ -212,6 +212,20 @@ namespace Epoch {
 			cloneInterp->SetActive(false);
 		}
 	}
+	void Timeline::PrepareAllObjectInterpolators(unsigned int _fromSnapTime, unsigned int _toSnapTime) {
+		Interpolator<matrix4> * objInterp;
+		if (_toSnapTime <= mSnaptimes.size() - 1 || _toSnapTime >= 0)
+		{
+			SnapInfo* _fromSnap = mSnapshots[mSnaptimes[_fromSnapTime]]->mSnapinfos[_fromSnapTime];
+			SnapInfo* _toSnap = mSnapshots[mSnaptimes[_toSnapTime]]->mSnapinfos[_toSnapTime];
+			for (std::pair<unsigned short, Epoch::BaseObject*> it : mLiveObjects)
+			{
+				objInterp = TimeManager::Instance()->GetObjectInterpolator(it.first);
+				objInterp->SetActive(true);
+				objInterp->Prepare(1, _fromSnap->mTransform.GetMatrix(), _toSnap->mTransform.GetMatrix(), it.second->GetTransform().GetMatrix());
+			}
+		}
+	}
 
 	void Timeline::SetCloneCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3) {
 		ObjectLifeTime* newObject = new ObjectLifeTime();
@@ -343,27 +357,6 @@ namespace Epoch {
 			for (unsigned int i = 0; i < destInfo->mComponets.size(); i++) {
 				SnapComponent* destComp = destInfo->mComponets[i];
 				SetComponent(destComp, baseobject, destInfo);
-			}
-		}
-	}
-	void Timeline::InterpAllObjectsToSnapExceptPlayer(unsigned int _fromSnapTime, unsigned int _toSnapTime, unsigned short _id1, unsigned short _id2, unsigned short _id3) 
-	{
-		Snapshot* _from = mSnapshots[_fromSnapTime];
-		Snapshot* _to = mSnapshots[_toSnapTime];
-		for (auto object : mLiveObjects) {
-			unsigned short id = object.second->GetUniqueID();
-			if (id == _id1 || id == _id2 || id == _id3)
-				continue;
-			SnapInfo* destInfo;
-			//If the object doesnt have a info, 
-			//then check against the list for the last snap it was updated
-			bool stored = _to->IsObjectStored(id);
-			if (stored) {
-				destInfo = _to->mSnapinfos[id];
-			} else if (!stored) {
-				if (_to->mUpdatedtimes.find(id) == _to->mUpdatedtimes.end())
-					continue;
-				destInfo = mSnapshots[_to->mUpdatedtimes[id]]->mSnapinfos[id];
 			}
 		}
 	}
@@ -530,7 +523,7 @@ namespace Epoch {
 							if (snap->mSnapinfos.find(id) != snap->mSnapinfos.end() && id == _clones[i]->GetUniqueID()) {
 								MoveObjectToSnap(_time, id);
 								//Update the clone interpolators to move if there is a next next snap available.
-								UpdateCloneInterpolators(_clones[i]->GetUniqueID(), snap->mSnapinfos[id], (float)_time);
+								UpdateCloneInterpolators(_clones[i]->GetUniqueID(), snap->mSnapinfos[id], _time);
 								break;
 							}
 							//If we are a clone but dont have a next movement then record one at position
