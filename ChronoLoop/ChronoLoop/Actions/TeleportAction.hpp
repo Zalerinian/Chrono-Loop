@@ -88,22 +88,6 @@ namespace Epoch {
 						}
 					}
 				}
-				if (left || right) {
-
-					TimeManager::Instance()->RewindTimeline(
-						TimeManager::Instance()->GetTempCurSnap(),
-						cLevel->GetHeadset()->GetUniqueID(),
-						cLevel->GetRightController()->GetUniqueID(),
-						cLevel->GetLeftController()->GetUniqueID());
-
-					VRInputManager::GetInstance().RewindInputTimeline(
-						TimeManager::Instance()->GetTempCurSnap(),
-						cLevel->GetRightController()->GetUniqueID(),
-						cLevel->GetLeftController()->GetUniqueID());
-
-					cLevel->GetLeftTimeManinpulator()->makeTimePaused(false);
-					cLevel->GetRightTimeManinpulator()->makeTimePaused(false);
-				}
 			}
 		}
 	};

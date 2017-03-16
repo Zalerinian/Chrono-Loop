@@ -9,15 +9,15 @@ namespace Epoch {
 	namespace Easing {
 
 		float SineIn(float t, float b, float c, float d) {
-			return -c * cos(t / d * (PI / 2)) + c + b;
+			return -c * (float)cos(t / d * (PI / 2)) + c + b;
 		}
 
 		float SineOut(float t, float b, float c, float d) {
-			return c * sin(t / d * (PI / 2)) + b;
+			return c * (float)sin(t / d * (PI / 2)) + b;
 		}
 
 		float SineInOut(float t, float b, float c, float d) {
-			return -c / 2 * (cos(PI*t / d) - 1) + b;
+			return -c / 2 * ((float)cos(PI*t / d) - 1) + b;
 		}
 
 	}
