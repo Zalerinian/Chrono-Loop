@@ -8,13 +8,6 @@
     <Scale>1,1,1.079898</Scale>
     <Components>
       <ButtonPress>Enabled</ButtonPress>
-      <ButtonPress>Enabled</ButtonPress>
-      <ButtonPress>Enabled</ButtonPress>
-      <ButtonPress>Enabled</ButtonPress>
-      <ButtonPress>Enabled</ButtonPress>
-      <ButtonPress>Enabled</ButtonPress>
-      <ButtonPress>Enabled</ButtonPress>
-      <ButtonPress>Enabled</ButtonPress>
       <Collider>
         <Type>Button</Type>
         <Trigger>False</Trigger>
@@ -165,40 +158,19 @@
       <AABBtoAABB>Enabled</AABBtoAABB>
       <AABBtoSphere>Enabled</AABBtoSphere>
       <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
-      <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
-      <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
-      <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
-      <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
-      <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
-      <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
-      <ElasticPlane>Enabled</ElasticPlane>
       <Collider>
         <Type>OBB</Type>
         <Trigger>False</Trigger>
         <Position>0,0,0</Position>
         <Rotation>0,0,0</Rotation>
         <Scale>1,1,1</Scale>
-        <Move>True</Move>
+        <Move>False</Move>
         <Gravity>0,-9.810001,0</Gravity>
-        <Mass>10</Mass>
+        <Mass>20</Mass>
         <Elasticity>0.2</Elasticity>
         <StaticFriction>0.1</StaticFriction>
         <KeneticFriction>0.1</KeneticFriction>
-        <Drag>0.7</Drag>
+        <Drag>0.8</Drag>
       </Collider>
     </Components>
   </Object>
@@ -213,25 +185,16 @@
       <AABBtoAABB>Enabled</AABBtoAABB>
       <AABBtoSphere>Enabled</AABBtoSphere>
       <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
-      <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
-      <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
-      <ElasticPlane>Enabled</ElasticPlane>
       <Collider>
         <Type>OBB</Type>
         <Trigger>False</Trigger>
         <Position>0,0,0</Position>
         <Rotation>0,0,0</Rotation>
         <Scale>1,1,1</Scale>
-        <Move>True</Move>
+        <Move>False</Move>
         <Gravity>0,-9.810001,0</Gravity>
-        <Mass>5</Mass>
-        <Elasticity>0.4</Elasticity>
+        <Mass>7</Mass>
+        <Elasticity>0.5</Elasticity>
         <StaticFriction>0.1</StaticFriction>
         <KeneticFriction>0.1</KeneticFriction>
         <Drag>0.3</Drag>
@@ -249,19 +212,13 @@
       <AABBtoAABB>Enabled</AABBtoAABB>
       <AABBtoSphere>Enabled</AABBtoSphere>
       <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
-      <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
-      <ElasticPlane>Enabled</ElasticPlane>
       <Collider>
         <Type>OBB</Type>
         <Trigger>False</Trigger>
         <Position>0,0,0</Position>
         <Rotation>0,0,0</Rotation>
         <Scale>1,1,1</Scale>
-        <Move>True</Move>
+        <Move>False</Move>
         <Gravity>0,-9.810001,0</Gravity>
         <Mass>6</Mass>
         <Elasticity>0.4</Elasticity>
@@ -585,19 +542,10 @@
     <Name>cube.002</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
-    <Position>-0.0915693,0.9180011,-1.074129</Position>
+    <Position>0.03,0.79,-1.09</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>0.3,0.3,0.3</Scale>
     <Components>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
-      <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
-      <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
-      <ElasticPlane>Enabled</ElasticPlane>
       <AABBtoAABB>Enabled</AABBtoAABB>
       <AABBtoSphere>Enabled</AABBtoSphere>
       <ElasticPlane>Enabled</ElasticPlane>
@@ -610,7 +558,7 @@
         <Move>True</Move>
         <Gravity>0,-9.810001,0</Gravity>
         <Mass>4</Mass>
-        <Elasticity>0.6</Elasticity>
+        <Elasticity>0.7</Elasticity>
         <StaticFriction>0.1</StaticFriction>
         <KeneticFriction>0.1</KeneticFriction>
         <Drag>0.1</Drag>
