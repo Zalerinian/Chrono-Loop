@@ -1,13 +1,24 @@
 #pragma once
+#include "Level.h"
+#include <mutex>
 
 namespace Epoch {
-	class Level;
-
-
 
 	class LM {
-		Level* mCurrentLevel = nullptr;
+		Level* mCurrentLevel = nullptr, *mLoadingLevel = nullptr;
 
+		enum class LoadStatus
+		{
+			None = 0,
+			Loading,
+			Complete,
+			Error
+		};
+
+		LoadStatus mLevelStatus = LoadStatus::None;
+		std::mutex mMutex;
+
+		void ThreadLoadLevel(std::string _path);
 
 	public:
 		enum class LevelStatus {
@@ -16,16 +27,20 @@ namespace Epoch {
 			Error
 		};
 
+
+		void SetCurrentLevel(Level* _level);
 		Level* GetCurrentLevel();
-		LevelStatus LoadLevelAsync(const char* _path, Level* _out);
+		LevelStatus LoadLevelAsync(const char* _path, Level** _out);
+		void Destroy();
 	};
+
 
 
 	class LevelManager {
 		static LM* sInstance;
 	
 	public:
-		static LM* GetInstance();
+		static LM& GetInstance();
 		static void DestroyInstance();
 	};
 }

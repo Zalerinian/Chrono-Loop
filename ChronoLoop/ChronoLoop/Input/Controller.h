@@ -22,7 +22,7 @@ namespace Epoch {
 		void Setup(int _index);
 
 
-		vec2f InitialPos = { -2,-2 };//-2Slow-2Furious
+		vec2f InitialPos = { 0,0 };
 		unsigned int gestureCnt = 0;
 
 		friend class VIM;
@@ -64,7 +64,7 @@ namespace Epoch {
 
 		//mostly for touchpad
 		vec2f GetAxis(vr::EVRButtonId buttonId = vr::k_EButton_SteamVR_Touchpad);
-		void TriggerHapticPulse(int duration_micro_sec = 500, vr::EVRButtonId buttonId = vr::k_EButton_SteamVR_Touchpad);
+		void TriggerHapticPulse(unsigned short duration_micro_sec = 500, vr::EVRButtonId buttonId = vr::k_EButton_SteamVR_Touchpad);
 	};
 
 }

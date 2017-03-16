@@ -6,7 +6,7 @@
 #include "../Objects/MeshComponent.h"
 #include "../Common/Logger.h"
 #include "Pool.h"
-#include "Level.h"
+#include "LevelManager.h"
 
 namespace Epoch {
 	bool Snapshot::IsObjectStored(unsigned short _id) {
@@ -87,6 +87,11 @@ namespace Epoch {
 			}
 		}
 
+	}
+
+	void Timeline::RemoveFromTimeline(unsigned short _id)
+	{
+		mLiveObjects.erase(_id);
 	}
 
 	bool Timeline::RewindMakeClone(unsigned int _snaptime) {
@@ -186,20 +191,17 @@ namespace Epoch {
 		if (mObjectLifeTimes.find(_cloneid) != mObjectLifeTimes.end() && (mObjectLifeTimes[_cloneid]->mBirth > mCurrentGameTimeIndx || mObjectLifeTimes[_cloneid]->mDeath < mCurrentGameTimeIndx))
 			cloneInterp->SetActive(false);
 
-		cloneInterp->SetType(InterpolatorType::I_Matrix4);
 		if (_currTime + 1 <= mSnaptimes.size() - 1) {
-			nextsnap = mSnapshots[mSnaptimes[_currTime + 1]];
+			nextsnap = mSnapshots[mSnaptimes[(unsigned int)_currTime + 1]];
 			//found a clone snapinfo in the next snapshot
 			if (nextsnap->mSnapinfos.find(_cloneid) != nextsnap->mSnapinfos.end()) {
 				nextInfo = nextsnap->mSnapinfos[_cloneid];
-				cloneInterp->SetStart(_currSnap->mTransform.GetMatrix());
-				cloneInterp->SetEnd(nextInfo->mTransform.GetMatrix());
 				cloneInterp->SetActive(true);
 				//Loop to find the same clone's baseObject
 				std::vector<BaseObject*> clones = TimeManager::Instance()->GetClonesVec();
 				for (int i = 0; i < clones.size(); ++i) {
 					if (_cloneid == clones[i]->GetUniqueID()) {
-						cloneInterp->SetEdit(clones[i]->GetTransform().GetMatrix());
+						cloneInterp->Prepare(0.1f, _currSnap->mTransform.GetMatrix(), nextInfo->mTransform.GetMatrix(), clones[i]->GetTransform().GetMatrix());
 						break;
 					}
 				}
@@ -250,13 +252,15 @@ namespace Epoch {
 			newObject->mDeath = mSnaptimes[mCurrentGameTimeIndx];
 		}
 	}
+	
 
 	//This hasn't been tested yet
 	void Timeline::CheckforLostObjects(std::vector<BaseObject*>& mClones) {
+		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 		for (auto obj : mObjectLifeTimes) {
 			if (obj.second->mBirth > mCurrentGameTimeIndx) {
 				for (unsigned int i = 0; i < mClones.size(); i++) {
-					if (mClones[i]->GetUniqueID() == obj.first || Level::Instance()->iGetLeftController()->GetUniqueID() == obj.first || Level::Instance()->iGetHeadset()->GetUniqueID() == obj.first || Level::Instance()->iGetRightController()->GetUniqueID() == obj.first)
+					if (mClones[i]->GetUniqueID() == obj.first || cLevel->GetLeftController()->GetUniqueID() == obj.first || cLevel->GetHeadset()->GetUniqueID() == obj.first || cLevel->GetRightController()->GetUniqueID() == obj.first)
 						break;
 
 					if (mClones[i]->GetUniqueID() != obj.first && i == mClones.size() - 1) {
@@ -342,7 +346,27 @@ namespace Epoch {
 			}
 		}
 	}
-
+	void Timeline::InterpAllObjectsToSnapExceptPlayer(unsigned int _fromSnapTime, unsigned int _toSnapTime, unsigned short _id1, unsigned short _id2, unsigned short _id3) 
+	{
+		Snapshot* _from = mSnapshots[_fromSnapTime];
+		Snapshot* _to = mSnapshots[_toSnapTime];
+		for (auto object : mLiveObjects) {
+			unsigned short id = object.second->GetUniqueID();
+			if (id == _id1 || id == _id2 || id == _id3)
+				continue;
+			SnapInfo* destInfo;
+			//If the object doesnt have a info, 
+			//then check against the list for the last snap it was updated
+			bool stored = _to->IsObjectStored(id);
+			if (stored) {
+				destInfo = _to->mSnapinfos[id];
+			} else if (!stored) {
+				if (_to->mUpdatedtimes.find(id) == _to->mUpdatedtimes.end())
+					continue;
+				destInfo = mSnapshots[_to->mUpdatedtimes[id]]->mSnapinfos[id];
+			}
+		}
+	}
 	void Timeline::MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3) {
 		Snapshot* destination = mSnapshots[_snaptime];
 		for (auto object : mLiveObjects) {
@@ -370,8 +394,6 @@ namespace Epoch {
 			}
 		}
 	}
-
-
 	void Timeline::ClearTimeLine() {
 		for (auto snapshot : mSnapshots) {
 			for (auto snapInfo : snapshot.second->mSnapinfos) {
@@ -409,10 +431,15 @@ namespace Epoch {
 		_info->mId = _object->GetUniqueID();
 		_info->mTransform = _object->GetTransform();
 
-		if (mObjectLifeTimes.find(_info->mId) == mObjectLifeTimes.end())
+		
+		if (mObjectLifeTimes.find(_info->mId) == mObjectLifeTimes.end()) {
 			_info->mBitset[0] = false;
-		else
+		} else {
+			if(mObjectLifeTimes[_info->mId]->mBirth > mCurrentGameTimeIndx || mObjectLifeTimes[_info->mId]->mDeath < mCurrentGameTimeIndx)
+				_info->mBitset[0] = false;
+			else
 			_info->mBitset[0] = true;
+		}
 
 
 		//TODO PAT: ADD MORE COMPONETS WHEN WE NEED THEM.

@@ -3,6 +3,7 @@
 #include <vector>
 #include "../Common/Interpolator.h"
 #include <unordered_map>
+#include <bitset>
 #define RecordingRate .1f // 1/10th of a second in milliseconds 
 
 namespace Epoch {
@@ -10,23 +11,35 @@ namespace Epoch {
 
 	class Timeline;
 
+	//made this to find other baseobjects of the same clone
+	struct Clonepair
+	{
+		unsigned short mCur;
+		unsigned short mOther1;
+		unsigned short mOther2;
+	};
 	//This class handles all game time as well as managing the Timeline
 	class TimeManager {
 		static TimeManager* instanceTimemanager;
 		static Timeline* mTimeline;
 
-
+		//Time variables
 		float mTimestamp = 0;
 		float mDeltaTime = 0;
 		unsigned int mLevelTime = 0;
 		bool mRewindMakeClone = false;
-		int mtempCurSnapFrame = 0;
+		unsigned int mtempCurSnapFrame = 0;
+
+		//container of objects
 		std::vector<BaseObject*>mClones;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneInterpolators;
-		Timeline* GetTimeLine();
-		//Command Console vars
-		bool mCloneCountOn;
-		bool mSnapshotCountOn;
+		
+		std::bitset<10>mCloneTextureBitset;
+		//Pass in baseobject id to get bitset location
+		std::unordered_map<unsigned short, unsigned int>mCloneTextures;
+
+		//Timeline* GetTimeLine();
+
 		TimeManager();
 		~TimeManager();
 	public:
@@ -35,18 +48,23 @@ namespace Epoch {
 		void UpdatePlayerObjectInTimeline(BaseObject* _obj);
 		void AddObjectToTimeline(BaseObject* _obj);
 		void AddInterpolatorForClone(BaseObject* _obj);
+		void AddAllTexturesToQueue();
+		void AssignTextureToClone(unsigned short _id);
 		//Clears the list of BaseObject* the Timemanager has refrence to.
 		void ClearClones();
 		//Checks and see if you can rewind to passed in frame
 		bool CheckRewindAvaliable(unsigned int _RewindNumOfframes);
+		void DeleteClone(unsigned short _id1);
 		static void Destroy();
-		bool DoesCloneExist(unsigned short _id, unsigned int _frame);
+		bool DoesCloneExist(unsigned short _id,unsigned int _frame);
+		void FindOtherClones(Clonepair& _pair);
 		//Returns the current snapshot indx
 		unsigned int GetCurrentSnapFrame();
 		//Retrieves delta time
 		float GetDeltaTime() { return mDeltaTime; }
 		Interpolator<matrix4>* GetCloneInterpolator(unsigned short _id);
 		std::vector<BaseObject*>& GetClonesVec() { return mClones; };
+		std::string GetNextTexture();
 		int GetTempCurSnap() { return mtempCurSnapFrame; };
 		void SetTempCurSnap() { mtempCurSnapFrame = GetCurrentSnapFrame(); };
 		unsigned int GetTotalSnapsmade();
@@ -64,11 +82,6 @@ namespace Epoch {
 
 		void BrowseTimeline(int _gesture, int _frameRewind);
 		void MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC);
-
-		void SetCloneCountBool(bool _set) { mCloneCountOn = _set; }
-		void SetSnapCountBool(bool _set) { mSnapshotCountOn = _set; }
-
-
 
 		void HotfixResetTimeline();
 	};

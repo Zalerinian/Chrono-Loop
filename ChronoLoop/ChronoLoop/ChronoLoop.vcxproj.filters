@@ -121,8 +121,17 @@
     <Filter Include="Common\Math\Source Files">
       <UniqueIdentifier>{e319ddd3-329d-43fd-aeb9-fb646fc0c8fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common\Easing">
+      <UniqueIdentifier>{9c847c8c-a255-4381-b942-ea9608a0525f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Easing\Header Files">
+      <UniqueIdentifier>{806d51f3-a257-47dd-ae5c-07c3930d54bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Easing\Source Files">
+      <UniqueIdentifier>{051b87d1-fce5-4caf-9b5f-f3909184eaae}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Particles">
-      <UniqueIdentifier>{7e823c1c-86a1-4114-b149-d7aa0c0a3021}</UniqueIdentifier>
+      <UniqueIdentifier>{a1f02d0e-5ef8-44d3-8749-fa5351c55aff}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -327,20 +336,8 @@
     <ClInclude Include="Common\Math\vec4i.h">
       <Filter>Common\Math\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Common\GhostList.h">
-      <Filter>Common\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\RenderList.h">
-      <Filter>Rendering\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Input\InputTimeline.h">
       <Filter>Input\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Actions\CCEnterLevel.h">
-      <Filter>Actions</Filter>
-    </ClInclude>
-    <ClInclude Include="Actions\MainMenuBT.h">
-      <Filter>Actions</Filter>
     </ClInclude>
     <ClInclude Include="Rendering\MeshCache.h">
       <Filter>Rendering\Header Files\Managers</Filter>
@@ -348,10 +345,71 @@
     <ClInclude Include="Core\LevelManager.h">
       <Filter>Core\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleComponents.h">
+    <ClInclude Include="Common\GhostList.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RenderList.h">
+      <Filter>Rendering\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCEnterLevel.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\MainMenuBT.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCEnterLevel.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Easing\Back.h">
+      <Filter>Common\Easing\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Easing\Bounce.h">
+      <Filter>Common\Easing\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Easing\Circ.h">
+      <Filter>Common\Easing\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Easing\Cubic.h">
+      <Filter>Common\Easing\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Easing\Elastic.h">
+      <Filter>Common\Easing\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Easing\Expo.h">
+      <Filter>Common\Easing\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Easing\Linear.h">
+      <Filter>Common\Easing\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Easing\Quad.h">
+      <Filter>Common\Easing\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Easing\Quart.h">
+      <Filter>Common\Easing\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Easing\Quint.h">
+      <Filter>Common\Easing\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Easing\Sine.h">
+      <Filter>Common\Easing\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EasingFunctions.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Settings.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NavMesh.h" />
+    <ClInclude Include="PathPlanning.h" />
+    <ClInclude Include="tinyxml\tinystr.h" />
+    <ClInclude Include="tinyxml\tinyxml.h" />
+    <ClInclude Include="Actions\WhatInHellAmIHitting.hpp">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Particles\ParticleSystem.h">
       <Filter>Particles</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleSystem.h">
+    <ClInclude Include="Particles\ParticleComponents.h">
       <Filter>Particles</Filter>
     </ClInclude>
   </ItemGroup>
@@ -524,6 +582,9 @@
     <ClCompile Include="Objects\MeshComponent.cpp">
       <Filter>Objects\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Common\LimitedList.cpp">
+      <Filter>Common\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Actions\TimeManipulation.cpp">
       <Filter>Actions\Source Files</Filter>
     </ClCompile>
@@ -557,9 +618,6 @@
     <ClCompile Include="Common\Math\vec4i.cpp">
       <Filter>Common\Math\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rendering\RenderList.cpp">
-      <Filter>Rendering\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Input\InputTimeline.cpp">
       <Filter>Input\Source Files</Filter>
     </ClCompile>
@@ -569,10 +627,55 @@
     <ClCompile Include="Core\LevelManager.cpp">
       <Filter>Core\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleComponents.cpp">
+    <ClCompile Include="Common\Easing\Back.cpp">
+      <Filter>Common\Easing\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Easing\Bounce.cpp">
+      <Filter>Common\Easing\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Easing\Circ.cpp">
+      <Filter>Common\Easing\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Easing\Cubic.cpp">
+      <Filter>Common\Easing\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Easing\Elastic.cpp">
+      <Filter>Common\Easing\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Easing\Expo.cpp">
+      <Filter>Common\Easing\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Easing\Linear.cpp">
+      <Filter>Common\Easing\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Easing\Quad.cpp">
+      <Filter>Common\Easing\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Easing\Quart.cpp">
+      <Filter>Common\Easing\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Easing\Quint.cpp">
+      <Filter>Common\Easing\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Easing\Sine.cpp">
+      <Filter>Common\Easing\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Settings.cpp">
+      <Filter>Common\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NavMesh.cpp" />
+    <ClCompile Include="PathPlanning.cpp" />
+    <ClCompile Include="tinyxml\tinystr.cpp" />
+    <ClCompile Include="tinyxml\tinyxml.cpp" />
+    <ClCompile Include="tinyxml\tinyxmlerror.cpp" />
+    <ClCompile Include="tinyxml\tinyxmlparser.cpp" />
+    <ClCompile Include="Rendering\RenderList.cpp">
+      <Filter>Rendering\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Particles\ParticleSystem.cpp">
       <Filter>Particles</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleSystem.cpp">
+    <ClCompile Include="Particles\ParticleComponents.cpp">
       <Filter>Particles</Filter>
     </ClCompile>
   </ItemGroup>
@@ -622,16 +725,15 @@
     <FxCompile Include="Rendering\Shaders\GSDuplicateMesh.hlsl">
       <Filter>Rendering\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="GSParticles.hlsl">
+    <FxCompile Include="Particles\GSParticles.hlsl">
       <Filter>Particles</Filter>
     </FxCompile>
-    <FxCompile Include="ParticlePixelShader.hlsl">
+    <FxCompile Include="Particles\ParticlePixelShader.hlsl">
       <Filter>Particles</Filter>
     </FxCompile>
-    <FxCompile Include="ParticleVertexShader.hlsl">
+    <FxCompile Include="Particles\ParticleVertexShader.hlsl">
       <Filter>Particles</Filter>
     </FxCompile>
-    <FxCompile Include="Rendering\Shaders\ShadowVS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
@@ -671,9 +773,6 @@
     </None>
     <None Include="..\DXTK\DirectXTex.inl">
       <Filter>DXTK</Filter>
-    </None>
-    <None Include="Rendering\Shaders\LightFunctions.hlsli">
-      <Filter>Rendering\Shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -1,14 +1,15 @@
 #include "LevelManager.h"
+#include <thread>
 
 namespace Epoch {
 
 	LM* LevelManager::sInstance = nullptr;
 
-	LM* LevelManager::GetInstance() {
+	LM& LevelManager::GetInstance() {
 		if (nullptr == sInstance) {
 			sInstance = new LM;
 		}
-		return sInstance;
+		return *sInstance;
 	}
 
 	void LevelManager::DestroyInstance() {
@@ -18,12 +19,64 @@ namespace Epoch {
 		}
 	}
 
-	Level * LM::GetCurrentLevel() {
+	void LM::ThreadLoadLevel(std::string _path)
+	{
+		mLoadingLevel = new Level;
+
+		// Actually load the level here
+		mLoadingLevel->LoadLevel(_path);
+
+
+		// Assuming everything went dandy
+		mMutex.lock();
+		mLevelStatus = LoadStatus::Complete;
+		mMutex.unlock();
+	}
+
+	void LM::SetCurrentLevel(Level* _level) {
+		mCurrentLevel = _level;
+	}
+
+	Level* LM::GetCurrentLevel() {
 		return mCurrentLevel;
 	}
 
-	LM::LevelStatus LM::LoadLevelAsync(const char * _path, Level* _out) {
-		return LevelStatus::Error;
+	LM::LevelStatus LM::LoadLevelAsync(const char * _path, Level** _out) {
+		mMutex.lock();
+		if (mLevelStatus == LoadStatus::Loading)
+		{
+			mMutex.unlock();
+			return LevelStatus::Loading;
+		}
+		else if (mLevelStatus == LoadStatus::None)
+		{
+			mLevelStatus = LoadStatus::Loading;
+			std::thread(&LM::ThreadLoadLevel, this, std::string(_path)).detach();
+			mMutex.unlock();
+			return LevelStatus::Loading;
+		}
+		else if (mLevelStatus == LoadStatus::Complete)
+		{
+			mLevelStatus = LoadStatus::None;
+			mMutex.unlock();
+			(*_out) = mLoadingLevel;
+			mLoadingLevel = nullptr;
+			return LevelStatus::Success;
+		}
+		else
+		{
+			// Error loading
+			SystemLogger::Error() << "Ya dun goofed." << std::endl;
+			mMutex.unlock();
+			return LevelStatus::Error;
+		}
+
+	}
+
+	void LM::Destroy()
+	{
+		if(mCurrentLevel)
+			delete mCurrentLevel;
 	}
 
 } // Epoch Namespace

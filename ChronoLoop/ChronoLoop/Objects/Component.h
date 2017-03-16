@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include "..\Physics\Physics.h"
 #include <unordered_set>
+#include "../Rendering/RenderSet.h"	
 
 namespace Epoch
 {
@@ -46,6 +47,8 @@ namespace Epoch
 		inline bool IsValid() { return mIsValid; }
 		inline void Disable() { mIsEnabled = false; };
 		inline void Enable() { mIsEnabled = true; };
+		virtual void Update() = 0;
+		virtual void Destroy() = 0;
 		unsigned short GetComponentNum() { return mComponentNum; }
 		void GetMatrix(matrix4& _m);
 		unsigned short GetColliderId() { return mComponentId; };
@@ -58,11 +61,6 @@ namespace Epoch
 
 		//Dont call this unless you are absolutly sure you know what you are doing
 		inline void SetComponentId(unsigned short _id) { mComponentId = _id; }
-
-		// Virtual functions for child classes
-		virtual void Update() = 0;
-		virtual void Destroy() = 0;
-		virtual void OnAddedToObject() {}
 	};
 
 	class Listener : public Component
@@ -117,8 +115,8 @@ namespace Epoch
 		vec4f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity, mWeight, mDragForce;
 		float mMass, mElasticity, mKineticFriction, mStaticFriction, mInvMass, mRHO, mDrag, mArea;
 
-		void Update();
-		void Destroy();
+		virtual void Update();
+		virtual void Destroy();
 
 		vec4f AddForce(vec4f _force) { mForces = _force; return mForces; };
 		virtual vec4f GetPos();
@@ -168,6 +166,10 @@ namespace Epoch
 		CubeCollider(BaseObject* _obj, bool _move, bool _trigger, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec4f _min, vec4f _max);
 		CubeCollider(vec4f _min, vec4f _max) { mMin = _min; mMax = _max; };
 		vec4f mMin, mMax, mMinOffset, mMaxOffset;
+		RenderShape* mShape;
+		GhostList<matrix4>::GhostNode* mNode = nullptr;
+		virtual void Update();
+
 		virtual void SetPos(const vec4f& _newPos);
 	};
 

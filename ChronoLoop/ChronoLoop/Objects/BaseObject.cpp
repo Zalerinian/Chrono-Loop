@@ -85,7 +85,7 @@ namespace Epoch {
 	void BaseObject::Update() {
 		for (auto it = mComponents.begin(); it != mComponents.end(); ++it) {
 			if (it->first == eCOMPONENT_COLLIDER) {
-				continue;
+				//continue;
 			}
 			for (auto cIt = it->second.begin(); cIt != it->second.end(); ++cIt) {
 				if ((*cIt)->IsEnabled()) {
@@ -158,38 +158,55 @@ namespace Epoch {
 		std::vector<Component*> components = this->GetComponents(eCOMPONENT_COLLIDER);
 		for (int j = 0; j < components.size(); ++j) {
 			components[j]->Destroy();
+			delete components[j];
 		}
 
 		components = this->GetComponents(eCOMPONENT_AUDIOEMITTER);
 		for (int j = 0; j < components.size(); ++j) {
 			components[j]->Destroy();
+			delete components[j];
 		}
 
 		components = this->GetComponents(eCOMPONENT_AUDIOLISTENER);
 		for (int j = 0; j < components.size(); ++j) {
 			components[j]->Destroy();
+			delete components[j];
 		}
 
 		components = this->GetComponents(eCOMPONENT_CODE);
 		for (int j = 0; j < components.size(); ++j) {
 			components[j]->Destroy();
+			delete components[j];
 		}
 
 		components = this->GetComponents(eCOMPONENT_MESH);
 		for (int j = 0; j < components.size(); ++j) {
 			components[j]->Destroy();
+			delete components[j];
 		}
 
 		components = this->GetComponents(eCOMPONENT_UI);
 		for (int j = 0; j < components.size(); ++j) {
 			components[j]->Destroy();
+			delete components[j];
 		}
 
 		components = this->GetComponents(eCOMPONENT_UNKNOWN);
 		for (int j = 0; j < components.size(); ++j) {
 			components[j]->Destroy();
+			delete components[j];
 		}
 
+
+		mComponents.clear();
 	}
+
+
+	
+
+	//void BaseObject::AddComponent(ComponentType _type, Component* _comp)
+	//{
+	//	mComponents[_type].push_back(_comp);
+	//}
 
 }
