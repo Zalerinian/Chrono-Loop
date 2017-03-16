@@ -398,7 +398,7 @@ namespace Epoch
 		mUpperBound.mNormal = mPushNormal;
 		mUpperBound.mOffset = mMax * mPushNormal;
 		mLowerBound.mNormal = mPushNormal;
-		mLowerBound.mOffset = (mMin - mMax) * mPushNormal * 2;
+		mLowerBound.mOffset = (mMin * mPushNormal) - .1;
 		mShouldMove = true;
 		mIsTrigger = false;
 
