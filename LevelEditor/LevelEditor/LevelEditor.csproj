@@ -85,32 +85,42 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Changes.cs" />
-    <Compile Include="FileOperations.cs">
+    <Compile Include="Components\BoxCollider.cs" />
+    <Compile Include="Components\Collider.cs" />
+    <Compile Include="Components\Component.cs" />
+    <Compile Include="Components\PlaneCollider.cs" />
+    <Compile Include="Forms\FileOperations.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.cs">
+    <Compile Include="Forms\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
+    <Compile Include="Forms\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="GraphicsPanel.cs">
+    <Compile Include="Controls\GraphicsPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="GraphicsPanel.Designer.cs">
+    <Compile Include="Controls\GraphicsPanel.Designer.cs">
       <DependentUpon>GraphicsPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="NoFocusButton.cs">
+    <Compile Include="Controls\NoFocusButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="NoFocusButton.Designer.cs">
+    <Compile Include="Controls\NoFocusButton.Designer.cs">
       <DependentUpon>NoFocusButton.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Forms\TestPositionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TestPositionForm.Designer.cs">
+      <DependentUpon>TestPositionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ToolObject.cs" />
     <Compile Include="ToolObjectColor.cs" />
-    <EmbeddedResource Include="Form1.resx">
+    <EmbeddedResource Include="Forms\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -122,6 +132,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Forms\TestPositionForm.resx">
+      <DependentUpon>TestPositionForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Assets\AxisGizmo.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

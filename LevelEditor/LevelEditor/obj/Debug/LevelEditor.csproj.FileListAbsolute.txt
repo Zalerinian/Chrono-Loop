@@ -250,3 +250,4 @@ C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\obj\Debu
 C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\obj\Debug\LevelEditor.csproj.GenerateResource.Cache
 C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\default.dds
 G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\default.dds
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\obj\Debug\LevelEditor.TestPositionForm.resources
