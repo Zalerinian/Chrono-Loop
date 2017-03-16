@@ -22,30 +22,11 @@ namespace Epoch
 	
 
 	unsigned int TimeManipulation::mCloneCount = 0;
-
+	unsigned short TimeManipulation::mCurrTexture = 0;
 
 	void TimeManipulation::Start()
 	{
-		//TODO PAT: Replace this with ryan's GUI system
-		return;
-		D3D11_TEXTURE2D_DESC txtdec;
-		txtdec.Width = 800;
-		txtdec.Height = 600;
-		txtdec.MipLevels = 1;
-		txtdec.ArraySize = 1;
-		txtdec.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-		txtdec.SampleDesc.Count = 1;
-		txtdec.SampleDesc.Quality = 0;
-		txtdec.Usage = D3D11_USAGE_DEFAULT;
-		txtdec.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-		txtdec.CPUAccessFlags = 0;
-		txtdec.MiscFlags = 0;
-		HRESULT hr;
-		hr = Renderer::Instance()->GetDevice().Get()->CreateTexture2D(&txtdec, NULL, &mCountTxt);
-		mCountMap = Draw::Instance().CreateBitmapForTexture(mCountTxt);
-		//This draws to center
-		Font* tempFont = new Font(L"Times New Roman", 25, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_CENTER, DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
-		Draw::Instance().DrawTextToBitmap(0.0f, 0.0f, 1.0f, 1.0f, *tempFont, std::to_wstring(mCloneCount), mCountMap);
+		
 	}
 
 	void TimeManipulation::Update() {
@@ -60,11 +41,13 @@ namespace Epoch
 			SystemLogger::GetLog() << "[Debug] A clone is being made, please hold: " << mCloneCount << " | Is left: " << mControllerRole << std::endl;
 
 			Transform identity;
+
 			
 			//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
 			BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - " + std::to_string(mCloneCount),  identity ); //new BaseObject("headset" + std::to_string(rand), identity);
 			MeshComponent *visibleMesh = new MeshComponent("../Resources/Clone.obj");
-			visibleMesh->AddTexture("../Resources/CloneTexture.png", eTEX_DIFFUSE);
+
+			visibleMesh->AddTexture(TimeManager::Instance()->GetNextTexture().c_str(), eTEX_DIFFUSE);
 			headset->AddComponent(visibleMesh);
 
 			//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
@@ -108,6 +91,10 @@ namespace Epoch
 			TimeManager::Instance()->AddInterpolatorForClone(headset);
 			TimeManager::Instance()->AddInterpolatorForClone(Controller1);
 			TimeManager::Instance()->AddInterpolatorForClone(Controller2);
+			
+			TimeManager::Instance()->AssignTextureToClone(headset->GetUniqueId());
+			
+
 			mCloneCount++;
 		}
 
@@ -133,14 +120,44 @@ namespace Epoch
 				mPauseTime = true;
 			}
 		}
-		
-		if (GetAsyncKeyState(VK_END) & 1 || VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::k_EButton_SteamVR_Touchpad)) 
-		{
-			HotfixButtonDown++;
-			if(HotfixButtonDown > 169)
+		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::k_EButton_SteamVR_Touchpad)) {
+			bool right = false;
+			bool left = false;
+			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
+
+			if (cLevel->GetRightTimeManinpulator() != nullptr || cLevel->GetLeftTimeManinpulator() != nullptr) {
+				right = cLevel->GetRightTimeManinpulator()->isTimePaused();
+				left = cLevel->GetLeftTimeManinpulator()->isTimePaused();
+			}
+
+			if (left || right) {
+
+				TimeManager::Instance()->RewindTimeline(
+					TimeManager::Instance()->GetTempCurSnap(),
+					cLevel->GetHeadset()->GetUniqueID(),
+					cLevel->GetRightController()->GetUniqueID(),
+					cLevel->GetLeftController()->GetUniqueID());
+
+				VRInputManager::GetInstance().RewindInputTimeline(
+					TimeManager::Instance()->GetTempCurSnap(),
+					cLevel->GetRightController()->GetUniqueID(),
+					cLevel->GetLeftController()->GetUniqueID());
+
+				cLevel->GetLeftTimeManinpulator()->makeTimePaused(false);
+				cLevel->GetRightTimeManinpulator()->makeTimePaused(false);
+			}
+
+			if(GetAsyncKeyState(VK_END) & 1)
+			{
+				HotfixButtonDown++;
+				if (HotfixButtonDown > 169) {
+					HotfixButtonDown = 0;
+					TimeManager::Instance()->HotfixResetTimeline();
+				}
+			}
+			else
 			{
 				HotfixButtonDown = 0;
-				TimeManager::Instance()->HotfixResetTimeline();
 			}
 		}
 		else

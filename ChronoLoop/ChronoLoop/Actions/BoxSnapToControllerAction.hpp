@@ -23,31 +23,25 @@ namespace Epoch {
 
 			bool mRight = false;
 			bool mLeft = false;
+
 			if (cLevel->GetRightTimeManinpulator() != nullptr || cLevel->GetLeftTimeManinpulator() != nullptr) {
 				mRight = cLevel->GetRightTimeManinpulator()->isTimePaused();
 				mLeft = cLevel->GetLeftTimeManinpulator()->isTimePaused();
 			}
 			if (VRInputManager::GetInstance().IsVREnabled() && mCollider) {
-
-
 				InputTimeline::InputNode*temp;
-
-				if (mRight || mLeft) {
-					temp = VRInputManager::GetInstance().FindLastInput(mCollider->GetBaseObject()->GetUniqueID(), true);
-				}
-				else {
+				if (mRight || mLeft ) {
+						temp = VRInputManager::GetInstance().FindLastInput(mCollider->GetBaseObject()->GetUniqueID(), true);
+				} else {
 					temp = VRInputManager::GetInstance().FindLastInput(mCollider->GetBaseObject()->GetUniqueID(), false);
 				}
-
-				//This is gross but i dont know how to get around this without storing mheld and should move in timeline
-				if (mInput && temp && mPickUp && 
-					(temp->mData.mLastFrame < mInput->mData.mLastFrame || 
+				if (mInput && temp && mPickUp &&
+					(temp->mData.mLastFrame < mInput->mData.mLastFrame ||
 					(temp->mData.mLastFrame == mInput->mData.mLastFrame && temp->mData.mTime < mInput->mData.mTime))) {
+					mHeld = false;
 					mPickUp->mShouldMove = true;
-
 					//	SystemLogger::GetLog() << "Should move on:: Old: snap = " << mInput->mData.mLastFrame << " time= " << mInput->mData.mTime << "   New: snap = " << temp->mData.mLastFrame << " time= " << temp->mData.mTime << std::endl;
 				}
-
 				mInput = temp;
 			}
 			//SystemLogger::GetLog() << mCollider->mHitting.size() << std::endl;
@@ -57,10 +51,17 @@ namespace Epoch {
 					mPickUp->SetPos(m.Position);
 					if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == 1 && mHeld || (mLeft || mRight)) {
 						SystemLogger::GetLog() << "Id: " << mCollider->GetBaseObject()->GetUniqueId() << " Released object" << std::endl;
+						if (mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueId() || mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueId()) {
+							VRInputManager::GetInstance().GetController((mInput->mData.mPrimary) ? eControllerType_Primary : eControllerType_Secondary).TriggerHapticPulse(500, mInput->mData.mButton);
+						}
 						ReleaseObject();
 					}
 				} else if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == -1 && !mHeld && !mCollider->mHitting.empty() && (!mLeft && !mRight)) {
 					SomethingtoController();
+					if (mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueId() || mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueId()) {
+						VRInputManager::GetInstance().GetController((mInput->mData.mPrimary) ? eControllerType_Primary : eControllerType_Secondary).TriggerHapticPulse(500, mInput->mData.mButton);
+					}
+
 				}
 
 				/*Controller &controller = VRInputManager::GetInstance().GetController(mControllerRole);

@@ -774,7 +774,7 @@ namespace Epoch {
 										} else if (otherCol->mColliderType == Collider::eCOLLIDER_Plane) {
 											PlaneCollider plane(((PlaneCollider*)otherCol)->mNormal, ((PlaneCollider*)otherCol)->mOffset);
 											int result = AabbToPlane(plane, aabb1);
-											if (result == 2)//behind plane
+											if (result == 2 && collider->GetPos().y > otherCol->GetPos().y)//behind plane TODO: Make this not jank
 											{
 												if (((CubeCollider*)collider)->mMin.y < otherCol->GetPos().y) {
 													vec4f pos = collider->GetPos();
@@ -883,7 +883,12 @@ namespace Epoch {
 										if (otherCol->mColliderType == Collider::eCOLLIDER_Cube) {
 											CubeCollider aabb2(((CubeCollider*)otherCol)->mMin, ((CubeCollider*)otherCol)->mMax);
 											if (AABBtoAABB(aabb1, aabb2))
+											{
 												((ControllerCollider*)collider)->mHitting.insert(otherCol);
+												for (unsigned int f = 0; f < collider->mObject->GetComponentCount(eCOMPONENT_CODE); ++f) {
+													((CodeComponent*)(collider->mObject->GetComponents(eCOMPONENT_CODE)[f]))->OnTriggerEnter(*collider, *otherCol);
+												}
+											}
 											else if (((ControllerCollider*)collider)->mHitting.find(otherCol) != ((ControllerCollider*)collider)->mHitting.end())
 												((ControllerCollider*)collider)->mHitting.erase(otherCol);
 										} else if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere) {
@@ -945,6 +950,7 @@ namespace Epoch {
 							collider->mForces *= 0.99f;
 
 						collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
+						
 					}
 				}//For all colliders of object end
 			}//For all objects end

@@ -3,6 +3,7 @@
 #include <vector>
 #include "../Common/Interpolator.h"
 #include <unordered_map>
+#include <bitset>
 #define RecordingRate .1f // 1/10th of a second in milliseconds 
 
 namespace Epoch {
@@ -22,15 +23,23 @@ namespace Epoch {
 		static TimeManager* instanceTimemanager;
 		static Timeline* mTimeline;
 
-
+		//Time variables
 		float mTimestamp = 0;
 		float mDeltaTime = 0;
 		unsigned int mLevelTime = 0;
 		bool mRewindMakeClone = false;
-		int mtempCurSnapFrame = 0;
+		unsigned int mtempCurSnapFrame = 0;
+
+		//container of objects
 		std::vector<BaseObject*>mClones;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneInterpolators;
-		Timeline* GetTimeLine();
+		
+		std::bitset<10>mCloneTextureBitset;
+		//Pass in baseobject id to get bitset location
+		std::unordered_map<unsigned short, unsigned int>mCloneTextures;
+
+		//Timeline* GetTimeLine();
+
 		TimeManager();
 		~TimeManager();
 	public:
@@ -39,6 +48,8 @@ namespace Epoch {
 		void UpdatePlayerObjectInTimeline(BaseObject* _obj);
 		void AddObjectToTimeline(BaseObject* _obj);
 		void AddInterpolatorForClone(BaseObject* _obj);
+		void AddAllTexturesToQueue();
+		void AssignTextureToClone(unsigned short _id);
 		//Clears the list of BaseObject* the Timemanager has refrence to.
 		void ClearClones();
 		//Checks and see if you can rewind to passed in frame
@@ -53,6 +64,7 @@ namespace Epoch {
 		float GetDeltaTime() { return mDeltaTime; }
 		Interpolator<matrix4>* GetCloneInterpolator(unsigned short _id);
 		std::vector<BaseObject*>& GetClonesVec() { return mClones; };
+		std::string GetNextTexture();
 		int GetTempCurSnap() { return mtempCurSnapFrame; };
 		void SetTempCurSnap() { mtempCurSnapFrame = GetCurrentSnapFrame(); };
 		unsigned int GetTotalSnapsmade();

@@ -13,8 +13,8 @@ namespace Epoch {
 			float p = d*.3f;
 			float a = c;
 			float s = p / 4;
-			float postFix = a*pow(2, 10 * (t -= 1)); // this is a fix, again, with post-increment operators
-			return -(postFix * sin((t*d - s)*(2 * PI) / p)) + b;
+			float postFix = a*(float)pow(2, 10 * (t -= 1)); // this is a fix, again, with post-increment operators
+			return -(postFix * (float)sin((t*d - s)*(2 * PI) / p)) + b;
 		}
 
 		float ElasticOut(float t, float b, float c, float d) {
@@ -22,7 +22,7 @@ namespace Epoch {
 			float p = d*.3f;
 			float a = c;
 			float s = p / 4;
-			return (a*pow(2, -10 * t) * sin((t*d - s)*(2 * PI) / p) + c + b);
+			return (a*(float)pow(2, -10 * t) * sin((t*d - s)*(2 * PI) / p) + c + b);
 		}
 
 		float ElasticInOut(float t, float b, float c, float d) {
@@ -32,11 +32,11 @@ namespace Epoch {
 			float s = p / 4;
 
 			if (t < 1) {
-				float postFix = a*pow(2, 10 * (t -= 1)); // postIncrement is evil
-				return -.5f*(postFix* sin((t*d - s)*(2 * PI) / p)) + b;
+				float postFix = a*(float)pow(2, 10 * (t -= 1)); // postIncrement is evil
+				return -.5f*(postFix* (float)sin((t*d - s)*(2 * PI) / p)) + b;
 			}
-			float postFix = a*pow(2, -10 * (t -= 1)); // postIncrement is evil
-			return postFix * sin((t*d - s)*(2 * PI) / p)*.5f + c + b;
+			float postFix = a*(float)pow(2, -10 * (t -= 1)); // postIncrement is evil
+			return postFix * (float)sin((t*d - s)*(2 * PI) / p)*.5f + c + b;
 		}
 
 	}

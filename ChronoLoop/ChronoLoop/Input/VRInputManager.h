@@ -36,6 +36,7 @@ namespace Epoch {
 		InputTimeline::InputNode * FindLastInput(unsigned short _id, bool _fromTempCurrent);
 		InputTimeline* GetInputTimeline() { return mInputTimeline; };
 
+		void CheckGesters();
 		inline unsigned int GetTrackedDeviceCount() { return vr::k_unMaxTrackedDeviceCount; }
 		inline vr::TrackedDevicePose_t* GetTrackedPositions() { return mPoses; }
 		inline matrix4& GetPlayerPosition() { return mPlayerPosition; }
