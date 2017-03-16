@@ -345,8 +345,9 @@ namespace Epoch {
 					if (colliderType == "OBB")
 					{
 						physical = true;
-						vec4f min = colliderPosition - vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1);
-						vec4f max = colliderPosition + vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1);
+						vec4f offset = vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1) / 2;
+						vec4f min = colliderPosition - offset;
+						vec4f max = colliderPosition + offset;
 						CubeCollider* col = new CubeCollider(obj, canMove, trigger, gravity, mass, elasticity, staticF, kineticF, drag, min, max);
 						obj->AddComponent(col);
 					}
