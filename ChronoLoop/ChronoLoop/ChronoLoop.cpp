@@ -652,24 +652,24 @@ void Update() {
 	L1->CallStart();
 	
 	//Enter effect
-	Patrick* emit = new Patrick(-1, 250, 2, vec4f(2.25, -1, 6.25, 1));
+	Patrick* emit = new Patrick(600, 250, 2, vec4f(7, 0, -4, 1));
 	emit->SetTexture("../Resources/BasicRectP.png");
 	emit->SetParticle(new Particle(200, 1.25 / 2.0, .15 / 2.0, vec4f(), vec4f(.2, .2, 1, 0), vec4f(0, 1, .2, 0)));
 	emit->y1 = 8;
 	emit->y2 = 12;
 	ParticleSystem::Instance()->AddEmitter(emit);
 
-	emit = new Patrick(-1, 150, 1, vec4f(2.25, -1, 6.25, 1));
+	emit = new Patrick(600, 150, 1, vec4f(7, 0, -4, 1));
 	emit->SetTexture("../Resources/BasicCircleP.png");
 	emit->SetParticle(new Particle(1000, .25 / 2.0, .05 / 2.0, vec4f(), vec4f(.5, 0, .25, 0), vec4f(.2, .8, .5, 0)));
 	emit->y1 = 1;
 	emit->y2 = 5;
 	ParticleSystem::Instance()->AddEmitter(emit);
 
-	ParticleEmitter * emitt = new ParticleEmitter(-1, 2000, 20, vec4f());
-	emitt->SetTexture("../Resources/BasicCircleP.png");
-	emitt->SetParticle(new Particle(500, .25, .15, vec4f(), vec4f(0, 0, 0, 0), vec4f(1, 1, 1, 1)));
-	ParticleSystem::Instance()->AddEmitter(emitt);
+	//ParticleEmitter * emitt = new ParticleEmitter(-1, 2000, 20, vec4f());
+	//emitt->SetTexture("../Resources/BasicCircleP.png");
+	//emitt->SetParticle(new Particle(500, .25, .15, vec4f(), vec4f(0, 0, 0, 0), vec4f(1, 1, 1, 1)));
+	//ParticleSystem::Instance()->AddEmitter(emitt);
 
 	//// Test for TextureManager::iAddTexture2D. Works nicely!
 	//D3D11_TEXTURE2D_DESC AddedTextureDesc;
