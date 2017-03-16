@@ -593,8 +593,8 @@
     <Name>TimeControlsPlane</Name>
     <Mesh>PlaneCorrection.obj</Mesh>
     <Texture>TimeControlScheme.png</Texture>
-    <Position>-1.079186,1.2,0</Position>
-    <Rotation>-1.57,0,0</Rotation>
+    <Position>-1.2,1.2,0</Position>
+    <Rotation>-1.57,0,3.14</Rotation>
     <Scale>1,1,1</Scale>
     <Components />
   </Object>
@@ -602,8 +602,8 @@
     <Name>TimeControlsPlane2</Name>
     <Mesh>PlaneCorrection.obj</Mesh>
     <Texture>TimeControlScheme.png</Texture>
-    <Position>-1.079186,1.2,8.89</Position>
-    <Rotation>-1.57,0,0</Rotation>
+    <Position>-1.140209,1.2,8.890001</Position>
+    <Rotation>-1.57,0,3.14</Rotation>
     <Scale>1,1,1</Scale>
     <Components />
   </Object>
@@ -612,7 +612,7 @@
     <Mesh>PlaneCorrection.obj</Mesh>
     <Texture>GeneralControlScheme.png</Texture>
     <Position>0,1.2,0</Position>
-    <Rotation>-1.57,0,0</Rotation>
+    <Rotation>-1.57,0,3.14</Rotation>
     <Scale>1,1,1</Scale>
     <Components />
   </Object>
@@ -621,7 +621,7 @@
     <Mesh>PlaneCorrection.obj</Mesh>
     <Texture>GeneralControlScheme.png</Texture>
     <Position>0,1.2,8.890001</Position>
-    <Rotation>-1.57,0,0</Rotation>
+    <Rotation>-1.57,0,3.14</Rotation>
     <Scale>1,1,1</Scale>
     <Components />
   </Object>

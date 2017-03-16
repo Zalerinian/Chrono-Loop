@@ -438,7 +438,7 @@ namespace Epoch {
 					if (physical)
 						Physics::Instance()->mObjects.push_back(obj);
 
-					if (canMove)
+					if (canMove || obj->GetName() == "Door1" || obj->GetName() == "Door2")
 						TimeManager::Instance()->AddObjectToTimeline(obj);
 					
 					AddObject(obj);

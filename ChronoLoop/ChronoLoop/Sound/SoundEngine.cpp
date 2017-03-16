@@ -80,6 +80,8 @@ namespace Epoch
 
 	void AudioWrapper::Update()
 	{
+		if (!mIsInitialize)
+			return;
 		AkListenerPosition lPos;
 		AkSoundPosition sPos;
 
