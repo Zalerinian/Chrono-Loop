@@ -49,7 +49,7 @@ LPCTSTR WndClassName = L"ChronoWindow";
 HINSTANCE hInst;
 bool VREnabled = false;
 
-const wchar_t* _basePath = L"../Resources/audio/";
+const wchar_t* _basePath = L"../Resources/Soundbanks/";
 const wchar_t* _initSB = L"Init.bnk";
 const wchar_t* _aSB = L"Test_Soundbank.bnk";
 
@@ -576,7 +576,12 @@ void Update() {
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
 
 	Listener* ears = new Listener();
+	Transform tep;
+	tep.SetMatrix(matrix4());
+	BaseObject* tcam = new BaseObject("TEMPCAM", tep);
+	tcam->AddComponent(ears);
 	Emitter* ambient = new Emitter();
+	tcam->AddComponent(ambient);
 	ambient->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_TEST2);
 	ambient->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_TEST2);
 	ambient->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_TEST2);
@@ -599,7 +604,7 @@ void Update() {
 	RightController->AddComponent(ta);
 	RightController->AddComponent(rightConCol);
 	RightController->AddComponent(tm);
-	RightController->AddComponent(ambient);
+	//RightController->AddComponent(ambient);
 	ambient->Play();
 	BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
 	((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
@@ -620,6 +625,7 @@ void Update() {
 	LeftController->AddComponent(mc2);
 	LeftController->AddComponent(ta2);
 	LeftController->AddComponent(tm2);
+	//LeftController->AddComponent(ears);
 	BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
 	((BoxSnapToControllerAction*)pickup2)->mControllerRole = eControllerType_Secondary;
 	LeftController->AddComponent(pickup2);
@@ -633,7 +639,7 @@ void Update() {
 	HeadsetFollow* hfollow = new HeadsetFollow();
 	headset->AddComponent(hfollow);
 	headset->AddComponent(visibleMesh2);
-	headset->AddComponent(ears);
+	//headset->AddComponent(ears);
 	TimeManager::Instance()->AddObjectToTimeline(headset);
 
 	Physics::Instance()->mObjects.push_back(RightController);
