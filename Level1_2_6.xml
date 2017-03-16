@@ -190,11 +190,11 @@
         <Scale>1,1,1</Scale>
         <Move>True</Move>
         <Gravity>0,-9.810001,0</Gravity>
-        <Mass>7</Mass>
+        <Mass>10</Mass>
         <Elasticity>0.2</Elasticity>
-        <StaticFriction>0.01</StaticFriction>
-        <KeneticFriction>0.01</KeneticFriction>
-        <Drag>0.5</Drag>
+        <StaticFriction>0.1</StaticFriction>
+        <KeneticFriction>0.1</KeneticFriction>
+        <Drag>0.4</Drag>
       </Collider>
     </Components>
   </Object>
@@ -223,10 +223,10 @@
         <Scale>1,1,1</Scale>
         <Move>True</Move>
         <Gravity>0,-9.810001,0</Gravity>
-        <Mass>4</Mass>
-        <Elasticity>0.3</Elasticity>
-        <StaticFriction>0.01</StaticFriction>
-        <KeneticFriction>0.01</KeneticFriction>
+        <Mass>5</Mass>
+        <Elasticity>0.6</Elasticity>
+        <StaticFriction>0.1</StaticFriction>
+        <KeneticFriction>0.1</KeneticFriction>
         <Drag>0.3</Drag>
       </Collider>
     </Components>
@@ -245,6 +245,9 @@
       <AABBtoAABB>Enabled</AABBtoAABB>
       <AABBtoSphere>Enabled</AABBtoSphere>
       <ElasticPlane>Enabled</ElasticPlane>
+      <AABBtoAABB>Enabled</AABBtoAABB>
+      <AABBtoSphere>Enabled</AABBtoSphere>
+      <ElasticPlane>Enabled</ElasticPlane>
       <Collider>
         <Type>OBB</Type>
         <Trigger>False</Trigger>
@@ -253,10 +256,10 @@
         <Scale>1,1,1</Scale>
         <Move>True</Move>
         <Gravity>0,-9.810001,0</Gravity>
-        <Mass>5</Mass>
-        <Elasticity>0.3</Elasticity>
-        <StaticFriction>0.01</StaticFriction>
-        <KeneticFriction>0.01</KeneticFriction>
+        <Mass>6</Mass>
+        <Elasticity>0.4</Elasticity>
+        <StaticFriction>0.1</StaticFriction>
+        <KeneticFriction>0.1</KeneticFriction>
         <Drag>0.2</Drag>
       </Collider>
     </Components>
@@ -560,13 +563,13 @@
         <Trigger>False</Trigger>
         <Position>-1.2,0,0</Position>
         <Rotation>0,0,0</Rotation>
-        <Scale>1.9,1,2</Scale>
+        <Scale>1,1,1</Scale>
         <Move>False</Move>
-        <Normal>0,0,0</Normal>
+        <Normal>0,1,0</Normal>
         <Mass>0</Mass>
-        <Elasticity>0</Elasticity>
-        <StaticFriction>0</StaticFriction>
-        <KeneticFriction>0</KeneticFriction>
+        <Elasticity>0.01</Elasticity>
+        <StaticFriction>0.7</StaticFriction>
+        <KeneticFriction>0.5</KeneticFriction>
         <Drag>0</Drag>
       </Collider>
     </Components>
@@ -588,6 +591,9 @@
       <AABBtoAABB>Enabled</AABBtoAABB>
       <AABBtoSphere>Enabled</AABBtoSphere>
       <ElasticPlane>Enabled</ElasticPlane>
+      <AABBtoAABB>Enabled</AABBtoAABB>
+      <AABBtoSphere>Enabled</AABBtoSphere>
+      <ElasticPlane>Enabled</ElasticPlane>
       <Collider>
         <Type>OBB</Type>
         <Trigger>False</Trigger>
@@ -595,12 +601,12 @@
         <Rotation>0,0,0</Rotation>
         <Scale>1,1,1</Scale>
         <Move>True</Move>
-        <Gravity>0,0,0</Gravity>
-        <Mass>2</Mass>
-        <Elasticity>0.4</Elasticity>
-        <StaticFriction>0.01</StaticFriction>
-        <KeneticFriction>0.01</KeneticFriction>
-        <Drag>0</Drag>
+        <Gravity>0,-9.810001,0</Gravity>
+        <Mass>4</Mass>
+        <Elasticity>0.6</Elasticity>
+        <StaticFriction>0.1</StaticFriction>
+        <KeneticFriction>0.1</KeneticFriction>
+        <Drag>0.1</Drag>
       </Collider>
     </Components>
   </Object>

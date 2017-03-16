@@ -25,6 +25,7 @@
 #include "Actions/CCElasticAABBToSphere.h"
 #include "Actions/TimeManipulation.h"
 #include "Actions/HeadsetFollow.hpp"
+#include "Actions/WhatInHellAmIHitting.hpp"
 #include "Actions\CodeComponent.hpp"
 #include "Actions/CCButtonPress.h"
 #include "Actions\CCEnterLevel.h"
@@ -600,6 +601,8 @@ void Update() {
 	BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
 	((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
 	RightController->AddComponent(pickup);
+	WIHAMIH* hittingRight = new WIHAMIH;
+	RightController->AddComponent(hittingRight);
 	TimeManager::Instance()->AddObjectToTimeline(RightController);
 
 	//pat added
@@ -619,6 +622,8 @@ void Update() {
 	BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
 	((BoxSnapToControllerAction*)pickup2)->mControllerRole = eControllerType_Secondary;
 	LeftController->AddComponent(pickup2);
+	WIHAMIH* hittingLeft = new WIHAMIH;
+	LeftController->AddComponent(hittingLeft);
 	TimeManager::Instance()->AddObjectToTimeline(LeftController);
 
 
