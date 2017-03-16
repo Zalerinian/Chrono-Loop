@@ -377,8 +377,9 @@ namespace Epoch {
 					{
 						physical = true;
 
-						vec4f min = colliderPosition - vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1);
-						vec4f max = colliderPosition + vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1);
+						vec4f offset = vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1) / 2;
+						vec4f min = colliderPosition - offset;
+						vec4f max = colliderPosition + offset;
 						ButtonCollider* col = new ButtonCollider(obj, min, max, mass, normF, pushNorm);
 						obj->AddComponent(col);
 					}
