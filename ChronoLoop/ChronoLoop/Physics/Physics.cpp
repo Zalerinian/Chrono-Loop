@@ -774,7 +774,7 @@ namespace Epoch {
 										} else if (otherCol->mColliderType == Collider::eCOLLIDER_Plane) {
 											PlaneCollider plane(((PlaneCollider*)otherCol)->mNormal, ((PlaneCollider*)otherCol)->mOffset);
 											int result = AabbToPlane(plane, aabb1);
-											if (result == 2)//behind plane
+											if (result == 2 && collider->GetPos().y > otherCol->GetPos().y)//behind plane TODO: Make this not jank
 											{
 												if (((CubeCollider*)collider)->mMin.y < otherCol->GetPos().y) {
 													vec4f pos = collider->GetPos();

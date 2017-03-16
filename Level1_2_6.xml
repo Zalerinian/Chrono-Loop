@@ -182,6 +182,9 @@
       <AABBtoAABB>Enabled</AABBtoAABB>
       <AABBtoSphere>Enabled</AABBtoSphere>
       <ElasticPlane>Enabled</ElasticPlane>
+      <AABBtoAABB>Enabled</AABBtoAABB>
+      <AABBtoSphere>Enabled</AABBtoSphere>
+      <ElasticPlane>Enabled</ElasticPlane>
       <Collider>
         <Type>OBB</Type>
         <Trigger>False</Trigger>
@@ -224,7 +227,7 @@
         <Move>True</Move>
         <Gravity>0,-9.810001,0</Gravity>
         <Mass>5</Mass>
-        <Elasticity>0.6</Elasticity>
+        <Elasticity>0.4</Elasticity>
         <StaticFriction>0.1</StaticFriction>
         <KeneticFriction>0.1</KeneticFriction>
         <Drag>0.3</Drag>
@@ -607,6 +610,30 @@
         <StaticFriction>0.1</StaticFriction>
         <KeneticFriction>0.1</KeneticFriction>
         <Drag>0.1</Drag>
+      </Collider>
+    </Components>
+  </Object>
+  <Object>
+    <Name>Ceiling</Name>
+    <Mesh>CeIling.obj</Mesh>
+    <Texture>floor.png</Texture>
+    <Position>-2.4,3,0.2</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components>
+      <Collider>
+        <Type>Plane</Type>
+        <Trigger>False</Trigger>
+        <Position>0,0,0</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>1,1,1</Scale>
+        <Move>False</Move>
+        <Normal>0,-1,0</Normal>
+        <Mass>0</Mass>
+        <Elasticity>0.1</Elasticity>
+        <StaticFriction>0.5</StaticFriction>
+        <KeneticFriction>0.4</KeneticFriction>
+        <Drag>0</Drag>
       </Collider>
     </Components>
   </Object>

@@ -25,7 +25,6 @@
 #include "Actions/CCElasticAABBToSphere.h"
 #include "Actions/TimeManipulation.h"
 #include "Actions/HeadsetFollow.hpp"
-#include "Actions/WhatInHellAmIHitting.hpp"
 #include "Actions\CodeComponent.hpp"
 #include "Actions/CCButtonPress.h"
 #include "Actions\CCEnterLevel.h"
