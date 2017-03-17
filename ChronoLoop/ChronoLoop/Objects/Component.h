@@ -139,16 +139,15 @@ namespace Epoch
 		SphereCollider(vec4f _pos, float _rad) { mCenter = _pos; mRadius = _rad; };
 		vec4f mCenter;
 		float mRadius;
-		virtual void SetPos(const vec4f& _other);
 	};
 
 	class PlaneCollider : public Collider
 	{
 	public:
 		PlaneCollider() {}
-		PlaneCollider(BaseObject* _obj, bool _move, bool _trigger, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _offset, vec4f _norm);
+		PlaneCollider(BaseObject* _obj, bool _trigger, float _staticFriction, float _kineticFriction, float _offset, vec4f _norm);
 		PlaneCollider(vec4f _norm, float _offset) { mNormal = _norm; mOffset = _offset; };
-		vec4f mNormal, mMin, mMax;
+		vec4f mNormal;
 		float mOffset;
 	};
 

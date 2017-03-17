@@ -213,7 +213,6 @@ namespace Epoch
 		mObject = _obj;
 		mType = eCOMPONENT_COLLIDER;
 		mColliderType = eCOLLIDER_Sphere;
-		mCenter = GetPos();
 		mRadius = _radius;
 		mShouldMove = _move;
 		mIsTrigger = _trigger;
@@ -236,12 +235,6 @@ namespace Epoch
 		mDrag = _drag;
 		mArea = 4 * DirectX::XM_PI * powf(mRadius, 2.0f);
 		mDragForce = mVelocity * (-0.5f * mRHO * mVelocity.Magnitude3() * mDrag * mArea);
-	}
-
-	void SphereCollider::SetPos(const vec4f& _other)
-	{
-		mObject->GetTransform().GetMatrix().fourth = _other;
-		mCenter = _other;
 	}
 
 	CubeCollider::CubeCollider(BaseObject* _obj, bool _move, bool _trigger, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec4f _min, vec4f _max)
@@ -355,34 +348,18 @@ namespace Epoch
 		mAxis[2].w = 1;
 	}
 
-	PlaneCollider::PlaneCollider(BaseObject* _obj, bool _move, bool _trigger, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _offset, vec4f _norm)
+	PlaneCollider::PlaneCollider(BaseObject* _obj, bool _trigger, float _staticFriction, float _kineticFriction, float _offset, vec4f _norm)
 	{
 		mObject = _obj;
 		mType = eCOMPONENT_COLLIDER;
 		mColliderType = eCOLLIDER_Plane;
 		mOffset = _offset;
 		mNormal = _norm;
-		mShouldMove = _move;
+		mShouldMove = false;
 		mIsTrigger = _trigger;
 
-		mGravity = _gravity;
-		mVelocity = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-		mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-		mTotalForce = mGravity;
-		mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-		mMass = _mass;
-		if (mMass == 0)
-			mInvMass = 0;
-		else
-			mInvMass = 1 / mMass;
-		mWeight = mGravity * mMass;
-		mElasticity = _elasticity;
 		mStaticFriction = _staticFriction;
 		mKineticFriction = _kineticFriction;
-		mRHO = 1;
-		mDrag = _drag;
-		//mArea = ;
-		//mDragForce = mVelocity * (-0.5f * mRHO * mVelocity.Magnitude3() * mDrag * mArea);
 	}
 
 	ButtonCollider::ButtonCollider(BaseObject* _obj, vec4f _min, vec4f _max, float _mass, float _normForce, vec4f _pushNormal)

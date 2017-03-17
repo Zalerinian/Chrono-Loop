@@ -387,7 +387,7 @@ namespace Epoch {
 					{
 						physical = true;
 
-						PlaneCollider* col = new PlaneCollider(obj, canMove, trigger, vec4f(0,0,0,0), mass, elasticity, staticF, kineticF, drag, fabsf((colliderPosition + position) * normal), normal);//TODO: Fix offset
+						PlaneCollider* col = new PlaneCollider(obj, trigger, staticF, kineticF, fabsf((colliderPosition + position) * normal), normal);//TODO: Fix offset
 						obj->AddComponent(col);
 					}
 
