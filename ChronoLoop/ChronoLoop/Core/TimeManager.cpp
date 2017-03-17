@@ -270,6 +270,12 @@ namespace Epoch {
 			mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
 		}
 
+		void TimeManager::UpdateCloneCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3)
+		{
+			unsigned short ids[3] = { _id1,_id2,_id3 };
+			mTimeline->ActivateCloneBitset(ids);
+		}
+
 		void TimeManager::Destroy() {
 			delete instanceTimemanager;
 		}

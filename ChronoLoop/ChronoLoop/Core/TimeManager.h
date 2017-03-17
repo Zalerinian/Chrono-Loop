@@ -74,6 +74,7 @@ namespace Epoch {
 		void RewindMakeClone(unsigned int _frame, BaseObject*& _ob1, BaseObject*& _ob2, BaseObject*& _ob3);
 		static TimeManager* Instance();
 		void Update(float _delta);
+		void UpdateCloneCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		//Function Pointer / Command Console
 		static void ToggleCloneCountDisplay(void* _command, std::wstring _ifOn);
 		static void ToggleSnapshotCountDisplay(void* _command, std::wstring _ifOn);

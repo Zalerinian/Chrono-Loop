@@ -11,6 +11,7 @@ namespace Epoch
 
 	Component::Component()
 	{
+		//SystemLogger::Debug() << mComponentCount << std::endl;
 		mComponentId = Component::mComponentCount++;
 	}
 	Component::Component(ComponentType _cType)

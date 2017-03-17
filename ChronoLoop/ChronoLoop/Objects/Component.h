@@ -30,7 +30,7 @@ namespace Epoch
 		friend class BaseObject;
 
 		static unsigned short mComponentCount;
-		unsigned short mComponentId;	//unique component id
+		unsigned int mComponentId;	//unique component id
 		unsigned short mComponentNum;  //the nth number component of a base object. This is for knowing the position in the bitset
 
 	protected:

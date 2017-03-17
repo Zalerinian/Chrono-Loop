@@ -85,6 +85,7 @@ namespace Epoch
 			TimeManager::Instance()->UpdatePlayerObjectInTimeline(headset);
 			TimeManager::Instance()->UpdatePlayerObjectInTimeline(Controller1);
 			TimeManager::Instance()->UpdatePlayerObjectInTimeline(Controller2);
+			TimeManager::Instance()->UpdateCloneCreationTime(headset->GetUniqueID(),Controller1->GetUniqueID(),Controller2->GetUniqueID());
 			//Rewind InputTime
 			VRInputManager::GetInstance().RewindInputTimeline(TimeManager::Instance()->GetCurrentSnapFrame(), currentLevel->GetRightController()->GetUniqueID(), currentLevel->GetLeftController()->GetUniqueID());
 			//add Interpolators for the clones
