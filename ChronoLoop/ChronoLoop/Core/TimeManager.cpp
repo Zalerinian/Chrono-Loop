@@ -94,8 +94,11 @@ namespace Epoch {
 			if (_obj != nullptr)
 			{
 				mTimeline->AddBaseObject(_obj, _obj->GetUniqueID());
-				if (_obj != LevelManager::GetInstance().GetCurrentLevel()->GetLeftController() || _obj != LevelManager::GetInstance().GetCurrentLevel()->GetRightController())
-					instanceTimemanager->AddInterpolatorToObject(_obj);
+				if (LevelManager::GetInstance().GetCurrentLevel() != nullptr) {
+					if (_obj != LevelManager::GetInstance().GetCurrentLevel()->GetLeftController() || _obj != LevelManager::GetInstance().GetCurrentLevel()->GetRightController()) {
+						instanceTimemanager->AddInterpolatorToObject(_obj);
+					}
+				}
 			}
 		}
 
