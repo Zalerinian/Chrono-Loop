@@ -28,9 +28,9 @@ namespace Epoch
 					norm = { 0,1,0,0 };
 
 					vec4f rest = _other.mVelocity;
-					if (fabsf(rest.x) < 0.1f && fabsf(rest.y) < 0.1f && fabsf(rest.z) < 0.1f)
+					if (fabsf(rest.y) < 1)
 					{
-						if (fabsf(_col.mVelocity.y) < 0.1f)
+						if (fabsf(_col.mVelocity.y) < 1)
 						{
 							_col.mVelocity.y = 0;
 							_col.mAcceleration.y = 0;
@@ -62,7 +62,7 @@ namespace Epoch
 				else if (center.y <= min.y)
 				{
 					vec4f rest = _col.mVelocity;
-					if (fabsf(rest.x) < 0.1f && fabsf(rest.y) < 0.1f && fabsf(rest.z) < 0.1f)
+					if (fabsf(rest.y) < 1)
 						return;
 
 					norm = { 0,-1,0,0 };
