@@ -97,10 +97,8 @@ namespace Epoch {
 			if (_obj != nullptr)
 			{
 				mTimeline->AddBaseObject(_obj, _obj->GetUniqueID());
-				if (LevelManager::GetInstance().GetCurrentLevel() != nullptr) {
-					if (_obj != LevelManager::GetInstance().GetCurrentLevel()->GetLeftController() || _obj != LevelManager::GetInstance().GetCurrentLevel()->GetRightController()) {
-						instanceTimemanager->AddInterpolatorToObject(_obj);
-					}
+				if (_obj->GetName() != "RController"  && _obj->GetName() != "LController") {
+					instanceTimemanager->AddInterpolatorToObject(_obj);
 				}
 			}
 		}
@@ -412,7 +410,7 @@ namespace Epoch {
 				int placeHolder = mtempCurSnapFrame;
 				mtempCurSnapFrame -= _frameRewind;
 
-				instanceTimemanager->GetTimeLine()->PrepareAllObjectInterpolators(placeHolder, mtempCurSnapFrame);
+				mTimeline->PrepareAllObjectInterpolators(placeHolder, mtempCurSnapFrame);
 				mShouldUpdateInterpolators = true;
 				//instanceTimemanager->MoveAllObjectExceptPlayer(
 				//	mtempCurSnapFrame,

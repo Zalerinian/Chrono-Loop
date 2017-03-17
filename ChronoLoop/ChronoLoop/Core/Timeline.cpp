@@ -216,13 +216,21 @@ namespace Epoch {
 		Interpolator<matrix4> * objInterp;
 		if (_toSnapTime <= mSnaptimes.size() - 1 || _toSnapTime >= 0)
 		{
-			SnapInfo* _fromSnap = mSnapshots[mSnaptimes[_fromSnapTime]]->mSnapinfos[_fromSnapTime];
-			SnapInfo* _toSnap = mSnapshots[mSnaptimes[_toSnapTime]]->mSnapinfos[_toSnapTime];
-			for (std::pair<unsigned short, Epoch::BaseObject*> it : mLiveObjects)
-			{
-				objInterp = TimeManager::Instance()->GetObjectInterpolator(it.first);
-				objInterp->SetActive(true);
-				objInterp->Prepare(1, _fromSnap->mTransform.GetMatrix(), _toSnap->mTransform.GetMatrix(), it.second->GetTransform().GetMatrix());
+			Snapshot* _fromShot = mSnapshots[mSnaptimes[_fromSnapTime]];
+			Snapshot* _toShot = mSnapshots[mSnaptimes[_toSnapTime]];
+			for (std::pair<unsigned short, Epoch::BaseObject*> it : mLiveObjects) {
+				if (it.second->GetName() != "RController" && it.second->GetName() != "LController") {
+					objInterp = TimeManager::Instance()->GetObjectInterpolator(it.first);
+					if (_fromShot->mSnapinfos.find(it.first) != _fromShot->mSnapinfos.end() && _toShot->mSnapinfos.find(it.first) != _toShot->mSnapinfos.end()) {
+						SnapInfo* _fromSnap = _fromShot->mSnapinfos[it.first];
+						SnapInfo* _toSnap = _toShot->mSnapinfos[it.first];
+
+						objInterp->SetActive(true);
+						objInterp->Prepare(mObjectInterpolationTime, _fromSnap->mTransform.GetMatrix(), _toSnap->mTransform.GetMatrix(), it.second->GetTransform().GetMatrix());
+					} else {
+						objInterp->SetActive(false);
+					}
+				}
 			}
 		}
 	}

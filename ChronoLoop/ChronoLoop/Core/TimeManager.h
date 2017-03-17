@@ -33,7 +33,7 @@ namespace Epoch {
 		std::vector<BaseObject*>mClones;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneInterpolators;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mObjectInterpolators; 
-		Timeline* GetTimeLine();
+		//Timeline* GetTimeLine();
 		
 		std::bitset<10>mCloneTextureBitset;
 		//Pass in baseobject id to get bitset location

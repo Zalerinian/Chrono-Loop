@@ -64,6 +64,7 @@ namespace Epoch {
 	class Timeline {
 		//Where we are at in the timeline
 		unsigned int mCurrentGameTimeIndx = 0;
+		float mObjectInterpolationTime = 0.35f;
 		std::vector<unsigned int> mSnaptimes;
 		std::unordered_map<unsigned int, Snapshot*> mSnapshots;		//The key will be the time they were taken (mSnapTimes)
 		std::unordered_map<unsigned short, BaseObject*> mLiveObjects;
@@ -86,6 +87,8 @@ namespace Epoch {
 		//SnapInfoPlayer * GenerateSnapInfoPlayer();
 		unsigned int GetCurrentGameTimeIndx() { return mCurrentGameTimeIndx; }
 		unsigned int GetTotalSnaps() { return (unsigned int)mSnapshots.size(); };
+		float GetObjectInterpolationTime() { return mObjectInterpolationTime; };
+		void SetObjectInterpolationTime(float _set) { mObjectInterpolationTime = _set; };
 		void HotFixResetLevel();
 		void RemoveFromTimeline(unsigned short _id);
 		bool RewindMakeClone(unsigned int _snaptime);
