@@ -375,7 +375,9 @@ namespace Epoch {
 		ID3D11Buffer *ColorRatioBuffer;
 		TimeManipulationEffectData initial;
 		initial.saturationColor.Set(0.30f, 0.59f, 0.11f, 0);
-		initial.saturationRatio = 0;
+		initial.saturationColor.Set(0.30f, 0, 0.30f, 0);
+		initial.ratios.Set(0, 0);
+		initial.fullRatios.Set(0.7f, 0.3f);
 		D3D11_SUBRESOURCE_DATA initialData;
 		initialData.pSysMem = &initial;
 		CD3D11_BUFFER_DESC bufferDesc(sizeof(TimeManipulationEffectData), D3D11_BIND_CONSTANT_BUFFER);
@@ -484,6 +486,7 @@ namespace Epoch {
 		SetStaticBuffers();
 		mContext->OMSetRenderTargets(1, mMainView.GetAddressOf(), mDSView.Get());
 	}
+
 	void Renderer::RenderVR(float _delta) {
 		vr::VRCompositor()->CompositorBringToFront();
 		UpdateViewProjection();

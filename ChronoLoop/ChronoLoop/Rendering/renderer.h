@@ -95,7 +95,9 @@ namespace Epoch {
 	public:
 		struct TimeManipulationEffectData {
 			vec4f saturationColor;
-			float saturationRatio = 0;
+			vec4f tintColor;
+			vec2f ratios;
+			vec2f fullRatios;
 		};
 
 		static Renderer* Instance();

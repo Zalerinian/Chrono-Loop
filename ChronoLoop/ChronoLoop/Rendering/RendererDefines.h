@@ -77,7 +77,6 @@ namespace Epoch {
 		eVB_SLOT12,
 		eVB_SLOT13,
 		eVB_SLOT14,
-		eVB_SLOT15,
 		eVB_MAX,
 		eVB_OFFSET = 1,
 		eVB_BEGIN = eVB_SLOT2
@@ -97,7 +96,6 @@ namespace Epoch {
 		ePB_SLOT12,
 		ePB_SLOT13,
 		ePB_SLOT14,
-		ePB_SLOT15,
 		ePB_MAX,
 		ePB_OFFSET = 1,
 		ePB_BEGIN = ePB_SLOT2
@@ -117,7 +115,6 @@ namespace Epoch {
 		eGB_SLOT12,
 		eGB_SLOT13,
 		eGB_SLOT14,
-		eGB_SLOT15,
 		eGB_MAX,
 		eGB_OFFSET = 1,
 		eGB_BEGIN = eGB_SLOT2

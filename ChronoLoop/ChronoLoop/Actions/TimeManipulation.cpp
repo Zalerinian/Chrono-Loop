@@ -15,8 +15,6 @@ namespace Epoch
 {
 
 	TimeManipulation::TimeManipulation() {
-		mEffectData.saturationColor.Set(0.30f, 0.59f, 0.11f, 0);
-		mEffectData.saturationRatio = 0;
 	}
 
 
@@ -29,7 +27,10 @@ namespace Epoch
 
 	void TimeManipulation::Start()
 	{
-		
+		mEffectData.saturationColor.Set(0.30f, 0.59f, 0.11f, 0);
+		mEffectData.tintColor.Set(1, 0.85f, 1, 1);
+		mEffectData.ratios.Set(0, 0);
+		mEffectData.fullRatios.Set(0.7f, 0.3f);
 	}
 
 	void TimeManipulation::Update() {
@@ -111,8 +112,8 @@ namespace Epoch
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			if (mPauseTime) {
 				// Resume Time
-				float finalRatio = 0.7f;
-				mDesaturationInterpolator.Prepare(0.5f, mEffectData.saturationRatio, finalRatio, mEffectData.saturationRatio);
+				vec2f finalRatios(0, 0);
+				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
 				mDesaturationInterpolator.SetActive(true);
 
 				mPauseTime = false;
@@ -124,8 +125,8 @@ namespace Epoch
 				);
 			} else {
 				// Stop time
-				float finalRatio = 0.7f;
-				mDesaturationInterpolator.Prepare(0.5f, mEffectData.saturationRatio, finalRatio, mEffectData.saturationRatio);
+				vec2f finalRatios(0.7, 0.3);
+				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
 				mDesaturationInterpolator.SetActive(true);
 				TimeManager::Instance()->SetTempCurSnap();
 				mPauseTime = true;
@@ -139,6 +140,8 @@ namespace Epoch
 		}
 		if (mDesaturationInterpolator.Update(TimeManager::Instance()->GetDeltaTime())) {
 			mDesaturationInterpolator.SetActive(false);
+			RenderShape* quad = Renderer::Instance()->GetSceneQuad();
+			Renderer::Instance()->GetContext()->UpdateSubresource(quad->GetContext().mPixelCBuffers[ePB_SLOT2].Get(), 0, NULL, &mEffectData, 0, 0);
 		}
 
 
@@ -154,7 +157,9 @@ namespace Epoch
 
 			// Accept timeline position
 			if (left || right) {
-
+				vec2f finalRatios(0, 0);
+				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
+				mDesaturationInterpolator.SetActive(true);
 				TimeManager::Instance()->RewindTimeline(
 					TimeManager::Instance()->GetTempCurSnap(),
 					cLevel->GetHeadset()->GetUniqueID(),

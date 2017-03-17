@@ -64,6 +64,7 @@ namespace Epoch {
 		for (int i = eGB_BEGIN; i < eGB_MAX; ++i) {
 			geoBuffers[i] = mGeometryCBuffers[i].Get();
 		}
+		
 		Renderer::Instance()->GetContext()->VSSetConstantBuffers(eVB_OFFSET, eVB_MAX, vertexBuffers);
 		Renderer::Instance()->GetContext()->PSSetConstantBuffers(ePB_OFFSET, ePB_MAX, pixelBuffers);
 		Renderer::Instance()->GetContext()->GSSetConstantBuffers(eGB_OFFSET, eGB_MAX, geoBuffers);

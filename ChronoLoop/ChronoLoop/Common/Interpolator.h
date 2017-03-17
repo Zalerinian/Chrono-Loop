@@ -107,6 +107,20 @@ namespace  Epoch {
 	}
 
 	template<>
+	inline void Interpolator<vec3f>::Interpolate() {
+		for (unsigned int i = 0; i < 3; i++) {
+			(*mEdit)[i] = mEasingFunction(mTweenTime, mStart[i], (mEnd[i] - mStart[i]), mDuration);
+		}
+	}
+
+	template<>
+	inline void Interpolator<vec2f>::Interpolate() {
+		for (unsigned int i = 0; i < 2; i++) {
+			(*mEdit)[i] = mEasingFunction(mTweenTime, mStart[i], (mEnd[i] - mStart[i]), mDuration);
+		}
+	}
+
+	template<>
 	inline void Interpolator<float>::Interpolate() {
 		(*mEdit) = mEasingFunction(mTweenTime, mStart, mEnd - mStart, mDuration);
 	}

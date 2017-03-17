@@ -22,7 +22,7 @@ namespace Epoch
 		ID2D1Bitmap1* mCountMap;
 		unsigned int HotfixButtonDown = 0;
 		Renderer::TimeManipulationEffectData mEffectData;
-		Interpolator<float> mDesaturationInterpolator;
+		Interpolator<vec2f> mDesaturationInterpolator;
 
 		static unsigned short mCurrTexture;
 		std::string mTextures[10] = { "../Resources/CloneTexture.png",
