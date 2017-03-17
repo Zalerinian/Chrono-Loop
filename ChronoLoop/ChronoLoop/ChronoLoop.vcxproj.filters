@@ -734,6 +734,18 @@
     <FxCompile Include="Particles\ParticleVertexShader.hlsl">
       <Filter>Particles</Filter>
     </FxCompile>
+    <FxCompile Include="Rendering\Shaders\NDCVertex.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\GSNDC.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PSTimeManipulation.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PSPureTexture.hlsl">
+      <Filter>Rendering\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">

@@ -107,15 +107,16 @@ namespace Epoch
 			VRInputManager::GetInstance().RewindInputTimeline(TimeManager::Instance()->GetCurrentSnapFrame(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());*/
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			if (mPauseTime) {
+				// Resume Time
 				mPauseTime = false;
 				TimeManager::Instance()->RewindTimeline(
 					TimeManager::Instance()->GetCurrentSnapFrame(),
 					cLevel->GetHeadset()->GetUniqueID(),
 					cLevel->GetRightController()->GetUniqueID(),
-					cLevel->GetLeftController()->GetUniqueID());
-				
-				
+					cLevel->GetLeftController()->GetUniqueID()
+				);
 			} else {
+				// Stop time
 				TimeManager::Instance()->SetTempCurSnap();
 				mPauseTime = true;
 			}
@@ -130,6 +131,7 @@ namespace Epoch
 				left = cLevel->GetLeftTimeManinpulator()->isTimePaused();
 			}
 
+			// Accept timeline position
 			if (left || right) {
 
 				TimeManager::Instance()->RewindTimeline(

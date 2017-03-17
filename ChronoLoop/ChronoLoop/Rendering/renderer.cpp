@@ -108,27 +108,12 @@ namespace Epoch {
 	Renderer::Renderer() {}
 
 	Renderer::Renderer::~Renderer() {
-		//(*mContext)->Release();
-		//(*mDSView)->Release();
-		//(*mDepthBuffer)->Release();
-		//(*mMainView)->Release();
-		//(*mFactory)->Release();
-		//(*mChain)->Release();
-		//// The device's release has been moved to ChronoLoop.cpp
-		//(*mVPBuffer)->Release();
-		//(*mPositionBuffer)->Release();
-		//(*mMainViewTexture)->Release();
-		//mContext.reset();
-		//mDSView.reset();
-		//mDepthBuffer.reset();
-		//mMainView.reset();
-		//mFactory.reset();
-		//mChain.reset();
-		//mDevice.reset();
-
-#if ENABLE_TEXT
-
-#endif
+		if (mScenePPQuad) {
+			delete mScenePPQuad;
+		}
+		if (mSceneScreenQuad) {
+			delete mSceneScreenQuad;
+		}
 	}
 
 	void Renderer::InitializeD3DDevice() {
@@ -225,10 +210,26 @@ namespace Epoch {
 		depthStencilDesc.MiscFlags = 0;
 		ThrowIfFailed(mDevice->CreateTexture2D(&depthStencilDesc, NULL, &depthTexture));
 		ThrowIfFailed(mDevice->CreateDepthStencilView(depthTexture, NULL, &depthView));
-		mContext->OMSetRenderTargets(1, &rtv, depthView);
 
 		mDepthBuffer.Attach(depthTexture);
 		mDSView.Attach(depthView);
+
+		ID3D11Texture2D *postTex;
+		CD3D11_TEXTURE2D_DESC t2d(DXGI_FORMAT_R16G16B16A16_FLOAT, _width, _height, 1, 0, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
+		mDevice->CreateTexture2D(&t2d, nullptr, &postTex);
+		mSceneTexture.Attach(postTex);
+
+		// Render target view in order to draw to the texture.
+		ID3D11RenderTargetView *sceneRTV;
+		HRESULT hr = mDevice->CreateRenderTargetView((ID3D11Resource*)postTex, NULL, &sceneRTV);
+		ThrowIfFailed(hr);
+		mSceneView.Attach(sceneRTV);
+		mContext->OMSetRenderTargets(1, &sceneRTV, depthView);
+
+		// Shader resource view for using the texture to draw the post quad.
+		ID3D11ShaderResourceView *sceneSRV;
+		ThrowIfFailed(mDevice->CreateShaderResourceView((ID3D11Resource*)postTex, NULL, &sceneSRV));
+		mSceneSRV.Attach(sceneSRV);
 
 		// Viewport
 		DXGI_SWAP_CHAIN_DESC scd;
@@ -239,10 +240,14 @@ namespace Epoch {
 		mLeftViewport.MaxDepth = 1;
 		mLeftViewport.TopLeftX = 0;
 		mLeftViewport.TopLeftY = 0;
+
 		mRightViewport = mLeftViewport;
 		mRightViewport.TopLeftX = (FLOAT)scd.BufferDesc.Width / 2;
 
-		D3D11_VIEWPORT viewports[] = { mLeftViewport, mRightViewport };
+		mFullViewport = mLeftViewport;
+		mFullViewport.Width = scd.BufferDesc.Width;
+
+		D3D11_VIEWPORT viewports[] = { mLeftViewport, mRightViewport, mFullViewport };
 		mContext->RSSetViewports(ARRAYSIZE(viewports), viewports);
 
 		//Shadows
@@ -363,6 +368,14 @@ namespace Epoch {
 #endif
 	}
 
+	void Renderer::InitializeSceneQuad() {
+		mScenePPQuad = new RenderShape("../Resources/VerticalPlane.obj", true, ePS_POSTPROCESS, eVS_NDC, eGS_PosNormTex_NDC);
+		mScenePPQuad->GetContext().mTextures[eTEX_DIFFUSE] = mSceneSRV;
+
+		mSceneScreenQuad = new RenderShape("../Resources/VerticalPlaneHalfU.obj", true, ePS_PURETEXTURE, eVS_NDC, eGS_PosNormTex_NDC);
+		mSceneScreenQuad->GetContext().mTextures[eTEX_DIFFUSE] = mSceneSRV;
+	}
+
 	void Renderer::SetStaticBuffers() {
 		mContext->GSSetConstantBuffers(0, 1, mVPBuffer.GetAddressOf());
 		mContext->VSSetConstantBuffers(0, 1, mPositionBuffer.GetAddressOf());
@@ -468,6 +481,11 @@ namespace Epoch {
 			UpdateLBuffers();
 			ProcessRenderSet();
 
+			// Apply post processing to the texture.
+			mContext->OMSetRenderTargets(1, mMainView.GetAddressOf(), mDSView.Get());
+			mScenePPQuad->GetContext().Apply();
+			mScenePPQuad->Render();
+
 
 			vr::Texture_t submitTexture = { (void*)mMainViewTexture.Get(), vr::TextureType_DirectX, vr::ColorSpace_Auto };
 			vr::VRTextureBounds_t boundary;
@@ -493,10 +511,13 @@ namespace Epoch {
 		UpdateCamera(2, 2, _delta);
 		ProcessRenderSet();
 
-#if ENABLE_TEXT
+		mContext->OMSetRenderTargets(1, mMainView.GetAddressOf(), mDSView.Get());
+		mScenePPQuad->GetContext().Apply();
+		mScenePPQuad->Render();
+
 		CommandConsole::Instance().SetVRBool(false);
 		CommandConsole::Instance().Update();
-#endif
+
 
 	}
 
@@ -572,9 +593,8 @@ namespace Epoch {
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, rtvWidth, rtvHeight);
 		InitializeViews(rtvWidth, rtvHeight);
 		InitializeBuffers();
-#if ENABLE_TEXT
+		InitializeSceneQuad();
 
-#endif
 #if _DEBUG
 		InitializeObjectNames();
 #endif
@@ -603,14 +623,31 @@ namespace Epoch {
 	void Renderer::Render(float _deltaTime) {
 
 		float color[4] = { 0.251f, 0.709f, 0.541f, 1 };
-		mContext->ClearRenderTargetView(mMainView.Get(), color);
+
+		// Setup the Scene Render Target 
+		mContext->OMSetRenderTargets(1, mSceneView.GetAddressOf(), mDSView.Get());
+		mContext->ClearRenderTargetView(mSceneView.Get(), color);
 		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 		ParticleSystem::Instance()->Render();
 		if (nullptr == mVrSystem) {
 			RenderNoVR(_deltaTime);
 		} else {
+			// In VR, we need to apply the post processing before we submit textures to the compositor.
 			RenderVR(_deltaTime);
 		}
+
+		//mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+		//// Regardless of VR or not, we need to render the Screen quad so we only see one eye on screen.
+		//mSceneScreenQuad->GetContext().Apply();
+		//mSceneScreenQuad->Render();
+
+		// Remove the Scene Shader Resource View from the input pipeline, as once the next render
+		// call happens, it will be bound to the output pipeline, as wel as the input pipeline,
+		// which will result in DirectX not setting it as an output.
+		ID3D11ShaderResourceView *nullSRV = nullptr;
+		mContext->PSSetShaderResources(eTEX_DIFFUSE, 1, &nullSRV);
+
+
 		mChain->Present(mUseVsync ? 1 : 0, 0);
 	}
 

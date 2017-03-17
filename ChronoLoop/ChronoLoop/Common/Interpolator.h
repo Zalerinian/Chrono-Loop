@@ -103,8 +103,13 @@ namespace  Epoch {
 		for (unsigned int i = 0; i < 4; i++) {
 			(*mEdit)[i] = mEasingFunction(mTweenTime, mStart[i], (mEnd[i] - mStart[i]), mDuration);
 		}
-
 	}
+
+	template<>
+	inline void Interpolator<float>::Interpolate() {
+		(*mEdit) = mEasingFunction(mTweenTime, mStart, mEnd - mStart, mDuration);
+	}
+
 }
 
 

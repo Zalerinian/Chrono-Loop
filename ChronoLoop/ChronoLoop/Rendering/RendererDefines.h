@@ -26,17 +26,21 @@ namespace Epoch {
 	enum PixelShaderFormat {
 		ePS_BASIC = 0,
 		ePS_TEXTURED,
+		ePS_POSTPROCESS,
+		ePS_PURETEXTURE,
 		ePS_MAX
 	};
 
 	enum VertexShaderFormat {
 		eVS_BASIC = 0,
 		eVS_TEXTURED,
+		eVS_NDC,
 		eVS_MAX
 	};
 
 	enum GeometryShaderFormat {
 		eGS_PosNormTex = 0,
+		eGS_PosNormTex_NDC,
 		eGS_MAX
 	};
 
@@ -51,12 +55,6 @@ namespace Epoch {
 		eTEX_CUSTOM5,
 		eTEX_CUSTOM6,
 		eTEX_MAX
-	};
-
-	enum RenderEye {
-		eEYE_LEFT = 0,
-		eEYE_RIGHT,
-		eEYE_MAX
 	};
 
 }
