@@ -92,6 +92,8 @@ namespace Epoch {
 	void Timeline::RemoveFromTimeline(unsigned short _id)
 	{
 		mLiveObjects.erase(_id);
+		if (mObjectLifeTimes.find(_id) != mObjectLifeTimes.end())
+			mObjectLifeTimes.erase(_id);
 	}
 
 	bool Timeline::RewindMakeClone(unsigned int _snaptime) {

@@ -186,6 +186,16 @@ namespace Epoch {
 						mCloneTextureBitset[textureIterator->second] = false;
 						mCloneTextures.erase(mClones[i]->GetUniqueId());
 					}
+
+					//Find the clone interpolator and delete it
+					for (auto j = mCloneInterpolators.begin(); j != mCloneInterpolators.end(); ++j) {
+						if(j->first == mClones[i]->GetUniqueID())
+						{
+							delete mCloneInterpolators[j->first];
+							mCloneInterpolators.erase(mClones[i]->GetUniqueID());
+						}
+					}
+
 					//Remove it from being tracked by timeline
 					mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueId());
 					Pool::Instance()->iRemoveObject(mClones[i]->GetUniqueID());
