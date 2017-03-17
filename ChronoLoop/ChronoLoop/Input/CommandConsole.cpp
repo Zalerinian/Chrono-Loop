@@ -241,13 +241,18 @@ namespace Epoch
 		if (Settings::GetInstance().GetBool("FPSCounter"))
 		{
 			float _deltaTime = TimeManager::Instance()->GetDeltaTime();
+			//SystemLogger::GetLog() << _deltaTime << std::endl;
 			sInstance->mFrameTime += _deltaTime;
-			if (sInstance->mFrameTime > .5f)
+			if (sInstance->mFrameTime > .25f)
 			{
 				sInstance->tempFps += (int)(1000.0f / (_deltaTime * 1000));
 				sInstance->mFrameTime = 0;
 				sInstance->mFpsCounter++;
-				sInstance->mFps = (int)(sInstance->tempFps / sInstance->mFpsCounter);
+				if (sInstance->mFpsCounter == 4) {
+					sInstance->mFps = (int)(sInstance->tempFps / sInstance->mFpsCounter);
+					sInstance->mFpsCounter = 0;
+					sInstance->tempFps = 0;
+				}
 			}
 			Font* tempFont;
 			if (!mIsVR)
