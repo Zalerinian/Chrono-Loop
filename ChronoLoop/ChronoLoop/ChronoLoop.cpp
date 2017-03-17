@@ -691,6 +691,7 @@ void Update() {
 	//planeObj->AddTexture(AddedTextureName.c_str(), eTEX_CUSTOM1);
 
 	//*////////////////////////////////////////////////////////////////////
+
 	if (VREnabled) {
 		VRInputManager::GetInstance().Update();
 	}

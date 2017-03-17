@@ -32,6 +32,7 @@ namespace  Epoch {
 		Interpolator(float _duration, Type& _from, Type& _to, Type* _edit);
 		~Interpolator();
 		inline void SetActive(bool _bool) { mActive = _bool; };
+		inline bool GetActive() { return mActive; }
 		inline void SetEasingFunction(EasingFunction _m) { mEasingFunction = _m; }
 		void Prepare(float _duration, Type& _start, Type& _end, Type& _edit);
 		bool Update(float _deltaTime);

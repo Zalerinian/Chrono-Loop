@@ -139,6 +139,15 @@
     <Filter Include="Pathing">
       <UniqueIdentifier>{6327b261-4002-48d0-8d77-1d763c9c02c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Rendering\Shaders\Pixel shaders">
+      <UniqueIdentifier>{701dbb75-cf20-4e08-88b6-8a186b2ec0f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Shaders\Vertex Shaders">
+      <UniqueIdentifier>{2ff294a5-e0a5-4fb8-8dd6-9578a2c21ecd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Shaders\Geometry Shaders">
+      <UniqueIdentifier>{ebfe2c81-866c-421b-aac0-bd789cbb4a1d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\BaseObject.h">
@@ -733,24 +742,6 @@
     <FxCompile Include="Rendering\Shaders\VertexLayout_VS.hlsl">
       <Filter>Rendering\Shaders\Layout Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Rendering\Shaders\TexturedPixel.hlsl">
-      <Filter>Rendering\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\TexturedVertex.hlsl">
-      <Filter>Rendering\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\BasicPixel.hlsl">
-      <Filter>Rendering\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\BasicVertex.hlsl">
-      <Filter>Rendering\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\InstancedVertex64.hlsl">
-      <Filter>Rendering\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\GSDuplicateMesh.hlsl">
-      <Filter>Rendering\Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="Particles\GSParticles.hlsl">
       <Filter>Particles</Filter>
     </FxCompile>
@@ -760,17 +751,35 @@
     <FxCompile Include="Particles\ParticleVertexShader.hlsl">
       <Filter>Particles</Filter>
     </FxCompile>
-    <FxCompile Include="Rendering\Shaders\NDCVertex.hlsl">
-      <Filter>Rendering\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\GSNDC.hlsl">
-      <Filter>Rendering\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\PSTimeManipulation.hlsl">
-      <Filter>Rendering\Shaders</Filter>
+    <FxCompile Include="Rendering\Shaders\BasicPixel.hlsl">
+      <Filter>Rendering\Shaders\Pixel shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\PSPureTexture.hlsl">
-      <Filter>Rendering\Shaders</Filter>
+      <Filter>Rendering\Shaders\Pixel shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PSTimeManipulation.hlsl">
+      <Filter>Rendering\Shaders\Pixel shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\TexturedPixel.hlsl">
+      <Filter>Rendering\Shaders\Pixel shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\BasicVertex.hlsl">
+      <Filter>Rendering\Shaders\Vertex Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\InstancedVertex64.hlsl">
+      <Filter>Rendering\Shaders\Vertex Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\TexturedVertex.hlsl">
+      <Filter>Rendering\Shaders\Vertex Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\GSDuplicateMesh.hlsl">
+      <Filter>Rendering\Shaders\Geometry Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\GSNDC.hlsl">
+      <Filter>Rendering\Shaders\Geometry Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\NDCVertex.hlsl">
+      <Filter>Rendering\Shaders\Vertex Shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

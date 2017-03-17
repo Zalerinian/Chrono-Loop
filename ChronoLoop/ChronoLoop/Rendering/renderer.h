@@ -19,6 +19,7 @@ namespace Epoch {
 		struct ViewProjectionBuffer {
 			matrix4 view, projection;
 		} mVPLeftData, mVPRightData;
+
 		static Renderer* sInstance;
 		//TODO: Light buffers
 		DirectionalLight mDLData;
@@ -92,6 +93,11 @@ namespace Epoch {
 		Renderer();
 		~Renderer();
 	public:
+		struct TimeManipulationEffectData {
+			vec4f saturationColor;
+			float saturationRatio = 0;
+		};
+
 		static Renderer* Instance();
 		static void DestroyInstance();
 		// Instance Functions
@@ -112,5 +118,6 @@ namespace Epoch {
 		inline Microsoft::WRL::ComPtr<ID3D11DepthStencilView> GetDSView() { return mDSView; }
 		inline Microsoft::WRL::ComPtr<ID3D11Texture2D> GetRTViewTexture() { return mMainViewTexture; }
 		inline HWND GetWindow() { return mWindow; }
+		inline RenderShape* GetSceneQuad() { return mScenePPQuad; }
 	};
 }

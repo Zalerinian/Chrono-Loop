@@ -14,7 +14,10 @@
 namespace Epoch
 {
 
-	TimeManipulation::TimeManipulation() {}
+	TimeManipulation::TimeManipulation() {
+		mEffectData.saturationColor.Set(0.30f, 0.59f, 0.11f, 0);
+		mEffectData.saturationRatio = 0;
+	}
 
 
 	TimeManipulation::~TimeManipulation() {}
@@ -108,6 +111,10 @@ namespace Epoch
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			if (mPauseTime) {
 				// Resume Time
+				float finalRatio = 0.7f;
+				mDesaturationInterpolator.Prepare(0.5f, mEffectData.saturationRatio, finalRatio, mEffectData.saturationRatio);
+				mDesaturationInterpolator.SetActive(true);
+
 				mPauseTime = false;
 				TimeManager::Instance()->RewindTimeline(
 					TimeManager::Instance()->GetCurrentSnapFrame(),
@@ -117,10 +124,24 @@ namespace Epoch
 				);
 			} else {
 				// Stop time
+				float finalRatio = 0.7f;
+				mDesaturationInterpolator.Prepare(0.5f, mEffectData.saturationRatio, finalRatio, mEffectData.saturationRatio);
+				mDesaturationInterpolator.SetActive(true);
 				TimeManager::Instance()->SetTempCurSnap();
 				mPauseTime = true;
 			}
 		}
+
+		// Update effect interpolator
+		if (mDesaturationInterpolator.GetActive()) {
+			RenderShape* quad = Renderer::Instance()->GetSceneQuad();
+			Renderer::Instance()->GetContext()->UpdateSubresource(quad->GetContext().mPixelCBuffers[ePB_SLOT2].Get(), 0, NULL, &mEffectData, 0, 0);
+		}
+		if (mDesaturationInterpolator.Update(TimeManager::Instance()->GetDeltaTime())) {
+			mDesaturationInterpolator.SetActive(false);
+		}
+
+
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::k_EButton_SteamVR_Touchpad)) {
 			bool right = false;
 			bool left = false;

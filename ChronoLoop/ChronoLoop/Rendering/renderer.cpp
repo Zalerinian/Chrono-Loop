@@ -180,8 +180,8 @@ namespace Epoch {
 		IDXGISwapChain *chain;
 
 		ThrowIfFailed(mFactory->CreateSwapChain(mDevice.Get(),
-																						&scDesc,
-																						&chain));
+												&scDesc,
+												&chain));
 		mChain.Attach(chain);
 	}
 
@@ -372,6 +372,16 @@ namespace Epoch {
 		mScenePPQuad = new RenderShape("../Resources/VerticalPlane.obj", true, ePS_POSTPROCESS, eVS_NDC, eGS_PosNormTex_NDC);
 		mScenePPQuad->GetContext().mTextures[eTEX_DIFFUSE] = mSceneSRV;
 
+		ID3D11Buffer *ColorRatioBuffer;
+		TimeManipulationEffectData initial;
+		initial.saturationColor.Set(0.30f, 0.59f, 0.11f, 0);
+		initial.saturationRatio = 0;
+		D3D11_SUBRESOURCE_DATA initialData;
+		initialData.pSysMem = &initial;
+		CD3D11_BUFFER_DESC bufferDesc(sizeof(TimeManipulationEffectData), D3D11_BIND_CONSTANT_BUFFER);
+		mDevice->CreateBuffer(&bufferDesc, &initialData, &ColorRatioBuffer);
+		mScenePPQuad->GetContext().mPixelCBuffers[ePB_SLOT2].Attach(ColorRatioBuffer);
+
 		mSceneScreenQuad = new RenderShape("../Resources/VerticalPlaneHalfU.obj", true, ePS_PURETEXTURE, eVS_NDC, eGS_PosNormTex_NDC);
 		mSceneScreenQuad->GetContext().mTextures[eTEX_DIFFUSE] = mSceneSRV;
 	}
@@ -379,7 +389,7 @@ namespace Epoch {
 	void Renderer::SetStaticBuffers() {
 		mContext->GSSetConstantBuffers(0, 1, mVPBuffer.GetAddressOf());
 		mContext->VSSetConstantBuffers(0, 1, mPositionBuffer.GetAddressOf());
-		ID3D11Buffer* buffs[] = { mDLBuffer.Get(), mPLBuffer.Get(), mSLBuffer.Get()};
+		ID3D11Buffer* buffs[] = { mDLBuffer.Get(), mPLBuffer.Get(), mSLBuffer.Get() };
 		mContext->PSSetConstantBuffers(0, 3, buffs);
 		//(*mContext)->VSSetConstantBuffers(2, 1, nullptr); // This will crash. - Instance Buffer
 		//(*mContext)->VSSetConstantBuffers(3, 1, nullptr); // This will crash. - Animation Data Buffer
@@ -476,29 +486,29 @@ namespace Epoch {
 	}
 	void Renderer::RenderVR(float _delta) {
 		vr::VRCompositor()->CompositorBringToFront();
-			UpdateViewProjection();
-			UpdateGSBuffers();
-			UpdateLBuffers();
-			ProcessRenderSet();
+		UpdateViewProjection();
+		UpdateGSBuffers();
+		UpdateLBuffers();
+		ProcessRenderSet();
 
-			// Apply post processing to the texture.
-			mContext->OMSetRenderTargets(1, mMainView.GetAddressOf(), mDSView.Get());
-			mScenePPQuad->GetContext().Apply();
-			mScenePPQuad->Render();
+		// Apply post processing to the texture.
+		mContext->OMSetRenderTargets(1, mMainView.GetAddressOf(), mDSView.Get());
+		mScenePPQuad->GetContext().Apply();
+		mScenePPQuad->Render();
 
 
-			vr::Texture_t submitTexture = { (void*)mMainViewTexture.Get(), vr::TextureType_DirectX, vr::ColorSpace_Auto };
-			vr::VRTextureBounds_t boundary;
-			boundary.uMin = 0.0f;
-			boundary.uMax = 0.5f;
-			boundary.vMin = 0.0f;
-			boundary.vMax = 1.0f;
+		vr::Texture_t submitTexture = { (void*)mMainViewTexture.Get(), vr::TextureType_DirectX, vr::ColorSpace_Auto };
+		vr::VRTextureBounds_t boundary;
+		boundary.uMin = 0.0f;
+		boundary.uMax = 0.5f;
+		boundary.vMin = 0.0f;
+		boundary.vMax = 1.0f;
 
-			vr::VRCompositor()->Submit(vr::EVREye::Eye_Left, &submitTexture, &boundary);
+		vr::VRCompositor()->Submit(vr::EVREye::Eye_Left, &submitTexture, &boundary);
 
-			boundary.uMin = 0.5f;
-			boundary.uMax = 1.0;
-			vr::VRCompositor()->Submit(vr::EVREye::Eye_Right, &submitTexture, &boundary);
+		boundary.uMin = 0.5f;
+		boundary.uMax = 1.0;
+		vr::VRCompositor()->Submit(vr::EVREye::Eye_Right, &submitTexture, &boundary);
 
 #if ENABLE_TEXT
 		CommandConsole::Instance().SetVRBool(true);
@@ -553,7 +563,7 @@ namespace Epoch {
 		}
 	}
 
-		
+
 #pragma endregion Private Functions
 
 #pragma region Public Functions
@@ -631,7 +641,8 @@ namespace Epoch {
 		ParticleSystem::Instance()->Render();
 		if (nullptr == mVrSystem) {
 			RenderNoVR(_deltaTime);
-		} else {
+		}
+		else {
 			// In VR, we need to apply the post processing before we submit textures to the compositor.
 			RenderVR(_deltaTime);
 		}

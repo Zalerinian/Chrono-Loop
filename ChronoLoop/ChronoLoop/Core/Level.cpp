@@ -158,7 +158,7 @@ namespace Epoch {
 		if (loadOkay)
 		{
 			SystemLogger::GetLog() << _file.c_str() << " loaded" << std::endl;
-			TiXmlElement *pRoot, *pObject, *pData, *pApp, *pLineFormat;
+			TiXmlElement *pRoot, *pObject, *pData;
 			pRoot = XMLdoc.FirstChildElement("Level");
 			if (pRoot)
 			{

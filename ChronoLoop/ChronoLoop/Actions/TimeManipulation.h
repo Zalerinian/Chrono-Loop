@@ -5,7 +5,7 @@
 #include "../Actions/CodeComponent.hpp"
 #include "../Rendering/Renderer.h"
 #include "../Input/VRInputManager.h"
-
+#include "../Common/Interpolator.h"
 
 namespace Epoch
 {
@@ -21,6 +21,8 @@ namespace Epoch
 		ID3D11Texture2D* mCountTxt;
 		ID2D1Bitmap1* mCountMap;
 		unsigned int HotfixButtonDown = 0;
+		Renderer::TimeManipulationEffectData mEffectData;
+		Interpolator<float> mDesaturationInterpolator;
 
 		static unsigned short mCurrTexture;
 		std::string mTextures[10] = { "../Resources/CloneTexture.png",
