@@ -352,17 +352,17 @@ namespace Epoch
 
 		if (x < mRect.min.x || x > mRect.max.x)
 		{
-			_p->mVelocity.x += (_p->mVelocity.x < 0) ? -.1 : .1;
+			_p->mVelocity.x += (_p->mVelocity.x < 0) ? -.1f : .1f;
 			_p->mVelocity.x *= -1;
 		}
 		if (y < mRect.min.y || y > mRect.max.y)
 		{
-			_p->mVelocity.y += (_p->mVelocity.y < 0) ? -.1 : .1;
+			_p->mVelocity.y += (_p->mVelocity.y < 0) ? -.1f : .1f;
 			_p->mVelocity.y *= -1;
 		}
 		if (z < mRect.min.z || z > mRect.max.z)
 		{
-			_p->mVelocity.z += (_p->mVelocity.z < 0) ? -.1 : .1;
+			_p->mVelocity.z += (_p->mVelocity.z < 0) ? -.1f : .1f;
 			_p->mVelocity.z *= -1;
 		}
 	}

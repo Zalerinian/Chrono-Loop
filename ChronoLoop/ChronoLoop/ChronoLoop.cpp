@@ -654,14 +654,14 @@ void Update() {
 	//Enter effect
 	Patrick* emit = new Patrick(500, 250, 2, vec4f(8, 0, -4, 1));
 	emit->SetTexture("../Resources/BasicRectP.png");
-	emit->SetParticle(new Particle(200, 1.25 / 2.0, .15 / 2.0, vec4f(), vec4f(.2, .2, 1, 0), vec4f(0, 1, .2, 0)));
+	emit->SetParticle(new Particle(200, 1.25f / 2.0f, .15f / 2.0f, vec4f(), vec4f(.2f, .2f, 1, 0), vec4f(0, 1, .2f, 0)));
 	emit->y1 = 8;
 	emit->y2 = 12;
 	ParticleSystem::Instance()->AddEmitter(emit);
 
 	emit = new Patrick(500, 150, 1, vec4f(8, 0, -4, 1));
 	emit->SetTexture("../Resources/BasicCircleP.png");
-	emit->SetParticle(new Particle(1000, .25 / 2.0, .05 / 2.0, vec4f(), vec4f(.5, 0, .25, 0), vec4f(.2, .8, .5, 0)));
+	emit->SetParticle(new Particle(1000, .25f / 2.0f, .05f / 2.0f, vec4f(), vec4f(.5f, 0, .25f, 0), vec4f(.2f, .8f, .5f, 0)));
 	emit->y1 = 1;
 	emit->y2 = 5;
 	ParticleSystem::Instance()->AddEmitter(emit);

@@ -112,22 +112,22 @@ namespace Epoch
 
 		ColliderType mColliderType;
 		bool mShouldMove, mIsTrigger;
-		vec4f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity, mWeight, mDragForce;
+		vec3f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity, mWeight, mDragForce;
 		float mMass, mElasticity, mKineticFriction, mStaticFriction, mInvMass, mRHO, mDrag, mArea;
 
 		virtual void Update();
 		virtual void Destroy();
 
-		vec4f AddForce(vec4f _force) { mForces = _force; return mForces; };
-		virtual vec4f GetPos();
-		virtual void SetPos(const vec4f& _newPos);
+		vec3f AddForce(vec3f _force) { mForces = _force; return mForces; };
+		virtual vec3f GetPos();
+		virtual void SetPos(const vec3f& _newPos);
 	};
 
 	//class MeshCollider : public Collider
 	//{
 	//public:
 	//	MeshCollider() {}
-	//	MeshCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, char* _path);
+	//	MeshCollider(BaseObject* _obj, bool _move, vec3f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, char* _path);
 	//	Mesh* mMesh;
 	//};
 
@@ -135,9 +135,9 @@ namespace Epoch
 	{
 	public:
 		SphereCollider() {}
-		SphereCollider(BaseObject* _obj, bool _move, bool _trigger, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _radius);
-		SphereCollider(vec4f _pos, float _rad) { mCenter = _pos; mRadius = _rad; };
-		vec4f mCenter;
+		SphereCollider(BaseObject* _obj, bool _move, bool _trigger, vec3f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _radius);
+		SphereCollider(vec3f _pos, float _rad) { mCenter = _pos; mRadius = _rad; };
+		vec3f mCenter;
 		float mRadius;
 	};
 
@@ -145,9 +145,9 @@ namespace Epoch
 	{
 	public:
 		PlaneCollider() {}
-		PlaneCollider(BaseObject* _obj, bool _trigger, float _staticFriction, float _kineticFriction, float _offset, vec4f _norm);
-		PlaneCollider(vec4f _norm, float _offset) { mNormal = _norm; mOffset = _offset; };
-		vec4f mNormal;
+		PlaneCollider(BaseObject* _obj, bool _trigger, float _staticFriction, float _kineticFriction, float _offset, vec3f _norm);
+		PlaneCollider(vec3f _norm, float _offset) { mNormal = _norm; mOffset = _offset; };
+		vec3f mNormal;
 		float mOffset;
 	};
 
@@ -155,40 +155,40 @@ namespace Epoch
 	{
 		Frustrum() {}
 		PlaneCollider mFaces[6];
-		vec4f mPoints[8];
+		vec3f mPoints[8];
 	};
 
 	class CubeCollider : public Collider
 	{
 	public:
 		CubeCollider() {}
-		CubeCollider(BaseObject* _obj, bool _move, bool _trigger, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec4f _min, vec4f _max);
-		CubeCollider(vec4f _min, vec4f _max) { mMin = _min; mMax = _max; };
-		vec4f mMin, mMax, mMinOffset, mMaxOffset;
+		CubeCollider(BaseObject* _obj, bool _move, bool _trigger, vec3f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec3f _min, vec3f _max);
+		CubeCollider(vec3f _min, vec3f _max) { mMin = _min; mMax = _max; };
+		vec3f mMin, mMax, mMinOffset, mMaxOffset;
 		RenderShape* mShape;
 		GhostList<matrix4>::GhostNode* mNode = nullptr;
 		virtual void Update();
 
-		virtual void SetPos(const vec4f& _newPos);
+		virtual void SetPos(const vec3f& _newPos);
 	};
 
 	class OrientedCubeCollider : public Collider
 	{
 	public:
 		OrientedCubeCollider() {}
-		OrientedCubeCollider(BaseObject* _obj, bool _move, bool _trigger, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _xRadius, float _yRadius, float _zRadius);
-		vec4f mCenter;
+		OrientedCubeCollider(BaseObject* _obj, bool _move, bool _trigger, vec3f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _xRadius, float _yRadius, float _zRadius);
+		vec3f mCenter;
 		float mWidth, mHeight, mDepth;
-		vec4f mAxis[3];
-		virtual void SetPos(const vec4f& _newPos);
+		vec3f mAxis[3];
+		virtual void SetPos(const vec3f& _newPos);
 	};
 
 	class ButtonCollider : public CubeCollider
 	{
 	public:
 		ButtonCollider() {}
-		ButtonCollider(BaseObject* _obj, vec4f _min, vec4f _max, float _mass, float normForce, vec4f _pushNormal);
-		vec4f mPushNormal;
+		ButtonCollider(BaseObject* _obj, vec3f _min, vec3f _max, float _mass, float normForce, vec3f _pushNormal);
+		vec3f mPushNormal;
 		PlaneCollider mUpperBound, mLowerBound;
 	};
 
@@ -196,7 +196,7 @@ namespace Epoch
 	{
 	public:
 		ControllerCollider() {}
-		ControllerCollider(BaseObject* _obj, vec4f _min, vec4f _max, bool _left);
+		ControllerCollider(BaseObject* _obj, vec3f _min, vec3f _max, bool _left);
 		bool mLeft;
 		std::unordered_set<Collider*> mHitting;
 	};

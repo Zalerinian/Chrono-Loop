@@ -37,7 +37,7 @@ namespace Epoch
 
 #pragma region RAY_CASTING
 
-	bool Physics::RayToTriangle(vec4f& _vert0, vec4f& _vert1, vec4f& _vert2, vec4f& _normal, vec4f& _start, vec4f& _dir, float& _time)
+	bool Physics::RayToTriangle(vec3f& _vert0, vec3f& _vert1, vec3f& _vert2, vec3f& _normal, vec3f& _start, vec3f& _dir, float& _time)
 	{
 		vec3f rayToCentroid = ((_vert0 + _vert1 + _vert2) / 3) - _start;
 		if ((_normal * _dir) > 0.001f || (rayToCentroid * _normal) > 0)
@@ -45,10 +45,10 @@ namespace Epoch
 			return false;
 		}
 
-		vec4f sa = _vert0 - _start;
-		vec4f sb = _vert1 - _start;
-		vec4f sc = _vert2 - _start;
-		vec4f N1, N2, N3;
+		vec3f sa = _vert0 - _start;
+		vec3f sb = _vert1 - _start;
+		vec3f sc = _vert2 - _start;
+		vec3f N1, N2, N3;
 		N1 = sc ^ sb;
 		N2 = sa ^ sc;
 		N3 = sb ^ sa;
@@ -71,11 +71,11 @@ namespace Epoch
 		return false;
 	}
 
-	bool Physics::RayToSphere(vec4f & _pos, vec4f & _dir, vec4f & _center, float _radius, float & _time, vec4f & _out)
+	bool Physics::RayToSphere(vec3f & _pos, vec3f & _dir, vec3f & _center, float _radius, float & _time, vec3f & _out)
 	{
-		vec4f check = _pos - _center;
+		vec3f check = _pos - _center;
 
-		vec4f m = _pos - _center;
+		vec3f m = _pos - _center;
 		float b = m * _dir;
 		float c = (m * m) - (_radius * _radius);
 		if (c < 0.0f || b > 0.0f)
@@ -89,18 +89,18 @@ namespace Epoch
 		if (_time < 0.0f)
 		{
 			_time = 0.0f;
-			vec4f np = { _pos.x + _time, _pos.y + _time, _pos.z + _time, 1.0f };
+			vec3f np = { _pos.x + _time, _pos.y + _time, _pos.z + _time };
 			_out = np ^ _dir;
 		}
 
 		return true;
 	}
 
-	bool Physics::RayToCylinder(vec4f & _start, vec4f & _normal, vec4f & _point1, vec4f & _point2, float _radius, float & _time)
+	bool Physics::RayToCylinder(vec3f & _start, vec3f & _normal, vec3f & _point1, vec3f & _point2, float _radius, float & _time)
 	{
-		vec4f d = _point2 - _point1;
-		vec4f od = _point1 - _point2;
-		vec4f m = _start - _point1;
+		vec3f d = _point2 - _point1;
+		vec3f od = _point1 - _point2;
+		vec3f m = _start - _point1;
 
 		float dd = d * d;
 		float nd = _normal * d;
@@ -127,7 +127,7 @@ namespace Epoch
 		if (_time < 0)
 			return false;
 
-		vec4f col = _start + _normal * _time;
+		vec3f col = _start + _normal * _time;
 
 		if (od * (_point2 - col) > 0 || d * (_point1 - col) > 0)
 			return false;
@@ -135,7 +135,7 @@ namespace Epoch
 		return true;
 	}
 
-	bool Physics::RayToCapsule(vec4f & _start, vec4f & _normal, vec4f & _point1, vec4f & _point2, float _radius, float & _time)
+	bool Physics::RayToCapsule(vec3f & _start, vec3f & _normal, vec3f & _point1, vec3f & _point2, float _radius, float & _time)
 	{
 		float fTime = FLT_MAX;
 		_time = FLT_MAX;
@@ -148,7 +148,7 @@ namespace Epoch
 			bReturn = true;
 		}
 
-		vec4f pcol, qcol;
+		vec3f pcol, qcol;
 		if (RayToSphere(_start, _normal, _point1, _radius, _time, pcol))
 		{
 			fTime = PMIN(_time, fTime);
@@ -172,7 +172,7 @@ namespace Epoch
 
 	//Returns 1 if on or in front of plane
 	//Returns 2 if behind plane
-	int Physics::PointToPlane(PlaneCollider& _plane, vec4f& _point)
+	int Physics::PointToPlane(PlaneCollider& _plane, vec3f& _point)
 	{
 		float pOffset = _point * _plane.mNormal;
 		if (pOffset >= _plane.mOffset)
@@ -198,9 +198,9 @@ namespace Epoch
 	//Returns 3 if intersecting plane.
 	int Physics::AabbToPlane(PlaneCollider& _plane, CubeCollider& _aabb)
 	{
-		vec4f center = (_aabb.mMax + _aabb.mMin) * 0.5f;
+		vec3f center = (_aabb.mMax + _aabb.mMin) * 0.5f;
 		float pOffset = center * _plane.mNormal - _plane.mOffset;
-		vec4f E = _aabb.mMax - center;
+		vec3f E = _aabb.mMax - center;
 		float r = E * _plane.mNormal;
 		SphereCollider s(center, r);
 		int t = SphereToPlane(_plane, s);
@@ -223,17 +223,15 @@ namespace Epoch
 
 	bool Epoch::Physics::OBBtoOBB(OrientedCubeCollider& _obb1, OrientedCubeCollider& _obb2)
 	{
-		vec4f T = _obb2.mCenter - _obb1.mCenter;
+		vec3f T = _obb2.mCenter - _obb1.mCenter;
 
-		vec4f xRot1 = _obb1.mObject->GetTransform().GetMatrix().first;
-		vec4f yRot1 = _obb1.mObject->GetTransform().GetMatrix().second;
-		vec4f zRot1 = -_obb1.mObject->GetTransform().GetMatrix().third;
-		zRot1.w = 1;
+		vec3f xRot1 = _obb1.mObject->GetTransform().GetMatrix().first;
+		vec3f yRot1 = _obb1.mObject->GetTransform().GetMatrix().second;
+		vec3f zRot1 = -_obb1.mObject->GetTransform().GetMatrix().third;
 
-		vec4f xRot2 = _obb2.mObject->GetTransform().GetMatrix().first;
-		vec4f yRot2 = _obb2.mObject->GetTransform().GetMatrix().second;
-		vec4f zRot2 = -_obb2.mObject->GetTransform().GetMatrix().third;
-		zRot2.w = 1;
+		vec3f xRot2 = _obb2.mObject->GetTransform().GetMatrix().first;
+		vec3f yRot2 = _obb2.mObject->GetTransform().GetMatrix().second;
+		vec3f zRot2 = -_obb2.mObject->GetTransform().GetMatrix().third;
 
 		//X1 Axis
 		if (fabsf(T * _obb1.mAxis[0]) >
@@ -368,7 +366,7 @@ namespace Epoch
 
 	bool Physics::SphereToSphere(SphereCollider& _sphere1, SphereCollider& _sphere2)
 	{
-		vec4f pos = _sphere1.mCenter - _sphere2.mCenter;
+		vec3f pos = _sphere1.mCenter - _sphere2.mCenter;
 		float distance = pos.x * pos.x + pos.y * pos.y + pos.z * pos.z;
 		float minDist = _sphere1.mRadius + _sphere2.mRadius;
 
@@ -378,7 +376,7 @@ namespace Epoch
 	bool Physics::SphereToAABB(SphereCollider& _sphere, CubeCollider& _aabb)
 	{
 		float X, Y, Z;
-		vec4f pos = _sphere.mCenter;
+		vec3f pos = _sphere.mCenter;
 
 		if (pos.x < _aabb.mMin.x)
 			X = _aabb.mMin.x;
@@ -401,23 +399,23 @@ namespace Epoch
 		else
 			Z = pos.z;
 
-		vec4f point = { X, Y, Z, 1.0f };
+		vec3f point = { X, Y, Z };
 
 		return (fabsf((point.x - pos.x)) < _sphere.mRadius &&
 			fabsf((point.y - pos.y)) < _sphere.mRadius &&
 			fabsf((point.z - pos.z)) < _sphere.mRadius);
 	}
 
-	bool Physics::SphereToTriangle(SphereCollider& _sphere, Triangle& _tri, vec4f& _displacement)
+	bool Physics::SphereToTriangle(SphereCollider& _sphere, Triangle& _tri, vec3f& _displacement)
 	{
-		vec4f pos = _sphere.mCenter;
+		vec3f pos = _sphere.mCenter;
 		float offset = (pos - _tri.Vertex[0]) * _tri.Normal;
-		vec4f scaled = _tri.Normal * offset;
-		vec4f projected = pos - scaled;
-		vec4f edge0 = _tri.Vertex[1] - _tri.Vertex[0];
-		vec4f edge1 = _tri.Vertex[2] - _tri.Vertex[1];
-		vec4f edge2 = _tri.Vertex[0] - _tri.Vertex[2];
-		vec4f norm0, norm1, norm2, Cpt = pos;
+		vec3f scaled = _tri.Normal * offset;
+		vec3f projected = pos - scaled;
+		vec3f edge0 = _tri.Vertex[1] - _tri.Vertex[0];
+		vec3f edge1 = _tri.Vertex[2] - _tri.Vertex[1];
+		vec3f edge2 = _tri.Vertex[0] - _tri.Vertex[2];
+		vec3f norm0, norm1, norm2, Cpt = pos;
 		norm0 = edge0 ^ _tri.Normal;
 		norm1 = edge1 ^ _tri.Normal;
 		norm2 = edge2 ^ _tri.Normal;
@@ -433,9 +431,9 @@ namespace Epoch
 		}
 		else
 		{
-			vec4f s0 = projected - _tri.Vertex[0];
-			vec4f s1 = projected - _tri.Vertex[1];
-			vec4f s2 = projected - _tri.Vertex[2];
+			vec3f s0 = projected - _tri.Vertex[0];
+			vec3f s1 = projected - _tri.Vertex[1];
+			vec3f s2 = projected - _tri.Vertex[2];
 			float p0 = (s0 * edge0) / (edge0 * edge0);
 			float p1 = (s1 * edge1) / (edge1 * edge1);
 			float p2 = (s2 * edge2) / (edge2 * edge2);
@@ -455,9 +453,9 @@ namespace Epoch
 			else if (p2 > 1)
 				p2 = 1;
 
-			vec4f c0 = _tri.Vertex[0] + edge0 * p0;
-			vec4f c1 = _tri.Vertex[1] + edge1 * p1;
-			vec4f c2 = _tri.Vertex[2] + edge2 * p2;
+			vec3f c0 = _tri.Vertex[0] + edge0 * p0;
+			vec3f c1 = _tri.Vertex[1] + edge1 * p1;
+			vec3f c2 = _tri.Vertex[2] + edge2 * p2;
 			float r0 = (projected - c0) * (projected - c0);
 			float r1 = (projected - c1) * (projected - c1);
 			float r2 = (projected - c2) * (projected - c2);
@@ -473,9 +471,9 @@ namespace Epoch
 
 		if ((Cpt - pos) * (Cpt - pos) < (_sphere.mRadius * _sphere.mRadius))
 		{
-			vec4f v = pos - Cpt;
-			float dist = v.Magnitude3();
-			vec4f n = v.Normalize();
+			vec3f v = pos - Cpt;
+			float dist = v.Magnitude();
+			vec3f n = v.Normalize();
 			_displacement = n * (_sphere.mRadius - dist);
 			return true;
 		}
@@ -483,16 +481,16 @@ namespace Epoch
 		return false;
 	}
 
-	bool Physics::MovingSphereToTriangle(vec4f & _vert0, vec4f & _vert1, vec4f & _vert2, vec4f & _normal, vec4f & _start, vec4f & _dir, float _radius, float & _time, vec4f & _outNormal)
+	bool Physics::MovingSphereToTriangle(vec3f & _vert0, vec3f & _vert1, vec3f & _vert2, vec3f & _normal, vec3f & _start, vec3f & _dir, float _radius, float & _time, vec3f & _outNormal)
 	{
 		bool bReturn = false;
 		float fTime = FLT_MAX;
 		_time = FLT_MAX;
 
-		vec4f verts[3] = { _vert0, _vert1, _vert2 };
-		vec4f offset0 = _vert0 + (_normal * _radius);
-		vec4f offset1 = _vert1 + (_normal * _radius);
-		vec4f offset2 = _vert2 + (_normal * _radius);
+		vec3f verts[3] = { _vert0, _vert1, _vert2 };
+		vec3f offset0 = _vert0 + (_normal * _radius);
+		vec3f offset1 = _vert1 + (_normal * _radius);
+		vec3f offset2 = _vert2 + (_normal * _radius);
 
 		if (RayToTriangle(offset0, offset1, offset2, _normal, _start, _dir, _time))
 		{
@@ -507,8 +505,8 @@ namespace Epoch
 			{
 				fTime = PMIN(_time, fTime);
 				_time = fTime;
-				vec4f temp1 = _dir * _time + _start;
-				vec4f temp2 = (_vert1 - _vert0) * _time + _vert0;
+				vec3f temp1 = _dir * _time + _start;
+				vec3f temp2 = (_vert1 - _vert0) * _time + _vert0;
 				_outNormal = (temp1 - temp2).Normalize();
 				bReturn = true;
 			}
@@ -517,8 +515,8 @@ namespace Epoch
 			{
 				fTime = PMIN(_time, fTime);
 				_time = fTime;
-				vec4f temp1 = _dir * _time + _start;
-				vec4f temp2 = (_vert1 - _vert0) * _time + _vert0;
+				vec3f temp1 = _dir * _time + _start;
+				vec3f temp2 = (_vert1 - _vert0) * _time + _vert0;
 				_outNormal = (temp1 - temp2).Normalize();
 				bReturn = true;
 			}
@@ -527,8 +525,8 @@ namespace Epoch
 			{
 				fTime = PMIN(_time, fTime);
 				_time = fTime;
-				vec4f temp1 = _dir * _time + _start;
-				vec4f temp2 = (_vert1 - _vert0) * _time + _vert0;
+				vec3f temp1 = _dir * _time + _start;
+				vec3f temp2 = (_vert1 - _vert0) * _time + _vert0;
 				_outNormal = (temp1 - temp2).Normalize();
 				bReturn = true;
 			}
@@ -537,7 +535,7 @@ namespace Epoch
 		return bReturn;
 	}
 
-	//bool Physics::MovingSphereToMesh(vec4f & _start, vec4f & _dir, float _radius, Mesh* _mesh, float & _time, vec4f & _outNormal)
+	//bool Physics::MovingSphereToMesh(vec3f & _start, vec3f & _dir, float _radius, Mesh* _mesh, float & _time, vec3f & _outNormal)
 	//{
 	//	bool bCollision = false;
 	//	_time = FLT_MAX;
@@ -546,12 +544,12 @@ namespace Epoch
 	//	for (unsigned int i = 0; i < _mesh->GetNumTriangles(); i++)
 	//	{
 	//		Triangle currTri = _mesh->GetTriangles()[i];
-	//		vec4f currNorm = _mesh->GetTriangles()[i].Normal;
+	//		vec3f currNorm = _mesh->GetTriangles()[i].Normal;
 	//
 	//		if (MovingSphereToTriangle(
-	//			vec4f(currTri.Vertex[0]),
-	//			vec4f(currTri.Vertex[1]),
-	//			vec4f(currTri.Vertex[2]),
+	//			vec3f(currTri.Vertex[0]),
+	//			vec3f(currTri.Vertex[1]),
+	//			vec3f(currTri.Vertex[2]),
 	//			currNorm, _start, _dir, _radius, fTime, _outNormal))
 	//		{
 	//			_time = fminf(_time, fTime);
@@ -570,8 +568,8 @@ namespace Epoch
 	/*
 	void Physics::BuildFrustum(Frustum& _frustum, float _fov, float _nearDist, float _farDist, float _ratio, matrix4& _camXform)
 	{
-	vec4f fc = _camXform.axis_pos - _camXform.axis_z * _farDist;
-	vec4f nc = _camXform.axis_pos - _camXform.axis_z * _nearDist;
+	vec3f fc = _camXform.axis_pos - _camXform.axis_z * _farDist;
+	vec3f nc = _camXform.axis_pos - _camXform.axis_z * _nearDist;
 	float Hnear = 2 * tan(_fov / 2) * _nearDist;
 	float Hfar = 2 * tan(_fov / 2) * _farDist;
 	float Wnear = Hnear * _ratio;
@@ -632,24 +630,24 @@ namespace Epoch
 
 #pragma region RIGIDBODY_SIMULATION
 
-	vec4f Physics::CalcAcceleration(vec4f& _force, float _mass)
+	vec3f Physics::CalcAcceleration(vec3f& _force, float _mass)
 	{
 		return _force / _mass;
 	}
 
-	vec4f Physics::CalcVelocity(vec4f& _vel, vec4f& _accel, float _time)
+	vec3f Physics::CalcVelocity(vec3f& _vel, vec3f& _accel, float _time)
 	{
 		return _vel + _accel * _time;
 	}
 
-	vec4f Physics::CalcPosition(vec4f& _pos, vec4f& _vel, float _time)
+	vec3f Physics::CalcPosition(vec3f& _pos, vec3f& _vel, float _time)
 	{
 		return _pos + _vel * _time;
 	}
 
-	void Physics::CalcFriction(Collider& _col, vec4f& _norm, float _static, float _kinetic)
+	void Physics::CalcFriction(Collider& _col, vec3f& _norm, float _static, float _kinetic)
 	{
-		vec4f tangentForce = _col.mForces - (_norm * (_col.mForces * _norm));
+		vec3f tangentForce = _col.mForces - (_norm * (_col.mForces * _norm));
 		float staticFriction = 0;
 		float avgStatic = _col.mStaticFriction < _static ? _static : _col.mStaticFriction;
 		float avgKinetic = _col.mKineticFriction < _kinetic ? _kinetic : _col.mKineticFriction;
@@ -661,23 +659,23 @@ namespace Epoch
 		if (fabsf(_col.mVelocity.z) < 0.1f)
 			_col.mVelocity.z = 0;
 
-		if (fabsf(_col.mVelocity.Magnitude3()) < 0.001f)
+		if (fabsf(_col.mVelocity.Magnitude()) < 0.001f)
 		{
-			staticFriction = avgStatic * (-_col.mWeight).Magnitude3();
-			_col.mTotalForce = { 0,0,0,0 };
+			staticFriction = avgStatic * (-_col.mWeight).Magnitude();
+			_col.mTotalForce = { 0,0,0 };
 		}
-		else if (_col.mVelocity.Magnitude3() > 0)
+		else if (_col.mVelocity.Magnitude() > 0)
 		{
-			//vec4f normDir(fabsf(_col.mVelocity.Normalize().x), fabsf(_col.mVelocity.Normalize().y), fabs(_col.mVelocity.Normalize().z), 1);
-			vec4f totalFriction = _col.mVelocity.Normalize() * (-avgKinetic * (-_col.mWeight).Magnitude3());
+			//vec3f normDir(fabsf(_col.mVelocity.Normalize().x), fabsf(_col.mVelocity.Normalize().y), fabs(_col.mVelocity.Normalize().z), 1);
+			vec3f totalFriction = _col.mVelocity.Normalize() * (-avgKinetic * (-_col.mWeight).Magnitude());
 			_col.mTotalForce = _col.mForces + totalFriction + _col.mDragForce;
 		}
 
-		if (fabsf(_col.mVelocity.Magnitude3()) < 0.001f && tangentForce.Magnitude3() >= staticFriction)
+		if (fabsf(_col.mVelocity.Magnitude()) < 0.001f && tangentForce.Magnitude() >= staticFriction)
 		{
-			float sliding = tangentForce.Magnitude3() / staticFriction;
+			float sliding = tangentForce.Magnitude() / staticFriction;
 			_col.mVelocity = tangentForce.Normalize() * sliding;
-			vec4f kineticFriction = _col.mVelocity.Normalize() * (-avgKinetic * (-_col.mWeight).Magnitude3());
+			vec3f kineticFriction = _col.mVelocity.Normalize() * (-avgKinetic * (-_col.mWeight).Magnitude());
 			_col.mTotalForce = _col.mForces + kineticFriction + _col.mDragForce;
 		}
 	}
@@ -703,7 +701,7 @@ namespace Epoch
 			//SystemLogger::GetLog() << _time << std::endl;
 			Collider* collider;
 			Collider* otherCol;
-			vec4f norm;
+			vec3f norm;
 			std::vector<Component*> codeComponents;
 			std::vector<Component*> Colliders;
 			std::vector<Component*> otherColliders;
@@ -716,7 +714,7 @@ namespace Epoch
 				for (int x = 0; x < cols; ++x)
 				{
 					collider = (Collider*)Colliders[x];
-					if (collider->mIsTrigger || collider->mShouldMove)
+					if (collider->IsEnabled() && (collider->mIsTrigger || collider->mShouldMove))
 					{
 						if(!collider->mIsTrigger)
 							collider->mTotalForce = collider->mForces + collider->mWeight + collider->mDragForce;
@@ -734,6 +732,10 @@ namespace Epoch
 									for (int k = 0; k < othercols; ++k)
 									{
 										otherCol = (Collider*)otherColliders[k];
+										if (otherCol->mIsEnabled)
+										{
+
+										}
 										//if (otherCol->mColliderType == Collider::eCOLLIDER_Mesh)
 										//{
 										//	//Not sure what outnorm is used for at the moment might just stick with basic cube/sphere collisions
@@ -779,8 +781,8 @@ namespace Epoch
 												float bottom = collider->GetPos().y - ((SphereCollider*)collider)->mRadius;
 												if (bottom < ((PlaneCollider*)otherCol)->mOffset)
 												{
-													vec4f pos = collider->GetPos();
-													collider->SetPos(vec4f(pos.x, ((PlaneCollider*)otherCol)->mOffset + ((SphereCollider*)collider)->mRadius, pos.z, 1));
+													vec3f pos = collider->GetPos();
+													collider->SetPos(vec3f(pos.x, ((PlaneCollider*)otherCol)->mOffset + ((SphereCollider*)collider)->mRadius, pos.z));
 
 													CalcFriction(*collider, plane.mNormal, otherCol->mStaticFriction, otherCol->mKineticFriction);
 													for (unsigned int f = 0; f < codeComponents.size(); ++f)
@@ -806,8 +808,8 @@ namespace Epoch
 												float bottom = collider->GetPos().y - ((SphereCollider*)collider)->mRadius;
 												if (bottom < ((PlaneCollider*)otherCol)->mOffset)
 												{
-													vec4f pos = collider->GetPos();
-													collider->SetPos(vec4f(pos.x, ((PlaneCollider*)otherCol)->mOffset + ((SphereCollider*)collider)->mRadius, pos.z, 1));
+													vec3f pos = collider->GetPos();
+													collider->SetPos(vec3f(pos.x, ((PlaneCollider*)otherCol)->mOffset + ((SphereCollider*)collider)->mRadius, pos.z));
 												}
 											}
 										}
@@ -871,8 +873,8 @@ namespace Epoch
 											{
 												if (((CubeCollider*)collider)->mMin.y < otherCol->GetPos().y)
 												{
-													vec4f pos = collider->GetPos();
-													collider->SetPos(vec4f(pos.x, ((PlaneCollider*)otherCol)->mOffset + ((CubeCollider*)collider)->mMinOffset.y, pos.z, 1));
+													vec3f pos = collider->GetPos();
+													collider->SetPos(vec3f(pos.x, ((PlaneCollider*)otherCol)->mOffset + ((CubeCollider*)collider)->mMinOffset.y, pos.z));
 
 													CalcFriction(*collider, plane.mNormal, otherCol->mStaticFriction, otherCol->mKineticFriction);
 													for (unsigned int f = 0; f < codeComponents.size(); ++f)
@@ -897,8 +899,8 @@ namespace Epoch
 
 												if (((CubeCollider*)collider)->mMin.y < ((PlaneCollider*)otherCol)->mOffset)
 												{
-													vec4f pos = collider->GetPos();
-													collider->SetPos(vec4f(pos.x, ((PlaneCollider*)otherCol)->mOffset + fabsf(((CubeCollider*)collider)->mMinOffset.y), pos.z, 1));
+													vec3f pos = collider->GetPos();
+													collider->SetPos(vec3f(pos.x, ((PlaneCollider*)otherCol)->mOffset + fabsf(((CubeCollider*)collider)->mMinOffset.y), pos.z));
 												}
 											}
 										}
@@ -951,9 +953,9 @@ namespace Epoch
 							CubeCollider aabb1(((ButtonCollider*)collider)->mMin, ((ButtonCollider*)collider)->mMax);
 							if (AabbToPlane(((ButtonCollider*)collider)->mUpperBound, aabb1) != 2)
 							{
-								collider->mVelocity = { 0,0,0,1 };
-								collider->mAcceleration = { 0,0,0,1 };
-								collider->mTotalForce = { 0,0,0,1 };
+								collider->mVelocity = { 0,0,0 };
+								collider->mAcceleration = { 0,0,0 };
+								collider->mTotalForce = { 0,0,0 };
 							}
 
 							for (int j = 0; j < objs; ++j)
@@ -1081,12 +1083,12 @@ namespace Epoch
 				{
 					if (collider->mShouldMove)
 					{
-						collider->mDragForce = collider->mVelocity * (-0.5f * collider->mRHO * collider->mVelocity.Magnitude3() * collider->mDrag * collider->mArea);
+						collider->mDragForce = collider->mVelocity * (-0.5f * collider->mRHO * collider->mVelocity.Magnitude() * collider->mDrag * collider->mArea);
 						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
 						collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
 
 						if (fabs(collider->mForces.x) < 0.01f && fabsf(collider->mForces.y) < 0.01f && fabsf(collider->mForces.z) < 0.01f)
-							collider->mForces = { 0,0,0,1 };
+							collider->mForces = { 0,0,0 };
 						else
 							collider->mForces *= 0.99f;
 

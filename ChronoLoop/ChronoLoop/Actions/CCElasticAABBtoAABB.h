@@ -84,7 +84,7 @@ namespace Epoch
 				float flip = -_col.mVelocity * norm;
 				vec4f prev = _col.mVelocity;
 				prev += norm * flip;
-				_col.mVelocity = { 0,0,0,1 };
+				_col.mVelocity = { 0,0,0 };
 				float avgElasticity = (_col.mElasticity + _other.mElasticity) / 2;
 				_col.mVelocity = norm * (1 + avgElasticity) + prev;
 

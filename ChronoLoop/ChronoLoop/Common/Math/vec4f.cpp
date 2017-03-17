@@ -167,21 +167,13 @@ namespace Epoch {
 		return sqrtf(SquaredMagnitude());
 	}
 
-	float vec4f::Magnitude3() const {
-		return sqrtf(SquaredMagnitude3());
-	}
-
 	float vec4f::SquaredMagnitude() const {
 		return x * x + y * y + z * z + w * w;
 	}
 
-	float vec4f::SquaredMagnitude3() const {
-		return x * x + y * y + z * z;
-	}
-
 	vec4f vec4f::Normalize() const {
 		vec4f temp;
-		float norm = 1 / Magnitude3();
+		float norm = 1 / Magnitude();
 		for (int i = 0; i < 4; ++i)
 			temp.xyzw[i] = xyzw[i] * norm;
 		return temp;
