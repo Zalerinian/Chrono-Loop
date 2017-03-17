@@ -113,7 +113,7 @@ namespace Epoch
 					cLevel->GetHeadset()->GetUniqueID(),
 					cLevel->GetRightController()->GetUniqueID(),
 					cLevel->GetLeftController()->GetUniqueID());
-				
+					
 				
 			} else {
 				TimeManager::Instance()->SetTempCurSnap();
