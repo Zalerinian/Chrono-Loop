@@ -31,6 +31,7 @@
 #include "Actions/MainMenuBT.h"
 #include "Core/Level.h"
 #include "Common/Logger.h"
+#include "Particles\ParticleSystem.h"
 //#include "Rendering/TextureManager.h"
 
 #define _CRTDBG_MAP_ALLOC
@@ -48,7 +49,7 @@ LPCTSTR WndClassName = L"ChronoWindow";
 HINSTANCE hInst;
 bool VREnabled = false;
 
-const wchar_t* _basePath = L"../Resources/audio/";
+const wchar_t* _basePath = L"../Resources/Soundbanks/";
 const wchar_t* _initSB = L"Init.bnk";
 const wchar_t* _aSB = L"Test_Soundbank.bnk";
 
@@ -574,14 +575,15 @@ void Update() {
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_initSB)));
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
 
-	//Temp Camera OBJ
-	Transform camTrans;
-	BaseObject camObj("TempCam", camTrans);
 	Listener* ears = new Listener();
-	camObj.AddComponent(ears);
+	Emitter* ambient = new Emitter();
+	ambient->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_TEST2);
+	ambient->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_TEST2);
+	ambient->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_TEST2);
+	ambient->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_TEST2);
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(ears, "Listener")));
-	//Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(aabbSound, "aabbS")));
-	//aabbSound->Play();
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(ambient, "ambiance")));
+	
 
 	Transform identity, transform;
 	BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("RController", identity);// new BaseObject("Controller", identity);
@@ -597,6 +599,8 @@ void Update() {
 	RightController->AddComponent(ta);
 	RightController->AddComponent(rightConCol);
 	RightController->AddComponent(tm);
+	RightController->AddComponent(ambient);
+	ambient->Play();
 	BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
 	((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
 	RightController->AddComponent(pickup);
@@ -629,31 +633,43 @@ void Update() {
 	HeadsetFollow* hfollow = new HeadsetFollow();
 	headset->AddComponent(hfollow);
 	headset->AddComponent(visibleMesh2);
+	headset->AddComponent(ears);
 	TimeManager::Instance()->AddObjectToTimeline(headset);
 
 	Physics::Instance()->mObjects.push_back(RightController);
 	Physics::Instance()->mObjects.push_back(LeftController);
 
-	matrix4 mat1 = matrix4::CreateScale(0.3f, 0.3f, 0.3f);
-	transform.SetMatrix(mat1);
-	BaseObject* PhysicsBox = Pool::Instance()->iGetObject()->Reset("aabb", transform);
-	MeshComponent *visibleMesh = new MeshComponent("../Resources/raycube.obj");
-	visibleMesh->AddTexture("../Resources/raycube.png", eTEX_DIFFUSE);
-	PhysicsBox->AddComponent(visibleMesh);
-
 	Level* L1;
 
-	while (LevelManager::GetInstance().LoadLevelAsync("../../Level1_2_5.xml", &L1) != Epoch::LM::LevelStatus::Success) {}
+	while (LevelManager::GetInstance().LoadLevelAsync("../Resources/Level1_2_6.xml", &L1) != Epoch::LM::LevelStatus::Success) {}
 	//while (LevelManager::GetInstance().LoadLevelAsync("../Resources/collider.xml", &L1) != Epoch::LM::LevelStatus::Success) {}
 	L1->Initialize(headset, LeftController, RightController);
 	L1->AddObject(RightController);
 	L1->AddObject(headset);
 	L1->AddObject(LeftController);
-	L1->AddObject(PhysicsBox);
 	//LevelManager::GetInstance().LoadLevelAsync("../Resources/LEVEL1/collider.xml", &L1);
 	LevelManager::GetInstance().SetCurrentLevel(L1);
 	L1->CallStart();
 	
+	//Enter effect
+	Patrick* emit = new Patrick(500, 250, 2, vec4f(8, 0, -4, 1));
+	emit->SetTexture("../Resources/BasicRectP.png");
+	emit->SetParticle(new Particle(200, 1.25 / 2.0, .15 / 2.0, vec4f(), vec4f(.2, .2, 1, 0), vec4f(0, 1, .2, 0)));
+	emit->y1 = 8;
+	emit->y2 = 12;
+	ParticleSystem::Instance()->AddEmitter(emit);
+
+	emit = new Patrick(500, 150, 1, vec4f(8, 0, -4, 1));
+	emit->SetTexture("../Resources/BasicCircleP.png");
+	emit->SetParticle(new Particle(1000, .25 / 2.0, .05 / 2.0, vec4f(), vec4f(.5, 0, .25, 0), vec4f(.2, .8, .5, 0)));
+	emit->y1 = 1;
+	emit->y2 = 5;
+	ParticleSystem::Instance()->AddEmitter(emit);
+
+	//ParticleEmitter * emitt = new ParticleEmitter(-1, 2000, 20, vec4f());
+	//emitt->SetTexture("../Resources/BasicCircleP.png");
+	//emitt->SetParticle(new Particle(500, .25, .15, vec4f(), vec4f(0, 0, 0, 0), vec4f(1, 1, 1, 1)));
+	//ParticleSystem::Instance()->AddEmitter(emitt);
 
 	//// Test for TextureManager::iAddTexture2D. Works nicely!
 	//D3D11_TEXTURE2D_DESC AddedTextureDesc;
@@ -699,7 +715,7 @@ void Update() {
 			//SystemLogger::GetLog() << "[Debug] Regular Update " << std::endl;
 			UpdateTime();
 			LevelManager::GetInstance().GetCurrentLevel()->Update();
-			
+			ParticleSystem::Instance()->Update();
 			TimeManager::Instance()->Update(deltaTime);
 			Renderer::Instance()->Render(deltaTime); 
 			while (fixedTime >= FIXED_UPDATE_INTERVAL) {
@@ -713,6 +729,7 @@ void Update() {
 		}
 	}
 	Messager::Destroy();
+	ParticleSystem::Destroy();
 
 }
 

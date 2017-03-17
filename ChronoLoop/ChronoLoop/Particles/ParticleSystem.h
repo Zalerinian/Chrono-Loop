@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "ParticleComponents.h"
-#include "Rendering\InputLayoutManager.h"
+#include "../Rendering\InputLayoutManager.h"
 
 struct ID3D11GeometryShader;
 struct ID3D11VertexShader;

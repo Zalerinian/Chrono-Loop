@@ -26,7 +26,6 @@ namespace Epoch
 		~Physics() {};
 
 	public:
-		bool mRayCasting;
 		std::vector< BaseObject*> mObjects;
 
 		static Physics* Instance();

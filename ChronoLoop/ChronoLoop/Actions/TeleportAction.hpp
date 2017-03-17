@@ -13,8 +13,8 @@
 namespace Epoch {
 
 	struct TeleportAction : public CodeComponent {
-		MeshComponent *mPlaneMesh, *mWallsMesh, *mBlockMesh, *mExitMesh;
-		BaseObject *mPlaneObject, *mWallsObject, *mBlockObject, *mExitObject;
+		MeshComponent *mPlaneMesh, *mWallsMesh, *mBlockMesh, *mExitMesh, *mServerMesh;
+		BaseObject *mPlaneObject, *mWallsObject, *mBlockObject, *mExitObject, *mServerObject;
 		ControllerType mControllerRole = eControllerType_Primary;
 		Level* cLevel = nullptr;
 		TeleportAction(ControllerType _t) { mControllerRole = _t; };
@@ -25,10 +25,12 @@ namespace Epoch {
 			mWallsObject  = cLevel->FindObjectWithName("Walls");
 			mBlockObject  = cLevel->FindObjectWithName("Door1");
 			mExitObject   = cLevel->FindObjectWithName("Door2");
+			mServerObject = cLevel->FindObjectWithName("Servers");
 			mPlaneMesh    = (MeshComponent*)mPlaneObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			mWallsMesh    = (MeshComponent*)mWallsObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			mBlockMesh    = (MeshComponent*)mBlockObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			mExitMesh     = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			mServerMesh = (MeshComponent*)mServerObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 		}
 
 		virtual void Update() {
@@ -50,11 +52,11 @@ namespace Epoch {
 			if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad)) {
 				if (!left && !right) {
 					vec4f forward(0, 0, 1, 0);
-					forward *= mObject->GetTransform().GetMatrix();
-					MeshComponent* meshes[] = { mWallsMesh, mBlockMesh, mExitMesh };
-					BaseObject* objects[] = { mWallsObject, mBlockObject, mExitObject };
+					MeshComponent* meshes[] = { mWallsMesh, mBlockMesh, mExitMesh, mServerMesh };
+					BaseObject* objects[] = { mWallsObject, mBlockObject, mExitObject, mServerObject };
 					float meshTime = 0, wallTime = FLT_MAX;
 					for (int i = 0; i < ARRAYSIZE(meshes); ++i) {
+						forward.Set(0, 0, 1, 0);
 						matrix4 inverse = (mat * objects[i]->GetTransform().GetMatrix().Invert());
 						vec4f meshPos = inverse.Position;
 						forward *= inverse;
@@ -87,22 +89,6 @@ namespace Epoch {
 							}
 						}
 					}
-				}
-				if (left || right) {
-
-					TimeManager::Instance()->RewindTimeline(
-						TimeManager::Instance()->GetTempCurSnap(),
-						cLevel->GetHeadset()->GetUniqueID(),
-						cLevel->GetRightController()->GetUniqueID(),
-						cLevel->GetLeftController()->GetUniqueID());
-
-					VRInputManager::GetInstance().RewindInputTimeline(
-						TimeManager::Instance()->GetTempCurSnap(),
-						cLevel->GetRightController()->GetUniqueID(),
-						cLevel->GetLeftController()->GetUniqueID());
-
-					cLevel->GetLeftTimeManinpulator()->makeTimePaused(false);
-					cLevel->GetRightTimeManinpulator()->makeTimePaused(false);
 				}
 			}
 		}

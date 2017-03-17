@@ -14,6 +14,7 @@ namespace Epoch
 
 		BaseObject *Block = nullptr, *Exit = nullptr;
 		CubeCollider* blockCube, *exitCube;
+		vec4f blockend, exitend;
 		Level* cLevel;
 
 		virtual void Start()
@@ -24,6 +25,8 @@ namespace Epoch
 
 			blockCube = (CubeCollider*)Block->mComponents[eCOMPONENT_COLLIDER][0];
 			exitCube = (CubeCollider*)Exit->mComponents[eCOMPONENT_COLLIDER][0];
+			blockend = blockCube->GetPos() - vec4f(0, 2.6, 0, 1);
+			exitend = exitCube->GetPos() + vec4f(0, 2.6, 0, 1);
 		}
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time)
@@ -42,10 +45,10 @@ namespace Epoch
 					_col.mTotalForce = tForce;
 					_col.mVelocity = vel;
 					_col.mAcceleration = vel / _time;
-					blockCube->SetPos(vec4f(0, -1, 0, 1));
+					blockCube->SetPos(blockend);
 					blockCube->mShouldMove = false;
 
-					exitCube->SetPos(vec4f(0, 2, 0, 1));
+					exitCube->SetPos(exitend);
 					exitCube->mShouldMove = false;
 				}
 			}

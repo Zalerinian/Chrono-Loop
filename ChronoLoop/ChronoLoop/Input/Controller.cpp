@@ -97,7 +97,7 @@ namespace Epoch {
 
 	void Controller::TriggerHapticPulse(unsigned short duration_micro_sec, vr::EVRButtonId buttonId) {
 			int axisId = (int)buttonId - (int)vr::k_EButton_Axis0;
-			VRInputManager::GetInstance().GetVRSystem()->TriggerHapticPulse(mIndex, (uint32_t)axisId, duration_micro_sec);
+			VRInputManager::GetInstance().GetVRSystem()->TriggerHapticPulse(mIndex, axisId, duration_micro_sec);
 	}
 
 #pragma region Private Functions

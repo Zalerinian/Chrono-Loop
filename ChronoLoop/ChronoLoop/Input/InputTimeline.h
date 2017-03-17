@@ -15,10 +15,11 @@ namespace Epoch {
 			//-1:Down 0:Press 1:Up
 			short mButtonState;
 			vec3f mVelocity;
+			bool mPrimary;
 		};
 		struct InputNode {
-			InputNode* mNext;
-			InputNode* mPrev;
+			InputNode* mNext = nullptr;
+			InputNode* mPrev = nullptr;
 			InputData mData;
 		};
 	private:
