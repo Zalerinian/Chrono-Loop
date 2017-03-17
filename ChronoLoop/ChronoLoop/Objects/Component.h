@@ -163,7 +163,6 @@ namespace Epoch
 	public:
 		CubeCollider() {}
 		CubeCollider(BaseObject* _obj, bool _move, bool _trigger, vec3f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec3f _min, vec3f _max);
-		CubeCollider(vec3f _min, vec3f _max) { mMin = _min; mMax = _max; };
 		vec3f mMin, mMax, mMinOffset, mMaxOffset;
 		RenderShape* mShape;
 		GhostList<matrix4>::GhostNode* mNode = nullptr;
@@ -177,7 +176,6 @@ namespace Epoch
 	public:
 		OrientedCubeCollider() {}
 		OrientedCubeCollider(BaseObject* _obj, bool _move, bool _trigger, vec3f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _xRadius, float _yRadius, float _zRadius);
-		vec3f mCenter;
 		float mWidth, mHeight, mDepth;
 		vec3f mAxis[3];
 		virtual void SetPos(const vec3f& _newPos);
