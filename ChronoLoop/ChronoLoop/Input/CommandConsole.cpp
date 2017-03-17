@@ -243,7 +243,7 @@ namespace Epoch
 			float _deltaTime = TimeManager::Instance()->GetDeltaTime();
 			//SystemLogger::GetLog() << _deltaTime << std::endl;
 			sInstance->mFrameTime += _deltaTime;
-			if (sInstance->mFrameTime > .25f)
+			if (sInstance->mFrameTime > .4f)
 			{
 				sInstance->tempFps += (int)(1000.0f / (_deltaTime * 1000));
 				sInstance->mFrameTime = 0;
