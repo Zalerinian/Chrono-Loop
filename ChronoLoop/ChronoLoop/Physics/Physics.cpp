@@ -712,7 +712,7 @@ namespace Epoch
 			for (int i = 0; i < objs; ++i)
 			{
 				Colliders = mObjects[i]->mComponents[eCOMPONENT_COLLIDER];
-				int cols = Colliders.size();
+				int cols = (int)Colliders.size();
 				for (int x = 0; x < cols; ++x)
 				{
 					collider = (Collider*)Colliders[x];
@@ -730,7 +730,7 @@ namespace Epoch
 								if (mObjects[j] != mObjects[i])
 								{
 									otherColliders = mObjects[j]->mComponents[eCOMPONENT_COLLIDER];
-									int othercols = otherColliders.size();
+									int othercols = (int)otherColliders.size();
 									for (int k = 0; k < othercols; ++k)
 									{
 										otherCol = (Collider*)otherColliders[k];
