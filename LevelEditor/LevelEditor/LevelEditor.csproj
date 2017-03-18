@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Changes.cs" />
+    <Compile Include="Components\BaseObject.cs" />
     <Compile Include="Components\Colliders\BoxCollider.cs" />
     <Compile Include="Components\Colliders\ButtonCollider.cs" />
     <Compile Include="Components\Colliders\Collider.cs" />
@@ -114,6 +115,12 @@
     <Compile Include="Controls\NoFocusButton.Designer.cs">
       <DependentUpon>NoFocusButton.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\LevelSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LevelSettingsForm.Designer.cs">
+      <DependentUpon>LevelSettingsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\TestPositionForm.cs">
@@ -122,10 +129,14 @@
     <Compile Include="Forms\TestPositionForm.Designer.cs">
       <DependentUpon>TestPositionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Settings.cs" />
     <Compile Include="ToolObject.cs" />
     <Compile Include="ToolObjectColor.cs" />
     <EmbeddedResource Include="Forms\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LevelSettingsForm.resx">
+      <DependentUpon>LevelSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

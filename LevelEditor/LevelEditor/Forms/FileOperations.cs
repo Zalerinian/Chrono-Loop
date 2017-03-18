@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using System.Xml;
 
 namespace LevelEditor {
-    public partial class Editor : Form {
+    public partial class Editor {
         private void saveLevel(string file) {
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;
@@ -15,6 +15,12 @@ namespace LevelEditor {
             using (XmlWriter writer = XmlWriter.Create(file, settings)) {
                 writer.WriteStartDocument();
                 writer.WriteStartElement("Level");
+                //*** Level Settings ***//
+                writer.WriteStartElement("Settings");
+                writer.WriteElementString("StartPos", mStartPos.X + "," + mStartPos.Y + "," + mStartPos.Z);
+                writer.WriteElementString("StartRot", mStartRot.X + "," + mStartRot.Y + "," + mStartRot.Z);
+                writer.WriteEndElement();
+                //*** END Level Settings ***//
                 foreach (ToolObject tObj in higharchy) {
                     writer.WriteStartElement("Object");
                     writer.WriteElementString("Name", tObj.Name);
@@ -153,6 +159,18 @@ namespace LevelEditor {
                                     break;
                                 case XmlNodeType.Text:
                                     switch (element) {
+                                        case "StartPos":
+                                            parts = reader.Value.Split(',');
+                                            mStartPos.X = float.Parse(parts[0]);
+                                            mStartPos.Y = float.Parse(parts[1]);
+                                            mStartPos.Z = float.Parse(parts[2]);
+                                            break;
+                                        case "StartRot":
+                                            parts = reader.Value.Split(',');
+                                            mStartRot.X = float.Parse(parts[0]);
+                                            mStartRot.Y = float.Parse(parts[1]);
+                                            mStartRot.Z = float.Parse(parts[2]);
+                                            break;
                                         case "Name":
                                             name = reader.Value;
                                             break;
