@@ -46,6 +46,7 @@ namespace Epoch {
 		KeyboardInput::DestroyInstance();
 		CommandConsole::DestroyInstance();
 		MeshCache::DestroyInstance();
+		LevelManager::GetInstance().Destroy();
 		LevelManager::DestroyInstance();
 		VertexBufferManager::Shutdown();
 		IndexBufferManager::DestroyInstance();

@@ -167,6 +167,7 @@ namespace Epoch
 		RenderShape* mShape;
 		GhostList<matrix4>::GhostNode* mNode = nullptr;
 		virtual void Update();
+		virtual void Destroy();
 
 		virtual void SetPos(const vec3f& _newPos);
 	};

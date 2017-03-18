@@ -101,7 +101,6 @@ E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\en
 E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\fieldGen.png
 E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\floor.png
 E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\grey.png
-E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\skybox.dds
 E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\wallTextureM.png
 E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\wallTextureS.png
 E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\AxisGizmo.obj
@@ -251,3 +250,5 @@ C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\obj\Debu
 C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\default.dds
 G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\default.dds
 C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\obj\Debug\LevelEditor.TestPositionForm.resources
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\default.dds
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.TestPositionForm.resources

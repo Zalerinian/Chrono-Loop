@@ -391,9 +391,9 @@ namespace Epoch {
 					if (colliderType == "OBB")
 					{
 						physical = true;
-						vec4f offset = vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1) / 2;
-						vec4f min = colliderPosition - offset;
-						vec4f max = colliderPosition + offset;
+						vec3f offset = vec3f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z) / 2;
+						vec3f min = colliderPosition - offset;
+						vec3f max = colliderPosition + offset;
 						CubeCollider* col = new CubeCollider(obj, canMove, trigger, gravity, mass, elasticity, staticF, kineticF, drag, min, max);
 						obj->AddComponent(col);
 					}
@@ -408,9 +408,9 @@ namespace Epoch {
 					{
 						physical = true;
 
-						vec4f offset = vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1) / 2;
-						vec4f min = colliderPosition - offset;
-						vec4f max = colliderPosition + offset;
+						vec3f offset = vec3f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z) / 2;
+						vec3f min = colliderPosition - offset;
+						vec3f max = colliderPosition + offset;
 						ButtonCollider* col = new ButtonCollider(obj, min, max, mass, normF, pushNorm);
 						obj->AddComponent(col);
 					}
