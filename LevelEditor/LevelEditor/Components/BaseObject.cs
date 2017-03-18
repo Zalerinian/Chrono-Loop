@@ -10,6 +10,7 @@ namespace LevelEditor
 
     class BaseObject
     {
+        private const bool ImplementHierarchy = false;
 
         protected List<Component> mComponents;
         protected BaseObject mParent = null;
@@ -23,6 +24,18 @@ namespace LevelEditor
         public List<Component> GetComponents()
         {
             return mComponents;
+        }
+
+        public Matrix GetMatrix()
+        {
+            if(mParent != null && ImplementHierarchy)
+            {
+                return ((TransformComponent)mComponents[0]).CreateMatrix() * mParent.GetMatrix();
+            }
+            else
+            {
+                return ((TransformComponent)mComponents[0]).CreateMatrix();
+            }
         }
 
         

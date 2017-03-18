@@ -13,7 +13,7 @@ namespace LevelEditor
     public partial class Editor : Form
     {
 
-        public const float RADIANS_TO_DEGREES = ((180.0f / 3.14f));
+        public const float RADIANS_TO_DEGREES = ((180.0f / 3.14f)); 
         public const float DEGREES_TO_RADIANS = (1 / 180.0f * 3.14f);
         private Microsoft.DirectX.Direct3D.Device device;
         private float angleX, angleY, rotSpeed, dragSpeed;

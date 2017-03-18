@@ -38,9 +38,9 @@ namespace LevelEditor.Forms
 
         public void SetPosition(Vector3 _pos)
         {
-            nRX.Value = (decimal)_pos.X;
-            nRY.Value = (decimal)_pos.Y;
-            nRZ.Value = (decimal)_pos.Z;
+            nPX.Value = (decimal)_pos.X;
+            nPY.Value = (decimal)_pos.Y;
+            nPZ.Value = (decimal)_pos.Z;
         }
 
         public void SetRotation(Vector3 _rot)

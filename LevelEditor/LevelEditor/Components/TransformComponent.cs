@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Diagnostics;
+using Microsoft.DirectX;
 
 namespace LevelEditor
 {
     public class TransformComponent : Component
     {
+        private const float D2R = ((1 / 180.0f) * 3.14f);
+        private const float R2D = (180 / 3.14f);
         protected Label mLbName, mLbPosition, mLbRotation, mLbScale;
         protected Label mLbPosX, mLbPosY, mLbPosZ;
         protected Label mLbRotX, mLbRotY, mLbRotZ;
@@ -128,6 +131,26 @@ namespace LevelEditor
 
             mGroupBox.Text = "Transform";
             mGroupBox.Size = mGroupBox.PreferredSize;
+        }
+
+        public Vector3 GetScaleVector()
+        {
+            return new Vector3((float)mScaleX.Value, (float)mScaleY.Value, (float)mScaleZ.Value);
+        }
+
+        public Vector3 GetPositionVector()
+        {
+            return new Vector3((float)mPosX.Value, (float)mPosY.Value, (float)mPosZ.Value);
+        }
+        
+        public Matrix CreateMatrix()
+        {
+            // Matrix multiplication order is Scale, Rotation, and then Translation.
+            Matrix mat = new Matrix();
+            mat.Scale(GetScaleVector());
+            mat.RotateYawPitchRoll((float)mRotY.Value * D2R, (float)mRotX.Value * D2R, (float)mRotZ.Value * D2R);
+            mat.Translate(GetPositionVector());
+            return mat;
         }
 
         protected override void OnMenuClick_Reset(object sender, EventArgs e)
