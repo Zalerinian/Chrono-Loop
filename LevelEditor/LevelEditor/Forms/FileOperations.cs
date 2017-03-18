@@ -18,7 +18,7 @@ namespace LevelEditor {
                 //*** Level Settings ***//
                 writer.WriteStartElement("Settings");
                 writer.WriteElementString("StartPos", mStartPos.X + "," + mStartPos.Y + "," + mStartPos.Z);
-                writer.WriteElementString("StartRot", mStartRot.X + "," + mStartRot.Y + "," + mStartRot.Z);
+                writer.WriteElementString("StartRot", (mStartRot.X * DEGREES_TO_RADIANS) + "," + (mStartRot.Y * DEGREES_TO_RADIANS) + "," + (mStartRot.Z * DEGREES_TO_RADIANS));
                 writer.WriteEndElement();
                 //*** END Level Settings ***//
                 foreach (ToolObject tObj in higharchy) {

@@ -655,6 +655,8 @@ void Update() {
 	L1->AddObject(LeftController);
 	//LevelManager::GetInstance().LoadLevelAsync("../Resources/LEVEL1/collider.xml", &L1);
 	LevelManager::GetInstance().RequestLevelChange(L1);
+	matrix4 cameraPos = matrix4::CreateTranslation(L1->GetStartPos()) * matrix4::CreateXRotation(L1->GetStartRot().x) * matrix4::CreateYRotation(L1->GetStartRot().y) * matrix4::CreateZRotation(L1->GetStartRot().z);
+	Renderer::Instance()->SetDebugCameraPosition(cameraPos);
 	L1->CallStart();
 	
 	//Enter effect

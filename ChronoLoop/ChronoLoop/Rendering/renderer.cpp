@@ -622,7 +622,7 @@ namespace Epoch {
 
 
 		if (!mVrSystem) {
-			mDebugCameraPos = matrix4::CreateYRotation(DirectX::XM_PI / 2) * matrix4::CreateTranslation(8, 2, -4);
+			mDebugCameraPos = matrix4::CreateYRotation(DirectX::XM_PI / 2) * VRInputManager::GetInstance().GetPlayerPosition();
 			mVPLeftData.projection.matrix = DirectX::XMMatrixPerspectiveFovRH(70, (float)_height / (float)_width, 0.1f, 1000);
 			mVPLeftData.view = mDebugCameraPos.Transpose().Invert();
 			mVPLeftData.projection = mVPLeftData.projection.Transpose();

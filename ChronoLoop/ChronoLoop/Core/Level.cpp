@@ -18,7 +18,7 @@
 #include "../Common/Settings.h"
 
 namespace Epoch {
-	
+
 	Level::Level() {}
 
 	Level::~Level() {
@@ -150,7 +150,7 @@ namespace Epoch {
 		}
 	}
 
-	void Level::LoadLevel(std::string _file) 
+	void Level::LoadLevel(std::string _file)
 	{
 		// Load the xml file, I put your XML in a file named test.xml
 		TiXmlDocument XMLdoc(_file.c_str());
@@ -159,6 +159,7 @@ namespace Epoch {
 		{
 			SystemLogger::GetLog() << _file.c_str() << " loaded" << std::endl;
 			mStartPosition.w = 1; // In the event a level doesn't define the start position, this is needed to mess up the matrix.
+			mStartRotation.w = 1;
 			TiXmlElement *pRoot, *pObject, *pData;
 			pRoot = XMLdoc.FirstChildElement("Level");
 			if (pRoot)
@@ -185,6 +186,18 @@ namespace Epoch {
 									s.erase(0, pos + 1);
 								}
 								SystemLogger::Debug() << "Start position: " << mStartPosition << std::endl;
+							} else if (nodeType == "StartRot") {
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									mStartRotation.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+								SystemLogger::Debug() << "Start rotation: " << mStartPosition << std::endl;
 							}
 							break;
 						default:
@@ -354,8 +367,8 @@ namespace Epoch {
 								}
 								gravity.w = 1;
 							}
-							else if(elementType == "NormalForce")
-								normF = std::strtof(pData->Value(),nullptr);
+							else if (elementType == "NormalForce")
+								normF = std::strtof(pData->Value(), nullptr);
 							else
 								codeComs.push_back(elementType);
 
@@ -367,13 +380,13 @@ namespace Epoch {
 						}
 					}
 
-					
+
 					Transform transform;
-					matrix4 mat = matrix4::CreateScale(scale.x, scale.y, scale.z) * 
-								  matrix4::CreateXRotation(rotation.x) * 
-								  matrix4::CreateYRotation(rotation.y) * 
-								  matrix4::CreateZRotation(rotation.z) * 
-								  matrix4::CreateTranslation(position.x, position.y, position.z);
+					matrix4 mat = matrix4::CreateScale(scale.x, scale.y, scale.z) *
+						matrix4::CreateXRotation(rotation.x) *
+						matrix4::CreateYRotation(rotation.y) *
+						matrix4::CreateZRotation(rotation.z) *
+						matrix4::CreateTranslation(position.x, position.y, position.z);
 					transform.SetMatrix(mat);
 					BaseObject* obj = new BaseObject(name, transform);
 
@@ -471,7 +484,7 @@ namespace Epoch {
 
 					if (canMove || obj->GetName() == "Door1" || obj->GetName() == "Door2")
 						TimeManager::Instance()->AddObjectToTimeline(obj);
-					
+
 					AddObject(obj);
 					pObject = pObject->NextSiblingElement("Object");
 				}
@@ -498,10 +511,12 @@ namespace Epoch {
 		if (_ifOn == L"ON") {
 			Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_WIREFRAME);
 			CommandConsole::Instance().DisplaySet(L"");
-		} else if (_ifOn == L"OFF") {
+		}
+		else if (_ifOn == L"OFF") {
 			Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_MAX);
 			CommandConsole::Instance().DisplaySet(L"");
-		} else {
+		}
+		else {
 			CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /WIREFRAME (ON/OFF)");
 		}
 	}

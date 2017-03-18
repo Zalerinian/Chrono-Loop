@@ -110,7 +110,7 @@ namespace Epoch {
 		GhostList<matrix4>::GhostNode* AddNode(RenderShape *_node);
 		void Render(float _deltaTime);
 
-		//Draws text in 0 to 1 space
+		inline void SetDebugCameraPosition(matrix4 _mat) { mDebugCameraPos = _mat; }
 
 		inline Microsoft::WRL::ComPtr<ID3D11Device> GetDevice() { return mDevice; }
 		inline Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetContext() { return mContext; }

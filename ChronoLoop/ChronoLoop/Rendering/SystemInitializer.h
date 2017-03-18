@@ -22,6 +22,7 @@ namespace Epoch {
 												 bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane,
 												 vr::IVRSystem* _vrsys) {
 		Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_MAX);
+		VRInputManager::Initialize(_vrsys);
 
 
 		Renderer::Instance()->iInitialize(_Window, _width, _height, _vsync, _fps, _fullscreen, _farPlane, _nearPlane, _vrsys);
@@ -29,7 +30,6 @@ namespace Epoch {
 		TimeManager::Instance();
 		InputLayoutManager::Instance();
 		TextureManager::Instance();
-		VRInputManager::Initialize(_vrsys);
 		ShaderManager::Instance();
 		Pool::Initialize();
 		Physics::Instance();
@@ -53,12 +53,12 @@ namespace Epoch {
 		Physics::Destroy();
 		Pool::DestroyInstance();
 		ShaderManager::DestroyInstance();
-		VRInputManager::DestroyInstance();
 		TextureManager::DestroyInstance();
 		InputLayoutManager::DestroyInstance();
 		TimeManager::Destroy();
 		RasterizerStateManager::DestroyInstance();
 		Renderer::DestroyInstance();
+		VRInputManager::DestroyInstance();
 		Settings::DestroyInstance();
 		return true;
 	}
