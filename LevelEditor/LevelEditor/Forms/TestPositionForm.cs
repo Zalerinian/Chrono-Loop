@@ -15,6 +15,7 @@ namespace LevelEditor
     {
 
         private TransformComponent mTransformTest;
+        private MeshComponent mMeshTest;
         private ColliderComponent mColliderTest;
         private BoxCollider mBoxTest;
         private PlaneCollider mPlaneTest;
@@ -28,12 +29,14 @@ namespace LevelEditor
             mComponents = new List<Component>(5);
 
             mTransformTest = new TransformComponent(mComponents);
+            mMeshTest = new MeshComponent(mComponents);
             mColliderTest = new ColliderComponent(mComponents);
             mBoxTest = new BoxCollider(mComponents);
             mPlaneTest = new PlaneCollider(mComponents);
             mSphereTest = new SphereCollider(mComponents);
             mButtonTest = new ButtonCollider(mComponents);
             Controls.Add(mTransformTest.GetGroupbox());
+            Controls.Add(mMeshTest.GetGroupbox());
             Controls.Add(mColliderTest.GetGroupbox());
             Controls.Add(mBoxTest.GetGroupbox());
             Controls.Add(mPlaneTest.GetGroupbox());

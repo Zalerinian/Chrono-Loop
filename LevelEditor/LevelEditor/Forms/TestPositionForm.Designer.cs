@@ -107,6 +107,13 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.gbMeshComponent = new System.Windows.Forms.GroupBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.btnFileSelect = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.gbCollider.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udKineticFriction)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udStaticFriction)).BeginInit();
@@ -143,6 +150,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown13)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown14)).BeginInit();
             this.gbTransform.SuspendLayout();
+            this.gbMeshComponent.SuspendLayout();
             this.SuspendLayout();
             // 
             // gbCollider
@@ -1051,7 +1059,7 @@
             this.gbTransform.Dock = System.Windows.Forms.DockStyle.Top;
             this.gbTransform.Location = new System.Drawing.Point(0, 844);
             this.gbTransform.Name = "gbTransform";
-            this.gbTransform.Size = new System.Drawing.Size(341, 205);
+            this.gbTransform.Size = new System.Drawing.Size(341, 151);
             this.gbTransform.TabIndex = 32;
             this.gbTransform.TabStop = false;
             this.gbTransform.Text = "[]Transform Component";
@@ -1146,12 +1154,88 @@
             this.panel6.Size = new System.Drawing.Size(228, 25);
             this.panel6.TabIndex = 11;
             // 
+            // gbMeshComponent
+            // 
+            this.gbMeshComponent.Controls.Add(this.button1);
+            this.gbMeshComponent.Controls.Add(this.btnFileSelect);
+            this.gbMeshComponent.Controls.Add(this.textBox2);
+            this.gbMeshComponent.Controls.Add(this.textBox1);
+            this.gbMeshComponent.Controls.Add(this.label20);
+            this.gbMeshComponent.Controls.Add(this.label23);
+            this.gbMeshComponent.Dock = System.Windows.Forms.DockStyle.Top;
+            this.gbMeshComponent.Location = new System.Drawing.Point(0, 995);
+            this.gbMeshComponent.Name = "gbMeshComponent";
+            this.gbMeshComponent.Size = new System.Drawing.Size(341, 151);
+            this.gbMeshComponent.TabIndex = 33;
+            this.gbMeshComponent.TabStop = false;
+            this.gbMeshComponent.Text = "[]Mesh Component";
+            this.gbMeshComponent.Visible = false;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox1.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.textBox1.Location = new System.Drawing.Point(90, 21);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(0);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(200, 24);
+            this.textBox1.TabIndex = 8;
+            this.textBox1.Text = "Mesh File...";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(6, 27);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(52, 13);
+            this.label20.TabIndex = 7;
+            this.label20.Text = "Mesh File";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(6, 56);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(75, 13);
+            this.label23.TabIndex = 1;
+            this.label23.Text = "Diffuse texture";
+            // 
+            // textBox2
+            // 
+            this.textBox2.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox2.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.textBox2.Location = new System.Drawing.Point(90, 51);
+            this.textBox2.Margin = new System.Windows.Forms.Padding(0);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(200, 24);
+            this.textBox2.TabIndex = 12;
+            this.textBox2.Text = "Texture File...";
+            // 
+            // btnFileSelect
+            // 
+            this.btnFileSelect.Location = new System.Drawing.Point(294, 50);
+            this.btnFileSelect.Name = "btnFileSelect";
+            this.btnFileSelect.Size = new System.Drawing.Size(26, 26);
+            this.btnFileSelect.TabIndex = 13;
+            this.btnFileSelect.Text = "...";
+            this.btnFileSelect.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(294, 20);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(26, 26);
+            this.button1.TabIndex = 14;
+            this.button1.Text = "...";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
             // TestPositionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(358, 570);
+            this.Controls.Add(this.gbMeshComponent);
             this.Controls.Add(this.gbTransform);
             this.Controls.Add(this.gbButtonCollider);
             this.Controls.Add(this.gbPlaneCollider);
@@ -1206,6 +1290,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown14)).EndInit();
             this.gbTransform.ResumeLayout(false);
             this.gbTransform.PerformLayout();
+            this.gbMeshComponent.ResumeLayout(false);
+            this.gbMeshComponent.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1296,5 +1382,12 @@
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.GroupBox gbMeshComponent;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnFileSelect;
     }
 }
