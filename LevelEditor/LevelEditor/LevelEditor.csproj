@@ -91,6 +91,8 @@
     <Compile Include="Components\Colliders\SphereCollider.cs" />
     <Compile Include="Components\Component.cs" />
     <Compile Include="Components\Colliders\PlaneCollider.cs" />
+    <Compile Include="Components\MeshComponent.cs" />
+    <Compile Include="Components\TransformComponent.cs" />
     <Compile Include="Forms\FileOperations.cs">
       <SubType>Form</SubType>
     </Compile>

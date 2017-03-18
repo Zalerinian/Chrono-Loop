@@ -98,6 +98,15 @@
             this.numericUpDown12 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown13 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown14 = new System.Windows.Forms.NumericUpDown();
+            this.gbTransform = new System.Windows.Forms.GroupBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.tbName = new System.Windows.Forms.TextBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
             this.gbCollider.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udKineticFriction)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udStaticFriction)).BeginInit();
@@ -136,6 +145,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown12)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown13)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown14)).BeginInit();
+            this.gbTransform.SuspendLayout();
             this.SuspendLayout();
             // 
             // gbCollider
@@ -1052,12 +1062,100 @@
             this.numericUpDown14.Size = new System.Drawing.Size(228, 20);
             this.numericUpDown14.TabIndex = 9;
             // 
+            // gbTransform
+            // 
+            this.gbTransform.Controls.Add(this.panel3);
+            this.gbTransform.Controls.Add(this.panel2);
+            this.gbTransform.Controls.Add(this.panel1);
+            this.gbTransform.Controls.Add(this.tbName);
+            this.gbTransform.Controls.Add(this.label17);
+            this.gbTransform.Controls.Add(this.label16);
+            this.gbTransform.Controls.Add(this.label18);
+            this.gbTransform.Controls.Add(this.label19);
+            this.gbTransform.Dock = System.Windows.Forms.DockStyle.Top;
+            this.gbTransform.Location = new System.Drawing.Point(0, 844);
+            this.gbTransform.Name = "gbTransform";
+            this.gbTransform.Size = new System.Drawing.Size(341, 205);
+            this.gbTransform.TabIndex = 32;
+            this.gbTransform.TabStop = false;
+            this.gbTransform.Text = "[]Transform Component";
+            this.gbTransform.Visible = false;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(6, 120);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(34, 13);
+            this.label18.TabIndex = 2;
+            this.label18.Text = "Scale";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(6, 50);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(44, 13);
+            this.label19.TabIndex = 1;
+            this.label19.Text = "Position";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(6, 85);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(47, 13);
+            this.label16.TabIndex = 5;
+            this.label16.Text = "Rotation";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(6, 23);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(35, 13);
+            this.label17.TabIndex = 7;
+            this.label17.Text = "Name";
+            // 
+            // tbName
+            // 
+            this.tbName.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbName.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.tbName.Location = new System.Drawing.Point(90, 20);
+            this.tbName.Margin = new System.Windows.Forms.Padding(0);
+            this.tbName.Name = "tbName";
+            this.tbName.Size = new System.Drawing.Size(227, 24);
+            this.tbName.TabIndex = 8;
+            this.tbName.Text = "Placeholder Text";
+            // 
+            // panel1
+            // 
+            this.panel1.Location = new System.Drawing.Point(90, 45);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(227, 25);
+            this.panel1.TabIndex = 9;
+            // 
+            // panel2
+            // 
+            this.panel2.Location = new System.Drawing.Point(90, 80);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(227, 25);
+            this.panel2.TabIndex = 10;
+            // 
+            // panel3
+            // 
+            this.panel3.Location = new System.Drawing.Point(90, 115);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(227, 25);
+            this.panel3.TabIndex = 11;
+            // 
             // TestPositionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(358, 570);
+            this.Controls.Add(this.gbTransform);
             this.Controls.Add(this.gbButtonCollider);
             this.Controls.Add(this.gbPlaneCollider);
             this.Controls.Add(this.gbBoxCollider);
@@ -1112,6 +1210,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown12)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown13)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown14)).EndInit();
+            this.gbTransform.ResumeLayout(false);
+            this.gbTransform.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1193,5 +1293,14 @@
         private System.Windows.Forms.NumericUpDown numericUpDown10;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.GroupBox gbTransform;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.TextBox tbName;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel1;
     }
 }

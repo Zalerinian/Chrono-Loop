@@ -48,15 +48,16 @@ namespace LevelEditor
             mGroupBox.AutoSize = false;
             mMenuStrip = new ContextMenuStrip();
             mMenuItemReset = new ToolStripMenuItem("Reset", null, OnMenuClick_Reset);
+            mMenuItemDelete = new ToolStripMenuItem("Delete", null, OnMenuClick_Delete);
+            mMenuStrip.Items.Add(mMenuItemReset);
             if (_destructible)
             {
-                mMenuItemDelete = new ToolStripMenuItem("Delete", null, OnMenuClick_Delete);
+                mMenuStrip.Items.Add(mMenuItemDelete);
             }
-            mMenuStrip.Items.Add(mMenuItemReset);
-            mMenuStrip.Items.Add(mMenuItemDelete);
 
             mGroupBox.Size = new System.Drawing.Size(0, 0);
             mGroupBox.ContextMenuStrip = mMenuStrip;
+            mGroupBox.Click += OnGroupBoxClick;
         }
 
         public GroupBox GetGroupbox()
@@ -77,13 +78,18 @@ namespace LevelEditor
                 MessageBoxButtons.OK);
         }
 
+        protected virtual void OnGroupBoxClick(object sender, EventArgs e)
+        {
+            mGroupBox.FindForm().ActiveControl = null;
+        }
+
 
         protected void SetupTransformPanel(Panel _panel, int _x, int _y, int _contentWidth, Label _lx, Label _ly, Label _lz, NumericUpDown _nx, NumericUpDown _ny, NumericUpDown _nz)
         {
             _panel.AutoSize = false;
             _panel.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
             _panel.Location = new System.Drawing.Point(_x, _y);
-            _panel.Size = new System.Drawing.Size(_contentWidth - _panel.Left, 25);
+            _panel.Size = new System.Drawing.Size(_contentWidth - _panel.Left, 20);
 
             _lx.Text = "X";
             _lx.Size = new System.Drawing.Size(14, 16);
