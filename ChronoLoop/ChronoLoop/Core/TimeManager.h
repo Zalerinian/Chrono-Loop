@@ -2,6 +2,7 @@
 #include <chrono>
 #include <vector>
 #include "../Common/Interpolator.h"
+#include "../Input/Controller.h"
 #include <unordered_map>
 #include <bitset>
 #define RecordingRate .1f // 1/10th of a second in milliseconds 
@@ -29,6 +30,7 @@ namespace Epoch {
 		unsigned int mLevelTime = 0;
 		bool mRewindMakeClone = false;
 		bool mShouldUpdateInterpolators = false;
+		bool mShouldPulse = false;
 		int mtempCurSnapFrame = 0;
 		std::vector<BaseObject*>mClones;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneInterpolators;
@@ -39,7 +41,7 @@ namespace Epoch {
 		//Pass in baseobject id to get bitset location
 		std::unordered_map<unsigned short, unsigned int>mCloneTextures;
 
-		//Timeline* GetTimeLine();
+		
 
 		TimeManager();
 		~TimeManager();
@@ -67,8 +69,11 @@ namespace Epoch {
 		Interpolator<matrix4>* GetCloneInterpolator(unsigned short _id);
 		Interpolator<matrix4>* GetObjectInterpolator(unsigned short _id);
 		std::vector<BaseObject*>& GetClonesVec() { return mClones; };
+		//DONT GET RID OF THIS PLZ
+		Timeline* GetTimeLine() { return mTimeline; };
 		std::string GetNextTexture();
 		int GetTempCurSnap() { return mtempCurSnapFrame; };
+		bool GetShouldPulse() { return mShouldPulse; };
 		void SetTempCurSnap() { mtempCurSnapFrame = GetCurrentSnapFrame(); };
 		unsigned int GetTotalSnapsmade();
 		//Go back into time. Send in dest frame and send in player headset and conrollers id

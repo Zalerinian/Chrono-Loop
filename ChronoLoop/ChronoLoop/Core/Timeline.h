@@ -64,7 +64,7 @@ namespace Epoch {
 	class Timeline {
 		//Where we are at in the timeline
 		unsigned int mCurrentGameTimeIndx = 0;
-		float mObjectInterpolationTime = 0.35f;
+		float mObjectInterpolationTime = 0.20f;
 		std::vector<unsigned int> mSnaptimes;
 		std::unordered_map<unsigned int, Snapshot*> mSnapshots;		//The key will be the time they were taken (mSnapTimes)
 		std::unordered_map<unsigned short, BaseObject*> mLiveObjects;

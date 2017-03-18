@@ -219,7 +219,7 @@ namespace Epoch {
 			Snapshot* _fromShot = mSnapshots[mSnaptimes[_fromSnapTime]];
 			Snapshot* _toShot = mSnapshots[mSnaptimes[_toSnapTime]];
 			for (std::pair<unsigned short, Epoch::BaseObject*> it : mLiveObjects) {
-				if (it.second->GetName() != "RController" && it.second->GetName() != "LController") {
+				if (it.second->GetName().find("Controller") == std::string::npos) { //TODO RYAN: TEMPORARY FIX FOR INTERPOLATION
 					objInterp = TimeManager::Instance()->GetObjectInterpolator(it.first);
 					if (_fromShot->mSnapinfos.find(it.first) != _fromShot->mSnapinfos.end() && _toShot->mSnapinfos.find(it.first) != _toShot->mSnapinfos.end()) {
 						SnapInfo* _fromSnap = _fromShot->mSnapinfos[it.first];

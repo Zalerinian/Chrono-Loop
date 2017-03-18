@@ -97,7 +97,8 @@ namespace Epoch {
 			if (_obj != nullptr)
 			{
 				mTimeline->AddBaseObject(_obj, _obj->GetUniqueID());
-				if (_obj->GetName() != "RController"  && _obj->GetName() != "LController") {
+				//Level* templvl = LevelManager::GetInstance().GetCurrentLevel();
+				if (_obj->GetName().find("Controller") == std::string::npos) { //TODO RYAN: TEMPORARY FIX FOR INTERPOLATION
 					instanceTimemanager->AddInterpolatorToObject(_obj);
 				}
 			}
@@ -227,7 +228,7 @@ namespace Epoch {
 					TimeManipulation* left = LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManinpulator();
 					TimeManipulation* right = LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManinpulator();
 					if (left) {
-						SystemLogger::GetLog() << "LeftController returned " << left->GetTexture(i) << std::endl;
+						SystemLogger::GetLog() << "Left Controller returned " << left->GetTexture(i) << std::endl;
 						return left->GetTexture(i);
 					} else if (right) {
 						SystemLogger::GetLog() << "Right Controller returned " << right->GetTexture(i) << std::endl;
@@ -380,7 +381,7 @@ namespace Epoch {
 			}
 		}
 		void TimeManager::BrowseTimeline(int _gesture, int _frameRewind) {
-
+			
 			if (mShouldUpdateInterpolators) {
 				for (auto it : mObjectInterpolators)
 				{
@@ -402,21 +403,16 @@ namespace Epoch {
 				return;
 			}
 
-			if ((unsigned int)mtempCurSnapFrame > mTimeline->GetCurrentGameTimeIndx())
-				return;
-
-
 			if ((mtempCurSnapFrame != 0 && _gesture == -1) || (mtempCurSnapFrame != temp && _gesture == 1)) {
 				int placeHolder = mtempCurSnapFrame;
 				mtempCurSnapFrame -= _frameRewind;
-
 				mTimeline->PrepareAllObjectInterpolators(placeHolder, mtempCurSnapFrame);
 				mShouldUpdateInterpolators = true;
-				//instanceTimemanager->MoveAllObjectExceptPlayer(
-				//	mtempCurSnapFrame,
-				//	LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetUniqueID(),
-				//	LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueID(),
-				//	LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueID());
+				mShouldPulse = true;
+			}
+			else {
+				mShouldPulse = false;
+
 			}
 
 		

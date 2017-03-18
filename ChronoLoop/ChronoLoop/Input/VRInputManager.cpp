@@ -238,24 +238,4 @@ namespace Epoch {
 		}
 		return nullptr;
 	}
-
-	void VIM::CheckGesters() {
-		//Time Gester
-		if (LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManinpulator()->isTimePaused() || LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManinpulator()->isTimePaused()) {
-			int GestureCheck;
-			GestureCheck = mRightController.CheckGesture();
-			TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
-			//Shake right controller
-			if (GestureCheck == 1) {
-				mRightController.TriggerHapticPulse(400, vr::k_EButton_Axis0);
-			}
-			GestureCheck = mLeftController.CheckGesture();
-			if (GestureCheck == 1) {
-				mLeftController.TriggerHapticPulse(400, vr::k_EButton_Axis0);
-			}
-			TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
-		}
-	}
-
-
 }
