@@ -13,8 +13,6 @@ namespace LevelEditor
     public partial class Editor : Form
     {
 
-        enum DataSet { Object, BoxCollider, SphereCollider, PlaneCollier, ButtonCollider };
-
         private Microsoft.DirectX.Direct3D.Device device;
         private float angleX, angleY, rotSpeed, dragSpeed;
         private Microsoft.DirectX.DirectInput.Device keyb;
@@ -37,7 +35,6 @@ namespace LevelEditor
         // Variables added by Drew
         private string mCurrentFilename = string.Empty;
         private bool mCurrentFileChanged = false;
-        private DataSet mDataset = DataSet.Object;
         private TestPositionForm mForm;
 
 
@@ -59,15 +56,6 @@ namespace LevelEditor
             }
         }
 
-        DataSet VisibileData {
-            get {
-                return mDataset;
-            }
-            set {
-                mDataset = value;
-                //UpdateDataVisibility();
-            }
-        }
 
         public Editor()
         {
@@ -92,7 +80,7 @@ namespace LevelEditor
             splitContainer1.BorderStyle = BorderStyle.None;
             splitContainer1.SplitterWidth = 1;
             splitContainer2.BorderStyle = BorderStyle.None;
-            splitContainer2.SplitterWidth = 1;
+            splitContainer2.SplitterWidth = 8;
             fpsTimer.Start();
             rotSpeed = 0.005f;
             dragSpeed = 2.0f;
@@ -1019,9 +1007,10 @@ namespace LevelEditor
 
         public void SetFileEdited(bool _edited) {
             if(_edited && !mCurrentFileChanged) {
-                Text = Text + "*";
+                SetFilepath(mCurrentFilename);
+                Text += "*";
             } else if(!_edited && mCurrentFileChanged) {
-                Text = Text.Substring(0, Text.Length - 1);
+                SetFilepath(mCurrentFilename);
             }
             mCurrentFileChanged = _edited;
         }
