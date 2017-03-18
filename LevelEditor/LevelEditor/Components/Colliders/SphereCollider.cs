@@ -71,14 +71,14 @@ namespace LevelEditor
             mLbX.TabIndex = 31;
 
             mLbPosition.AutoSize = true;
-            mLbPosition.Location = new System.Drawing.Point(12, 49 + _yOffset);
+            mLbPosition.Location = new System.Drawing.Point(6, 49 + _yOffset);
             mLbPosition.Name = "mLbNormal";
             mLbPosition.Size = new System.Drawing.Size(40, 13);
             mLbPosition.TabIndex = 11;
             mLbPosition.Text = "Position";
 
             mLbRadius.AutoSize = true;
-            mLbRadius.Location = new System.Drawing.Point(12, 19 + _yOffset);
+            mLbRadius.Location = new System.Drawing.Point(6, 19 + _yOffset);
             mLbRadius.Name = "mLbOffset";
             mLbRadius.Size = new System.Drawing.Size(35, 13);
             mLbRadius.TabIndex = 10;

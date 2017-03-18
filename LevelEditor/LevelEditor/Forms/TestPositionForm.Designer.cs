@@ -91,11 +91,8 @@
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
-            this.numericUpDown10 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown11 = new System.Windows.Forms.NumericUpDown();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
-            this.numericUpDown12 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown13 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown14 = new System.Windows.Forms.NumericUpDown();
             this.gbTransform = new System.Windows.Forms.GroupBox();
@@ -107,6 +104,9 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.panel6 = new System.Windows.Forms.Panel();
             this.gbCollider.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udKineticFriction)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udStaticFriction)).BeginInit();
@@ -140,9 +140,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pudMass)).BeginInit();
             this.gbButtonCollider.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown10)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown11)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown12)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown13)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown14)).BeginInit();
             this.gbTransform.SuspendLayout();
@@ -963,13 +960,13 @@
             // 
             // gbButtonCollider
             // 
+            this.gbButtonCollider.Controls.Add(this.panel6);
+            this.gbButtonCollider.Controls.Add(this.panel5);
+            this.gbButtonCollider.Controls.Add(this.panel4);
             this.gbButtonCollider.Controls.Add(this.numericUpDown14);
             this.gbButtonCollider.Controls.Add(this.numericUpDown13);
-            this.gbButtonCollider.Controls.Add(this.numericUpDown12);
             this.gbButtonCollider.Controls.Add(this.label15);
             this.gbButtonCollider.Controls.Add(this.label14);
-            this.gbButtonCollider.Controls.Add(this.numericUpDown11);
-            this.gbButtonCollider.Controls.Add(this.numericUpDown10);
             this.gbButtonCollider.Controls.Add(this.label13);
             this.gbButtonCollider.Controls.Add(this.label12);
             this.gbButtonCollider.Controls.Add(this.label11);
@@ -985,7 +982,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(7, 105);
+            this.label11.Location = new System.Drawing.Point(6, 119);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(32, 13);
             this.label11.TabIndex = 0;
@@ -994,7 +991,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(6, 27);
+            this.label12.Location = new System.Drawing.Point(6, 25);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(44, 13);
             this.label12.TabIndex = 1;
@@ -1003,30 +1000,16 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(6, 53);
+            this.label13.Location = new System.Drawing.Point(6, 55);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(34, 13);
             this.label13.TabIndex = 2;
             this.label13.Text = "Scale";
             // 
-            // numericUpDown10
-            // 
-            this.numericUpDown10.Location = new System.Drawing.Point(90, 25);
-            this.numericUpDown10.Name = "numericUpDown10";
-            this.numericUpDown10.Size = new System.Drawing.Size(228, 20);
-            this.numericUpDown10.TabIndex = 3;
-            // 
-            // numericUpDown11
-            // 
-            this.numericUpDown11.Location = new System.Drawing.Point(91, 51);
-            this.numericUpDown11.Name = "numericUpDown11";
-            this.numericUpDown11.Size = new System.Drawing.Size(228, 20);
-            this.numericUpDown11.TabIndex = 4;
-            // 
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(7, 79);
+            this.label14.Location = new System.Drawing.Point(6, 85);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(67, 13);
             this.label14.TabIndex = 5;
@@ -1035,29 +1018,22 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(7, 131);
+            this.label15.Location = new System.Drawing.Point(6, 144);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(70, 13);
             this.label15.TabIndex = 6;
             this.label15.Text = "Normal Force";
             // 
-            // numericUpDown12
-            // 
-            this.numericUpDown12.Location = new System.Drawing.Point(90, 77);
-            this.numericUpDown12.Name = "numericUpDown12";
-            this.numericUpDown12.Size = new System.Drawing.Size(227, 20);
-            this.numericUpDown12.TabIndex = 7;
-            // 
             // numericUpDown13
             // 
-            this.numericUpDown13.Location = new System.Drawing.Point(90, 103);
+            this.numericUpDown13.Location = new System.Drawing.Point(90, 115);
             this.numericUpDown13.Name = "numericUpDown13";
             this.numericUpDown13.Size = new System.Drawing.Size(228, 20);
             this.numericUpDown13.TabIndex = 8;
             // 
             // numericUpDown14
             // 
-            this.numericUpDown14.Location = new System.Drawing.Point(91, 129);
+            this.numericUpDown14.Location = new System.Drawing.Point(90, 140);
             this.numericUpDown14.Name = "numericUpDown14";
             this.numericUpDown14.Size = new System.Drawing.Size(228, 20);
             this.numericUpDown14.TabIndex = 9;
@@ -1149,6 +1125,27 @@
             this.panel3.Size = new System.Drawing.Size(227, 25);
             this.panel3.TabIndex = 11;
             // 
+            // panel4
+            // 
+            this.panel4.Location = new System.Drawing.Point(90, 20);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(228, 25);
+            this.panel4.TabIndex = 10;
+            // 
+            // panel5
+            // 
+            this.panel5.Location = new System.Drawing.Point(90, 50);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(228, 25);
+            this.panel5.TabIndex = 11;
+            // 
+            // panel6
+            // 
+            this.panel6.Location = new System.Drawing.Point(90, 80);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(228, 25);
+            this.panel6.TabIndex = 11;
+            // 
             // TestPositionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1205,9 +1202,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pudMass)).EndInit();
             this.gbButtonCollider.ResumeLayout(false);
             this.gbButtonCollider.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown10)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown11)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown12)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown13)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown14)).EndInit();
             this.gbTransform.ResumeLayout(false);
@@ -1286,11 +1280,8 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.NumericUpDown numericUpDown14;
         private System.Windows.Forms.NumericUpDown numericUpDown13;
-        private System.Windows.Forms.NumericUpDown numericUpDown12;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.NumericUpDown numericUpDown11;
-        private System.Windows.Forms.NumericUpDown numericUpDown10;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.GroupBox gbTransform;
@@ -1302,5 +1293,8 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Panel panel4;
     }
 }

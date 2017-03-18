@@ -76,7 +76,7 @@ namespace LevelEditor
 
             // Numeric Up-Downs
             mMass.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
-            mMass.Location = new System.Drawing.Point(90, 103 + _yOffset);
+            mMass.Location = new System.Drawing.Point(90, 115 + _yOffset);
             mMass.Name = "offset";
             mMass.Size = new System.Drawing.Size(ContentWidth - mMass.Left, 25);
             mMass.TabIndex = 45;
@@ -86,7 +86,7 @@ namespace LevelEditor
             mMass.DecimalPlaces = 2;
 
             mForce.Anchor = (AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right);
-            mForce.Location = new System.Drawing.Point(90, 129 + _yOffset);
+            mForce.Location = new System.Drawing.Point(90, 140 + _yOffset);
             mForce.Name = "mForce";
             mForce.Size = new System.Drawing.Size(ContentWidth - mForce.Left, 25);
             mForce.Increment = new decimal(0.1);
@@ -111,7 +111,7 @@ namespace LevelEditor
             mLbNX.Name = "mLbNX";
 
             mLbPosition.AutoSize = true;
-            mLbPosition.Location = new System.Drawing.Point(6, 20 + _yOffset);
+            mLbPosition.Location = new System.Drawing.Point(6, 25 + _yOffset);
             mLbPosition.Name = "mLbPosition";
             mLbPosition.Size = new System.Drawing.Size(35, 13);
             mLbPosition.TabIndex = 10;
@@ -125,28 +125,28 @@ namespace LevelEditor
             mLbScale.Text = "Scale";
 
             mLbNormal.AutoSize = true;
-            mLbNormal.Location = new System.Drawing.Point(6, 80 + _yOffset);
+            mLbNormal.Location = new System.Drawing.Point(6, 85 + _yOffset);
             mLbNormal.Name = "mLbNormal";
             mLbNormal.Size = new System.Drawing.Size(40, 13);
             mLbNormal.TabIndex = 11;
             mLbNormal.Text = "Push Normal";
 
             mLbMass.AutoSize = true;
-            mLbMass.Location = new System.Drawing.Point(6, 115 + _yOffset);
+            mLbMass.Location = new System.Drawing.Point(6, 119 + _yOffset);
             mLbMass.Name = "mLbMass";
             mLbMass.Size = new System.Drawing.Size(40, 13);
             mLbMass.TabIndex = 0;
             mLbMass.Text = "Mass";
 
             mLbForce.AutoSize = true;
-            mLbForce.Location = new System.Drawing.Point(6, 150 + _yOffset);
+            mLbForce.Location = new System.Drawing.Point(6, 144 + _yOffset);
             mLbForce.Name = "mLbForce";
             mLbForce.Size = new System.Drawing.Size(40, 13);
             mLbForce.TabIndex = 0;
             mLbForce.Text = "Normal Force";
 
             SetupTransformPanel(mPosPanel, 90, 20, ContentWidth, mLbPosX, mLbPosY, mLbPosZ, mPosX, mPosY, mPosZ);
-            SetupTransformPanel(mScalePanel, 90, 55, ContentWidth, mLbScaleX, mLbScaleY, mLbScaleZ, mScaleX, mScaleY, mScaleZ);
+            SetupTransformPanel(mScalePanel, 90, 50, ContentWidth, mLbScaleX, mLbScaleY, mLbScaleZ, mScaleX, mScaleY, mScaleZ);
             SetupTransformPanel(mNormalPanel, 90, 80 + _yOffset, ContentWidth, mLbNX, mLbNY, mLbNZ, mNX, mNY, mNZ);
 
             #endregion
