@@ -158,10 +158,44 @@ namespace Epoch {
 		if (loadOkay)
 		{
 			SystemLogger::GetLog() << _file.c_str() << " loaded" << std::endl;
+			mStartPosition.w = 1; // In the event a level doesn't define the start position, this is needed to mess up the matrix.
 			TiXmlElement *pRoot, *pObject, *pData;
 			pRoot = XMLdoc.FirstChildElement("Level");
 			if (pRoot)
 			{
+				// Get Level Settings
+				pObject = pRoot->FirstChildElement("Settings");
+				if (pObject != nullptr) {
+					pData = pObject->FirstChildElement();
+					std::string nodeType;
+					while (pData) {
+						switch (pData->Type()) {
+						case TiXmlNode::NodeType::TINYXML_ELEMENT:
+							nodeType = pData->Value();
+							pData = (TiXmlElement*)pData->FirstChild();
+							if (nodeType == "StartPos") {
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									mStartPosition.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+								SystemLogger::Debug() << "Start position: " << mStartPosition << std::endl;
+							}
+							break;
+						default:
+							SystemLogger::Error() << "Wat" << std::endl;
+							break;
+						}
+
+						pData = pData->Parent()->NextSiblingElement();
+					}
+				}
+
 				// Parse objects
 				pObject = pRoot->FirstChildElement("Object");
 				while (pObject)
@@ -177,14 +211,12 @@ namespace Epoch {
 						switch (pData->Type())
 						{
 						case TiXmlNode::NodeType::TINYXML_ELEMENT:
-							SystemLogger::GetLog() << "Element: '" << pData->Value() << "'" << std::endl;
 							elementType = std::string(pData->Value());
 							if (elementType == "Collider")
 								collider = true;
 							pData = (TiXmlElement*)pData->FirstChild();
 							break;
 						case TiXmlNode::NodeType::TINYXML_TEXT:
-							SystemLogger::GetLog() << "Value: '" << pData->Value() << "'" << std::endl;
 							if (elementType == "Name")
 								name = pData->Value();
 							else if (elementType == "Mesh")
@@ -334,7 +366,6 @@ namespace Epoch {
 							break;
 						}
 					}
-					SystemLogger::GetLog() << "Element: name= '" << pObject->Value() << "'" << std::endl;
 
 					
 					Transform transform;
@@ -449,7 +480,7 @@ namespace Epoch {
 			}
 			else
 			{
-				SystemLogger::GetLog() << "Cannot find 'Configuration' node" << std::endl;
+				SystemLogger::GetLog() << "Cannot find 'Root' node" << std::endl;
 			}
 		}
 	}

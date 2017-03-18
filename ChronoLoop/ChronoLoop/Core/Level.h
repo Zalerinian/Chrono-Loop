@@ -22,6 +22,7 @@ namespace Epoch
 		TimeManipulation* mTMComponent1 = nullptr, *mTMComponent2 = nullptr;
 		std::list<BaseObject*> mObjectList;
 		unsigned short mId;
+		vec4f mStartPosition;
 
 
 	public:
