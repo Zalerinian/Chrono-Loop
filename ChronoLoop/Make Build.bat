@@ -1,7 +1,7 @@
 @echo off
 echo Loading Visual Studio dev commands.
 
-call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\Tools\VsDevCmd.bat"
+call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\Tools\VsDevCmd.bat"
 devenv ChronoLoop.sln /build "Release|x64"
 
 if not exist _Build (

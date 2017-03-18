@@ -427,7 +427,7 @@ namespace Epoch
 	void RadialEmitter::UpdateParticle(Particle* _p, float _delta)
 	{
 		ParticleEmitter::UpdateParticle(_p, _delta);
-		_p->mVelocity.y += .0001f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.001 - .0001)));;
+		_p->mVelocity.y += .0001f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.001f - .0001f)));;
 	}
 
 	void RadialEmitter::EmitParticles()

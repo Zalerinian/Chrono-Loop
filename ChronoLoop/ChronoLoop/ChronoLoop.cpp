@@ -98,9 +98,15 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count());
 	Update();
 
+
+
 	// Cleanup
 	vr::VR_Shutdown();
 	ShutdownSystems();
+
+	for (int i = 0; i < 40; ++i) {
+		SystemLogger::Warn() << "THE CONSOLE HAS BEEN DETATCHED. IF THIS WINDOW IS STILL OPEN, IT IS OWNED BY THE STEAMVR SERVER. CLOSING THIS WILL CAUSE ISSUES WITH STEAMVR." << std::endl;
+	}
 	SystemLogger::DestroyInstance();
 	vrsys = nullptr;
 
@@ -691,6 +697,7 @@ void Update() {
 	//planeObj->AddTexture(AddedTextureName.c_str(), eTEX_CUSTOM1);
 
 	//*////////////////////////////////////////////////////////////////////
+
 	if (VREnabled) {
 		VRInputManager::GetInstance().Update();
 	}

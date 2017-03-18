@@ -13,6 +13,8 @@ namespace LevelEditor
     public partial class Editor : Form
     {
 
+        enum DataSet { Object, BoxCollider, SphereCollider, PlaneCollier, ButtonCollider };
+
         private Microsoft.DirectX.Direct3D.Device device;
         private float angleX, angleY, rotSpeed, dragSpeed;
         private Microsoft.DirectX.DirectInput.Device keyb;
@@ -35,6 +37,9 @@ namespace LevelEditor
         // Variables added by Drew
         private string mCurrentFilename = string.Empty;
         private bool mCurrentFileChanged = false;
+        private DataSet mDataset = DataSet.Object;
+        private TestPositionForm mForm;
+
 
         string Filename {
             get {
@@ -51,6 +56,16 @@ namespace LevelEditor
             }
             set {
                 SetFileEdited(value);
+            }
+        }
+
+        DataSet VisibileData {
+            get {
+                return mDataset;
+            }
+            set {
+                mDataset = value;
+                //UpdateDataVisibility();
             }
         }
 
@@ -84,6 +99,12 @@ namespace LevelEditor
             angleX = angleY = 0;
             rotate = Matrix.Identity;
             Tree.Nodes[0].Expand();
+
+
+
+            // Purely Testificate
+            mForm = new TestPositionForm();
+            mForm.Show();
         }
         private void InitializeDevice()
         {
@@ -467,6 +488,9 @@ namespace LevelEditor
         }
         private void ReadKeyboard()
         {
+            if(Form.ActiveForm != this) {
+                return;
+            }
             KeyboardState keys = keyb.GetCurrentKeyboardState();
             if (canMove)
             {
@@ -976,7 +1000,7 @@ namespace LevelEditor
                     adv += l;
                 adv /= advMillisecond.Count;
                 //FpsCount.Text = "FPS: " + (1000 / adv);
-                Debug.Print("FPS: " + (1000 / adv));
+                //Debug.Print("FPS: " + (1000 / adv));
                 advMillisecond.Clear();
             }
             fpsTimer.Reset();
