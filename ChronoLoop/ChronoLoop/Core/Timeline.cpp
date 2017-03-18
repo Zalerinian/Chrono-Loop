@@ -29,6 +29,34 @@ namespace Epoch {
 		ClearTimeLine();
 	}
 
+	void Timeline::ActivateCloneBitset(unsigned short _ids[3])
+	{
+		Snapshot* snap = mSnapshots[mSnaptimes[mCurrentGameTimeIndx]];
+		//This will will always exist in mLiveobjects so no checking needed
+		BaseObject* obj1 = mLiveObjects[_ids[0]];
+		BaseObject* obj2 = mLiveObjects[_ids[1]];
+		BaseObject* obj3 = mLiveObjects[_ids[2]];
+
+		SnapInfo* info;
+		for (unsigned int i = 0; i < 3; i++) {
+			//If the clone doesnt have a snap at this time, 1)find the most recent and snap. 2)Copy it. 3)make it a snap in the current time
+			if (snap->mSnapinfos.find(_ids[i]) == snap->mSnapinfos.end())
+			{
+				info = mSnapshots[snap->mUpdatedtimes[_ids[i]]]->mSnapinfos[_ids[i]];
+				snap->mSnapinfos[_ids[i]] = info;
+				snap->mUpdatedtimes[_ids[i]] = mCurrentGameTimeIndx;
+				info = snap->mSnapinfos[_ids[i]];
+			}
+			else
+			{
+				info = snap->mSnapinfos[_ids[i]];
+			}
+			
+			info->mBitset[0] = true;
+		}
+		
+	}
+
 	void Timeline::AddBaseObject(BaseObject* _object, unsigned short _id) {
 		mLiveObjects[_id] = _object;
 		ObjectLifeTime* newObject = new ObjectLifeTime();
@@ -92,6 +120,8 @@ namespace Epoch {
 	void Timeline::RemoveFromTimeline(unsigned short _id)
 	{
 		mLiveObjects.erase(_id);
+		if (mObjectLifeTimes.find(_id) != mObjectLifeTimes.end())
+			mObjectLifeTimes.erase(_id);
 	}
 
 	bool Timeline::RewindMakeClone(unsigned int _snaptime) {
@@ -127,11 +157,11 @@ namespace Epoch {
 			}
 			//The comp is a mesh
 			else {
-				//if (_destinfo->mBitset[bitnum])
-				//((MeshComponent*)_curComp)->SetVisible(true);
+				if (_destinfo->mBitset[bitnum])
+				((MeshComponent*)_curComp)->SetVisible(true);
 
-				//else
-				//	((MeshComponent*)_curComp)->SetVisible(false);
+				else
+					((MeshComponent*)_curComp)->SetVisible(false);
 			}
 		}
 
@@ -142,10 +172,33 @@ namespace Epoch {
 			}
 			//The comp is a mesh
 			else {
-				//((MeshComponent*)_curComp)->SetVisible(false);
+				((MeshComponent*)_curComp)->SetVisible(false);
 			}
 		}
 	}
+	//This one doesnt care if its active or not
+	void Timeline::ChangePlayerBitsetToSnap(SnapInfo * _destinfo, Component* _curComp) {
+		unsigned short bitnum = _curComp->GetComponentNum();
+
+		
+			if (_curComp->GetType() != eCOMPONENT_MESH) {
+				if (_destinfo->mBitset[bitnum])
+					_curComp->Enable();
+
+				else
+					_curComp->Disable();
+			}
+			//The comp is a mesh
+			else {
+				if (_destinfo->mBitset[bitnum])
+					((MeshComponent*)_curComp)->SetVisible(true);
+
+				else
+					((MeshComponent*)_curComp)->SetVisible(false);
+			}
+		
+	}
+
 
 	void Timeline::SetComponent(SnapComponent* _destComp, BaseObject * _obj, SnapInfo* _destInfo) {
 		switch (_destComp->mCompType) {
@@ -164,6 +217,12 @@ namespace Epoch {
 					((Collider*)currComp)->SetPos(*_destInfo->mTransform.GetPosition());
 
 					//Set the bitset
+					Level* currlevel = LevelManager::GetInstance().GetCurrentLevel();
+					if (_obj->GetUniqueID() == currlevel->GetLeftController()->GetUniqueID() ||
+						_obj->GetUniqueID() == currlevel->GetRightController()->GetUniqueID() ||
+						_obj->GetUniqueID() == currlevel->GetHeadset()->GetUniqueID())
+						ChangePlayerBitsetToSnap(_destInfo, currComp);
+					else
 					ChangeBitsetToSnap(_destInfo, currComp);
 				}
 			}
@@ -175,7 +234,13 @@ namespace Epoch {
 				Component* currComp = _obj->GetComponentIndexed(_destComp->mCompType, j);
 				if (currComp->GetColliderId() == _destComp->mId) {
 					//Set the bitset
-					ChangeBitsetToSnap(_destInfo, currComp);
+					Level* currlevel = LevelManager::GetInstance().GetCurrentLevel();
+					if (_obj->GetUniqueID() == currlevel->GetLeftController()->GetUniqueID() ||
+						_obj->GetUniqueID() == currlevel->GetRightController()->GetUniqueID() ||
+						_obj->GetUniqueID() == currlevel->GetHeadset()->GetUniqueID())
+						ChangePlayerBitsetToSnap(_destInfo, currComp);
+					else
+						ChangeBitsetToSnap(_destInfo, currComp);
 				}
 			}
 			break;
@@ -437,6 +502,13 @@ namespace Epoch {
 		} else {
 			if(mObjectLifeTimes[_info->mId]->mBirth > mCurrentGameTimeIndx || mObjectLifeTimes[_info->mId]->mDeath < mCurrentGameTimeIndx)
 				_info->mBitset[0] = false;
+			Level* currlevel = LevelManager::GetInstance().GetCurrentLevel();
+			if(_object->GetUniqueID() == currlevel->GetLeftController()->GetUniqueID() ||
+				_object->GetUniqueID() == currlevel->GetRightController()->GetUniqueID() || 
+				_object->GetUniqueID() == currlevel->GetHeadset()->GetUniqueID())
+			{
+				_info->mBitset[0] = false;
+			}
 			else
 			_info->mBitset[0] = true;
 		}

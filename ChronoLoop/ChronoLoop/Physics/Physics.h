@@ -26,7 +26,6 @@ namespace Epoch
 		~Physics() {};
 
 	public:
-		bool mRayCasting;
 		std::vector< BaseObject*> mObjects;
 
 		static Physics* Instance();
@@ -34,15 +33,15 @@ namespace Epoch
 
 		void			Update(float _time);
 
-		bool			RayToTriangle(vec4f& _vert0, vec4f& _vert1, vec4f& _vert2, vec4f& _normal, vec4f& _start, vec4f& _dir, float& _time);
-		bool			RayToSphere(vec4f& _pos, vec4f & _dir, vec4f & _center, float _radius, float & _time, vec4f & _out);
-		bool			RayToCylinder(vec4f& _start, vec4f & _normal, vec4f & _point1, vec4f & _point2, float _radius, float & _time);
-		bool			RayToCapsule(vec4f& _start, vec4f& _normal, vec4f & _point1, vec4f & _point2, float _radius, float & _time);
+		bool			RayToTriangle(vec3f& _vert0, vec3f& _vert1, vec3f& _vert2, vec3f& _normal, vec3f& _start, vec3f& _dir, float& _time);
+		bool			RayToSphere(vec3f& _pos, vec3f & _dir, vec3f & _center, float _radius, float & _time, vec3f & _out);
+		bool			RayToCylinder(vec3f& _start, vec3f & _normal, vec3f & _point1, vec3f & _point2, float _radius, float & _time);
+		bool			RayToCapsule(vec3f& _start, vec3f& _normal, vec3f & _point1, vec3f & _point2, float _radius, float & _time);
 
-		bool			MovingSphereToTriangle(vec4f & _vert0, vec4f & _vert1, vec4f & _vert2, vec4f & _normal, vec4f & _start, vec4f & _dir, float _radius, float & _time, vec4f & _outNormal);
-		//bool			MovingSphereToMesh(vec4f & _start, vec4f & _dir, float _radius, Mesh* mesh, float & _time, vec4f & _outNormal);
+		bool			MovingSphereToTriangle(vec3f & _vert0, vec3f & _vert1, vec3f & _vert2, vec3f & _normal, vec3f & _start, vec3f & _dir, float _radius, float & _time, vec3f & _outNormal);
+		//bool			MovingSphereToMesh(vec3f & _start, vec3f & _dir, float _radius, Mesh* mesh, float & _time, vec3f & _outNormal);
 
-		int				PointToPlane(PlaneCollider& _plane, vec4f& _point);
+		int				PointToPlane(PlaneCollider& _plane, vec3f& _point);
 		int				SphereToPlane(PlaneCollider& _plane, SphereCollider& _sphere);
 		int				AabbToPlane(PlaneCollider& _plane, CubeCollider& _aabb);
 
@@ -55,12 +54,12 @@ namespace Epoch
 		bool			OBBtoPlane(OrientedCubeCollider& _obb, PlaneCollider& _plane);
 		bool			SphereToSphere(SphereCollider& _sphere1, SphereCollider& _sphere2);
 		bool			SphereToAABB(SphereCollider& _sphere, CubeCollider& _aabb);
-		bool			SphereToTriangle(SphereCollider& _sphere, Triangle& _tri, vec4f& _displacement);
+		bool			SphereToTriangle(SphereCollider& _sphere, Triangle& _tri, vec3f& _displacement);
 
-		vec4f			CalcAcceleration(vec4f& _force, float _mass);
-		vec4f			CalcVelocity(vec4f& _vel, vec4f& _accel, float _time);
-		vec4f			CalcPosition(vec4f& _pos, vec4f& _vel, float _time);
-		void			CalcFriction(Collider& _col, vec4f& _norm, float _static, float _kinetic);
+		vec3f			CalcAcceleration(vec3f& _force, float _mass);
+		vec3f			CalcVelocity(vec3f& _vel, vec3f& _accel, float _time);
+		vec3f			CalcPosition(vec3f& _pos, vec3f& _vel, float _time);
+		void			CalcFriction(Collider& _col, vec3f& _norm, float _static, float _kinetic);
 	};
 
 }

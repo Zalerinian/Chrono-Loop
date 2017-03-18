@@ -14,9 +14,9 @@ namespace Epoch
 
 	struct Triangle
 	{
-		vec4f Vertex[3];
-		vec4f Normal;
-		vec4f Centeroid;
+		vec3f Vertex[3];
+		vec3f Normal;
+		vec3f Centeroid;
 	};
 
 	template<typename T>

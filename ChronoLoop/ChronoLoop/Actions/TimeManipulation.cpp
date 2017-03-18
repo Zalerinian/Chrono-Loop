@@ -85,6 +85,7 @@ namespace Epoch
 			TimeManager::Instance()->UpdatePlayerObjectInTimeline(headset);
 			TimeManager::Instance()->UpdatePlayerObjectInTimeline(Controller1);
 			TimeManager::Instance()->UpdatePlayerObjectInTimeline(Controller2);
+			TimeManager::Instance()->UpdateCloneCreationTime(headset->GetUniqueID(),Controller1->GetUniqueID(),Controller2->GetUniqueID());
 			//Rewind InputTime
 			VRInputManager::GetInstance().RewindInputTimeline(TimeManager::Instance()->GetCurrentSnapFrame(), currentLevel->GetRightController()->GetUniqueID(), currentLevel->GetLeftController()->GetUniqueID());
 			//add Interpolators for the clones
@@ -113,7 +114,7 @@ namespace Epoch
 					cLevel->GetHeadset()->GetUniqueID(),
 					cLevel->GetRightController()->GetUniqueID(),
 					cLevel->GetLeftController()->GetUniqueID());
-				
+					
 				
 			} else {
 				TimeManager::Instance()->SetTempCurSnap();
@@ -177,13 +178,14 @@ namespace Epoch
 				vec4f forward;
 				forward.Set(0, 0, 1, 0);
 				matrix4 inverse = (mat * clones[i]->GetTransform().GetMatrix().Invert());
-				vec4f meshPos = inverse.Position;
+				vec3f meshPos = inverse.Position;
 				forward *= inverse;
+				vec3f fwd = forward;
 				Triangle *tris = mesh->GetTriangles();
 				size_t numTris = mesh->GetTriangleCount();
 				for (unsigned int j = 0; j < numTris; ++j) {
 					float hitTime;
-					if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, forward, hitTime)) {
+					if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, fwd, hitTime)) {
 							TimeManager::Instance()->DeleteClone(clones[i]->GetUniqueId());
 							return;
 					}

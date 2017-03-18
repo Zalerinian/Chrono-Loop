@@ -10,7 +10,7 @@ namespace Epoch {
 	struct SnapComponent {
 		ComponentType mCompType;
 		unsigned short mBitNum;
-		unsigned short mId;
+		unsigned int mId;
 	};
 	struct SnapComponent_Physics : SnapComponent {
 		vec4f mForces;
@@ -72,11 +72,14 @@ namespace Epoch {
 	public:
 		Timeline();
 		~Timeline();
+		//this will turn the bitset[0] to 1 so he acts as a normal game object in the timeline
+		void ActivateCloneBitset(unsigned short _ids[3]);
 		void AddBaseObject(BaseObject* _object, unsigned short _id);						//add to the list of recorded objects.
 		void UpdatePlayerBaseObject(BaseObject* _object, unsigned short _id);						//add to the player of recorded objects and .
 		void AddSnapshot(unsigned int _snaptime, Snapshot* _snapshot);
 		void ClearTimeLine();
 		void ChangeBitsetToSnap(SnapInfo* _destinfo, Component* _curComp);
+		void ChangePlayerBitsetToSnap(SnapInfo * _destinfo, Component* _curComp);
 		bool CheckForDuplicateData(unsigned short _id, BaseObject* _object);
 		//This function removes non-clone objects that were created in the future
 		void CheckforLostObjects(std::vector<BaseObject*>&mClones);

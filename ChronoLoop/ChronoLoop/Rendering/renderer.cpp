@@ -14,6 +14,7 @@
 #include "../Common/Breakpoint.h"
 #include "../Input/CommandConsole.h"
 #include "../Rendering/Draw2D.h"
+#include "../Particles/ParticleSystem.h"
 
 #define ENABLE_TEXT 1
 
@@ -588,7 +589,7 @@ namespace Epoch {
 
 
 		if (!mVrSystem) {
-			mDebugCameraPos = matrix4::CreateTranslation(1.9f, 0.5f, 8);
+			mDebugCameraPos = matrix4::CreateYRotation(DirectX::XM_PI / 2) * matrix4::CreateTranslation(8, 2, -4);
 			mVPLeftData.projection.matrix = DirectX::XMMatrixPerspectiveFovRH(70, (float)_height / (float)_width, 0.1f, 1000);
 			mVPLeftData.view = mDebugCameraPos.Transpose().Invert();
 			mVPLeftData.projection = mVPLeftData.projection.Transpose();
@@ -604,6 +605,7 @@ namespace Epoch {
 		float color[4] = { 0.251f, 0.709f, 0.541f, 1 };
 		mContext->ClearRenderTargetView(mMainView.Get(), color);
 		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+		ParticleSystem::Instance()->Render();
 		if (nullptr == mVrSystem) {
 			RenderNoVR(_deltaTime);
 		} else {

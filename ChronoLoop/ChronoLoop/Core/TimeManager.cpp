@@ -186,6 +186,16 @@ namespace Epoch {
 						mCloneTextureBitset[textureIterator->second] = false;
 						mCloneTextures.erase(mClones[i]->GetUniqueId());
 					}
+
+					//Find the clone interpolator and delete it
+					for (auto j = mCloneInterpolators.begin(); j != mCloneInterpolators.end(); ++j) {
+						if(j->first == mClones[i]->GetUniqueID())
+						{
+							delete mCloneInterpolators[j->first];
+							mCloneInterpolators.erase(mClones[i]->GetUniqueID());
+						}
+					}
+
 					//Remove it from being tracked by timeline
 					mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueId());
 					Pool::Instance()->iRemoveObject(mClones[i]->GetUniqueID());
@@ -258,6 +268,12 @@ namespace Epoch {
 			mTimeline->SetCloneCreationTime(_ob1->GetUniqueID(), _ob2->GetUniqueID(), _ob3->GetUniqueID());
 			//Tell the time manager what frame the timeline its on
 			mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
+		}
+
+		void TimeManager::UpdateCloneCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3)
+		{
+			unsigned short ids[3] = { _id1,_id2,_id3 };
+			mTimeline->ActivateCloneBitset(ids);
 		}
 
 		void TimeManager::Destroy() {
@@ -404,10 +420,10 @@ namespace Epoch {
 
 				for (int k = 0; k < Physics::Instance()->mObjects.size(); ++k) {
 					if (Physics::Instance()->mObjects[k]->GetUniqueID() == mClones[i]->GetUniqueID()) {
-						//I know I could have just iterated through it with an iterator but im lazy and tired
 						Physics::Instance()->mObjects.erase(Physics::Instance()->mObjects.begin() + k);
 					}
 				}
+
 				//Remove it from being tracked by timeline
 				mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueId());
 

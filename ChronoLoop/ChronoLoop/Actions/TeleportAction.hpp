@@ -58,13 +58,14 @@ namespace Epoch {
 					for (int i = 0; i < ARRAYSIZE(meshes); ++i) {
 						forward.Set(0, 0, 1, 0);
 						matrix4 inverse = (mat * objects[i]->GetTransform().GetMatrix().Invert());
-						vec4f meshPos = inverse.Position;
+						vec3f meshPos = inverse.Position;
 						forward *= inverse;
+						vec3f fwd(forward);
 						Triangle *tris = meshes[i]->GetTriangles();
 						size_t numTris = meshes[i]->GetTriangleCount();
 						for (unsigned int i = 0; i < numTris; ++i) {
 							float hitTime = FLT_MAX;
-							Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, meshPos, forward, hitTime);
+							Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, meshPos, fwd, hitTime);
 							if (hitTime < wallTime) {
 								wallTime = hitTime;
 							}
@@ -74,11 +75,12 @@ namespace Epoch {
 					Triangle *tris = mPlaneMesh->GetTriangles();
 					size_t numTris = mPlaneMesh->GetTriangleCount();
 					matrix4 inverse = (mat * mPlaneObject->GetTransform().GetMatrix().Invert());
-					vec4f position = inverse.Position;
+					vec3f position = inverse.Position;
 					forward.Set(0, 0, 1, 0);
 					forward *= inverse;
+					vec3f fwd = forward;
 					for (unsigned int i = 0; i < numTris; ++i) {
-						if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, forward, meshTime)) {
+						if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, fwd, meshTime)) {
 							if (meshTime < wallTime) {
 								forward *= meshTime;
 								VRInputManager::GetInstance().GetPlayerPosition()[3][0] += forward[0]; // x

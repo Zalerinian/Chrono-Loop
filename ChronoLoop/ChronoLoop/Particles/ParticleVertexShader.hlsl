@@ -25,8 +25,8 @@ GSParticle main(GSParticle input)
 	float4 pos = input.pos;
 	
 	//pos = mul(pos, model);
-	pos = mul(pos, view);
-	pos = mul(pos, proj);
+	//pos = mul(pos, view);
+	//pos = mul(pos, proj);
 
 	output.pos = pos;
 	output.col = input.col;

@@ -1,4 +1,4 @@
-struct EyeData
+		struct EyeData
 {
 	matrix view;
 	matrix projection;
