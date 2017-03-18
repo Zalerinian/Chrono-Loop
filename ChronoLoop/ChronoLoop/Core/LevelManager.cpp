@@ -33,8 +33,17 @@ namespace Epoch {
 		mMutex.unlock();
 	}
 
-	void LM::SetCurrentLevel(Level* _level) {
-		mCurrentLevel = _level;
+	//void LM::SetCurrentLevel(Level* _level) {
+	//	mCurrentLevel = _level;
+	//}
+
+	void LM::RequestLevelChange(Level * _next)
+	{
+		if (!mCurrentLevel){
+			mCurrentLevel = _next;
+			return;
+		}
+		mRequested = _next;
 	}
 
 	Level* LM::GetCurrentLevel() {
@@ -75,8 +84,20 @@ namespace Epoch {
 
 	void LM::Destroy()
 	{
-		if(mCurrentLevel)
+		if (mCurrentLevel)
 			delete mCurrentLevel;
+	}
+
+	void LM::Update()
+	{
+		if (mRequested) {
+			if (mCurrentLevel) {
+				delete mCurrentLevel;
+			}
+			mCurrentLevel = mRequested;
+			mRequested = nullptr;
+		}
+		mCurrentLevel->Update();
 	}
 
 } // Epoch Namespace

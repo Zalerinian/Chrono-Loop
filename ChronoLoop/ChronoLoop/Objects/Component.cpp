@@ -284,6 +284,12 @@ namespace Epoch
 		//mNode->data = pos;
 	}
 
+	void CubeCollider::Destroy()
+	{
+		delete mNode;
+		delete mShape;
+	}
+
 	void CubeCollider::SetPos(const vec3f& _newPos)
 	{
 		mObject->GetTransform().GetMatrix().fourth = _newPos;
