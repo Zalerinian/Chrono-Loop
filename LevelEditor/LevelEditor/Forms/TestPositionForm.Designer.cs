@@ -87,6 +87,17 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
+            this.gbButtonCollider = new System.Windows.Forms.GroupBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.numericUpDown10 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown11 = new System.Windows.Forms.NumericUpDown();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.numericUpDown12 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown13 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown14 = new System.Windows.Forms.NumericUpDown();
             this.gbCollider.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udKineticFriction)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udStaticFriction)).BeginInit();
@@ -119,6 +130,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pudMass)).BeginInit();
+            this.gbButtonCollider.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown10)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown11)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown12)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown13)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown14)).BeginInit();
             this.SuspendLayout();
             // 
             // gbCollider
@@ -934,18 +951,121 @@
             this.label10.TabIndex = 0;
             this.label10.Text = "Mass: ";
             // 
+            // gbButtonCollider
+            // 
+            this.gbButtonCollider.Controls.Add(this.numericUpDown14);
+            this.gbButtonCollider.Controls.Add(this.numericUpDown13);
+            this.gbButtonCollider.Controls.Add(this.numericUpDown12);
+            this.gbButtonCollider.Controls.Add(this.label15);
+            this.gbButtonCollider.Controls.Add(this.label14);
+            this.gbButtonCollider.Controls.Add(this.numericUpDown11);
+            this.gbButtonCollider.Controls.Add(this.numericUpDown10);
+            this.gbButtonCollider.Controls.Add(this.label13);
+            this.gbButtonCollider.Controls.Add(this.label12);
+            this.gbButtonCollider.Controls.Add(this.label11);
+            this.gbButtonCollider.Dock = System.Windows.Forms.DockStyle.Top;
+            this.gbButtonCollider.Location = new System.Drawing.Point(0, 639);
+            this.gbButtonCollider.Name = "gbButtonCollider";
+            this.gbButtonCollider.Size = new System.Drawing.Size(341, 205);
+            this.gbButtonCollider.TabIndex = 3;
+            this.gbButtonCollider.TabStop = false;
+            this.gbButtonCollider.Text = "[]ButtonCollider Component";
+            this.gbButtonCollider.Visible = false;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(7, 105);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(32, 13);
+            this.label11.TabIndex = 0;
+            this.label11.Text = "Mass";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(6, 27);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(44, 13);
+            this.label12.TabIndex = 1;
+            this.label12.Text = "Position";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(6, 53);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(34, 13);
+            this.label13.TabIndex = 2;
+            this.label13.Text = "Scale";
+            // 
+            // numericUpDown10
+            // 
+            this.numericUpDown10.Location = new System.Drawing.Point(90, 25);
+            this.numericUpDown10.Name = "numericUpDown10";
+            this.numericUpDown10.Size = new System.Drawing.Size(228, 20);
+            this.numericUpDown10.TabIndex = 3;
+            // 
+            // numericUpDown11
+            // 
+            this.numericUpDown11.Location = new System.Drawing.Point(91, 51);
+            this.numericUpDown11.Name = "numericUpDown11";
+            this.numericUpDown11.Size = new System.Drawing.Size(228, 20);
+            this.numericUpDown11.TabIndex = 4;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(7, 79);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(67, 13);
+            this.label14.TabIndex = 5;
+            this.label14.Text = "Push Normal";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(7, 131);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(70, 13);
+            this.label15.TabIndex = 6;
+            this.label15.Text = "Normal Force";
+            // 
+            // numericUpDown12
+            // 
+            this.numericUpDown12.Location = new System.Drawing.Point(90, 77);
+            this.numericUpDown12.Name = "numericUpDown12";
+            this.numericUpDown12.Size = new System.Drawing.Size(227, 20);
+            this.numericUpDown12.TabIndex = 7;
+            // 
+            // numericUpDown13
+            // 
+            this.numericUpDown13.Location = new System.Drawing.Point(90, 103);
+            this.numericUpDown13.Name = "numericUpDown13";
+            this.numericUpDown13.Size = new System.Drawing.Size(228, 20);
+            this.numericUpDown13.TabIndex = 8;
+            // 
+            // numericUpDown14
+            // 
+            this.numericUpDown14.Location = new System.Drawing.Point(91, 129);
+            this.numericUpDown14.Name = "numericUpDown14";
+            this.numericUpDown14.Size = new System.Drawing.Size(228, 20);
+            this.numericUpDown14.TabIndex = 9;
+            // 
             // TestPositionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(358, 461);
+            this.ClientSize = new System.Drawing.Size(358, 570);
+            this.Controls.Add(this.gbButtonCollider);
             this.Controls.Add(this.gbPlaneCollider);
             this.Controls.Add(this.gbBoxCollider);
             this.Controls.Add(this.gbCollider);
             this.MinimumSize = new System.Drawing.Size(340, 500);
             this.Name = "TestPositionForm";
             this.Text = "TestPositionForm";
+            this.ResizeBegin += new System.EventHandler(this.TestPositionForm_ResizeBegin);
             this.Click += new System.EventHandler(this.TestPositionForm_Click);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.TestPositionForm_Paint);
             this.Resize += new System.EventHandler(this.TestPositionForm_Resize);
@@ -985,6 +1105,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pudMass)).EndInit();
+            this.gbButtonCollider.ResumeLayout(false);
+            this.gbButtonCollider.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown10)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown11)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown12)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown13)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown14)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1055,5 +1182,16 @@
         private System.Windows.Forms.Label mLbNormal;
         private System.Windows.Forms.Label mLbOffset;
         private System.Windows.Forms.Panel pnPlaneNormal;
+        private System.Windows.Forms.GroupBox gbButtonCollider;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.NumericUpDown numericUpDown14;
+        private System.Windows.Forms.NumericUpDown numericUpDown13;
+        private System.Windows.Forms.NumericUpDown numericUpDown12;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.NumericUpDown numericUpDown11;
+        private System.Windows.Forms.NumericUpDown numericUpDown10;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label12;
     }
 }

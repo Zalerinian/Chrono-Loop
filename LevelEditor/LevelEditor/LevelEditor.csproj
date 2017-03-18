@@ -85,10 +85,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Changes.cs" />
-    <Compile Include="Components\BoxCollider.cs" />
-    <Compile Include="Components\Collider.cs" />
+    <Compile Include="Components\Colliders\BoxCollider.cs" />
+    <Compile Include="Components\Colliders\ButtonCollider.cs" />
+    <Compile Include="Components\Colliders\Collider.cs" />
+    <Compile Include="Components\Colliders\SphereCollider.cs" />
     <Compile Include="Components\Component.cs" />
-    <Compile Include="Components\PlaneCollider.cs" />
+    <Compile Include="Components\Colliders\PlaneCollider.cs" />
     <Compile Include="Forms\FileOperations.cs">
       <SubType>Form</SubType>
     </Compile>

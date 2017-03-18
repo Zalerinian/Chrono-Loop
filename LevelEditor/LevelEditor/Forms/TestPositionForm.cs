@@ -15,6 +15,8 @@ namespace LevelEditor {
         private ColliderComponent mColliderTest;
         private BoxCollider mBoxTest;
         private PlaneCollider mPlaneTest;
+        private SphereCollider mSphereTest;
+        private ButtonCollider mButtonTest;
         private List<Component> mComponents;
 
         public TestPositionForm() {
@@ -24,9 +26,13 @@ namespace LevelEditor {
             mColliderTest = new ColliderComponent(mComponents);
             mBoxTest = new BoxCollider(mComponents);
             mPlaneTest = new PlaneCollider(mComponents);
+            mSphereTest = new SphereCollider(mComponents);
+            mButtonTest = new ButtonCollider(mComponents);
             Controls.Add(mColliderTest.GetGroupbox());
             Controls.Add(mBoxTest.GetGroupbox());
             Controls.Add(mPlaneTest.GetGroupbox());
+            Controls.Add(mSphereTest.GetGroupbox());
+            Controls.Add(mButtonTest.GetGroupbox());
             AutoSize = false;
 
             Padding p = new Padding(0);
@@ -35,13 +41,20 @@ namespace LevelEditor {
         }
 
         private void TestPositionForm_Click(object sender, EventArgs e) {
-            string breakpoint = "yup";
+            Debug.Print("Form Clicked");
         }
 
         private void TestPositionForm_Resize(object sender, EventArgs e) {
-            Point position = new Point(AutoScrollOffset.X, AutoScrollOffset.Y);
-            Point NewScrollPos = new Point(0, AutoScrollPosition.Y);
-            AutoScrollPosition = NewScrollPos;
+            Point position = new Point(AutoScrollPosition.X, AutoScrollPosition.Y);
+            //Point NewScrollPos = new Point(0, AutoScrollPosition.Y);
+            //AutoScrollPosition = NewScrollPos;
+            //Size nSize = new Size(ClientRectangle.X, Size.Height);
+            //Size = nSize;
+
+
+            //Debug.Print("Resized to " + Size);
+            HorizontalScroll.Value = 0;
+            HorizontalScroll.Maximum = ClientSize.Width;
             Size dimensions = new Size();
             for (int i = 0; i < mComponents.Count; ++i) {
                 GroupBox box = mComponents[i].GetGroupbox();
@@ -55,8 +68,12 @@ namespace LevelEditor {
         }
 
         private void TestPositionForm_Paint(object sender, PaintEventArgs e) {
-            Point NewScrollPos = new Point(0, AutoScrollPosition.Y);
-            AutoScrollPosition = NewScrollPos;
+        }
+
+        private void TestPositionForm_ResizeBegin(object sender, EventArgs e)
+        {
+            Debug.Print("Begin Resizing");
+            ActiveControl = null;
         }
     }
 }
