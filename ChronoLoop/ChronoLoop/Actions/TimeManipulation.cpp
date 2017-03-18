@@ -125,7 +125,7 @@ namespace Epoch
 				);
 			} else {
 				// Stop time
-				vec2f finalRatios(0.7, 0.3);
+				vec2f finalRatios(0.7f, 0.3f);
 				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
 				mDesaturationInterpolator.SetActive(true);
 				TimeManager::Instance()->SetTempCurSnap();
