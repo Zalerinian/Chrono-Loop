@@ -1,0 +1,6 @@
+*.db
+.vs/*
+Hourglass/Properties/*
+Hourglass/bin/*
+Hourglass/obj/*
+Hourglass/x64/*
