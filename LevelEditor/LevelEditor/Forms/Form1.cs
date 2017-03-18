@@ -795,15 +795,15 @@ namespace LevelEditor
 
 
             // Hide Yams' controls so we can start adding in the component model.
-            groupBox1.Visible = false;
-            groupBox2.Visible = false;
-            groupBox3.Visible = false;
-            groupBox4.Visible = false;
-            groupBox5.Visible = false;
-            groupBox6.Visible = false;
-            groupBox7.Visible = false;
-            TextureBox.Visible = false;
-            return;
+            //groupBox1.Visible = false;
+            //groupBox2.Visible = false;
+            //groupBox3.Visible = false;
+            //groupBox4.Visible = false;
+            //groupBox5.Visible = false;
+            //groupBox6.Visible = false;
+            //groupBox7.Visible = false;
+            //TextureBox.Visible = false;
+            //return;
             if (selectedCollider != null)
             {
                 groupBox5.Visible = false;

@@ -167,9 +167,9 @@ namespace LevelEditor {
                                             break;
                                         case "StartRot":
                                             parts = reader.Value.Split(',');
-                                            mStartRot.X = float.Parse(parts[0]);
-                                            mStartRot.Y = float.Parse(parts[1]);
-                                            mStartRot.Z = float.Parse(parts[2]);
+                                            mStartRot.X = float.Parse(parts[0]) * RADIANS_TO_DEGREES;
+                                            mStartRot.Y = float.Parse(parts[1]) * RADIANS_TO_DEGREES;
+                                            mStartRot.Z = float.Parse(parts[2]) * RADIANS_TO_DEGREES;
                                             break;
                                         case "Name":
                                             name = reader.Value;

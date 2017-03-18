@@ -197,7 +197,7 @@ namespace Epoch {
 									i++;
 									s.erase(0, pos + 1);
 								}
-								SystemLogger::Debug() << "Start rotation: " << mStartPosition << std::endl;
+								SystemLogger::Debug() << "Start rotation: " << mStartRotation << std::endl;
 							}
 							break;
 						default:

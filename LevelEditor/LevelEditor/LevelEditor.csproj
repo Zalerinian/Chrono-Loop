@@ -152,6 +152,9 @@
     <EmbeddedResource Include="Forms\TestPositionForm.resx">
       <DependentUpon>TestPositionForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Assets\Arrow.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Assets\AxisGizmo.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
