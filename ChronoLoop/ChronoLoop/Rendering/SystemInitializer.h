@@ -16,6 +16,8 @@
 #include "../Input/KeyboardInput.h"
 #include "../Common/Settings.h"
 #include "../Rendering/RendererDefines.h"
+#include "../Particles/ParticleSystem.h"
+#include "../Messager/Messager.h"
 
 namespace Epoch {
 	bool InitializeSystems(HWND _Window, unsigned int _width, unsigned int _height,
@@ -51,6 +53,9 @@ namespace Epoch {
 		VertexBufferManager::Shutdown();
 		IndexBufferManager::DestroyInstance();
 		Physics::Destroy();
+		ParticleSystem::Destroy();
+
+		Messager::Destroy();
 		Pool::DestroyInstance();
 		ShaderManager::DestroyInstance();
 		VRInputManager::DestroyInstance();

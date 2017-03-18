@@ -70,7 +70,7 @@ void UpdateTime();
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(27042);
+	//_CrtSetBreakAlloc(26801);
 	if (!InitializeWindow(hInstance, nCmdShow, 1366, 720, true)) {
 		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
 		return 2;
@@ -735,10 +735,6 @@ void Update() {
 			}
 		}
 	}
-	delete emit;
-	Messager::Destroy();
-	ParticleSystem::Destroy();
-
 }
 
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed) {
