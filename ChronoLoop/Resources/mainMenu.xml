@@ -1,4 +1,4 @@
-﻿<Level>
+<Level>
   <Settings>
     <StartPos>0,0,0</StartPos>
     <StartRot>0,0,0</StartRot>
@@ -33,7 +33,7 @@
       <EnterLevel>Enabled</EnterLevel>
       <Collider>
         <Type>OBB</Type>
-        <Trigger>False</Trigger>
+        <Trigger>True</Trigger>
         <Position>0,1,0</Position>
         <Rotation>0,0,0</Rotation>
         <Scale>1.2,1.8,0.4</Scale>

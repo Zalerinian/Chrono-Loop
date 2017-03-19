@@ -633,11 +633,18 @@ namespace Epoch {
 		return true;
 	}
 
+	void Renderer::ClearRenderSet()
+	{
+		mRenderSet.ClearSet();
+	}
+
+
 	void Renderer::Render(float _deltaTime) {
 
 		float color[4] = { 0.251f, 0.709f, 0.541f, 1 };
 
 		// Setup the Scene Render Target 
+		mRendererLock.lock();
 		mContext->OMSetRenderTargets(1, mSceneView.GetAddressOf(), mDSView.Get());
 		mContext->ClearRenderTargetView(mSceneView.Get(), color);
 		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -663,6 +670,7 @@ namespace Epoch {
 
 
 		mChain->Present(mUseVsync ? 1 : 0, 0);
+		mRendererLock.unlock();
 	}
 
 #pragma endregion Public Functions

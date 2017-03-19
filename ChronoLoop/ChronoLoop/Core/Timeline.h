@@ -64,6 +64,7 @@ namespace Epoch {
 	class Timeline {
 		//Where we are at in the timeline
 		unsigned int mCurrentGameTimeIndx = 0;
+		float mObjectInterpolationTime = 0.20f;
 		std::vector<unsigned int> mSnaptimes;
 		std::unordered_map<unsigned int, Snapshot*> mSnapshots;		//The key will be the time they were taken (mSnapTimes)
 		std::unordered_map<unsigned short, BaseObject*> mLiveObjects;
@@ -86,13 +87,14 @@ namespace Epoch {
 		//SnapInfoPlayer * GenerateSnapInfoPlayer();
 		unsigned int GetCurrentGameTimeIndx() { return mCurrentGameTimeIndx; }
 		unsigned int GetTotalSnaps() { return (unsigned int)mSnapshots.size(); };
+		float GetObjectInterpolationTime() { return mObjectInterpolationTime; };
+		void SetObjectInterpolationTime(float _set) { mObjectInterpolationTime = _set; };
 		void HotFixResetLevel();
 		void RemoveFromTimeline(unsigned short _id);
 		bool RewindMakeClone(unsigned int _snaptime);
 		bool RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void MoveObjectToSnap(unsigned int _snaptime, unsigned short _id);
 		void MoveAllObjectsToSnap(unsigned int _snaptime);
-		void InterpAllObjectsToSnapExceptPlayer(unsigned int _fromSnapTime, unsigned int _toSnapTime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void SetBaseObjectDeathTime(unsigned short _id);
 		void SetCloneCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);
@@ -100,6 +102,7 @@ namespace Epoch {
 		void SetComponent(SnapComponent* _destComp, BaseObject* _obj, SnapInfo* _destInfo);
 		void SetCurrentGameTimeIndx(int _time) { mCurrentGameTimeIndx = _time; };
 		void UpdateCloneInterpolators(unsigned short _cloneid, SnapInfo* _currSnap, unsigned int _currTime);
+		void PrepareAllObjectInterpolators(unsigned int _fromSnapTime, unsigned int _toSnapTime);
 	};
 
 }

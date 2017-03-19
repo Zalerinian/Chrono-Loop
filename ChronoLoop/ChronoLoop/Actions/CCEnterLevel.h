@@ -4,6 +4,7 @@
 #include "..\Core\LevelManager.h"
 #include "..\Messager\Messager.h"
 #include "..\Core\Pool.h"
+#include "..\Core\TimeManager.h"
 
 namespace Epoch 
 {
@@ -17,26 +18,30 @@ namespace Epoch
 		bool once = true;
 		virtual void OnTriggerEnter(Collider& _col1, Collider& _col2) 
 		{
-				once = false;
+			SystemLogger::GetLog() << "CCEnterLevel: LOAD LEVEL" << std::endl;
+			once = false;
 		}
 
 		virtual void Update() {
 			if (!once) {
-				SystemLogger::GetLog() << "CCEnterLevel: LOAD LEVEL" << std::endl;
-				LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->Destroy();
-				LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->Destroy();
-
 				Level* next;
 				LM::LevelStatus status = LevelManager::GetInstance().LoadLevelAsync("../Resources/Level1_2_6.xml", &next);
 				if (status == LM::LevelStatus::Success)
 				{
-					//Sound Initializing---------------------------------------------------
-					Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::INITIALIZE_Audio, 0, false));
-					//Soundbanks
-					Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::SET_BasePath, 0, false, (void*)new m_Path(_basePath)));
-					Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_initSB)));
-					Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
+					TimeManager::Instance()->Destroy();
+					Renderer::Instance()->ClearRenderSet();
+					Physics::Instance()->PhysicsLock.lock();
+					// Boop those controllers.
+					LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->Destroy();
+					LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->Destroy();
+					LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->Destroy();
 
+					Physics::Instance()->mObjects.clear();
+
+
+					//Sound Initializing---------------------------------------------------
+					
+					TimeManager::Instance();
 					Listener* ears = new Listener();
 					Emitter* ambient = new Emitter();
 					ambient->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_TEST2);
@@ -87,8 +92,29 @@ namespace Epoch
 					BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
 					((BoxSnapToControllerAction*)pickup2)->mControllerRole = eControllerType_Secondary;
 					LeftController->AddComponent(pickup2);
+
+					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", transform); //new BaseObject("headset", transform);
+					MeshComponent *visibleMesh2 = new MeshComponent("../Resources/Cube.obj");
+					visibleMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
+					visibleMesh2->SetVisible(false);
+					HeadsetFollow* hfollow = new HeadsetFollow();
+					headset->AddComponent(hfollow);
+					headset->AddComponent(visibleMesh2);
+					headset->AddComponent(ears);
+					TimeManager::Instance()->AddObjectToTimeline(headset);
+
 					TimeManager::Instance()->AddObjectToTimeline(LeftController);
 					//next->CallStart();
+					Physics::Instance()->mObjects.push_back(RightController);
+					Physics::Instance()->mObjects.push_back(LeftController);
+					Physics::Instance()->mObjects.push_back(headset);
+					next->Initialize(headset, LeftController, RightController);
+					LevelManager::GetInstance().RequestLevelChange(next);
+				
+
+
+					SystemLogger::Debug() << "Loading complete" << std::endl;
+					Physics::Instance()->PhysicsLock.unlock();
 				}
 			}
 		}

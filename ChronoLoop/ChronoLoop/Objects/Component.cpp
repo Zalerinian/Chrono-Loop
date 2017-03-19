@@ -35,7 +35,10 @@ namespace Epoch
 	//Listener----------------------------------------------------
 #pragma region Listener
 
-//void Listener::Update(){}
+	void Listener::Destroy()
+	{
+		AudioWrapper::GetInstance().RemoveListener(this);
+	}
 
 
 

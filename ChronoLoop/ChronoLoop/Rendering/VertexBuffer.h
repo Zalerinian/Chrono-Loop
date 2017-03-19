@@ -4,6 +4,7 @@
 #include <d3d11.h>
 #include "renderer.h"
 #include <wrl/client.h>
+#include "../Common/Common.h"
 
 namespace Epoch {
 	template<typename T>
@@ -32,6 +33,7 @@ namespace Epoch {
 		if (mOffsets.count(_name) > 0)
 			offset = mOffsets.at(_name);
 		else {
+			Renderer::Instance()->GetRendererLock().lock();
 			if (mVertexBuffer) {
 				D3D11_BUFFER_DESC desc;
 				mVertexBuffer->GetDesc(&desc);
@@ -46,6 +48,7 @@ namespace Epoch {
 				ID3D11Buffer *newBuffer;
 				Renderer::Instance()->GetDevice()->CreateBuffer(&desc, &initData, &newBuffer);
 				Renderer::Instance()->GetContext()->CopySubresourceRegion(newBuffer, 0, 0, 0, 0, mVertexBuffer.Get(), 0, 0);
+				//meat :)
 				mVertexBuffer.Attach(newBuffer);
 				std::string name = "The Vertex Buffer, mk" + std::to_string(mOffsets.size());
 				SetD3DName(mVertexBuffer.Get(), name.c_str());
@@ -65,6 +68,7 @@ namespace Epoch {
 				std::string name = "The Vertex Buffer";
 				SetD3DName(mVertexBuffer.Get(), name.c_str());
 			}
+			Renderer::Instance()->GetRendererLock().unlock();
 			mOffsets[_name] = offset;
 		}
 		return offset;
