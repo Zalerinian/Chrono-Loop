@@ -56,6 +56,7 @@ namespace Epoch {
 				for (auto Interp : mCloneInterpolators) {
 					if (Interp.second)
 						Interp.second->Update(_delta);
+				}
 
 					//Update inputTimeLine
 					//This updates curr pointer of the input timeline along with the current time in the Timeline 
@@ -81,7 +82,6 @@ namespace Epoch {
 						}
 					}
 				}
-			}
 		}
 	}
 		TimeManager * TimeManager::Instance() {
@@ -101,6 +101,8 @@ namespace Epoch {
 		void TimeManager::AddInterpolatorForClone(BaseObject * _obj) {
 			Interpolator<matrix4>* temp = new Interpolator<matrix4>();
 			mCloneInterpolators[_obj->GetUniqueID()] = temp;
+			Interpolator<matrix4>* temp2 = new Interpolator<matrix4>();
+			mCloneColliderInterpolators[_obj->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)->GetColliderId()] = temp2;
 		}
 
 		void TimeManager::AddAllTexturesToQueue()
@@ -149,6 +151,10 @@ namespace Epoch {
 				if (Interp.second)
 					delete Interp.second;
 			}
+			for (auto InterpCollider : mCloneColliderInterpolators) {
+				if (InterpCollider.second)
+					delete InterpCollider.second;
+			}
 			mCloneInterpolators.clear();
 		}
 
@@ -196,6 +202,14 @@ namespace Epoch {
 							break;
 						}
 					}
+					for (auto j = mCloneColliderInterpolators.begin(); j != mCloneColliderInterpolators.end(); ++j) {
+						if (j->first == mClones[i]->GetComponentIndexed(eCOMPONENT_COLLIDER,0)->GetColliderId())
+						{
+							delete mCloneInterpolators[j->first];
+							mCloneInterpolators.erase(mClones[i]->GetUniqueID());
+							break;
+						}
+					}
 
 					//Remove it from being tracked by timeline
 					mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueId());
@@ -216,6 +230,14 @@ namespace Epoch {
 
 			if (mCloneInterpolators.find(_id) != mCloneInterpolators.end())
 				return mCloneInterpolators[_id];
+
+			return nullptr;
+		}
+
+		Interpolator<matrix4>* TimeManager::GetCloneColliderInterpolator(unsigned short _id) {
+
+			if (mCloneColliderInterpolators.find(_id) != mCloneColliderInterpolators.end())
+				return mCloneColliderInterpolators[_id];
 
 			return nullptr;
 		}

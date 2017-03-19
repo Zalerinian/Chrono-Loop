@@ -33,6 +33,8 @@ namespace Epoch {
 		//container of objects
 		std::vector<BaseObject*>mClones;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneInterpolators;
+		//This is for the hitboxes for the controller
+		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneColliderInterpolators;
 		
 		std::bitset<10>mCloneTextureBitset;
 		//Pass in baseobject id to get bitset location
@@ -63,6 +65,7 @@ namespace Epoch {
 		//Retrieves delta time
 		float GetDeltaTime() { return mDeltaTime; }
 		Interpolator<matrix4>* GetCloneInterpolator(unsigned short _id);
+		Interpolator<matrix4>* GetCloneColliderInterpolator(unsigned short _id);
 		std::vector<BaseObject*>& GetClonesVec() { return mClones; };
 		std::string GetNextTexture();
 		int GetTempCurSnap() { return mtempCurSnapFrame; };
