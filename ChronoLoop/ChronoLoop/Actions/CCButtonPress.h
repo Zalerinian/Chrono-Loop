@@ -4,6 +4,7 @@
 #include "..\Physics\Physics.h"
 #include "..\Common\Logger.h"
 #include "../Core/Level.h"
+#include "../Core/TimeManager.h"
 
 namespace Epoch
 {
@@ -14,7 +15,9 @@ namespace Epoch
 
 		BaseObject *Block = nullptr, *Exit = nullptr;
 		CubeCollider* blockCube, *exitCube;
+		//matrix4 blockend, exitend;
 		vec4f blockend, exitend;
+
 		Level* cLevel;
 
 		virtual void Start()
@@ -27,6 +30,8 @@ namespace Epoch
 			exitCube = (CubeCollider*)Exit->mComponents[eCOMPONENT_COLLIDER][0];
 			blockend = blockCube->GetPos() - vec4f(0, 2.6f, 0, 1);
 			exitend = exitCube->GetPos() + vec4f(0, 2.6f, 0, 1);
+			//blockend = blockCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, -2.6f, 0, 1));
+			//exitend = exitCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 2.6f, 0, 1));
 		}
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time)
@@ -45,15 +50,30 @@ namespace Epoch
 					_col.mVelocity = vel;
 					_col.mAcceleration = vel / _time;
 					blockCube->SetPos(blockend);
-					blockCube->mShouldMove = false;
+					//Interpolator<matrix4>* blockInterp = TimeManager::Instance()->GetObjectInterpolator(Block->GetUniqueID());
+					//blockInterp->SetActive(true);
+					//blockInterp->Prepare(1.0f, blockCube->GetTransform().GetMatrix(), blockend, blockCube->GetTransform().GetMatrix());
+					
+
 
 					exitCube->SetPos(exitend);
+					//Interpolator<matrix4>* exitInterp = TimeManager::Instance()->GetObjectInterpolator(Exit->GetUniqueID());
+					//exitInterp->SetActive(true);
+					//exitInterp->Prepare(1.0f, exitCube->GetTransform().GetMatrix(), exitend, exitCube->GetTransform().GetMatrix());
+
+					//bool meMooscles = false;
+					//while(!meMooscles)
+					//{
+					//	meMooscles = (blockInterp->Update(TimeManager::Instance()->GetDeltaTime()) && exitInterp->Update(TimeManager::Instance()->GetDeltaTime()));
+					//}
+					//blockInterp->SetActive(false);
+					//exitInterp->SetActive(false);
 					exitCube->mShouldMove = false;
+					blockCube->mShouldMove = false;
 				}
 			}
 			else
 				colliding = false;
 		}
 	};
-
 }
