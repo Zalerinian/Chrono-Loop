@@ -70,8 +70,8 @@ namespace Epoch
 		delete mBase;
 		mTName = nullptr;
 		mBase = nullptr;
-		for (Particle* p : mParticles)
-			delete p;
+		for (auto iter = mParticles.begin(); iter != mParticles.end(); ++iter)
+			delete *iter;
 		mParticles.clear();
 		mTotalParticles = mMaxParticles = 0;
 		mVBuffer->Release();
@@ -216,10 +216,10 @@ namespace Epoch
 				(*i).pos = vec4f(0, 0, 0, 0);
 				(*i).size = 0;
 				Particle* temp = (*iter);
+				delete temp;
 				iter = mParticles.erase(iter);
 				if (iter == mParticles.end())
 					break;
-				delete temp;
 			}
 		}
 	}

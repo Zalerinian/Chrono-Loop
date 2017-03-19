@@ -87,6 +87,33 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
+            this.gbButtonCollider = new System.Windows.Forms.GroupBox();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.numericUpDown14 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown13 = new System.Windows.Forms.NumericUpDown();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.gbTransform = new System.Windows.Forms.GroupBox();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.tbName = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.gbMeshComponent = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.btnFileSelect = new System.Windows.Forms.Button();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
             this.gbCollider.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udKineticFriction)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udStaticFriction)).BeginInit();
@@ -119,6 +146,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pudMass)).BeginInit();
+            this.gbButtonCollider.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown14)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown13)).BeginInit();
+            this.gbTransform.SuspendLayout();
+            this.gbMeshComponent.SuspendLayout();
             this.SuspendLayout();
             // 
             // gbCollider
@@ -136,7 +168,7 @@
             this.gbCollider.Dock = System.Windows.Forms.DockStyle.Top;
             this.gbCollider.Location = new System.Drawing.Point(0, 0);
             this.gbCollider.Name = "gbCollider";
-            this.gbCollider.Size = new System.Drawing.Size(341, 159);
+            this.gbCollider.Size = new System.Drawing.Size(267, 159);
             this.gbCollider.TabIndex = 0;
             this.gbCollider.TabStop = false;
             this.gbCollider.Text = "[]Collider Base Component";
@@ -148,7 +180,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.udKineticFriction.Location = new System.Drawing.Point(90, 130);
             this.udKineticFriction.Name = "udKineticFriction";
-            this.udKineticFriction.Size = new System.Drawing.Size(228, 20);
+            this.udKineticFriction.Size = new System.Drawing.Size(154, 20);
             this.udKineticFriction.TabIndex = 9;
             // 
             // udStaticFriction
@@ -157,7 +189,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.udStaticFriction.Location = new System.Drawing.Point(90, 103);
             this.udStaticFriction.Name = "udStaticFriction";
-            this.udStaticFriction.Size = new System.Drawing.Size(228, 20);
+            this.udStaticFriction.Size = new System.Drawing.Size(154, 20);
             this.udStaticFriction.TabIndex = 8;
             // 
             // udDrag
@@ -166,7 +198,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.udDrag.Location = new System.Drawing.Point(90, 77);
             this.udDrag.Name = "udDrag";
-            this.udDrag.Size = new System.Drawing.Size(228, 20);
+            this.udDrag.Size = new System.Drawing.Size(154, 20);
             this.udDrag.TabIndex = 7;
             // 
             // udElasticity
@@ -175,7 +207,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.udElasticity.Location = new System.Drawing.Point(90, 49);
             this.udElasticity.Name = "udElasticity";
-            this.udElasticity.Size = new System.Drawing.Size(228, 20);
+            this.udElasticity.Size = new System.Drawing.Size(154, 20);
             this.udElasticity.TabIndex = 6;
             // 
             // udMass
@@ -184,7 +216,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.udMass.Location = new System.Drawing.Point(90, 20);
             this.udMass.Name = "udMass";
-            this.udMass.Size = new System.Drawing.Size(228, 20);
+            this.udMass.Size = new System.Drawing.Size(154, 20);
             this.udMass.TabIndex = 5;
             // 
             // lbKineticFriction
@@ -268,7 +300,7 @@
             this.gbBoxCollider.Dock = System.Windows.Forms.DockStyle.Top;
             this.gbBoxCollider.Location = new System.Drawing.Point(0, 159);
             this.gbBoxCollider.Name = "gbBoxCollider";
-            this.gbBoxCollider.Size = new System.Drawing.Size(341, 260);
+            this.gbBoxCollider.Size = new System.Drawing.Size(267, 260);
             this.gbBoxCollider.TabIndex = 1;
             this.gbBoxCollider.TabStop = false;
             this.gbBoxCollider.Text = "[]BoxCollider Component";
@@ -595,7 +627,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDown1.Location = new System.Drawing.Point(90, 230);
             this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(228, 20);
+            this.numericUpDown1.Size = new System.Drawing.Size(154, 20);
             this.numericUpDown1.TabIndex = 9;
             // 
             // numericUpDown2
@@ -604,7 +636,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDown2.Location = new System.Drawing.Point(90, 203);
             this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(228, 20);
+            this.numericUpDown2.Size = new System.Drawing.Size(154, 20);
             this.numericUpDown2.TabIndex = 8;
             // 
             // numericUpDown3
@@ -613,7 +645,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDown3.Location = new System.Drawing.Point(90, 177);
             this.numericUpDown3.Name = "numericUpDown3";
-            this.numericUpDown3.Size = new System.Drawing.Size(228, 20);
+            this.numericUpDown3.Size = new System.Drawing.Size(154, 20);
             this.numericUpDown3.TabIndex = 7;
             // 
             // numericUpDown4
@@ -622,7 +654,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDown4.Location = new System.Drawing.Point(90, 149);
             this.numericUpDown4.Name = "numericUpDown4";
-            this.numericUpDown4.Size = new System.Drawing.Size(228, 20);
+            this.numericUpDown4.Size = new System.Drawing.Size(154, 20);
             this.numericUpDown4.TabIndex = 6;
             // 
             // numericUpDown5
@@ -631,7 +663,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDown5.Location = new System.Drawing.Point(90, 120);
             this.numericUpDown5.Name = "numericUpDown5";
-            this.numericUpDown5.Size = new System.Drawing.Size(228, 20);
+            this.numericUpDown5.Size = new System.Drawing.Size(154, 20);
             this.numericUpDown5.TabIndex = 5;
             // 
             // label1
@@ -698,7 +730,7 @@
             this.gbPlaneCollider.Dock = System.Windows.Forms.DockStyle.Top;
             this.gbPlaneCollider.Location = new System.Drawing.Point(0, 419);
             this.gbPlaneCollider.Name = "gbPlaneCollider";
-            this.gbPlaneCollider.Size = new System.Drawing.Size(341, 220);
+            this.gbPlaneCollider.Size = new System.Drawing.Size(267, 220);
             this.gbPlaneCollider.TabIndex = 2;
             this.gbPlaneCollider.TabStop = false;
             this.gbPlaneCollider.Text = "[]PlaneCollider component";
@@ -717,7 +749,7 @@
             this.pnPlaneNormal.Controls.Add(this.mLbNX);
             this.pnPlaneNormal.Location = new System.Drawing.Point(90, 43);
             this.pnPlaneNormal.Name = "pnPlaneNormal";
-            this.pnPlaneNormal.Size = new System.Drawing.Size(228, 34);
+            this.pnPlaneNormal.Size = new System.Drawing.Size(154, 34);
             this.pnPlaneNormal.TabIndex = 34;
             this.pnPlaneNormal.Visible = false;
             // 
@@ -823,7 +855,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.udPlaneOffset.Location = new System.Drawing.Point(90, 17);
             this.udPlaneOffset.Name = "udPlaneOffset";
-            this.udPlaneOffset.Size = new System.Drawing.Size(228, 20);
+            this.udPlaneOffset.Size = new System.Drawing.Size(154, 20);
             this.udPlaneOffset.TabIndex = 12;
             // 
             // mLbNormal
@@ -850,7 +882,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDown6.Location = new System.Drawing.Point(90, 193);
             this.numericUpDown6.Name = "numericUpDown6";
-            this.numericUpDown6.Size = new System.Drawing.Size(228, 20);
+            this.numericUpDown6.Size = new System.Drawing.Size(154, 20);
             this.numericUpDown6.TabIndex = 9;
             // 
             // numericUpDown7
@@ -859,7 +891,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDown7.Location = new System.Drawing.Point(90, 166);
             this.numericUpDown7.Name = "numericUpDown7";
-            this.numericUpDown7.Size = new System.Drawing.Size(228, 20);
+            this.numericUpDown7.Size = new System.Drawing.Size(154, 20);
             this.numericUpDown7.TabIndex = 8;
             // 
             // numericUpDown8
@@ -868,7 +900,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDown8.Location = new System.Drawing.Point(90, 140);
             this.numericUpDown8.Name = "numericUpDown8";
-            this.numericUpDown8.Size = new System.Drawing.Size(228, 20);
+            this.numericUpDown8.Size = new System.Drawing.Size(154, 20);
             this.numericUpDown8.TabIndex = 7;
             // 
             // numericUpDown9
@@ -877,7 +909,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDown9.Location = new System.Drawing.Point(90, 112);
             this.numericUpDown9.Name = "numericUpDown9";
-            this.numericUpDown9.Size = new System.Drawing.Size(228, 20);
+            this.numericUpDown9.Size = new System.Drawing.Size(154, 20);
             this.numericUpDown9.TabIndex = 6;
             // 
             // pudMass
@@ -886,7 +918,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pudMass.Location = new System.Drawing.Point(90, 83);
             this.pudMass.Name = "pudMass";
-            this.pudMass.Size = new System.Drawing.Size(228, 20);
+            this.pudMass.Size = new System.Drawing.Size(154, 20);
             this.pudMass.TabIndex = 5;
             // 
             // label6
@@ -934,18 +966,285 @@
             this.label10.TabIndex = 0;
             this.label10.Text = "Mass: ";
             // 
+            // gbButtonCollider
+            // 
+            this.gbButtonCollider.Controls.Add(this.panel6);
+            this.gbButtonCollider.Controls.Add(this.panel5);
+            this.gbButtonCollider.Controls.Add(this.panel4);
+            this.gbButtonCollider.Controls.Add(this.numericUpDown14);
+            this.gbButtonCollider.Controls.Add(this.numericUpDown13);
+            this.gbButtonCollider.Controls.Add(this.label15);
+            this.gbButtonCollider.Controls.Add(this.label14);
+            this.gbButtonCollider.Controls.Add(this.label13);
+            this.gbButtonCollider.Controls.Add(this.label12);
+            this.gbButtonCollider.Controls.Add(this.label11);
+            this.gbButtonCollider.Dock = System.Windows.Forms.DockStyle.Top;
+            this.gbButtonCollider.Location = new System.Drawing.Point(0, 639);
+            this.gbButtonCollider.Name = "gbButtonCollider";
+            this.gbButtonCollider.Size = new System.Drawing.Size(267, 205);
+            this.gbButtonCollider.TabIndex = 3;
+            this.gbButtonCollider.TabStop = false;
+            this.gbButtonCollider.Text = "[]ButtonCollider Component";
+            this.gbButtonCollider.Visible = false;
+            // 
+            // panel6
+            // 
+            this.panel6.Location = new System.Drawing.Point(90, 80);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(228, 25);
+            this.panel6.TabIndex = 11;
+            // 
+            // panel5
+            // 
+            this.panel5.Location = new System.Drawing.Point(90, 50);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(228, 25);
+            this.panel5.TabIndex = 11;
+            // 
+            // panel4
+            // 
+            this.panel4.Location = new System.Drawing.Point(90, 20);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(228, 25);
+            this.panel4.TabIndex = 10;
+            // 
+            // numericUpDown14
+            // 
+            this.numericUpDown14.Location = new System.Drawing.Point(90, 140);
+            this.numericUpDown14.Name = "numericUpDown14";
+            this.numericUpDown14.Size = new System.Drawing.Size(228, 20);
+            this.numericUpDown14.TabIndex = 9;
+            // 
+            // numericUpDown13
+            // 
+            this.numericUpDown13.Location = new System.Drawing.Point(90, 115);
+            this.numericUpDown13.Name = "numericUpDown13";
+            this.numericUpDown13.Size = new System.Drawing.Size(228, 20);
+            this.numericUpDown13.TabIndex = 8;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(6, 144);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(70, 13);
+            this.label15.TabIndex = 6;
+            this.label15.Text = "Normal Force";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(6, 85);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(67, 13);
+            this.label14.TabIndex = 5;
+            this.label14.Text = "Push Normal";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(6, 55);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(34, 13);
+            this.label13.TabIndex = 2;
+            this.label13.Text = "Scale";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(6, 25);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(44, 13);
+            this.label12.TabIndex = 1;
+            this.label12.Text = "Position";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(6, 119);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(32, 13);
+            this.label11.TabIndex = 0;
+            this.label11.Text = "Mass";
+            // 
+            // gbTransform
+            // 
+            this.gbTransform.Controls.Add(this.panel3);
+            this.gbTransform.Controls.Add(this.panel2);
+            this.gbTransform.Controls.Add(this.panel1);
+            this.gbTransform.Controls.Add(this.tbName);
+            this.gbTransform.Controls.Add(this.label17);
+            this.gbTransform.Controls.Add(this.label16);
+            this.gbTransform.Controls.Add(this.label18);
+            this.gbTransform.Controls.Add(this.label19);
+            this.gbTransform.Dock = System.Windows.Forms.DockStyle.Top;
+            this.gbTransform.Location = new System.Drawing.Point(0, 844);
+            this.gbTransform.Name = "gbTransform";
+            this.gbTransform.Size = new System.Drawing.Size(267, 151);
+            this.gbTransform.TabIndex = 32;
+            this.gbTransform.TabStop = false;
+            this.gbTransform.Text = "[]Transform Component";
+            this.gbTransform.Visible = false;
+            // 
+            // panel3
+            // 
+            this.panel3.Location = new System.Drawing.Point(90, 115);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(227, 25);
+            this.panel3.TabIndex = 11;
+            // 
+            // panel2
+            // 
+            this.panel2.Location = new System.Drawing.Point(90, 80);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(227, 25);
+            this.panel2.TabIndex = 10;
+            // 
+            // panel1
+            // 
+            this.panel1.Location = new System.Drawing.Point(90, 45);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(227, 25);
+            this.panel1.TabIndex = 9;
+            // 
+            // tbName
+            // 
+            this.tbName.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbName.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.tbName.Location = new System.Drawing.Point(90, 20);
+            this.tbName.Margin = new System.Windows.Forms.Padding(0);
+            this.tbName.Name = "tbName";
+            this.tbName.Size = new System.Drawing.Size(227, 24);
+            this.tbName.TabIndex = 8;
+            this.tbName.Text = "Placeholder Text";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(6, 23);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(35, 13);
+            this.label17.TabIndex = 7;
+            this.label17.Text = "Name";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(6, 85);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(47, 13);
+            this.label16.TabIndex = 5;
+            this.label16.Text = "Rotation";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(6, 120);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(34, 13);
+            this.label18.TabIndex = 2;
+            this.label18.Text = "Scale";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(6, 50);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(44, 13);
+            this.label19.TabIndex = 1;
+            this.label19.Text = "Position";
+            // 
+            // gbMeshComponent
+            // 
+            this.gbMeshComponent.Controls.Add(this.button1);
+            this.gbMeshComponent.Controls.Add(this.btnFileSelect);
+            this.gbMeshComponent.Controls.Add(this.textBox2);
+            this.gbMeshComponent.Controls.Add(this.textBox1);
+            this.gbMeshComponent.Controls.Add(this.label20);
+            this.gbMeshComponent.Controls.Add(this.label23);
+            this.gbMeshComponent.Dock = System.Windows.Forms.DockStyle.Top;
+            this.gbMeshComponent.Location = new System.Drawing.Point(0, 995);
+            this.gbMeshComponent.Name = "gbMeshComponent";
+            this.gbMeshComponent.Size = new System.Drawing.Size(267, 151);
+            this.gbMeshComponent.TabIndex = 33;
+            this.gbMeshComponent.TabStop = false;
+            this.gbMeshComponent.Text = "[]Mesh Component";
+            this.gbMeshComponent.Visible = false;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(294, 20);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(26, 26);
+            this.button1.TabIndex = 14;
+            this.button1.Text = "...";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // btnFileSelect
+            // 
+            this.btnFileSelect.Location = new System.Drawing.Point(294, 50);
+            this.btnFileSelect.Name = "btnFileSelect";
+            this.btnFileSelect.Size = new System.Drawing.Size(26, 26);
+            this.btnFileSelect.TabIndex = 13;
+            this.btnFileSelect.Text = "...";
+            this.btnFileSelect.UseVisualStyleBackColor = true;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox2.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.textBox2.Location = new System.Drawing.Point(90, 51);
+            this.textBox2.Margin = new System.Windows.Forms.Padding(0);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(200, 24);
+            this.textBox2.TabIndex = 12;
+            this.textBox2.Text = "Texture File...";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox1.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.textBox1.Location = new System.Drawing.Point(90, 21);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(0);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(200, 24);
+            this.textBox1.TabIndex = 8;
+            this.textBox1.Text = "Mesh File...";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(6, 27);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(52, 13);
+            this.label20.TabIndex = 7;
+            this.label20.Text = "Mesh File";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(6, 56);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(75, 13);
+            this.label23.TabIndex = 1;
+            this.label23.Text = "Diffuse texture";
+            // 
             // TestPositionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(358, 461);
+            this.ClientSize = new System.Drawing.Size(284, 570);
+            this.Controls.Add(this.gbMeshComponent);
+            this.Controls.Add(this.gbTransform);
+            this.Controls.Add(this.gbButtonCollider);
             this.Controls.Add(this.gbPlaneCollider);
             this.Controls.Add(this.gbBoxCollider);
             this.Controls.Add(this.gbCollider);
-            this.MinimumSize = new System.Drawing.Size(340, 500);
+            this.MinimumSize = new System.Drawing.Size(300, 500);
             this.Name = "TestPositionForm";
             this.Text = "TestPositionForm";
+            this.ResizeBegin += new System.EventHandler(this.TestPositionForm_ResizeBegin);
             this.Click += new System.EventHandler(this.TestPositionForm_Click);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.TestPositionForm_Paint);
             this.Resize += new System.EventHandler(this.TestPositionForm_Resize);
@@ -985,6 +1284,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pudMass)).EndInit();
+            this.gbButtonCollider.ResumeLayout(false);
+            this.gbButtonCollider.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown14)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown13)).EndInit();
+            this.gbTransform.ResumeLayout(false);
+            this.gbTransform.PerformLayout();
+            this.gbMeshComponent.ResumeLayout(false);
+            this.gbMeshComponent.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1055,5 +1362,32 @@
         private System.Windows.Forms.Label mLbNormal;
         private System.Windows.Forms.Label mLbOffset;
         private System.Windows.Forms.Panel pnPlaneNormal;
+        private System.Windows.Forms.GroupBox gbButtonCollider;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.NumericUpDown numericUpDown14;
+        private System.Windows.Forms.NumericUpDown numericUpDown13;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.GroupBox gbTransform;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.TextBox tbName;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.GroupBox gbMeshComponent;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnFileSelect;
     }
 }

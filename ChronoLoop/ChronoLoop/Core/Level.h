@@ -16,12 +16,14 @@ namespace Epoch
 
 	class Level
 	{
+		friend class LM;
 		BaseObject* mHeadset;
 		BaseObject* mController1;
 		BaseObject* mController2;
 		TimeManipulation* mTMComponent1 = nullptr, *mTMComponent2 = nullptr;
 		std::list<BaseObject*> mObjectList;
 		unsigned short mId;
+		vec4f mStartPosition, mStartRotation;
 
 
 	public:
@@ -42,6 +44,8 @@ namespace Epoch
 		inline BaseObject* GetHeadset() { return mHeadset; }
 		inline BaseObject* GetLeftController() { return mController1; }
 		inline BaseObject* GetRightController() { return mController2; }
+		inline vec4f GetStartPos() { return mStartPosition; }
+		inline vec4f GetStartRot() { return mStartRotation; }
 		TimeManipulation* GetLeftTimeManipulator() { return mTMComponent1; }
 		TimeManipulation* GetRightTimeManipulator() { return mTMComponent2; }
 

@@ -70,7 +70,7 @@ void UpdateTime();
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(863805);
+	//_CrtSetBreakAlloc(26801);
 	if (!InitializeWindow(hInstance, nCmdShow, 1366, 720, true)) {
 		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
 		return 2;
@@ -654,7 +654,9 @@ void Update() {
 	L1->AddObject(headset);
 	L1->AddObject(LeftController);
 	//LevelManager::GetInstance().LoadLevelAsync("../Resources/LEVEL1/collider.xml", &L1);
-	LevelManager::GetInstance().SetCurrentLevel(L1);
+	LevelManager::GetInstance().RequestLevelChange(L1);
+	matrix4 cameraPos = matrix4::CreateYRotation(L1->GetStartRot().y) * matrix4::CreateZRotation(L1->GetStartRot().z) * matrix4::CreateXRotation(L1->GetStartRot().x) * matrix4::CreateTranslation(L1->GetStartPos());
+	Renderer::Instance()->SetDebugCameraPosition(cameraPos);
 	L1->CallStart();
 	
 	//Enter effect
@@ -721,7 +723,7 @@ void Update() {
 
 			//SystemLogger::GetLog() << "[Debug] Regular Update " << std::endl;
 			UpdateTime();
-			LevelManager::GetInstance().GetCurrentLevel()->Update();
+			LevelManager::GetInstance().Update();
 			ParticleSystem::Instance()->Update();
 			TimeManager::Instance()->Update(deltaTime);
 			Renderer::Instance()->Render(deltaTime); 
@@ -735,9 +737,6 @@ void Update() {
 			}
 		}
 	}
-	Messager::Destroy();
-	ParticleSystem::Destroy();
-
 }
 
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed) {

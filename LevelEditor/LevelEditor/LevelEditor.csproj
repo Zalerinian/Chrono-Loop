@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LevelEditor</RootNamespace>
     <AssemblyName>LevelEditor</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -85,10 +86,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Changes.cs" />
-    <Compile Include="Components\BoxCollider.cs" />
-    <Compile Include="Components\Collider.cs" />
+    <Compile Include="Components\BaseObject.cs" />
+    <Compile Include="Components\Colliders\BoxCollider.cs" />
+    <Compile Include="Components\Colliders\ButtonCollider.cs" />
+    <Compile Include="Components\Colliders\Collider.cs" />
+    <Compile Include="Components\Colliders\SphereCollider.cs" />
     <Compile Include="Components\Component.cs" />
-    <Compile Include="Components\PlaneCollider.cs" />
+    <Compile Include="Components\Colliders\PlaneCollider.cs" />
+    <Compile Include="Components\MeshComponent.cs" />
+    <Compile Include="Components\TransformComponent.cs" />
     <Compile Include="Forms\FileOperations.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,6 +116,12 @@
     <Compile Include="Controls\NoFocusButton.Designer.cs">
       <DependentUpon>NoFocusButton.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\LevelSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LevelSettingsForm.Designer.cs">
+      <DependentUpon>LevelSettingsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\TestPositionForm.cs">
@@ -118,10 +130,14 @@
     <Compile Include="Forms\TestPositionForm.Designer.cs">
       <DependentUpon>TestPositionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Settings.cs" />
     <Compile Include="ToolObject.cs" />
     <Compile Include="ToolObjectColor.cs" />
     <EmbeddedResource Include="Forms\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LevelSettingsForm.resx">
+      <DependentUpon>LevelSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -131,10 +147,14 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="Forms\TestPositionForm.resx">
       <DependentUpon>TestPositionForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Assets\Arrow.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Assets\AxisGizmo.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

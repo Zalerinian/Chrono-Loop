@@ -13,8 +13,8 @@ namespace LevelEditor
     public partial class Editor : Form
     {
 
-        enum DataSet { Object, BoxCollider, SphereCollider, PlaneCollier, ButtonCollider };
-
+        public const float RADIANS_TO_DEGREES = ((180.0f / 3.14f)); 
+        public const float DEGREES_TO_RADIANS = (1 / 180.0f * 3.14f);
         private Microsoft.DirectX.Direct3D.Device device;
         private float angleX, angleY, rotSpeed, dragSpeed;
         private Microsoft.DirectX.DirectInput.Device keyb;
@@ -27,6 +27,7 @@ namespace LevelEditor
         private List<long> advMillisecond = new List<long>();
         private Vector3 cameraPos = new Vector3(0, 0, 0), prevHit = new Vector3(0, 0, 0), curHit = new Vector3(0, 0, 0);
         private Vector2 prevMouse, curMouse;
+        private Vector3 mStartPos, mStartRot;
         private int selectedIndex = 0;
         private bool canMove = false, grab = false, snap = false, loaded = true;
         private string selectedName = string.Empty, colliderType = string.Empty, currentFile = string.Empty;
@@ -37,7 +38,6 @@ namespace LevelEditor
         // Variables added by Drew
         private string mCurrentFilename = string.Empty;
         private bool mCurrentFileChanged = false;
-        private DataSet mDataset = DataSet.Object;
         private TestPositionForm mForm;
 
 
@@ -59,15 +59,6 @@ namespace LevelEditor
             }
         }
 
-        DataSet VisibileData {
-            get {
-                return mDataset;
-            }
-            set {
-                mDataset = value;
-                //UpdateDataVisibility();
-            }
-        }
 
         public Editor()
         {
@@ -89,10 +80,10 @@ namespace LevelEditor
             debugObjs[0].ObjectColor = Color.GhostWhite;
             debugObjs[0].IsWireFrame = true;
             debugObjs.Add(new ToolObjectColor("Assets\\AxisGizmo.obj", ref device));
-            splitContainer1.BorderStyle = BorderStyle.None;
-            splitContainer1.SplitterWidth = 1;
+            spHierarchyPanel.BorderStyle = BorderStyle.None;
+            spHierarchyPanel.SplitterWidth = 1;
             splitContainer2.BorderStyle = BorderStyle.None;
-            splitContainer2.SplitterWidth = 1;
+            splitContainer2.SplitterWidth = 8;
             fpsTimer.Start();
             rotSpeed = 0.005f;
             dragSpeed = 2.0f;
@@ -101,6 +92,9 @@ namespace LevelEditor
             Tree.Nodes[0].Expand();
 
 
+            // Level settings McBootleg
+            mStartPos = new Vector3(0, 0, 0);
+            mStartRot = new Vector3(0, 0, 0);
 
             // Purely Testificate
             mForm = new TestPositionForm();
@@ -574,7 +568,7 @@ namespace LevelEditor
         private void LeftToggle_Click(object sender, EventArgs e)
         {
             LeftToggle.Text = LeftToggle.Text == "<" ? ">" : "<";
-            splitContainer1.Panel1Collapsed = !splitContainer1.Panel1Collapsed;
+            spHierarchyPanel.Panel1Collapsed = !spHierarchyPanel.Panel1Collapsed;
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -643,6 +637,18 @@ namespace LevelEditor
             {
                 currentFile = saveFile.FileName;
                 saveLevel(saveFile.FileName);
+            }
+        }
+
+        private void levelSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Forms.LevelSettingsForm settings = new Forms.LevelSettingsForm();
+            settings.SetPosition(mStartPos);
+            settings.SetRotation(mStartRot);
+            if(settings.ShowDialog() == DialogResult.OK)
+            {
+                mStartPos = settings.GetPosition();
+                mStartRot = settings.GetRotation();
             }
         }
 
@@ -784,6 +790,20 @@ namespace LevelEditor
 
         private void UpdateSelectedData()
         {
+
+
+
+
+            // Hide Yams' controls so we can start adding in the component model.
+            //groupBox1.Visible = false;
+            //groupBox2.Visible = false;
+            //groupBox3.Visible = false;
+            //groupBox4.Visible = false;
+            //groupBox5.Visible = false;
+            //groupBox6.Visible = false;
+            //groupBox7.Visible = false;
+            //TextureBox.Visible = false;
+            //return;
             if (selectedCollider != null)
             {
                 groupBox5.Visible = false;
@@ -1019,9 +1039,10 @@ namespace LevelEditor
 
         public void SetFileEdited(bool _edited) {
             if(_edited && !mCurrentFileChanged) {
-                Text = Text + "*";
+                SetFilepath(mCurrentFilename);
+                Text += "*";
             } else if(!_edited && mCurrentFileChanged) {
-                Text = Text.Substring(0, Text.Length - 1);
+                SetFilepath(mCurrentFilename);
             }
             mCurrentFileChanged = _edited;
         }

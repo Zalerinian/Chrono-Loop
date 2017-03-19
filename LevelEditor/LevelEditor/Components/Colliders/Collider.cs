@@ -67,14 +67,14 @@ namespace LevelEditor {
             mLbDrag.Text = "Drag";
 
             mLbStaticFriction.AutoSize = true;
-            mLbStaticFriction.Location = new System.Drawing.Point(7, 105 + _yOffset);
+            mLbStaticFriction.Location = new System.Drawing.Point(6, 105 + _yOffset);
             mLbStaticFriction.Name = "mLbStaticFriction";
             mLbStaticFriction.Size = new System.Drawing.Size(77, 13);
             mLbStaticFriction.TabIndex = 3;
             mLbStaticFriction.Text = "Static Friction";
 
             mLbKineticFriction.AutoSize = true;
-            mLbKineticFriction.Location = new System.Drawing.Point(7, 132 + _yOffset);
+            mLbKineticFriction.Location = new System.Drawing.Point(6, 132 + _yOffset);
             mLbKineticFriction.Name = "mLbKineticFriction";
             mLbKineticFriction.Size = new System.Drawing.Size(82, 13);
             mLbKineticFriction.TabIndex = 4;

@@ -27,6 +27,8 @@ namespace Epoch
 
 	void Physics::Destroy()
 	{
+		
+
 		if (mInstance)
 		{
 			delete mInstance;
