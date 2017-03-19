@@ -10,44 +10,20 @@ SamplerState normalFilter : register(s1);
 texture2D tSpecular : register(t2);
 SamplerState specularFilter : register(s2);
 
-struct DLight {
-	float4 dir;
-	float4 color;
-};
-
-struct PLight {
+struct Light {
+    int type;
 	float4 pos;
-	float4 color;
-};
-
-struct SLight {
 	float4 dir;
-	float4 pos;
+	float4 cdir;
 	float4 color;
 	float  ratio;
 };
 
-cbuffer _DLight : register(b0)
+cbuffer _Light : register(b0)
 {
-	DLight DirLight;
-	//float4 dir;
-	//float4 dcol;
-};
-
-cbuffer _PLight : register(b1)
-{
-	PLight PointLight;
-	//float4 ppos; 
-	//float4 pcol;
-};
-
-cbuffer _SLight : register(b2)
-{
-	SLight SpotLight;
-	//float4 cdir;
-	//float4 slpos;
-	//float4 slcol;
-	//float cratio;
+	Light DirLight;
+	Light PointLight;
+	Light SpotLight;
 };
 
 struct PSI

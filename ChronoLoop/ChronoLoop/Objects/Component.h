@@ -204,16 +204,6 @@ namespace Epoch
 		std::unordered_set<Collider*> mHitting;
 	};
 
-	class Light : public Component
-	{
-		union
-		{
-			DirectionalLight mDL;
-			SpotLight mSL;
-			PointLight mPL;
-		};
-	};
-
 	class Effect : public Component
 	{
 	public:

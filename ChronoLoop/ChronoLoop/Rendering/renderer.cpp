@@ -97,9 +97,8 @@ namespace Epoch {
 
 	void Renderer::UpdateLBuffers()
 	{
-		mContext->UpdateSubresource(mDLBuffer.Get(), 0, nullptr, &mDLData, 0, 0);
-		mContext->UpdateSubresource(mSLBuffer.Get(), 0, nullptr, &mSLData, 0, 0);
-		mContext->UpdateSubresource(mPLBuffer.Get(), 0, nullptr, &mPLData, 0, 0);
+		Light buffs[] = { mDLData, mPLData, mSLData };
+		mContext->UpdateSubresource(mLBuffer.Get(), 0, nullptr, buffs, 0, 0);
 
 		//mContext->UpdateSubresource(mDLBufferS.Get(), 0, nullptr, &mDLVPB, 0, 0);
 		//mContext->UpdateSubresource(mSLBufferS.Get(), 0, nullptr, &mSLVPB, 0, 0);
@@ -289,17 +288,11 @@ namespace Epoch {
 		mPositionBuffer.Attach(pBuff);
 
 		//Light buffers
-		desc.ByteWidth = sizeof(DirectionalLight);
+		desc.ByteWidth = sizeof(Directional);
+		desc.ByteWidth += sizeof(Point);
+		desc.ByteWidth += sizeof(Spot);
 		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
-		mDLBuffer.Attach(pBuff);
-
-		desc.ByteWidth = sizeof(PointLight);
-		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
-		mPLBuffer.Attach(pBuff);
-
-		desc.ByteWidth = sizeof(SpotLight);
-		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
-		mSLBuffer.Attach(pBuff);
+		mLBuffer.Attach(pBuff);
 
 		//desc.ByteWidth = sizeof(ViewProjectionBuffer);
 		//mDevice->CreateBuffer(&desc, nullptr, &pBuff);
@@ -312,16 +305,16 @@ namespace Epoch {
 		//mSLBufferS.Attach(pBuff);
 
 		//TODO: GET RID OF THIS
-		mDLData.Color = vec4f(.5, .5, .5, 1);
-		mDLData.Direction = vec4f(0, -1, 0, 0);
+		mDLData.mColor = vec4f(.5, .5, .5, 1);
+		mDLData.mDirection = vec4f(0, -1, 0, 0);
 
-		mPLData.Position = vec4f(0, 0, 0, 0);
-		mPLData.Color = vec4f(1, 1, 1, 1);
+		mPLData.mPosition = vec4f(0, 0, 0, 0);
+		mPLData.mColor = vec4f(1, 1, 1, 1);
 
-		mSLData.Color = vec4f(0, .25, .25, 1);
-		mSLData.ConeDirection = vec4f(0, -1, 0, 0);
-		mSLData.Position = vec4f(3, 4, 0, 0);
-		mSLData.ConeRatio = .5;
+		mSLData.mColor = vec4f(0, .25, .25, 1);
+		mSLData.mConeDirection = vec4f(0, -1, 0, 0);
+		mSLData.mPosition = vec4f(3, 4, 0, 0);
+		mSLData.mConeRatio = .5;
 		UpdateLBuffers();
 
 	}
@@ -366,8 +359,7 @@ namespace Epoch {
 	void Renderer::SetStaticBuffers() {
 		mContext->GSSetConstantBuffers(0, 1, mVPBuffer.GetAddressOf());
 		mContext->VSSetConstantBuffers(0, 1, mPositionBuffer.GetAddressOf());
-		ID3D11Buffer* buffs[] = { mDLBuffer.Get(), mPLBuffer.Get(), mSLBuffer.Get()};
-		mContext->PSSetConstantBuffers(0, 3, buffs);
+		mContext->PSSetConstantBuffers(0, 1, mLBuffer.GetAddressOf());
 		//(*mContext)->VSSetConstantBuffers(2, 1, nullptr); // This will crash. - Instance Buffer
 		//(*mContext)->VSSetConstantBuffers(3, 1, nullptr); // This will crash. - Animation Data Buffer
 

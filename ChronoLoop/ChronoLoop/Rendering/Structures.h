@@ -60,21 +60,42 @@ namespace Epoch
 		VertexPosBoneWeightNormTanTex() {};
 	};
 
-	struct DirectionalLight
+	struct Light
 	{
-		vec4f Direction;
-		vec4f Color;
-	};
-	struct PointLight
-	{
-		vec4f Position;
-		vec4f Color;
-	};
-	struct SpotLight
-	{
-		vec4f ConeDirection;
-		vec4f Position;
-		vec4f Color;
+	public:
+		int Type;
+	protected:
+		vec4f Position, Direction, ConeDirection, Color;
 		float ConeRatio;
+	};
+
+	struct Directional : public Light
+	{
+		vec4f & mDirection = Direction;
+		vec4f & mColor = Color;
+		Directional()
+		{
+			Type = 1;
+		}
+	};
+	struct Point : public Light
+	{
+		vec4f & mPosition = Position;
+		vec4f & mColor = Color;
+		Point()
+		{
+			Type = 2;
+		}
+	};
+	struct Spot : public Light
+	{
+		vec4f & mConeDirection = ConeDirection;
+		vec4f & mPosition = Position;
+		vec4f & mColor = Color;
+		float & mConeRatio = ConeRatio;
+		Spot()
+		{
+			Type = 4;
+		}
 	};
 }

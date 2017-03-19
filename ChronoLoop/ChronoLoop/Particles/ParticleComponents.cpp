@@ -596,16 +596,16 @@ namespace Epoch
 			{
 				Particle* p = &Particle::Init(*mBase);
 				float x, y, z;
-				x = -.25f - mPos.x + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.25f + mPos.x - (-.25f - mPos.x))));
+				x = -.05f - mPos.x + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05f + mPos.x - (-.05f - mPos.x))));
 				y = -1.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - (-3.0f))));
-				z = -.25f - mPos.z + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.25f + mPos.x - (-.25f - mPos.z))));
-				p->SetPos(x, 0, z);
+				z = -.05f - mPos.z + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05f + mPos.x - (-.05f - mPos.z))));
+				p->SetPos(0, 0, 0);
 				*p->GetPos() = *p->GetPos() + mPos;
 				p->SetRadials(0, y, 0);
 				x = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - -3.0f)));
 				y = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - -3.0f)));
 				z = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - -3.0f)));
-				p->SetVelocity(0, 1, 0);
+				p->SetVelocity(x, 1, z);
 
 				mParticles.push_back(p);
 				total++;
