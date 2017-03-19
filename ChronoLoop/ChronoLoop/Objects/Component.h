@@ -5,6 +5,7 @@
 #include "..\Physics\Physics.h"
 #include <unordered_set>
 #include "../Rendering/RenderSet.h"	
+#include "../Particles/ParticleSystem.h"
 
 namespace Epoch
 {
@@ -21,6 +22,7 @@ namespace Epoch
 		eCOMPONENT_COLLIDER,
 		eCOMPONENT_UI,
 		eCOMPONENT_MESH,
+		eCOMPONENT_EFFECT,
 		eCOMPONENT_MAX
 	};
 
@@ -212,6 +214,19 @@ namespace Epoch
 		};
 	};
 
+	class Effect : public Component
+	{
+	public:
+		Effect() : Component(ComponentType::eCOMPONENT_EFFECT) {}
+		ParticleEmitter* mEmitter;
+
+		void FireEffect()
+		{
+			if (mEmitter)
+				mEmitter->FIRE();
+		}
+
+	};
 	/*
 	business entity- gmail, twitter, facebook, steam account
 	art, audio, marketing, designer students ?

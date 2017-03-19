@@ -412,6 +412,9 @@
     <ClInclude Include="Particles\ParticleComponents.h">
       <Filter>Particles</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleEffectPrototypes.h">
+      <Filter>Particles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">

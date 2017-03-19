@@ -127,11 +127,13 @@ namespace Epoch
 
 	void Emitter::AddSoundEvent(sfxTypes _type, int64_t _event)
 	{
+		
 		switch (_type)
 		{
 		case sfxTypes::ePlayLoop:
 		{
 			mSFX[_type].push_back(_event);
+			mIsSounds.push_back(std::pair<bool, bool>(false, false));
 		}
 		break;
 		case sfxTypes::ePauseLoop:
@@ -156,10 +158,6 @@ namespace Epoch
 		break;
 		}
 
-		if (_type != sfxTypes::ePlaySFX)
-		{
-			mIsSounds.push_back(std::pair<bool, bool>(false, false));
-		}
 	}
 
 	void Emitter::Destroy()

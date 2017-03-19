@@ -5,55 +5,173 @@
 namespace Epoch
 {
 
-	//Particle----------------------------------------------------------
+#pragma region Particles
 
-	Particle::Particle()
+	Particle& Particle::Init(const Particle& _p)
 	{
-		mLife = mMaxLife = 1000;
-		mSize = 1.0f;
-		mPos = vec4f(0, 0, 0, 0);
-		mVelocity = vec4f(0, 0, 0, 0);
-		mSColor = mEColor = mCurColor = vec4f(1, 1, 1, 1);
-		mActive = true;
+		Particle* p = new Particle();
+		*p = _p;
+
+		return *p;
 	}
-	Particle::Particle(int _life, float _size, vec4f _pos, vec4f _color)
+	Particle& Particle::Init(int _life, float _ss, float _es, float _so, float _eo, float _xr, float _yr, float _zr, vec4f _pos, vec4f _vel, vec4f _scol, vec4f _ecol)
 	{
-		mLife = mMaxLife = _life;
-		mSize = mSSize = mFSize = _size;
-		mPos = _pos;
-		mSColor = mEColor = mCurColor = _color;
-		mVelocity = vec4f(0, 0, 0, 0);
-		mActive = true;
-	}
-	Particle::Particle(int _life, float _size, float _msize, vec4f _pos, vec4f _scolor, vec4f _ecolor)
-	{
-		mLife = mMaxLife = _life;
-		mSize = mSSize = _size;
-		mFSize = _msize;
-		mPos = _pos;
-		mSColor = mCurColor = _scolor;
-		mEColor = _ecolor;
-		mVelocity = vec4f(0, 0, 0, 0);
-		mActive = true;
+		Particle* p = new Particle();
+		p->mLife = p->mTotalLife = _life;
+		p->mSize = p->mStartSize = _ss;
+		p->mEndSize = _es;
+		p->mOpacity = p->mStartOpacity = _so;
+		p->mEndOpacity = _eo;
+		p->mXRadial = _xr;
+		p->mYRadial = _yr;
+		p->mZRadial = _zr;
+		p->mPos = _pos;
+		p->mVelocity = _vel;
+		p->mStartColor = _scol;
+		p->mEndColor = _ecol;
+
+		return *p;
 	}
 
 	Particle& Particle::operator=(const Particle& _other)
 	{
 		mLife = _other.mLife;
-		mMaxLife = _other.mMaxLife;
+		mTotalLife = _other.mTotalLife;
 		mSize = _other.mSize;
-		mSSize = _other.mSSize;
-		mFSize = _other.mFSize;
+		mStartSize = _other.mStartSize;
+		mEndSize = _other.mEndSize;
+		mOpacity = _other.mOpacity;
+		mStartOpacity = _other.mStartOpacity;
+		mEndOpacity = _other.mEndOpacity;
+		mXRadial = _other.mXRadial;
+		mYRadial = _other.mYRadial;
+		mZRadial = _other.mZRadial;
 		mPos = _other.mPos;
-		mSColor = _other.mSColor;
-		mEColor = _other.mEColor;
-		mCurColor = _other.mCurColor;
-		mActive = _other.mActive;
+		mPrevPos = _other.mPrevPos;
+		mColor = _other.mColor;
+		mStartColor = _other.mStartColor;
+		mEndColor = _other.mEndColor;
+		mVelocity = _other.mVelocity;
+		mAlive = _other.mAlive;
 
 		return *this;
 	}
 
-	//Base Particle Emitter---------------------------------------------
+	bool Particle::IsActive() const
+	{
+		return mAlive;
+	}
+	float Particle::GetLifeRatio() const
+	{
+		return ((float)mLife / (float)mTotalLife);
+	}
+	int Particle::GetLife() const
+	{
+		return mLife;
+	}
+	float Particle::GetSize() const
+	{
+		return mSize;
+	}
+	void Particle::GetRadials(float* _x, float* _y, float* _z)
+	{
+		_x = &mXRadial;
+		_y = &mYRadial;
+		_z = &mZRadial;
+	}
+	vec4f* Particle::GetPos()
+	{
+		return &mPos;
+	}
+	vec4f* Particle::GetPrevPos()
+	{
+		return &mPrevPos;
+	}
+	vec4f Particle::GetVelocity() const
+	{
+		return mVelocity;
+	}
+	vec4f Particle::GetColor() const
+	{
+		return mColor;
+	}
+
+	void Particle::SetLife(int _life)
+	{
+		mLife = mTotalLife = _life;
+	}
+	void Particle::SetPos(vec4f _pos)
+	{
+		mPos = _pos;
+		mPos.w = 1;
+	}
+	void Particle::SetPos(float _x, float _y, float _z)
+	{
+		mPos.x = _x;
+		mPos.y = _y;
+		mPos.z = _z;
+		mPos.w = 1;
+	}
+	void Particle::SetSize(float _ssize, float _esize)
+	{
+		mSize = mStartSize = _ssize;
+		mEndSize = _esize;
+	}
+	void Particle::SetRadials(float _x, float _y, float _z)
+	{
+		mXRadial = _x;
+		mYRadial = _y;
+		mZRadial = _z;
+	}
+	void Particle::SetVelocity(vec4f _vel)
+	{
+		mVelocity = _vel;
+		mVelocity.w = 0;
+	}
+	void Particle::SetVelocity(float _x, float _y, float _z)
+	{
+		mVelocity.x = _x;
+		mVelocity.y = _y;
+		mVelocity.z = _z;
+		mVelocity.w = 0;
+	}
+	void Particle::SetColors(vec4f _scol, vec4f _ecol)
+	{
+		mColor = mStartColor = _scol;
+		mEndColor = _ecol;
+	}
+	void Particle::DecLife()
+	{
+		mLife--;
+	}
+	void Particle::Kill()
+	{
+		mAlive = false;
+	}
+
+	Particle& Particle::operator--()
+	{
+		--mLife;
+		return *this;
+	}
+	Particle Particle::operator--(int i)
+	{
+		mLife--;
+		return *this;
+	}
+
+	void Particle::InterpSize()
+	{
+		mSize += (mEndSize - mStartSize) * (1.0f - GetLifeRatio());
+	}
+	void Particle::InterpColor()
+	{
+		mColor += (mEndColor - mStartColor) * (1.0f - GetLifeRatio());
+	}
+
+#pragma endregion
+
+#pragma region Base Emitter
 
 	ParticleEmitter::ParticleEmitter(int _totalp, int _maxp, int _persec, vec4f _pos)
 	{
@@ -62,6 +180,7 @@ namespace Epoch
 		mPerSec = _persec;
 		mPos = _pos;
 		mActive = true;
+		mEnabled = false;
 		CreateBuffers();
 	}
 
@@ -70,8 +189,14 @@ namespace Epoch
 		delete mBase;
 		mTName = nullptr;
 		mBase = nullptr;
-		for (Particle* p : mParticles)
-			delete p;
+		for (auto i = mParticles.begin(); i != mParticles.end(); i++)
+		{
+			Particle* t = *i;
+			i = mParticles.erase(i);
+			if (i == mParticles.end())
+				break;
+			delete t;
+		}
 		mParticles.clear();
 		mTotalParticles = mMaxParticles = 0;
 		mVBuffer->Release();
@@ -140,27 +265,29 @@ namespace Epoch
 	}
 	void ParticleEmitter::Update(float _delta)
 	{
-		if (mActive == false)
+		if (mEnabled == false)
 			return;
 		CleanUpParticles();
 		EmitParticles();
-		for (Particle* p : mParticles)
-			UpdateParticle(p, _delta);
+		for (auto p = mParticles.begin(); p != mParticles.end(); p++)
+		{
+			UpdateParticle(*p, _delta);
+		}
 		UpdateBuffers();
 	}
 
 	void ParticleEmitter::UpdateParticle(Particle* _p, float _delta)
 	{
 		//TODO: I have no clue, particle stuff
-		if (_p->mLife <= 0 || _p->mSize <= 0)
-			_p->mActive = false;
-		if (_p->mActive)
+		if (_p->GetLife() <= 0 || _p->GetSize() <= 0)
+			_p->Kill();
+		if (_p->IsActive())
 		{
-			_p->mPrevPos = _p->mPos;
-			_p->mPos = _p->mPos + (_p->mVelocity * _delta);
-			_p->mSize += (_p->mFSize - _p->mSSize) * (1 - ((float)_p->mLife / (float)_p->mMaxLife)) / 10.0f;
-			_p->mCurColor += (_p->mEColor - _p->mSColor) *  (1 - ((float)_p->mLife / (float)_p->mMaxLife)) / 10.0f;
-			_p->mLife--;
+			*_p->GetPrevPos() = *_p->GetPos();
+			*_p->GetPos() = *_p->GetPos() + (_p->GetVelocity() * _delta);
+			_p->InterpSize();
+			_p->InterpColor();
+			(*_p)--;
 		}
 	}
 
@@ -175,11 +302,11 @@ namespace Epoch
 		int i = 0;
 		for (auto iter = mParticles.begin(); iter != mParticles.end(); ++iter)
 		{
-			if ((*iter)->mActive)
+			if ((*iter)->IsActive())
 			{
-				gps.pos = (*iter)->mPos;
-				gps.size = (*iter)->mSize;
-				gps.col = (*iter)->mCurColor;
+				gps.pos = *(*iter)->GetPos();
+				gps.size = (*iter)->GetSize();
+				gps.col = (*iter)->GetColor();
 				mGParticles[i] = gps;
 			}
 			else
@@ -211,7 +338,7 @@ namespace Epoch
 		auto i = mGParticles.begin();
 		for (auto iter = mParticles.begin(); iter != mParticles.end() && i != mGParticles.end(); ++iter, ++i)
 		{
-			if ((*iter)->mActive == false)
+			if ((*iter)->IsActive() == false)
 			{
 				(*i).pos = vec4f(0, 0, 0, 0);
 				(*i).size = 0;
@@ -237,27 +364,28 @@ namespace Epoch
 			}
 			if (mParticles.size() < mMaxParticles && (total < mTotalParticles || mTotalParticles == -1))
 			{
+				Particle* p = &Particle::Init(*mBase);
 				float x, y, z;
 				x = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - (-3.0f))));
 				y = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - (-3.0f))));
 				z = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - (-3.0f))));
-				Particle* p = new Particle();
-				*p = *mBase;
-				p->mPos = vec4f(0, 0, 0, 1);
-				p->mPos += mPos;
-				p->mSize = .1f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.25f - .1f)));
+				p->SetPos(0, 0, 0);
+				*p->GetPos() = *p->GetPos() + mPos;
 
 				x = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - -3.0f)));
 				y = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - -3.0f)));
 				z = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - -3.0f)));
-				p->mVelocity = vec4f(x, y, z, 0);
+				p->SetVelocity(x, 0, z);
+
 				mParticles.push_back(p);
 				total++;
 			}
 		}
 	}
 
-	//Volume Emitter------------------------------------------------------
+#pragma endregion
+
+#pragma region Volume Emitter
 
 	VolumeEmitter::VolumeEmitter(int _totalp, int _maxp, int _persec, vec4f _pos) : ParticleEmitter(_totalp, _maxp, _persec, _pos)
 	{
@@ -348,31 +476,39 @@ namespace Epoch
 
 	void VolumeEmitter::BindToAABB(Particle* _p)
 	{
-		float x = _p->mPos.x, y = _p->mPos.y, z = _p->mPos.z;
+		float x = _p->GetPos()->x, y = _p->GetPos()->y, z = _p->GetPos()->z;
 
 		if (x < mRect.min.x || x > mRect.max.x)
 		{
-			_p->mVelocity.x += (_p->mVelocity.x < 0) ? -.1f : .1f;
-			_p->mVelocity.x *= -1.0f;
+			vec4f tvel = _p->GetVelocity();
+			tvel.x += (_p->GetVelocity().x < 0) ? -.1f : .1f;
+			tvel.x *= -1.0f;
+			_p->SetVelocity(tvel);
 		}
 		if (y < mRect.min.y || y > mRect.max.y)
 		{
-			_p->mVelocity.y += (_p->mVelocity.y < 0) ? -.1f : .1f;
-			_p->mVelocity.y *= -1.0f;
+			vec4f tvel = _p->GetVelocity();
+			tvel.y += (_p->GetVelocity().y < 0) ? -.1f : .1f;
+			tvel.y *= -1.0f;
+			_p->SetVelocity(tvel);
 		}
 		if (z < mRect.min.z || z > mRect.max.z)
 		{
-			_p->mVelocity.z += (_p->mVelocity.z < 0) ? -.1f : .1f;
-			_p->mVelocity.z *= -1.0f;
+			vec4f tvel = _p->GetVelocity();
+			tvel.z += (_p->GetVelocity().z < 0) ? -.1f : .1f;
+			tvel.z *= -1.0f;
+			_p->SetVelocity(tvel);
 		}
 	}
 	void VolumeEmitter::BindToSPHR(Particle* _p)
 	{
 		float r = mSphr.radius;
-		float d = (_p->mPos - mPos).Magnitude();
+		float d = (*_p->GetPos() - mPos).Magnitude();
 
+		vec4f tvel = _p->GetVelocity();
 		if (d > r)
-			_p->mVelocity *= -1;
+			tvel *= -1;
+		_p->SetVelocity(tvel);
 
 	}
 	void VolumeEmitter::BindToCYL(Particle* _p)
@@ -381,16 +517,18 @@ namespace Epoch
 		float offset = mCylndr.length / 2.0f;
 		float r = mCylndr.radius;
 		vec4f dir = (mCylndr.top - mCylndr.bottom);
-		float rat = dir.Dot(_p->mPos);
+		float rat = dir.Dot(*_p->GetPos());
 		if (rat < 0)
 			rat = 0;
 		else if (rat > 1)
 			rat = 1;
 		vec4f point = mCylndr.bottom + (dir * rat);
-		float d = (point - _p->mPos).Magnitude();
+		float d = (point - *_p->GetPos()).Magnitude();
 
+		vec4f tvel = _p->GetVelocity();
 		if (d > r)
-			_p->mVelocity *= -1;
+			tvel *= -1;
+		_p->SetVelocity(tvel);
 
 		/*switch (mCylndr.orientation)
 		{
@@ -417,7 +555,9 @@ namespace Epoch
 		}*/
 	}
 
-	//Radial ----------------------
+#pragma endregion
+
+#pragma region Radial
 
 	RadialEmitter::RadialEmitter(int _totalp, int _maxp, int _persec, vec4f _pos) : ParticleEmitter(_totalp, _maxp, _persec, _pos)
 	{
@@ -426,8 +566,19 @@ namespace Epoch
 
 	void RadialEmitter::UpdateParticle(Particle* _p, float _delta)
 	{
+		vec4f tvel = _p->GetVelocity();
+		_p->mYRadial += .01f;
+		//tvel.y += .01f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.1f - .01f)));
+		//_p->SetVelocity(tvel);
+		tvel = *_p->GetPos();
+		tvel.y = 0;
+		//float radius = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - (0.0f))));
+		float radius = (tvel - mPos).Magnitude3();
+
+		(*_p->GetPos()).x = radius * cos(_p->mYRadial) + mPos.x;
+		(*_p->GetPos()).z = radius * sin(-_p->mYRadial) + mPos.z;
 		ParticleEmitter::UpdateParticle(_p, _delta);
-		_p->mVelocity.y += .0001f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.001f - .0001f)));;
+
 	}
 
 	void RadialEmitter::EmitParticles()
@@ -443,38 +594,40 @@ namespace Epoch
 			}
 			if (mParticles.size() < mMaxParticles && (total < mTotalParticles || mTotalParticles == -1))
 			{
+				Particle* p = &Particle::Init(*mBase);
 				float x, y, z;
-				x = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - (-3.0f))));
-				y = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - (-3.0f))));
-				z = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - (-3.0f))));
-				Particle* p = new Particle();
-				*p = *mBase;
-				p->mPos = vec4f(0, 0, 0, 1);
-				p->mPos += mPos;
-				//p->mSize = .1 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.25 - .1)));
+				x = -.25f - mPos.x + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.25f + mPos.x - (-.25f - mPos.x))));
+				y = -1.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - (-3.0f))));
+				z = -.25f - mPos.z + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.25f + mPos.x - (-.25f - mPos.z))));
+				p->SetPos(x, 0, z);
+				*p->GetPos() = *p->GetPos() + mPos;
+				p->SetRadials(0, y, 0);
+				x = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - -3.0f)));
+				y = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - -3.0f)));
+				z = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - -3.0f)));
+				p->SetVelocity(0, 1, 0);
 
-				x = -.05f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05f - -.05f)));
-				y = -.05f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05f - -.05f)));
-				z = -.05f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05f - -.05f)));
-				p->mVelocity = vec4f(x, 0, z, 0);
 				mParticles.push_back(p);
 				total++;
 			}
 		}
 	}
 
+#pragma endregion
 
-	Patrick::Patrick(int _totalp, int _maxp, int _persec, vec4f _pos) : ParticleEmitter(_totalp, _maxp, _persec, _pos)
+#pragma region Teleport
+
+	IDC::IDC(int _totalp, int _maxp, int _persec, vec4f _pos) : ParticleEmitter(_totalp, _maxp, _persec, _pos)
 	{
 
 	}
 
-	void Patrick::UpdateParticle(Particle* _p, float _delta)
+	void IDC::UpdateParticle(Particle* _p, float _delta)
 	{
 		ParticleEmitter::UpdateParticle(_p, _delta);
 	}
 
-	void Patrick::EmitParticles()
+	void IDC::EmitParticles()
 	{
 		static int total = 0;
 
@@ -487,23 +640,23 @@ namespace Epoch
 			}
 			if (mParticles.size() < mMaxParticles && (total < mTotalParticles || mTotalParticles == -1))
 			{
+				Particle* p = &Particle::Init(*mBase);
 				float x, y, z;
 				x = -1.25f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1.25f - (-1.25f))));
-				y = -3.0f+ static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - (-3.0f))));
+				y = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - (-3.0f))));
 				z = -1.25f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1.25f - (-1.25f))));
-				Particle* p = new Particle();
-				*p = *mBase;
-				p->mPos = vec4f(x, 0, z, 1);
-				p->mPos += mPos;
-				//p->mSize = .1 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.25 - .1)));
-
+				p->SetPos(x, 0, z);
+				*p->GetPos() = *p->GetPos() + mPos;
 				x = -.05f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05f - -.05f)));
 				y = y1 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (y2 - y1)));
 				z = -.05f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05f - -.05f)));
-				p->mVelocity = vec4f(0, y, 0, 0);
+				p->SetVelocity(0, y, 0);
+
 				mParticles.push_back(p);
 				total++;
 			}
 		}
 	}
+
+#pragma endregion
 }
