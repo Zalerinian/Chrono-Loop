@@ -42,8 +42,8 @@ namespace Epoch
 		inline BaseObject* GetHeadset() { return mHeadset; }
 		inline BaseObject* GetLeftController() { return mController1; }
 		inline BaseObject* GetRightController() { return mController2; }
-		TimeManipulation* GetLeftTimeManinpulator() { return mTMComponent1; }
-		TimeManipulation* GetRightTimeManinpulator() { return mTMComponent2; }
+		TimeManipulation* GetLeftTimeManipulator() { return mTMComponent1; }
+		TimeManipulation* GetRightTimeManipulator() { return mTMComponent2; }
 
 		//**SETTERS**//
 		void SetId(unsigned short _set) { mId = _set; };

@@ -33,9 +33,9 @@ namespace Epoch {
 	}
 
 	void TimeManager::Update(float _delta) {
-		if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManinpulator() != nullptr || LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManinpulator() != nullptr) {
+		if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator() != nullptr || LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator() != nullptr) {
 
-			if (!LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManinpulator()->isTimePaused() && !LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManinpulator()->isTimePaused()) {
+			if (!LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->isTimePaused() && !LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->isTimePaused()) {
 
 				mTimestamp += _delta;
 				mDeltaTime = _delta;
@@ -98,9 +98,20 @@ namespace Epoch {
 			{
 				mTimeline->AddBaseObject(_obj, _obj->GetUniqueID());
 				//Level* templvl = LevelManager::GetInstance().GetCurrentLevel();
-				if (_obj->GetName().find("Controller") == std::string::npos) { //TODO RYAN: TEMPORARY FIX FOR INTERPOLATION
-					instanceTimemanager->AddInterpolatorToObject(_obj);
-				}
+				instanceTimemanager->AddInterpolatorToObject(_obj);
+				//if (LevelManager::GetInstance().GetCurrentLevel() == nullptr)
+				//{
+				//	if (_obj->GetName().find("Controller1 - 0") == std::string::npos &&
+				//		_obj->GetName().find("Controller2 - 0") == std::string::npos) { //TODO RYAN: TEMPORARY FIX FOR INTERPOLATION
+				//		instanceTimemanager->AddInterpolatorToObject(_obj);
+				//	}
+				//}7
+				//else {
+				//	if (_obj->GetName().find("Controller1 - " + std::to_string(LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->GetNumClones())) == std::string::npos &&
+				//		_obj->GetName().find("Controller2 - " + std::to_string(LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->GetNumClones())) == std::string::npos) { //TODO RYAN: TEMPORARY FIX FOR INTERPOLATION
+				//		instanceTimemanager->AddInterpolatorToObject(_obj);
+				//	}
+				//}
 			}
 		}
 
@@ -110,7 +121,7 @@ namespace Epoch {
 		}
 		void TimeManager::AddInterpolatorToObject(BaseObject* _obj) {
 			Interpolator<matrix4>* temp = new Interpolator<matrix4>();
-			mObjectInterpolators[_obj->GetUniqueID()] = temp;
+			mObjectRewindInterpolators[_obj->GetUniqueID()] = temp;
 		}
 		void TimeManager::AddAllTexturesToQueue()
 	{
@@ -218,15 +229,15 @@ namespace Epoch {
 			return nullptr;
 		}
 		Interpolator<matrix4>* TimeManager::GetObjectInterpolator(unsigned short _id) {
-			if (mObjectInterpolators.find(_id) != mObjectInterpolators.end())
-				return mObjectInterpolators[_id];
+			if (mObjectRewindInterpolators.find(_id) != mObjectRewindInterpolators.end())
+				return mObjectRewindInterpolators[_id];
 			return nullptr;
 		}
 		std::string TimeManager::GetNextTexture() {
 			for (unsigned int i = 0; i < mCloneTextureBitset.size(); i++) {
 				if (mCloneTextureBitset[i] == false) {
-					TimeManipulation* left = LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManinpulator();
-					TimeManipulation* right = LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManinpulator();
+					TimeManipulation* left = LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator();
+					TimeManipulation* right = LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator();
 					if (left) {
 						SystemLogger::GetLog() << "Left Controller returned " << left->GetTexture(i) << std::endl;
 						return left->GetTexture(i);
@@ -383,7 +394,7 @@ namespace Epoch {
 		void TimeManager::BrowseTimeline(int _gesture, int _frameRewind) {
 			
 			if (mShouldUpdateInterpolators) {
-				for (auto it : mObjectInterpolators)
+				for (auto it : mObjectRewindInterpolators)
 				{
 					bool complete = it.second->Update(GetDeltaTime());
 					if (complete)
@@ -398,8 +409,8 @@ namespace Epoch {
 			else if (_gesture == 1)
 				_frameRewind *= -1;
 			else if (_gesture == 2) {
-				LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManinpulator()->RaycastCloneCheck();
-				LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManinpulator()->RaycastCloneCheck();
+				LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->RaycastCloneCheck();
+				LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->RaycastCloneCheck();
 				return;
 			}
 

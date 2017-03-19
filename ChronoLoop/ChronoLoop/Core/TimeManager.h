@@ -34,7 +34,7 @@ namespace Epoch {
 		int mtempCurSnapFrame = 0;
 		std::vector<BaseObject*>mClones;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneInterpolators;
-		std::unordered_map<unsigned short, Interpolator<matrix4>*>mObjectInterpolators; 
+		std::unordered_map<unsigned short, Interpolator<matrix4>*>mObjectRewindInterpolators; 
 		//Timeline* GetTimeLine();
 		
 		std::bitset<10>mCloneTextureBitset;

@@ -24,9 +24,9 @@ namespace Epoch {
 			bool mRight = false;
 			bool mLeft = false;
 
-			if (cLevel->GetRightTimeManinpulator() != nullptr || cLevel->GetLeftTimeManinpulator() != nullptr) {
-				mRight = cLevel->GetRightTimeManinpulator()->isTimePaused();
-				mLeft = cLevel->GetLeftTimeManinpulator()->isTimePaused();
+			if (cLevel->GetRightTimeManipulator() != nullptr || cLevel->GetLeftTimeManipulator() != nullptr) {
+				mRight = cLevel->GetRightTimeManipulator()->isTimePaused();
+				mLeft = cLevel->GetLeftTimeManipulator()->isTimePaused();
 			}
 			if (VRInputManager::GetInstance().IsVREnabled() && mCollider) {
 				InputTimeline::InputNode*temp;

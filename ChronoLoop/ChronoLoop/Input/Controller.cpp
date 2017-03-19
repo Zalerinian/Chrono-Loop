@@ -38,8 +38,8 @@ namespace Epoch {
 
 	int Controller::CheckGesture() {
 		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
-		if (cLevel->GetRightTimeManinpulator() != nullptr && cLevel->GetLeftTimeManinpulator() != nullptr) {
-			if ((cLevel->GetLeftTimeManinpulator()->isTimePaused()) || cLevel->GetRightTimeManinpulator()->isTimePaused()) {
+		if (cLevel->GetRightTimeManipulator() != nullptr && cLevel->GetLeftTimeManipulator() != nullptr) {
+			if ((cLevel->GetLeftTimeManipulator()->isTimePaused()) || cLevel->GetRightTimeManipulator()->isTimePaused()) {
 
 				vec2f touch = this->GetAxis();
 				if (touch.x == 0 && touch.y == 0)

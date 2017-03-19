@@ -93,9 +93,9 @@ namespace Epoch {
 		vr::VREvent_t tempEvent;
 		bool right = false;
 		bool left = false;
-		if (cLevel->GetRightTimeManinpulator() != nullptr || cLevel->GetLeftTimeManinpulator() != nullptr) {
-			bool right = cLevel->GetRightTimeManinpulator()->isTimePaused();
-			bool left = cLevel->GetLeftTimeManinpulator()->isTimePaused();
+		if (cLevel->GetRightTimeManipulator() != nullptr || cLevel->GetLeftTimeManipulator() != nullptr) {
+			bool right = cLevel->GetRightTimeManipulator()->isTimePaused();
+			bool left = cLevel->GetLeftTimeManipulator()->isTimePaused();
 		}
 		//if there is a event avaliable and the game is focused
 		while (mVRSystem->PollNextEvent(&tempEvent, sizeof(tempEvent)) && !mVRSystem->IsInputFocusCapturedByAnotherProcess() && (!left && !right)) {

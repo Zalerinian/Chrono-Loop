@@ -691,10 +691,10 @@ namespace Epoch
 		bool right = false;
 		bool left = false;
 
-		if (cLevel->GetRightTimeManinpulator() != nullptr || cLevel->GetLeftTimeManinpulator() != nullptr)
+		if (cLevel->GetRightTimeManipulator() != nullptr || cLevel->GetLeftTimeManipulator() != nullptr)
 		{
-			right = cLevel->GetRightTimeManinpulator()->isTimePaused();
-			left = cLevel->GetLeftTimeManinpulator()->isTimePaused();
+			right = cLevel->GetRightTimeManipulator()->isTimePaused();
+			left = cLevel->GetLeftTimeManipulator()->isTimePaused();
 		}
 		if (!left && !right)
 		{
