@@ -39,6 +39,7 @@ namespace Hourglass
         private string mCurrentFilename = string.Empty;
         private bool mCurrentFileChanged = false;
         private TestPositionForm mForm;
+        private TreeNode mSelectedObjectNode;
 
 
         string Filename {
@@ -66,6 +67,10 @@ namespace Hourglass
             InitializeDevice();
             InitializeKeyboard();
             InitializeCamera();
+
+            gbFocus.Location = new Point(-420, -420);
+            gbFocus.Size = new Size(5, 5);
+
             //defaultTexture = TextureLoader.FromFile(device, "Assets/missing.dds");
             //objects.Add(new ToolObject(ref device));
             //objects[0].Name = "Empty";
@@ -78,7 +83,7 @@ namespace Hourglass
             debugObjs[0].IsWireFrame = true;
             debugObjs.Add(new ToolObjectColor("Assets\\AxisGizmo.obj", ref device));
             spHierarchyPanel.BorderStyle = BorderStyle.None;
-            spHierarchyPanel.SplitterWidth = 1;
+            spHierarchyPanel.SplitterWidth = 8;
             splitContainer2.BorderStyle = BorderStyle.None;
             splitContainer2.SplitterWidth = 8;
             fpsTimer.Start();
@@ -95,6 +100,7 @@ namespace Hourglass
             // Purely Testificate
             mForm = new TestPositionForm();
             mForm.Show();
+            UpdateSelectedData();
         }
 
         private void InitializeDevice()
@@ -149,7 +155,7 @@ namespace Hourglass
         
         private void InitializeCamera()
         {
-            device.Transform.Projection = Matrix.PerspectiveFovRH((float)Math.PI / 4.0f, (float)graphicsPanel1.Width / (float)graphicsPanel1.Height, 1f, 1000);
+            device.Transform.Projection = Matrix.PerspectiveFovRH((float)Math.PI / 4.0f, (float)graphicsPanel1.Width / (float)graphicsPanel1.Height, 0.1f, 1000);
             Matrix rotate = Matrix.RotationYawPitchRoll(angleY, angleX, 0);
             Vector3 look = cameraPos + GetVector3(Vector3.Transform(new Vector3(0, 0, -1), rotate));
             device.Transform.View = Matrix.LookAtRH(cameraPos, look, new Vector3(0, 1, 0));
@@ -165,7 +171,7 @@ namespace Hourglass
             keyb.Acquire();
         }
 
-        private void Paint(object sender, PaintEventArgs e)
+        private void OnPaint(object sender, PaintEventArgs e)
         {
             device.RenderState.ZBufferEnable = true;
             device.Clear(ClearFlags.ZBuffer, 0, 1.0f, 0);
@@ -556,20 +562,20 @@ namespace Hourglass
                 UpdateSelectedData();
             }
         }
-        private void Resize(object sender, EventArgs e)
+        private void OnResize(object sender, EventArgs e)
         {
             graphicsPanel1.Invalidate();
         }
 
         private void RightToggle_Click(object sender, EventArgs e)
         {
-            RightToggle.Text = RightToggle.Text == "<" ? ">" : "<";
+            RightToggle.Text = splitContainer2.Panel2Collapsed ? ">" : "<";
             splitContainer2.Panel2Collapsed = !splitContainer2.Panel2Collapsed;
         }
 
         private void LeftToggle_Click(object sender, EventArgs e)
         {
-            LeftToggle.Text = LeftToggle.Text == "<" ? ">" : "<";
+            LeftToggle.Text = spHierarchyPanel.Panel1Collapsed ? ">" : "<";
             spHierarchyPanel.Panel1Collapsed = !spHierarchyPanel.Panel1Collapsed;
         }
 
@@ -644,25 +650,26 @@ namespace Hourglass
 
         private void mMenuButton_Click(object sender, EventArgs e)
         {
-            ConstructTreeObject(null);
+            Tree.SelectedNode = ConstructTreeObject(null);
         }
 
         private void mCreateMenuAdd_Click(object sender, EventArgs e)
         {
-            ConstructTreeObject(null);
+            Tree.SelectedNode = ConstructTreeObject(null);
         }
 
         private void mCreateMenuAddChild_Click(object sender, EventArgs e)
         {
-            if(!(sender is TreeNode))
+            TreeNode n = ConstructTreeObject(Tree.SelectedNode);
+            if(Tree.SelectedNode != null)
             {
-                Debug.Print("Something's gone a bit weird here.");
-                return;
+                // TODO: Add a setting in the editor for Expanding nodes on adding a child instead of assuming.
+                Tree.SelectedNode.Expand();
             }
-            ConstructTreeObject(sender as TreeNode);
+            Tree.SelectedNode = n;
         }
 
-        private void ConstructTreeObject(TreeNode _parent)
+        private TreeNode ConstructTreeObject(TreeNode _parent)
         {
             TreeNode n = new TreeNode();
             n.ContextMenuStrip = mObjectStrip;
@@ -677,6 +684,15 @@ namespace Hourglass
             {
                 Tree.Nodes.Add(n);
             }
+            return n;
+        }
+
+        private void Tree_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            mSelectedObjectNode = e.Node;
+            e.Node.EnsureVisible();
+            e.Node.NodeFont = SystemFonts.MenuFont;
+            Tree.SelectedNode = null;
         }
 
         private void levelSettingsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -784,49 +800,6 @@ namespace Hourglass
             selectedName = string.Empty;
         }
 
-        private void Tree_Click(object sender, EventArgs e)
-        {
-            if (Tree.SelectedNode != null && Tree.SelectedNode.Parent != null && Tree.SelectedNode.Parent.Text == "Hierarchy")
-            {
-                selectedIndex = Tree.SelectedNode.Index;
-                selectedObject = higharchy[selectedIndex];
-                selectedCollider = null;
-                UpdateSelectedData();
-            }
-            else if (Tree.SelectedNode != null && Tree.SelectedNode.Parent != null && Tree.SelectedNode.Parent.Text != "Hierarchy" && Tree.SelectedNode.Parent.Text != "Objects")
-            {
-                if (higharchy[Tree.SelectedNode.Parent.Index].Name == Tree.SelectedNode.Parent.Text)
-                {
-                    selectedIndex = Tree.SelectedNode.Parent.Index;
-                    selectedObject = null;
-                    selectedCollider = higharchy[Tree.SelectedNode.Parent.Index].Collider;
-                    colliderType = higharchy[Tree.SelectedNode.Parent.Index].ColliderType;
-                    UpdateSelectedData();
-                }
-            }
-            graphicsPanel1.Focus();
-        }
-
-        private void Tree_DoubleClick(object sender, EventArgs e)
-        {
-            if (Tree.SelectedNode != null && Tree.SelectedNode.Parent != null && Tree.SelectedNode.Parent.Text == "Objects" && Tree.SelectedNode.Index < objects.Count)
-            {
-                higharchy.Add(new ToolObject(objects[Tree.SelectedNode.Index]));
-                higharchy[higharchy.Count - 1].VertexDeclaration();
-                higharchy[higharchy.Count - 1].IndicesDeclaration();
-                Tree.Nodes[1].Nodes.Add(objects[Tree.SelectedNode.Index].Name);
-                Tree.Nodes[1].Expand();
-            }
-            else if (Tree.SelectedNode != null && Tree.SelectedNode.Parent != null && Tree.SelectedNode.Parent.Text == "Hierarchy" && Tree.SelectedNode.Index < higharchy.Count)
-            {
-                higharchy.Add(new ToolObject(higharchy[Tree.SelectedNode.Index]));
-                higharchy[higharchy.Count - 1].VertexDeclaration();
-                higharchy[higharchy.Count - 1].IndicesDeclaration();
-                Tree.Nodes[1].Nodes.Add(higharchy[Tree.SelectedNode.Index].Name);
-                Tree.Nodes[1].Expand();
-            }
-        }
-
         private void UpdateSelectedData()
         {
 
@@ -834,15 +807,15 @@ namespace Hourglass
 
 
             // Hide Yams' controls so we can start adding in the component model.
-            //groupBox1.Visible = false;
-            //groupBox2.Visible = false;
-            //groupBox3.Visible = false;
-            //groupBox4.Visible = false;
-            //groupBox5.Visible = false;
-            //groupBox6.Visible = false;
-            //groupBox7.Visible = false;
-            //TextureBox.Visible = false;
-            //return;
+            groupBox1.Visible = false;
+            groupBox2.Visible = false;
+            groupBox3.Visible = false;
+            groupBox4.Visible = false;
+            groupBox5.Visible = false;
+            groupBox6.Visible = false;
+            groupBox7.Visible = false;
+            TextureBox.Visible = false;
+            return;
             if (selectedCollider != null)
             {
                 groupBox5.Visible = false;
