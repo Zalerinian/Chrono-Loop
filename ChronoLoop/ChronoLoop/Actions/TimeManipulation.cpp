@@ -148,17 +148,14 @@ namespace Epoch
 				cLevel->GetRightTimeManinpulator()->makeTimePaused(false);
 			}
 
-			if(GetAsyncKeyState(VK_END) & 1)
+		
+			else
 			{
 				HotfixButtonDown++;
 				if (HotfixButtonDown > 169) {
 					HotfixButtonDown = 0;
 					TimeManager::Instance()->HotfixResetTimeline();
 				}
-			}
-			else
-			{
-				HotfixButtonDown = 0;
 			}
 		}
 		else
