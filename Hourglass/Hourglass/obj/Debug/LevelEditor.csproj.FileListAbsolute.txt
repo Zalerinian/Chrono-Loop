@@ -252,5 +252,5 @@ G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\default
 C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\obj\Debug\LevelEditor.TestPositionForm.resources
 E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\default.dds
 E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.TestPositionForm.resources
-C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\Arrow.obj
-C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\obj\Debug\LevelEditor.Forms.LevelSettingsForm.resources
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Arrow.obj
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.Forms.LevelSettingsForm.resources
