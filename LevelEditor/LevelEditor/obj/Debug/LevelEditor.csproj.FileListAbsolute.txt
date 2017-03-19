@@ -1,0 +1,257 @@
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\LevelEditor.exe.config
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\LevelEditor.exe
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\LevelEditor.pdb
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Diagnostics.dll
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3D.dll
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3DX.dll
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectDraw.dll
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectInput.dll
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.dll
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.xml
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Diagnostics.xml
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3D.xml
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3DX.xml
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectDraw.xml
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectInput.xml
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.csprojResolveAssemblyReference.cache
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.Properties.Resources.resources
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.csproj.GenerateResource.Cache
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.exe
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.pdb
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.Editor.resources
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.AudioVideoPlayback.dll
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectPlay.dll
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectSound.dll
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.AudioVideoPlayback.xml
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectPlay.xml
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectSound.xml
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Cube.obj
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Sphere.obj
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Cube.obj
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\LevelEditor.exe.config
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\LevelEditor.exe
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\LevelEditor.pdb
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.AudioVideoPlayback.dll
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Diagnostics.dll
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3D.dll
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3DX.dll
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectDraw.dll
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectInput.dll
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectPlay.dll
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectSound.dll
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.dll
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.xml
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.AudioVideoPlayback.xml
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Diagnostics.xml
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3D.xml
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3DX.xml
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectDraw.xml
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectInput.xml
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectPlay.xml
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectSound.xml
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.Editor.resources
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.Properties.Resources.resources
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.csproj.GenerateResource.Cache
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.exe
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.pdb
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\skybox.dds
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.csprojResolveAssemblyReference.cache
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\AxisGizmo.obj
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\AxisGizmo.obj
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Plane.obj
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\energyField.png
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\enrgyField.png
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\fieldGen.png
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\wallTextureM.png
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\wallTextureS.png
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\floor.png
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Button.obj
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\buttonstand.obj
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Celling.obj
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Door1.obj
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\DoorEmiters1.obj
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\DoorFrame1.obj
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\floor.obj
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\servers.obj
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\walls.obj
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\grey.png
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\skybox.dds
+E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Sphere.obj
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\energyField.png
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\enrgyField.png
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\fieldGen.png
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\floor.png
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\grey.png
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\wallTextureM.png
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\wallTextureS.png
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Button.obj
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Buttonstand.obj
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Celling.obj
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Door1.obj
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\DoorEmiters1.obj
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\DoorFrame1.obj
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Floor.obj
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Plane.obj
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Servers.obj
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Walls.obj
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\LevelEditor.exe.config
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.exe
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.pdb
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\enrgyField.png
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\fieldGen.png
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\floor.png
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\grey.png
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\wallTextureM.png
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\wallTextureS.png
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\AxisGizmo.obj
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Button.obj
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Buttonstand.obj
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Celling.obj
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Cube.obj
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Door1.obj
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\DoorEmiters1.obj
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\DoorFrame1.obj
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Floor.obj
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Plane.obj
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Servers.obj
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Sphere.obj
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Walls.obj
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\LevelEditor.exe
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\LevelEditor.pdb
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.AudioVideoPlayback.dll
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Diagnostics.dll
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3D.dll
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3DX.dll
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectDraw.dll
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectInput.dll
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectPlay.dll
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectSound.dll
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.dll
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.xml
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.AudioVideoPlayback.xml
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Diagnostics.xml
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3D.xml
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3DX.xml
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectDraw.xml
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectInput.xml
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectPlay.xml
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectSound.xml
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.csprojResolveAssemblyReference.cache
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.Editor.resources
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.Properties.Resources.resources
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.csproj.GenerateResource.Cache
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Door2.obj
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\DoorEmiters2.obj
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\DoorFrame2.obj
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\red.png
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\white.png
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\enrgyField.png
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\fieldGen.png
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\floor.png
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\grey.png
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\wallTextureM.png
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\wallTextureS.png
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\AxisGizmo.obj
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Button.obj
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\ButtonStand.obj
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Celling.obj
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Cube.obj
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Door1.obj
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Door2.obj
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\DoorEmiters1.obj
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\DoorEmiters2.obj
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\DoorFrame1.obj
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\DoorFrame2.obj
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Floor.obj
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Plane.obj
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Servers.obj
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Sphere.obj
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Walls.obj
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\red.png
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\white.png
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\LevelEditor.exe.config
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\LevelEditor.exe
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\LevelEditor.pdb
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.AudioVideoPlayback.dll
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Diagnostics.dll
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3D.dll
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3DX.dll
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectDraw.dll
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectInput.dll
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectPlay.dll
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectSound.dll
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.dll
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.xml
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.AudioVideoPlayback.xml
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Diagnostics.xml
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3D.xml
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3DX.xml
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectDraw.xml
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectInput.xml
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectPlay.xml
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectSound.xml
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.csprojResolveAssemblyReference.cache
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.Editor.resources
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.Properties.Resources.resources
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.csproj.GenerateResource.Cache
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.exe
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.pdb
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\LevelEditor.exe.config
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\obj\Debug\LevelEditor.exe
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\obj\Debug\LevelEditor.pdb
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\enrgyField.png
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\fieldGen.png
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\floor.png
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\grey.png
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\red.png
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\wallTextureM.png
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\wallTextureS.png
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\white.png
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\AxisGizmo.obj
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\Plane.obj
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\Button.obj
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\ButtonStand.obj
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\Celling.obj
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\Cube.obj
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\Door1.obj
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\Door2.obj
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\DoorEmiters1.obj
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\DoorEmiters2.obj
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\DoorFrame1.obj
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\DoorFrame2.obj
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\Floor.obj
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\Servers.obj
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\Sphere.obj
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\Walls.obj
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\LevelEditor.exe
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\LevelEditor.pdb
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.AudioVideoPlayback.dll
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Diagnostics.dll
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3D.dll
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3DX.dll
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectDraw.dll
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectInput.dll
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectPlay.dll
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectSound.dll
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.dll
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.xml
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.AudioVideoPlayback.xml
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Diagnostics.xml
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3D.xml
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.Direct3DX.xml
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectDraw.xml
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectInput.xml
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectPlay.xml
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Microsoft.DirectX.DirectSound.xml
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\obj\Debug\LevelEditor.csprojResolveAssemblyReference.cache
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\obj\Debug\LevelEditor.Editor.resources
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\obj\Debug\LevelEditor.Properties.Resources.resources
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\obj\Debug\LevelEditor.csproj.GenerateResource.Cache
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\bin\Debug\Assets\default.dds
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\default.dds
+C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\obj\Debug\LevelEditor.TestPositionForm.resources
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\default.dds
+E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.TestPositionForm.resources
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Arrow.obj
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.Forms.LevelSettingsForm.resources
+G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.TestPositionForm.resources

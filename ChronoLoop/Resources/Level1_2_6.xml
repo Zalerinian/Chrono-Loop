@@ -1,4 +1,8 @@
-﻿<Level>
+<Level>
+  <Settings>
+    <StartPos>8.88,0,-4.1</StartPos>
+    <StartRot>0,0,0</StartRot>
+  </Settings>
   <Object>
     <Name>Button</Name>
     <Mesh>Button.obj</Mesh>

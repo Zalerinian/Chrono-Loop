@@ -19,6 +19,7 @@ namespace Epoch {
 		struct ViewProjectionBuffer {
 			matrix4 view, projection;
 		} mVPLeftData, mVPRightData;
+
 		static Renderer* sInstance;
 		//TODO: Light buffers
 		DirectionalLight mDLData;
@@ -31,12 +32,12 @@ namespace Epoch {
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> mContext;
 		Microsoft::WRL::ComPtr<IDXGISwapChain> mChain;
 		Microsoft::WRL::ComPtr<IDXGIFactory1> mFactory;
-		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mMainView;
+		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mMainView, mSceneView;
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> mMainViewTexture;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDSView;
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> mDepthBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> mDepthBuffer, mSceneTexture;
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> mSamplerState;
-		D3D11_VIEWPORT mLeftViewport, mRightViewport;
+		D3D11_VIEWPORT mLeftViewport, mRightViewport, mFullViewport;
 		HWND mWindow;
 
 		vr::IVRSystem* mVrSystem;
@@ -48,10 +49,12 @@ namespace Epoch {
 		Microsoft::WRL::ComPtr<ID3D11VertexShader> mShadowVS;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mSDSView1, mSDSView2, mSDSView3;
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> mShadowTextures1, mShadowTextures2, mShadowTextures3;
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mShadowSRV1, mShadowSRV2, mShadowSRV3;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mShadowSRV1, mShadowSRV2, mShadowSRV3, mSceneSRV;
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> mSSamplerState;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mDLBufferS, mPLBufferS, mSLBufferS;
 		ViewProjectionBuffer mSLVPB, mDLVPB, mPLVPB;
+
+		RenderShape* mScenePPQuad = nullptr, *mSceneScreenQuad = nullptr;
 
 		//Pat Added
 		//DirectWrite Drawing componets
@@ -67,6 +70,7 @@ namespace Epoch {
 		void InitializeBuffers();
 		void InitializeSamplerState();
 		void InitializeObjectNames();
+		void InitializeSceneQuad();
 		void SetStaticBuffers();
 
 		matrix4 mEyePosLeft, mEyePosRight, mEyeProjLeft, mEyeProjRight, mHMDPos, mDebugCameraPos;
@@ -89,6 +93,13 @@ namespace Epoch {
 		Renderer();
 		~Renderer();
 	public:
+		struct TimeManipulationEffectData {
+			vec4f saturationColor;
+			vec4f tintColor;
+			vec2f ratios;
+			vec2f fullRatios;
+		};
+
 		static Renderer* Instance();
 		static void DestroyInstance();
 		// Instance Functions
@@ -99,7 +110,7 @@ namespace Epoch {
 		GhostList<matrix4>::GhostNode* AddNode(RenderShape *_node);
 		void Render(float _deltaTime);
 
-		//Draws text in 0 to 1 space
+		inline void SetDebugCameraPosition(matrix4 _mat) { mDebugCameraPos = _mat; }
 
 		inline Microsoft::WRL::ComPtr<ID3D11Device> GetDevice() { return mDevice; }
 		inline Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetContext() { return mContext; }
@@ -109,5 +120,6 @@ namespace Epoch {
 		inline Microsoft::WRL::ComPtr<ID3D11DepthStencilView> GetDSView() { return mDSView; }
 		inline Microsoft::WRL::ComPtr<ID3D11Texture2D> GetRTViewTexture() { return mMainViewTexture; }
 		inline HWND GetWindow() { return mWindow; }
+		inline RenderShape* GetSceneQuad() { return mScenePPQuad; }
 	};
 }

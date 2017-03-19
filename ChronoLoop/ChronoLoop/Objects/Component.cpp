@@ -181,7 +181,7 @@ namespace Epoch
 
 	void Collider::SetPos(const vec3f& _newPos)
 	{
-		mObject->GetTransform().GetMatrix().fourth = _newPos;
+		mObject->GetTransform().GetMatrix().fourth = vec4f(_newPos);
 	}
 
 	//MeshCollider::MeshCollider(BaseObject* _obj, bool _move, vec3f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, char * _path)
@@ -285,6 +285,12 @@ namespace Epoch
 		//mNode->data = pos;
 	}
 
+	void CubeCollider::Destroy()
+	{
+		delete mNode;
+		delete mShape;
+	}
+
 	void CubeCollider::SetPos(const vec3f& _newPos)
 	{
 		mObject->GetTransform().GetMatrix().fourth = _newPos;
@@ -319,18 +325,17 @@ namespace Epoch
 		mKineticFriction = _kineticFriction;
 		mRHO = 1;
 		mDrag = _drag;
-		mCenter = GetPos();
 		mWidth = _xRadius;
 		mHeight = _yRadius;
 		mDepth = _zRadius;
 
-		vec3f maxOffset, minOffset;
-		maxOffset.x = mCenter.x + mWidth;
-		maxOffset.y = mCenter.y + mHeight;
-		maxOffset.z = mCenter.z + mDepth;
-		minOffset.x = mCenter.x - mWidth;
-		minOffset.y = mCenter.y - mHeight;
-		minOffset.z = mCenter.z - mDepth;
+		vec3f maxOffset, minOffset, Center = GetPos();
+		maxOffset.x = Center.x + mWidth;
+		maxOffset.y = Center.y + mHeight;
+		maxOffset.z = Center.z + mDepth;
+		minOffset.x = Center.x - mWidth;
+		minOffset.y = Center.y - mHeight;
+		minOffset.z = Center.z - mDepth;
 		float a = (maxOffset - minOffset) * vec3f(0, 0, 1);
 		float b = (maxOffset - minOffset) * vec3f(0, 1, 0);
 		float c = (maxOffset - minOffset) * vec3f(1, 0, 0);
@@ -341,7 +346,6 @@ namespace Epoch
 	void Epoch::OrientedCubeCollider::SetPos(const vec3f & _newPos)
 	{
 		mObject->GetTransform().GetMatrix().fourth = _newPos;
-		mCenter = _newPos;
 		mAxis[0] = mObject->GetTransform().GetMatrix().first;
 		mAxis[1] = mObject->GetTransform().GetMatrix().second;
 		mAxis[2] = -mObject->GetTransform().GetMatrix().third;

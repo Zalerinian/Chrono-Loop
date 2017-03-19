@@ -71,7 +71,7 @@ void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftControl
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(863805);
+	//_CrtSetBreakAlloc(26801);
 	if (!InitializeWindow(hInstance, nCmdShow, 1366, 720, true)) {
 		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
 		return 2;
@@ -99,9 +99,15 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count());
 	Update();
 
+
+
 	// Cleanup
 	vr::VR_Shutdown();
 	ShutdownSystems();
+
+	for (int i = 0; i < 40; ++i) {
+		SystemLogger::Warn() << "THE CONSOLE HAS BEEN DETATCHED. IF THIS WINDOW IS STILL OPEN, IT IS OWNED BY THE STEAMVR SERVER. CLOSING THIS WILL CAUSE ISSUES WITH STEAMVR." << std::endl;
+	}
 	SystemLogger::DestroyInstance();
 	vrsys = nullptr;
 
@@ -580,6 +586,7 @@ void Update() {
 	BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("RController", identity);// new BaseObject("Controller", identity);
 	BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("LController", identity); //new BaseObject("Controller2", identity);
 	BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", transform); //new BaseObject("headset", transform);
+
 	InitializeHeadsetAndController(headset,LeftController,RightController);
 
 	Physics::Instance()->mObjects.push_back(RightController);
@@ -594,7 +601,9 @@ void Update() {
 	L1->AddObject(headset);
 	L1->AddObject(LeftController);
 	//LevelManager::GetInstance().LoadLevelAsync("../Resources/LEVEL1/collider.xml", &L1);
-	LevelManager::GetInstance().SetCurrentLevel(L1);
+	LevelManager::GetInstance().RequestLevelChange(L1);
+	matrix4 cameraPos = matrix4::CreateYRotation(L1->GetStartRot().y) * matrix4::CreateZRotation(L1->GetStartRot().z) * matrix4::CreateXRotation(L1->GetStartRot().x) * matrix4::CreateTranslation(L1->GetStartPos());
+	Renderer::Instance()->SetDebugCameraPosition(cameraPos);
 	L1->CallStart();
 	
 	//Enter effect
@@ -637,6 +646,7 @@ void Update() {
 	//planeObj->AddTexture(AddedTextureName.c_str(), eTEX_CUSTOM1);
 
 	//*////////////////////////////////////////////////////////////////////
+
 	if (VREnabled) {
 		VRInputManager::GetInstance().Update();
 	}
@@ -660,7 +670,7 @@ void Update() {
 
 			//SystemLogger::GetLog() << "[Debug] Regular Update " << std::endl;
 			UpdateTime();
-			LevelManager::GetInstance().GetCurrentLevel()->Update();
+			LevelManager::GetInstance().Update();
 			ParticleSystem::Instance()->Update();
 			TimeManager::Instance()->Update(deltaTime);
 			Renderer::Instance()->Render(deltaTime); 
@@ -674,9 +684,6 @@ void Update() {
 			}
 		}
 	}
-	Messager::Destroy();
-	ParticleSystem::Destroy();
-
 }
 
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed) {
@@ -797,7 +804,6 @@ void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftControl
 	LeftController->AddComponent(ta2);
 	LeftController->AddComponent(tm2);
 	TimeManager::Instance()->AddObjectToTimeline(LeftController);
-
 
 
 	MeshComponent *visibleMesh2 = new MeshComponent("../Resources/Cube.obj");

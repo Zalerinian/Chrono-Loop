@@ -103,6 +103,7 @@ namespace Epoch {
 		void MoveAllObjectsToSnap(unsigned int _snaptime);
 		void InterpAllObjectsToSnapExceptPlayer(unsigned int _fromSnapTime, unsigned int _toSnapTime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
+		void SetObjectBirthTime(unsigned short _id);
 		void SetBaseObjectDeathTime(unsigned short _id);
 		void SetCloneObjectCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void SetCloneMadeTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);

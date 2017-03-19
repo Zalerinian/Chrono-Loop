@@ -415,6 +415,9 @@ namespace Epoch {
 
 		void TimeManager::HotfixResetTimeline() {
 			RewindTimeline(0, LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueID(), LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueID(), LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetUniqueID());
+			mTimeline->SetObjectBirthTime(LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueID());
+			mTimeline->SetObjectBirthTime(LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueID());
+			mTimeline->SetObjectBirthTime(LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetUniqueID());
 			mTimeline->HotFixResetLevel();
 			for (int i = 0; i < mClones.size(); ++i) {
 				mClones[i]->RemoveAllComponents();
@@ -432,9 +435,9 @@ namespace Epoch {
 				mCloneTextures.erase(mClones[i]->GetUniqueId());
 			}
 			ClearClones();
-
-
-
-			VRInputManager::GetInstance().GetPlayerPosition()[3].Set(1.9f, -1.0f, 8, 1.0f);
+			AddAllTexturesToQueue();
+			VRInputManager::GetInstance().GetInputTimeline()->Clear();
+			vec4f start = LevelManager::GetInstance().GetCurrentLevel()->GetStartPos();
+			VRInputManager::GetInstance().GetPlayerPosition()[3].Set(start.x, start.y, start.z, start.w);
 		}
 	}
