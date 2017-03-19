@@ -21,8 +21,8 @@ namespace Epoch {
 		mVertexShaderFormat = _copy.mVertexShaderFormat;
 		mGeoShaderFormat = _copy.mGeoShaderFormat;
 		mType = _copy.mType;
-		for (auto it = _copy.mTextures.begin(); it != _copy.mTextures.end(); ++it) {
-			mTextures[it->first] = it->second;
+		for (int i = eTEX_DIFFUSE; i < eTEX_MAX; ++i) {
+			mTextures[i] = _copy.mTextures[i];
 		}
 	}
 
@@ -47,12 +47,27 @@ namespace Epoch {
 		if (mGeoShaderFormat != eGS_MAX) {
 			ShaderManager::Instance()->ApplyGShader(mGeoShaderFormat);
 		}
-		for (auto it = mTextures.begin(); it != mTextures.end(); ++it) {
-			if (it->second.Get() != nullptr) {
-				Renderer::Instance()->GetContext()->PSSetShaderResources((UINT)it->first, 1, it->second.GetAddressOf());
+		for (int i = eTEX_DIFFUSE; i < eTEX_MAX; ++i) {
+			if (mTextures[i].Get() != nullptr) {
+				Renderer::Instance()->GetContext()->PSSetShaderResources((UINT)i, 1, mTextures[i].GetAddressOf());
 				//(*Renderer::Instance()->GetContext())->PSSetSamplers((UINT)it->first, 1, nullptr); //TODO: Consider adding samplers to contexts. Curently a global sampler is applied in the renderer.
 			}
 		}
+
+		ID3D11Buffer *pixelBuffers[ePB_MAX], *vertexBuffers[eVB_MAX], *geoBuffers[eGB_MAX];
+		for (int i = eVB_BEGIN; i < eVB_MAX; ++i) {
+			vertexBuffers[i] = mVertexCBuffers[i].Get();
+		}
+		for (int i = ePB_BEGIN; i < ePB_MAX; ++i) {
+			pixelBuffers[i] = mPixelCBuffers[i].Get();
+		}
+		for (int i = eGB_BEGIN; i < eGB_MAX; ++i) {
+			geoBuffers[i] = mGeometryCBuffers[i].Get();
+		}
+		
+		Renderer::Instance()->GetContext()->VSSetConstantBuffers(eVB_OFFSET, eVB_MAX, vertexBuffers);
+		Renderer::Instance()->GetContext()->PSSetConstantBuffers(ePB_OFFSET, ePB_MAX, pixelBuffers);
+		Renderer::Instance()->GetContext()->GSSetConstantBuffers(eGB_OFFSET, eGB_MAX, geoBuffers);
 	}
 
 	void RenderContext::Apply(RenderContext & from) {
@@ -74,14 +89,28 @@ namespace Epoch {
 		if (mGeoShaderFormat != eGS_MAX && mGeoShaderFormat != from.mGeoShaderFormat) {
 			ShaderManager::Instance()->ApplyGShader(mGeoShaderFormat);
 		}
-		for (auto it = mTextures.begin(); it != mTextures.end(); ++it) {
-			if (it->second.Get() != nullptr && from.mTextures[it->first].Get() != it->second.Get()) {
-				Renderer::Instance()->GetContext()->PSSetShaderResources((UINT)it->first, 1, it->second.GetAddressOf());
+		for (int i = eTEX_DIFFUSE; i < eTEX_MAX; ++i) {
+			if (mTextures[i].Get() != nullptr && from.mTextures[i].Get() != mTextures[i].Get()) {
+				Renderer::Instance()->GetContext()->PSSetShaderResources((UINT)i, 1, mTextures[i].GetAddressOf());
 			}
 		}
+
+		ID3D11Buffer *pixelBuffers[ePB_MAX], *vertexBuffers[eVB_MAX], *geoBuffers[eGB_MAX];
+		for (int i = eVB_BEGIN; i < eVB_MAX; ++i) {
+			vertexBuffers[i] = mVertexCBuffers[i].Get();
+		}
+		for (int i = ePB_BEGIN; i < ePB_MAX; ++i) {
+			pixelBuffers[i] = mPixelCBuffers[i].Get();
+		}
+		for (int i = eGB_BEGIN; i < eGB_MAX; ++i) {
+			geoBuffers[i] = mGeometryCBuffers[i].Get();
+		}
+		Renderer::Instance()->GetContext()->VSSetConstantBuffers(eVB_OFFSET, eVB_MAX, vertexBuffers);
+		Renderer::Instance()->GetContext()->PSSetConstantBuffers(ePB_OFFSET, ePB_MAX, pixelBuffers);
+		Renderer::Instance()->GetContext()->GSSetConstantBuffers(eGB_OFFSET, eGB_MAX, geoBuffers);
 	}
 
-	bool RenderContext::operator==(RenderContext & other) {
+	bool RenderContext::operator==(const RenderContext & other) const {
 		for (int i = eTEX_DIFFUSE; i < eTEX_MAX; ++i) {
 			if (other.mTextures[i].Get() == nullptr || other.mTextures[i].Get() == this->mTextures[i].Get()) {
 				// If the textures aren't different, or aren't used, we can continue on.
@@ -91,10 +120,10 @@ namespace Epoch {
 		}
 
 		if (mRasterState != other.mRasterState ||
-				mVertexFormat != other.mVertexFormat ||
-				mPixelShaderFormat != other.mPixelShaderFormat ||
-				mVertexShaderFormat != other.mVertexShaderFormat ||
-				mGeoShaderFormat != other.mGeoShaderFormat) {
+			mVertexFormat != other.mVertexFormat ||
+			mPixelShaderFormat != other.mPixelShaderFormat ||
+			mVertexShaderFormat != other.mVertexShaderFormat ||
+			mGeoShaderFormat != other.mGeoShaderFormat) {
 			return false;
 		}
 
@@ -108,13 +137,13 @@ namespace Epoch {
 		mVertexShaderFormat = _other.mVertexShaderFormat;
 		mGeoShaderFormat = _other.mGeoShaderFormat;
 		mType = _other.mType;
-		for (auto it = _other.mTextures.begin(); it != _other.mTextures.end(); ++it) {
-			mTextures[it->first] = it->second;
+		for (int i = eTEX_DIFFUSE; i < eTEX_MAX; ++i) {
+			mTextures[i] = _other.mTextures[i];
 		}
 		return *this;
 	}
 
-	bool RenderContext::operator==(const RenderContext & _other) const {
+	/*bool RenderContext::operator==(const RenderContext & _other) const {
 		for (int i = eTEX_DIFFUSE; i < eTEX_MAX; ++i) {
 			if (_other.mTextures.count(i) != 0) {
 				if (_other.mTextures.at(i).Get() == nullptr ||
@@ -134,7 +163,7 @@ namespace Epoch {
 		}
 
 		return true;
-	}
+	}*/
 
 	bool Epoch::RenderContext::operator!=(RenderContext & _other) {
 		return !(this->operator==(_other));

@@ -173,4 +173,14 @@ namespace Epoch {
 		return XMMatrixTranslation(_x, _y, _z);
 	}
 
+	matrix4 matrix4::CreateTranslation(vec3f _vec)
+	{
+		return CreateTranslation(_vec.x, _vec.y, _vec.z);
+	}
+
+	matrix4 matrix4::CreateTranslation(vec4f _vec)
+	{
+		return CreateTranslation(_vec.x, _vec.y, _vec.z);
+	}
+
 }

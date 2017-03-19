@@ -16,6 +16,7 @@
 *.db
 *.opendb
 
+/.vs
 /x64
 /DirectXTK/Bin
 /DirectXTK/MakeSpriteFont/bin

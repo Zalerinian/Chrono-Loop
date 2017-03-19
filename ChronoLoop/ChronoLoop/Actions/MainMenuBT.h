@@ -92,14 +92,15 @@ namespace Epoch
 				{
 					vec4f forward(0, 0, 1, 0);
 					matrix4 inverse = (mat * objects[i]->GetTransform().GetMatrix().Invert());
-					vec4f meshPos = inverse.Position;
+					vec3f meshPos = inverse.Position;
 					forward *= inverse;
+					vec3f fwd = forward;
 					Triangle *tris = meshes[i]->GetTriangles();
 					size_t numTris = meshes[i]->GetTriangleCount();
 					for (unsigned int j = 0; j < numTris; ++j)
 					{
 						float hitTime;
-						if (cLevel->mmflip && Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, forward, hitTime))
+						if (cLevel->mmflip && Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, fwd, hitTime))
 						{
 							if (i == 0)
 							{
@@ -123,18 +124,19 @@ namespace Epoch
 			{
 				vec4f forward(0, 0, 1, 0);
 				forward *= mObject->GetTransform().GetMatrix();
+				vec3f fwd = forward;
 				MeshComponent* meshes[] = { mRoomMesh, mChamberMesh };
 				BaseObject* objects[] = { mRoomObject, mChamberObject };
 				float meshTime = 0, wallTime = FLT_MAX;
 				for (int i = 0; i < ARRAYSIZE(meshes); ++i)
 				{
-					vec4f meshPos = (mat * objects[i]->GetTransform().GetMatrix().Invert()).Position;
+					vec3f meshPos = (mat * objects[i]->GetTransform().GetMatrix().Invert()).Position;
 					Triangle *tris = meshes[i]->GetTriangles();
 					size_t numTris = meshes[i]->GetTriangleCount();
 					for (unsigned int i = 0; i < numTris; ++i)
 					{
 						float hitTime = FLT_MAX;
-						Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, meshPos, forward, hitTime);
+						Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, meshPos, fwd, hitTime);
 						if (hitTime < wallTime)
 						{
 							wallTime = hitTime;
@@ -144,10 +146,10 @@ namespace Epoch
 
 				Triangle *tris = mFloorMesh->GetTriangles();
 				size_t numTris = mFloorMesh->GetTriangleCount();
-				vec4f position = (mat * mFloorObject->GetTransform().GetMatrix().Invert()).Position;
+				vec3f position = (mat * mFloorObject->GetTransform().GetMatrix().Invert()).Position;
 				for (unsigned int i = 0; i < numTris; ++i)
 				{
-					if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, forward, meshTime))
+					if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, fwd, meshTime))
 					{
 						if (meshTime < wallTime)
 						{

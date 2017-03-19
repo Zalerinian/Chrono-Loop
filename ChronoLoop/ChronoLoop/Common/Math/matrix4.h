@@ -66,6 +66,8 @@ namespace Epoch {
 		static matrix4 CreateZRotation(float _rads);
 		static matrix4 CreateScale(float _x, float _y, float _z);
 		static matrix4 CreateTranslation(float _x, float _y, float _z);
+		static matrix4 CreateTranslation(vec3f _vec);
+		static matrix4 CreateTranslation(vec4f _vec);
 	};
 
 }

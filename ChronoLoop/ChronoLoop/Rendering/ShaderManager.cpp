@@ -5,6 +5,7 @@
 #include "Renderer.h"
 #include <memory>
 #include "../Common/Logger.h"
+#include "../Common/Common.h"
 
 namespace Epoch {
 
@@ -20,6 +21,7 @@ namespace Epoch {
 			mPixelShaders[ePS_BASIC] = std::make_shared<ID3D11PixelShader*>(nullptr);
 		} else {
 			Renderer::Instance()->GetDevice()->CreatePixelShader(buffer, byteSize, nullptr, &ps);
+			SetD3DName(ps, "BasicPixel.cso");
 			mPixelShaders[ePS_BASIC] = std::make_shared<ID3D11PixelShader*>(ps);
 			delete[] buffer;
 		}
@@ -29,9 +31,33 @@ namespace Epoch {
 			mPixelShaders[ePS_TEXTURED] = std::make_shared<ID3D11PixelShader*>(nullptr);
 		} else {
 			Renderer::Instance()->GetDevice()->CreatePixelShader(buffer, byteSize, nullptr, &ps);
+			SetD3DName(ps, "TexturedPixel.cso");
 			mPixelShaders[ePS_TEXTURED] = std::make_shared<ID3D11PixelShader*>(ps);
 			delete[] buffer;
 		}
+
+		if (!FileIO::LoadBytes("PSTimeManipulation.cso", &buffer, byteSize)) {
+			SystemLogger::GetError() << "[Error] An error has occurred when trying to read PSTimeManipulation.cso. Chances are the file is missing or has been renamed. The shader will be null, and may result in a crash." << std::endl;
+			mPixelShaders[ePS_POSTPROCESS] = std::make_shared<ID3D11PixelShader*>(nullptr);
+		} else {
+			Renderer::Instance()->GetDevice()->CreatePixelShader(buffer, byteSize, nullptr, &ps);
+			SetD3DName(ps, "PSTimeManipulation.cso");
+			mPixelShaders[ePS_POSTPROCESS] = std::make_shared<ID3D11PixelShader*>(ps);
+			delete[] buffer;
+		}
+
+		if (!FileIO::LoadBytes("PSPureTexture.cso", &buffer, byteSize)) {
+			SystemLogger::GetError() << "[Error] An error has occurred when trying to read PSPureTexture.cso. Chances are the file is missing or has been renamed. The shader will be null, and may result in a crash." << std::endl;
+			mPixelShaders[ePS_PURETEXTURE] = std::make_shared<ID3D11PixelShader*>(nullptr);
+		} else {
+			Renderer::Instance()->GetDevice()->CreatePixelShader(buffer, byteSize, nullptr, &ps);
+			SetD3DName(ps, "PSPureTexture.cso");
+			mPixelShaders[ePS_PURETEXTURE] = std::make_shared<ID3D11PixelShader*>(ps);
+			delete[] buffer;
+		}
+
+
+
 
 
 		// Create Vertex Shaders.
@@ -41,6 +67,7 @@ namespace Epoch {
 			mVertexShaders[eVS_BASIC] = std::make_shared<ID3D11VertexShader*>(nullptr);
 		} else {
 			Renderer::Instance()->GetDevice()->CreateVertexShader(buffer, byteSize, nullptr, &vs);
+			SetD3DName(vs, "BasicVertex.cso");
 			mVertexShaders[eVS_BASIC] = std::make_shared<ID3D11VertexShader*>(vs);
 			delete[] buffer;
 		}
@@ -50,18 +77,45 @@ namespace Epoch {
 			mVertexShaders[eVS_TEXTURED] = std::make_shared<ID3D11VertexShader*>(nullptr);
 		} else {
 			Renderer::Instance()->GetDevice()->CreateVertexShader(buffer, byteSize, nullptr, &vs);
+			SetD3DName(vs, "TexturedVertex.cso");
 			mVertexShaders[eVS_TEXTURED] = std::make_shared<ID3D11VertexShader*>(vs);
 			delete[] buffer;
 		}
 
+		if (!FileIO::LoadBytes("NDCVertex.cso", &buffer, byteSize)) {
+			SystemLogger::GetError() << "[Error] An error has occurred when trying to read NDCVertex.cso. Chances are the file is missing or has been renamed. The shader will be null, and may result in a crash." << std::endl;
+			mVertexShaders[eVS_NDC] = std::make_shared<ID3D11VertexShader*>(nullptr);
+		} else {
+			Renderer::Instance()->GetDevice()->CreateVertexShader(buffer, byteSize, nullptr, &vs);
+			SetD3DName(vs, "NDCVertex.cso");
+			mVertexShaders[eVS_NDC] = std::make_shared<ID3D11VertexShader*>(vs);
+			delete[] buffer;
+		}
+
+
+
+
+
+
 		// Create geometry shaders
 		ID3D11GeometryShader *gs;
 		if (!FileIO::LoadBytes("GSDuplicateMesh.cso", &buffer, byteSize)) {
-			SystemLogger::Error() << "An error has occurred when trying to read TexturedVertex.cso. Chances are the file is missing or has been renamed. The shader will be null, and may result in a crash." << std::endl;
+			SystemLogger::Error() << "An error has occurred when trying to read GSDuplucateMesh.cso. Chances are the file is missing or has been renamed. The shader will be null, and may result in a crash." << std::endl;
 			mGeoShaders[eGS_PosNormTex] = nullptr;
 		} else {
 			Renderer::Instance()->GetDevice()->CreateGeometryShader(buffer, byteSize, nullptr, &gs);
+			SetD3DName(gs, "GSDuplicateMesh.cso");
 			mGeoShaders[eGS_PosNormTex].Attach(gs);
+			delete[] buffer;
+		}
+
+		if (!FileIO::LoadBytes("GSNDC.cso", &buffer, byteSize)) {
+			SystemLogger::Error() << "An error has occurred when trying to read GSNDC.cso. Chances are the file is missing or has been renamed. The shader will be null, and may result in a crash." << std::endl;
+			mGeoShaders[eGS_PosNormTex_NDC] = nullptr;
+		} else {
+			Renderer::Instance()->GetDevice()->CreateGeometryShader(buffer, byteSize, nullptr, &gs);
+			SetD3DName(gs, "GSNDC.cso");
+			mGeoShaders[eGS_PosNormTex_NDC].Attach(gs);
 			delete[] buffer;
 		}
 	}

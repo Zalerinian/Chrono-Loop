@@ -5,7 +5,7 @@
 namespace Epoch {
 
 	class LM {
-		Level* mCurrentLevel = nullptr, *mLoadingLevel = nullptr;
+		Level* mCurrentLevel = nullptr, *mLoadingLevel = nullptr, *mRequested = nullptr;
 
 		enum class LoadStatus
 		{
@@ -28,10 +28,12 @@ namespace Epoch {
 		};
 
 
-		void SetCurrentLevel(Level* _level);
+		//void SetCurrentLevel(Level* _level);
+		void RequestLevelChange(Level* _next);
 		Level* GetCurrentLevel();
 		LevelStatus LoadLevelAsync(const char* _path, Level** _out);
 		void Destroy();
+		void Update();
 	};
 
 

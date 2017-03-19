@@ -43,9 +43,7 @@ namespace Epoch {
 		vec4f  Cross(const vec4f& _other) const;
 		float  Dot(const vec4f& _other) const;
 		float  Magnitude() const;
-		float  Magnitude3() const;
 		float  SquaredMagnitude() const;
-		float  SquaredMagnitude3() const;
 		vec4f  Normalize() const;
 		vec4f  Reflect(const vec4f& other) const;
 		vec4f& Set(const float _x, const float _y, const float _z, const float _w);
