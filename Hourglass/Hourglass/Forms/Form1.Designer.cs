@@ -120,6 +120,10 @@ namespace Hourglass
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.nameBox = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.mMenuButtonStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mCreateMenuAdd = new System.Windows.Forms.ToolStripMenuItem();
+            this.mCreateMenuAddChild = new System.Windows.Forms.ToolStripMenuItem();
+            this.mObjectStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spHierarchyPanel)).BeginInit();
             this.spHierarchyPanel.Panel1.SuspendLayout();
@@ -157,6 +161,7 @@ namespace Hourglass
             this.TextureBox.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            this.mMenuButtonStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -427,6 +432,7 @@ namespace Hourglass
             this.mMenuButton.TabIndex = 1;
             this.mMenuButton.Text = "Create Object            ";
             this.mMenuButton.UseVisualStyleBackColor = true;
+            this.mMenuButton.Click += new System.EventHandler(this.mMenuButton_Click);
             // 
             // Tree
             // 
@@ -482,7 +488,7 @@ namespace Hourglass
             this.splitContainer2.Panel2.Controls.Add(this.groupBox4);
             this.splitContainer2.Panel2MinSize = 300;
             this.splitContainer2.Size = new System.Drawing.Size(860, 628);
-            this.splitContainer2.SplitterDistance = 514;
+            this.splitContainer2.SplitterDistance = 508;
             this.splitContainer2.SplitterWidth = 10;
             this.splitContainer2.TabIndex = 3;
             // 
@@ -493,7 +499,7 @@ namespace Hourglass
             this.graphicsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.graphicsPanel1.Location = new System.Drawing.Point(0, 0);
             this.graphicsPanel1.Name = "graphicsPanel1";
-            this.graphicsPanel1.Size = new System.Drawing.Size(514, 628);
+            this.graphicsPanel1.Size = new System.Drawing.Size(508, 628);
             this.graphicsPanel1.TabIndex = 2;
             this.graphicsPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.Paint);
             this.graphicsPanel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseClick);
@@ -518,7 +524,7 @@ namespace Hourglass
             // 
             this.RightToggle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.RightToggle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.RightToggle.Location = new System.Drawing.Point(488, 3);
+            this.RightToggle.Location = new System.Drawing.Point(482, 3);
             this.RightToggle.MinimumSize = new System.Drawing.Size(1, 1);
             this.RightToggle.Name = "RightToggle";
             this.RightToggle.Size = new System.Drawing.Size(23, 23);
@@ -532,7 +538,7 @@ namespace Hourglass
             this.groupBox7.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.groupBox7.Location = new System.Drawing.Point(0, 728);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(319, 72);
+            this.groupBox7.Size = new System.Drawing.Size(325, 72);
             this.groupBox7.TabIndex = 22;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "groupBox7";
@@ -544,7 +550,7 @@ namespace Hourglass
             this.visibleCheck.Dock = System.Windows.Forms.DockStyle.Top;
             this.visibleCheck.Location = new System.Drawing.Point(0, 711);
             this.visibleCheck.Name = "visibleCheck";
-            this.visibleCheck.Size = new System.Drawing.Size(319, 17);
+            this.visibleCheck.Size = new System.Drawing.Size(325, 17);
             this.visibleCheck.TabIndex = 21;
             this.visibleCheck.Text = "Visible";
             this.visibleCheck.UseVisualStyleBackColor = true;
@@ -557,7 +563,7 @@ namespace Hourglass
             this.MoveCheck.Dock = System.Windows.Forms.DockStyle.Top;
             this.MoveCheck.Location = new System.Drawing.Point(0, 694);
             this.MoveCheck.Name = "MoveCheck";
-            this.MoveCheck.Size = new System.Drawing.Size(319, 17);
+            this.MoveCheck.Size = new System.Drawing.Size(325, 17);
             this.MoveCheck.TabIndex = 13;
             this.MoveCheck.Text = "Can Move";
             this.MoveCheck.UseVisualStyleBackColor = true;
@@ -570,7 +576,7 @@ namespace Hourglass
             this.Trigger.Dock = System.Windows.Forms.DockStyle.Top;
             this.Trigger.Location = new System.Drawing.Point(0, 677);
             this.Trigger.Name = "Trigger";
-            this.Trigger.Size = new System.Drawing.Size(319, 17);
+            this.Trigger.Size = new System.Drawing.Size(325, 17);
             this.Trigger.TabIndex = 12;
             this.Trigger.Text = "Trigger";
             this.Trigger.UseVisualStyleBackColor = true;
@@ -586,7 +592,7 @@ namespace Hourglass
             this.colorSelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.colorSelect.Location = new System.Drawing.Point(0, 652);
             this.colorSelect.Name = "colorSelect";
-            this.colorSelect.Size = new System.Drawing.Size(319, 25);
+            this.colorSelect.Size = new System.Drawing.Size(325, 25);
             this.colorSelect.TabIndex = 8;
             this.colorSelect.Text = "Color";
             this.colorSelect.UseVisualStyleBackColor = false;
@@ -609,7 +615,7 @@ namespace Hourglass
             this.Physics.Dock = System.Windows.Forms.DockStyle.Top;
             this.Physics.Location = new System.Drawing.Point(0, 493);
             this.Physics.Name = "Physics";
-            this.Physics.Size = new System.Drawing.Size(319, 159);
+            this.Physics.Size = new System.Drawing.Size(325, 159);
             this.Physics.TabIndex = 1;
             this.Physics.TabStop = false;
             this.Physics.Text = "Pysics";
@@ -802,7 +808,7 @@ namespace Hourglass
             this.ExtraVector.Dock = System.Windows.Forms.DockStyle.Top;
             this.ExtraVector.Location = new System.Drawing.Point(0, 419);
             this.ExtraVector.Name = "ExtraVector";
-            this.ExtraVector.Size = new System.Drawing.Size(319, 74);
+            this.ExtraVector.Size = new System.Drawing.Size(325, 74);
             this.ExtraVector.TabIndex = 20;
             this.ExtraVector.TabStop = false;
             this.ExtraVector.Text = "ExtraVector";
@@ -923,7 +929,7 @@ namespace Hourglass
             this.groupBox2.Location = new System.Drawing.Point(0, 347);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBox2.Size = new System.Drawing.Size(319, 72);
+            this.groupBox2.Size = new System.Drawing.Size(325, 72);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Rotation";
@@ -1046,7 +1052,7 @@ namespace Hourglass
             this.groupBox1.Location = new System.Drawing.Point(0, 275);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBox1.Size = new System.Drawing.Size(319, 72);
+            this.groupBox1.Size = new System.Drawing.Size(325, 72);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Scale";
@@ -1162,7 +1168,7 @@ namespace Hourglass
             this.groupBox6.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox6.Location = new System.Drawing.Point(0, 235);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(319, 40);
+            this.groupBox6.Size = new System.Drawing.Size(325, 40);
             this.groupBox6.TabIndex = 11;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Radius";
@@ -1190,7 +1196,7 @@ namespace Hourglass
             0,
             -2147483648});
             this.Radius.Name = "Radius";
-            this.Radius.Size = new System.Drawing.Size(313, 20);
+            this.Radius.Size = new System.Drawing.Size(319, 20);
             this.Radius.TabIndex = 8;
             this.Radius.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
             // 
@@ -1207,7 +1213,7 @@ namespace Hourglass
             this.groupBox3.Location = new System.Drawing.Point(0, 163);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBox3.Size = new System.Drawing.Size(319, 72);
+            this.groupBox3.Size = new System.Drawing.Size(325, 72);
             this.groupBox3.TabIndex = 5;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Position";
@@ -1326,7 +1332,7 @@ namespace Hourglass
             this.TextureBox.Location = new System.Drawing.Point(0, 111);
             this.TextureBox.Name = "TextureBox";
             this.TextureBox.Padding = new System.Windows.Forms.Padding(0);
-            this.TextureBox.Size = new System.Drawing.Size(319, 52);
+            this.TextureBox.Size = new System.Drawing.Size(325, 52);
             this.TextureBox.TabIndex = 4;
             this.TextureBox.TabStop = false;
             this.TextureBox.Text = "Texture";
@@ -1360,7 +1366,7 @@ namespace Hourglass
             this.groupBox5.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox5.Location = new System.Drawing.Point(0, 39);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(319, 72);
+            this.groupBox5.Size = new System.Drawing.Size(325, 72);
             this.groupBox5.TabIndex = 10;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Components";
@@ -1390,7 +1396,7 @@ namespace Hourglass
             this.componetsCheck.Location = new System.Drawing.Point(3, 16);
             this.componetsCheck.Margin = new System.Windows.Forms.Padding(0);
             this.componetsCheck.Name = "componetsCheck";
-            this.componetsCheck.Size = new System.Drawing.Size(313, 53);
+            this.componetsCheck.Size = new System.Drawing.Size(319, 53);
             this.componetsCheck.TabIndex = 1;
             this.componetsCheck.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.componetsCheck_ItemCheck);
             // 
@@ -1401,7 +1407,7 @@ namespace Hourglass
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox4.Location = new System.Drawing.Point(0, 0);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(319, 39);
+            this.groupBox4.Size = new System.Drawing.Size(325, 39);
             this.groupBox4.TabIndex = 0;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Name";
@@ -1412,7 +1418,7 @@ namespace Hourglass
             this.nameBox.Location = new System.Drawing.Point(3, 16);
             this.nameBox.Margin = new System.Windows.Forms.Padding(0);
             this.nameBox.Name = "nameBox";
-            this.nameBox.Size = new System.Drawing.Size(313, 20);
+            this.nameBox.Size = new System.Drawing.Size(319, 20);
             this.nameBox.TabIndex = 0;
             this.nameBox.TextChanged += new System.EventHandler(this.transform_ValueChanged);
             this.nameBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.nameBox_KeyDown);
@@ -1422,6 +1428,33 @@ namespace Hourglass
             this.timer1.Enabled = true;
             this.timer1.Interval = 1;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // mMenuButtonStrip
+            // 
+            this.mMenuButtonStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mCreateMenuAdd,
+            this.mCreateMenuAddChild});
+            this.mMenuButtonStrip.Name = "contextMenuStrip1";
+            this.mMenuButtonStrip.Size = new System.Drawing.Size(153, 70);
+            // 
+            // mCreateMenuAdd
+            // 
+            this.mCreateMenuAdd.Name = "mCreateMenuAdd";
+            this.mCreateMenuAdd.Size = new System.Drawing.Size(152, 22);
+            this.mCreateMenuAdd.Text = "Create Object";
+            this.mCreateMenuAdd.Click += new System.EventHandler(this.mCreateMenuAdd_Click);
+            // 
+            // mCreateMenuAddChild
+            // 
+            this.mCreateMenuAddChild.Name = "mCreateMenuAddChild";
+            this.mCreateMenuAddChild.Size = new System.Drawing.Size(152, 22);
+            this.mCreateMenuAddChild.Text = "Create Child";
+            this.mCreateMenuAddChild.Click += new System.EventHandler(this.mCreateMenuAddChild_Click);
+            // 
+            // mObjectStrip
+            // 
+            this.mObjectStrip.Name = "mObjectStrip";
+            this.mObjectStrip.Size = new System.Drawing.Size(61, 4);
             // 
             // Editor
             // 
@@ -1481,6 +1514,7 @@ namespace Hourglass
             this.groupBox5.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.mMenuButtonStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1577,6 +1611,10 @@ namespace Hourglass
         private System.Windows.Forms.ToolStripMenuItem levelSettingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createToolStripMenuItem;
         private MenuButton mMenuButton;
+        private System.Windows.Forms.ContextMenuStrip mMenuButtonStrip;
+        private System.Windows.Forms.ToolStripMenuItem mCreateMenuAdd;
+        private System.Windows.Forms.ToolStripMenuItem mCreateMenuAddChild;
+        private System.Windows.Forms.ContextMenuStrip mObjectStrip;
     }
 }
 

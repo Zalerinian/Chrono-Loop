@@ -39,7 +39,6 @@ namespace Hourglass
         private string mCurrentFilename = string.Empty;
         private bool mCurrentFileChanged = false;
         private TestPositionForm mForm;
-        private ContextMenuStrip mMenuButtonStrip;
 
 
         string Filename {
@@ -64,7 +63,6 @@ namespace Hourglass
         public Editor()
         {
             InitializeComponent();
-            InitializeMenuButton(); // Sets up the Create menubutton.
             InitializeDevice();
             InitializeKeyboard();
             InitializeCamera();
@@ -148,28 +146,7 @@ namespace Hourglass
                 }
             }
         }
-
-        private void InitializeMenuButton()
-        {
-            spHierarchyPanel.Panel1.Controls.Add(mMenuButton);
-
-
-            // The menu button strip is currently not used.
-            mMenuButtonStrip = new ContextMenuStrip();
-            ToolStripMenuItem addObject = new ToolStripMenuItem("Create Object");
-            ToolStripMenuItem addChild = new ToolStripMenuItem("Create Child Object");
-
-            mMenuButtonStrip.Items.Add(addObject);
-            mMenuButtonStrip.Items.Add(addChild);
-
-            mMenuButton.Menu = mMenuButtonStrip;
-        }
-
-        private void OnbuttonClick(object sender, EventArgs e)
-        {
-            Debug.Print("Boop");
-        }
-
+        
         private void InitializeCamera()
         {
             device.Transform.Projection = Matrix.PerspectiveFovRH((float)Math.PI / 4.0f, (float)graphicsPanel1.Width / (float)graphicsPanel1.Height, 1f, 1000);
@@ -662,6 +639,43 @@ namespace Hourglass
             {
                 currentFile = saveFile.FileName;
                 saveLevel(saveFile.FileName);
+            }
+        }
+
+        private void mMenuButton_Click(object sender, EventArgs e)
+        {
+            ConstructTreeObject(null);
+        }
+
+        private void mCreateMenuAdd_Click(object sender, EventArgs e)
+        {
+            ConstructTreeObject(null);
+        }
+
+        private void mCreateMenuAddChild_Click(object sender, EventArgs e)
+        {
+            if(!(sender is TreeNode))
+            {
+                Debug.Print("Something's gone a bit weird here.");
+                return;
+            }
+            ConstructTreeObject(sender as TreeNode);
+        }
+
+        private void ConstructTreeObject(TreeNode _parent)
+        {
+            TreeNode n = new TreeNode();
+            n.ContextMenuStrip = mObjectStrip;
+            BaseObject b = new BaseObject("Base Object");
+            n.Tag = b;
+            n.Text = b.Name;
+            if(_parent != null)
+            {
+                _parent.Nodes.Add(n);
+            }
+            else
+            {
+                Tree.Nodes.Add(n);
             }
         }
 

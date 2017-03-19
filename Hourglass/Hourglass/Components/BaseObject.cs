@@ -12,13 +12,25 @@ namespace Hourglass
     {
         private const bool ImplementHierarchy = false;
 
+        protected static uint UID = 0;
+        protected string mNodeKey;
+        protected uint mObjectUID = UID++;
         protected List<Component> mComponents;
         protected BaseObject mParent = null;
 
-        public BaseObject(ref Device _device) {
+        public string Name {
+            get { return ((TransformComponent)mComponents[0]).Name; }
+            set { ((TransformComponent)mComponents[0]).Name = value; }
+        }
+
+        public BaseObject() {
+            mComponents = new List<Component>();
             TransformComponent transform = new TransformComponent(mComponents);
+        }
 
-
+        public BaseObject(string _name) : this()
+        {
+            ((TransformComponent)mComponents[0]).Name = _name;
         }
 
         public List<Component> GetComponents()

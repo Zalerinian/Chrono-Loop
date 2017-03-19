@@ -25,6 +25,26 @@ namespace Hourglass
 
         protected bool mNameIsPlaceholder = true;
 
+        public string Name {
+            get { return mNameIsPlaceholder ? "" : mName.Text; }
+            set {
+                mName.Text = value;
+                if(!string.IsNullOrWhiteSpace(value))
+                {
+                    mName.Font = mActiveFont;
+                    mName.ForeColor = System.Drawing.SystemColors.ControlText;
+                    mNameIsPlaceholder = false;
+                }
+                else
+                {
+                    mName.Font = mPlaceholderFont;
+                    mName.ForeColor = System.Drawing.SystemColors.ControlDark;
+                    mNameIsPlaceholder = true;
+                }
+            }
+        }
+
+
         public TransformComponent(List<Component> _container, int _yOffset = 0) : base(_container, false)
         {
             if(_yOffset != 0)
@@ -131,6 +151,11 @@ namespace Hourglass
 
             mGroupBox.Text = "Transform";
             mGroupBox.Size = mGroupBox.PreferredSize;
+        }
+
+        public TransformComponent(List<Component> _container, string _name) : this(_container)
+        {
+            Name = _name;
         }
 
         public Vector3 GetScaleVector()
