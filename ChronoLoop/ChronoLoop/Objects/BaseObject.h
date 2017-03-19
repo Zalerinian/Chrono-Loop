@@ -39,6 +39,7 @@ namespace Epoch {
 		BaseObject* Reset(std::string _name);
 		BaseObject* Reset(std::string _name, Transform _transform);
 		BaseObject* Reset(std::string _name, Transform _transform, BaseObject* _parent);
+		unsigned int GetTotalAmountofComponents();
 		void RemoveAllComponents();
 
 		inline unsigned int GetUniqueId() {

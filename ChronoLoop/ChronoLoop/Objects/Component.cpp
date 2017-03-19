@@ -6,7 +6,7 @@
 
 namespace Epoch
 {
-	// 0 is reserved for the player.
+	
 	unsigned short Component::mComponentCount = 0;
 
 	Component::Component()

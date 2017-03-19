@@ -193,6 +193,7 @@ namespace Epoch {
 						{
 							delete mCloneInterpolators[j->first];
 							mCloneInterpolators.erase(mClones[i]->GetUniqueID());
+							break;
 						}
 					}
 
@@ -265,7 +266,7 @@ namespace Epoch {
 			mClones.push_back(_ob1);
 			mClones.push_back(_ob2);
 			mClones.push_back(_ob3);
-			mTimeline->SetCloneCreationTime(_ob1->GetUniqueID(), _ob2->GetUniqueID(), _ob3->GetUniqueID());
+			mTimeline->SetCloneObjectCreationTime(_ob1->GetUniqueID(), _ob2->GetUniqueID(), _ob3->GetUniqueID());
 			//Tell the time manager what frame the timeline its on
 			mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
 		}

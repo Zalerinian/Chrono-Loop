@@ -84,18 +84,17 @@ namespace Epoch {
 	}
 	
 	//This func assumes all components are attached in the EXACT order,
-	void Level::SwapPlayerComponentIds(BaseObject * _first, BaseObject* _other)
+	void Level::SwapPlayerComponentIds(BaseObject *& _first, BaseObject*& _other)
 	{
 		std::vector<Component*> components = _first->GetComponents(eCOMPONENT_COLLIDER);
 		std::vector<Component*> othersComponents = _other->GetComponents(eCOMPONENT_COLLIDER);
-		if (components.size() == othersComponents.size())
-		{
-			for (int i = 0; i < components.size(); ++i) {
+
+			for (int i = 0; i < othersComponents.size(); ++i) {
 				unsigned int FirstCompId = components[i]->GetColliderId();
 				components[i]->SetComponentId(othersComponents[i]->GetColliderId());
 				othersComponents[i]->SetComponentId(FirstCompId);
 			}
-		}
+		
 
 		/*components = _first->GetComponents(eCOMPONENT_AUDIOEMITTER);
 		othersComponents = _other->GetComponents(eCOMPONENT_AUDIOEMITTER);
@@ -115,25 +114,22 @@ namespace Epoch {
 
 		components = _first->GetComponents(eCOMPONENT_CODE);
 		othersComponents = _other->GetComponents(eCOMPONENT_CODE);
-		if (components.size() == othersComponents.size())
-		{
-			for (int i = 0; i < components.size(); ++i) {
+
+			for (int i = 0; i <othersComponents.size(); ++i) {
 				unsigned int FirstCompId = components[i]->GetColliderId();
 				components[i]->SetComponentId(othersComponents[i]->GetColliderId());
 				othersComponents[i]->SetComponentId(FirstCompId);
 			}
-		}
 
 		components = _first->GetComponents(eCOMPONENT_MESH);
 		othersComponents = _other->GetComponents(eCOMPONENT_MESH);
-		if (components.size() == othersComponents.size())
-		{
-			for (int i = 0; i < components.size(); ++i) {
+	
+			for (int i = 0; i < othersComponents.size(); ++i) {
 				unsigned int FirstCompId = components[i]->GetColliderId();
 				components[i]->SetComponentId(othersComponents[i]->GetColliderId());
 				othersComponents[i]->SetComponentId(FirstCompId);
 			}
-		}
+		
 
 	/*	components = _first->GetComponents(eCOMPONENT_UI);
 		othersComponents = _other->GetComponents(eCOMPONENT_UI);
@@ -145,14 +141,11 @@ namespace Epoch {
 
 		components = _first->GetComponents(eCOMPONENT_UNKNOWN);
 		othersComponents = _other->GetComponents(eCOMPONENT_UNKNOWN);
-		if (components.size() == othersComponents.size())
-		{
-			for (int i = 0; i < components.size(); ++i) {
+			for (int i = 0; i < othersComponents.size(); ++i) {
 				unsigned int FirstCompId = components[i]->GetColliderId();
 				components[i]->SetComponentId(othersComponents[i]->GetColliderId());
 				othersComponents[i]->SetComponentId(FirstCompId);
 			}
-		}
 	}
 
 	void Level::SetHeadsetAndControllers(BaseObject *& _headset, BaseObject *& _controller1, BaseObject *& _controller2, ControllerCollider* _c1Collider, ControllerCollider* _c2Collider) {
@@ -425,6 +418,7 @@ namespace Epoch {
 						path.append(textureFile);
 						mesh->AddTexture(path.c_str(), eTEX_DIFFUSE);
 						obj->AddComponent(mesh);
+					
 					}
 
 					if (colliderType == "OBB")

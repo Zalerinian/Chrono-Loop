@@ -55,9 +55,9 @@ namespace Epoch
 			MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 			ControllerCollider* CubeColider = new ControllerCollider(Controller1, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
 			mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+			Controller1->AddComponent(mc);
 			Controller1->AddComponent(CubeColider);
 			BoxSnapToControllerAction* SN1 = new BoxSnapToControllerAction();
-			Controller1->AddComponent(mc);
 			Controller1->AddComponent(SN1);
 
 			//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
@@ -65,9 +65,9 @@ namespace Epoch
 			MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 			ControllerCollider* CubeColider2 = new ControllerCollider(Controller2, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 			mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+			Controller2->AddComponent(mc2);
 			Controller2->AddComponent(CubeColider2);
 			BoxSnapToControllerAction* SN2 = new BoxSnapToControllerAction();
-			Controller2->AddComponent(mc2);
 			Controller2->AddComponent(SN2);
 
 
