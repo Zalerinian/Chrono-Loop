@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 
-namespace LevelEditor {
+namespace Hourglass {
     public partial class Editor {
         private void saveLevel(string file) {
             XmlWriterSettings settings = new XmlWriterSettings();

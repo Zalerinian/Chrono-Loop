@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace LevelEditor {
+namespace Hourglass {
     class PlaneCollider : ColliderComponent {
         protected Label mLbOffset, mLbNormal, mLbNX, mLbNY, mLbNZ;
         protected NumericUpDown mOffset, mNX, mNY, mNZ;

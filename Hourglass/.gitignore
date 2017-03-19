@@ -1,5 +1,7 @@
 *.db
 .vs/*
+*.user
+
 Hourglass/Properties/*
 Hourglass/bin/*
 Hourglass/obj/*

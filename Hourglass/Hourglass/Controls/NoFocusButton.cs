@@ -8,7 +8,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 
-namespace LevelEditor
+namespace Hourglass
 {
     public partial class NoFocusButton : Button
     {

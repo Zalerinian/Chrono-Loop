@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 
-namespace LevelEditor
+namespace Hourglass
 {
     public partial class TestPositionForm : Form
     {

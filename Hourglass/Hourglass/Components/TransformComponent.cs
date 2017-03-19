@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using Microsoft.DirectX;
 
-namespace LevelEditor
+namespace Hourglass
 {
     public class TransformComponent : Component
     {

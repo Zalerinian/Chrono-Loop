@@ -1,4 +1,4 @@
-﻿namespace LevelEditor.Forms
+﻿namespace Hourglass.Forms
 {
     partial class LevelSettingsForm
     {

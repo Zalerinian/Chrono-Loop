@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.DirectX;
 
-namespace LevelEditor.Forms
+namespace Hourglass.Forms
 {
     public partial class LevelSettingsForm : Form
     {

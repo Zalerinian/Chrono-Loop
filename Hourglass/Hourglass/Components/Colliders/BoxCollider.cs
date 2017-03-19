@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace LevelEditor {
+namespace Hourglass {
 
     class BoxCollider : ColliderComponent {
         protected Panel mPosPanel, mRotPanel, mScalePanel;

@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace LevelEditor
+namespace Hourglass
 {
     public partial class GraphicsPanel : Panel
     {

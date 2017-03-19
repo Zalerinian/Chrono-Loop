@@ -1,6 +1,6 @@
 ﻿namespace Hourglass
 {
-    public partial class GraphicsPanel
+    partial class MenuButton
     {
         /// <summary>
         /// Required designer variable.

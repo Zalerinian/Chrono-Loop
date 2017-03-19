@@ -1,4 +1,4 @@
-﻿namespace LevelEditor {
+﻿namespace Hourglass {
     partial class TestPositionForm {
         /// <summary>
         /// Required designer variable.

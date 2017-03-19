@@ -8,7 +8,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 
-namespace LevelEditor
+namespace Hourglass
 {
     class ToolObjectColor
     {

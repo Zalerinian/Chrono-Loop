@@ -8,7 +8,7 @@ using Microsoft.DirectX.DirectInput;
 using System.Diagnostics;
 
 
-namespace LevelEditor
+namespace Hourglass
 {
     public partial class Editor : Form
     {
@@ -39,6 +39,7 @@ namespace LevelEditor
         private string mCurrentFilename = string.Empty;
         private bool mCurrentFileChanged = false;
         private TestPositionForm mForm;
+        private ContextMenuStrip mMenuButtonStrip;
 
 
         string Filename {
@@ -63,18 +64,16 @@ namespace LevelEditor
         public Editor()
         {
             InitializeComponent();
+            InitializeMenuButton(); // Sets up the Create menubutton.
             InitializeDevice();
             InitializeKeyboard();
             InitializeCamera();
-            defaultTexture = TextureLoader.FromFile(device, "Assets/missing.dds");
-            objects.Add(new ToolObject(ref device));
-            objects[0].Name = "Empty";
-            objects.Add(new ToolObject("Assets\\Cube.obj", ref device));
-            objects.Add(new ToolObject("Assets\\Sphere.obj", ref device));
-            for (int i = 0; i < objects.Count; i++)
-            {
-                Tree.Nodes[0].Nodes.Add(objects[i].Name);
-            }
+            //defaultTexture = TextureLoader.FromFile(device, "Assets/missing.dds");
+            //objects.Add(new ToolObject(ref device));
+            //objects[0].Name = "Empty";
+            //objects.Add(new ToolObject("Assets\\Cube.obj", ref device));
+            //objects.Add(new ToolObject("Assets\\Sphere.obj", ref device));
+
             debugObjs.Add(new ToolObjectColor(ref device));
             debugObjs[0].MakeGrid();
             debugObjs[0].ObjectColor = Color.GhostWhite;
@@ -89,7 +88,6 @@ namespace LevelEditor
             dragSpeed = 2.0f;
             angleX = angleY = 0;
             rotate = Matrix.Identity;
-            Tree.Nodes[0].Expand();
 
 
             // Level settings McBootleg
@@ -100,6 +98,7 @@ namespace LevelEditor
             mForm = new TestPositionForm();
             mForm.Show();
         }
+
         private void InitializeDevice()
         {
             try
@@ -125,8 +124,10 @@ namespace LevelEditor
                 Trace.WriteLine("StackTrace:" + exception.StackTrace);
             }
         }
+
         private void HandleResetEvent(object caller, EventArgs args)
         {
+            Debug.Print("Device reset!");
             device.RenderState.FillMode = FillMode.Solid;
             device.RenderState.CullMode = Cull.Clockwise;
             device.RenderState.ZBufferEnable = true;
@@ -147,6 +148,28 @@ namespace LevelEditor
                 }
             }
         }
+
+        private void InitializeMenuButton()
+        {
+            spHierarchyPanel.Panel1.Controls.Add(mMenuButton);
+
+
+            // The menu button strip is currently not used.
+            mMenuButtonStrip = new ContextMenuStrip();
+            ToolStripMenuItem addObject = new ToolStripMenuItem("Create Object");
+            ToolStripMenuItem addChild = new ToolStripMenuItem("Create Child Object");
+
+            mMenuButtonStrip.Items.Add(addObject);
+            mMenuButtonStrip.Items.Add(addChild);
+
+            mMenuButton.Menu = mMenuButtonStrip;
+        }
+
+        private void OnbuttonClick(object sender, EventArgs e)
+        {
+            Debug.Print("Boop");
+        }
+
         private void InitializeCamera()
         {
             device.Transform.Projection = Matrix.PerspectiveFovRH((float)Math.PI / 4.0f, (float)graphicsPanel1.Width / (float)graphicsPanel1.Height, 1f, 1000);
@@ -157,12 +180,14 @@ namespace LevelEditor
                 device.RenderState.ZBufferEnable = true;
             device.RenderState.CullMode = Cull.Clockwise;
         }
+
         public void InitializeKeyboard()
         {
             keyb = new Microsoft.DirectX.DirectInput.Device(SystemGuid.Keyboard);
             keyb.SetCooperativeLevel(this, CooperativeLevelFlags.Background | CooperativeLevelFlags.NonExclusive);
             keyb.Acquire();
         }
+
         private void Paint(object sender, PaintEventArgs e)
         {
             device.RenderState.ZBufferEnable = true;
@@ -228,7 +253,7 @@ namespace LevelEditor
                 gizmoScale = Matrix.Scaling(Vector3.Maximize(new Vector3(scale, scale, scale) * 0.05f, new Vector3(0.05f, 0.05f, 0.05f)));
                 foreach (ToolObjectColor tObj2 in debugObjs[1].Children)
                 {
-                    device.RenderState.FillMode = tObj2.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
+                    device.RenderState.FillMode = FillMode.Solid;
                     device.SetStreamSource(0, tObj2.VertexBuffer, 0);
                     device.Indices = tObj2.IndexBuffer;
                     device.Transform.World = gizmoScale * Matrix.Translation(selectedObject.Position) * debugObjs[1].Transform * tObj2.Transform;
