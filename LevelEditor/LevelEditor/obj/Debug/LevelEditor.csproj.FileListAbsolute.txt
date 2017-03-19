@@ -54,7 +54,6 @@ D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\L
 D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.csproj.GenerateResource.Cache
 D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.exe
 D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.pdb
-D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\skybox.dds
 D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.csprojResolveAssemblyReference.cache
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\AxisGizmo.obj
 D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\AxisGizmo.obj
@@ -77,7 +76,6 @@ E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\D
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\grey.png
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\skybox.dds
 E:\Users\James Moran\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Sphere.obj
-D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\energyField.png
 D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\enrgyField.png
 D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\fieldGen.png
 D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\floor.png
@@ -252,6 +250,12 @@ G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\default
 C:\Users\Drew\Documents\Full Sail\Capstone\repo\LevelEditor\LevelEditor\obj\Debug\LevelEditor.TestPositionForm.resources
 E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\default.dds
 E:\School\Final Project\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.TestPositionForm.resources
-G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Arrow.obj
-G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.Forms.LevelSettingsForm.resources
-G:\Projects\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.TestPositionForm.resources
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\default.dds
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Door2.obj
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\DoorEmiters2.obj
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\DoorFrame2.obj
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\red.png
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\white.png
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\bin\Debug\Assets\Arrow.obj
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.Forms.LevelSettingsForm.resources
+D:\Users\James\Documents\GitHub\NthDimension\LevelEditor\LevelEditor\obj\Debug\LevelEditor.TestPositionForm.resources
