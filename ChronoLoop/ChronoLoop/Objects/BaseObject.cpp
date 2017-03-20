@@ -118,7 +118,7 @@ namespace Epoch {
 		int count = 0;
 		for (auto vec : mComponents)
 		{
-			count += vec.second.size();
+			count += (int)vec.second.size();
 		}
 
 		return count;

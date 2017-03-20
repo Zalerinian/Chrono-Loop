@@ -227,12 +227,14 @@ namespace Hourglass
         {
             if(mOwner != null && mOwner.Node != null)
             {
-                if(string.IsNullOrWhiteSpace(mName.Text))
+                if(string.IsNullOrWhiteSpace(mName.Text) || mNameIsPlaceholder)
                 {
-                    //mOwner.Node.NodeFont = 
+                    mOwner.Node.NodeFont = mPlaceholderFont;
+                    mOwner.Node.Text = "<Unnamed Object>";
                 }
                 else
                 {
+                    mOwner.Node.NodeFont = mActiveFont;
                     mOwner.Node.Text = mName.Text;
                 }
             }
