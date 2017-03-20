@@ -51,33 +51,6 @@ namespace Epoch
 					Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(ears, "Listener")));
 					Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(ambient, "ambiance")));
 
-
-					//BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("RController");
-					//MeshComponent *mc = (new MeshComponent("../Resources/Controller.obj"))->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
-					//MeshComponent *rightRaycaster = (new MeshComponent("../Resources/BootrayCast.obj"))->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
-					//TeleportAction *ta = new TeleportAction(eControllerType_Primary);
-					//TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
-					//ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
-					//BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
-					//RightController->AddComponent(mc)->AddComponent(rightRaycaster)->AddComponent(ta)->AddComponent(rightConCol)->AddComponent(tm)->AddComponent(ambient)->AddComponent(pickup);
-					//ambient->Play();
-					//pickup->mControllerRole = eControllerType_Primary;
-					//
-					////pat added
-					//BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("LController");
-					//MeshComponent *mc2 = (new MeshComponent("../Resources/Controller.obj"))->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
-					//MeshComponent *leftRaycaster = (new MeshComponent("../Resources/BootrayCast.obj"))->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
-					//TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
-					//TimeManipulation* tm2 = new TimeManipulation(eControllerType_Secondary);
-					//ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
-					//BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
-					//LeftController->AddComponent(leftConCol)->AddComponent(leftRaycaster)->AddComponent(mc2)->AddComponent(ta2)->AddComponent(tm2)->AddComponent(pickup2);
-					//pickup2->mControllerRole = eControllerType_Secondary;
-
-					//BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset");
-					//HeadsetFollow* hfollow = new HeadsetFollow();
-					//headset->AddComponent(hfollow)->AddComponent(ears);
-
 					//new stuff
 					Transform identity;
 					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", identity);// new BaseObject("Controller", identity);
@@ -100,22 +73,6 @@ namespace Epoch
 					RightController->AddComponent(tm);
 					RightController->AddComponent(ambient);
 					ambient->Play();
-					TimeManager::Instance()->AddObjectToTimeline(RightController);
-
-					//Transform identity;
-					//BaseObject *RightTimeIndicator = Pool::Instance()->iGetObject()->Reset("RTimeIndicator", identity);
-					//RightTimeIndicator->SetParent(RightController);
-					//MeshComponent *TimeIndicatorLine = new MeshComponent("../Resources/TimeIndicatorLine.obj");
-					//MeshComponent *TimeIndicator = new MeshComponent("../Resources/TimeIndicator.obj");
-					//TimeIndicatorLine->AddTexture("../Resources/TimeIndicatorLine.png", eTEX_DIFFUSE);
-					//TimeIndicator->AddTexture("../Resources/TimeIndicator.png", eTEX_DIFFUSE);
-					////TimeIndicator->GetTransform().TranslateLocal(0, 0.27277f, -0.25699f); <-- Beaks here don't know why
-					//TimeLineIndicator *tli = new TimeLineIndicator(TimeIndicator, TimeIndicatorLine);
-					//tli->mParent = &RightController->GetTransform().GetMatrix();
-					//RightTimeIndicator->AddComponent(TimeIndicatorLine);
-					//RightTimeIndicator->AddComponent(TimeIndicator);
-					//RightTimeIndicator->AddComponent(tli);
-
 
 					//pat added
 					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
@@ -133,7 +90,6 @@ namespace Epoch
 					LeftController->AddComponent(leftRaycaster);
 					LeftController->AddComponent(ta2);
 					LeftController->AddComponent(tm2);
-					TimeManager::Instance()->AddObjectToTimeline(LeftController);
 
 					MeshComponent *visibleMesh2 = new MeshComponent("../Resources/TinyCube.obj");
 					visibleMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
@@ -143,11 +99,7 @@ namespace Epoch
 					HeadsetFollow* hfollow = new HeadsetFollow();
 					headset->AddComponent(hfollow);
 					headset->AddComponent(ears);
-					TimeManager::Instance()->AddObjectToTimeline(headset);
 
-					Physics::Instance()->mObjects.push_back(RightController);
-					Physics::Instance()->mObjects.push_back(LeftController);
-					Physics::Instance()->mObjects.push_back(headset);
 					LevelManager::GetInstance().RequestLevelChange(next);
 
 
@@ -178,22 +130,14 @@ namespace Epoch
 					ParticleSystem::Instance()->AddEmitter(emit);
 					emit->FIRE();
 
-					//auto objects = LevelManager::GetInstance().GetCurrentLevel()->GetLevelObjects();
-					//for(auto it = objects.begin(); it != objects.end(); ++it)
-					//{
-					//	std::vector<Component*> zits = (*it)->GetComponents(eCOMPONENT_MESH);
-					//	for(auto cit = zits.begin(); cit != zits.end(); ++cit)
-					//	{
-					//		((MeshComponent*)(*cit))->SetVisible(false);
-					//		((MeshComponent*)(*cit))->SetVisible(true);
-					//	}
-					//}
-
-
 					next->AssignPlayerControls(headset, LeftController, RightController);
 					next->AddObject(headset);
 					next->AddObject(LeftController);
 					next->AddObject(RightController);
+
+					TimeManager::Instance()->AddObjectToTimeline(RightController);
+					TimeManager::Instance()->AddObjectToTimeline(LeftController);
+					TimeManager::Instance()->AddObjectToTimeline(headset);
 
 					auto& levelObjects = next->GetLevelObjects();
 					for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it) {
@@ -201,11 +145,6 @@ namespace Epoch
 							Physics::Instance()->mObjects.push_back((*it));
 							if (((Collider*)(*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mShouldMove || (*it)->GetName() == "Door1" || (*it)->GetName() == "Door2")
 							{
-								if ((*it)->GetUniqueID() == next->GetLeftController()->GetUniqueID() ||
-									(*it)->GetUniqueID() == next->GetRightController()->GetUniqueID() ||
-									(*it)->GetUniqueID() == next->GetHeadset()->GetUniqueID())
-									continue;
-
 								TimeManager::Instance()->AddObjectToTimeline(*it);
 							}
 						}
