@@ -21,20 +21,20 @@ namespace Hourglass
         private PlaneCollider mPlaneTest;
         private SphereCollider mSphereTest;
         private ButtonCollider mButtonTest;
-        private List<Component> mComponents;
+        protected BaseObject mObject;
 
         public TestPositionForm()
         {
             InitializeComponent();
-            mComponents = new List<Component>(5);
-
-            mTransformTest = new TransformComponent(mComponents);
-            mMeshTest = new MeshComponent(mComponents);
-            mColliderTest = new ColliderComponent(mComponents);
-            mBoxTest = new BoxCollider(mComponents);
-            mPlaneTest = new PlaneCollider(mComponents);
-            mSphereTest = new SphereCollider(mComponents);
-            mButtonTest = new ButtonCollider(mComponents);
+            mObject = new BaseObject(new TreeNode());
+            
+            mTransformTest = new TransformComponent(mObject);
+            mMeshTest = new MeshComponent(mObject);
+            mColliderTest = new ColliderComponent(mObject);
+            mBoxTest = new BoxCollider(mObject);
+            mPlaneTest = new PlaneCollider(mObject);
+            mSphereTest = new SphereCollider(mObject);
+            mButtonTest = new ButtonCollider(mObject);
             Controls.Add(mTransformTest.GetGroupbox());
             Controls.Add(mMeshTest.GetGroupbox());
             Controls.Add(mColliderTest.GetGroupbox());
@@ -78,9 +78,9 @@ namespace Hourglass
             HorizontalScroll.Value = 0;
             HorizontalScroll.Maximum = ClientSize.Width;
             Size dimensions = new Size();
-            for (int i = 0; i < mComponents.Count; ++i)
+            for (int i = 0; i < mObject.GetComponents().Count; ++i)
             {
-                GroupBox box = mComponents[i].GetGroupbox();
+                GroupBox box = mObject.GetComponents()[i].GetGroupbox();
                 box.Location = position;
                 position.Y += box.Size.Height + 3;
 

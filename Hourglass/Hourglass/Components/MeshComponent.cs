@@ -38,7 +38,7 @@ namespace Hourglass
             }
         }
 
-        public MeshComponent(List<Component> _container) : base(_container)
+        public MeshComponent(BaseObject _owner) : base(_owner)
         {
             #region Component Creation
 
