@@ -24,7 +24,7 @@ namespace Epoch {
 			bool mRight = false;
 			bool mLeft = false;
 
-			if (cLevel->GetRightTimeManipulator() != nullptr || cLevel->GetLeftTimeManipulator() != nullptr) {
+			if (cLevel->GetRightTimeManipulator()!= nullptr || cLevel->GetLeftTimeManipulator() != nullptr) {
 				mRight = cLevel->GetRightTimeManipulator()->isTimePaused();
 				mLeft = cLevel->GetLeftTimeManipulator()->isTimePaused();
 			}

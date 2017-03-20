@@ -34,8 +34,11 @@ namespace Epoch {
 		int mtempCurSnapFrame = 0;
 		std::vector<BaseObject*>mClones;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneInterpolators;
+		//This is for the hitboxes for the controller
+		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneColliderInterpolators;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mObjectRewindInterpolators; 
 		//Timeline* GetTimeLine();
+
 		
 		std::bitset<10>mCloneTextureBitset;
 		//Pass in baseobject id to get bitset location
@@ -69,6 +72,7 @@ namespace Epoch {
 		Interpolator<matrix4>* GetCloneInterpolator(unsigned short _id);
 		Interpolator<matrix4>* GetCloneColliderInterpolator(unsigned short _id);
 		Interpolator<matrix4>* GetObjectInterpolator(unsigned short _id);
+
 		std::vector<BaseObject*>& GetClonesVec() { return mClones; };
 		//DONT GET RID OF THIS PLZ
 		Timeline* GetTimeLine() { return mTimeline; };
