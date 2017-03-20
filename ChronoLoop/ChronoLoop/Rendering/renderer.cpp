@@ -375,6 +375,7 @@ namespace Epoch {
 	void Renderer::InitializeSceneQuad() {
 		mScenePPQuad = new RenderShape("../Resources/VerticalPlane.obj", true, ePS_POSTPROCESS, eVS_NDC, eGS_PosNormTex_NDC);
 		mScenePPQuad->GetContext().mTextures[eTEX_DIFFUSE] = mSceneSRV;
+		mScenePPQuad->GetContext().mRasterState = eRS_FILLED;
 
 		ID3D11Buffer *ColorRatioBuffer;
 		TimeManipulationEffectData initial;

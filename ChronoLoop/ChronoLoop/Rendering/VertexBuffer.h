@@ -29,15 +29,16 @@ namespace Epoch {
 
 	template<typename T>
 	unsigned int VertexBuffer<T>::AddVerts(std::string _name, const T * _verts, unsigned int _numVerts) {
+		Renderer::Instance()->GetRendererLock().lock();
 		unsigned int offset = 0;
 		if (mOffsets.count(_name) > 0)
 			offset = mOffsets.at(_name);
 		else {
-			Renderer::Instance()->GetRendererLock().lock();
 			if (mVertexBuffer) {
 				D3D11_BUFFER_DESC desc;
 				mVertexBuffer->GetDesc(&desc);
 
+				SystemLogger::Debug() << "Vertex buffer mark '" << (mOffsets.size() + 1) << "'" << std::endl;
 				D3D11_SUBRESOURCE_DATA initData;
 				unsigned int oldSize = desc.ByteWidth / sizeof(T);
 				unsigned int newSize = oldSize + _numVerts;
@@ -48,7 +49,6 @@ namespace Epoch {
 				ID3D11Buffer *newBuffer;
 				Renderer::Instance()->GetDevice()->CreateBuffer(&desc, &initData, &newBuffer);
 				Renderer::Instance()->GetContext()->CopySubresourceRegion(newBuffer, 0, 0, 0, 0, mVertexBuffer.Get(), 0, 0);
-				//meat :)
 				mVertexBuffer.Attach(newBuffer);
 				std::string name = "The Vertex Buffer, mk" + std::to_string(mOffsets.size());
 				SetD3DName(mVertexBuffer.Get(), name.c_str());
@@ -68,9 +68,9 @@ namespace Epoch {
 				std::string name = "The Vertex Buffer";
 				SetD3DName(mVertexBuffer.Get(), name.c_str());
 			}
-			Renderer::Instance()->GetRendererLock().unlock();
 			mOffsets[_name] = offset;
 		}
+		Renderer::Instance()->GetRendererLock().unlock();
 		return offset;
 	}
 	template<typename T>

@@ -699,8 +699,16 @@ void Update() {
 	mainMenu->AddObject(LeftController);
 	mainMenu->AddObject(mmCube);
 	//LevelManager::GetInstance().LoadLevelAsync("../Resources/LEVEL1/collider.xml", &L1);
+	auto& levelObjects = mainMenu->GetLevelObjects();
+	for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it) {
+		if ((*it)->mComponents[eCOMPONENT_COLLIDER].size() > 0) {
+			Physics::Instance()->mObjects.push_back((*it));
+		}
+	}
+
 	LevelManager::GetInstance().RequestLevelChange(mainMenu);
 	mainMenu->CallStart();
+
 	
 	//Enter effect
 	//Patrick* emit = new Patrick(500, 250, 2, vec4f(8, 0, -4, 1));

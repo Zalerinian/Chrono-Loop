@@ -24,12 +24,13 @@ namespace Epoch
 
 		virtual void Update() {
 			if (!once) {
-				Level* next = new Level;
 				Settings::GetInstance().SetBool("LevelIsLoading", true);
+				Level* next = new Level;
+				next->LoadLevel("../Resources/Level1_2_6.xml");
 				// Todo: Un-hardcode this
 				// use a setting string for next level path?
-				LM::LevelStatus status = LevelManager::GetInstance().LoadLevelAsync("../Resources/Level1_2_6.xml", &next);
-				if (status == LM::LevelStatus::Success)
+				//LM::LevelStatus status = LevelManager::GetInstance().LoadLevelAsync("../Resources/Level1_2_6.xml", &next);
+				if (/*status == LM::LevelStatus::Success*/ true)
 				{
 					// Clean up the current level and request the new one be used next time.
 					Physics::Instance()->PhysicsLock.lock();
@@ -98,6 +99,9 @@ namespace Epoch
 					TimeManager::Instance()->AddObjectToTimeline(LeftController);
 					TimeManager::Instance()->AddObjectToTimeline(RightController);
 					next->AssignPlayerControls(headset, LeftController, RightController);
+					next->AddObject(headset);
+					next->AddObject(LeftController);
+					next->AddObject(RightController);
 
 					auto& levelObjects = next->GetLevelObjects();
 					for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it) {

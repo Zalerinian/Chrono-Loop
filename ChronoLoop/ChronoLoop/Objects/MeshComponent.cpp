@@ -1,8 +1,8 @@
+#include "MeshComponent.h"
 #include "BaseObject.h"
 #include "Component.h"
 #include "../Rendering/RenderShape.h"
 #include "../Rendering/Renderer.h"
-#include "MeshComponent.h"
 #include "../Common/Settings.h"
 
 #define DESTROY_NODE(x) { \
@@ -25,6 +25,7 @@ namespace Epoch {
 		else
 		{
 			mVisible = false;
+			mNode = nullptr;
 		}
 	}
 
