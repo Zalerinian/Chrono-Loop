@@ -33,9 +33,9 @@ namespace Epoch {
 	}
 
 	void TimeManager::Update(float _delta) {
-		if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManinpulator() != nullptr || LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManinpulator() != nullptr) {
+		if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator() != nullptr || LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator() != nullptr) {
 
-			if (!LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManinpulator()->isTimePaused() && !LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManinpulator()->isTimePaused()) {
+			if (!LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->isTimePaused() && !LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->isTimePaused()) {
 
 				mTimestamp += _delta;
 				mDeltaTime = _delta;
@@ -109,7 +109,24 @@ namespace Epoch {
 
 		void TimeManager::AddObjectToTimeline(BaseObject * _obj) {
 			if (_obj != nullptr)
+			{
 				mTimeline->AddBaseObject(_obj, _obj->GetUniqueID());
+				//Level* templvl = LevelManager::GetInstance().GetCurrentLevel();
+				instanceTimemanager->AddInterpolatorToObject(_obj);
+				//if (LevelManager::GetInstance().GetCurrentLevel() == nullptr)
+				//{
+				//	if (_obj->GetName().find("Controller1 - 0") == std::string::npos &&
+				//		_obj->GetName().find("Controller2 - 0") == std::string::npos) { //TODO RYAN: TEMPORARY FIX FOR INTERPOLATION
+				//		instanceTimemanager->AddInterpolatorToObject(_obj);
+				//	}
+				//}7
+				//else {
+				//	if (_obj->GetName().find("Controller1 - " + std::to_string(LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->GetNumClones())) == std::string::npos &&
+				//		_obj->GetName().find("Controller2 - " + std::to_string(LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->GetNumClones())) == std::string::npos) { //TODO RYAN: TEMPORARY FIX FOR INTERPOLATION
+				//		instanceTimemanager->AddInterpolatorToObject(_obj);
+				//	}
+				//}
+			}
 		}
 
 		void TimeManager::AddInterpolatorForClone(BaseObject * _obj) {
@@ -119,7 +136,10 @@ namespace Epoch {
 			//if(_obj->GetComponentCount(eCOMPONENT_COLLIDER) > 0)
 			//mCloneColliderInterpolators[_obj->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)->GetColliderId()] = temp2;
 		}
-
+		void TimeManager::AddInterpolatorToObject(BaseObject* _obj) {
+			Interpolator<matrix4>* temp = new Interpolator<matrix4>();
+			mObjectRewindInterpolators[_obj->GetUniqueID()] = temp;
+		}
 		void TimeManager::AddAllTexturesToQueue()
 	{
 			for (unsigned int i = 0; i < mCloneTextureBitset.size(); i++) {
@@ -248,7 +268,11 @@ namespace Epoch {
 
 			return nullptr;
 		}
-
+		Interpolator<matrix4>* TimeManager::GetObjectInterpolator(unsigned short _id) {
+			if (mObjectRewindInterpolators.find(_id) != mObjectRewindInterpolators.end())
+				return mObjectRewindInterpolators[_id];
+			return nullptr;
+		}
 		Interpolator<matrix4>* TimeManager::GetCloneColliderInterpolator(unsigned short _id) {
 
 			if (mCloneColliderInterpolators.find(_id) != mCloneColliderInterpolators.end())
@@ -260,10 +284,10 @@ namespace Epoch {
 		std::string TimeManager::GetNextTexture() {
 			for (unsigned int i = 0; i < mCloneTextureBitset.size(); i++) {
 				if (mCloneTextureBitset[i] == false) {
-					TimeManipulation* left = LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManinpulator();
-					TimeManipulation* right = LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManinpulator();
+					TimeManipulation* left = LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator();
+					TimeManipulation* right = LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator();
 					if (left) {
-						SystemLogger::GetLog() << "LeftController returned " << left->GetTexture(i) << std::endl;
+						SystemLogger::GetLog() << "Left Controller returned " << left->GetTexture(i) << std::endl;
 						return left->GetTexture(i);
 					} else if (right) {
 						SystemLogger::GetLog() << "Right Controller returned " << right->GetTexture(i) << std::endl;
@@ -422,28 +446,41 @@ namespace Epoch {
 			}
 		}
 		void TimeManager::BrowseTimeline(int _gesture, int _frameRewind) {
+			
+			if (mShouldUpdateInterpolators) {
+				for (auto it : mObjectRewindInterpolators)
+				{
+					bool complete = it.second->Update(GetDeltaTime());
+					if (complete)
+						mShouldUpdateInterpolators = false;
+				}
+				return;
+			}
+
 			unsigned int temp = instanceTimemanager->GetCurrentSnapFrame();
 			if (_gesture == 0)
 				return;
 			else if (_gesture == 1)
 				_frameRewind *= -1;
 			else if (_gesture == 2) {
-				LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManinpulator()->RaycastCloneCheck();
-				LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManinpulator()->RaycastCloneCheck();
+				LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->RaycastCloneCheck();
+				LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->RaycastCloneCheck();
 				return;
 			}
 
-			if ((unsigned int)mtempCurSnapFrame > mTimeline->GetCurrentGameTimeIndx())
-				return;
-
-
-			if ((mtempCurSnapFrame != 0 && _gesture == -1) || (mtempCurSnapFrame != temp && _gesture == 1))
+			if ((mtempCurSnapFrame != 0 && _gesture == -1) || (mtempCurSnapFrame != temp && _gesture == 1)) {
+				int placeHolder = mtempCurSnapFrame;
 				mtempCurSnapFrame -= _frameRewind;
-			instanceTimemanager->MoveAllObjectExceptPlayer(
-				mtempCurSnapFrame,
-				LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetUniqueID(),
-				LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueID(),
-				LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueID());
+				mTimeline->PrepareAllObjectInterpolators(placeHolder, mtempCurSnapFrame);
+				mShouldUpdateInterpolators = true;
+				mShouldPulse = true;
+			}
+			else {
+				mShouldPulse = false;
+
+			}
+
+		
 
 		}
 		void TimeManager::MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC) {
