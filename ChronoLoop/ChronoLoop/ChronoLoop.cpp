@@ -37,6 +37,7 @@
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
+#include "Actions/TimelineIndicator.hpp"
 
 using namespace Epoch;
 #define LEVEL_1 0
@@ -144,7 +145,7 @@ void Update() {
 
 	// TODO: Replace all this with a level to run.
 	///*///////////////////////Using this to test physics//////////////////
-	//_CrtSetBreakAlloc(26104);
+
 #if MAINMENU
 
 	Transform transform;
@@ -692,12 +693,18 @@ void Update() {
 
 	while (LevelManager::GetInstance().LoadLevelAsync("../Resources/mainMenu.xml", &mainMenu) != Epoch::LM::LevelStatus::Success) {}
 	//while (LevelManager::GetInstance().LoadLevelAsync("../Resources/collider.xml", &L1) != Epoch::LM::LevelStatus::Success) {}
-	mainMenu->Initialize(headset, LeftController, RightController);
-	mainMenu->AddObject(RightController);
-	mainMenu->AddObject(headset);
-	mainMenu->AddObject(LeftController);
+	//L1->Initialize(headset, LeftController, RightController);
+	//L1->AddObject(RightController);
+	//L1->AddObject(RightTimeIndicator);
+	//L1->AddObject(headset);
+	//L1->AddObject(LeftController);
 	//LevelManager::GetInstance().LoadLevelAsync("../Resources/LEVEL1/collider.xml", &L1);
 	//InitializeHeadsetAndController(headset, LeftController, RightController);
+	mainMenu->AddObject(LeftController);
+	mainMenu->AddObject(RightController);
+	mainMenu->AddObject(headset);
+
+	mainMenu->Initialize(headset, LeftController, RightController);
 	LevelManager::GetInstance().RequestLevelChange(mainMenu);
 	matrix4 cameraPos = matrix4::CreateYRotation(mainMenu->GetStartRot().y) * matrix4::CreateZRotation(mainMenu->GetStartRot().z) * matrix4::CreateXRotation(mainMenu->GetStartRot().x) * matrix4::CreateTranslation(mainMenu->GetStartPos());
 	Renderer::Instance()->SetDebugCameraPosition(cameraPos);
@@ -718,10 +725,10 @@ void Update() {
 	//emit->y2 = 5;
 	//ParticleSystem::Instance()->AddEmitter(emit);
 	Particle* p = &Particle::Init();
-	p->SetColors(vec4f(.2, .2, 1, 0), vec4f(0, 1, .2, 0));
+	p->SetColors(vec4f(.2f, .2f, 1, 0), vec4f(0, 1, .2f, 0));
 	p->SetLife(200);
-	p->SetSize(1.25 / 2.0, .15 / .2);
-	ParticleEmitter* emit = new IDC(500, 250, 2, vec4f(2.25, -1, 6.25, 1));
+	p->SetSize(1.25f / 2.0f, .15f / .2f);
+	ParticleEmitter* emit = new IDC(500, 250, 2, vec4f(2.25f, -1, 6.25f, 1));
 	emit->SetParticle(p);
 	emit->SetTexture("../Resources/BasicRectP.png");
 	((IDC*)emit)->y1 = 8;
@@ -730,10 +737,10 @@ void Update() {
 	emit->FIRE();
 
 	p = &Particle::Init();
-	p->SetColors(vec4f(.5, 0, .25, 0), vec4f(.2, .8, .5, 0));
+	p->SetColors(vec4f(.5f, 0, .25f, 0), vec4f(.2f, .8f, .5f, 0));
 	p->SetLife(1000);
-	p->SetSize(.25 , .05);
-	emit = new IDC(500, 150, 1, vec4f(2.25, -1, 6.25, 1));
+	p->SetSize(.25f , .05f);
+	emit = new IDC(500, 150, 1, vec4f(2.25f, -1, 6.25f, 1));
 	emit->SetTexture("../Resources/BasicCircleP.png");
 	emit->SetParticle(p);
 	((IDC*)emit)->y1 = 1;
@@ -906,6 +913,21 @@ void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftControl
 	RightController->AddComponent(ambient);
 	ambient->Play();
 	TimeManager::Instance()->AddObjectToTimeline(RightController);
+
+	Transform identity;
+	BaseObject *RightTimeIndicator = Pool::Instance()->iGetObject()->Reset("RTimeIndicator", identity);
+	RightTimeIndicator->SetParent(RightController);
+	MeshComponent *TimeIndicatorLine = new MeshComponent("../Resources/TimeIndicatorLine.obj");
+	MeshComponent *TimeIndicator = new MeshComponent("../Resources/TimeIndicator.obj");
+	TimeIndicatorLine->AddTexture("../Resources/TimeIndicatorLine.png", eTEX_DIFFUSE);
+	TimeIndicator->AddTexture("../Resources/TimeIndicator.png", eTEX_DIFFUSE);
+	//TimeIndicator->GetTransform().TranslateLocal(0, 0.27277f, -0.25699f); <-- Beaks here don't know why
+	TimeLineIndicator *tli = new TimeLineIndicator(TimeIndicator, TimeIndicatorLine);
+	tli->mParent = &RightController->GetTransform().GetMatrix();
+	RightTimeIndicator->AddComponent(TimeIndicatorLine);
+	RightTimeIndicator->AddComponent(TimeIndicator);
+	RightTimeIndicator->AddComponent(tli);
+
 
 	//pat added
 	MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");

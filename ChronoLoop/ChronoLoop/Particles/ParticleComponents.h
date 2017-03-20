@@ -49,7 +49,7 @@ namespace Epoch
 		static Particle& Init(const Particle& _other);
 
 		/// <summary>Initializes a particle</summary>
-		///<returns>The new particle</returns>
+		//<returns>The new particle</returns>
 		static Particle& Init(int _life = 250 /**< [in] Life of the particle. */,
 			float _ss = 0.5f /**< [in] Starting size. */,
 			float _es = 0.5f /**< [in] Ending size. */,

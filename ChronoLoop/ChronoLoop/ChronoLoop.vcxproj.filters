@@ -438,6 +438,9 @@
     <ClInclude Include="ParticleEffectPrototypes.h">
       <Filter>Particles</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\TimelineIndicator.hpp">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">

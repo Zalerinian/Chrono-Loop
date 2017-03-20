@@ -24,15 +24,16 @@ namespace Epoch {
 			bool mRight = false;
 			bool mLeft = false;
 
-			if (cLevel->GetRightTimeManinpulator() != nullptr || cLevel->GetLeftTimeManinpulator() != nullptr) {
-				mRight = cLevel->GetRightTimeManinpulator()->isTimePaused();
-				mLeft = cLevel->GetLeftTimeManinpulator()->isTimePaused();
+			if (cLevel->GetRightTimeManipulator()!= nullptr || cLevel->GetLeftTimeManipulator() != nullptr) {
+				mRight = cLevel->GetRightTimeManipulator()->isTimePaused();
+				mLeft = cLevel->GetLeftTimeManipulator()->isTimePaused();
 			}
 			if (VRInputManager::GetInstance().IsVREnabled() && mCollider) {
 				InputTimeline::InputNode*temp;
-				if (mRight || mLeft ) {
-						temp = VRInputManager::GetInstance().FindLastInput(mCollider->GetBaseObject()->GetUniqueID(), true);
-				} else {
+				if (mRight || mLeft) {
+					temp = VRInputManager::GetInstance().FindLastInput(mCollider->GetBaseObject()->GetUniqueID(), true);
+				}
+				else {
 					temp = VRInputManager::GetInstance().FindLastInput(mCollider->GetBaseObject()->GetUniqueID(), false);
 				}
 				if (mInput && temp && mPickUp &&
@@ -56,58 +57,61 @@ namespace Epoch {
 						}
 						ReleaseObject();
 					}
-				} else if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == -1 && !mHeld && !mCollider->mHitting.empty() && (!mLeft && !mRight)) {
+				}
+				else if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == -1 && !mHeld && !mCollider->mHitting.empty() && (!mLeft && !mRight)) {
 					SomethingtoController();
-					if (mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueId() || mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueId()) {
-						VRInputManager::GetInstance().GetController((mInput->mData.mPrimary) ? eControllerType_Primary : eControllerType_Secondary).TriggerHapticPulse(500, mInput->mData.mButton);
+					if (mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueId()) {
+						VRInputManager::GetInstance().GetController(eControllerType_Primary).TriggerHapticPulse(500);
 					}
-
+					else if (mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueId()) {
+						VRInputManager::GetInstance().GetController(eControllerType_Secondary).TriggerHapticPulse(500);
+					}
 				}
-
-				/*Controller &controller = VRInputManager::GetInstance().GetController(mControllerRole);
-				if (mHeld && mPickUp != nullptr)
-				{
-				matrix4 m = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
-				mPickUp->SetPos(m.Position);
-				if (!controller.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger))
-				{
-				ReleaseObject();
-				}
-				}
-				else if (controller.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger) && !mHeld && !mCollider->mHitting.empty())
-				{
-				SomethingtoController();
-				}
-				*/
-
-			#pragma region Gestures
-				//vec2f touch = leftController.GetAxis();
-				//mBootleg.AddHead(touch);
-
-				////SystemLogger::GetLog() << "(" << touch.x << "," << touch.y << ")" << std::endl;
-				//if (mBootleg.mSize == mBootleg.mLimit) {
-				//	// Get initial point, get vector from it's negation (v - (-v)), and then cross it (v.y, -v.x)
-				//	vec2f initialPoint = mBootleg[0];
-				//	vec2f line = (initialPoint - (-initialPoint));
-				//	vec2f counterClockwise = line.Cross().Normalize();
-
-				//	vec2f pointEight = mBootleg[8];
-				//	vec2f leg = (pointEight - initialPoint);
-				//	vec2f nLeg = leg.Normalize();
-				//	if (leg.SquaredMagnitude() >= 0.01f) {
-				//		if (nLeg * counterClockwise < 0) {
-				//			SystemLogger::GetLog() << "Somewhat Clockwise" << std::endl;
-				//		}
-				//		if (nLeg * counterClockwise > 0) {
-				//			SystemLogger::GetLog() << "Somewhat Counter-Clockwise" << std::endl;
-				//		}
-				//	}
-				//}
-				//SystemLogger::GetLog() << "[Debug] Touchpad Axis: (" << touch.x << ", " << touch.y << ")" << std::endl;
-			#pragma endregion Gestures
 			}
-			//mObject->GetTransform().SetMatrix(Math::MatrixRotateInPlace(mObject->GetTransform().GetMatrix(), 1, 0, 0, DirectX::XM_PI / 1024.0f));
+
+			/*Controller &controller = VRInputManager::GetInstance().GetController(mControllerRole);
+			if (mHeld && mPickUp != nullptr)
+			{
+			matrix4 m = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
+			mPickUp->SetPos(m.Position);
+			if (!controller.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger))
+			{
+			ReleaseObject();
+			}
+			}
+			else if (controller.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger) && !mHeld && !mCollider->mHitting.empty())
+			{
+			SomethingtoController();
+			}
+			*/
+
+#pragma region Gestures
+			//vec2f touch = leftController.GetAxis();
+			//mBootleg.AddHead(touch);
+
+			////SystemLogger::GetLog() << "(" << touch.x << "," << touch.y << ")" << std::endl;
+			//if (mBootleg.mSize == mBootleg.mLimit) {
+			//	// Get initial point, get vector from it's negation (v - (-v)), and then cross it (v.y, -v.x)
+			//	vec2f initialPoint = mBootleg[0];
+			//	vec2f line = (initialPoint - (-initialPoint));
+			//	vec2f counterClockwise = line.Cross().Normalize();
+
+			//	vec2f pointEight = mBootleg[8];
+			//	vec2f leg = (pointEight - initialPoint);
+			//	vec2f nLeg = leg.Normalize();
+			//	if (leg.SquaredMagnitude() >= 0.01f) {
+			//		if (nLeg * counterClockwise < 0) {
+			//			SystemLogger::GetLog() << "Somewhat Clockwise" << std::endl;
+			//		}
+			//		if (nLeg * counterClockwise > 0) {
+			//			SystemLogger::GetLog() << "Somewhat Counter-Clockwise" << std::endl;
+			//		}
+			//	}
+			//}
+			//SystemLogger::GetLog() << "[Debug] Touchpad Axis: (" << touch.x << ", " << touch.y << ")" << std::endl;
+#pragma endregion Gestures
 		}
+		//mObject->GetTransform().SetMatrix(Math::MatrixRotateInPlace(mObject->GetTransform().GetMatrix(), 1, 0, 0, DirectX::XM_PI / 1024.0f));
 
 		virtual void SomethingtoController() {
 			mHeld = true;
@@ -162,5 +166,4 @@ namespace Epoch {
 			mHeld = false;
 		}
 	};
-
 } // Epoch Namespace
