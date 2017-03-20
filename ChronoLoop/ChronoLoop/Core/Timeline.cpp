@@ -64,7 +64,7 @@ namespace Epoch {
 				temp->SetActive(false);
 		}
 
-		CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
+		//CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
 		return true;
 	}
 
@@ -108,7 +108,7 @@ namespace Epoch {
 				temp->SetActive(false);
 		}
 
-		CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
+		//CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
 		return true;
 	}
 
