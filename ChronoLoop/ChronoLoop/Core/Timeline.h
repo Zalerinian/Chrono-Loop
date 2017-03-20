@@ -10,7 +10,7 @@ namespace Epoch {
 	struct SnapComponent {
 		ComponentType mCompType;
 		unsigned short mBitNum;
-		unsigned short mId;
+		unsigned int mId;
 	};
 	struct SnapComponent_Physics : SnapComponent {
 		vec4f mForces;
@@ -25,7 +25,7 @@ namespace Epoch {
 	struct SnapInfo {
 		unsigned short mId;	//unique id of the object
 		Transform mTransform;	//positional data of the object
-		std::vector<SnapComponent*>mComponets;
+		std::vector<SnapComponent*>mComponents;
 		std::bitset<32>mBitset;	//Base object and componets enabled or disabled //0 for the baseobject and 1-31 for the components
 	};
 
@@ -60,6 +60,11 @@ namespace Epoch {
 		unsigned int mBirth = 0;
 		unsigned int mDeath = INT32_MAX;
 	};
+	//Clones objects can be made at a different time than when the clone time he is made in the game
+	struct CloneLifeTime : ObjectLifeTime
+	{
+		unsigned int mMade = INT32_MAX;
+	};
 
 	class Timeline {
 		//Where we are at in the timeline
@@ -72,14 +77,18 @@ namespace Epoch {
 	public:
 		Timeline();
 		~Timeline();
+		//this will turn the bitset[0] to 1 so he acts as a normal game object in the timeline
+		void ActivateCloneBitset(unsigned short _ids[3]);
 		void AddBaseObject(BaseObject* _object, unsigned short _id);						//add to the list of recorded objects.
 		void UpdatePlayerBaseObject(BaseObject* _object, unsigned short _id);						//add to the player of recorded objects and .
 		void AddSnapshot(unsigned int _snaptime, Snapshot* _snapshot);
 		void ClearTimeLine();
 		void ChangeBitsetToSnap(SnapInfo* _destinfo, Component* _curComp);
+		void ChangePlayerBitsetToSnap(SnapInfo * _destinfo, Component* _curComp);
 		bool CheckForDuplicateData(unsigned short _id, BaseObject* _object);
 		//This function removes non-clone objects that were created in the future
 		void CheckforLostObjects(std::vector<BaseObject*>&mClones);
+		void CopySnapInfo(SnapInfo* _src, SnapInfo* _dst);
 		ObjectLifeTime* GetObjectLifetime(unsigned short _id);
 		SnapInfo* GenerateSnapInfo(BaseObject* _object, SnapInfo* _info);							//Error check agianst the BaseObject* if it is null or not
 		Snapshot* GenerateSnapShot(unsigned int _time, std::vector<BaseObject*> & _clones);
@@ -90,12 +99,14 @@ namespace Epoch {
 		void RemoveFromTimeline(unsigned short _id);
 		bool RewindMakeClone(unsigned int _snaptime);
 		bool RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
-		void MoveObjectToSnap(unsigned int _snaptime, unsigned short _id);
+		void MoveObjectToSnap(unsigned int _snaptime, unsigned short _id,bool isClone);
 		void MoveAllObjectsToSnap(unsigned int _snaptime);
 		void InterpAllObjectsToSnapExceptPlayer(unsigned int _fromSnapTime, unsigned int _toSnapTime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
+		void SetObjectBirthTime(unsigned short _id);
 		void SetBaseObjectDeathTime(unsigned short _id);
-		void SetCloneCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);
+		void SetCloneObjectCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);
+		void SetCloneMadeTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void SetCloneDeathTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void SetComponent(SnapComponent* _destComp, BaseObject* _obj, SnapInfo* _destInfo);
 		void SetCurrentGameTimeIndx(int _time) { mCurrentGameTimeIndx = _time; };

@@ -50,7 +50,6 @@ namespace Epoch
 			//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
 			BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - " + std::to_string(mCloneCount),  identity ); //new BaseObject("headset" + std::to_string(rand), identity);
 			MeshComponent *visibleMesh = new MeshComponent("../Resources/Clone.obj");
-
 			visibleMesh->AddTexture(TimeManager::Instance()->GetNextTexture().c_str(), eTEX_DIFFUSE);
 			headset->AddComponent(visibleMesh);
 
@@ -59,9 +58,9 @@ namespace Epoch
 			MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 			ControllerCollider* CubeColider = new ControllerCollider(Controller1, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
 			mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+			Controller1->AddComponent(mc);
 			Controller1->AddComponent(CubeColider);
 			BoxSnapToControllerAction* SN1 = new BoxSnapToControllerAction();
-			Controller1->AddComponent(mc);
 			Controller1->AddComponent(SN1);
 
 			//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
@@ -69,9 +68,9 @@ namespace Epoch
 			MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 			ControllerCollider* CubeColider2 = new ControllerCollider(Controller2, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 			mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+			Controller2->AddComponent(mc2);
 			Controller2->AddComponent(CubeColider2);
 			BoxSnapToControllerAction* SN2 = new BoxSnapToControllerAction();
-			Controller2->AddComponent(mc2);
 			Controller2->AddComponent(SN2);
 
 
@@ -89,6 +88,7 @@ namespace Epoch
 			TimeManager::Instance()->UpdatePlayerObjectInTimeline(headset);
 			TimeManager::Instance()->UpdatePlayerObjectInTimeline(Controller1);
 			TimeManager::Instance()->UpdatePlayerObjectInTimeline(Controller2);
+			TimeManager::Instance()->UpdateCloneCreationTime(headset->GetUniqueID(),Controller1->GetUniqueID(),Controller2->GetUniqueID());
 			//Rewind InputTime
 			VRInputManager::GetInstance().RewindInputTimeline(TimeManager::Instance()->GetCurrentSnapFrame(), currentLevel->GetRightController()->GetUniqueID(), currentLevel->GetLeftController()->GetUniqueID());
 			//add Interpolators for the clones
@@ -121,8 +121,9 @@ namespace Epoch
 					TimeManager::Instance()->GetCurrentSnapFrame(),
 					cLevel->GetHeadset()->GetUniqueID(),
 					cLevel->GetRightController()->GetUniqueID(),
-					cLevel->GetLeftController()->GetUniqueID()
-				);
+					cLevel->GetLeftController()->GetUniqueID());
+					
+				
 			} else {
 				// Stop time
 				vec2f finalRatios(0.7, 0.3);
@@ -175,17 +176,15 @@ namespace Epoch
 				cLevel->GetRightTimeManinpulator()->makeTimePaused(false);
 			}
 
-			if(GetAsyncKeyState(VK_END) & 1)
+		
+			else
 			{
+				SystemLogger::GetLog() << HotfixButtonDown << std::endl;
 				HotfixButtonDown++;
-				if (HotfixButtonDown > 169) {
+				if (HotfixButtonDown > 100) {
 					HotfixButtonDown = 0;
 					TimeManager::Instance()->HotfixResetTimeline();
 				}
-			}
-			else
-			{
-				HotfixButtonDown = 0;
 			}
 		}
 		else

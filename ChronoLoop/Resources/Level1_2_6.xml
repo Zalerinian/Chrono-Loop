@@ -1,7 +1,7 @@
-﻿<Level>
+<Level>
   <Settings>
-    <StartPos>8.8,1.29,-4.1</StartPos>
-    <StartRot>0,1.57,0</StartRot>
+    <StartPos>8.88,0,-4.1</StartPos>
+    <StartRot>0,0,0</StartRot>
   </Settings>
   <Object>
     <Name>Button</Name>
