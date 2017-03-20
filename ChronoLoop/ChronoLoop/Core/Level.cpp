@@ -29,7 +29,7 @@ namespace Epoch {
 		mObjectList.clear();
 	}
 
-	void Level::Initialize(BaseObject * _headset, BaseObject * _lController, BaseObject * _rController) {
+	void Level::AssignPlayerControls(BaseObject * _headset, BaseObject * _lController, BaseObject * _rController) {
 		mHeadset = _headset;
 		mController1 = _lController;
 		mController2 = _rController;
@@ -122,14 +122,17 @@ namespace Epoch {
 				othersComponents[i]->SetComponentId(FirstCompId);
 			}
 
-		/*components = _first->GetComponents(eCOMPONENT_MESH);
-		othersComponents = _other->GetComponents(eCOMPONENT_MESH);
 	
+		components = _first->GetComponents(eCOMPONENT_MESH);
+		othersComponents = _other->GetComponents(eCOMPONENT_MESH);
+		if (components.size() > 0)
+		{
 			for (int i = 0; i < othersComponents.size(); ++i) {
 				unsigned int FirstCompId = components[i]->GetColliderId();
 				components[i]->SetComponentId(othersComponents[i]->GetColliderId());
 				othersComponents[i]->SetComponentId(FirstCompId);
-			}*/
+			}
+		}
 		
 
 	/*	components = _first->GetComponents(eCOMPONENT_UI);
@@ -203,6 +206,17 @@ namespace Epoch {
 		TimeManager::Instance()->AddObjectToTimeline(mController1);
 		TimeManager::Instance()->AddObjectToTimeline(mController2);
 
+	}
+
+	void Level::SetupObjects()
+	{
+		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
+			auto& meshes = (*it)->GetComponents(eCOMPONENT_MESH);
+			for (auto cit = meshes.begin(); cit != meshes.end(); ++cit) {
+				((MeshComponent*)(*cit))->SetVisible(false);
+				((MeshComponent*)(*cit))->SetVisible(true);
+			}
+		}
 	}
 
 	void Level::CallStart() {
@@ -372,7 +386,11 @@ namespace Epoch {
 							else if (elementType == "Type")
 								colliderType = pData->Value();
 							else if (elementType == "Trigger")
-								trigger = pData->Value() == "True";
+							{
+								std::string temp(pData->Value());
+								trigger = temp.find("True") != std::string::npos;
+								int thing = 0;
+							}
 							else if (elementType == "Radius")
 							{
 								radius = std::strtof(pData->Value(), nullptr);
@@ -681,13 +699,6 @@ namespace Epoch {
 							obj->AddComponent(code);
 						}
 					}
-
-					if (physical)
-						Physics::Instance()->mObjects.push_back(obj);
-
-					if (canMove || obj->GetName() == "Door1" || obj->GetName() == "Door2")
-						TimeManager::Instance()->AddObjectToTimeline(obj);
-
 					AddObject(obj);
 					pObject = pObject->NextSiblingElement("Object");
 				}

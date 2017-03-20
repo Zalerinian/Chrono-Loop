@@ -270,7 +270,7 @@ void Update() {
 	Physics::Instance()->mObjects.push_back(mmdoor);
 	
 	Level* MainMenu = new Level;
-	MainMenu->Initialize(headset, RightController, LeftController);
+	MainMenu->AssignPlayerControls(headset, RightController, LeftController);
 	LevelManager::GetInstance().SetCurrentLevel(MainMenu);
 	MainMenu->AddObject(RightController);
 	MainMenu->AddObject(headset);
@@ -555,7 +555,7 @@ void Update() {
 	Physics::Instance()->mObjects.push_back(Button);
 
 	Level* L1 = new Level;
-	L1->Initialize(headset, LeftController, RightController);
+	L1->AssignPlayerControls(headset, LeftController, RightController);
 	L1->AddObject(PhysicsBox);
 	L1->AddObject(PhysicsBox2);
 	L1->AddObject(PhysicsSphere);
@@ -579,26 +579,13 @@ void Update() {
 	////Sound Initializing---------------------------------------------------
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::INITIALIZE_Audio, 0, false));
 	//Soundbanks
-	//Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::SET_BasePath, 0, false, (void*)new m_Path(_basePath)));
-	//Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_initSB)));
-	//Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
-
-	////Soundbanks
-	//Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::SET_BasePath, 0, false, (void*)new m_Path(_basePath)));
-	//Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_initSB)));
-	//Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
-	//
-	//Listener* ears = new Listener();
-	//Emitter* ambient = new Emitter();
-	//ambient->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_TEST2);
-	//ambient->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_TEST2);
-	//ambient->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_TEST2);
-	//ambient->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_TEST2);
-	//Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(ears, "Listener")));
-	//Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(ambient, "ambiance")));
-	
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::SET_BasePath, 0, false, (void*)new m_Path(_basePath)));
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_initSB)));
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
 
 	Transform identity, transform;
+	BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", identity);// new BaseObject("Controller", identity);
+
 	//BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("RController", identity);// new BaseObject("Controller", identity);
 	//MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 	//MeshComponent *rightRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
@@ -649,7 +636,7 @@ void Update() {
 	//headset->AddComponent(ears);
 	//TimeManager::Instance()->AddObjectToTimeline(headset);
 
-	BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("RController", identity);// new BaseObject("Controller", identity);
+	//BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("RController", identity);// new BaseObject("Controller", identity);
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 	MeshComponent *rightRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
 	rightRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
@@ -662,8 +649,7 @@ void Update() {
 	RightController->AddComponent(rightConCol);
 	TimeManager::Instance()->AddObjectToTimeline(RightController);
 
-	BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("LController", identity); //new BaseObject("Controller2", identity);
-	//BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", transform); //new BaseObject("headset", transform);
+	BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity); //new BaseObject("Controller2", identity);
 	MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 	MeshComponent *leftRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
 	leftRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
@@ -676,15 +662,17 @@ void Update() {
 	LeftController->AddComponent(bt2);
 	TimeManager::Instance()->AddObjectToTimeline(LeftController);
 
-
 	BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", transform); //new BaseObject("headset", transform);
-	MeshComponent *visibleMesh2 = new MeshComponent("../Resources/Cube.obj");
-	visibleMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
-	visibleMesh2->SetVisible(false);
 	HeadsetFollow* hfollow = new HeadsetFollow();
 	headset->AddComponent(hfollow);
-	headset->AddComponent(visibleMesh2);
 	TimeManager::Instance()->AddObjectToTimeline(headset);
+
+	Transform cubeScale;
+	cubeScale.SetMatrix(matrix4::CreateScale(0.01f, 0.01f, 0.01f));
+	BaseObject* mmCube = Pool::Instance()->iGetObject()->Reset("mmCube", cubeScale);// new BaseObject("walls", PlaneTransform);
+	MeshComponent *mmCubeMesh = new MeshComponent("../Resources/Cube.obj");
+	mmCubeMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
+	mmCube->AddComponent(mmCubeMesh);
 
 	Physics::Instance()->mObjects.push_back(RightController);
 	Physics::Instance()->mObjects.push_back(LeftController);
@@ -693,60 +681,24 @@ void Update() {
 
 	while (LevelManager::GetInstance().LoadLevelAsync("../Resources/mainMenu.xml", &mainMenu) != Epoch::LM::LevelStatus::Success) {}
 	//while (LevelManager::GetInstance().LoadLevelAsync("../Resources/collider.xml", &L1) != Epoch::LM::LevelStatus::Success) {}
-	//L1->Initialize(headset, LeftController, RightController);
-	//L1->AddObject(RightController);
-	//L1->AddObject(RightTimeIndicator);
-	//L1->AddObject(headset);
-	//L1->AddObject(LeftController);
-	//LevelManager::GetInstance().LoadLevelAsync("../Resources/LEVEL1/collider.xml", &L1);
-	//InitializeHeadsetAndController(headset, LeftController, RightController);
-	mainMenu->AddObject(LeftController);
+	mainMenu->AssignPlayerControls(headset, LeftController, RightController);
 	mainMenu->AddObject(RightController);
 	mainMenu->AddObject(headset);
+	mainMenu->AddObject(LeftController);
+	mainMenu->AddObject(mmCube);
+	//LevelManager::GetInstance().LoadLevelAsync("../Resources/LEVEL1/collider.xml", &L1);
+	auto& levelObjects = mainMenu->GetLevelObjects();
+	for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it) {
+		if ((*it)->mComponents[eCOMPONENT_COLLIDER].size() > 0) {
+			Physics::Instance()->mObjects.push_back((*it));
+		}
+	}
 
-	mainMenu->Initialize(headset, LeftController, RightController);
 	LevelManager::GetInstance().RequestLevelChange(mainMenu);
-	matrix4 cameraPos = matrix4::CreateYRotation(mainMenu->GetStartRot().y) * matrix4::CreateZRotation(mainMenu->GetStartRot().z) * matrix4::CreateXRotation(mainMenu->GetStartRot().x) * matrix4::CreateTranslation(mainMenu->GetStartPos());
-	Renderer::Instance()->SetDebugCameraPosition(cameraPos);
 	mainMenu->CallStart();
-	
-	//Enter effect
-	//Patrick* emit = new Patrick(500, 250, 2, vec4f(8, 0, -4, 1));
-	//emit->SetTexture("../Resources/BasicRectP.png");
-	//emit->SetParticle(new Particle(200, 1.25f / 2.0f, .15f / 2.0f, vec4f(), vec4f(.2f, .2f, 1, 0), vec4f(0, 1, .2f, 0)));
-	//emit->y1 = 8;
-	//emit->y2 = 12;
-	//ParticleSystem::Instance()->AddEmitter(emit);
-	//
-	//emit = new Patrick(500, 150, 1, vec4f(8, 0, -4, 1));
-	//emit->SetTexture("../Resources/BasicCircleP.png");
-	//emit->SetParticle(new Particle(1000, .25f / 2.0f, .05f / 2.0f, vec4f(), vec4f(.5f, 0, .25f, 0), vec4f(.2f, .8f, .5f, 0)));
-	//emit->y1 = 1;
-	//emit->y2 = 5;
-	//ParticleSystem::Instance()->AddEmitter(emit);
-	Particle* p = &Particle::Init();
-	p->SetColors(vec4f(.2f, .2f, 1, 0), vec4f(0, 1, .2f, 0));
-	p->SetLife(200);
-	p->SetSize(1.25f / 2.0f, .15f / .2f);
-	ParticleEmitter* emit = new IDC(500, 250, 2, vec4f(2.25f, -1, 6.25f, 1));
-	emit->SetParticle(p);
-	emit->SetTexture("../Resources/BasicRectP.png");
-	((IDC*)emit)->y1 = 8;
-	((IDC*)emit)->y2 = 12;
-	ParticleSystem::Instance()->AddEmitter(emit);
-	emit->FIRE();
 
-	p = &Particle::Init();
-	p->SetColors(vec4f(.5f, 0, .25f, 0), vec4f(.2f, .8f, .5f, 0));
-	p->SetLife(1000);
-	p->SetSize(.25f , .05f);
-	emit = new IDC(500, 150, 1, vec4f(2.25f, -1, 6.25f, 1));
-	emit->SetTexture("../Resources/BasicCircleP.png");
-	emit->SetParticle(p);
-	((IDC*)emit)->y1 = 1;
-	((IDC*)emit)->y2 = 5;
-	ParticleSystem::Instance()->AddEmitter(emit);
-	emit->FIRE();
+	
+	
 
 	//ParticleEmitter * emitt = new ParticleEmitter(-1, 2000, 20, vec4f());
 	//emitt->SetTexture("../Resources/BasicCircleP.png");
@@ -804,6 +756,11 @@ void Update() {
 			while (fixedTime >= FIXED_UPDATE_INTERVAL) {
 				Physics::Instance()->Update(FIXED_UPDATE_INTERVAL);
 				fixedTime -= FIXED_UPDATE_INTERVAL;
+				if(fixedTime >=  0.25f)
+				{
+					UpdateTime();
+					fixedTime = 0;
+				}
 			}
 
 			if (VREnabled) {
@@ -898,7 +855,7 @@ void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftControl
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 	BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
-	pickup->mControllerRole = eControllerType_Primary;
+	((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
 	MeshComponent *rightRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
 	rightRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
 	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
@@ -914,19 +871,19 @@ void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftControl
 	ambient->Play();
 	TimeManager::Instance()->AddObjectToTimeline(RightController);
 
-	Transform identity;
-	BaseObject *RightTimeIndicator = Pool::Instance()->iGetObject()->Reset("RTimeIndicator", identity);
-	RightTimeIndicator->SetParent(RightController);
-	MeshComponent *TimeIndicatorLine = new MeshComponent("../Resources/TimeIndicatorLine.obj");
-	MeshComponent *TimeIndicator = new MeshComponent("../Resources/TimeIndicator.obj");
-	TimeIndicatorLine->AddTexture("../Resources/TimeIndicatorLine.png", eTEX_DIFFUSE);
-	TimeIndicator->AddTexture("../Resources/TimeIndicator.png", eTEX_DIFFUSE);
-	//TimeIndicator->GetTransform().TranslateLocal(0, 0.27277f, -0.25699f); <-- Beaks here don't know why
-	TimeLineIndicator *tli = new TimeLineIndicator(TimeIndicator, TimeIndicatorLine);
-	tli->mParent = &RightController->GetTransform().GetMatrix();
-	RightTimeIndicator->AddComponent(TimeIndicatorLine);
-	RightTimeIndicator->AddComponent(TimeIndicator);
-	RightTimeIndicator->AddComponent(tli);
+	//Transform identity;
+	//BaseObject *RightTimeIndicator = Pool::Instance()->iGetObject()->Reset("RTimeIndicator", identity);
+	//RightTimeIndicator->SetParent(RightController);
+	//MeshComponent *TimeIndicatorLine = new MeshComponent("../Resources/TimeIndicatorLine.obj");
+	//MeshComponent *TimeIndicator = new MeshComponent("../Resources/TimeIndicator.obj");
+	//TimeIndicatorLine->AddTexture("../Resources/TimeIndicatorLine.png", eTEX_DIFFUSE);
+	//TimeIndicator->AddTexture("../Resources/TimeIndicator.png", eTEX_DIFFUSE);
+	////TimeIndicator->GetTransform().TranslateLocal(0, 0.27277f, -0.25699f); <-- Beaks here don't know why
+	//TimeLineIndicator *tli = new TimeLineIndicator(TimeIndicator, TimeIndicatorLine);
+	//tli->mParent = &RightController->GetTransform().GetMatrix();
+	//RightTimeIndicator->AddComponent(TimeIndicatorLine);
+	//RightTimeIndicator->AddComponent(TimeIndicator);
+	//RightTimeIndicator->AddComponent(tli);
 
 
 	//pat added

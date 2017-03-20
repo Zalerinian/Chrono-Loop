@@ -70,7 +70,7 @@ namespace Epoch
 	public:
 		Listener() : Component(ComponentType::eCOMPONENT_AUDIOLISTENER) {}
 		void Update() {}
-		void Destroy() {}
+		void Destroy();
 	};
 
 	class Emitter :public Component
