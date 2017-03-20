@@ -86,7 +86,7 @@ namespace Epoch {
 								}
 								if (mSpeedCW % 35 == 0 && mIncreaseGestureSpeed != 1)
 								{
-									//tempTimeLine->SetObjectInterpolationTime(tempTimeLine->GetObjectInterpolationTime() - 0.03f);
+									tempTimeLine->SetObjectInterpolationTime(tempTimeLine->GetObjectInterpolationTime() - 0.03f);
 									mIncreaseGestureSpeed--;
 								}
 								if (TimeManager::Instance()->GetShouldPulse())

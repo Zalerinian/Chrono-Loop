@@ -135,10 +135,11 @@ namespace Epoch
 					LeftController->AddComponent(tm2);
 					TimeManager::Instance()->AddObjectToTimeline(LeftController);
 
-					/*MeshComponent *visibleMesh2 = new MeshComponent("../Resources/Cube.obj");
+					MeshComponent *visibleMesh2 = new MeshComponent("../Resources/TinyCube.obj");
 					visibleMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 					visibleMesh2->SetVisible(false);
-					headset->AddComponent(visibleMesh2);*/
+					headset->AddComponent(visibleMesh2);
+
 					HeadsetFollow* hfollow = new HeadsetFollow();
 					headset->AddComponent(hfollow);
 					headset->AddComponent(ears);
