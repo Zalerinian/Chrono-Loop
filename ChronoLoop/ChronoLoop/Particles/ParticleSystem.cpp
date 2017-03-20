@@ -13,10 +13,10 @@ namespace Epoch
 	}
 	ParticleSystem::~ParticleSystem()
 	{
-		for (ParticleEmitter* emit : mPEmitters)
-			delete emit;
+		for (int i = 0; i < mPEmitters.size(); ++i)
+			delete mPEmitters[i];
 
-		mPEmitters.clear();
+		//mPEmitters.clear();
 		mILayout->Release();
 		mVBuff->Release();
 		mVShader->Release();
@@ -44,6 +44,7 @@ namespace Epoch
 		FileIO::LoadBytes("GSParticles.cso", &buffer, bytes);
 
 		Renderer::Instance()->GetDevice()->CreateGeometryShader(buffer, bytes, nullptr, &mGeometryShader);
+		delete buffer;
 	}
 	void ParticleSystem::SetVertexPixelShader()
 	{
@@ -63,9 +64,10 @@ namespace Epoch
 
 		Renderer::Instance()->GetDevice()->CreateInputLayout(iDesc, ARRAYSIZE(iDesc), buffer, bytes, &mILayout);
 
-
+		delete buffer;
 		FileIO::LoadBytes("ParticlePixelShader.cso", &buffer, bytes);
 		Renderer::Instance()->GetDevice()->CreatePixelShader(buffer, bytes, nullptr, &mPShader);
+		delete buffer;
 
 		CD3D11_BUFFER_DESC desc(sizeof(GSMatrix), D3D11_BIND_CONSTANT_BUFFER);
 		Renderer::Instance()->GetDevice()->CreateBuffer(&desc, NULL, &mVBuff);
@@ -135,7 +137,10 @@ namespace Epoch
 	{
 		auto iter = std::find(mPEmitters.begin(), mPEmitters.end(), _pemitter);
 		if (iter != mPEmitters.end())
+		{
+			delete *iter;
 			mPEmitters.erase(iter);
+		}
 	}
 
 	bool ParticleSystem::DoesExist(ParticleEmitter* _pemitter)

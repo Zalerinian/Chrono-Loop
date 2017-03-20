@@ -32,9 +32,11 @@ namespace  Epoch {
 		Interpolator(float _duration, Type& _from, Type& _to, Type* _edit);
 		~Interpolator();
 		inline void SetActive(bool _bool) { mActive = _bool; };
+		inline bool GetActive() { return mActive; }
+		inline Type GetEdit() { if(mEdit != nullptr) return *mEdit; };
 		inline void SetEasingFunction(EasingFunction _m) { mEasingFunction = _m; }
 		void Prepare(float _duration, Type& _start, Type& _end, Type& _edit);
-		bool Update(float _deltaTime);
+		virtual bool Update(float _deltaTime);
 		void Interpolate();
 		inline float GetProgress() { return mTweenTime / mDuration; }
 	};
@@ -103,8 +105,27 @@ namespace  Epoch {
 		for (unsigned int i = 0; i < 4; i++) {
 			(*mEdit)[i] = mEasingFunction(mTweenTime, mStart[i], (mEnd[i] - mStart[i]), mDuration);
 		}
-
 	}
+
+	template<>
+	inline void Interpolator<vec3f>::Interpolate() {
+		for (unsigned int i = 0; i < 3; i++) {
+			(*mEdit)[i] = mEasingFunction(mTweenTime, mStart[i], (mEnd[i] - mStart[i]), mDuration);
+		}
+	}
+
+	template<>
+	inline void Interpolator<vec2f>::Interpolate() {
+		for (unsigned int i = 0; i < 2; i++) {
+			(*mEdit)[i] = mEasingFunction(mTweenTime, mStart[i], (mEnd[i] - mStart[i]), mDuration);
+		}
+	}
+
+	template<>
+	inline void Interpolator<float>::Interpolate() {
+		(*mEdit) = mEasingFunction(mTweenTime, mStart, mEnd - mStart, mDuration);
+	}
+
 }
 
 

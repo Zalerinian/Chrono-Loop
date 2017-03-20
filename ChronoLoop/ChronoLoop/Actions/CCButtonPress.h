@@ -25,8 +25,8 @@ namespace Epoch
 
 			blockCube = (CubeCollider*)Block->mComponents[eCOMPONENT_COLLIDER][0];
 			exitCube = (CubeCollider*)Exit->mComponents[eCOMPONENT_COLLIDER][0];
-			blockend = blockCube->GetPos() - vec4f(0, 2.6, 0, 1);
-			exitend = exitCube->GetPos() + vec4f(0, 2.6, 0, 1);
+			blockend = blockCube->GetPos() - vec4f(0, 2.6f, 0, 1);
+			exitend = exitCube->GetPos() + vec4f(0, 2.6f, 0, 1);
 		}
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time)
@@ -36,7 +36,6 @@ namespace Epoch
 				colliding = true;
 
 				vec4f norm = ((ButtonCollider*)&_col)->mPushNormal;
-				CubeCollider aabb1(((ButtonCollider*)&_col)->mMin, ((ButtonCollider*)&_col)->mMax);
 				vec4f tForce = norm * (norm * _other.mTotalForce);
 				vec4f vel = norm * (norm * _other.mVelocity);
 				vec4f accel = norm * (norm * _other.mAcceleration);

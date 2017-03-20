@@ -147,9 +147,9 @@ namespace Epoch {
 				mPickUp->SetPos((m).tiers[3]);
 				//mObject->GetTransform().SetMatrix(m);
 				mPickUp->mShouldMove = false;
-				mPickUp->mForces = { 0,0,0,0 };
-				mPickUp->mVelocity = { 0,0,0,0 };
-				mPickUp->mAcceleration = { 0,0,0,0 };
+				mPickUp->mForces = { 0,0,0 };
+				mPickUp->mVelocity = { 0,0,0 };
+				mPickUp->mAcceleration = { 0,0,0 };
 			}
 		}
 

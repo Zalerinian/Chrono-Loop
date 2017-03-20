@@ -572,8 +572,9 @@ namespace Epoch
 		//_p->SetVelocity(tvel);
 		tvel = *_p->GetPos();
 		tvel.y = 0;
+		tvel.w = 0;
 		//float radius = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - (0.0f))));
-		float radius = (tvel - mPos).Magnitude3();
+		float radius = (tvel - mPos).Magnitude();
 
 		(*_p->GetPos()).x = radius * cos(_p->mYRadial) + mPos.x;
 		(*_p->GetPos()).z = radius * sin(-_p->mYRadial) + mPos.z;

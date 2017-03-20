@@ -33,8 +33,18 @@ namespace Epoch {
 		mMutex.unlock();
 	}
 
-	void LM::SetCurrentLevel(Level* _level) {
-		mCurrentLevel = _level;
+	//void LM::SetCurrentLevel(Level* _level) {
+	//	mCurrentLevel = _level;
+	//}
+
+	void LM::RequestLevelChange(Level * _next)
+	{
+		if (!mCurrentLevel) {
+			mCurrentLevel = _next;
+			VRInputManager::GetInstance().GetPlayerPosition().Position = _next->mStartPosition;
+			return;
+		}
+		mRequested = _next;
 	}
 
 	Level* LM::GetCurrentLevel() {
@@ -75,8 +85,22 @@ namespace Epoch {
 
 	void LM::Destroy()
 	{
-		if(mCurrentLevel)
+		if (mCurrentLevel)
 			delete mCurrentLevel;
+	}
+
+	void LM::Update()
+	{
+		if (mRequested) {
+			if (mCurrentLevel) {
+				delete mCurrentLevel;
+			}
+			VRInputManager::GetInstance().GetPlayerPosition().Position = mRequested->mStartPosition;
+			mCurrentLevel = mRequested;
+			mCurrentLevel->CallStart();
+			mRequested = nullptr;
+		}
+		mCurrentLevel->Update();
 	}
 
 } // Epoch Namespace

@@ -18,7 +18,7 @@
 #include "../Common/Settings.h"
 
 namespace Epoch {
-	
+
 	Level::Level() {}
 
 	Level::~Level() {
@@ -82,9 +82,77 @@ namespace Epoch {
 		}
 		return false;
 	}
+	
+	//This func assumes all components are attached in the EXACT order,
+	void Level::SwapPlayerComponentIds(BaseObject *& _first, BaseObject*& _other)
+	{
+		std::vector<Component*> components = _first->GetComponents(eCOMPONENT_COLLIDER);
+		std::vector<Component*> othersComponents = _other->GetComponents(eCOMPONENT_COLLIDER);
+
+			for (int i = 0; i < othersComponents.size(); ++i) {
+				unsigned int FirstCompId = components[i]->GetColliderId();
+				components[i]->SetComponentId(othersComponents[i]->GetColliderId());
+				othersComponents[i]->SetComponentId(FirstCompId);
+			}
+		
+
+		/*components = _first->GetComponents(eCOMPONENT_AUDIOEMITTER);
+		othersComponents = _other->GetComponents(eCOMPONENT_AUDIOEMITTER);
+		for (int i = 0; i < components.size(); ++i) {
+			unsigned int FirstCompId = components[i]->GetColliderId();
+			components[i]->SetComponentId(othersComponents[i]->GetColliderId());
+			othersComponents[i]->SetComponentId(FirstCompId);
+		}*/
+
+		/*components = _first->GetComponents(eCOMPONENT_AUDIOLISTENER);
+		othersComponents = _other->GetComponents(eCOMPONENT_AUDIOLISTENER);
+		for (int i = 0; i < components.size(); ++i) {
+			unsigned int FirstCompId = components[i]->GetColliderId();
+			components[i]->SetComponentId(othersComponents[i]->GetColliderId());
+			othersComponents[i]->SetComponentId(FirstCompId);
+		}*/
+
+		components = _first->GetComponents(eCOMPONENT_CODE);
+		othersComponents = _other->GetComponents(eCOMPONENT_CODE);
+
+			for (int i = 0; i <othersComponents.size(); ++i) {
+				unsigned int FirstCompId = components[i]->GetColliderId();
+				components[i]->SetComponentId(othersComponents[i]->GetColliderId());
+				othersComponents[i]->SetComponentId(FirstCompId);
+			}
+
+		/*components = _first->GetComponents(eCOMPONENT_MESH);
+		othersComponents = _other->GetComponents(eCOMPONENT_MESH);
+	
+			for (int i = 0; i < othersComponents.size(); ++i) {
+				unsigned int FirstCompId = components[i]->GetColliderId();
+				components[i]->SetComponentId(othersComponents[i]->GetColliderId());
+				othersComponents[i]->SetComponentId(FirstCompId);
+			}*/
+		
+
+	/*	components = _first->GetComponents(eCOMPONENT_UI);
+		othersComponents = _other->GetComponents(eCOMPONENT_UI);
+		for (int i = 0; i < components.size(); ++i) {
+			unsigned int FirstCompId = components[i]->GetColliderId();
+			components[i]->SetComponentId(othersComponents[i]->GetColliderId());
+			othersComponents[i]->SetComponentId(FirstCompId);
+		}*/
+
+		components = _first->GetComponents(eCOMPONENT_UNKNOWN);
+		othersComponents = _other->GetComponents(eCOMPONENT_UNKNOWN);
+			for (int i = 0; i < othersComponents.size(); ++i) {
+				unsigned int FirstCompId = components[i]->GetColliderId();
+				components[i]->SetComponentId(othersComponents[i]->GetColliderId());
+				othersComponents[i]->SetComponentId(FirstCompId);
+			}
+	}
 
 	void Level::SetHeadsetAndControllers(BaseObject *& _headset, BaseObject *& _controller1, BaseObject *& _controller2, ControllerCollider* _c1Collider, ControllerCollider* _c2Collider) {
-		//Remove the action componets and 
+		//Swap component ids
+		SwapPlayerComponentIds(mHeadset, _headset);
+		SwapPlayerComponentIds(mController1, _controller1);
+		SwapPlayerComponentIds(mController2, _controller2);
 		//Set the new BaseObjects to the current controller so new objects can follow old controller movement as clones.
 		unsigned short headid = _headset->GetUniqueID();
 		unsigned short cl1id = _controller1->GetUniqueID();
@@ -92,8 +160,6 @@ namespace Epoch {
 		unsigned short c1paramCodeCollid = _c1Collider->GetColliderId();
 		unsigned short c2paramCodeCollid = _c2Collider->GetColliderId();
 
-		Component* controller1Collider = mController1->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
-		Component* controller2Collider = mController2->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
 
 		std::string headname = _headset->GetName();
 		std::string Controller1name = _controller1->GetName();
@@ -109,8 +175,7 @@ namespace Epoch {
 		_headset->SetName(mHeadset->GetName());
 		_controller1->SetName(mController1->GetName());
 		_controller2->SetName(mController2->GetName());
-		_c1Collider->SetComponentId(controller1Collider->GetColliderId());
-		_c2Collider->SetComponentId(controller2Collider->GetColliderId());
+		
 
 		mHeadset->SetUniqueID(headid);
 		mController1->SetUniqueID(cl1id);
@@ -118,8 +183,7 @@ namespace Epoch {
 		mHeadset->SetName(headname);
 		mController1->SetName(Controller1name);
 		mController2->SetName(Controller2name);
-		controller1Collider->SetComponentId(c1paramCodeCollid);
-		controller2Collider->SetComponentId(c2paramCodeCollid);
+	
 
 		mHeadset->SetUniqueID(headid);
 		mController1->SetUniqueID(cl1id);
@@ -127,8 +191,7 @@ namespace Epoch {
 		mHeadset->SetName(headname);
 		mController1->SetName(Controller1name);
 		mController2->SetName(Controller2name);
-		controller1Collider->SetComponentId(c1paramCodeCollid);
-		controller2Collider->SetComponentId(c2paramCodeCollid);
+	
 
 		mObjectList.push_back(_headset);
 		mObjectList.push_back(_controller1);
@@ -150,7 +213,7 @@ namespace Epoch {
 		}
 	}
 
-	void Level::LoadLevel(std::string _file) 
+	void Level::LoadLevel(std::string _file)
 	{
 		// Load the xml file, I put your XML in a file named test.xml
 		TiXmlDocument XMLdoc(_file.c_str());
@@ -158,10 +221,57 @@ namespace Epoch {
 		if (loadOkay)
 		{
 			SystemLogger::GetLog() << _file.c_str() << " loaded" << std::endl;
-			TiXmlElement *pRoot, *pObject, *pData, *pApp, *pLineFormat;
+			mStartPosition.w = 1; // In the event a level doesn't define the start position, this is needed to mess up the matrix.
+			mStartRotation.w = 1;
+			TiXmlElement *pRoot, *pObject, *pData;
 			pRoot = XMLdoc.FirstChildElement("Level");
 			if (pRoot)
 			{
+				// Get Level Settings
+				pObject = pRoot->FirstChildElement("Settings");
+				if (pObject != nullptr) {
+					pData = pObject->FirstChildElement();
+					std::string nodeType;
+					while (pData) {
+						switch (pData->Type()) {
+						case TiXmlNode::NodeType::TINYXML_ELEMENT:
+							nodeType = pData->Value();
+							pData = (TiXmlElement*)pData->FirstChild();
+							if (nodeType == "StartPos") {
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									mStartPosition.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+								SystemLogger::Debug() << "Start position: " << mStartPosition << std::endl;
+							} else if (nodeType == "StartRot") {
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									mStartRotation.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+								SystemLogger::Debug() << "Start rotation: " << mStartRotation << std::endl;
+							}
+							break;
+						default:
+							SystemLogger::Error() << "Wat" << std::endl;
+							break;
+						}
+
+						pData = pData->Parent()->NextSiblingElement();
+					}
+				}
+
 				// Parse objects
 				pObject = pRoot->FirstChildElement("Object");
 				while (pObject)
@@ -177,14 +287,12 @@ namespace Epoch {
 						switch (pData->Type())
 						{
 						case TiXmlNode::NodeType::TINYXML_ELEMENT:
-							SystemLogger::GetLog() << "Element: '" << pData->Value() << "'" << std::endl;
 							elementType = std::string(pData->Value());
 							if (elementType == "Collider")
 								collider = true;
 							pData = (TiXmlElement*)pData->FirstChild();
 							break;
 						case TiXmlNode::NodeType::TINYXML_TEXT:
-							SystemLogger::GetLog() << "Value: '" << pData->Value() << "'" << std::endl;
 							if (elementType == "Name")
 								name = pData->Value();
 							else if (elementType == "Mesh")
@@ -322,8 +430,8 @@ namespace Epoch {
 								}
 								gravity.w = 1;
 							}
-							else if(elementType == "NormalForce")
-								normF = std::strtof(pData->Value(),nullptr);
+							else if (elementType == "NormalForce")
+								normF = std::strtof(pData->Value(), nullptr);
 							else
 								codeComs.push_back(elementType);
 
@@ -334,15 +442,14 @@ namespace Epoch {
 							break;
 						}
 					}
-					SystemLogger::GetLog() << "Element: name= '" << pObject->Value() << "'" << std::endl;
 
-					
+
 					Transform transform;
-					matrix4 mat = matrix4::CreateScale(scale.x, scale.y, scale.z) * 
-								  matrix4::CreateXRotation(rotation.x) * 
-								  matrix4::CreateYRotation(rotation.y) * 
-								  matrix4::CreateZRotation(rotation.z) * 
-								  matrix4::CreateTranslation(position.x, position.y, position.z);
+					matrix4 mat = matrix4::CreateScale(scale.x, scale.y, scale.z) *
+						matrix4::CreateXRotation(rotation.x) *
+						matrix4::CreateYRotation(rotation.y) *
+						matrix4::CreateZRotation(rotation.z) *
+						matrix4::CreateTranslation(position.x, position.y, position.z);
 					transform.SetMatrix(mat);
 					BaseObject* obj = new BaseObject(name, transform);
 
@@ -355,14 +462,15 @@ namespace Epoch {
 						path.append(textureFile);
 						mesh->AddTexture(path.c_str(), eTEX_DIFFUSE);
 						obj->AddComponent(mesh);
+					
 					}
 
 					if (colliderType == "OBB")
 					{
 						physical = true;
-						vec4f offset = vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1) / 2;
-						vec4f min = colliderPosition - offset;
-						vec4f max = colliderPosition + offset;
+						vec3f offset = vec3f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z) / 2;
+						vec3f min = colliderPosition - offset;
+						vec3f max = colliderPosition + offset;
 						CubeCollider* col = new CubeCollider(obj, canMove, trigger, gravity, mass, elasticity, staticF, kineticF, drag, min, max);
 						obj->AddComponent(col);
 					}
@@ -377,9 +485,9 @@ namespace Epoch {
 					{
 						physical = true;
 
-						vec4f offset = vec4f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z, 1) / 2;
-						vec4f min = colliderPosition - offset;
-						vec4f max = colliderPosition + offset;
+						vec3f offset = vec3f(colliderScale.x * scale.x, colliderScale.y * scale.y, colliderScale.z * scale.z) / 2;
+						vec3f min = colliderPosition - offset;
+						vec3f max = colliderPosition + offset;
 						ButtonCollider* col = new ButtonCollider(obj, min, max, mass, normF, pushNorm);
 						obj->AddComponent(col);
 					}
@@ -387,7 +495,7 @@ namespace Epoch {
 					{
 						physical = true;
 
-						PlaneCollider* col = new PlaneCollider(obj, canMove, trigger, vec4f(0,0,0,0), mass, elasticity, staticF, kineticF, drag, fabsf((colliderPosition + position) * normal), normal);//TODO: Fix offset
+						PlaneCollider* col = new PlaneCollider(obj, trigger, staticF, kineticF, fabsf((colliderPosition + position) * normal), normal);//TODO: Fix offset
 						obj->AddComponent(col);
 					}
 
@@ -438,9 +546,9 @@ namespace Epoch {
 					if (physical)
 						Physics::Instance()->mObjects.push_back(obj);
 
-					if (canMove)
+					if (canMove || obj->GetName() == "Door1" || obj->GetName() == "Door2")
 						TimeManager::Instance()->AddObjectToTimeline(obj);
-					
+
 					AddObject(obj);
 					pObject = pObject->NextSiblingElement("Object");
 				}
@@ -449,7 +557,7 @@ namespace Epoch {
 			}
 			else
 			{
-				SystemLogger::GetLog() << "Cannot find 'Configuration' node" << std::endl;
+				SystemLogger::GetLog() << "Cannot find 'Root' node" << std::endl;
 			}
 		}
 	}
@@ -467,10 +575,12 @@ namespace Epoch {
 		if (_ifOn == L"ON") {
 			Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_WIREFRAME);
 			CommandConsole::Instance().DisplaySet(L"");
-		} else if (_ifOn == L"OFF") {
+		}
+		else if (_ifOn == L"OFF") {
 			Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_MAX);
 			CommandConsole::Instance().DisplaySet(L"");
-		} else {
+		}
+		else {
 			CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /WIREFRAME (ON/OFF)");
 		}
 	}

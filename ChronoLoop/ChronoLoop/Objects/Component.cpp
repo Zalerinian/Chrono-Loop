@@ -6,11 +6,12 @@
 
 namespace Epoch
 {
-	// 0 is reserved for the player.
+	
 	unsigned short Component::mComponentCount = 0;
 
 	Component::Component()
 	{
+		//SystemLogger::Debug() << mComponentCount << std::endl;
 		mComponentId = Component::mComponentCount++;
 	}
 	Component::Component(ComponentType _cType)
@@ -171,26 +172,26 @@ namespace Epoch
 
 	void Collider::Destroy() {}
 
-	vec4f Collider::GetPos()
+	vec3f Collider::GetPos()
 	{
 		return mObject->GetTransform().GetMatrix().fourth;
 	}
 
-	void Collider::SetPos(const vec4f& _newPos)
+	void Collider::SetPos(const vec3f& _newPos)
 	{
-		mObject->GetTransform().GetMatrix().fourth = _newPos;
+		mObject->GetTransform().GetMatrix().fourth = vec4f(_newPos);
 	}
 
-	//MeshCollider::MeshCollider(BaseObject* _obj, bool _move, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, char * _path)
+	//MeshCollider::MeshCollider(BaseObject* _obj, bool _move, vec3f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, char * _path)
 	//{
 	//	mObject = _obj;
 	//	mType = eCOMPONENT_COLLIDER;
 	//	mColliderType = eCOLLIDER_Mesh;
 	//	mGravity = _gravity;
-	//	mVelocity = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-	//	mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+	//	mVelocity = vec3f(0.0f, 0.0f, 0.0f, 1.0f);
+	//	mAcceleration = vec3f(0.0f, 0.0f, 0.0f, 1.0f);
 	//	mTotalForce = mGravity;
-	//	mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+	//	mImpulsiveForce = vec3f(0.0f, 0.0f, 0.0f, 1.0f);
 	//	mShouldMove = _move;
 	//	mMass = _mass;
 	//	mDrag = _drag;
@@ -206,21 +207,20 @@ namespace Epoch
 	//	mMesh = &Mesh(_path);
 	//}
 
-	SphereCollider::SphereCollider(BaseObject* _obj, bool _move, bool _trigger, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _radius)
+	SphereCollider::SphereCollider(BaseObject* _obj, bool _move, bool _trigger, vec3f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _radius)
 	{
 		mObject = _obj;
 		mType = eCOMPONENT_COLLIDER;
 		mColliderType = eCOLLIDER_Sphere;
-		mCenter = GetPos();
 		mRadius = _radius;
 		mShouldMove = _move;
 		mIsTrigger = _trigger;
 
 		mGravity = _gravity;
-		mVelocity = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-		mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+		mVelocity;// = vec3f(0.0f, 0.0f, 0.0f);
+		mAcceleration = vec3f(0.0f, 0.0f, 0.0f);
 		mTotalForce = mGravity;
-		mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+		mImpulsiveForce = vec3f(0.0f, 0.0f, 0.0f);
 		mMass = _mass;
 		if (mMass == 0)
 			mInvMass = 0;
@@ -233,16 +233,10 @@ namespace Epoch
 		mRHO = 1;
 		mDrag = _drag;
 		mArea = 4 * DirectX::XM_PI * powf(mRadius, 2.0f);
-		mDragForce = mVelocity * (-0.5f * mRHO * mVelocity.Magnitude3() * mDrag * mArea);
+		mDragForce = mVelocity * (-0.5f * mRHO * mVelocity.Magnitude() * mDrag * mArea);
 	}
 
-	void SphereCollider::SetPos(const vec4f& _other)
-	{
-		mObject->GetTransform().GetMatrix().fourth = _other;
-		mCenter = _other;
-	}
-
-	CubeCollider::CubeCollider(BaseObject* _obj, bool _move, bool _trigger, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec4f _min, vec4f _max)
+	CubeCollider::CubeCollider(BaseObject* _obj, bool _move, bool _trigger, vec3f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec3f _min, vec3f _max)
 	{
 		mObject = _obj;
 		mType = eCOMPONENT_COLLIDER;
@@ -255,10 +249,10 @@ namespace Epoch
 		mShouldMove = _move;
 
 		mGravity = _gravity;
-		mVelocity = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-		mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+		mVelocity = vec3f(0.0f, 0.0f, 0.0f);
+		mAcceleration = vec3f(0.0f, 0.0f, 0.0f);
 		mTotalForce = mGravity;
-		mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+		mImpulsiveForce = vec3f(0.0f, 0.0f, 0.0f);
 		mMass = _mass;
 		if (mMass == 0)
 			mInvMass = 0;
@@ -270,33 +264,39 @@ namespace Epoch
 		mKineticFriction = _kineticFriction;
 		mRHO = 1;
 		mDrag = _drag;
-		float a = (mMaxOffset - mMinOffset) * vec4f(0, 0, 1, 0);
-		float b = (mMaxOffset - mMinOffset) * vec4f(0, 1, 0, 0);
-		float c = (mMaxOffset - mMinOffset) * vec4f(1, 0, 0, 0);
+		float a = (mMaxOffset - mMinOffset) * vec3f(0, 0, 1);
+		float b = (mMaxOffset - mMinOffset) * vec3f(0, 1, 0);
+		float c = (mMaxOffset - mMinOffset) * vec3f(1, 0, 0);
 		mArea = (2 * (a * b)) + (2 * (b * c)) + (2 * (a * c));
-		mDragForce = mVelocity * (-0.5f * mRHO * mVelocity.Magnitude3() * mDrag * mArea);
+		mDragForce = mVelocity * (-0.5f * mRHO * mVelocity.Magnitude() * mDrag * mArea);
 		mShape = new RenderShape("../Resources/UnitCube.obj", true, ePS_TEXTURED, eVS_TEXTURED, eGS_PosNormTex);
 		mShape->GetContext().mRasterState = eRS_WIREFRAME;
 	}
 
 	void CubeCollider::Update() {
-		if (mNode == nullptr) {
+	/*	if (mNode == nullptr) {
 			mNode = Renderer::Instance()->AddNode(mShape);
 		}
-		vec4f size = mMax - mMin;
+		vec3f size = mMax - mMin;
 		matrix4 pos = matrix4::CreateScale(size.x, size.y, size.z);
 		pos.Position = (mMax - mMin) / 2 + mMin;
-		mNode->data = pos;
+		mNode->data = pos;*/
 	}
 
-	void CubeCollider::SetPos(const vec4f& _newPos)
+	void CubeCollider::Destroy()
+	{
+		delete mNode;
+		delete mShape;
+	}
+
+	void CubeCollider::SetPos(const vec3f& _newPos)
 	{
 		mObject->GetTransform().GetMatrix().fourth = _newPos;
 		mMin = mMinOffset + _newPos;
 		mMax = mMaxOffset + _newPos;
 	}
 
-	OrientedCubeCollider::OrientedCubeCollider(BaseObject * _obj, bool _move, bool _trigger, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _xRadius, float _yRadius, float _zRadius)
+	OrientedCubeCollider::OrientedCubeCollider(BaseObject * _obj, bool _move, bool _trigger, vec3f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _xRadius, float _yRadius, float _zRadius)
 	{
 		mObject = _obj;
 		mType = eCOMPONENT_COLLIDER;
@@ -304,15 +304,14 @@ namespace Epoch
 		mAxis[0] = mObject->GetTransform().GetMatrix().first;
 		mAxis[1] = mObject->GetTransform().GetMatrix().second;
 		mAxis[2] = -mObject->GetTransform().GetMatrix().third;
-		mAxis[2].w = 1;
 		mShouldMove = _move;
 		mIsTrigger = _trigger;
 
 		mGravity = _gravity;
-		mVelocity = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-		mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+		mVelocity = vec3f(0.0f, 0.0f, 0.0f);
+		mAcceleration = vec3f(0.0f, 0.0f, 0.0f);
 		mTotalForce = mGravity;
-		mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+		mImpulsiveForce = vec3f(0.0f, 0.0f, 0.0f);
 		mMass = _mass;
 		if (mMass == 0)
 			mInvMass = 0;
@@ -324,66 +323,47 @@ namespace Epoch
 		mKineticFriction = _kineticFriction;
 		mRHO = 1;
 		mDrag = _drag;
-		mCenter = GetPos();
 		mWidth = _xRadius;
 		mHeight = _yRadius;
 		mDepth = _zRadius;
 
-		vec4f maxOffset, minOffset;
-		maxOffset.x = mCenter.x + mWidth;
-		maxOffset.y = mCenter.y + mHeight;
-		maxOffset.z = mCenter.z + mDepth;
-		minOffset.x = mCenter.x - mWidth;
-		minOffset.y = mCenter.y - mHeight;
-		minOffset.z = mCenter.z - mDepth;
-		float a = (maxOffset - minOffset) * vec4f(0, 0, 1, 0);
-		float b = (maxOffset - minOffset) * vec4f(0, 1, 0, 0);
-		float c = (maxOffset - minOffset) * vec4f(1, 0, 0, 0);
+		vec3f maxOffset, minOffset, Center = GetPos();
+		maxOffset.x = Center.x + mWidth;
+		maxOffset.y = Center.y + mHeight;
+		maxOffset.z = Center.z + mDepth;
+		minOffset.x = Center.x - mWidth;
+		minOffset.y = Center.y - mHeight;
+		minOffset.z = Center.z - mDepth;
+		float a = (maxOffset - minOffset) * vec3f(0, 0, 1);
+		float b = (maxOffset - minOffset) * vec3f(0, 1, 0);
+		float c = (maxOffset - minOffset) * vec3f(1, 0, 0);
 		mArea = (2 * (a * b)) + (2 * (b * c)) + (2 * (a * c));
-		mDragForce = mVelocity * (-0.5f * mRHO * mVelocity.Magnitude3() * mDrag * mArea);
+		mDragForce = mVelocity * (-0.5f * mRHO * mVelocity.Magnitude() * mDrag * mArea);
 	}
 
-	void Epoch::OrientedCubeCollider::SetPos(const vec4f & _newPos)
+	void Epoch::OrientedCubeCollider::SetPos(const vec3f & _newPos)
 	{
 		mObject->GetTransform().GetMatrix().fourth = _newPos;
-		mCenter = _newPos;
 		mAxis[0] = mObject->GetTransform().GetMatrix().first;
 		mAxis[1] = mObject->GetTransform().GetMatrix().second;
 		mAxis[2] = -mObject->GetTransform().GetMatrix().third;
-		mAxis[2].w = 1;
 	}
 
-	PlaneCollider::PlaneCollider(BaseObject* _obj, bool _move, bool _trigger, vec4f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _offset, vec4f _norm)
+	PlaneCollider::PlaneCollider(BaseObject* _obj, bool _trigger, float _staticFriction, float _kineticFriction, float _offset, vec3f _norm)
 	{
 		mObject = _obj;
 		mType = eCOMPONENT_COLLIDER;
 		mColliderType = eCOLLIDER_Plane;
 		mOffset = _offset;
 		mNormal = _norm;
-		mShouldMove = _move;
+		mShouldMove = false;
 		mIsTrigger = _trigger;
 
-		mGravity = _gravity;
-		mVelocity = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-		mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-		mTotalForce = mGravity;
-		mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-		mMass = _mass;
-		if (mMass == 0)
-			mInvMass = 0;
-		else
-			mInvMass = 1 / mMass;
-		mWeight = mGravity * mMass;
-		mElasticity = _elasticity;
 		mStaticFriction = _staticFriction;
 		mKineticFriction = _kineticFriction;
-		mRHO = 1;
-		mDrag = _drag;
-		//mArea = ;
-		//mDragForce = mVelocity * (-0.5f * mRHO * mVelocity.Magnitude3() * mDrag * mArea);
 	}
 
-	ButtonCollider::ButtonCollider(BaseObject* _obj, vec4f _min, vec4f _max, float _mass, float _normForce, vec4f _pushNormal)
+	ButtonCollider::ButtonCollider(BaseObject* _obj, vec3f _min, vec3f _max, float _mass, float _normForce, vec3f _pushNormal)
 	{
 		mObject = _obj;
 		mType = eCOMPONENT_COLLIDER;
@@ -396,15 +376,15 @@ namespace Epoch
 		mUpperBound.mNormal = mPushNormal;
 		mUpperBound.mOffset = mMax * mPushNormal;
 		mLowerBound.mNormal = mPushNormal;
-		mLowerBound.mOffset = (mMin * mPushNormal) - .1;
+		mLowerBound.mOffset = (mMin * mPushNormal) - .1f;
 		mShouldMove = true;
 		mIsTrigger = false;
 
 		mGravity = _pushNormal * _normForce;
-		mVelocity = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-		mAcceleration = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+		mVelocity = vec3f(0.0f, 0.0f, 0.0f);
+		mAcceleration = vec3f(0.0f, 0.0f, 0.0f);
 		mTotalForce = mGravity * _mass;
-		mImpulsiveForce = vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+		mImpulsiveForce = vec3f(0.0f, 0.0f, 0.0f);
 		
 		mMass = _mass;
 		if (mMass == 0)
@@ -417,7 +397,7 @@ namespace Epoch
 		mShape->GetContext().mRasterState = eRS_WIREFRAME;
 	}
 
-	ControllerCollider::ControllerCollider(BaseObject* _obj, vec4f _min, vec4f _max, bool _left)
+	ControllerCollider::ControllerCollider(BaseObject* _obj, vec3f _min, vec3f _max, bool _left)
 	{
 		mObject = _obj;
 		mLeft = _left;
@@ -429,12 +409,12 @@ namespace Epoch
 		mIsTrigger = false;
 
 		mMass = 2;
-		mForces = vec4f(0, -1, 0, 0);
-		mGravity = vec4f(0, -2.0f, 0, 0);
+		mForces = vec3f(0, -1, 0);
+		mGravity = vec3f(0, -2.0f, 0);
 		mType = eCOMPONENT_COLLIDER;
 		mColliderType = eCOLLIDER_Controller;
-		mTotalForce = { 0,-2,0,0 };
-		mAcceleration = { 0,-2,0,0 };
+		mTotalForce = { 0, -2, 0 };
+		mAcceleration = { 0, -2, 0 };
 		mShape = new RenderShape("../Resources/UnitCube.obj", true, ePS_TEXTURED, eVS_TEXTURED, eGS_PosNormTex);
 		mShape->GetContext().mRasterState = eRS_WIREFRAME;
 	}

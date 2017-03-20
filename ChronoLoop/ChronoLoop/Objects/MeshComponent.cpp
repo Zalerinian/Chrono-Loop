@@ -41,10 +41,12 @@ namespace Epoch {
 		if (_vis) {
 			if (!mVisible) {
 				mNode = Renderer::Instance()->AddNode(mShape);
+				mVisible = true;
 			}
 		} else {
 			if (mVisible) {
 				DESTROY_NODE(mNode);
+				mVisible = false;
 			}
 		}
 	}

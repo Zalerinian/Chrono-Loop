@@ -133,6 +133,21 @@
     <Filter Include="Particles">
       <UniqueIdentifier>{a1f02d0e-5ef8-44d3-8749-fa5351c55aff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="tinyxml">
+      <UniqueIdentifier>{b7271d43-9cae-4517-a8fe-847bce75f378}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pathing">
+      <UniqueIdentifier>{6327b261-4002-48d0-8d77-1d763c9c02c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Shaders\Pixel shaders">
+      <UniqueIdentifier>{701dbb75-cf20-4e08-88b6-8a186b2ec0f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Shaders\Vertex Shaders">
+      <UniqueIdentifier>{2ff294a5-e0a5-4fb8-8dd6-9578a2c21ecd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Shaders\Geometry Shaders">
+      <UniqueIdentifier>{ebfe2c81-866c-421b-aac0-bd789cbb4a1d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Objects\BaseObject.h">
@@ -399,10 +414,6 @@
     <ClInclude Include="Common\Settings.h">
       <Filter>Common\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NavMesh.h" />
-    <ClInclude Include="PathPlanning.h" />
-    <ClInclude Include="tinyxml\tinystr.h" />
-    <ClInclude Include="tinyxml\tinyxml.h" />
     <ClInclude Include="Actions\WhatInHellAmIHitting.hpp">
       <Filter>Actions</Filter>
     </ClInclude>
@@ -411,6 +422,18 @@
     </ClInclude>
     <ClInclude Include="Particles\ParticleComponents.h">
       <Filter>Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyxml\tinystr.h">
+      <Filter>tinyxml</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyxml\tinyxml.h">
+      <Filter>tinyxml</Filter>
+    </ClInclude>
+    <ClInclude Include="NavMesh.h">
+      <Filter>Pathing</Filter>
+    </ClInclude>
+    <ClInclude Include="PathPlanning.h">
+      <Filter>Pathing</Filter>
     </ClInclude>
     <ClInclude Include="ParticleEffectPrototypes.h">
       <Filter>Particles</Filter>
@@ -666,12 +689,6 @@
     <ClCompile Include="Common\Settings.cpp">
       <Filter>Common\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NavMesh.cpp" />
-    <ClCompile Include="PathPlanning.cpp" />
-    <ClCompile Include="tinyxml\tinystr.cpp" />
-    <ClCompile Include="tinyxml\tinyxml.cpp" />
-    <ClCompile Include="tinyxml\tinyxmlerror.cpp" />
-    <ClCompile Include="tinyxml\tinyxmlparser.cpp" />
     <ClCompile Include="Rendering\RenderList.cpp">
       <Filter>Rendering\Source Files</Filter>
     </ClCompile>
@@ -680,6 +697,24 @@
     </ClCompile>
     <ClCompile Include="Particles\ParticleComponents.cpp">
       <Filter>Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml\tinystr.cpp">
+      <Filter>tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml\tinyxml.cpp">
+      <Filter>tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml\tinyxmlerror.cpp">
+      <Filter>tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml\tinyxmlparser.cpp">
+      <Filter>tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="NavMesh.cpp">
+      <Filter>Pathing</Filter>
+    </ClCompile>
+    <ClCompile Include="PathPlanning.cpp">
+      <Filter>Pathing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -710,24 +745,6 @@
     <FxCompile Include="Rendering\Shaders\VertexLayout_VS.hlsl">
       <Filter>Rendering\Shaders\Layout Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Rendering\Shaders\TexturedPixel.hlsl">
-      <Filter>Rendering\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\TexturedVertex.hlsl">
-      <Filter>Rendering\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\BasicPixel.hlsl">
-      <Filter>Rendering\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\BasicVertex.hlsl">
-      <Filter>Rendering\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\InstancedVertex64.hlsl">
-      <Filter>Rendering\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\GSDuplicateMesh.hlsl">
-      <Filter>Rendering\Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="Particles\GSParticles.hlsl">
       <Filter>Particles</Filter>
     </FxCompile>
@@ -736,6 +753,36 @@
     </FxCompile>
     <FxCompile Include="Particles\ParticleVertexShader.hlsl">
       <Filter>Particles</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\BasicPixel.hlsl">
+      <Filter>Rendering\Shaders\Pixel shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PSPureTexture.hlsl">
+      <Filter>Rendering\Shaders\Pixel shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PSTimeManipulation.hlsl">
+      <Filter>Rendering\Shaders\Pixel shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\TexturedPixel.hlsl">
+      <Filter>Rendering\Shaders\Pixel shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\BasicVertex.hlsl">
+      <Filter>Rendering\Shaders\Vertex Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\InstancedVertex64.hlsl">
+      <Filter>Rendering\Shaders\Vertex Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\TexturedVertex.hlsl">
+      <Filter>Rendering\Shaders\Vertex Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\GSDuplicateMesh.hlsl">
+      <Filter>Rendering\Shaders\Geometry Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\GSNDC.hlsl">
+      <Filter>Rendering\Shaders\Geometry Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\NDCVertex.hlsl">
+      <Filter>Rendering\Shaders\Vertex Shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
