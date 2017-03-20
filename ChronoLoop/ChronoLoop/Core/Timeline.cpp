@@ -283,8 +283,7 @@ namespace Epoch {
 		Snapshot* nextsnap;
 		SnapInfo* nextInfo;
 		Interpolator<matrix4>* cloneInterp = TimeManager::Instance()->GetCloneInterpolator(_cloneid);
-
-		Interpolator<matrix4>* cloneColliderInterp = TimeManager::Instance()->GetCloneColliderInterpolator(_cloneid);
+		Interpolator<matrix4>* cloneColliderInterp = TimeManager::Instance()->GetCloneColliderInterpolator(mLiveObjects[_cloneid]->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)->GetColliderId());
 
 		if (mObjectLifeTimes.find(_cloneid) != mObjectLifeTimes.end() && (mObjectLifeTimes[_cloneid]->mBirth > mCurrentGameTimeIndx || mObjectLifeTimes[_cloneid]->mDeath < mCurrentGameTimeIndx))
 		{
