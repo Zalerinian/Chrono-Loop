@@ -13,6 +13,7 @@ namespace AK
 {
     namespace EVENTS
     {
+        static const AkUniqueID BEEP = 1123068841U;
         static const AkUniqueID BLOP = 1762045322U;
         static const AkUniqueID BUTTON_PRESS1 = 381359574U;
         static const AkUniqueID BUTTON_PRESS2 = 381359573U;
@@ -25,10 +26,12 @@ namespace AK
         static const AkUniqueID PLING = 652836727U;
         static const AkUniqueID RESUME_TEST1 = 1235130312U;
         static const AkUniqueID RESUME_TEST2 = 1235130315U;
+        static const AkUniqueID SHORTCIRUIT = 2344782521U;
         static const AkUniqueID STOP_TEST1 = 2011175805U;
         static const AkUniqueID STOP_TEST2 = 2011175806U;
         static const AkUniqueID SWOOSH = 751805364U;
         static const AkUniqueID TICK = 2755031898U;
+        static const AkUniqueID TOGGLE = 894718049U;
     } // namespace EVENTS
 
     namespace GAME_PARAMETERS
