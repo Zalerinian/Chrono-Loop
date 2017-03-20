@@ -6,11 +6,12 @@
 
 namespace Epoch
 {
-	// 0 is reserved for the player.
+	
 	unsigned short Component::mComponentCount = 0;
 
 	Component::Component()
 	{
+		//SystemLogger::Debug() << mComponentCount << std::endl;
 		mComponentId = Component::mComponentCount++;
 	}
 	Component::Component(ComponentType _cType)
@@ -275,13 +276,13 @@ namespace Epoch
 	}
 
 	void CubeCollider::Update() {
-		//if (mNode == nullptr) {
-		//	mNode = Renderer::Instance()->AddNode(mShape);
-		//}
-		//vec3f size = mMax - mMin;
-		//matrix4 pos = matrix4::CreateScale(size.x, size.y, size.z);
-		//pos.Position = (mMax - mMin) / 2 + mMin;
-		//mNode->data = pos;
+	/*	if (mNode == nullptr) {
+			mNode = Renderer::Instance()->AddNode(mShape);
+		}
+		vec3f size = mMax - mMin;
+		matrix4 pos = matrix4::CreateScale(size.x, size.y, size.z);
+		pos.Position = (mMax - mMin) / 2 + mMin;
+		mNode->data = pos;*/
 	}
 
 	void CubeCollider::Destroy()

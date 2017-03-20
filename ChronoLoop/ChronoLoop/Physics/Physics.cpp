@@ -1050,7 +1050,6 @@ namespace Epoch
 								}
 							}
 						}
-
 						Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 						if (((ControllerCollider*)collider)->mLeft &&
 							(collider->mObject->GetUniqueID() == cLevel->GetLeftController()->GetUniqueID() ||

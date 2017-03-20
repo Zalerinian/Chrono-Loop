@@ -1,3 +1,4 @@
+
 //#include "stdafx.h"
 #include "Renderer.h"
 #include <d3d11.h>
@@ -371,6 +372,7 @@ namespace Epoch {
 	void Renderer::InitializeSceneQuad() {
 		mScenePPQuad = new RenderShape("../Resources/VerticalPlane.obj", true, ePS_POSTPROCESS, eVS_NDC, eGS_PosNormTex_NDC);
 		mScenePPQuad->GetContext().mTextures[eTEX_DIFFUSE] = mSceneSRV;
+		mScenePPQuad->GetContext().mRasterState = eRS_FILLED;
 
 		ID3D11Buffer *ColorRatioBuffer;
 		TimeManipulationEffectData initial;
@@ -566,7 +568,7 @@ namespace Epoch {
 		}
 	}
 
-
+	 
 #pragma endregion Private Functions
 
 #pragma region Public Functions

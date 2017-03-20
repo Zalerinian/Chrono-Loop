@@ -29,6 +29,59 @@ namespace Epoch {
 		ClearTimeLine();
 	}
 
+	void Timeline::ActivateCloneBitset(unsigned short _ids[3])
+	{
+		Snapshot* snap = mSnapshots[mSnaptimes[mCurrentGameTimeIndx]];
+		//This will will always exist in mLiveobjects so no checking needed
+		BaseObject* obj1 = mLiveObjects[_ids[0]];
+		BaseObject* obj2 = mLiveObjects[_ids[1]];
+		BaseObject* obj3 = mLiveObjects[_ids[2]];
+
+		SnapInfo* info;
+		for (unsigned int i = 0; i < 3; i++) {
+			//If the clone doesnt have a snap at this time, 1)find the most recent and snap. 2)Copy it. 3)make it a snap in the current time
+			if (snap->mSnapinfos.find(_ids[i]) == snap->mSnapinfos.end())
+			{
+				if (snap->mUpdatedtimes.find(_ids[i]) != snap->mUpdatedtimes.end())
+				{
+					Snapshot* destSnap = mSnapshots[snap->mUpdatedtimes[_ids[i]]];
+					if (destSnap->mSnapinfos.find(_ids[i]) == destSnap->mSnapinfos.end())
+						continue;
+
+					info = mSnapshots[snap->mUpdatedtimes[_ids[i]]]->mSnapinfos[_ids[i]];
+					SnapInfo* cpyInfo = new SnapInfo();
+					CopySnapInfo(info, cpyInfo);
+					snap->mSnapinfos[_ids[i]] = cpyInfo;
+					snap->mUpdatedtimes[_ids[i]] = mCurrentGameTimeIndx;
+					info = snap->mSnapinfos[_ids[i]];
+					info->mBitset[0] = true;
+				}
+				//The object hasnt been made yet. Make the make time the birth time
+				else
+				{
+					if (mObjectLifeTimes.find(_ids[i]) != mObjectLifeTimes.end())
+					{
+						unsigned int birth = mObjectLifeTimes[_ids[i]]->mBirth;
+						((CloneLifeTime*)mObjectLifeTimes[_ids[i]])->mMade = birth;
+					
+					}
+					else
+					{
+						SystemLogger::GetError() << "Object id: " << _ids[i] << " didnt have a birth time";
+					}
+				}
+
+			}
+			else
+			{
+				info = snap->mSnapinfos[_ids[i]];
+				info->mBitset[0] = true;
+			}
+			
+		}
+		SetCloneMadeTime(_ids[0], _ids[1], _ids[2]);
+	}
+
 	void Timeline::AddBaseObject(BaseObject* _object, unsigned short _id) {
 		mLiveObjects[_id] = _object;
 		ObjectLifeTime* newObject = new ObjectLifeTime();
@@ -60,8 +113,13 @@ namespace Epoch {
 		std::vector<BaseObject*>clones = TimeManager::Instance()->GetClonesVec();
 		for (unsigned int i = 0; i < clones.size(); i++) {
 			Interpolator<matrix4>* temp = TimeManager::Instance()->GetCloneInterpolator(clones[i]->GetUniqueID());
+			Interpolator<matrix4>* tempCol = nullptr;
+		//	if(clones[i]->GetComponentCount(eCOMPONENT_COLLIDER) > 0)
+//			tempCol= TimeManager::Instance()->GetCloneColliderInterpolator(clones[i]->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)->GetColliderId());
 			if (temp)
 				temp->SetActive(false);
+			//if (tempCol)
+				//tempCol->SetActive(false);
 		}
 
 		CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
@@ -92,6 +150,8 @@ namespace Epoch {
 	void Timeline::RemoveFromTimeline(unsigned short _id)
 	{
 		mLiveObjects.erase(_id);
+		if (mObjectLifeTimes.find(_id) != mObjectLifeTimes.end())
+			mObjectLifeTimes.erase(_id);
 	}
 
 	bool Timeline::RewindMakeClone(unsigned int _snaptime) {
@@ -104,8 +164,13 @@ namespace Epoch {
 		std::vector<BaseObject*>clones = TimeManager::Instance()->GetClonesVec();
 		for (unsigned int i = 0; i < clones.size(); i++) {
 			Interpolator<matrix4>* temp = TimeManager::Instance()->GetCloneInterpolator(clones[i]->GetUniqueID());
+			Interpolator<matrix4>* tempCol = nullptr;
+			//if (clones[i]->GetComponentCount(eCOMPONENT_COLLIDER) > 0)
+				//tempCol = TimeManager::Instance()->GetCloneColliderInterpolator(clones[i]->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)->GetColliderId());
 			if (temp)
 				temp->SetActive(false);
+			//if (tempCol)
+				//tempCol->SetActive(false);
 		}
 
 		CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
@@ -127,11 +192,11 @@ namespace Epoch {
 			}
 			//The comp is a mesh
 			else {
-				//if (_destinfo->mBitset[bitnum])
-				//((MeshComponent*)_curComp)->SetVisible(true);
+				if (_destinfo->mBitset[bitnum])
+				((MeshComponent*)_curComp)->SetVisible(true);
 
-				//else
-				//	((MeshComponent*)_curComp)->SetVisible(false);
+				else
+					((MeshComponent*)_curComp)->SetVisible(false);
 			}
 		}
 
@@ -142,10 +207,33 @@ namespace Epoch {
 			}
 			//The comp is a mesh
 			else {
-				//((MeshComponent*)_curComp)->SetVisible(false);
+				((MeshComponent*)_curComp)->SetVisible(false);
 			}
 		}
 	}
+	//This one doesnt care if its active or not
+	void Timeline::ChangePlayerBitsetToSnap(SnapInfo * _destinfo, Component* _curComp) {
+		unsigned short bitnum = _curComp->GetComponentNum();
+
+		
+			if (_curComp->GetType() != eCOMPONENT_MESH) {
+				if (_destinfo->mBitset[bitnum])
+					_curComp->Enable();
+
+				else
+					_curComp->Disable();
+			}
+			//The comp is a mesh
+			else {
+				if (_destinfo->mBitset[bitnum])
+					((MeshComponent*)_curComp)->SetVisible(true);
+
+				else
+					((MeshComponent*)_curComp)->SetVisible(false);
+			}
+		
+	}
+
 
 	void Timeline::SetComponent(SnapComponent* _destComp, BaseObject * _obj, SnapInfo* _destInfo) {
 		switch (_destComp->mCompType) {
@@ -164,6 +252,12 @@ namespace Epoch {
 					((Collider*)currComp)->SetPos(*_destInfo->mTransform.GetPosition());
 
 					//Set the bitset
+					Level* currlevel = LevelManager::GetInstance().GetCurrentLevel();
+					if (_obj->GetUniqueID() == currlevel->GetLeftController()->GetUniqueID() ||
+						_obj->GetUniqueID() == currlevel->GetRightController()->GetUniqueID() ||
+						_obj->GetUniqueID() == currlevel->GetHeadset()->GetUniqueID())
+						ChangePlayerBitsetToSnap(_destInfo, currComp);
+					else
 					ChangeBitsetToSnap(_destInfo, currComp);
 				}
 			}
@@ -175,7 +269,13 @@ namespace Epoch {
 				Component* currComp = _obj->GetComponentIndexed(_destComp->mCompType, j);
 				if (currComp->GetColliderId() == _destComp->mId) {
 					//Set the bitset
-					ChangeBitsetToSnap(_destInfo, currComp);
+					Level* currlevel = LevelManager::GetInstance().GetCurrentLevel();
+					if (_obj->GetUniqueID() == currlevel->GetLeftController()->GetUniqueID() ||
+						_obj->GetUniqueID() == currlevel->GetRightController()->GetUniqueID() ||
+						_obj->GetUniqueID() == currlevel->GetHeadset()->GetUniqueID())
+						ChangePlayerBitsetToSnap(_destInfo, currComp);
+					else
+						ChangeBitsetToSnap(_destInfo, currComp);
 				}
 			}
 			break;
@@ -187,9 +287,18 @@ namespace Epoch {
 		Snapshot* nextsnap;
 		SnapInfo* nextInfo;
 		Interpolator<matrix4>* cloneInterp = TimeManager::Instance()->GetCloneInterpolator(_cloneid);
+		//Interpolator<matrix4>* cloneColliderInterp = nullptr;
+		//if (mLiveObjects.find(_cloneid) != mLiveObjects.end() && mLiveObjects[_cloneid]->GetComponentCount(eCOMPONENT_COLLIDER) > 0)
+		//{
+		//	cloneColliderInterp = TimeManager::Instance()->GetCloneColliderInterpolator(mLiveObjects[_cloneid]->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)->GetColliderId());
+		//}
 
 		if (mObjectLifeTimes.find(_cloneid) != mObjectLifeTimes.end() && (mObjectLifeTimes[_cloneid]->mBirth > mCurrentGameTimeIndx || mObjectLifeTimes[_cloneid]->mDeath < mCurrentGameTimeIndx))
+		{
 			cloneInterp->SetActive(false);
+			//if(cloneColliderInterp)
+			//cloneColliderInterp->SetActive(false);
+		}
 
 		if (_currTime + 1 <= mSnaptimes.size() - 1) {
 			nextsnap = mSnapshots[mSnaptimes[(unsigned int)_currTime + 1]];
@@ -197,23 +306,31 @@ namespace Epoch {
 			if (nextsnap->mSnapinfos.find(_cloneid) != nextsnap->mSnapinfos.end()) {
 				nextInfo = nextsnap->mSnapinfos[_cloneid];
 				cloneInterp->SetActive(true);
+				//if (cloneColliderInterp)
+				//cloneColliderInterp->SetActive(true);
 				//Loop to find the same clone's baseObject
 				std::vector<BaseObject*> clones = TimeManager::Instance()->GetClonesVec();
 				for (int i = 0; i < clones.size(); ++i) {
 					if (_cloneid == clones[i]->GetUniqueID()) {
 						cloneInterp->Prepare(0.1f, _currSnap->mTransform.GetMatrix(), nextInfo->mTransform.GetMatrix(), clones[i]->GetTransform().GetMatrix());
+						//if (cloneColliderInterp)
+						//cloneColliderInterp->Prepare(0.1f, _currSnap->mTransform.GetMatrix(), nextInfo->mTransform.GetMatrix(), clones[i]->GetComponentIndexed(eCOMPONENT_COLLIDER,0)->GetTransform().GetMatrix());
 						break;
 					}
 				}
 			} else {
 				cloneInterp->SetActive(false);
+				//if (cloneColliderInterp)
+				//cloneColliderInterp->SetActive(false);
 			}
 		} else {
 			cloneInterp->SetActive(false);
+			//if (cloneColliderInterp)
+			//cloneColliderInterp->SetActive(false);
 		}
 	}
 
-	void Timeline::SetCloneCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3) {
+	void Timeline::SetCloneObjectCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3) {
 		ObjectLifeTime* newObject = new ObjectLifeTime();
 		newObject->mBirth = mSnaptimes[mCurrentGameTimeIndx];
 		mObjectLifeTimes[_id1] = newObject;
@@ -244,6 +361,21 @@ namespace Epoch {
 			ObjectLifeTime* newObject2 = mObjectLifeTimes[_id3];
 			newObject2->mDeath = mSnaptimes[mCurrentGameTimeIndx];
 		}
+	}
+
+	void Timeline::SetCloneMadeTime(unsigned short _id1, unsigned short _id2, unsigned short _id3) {
+		CloneLifeTime* newObject = new CloneLifeTime();
+		newObject->mMade= mSnaptimes[mCurrentGameTimeIndx];
+		mObjectLifeTimes[_id1] = newObject;
+
+		CloneLifeTime* newObject1 = new CloneLifeTime();
+		newObject1->mMade = mSnaptimes[mCurrentGameTimeIndx];
+		mObjectLifeTimes[_id2] = newObject1;
+
+		CloneLifeTime* newObject2 = new CloneLifeTime();
+		newObject2->mMade = mSnaptimes[mCurrentGameTimeIndx];
+		mObjectLifeTimes[_id3] = newObject2;
+
 	}
 
 	void Timeline::SetBaseObjectDeathTime(unsigned short _id) {
@@ -286,6 +418,30 @@ namespace Epoch {
 		}
 	}
 
+	
+	void Timeline::CopySnapInfo(SnapInfo * _src, SnapInfo * _dst)
+	{
+		_dst->mTransform = _src->mTransform;
+		_dst->mId = _src->mId;
+		for (unsigned int i = 0; i < _src->mComponents.size(); i++)
+		{
+			if (_src->mComponents[i]->mCompType == ComponentType::eCOMPONENT_COLLIDER)
+			{
+				SnapComponent_Physics* temp = new SnapComponent_Physics();
+				memcpy(temp, (SnapComponent_Physics*)_src->mComponents[i], sizeof(SnapComponent_Physics));
+				_dst->mComponents.push_back(temp);
+			}
+			else
+			{
+				SnapComponent* temp = new SnapComponent();
+				memcpy(temp, _src->mComponents[i], sizeof(SnapComponent));
+				_dst->mComponents.push_back(temp);
+			}
+		}
+		_dst->mComponents = _src->mComponents;
+
+	}
+
 	ObjectLifeTime * Timeline::GetObjectLifetime(unsigned short _id) {
 		if (mObjectLifeTimes.find(_id) != mObjectLifeTimes.end())
 			return mObjectLifeTimes[_id];
@@ -293,7 +449,7 @@ namespace Epoch {
 		return nullptr;
 	}
 
-	void Timeline::MoveObjectToSnap(unsigned int _snaptime, unsigned short _id) {
+	void Timeline::MoveObjectToSnap(unsigned int _snaptime, unsigned short _id, bool isClone) {
 
 		Snapshot* destination = mSnapshots[_snaptime];
 		SnapInfo* destInfo;
@@ -311,9 +467,18 @@ namespace Epoch {
 		BaseObject* baseobject = mLiveObjects[_id];
 		baseobject->SetTransform(destInfo->mTransform);
 
+
+		//If the object is a clone and this func is used to move clones forward in time. Assume the clone is made forward in time
+		if (isClone && 
+			mObjectLifeTimes.find(_id) != mObjectLifeTimes.end() && 
+			((CloneLifeTime*)mObjectLifeTimes[_id])->mMade <= mCurrentGameTimeIndx)
+		{
+			destInfo->mBitset[0] = true;
+		}
+
 		//Set all componets to time recorded
-		for (unsigned int i = 0; i < destInfo->mComponets.size(); i++) {
-			SnapComponent* destComp = destInfo->mComponets[i];
+		for (unsigned int i = 0; i < destInfo->mComponents.size(); i++) {
+			SnapComponent* destComp = destInfo->mComponents[i];
 			SetComponent(destComp, baseobject, destInfo);
 		}
 
@@ -339,9 +504,10 @@ namespace Epoch {
 			if (baseobject)
 				baseobject->SetTransform(destInfo->mTransform);
 
+			
 			//Set all componets back to time recorded
-			for (unsigned int i = 0; i < destInfo->mComponets.size(); i++) {
-				SnapComponent* destComp = destInfo->mComponets[i];
+			for (unsigned int i = 0; i < destInfo->mComponents.size(); i++) {
+				SnapComponent* destComp = destInfo->mComponents[i];
 				SetComponent(destComp, baseobject, destInfo);
 			}
 		}
@@ -388,21 +554,37 @@ namespace Epoch {
 			baseobject->SetTransform(destInfo->mTransform);
 
 			//Set all componets back to time recorded
-			for (unsigned int i = 0; i < destInfo->mComponets.size(); i++) {
-				SnapComponent* destComp = destInfo->mComponets[i];
+			for (unsigned int i = 0; i < destInfo->mComponents.size(); i++) {
+				SnapComponent* destComp = destInfo->mComponents[i];
 				SetComponent(destComp, baseobject, destInfo);
 			}
+		}
+	}
+	void Timeline::SetObjectBirthTime(unsigned short _id)
+	{
+		ObjectLifeTime* life;
+		if(mObjectLifeTimes.find(_id) != mObjectLifeTimes.end())
+		{
+			mObjectLifeTimes[_id]->mBirth = mCurrentGameTimeIndx;
 		}
 	}
 	void Timeline::ClearTimeLine() {
 		for (auto snapshot : mSnapshots) {
 			for (auto snapInfo : snapshot.second->mSnapinfos) {
 				if (snapInfo.second)
-					for (auto snapComps : snapInfo.second->mComponets)
-						delete snapComps;
+				{
+					for (auto comp : snapInfo.second->mComponents)
+						delete comp;
+					/*auto comp = snapInfo.second->mComponents.begin();
+					while (comp != snapInfo.second->mComponents.end())
+					{
+						delete *comp;
+						comp = snapInfo.second->mComponents.erase(comp);
+					}*/
+				}
 
 				if (snapInfo.second)
-					snapInfo.second->mComponets.clear();
+					snapInfo.second->mComponents.clear();
 
 				if (snapInfo.second)
 					delete snapInfo.second;
@@ -437,6 +619,13 @@ namespace Epoch {
 		} else {
 			if(mObjectLifeTimes[_info->mId]->mBirth > mCurrentGameTimeIndx || mObjectLifeTimes[_info->mId]->mDeath < mCurrentGameTimeIndx)
 				_info->mBitset[0] = false;
+			Level* currlevel = LevelManager::GetInstance().GetCurrentLevel();
+			if(_object->GetUniqueID() == currlevel->GetLeftController()->GetUniqueID() ||
+				_object->GetUniqueID() == currlevel->GetRightController()->GetUniqueID() || 
+				_object->GetUniqueID() == currlevel->GetHeadset()->GetUniqueID())
+			{
+				_info->mBitset[0] = false;
+			}
 			else
 			_info->mBitset[0] = true;
 		}
@@ -463,7 +652,7 @@ namespace Epoch {
 
 						//Set the bitset
 						newComp->mId = temp[i]->GetColliderId();
-						_info->mComponets.push_back(newComp);
+						_info->mComponents.push_back(newComp);
 					}
 				} else {
 					temp = _object->GetComponents((ComponentType)i);
@@ -473,7 +662,7 @@ namespace Epoch {
 						newComp->mBitNum = temp[i]->GetComponentNum();
 						_info->mBitset[newComp->mBitNum] = temp[i]->IsEnabled();
 						newComp->mId = temp[i]->GetColliderId();
-						_info->mComponets.push_back(newComp);
+						_info->mComponents.push_back(newComp);
 						////Dont waste cycles if component is not enabled
 						//if (!_info->mBitset[newComp->mBitNum])
 						//	continue;
@@ -533,7 +722,7 @@ namespace Epoch {
 						for (unsigned int i = 0; i < _clones.size(); i++) {
 							//Move clone to next frame if frame is avalible
 							if (snap->mSnapinfos.find(id) != snap->mSnapinfos.end() && id == _clones[i]->GetUniqueID()) {
-								MoveObjectToSnap(_time, id);
+								MoveObjectToSnap(_time, id,true);
 								//Update the clone interpolators to move if there is a next next snap available.
 								UpdateCloneInterpolators(_clones[i]->GetUniqueID(), snap->mSnapinfos[id], _time);
 								break;
@@ -600,8 +789,8 @@ namespace Epoch {
 		if (info->mTransform != _object->GetTransform())
 			return false;
 
-		for (unsigned int i = 0; i < info->mComponets.size(); i++) {
-			SnapComponent* comp = info->mComponets[i];
+		for (unsigned int i = 0; i < info->mComponents.size(); i++) {
+			SnapComponent* comp = info->mComponents[i];
 
 			switch (comp->mCompType) {
 				//For each of the collider in the vec

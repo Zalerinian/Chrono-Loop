@@ -33,6 +33,8 @@ namespace Epoch {
 		//container of objects
 		std::vector<BaseObject*>mClones;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneInterpolators;
+		//This is for the hitboxes for the controller
+		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneColliderInterpolators;
 		
 		std::bitset<10>mCloneTextureBitset;
 		//Pass in baseobject id to get bitset location
@@ -63,6 +65,7 @@ namespace Epoch {
 		//Retrieves delta time
 		float GetDeltaTime() { return mDeltaTime; }
 		Interpolator<matrix4>* GetCloneInterpolator(unsigned short _id);
+		Interpolator<matrix4>* GetCloneColliderInterpolator(unsigned short _id);
 		std::vector<BaseObject*>& GetClonesVec() { return mClones; };
 		std::string GetNextTexture();
 		int GetTempCurSnap() { return mtempCurSnapFrame; };
@@ -74,6 +77,7 @@ namespace Epoch {
 		void RewindMakeClone(unsigned int _frame, BaseObject*& _ob1, BaseObject*& _ob2, BaseObject*& _ob3);
 		static TimeManager* Instance();
 		void Update(float _delta);
+		void UpdateCloneCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		//Function Pointer / Command Console
 		static void ToggleCloneCountDisplay(void* _command, std::wstring _ifOn);
 		static void ToggleSnapshotCountDisplay(void* _command, std::wstring _ifOn);
