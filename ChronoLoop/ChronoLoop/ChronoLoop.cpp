@@ -29,6 +29,7 @@
 #include "Actions/CCButtonPress.h"
 #include "Actions\CCEnterLevel.h"
 #include "Actions/MainMenuBT.h"
+#include "Actions\TimelineIndicator.hpp"
 #include "Core/Level.h"
 #include "Common/Logger.h"
 #include "Particles\ParticleSystem.h"
@@ -612,6 +613,19 @@ void Update() {
 	RightController->AddComponent(pickup);
 	TimeManager::Instance()->AddObjectToTimeline(RightController);
 
+	//james added
+	BaseObject *RightTimeIndicator = Pool::Instance()->iGetObject()->Reset("RTimeIndicator", identity);
+	RightTimeIndicator->SetParent(RightController);
+	MeshComponent *TimeIndicatorLine = new MeshComponent("../Resources/TimeIndicatorLine.obj");
+	MeshComponent *TimeIndicator = new MeshComponent("../Resources/TimeIndicator.obj");
+	TimeIndicatorLine->AddTexture("../Resources/TimeIndicatorLine.png", eTEX_DIFFUSE);
+	TimeIndicator->AddTexture("../Resources/TimeIndicator.png", eTEX_DIFFUSE);
+	//TimeIndicator->GetTransform().TranslateLocal(0, 0.27277f, -0.25699f); <-- Beaks here don't know why
+	TimeLineIndicator *tli = new TimeLineIndicator(TimeIndicator);
+	RightTimeIndicator->AddComponent(TimeIndicatorLine);
+	RightTimeIndicator->AddComponent(TimeIndicator);
+	RightTimeIndicator->AddComponent(tli);
+
 	//pat added
 	BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("LController", identity); //new BaseObject("Controller2", identity);
 	MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
@@ -651,6 +665,7 @@ void Update() {
 	//while (LevelManager::GetInstance().LoadLevelAsync("../Resources/collider.xml", &L1) != Epoch::LM::LevelStatus::Success) {}
 	L1->Initialize(headset, LeftController, RightController);
 	L1->AddObject(RightController);
+	L1->AddObject(RightTimeIndicator);
 	L1->AddObject(headset);
 	L1->AddObject(LeftController);
 	//LevelManager::GetInstance().LoadLevelAsync("../Resources/LEVEL1/collider.xml", &L1);

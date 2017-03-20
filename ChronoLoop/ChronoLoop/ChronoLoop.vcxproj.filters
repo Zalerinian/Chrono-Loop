@@ -435,6 +435,9 @@
     <ClInclude Include="PathPlanning.h">
       <Filter>Pathing</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\TimelineIndicator.hpp">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
