@@ -806,11 +806,8 @@ void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftControl
 	TimeManager::Instance()->AddObjectToTimeline(LeftController);
 
 
-	MeshComponent *visibleMesh2 = new MeshComponent("../Resources/Cube.obj");
-	visibleMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
-	visibleMesh2->SetVisible(false);
+
 	HeadsetFollow* hfollow = new HeadsetFollow();
-	headset->AddComponent(visibleMesh2);
 	headset->AddComponent(hfollow);
 	headset->AddComponent(ears);
 	TimeManager::Instance()->AddObjectToTimeline(headset);

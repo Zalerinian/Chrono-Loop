@@ -121,14 +121,14 @@ namespace Epoch {
 				othersComponents[i]->SetComponentId(FirstCompId);
 			}
 
-		components = _first->GetComponents(eCOMPONENT_MESH);
+		/*components = _first->GetComponents(eCOMPONENT_MESH);
 		othersComponents = _other->GetComponents(eCOMPONENT_MESH);
 	
 			for (int i = 0; i < othersComponents.size(); ++i) {
 				unsigned int FirstCompId = components[i]->GetColliderId();
 				components[i]->SetComponentId(othersComponents[i]->GetColliderId());
 				othersComponents[i]->SetComponentId(FirstCompId);
-			}
+			}*/
 		
 
 	/*	components = _first->GetComponents(eCOMPONENT_UI);

@@ -113,11 +113,13 @@ namespace Epoch {
 		std::vector<BaseObject*>clones = TimeManager::Instance()->GetClonesVec();
 		for (unsigned int i = 0; i < clones.size(); i++) {
 			Interpolator<matrix4>* temp = TimeManager::Instance()->GetCloneInterpolator(clones[i]->GetUniqueID());
-			Interpolator<matrix4>* tempCol = TimeManager::Instance()->GetCloneColliderInterpolator(clones[i]->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)->GetColliderId());
+			Interpolator<matrix4>* tempCol = nullptr;
+		//	if(clones[i]->GetComponentCount(eCOMPONENT_COLLIDER) > 0)
+//			tempCol= TimeManager::Instance()->GetCloneColliderInterpolator(clones[i]->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)->GetColliderId());
 			if (temp)
 				temp->SetActive(false);
-			if (tempCol)
-				tempCol->SetActive(false);
+			//if (tempCol)
+				//tempCol->SetActive(false);
 		}
 
 		CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
@@ -162,11 +164,13 @@ namespace Epoch {
 		std::vector<BaseObject*>clones = TimeManager::Instance()->GetClonesVec();
 		for (unsigned int i = 0; i < clones.size(); i++) {
 			Interpolator<matrix4>* temp = TimeManager::Instance()->GetCloneInterpolator(clones[i]->GetUniqueID());
-			Interpolator<matrix4>* tempCol = TimeManager::Instance()->GetCloneColliderInterpolator(clones[i]->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)->GetColliderId());
+			Interpolator<matrix4>* tempCol = nullptr;
+			//if (clones[i]->GetComponentCount(eCOMPONENT_COLLIDER) > 0)
+				//tempCol = TimeManager::Instance()->GetCloneColliderInterpolator(clones[i]->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)->GetColliderId());
 			if (temp)
 				temp->SetActive(false);
-			if (tempCol)
-				tempCol->SetActive(false);
+			//if (tempCol)
+				//tempCol->SetActive(false);
 		}
 
 		CheckforLostObjects(TimeManager::Instance()->GetClonesVec());
@@ -283,12 +287,17 @@ namespace Epoch {
 		Snapshot* nextsnap;
 		SnapInfo* nextInfo;
 		Interpolator<matrix4>* cloneInterp = TimeManager::Instance()->GetCloneInterpolator(_cloneid);
-		Interpolator<matrix4>* cloneColliderInterp = TimeManager::Instance()->GetCloneColliderInterpolator(mLiveObjects[_cloneid]->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)->GetColliderId());
+		//Interpolator<matrix4>* cloneColliderInterp = nullptr;
+		//if (mLiveObjects.find(_cloneid) != mLiveObjects.end() && mLiveObjects[_cloneid]->GetComponentCount(eCOMPONENT_COLLIDER) > 0)
+		//{
+		//	cloneColliderInterp = TimeManager::Instance()->GetCloneColliderInterpolator(mLiveObjects[_cloneid]->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)->GetColliderId());
+		//}
 
 		if (mObjectLifeTimes.find(_cloneid) != mObjectLifeTimes.end() && (mObjectLifeTimes[_cloneid]->mBirth > mCurrentGameTimeIndx || mObjectLifeTimes[_cloneid]->mDeath < mCurrentGameTimeIndx))
 		{
 			cloneInterp->SetActive(false);
-			cloneColliderInterp->SetActive(false);
+			//if(cloneColliderInterp)
+			//cloneColliderInterp->SetActive(false);
 		}
 
 		if (_currTime + 1 <= mSnaptimes.size() - 1) {
@@ -297,23 +306,27 @@ namespace Epoch {
 			if (nextsnap->mSnapinfos.find(_cloneid) != nextsnap->mSnapinfos.end()) {
 				nextInfo = nextsnap->mSnapinfos[_cloneid];
 				cloneInterp->SetActive(true);
-				cloneColliderInterp->SetActive(true);
+				//if (cloneColliderInterp)
+				//cloneColliderInterp->SetActive(true);
 				//Loop to find the same clone's baseObject
 				std::vector<BaseObject*> clones = TimeManager::Instance()->GetClonesVec();
 				for (int i = 0; i < clones.size(); ++i) {
 					if (_cloneid == clones[i]->GetUniqueID()) {
 						cloneInterp->Prepare(0.1f, _currSnap->mTransform.GetMatrix(), nextInfo->mTransform.GetMatrix(), clones[i]->GetTransform().GetMatrix());
-						cloneColliderInterp->Prepare(0.1f, _currSnap->mTransform.GetMatrix(), nextInfo->mTransform.GetMatrix(), clones[i]->GetComponentIndexed(eCOMPONENT_COLLIDER,0)->GetTransform().GetMatrix());
+						//if (cloneColliderInterp)
+						//cloneColliderInterp->Prepare(0.1f, _currSnap->mTransform.GetMatrix(), nextInfo->mTransform.GetMatrix(), clones[i]->GetComponentIndexed(eCOMPONENT_COLLIDER,0)->GetTransform().GetMatrix());
 						break;
 					}
 				}
 			} else {
 				cloneInterp->SetActive(false);
-				cloneColliderInterp->SetActive(false);
+				//if (cloneColliderInterp)
+				//cloneColliderInterp->SetActive(false);
 			}
 		} else {
 			cloneInterp->SetActive(false);
-			cloneColliderInterp->SetActive(false);
+			//if (cloneColliderInterp)
+			//cloneColliderInterp->SetActive(false);
 		}
 	}
 

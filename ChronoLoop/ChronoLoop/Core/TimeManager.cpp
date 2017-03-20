@@ -57,6 +57,20 @@ namespace Epoch {
 					if (Interp.second)
 						Interp.second->Update(_delta);
 				}
+				/*for (auto Interp : mCloneColliderInterpolators) {
+					if (Interp.second)
+					{
+						Interp.second->Update(_delta);
+						for (unsigned int i = 0; i < mClones.size(); i++)
+						{
+							if(mClones[i]->GetComponentCount(eCOMPONENT_COLLIDER) > 0 && mClones[i]->GetComponentIndexed(eCOMPONENT_COLLIDER,0)->GetColliderId() == Interp.first)
+							{
+								vec3f temp(Interp.second->GetEdit().Position[0], Interp.second->GetEdit().Position[1], Interp.second->GetEdit().Position[2]);
+								((Collider*)mClones[i]->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(temp);
+							}
+						}
+					}
+				}*/
 
 					//Update inputTimeLine
 					//This updates curr pointer of the input timeline along with the current time in the Timeline 
@@ -101,8 +115,9 @@ namespace Epoch {
 		void TimeManager::AddInterpolatorForClone(BaseObject * _obj) {
 			Interpolator<matrix4>* temp = new Interpolator<matrix4>();
 			mCloneInterpolators[_obj->GetUniqueID()] = temp;
-			Interpolator<matrix4>* temp2 = new Interpolator<matrix4>();
-			mCloneColliderInterpolators[_obj->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)->GetColliderId()] = temp2;
+			//Interpolator<matrix4>* temp2 = new Interpolator<matrix4>();
+			//if(_obj->GetComponentCount(eCOMPONENT_COLLIDER) > 0)
+			//mCloneColliderInterpolators[_obj->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)->GetColliderId()] = temp2;
 		}
 
 		void TimeManager::AddAllTexturesToQueue()
@@ -151,10 +166,10 @@ namespace Epoch {
 				if (Interp.second)
 					delete Interp.second;
 			}
-			for (auto InterpCollider : mCloneColliderInterpolators) {
+			/*for (auto InterpCollider : mCloneColliderInterpolators) {
 				if (InterpCollider.second)
 					delete InterpCollider.second;
-			}
+			}*/
 			mCloneInterpolators.clear();
 		}
 
@@ -202,14 +217,14 @@ namespace Epoch {
 							break;
 						}
 					}
-					for (auto j = mCloneColliderInterpolators.begin(); j != mCloneColliderInterpolators.end(); ++j) {
-						if (j->first == mClones[i]->GetComponentIndexed(eCOMPONENT_COLLIDER,0)->GetColliderId())
+					/*for (auto j = mCloneColliderInterpolators.begin(); j != mCloneColliderInterpolators.end(); ++j) {
+						if (mClones[i]->GetComponentCount(eCOMPONENT_COLLIDER) > 0 && j->first == mClones[i]->GetComponentIndexed(eCOMPONENT_COLLIDER,0)->GetColliderId())
 						{
 							delete mCloneInterpolators[j->first];
 							mCloneInterpolators.erase(mClones[i]->GetUniqueID());
 							break;
 						}
-					}
+					}*/
 
 					//Remove it from being tracked by timeline
 					mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueId());
@@ -314,7 +329,7 @@ namespace Epoch {
 
 		void TimeManager::FindOtherClones(Clonepair & _pair)
 		{
-			ObjectLifeTime* curr = mTimeline->GetObjectLifetime(_pair.mCur);
+			CloneLifeTime* curr = (CloneLifeTime*)mTimeline->GetObjectLifetime(_pair.mCur);
 			if (!curr)
 				return;
 			bool pair1 = false;
@@ -322,8 +337,8 @@ namespace Epoch {
 			for (unsigned int i = 0; i < mClones.size(); i++) {
 				if (mClones[i]->GetUniqueId() == _pair.mCur)
 					continue;
-				ObjectLifeTime* temp = mTimeline->GetObjectLifetime(mClones[i]->GetUniqueId());
-				if(temp &&temp->mBirth == curr->mBirth && (mClones[i]->GetName().find("Headset") != std::string::npos || mClones[i]->GetName().find("Controller") != std::string::npos))
+				CloneLifeTime* temp = (CloneLifeTime*)mTimeline->GetObjectLifetime(mClones[i]->GetUniqueId());
+				if(temp &&temp->mMade == curr->mMade && (mClones[i]->GetName().find("Headset") != std::string::npos || mClones[i]->GetName().find("Controller") != std::string::npos))
 				{
 				
 					if(!pair1)
