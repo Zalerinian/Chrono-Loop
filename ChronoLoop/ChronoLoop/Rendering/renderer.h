@@ -22,9 +22,9 @@ namespace Epoch {
 
 		static Renderer* sInstance;
 		//TODO: Light buffers
-		DirectionalLight mDLData;
-		PointLight mPLData;
-		SpotLight mSLData;
+		Directional mDLData;
+		Point mPLData;
+		Spot mSLData;
 
 		// Instance members
 		// D3D11 Variables
@@ -43,7 +43,7 @@ namespace Epoch {
 		vr::IVRSystem* mVrSystem;
 		RenderSet mRenderSet;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mVPBuffer, mPositionBuffer;
-		Microsoft::WRL::ComPtr<ID3D11Buffer> mDLBuffer, mPLBuffer, mSLBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mLBuffer;
 		bool mUseVsync = false;
 		//ShadowMap 1 - Directional, 2 - Point, 3 - Spot
 		Microsoft::WRL::ComPtr<ID3D11VertexShader> mShadowVS;

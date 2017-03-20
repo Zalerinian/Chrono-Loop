@@ -531,10 +531,10 @@ namespace Epoch {
 
 					if (particle)
 					{
-						ParticleEmitter* emitter = new ParticleEmitter(totalParticles, maxParticles, PPS, position);
-						emitter->SetTexture(particleTexture.c_str());
-						Particle* p = new Particle(lifeTime, startSize, endSize, position, startColor, endColor);
-						emitter->SetParticle(p);
+						//ParticleEmitter* emitter = new ParticleEmitter(totalParticles, maxParticles, PPS, position);
+						//emitter->SetTexture(particleTexture.c_str());
+						//Particle* p = new Particle(lifeTime, startSize, endSize, position, startColor, endColor);
+						//emitter->SetParticle(p);
 						//obj->AddComponent
 					}
 
