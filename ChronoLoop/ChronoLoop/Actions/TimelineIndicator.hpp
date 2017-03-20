@@ -22,19 +22,22 @@ namespace Epoch {
 		}
 
 		virtual void Update() override {
-			unsigned int CurSnap = TimeManager::Instance()->GetCurrentSnapFrame();
-			unsigned int TotalSnap = TimeManager::Instance()->GetTotalSnapsmade();
-			if (TotalSnap > 0) {
-				mRatio = (float)(CurSnap + 1) / (float)TotalSnap;
-			}
-			else {
-				mRatio = 1;
-			}
-			if (mParent)
-			{
-				mIndicator->GetTransform().GetMatrix() = *mParent * matrix4::CreateScale(0.5f, 0.5f, 0.5f) * matrix4::CreateTranslation(0, -0.25699f, 0.27277f) * matrix4::CreateXRotation((-42.237f) * (3.14f / 180.0f)) * matrix4::CreateYRotation((mMaxRotation * mRatio) * (3.14f / 180.0f));
-				mLine->GetTransform().GetMatrix()= *mParent;
-			}
+			//if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->isTimePaused() || LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->isTimePaused()) {
+				unsigned int CurSnap = TimeManager::Instance()->GetTempCurSnap();
+				unsigned int TotalSnap = TimeManager::Instance()->GetCurrentSnapFrame();
+				if (TotalSnap > 0) {
+					mRatio = (float)(CurSnap) / (float)TotalSnap;
+				}
+				else {
+					mRatio = 1;
+				}
+				if (mParent)
+				{
+					//mIndicator->GetTransform().GetMatrix();// = /*(*mParent) * matrix4::CreateScale(0.1f, 0.1f, 0.1f) *matrix4::CreateTranslation(0, -0.25699f, 0.27277f) *matrix4::CreateXRotation((42.237f) * (3.14f / 180.0f)) *matrix4::CreateYRotation((mMaxRotation * mRatio) * (3.14f / 180.0f));
+					mLine->GetTransform().GetMatrix() = *mParent; //matrix4::CreateScale(0.9f, 0.9f, 0.9f);
+					GetTransform().GetMatrix() = *mParent;
+				}
+			//}
 		}
 	};
 
