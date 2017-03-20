@@ -9,7 +9,7 @@ namespace Hourglass {
         protected NumericUpDown mMass, mStaticFriction, mElasticity, mKineticFriction, mDrag;
         protected Label mLbMass, mLbStaticFriction, mLbElasticity, mLbKineticFriction, mLbDrag;
 
-        public ColliderComponent(List<Component> _container, int _yOffset = 0) : base(_container) {
+        public ColliderComponent(BaseObject _owner, int _yOffset = 0) : base(_owner) {
             #region Control Creation
             
             // Numeric Up-Down controls:

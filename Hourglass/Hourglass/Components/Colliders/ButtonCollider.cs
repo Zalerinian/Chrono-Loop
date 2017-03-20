@@ -16,7 +16,7 @@ namespace Hourglass
         protected NumericUpDown mNX, mNY, mNZ;
         protected Panel mPosPanel, mScalePanel, mNormalPanel;
 
-        public ButtonCollider(List<Component> _container, int _yOffset = 0) : base(_container)
+        public ButtonCollider(BaseObject _owner, int _yOffset = 0) : base(_owner)
         {
             #region Component Creation
 

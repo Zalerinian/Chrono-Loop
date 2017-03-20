@@ -2,13 +2,12 @@
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
+using System.Windows.Forms;
 
 namespace Hourglass
 {
 
-    class BaseObject
+    public class BaseObject
     {
         private const bool ImplementHierarchy = false;
 
@@ -17,20 +16,23 @@ namespace Hourglass
         protected uint mObjectUID = UID++;
         protected List<Component> mComponents;
         protected BaseObject mParent = null;
+        protected TreeNode mNode = null;
 
         public string Name {
             get { return ((TransformComponent)mComponents[0]).Name; }
             set { ((TransformComponent)mComponents[0]).Name = value; }
         }
 
-        public BaseObject() {
+        public BaseObject(TreeNode _node) {
+            mNode = _node;
             mComponents = new List<Component>();
-            TransformComponent transform = new TransformComponent(mComponents);
+            TransformComponent transform = new TransformComponent(this);
         }
 
-        public BaseObject(string _name) : this()
+        public BaseObject(TreeNode _node, string _name) : this(_node)
         {
             ((TransformComponent)mComponents[0]).Name = _name;
+            _node.Text = _name;
         }
 
         public List<Component> GetComponents()

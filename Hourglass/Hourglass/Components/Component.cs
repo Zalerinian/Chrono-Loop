@@ -10,6 +10,7 @@ namespace Hourglass
         protected ContextMenuStrip mMenuStrip;
         protected ToolStripMenuItem mMenuItemDelete, mMenuItemReset;
         protected List<Component> mContainerReference;
+        protected BaseObject mOwner = null;
 
 
         int Width {
@@ -31,7 +32,7 @@ namespace Hourglass
         ///     that hold values will be used as the XML keys for their values when written
         ///     in Text mode.
         /// </summary>
-        /// <param name="_container">
+        /// <param name="_owner">
         ///     A List of Components that represents the components of an object that this component will be added to.
         /// </param>
         /// <param name="_destructible">
@@ -39,9 +40,9 @@ namespace Hourglass
         ///     This is true for everything except an object's transform (Position,
         ///     Rotation, Scale), and its name.
         /// </param>
-        public Component(List<Component> _container, bool _destructible = true)
+        public Component(BaseObject _owner, bool _destructible = true)
         {
-            mContainerReference = _container;
+            mContainerReference = _owner.GetComponents();
             mContainerReference.Add(this);
 
             mGroupBox = new GroupBox();
