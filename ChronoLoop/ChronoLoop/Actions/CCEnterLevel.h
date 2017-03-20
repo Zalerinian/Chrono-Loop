@@ -36,7 +36,6 @@ namespace Epoch
 					Physics::Instance()->PhysicsLock.lock();
 					TimeManager::Instance()->Destroy();
 					Physics::Instance()->mObjects.clear();
-					Renderer::Instance()->ClearRenderSet();
 					LevelManager::GetInstance().RequestLevelChange(next);
 
 					//Sound Initializing---------------------------------------------------

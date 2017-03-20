@@ -34,6 +34,10 @@ namespace Epoch {
 		ClearClones();
 		mTimeline = nullptr;
 		instanceTimemanager = nullptr;
+		for (auto it = mObjectRewindInterpolators.begin(); it != mObjectRewindInterpolators.end(); ++it) {
+			delete it->second;
+		}
+		mObjectRewindInterpolators.clear();
 	}
 
 	void TimeManager::Update(float _delta) {

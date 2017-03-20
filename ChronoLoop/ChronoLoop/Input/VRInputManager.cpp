@@ -51,7 +51,9 @@ namespace Epoch {
 		mInputTimeline = new InputTimeline();
 	}
 
-	VIM::~VIM() {}
+	VIM::~VIM() {
+		delete mInputTimeline;
+	}
 
 	void VIM::Update() {
 		int GestureCheck = 0;
