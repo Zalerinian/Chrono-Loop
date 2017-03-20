@@ -278,11 +278,12 @@ namespace Epoch {
 				while (pObject)
 				{
 					std::vector<std::string> codeComs;
-					std::string elementType, name, meshFile, textureFile, colliderType, particleTexture;
+					std::string elementType, name, meshFile, textureFile, colliderType, particleTexture, soundName;
 					vec4f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity, particleRadius, startColor, endColor;
 					float mass, elasticity, staticF, kineticF, normF, drag, radius, startSize, endSize, startAlpha, endAlpha;
 					int totalParticles, maxParticles, PPS, lifeTime;
-					bool collider = false, trigger = false, canMove = false, physical = false, particle = false;
+					bool collider = false, trigger = false, canMove = false, physical = false, particle = false, sound = false, SFX = false, Loop = false;
+					unsigned long sfxFile, playFile, pauseFile, stopFile, resumeFile;
 					pData = pObject->FirstChildElement();
 					while (pData)
 					{
@@ -294,6 +295,8 @@ namespace Epoch {
 								collider = true;
 							else if (elementType == "ParticleEmitter")
 								particle = true;
+							else if (elementType == "SoundEmitter")
+								sound = true;
 							pData = (TiXmlElement*)pData->FirstChild();
 							break;
 						case TiXmlNode::NodeType::TINYXML_TEXT:
@@ -365,7 +368,6 @@ namespace Epoch {
 							{
 								std::string temp(pData->Value());
 								canMove = temp.find("True") != std::string::npos;
-								int thing = 0;
 							}
 							else if (elementType == "Type")
 								colliderType = pData->Value();
@@ -496,6 +498,43 @@ namespace Epoch {
 								}
 								endColor.w = 1;
 							}
+							else if(elementType == "SoundName")
+								soundName = pData->Value();
+							else if (elementType == "SFX")
+							{
+								SFX = true;
+								std::string t = pData->Value();
+								char* c;
+								sfxFile = std::strtol(t.c_str(), &c, 16);
+							}
+							else if (elementType == "Play")
+							{
+								Loop = true;
+								std::string t = pData->Value();
+								char* c;
+								playFile = std::strtol(t.c_str(), &c, 16);
+							}
+							else if (elementType == "Pause")
+							{
+								Loop = true;
+								std::string t = pData->Value();
+								char* c;
+								pauseFile = std::strtol(t.c_str(), &c, 16);
+							}
+							else if (elementType == "Stop")
+							{
+								Loop = true;
+								std::string t = pData->Value();
+								char* c;
+								stopFile = std::strtol(t.c_str(), &c, 16);
+							}
+							else if (elementType == "Resume")
+							{
+								Loop = true;
+								std::string t = pData->Value();
+								char* c;
+								resumeFile = std::strtol(t.c_str(), &c, 16);
+							}
 							else
 								codeComs.push_back(elementType);
 
@@ -531,11 +570,38 @@ namespace Epoch {
 
 					if (particle)
 					{
-						//ParticleEmitter* emitter = new ParticleEmitter(totalParticles, maxParticles, PPS, position);
-						//emitter->SetTexture(particleTexture.c_str());
-						//Particle* p = new Particle(lifeTime, startSize, endSize, position, startColor, endColor);
-						//emitter->SetParticle(p);
-						//obj->AddComponent
+						ParticleEmitter* emitter = new ParticleEmitter(totalParticles, maxParticles, PPS, position);
+						emitter->SetTexture(particleTexture.c_str());
+						Particle* p = &Particle::Init();
+						p->SetColors(startColor, endColor);
+						p->SetLife(lifeTime);
+						p->SetSize(startSize, endSize);
+						emitter->SetParticle(p);
+						ParticleSystem::Instance()->AddEmitter(emitter);
+						Effect* e = new Effect();
+						e->mEmitter = emitter;
+						obj->AddComponent(e);
+					}
+
+					if (sound)
+					{
+						if (SFX)
+						{
+							Emitter* sound = new Emitter();
+							sound->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, sfxFile);
+							Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(sound, soundName.c_str())));
+							obj->AddComponent(sound);
+						}
+						if (Loop)
+						{
+							Emitter* sound = new Emitter();
+							sound->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, playFile);
+							sound->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, pauseFile);
+							sound->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, resumeFile);
+							sound->AddSoundEvent(Emitter::sfxTypes::eStopLoop, stopFile);
+							Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(sound, soundName.c_str())));
+							obj->AddComponent(sound);
+						}
 					}
 
 					if (colliderType == "OBB")

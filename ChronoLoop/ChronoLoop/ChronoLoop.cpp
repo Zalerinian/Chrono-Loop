@@ -891,7 +891,7 @@ void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftControl
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 	BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
-	((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
+	pickup->mControllerRole = eControllerType_Primary;
 	MeshComponent *rightRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
 	rightRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
 	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
