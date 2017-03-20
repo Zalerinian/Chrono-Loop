@@ -23,6 +23,10 @@ namespace Hourglass
             set { ((TransformComponent)mComponents[0]).Name = value; }
         }
 
+        public TreeNode Node {
+            get { return mNode; }
+        }
+
         public BaseObject(TreeNode _node) {
             mNode = _node;
             mComponents = new List<Component>();
@@ -52,7 +56,6 @@ namespace Hourglass
             }
         }
 
-        
 
     }
 }

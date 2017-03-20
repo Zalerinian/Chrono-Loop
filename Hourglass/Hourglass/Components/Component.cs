@@ -33,7 +33,8 @@ namespace Hourglass
         ///     in Text mode.
         /// </summary>
         /// <param name="_owner">
-        ///     A List of Components that represents the components of an object that this component will be added to.
+        ///     The base object that this component is a part of. This allows us to update 
+        ///     any necessary data with the TreeNode.
         /// </param>
         /// <param name="_destructible">
         ///     Whether or not this component can be deleted from an object.
@@ -42,6 +43,7 @@ namespace Hourglass
         /// </param>
         public Component(BaseObject _owner, bool _destructible = true)
         {
+            mOwner = _owner;
             mContainerReference = _owner.GetComponents();
             mContainerReference.Add(this);
 

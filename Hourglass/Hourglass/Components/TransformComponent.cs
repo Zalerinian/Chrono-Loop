@@ -22,9 +22,7 @@ namespace Hourglass
         protected NumericUpDown mPosX, mPosY, mPosZ;
         protected NumericUpDown mRotX, mRotY, mRotZ;
         protected NumericUpDown mScaleX, mScaleY, mScaleZ;
-
-        protected BaseObject mOwner = null;
-
+        
         protected bool mNameIsPlaceholder = true;
 
         public string Name {
@@ -143,6 +141,7 @@ namespace Hourglass
             mName.Size = new System.Drawing.Size(ContentWidth - mName.Left, 20);
             mName.GotFocus += OnNameGetFocus;
             mName.LostFocus += OnNameLoseFocus;
+            mName.TextChanged += OnUpdateName;
 
 
             // Panels
@@ -223,5 +222,22 @@ namespace Hourglass
                 mName.Text = "Object Name...";
             }
         }
+
+        protected void OnUpdateName(object sender, EventArgs e)
+        {
+            if(mOwner != null && mOwner.Node != null)
+            {
+                if(string.IsNullOrWhiteSpace(mName.Text))
+                {
+                    //mOwner.Node.NodeFont = 
+                }
+                else
+                {
+                    mOwner.Node.Text = mName.Text;
+                }
+            }
+        }
+
+
     }
 }
