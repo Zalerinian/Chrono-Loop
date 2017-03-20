@@ -19,7 +19,7 @@ namespace Epoch {
 		vr::TrackedDevicePose_t mPoses[vr::k_unMaxTrackedDeviceCount];
 		vr::IVRSystem* mVRSystem = nullptr;
 		bool mIsLeftPrimary = false;
-		InputTimeline* mInputTimeline;
+		InputTimeline* mInputTimeline = nullptr;
 		float mTweenTimestamp = 0;
 		float mSnapTweenTime = 0;
 

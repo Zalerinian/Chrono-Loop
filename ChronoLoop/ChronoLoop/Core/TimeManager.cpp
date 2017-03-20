@@ -29,6 +29,7 @@ namespace Epoch {
 	TimeManager::~TimeManager() {
 		//Level manager will clear delete clones
 		delete mTimeline;
+		if(VRInputManager::GetInstance().GetInputTimeline())
 		VRInputManager::GetInstance().GetInputTimeline()->Clear();
 		ClearClones();
 		mTimeline = nullptr;

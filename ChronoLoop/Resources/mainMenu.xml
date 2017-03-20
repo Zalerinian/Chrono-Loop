@@ -9,7 +9,7 @@
     <Texture>grey.png</Texture>
     <Position>0,0,0</Position>
     <Rotation>0,0,0</Rotation>
-    <Scale>1,1,1</Scale>
+    <Scale>1,1.25,1</Scale>
     <Components />
   </Object>
   <Object>
@@ -27,7 +27,7 @@
     <Texture>fieldGen.png</Texture>
     <Position>0,-10,2.611548</Position>
     <Rotation>0,0,0</Rotation>
-    <Scale>1,1,0.5</Scale>
+    <Scale>1,1.25,0.5</Scale>
     <Components>
       <EnterLevel>Enabled</EnterLevel>
       <Collider>
