@@ -213,7 +213,8 @@ namespace Epoch
 			if (mEmitter)
 				mEmitter->FIRE();
 		}
-
+		void Update() {}
+		void Destroy() {}
 	};
 	/*
 	business entity- gmail, twitter, facebook, steam account
