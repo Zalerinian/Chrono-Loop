@@ -144,7 +144,7 @@ void Update() {
 
 	// TODO: Replace all this with a level to run.
 	///*///////////////////////Using this to test physics//////////////////
-
+	//_CrtSetBreakAlloc(26104);
 #if MAINMENU
 
 	Transform transform;
@@ -675,19 +675,29 @@ void Update() {
 	L1->CallStart();
 	
 	//Enter effect
-	Patrick* emit = new Patrick(500, 250, 2, vec4f(8, 0, -4, 1));
+	Particle* p = &Particle::Init();
+	p->SetColors(vec4f(.2, .2, 1, 0), vec4f(0, 1, .2, 0));
+	p->SetLife(200);
+	p->SetSize(1.25 / 2.0, .15 / .2);
+	ParticleEmitter* emit = new IDC(500, 250, 2, vec4f(2.25, -1, 6.25, 1));
+	emit->SetParticle(p);
 	emit->SetTexture("../Resources/BasicRectP.png");
-	emit->SetParticle(new Particle(200, 1.25f / 2.0f, .15f / 2.0f, vec4f(), vec4f(.2f, .2f, 1, 0), vec4f(0, 1, .2f, 0)));
-	emit->y1 = 8;
-	emit->y2 = 12;
+	((IDC*)emit)->y1 = 8;
+	((IDC*)emit)->y2 = 12;
 	ParticleSystem::Instance()->AddEmitter(emit);
+	emit->FIRE();
 
-	emit = new Patrick(500, 150, 1, vec4f(8, 0, -4, 1));
+	p = &Particle::Init();
+	p->SetColors(vec4f(.5, 0, .25, 0), vec4f(.2, .8, .5, 0));
+	p->SetLife(1000);
+	p->SetSize(.25 , .05);
+	emit = new IDC(500, 150, 1, vec4f(2.25, -1, 6.25, 1));
 	emit->SetTexture("../Resources/BasicCircleP.png");
-	emit->SetParticle(new Particle(1000, .25f / 2.0f, .05f / 2.0f, vec4f(), vec4f(.5f, 0, .25f, 0), vec4f(.2f, .8f, .5f, 0)));
-	emit->y1 = 1;
-	emit->y2 = 5;
+	emit->SetParticle(p);
+	((IDC*)emit)->y1 = 1;
+	((IDC*)emit)->y2 = 5;
 	ParticleSystem::Instance()->AddEmitter(emit);
+	emit->FIRE();
 
 	//ParticleEmitter * emitt = new ParticleEmitter(-1, 2000, 20, vec4f());
 	//emitt->SetTexture("../Resources/BasicCircleP.png");
