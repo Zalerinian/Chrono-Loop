@@ -365,6 +365,10 @@ namespace Epoch {
 		SetD3DName(mDepthBuffer.Get(), "Main Depth Buffer");
 		SetD3DName(mVPBuffer.Get(), "View-Projection Constant Buffer");
 		SetD3DName(mPositionBuffer.Get(), "Model Constant Buffer");
+
+		SetD3DName(mSceneTexture.Get(), "Post Processing Texture");
+		SetD3DName(mSceneSRV.Get(), "Scene Texture SRV");
+
 #endif
 	}
 

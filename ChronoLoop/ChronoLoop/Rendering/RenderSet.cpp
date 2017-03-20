@@ -28,6 +28,7 @@ namespace Epoch {
 		for (auto it = mRenderList.begin(); it != mRenderList.end(); ++it) {
 			delete *it;
 		}
+		mRenderList.clear();
 	}
 
 

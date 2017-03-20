@@ -24,9 +24,9 @@ namespace Epoch
 
 		virtual void Update() {
 			if (!once) {
-				Level* next;
-				LM::LevelStatus status = LevelManager::GetInstance().LoadLevelAsync("../Resources/Level1_2_6.xml", &next);
-				if (status == LM::LevelStatus::Success)
+				Level* next = new Level;
+				//LM::LevelStatus status = LevelManager::GetInstance().LoadLevelAsync("../Resources/Level1_2_6.xml", &next);
+				if (/*status == LM::LevelStatus::Success*/ true)
 				{
 					TimeManager::Instance()->Destroy();
 					Renderer::Instance()->ClearRenderSet();
@@ -40,8 +40,10 @@ namespace Epoch
 
 
 					//Sound Initializing---------------------------------------------------
-					
 					TimeManager::Instance();
+					next->LoadLevel("../Resources/Level1_2_6.xml");
+					
+
 					Listener* ears = new Listener();
 					Emitter* ambient = new Emitter();
 					ambient->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_TEST2);
@@ -108,9 +110,20 @@ namespace Epoch
 					Physics::Instance()->mObjects.push_back(RightController);
 					Physics::Instance()->mObjects.push_back(LeftController);
 					Physics::Instance()->mObjects.push_back(headset);
-					next->Initialize(headset, LeftController, RightController);
 					LevelManager::GetInstance().RequestLevelChange(next);
-				
+
+					auto objects = LevelManager::GetInstance().GetCurrentLevel()->GetLevelObjects();
+					for(auto it = objects.begin(); it != objects.end(); ++it)
+					{
+						std::vector<Component*> zits = (*it)->GetComponents(eCOMPONENT_MESH);
+						for(auto cit = zits.begin(); cit != zits.end(); ++cit)
+						{
+							((MeshComponent*)(*cit))->SetVisible(false);
+							((MeshComponent*)(*cit))->SetVisible(true);
+						}
+					}
+
+					next->Initialize(headset, LeftController, RightController);
 
 
 					SystemLogger::Debug() << "Loading complete" << std::endl;

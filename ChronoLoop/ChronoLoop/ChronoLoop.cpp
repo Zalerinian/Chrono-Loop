@@ -771,6 +771,15 @@ void Update() {
 			while (fixedTime >= FIXED_UPDATE_INTERVAL) {
 				Physics::Instance()->Update(FIXED_UPDATE_INTERVAL);
 				fixedTime -= FIXED_UPDATE_INTERVAL;
+				if(fixedTime >=  0.25f)
+				{
+					UpdateTime();
+					UpdateTime();
+					UpdateTime();
+					UpdateTime();
+					UpdateTime();
+					fixedTime = 0;
+				}
 			}
 
 			if (VREnabled) {
