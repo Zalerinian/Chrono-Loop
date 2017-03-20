@@ -16,6 +16,7 @@
 #include "../tinyxml/tinyxml.h"
 #include "../tinyxml/tinystr.h"
 #include "../Common/Settings.h"
+#include "../Particles/ParticleComponents.h"
 
 namespace Epoch {
 
@@ -214,10 +215,11 @@ namespace Epoch {
 				while (pObject)
 				{
 					std::vector<std::string> codeComs;
-					std::string elementType, name, meshFile, textureFile, colliderType;
-					vec4f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity;
-					float mass, elasticity, staticF, kineticF, normF, drag, radius;
-					bool collider = false, trigger = false, canMove = false, physical = false;
+					std::string elementType, name, meshFile, textureFile, colliderType, particleTexture;
+					vec4f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity, particleRadius, startColor, endColor;
+					float mass, elasticity, staticF, kineticF, normF, drag, radius, startSize, endSize, startAlpha, endAlpha;
+					int totalParticles, maxParticles, PPS, lifeTime;
+					bool collider = false, trigger = false, canMove = false, physical = false, particle = false;
 					pData = pObject->FirstChildElement();
 					while (pData)
 					{
@@ -227,6 +229,8 @@ namespace Epoch {
 							elementType = std::string(pData->Value());
 							if (elementType == "Collider")
 								collider = true;
+							else if (elementType == "ParticleEmitter")
+								particle = true;
 							pData = (TiXmlElement*)pData->FirstChild();
 							break;
 						case TiXmlNode::NodeType::TINYXML_TEXT:
@@ -369,6 +373,66 @@ namespace Epoch {
 							}
 							else if (elementType == "NormalForce")
 								normF = std::strtof(pData->Value(), nullptr);
+							else if(elementType == "MaxParticles")
+								maxParticles = std::strtof(pData->Value(), nullptr);
+							else if (elementType == "TotalParticles")
+								totalParticles = std::strtof(pData->Value(), nullptr);
+							else if(elementType == "Texture")
+								particleTexture = pData->Value();
+							else if(elementType == "PPS")
+								PPS = std::strtof(pData->Value(), nullptr);
+							else if(elementType == "LifeTime")
+								lifeTime = std::strtof(pData->Value(), nullptr);
+							else if(elementType == "StartSize")
+								startSize = std::strtof(pData->Value(), nullptr);
+							else if(elementType == "EndSize")
+								endSize = std::strtof(pData->Value(), nullptr);
+							else if (elementType == "StartAlpha")
+								startAlpha = std::strtof(pData->Value(), nullptr);
+							else if(elementType == "EndAlpha")
+								endAlpha = std::strtof(pData->Value(), nullptr);
+							else if (elementType == "Radial")
+							{
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									particleRadius.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+								particleRadius.w = 1;
+							}
+							else if(elementType == "StartColor")
+							{
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									startColor.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+								startColor.w = 1;
+							}
+							else if (elementType == "StartColor")
+							{
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									endColor.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+								endColor.w = 1;
+							}
 							else
 								codeComs.push_back(elementType);
 
@@ -399,6 +463,15 @@ namespace Epoch {
 						path.append(textureFile);
 						mesh->AddTexture(path.c_str(), eTEX_DIFFUSE);
 						obj->AddComponent(mesh);
+					}
+
+					if (particle)
+					{
+						ParticleEmitter* emitter = new ParticleEmitter(totalParticles, maxParticles, PPS, position);
+						emitter->SetTexture(particleTexture.c_str());
+						Particle* p = new Particle(lifeTime, startSize, endSize, position, startColor, endColor);
+						emitter->SetParticle(p);
+						//obj->AddComponent
 					}
 
 					if (colliderType == "OBB")
