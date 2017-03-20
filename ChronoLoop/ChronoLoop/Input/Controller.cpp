@@ -49,7 +49,7 @@ namespace Epoch {
 					return 0;
 				}
 				gestureCnt++;
-				if (gestureCnt == 4) {
+				if (gestureCnt == mIncreaseGestureSpeed) {
 					gestureCnt = 0;
 					//vec2f CurPos,line,diff;
 					vec2f CurPos = touch;
@@ -86,7 +86,7 @@ namespace Epoch {
 								}
 								if (mSpeedCW % 35 == 0 && mIncreaseGestureSpeed != 1)
 								{
-									tempTimeLine->SetObjectInterpolationTime(tempTimeLine->GetObjectInterpolationTime() - 0.03f);
+									//tempTimeLine->SetObjectInterpolationTime(tempTimeLine->GetObjectInterpolationTime() - 0.03f);
 									mIncreaseGestureSpeed--;
 								}
 								if (TimeManager::Instance()->GetShouldPulse())

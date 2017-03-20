@@ -29,19 +29,74 @@ namespace Epoch
 
 	struct Particle
 	{
-		int mLife, mMaxLife;
-		//TODO: Opacity and Rotation over time??
-		float mSize, mFSize, mSSize;
+	public:
+
+		bool mAlive;
+		int mLife, mTotalLife;
+		float mSize, mStartSize, mEndSize;
+		float mOpacity, mStartOpacity, mEndOpacity;
+		float mXRadial, mYRadial, mZRadial;
 		vec4f mPos, mPrevPos, mVelocity;
-		vec4f mSColor, mEColor, mCurColor;
-		bool mActive;
+		vec4f mColor, mStartColor, mEndColor;
 
 		//Constructors
-		Particle();
-		Particle(int _life, float _size, vec4f _pos, vec4f _color);
-		Particle(int _life, float _size, float _msize, vec4f _pos, vec4f _scolor, vec4f _ecolor);
-
+		Particle() { mAlive = true; }
 		Particle& operator=(const Particle& _other);
+
+
+		//Initialize functions
+
+		static Particle& Init(const Particle& _other);
+
+		/// <summary>Initializes a particle</summary>
+		//<returns>The new particle</returns>
+		static Particle& Init(int _life = 250 /**< [in] Life of the particle. */,
+			float _ss = 0.5f /**< [in] Starting size. */,
+			float _es = 0.5f /**< [in] Ending size. */,
+			float _so = 1.0f /**< [in] Starting opacity. */,
+			float _eo = 1.0f /**< [in] Ending opacity. */,
+			float _xr = 0.0f /**< [in] X radial (for moving x in a circular pattern). */,
+			float _yr = 0.0f /**< [in] Y radial (for moving y in a circular pattern).. */,
+			float _zr = 0.0f /**< [in] Z radial (for moving z in a circular pattern).. */,
+			vec4f _pos = vec4f(0, 0, 0, 0) /**< [in] Position. */,
+			vec4f _vel = vec4f(0, 0, 0, 0) /**< [in] Initial velocity. */,
+			vec4f _scol = vec4f(0, 0, 0, 0) /**< [in] Starting color. */,
+			vec4f _ecol = vec4f(0, 0, 0, 0) /**< [in] Ending color. */);
+
+		//Getters
+
+		bool IsActive() const;
+		float GetLifeRatio() const;
+		int GetLife() const;
+		float GetSize() const;
+		void GetRadials(float* _x, float* _y, float* _z);
+		vec4f* GetPos();
+		vec4f* GetPrevPos();
+		vec4f GetVelocity() const;
+		vec4f GetColor() const;
+
+		//Setters
+
+		void SetLife(int _life);
+		void SetPos(vec4f _pos);
+		void SetPos(float _x, float _y, float _z);
+		void SetSize(float _ssize, float _esize);
+		void SetRadials(float _x, float _y, float _z);
+		void SetVelocity(vec4f _vel);
+		void SetVelocity(float _x, float _y, float _z);
+		void SetColors(vec4f _scol, vec4f _ecol);
+		void DecLife();
+		void Kill();
+
+		//Operator functions
+
+		Particle& operator--();
+		Particle operator--(int i);
+
+		//Misc
+		void InterpSize();
+		void InterpColor();
+
 	};
 
 	class ParticleEmitter
@@ -59,6 +114,7 @@ namespace Epoch
 		//TODO: Make this attachable, basically a position pointer
 		vec4f mPos;
 
+		
 		Particle* mBase;
 		std::list<Particle*> mParticles;
 		std::vector<GSParticle> mGParticles;
@@ -76,7 +132,7 @@ namespace Epoch
 		virtual void EmitParticles();
 
 	public:
-		bool mActive;
+		bool mActive, mEnabled;
 
 		ParticleEmitter(int _totalp, int _maxp, int _persec, vec4f _pos);
 		virtual ~ParticleEmitter();
@@ -88,6 +144,7 @@ namespace Epoch
 		void SetTexture(const char* _tex);
 		void SetTexture(const char* _tex, bool _animate, float offset);
 		virtual void SetParticle(Particle* _p);
+		void FIRE() { mEnabled = true; }
 
 		void Update(float _delta);
 
@@ -149,13 +206,13 @@ namespace Epoch
 
 	};
 
-	class Patrick : public ParticleEmitter
+	class IDC : public ParticleEmitter
 	{
 	public:
 		float y1, y2;
 
-		Patrick();
-		Patrick(int _totalp, int _maxp, int _persec, vec4f _pos);
+		IDC();
+		IDC(int _totalp, int _maxp, int _persec, vec4f _pos);
 	private:
 		virtual void UpdateParticle(Particle* _p, float _delta);
 		virtual void EmitParticles();

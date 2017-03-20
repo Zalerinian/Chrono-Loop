@@ -1,6 +1,6 @@
 ﻿<Level>
   <Settings>
-    <StartPos>8.8,1.29,-4.1</StartPos>
+    <StartPos>8.8,0,-4.1</StartPos>
     <StartRot>0,1.57,0</StartRot>
   </Settings>
   <Object>
@@ -615,7 +615,7 @@
     <Name>Arrow</Name>
     <Mesh>Arrow.obj</Mesh>
     <Texture>red.png</Texture>
-    <Position>8.884659,1.288996,-4.103665</Position>
+    <Position>8.884659,0.001807882,-4.103665</Position>
     <Rotation>0,1.57,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components />

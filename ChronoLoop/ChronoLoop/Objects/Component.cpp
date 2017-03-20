@@ -6,11 +6,12 @@
 
 namespace Epoch
 {
-	// 0 is reserved for the player.
+	
 	unsigned short Component::mComponentCount = 0;
 
 	Component::Component()
 	{
+		//SystemLogger::Debug() << mComponentCount << std::endl;
 		mComponentId = Component::mComponentCount++;
 	}
 	Component::Component(ComponentType _cType)
@@ -130,11 +131,13 @@ namespace Epoch
 
 	void Emitter::AddSoundEvent(sfxTypes _type, int64_t _event)
 	{
+		
 		switch (_type)
 		{
 		case sfxTypes::ePlayLoop:
 		{
 			mSFX[_type].push_back(_event);
+			mIsSounds.push_back(std::pair<bool, bool>(false, false));
 		}
 		break;
 		case sfxTypes::ePauseLoop:
@@ -159,10 +162,6 @@ namespace Epoch
 		break;
 		}
 
-		if (_type != sfxTypes::ePlaySFX)
-		{
-			mIsSounds.push_back(std::pair<bool, bool>(false, false));
-		}
 	}
 
 	void Emitter::Destroy()
@@ -278,13 +277,13 @@ namespace Epoch
 	}
 
 	void CubeCollider::Update() {
-		if (mNode == nullptr) {
+		/*if (mNode == nullptr) {
 			mNode = Renderer::Instance()->AddNode(mShape);
 		}
 		vec3f size = mMax - mMin;
 		matrix4 pos = matrix4::CreateScale(size.x, size.y, size.z);
 		pos.Position = (mMax - mMin) / 2 + mMin;
-		mNode->data = pos;
+		mNode->data = pos;*/
 	}
 
 	void CubeCollider::Destroy()

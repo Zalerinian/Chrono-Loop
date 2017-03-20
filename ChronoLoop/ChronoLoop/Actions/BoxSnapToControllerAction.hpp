@@ -24,7 +24,7 @@ namespace Epoch {
 			bool mRight = false;
 			bool mLeft = false;
 
-			if (cLevel->GetRightTimeManipulator() != nullptr || cLevel->GetLeftTimeManipulator() != nullptr) {
+			if (cLevel->GetRightTimeManipulator()!= nullptr || cLevel->GetLeftTimeManipulator() != nullptr) {
 				mRight = cLevel->GetRightTimeManipulator()->isTimePaused();
 				mLeft = cLevel->GetLeftTimeManipulator()->isTimePaused();
 			}
@@ -61,10 +61,10 @@ namespace Epoch {
 				else if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == -1 && !mHeld && !mCollider->mHitting.empty() && (!mLeft && !mRight)) {
 					SomethingtoController();
 					if (mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueId()) {
-						VRInputManager::GetInstance().GetController(eControllerType_Primary).TriggerHapticPulse(500);
+						VRInputManager::GetInstance().GetController(eControllerType_Secondary).TriggerHapticPulse(500);
 					}
 					else if (mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueId()) {
-						VRInputManager::GetInstance().GetController(eControllerType_Secondary).TriggerHapticPulse(500);
+						VRInputManager::GetInstance().GetController(eControllerType_Primary).TriggerHapticPulse(500);
 					}
 				}
 			}

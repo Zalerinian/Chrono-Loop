@@ -44,15 +44,16 @@ namespace Epoch
 		inline BaseObject* GetHeadset() { return mHeadset; }
 		inline BaseObject* GetLeftController() { return mController1; }
 		inline BaseObject* GetRightController() { return mController2; }
-		TimeManipulation* GetLeftTimeManipulator() { return mTMComponent1; }
-		TimeManipulation* GetRightTimeManipulator() { return mTMComponent2; }
 		inline vec4f GetStartPos() { return mStartPosition; }
 		inline vec4f GetStartRot() { return mStartRotation; }
+		TimeManipulation* GetLeftTimeManipulator() { return mTMComponent1; }
+		TimeManipulation* GetRightTimeManipulator() { return mTMComponent2; }
 
 
 		//**SETTERS**//
 		void SetId(unsigned short _set) { mId = _set; };
 		void SetHeadsetAndControllers(BaseObject*& _headset, BaseObject*& _controller1, BaseObject*& _controller2, ControllerCollider* _c1Collider, ControllerCollider* _c2Collider);
+		void SwapPlayerComponentIds(BaseObject *& _first, BaseObject*& _other);
 
 		//**FUNCTIONS**//
 		void SetupObjects();
