@@ -1,0 +1,11 @@
+﻿<Level>
+  <Object>
+    <Name>Cube.001</Name>
+    <Mesh>Cube.obj</Mesh>
+    <Texture>red.png</Texture>
+    <Position>-2,0,0</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+</Level> 
