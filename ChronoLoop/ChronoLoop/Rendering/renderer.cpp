@@ -288,9 +288,7 @@ namespace Epoch {
 		mPositionBuffer.Attach(pBuff);
 
 		//Light buffers
-		desc.ByteWidth = sizeof(Directional);
-		desc.ByteWidth += sizeof(Point);
-		desc.ByteWidth += sizeof(Spot);
+		desc.ByteWidth = sizeof(Light) * 3;
 		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
 		mLBuffer.Attach(pBuff);
 

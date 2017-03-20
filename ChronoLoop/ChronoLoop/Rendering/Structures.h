@@ -64,9 +64,12 @@ namespace Epoch
 	{
 	public:
 		int Type;
+
 	protected:
+		float pad2[3];
 		vec4f Position, Direction, ConeDirection, Color;
 		float ConeRatio;
+		float pad[3];
 	};
 
 	struct Directional : public Light

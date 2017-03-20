@@ -12,11 +12,13 @@ SamplerState specularFilter : register(s2);
 
 struct Light {
     int type;
+    float3 p1;
 	float4 pos;
 	float4 dir;
 	float4 cdir;
 	float4 color;
 	float  ratio;
+    float3 p2;
 };
 
 cbuffer _Light : register(b0)

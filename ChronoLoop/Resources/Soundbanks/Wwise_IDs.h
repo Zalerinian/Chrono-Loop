@@ -13,15 +13,22 @@ namespace AK
 {
     namespace EVENTS
     {
+        static const AkUniqueID BLOP = 1762045322U;
+        static const AkUniqueID BUTTON_PRESS1 = 381359574U;
+        static const AkUniqueID BUTTON_PRESS2 = 381359573U;
+        static const AkUniqueID DOORSOUND = 2580845818U;
         static const AkUniqueID PAUSE_TEST1 = 1888362325U;
         static const AkUniqueID PAUSE_TEST2 = 1888362326U;
         static const AkUniqueID PLAY_TEST1 = 3759155919U;
         static const AkUniqueID PLAY_TEST2 = 3759155916U;
         static const AkUniqueID PLAYBOUNCEEFFECTS = 3909886823U;
+        static const AkUniqueID PLING = 652836727U;
         static const AkUniqueID RESUME_TEST1 = 1235130312U;
         static const AkUniqueID RESUME_TEST2 = 1235130315U;
         static const AkUniqueID STOP_TEST1 = 2011175805U;
         static const AkUniqueID STOP_TEST2 = 2011175806U;
+        static const AkUniqueID SWOOSH = 751805364U;
+        static const AkUniqueID TICK = 2755031898U;
     } // namespace EVENTS
 
     namespace GAME_PARAMETERS
