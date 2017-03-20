@@ -126,7 +126,7 @@ namespace Epoch
 
 	int ParticleEmitter::GetVertexCount()
 	{
-		return mGParticles.size();
+		return (int)mGParticles.size();
 	}
 	void ParticleEmitter::SetTexture(const char* _tex)
 	{

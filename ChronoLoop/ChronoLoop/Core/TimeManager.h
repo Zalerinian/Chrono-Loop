@@ -2,6 +2,7 @@
 #include <chrono>
 #include <vector>
 #include "../Common/Interpolator.h"
+#include "../Input/Controller.h"
 #include <unordered_map>
 #include <bitset>
 #define RecordingRate .1f // 1/10th of a second in milliseconds 
@@ -28,19 +29,21 @@ namespace Epoch {
 		float mDeltaTime = 0;
 		unsigned int mLevelTime = 0;
 		bool mRewindMakeClone = false;
-		unsigned int mtempCurSnapFrame = 0;
-
-		//container of objects
+		bool mShouldUpdateInterpolators = false;
+		bool mShouldPulse = false;
+		int mtempCurSnapFrame = 0;
 		std::vector<BaseObject*>mClones;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneInterpolators;
 		//This is for the hitboxes for the controller
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneColliderInterpolators;
+		std::unordered_map<unsigned short, Interpolator<matrix4>*>mObjectRewindInterpolators; 
+		//Timeline* GetTimeLine();
 		
 		std::bitset<10>mCloneTextureBitset;
 		//Pass in baseobject id to get bitset location
 		std::unordered_map<unsigned short, unsigned int>mCloneTextures;
 
-		//Timeline* GetTimeLine();
+		
 
 		TimeManager();
 		~TimeManager();
@@ -50,6 +53,7 @@ namespace Epoch {
 		void UpdatePlayerObjectInTimeline(BaseObject* _obj);
 		void AddObjectToTimeline(BaseObject* _obj);
 		void AddInterpolatorForClone(BaseObject* _obj);
+		void AddInterpolatorToObject(BaseObject* _obj);
 		void AddAllTexturesToQueue();
 		void AssignTextureToClone(unsigned short _id);
 		//Clears the list of BaseObject* the Timemanager has refrence to.
@@ -65,10 +69,14 @@ namespace Epoch {
 		//Retrieves delta time
 		float GetDeltaTime() { return mDeltaTime; }
 		Interpolator<matrix4>* GetCloneInterpolator(unsigned short _id);
+		Interpolator<matrix4>* GetObjectInterpolator(unsigned short _id);
 		Interpolator<matrix4>* GetCloneColliderInterpolator(unsigned short _id);
 		std::vector<BaseObject*>& GetClonesVec() { return mClones; };
+		//DONT GET RID OF THIS PLZ
+		Timeline* GetTimeLine() { return mTimeline; };
 		std::string GetNextTexture();
 		int GetTempCurSnap() { return mtempCurSnapFrame; };
+		bool GetShouldPulse() { return mShouldPulse; };
 		void SetTempCurSnap() { mtempCurSnapFrame = GetCurrentSnapFrame(); };
 		unsigned int GetTotalSnapsmade();
 		//Go back into time. Send in dest frame and send in player headset and conrollers id

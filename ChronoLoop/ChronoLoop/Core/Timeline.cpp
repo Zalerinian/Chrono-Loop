@@ -329,6 +329,30 @@ namespace Epoch {
 			//cloneColliderInterp->SetActive(false);
 		}
 	}
+	void Timeline::PrepareAllObjectInterpolators(unsigned int _fromSnapTime, unsigned int _toSnapTime) {
+		Interpolator<matrix4> * objInterp;
+		if (_toSnapTime <= mSnaptimes.size() - 1 || _toSnapTime >= 0)
+		{
+			Snapshot* _fromShot = mSnapshots[mSnaptimes[_fromSnapTime]];
+			Snapshot* _toShot = mSnapshots[mSnaptimes[_toSnapTime]];
+			unsigned int temp2 = LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->GetNumClones();
+			for (std::pair<unsigned short, Epoch::BaseObject*> it : mLiveObjects) {
+				if (it.second->GetName().find("Controller1 - " + std::to_string(temp2)) == std::string::npos &&
+					it.second->GetName().find("Controller2 - " + std::to_string(temp2)) == std::string::npos) { //TODO RYAN: TEMPORARY FIX FOR INTERPOLATION
+					objInterp = TimeManager::Instance()->GetObjectInterpolator(it.first);
+					if (_fromShot->mSnapinfos.find(it.first) != _fromShot->mSnapinfos.end() && _toShot->mSnapinfos.find(it.first) != _toShot->mSnapinfos.end()) {
+						SnapInfo* _fromSnap = _fromShot->mSnapinfos[it.first];
+						SnapInfo* _toSnap = _toShot->mSnapinfos[it.first];
+
+						objInterp->SetActive(true);
+						objInterp->Prepare(mObjectInterpolationTime, _fromSnap->mTransform.GetMatrix(), _toSnap->mTransform.GetMatrix(), it.second->GetTransform().GetMatrix());
+					} else {
+						objInterp->SetActive(false);
+					}
+				}
+			}
+		}
+	}
 
 	void Timeline::SetCloneObjectCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3) {
 		ObjectLifeTime* newObject = new ObjectLifeTime();
@@ -509,27 +533,6 @@ namespace Epoch {
 			for (unsigned int i = 0; i < destInfo->mComponents.size(); i++) {
 				SnapComponent* destComp = destInfo->mComponents[i];
 				SetComponent(destComp, baseobject, destInfo);
-			}
-		}
-	}
-	void Timeline::InterpAllObjectsToSnapExceptPlayer(unsigned int _fromSnapTime, unsigned int _toSnapTime, unsigned short _id1, unsigned short _id2, unsigned short _id3) 
-	{
-		Snapshot* _from = mSnapshots[_fromSnapTime];
-		Snapshot* _to = mSnapshots[_toSnapTime];
-		for (auto object : mLiveObjects) {
-			unsigned short id = object.second->GetUniqueID();
-			if (id == _id1 || id == _id2 || id == _id3)
-				continue;
-			SnapInfo* destInfo;
-			//If the object doesnt have a info, 
-			//then check against the list for the last snap it was updated
-			bool stored = _to->IsObjectStored(id);
-			if (stored) {
-				destInfo = _to->mSnapinfos[id];
-			} else if (!stored) {
-				if (_to->mUpdatedtimes.find(id) == _to->mUpdatedtimes.end())
-					continue;
-				destInfo = mSnapshots[_to->mUpdatedtimes[id]]->mSnapinfos[id];
 			}
 		}
 	}

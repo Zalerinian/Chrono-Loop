@@ -22,7 +22,7 @@ namespace Epoch {
 			float p = d*.3f;
 			float a = c;
 			float s = p / 4;
-			return (a*(float)pow(2, -10 * t) * sin((t*d - s)*(2 * PI) / p) + c + b);
+			return (a*(float)pow(2, -10.0f * t) * (float)sin((t*d - s)*(2.0f * PI) / p) + c + b);
 		}
 
 		float ElasticInOut(float t, float b, float c, float d) {

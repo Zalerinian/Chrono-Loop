@@ -48,6 +48,7 @@ namespace Epoch
 		inline vec4f GetStartRot() { return mStartRotation; }
 		TimeManipulation* GetLeftTimeManinpulator() { return mTMComponent1; }
 		TimeManipulation* GetRightTimeManinpulator() { return mTMComponent2; }
+		
 
 		//**SETTERS**//
 		void SetId(unsigned short _set) { mId = _set; };
