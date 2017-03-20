@@ -245,7 +245,7 @@ namespace Epoch {
 		mRightViewport.TopLeftX = (FLOAT)scd.BufferDesc.Width / 2;
 
 		mFullViewport = mLeftViewport;
-		mFullViewport.Width = scd.BufferDesc.Width;
+		mFullViewport.Width = (FLOAT)scd.BufferDesc.Width;
 
 		D3D11_VIEWPORT viewports[] = { mLeftViewport, mRightViewport, mFullViewport };
 		mContext->RSSetViewports(ARRAYSIZE(viewports), viewports);
@@ -410,35 +410,35 @@ namespace Epoch {
 		if (!CommandConsole::Instance().willTakeInput()) {
 			//w
 			if (GetAsyncKeyState('W')) {
-				mDebugCameraPos = matrix4::CreateTranslation(0, 0, -_moveSpd * _delta) * mDebugCameraPos;
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateTranslation(0, 0, -_moveSpd * _delta) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 			//s
 			if (GetAsyncKeyState('S')) {
-				mDebugCameraPos = matrix4::CreateTranslation(0, 0, _moveSpd * _delta) * mDebugCameraPos;
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateTranslation(0, 0, _moveSpd * _delta) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 			//a
 			if (GetAsyncKeyState('A')) {
-				mDebugCameraPos = matrix4::CreateTranslation(-_moveSpd * _delta, 0, 0) * mDebugCameraPos;
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateTranslation(-_moveSpd * _delta, 0, 0) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 			//d
 			if (GetAsyncKeyState('D')) {
-				mDebugCameraPos = matrix4::CreateTranslation(_moveSpd * _delta, 0, 0) * mDebugCameraPos;
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateTranslation(_moveSpd * _delta, 0, 0) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 			// Q
 			if (GetAsyncKeyState('Q')) {
-				mDebugCameraPos = matrix4::CreateZRotation(_rotSpd * _delta) * mDebugCameraPos;
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateZRotation(_rotSpd * _delta) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 			// E
 			if (GetAsyncKeyState('E')) {
-				mDebugCameraPos = matrix4::CreateZRotation(-_rotSpd * _delta) * mDebugCameraPos;
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateZRotation(-_rotSpd * _delta) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 			//x
 			if (GetAsyncKeyState(VK_CONTROL)) {
-				mDebugCameraPos = matrix4::CreateTranslation(0, -_moveSpd * _delta, 0) * mDebugCameraPos;
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateTranslation(0, -_moveSpd * _delta, 0) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 
 			if (GetAsyncKeyState(VK_SPACE)) {
-				mDebugCameraPos = matrix4::CreateTranslation(0, _moveSpd * _delta, 0) * mDebugCameraPos;
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateTranslation(0, _moveSpd * _delta, 0) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 			if (GetAsyncKeyState(VK_LBUTTON) & 1 && !mIsMouseDown) {
 				GetCursorPos(&mMouseOrigin);
@@ -455,7 +455,7 @@ namespace Epoch {
 				float dx = -(now.x - mMouseOrigin.x) * _rotSpd * _delta;
 				float dy = -(now.y - mMouseOrigin.y) * _rotSpd * _delta;
 
-				mDebugCameraPos = matrix4::CreateXRotation(dy) * matrix4::CreateYRotation(dx) * mDebugCameraPos;
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateXRotation(dy) * matrix4::CreateYRotation(dx) * VRInputManager::GetInstance().GetPlayerPosition();
 
 				// Reset cursor to center of the window.
 				WINDOWINFO winfo;
@@ -466,7 +466,7 @@ namespace Epoch {
 			}
 		}
 
-		mVPLeftData.view = mDebugCameraPos.Transpose().Invert();
+		mVPLeftData.view = VRInputManager::GetInstance().GetPlayerPosition().Transpose().Invert();
 		mVPRightData = mVPLeftData;
 		UpdateGSBuffers();
 		//UpdateLBuffers();
@@ -626,9 +626,8 @@ namespace Epoch {
 
 
 		if (!mVrSystem) {
-			mDebugCameraPos = matrix4::CreateYRotation(DirectX::XM_PI / 2) * VRInputManager::GetInstance().GetPlayerPosition();
 			mVPLeftData.projection.matrix = DirectX::XMMatrixPerspectiveFovRH(70, (float)_height / (float)_width, 0.1f, 1000);
-			mVPLeftData.view = mDebugCameraPos.Transpose().Invert();
+			mVPLeftData.view = VRInputManager::GetInstance().GetPlayerPosition().Transpose().Invert();
 			mVPLeftData.projection = mVPLeftData.projection.Transpose();
 			mVPRightData = mVPLeftData;
 		}

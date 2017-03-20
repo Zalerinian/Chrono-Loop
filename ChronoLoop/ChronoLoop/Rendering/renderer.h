@@ -76,7 +76,7 @@ namespace Epoch {
 		void InitializeSceneQuad();
 		void SetStaticBuffers();
 
-		matrix4 mEyePosLeft, mEyePosRight, mEyeProjLeft, mEyeProjRight, mHMDPos, mDebugCameraPos;
+		matrix4 mEyePosLeft, mEyePosRight, mEyeProjLeft, mEyeProjRight, mHMDPos;
 
 		POINT mMouseOrigin;
 		bool mIsMouseDown = false;
@@ -115,7 +115,6 @@ namespace Epoch {
 
 		void ClearRenderSet();
 
-		inline void SetDebugCameraPosition(matrix4 _mat) { mDebugCameraPos = _mat; }
 
 		inline Microsoft::WRL::ComPtr<ID3D11Device> GetDevice() { return mDevice; }
 		inline Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetContext() { return mContext; }

@@ -268,7 +268,7 @@ void Update() {
 	Physics::Instance()->mObjects.push_back(mmdoor);
 	
 	Level* MainMenu = new Level;
-	MainMenu->Initialize(headset, RightController, LeftController);
+	MainMenu->AssignPlayerControls(headset, RightController, LeftController);
 	LevelManager::GetInstance().SetCurrentLevel(MainMenu);
 	MainMenu->AddObject(RightController);
 	MainMenu->AddObject(headset);
@@ -553,7 +553,7 @@ void Update() {
 	Physics::Instance()->mObjects.push_back(Button);
 
 	Level* L1 = new Level;
-	L1->Initialize(headset, LeftController, RightController);
+	L1->AssignPlayerControls(headset, LeftController, RightController);
 	L1->AddObject(PhysicsBox);
 	L1->AddObject(PhysicsBox2);
 	L1->AddObject(PhysicsSphere);
@@ -693,15 +693,13 @@ void Update() {
 
 	while (LevelManager::GetInstance().LoadLevelAsync("../Resources/mainMenu.xml", &mainMenu) != Epoch::LM::LevelStatus::Success) {}
 	//while (LevelManager::GetInstance().LoadLevelAsync("../Resources/collider.xml", &L1) != Epoch::LM::LevelStatus::Success) {}
-	mainMenu->Initialize(headset, LeftController, RightController);
+	mainMenu->AssignPlayerControls(headset, LeftController, RightController);
 	mainMenu->AddObject(RightController);
 	mainMenu->AddObject(headset);
 	mainMenu->AddObject(LeftController);
 	mainMenu->AddObject(mmCube);
 	//LevelManager::GetInstance().LoadLevelAsync("../Resources/LEVEL1/collider.xml", &L1);
 	LevelManager::GetInstance().RequestLevelChange(mainMenu);
-	matrix4 cameraPos = matrix4::CreateYRotation(mainMenu->GetStartRot().y) * matrix4::CreateZRotation(mainMenu->GetStartRot().z) * matrix4::CreateXRotation(mainMenu->GetStartRot().x) * matrix4::CreateTranslation(mainMenu->GetStartPos());
-	Renderer::Instance()->SetDebugCameraPosition(cameraPos);
 	mainMenu->CallStart();
 	
 	//Enter effect

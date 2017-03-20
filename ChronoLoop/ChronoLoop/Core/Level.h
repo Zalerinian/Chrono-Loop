@@ -32,12 +32,12 @@ namespace Epoch
 		bool ChronoLoop = true;
 		bool mmflip = true;
 
-		void Initialize(BaseObject *_headset, BaseObject *_lController, BaseObject *_rController);
+		void AssignPlayerControls(BaseObject *_headset, BaseObject *_lController, BaseObject *_rController);
 
 		//**GETTERS**//
 		BaseObject* FindObjectWithName(std::string _name);
 		std::vector<BaseObject*> FindAllObjectsWithName(std::string _name);
-		std::list<BaseObject*> GetLevelObjects() { return mObjectList; };
+		std::list<BaseObject*>& GetLevelObjects() { return mObjectList; };
 		void AddObject(BaseObject* _obj);
 		bool RemoveObject(BaseObject* _obj);
 		unsigned short GetId() { return mId; };
@@ -55,6 +55,7 @@ namespace Epoch
 		void SetHeadsetAndControllers(BaseObject*& _headset, BaseObject*& _controller1, BaseObject*& _controller2, ControllerCollider* _c1Collider, ControllerCollider* _c2Collider);
 
 		//**FUNCTIONS**//
+		void SetupObjects();
 		void CallStart();
 		void LoadLevel(std::string _file);
 		void Update();

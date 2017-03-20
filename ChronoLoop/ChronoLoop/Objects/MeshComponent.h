@@ -18,8 +18,8 @@ namespace Epoch
 		MeshComponent(const char *_path);
 		virtual void Update() override;
 		virtual void Destroy() override;
-		void SetVisible(bool _vis);
-		void AddTexture(const char *_path, TextureType _type);
+		MeshComponent* SetVisible(bool _vis);
+		MeshComponent* AddTexture(const char *_path, TextureType _type);
 		inline bool IsVisible() { return mVisible; };
 		inline Triangle *GetTriangles() { return mShape->GetTriangles(); }
 		inline size_t GetTriangleCount() { return mShape->GetTriangleCount(); }

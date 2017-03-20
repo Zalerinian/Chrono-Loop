@@ -28,7 +28,7 @@ namespace Epoch {
 		mObjectList.clear();
 	}
 
-	void Level::Initialize(BaseObject * _headset, BaseObject * _lController, BaseObject * _rController) {
+	void Level::AssignPlayerControls(BaseObject * _headset, BaseObject * _lController, BaseObject * _rController) {
 		mHeadset = _headset;
 		mController1 = _lController;
 		mController2 = _rController;
@@ -139,6 +139,17 @@ namespace Epoch {
 		TimeManager::Instance()->AddObjectToTimeline(mController1);
 		TimeManager::Instance()->AddObjectToTimeline(mController2);
 
+	}
+
+	void Level::SetupObjects()
+	{
+		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
+			auto& meshes = (*it)->GetComponents(eCOMPONENT_MESH);
+			for (auto cit = meshes.begin(); cit != meshes.end(); ++cit) {
+				((MeshComponent*)(*cit))->SetVisible(false);
+				((MeshComponent*)(*cit))->SetVisible(true);
+			}
+		}
 	}
 
 	void Level::CallStart() {
@@ -482,13 +493,6 @@ namespace Epoch {
 							obj->AddComponent(code);
 						}
 					}
-
-					if (physical)
-						Physics::Instance()->mObjects.push_back(obj);
-
-					if (canMove || obj->GetName() == "Door1" || obj->GetName() == "Door2")
-						TimeManager::Instance()->AddObjectToTimeline(obj);
-
 					AddObject(obj);
 					pObject = pObject->NextSiblingElement("Object");
 				}

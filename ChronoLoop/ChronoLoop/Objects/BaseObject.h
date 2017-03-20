@@ -96,7 +96,7 @@ namespace Epoch {
 		}
 
 
-		unsigned int AddComponent(Component* _comp);
+		BaseObject* AddComponent(Component* _comp);
 		bool RemoveComponent(Component* _comp);
 
 		//**FUNCTION**//
