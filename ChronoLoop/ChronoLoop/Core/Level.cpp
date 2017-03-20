@@ -303,7 +303,11 @@ namespace Epoch {
 							else if (elementType == "Type")
 								colliderType = pData->Value();
 							else if (elementType == "Trigger")
-								trigger = pData->Value() == "True";
+							{
+								std::string temp(pData->Value());
+								trigger = temp.find("True") != std::string::npos;
+								int thing = 0;
+							}
 							else if (elementType == "Radius")
 							{
 								radius = std::strtof(pData->Value(), nullptr);

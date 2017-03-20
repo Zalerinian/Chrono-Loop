@@ -2,6 +2,8 @@
 #include "Controller.h"
 #include "../Common/Logger.h"
 #include "../Core/LevelManager.h"
+#include "../Core/TimeManager.h"
+#include "../Core/Timeline.h"
 #include "VRInputManager.h"
 
 namespace Epoch {
@@ -36,8 +38,8 @@ namespace Epoch {
 
 	int Controller::CheckGesture() {
 		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
-		if (cLevel->GetRightTimeManinpulator() != nullptr && cLevel->GetLeftTimeManinpulator() != nullptr) {
-			if ((cLevel->GetLeftTimeManinpulator()->isTimePaused()) || cLevel->GetRightTimeManinpulator()->isTimePaused()) {
+		if (cLevel->GetRightTimeManipulator() != nullptr && cLevel->GetLeftTimeManipulator() != nullptr) {
+			if ((cLevel->GetLeftTimeManipulator()->isTimePaused()) || cLevel->GetRightTimeManipulator()->isTimePaused()) {
 
 				vec2f touch = this->GetAxis();
 				if (touch.x == 0 && touch.y == 0)
@@ -66,17 +68,49 @@ namespace Epoch {
 							return 0;
 						}
 						InitialPos = CurPos;
-						if ((powf((CurPos.x), 2) + powf((CurPos.y), 2)) > 0.25f) {
+						if ((powf((CurPos.x), 2) + powf((CurPos.y), 2)) > 0.16f) {
 							//SystemLogger::GetLog() << "Outside the Circle" << std::endl;
 							//SystemLogger::GetLog() << "Difference: " << diff << std::endl; 
 							//SystemLogger::GetLog() << "InitialPos: (" << InitialPos.x << "," << InitialPos.y << ")" << "\nCurPos: (" << CurPos.x << "," << CurPos.y << ")" << std::endl;
+							Timeline* tempTimeLine = TimeManager::Instance()->GetTimeLine();
 							if (diff * line > 0) {
 								SystemLogger::GetLog() << "Somewhat Clockwise" << std::endl;
-								this->TriggerHapticPulse(200, vr::k_EButton_SteamVR_Touchpad);
+								if (mIncreaseGestureSpeed != 1)
+									mSpeedCW++;
+								SystemLogger::GetLog() << "Speed: " << mSpeedCW << std::endl << "GestureSpeed: " << mIncreaseGestureSpeed << std::endl << std::endl;
+								if (mSpeedCCW != 0) {
+									mSpeedCCW = 0;
+									mSpeedCW = 1;
+									mIncreaseGestureSpeed = 5;
+									tempTimeLine->SetObjectInterpolationTime(0.20f);
+								}
+								if (mSpeedCW % 35 == 0 && mIncreaseGestureSpeed != 1)
+								{
+									tempTimeLine->SetObjectInterpolationTime(tempTimeLine->GetObjectInterpolationTime() - 0.03f);
+									mIncreaseGestureSpeed--;
+								}
+								if (TimeManager::Instance()->GetShouldPulse())
+									this->TriggerHapticPulse(300, vr::k_EButton_SteamVR_Touchpad);
+
 								return 1;
-							} else if (diff * line < 0) {
+							}
+							else if (diff * line < 0) {
 								SystemLogger::GetLog() << "Somewhat Counter-Clockwise" << std::endl;
-								this->TriggerHapticPulse(200, vr::k_EButton_SteamVR_Touchpad);
+								if (mIncreaseGestureSpeed != 1)
+									mSpeedCCW++;
+								SystemLogger::GetLog() << "Speed: " << mSpeedCCW << std::endl << "GestureSpeed: " << mIncreaseGestureSpeed << std::endl << std::endl;
+								if (mSpeedCW != 0) {
+									mSpeedCW = 0;
+									mSpeedCCW = 1;
+									mIncreaseGestureSpeed = 5;
+									tempTimeLine->SetObjectInterpolationTime(0.20f);
+								}
+								if (mSpeedCCW % 35 == 0 && mIncreaseGestureSpeed != 1) {
+									tempTimeLine->SetObjectInterpolationTime(tempTimeLine->GetObjectInterpolationTime() - 0.03f);
+									mIncreaseGestureSpeed--;
+								}
+								if(TimeManager::Instance()->GetShouldPulse())
+									this->TriggerHapticPulse(300, vr::k_EButton_SteamVR_Touchpad);
 
 								return -1;
 							}

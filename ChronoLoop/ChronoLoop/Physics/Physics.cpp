@@ -687,16 +687,17 @@ namespace Epoch
 
 	void Physics::Update(float _time)
 	{
+		PhysicsLock.lock();
 		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
 		//Time pause
 		bool right = false;
 		bool left = false;
 
-		if (cLevel->GetRightTimeManinpulator() != nullptr || cLevel->GetLeftTimeManinpulator() != nullptr)
+		if (cLevel->GetRightTimeManipulator() != nullptr || cLevel->GetLeftTimeManipulator() != nullptr)
 		{
-			right = cLevel->GetRightTimeManinpulator()->isTimePaused();
-			left = cLevel->GetLeftTimeManinpulator()->isTimePaused();
+			right = cLevel->GetRightTimeManipulator()->isTimePaused();
+			left = cLevel->GetLeftTimeManipulator()->isTimePaused();
 		}
 		if (!left && !right)
 		{
@@ -712,7 +713,7 @@ namespace Epoch
 			for (int i = 0; i < objs; ++i)
 			{
 				Colliders = mObjects[i]->mComponents[eCOMPONENT_COLLIDER];
-				int cols = Colliders.size();
+				int cols = (int)Colliders.size();
 				for (int x = 0; x < cols; ++x)
 				{
 					collider = (Collider*)Colliders[x];
@@ -730,7 +731,7 @@ namespace Epoch
 								if (mObjects[j] != mObjects[i])
 								{
 									otherColliders = mObjects[j]->mComponents[eCOMPONENT_COLLIDER];
-									int othercols = otherColliders.size();
+									int othercols = (int)otherColliders.size();
 									for (int k = 0; k < othercols; ++k)
 									{
 										otherCol = (Collider*)otherColliders[k];
@@ -1051,6 +1052,7 @@ namespace Epoch
 							}
 						}
 
+						Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 						if (((ControllerCollider*)collider)->mLeft &&
 							(collider->mObject->GetUniqueID() == cLevel->GetLeftController()->GetUniqueID() ||
 								collider->mObject->GetUniqueID() == cLevel->GetRightController()->GetUniqueID()))
@@ -1070,26 +1072,6 @@ namespace Epoch
 							collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPosition().Position);
 						}
 					}
-
-					Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
-					if (((ControllerCollider*)collider)->mLeft &&
-						(collider->mObject->GetUniqueID() == cLevel->GetLeftController()->GetUniqueID() ||
-							collider->mObject->GetUniqueID() == cLevel->GetRightController()->GetUniqueID()))
-					{
-						collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
-						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
-						collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetVelocity();
-						collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPosition().Position);
-					}
-					else if ((!(((ControllerCollider*)collider)->mLeft) &&
-						(collider->mObject->GetUniqueID() == cLevel->GetLeftController()->GetUniqueID() ||
-							collider->mObject->GetUniqueID() == cLevel->GetRightController()->GetUniqueID())))
-					{
-						collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
-						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
-						collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Primary).GetVelocity();
-						collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPosition().Position);
-					}
 				}
 
 				if (collider->IsEnabled() && collider->mShouldMove && collider->mColliderType != Collider::eCOLLIDER_Controller)
@@ -1107,6 +1089,7 @@ namespace Epoch
 				}//For all colliders of object end
 			}//For all objects end
 		}
+		PhysicsLock.unlock();
 	}//Physics loop end
 
 } // Epoch Namespace

@@ -46,7 +46,7 @@ namespace Epoch
 
 			Transform identity;
 
-			
+			mCloneCount++;
 			//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
 			BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - " + std::to_string(mCloneCount),  identity ); //new BaseObject("headset" + std::to_string(rand), identity);
 			MeshComponent *visibleMesh = new MeshComponent("../Resources/Clone.obj");
@@ -64,7 +64,7 @@ namespace Epoch
 			Controller1->AddComponent(mc);
 			Controller1->AddComponent(SN1);
 
-			//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
+			//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be proble
 			BaseObject* Controller2 = Pool::Instance()->iGetObject()->Reset("Controller2 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
 			MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 			ControllerCollider* CubeColider2 = new ControllerCollider(Controller2, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
@@ -73,6 +73,7 @@ namespace Epoch
 			BoxSnapToControllerAction* SN2 = new BoxSnapToControllerAction();
 			Controller2->AddComponent(mc2);
 			Controller2->AddComponent(SN2);
+
 
 
 			//
@@ -99,7 +100,7 @@ namespace Epoch
 			TimeManager::Instance()->AssignTextureToClone(headset->GetUniqueId());
 			
 
-			mCloneCount++;
+
 		}
 
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
@@ -125,7 +126,7 @@ namespace Epoch
 				);
 			} else {
 				// Stop time
-				vec2f finalRatios(0.7, 0.3);
+				vec2f finalRatios(0.7f, 0.3f);
 				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
 				mDesaturationInterpolator.SetActive(true);
 				TimeManager::Instance()->SetTempCurSnap();
@@ -150,9 +151,9 @@ namespace Epoch
 			bool left = false;
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
-			if (cLevel->GetRightTimeManinpulator() != nullptr || cLevel->GetLeftTimeManinpulator() != nullptr) {
-				right = cLevel->GetRightTimeManinpulator()->isTimePaused();
-				left = cLevel->GetLeftTimeManinpulator()->isTimePaused();
+			if (cLevel->GetRightTimeManipulator() != nullptr || cLevel->GetLeftTimeManipulator() != nullptr) {
+				right = cLevel->GetRightTimeManipulator()->isTimePaused();
+				left = cLevel->GetLeftTimeManipulator()->isTimePaused();
 			}
 
 			// Accept timeline position
@@ -171,8 +172,8 @@ namespace Epoch
 					cLevel->GetRightController()->GetUniqueID(),
 					cLevel->GetLeftController()->GetUniqueID());
 
-				cLevel->GetLeftTimeManinpulator()->makeTimePaused(false);
-				cLevel->GetRightTimeManinpulator()->makeTimePaused(false);
+				cLevel->GetLeftTimeManipulator()->makeTimePaused(false);
+				cLevel->GetRightTimeManipulator()->makeTimePaused(false);
 			}
 
 			if(GetAsyncKeyState(VK_END) & 1)

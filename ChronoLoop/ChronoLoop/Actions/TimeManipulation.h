@@ -15,16 +15,17 @@ namespace Epoch
 	private:
 		ControllerType mControllerRole = eControllerType_Primary;
 		int mCount = 0;
+
 		bool mTexturedApplied = false;
 		bool mPauseTime = false;
-		static unsigned int mCloneCount;
 		ID3D11Texture2D* mCountTxt;
 		ID2D1Bitmap1* mCountMap;
 		unsigned int HotfixButtonDown = 0;
 		Renderer::TimeManipulationEffectData mEffectData;
 		Interpolator<vec2f> mDesaturationInterpolator;
-
+		static unsigned int mCloneCount;
 		static unsigned short mCurrTexture;
+
 		std::string mTextures[10] = { "../Resources/CloneTexture.png",
 			"../Resources/CloneTexture_Green.png",
 			"../Resources/CloneTexture_Pink.png",
@@ -43,6 +44,7 @@ namespace Epoch
 		std::string GetTexture(unsigned short _indx) { return mTextures[_indx]; }
 		void RaycastCloneCheck();
 		bool isTimePaused() { return mPauseTime; };
+		unsigned int GetNumClones() { return mCloneCount; };
 		void makeTimePaused(bool _isPaused) { mPauseTime = _isPaused; };
 		void Start();
 		void Update();

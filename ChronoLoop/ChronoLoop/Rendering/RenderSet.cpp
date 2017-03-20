@@ -23,6 +23,14 @@ namespace Epoch {
 		return n;
 	}
 
+	void RenderSet::ClearSet()
+	{
+		for (auto it = mRenderList.begin(); it != mRenderList.end(); ++it) {
+			delete *it;
+		}
+		mRenderList.clear();
+	}
+
 
 	std::list<RenderList*>::iterator RenderSet::Begin() {
 		return mRenderList.begin();
