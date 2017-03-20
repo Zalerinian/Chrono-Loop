@@ -206,13 +206,13 @@ namespace Epoch
 
 	};
 
-	class IDC : public ParticleEmitter
+	class TeleportEffect : public ParticleEmitter
 	{
 	public:
 		float y1, y2;
 
-		IDC();
-		IDC(int _totalp, int _maxp, int _persec, vec4f _pos);
+		TeleportEffect();
+		TeleportEffect(int _totalp, int _maxp, int _persec, vec4f _pos);
 	private:
 		virtual void UpdateParticle(Particle* _p, float _delta);
 		virtual void EmitParticles();

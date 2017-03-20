@@ -618,17 +618,17 @@ namespace Epoch
 
 #pragma region Teleport
 
-	IDC::IDC(int _totalp, int _maxp, int _persec, vec4f _pos) : ParticleEmitter(_totalp, _maxp, _persec, _pos)
+	TeleportEffect::TeleportEffect(int _totalp, int _maxp, int _persec, vec4f _pos) : ParticleEmitter(_totalp, _maxp, _persec, _pos)
 	{
 
 	}
 
-	void IDC::UpdateParticle(Particle* _p, float _delta)
+	void TeleportEffect::UpdateParticle(Particle* _p, float _delta)
 	{
 		ParticleEmitter::UpdateParticle(_p, _delta);
 	}
 
-	void IDC::EmitParticles()
+	void TeleportEffect::EmitParticles()
 	{
 		static int total = 0;
 
