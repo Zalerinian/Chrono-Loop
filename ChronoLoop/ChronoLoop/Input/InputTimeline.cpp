@@ -102,5 +102,7 @@ namespace Epoch {
 			temp = temp->mNext;
 			delete del;
 		}
+		mCurrent = nullptr;
+		mHead = nullptr;
 	}
 }

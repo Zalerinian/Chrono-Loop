@@ -10,8 +10,8 @@ namespace Epoch
 
 	class MeshComponent : public Component
 	{
-		GhostList<matrix4>::GhostNode* mNode;
-		RenderShape* mShape;
+		GhostList<matrix4>::GhostNode* mNode = nullptr;
+		RenderShape* mShape = nullptr;
 		bool mVisible = true;
 
 	public:

@@ -1,8 +1,8 @@
+#include "MeshComponent.h"
 #include "BaseObject.h"
 #include "Component.h"
 #include "../Rendering/RenderShape.h"
 #include "../Rendering/Renderer.h"
-#include "MeshComponent.h"
 #include "../Common/Settings.h"
 
 #define DESTROY_NODE(x) { \
@@ -25,6 +25,7 @@ namespace Epoch {
 		else
 		{
 			mVisible = false;
+			mNode = nullptr;
 		}
 	}
 
@@ -49,11 +50,13 @@ namespace Epoch {
 		if (_vis) {
 			if (!mVisible) {
 				mNode = Renderer::Instance()->AddNode(mShape);
+				mVisible = true;
 			}
 		}
 		else {
 			if (mVisible) {
 				DESTROY_NODE(mNode);
+				mVisible = false;
 			}
 		}
 		return this;

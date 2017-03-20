@@ -42,6 +42,7 @@ namespace Epoch {
 	{
 		if (!mCurrentLevel) {
 			mCurrentLevel = _next;
+			VRInputManager::GetInstance().GetPlayerPosition().Position = _next->mStartPosition;
 			return;
 		}
 		mRequested = _next;

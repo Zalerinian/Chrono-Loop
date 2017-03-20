@@ -113,6 +113,17 @@ namespace Epoch {
 		return this;
 	}
 
+	unsigned int BaseObject::GetTotalAmountofComponents()
+	{
+		int count = 0;
+		for (auto vec : mComponents)
+		{
+			count += vec.second.size();
+		}
+
+		return count;
+	}
+
 	void BaseObject::SetName(std::string _name) {
 		mName = _name;
 	}
@@ -129,7 +140,7 @@ namespace Epoch {
 		}
 		_comp->mObject = this;
 		mComponents[_comp->GetType()].push_back(_comp);
-		_comp->mComponentNum = (unsigned short)mComponents.size();	//sets the component number for knowing the position in the bitset
+		_comp->mComponentNum = (unsigned short)(GetTotalAmountofComponents());	//sets the component number for knowing the position in the bitset
 
 		//If level has already started call start on new component
 		if (!Settings::GetInstance().GetBool("LevelIsLoading")) {
@@ -203,6 +214,8 @@ namespace Epoch {
 
 		mComponents.clear();
 	}
+
+	
 
 
 	

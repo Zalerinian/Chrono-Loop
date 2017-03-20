@@ -5,6 +5,7 @@
 #include "..\Physics\Physics.h"
 #include <unordered_set>
 #include "../Rendering/RenderSet.h"	
+#include "../Particles/ParticleSystem.h"
 
 namespace Epoch
 {
@@ -21,6 +22,7 @@ namespace Epoch
 		eCOMPONENT_COLLIDER,
 		eCOMPONENT_UI,
 		eCOMPONENT_MESH,
+		eCOMPONENT_EFFECT,
 		eCOMPONENT_MAX
 	};
 
@@ -30,7 +32,7 @@ namespace Epoch
 		friend class BaseObject;
 
 		static unsigned short mComponentCount;
-		unsigned short mComponentId;	//unique component id
+		unsigned int mComponentId;	//unique component id
 		unsigned short mComponentNum;  //the nth number component of a base object. This is for knowing the position in the bitset
 
 	protected:
@@ -200,16 +202,19 @@ namespace Epoch
 		std::unordered_set<Collider*> mHitting;
 	};
 
-	class Light : public Component
+	class Effect : public Component
 	{
-		union
-		{
-			DirectionalLight mDL;
-			SpotLight mSL;
-			PointLight mPL;
-		};
-	};
+	public:
+		Effect() : Component(ComponentType::eCOMPONENT_EFFECT) {}
+		ParticleEmitter* mEmitter;
 
+		void FireEffect()
+		{
+			if (mEmitter)
+				mEmitter->FIRE();
+		}
+
+	};
 	/*
 	business entity- gmail, twitter, facebook, steam account
 	art, audio, marketing, designer students ?

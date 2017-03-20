@@ -27,7 +27,7 @@ namespace Epoch
 
 	void Physics::Destroy()
 	{
-		
+
 
 		if (mInstance)
 		{
@@ -687,7 +687,6 @@ namespace Epoch
 
 	void Physics::Update(float _time)
 	{
-		PhysicsLock.lock();
 		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
 		//Time pause
@@ -719,7 +718,7 @@ namespace Epoch
 					collider = (Collider*)Colliders[x];
 					if (collider->IsEnabled() && (collider->mIsTrigger || collider->mShouldMove))
 					{
-						if(!collider->mIsTrigger)
+						if (!collider->mIsTrigger)
 							collider->mTotalForce = collider->mForces + collider->mWeight + collider->mDragForce;
 
 						codeComponents = collider->mObject->GetComponents(eCOMPONENT_CODE);
@@ -1051,7 +1050,6 @@ namespace Epoch
 								}
 							}
 						}
-
 						Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 						if (((ControllerCollider*)collider)->mLeft &&
 							(collider->mObject->GetUniqueID() == cLevel->GetLeftController()->GetUniqueID() ||
@@ -1089,7 +1087,6 @@ namespace Epoch
 				}//For all colliders of object end
 			}//For all objects end
 		}
-		PhysicsLock.unlock();
 	}//Physics loop end
 
 } // Epoch Namespace

@@ -49,7 +49,7 @@ namespace Epoch {
 					return 0;
 				}
 				gestureCnt++;
-				if (gestureCnt == 4) {
+				if (gestureCnt == mIncreaseGestureSpeed) {
 					gestureCnt = 0;
 					//vec2f CurPos,line,diff;
 					vec2f CurPos = touch;

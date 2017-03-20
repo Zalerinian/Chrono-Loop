@@ -34,8 +34,11 @@ namespace Epoch {
 		int mtempCurSnapFrame = 0;
 		std::vector<BaseObject*>mClones;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneInterpolators;
+		//This is for the hitboxes for the controller
+		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneColliderInterpolators;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mObjectRewindInterpolators; 
 		//Timeline* GetTimeLine();
+
 		
 		std::bitset<10>mCloneTextureBitset;
 		//Pass in baseobject id to get bitset location
@@ -67,7 +70,9 @@ namespace Epoch {
 		//Retrieves delta time
 		float GetDeltaTime() { return mDeltaTime; }
 		Interpolator<matrix4>* GetCloneInterpolator(unsigned short _id);
+		Interpolator<matrix4>* GetCloneColliderInterpolator(unsigned short _id);
 		Interpolator<matrix4>* GetObjectInterpolator(unsigned short _id);
+
 		std::vector<BaseObject*>& GetClonesVec() { return mClones; };
 		//DONT GET RID OF THIS PLZ
 		Timeline* GetTimeLine() { return mTimeline; };
@@ -87,7 +92,7 @@ namespace Epoch {
 		static void ToggleSnapshotCountDisplay(void* _command, std::wstring _ifOn);
 		void DisplayCloneCount();
 		void DisplaySnapshotCount();
-
+		void UpdateCloneCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void BrowseTimeline(int _gesture, int _frameRewind);
 		void MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC);
 
