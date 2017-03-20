@@ -29,17 +29,20 @@ namespace Epoch {
 	TimeManager::~TimeManager() {
 		//Level manager will clear delete clones
 		delete mTimeline;
+		VRInputManager::GetInstance().GetInputTimeline()->Clear();
 		ClearClones();
+		mTimeline = nullptr;
+		instanceTimemanager = nullptr;
 	}
 
 	void TimeManager::Update(float _delta) {
+	
+		mDeltaTime = _delta;
+
 		if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator() != nullptr || LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator() != nullptr) {
 
 			if (!LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->isTimePaused() && !LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->isTimePaused()) {
-
 				mTimestamp += _delta;
-				mDeltaTime = _delta;
-
 				//If its time for a snapshot
 				if (mTimestamp >= RecordingRate) {
 					mTimestamp -= RecordingRate;
@@ -102,6 +105,7 @@ namespace Epoch {
 			if (!instanceTimemanager) {
 				instanceTimemanager = new TimeManager();
 
+
 				instanceTimemanager->AddAllTexturesToQueue();
 			}
 			return instanceTimemanager;
@@ -110,6 +114,8 @@ namespace Epoch {
 		void TimeManager::AddObjectToTimeline(BaseObject * _obj) {
 			if (_obj != nullptr)
 			{
+				if (!mTimeline)
+					mTimeline = new Timeline();
 				mTimeline->AddBaseObject(_obj, _obj->GetUniqueID());
 				//Level* templvl = LevelManager::GetInstance().GetCurrentLevel();
 				instanceTimemanager->AddInterpolatorToObject(_obj);

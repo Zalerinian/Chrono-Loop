@@ -1,8 +1,9 @@
+#include "MeshComponent.h"
 #include "BaseObject.h"
 #include "Component.h"
 #include "../Rendering/RenderShape.h"
 #include "../Rendering/Renderer.h"
-#include "MeshComponent.h"
+#include "../Common/Settings.h"
 
 #define DESTROY_NODE(x) { \
 	if(x != nullptr) { \
@@ -17,7 +18,15 @@ namespace Epoch {
 		mType = eCOMPONENT_MESH;
 		mShape = new RenderShape(_path, true, ePS_TEXTURED, eVS_TEXTURED, eGS_PosNormTex);
 		mShape->GetContext().mRasterState = eRS_FILLED;
-		mNode = Renderer::Instance()->AddNode(mShape);
+		if (!Settings::GetInstance().GetBool("LevelIsLoading")) {
+			mNode = Renderer::Instance()->AddNode(mShape);
+			mVisible = true;
+		}
+		else
+		{
+			mVisible = false;
+			mNode = nullptr;
+		}
 	}
 
 	void MeshComponent::Update() {
@@ -32,7 +41,7 @@ namespace Epoch {
 		delete mShape;
 	}
 
-	void MeshComponent::SetVisible(bool _vis) {
+	MeshComponent* MeshComponent::SetVisible(bool _vis) {
 		// TODO: Check to see if this is an efficient way to make meshes appear and disappear, because this involves
 		// a bit of looping. It could possibly be more efficient to set a bool on the render shape saying it's
 		// invisible.
@@ -43,18 +52,21 @@ namespace Epoch {
 				mNode = Renderer::Instance()->AddNode(mShape);
 				mVisible = true;
 			}
-		} else {
+		}
+		else {
 			if (mVisible) {
 				DESTROY_NODE(mNode);
 				mVisible = false;
 			}
 		}
+		return this;
 	}
 
-	void MeshComponent::AddTexture(const char * _path, TextureType _type) {
+	MeshComponent* MeshComponent::AddTexture(const char * _path, TextureType _type) {
 		DESTROY_NODE(mNode);
 		mShape->AddTexture(_path, _type);
 		mNode = Renderer::Instance()->AddNode(mShape);
+		return this;
 	}
 
 	void MeshComponent::SetRasterState(RasterState _t) {

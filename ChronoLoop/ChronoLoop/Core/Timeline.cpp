@@ -243,7 +243,7 @@ namespace Epoch {
 			//Loop to find the same collider component
 			for (unsigned int j = 0; j < _obj->GetComponentCount(eCOMPONENT_COLLIDER); j++) {
 				Component* currComp = _obj->GetComponentIndexed(eCOMPONENT_COLLIDER, j);
-				if (currComp->GetColliderId() == _destComp->mId) {
+				//if (currComp->GetColliderId() == _destComp->mId) {
 					//((Collider*)currComp)->mRewind = true;
 					//((Collider*)currComp)->mShouldMove = false;
 					((Collider*)currComp)->mAcceleration = ((SnapComponent_Physics*)_destComp)->mAcc;
@@ -259,7 +259,7 @@ namespace Epoch {
 						ChangePlayerBitsetToSnap(_destInfo, currComp);
 					else
 					ChangeBitsetToSnap(_destInfo, currComp);
-				}
+				//}
 			}
 			break;
 		}

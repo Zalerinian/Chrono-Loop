@@ -29,7 +29,7 @@ namespace Epoch {
 		std::bitset<32>mBitset;	//Base object and componets enabled or disabled //0 for the baseobject and 1-31 for the components
 	};
 
-	
+
 	//struct SnapInfoPlayer : SnapInfo {
 
 	//	matrix4 mPlayerWorldPos;
@@ -102,7 +102,7 @@ namespace Epoch {
 		void RemoveFromTimeline(unsigned short _id);
 		bool RewindMakeClone(unsigned int _snaptime);
 		bool RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
-		void MoveObjectToSnap(unsigned int _snaptime, unsigned short _id,bool isClone);
+		void MoveObjectToSnap(unsigned int _snaptime, unsigned short _id, bool isClone);
 		void MoveAllObjectsToSnap(unsigned int _snaptime);
 		void MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void SetObjectBirthTime(unsigned short _id);

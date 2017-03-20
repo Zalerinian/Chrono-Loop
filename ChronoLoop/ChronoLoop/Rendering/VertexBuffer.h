@@ -4,6 +4,7 @@
 #include <d3d11.h>
 #include "renderer.h"
 #include <wrl/client.h>
+#include "../Common/Common.h"
 
 namespace Epoch {
 	template<typename T>
@@ -28,6 +29,7 @@ namespace Epoch {
 
 	template<typename T>
 	unsigned int VertexBuffer<T>::AddVerts(std::string _name, const T * _verts, unsigned int _numVerts) {
+		Renderer::Instance()->GetRendererLock().lock();
 		unsigned int offset = 0;
 		if (mOffsets.count(_name) > 0)
 			offset = mOffsets.at(_name);
@@ -36,6 +38,7 @@ namespace Epoch {
 				D3D11_BUFFER_DESC desc;
 				mVertexBuffer->GetDesc(&desc);
 
+				SystemLogger::Debug() << "Vertex buffer mark '" << (mOffsets.size() + 1) << "'" << std::endl;
 				D3D11_SUBRESOURCE_DATA initData;
 				unsigned int oldSize = desc.ByteWidth / sizeof(T);
 				unsigned int newSize = oldSize + _numVerts;
@@ -67,6 +70,7 @@ namespace Epoch {
 			}
 			mOffsets[_name] = offset;
 		}
+		Renderer::Instance()->GetRendererLock().unlock();
 		return offset;
 	}
 	template<typename T>

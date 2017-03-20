@@ -11,6 +11,7 @@
 #include "RenderSet.h"
 #include "RenderShape.h"
 #include <wrl/client.h>
+#include <mutex>
 
 namespace Epoch {
 
@@ -56,6 +57,8 @@ namespace Epoch {
 
 		RenderShape* mScenePPQuad = nullptr, *mSceneScreenQuad = nullptr;
 
+		std::mutex mRendererLock;
+
 		//Pat Added
 		//DirectWrite Drawing componets
 
@@ -73,7 +76,7 @@ namespace Epoch {
 		void InitializeSceneQuad();
 		void SetStaticBuffers();
 
-		matrix4 mEyePosLeft, mEyePosRight, mEyeProjLeft, mEyeProjRight, mHMDPos, mDebugCameraPos;
+		matrix4 mEyePosLeft, mEyePosRight, mEyeProjLeft, mEyeProjRight, mHMDPos;
 
 		POINT mMouseOrigin;
 		bool mIsMouseDown = false;
@@ -110,7 +113,8 @@ namespace Epoch {
 		GhostList<matrix4>::GhostNode* AddNode(RenderShape *_node);
 		void Render(float _deltaTime);
 
-		inline void SetDebugCameraPosition(matrix4 _mat) { mDebugCameraPos = _mat; }
+		void ClearRenderSet();
+
 
 		inline Microsoft::WRL::ComPtr<ID3D11Device> GetDevice() { return mDevice; }
 		inline Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetContext() { return mContext; }
@@ -121,5 +125,6 @@ namespace Epoch {
 		inline Microsoft::WRL::ComPtr<ID3D11Texture2D> GetRTViewTexture() { return mMainViewTexture; }
 		inline HWND GetWindow() { return mWindow; }
 		inline RenderShape* GetSceneQuad() { return mScenePPQuad; }
+		inline std::mutex& GetRendererLock() { return mRendererLock; }
 	};
 }

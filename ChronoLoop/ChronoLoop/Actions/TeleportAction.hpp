@@ -26,11 +26,14 @@ namespace Epoch {
 			mBlockObject  = cLevel->FindObjectWithName("Door1");
 			mExitObject   = cLevel->FindObjectWithName("Door2");
 			mServerObject = cLevel->FindObjectWithName("Servers");
-			mPlaneMesh    = (MeshComponent*)mPlaneObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mWallsMesh    = (MeshComponent*)mWallsObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mBlockMesh    = (MeshComponent*)mBlockObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mExitMesh     = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mServerMesh = (MeshComponent*)mServerObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			if(mPlaneObject)
+			{
+				mPlaneMesh    = (MeshComponent*)mPlaneObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+				mWallsMesh    = (MeshComponent*)mWallsObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+				mBlockMesh    = (MeshComponent*)mBlockObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+				mExitMesh     = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+				mServerMesh = (MeshComponent*)mServerObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			}
 		}
 
 		virtual void Update() {

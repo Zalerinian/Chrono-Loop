@@ -27,7 +27,7 @@ namespace Epoch
 
 	void Physics::Destroy()
 	{
-		
+
 
 		if (mInstance)
 		{
@@ -718,7 +718,7 @@ namespace Epoch
 					collider = (Collider*)Colliders[x];
 					if (collider->IsEnabled() && (collider->mIsTrigger || collider->mShouldMove))
 					{
-						if(!collider->mIsTrigger)
+						if (!collider->mIsTrigger)
 							collider->mTotalForce = collider->mForces + collider->mWeight + collider->mDragForce;
 
 						codeComponents = collider->mObject->GetComponents(eCOMPONENT_CODE);

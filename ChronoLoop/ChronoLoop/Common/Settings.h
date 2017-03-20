@@ -1,5 +1,6 @@
 #pragma once
 #include <unordered_map>
+#include <mutex>
 
 namespace Epoch {
 
@@ -15,6 +16,7 @@ namespace Epoch {
 			std::unordered_map<std::string, int>            mInts;
 			std::unordered_map<std::string, unsigned int>   mUInts;
 			std::unordered_map<std::string, std::string>    mStrings;
+			std::mutex                                      mLock;
 
 		public:
 			bool GetBool(std::string _key);

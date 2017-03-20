@@ -245,7 +245,7 @@ namespace Epoch {
 		mRightViewport.TopLeftX = (FLOAT)scd.BufferDesc.Width / 2;
 
 		mFullViewport = mLeftViewport;
-		mFullViewport.Width = scd.BufferDesc.Width;
+		mFullViewport.Width = (FLOAT)scd.BufferDesc.Width;
 
 		D3D11_VIEWPORT viewports[] = { mLeftViewport, mRightViewport, mFullViewport };
 		mContext->RSSetViewports(ARRAYSIZE(viewports), viewports);
@@ -357,6 +357,10 @@ namespace Epoch {
 		SetD3DName(mDepthBuffer.Get(), "Main Depth Buffer");
 		SetD3DName(mVPBuffer.Get(), "View-Projection Constant Buffer");
 		SetD3DName(mPositionBuffer.Get(), "Model Constant Buffer");
+
+		SetD3DName(mSceneTexture.Get(), "Post Processing Texture");
+		SetD3DName(mSceneSRV.Get(), "Scene Texture SRV");
+
 #endif
 	}
 
@@ -398,35 +402,35 @@ namespace Epoch {
 		if (!CommandConsole::Instance().willTakeInput()) {
 			//w
 			if (GetAsyncKeyState('W')) {
-				mDebugCameraPos = matrix4::CreateTranslation(0, 0, -_moveSpd * _delta) * mDebugCameraPos;
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateTranslation(0, 0, -_moveSpd * _delta) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 			//s
 			if (GetAsyncKeyState('S')) {
-				mDebugCameraPos = matrix4::CreateTranslation(0, 0, _moveSpd * _delta) * mDebugCameraPos;
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateTranslation(0, 0, _moveSpd * _delta) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 			//a
 			if (GetAsyncKeyState('A')) {
-				mDebugCameraPos = matrix4::CreateTranslation(-_moveSpd * _delta, 0, 0) * mDebugCameraPos;
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateTranslation(-_moveSpd * _delta, 0, 0) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 			//d
 			if (GetAsyncKeyState('D')) {
-				mDebugCameraPos = matrix4::CreateTranslation(_moveSpd * _delta, 0, 0) * mDebugCameraPos;
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateTranslation(_moveSpd * _delta, 0, 0) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 			// Q
 			if (GetAsyncKeyState('Q')) {
-				mDebugCameraPos = matrix4::CreateZRotation(_rotSpd * _delta) * mDebugCameraPos;
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateZRotation(_rotSpd * _delta) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 			// E
 			if (GetAsyncKeyState('E')) {
-				mDebugCameraPos = matrix4::CreateZRotation(-_rotSpd * _delta) * mDebugCameraPos;
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateZRotation(-_rotSpd * _delta) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 			//x
 			if (GetAsyncKeyState(VK_CONTROL)) {
-				mDebugCameraPos = matrix4::CreateTranslation(0, -_moveSpd * _delta, 0) * mDebugCameraPos;
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateTranslation(0, -_moveSpd * _delta, 0) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 
 			if (GetAsyncKeyState(VK_SPACE)) {
-				mDebugCameraPos = matrix4::CreateTranslation(0, _moveSpd * _delta, 0) * mDebugCameraPos;
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateTranslation(0, _moveSpd * _delta, 0) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 			if (GetAsyncKeyState(VK_LBUTTON) & 1 && !mIsMouseDown) {
 				GetCursorPos(&mMouseOrigin);
@@ -443,7 +447,7 @@ namespace Epoch {
 				float dx = -(now.x - mMouseOrigin.x) * _rotSpd * _delta;
 				float dy = -(now.y - mMouseOrigin.y) * _rotSpd * _delta;
 
-				mDebugCameraPos = matrix4::CreateXRotation(dy) * matrix4::CreateYRotation(dx) * mDebugCameraPos;
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateXRotation(dy) * matrix4::CreateYRotation(dx) * VRInputManager::GetInstance().GetPlayerPosition();
 
 				// Reset cursor to center of the window.
 				WINDOWINFO winfo;
@@ -454,7 +458,7 @@ namespace Epoch {
 			}
 		}
 
-		mVPLeftData.view = mDebugCameraPos.Transpose().Invert();
+		mVPLeftData.view = VRInputManager::GetInstance().GetPlayerPosition().Transpose().Invert();
 		mVPRightData = mVPLeftData;
 		UpdateGSBuffers();
 		//UpdateLBuffers();
@@ -614,9 +618,8 @@ namespace Epoch {
 
 
 		if (!mVrSystem) {
-			mDebugCameraPos = matrix4::CreateYRotation(DirectX::XM_PI / 2) * VRInputManager::GetInstance().GetPlayerPosition();
 			mVPLeftData.projection.matrix = DirectX::XMMatrixPerspectiveFovRH(70, (float)_height / (float)_width, 0.1f, 1000);
-			mVPLeftData.view = mDebugCameraPos.Transpose().Invert();
+			mVPLeftData.view = VRInputManager::GetInstance().GetPlayerPosition().Transpose().Invert();
 			mVPLeftData.projection = mVPLeftData.projection.Transpose();
 			mVPRightData = mVPLeftData;
 		}
@@ -625,11 +628,18 @@ namespace Epoch {
 		return true;
 	}
 
+	void Renderer::ClearRenderSet()
+	{
+		mRenderSet.ClearSet();
+	}
+
+
 	void Renderer::Render(float _deltaTime) {
 
 		float color[4] = { 0.251f, 0.709f, 0.541f, 1 };
 
 		// Setup the Scene Render Target 
+		mRendererLock.lock();
 		mContext->OMSetRenderTargets(1, mSceneView.GetAddressOf(), mDSView.Get());
 		mContext->ClearRenderTargetView(mSceneView.Get(), color);
 		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -655,6 +665,7 @@ namespace Epoch {
 
 
 		mChain->Present(mUseVsync ? 1 : 0, 0);
+		mRendererLock.unlock();
 	}
 
 #pragma endregion Public Functions

@@ -39,6 +39,7 @@ namespace Epoch {
 			offset = sInstance->mOffsets.at(_Name);
 		else
 		{
+			Renderer::Instance()->GetRendererLock().lock();
 			if (sInstance->mIndexBuffer)
 			{
 				D3D11_BUFFER_DESC desc;
@@ -52,7 +53,7 @@ namespace Epoch {
 				memcpy((char *)(initData.pSysMem) + desc.ByteWidth, _Indices, sizeof(unsigned int) * _NumIndices);
 				desc.ByteWidth += sizeof(unsigned int) * _NumIndices;
 				ID3D11Buffer *newBuffer;
-				Renderer::Instance()->GetDevice()->CreateBuffer(&desc, &initData, &newBuffer);
+				HRESULT hr = Renderer::Instance()->GetDevice()->CreateBuffer(&desc, &initData, &newBuffer);
 				Renderer::Instance()->GetContext()->CopySubresourceRegion(newBuffer, 0, 0, 0, 0, sInstance->mIndexBuffer.Get(), 0, 0);
 				sInstance->mIndexBuffer.Attach(newBuffer);
 				//sInstance->mIndexBuffer = newBuffer;
@@ -75,6 +76,7 @@ namespace Epoch {
 				Renderer::Instance()->GetDevice()->CreateBuffer(&desc, &initData, sInstance->mIndexBuffer.GetAddressOf());
 				SetD3DName(sInstance->mIndexBuffer.Get(), "The Index Buffer");
 			}
+			Renderer::Instance()->GetRendererLock().unlock();
 			sInstance->mOffsets[_Name] = offset;
 		}
 		return offset;

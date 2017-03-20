@@ -36,7 +36,10 @@ namespace Epoch
 	//Listener----------------------------------------------------
 #pragma region Listener
 
-//void Listener::Update(){}
+	void Listener::Destroy()
+	{
+		AudioWrapper::GetInstance().RemoveListener(this);
+	}
 
 
 
@@ -274,7 +277,7 @@ namespace Epoch
 	}
 
 	void CubeCollider::Update() {
-	/*	if (mNode == nullptr) {
+		/*if (mNode == nullptr) {
 			mNode = Renderer::Instance()->AddNode(mShape);
 		}
 		vec3f size = mMax - mMin;

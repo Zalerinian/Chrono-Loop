@@ -1,5 +1,6 @@
 #include "LevelManager.h"
 #include <thread>
+#include "../Common/Settings.h"
 
 namespace Epoch {
 
@@ -97,6 +98,7 @@ namespace Epoch {
 			}
 			VRInputManager::GetInstance().GetPlayerPosition().Position = mRequested->mStartPosition;
 			mCurrentLevel = mRequested;
+			mCurrentLevel->SetupObjects();
 			mCurrentLevel->CallStart();
 			mRequested = nullptr;
 		}
