@@ -273,13 +273,13 @@ namespace Epoch {
 				return mObjectRewindInterpolators[_id];
 			return nullptr;
 		}
-		Interpolator<matrix4>* TimeManager::GetCloneColliderInterpolator(unsigned short _id) {
+		//Interpolator<matrix4>* TimeManager::GetCloneColliderInterpolator(unsigned short _id) {
 
-			if (mCloneColliderInterpolators.find(_id) != mCloneColliderInterpolators.end())
-				return mCloneColliderInterpolators[_id];
+		//	if (mCloneColliderInterpolators.find(_id) != mCloneColliderInterpolators.end())
+		//		return mCloneColliderInterpolators[_id];
 
-			return nullptr;
-		}
+		//	return nullptr;
+		//}
 
 		std::string TimeManager::GetNextTexture() {
 			for (unsigned int i = 0; i < mCloneTextureBitset.size(); i++) {

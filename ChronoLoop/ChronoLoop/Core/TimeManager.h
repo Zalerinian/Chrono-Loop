@@ -88,7 +88,7 @@ namespace Epoch {
 		static void ToggleSnapshotCountDisplay(void* _command, std::wstring _ifOn);
 		void DisplayCloneCount();
 		void DisplaySnapshotCount();
-
+		void UpdateCloneCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void BrowseTimeline(int _gesture, int _frameRewind);
 		void MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC);
 

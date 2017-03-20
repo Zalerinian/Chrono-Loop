@@ -676,10 +676,10 @@ void Update() {
 	
 	//Enter effect
 	Particle* p = &Particle::Init();
-	p->SetColors(vec4f(.2, .2, 1, 0), vec4f(0, 1, .2, 0));
+	p->SetColors(vec4f(.2f, .2f, 1, 0), vec4f(0, 1, .2f, 0));
 	p->SetLife(200);
-	p->SetSize(1.25 / 2.0, .15 / .2);
-	ParticleEmitter* emit = new IDC(500, 250, 2, vec4f(2.25, -1, 6.25, 1));
+	p->SetSize(1.25f / 2.0f, .15f / .2f);
+	ParticleEmitter* emit = new IDC(500, 250, 2, vec4f(2.25f, -1, 6.25f, 1));
 	emit->SetParticle(p);
 	emit->SetTexture("../Resources/BasicRectP.png");
 	((IDC*)emit)->y1 = 8;
@@ -688,10 +688,10 @@ void Update() {
 	emit->FIRE();
 
 	p = &Particle::Init();
-	p->SetColors(vec4f(.5, 0, .25, 0), vec4f(.2, .8, .5, 0));
+	p->SetColors(vec4f(.5f, 0, .25f, 0), vec4f(.2f, .8f, .5f, 0));
 	p->SetLife(1000);
-	p->SetSize(.25 , .05);
-	emit = new IDC(500, 150, 1, vec4f(2.25, -1, 6.25, 1));
+	p->SetSize(.25f , .05f);
+	emit = new IDC(500, 150, 1, vec4f(2.25f, -1, 6.25f, 1));
 	emit->SetTexture("../Resources/BasicCircleP.png");
 	emit->SetParticle(p);
 	((IDC*)emit)->y1 = 1;
