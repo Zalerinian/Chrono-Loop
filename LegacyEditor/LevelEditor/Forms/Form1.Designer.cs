@@ -31,8 +31,8 @@ namespace LevelEditor
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Objects");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Hierarchy");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Objects");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Hierarchy");
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -123,6 +123,7 @@ namespace LevelEditor
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.nameBox = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.componentEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spHierarchyPanel)).BeginInit();
             this.spHierarchyPanel.Panel1.SuspendLayout();
@@ -198,7 +199,7 @@ namespace LevelEditor
             this.newToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.newToolStripMenuItem.Text = "&New";
             // 
             // openToolStripMenuItem
@@ -342,6 +343,7 @@ namespace LevelEditor
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.levelSettingsToolStripMenuItem,
+            this.componentEditorToolStripMenuItem,
             this.customizeToolStripMenuItem,
             this.optionsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
@@ -443,13 +445,13 @@ namespace LevelEditor
             this.Tree.Indent = 10;
             this.Tree.Location = new System.Drawing.Point(0, 0);
             this.Tree.Name = "Tree";
-            treeNode1.Name = "Objects";
-            treeNode1.Text = "Objects";
-            treeNode2.Name = "Hierarchy";
-            treeNode2.Text = "Hierarchy";
+            treeNode3.Name = "Objects";
+            treeNode3.Text = "Objects";
+            treeNode4.Name = "Hierarchy";
+            treeNode4.Text = "Hierarchy";
             this.Tree.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2});
+            treeNode3,
+            treeNode4});
             this.Tree.PathSeparator = "/";
             this.Tree.ShowLines = false;
             this.Tree.Size = new System.Drawing.Size(150, 628);
@@ -1421,6 +1423,13 @@ namespace LevelEditor
             this.timer1.Interval = 1;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // componentEditorToolStripMenuItem
+            // 
+            this.componentEditorToolStripMenuItem.Name = "componentEditorToolStripMenuItem";
+            this.componentEditorToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.componentEditorToolStripMenuItem.Text = "Component Editor";
+            this.componentEditorToolStripMenuItem.Click += new System.EventHandler(this.componentEditorToolStripMenuItem_Click);
+            // 
             // Editor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1576,6 +1585,7 @@ namespace LevelEditor
         private System.Windows.Forms.CheckBox visibleCheck;
         private System.Windows.Forms.Button colorSelect;
         private System.Windows.Forms.ToolStripMenuItem levelSettingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem componentEditorToolStripMenuItem;
     }
 }
 

@@ -644,6 +644,25 @@ namespace LevelEditor
             }
         }
 
+        private void componentEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(!mForm.Created)
+            {
+                mForm = new TestPositionForm();
+                if(selectedObject != null)
+                {
+                    mForm.SetObject(selectedObject.mComponentList);
+                } else
+                {
+                    mForm.SetObject(null);
+                }
+                mForm.Show();
+            } else
+            {
+                mForm.Focus();
+            }
+        }
+
         private void levelSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Forms.LevelSettingsForm settings = new Forms.LevelSettingsForm();
