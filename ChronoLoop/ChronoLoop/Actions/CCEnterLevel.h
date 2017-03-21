@@ -104,11 +104,11 @@ namespace Epoch
 
 					//Enter effect
 					Particle* p = &Particle::Init();
-					p->SetPos(vec4f(8.88f, 0, -4.1f, 1));
-					p->SetColors(vec4f(.2f, .2f, 1, 0), vec4f(0, 1, .2f, 0));
+					p->SetPos(vec3f(8.88f, 0, -4.1f));
+					p->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));
 					p->SetLife(200);
 					p->SetSize(1.25f / 2.0f, .15f / .2f);
-					ParticleEmitter* emit = new IDC(500, 250, 2, vec4f(8.88f, 0, -4.1f, 1));
+					ParticleEmitter* emit = new IDC(500, 250, 2, vec3f(8.88f, 0, -4.1f));
 					emit->SetParticle(p);
 					emit->SetTexture("../Resources/BasicRectP.png");
 					((IDC*)emit)->y1 = 8;
@@ -117,11 +117,11 @@ namespace Epoch
 					emit->FIRE();
 
 					p = &Particle::Init();
-					p->SetPos(vec4f(8.88f, 0, -4.1f, 1));
-					p->SetColors(vec4f(.5f, 0, .25f, 0), vec4f(.2f, .8f, .5f, 0));
+					p->SetPos(vec3f(8.88f, 0, -4.1f));
+					p->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
 					p->SetLife(1000);
 					p->SetSize(.25f, .05f);
-					emit = new IDC(500, 150, 1, vec4f(8.88f, 0, -4.1f, 1));
+					emit = new IDC(500, 150, 1, vec3f(8.88f, 0, -4.1f));
 					emit->SetTexture("../Resources/BasicCircleP.png");
 					emit->SetParticle(p);
 					((IDC*)emit)->y1 = 1;

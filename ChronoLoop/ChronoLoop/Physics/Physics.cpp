@@ -827,8 +827,8 @@ namespace Epoch
 						}
 						else if (collider->mColliderType == Collider::eCOLLIDER_Cube)//Check CubeCollider's collision with other objects
 						{
-							if (collider->mObject->GetName() == "mmDoor")
-								((CodeComponent*)codeComponents[0])->OnTriggerEnter(*collider, *otherCol);
+							//if (collider->mObject->GetName() == "mmDoor")
+							//	((CodeComponent*)codeComponents[0])->OnTriggerEnter(*collider, *otherCol);
 
 							CubeCollider* aabb1 = (CubeCollider*)collider;
 							for (int j = 0; j < objs; ++j)
