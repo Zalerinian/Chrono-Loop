@@ -16,10 +16,10 @@ namespace Epoch
 				colliding = true;
 
 				float avgElasticity = (_col.mElasticity + _other.mElasticity) / 2;
-				vec4f collisionNormal = (_col.GetPos() - _other.GetPos()).Normalize();
+				vec3f collisionNormal = (_col.GetPos() - _other.GetPos()).Normalize();
 
-				vec4f rest = _col.mVelocity;
-				float dir = (collisionNormal * vec4f(0, 1, 0, 1));
+				vec3f rest = _col.mVelocity;
+				float dir = (collisionNormal * vec3f(0, 1, 0));
 				if ((dir < 0) && (fabsf(rest.x) < 0.1f && fabsf(rest.y) < 0.1f && fabsf(rest.z) < 0.1f))
 					return;
 

@@ -16,7 +16,7 @@ namespace Epoch
 				colliding = true;
 
 				float avgElasticity = (_col.mElasticity + _other.mElasticity) / 2;
-				vec4f collisionNormal = (_col.GetPos() - _other.GetPos()).Normalize();
+				vec3f collisionNormal = (_col.GetPos() - _other.GetPos()).Normalize();
 				_col.mVelocity += collisionNormal * (1 + avgElasticity);
 			}
 			else

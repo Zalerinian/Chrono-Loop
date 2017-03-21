@@ -56,7 +56,7 @@ namespace Epoch
 					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity); //new BaseObject("Controller2", identity);
 					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity); //new BaseObject("headset", transform);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
-					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
+					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), false);
 					BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
 					((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
 					MeshComponent *rightRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
@@ -75,7 +75,7 @@ namespace Epoch
 
 					//pat added
 					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
-					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
+					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), true);
 					BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
 					((BoxSnapToControllerAction*)pickup2)->mControllerRole = eControllerType_Secondary;
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
