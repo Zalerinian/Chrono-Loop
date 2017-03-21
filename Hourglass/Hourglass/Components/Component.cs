@@ -12,17 +12,28 @@ namespace Hourglass
         protected List<Component> mContainerReference;
         protected BaseObject mOwner = null;
 
+        private static readonly System.Drawing.Font 
+            mPlaceholderFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25f, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0))),
+            mActiveFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 
-        int Width {
+        public int Width {
             get {
                 return mGroupBox.Size.Width;
             }
         }
 
-        int Height {
+        public int Height {
             get {
                 return mGroupBox.Size.Height;
             }
+        }
+
+        public System.Drawing.Font PlaceholderFont {
+            get { return mPlaceholderFont; }
+        }
+
+        public System.Drawing.Font ActiveFont {
+            get { return mActiveFont; }
         }
 
         /// <summary>

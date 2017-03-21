@@ -16,7 +16,6 @@ namespace Hourglass
         protected Label mLbScaleX, mLbScaleY, mLbScaleZ;
 
         protected TextBox mName;
-        protected System.Drawing.Font mPlaceholderFont, mActiveFont;
         protected Panel mPosPanel, mRotPanel, mScalePanel;
 
         protected NumericUpDown mPosX, mPosY, mPosZ;
@@ -28,19 +27,19 @@ namespace Hourglass
         public string Name {
             get { return mNameIsPlaceholder ? "" : mName.Text; }
             set {
-                mName.Text = value;
                 if(!string.IsNullOrWhiteSpace(value))
                 {
-                    mName.Font = mActiveFont;
+                    mName.Font = ActiveFont;
                     mName.ForeColor = System.Drawing.SystemColors.ControlText;
                     mNameIsPlaceholder = false;
                 }
                 else
                 {
-                    mName.Font = mPlaceholderFont;
+                    mName.Font = PlaceholderFont;
                     mName.ForeColor = System.Drawing.SystemColors.ControlDark;
                     mNameIsPlaceholder = true;
                 }
+                mName.Text = value;
             }
         }
 
@@ -96,11 +95,6 @@ namespace Hourglass
 
             #region Component Setup
             int ContentWidth = (mGroupBox.Size - mGroupBox.Padding.Size - mGroupBox.Margin.Size).Width;
-
-            // Fonts
-            mPlaceholderFont = new System.Drawing.Font("Calibri", 8.25f, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            mActiveFont = new System.Drawing.Font("Calibri", 8.25f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-
 
             // Labels
             mLbPosX.Name = "mLbPosX";
@@ -183,7 +177,7 @@ namespace Hourglass
         protected override void OnMenuClick_Reset(object sender, EventArgs e)
         {
             mName.Text = "Object Name...";
-            mName.Font = mPlaceholderFont;
+            mName.Font = PlaceholderFont;
             mName.ForeColor = System.Drawing.SystemColors.ControlDark;
             mName.Refresh();
             mNameIsPlaceholder = true;
@@ -206,7 +200,7 @@ namespace Hourglass
             if (mNameIsPlaceholder)
             {
                 mNameIsPlaceholder = false;
-                mName.Font = mActiveFont;
+                mName.Font = ActiveFont;
                 mName.ForeColor = System.Drawing.SystemColors.ControlText;
                 mName.Text = "";
             }
@@ -217,7 +211,7 @@ namespace Hourglass
             if(String.IsNullOrWhiteSpace(mName.Text))
             {
                 mNameIsPlaceholder = true;
-                mName.Font = mPlaceholderFont;
+                mName.Font = PlaceholderFont;
                 mName.ForeColor = System.Drawing.SystemColors.ControlDark;
                 mName.Text = "Object Name...";
             }
@@ -229,12 +223,12 @@ namespace Hourglass
             {
                 if(string.IsNullOrWhiteSpace(mName.Text) || mNameIsPlaceholder)
                 {
-                    mOwner.Node.NodeFont = mPlaceholderFont;
+                    mOwner.Node.NodeFont = PlaceholderFont;
                     mOwner.Node.Text = "<Unnamed Object>";
                 }
                 else
                 {
-                    mOwner.Node.NodeFont = mActiveFont;
+                    mOwner.Node.NodeFont = ActiveFont;
                     mOwner.Node.Text = mName.Text;
                 }
             }

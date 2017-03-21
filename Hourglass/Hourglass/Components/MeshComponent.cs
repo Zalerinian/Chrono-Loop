@@ -6,6 +6,10 @@ namespace Hourglass
 {
     public class MeshComponent : Component
     {
+		//public delegate void dTextBoxUpdate(string value);
+		//public event dTextBoxUpdate MeshUpdated;
+		//public event dTextBoxUpdate TextureUpdated;
+
         protected System.Drawing.Font mPlaceholderFont, mActiveFont;
 
         protected Label mLbMesh, mLbDiffuse;
@@ -115,12 +119,12 @@ namespace Hourglass
         protected override void OnMenuClick_Reset(object sender, EventArgs e)
         {
             mMesh.Text = "Mesh File...";
-            mMesh.Font = mPlaceholderFont;
+            mMesh.Font = PlaceholderFont;
             mMesh.ForeColor = System.Drawing.SystemColors.ControlDark;
             mMesh.Tag = new TextBoxTag(true, "Mesh File...");
 
             mDiffuse.Text = "Texture File...";
-            mDiffuse.Font = mPlaceholderFont;
+            mDiffuse.Font = PlaceholderFont;
             mDiffuse.ForeColor = System.Drawing.SystemColors.ControlDark;
             mDiffuse.Tag = new TextBoxTag(true, "Texture File...");
         }
@@ -137,7 +141,7 @@ namespace Hourglass
             {
                 TextBoxTag tag = ((TextBoxTag)tb.Tag);
                 tag.Placeholder = false;
-                tb.Font = mActiveFont;
+                tb.Font = ActiveFont;
                 tb.ForeColor = System.Drawing.SystemColors.ControlText;
                 tb.Text = "";
             }
