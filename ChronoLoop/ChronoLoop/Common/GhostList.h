@@ -78,21 +78,21 @@ namespace Epoch {
 			n = n->mNext;
 		}
 		if (_data.size() != mSize) {
-			SystemLogger::Error() << "Something has gone wrong creating the data list: The resulting size is not what was expected. Is something corrupt?" << std::endl;
+			SystemLogger::Error() << "[GhostList] Something has gone wrong creating the data list: The resulting size (" << _data.size() << ") is not what was expected (" << mSize << "). Is something corrupt?" << std::endl;
 		}
 	}
 
 	template<>
 	inline void GhostList<matrix4>::GetData(std::vector<matrix4>& _data) {
 		_data.clear();
-		_data.reserve(mSize); 
+		_data.reserve(mSize);
 		GhostNode *n = mHead;
 		while (n != nullptr) {
 			_data.push_back(n->data.Transpose());
 			n = n->mNext;
 		}
 		if (_data.size() != mSize) {
-			SystemLogger::Error() << "Something has gone wrong creating the data list: The resulting size is not what was expected. Is something corrupt?" << std::endl;
+			SystemLogger::Error() << "[GhostList] Something has gone wrong creating the data list: The resulting size (" << _data.size() << ") is not what was expected (" << mSize << "). Is something corrupt?" << std::endl;
 		}
 	}
 

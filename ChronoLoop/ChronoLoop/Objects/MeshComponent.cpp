@@ -65,7 +65,9 @@ namespace Epoch {
 	MeshComponent* MeshComponent::AddTexture(const char * _path, TextureType _type) {
 		DESTROY_NODE(mNode);
 		mShape->AddTexture(_path, _type);
-		mNode = Renderer::Instance()->AddNode(mShape);
+		if (mVisible) {
+			mNode = Renderer::Instance()->AddNode(mShape);
+		}
 		return this;
 	}
 
@@ -73,7 +75,9 @@ namespace Epoch {
 		if (_t != mShape->GetContext().mRasterState) {
 			DESTROY_NODE(mNode);
 			mShape->GetContext().mRasterState = _t;
-			mNode = Renderer::Instance()->AddNode(mShape);
+			if (mVisible) {
+				mNode = Renderer::Instance()->AddNode(mShape);
+			}
 		}
 	}
 
