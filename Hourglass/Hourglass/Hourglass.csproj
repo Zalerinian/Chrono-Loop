@@ -108,6 +108,7 @@
     <Compile Include="Components\Colliders\SphereCollider.cs" />
     <Compile Include="Components\Component.cs" />
     <Compile Include="Components\Colliders\PlaneCollider.cs" />
+    <Compile Include="Components\IGizmoAttachment.cs" />
     <Compile Include="Components\MeshComponent.cs" />
     <Compile Include="Components\TransformComponent.cs" />
     <Compile Include="Controls\MenuButton.cs">
@@ -151,6 +152,10 @@
     <Compile Include="Forms\TestPositionForm.Designer.cs">
       <DependentUpon>TestPositionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Rendering\Renderer.cs" />
+    <Compile Include="Rendering\ColoredShape.cs" />
+    <Compile Include="Rendering\RenderShape.cs" />
+    <Compile Include="Rendering\TexturedShape.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="ToolObject.cs" />
     <Compile Include="ToolObjectColor.cs" />
