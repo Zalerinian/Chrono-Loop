@@ -15,6 +15,7 @@ struct GSOutput
 	float4 normal : NORMAL0;
 	float4 texCoord : COLOR;
 	float4 wpos : WORLDPOS;
+    float4 shadowPos : SHADOW;
 	uint viewport : SV_ViewportArrayIndex;
 };
 
@@ -24,6 +25,7 @@ struct GSInput
 	float4 normal : NORMAL0;
 	float4 texCoord : COLOR;
 	float4 wpos : WORLDPOS;
+    float4 shadowPos : SHADOW;
 };
 
 [maxvertexcount(6)]
@@ -40,6 +42,7 @@ void main(triangle GSInput input[3], inout TriangleStream<GSOutput> TriStream)
 		output.texCoord = input[i].texCoord;
 		output.wpos = input[i].wpos;
 		output.viewport = 0;
+        output.shadowPos = input[i].shadowPos;
 		TriStream.Append(output);
 	}
 
@@ -53,6 +56,7 @@ void main(triangle GSInput input[3], inout TriangleStream<GSOutput> TriStream)
 		output.texCoord = input[j].texCoord;
 		output.wpos = input[j].wpos;
 		output.viewport = 1;
+        output.shadowPos = input[j].shadowPos;
 		TriStream.Append(output);
 	}
 	TriStream.RestartStrip();

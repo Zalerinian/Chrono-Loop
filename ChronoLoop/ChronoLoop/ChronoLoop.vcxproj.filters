@@ -578,9 +578,6 @@
     <ClCompile Include="Common\Logger.cpp">
       <Filter>Common\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rendering\Renderer.cpp">
-      <Filter>Rendering\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Input\Controller.cpp">
       <Filter>Input\Source Files</Filter>
     </ClCompile>
@@ -719,6 +716,9 @@
     <ClCompile Include="PathPlanning.cpp">
       <Filter>Pathing</Filter>
     </ClCompile>
+    <ClCompile Include="Rendering\Renderer.cpp">
+      <Filter>Rendering\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
@@ -785,6 +785,9 @@
       <Filter>Rendering\Shaders\Geometry Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Rendering\Shaders\NDCVertex.hlsl">
+      <Filter>Rendering\Shaders\Vertex Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\ShadowVS.hlsl">
       <Filter>Rendering\Shaders\Vertex Shaders</Filter>
     </FxCompile>
   </ItemGroup>

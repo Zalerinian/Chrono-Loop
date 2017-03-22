@@ -54,6 +54,7 @@ namespace Epoch {
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> mSSamplerState;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mDLBufferS, mPLBufferS, mSLBufferS;
 		ViewProjectionBuffer mSLVPB, mDLVPB, mPLVPB;
+		D3D11_VIEWPORT mShadowVP;
 
 		RenderShape* mScenePPQuad = nullptr, *mSceneScreenQuad = nullptr;
 

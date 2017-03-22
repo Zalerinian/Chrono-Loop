@@ -103,7 +103,11 @@ namespace Epoch {
 
 		//mContext->UpdateSubresource(mDLBufferS.Get(), 0, nullptr, &mDLVPB, 0, 0);
 		//mContext->UpdateSubresource(mSLBufferS.Get(), 0, nullptr, &mSLVPB, 0, 0);
-		//mContext->UpdateSubresource(mPLBufferS.Get(), 0, nullptr, &mPLVPB, 0, 0);
+		mPLVPB.view = matrix4();
+		mPLVPB.view.fourth = mPLData.mPosition;
+		//mPLVPB.projection = DirectX::XMMatrixPerspectiveFovRH(360, (float)1366.0f / (float)720.0f, 0.1f, 1000);
+		mPLVPB.projection = mVPLeftData.projection;
+		mContext->UpdateSubresource(mPLBufferS.Get(), 0, nullptr, &mPLVPB, 0, 0);
 	}
 	Renderer::Renderer() {}
 
@@ -251,24 +255,25 @@ namespace Epoch {
 		mContext->RSSetViewports(ARRAYSIZE(viewports), viewports);
 
 		//Shadows
-		//depthStencilDesc.Format = DXGI_FORMAT_R32_TYPELESS;
-		//depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
-		//
-		//D3D11_DEPTH_STENCIL_VIEW_DESC dvsDesc;
-		//dvsDesc.Format = depthStencilDesc.Format;
-		//dvsDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-		//dvsDesc.Texture2D.MipSlice = 0;
-		//
-		//D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-		//srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
-		//srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-		//srvDesc.Texture2D.MipLevels = depthStencilDesc.MipLevels;
-		//srvDesc.Texture2D.MostDetailedMip = 0;
-		//
-		//mDevice->CreateTexture2D(&depthStencilDesc, NULL, mShadowTextures1.GetAddressOf());
-		//mDevice->CreateDepthStencilView(mShadowTextures1.Get(), &dvsDesc, mSDSView1.GetAddressOf());
-		//mDevice->CreateShaderResourceView(mShadowTextures1.Get(), &srvDesc, &mShadowSRV1);
-		//
+		depthStencilDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
+		depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+		
+		D3D11_DEPTH_STENCIL_VIEW_DESC dvsDesc;
+		dvsDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		dvsDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		dvsDesc.Texture2D.MipSlice = 0;
+		dvsDesc.Flags = 0;
+		
+		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+		srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvDesc.Texture2D.MipLevels = depthStencilDesc.MipLevels;
+		srvDesc.Texture2D.MostDetailedMip = 0;
+		
+		mDevice->CreateTexture2D(&depthStencilDesc, NULL, mShadowTextures1.GetAddressOf());
+		mDevice->CreateDepthStencilView(mShadowTextures1.Get(), &dvsDesc, mSDSView1.GetAddressOf());
+		mDevice->CreateShaderResourceView(mShadowTextures1.Get(), &srvDesc, &mShadowSRV1);
+		
 		//mDevice->CreateTexture2D(&depthStencilDesc, NULL, mShadowTextures2.GetAddressOf());
 		//mDevice->CreateDepthStencilView(mShadowTextures2.Get(), &dvsDesc, mSDSView2.GetAddressOf());
 		//mDevice->CreateShaderResourceView(mShadowTextures2.Get(), &srvDesc, &mShadowSRV2);
@@ -298,15 +303,15 @@ namespace Epoch {
 		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
 		mLBuffer.Attach(pBuff);
 
-		//desc.ByteWidth = sizeof(ViewProjectionBuffer);
-		//mDevice->CreateBuffer(&desc, nullptr, &pBuff);
-		//mDLBufferS.Attach(pBuff);
-		//
-		//mDevice->CreateBuffer(&desc, nullptr, &pBuff);
-		//mPLBufferS.Attach(pBuff);
-		//
-		//mDevice->CreateBuffer(&desc, nullptr, &pBuff);
-		//mSLBufferS.Attach(pBuff);
+		desc.ByteWidth = sizeof(ViewProjectionBuffer);
+		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
+		mDLBufferS.Attach(pBuff);
+		
+		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
+		mPLBufferS.Attach(pBuff);
+		
+		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
+		mSLBufferS.Attach(pBuff);
 
 		//TODO: GET RID OF THIS
 		mDLData.mColor = vec4f(.5, .5, .5, 1);
@@ -343,6 +348,11 @@ namespace Epoch {
 		sDesc.ComparisonFunc = D3D11_COMPARISON_LESS;
 
 		mDevice->CreateSamplerState(&sDesc, mSSamplerState.GetAddressOf());
+
+		char * buffer;
+		int bytes;
+		FileIO::LoadBytes("ShadowVS.cso", &buffer, bytes);
+		mDevice->CreateVertexShader(buffer, bytes, NULL, mShadowVS.GetAddressOf());
 	}
 
 	void Renderer::InitializeObjectNames() {
@@ -471,11 +481,11 @@ namespace Epoch {
 		mContext->OMSetRenderTargets(0, 0, mSDSView1.Get());
 		mContext->ClearDepthStencilView(mSDSView1.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 		//Set VS & PS & GS and light buffer
-		mContext->GSGetShader(NULL, NULL, NULL);
-		mContext->VSGetShader(mShadowVS.GetAddressOf(), 0, 0);
-		mContext->PSGetShader(NULL, NULL, NULL);
+		mContext->GSSetShader(NULL, NULL, NULL);
+		mContext->VSSetShader(mShadowVS.Get(), 0, 0);
+		mContext->PSSetShader(NULL, NULL, NULL);
 
-		mContext->VSGetConstantBuffers(0, 1, mDLBufferS.GetAddressOf());
+		mContext->VSSetConstantBuffers(1, 1, mPLBufferS.GetAddressOf());
 		//TODO: DRAW
 		ProcessRenderSet();
 
@@ -640,10 +650,13 @@ namespace Epoch {
 
 		// Setup the Scene Render Target 
 		mRendererLock.lock();
+		RenderShadowMaps(_deltaTime);
 		mContext->OMSetRenderTargets(1, mSceneView.GetAddressOf(), mDSView.Get());
 		mContext->ClearRenderTargetView(mSceneView.Get(), color);
 		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 		ParticleSystem::Instance()->Render();
+		mContext->PSSetShaderResources(3, 1, mShadowSRV1.GetAddressOf());
+		mContext->PSSetSamplers(3, 1, mSSamplerState.GetAddressOf());
 		if (nullptr == mVrSystem) {
 			RenderNoVR(_deltaTime);
 		}

@@ -145,7 +145,7 @@ void Update() {
 
 	// TODO: Replace all this with a level to run.
 	///*///////////////////////Using this to test physics//////////////////
-
+	//_CrtSetBreakAlloc(4390);
 #if MAINMENU
 
 	Transform transform;
@@ -696,9 +696,6 @@ void Update() {
 
 	LevelManager::GetInstance().RequestLevelChange(mainMenu);
 	mainMenu->CallStart();
-
-	
-	
 
 	//ParticleEmitter * emitt = new ParticleEmitter(-1, 2000, 20, vec4f());
 	//emitt->SetTexture("../Resources/BasicCircleP.png");
