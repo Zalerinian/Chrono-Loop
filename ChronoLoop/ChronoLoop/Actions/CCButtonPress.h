@@ -16,7 +16,7 @@ namespace Epoch
 		BaseObject *Block = nullptr, *Exit = nullptr;
 		CubeCollider* blockCube, *exitCube;
 		//matrix4 blockend, exitend;
-		vec4f blockend, exitend;
+		vec3f blockend, exitend;
 
 		Level* cLevel;
 
@@ -28,10 +28,10 @@ namespace Epoch
 
 			blockCube = (CubeCollider*)Block->mComponents[eCOMPONENT_COLLIDER][0];
 			exitCube = (CubeCollider*)Exit->mComponents[eCOMPONENT_COLLIDER][0];
-			blockend = blockCube->GetPos() - vec4f(0, 2.6f, 0, 1);
-			exitend = exitCube->GetPos() + vec4f(0, 2.6f, 0, 1);
-			//blockend = blockCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, -2.6f, 0, 1));
-			//exitend = exitCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 2.6f, 0, 1));
+			blockend = blockCube->GetPos() - vec3f(0, 2.6f, 0);
+			exitend = exitCube->GetPos() + vec3f(0, 2.6f, 0);
+			//blockend = blockCube->GetTransform().GetMatrix().CreateTranslation(vec3f(0, -2.6f, 0, 1));
+			//exitend = exitCube->GetTransform().GetMatrix().CreateTranslation(vec3f(0, 2.6f, 0, 1));
 		}
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time)
@@ -40,10 +40,10 @@ namespace Epoch
 			{
 				colliding = true;
 
-				vec4f norm = ((ButtonCollider*)&_col)->mPushNormal;
-				vec4f tForce = norm * (norm * _other.mTotalForce);
-				vec4f vel = norm * (norm * _other.mVelocity);
-				vec4f accel = norm * (norm * _other.mAcceleration);
+				vec3f norm = ((ButtonCollider*)&_col)->mPushNormal;
+				vec3f tForce = norm * (norm * _other.mTotalForce);
+				vec3f vel = norm * (norm * _other.mVelocity);
+				vec3f accel = norm * (norm * _other.mAcceleration);
 				if (tForce * norm < 0 && vel * norm < 0 && accel * norm < 0)
 				{
 					_col.mTotalForce = tForce;

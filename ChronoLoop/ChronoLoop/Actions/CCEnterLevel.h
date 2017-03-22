@@ -56,7 +56,7 @@ namespace Epoch
 					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity); //new BaseObject("Controller2", identity);
 					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity); //new BaseObject("headset", transform);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
-					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
+					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), false);
 					BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
 					((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
 					MeshComponent *rightRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
@@ -75,7 +75,7 @@ namespace Epoch
 
 					//pat added
 					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
-					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
+					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), true);
 					BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
 					((BoxSnapToControllerAction*)pickup2)->mControllerRole = eControllerType_Secondary;
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
@@ -104,11 +104,11 @@ namespace Epoch
 
 					//Enter effect
 					Particle* p = &Particle::Init();
-					p->SetPos(vec4f(8.88f, 0, -4.1f, 1));
-					p->SetColors(vec4f(.2f, .2f, 1, 0), vec4f(0, 1, .2f, 0));
+					p->SetPos(vec3f(8.88f, 0, -4.1f));
+					p->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));
 					p->SetLife(200);
 					p->SetSize(1.25f / 2.0f, .15f / .2f);
-					ParticleEmitter* emit = new IDC(500, 250, 2, vec4f(8.88f, 0, -4.1f, 1));
+					ParticleEmitter* emit = new IDC(500, 250, 2, vec3f(8.88f, 0, -4.1f));
 					emit->SetParticle(p);
 					emit->SetTexture("../Resources/BasicRectP.png");
 					((IDC*)emit)->y1 = 8;
@@ -117,11 +117,11 @@ namespace Epoch
 					emit->FIRE();
 
 					p = &Particle::Init();
-					p->SetPos(vec4f(8.88f, 0, -4.1f, 1));
-					p->SetColors(vec4f(.5f, 0, .25f, 0), vec4f(.2f, .8f, .5f, 0));
+					p->SetPos(vec3f(8.88f, 0, -4.1f));
+					p->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
 					p->SetLife(1000);
 					p->SetSize(.25f, .05f);
-					emit = new IDC(500, 150, 1, vec4f(8.88f, 0, -4.1f, 1));
+					emit = new IDC(500, 150, 1, vec3f(8.88f, 0, -4.1f));
 					emit->SetTexture("../Resources/BasicCircleP.png");
 					emit->SetParticle(p);
 					((IDC*)emit)->y1 = 1;
