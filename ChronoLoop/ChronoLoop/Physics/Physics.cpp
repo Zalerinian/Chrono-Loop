@@ -827,6 +827,9 @@ namespace Epoch
 						}
 						else if (collider->mColliderType == Collider::eCOLLIDER_Cube)//Check CubeCollider's collision with other objects
 						{
+							//if (collider->mObject->GetName() == "mmDoor")
+							//	((CodeComponent*)codeComponents[0])->OnTriggerEnter(*collider, *otherCol);
+
 							CubeCollider* aabb1 = (CubeCollider*)collider;
 							for (int j = 0; j < objs; ++j)
 							{
@@ -1070,20 +1073,20 @@ namespace Epoch
 							collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPosition().Position);
 						}
 					}
-				}
 
-				if (collider->IsEnabled() && collider->mShouldMove && collider->mColliderType != Collider::eCOLLIDER_Controller)
-				{
-					collider->mDragForce = collider->mVelocity * (-0.5f * collider->mRHO * collider->mVelocity.Magnitude() * collider->mDrag * collider->mArea);
-					collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
-					collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
+					if (collider->IsEnabled() && collider->mShouldMove && collider->mColliderType != Collider::eCOLLIDER_Controller)
+					{
+						collider->mDragForce = collider->mVelocity * (-0.5f * collider->mRHO * collider->mVelocity.Magnitude() * collider->mDrag * collider->mArea);
+						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
+						collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
 
-					if (fabs(collider->mForces.x) < 0.01f && fabsf(collider->mForces.y) < 0.01f && fabsf(collider->mForces.z) < 0.01f)
-						collider->mForces = { 0,0,0 };
-					else
-						collider->mForces *= 0.99f;
+						if (fabs(collider->mForces.x) < 0.01f && fabsf(collider->mForces.y) < 0.01f && fabsf(collider->mForces.z) < 0.01f)
+							collider->mForces = { 0,0,0 };
+						else
+							collider->mForces *= 0.99f;
 
-					collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
+						collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
+					}
 				}//For all colliders of object end
 			}//For all objects end
 		}

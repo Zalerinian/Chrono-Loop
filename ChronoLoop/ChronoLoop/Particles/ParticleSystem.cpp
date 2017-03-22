@@ -2,6 +2,8 @@
 #include "../Rendering\renderer.h"
 #include "../Core\TimeManager.h"
 #include "../Rendering/RasterizerStateManager.h"
+#include "../Common/Common.h"
+
 namespace Epoch
 {
 	ParticleSystem* ParticleSystem::mSystem = nullptr;
@@ -42,8 +44,8 @@ namespace Epoch
 		char* buffer;
 		int bytes = 0;
 		FileIO::LoadBytes("GSParticles.cso", &buffer, bytes);
-
 		Renderer::Instance()->GetDevice()->CreateGeometryShader(buffer, bytes, nullptr, &mGeometryShader);
+		SetD3DName(mGeometryShader, "GSParticles.cso");
 		delete buffer;
 	}
 	void ParticleSystem::SetVertexPixelShader()
@@ -53,7 +55,7 @@ namespace Epoch
 
 		FileIO::LoadBytes("ParticleVertexShader.cso", &buffer, bytes);
 		Renderer::Instance()->GetDevice()->CreateVertexShader(buffer, bytes, nullptr, &mVShader);
-
+		SetD3DName(mVShader, "ParticleVertexShader.cso");
 		D3D11_INPUT_ELEMENT_DESC iDesc[] =
 		{
 			{ "SV_POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -68,7 +70,7 @@ namespace Epoch
 		FileIO::LoadBytes("ParticlePixelShader.cso", &buffer, bytes);
 		Renderer::Instance()->GetDevice()->CreatePixelShader(buffer, bytes, nullptr, &mPShader);
 		delete buffer;
-
+		SetD3DName(mPShader, "ParticlePixelShader.cso");
 		CD3D11_BUFFER_DESC desc(sizeof(GSMatrix), D3D11_BIND_CONSTANT_BUFFER);
 		Renderer::Instance()->GetDevice()->CreateBuffer(&desc, NULL, &mVBuff);
 	}

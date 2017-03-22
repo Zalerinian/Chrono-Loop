@@ -30,7 +30,6 @@ namespace Epoch
 	struct Particle
 	{
 	public:
-
 		bool mAlive;
 		int mLife, mTotalLife;
 		float mSize, mStartSize, mEndSize;
@@ -101,6 +100,7 @@ namespace Epoch
 
 	class ParticleEmitter
 	{
+		const char* mDebugName = "ParticleEmit";
 		long mID;
 		char* mName;
 

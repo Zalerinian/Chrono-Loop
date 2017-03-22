@@ -29,11 +29,15 @@ namespace Epoch {
 	TimeManager::~TimeManager() {
 		//Level manager will clear delete clones
 		delete mTimeline;
-		if (VRInputManager::GetInstance().GetInputTimeline())
-			VRInputManager::GetInstance().GetInputTimeline()->Clear();
+		if(VRInputManager::GetInstance().GetInputTimeline())
+		VRInputManager::GetInstance().GetInputTimeline()->Clear();
 		ClearClones();
 		mTimeline = nullptr;
 		instanceTimemanager = nullptr;
+		for (auto it = mObjectRewindInterpolators.begin(); it != mObjectRewindInterpolators.end(); ++it) {
+			delete it->second;
+		}
+		mObjectRewindInterpolators.clear();
 	}
 
 	void TimeManager::Update(float _delta) {

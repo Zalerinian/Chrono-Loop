@@ -22,6 +22,7 @@ namespace Epoch {
 		InputTimeline* mInputTimeline = nullptr;
 		float mTweenTimestamp = 0;
 		float mSnapTweenTime = 0;
+		float mDebugDeltaTime = 0;
 
 		VIM(vr::IVRSystem* _vr);
 		~VIM();

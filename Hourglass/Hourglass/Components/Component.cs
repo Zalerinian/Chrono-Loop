@@ -10,6 +10,7 @@ namespace Hourglass
         protected ContextMenuStrip mMenuStrip;
         protected ToolStripMenuItem mMenuItemDelete, mMenuItemReset;
         protected List<Component> mContainerReference;
+        protected BaseObject mOwner = null;
 
 
         int Width {
@@ -31,17 +32,19 @@ namespace Hourglass
         ///     that hold values will be used as the XML keys for their values when written
         ///     in Text mode.
         /// </summary>
-        /// <param name="_container">
-        ///     A List of Components that represents the components of an object that this component will be added to.
+        /// <param name="_owner">
+        ///     The base object that this component is a part of. This allows us to update 
+        ///     any necessary data with the TreeNode.
         /// </param>
         /// <param name="_destructible">
         ///     Whether or not this component can be deleted from an object.
         ///     This is true for everything except an object's transform (Position,
         ///     Rotation, Scale), and its name.
         /// </param>
-        public Component(List<Component> _container, bool _destructible = true)
+        public Component(BaseObject _owner, bool _destructible = true)
         {
-            mContainerReference = _container;
+            mOwner = _owner;
+            mContainerReference = _owner.GetComponents();
             mContainerReference.Add(this);
 
             mGroupBox = new GroupBox();

@@ -182,7 +182,8 @@ namespace Epoch
 
 	void Collider::SetPos(const vec3f& _newPos)
 	{
-		mObject->GetTransform().GetMatrix().fourth = vec4f(_newPos);
+		vec4f v(_newPos);
+		mObject->GetTransform().GetMatrix().fourth = v;
 	}
 
 	//MeshCollider::MeshCollider(BaseObject* _obj, bool _move, vec3f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, char * _path)
@@ -294,7 +295,7 @@ namespace Epoch
 
 	void CubeCollider::SetPos(const vec3f& _newPos)
 	{
-		mObject->GetTransform().GetMatrix().fourth = _newPos;
+		mObject->GetTransform().GetMatrix().fourth = vec4f(_newPos);
 		mMin = mMinOffset + _newPos;
 		mMax = mMaxOffset + _newPos;
 	}

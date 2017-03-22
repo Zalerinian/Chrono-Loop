@@ -72,7 +72,7 @@ void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftControl
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(26801);
+	//_CrtSetBreakAlloc(133054);
 	if (!InitializeWindow(hInstance, nCmdShow, 1366, 720, true)) {
 		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
 		return 2;
@@ -103,8 +103,8 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 
 
 	// Cleanup
-	vr::VR_Shutdown();
 	ShutdownSystems();
+	vr::VR_Shutdown();
 
 	for (int i = 0; i < 40; ++i) {
 		SystemLogger::Warn() << "THE CONSOLE HAS BEEN DETATCHED. IF THIS WINDOW IS STILL OPEN, IT IS OWNED BY THE STEAMVR SERVER. CLOSING THIS WILL CAUSE ISSUES WITH STEAMVR." << std::endl;

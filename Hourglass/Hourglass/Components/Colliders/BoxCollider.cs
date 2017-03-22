@@ -16,7 +16,7 @@ namespace Hourglass {
         protected NumericUpDown mScaleX, mScaleY, mScaleZ;
 
 
-        public BoxCollider(List<Component> _container, int _yOffset = 0) : base(_container, 100 + _yOffset) {
+        public BoxCollider(BaseObject _owner, int _yOffset = 0) : base(_owner, 100 + _yOffset) {
 
             #region Component Creation
 

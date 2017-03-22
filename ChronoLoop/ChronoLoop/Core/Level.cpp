@@ -292,7 +292,7 @@ namespace Epoch {
 				{
 					std::vector<std::string> codeComs;
 					std::string elementType, name, meshFile, textureFile, colliderType;
-					vec4f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity;
+					vec3f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity;
 					float mass, elasticity, staticF, kineticF, normF, drag, radius;
 					bool collider = false, trigger = false, canMove = false, physical = false;
 					pData = pObject->FirstChildElement();
@@ -323,13 +323,11 @@ namespace Epoch {
 									std::string token = s.substr(0, pos);
 									if (collider)
 									{
-										colliderPosition.xyzw[i] = std::strtof(token.c_str(), nullptr);
-										colliderPosition.w = 1;
+										colliderPosition.xyz[i] = std::strtof(token.c_str(), nullptr);
 									}
 									else
 									{
-										position.xyzw[i] = std::strtof(token.c_str(), nullptr);
-										position.w = 1;
+										position.xyz[i] = std::strtof(token.c_str(), nullptr);
 									}
 									i++;
 									s.erase(0, pos + 1);
@@ -343,11 +341,10 @@ namespace Epoch {
 								while ((pos = s.find(",")) != std::string::npos)
 								{
 									std::string token = s.substr(0, pos);
-									rotation.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									rotation.xyz[i] = std::strtof(token.c_str(), nullptr);
 									i++;
 									s.erase(0, pos + 1);
 								}
-								rotation.w = 1;
 							}
 							else if (elementType == "Scale")
 							{
@@ -359,13 +356,11 @@ namespace Epoch {
 									std::string token = s.substr(0, pos);
 									if (collider)
 									{
-										colliderScale.xyzw[i] = std::strtof(token.c_str(), nullptr);
-										colliderScale.w = 1;
+										colliderScale.xyz[i] = std::strtof(token.c_str(), nullptr);
 									}
 									else
 									{
-										scale.xyzw[i] = std::strtof(token.c_str(), nullptr);
-										scale.w = 1;
+										scale.xyz[i] = std::strtof(token.c_str(), nullptr);
 									}
 									i++;
 									s.erase(0, pos + 1);
@@ -414,11 +409,10 @@ namespace Epoch {
 								while ((pos = s.find(",")) != std::string::npos)
 								{
 									std::string token = s.substr(0, pos);
-									normal.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									normal.xyz[i] = std::strtof(token.c_str(), nullptr);
 									i++;
 									s.erase(0, pos + 1);
 								}
-								normal.w = 1;
 							}
 							else if (elementType == "PushNormal")
 							{
@@ -428,11 +422,10 @@ namespace Epoch {
 								while ((pos = s.find(",")) != std::string::npos)
 								{
 									std::string token = s.substr(0, pos);
-									pushNorm.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									pushNorm.xyz[i] = std::strtof(token.c_str(), nullptr);
 									i++;
 									s.erase(0, pos + 1);
 								}
-								pushNorm.w = 1;
 							}
 							else if (elementType == "Gravity")
 							{
@@ -442,11 +435,10 @@ namespace Epoch {
 								while ((pos = s.find(",")) != std::string::npos)
 								{
 									std::string token = s.substr(0, pos);
-									gravity.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									gravity.xyz[i] = std::strtof(token.c_str(), nullptr);
 									i++;
 									s.erase(0, pos + 1);
 								}
-								gravity.w = 1;
 							}
 							else if (elementType == "NormalForce")
 								normF = std::strtof(pData->Value(), nullptr);
