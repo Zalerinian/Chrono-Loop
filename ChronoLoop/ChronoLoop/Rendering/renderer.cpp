@@ -105,8 +105,7 @@ namespace Epoch {
 		//mContext->UpdateSubresource(mSLBufferS.Get(), 0, nullptr, &mSLVPB, 0, 0);
 		mPLVPB.view = matrix4();
 		mPLVPB.view.fourth = mPLData.mPosition;
-		//mPLVPB.projection = DirectX::XMMatrixPerspectiveFovRH(360, (float)1366.0f / (float)720.0f, 0.1f, 1000);
-		mPLVPB.projection = mVPLeftData.projection;
+		mPLVPB.projection = DirectX::XMMatrixPerspectiveFovRH(360, (float)1366.0f / (float)720.0f, 0.1f, 1000);
 		mContext->UpdateSubresource(mPLBufferS.Get(), 0, nullptr, &mPLVPB, 0, 0);
 	}
 	Renderer::Renderer() {}
