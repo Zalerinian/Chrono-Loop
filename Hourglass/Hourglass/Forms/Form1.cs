@@ -78,6 +78,9 @@ namespace Hourglass
 			spWorldView.Panel2.ControlRemoved += ReorderComponents;
 			spWorldView.Panel2.AutoScroll = true;
 
+			btnFocus.Size = new Size(0, 0);
+			btnFocus.Select();
+
 			spWorldView.Panel2.Controls.Add(btnComponentAdd);
 		}
 
@@ -178,6 +181,8 @@ namespace Hourglass
 
 		private void graphicsPanel1_MouseClick(object sender, MouseEventArgs e)
 		{
+			// Give the Focus textbox focus so that we can gladly accept input for the graphics panel.
+			btnFocus.Select();
 			if (e.Button == MouseButtons.Left)
 			{
 				// TODO: Raycast to hit an object. Be sure to apply the camera's rotation in there somehow.
@@ -253,34 +258,37 @@ namespace Hourglass
 			// Todo add movement controls.
 			KeyboardState keys = mKeyboard.GetCurrentKeyboardState();
 
-			// Lateral movement, only if no Control key is held down.
-			if (!keys[Key.LeftControl] && !keys[Key.RightControl])
+			if (btnFocus.ContainsFocus)
 			{
-				if (keys[Key.W])
+				// Lateral movement, only if no Control key is held down.
+				if (!keys[Key.LeftControl] && !keys[Key.RightControl])
 				{
-					Renderer.Instance.CameraPosition -= Renderer.Instance.Forward * 0.1f;
-				}
-				if (keys[Key.S])
-				{
-					Renderer.Instance.CameraPosition += Renderer.Instance.Forward * 0.1f;
-				}
-				if (keys[Key.A])
-				{
-					Renderer.Instance.CameraPosition -= Renderer.Instance.Right * 0.1f;
-				}
-				if (keys[Key.D])
-				{
-					Renderer.Instance.CameraPosition += Renderer.Instance.Right * 0.1f;
-				}
-				if (keys[Key.Space])
-				{
-					Renderer.Instance.CameraPosition += Renderer.Instance.Up * 0.1f;
-				}
-				if (keys[Key.LeftShift] || keys[Key.RightShift])
-				{
-					Renderer.Instance.CameraPosition -= Renderer.Instance.Up * 0.1f;
-				}
-			} // END Not holding control keys
+					if (keys[Key.W])
+					{
+						Renderer.Instance.CameraPosition -= Renderer.Instance.Forward * 0.1f;
+					}
+					if (keys[Key.S])
+					{
+						Renderer.Instance.CameraPosition += Renderer.Instance.Forward * 0.1f;
+					}
+					if (keys[Key.A])
+					{
+						Renderer.Instance.CameraPosition -= Renderer.Instance.Right * 0.1f;
+					}
+					if (keys[Key.D])
+					{
+						Renderer.Instance.CameraPosition += Renderer.Instance.Right * 0.1f;
+					}
+					if (keys[Key.Space])
+					{
+						Renderer.Instance.CameraPosition += Renderer.Instance.Up * 0.1f;
+					}
+					if (keys[Key.LeftShift] || keys[Key.RightShift])
+					{
+						Renderer.Instance.CameraPosition -= Renderer.Instance.Up * 0.1f;
+					}
+				} // END Not holding control keys
+			} // Ensure the Grapics Panel's focus textbox is selected.
 		}
 
 		private void RightToggle_Click(object sender, EventArgs e)
@@ -399,11 +407,13 @@ namespace Hourglass
 		private void mMenuButton_Click(object sender, EventArgs e)
 		{
 			Tree.SelectedNode = ConstructTreeObject(null);
+			btnFocus.Select();
 		}
 
 		private void mCreateMenuAdd_Click(object sender, EventArgs e)
 		{
 			Tree.SelectedNode = ConstructTreeObject(null);
+			btnFocus.Select();
 		}
 
 		private void Tree_AfterSelect(object sender, TreeViewEventArgs e)
@@ -432,6 +442,7 @@ namespace Hourglass
 				Tree.SelectedNode.Expand();
 			}
 			Tree.SelectedNode = n;
+			btnFocus.Select();
 		}
 
 		private TreeNode ConstructTreeObject(TreeNode _parent)

@@ -86,6 +86,7 @@ namespace Hourglass
 			this.audioComponentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.mObjectStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.btnFocus = new System.Windows.Forms.Button();
 			this.menuStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.spHierarchyPanel)).BeginInit();
 			this.spHierarchyPanel.Panel1.SuspendLayout();
@@ -437,6 +438,7 @@ namespace Hourglass
 			// 
 			// graphicsPanel1
 			// 
+			this.graphicsPanel1.Controls.Add(this.btnFocus);
 			this.graphicsPanel1.Controls.Add(this.LeftToggle);
 			this.graphicsPanel1.Controls.Add(this.RightToggle);
 			this.graphicsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -485,7 +487,7 @@ namespace Hourglass
 			this.btnComponentAdd.Menu = this.mComponentStrip;
 			this.btnComponentAdd.Name = "btnComponentAdd";
 			this.btnComponentAdd.Size = new System.Drawing.Size(158, 23);
-			this.btnComponentAdd.TabIndex = 0;
+			this.btnComponentAdd.TabIndex = 2;
 			this.btnComponentAdd.Text = "Add Component";
 			this.btnComponentAdd.UseVisualStyleBackColor = true;
 			// 
@@ -619,6 +621,16 @@ namespace Hourglass
 			this.mObjectStrip.Name = "mObjectStrip";
 			this.mObjectStrip.Size = new System.Drawing.Size(61, 4);
 			// 
+			// btnFocus
+			// 
+			this.btnFocus.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnFocus.Location = new System.Drawing.Point(0, 0);
+			this.btnFocus.Name = "btnFocus";
+			this.btnFocus.Size = new System.Drawing.Size(450, 625);
+			this.btnFocus.TabIndex = 3;
+			this.btnFocus.Text = resources.GetString("btnFocus.Text");
+			this.btnFocus.UseVisualStyleBackColor = true;
+			// 
 			// Editor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -706,6 +718,7 @@ namespace Hourglass
 		private System.Windows.Forms.ToolStripMenuItem radialEmitterToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem iDCToolStripMenuItem;
 		private MenuButton btnComponentAdd;
+		private System.Windows.Forms.Button btnFocus;
 	}
 }
 
