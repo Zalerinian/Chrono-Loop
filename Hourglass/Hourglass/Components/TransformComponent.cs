@@ -22,7 +22,7 @@ namespace Hourglass
         protected NumericUpDown mPosX, mPosY, mPosZ;
         protected NumericUpDown mRotX, mRotY, mRotZ;
         protected NumericUpDown mScaleX, mScaleY, mScaleZ;
-
+        
         protected bool mNameIsPlaceholder = true;
 
         public string Name {
@@ -45,7 +45,7 @@ namespace Hourglass
         }
 
 
-        public TransformComponent(List<Component> _container, int _yOffset = 0) : base(_container, false)
+        public TransformComponent(BaseObject _owner, int _yOffset = 0) : base(_owner, false)
         {
             if(_yOffset != 0)
             {
@@ -141,6 +141,7 @@ namespace Hourglass
             mName.Size = new System.Drawing.Size(ContentWidth - mName.Left, 20);
             mName.GotFocus += OnNameGetFocus;
             mName.LostFocus += OnNameLoseFocus;
+            mName.TextChanged += OnUpdateName;
 
 
             // Panels
@@ -151,9 +152,10 @@ namespace Hourglass
 
             mGroupBox.Text = "Transform";
             mGroupBox.Size = mGroupBox.PreferredSize;
+            OnMenuClick_Reset(null, null);
         }
 
-        public TransformComponent(List<Component> _container, string _name) : this(_container)
+        public TransformComponent(BaseObject _owner, string _name) : this(_owner)
         {
             Name = _name;
         }
@@ -183,6 +185,8 @@ namespace Hourglass
             mName.Text = "Object Name...";
             mName.Font = mPlaceholderFont;
             mName.ForeColor = System.Drawing.SystemColors.ControlDark;
+            mName.Refresh();
+            mNameIsPlaceholder = true;
 
             mPosX.Value = 0;
             mPosY.Value = 0;
@@ -218,5 +222,24 @@ namespace Hourglass
                 mName.Text = "Object Name...";
             }
         }
+
+        protected void OnUpdateName(object sender, EventArgs e)
+        {
+            if(mOwner != null && mOwner.Node != null)
+            {
+                if(string.IsNullOrWhiteSpace(mName.Text) || mNameIsPlaceholder)
+                {
+                    mOwner.Node.NodeFont = mPlaceholderFont;
+                    mOwner.Node.Text = "<Unnamed Object>";
+                }
+                else
+                {
+                    mOwner.Node.NodeFont = mActiveFont;
+                    mOwner.Node.Text = mName.Text;
+                }
+            }
+        }
+
+
     }
 }

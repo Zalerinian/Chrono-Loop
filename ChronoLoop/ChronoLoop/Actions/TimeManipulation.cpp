@@ -39,7 +39,13 @@ namespace Epoch
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu)) {
 			int frameRewind = 30;
 
-			if (!TimeManager::Instance()->CheckRewindAvaliable(frameRewind))
+
+			bool right, left;
+			if (currentLevel->GetRightTimeManipulator() != nullptr || currentLevel->GetLeftTimeManipulator() != nullptr) {
+				right = currentLevel->GetRightTimeManipulator()->isTimePaused();
+				left = currentLevel->GetLeftTimeManipulator()->isTimePaused();
+			}
+			if (!TimeManager::Instance()->CheckRewindAvaliable(frameRewind) || right || left)
 				return;
 
 			SystemLogger::GetLog() << "[Debug] A clone is being made, please hold: " << mCloneCount << " | Is left: " << mControllerRole << std::endl;

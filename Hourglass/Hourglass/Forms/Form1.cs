@@ -84,8 +84,8 @@ namespace Hourglass
             debugObjs.Add(new ToolObjectColor("Assets\\AxisGizmo.obj", ref device));
             spHierarchyPanel.BorderStyle = BorderStyle.None;
             spHierarchyPanel.SplitterWidth = 8;
-            splitContainer2.BorderStyle = BorderStyle.None;
-            splitContainer2.SplitterWidth = 8;
+            spWorldView.BorderStyle = BorderStyle.None;
+            spWorldView.SplitterWidth = 8;
             fpsTimer.Start();
             rotSpeed = 0.005f;
             dragSpeed = 2.0f;
@@ -97,7 +97,11 @@ namespace Hourglass
             mStartPos = new Vector3(0, 0, 0);
             mStartRot = new Vector3(0, 0, 0);
 
-            // Purely Testificate
+            spWorldView.Panel2.ControlAdded += ReorderComponents;
+            spWorldView.Panel2.ControlRemoved += ReorderComponents;
+            spWorldView.Panel2.AutoScroll = true;
+
+
             mForm = new TestPositionForm();
             mForm.Show();
             UpdateSelectedData();
@@ -569,8 +573,8 @@ namespace Hourglass
 
         private void RightToggle_Click(object sender, EventArgs e)
         {
-            RightToggle.Text = splitContainer2.Panel2Collapsed ? ">" : "<";
-            splitContainer2.Panel2Collapsed = !splitContainer2.Panel2Collapsed;
+            RightToggle.Text = spWorldView.Panel2Collapsed ? ">" : "<";
+            spWorldView.Panel2Collapsed = !spWorldView.Panel2Collapsed;
         }
 
         private void LeftToggle_Click(object sender, EventArgs e)
@@ -658,6 +662,20 @@ namespace Hourglass
             Tree.SelectedNode = ConstructTreeObject(null);
         }
 
+        private void Tree_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            spWorldView.Panel2.Controls.Clear();
+            BaseObject obj = (BaseObject)Tree.SelectedNode.Tag;
+            if(obj == null)
+            {
+                Debug.Print("AfterSelect object is null!");
+            }
+            for(int i = 0; i < obj.GetComponents().Count; ++i)
+            {
+                spWorldView.Panel2.Controls.Add(obj.GetComponents()[i].GetGroupbox());
+            }
+        }
+
         private void mCreateMenuAddChild_Click(object sender, EventArgs e)
         {
             TreeNode n = ConstructTreeObject(Tree.SelectedNode);
@@ -673,9 +691,8 @@ namespace Hourglass
         {
             TreeNode n = new TreeNode();
             n.ContextMenuStrip = mObjectStrip;
-            BaseObject b = new BaseObject("Base Object");
+            BaseObject b = new BaseObject(n, "Empty Object");
             n.Tag = b;
-            n.Text = b.Name;
             if(_parent != null)
             {
                 _parent.Nodes.Add(n);
@@ -685,14 +702,6 @@ namespace Hourglass
                 Tree.Nodes.Add(n);
             }
             return n;
-        }
-
-        private void Tree_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            mSelectedObjectNode = e.Node;
-            e.Node.EnsureVisible();
-            e.Node.NodeFont = SystemFonts.MenuFont;
-            Tree.SelectedNode = null;
         }
 
         private void levelSettingsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -724,63 +733,27 @@ namespace Hourglass
                 switch (e.Index)
                 {
                     case 0:
-                        if (selectedObject.Collider == null && e.NewValue == CheckState.Checked)
+                        if(Tree.SelectedNode != null && e.NewValue == CheckState.Checked)
                         {
-                            selectedObject.Collider = new ToolObjectColor("Assets\\Cube.obj", Color.Red, ref device);
-                            selectedObject.ColliderType = "OBB";
-                            selectedObject.Collider.IsWireFrame = true;
-                            selectedObject.Collider.Name = "Collider";
-                            Tree.Nodes[1].Nodes[selectedIndex].Nodes.Add("Collider");
-                        }
-                        if (selectedObject.Collider != null && e.NewValue == CheckState.Unchecked && selectedObject.ColliderType == "OBB")
-                        {
-                            selectedObject.Collider = null;
-                            Tree.Nodes[1].Nodes[selectedIndex].Nodes.RemoveAt(0);
+                            new BoxCollider((BaseObject)Tree.SelectedNode.Tag);
                         }
                         break;
                     case 1:
-                        if (selectedObject.Collider == null && e.NewValue == CheckState.Checked)
+                        if (Tree.SelectedNode != null && e.NewValue == CheckState.Checked)
                         {
-                            selectedObject.Collider = new ToolObjectColor("Assets\\Sphere.obj", Color.Red, ref device);
-                            selectedObject.ColliderType = "Sphere";
-                            selectedObject.Collider.IsWireFrame = true;
-                            selectedObject.Collider.Name = "Collider";
-                            Tree.Nodes[1].Nodes[selectedIndex].Nodes.Add("Collider");
-                        }
-                        if (selectedObject.Collider != null && e.NewValue == CheckState.Unchecked && selectedObject.ColliderType == "Sphere")
-                        {
-                            selectedObject.Collider = null;
-                            Tree.Nodes[1].Nodes[selectedIndex].Nodes.RemoveAt(0);
+                            new SphereCollider((BaseObject)Tree.SelectedNode.Tag);
                         }
                         break;
                     case 2:
-                        if (selectedObject.Collider == null && e.NewValue == CheckState.Checked)
+                        if (Tree.SelectedNode != null && e.NewValue == CheckState.Checked)
                         {
-                            selectedObject.Collider = new ToolObjectColor("Assets\\Plane.obj", Color.Red, ref device);
-                            selectedObject.ColliderType = "Plane";
-                            selectedObject.Collider.IsWireFrame = true;
-                            selectedObject.Collider.Name = "Collider";
-                            Tree.Nodes[1].Nodes[selectedIndex].Nodes.Add("Collider");
-                        }
-                        if (selectedObject.Collider != null && e.NewValue == CheckState.Unchecked && selectedObject.ColliderType == "Plane")
-                        {
-                            selectedObject.Collider = null;
-                            Tree.Nodes[1].Nodes[selectedIndex].Nodes.RemoveAt(0);
+                            new PlaneCollider((BaseObject)Tree.SelectedNode.Tag);
                         }
                         break;
                     case 3:
-                        if (selectedObject.Collider == null && e.NewValue == CheckState.Checked)
+                        if (Tree.SelectedNode != null && e.NewValue == CheckState.Checked)
                         {
-                            selectedObject.Collider = new ToolObjectColor("Assets\\Cube.obj", Color.Red, ref device);
-                            selectedObject.ColliderType = "Button";
-                            selectedObject.Collider.IsWireFrame = true;
-                            selectedObject.Collider.Name = "Collider";
-                            Tree.Nodes[1].Nodes[selectedIndex].Nodes.Add("Collider");
-                        }
-                        if (selectedObject.Collider != null && e.NewValue == CheckState.Unchecked && selectedObject.ColliderType == "Button")
-                        {
-                            selectedObject.Collider = null;
-                            Tree.Nodes[1].Nodes[selectedIndex].Nodes.RemoveAt(0);
+                            new ButtonCollider((BaseObject)Tree.SelectedNode.Tag);
                         }
                         break;
                     default:
@@ -792,6 +765,30 @@ namespace Hourglass
                 }
             }
             graphicsPanel1.Focus();
+        }
+
+        private void ReorderComponents(object sender, EventArgs e)
+        {
+            Point position = new Point(AutoScrollPosition.X, AutoScrollPosition.Y);
+            int ControlWidth = ((Control)sender).ClientSize.Width;
+            HorizontalScroll.Value = 0;
+            HorizontalScroll.Maximum = ControlWidth;
+            BaseObject obj = (BaseObject)Tree.SelectedNode.Tag;
+            if(obj == null)
+            {
+                Debug.Print("Cannot reorder components: No selected object!");
+            }
+            Size dimensions = new Size();
+            for (int i = 0; i < obj.GetComponents().Count; ++i)
+            {
+                GroupBox box = obj.GetComponents()[i].GetGroupbox();
+                box.Location = position;
+                position.Y += box.Size.Height + 3;
+
+                dimensions.Width = ControlWidth;
+                dimensions.Height = box.Height;
+                box.Size = dimensions;
+            }
         }
 
         private void graphicsPanel1_MouseUp(object sender, MouseEventArgs e)
@@ -813,7 +810,6 @@ namespace Hourglass
             groupBox4.Visible = false;
             groupBox5.Visible = false;
             groupBox6.Visible = false;
-            groupBox7.Visible = false;
             TextureBox.Visible = false;
             return;
             if (selectedCollider != null)
@@ -1007,7 +1003,6 @@ namespace Hourglass
             }
         }
 
-
         private void supress_KeyDown(object sender, KeyPressEventArgs e)
         {
         }
@@ -1019,7 +1014,6 @@ namespace Hourglass
             if (e.KeyCode == Keys.N)
                 RightToggle_Click(sender, null);
         }
-
 
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -1038,7 +1032,6 @@ namespace Hourglass
             fpsTimer.Reset();
             fpsTimer.Start();
         }
-
 
         public void SetFilepath(string _filepath) {
             mCurrentFilename = _filepath;

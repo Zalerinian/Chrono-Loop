@@ -1,4 +1,4 @@
-<Level>
+﻿<Level>
   <Settings>
     <StartPos>0,0,0</StartPos>
     <StartRot>0,0,0</StartRot>
@@ -9,13 +9,13 @@
     <Texture>grey.png</Texture>
     <Position>0,0,0</Position>
     <Rotation>0,0,0</Rotation>
-    <Scale>1,1,1</Scale>
+    <Scale>1,1.25,1</Scale>
     <Components />
   </Object>
   <Object>
     <Name>mmFloor</Name>
     <Mesh>mmFloor.obj</Mesh>
-    <Texture>floor.png</Texture>
+    <Texture>black.png</Texture>
     <Position>0,-10,0</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
@@ -27,7 +27,7 @@
     <Texture>fieldGen.png</Texture>
     <Position>0,-10,2.611548</Position>
     <Rotation>0,0,0</Rotation>
-    <Scale>1,1,0.5</Scale>
+    <Scale>1,1.25,0.5</Scale>
     <Components>
       <EnterLevel>Enabled</EnterLevel>
       <Collider>
@@ -71,6 +71,15 @@
     <Position>0,0,0</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Cube_Cube.025</Name>
+    <Mesh>mmSkybox.obj</Mesh>
+    <Texture>mmSkyboxLight.png</Texture>
+    <Position>0,0,0</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>50,50,50</Scale>
     <Components />
   </Object>
 </Level>
