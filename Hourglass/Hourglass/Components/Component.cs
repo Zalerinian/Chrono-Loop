@@ -6,10 +6,12 @@ namespace Hourglass
 {
     public abstract class Component
     {
+		public delegate void OwnerChangedHandler();
+		public event OwnerChangedHandler OwnerChanged;
+
         protected GroupBox mGroupBox;
         protected ContextMenuStrip mMenuStrip;
         protected ToolStripMenuItem mMenuItemDelete, mMenuItemReset;
-        protected List<Component> mContainerReference;
         protected BaseObject mOwner = null;
 
         private static readonly System.Drawing.Font 
@@ -36,6 +38,19 @@ namespace Hourglass
             get { return mActiveFont; }
         }
 
+		public BaseObject Owner {
+			get {
+				return mOwner;
+			}
+			set {
+				mOwner = value;
+				if(OwnerChanged != null)
+				{
+					OwnerChanged();
+				}
+			}
+		}
+
         /// <summary>
         ///     A component is a property of an object that affects what it does in the
         ///     world.
@@ -54,9 +69,6 @@ namespace Hourglass
         /// </param>
         public Component(BaseObject _owner, bool _destructible = true)
         {
-            mOwner = _owner;
-            mContainerReference = _owner.GetComponents();
-            mContainerReference.Add(this);
 
             mGroupBox = new GroupBox();
             mGroupBox.AutoSize = false;
@@ -81,8 +93,7 @@ namespace Hourglass
 
         protected virtual void OnMenuClick_Delete(object sender, EventArgs e)
         {
-            mContainerReference.Remove(this);
-            mGroupBox.Parent = null;
+            Owner.RemoveComponent(this);
         }
 
         protected virtual void OnMenuClick_Reset(object sender, EventArgs e)

@@ -15,19 +15,16 @@ namespace Hourglass
 
 		public const float RADIANS_TO_DEGREES = ((180.0f / 3.14f));
 		public const float DEGREES_TO_RADIANS = (1 / 180.0f * 3.14f);
-		private Microsoft.DirectX.Direct3D.Device device;
-		private float angleX, angleY, rotSpeed;
+		private float mRotationSpeed;
 		private Microsoft.DirectX.DirectInput.Device mKeyboard;
 		private List<ToolObject> objects = new List<ToolObject>();
 		private List<ToolObject> higharchy = new List<ToolObject>();
 		private List<ToolObjectColor> debugObjs = new List<ToolObjectColor>();
-		private ToolObject selectedObject = null;
-		private Stopwatch fpsTimer = new Stopwatch();
+		private Stopwatch mFPSTimer = new Stopwatch();
 		private List<long> advMillisecond = new List<long>();
 		private Vector3 cameraPos = new Vector3(0, 0, 0), prevHit = new Vector3(0, 0, 0), curHit = new Vector3(0, 0, 0);
 		private Vector2 prevMouse, curMouse;
 		private Vector3 mStartPos, mStartRot;
-		private bool loaded = true;
 		private string selectedName = string.Empty, colliderType = string.Empty, currentFile = string.Empty;
 		Matrix gizmoScale = Matrix.Identity;
 		Matrix rotate = Matrix.Identity;
@@ -35,7 +32,7 @@ namespace Hourglass
 		// Variables added by Drew
 		private string mCurrentFilename = string.Empty;
 		private bool mCurrentFileChanged = false;
-		private bool mFormResizing = false, mDeviceNeedsReset = false;
+		private MouseEventArgs mMouseState;
 
 		private ColoredShape mGrid;
 
@@ -57,38 +54,21 @@ namespace Hourglass
 			}
 		}
 
-
 		public Editor()
 		{
 			InitializeComponent();
-			//InitializeDevice();
-			Renderer.Instance.AttachToControl(graphicsPanel1);
 			InitializeKeyboard();
-			//InitializeCamera();
+			Renderer.Instance.AttachToControl(graphicsPanel1);
 
 			mGrid = new ColoredShape();
 			mGrid.MakeGrid();
+			mGrid.FillMode = FillMode.WireFrame;
 			mGrid.Color = Color.White;
-
-			TexturedShape cube = new TexturedShape("Assets\\Cube.obj");
-			cube.SetTexture(0, TextureLoader.FromFile(Renderer.Instance.Device, "Assets\\missing.dds"));
 			Renderer.Instance.AddShape(mGrid);
-			Renderer.Instance.AddShape(cube);
 
-			//debugObjs.Add(new ToolObjectColor(ref device));
-			//debugObjs[0].MakeGrid();
-			//debugObjs[0].ObjectColor = Color.GhostWhite;
-			//debugObjs[0].IsWireFrame = true;
-			//debugObjs.Add(new ToolObjectColor("Assets\\AxisGizmo.obj", ref device));
-			spHierarchyPanel.BorderStyle = BorderStyle.None;
-			spHierarchyPanel.SplitterWidth = 8;
-			spWorldView.BorderStyle = BorderStyle.None;
-			spWorldView.SplitterWidth = 8;
-			fpsTimer.Start();
-			rotSpeed = 0.005f;
-			angleX = angleY = 0;
-			rotate = Matrix.Identity;
-
+			mFPSTimer.Start();
+			mRotationSpeed = 0.005f;
+			mMouseState = new MouseEventArgs(MouseButtons.None, 0, 0, 0, 0);
 
 			// Level settings McBootleg
 			mStartPos = new Vector3(0, 0, 0);
@@ -97,77 +77,6 @@ namespace Hourglass
 			spWorldView.Panel2.ControlAdded += ReorderComponents;
 			spWorldView.Panel2.ControlRemoved += ReorderComponents;
 			spWorldView.Panel2.AutoScroll = true;
-		}
-
-		private void InitializeDevice()
-		{
-			try
-			{
-				PresentParameters presentParams = new PresentParameters();
-				presentParams.Windowed = true;
-				presentParams.SwapEffect = SwapEffect.Copy;
-				presentParams.EnableAutoDepthStencil = true;
-				presentParams.AutoDepthStencilFormat = DepthFormat.D16;
-				device = new Microsoft.DirectX.Direct3D.Device(0, Microsoft.DirectX.Direct3D.DeviceType.Hardware, this.graphicsPanel1, CreateFlags.HardwareVertexProcessing, presentParams);
-				device.RenderState.FillMode = FillMode.Solid;
-				device.RenderState.CullMode = Cull.Clockwise;
-				device.DeviceReset += HandleResetEvent;
-			}
-			catch (GraphicsException exception)
-			{
-
-				//Trace is in System.Diagnostics
-				//WriteLine outputs to the IDE's Output window
-				Trace.WriteLine("Error Code:" + exception.ErrorCode);
-				Trace.WriteLine("Error String:" + exception.ErrorString);
-				Trace.WriteLine("Message:" + exception.Message);
-				Trace.WriteLine("StackTrace:" + exception.StackTrace);
-			}
-		}
-
-		private void HandleResetEvent(object caller, EventArgs args)
-		{
-			if (mFormResizing)
-			{
-				Debug.Print("Device lost context, but the form is resizing!");
-				mDeviceNeedsReset = true;
-				return;
-			}
-			else
-			{
-				Debug.Print("Device reset, rebuilding it!");
-				mDeviceNeedsReset = false;
-				device.RenderState.FillMode = FillMode.Solid;
-				device.RenderState.CullMode = Cull.Clockwise;
-				device.RenderState.ZBufferEnable = true;
-				InitializeCamera();
-				foreach (ToolObjectColor to in debugObjs)
-				{
-					to.VertexDeclaration();
-					to.IndicesDeclaration();
-				}
-				foreach (ToolObject to in higharchy)
-				{
-					to.VertexDeclaration();
-					to.IndicesDeclaration();
-					if (to.Collider != null)
-					{
-						to.Collider.VertexDeclaration();
-						to.Collider.IndicesDeclaration();
-					}
-				}
-			}
-		}
-
-		private void InitializeCamera()
-		{
-			device.Transform.Projection = Matrix.PerspectiveFovRH((float)Math.PI / 4.0f, (float)graphicsPanel1.Width / (float)graphicsPanel1.Height, 0.1f, 1000);
-			Matrix rotate = Matrix.RotationYawPitchRoll(angleY, angleX, 0);
-			Vector3 look = cameraPos + GetVector3(Vector3.Transform(new Vector3(0, 0, -1), rotate));
-			device.Transform.View = Matrix.LookAtRH(cameraPos, look, new Vector3(0, 1, 0));
-			device.RenderState.Lighting = false;
-			device.RenderState.ZBufferEnable = true;
-			device.RenderState.CullMode = Cull.Clockwise;
 		}
 
 		public void InitializeKeyboard()
@@ -183,82 +92,82 @@ namespace Hourglass
 
 			Renderer.Instance.Render();
 			return;
-			device.RenderState.ZBufferEnable = true;
-			device.Clear(ClearFlags.ZBuffer, 0, 1.0f, 0);
-			device.Clear(ClearFlags.Target, Color.Black, 1.0f, 0);
-
-			device.BeginScene();
-			//Grid
-			device.VertexFormat = CustomVertex.PositionNormalColored.Format;
-			device.RenderState.CullMode = Cull.None;
-			device.SetTexture(0, null);
-			device.RenderState.AlphaBlendEnable = false;
-			device.RenderState.FillMode = debugObjs[0].IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
-			device.SetStreamSource(0, debugObjs[0].VertexBuffer, 0);
-			device.Indices = debugObjs[0].IndexBuffer;
-			device.Transform.World = debugObjs[0].Transform;
-			device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, debugObjs[0].Indices.Length, 0, debugObjs[0].Indices.Length / 3);
-			if (loaded)
-			{
-				//Scene
-				device.RenderState.AlphaBlendEnable = false;
-				foreach (ToolObject tObj in higharchy)
-				{
-					if (tObj.Vertices != null)
-					{
-						device.VertexFormat = CustomVertex.PositionNormalTextured.Format;
-						device.RenderState.CullMode = Cull.Clockwise;
-						device.RenderState.FillMode = tObj.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
-						device.SetStreamSource(0, tObj.VertexBuffer, 0);
-						device.Indices = tObj.IndexBuffer;
-						if (tObj.Texture == null)
-							device.SetTexture(0, null);
-						else
-							device.SetTexture(0, tObj.Texture);
-						device.Transform.World = tObj.Transform;
-						device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Indices.Length, 0, tObj.Indices.Length / 3);
-					}
-					if (tObj.Collider != null && tObj.Collider.Visible == true)
-					{
-						device.VertexFormat = CustomVertex.PositionNormalColored.Format;
-						device.RenderState.CullMode = Cull.None;
-						device.RenderState.FillMode = tObj.Collider.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
-						device.SetStreamSource(0, tObj.Collider.VertexBuffer, 0);
-						device.Indices = tObj.Collider.IndexBuffer;
-						device.SetTexture(0, null);
-						if (tObj.ColliderType == "Sphere")
-							device.Transform.World = Matrix.Translation(tObj.Position) * tObj.Collider.Transform;
-						else
-							device.Transform.World = tObj.Collider.Transform * tObj.Transform;
-						device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Collider.Indices.Length, 0, tObj.Collider.Indices.Length / 3);
-					}
-				}
-			}
-			//Axis Gizmo
-			device.Clear(ClearFlags.ZBuffer, 0, 1.0f, 0);
-			if (selectedObject != null)
-			{
-				device.VertexFormat = CustomVertex.PositionNormalColored.Format;
-				device.RenderState.CullMode = Cull.None;
-				device.SetTexture(0, null);
-				device.RenderState.AlphaBlendEnable = true;
-				float scale = (cameraPos - selectedObject.Position).Length();
-				gizmoScale = Matrix.Scaling(Vector3.Maximize(new Vector3(scale, scale, scale) * 0.05f, new Vector3(0.05f, 0.05f, 0.05f)));
-				foreach (ToolObjectColor tObj2 in debugObjs[1].Children)
-				{
-					device.RenderState.FillMode = FillMode.Solid;
-					device.SetStreamSource(0, tObj2.VertexBuffer, 0);
-					device.Indices = tObj2.IndexBuffer;
-					device.Transform.World = gizmoScale * Matrix.Translation(selectedObject.Position) * debugObjs[1].Transform * tObj2.Transform;
-					device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj2.Indices.Length, 0, tObj2.Indices.Length / 3);
-				}
-			}
-			device.EndScene();
-
-			device.Present();
-			device.RenderState.ZBufferEnable = false;
-			device.RenderState.UseWBuffer = true;
-			UpdateKeyboardInput();
+			//device.RenderState.ZBufferEnable = true;
+			//device.Clear(ClearFlags.ZBuffer, 0, 1.0f, 0);
+			//device.Clear(ClearFlags.Target, Color.Black, 1.0f, 0);
+			//
+			//device.BeginScene();
+			////Grid
+			//device.VertexFormat = CustomVertex.PositionNormalColored.Format;
+			//device.RenderState.CullMode = Cull.None;
+			//device.SetTexture(0, null);
+			//device.RenderState.AlphaBlendEnable = false;
+			//device.RenderState.FillMode = debugObjs[0].IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
+			//device.SetStreamSource(0, debugObjs[0].VertexBuffer, 0);
+			//device.Indices = debugObjs[0].IndexBuffer;
+			//device.Transform.World = debugObjs[0].Transform;
+			//device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, debugObjs[0].Indices.Length, 0, debugObjs[0].Indices.Length / 3);
+			//if (loaded)
+			//{
+			//	//Scene
+			//	device.RenderState.AlphaBlendEnable = false;
+			//	foreach (ToolObject tObj in higharchy)
+			//	{
+			//		if (tObj.Vertices != null)
+			//		{
+			//			device.VertexFormat = CustomVertex.PositionNormalTextured.Format;
+			//			device.RenderState.CullMode = Cull.Clockwise;
+			//			device.RenderState.FillMode = tObj.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
+			//			device.SetStreamSource(0, tObj.VertexBuffer, 0);
+			//			device.Indices = tObj.IndexBuffer;
+			//			if (tObj.Texture == null)
+			//				device.SetTexture(0, null);
+			//			else
+			//				device.SetTexture(0, tObj.Texture);
+			//			device.Transform.World = tObj.Transform;
+			//			device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Indices.Length, 0, tObj.Indices.Length / 3);
+			//		}
+			//		if (tObj.Collider != null && tObj.Collider.Visible == true)
+			//		{
+			//			device.VertexFormat = CustomVertex.PositionNormalColored.Format;
+			//			device.RenderState.CullMode = Cull.None;
+			//			device.RenderState.FillMode = tObj.Collider.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
+			//			device.SetStreamSource(0, tObj.Collider.VertexBuffer, 0);
+			//			device.Indices = tObj.Collider.IndexBuffer;
+			//			device.SetTexture(0, null);
+			//			if (tObj.ColliderType == "Sphere")
+			//				device.Transform.World = Matrix.Translation(tObj.Position) * tObj.Collider.Transform;
+			//			else
+			//				device.Transform.World = tObj.Collider.Transform * tObj.Transform;
+			//			device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Collider.Indices.Length, 0, tObj.Collider.Indices.Length / 3);
+			//		}
+			//	}
+			//}
+			////Axis Gizmo
+			//device.Clear(ClearFlags.ZBuffer, 0, 1.0f, 0);
+			//if (selectedObject != null)
+			//{
+			//	device.VertexFormat = CustomVertex.PositionNormalColored.Format;
+			//	device.RenderState.CullMode = Cull.None;
+			//	device.SetTexture(0, null);
+			//	device.RenderState.AlphaBlendEnable = true;
+			//	float scale = (cameraPos - selectedObject.Position).Length();
+			//	gizmoScale = Matrix.Scaling(Vector3.Maximize(new Vector3(scale, scale, scale) * 0.05f, new Vector3(0.05f, 0.05f, 0.05f)));
+			//	foreach (ToolObjectColor tObj2 in debugObjs[1].Children)
+			//	{
+			//		device.RenderState.FillMode = FillMode.Solid;
+			//		device.SetStreamSource(0, tObj2.VertexBuffer, 0);
+			//		device.Indices = tObj2.IndexBuffer;
+			//		device.Transform.World = gizmoScale * Matrix.Translation(selectedObject.Position) * debugObjs[1].Transform * tObj2.Transform;
+			//		device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj2.Indices.Length, 0, tObj2.Indices.Length / 3);
+			//	}
+			//}
+			//device.EndScene();
+			//
+			//device.Present();
+			//device.RenderState.ZBufferEnable = false;
+			//device.RenderState.UseWBuffer = true;
+			//UpdateKeyboardInput();
 		}
 
 		private void graphicsPanel1_MouseLeave(object sender, EventArgs e)
@@ -297,34 +206,34 @@ namespace Hourglass
 			}
 		}
 
-		private Vector3 RaycastPlane(Vector3 near, Vector3 far, Vector3 position, Vector3 normal)
-		{
-			normal.Normalize();
-			near.Unproject(device.Viewport, device.Transform.Projection, device.Transform.View, Matrix.Translation(position));
-			far.Unproject(device.Viewport, device.Transform.Projection, device.Transform.View, Matrix.Translation(position));
-			float D0 = Vector3.Dot(normal, near);
-			float D1 = Vector3.Dot(normal, position);
-			float D2 = D0 - D1;
-			Vector3 L = far - near;
-			float D3 = Vector3.Dot(normal, L);
-			return near + (L * (-1.0f * (D2 / D3)));
-		}
-
 		private void graphicsPanel1_MouseMove(object sender, MouseEventArgs e)
 		{
 			// Update Mouse Input
 			prevMouse = curMouse;
 			curMouse = new Vector2(e.X, e.Y);
 
+			if(ActiveForm != this)
+			{
+				// Ensure we're the active window.
+				return;
+			}
+			Vector2 delta = curMouse - prevMouse;
 			switch(e.Button)
 			{
 				case MouseButtons.Middle:
-					Vector2 delta = curMouse - prevMouse;
-					Renderer.Instance.AngleY -= delta.X * rotSpeed;
-					Renderer.Instance.AngleX += delta.Y * rotSpeed;
+					Renderer.Instance.AngleY -= delta.X * mRotationSpeed;
+					Renderer.Instance.AngleX += delta.Y * mRotationSpeed;
 					Renderer.Instance.RebuildViewMatrix();
 					break;
+				case MouseButtons.Right:
+					// Minus-equals because Right handed systems have positive X going out of the screen.
+					Renderer.Instance.CameraPosition -= Renderer.Instance.Forward * 0.1f * delta.X;
+
+					// TODO: When the cursor approaches the corners of the current monitor, wrap its position.
+					break;
 			}
+
+			mMouseState = e;
 		}
 
 		private Vector3 GetVector3(Vector4 v)
@@ -342,36 +251,34 @@ namespace Hourglass
 			// Todo add movement controls.
 			KeyboardState keys = mKeyboard.GetCurrentKeyboardState();
 
-			// Lateral movement
-			if(keys[Key.W])
+			// Lateral movement, only if no Control key is held down.
+			if (!keys[Key.LeftControl] && !keys[Key.RightControl])
 			{
-				Renderer.Instance.View *= Matrix.Translation(0, 0, 0.1f);
+				if (keys[Key.W])
+				{
+					Renderer.Instance.CameraPosition -= Renderer.Instance.Forward * 0.1f;
+				}
+				if (keys[Key.S])
+				{
+					Renderer.Instance.CameraPosition += Renderer.Instance.Forward * 0.1f;
+				}
+				if (keys[Key.A])
+				{
+					Renderer.Instance.CameraPosition -= Renderer.Instance.Right * 0.1f;
+				}
+				if (keys[Key.D])
+				{
+					Renderer.Instance.CameraPosition += Renderer.Instance.Right * 0.1f;
+				}
+				if (keys[Key.Space])
+				{
+					Renderer.Instance.CameraPosition += Renderer.Instance.Up * 0.1f;
+				}
+				if (keys[Key.LeftShift] || keys[Key.RightShift])
+				{
+					Renderer.Instance.CameraPosition -= Renderer.Instance.Up * 0.1f;
+				}
 			}
-			if(keys[Key.S])
-			{
-				Renderer.Instance.View *= Matrix.Translation(0, 0, -0.1f);
-			}
-			if(keys[Key.A])
-			{
-				Renderer.Instance.View *= Matrix.Translation(0.1f, 0, 0);
-			}
-			if(keys[Key.D])
-			{
-				Renderer.Instance.View *= Matrix.Translation(-0.1f, 0, 0);
-			}
-			if(keys[Key.Space])
-			{
-				Renderer.Instance.View *= Matrix.Translation(0, -0.1f, 0);
-			}
-			if(keys[Key.LeftShift] || keys[Key.RightShift])
-			{
-				Renderer.Instance.View *= Matrix.Translation(0, 0.1f, 0);
-			}
-		}
-
-		private void OnResize(object sender, EventArgs e)
-		{
-			graphicsPanel1.Invalidate();
 		}
 
 		private void RightToggle_Click(object sender, EventArgs e)
@@ -382,7 +289,7 @@ namespace Hourglass
 
 		private void LeftToggle_Click(object sender, EventArgs e)
 		{
-			LeftToggle.Text = spHierarchyPanel.Panel1Collapsed ? ">" : "<";
+			LeftToggle.Text = spHierarchyPanel.Panel1Collapsed ? "<" : ">";
 			spHierarchyPanel.Panel1Collapsed = !spHierarchyPanel.Panel1Collapsed;
 		}
 
@@ -453,19 +360,6 @@ namespace Hourglass
 			}
 		}
 
-		private void Editor_ResizeBegin(object sender, EventArgs e)
-		{
-			mFormResizing = true;
-		}
-
-		private void Editor_ResizeEnd(object sender, EventArgs e)
-		{
-			mFormResizing = false;
-			if(mDeviceNeedsReset)
-			{
-				HandleResetEvent(null, null);
-			}
-		}
 
 		private void mCreateMenuAddChild_Click(object sender, EventArgs e)
 		{
@@ -539,8 +433,8 @@ namespace Hourglass
 		private void timer1_Tick(object sender, EventArgs e)
 		{
 			graphicsPanel1.Invalidate();
-			fpsTimer.Stop();
-			advMillisecond.Add(fpsTimer.ElapsedMilliseconds);
+			mFPSTimer.Stop();
+			advMillisecond.Add(mFPSTimer.ElapsedMilliseconds);
 			if (advMillisecond.Count >= 5)
 			{
 				long adv = 0;
@@ -551,8 +445,8 @@ namespace Hourglass
 				//Debug.Print("FPS: " + (1000 / adv));
 				advMillisecond.Clear();
 			}
-			fpsTimer.Reset();
-			fpsTimer.Start();
+			mFPSTimer.Reset();
+			mFPSTimer.Start();
 		}
 
 		public void SetFilepath(string _filepath)

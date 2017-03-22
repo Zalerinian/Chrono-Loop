@@ -12,13 +12,6 @@ namespace Hourglass
 		public BaseTexture[] mTextures = new BaseTexture[4];
 		public CustomVertex.PositionNormalTextured[] mVertices;
 
-
-		public bool Valid {
-			get {
-				return VertexBuffer != null && IndexBuffer != null;
-			}
-		}
-
 		public BaseTexture[] Textures {
 			get {
 				return mTextures;
@@ -113,7 +106,12 @@ namespace Hourglass
 			mTextures[(int)location] = t;
 		}
 
-		public void FillBuffers()
+		public void SetTexture(TextureType location, string file)
+		{
+			SetTexture(location, Renderer.Instance.LoadTexture(file));
+		}
+
+		public override void FillBuffers()
 		{
 			if(mIndexBuffer != null)
 			{

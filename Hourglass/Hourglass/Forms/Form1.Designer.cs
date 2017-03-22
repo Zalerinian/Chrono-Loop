@@ -69,6 +69,7 @@ namespace Hourglass
 			this.graphicsPanel1 = new Hourglass.GraphicsPanel();
 			this.LeftToggle = new Hourglass.NoFocusButton();
 			this.RightToggle = new Hourglass.NoFocusButton();
+			this.btnComponentAdd = new Hourglass.MenuButton();
 			this.mComponentStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.boxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -85,7 +86,6 @@ namespace Hourglass
 			this.audioComponentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.mObjectStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.brnComponentAdd = new Hourglass.MenuButton();
 			this.menuStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.spHierarchyPanel)).BeginInit();
 			this.spHierarchyPanel.Panel1.SuspendLayout();
@@ -401,11 +401,9 @@ namespace Hourglass
 			this.Tree.BackColor = System.Drawing.SystemColors.Control;
 			this.Tree.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.Tree.CausesValidation = false;
-			this.Tree.FullRowSelect = true;
 			this.Tree.HideSelection = false;
-			this.Tree.HotTracking = true;
 			this.Tree.Indent = 10;
-			this.Tree.Location = new System.Drawing.Point(0, 22);
+			this.Tree.Location = new System.Drawing.Point(-3, 22);
 			this.Tree.Name = "Tree";
 			this.Tree.PathSeparator = "/";
 			this.Tree.ShowRootLines = false;
@@ -430,7 +428,7 @@ namespace Hourglass
 			// spWorldView.Panel2
 			// 
 			this.spWorldView.Panel2.AutoScroll = true;
-			this.spWorldView.Panel2.Controls.Add(this.brnComponentAdd);
+			this.spWorldView.Panel2.Controls.Add(this.btnComponentAdd);
 			this.spWorldView.Panel2MinSize = 300;
 			this.spWorldView.Size = new System.Drawing.Size(775, 628);
 			this.spWorldView.SplitterDistance = 450;
@@ -451,7 +449,6 @@ namespace Hourglass
 			this.graphicsPanel1.MouseLeave += new System.EventHandler(this.graphicsPanel1_MouseLeave);
 			this.graphicsPanel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseMove);
 			this.graphicsPanel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseUp);
-			this.graphicsPanel1.Resize += new System.EventHandler(this.OnResize);
 			// 
 			// LeftToggle
 			// 
@@ -477,6 +474,18 @@ namespace Hourglass
 			this.RightToggle.Text = ">";
 			this.RightToggle.UseVisualStyleBackColor = true;
 			this.RightToggle.Click += new System.EventHandler(this.RightToggle_Click);
+			// 
+			// btnComponentAdd
+			// 
+			this.btnComponentAdd.ArrowVisible = false;
+			this.btnComponentAdd.Location = new System.Drawing.Point(81, 3);
+			this.btnComponentAdd.Margin = new System.Windows.Forms.Padding(3, 15, 3, 3);
+			this.btnComponentAdd.Menu = this.mComponentStrip;
+			this.btnComponentAdd.Name = "btnComponentAdd";
+			this.btnComponentAdd.Size = new System.Drawing.Size(158, 23);
+			this.btnComponentAdd.TabIndex = 0;
+			this.btnComponentAdd.Text = "Add Component";
+			this.btnComponentAdd.UseVisualStyleBackColor = true;
 			// 
 			// mComponentStrip
 			// 
@@ -589,21 +598,6 @@ namespace Hourglass
 			this.mObjectStrip.Name = "mObjectStrip";
 			this.mObjectStrip.Size = new System.Drawing.Size(61, 4);
 			// 
-			// brnComponentAdd
-			// 
-			this.brnComponentAdd.ArrowAreaWidth = 500;
-			this.brnComponentAdd.ArrowHeight = 0;
-			this.brnComponentAdd.ArrowMargin = 0;
-			this.brnComponentAdd.ArrowWidth = 0;
-			this.brnComponentAdd.Location = new System.Drawing.Point(81, 3);
-			this.brnComponentAdd.Margin = new System.Windows.Forms.Padding(3, 15, 3, 3);
-			this.brnComponentAdd.Menu = this.mComponentStrip;
-			this.brnComponentAdd.Name = "brnComponentAdd";
-			this.brnComponentAdd.Size = new System.Drawing.Size(158, 23);
-			this.brnComponentAdd.TabIndex = 0;
-			this.brnComponentAdd.Text = "Add Component";
-			this.brnComponentAdd.UseVisualStyleBackColor = true;
-			// 
 			// Editor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -616,8 +610,6 @@ namespace Hourglass
 			this.MinimumSize = new System.Drawing.Size(960, 39);
 			this.Name = "Editor";
 			this.Text = "Level Editor";
-			this.ResizeBegin += new System.EventHandler(this.Editor_ResizeBegin);
-			this.ResizeEnd += new System.EventHandler(this.Editor_ResizeEnd);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			this.spHierarchyPanel.Panel1.ResumeLayout(false);
@@ -692,7 +684,7 @@ namespace Hourglass
 		private System.Windows.Forms.ToolStripMenuItem volumeEmitterToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem radialEmitterToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem iDCToolStripMenuItem;
-		private MenuButton brnComponentAdd;
+		private MenuButton btnComponentAdd;
 	}
 }
 

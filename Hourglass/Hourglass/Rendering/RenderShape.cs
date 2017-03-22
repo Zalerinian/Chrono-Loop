@@ -3,7 +3,7 @@ using Microsoft.DirectX.Direct3D;
 
 namespace Hourglass
 {
-	public class RenderShape
+	public abstract class RenderShape
 	{
 		protected FillMode mFillMode = FillMode.Solid;
 		protected Matrix mWorld;
@@ -70,5 +70,7 @@ namespace Hourglass
 				mIndices = value;
 			}
 		}
+
+		public abstract void FillBuffers();
 	}
 }

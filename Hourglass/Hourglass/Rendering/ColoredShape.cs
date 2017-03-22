@@ -115,7 +115,7 @@ namespace Hourglass
 			FillBuffers();
 		}
 
-		public void FillBuffers()
+		public override void FillBuffers()
 		{
 			if(mIndexBuffer != null)
 			{
