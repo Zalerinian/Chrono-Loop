@@ -81,6 +81,9 @@ namespace Hourglass
 			btnFocus.Size = new Size(0, 0);
 			btnFocus.Select();
 
+			btnComponentAdd.Size = new Size(spWorldView.Panel2.ClientRectangle.Width / 2, btnComponentAdd.Height);
+			btnComponentAdd.Location = new Point(spWorldView.Panel2.ClientRectangle.Width / 4, btnComponentAdd.Location.Y);
+			btnComponentAdd.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
 			spWorldView.Panel2.Controls.Add(btnComponentAdd);
 		}
 
@@ -353,6 +356,7 @@ namespace Hourglass
 
 				// Non-Grouped components that *aren't* code components
 				case "Mesh":
+					obj.AddComponent(new MeshComponent());
 					break;
 				case "Audio":
 					break;
@@ -482,6 +486,15 @@ namespace Hourglass
 			ReorderComponents(spWorldView.Panel2, EventArgs.Empty);
 		}
 
+		private void Editor_ClientSizeChanged(object sender, EventArgs e)
+		{
+			// Ensure the graphics panel can't get too small.
+			spHierarchyPanel.Panel2MinSize = ClientRectangle.Width - 210;
+			spWorldView.Panel1MinSize = ClientRectangle.Width - 210 - 260;
+			spHierarchyPanel.PerformLayout();
+			spWorldView.PerformLayout();
+		}
+
 		private void ObjectRemoveComponent(Component _c)
 		{
 			spWorldView.Panel2.Controls.Remove(_c.GetGroupbox());
@@ -502,6 +515,7 @@ namespace Hourglass
 			}
 			Size dimensions = new Size();
 			dimensions.Width = ControlWidth;
+			AnchorStyles LTR = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
 			for (int i = 0; i < obj.GetComponents().Count; ++i)
 			{
 				GroupBox box = obj.GetComponents()[i].GetGroupbox();
@@ -510,19 +524,13 @@ namespace Hourglass
 
 				dimensions.Height = box.Height;
 				box.Size = dimensions;
+				box.Anchor = LTR;
 			}
-
 			position.Y += 15;
-			position.X = btnComponentAdd.Location.X;
-			dimensions.Height = btnComponentAdd.Size.Height;
-			dimensions.Width /= 2;
+			position.X = btnComponentAdd.Left;
 			btnComponentAdd.Location = position;
-			btnComponentAdd.Size = dimensions;
 		}
-
-		private void graphicsPanel1_MouseUp(object sender, MouseEventArgs e)
-		{
-		}
+		
 
 		private void timer1_Tick(object sender, EventArgs e)
 		{

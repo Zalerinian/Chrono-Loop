@@ -99,6 +99,7 @@ namespace Hourglass
             mMesh.Location = new System.Drawing.Point(90, 21);
             mMesh.Size = new System.Drawing.Size(ContentWidth - mMesh.Left - mMeshSelect.Width, 24);
             mMesh.Tag = new TextBoxTag(true, "Mesh File...");
+			mMesh.Enabled = false;
             mMesh.GotFocus += OnTextBoxGetFocus;
             mMesh.LostFocus += OnTextBoxLostFocus;
 
@@ -106,6 +107,7 @@ namespace Hourglass
             mDiffuse.Location = new System.Drawing.Point(90, 51);
             mDiffuse.Size = new System.Drawing.Size(ContentWidth - mDiffuse.Left - mDiffuseSelect.Width, 24);
             mDiffuse.Tag = new TextBoxTag(true, "Texture File...");
+			mDiffuse.Enabled = false;
             mDiffuse.GotFocus += OnTextBoxGetFocus;
             mDiffuse.LostFocus += OnTextBoxLostFocus;
 
