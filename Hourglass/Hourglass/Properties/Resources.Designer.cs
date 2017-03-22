@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LevelEditor.Properties {
+namespace Hourglass.Properties {
     using System;
     
     

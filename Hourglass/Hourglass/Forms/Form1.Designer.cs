@@ -440,7 +440,7 @@ namespace Hourglass
 			// 
 			this.graphicsPanel1.Controls.Add(this.btnFocus);
 			this.graphicsPanel1.Controls.Add(this.LeftToggle);
-			this.graphicsPanel1.Controls.Add(this.RightToggle);
+			this.graphicsPanel1.Controls.Add(this.RightToggle); 
 			this.graphicsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.graphicsPanel1.Location = new System.Drawing.Point(0, 0);
 			this.graphicsPanel1.Name = "graphicsPanel1";

@@ -85,6 +85,18 @@ namespace Hourglass
 			btnComponentAdd.Location = new Point(spWorldView.Panel2.ClientRectangle.Width / 4, btnComponentAdd.Location.Y);
 			btnComponentAdd.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
 			spWorldView.Panel2.Controls.Add(btnComponentAdd);
+
+			//if(string.IsNullOrWhiteSpace(Properties.Settings.Default.ProjectDirectory))
+			//{
+			//	FolderBrowserDialog o = new FolderBrowserDialog();
+			//	if(o.ShowDialog() == DialogResult.OK)
+			//	{
+			//		Debug.Print("Ye");
+			//	} else
+			//	{
+			//		Debug.Print("Ne");
+			//	}
+			//}
 		}
 
 		public void InitializeKeyboard()
