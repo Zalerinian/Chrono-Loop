@@ -8,7 +8,7 @@ namespace Hourglass {
         protected NumericUpDown mOffset, mNX, mNY, mNZ;
         protected Panel mNormalPanel;
 
-        public PlaneCollider(BaseObject _owner, int _yOffset = 0) : base(_owner, 64 + _yOffset) {
+        public PlaneCollider(int _yOffset = 0) : base(64 + _yOffset) {
             #region Component Creation
 
             mLbOffset = new Label();

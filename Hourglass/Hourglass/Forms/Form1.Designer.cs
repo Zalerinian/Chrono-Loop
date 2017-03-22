@@ -477,9 +477,11 @@ namespace Hourglass
 			// 
 			// btnComponentAdd
 			// 
+			this.btnComponentAdd.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnComponentAdd.ArrowVisible = false;
-			this.btnComponentAdd.Location = new System.Drawing.Point(81, 3);
-			this.btnComponentAdd.Margin = new System.Windows.Forms.Padding(3, 15, 3, 3);
+			this.btnComponentAdd.Location = new System.Drawing.Point(84, 15);
+			this.btnComponentAdd.Margin = new System.Windows.Forms.Padding(3, 15, 3, 15);
 			this.btnComponentAdd.Menu = this.mComponentStrip;
 			this.btnComponentAdd.Name = "btnComponentAdd";
 			this.btnComponentAdd.Size = new System.Drawing.Size(158, 23);
@@ -514,32 +516,41 @@ namespace Hourglass
 			// 
 			this.boxToolStripMenuItem.Name = "boxToolStripMenuItem";
 			this.boxToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+			this.boxToolStripMenuItem.Tag = "ColBox";
 			this.boxToolStripMenuItem.Text = "Box Collider";
-			this.boxToolStripMenuItem.Click += new System.EventHandler(this.AddColliderComponent);
+			this.boxToolStripMenuItem.Click += new System.EventHandler(this.AddComponentHandler);
 			// 
 			// sphereToolStripMenuItem
 			// 
 			this.sphereToolStripMenuItem.Name = "sphereToolStripMenuItem";
 			this.sphereToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+			this.sphereToolStripMenuItem.Tag = "ColSphere";
 			this.sphereToolStripMenuItem.Text = "Sphere Collider";
+			this.sphereToolStripMenuItem.Click += new System.EventHandler(this.AddComponentHandler);
 			// 
 			// planeToolStripMenuItem
 			// 
 			this.planeToolStripMenuItem.Name = "planeToolStripMenuItem";
 			this.planeToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+			this.planeToolStripMenuItem.Tag = "ColPlane";
 			this.planeToolStripMenuItem.Text = "Plane Collider";
+			this.planeToolStripMenuItem.Click += new System.EventHandler(this.AddComponentHandler);
 			// 
 			// buttonToolStripMenuItem
 			// 
 			this.buttonToolStripMenuItem.Name = "buttonToolStripMenuItem";
 			this.buttonToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+			this.buttonToolStripMenuItem.Tag = "ColButton";
 			this.buttonToolStripMenuItem.Text = "Button Collider";
+			this.buttonToolStripMenuItem.Click += new System.EventHandler(this.AddComponentHandler);
 			// 
 			// controllerColliderToolStripMenuItem
 			// 
 			this.controllerColliderToolStripMenuItem.Name = "controllerColliderToolStripMenuItem";
 			this.controllerColliderToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+			this.controllerColliderToolStripMenuItem.Tag = "ColController";
 			this.controllerColliderToolStripMenuItem.Text = "Controller Collider";
+			this.controllerColliderToolStripMenuItem.Click += new System.EventHandler(this.AddComponentHandler);
 			// 
 			// particleEmitterToolStripMenuItem
 			// 
@@ -554,20 +565,26 @@ namespace Hourglass
 			// volumeEmitterToolStripMenuItem
 			// 
 			this.volumeEmitterToolStripMenuItem.Name = "volumeEmitterToolStripMenuItem";
-			this.volumeEmitterToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+			this.volumeEmitterToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+			this.volumeEmitterToolStripMenuItem.Tag = "PEVolume";
 			this.volumeEmitterToolStripMenuItem.Text = "Volume Emitter";
+			this.volumeEmitterToolStripMenuItem.Click += new System.EventHandler(this.AddComponentHandler);
 			// 
 			// radialEmitterToolStripMenuItem
 			// 
 			this.radialEmitterToolStripMenuItem.Name = "radialEmitterToolStripMenuItem";
-			this.radialEmitterToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+			this.radialEmitterToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+			this.radialEmitterToolStripMenuItem.Tag = "PERadial";
 			this.radialEmitterToolStripMenuItem.Text = "Radial Emitter";
+			this.radialEmitterToolStripMenuItem.Click += new System.EventHandler(this.AddComponentHandler);
 			// 
 			// iDCToolStripMenuItem
 			// 
 			this.iDCToolStripMenuItem.Name = "iDCToolStripMenuItem";
-			this.iDCToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
-			this.iDCToolStripMenuItem.Text = "\"IDC\"";
+			this.iDCToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+			this.iDCToolStripMenuItem.Tag = "PETeleport";
+			this.iDCToolStripMenuItem.Text = "\"IDC\" (Teleport Effect)";
+			this.iDCToolStripMenuItem.Click += new System.EventHandler(this.AddComponentHandler);
 			// 
 			// codeComponentsToolStripMenuItem
 			// 
@@ -579,13 +596,17 @@ namespace Hourglass
 			// 
 			this.meshComponentToolStripMenuItem.Name = "meshComponentToolStripMenuItem";
 			this.meshComponentToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+			this.meshComponentToolStripMenuItem.Tag = "Mesh";
 			this.meshComponentToolStripMenuItem.Text = "Mesh Component";
+			this.meshComponentToolStripMenuItem.Click += new System.EventHandler(this.AddComponentHandler);
 			// 
 			// audioComponentToolStripMenuItem
 			// 
 			this.audioComponentToolStripMenuItem.Name = "audioComponentToolStripMenuItem";
 			this.audioComponentToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+			this.audioComponentToolStripMenuItem.Tag = "Audio";
 			this.audioComponentToolStripMenuItem.Text = "Audio Component";
+			this.audioComponentToolStripMenuItem.Click += new System.EventHandler(this.AddComponentHandler);
 			// 
 			// timer1
 			// 

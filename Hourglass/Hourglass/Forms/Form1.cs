@@ -77,6 +77,8 @@ namespace Hourglass
 			spWorldView.Panel2.ControlAdded += ReorderComponents;
 			spWorldView.Panel2.ControlRemoved += ReorderComponents;
 			spWorldView.Panel2.AutoScroll = true;
+
+			spWorldView.Panel2.Controls.Add(btnComponentAdd);
 		}
 
 		public void InitializeKeyboard()
@@ -278,7 +280,7 @@ namespace Hourglass
 				{
 					Renderer.Instance.CameraPosition -= Renderer.Instance.Up * 0.1f;
 				}
-			}
+			} // END Not holding control keys
 		}
 
 		private void RightToggle_Click(object sender, EventArgs e)
@@ -293,8 +295,66 @@ namespace Hourglass
 			spHierarchyPanel.Panel1Collapsed = !spHierarchyPanel.Panel1Collapsed;
 		}
 
-		private void AddColliderComponent(object sender, EventArgs e)
+		private void AddComponentHandler(object sender, EventArgs e)
 		{
+			if(!(sender is ToolStripMenuItem))
+			{
+				Debug.Print("Trying to add a component, but the sender is not valid.");
+				return;
+			}
+			if(Tree.SelectedNode == null)
+			{
+				Debug.Print("Trying to add a component, but the tree has no selected node!");
+				return;
+			}
+			if(!(Tree.SelectedNode.Tag is BaseObject))
+			{
+				Debug.Print("Trying to add a component, but the selected noe doesn't have an associated BaseObject!");
+				return;
+			}
+			BaseObject obj = Tree.SelectedNode.Tag as BaseObject;
+			string tag = (string)((ToolStripMenuItem)sender).Tag;
+			switch(tag)
+			{
+				// Colliders
+				case "ColBox":
+					obj.AddComponent(new BoxCollider());
+					break;
+				case "ColButton":
+					obj.AddComponent(new ButtonCollider());
+					break;
+				case "ColPlane":
+					obj.AddComponent(new PlaneCollider());
+					break;
+				case "ColSphere":
+					obj.AddComponent(new SphereCollider());
+					break;
+				case "ColController":
+					//obj.AddComponent(new ControllerCollider());
+					break;
+
+				// Particle Emitters
+				case "PEVolume":
+					break;
+				case "PERadial":
+					Debug.Print("Is this not just a spherical volume emitter...?");
+					break;
+				case "PETeleport":
+					Debug.Print("Honestly this should be configurable through a generic particle or volume emitter.");
+					break;
+
+				// Non-Grouped components that *aren't* code components
+				case "Mesh":
+					break;
+				case "Audio":
+					break;
+
+				// Code Components
+
+
+				default:
+					break;
+			}
 		}
 
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -349,6 +409,8 @@ namespace Hourglass
 		private void Tree_AfterSelect(object sender, TreeViewEventArgs e)
 		{
 			spWorldView.Panel2.Controls.Clear();
+			// Needed to keep the component button on the side panel.
+			spWorldView.Panel2.Controls.Add(btnComponentAdd);
 			BaseObject obj = (BaseObject)Tree.SelectedNode.Tag;
 			if (obj == null)
 			{
@@ -377,6 +439,8 @@ namespace Hourglass
 			TreeNode n = new TreeNode();
 			n.ContextMenuStrip = mObjectStrip;
 			BaseObject b = new BaseObject(n, "Empty Object");
+			b.ComponentAdded += ObjectAddComponent;
+			b.ComponentRemoved += ObjectRemoveComponent;
 			n.Tag = b;
 			if (_parent != null)
 			{
@@ -401,6 +465,18 @@ namespace Hourglass
 			}
 		}
 
+		private void ObjectAddComponent(Component _c)
+		{
+			spWorldView.Panel2.Controls.Add(_c.GetGroupbox());
+			ReorderComponents(spWorldView.Panel2, EventArgs.Empty);
+		}
+
+		private void ObjectRemoveComponent(Component _c)
+		{
+			spWorldView.Panel2.Controls.Remove(_c.GetGroupbox());
+			ReorderComponents(spWorldView.Panel2, EventArgs.Empty);
+		}
+
 		private void ReorderComponents(object sender, EventArgs e)
 		{
 			Point position = new Point(AutoScrollPosition.X, AutoScrollPosition.Y);
@@ -414,16 +490,23 @@ namespace Hourglass
 				return;
 			}
 			Size dimensions = new Size();
+			dimensions.Width = ControlWidth;
 			for (int i = 0; i < obj.GetComponents().Count; ++i)
 			{
 				GroupBox box = obj.GetComponents()[i].GetGroupbox();
 				box.Location = position;
 				position.Y += box.Size.Height + 3;
 
-				dimensions.Width = ControlWidth;
 				dimensions.Height = box.Height;
 				box.Size = dimensions;
 			}
+
+			position.Y += 15;
+			position.X = btnComponentAdd.Location.X;
+			dimensions.Height = btnComponentAdd.Size.Height;
+			dimensions.Width /= 2;
+			btnComponentAdd.Location = position;
+			btnComponentAdd.Size = dimensions;
 		}
 
 		private void graphicsPanel1_MouseUp(object sender, MouseEventArgs e)

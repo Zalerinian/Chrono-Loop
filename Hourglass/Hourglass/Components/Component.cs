@@ -67,7 +67,7 @@ namespace Hourglass
         ///     This is true for everything except an object's transform (Position,
         ///     Rotation, Scale), and its name.
         /// </param>
-        public Component(BaseObject _owner, bool _destructible = true)
+        public Component(bool _destructible = true)
         {
 
             mGroupBox = new GroupBox();

@@ -34,7 +34,7 @@ namespace Hourglass
         public BaseObject(TreeNode _node) {
             mNode = _node;
             mComponents = new List<Component>();
-            TransformComponent transform = new TransformComponent(this);
+            TransformComponent transform = new TransformComponent();
 			AddComponent(transform);
         }
 

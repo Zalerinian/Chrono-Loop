@@ -12,13 +12,13 @@ namespace Hourglass
 		private static readonly Renderer sInstance = new Renderer();
 
 		private List<RenderShape> mRenderSet;
-		private bool mInitialized = false, mCameraNeedsRebuild = false, mRenderGrid = true, mDeviceNeedsReset = false, mPanelResizing = false;
+		private bool mInitialized = false, mCameraNeedsRebuild = false, mRenderGrid = true, mPanelResizing = false;
 		private Device mDevice;
 		private Control mPanel;
 		private ColoredShape mGrid;
 		private Timer mResizeTimeout = new Timer();
 
-		private Vector3 mCameraPos = new Vector3(0, 0, 0);
+		private Vector3 mCameraPos = new Vector3(0, 2, -4);
 		private float mAngleX = 0, mAngleY = 0;
 
 		public static Renderer Instance {
@@ -238,7 +238,6 @@ namespace Hourglass
 		{
 			if (!mPanelResizing)
 			{
-				mDeviceNeedsReset = false;
 				mDevice.RenderState.FillMode = FillMode.Solid;
 				mDevice.RenderState.CullMode = Cull.Clockwise;
 				mDevice.RenderState.ZBufferEnable = true;
