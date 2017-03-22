@@ -527,9 +527,9 @@
   </Object>
   <Object>
     <Name>Ceiling</Name>
-    <Mesh>CeIling.obj</Mesh>
+    <Mesh>Ceiling.obj</Mesh>
     <Texture>floor.png</Texture>
-    <Position>0,3,0</Position>
+    <Position>-2.4,3,0.2</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components>
