@@ -51,7 +51,9 @@ namespace Epoch {
 		mInputTimeline = new InputTimeline();
 	}
 
-	VIM::~VIM() {}
+	VIM::~VIM() {
+		delete mInputTimeline;
+	}
 
 	void VIM::Update() {
 		int GestureCheck = 0;
@@ -72,11 +74,20 @@ namespace Epoch {
 			}
 		} else {
 			mLeftController.Update();
-
 		}
+		mDebugDeltaTime += TimeManager::Instance()->GetDeltaTime();
+		if (mDebugDeltaTime >= 5) {
+			mDebugDeltaTime -= 5;
+			SystemLogger::Debug() << "Index for left controller: " << mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand) << std::endl;
+			SystemLogger::Debug() << "Index for Right controller: " << mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_RightHand) << std::endl;
+		}
+
 		vr::VRCompositor()->WaitGetPoses(mPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
 
-		CheckGesters();
+		GestureCheck = mRightController.CheckGesture();
+		TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
+		GestureCheck = mLeftController.CheckGesture();
+		TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
 
 		//Update InputSnap TweenTime 
 		mTweenTimestamp += TimeManager::Instance()->GetDeltaTime();
@@ -90,9 +101,9 @@ namespace Epoch {
 		vr::VREvent_t tempEvent;
 		bool right = false;
 		bool left = false;
-		if (cLevel->GetRightTimeManinpulator() != nullptr || cLevel->GetLeftTimeManinpulator() != nullptr) {
-			bool right = cLevel->GetRightTimeManinpulator()->isTimePaused();
-			bool left = cLevel->GetLeftTimeManinpulator()->isTimePaused();
+		if (cLevel->GetRightTimeManipulator() != nullptr || cLevel->GetLeftTimeManipulator() != nullptr) {
+			bool right = cLevel->GetRightTimeManipulator()->isTimePaused();
+			bool left = cLevel->GetLeftTimeManipulator()->isTimePaused();
 		}
 		//if there is a event avaliable and the game is focused
 		while (mVRSystem->PollNextEvent(&tempEvent, sizeof(tempEvent)) && !mVRSystem->IsInputFocusCapturedByAnotherProcess() && (!left && !right)) {
@@ -242,24 +253,4 @@ namespace Epoch {
 		}
 		return nullptr;
 	}
-
-	void VIM::CheckGesters() {
-		//Time Gester
-		if (LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManinpulator()->isTimePaused() || LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManinpulator()->isTimePaused()) {
-			int GestureCheck;
-			GestureCheck = mRightController.CheckGesture();
-			TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
-			//Shake right controller
-			if (GestureCheck == 1) {
-				mRightController.TriggerHapticPulse(400, vr::k_EButton_Axis0);
-			}
-			GestureCheck = mLeftController.CheckGesture();
-			if (GestureCheck == 1) {
-				mLeftController.TriggerHapticPulse(400, vr::k_EButton_Axis0);
-			}
-			TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
-		}
-	}
-
-
 }

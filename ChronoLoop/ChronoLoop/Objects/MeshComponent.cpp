@@ -1,23 +1,29 @@
+#include "MeshComponent.h"
 #include "BaseObject.h"
 #include "Component.h"
 #include "../Rendering/RenderShape.h"
 #include "../Rendering/Renderer.h"
-#include "MeshComponent.h"
-
-#define DESTROY_NODE(x) { \
-	if(x != nullptr) { \
-		delete x; \
-		x = nullptr; \
-	} \
-}
+#include "../Common/Settings.h"
 
 namespace Epoch {
+	void MeshComponent::CreateNode()
+	{
+		mNode = Renderer::Instance()->AddOpaqueNode(mShape);
+	}
 
 	MeshComponent::MeshComponent(const char * _path) {
 		mType = eCOMPONENT_MESH;
 		mShape = new RenderShape(_path, true, ePS_TEXTURED, eVS_TEXTURED, eGS_PosNormTex);
 		mShape->GetContext().mRasterState = eRS_FILLED;
-		mNode = Renderer::Instance()->AddNode(mShape);
+		if (CanCreateNode()) {
+			CreateNode();
+			mVisible = true;
+		}
+		else
+		{
+			mVisible = false;
+			mNode = nullptr;
+		}
 	}
 
 	void MeshComponent::Update() {
@@ -32,7 +38,7 @@ namespace Epoch {
 		delete mShape;
 	}
 
-	void MeshComponent::SetVisible(bool _vis) {
+	MeshComponent* MeshComponent::SetVisible(bool _vis) {
 		// TODO: Check to see if this is an efficient way to make meshes appear and disappear, because this involves
 		// a bit of looping. It could possibly be more efficient to set a bool on the render shape saying it's
 		// invisible.
@@ -40,29 +46,41 @@ namespace Epoch {
 		// access to the position of the object.
 		if (_vis) {
 			if (!mVisible) {
-				mNode = Renderer::Instance()->AddNode(mShape);
+				CreateNode();
 				mVisible = true;
 			}
-		} else {
+		}
+		else {
 			if (mVisible) {
 				DESTROY_NODE(mNode);
 				mVisible = false;
 			}
 		}
+		return this;
 	}
 
-	void MeshComponent::AddTexture(const char * _path, TextureType _type) {
+	MeshComponent* MeshComponent::AddTexture(const char * _path, TextureType _type) {
 		DESTROY_NODE(mNode);
 		mShape->AddTexture(_path, _type);
-		mNode = Renderer::Instance()->AddNode(mShape);
+		if (mVisible) {
+			CreateNode();
+		}
+		return this;
 	}
 
 	void MeshComponent::SetRasterState(RasterState _t) {
 		if (_t != mShape->GetContext().mRasterState) {
 			DESTROY_NODE(mNode);
 			mShape->GetContext().mRasterState = _t;
-			mNode = Renderer::Instance()->AddNode(mShape);
+			if (mVisible) {
+				CreateNode();
+			}
 		}
+	}
+
+	bool MeshComponent::CanCreateNode()
+	{
+		return !Settings::GetInstance().GetBool("LevelIsLoading");
 	}
 
 }

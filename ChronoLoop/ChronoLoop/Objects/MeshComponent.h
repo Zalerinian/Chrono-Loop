@@ -4,27 +4,38 @@
 #include "../Rendering/RenderShape.h"
 #include "../Common/GhostList.h"
 
+#define DESTROY_NODE(x) { \
+	if(x != nullptr) { \
+		delete x; \
+		x = nullptr; \
+	} \
+}
+
 namespace Epoch
 {
 	struct RenderShape;
 
 	class MeshComponent : public Component
 	{
-		GhostList<matrix4>::GhostNode* mNode;
-		RenderShape* mShape;
+	protected:
+		GhostList<matrix4>::GhostNode* mNode = nullptr;
+		RenderShape* mShape = nullptr;
 		bool mVisible = true;
 
+		virtual void CreateNode();
 	public:
 		MeshComponent(const char *_path);
 		virtual void Update() override;
 		virtual void Destroy() override;
-		void SetVisible(bool _vis);
-		void AddTexture(const char *_path, TextureType _type);
+		MeshComponent* SetVisible(bool _vis);
+		MeshComponent* AddTexture(const char *_path, TextureType _type);
 		inline bool IsVisible() { return mVisible; };
 		inline Triangle *GetTriangles() { return mShape->GetTriangles(); }
 		inline size_t GetTriangleCount() { return mShape->GetTriangleCount(); }
 		inline RenderContext& GetContext() { return mShape->GetContext(); }
 		void SetRasterState(RasterState _t);
+
+		bool CanCreateNode();
 	};
 
 }

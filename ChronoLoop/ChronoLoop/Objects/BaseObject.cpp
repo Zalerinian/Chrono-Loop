@@ -4,6 +4,7 @@
 #include "../Common/Logger.h"
 #include "../Common/Breakpoint.h"
 #include "../Core/Level.h"
+#include "../Common/Settings.h"
 
 namespace Epoch {
 	unsigned int BaseObject::ObjectCount = 0;
@@ -117,7 +118,7 @@ namespace Epoch {
 		int count = 0;
 		for (auto vec : mComponents)
 		{
-			count += vec.second.size();
+			count += (int)vec.second.size();
 		}
 
 		return count;
@@ -127,30 +128,32 @@ namespace Epoch {
 		mName = _name;
 	}
 
-	unsigned int BaseObject::AddComponent(Component * _comp) {
+	BaseObject* BaseObject::AddComponent(Component * _comp) {
 		if (_comp->GetType() == eCOMPONENT_MAX) {
 			SystemLogger::Error() << "Trying to add a component with an invalid type. This is not allowed, returning -1U." << std::endl;
-			return -1;
+			return nullptr;
 		}
 		if (mComponents.size() + 1 > 30) {
 			SystemLogger::Error() << "Attempted to add a component after reaching the max amount you can add. Deleting this component" << std::endl;
 			delete _comp;
-			return -1;
+			return nullptr;
 		}
 		_comp->mObject = this;
 		mComponents[_comp->GetType()].push_back(_comp);
 		_comp->mComponentNum = (unsigned short)(GetTotalAmountofComponents());	//sets the component number for knowing the position in the bitset
 
 		//If level has already started call start on new component
-		if (_comp->GetType() == eCOMPONENT_CODE && TimeManager::Instance()->GetTotalSnapsmade() > 0) {
-			((CodeComponent*)_comp)->Start();
+		if (!Settings::GetInstance().GetBool("LevelIsLoading")) {
+			if (_comp->GetType() == eCOMPONENT_CODE && TimeManager::Instance()->GetTotalSnapsmade() > 0) {
+				((CodeComponent*)_comp)->Start();
+			}
 		}
-		return (unsigned int)mComponents[_comp->GetType()].size();
+		return this;
 	}
 
 	bool BaseObject::RemoveComponent(Component * _comp) {
 		if (_comp->GetType() >= eCOMPONENT_MAX) {
-			SystemLogger::Error() << "Trying to remove a component with an invalid type. This is undefined." << std::endl;
+			SystemLogger::Error() << "Trying to remove a component with an invalid type. This is not allowed." << std::endl;
 			return false;
 		}
 		ComponentType type = _comp->GetType();

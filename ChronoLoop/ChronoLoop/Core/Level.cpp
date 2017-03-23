@@ -13,9 +13,11 @@
 #include "../Actions\CCEnterLevel.h"
 #include "../Actions/MainMenuBT.h"
 #include "../Objects/MeshComponent.h"
+#include "../Objects/TransparentMeshComponent.h"
 #include "../tinyxml/tinyxml.h"
 #include "../tinyxml/tinystr.h"
 #include "../Common/Settings.h"
+#include "../Particles/ParticleComponents.h"
 
 namespace Epoch {
 
@@ -28,7 +30,7 @@ namespace Epoch {
 		mObjectList.clear();
 	}
 
-	void Level::Initialize(BaseObject * _headset, BaseObject * _lController, BaseObject * _rController) {
+	void Level::AssignPlayerControls(BaseObject * _headset, BaseObject * _lController, BaseObject * _rController) {
 		mHeadset = _headset;
 		mController1 = _lController;
 		mController2 = _rController;
@@ -121,14 +123,17 @@ namespace Epoch {
 				othersComponents[i]->SetComponentId(FirstCompId);
 			}
 
-		/*components = _first->GetComponents(eCOMPONENT_MESH);
-		othersComponents = _other->GetComponents(eCOMPONENT_MESH);
 	
+		components = _first->GetComponents(eCOMPONENT_MESH);
+		othersComponents = _other->GetComponents(eCOMPONENT_MESH);
+		if (components.size() > 0)
+		{
 			for (int i = 0; i < othersComponents.size(); ++i) {
 				unsigned int FirstCompId = components[i]->GetColliderId();
 				components[i]->SetComponentId(othersComponents[i]->GetColliderId());
 				othersComponents[i]->SetComponentId(FirstCompId);
-			}*/
+			}
+		}
 		
 
 	/*	components = _first->GetComponents(eCOMPONENT_UI);
@@ -204,6 +209,17 @@ namespace Epoch {
 
 	}
 
+	void Level::SetupObjects()
+	{
+		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
+			auto& meshes = (*it)->GetComponents(eCOMPONENT_MESH);
+			for (auto cit = meshes.begin(); cit != meshes.end(); ++cit) {
+				((MeshComponent*)(*cit))->SetVisible(false);
+				((MeshComponent*)(*cit))->SetVisible(true);
+			}
+		}
+	}
+
 	void Level::CallStart() {
 		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
 			auto codes = (*it)->GetComponents(eCOMPONENT_CODE);
@@ -277,10 +293,12 @@ namespace Epoch {
 				while (pObject)
 				{
 					std::vector<std::string> codeComs;
-					std::string elementType, name, meshFile, textureFile, colliderType;
-					vec4f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity;
-					float mass, elasticity, staticF, kineticF, normF, drag, radius;
-					bool collider = false, trigger = false, canMove = false, physical = false;
+					std::string elementType, name, meshFile, textureFile, colliderType, particleTexture, soundName;
+					vec3f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity, particleRadius, startColor, endColor;
+					float mass, elasticity, staticF, kineticF, normF, drag, radius, startSize, endSize, startAlpha, endAlpha;
+					int totalParticles, maxParticles, PPS, lifeTime;
+					bool collider = false, trigger = false, canMove = false, physical = false, particle = false, sound = false, SFX = false, Loop = false;
+					unsigned long sfxFile, playFile, pauseFile, stopFile, resumeFile;
 					pData = pObject->FirstChildElement();
 					while (pData)
 					{
@@ -290,6 +308,10 @@ namespace Epoch {
 							elementType = std::string(pData->Value());
 							if (elementType == "Collider")
 								collider = true;
+							else if (elementType == "ParticleEmitter")
+								particle = true;
+							else if (elementType == "SoundEmitter")
+								sound = true;
 							pData = (TiXmlElement*)pData->FirstChild();
 							break;
 						case TiXmlNode::NodeType::TINYXML_TEXT:
@@ -309,13 +331,11 @@ namespace Epoch {
 									std::string token = s.substr(0, pos);
 									if (collider)
 									{
-										colliderPosition.xyzw[i] = std::strtof(token.c_str(), nullptr);
-										colliderPosition.w = 1;
+										colliderPosition.xyz[i] = std::strtof(token.c_str(), nullptr);
 									}
 									else
 									{
-										position.xyzw[i] = std::strtof(token.c_str(), nullptr);
-										position.w = 1;
+										position.xyz[i] = std::strtof(token.c_str(), nullptr);
 									}
 									i++;
 									s.erase(0, pos + 1);
@@ -329,11 +349,10 @@ namespace Epoch {
 								while ((pos = s.find(",")) != std::string::npos)
 								{
 									std::string token = s.substr(0, pos);
-									rotation.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									rotation.xyz[i] = std::strtof(token.c_str(), nullptr);
 									i++;
 									s.erase(0, pos + 1);
 								}
-								rotation.w = 1;
 							}
 							else if (elementType == "Scale")
 							{
@@ -345,13 +364,11 @@ namespace Epoch {
 									std::string token = s.substr(0, pos);
 									if (collider)
 									{
-										colliderScale.xyzw[i] = std::strtof(token.c_str(), nullptr);
-										colliderScale.w = 1;
+										colliderScale.xyz[i] = std::strtof(token.c_str(), nullptr);
 									}
 									else
 									{
-										scale.xyzw[i] = std::strtof(token.c_str(), nullptr);
-										scale.w = 1;
+										scale.xyz[i] = std::strtof(token.c_str(), nullptr);
 									}
 									i++;
 									s.erase(0, pos + 1);
@@ -361,12 +378,15 @@ namespace Epoch {
 							{
 								std::string temp(pData->Value());
 								canMove = temp.find("True") != std::string::npos;
-								int thing = 0;
 							}
 							else if (elementType == "Type")
 								colliderType = pData->Value();
 							else if (elementType == "Trigger")
-								trigger = pData->Value() == "True";
+							{
+								std::string temp(pData->Value());
+								trigger = temp.find("True") != std::string::npos;
+								int thing = 0;
+							}
 							else if (elementType == "Radius")
 							{
 								radius = std::strtof(pData->Value(), nullptr);
@@ -396,11 +416,10 @@ namespace Epoch {
 								while ((pos = s.find(",")) != std::string::npos)
 								{
 									std::string token = s.substr(0, pos);
-									normal.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									normal.xyz[i] = std::strtof(token.c_str(), nullptr);
 									i++;
 									s.erase(0, pos + 1);
 								}
-								normal.w = 1;
 							}
 							else if (elementType == "PushNormal")
 							{
@@ -410,11 +429,10 @@ namespace Epoch {
 								while ((pos = s.find(",")) != std::string::npos)
 								{
 									std::string token = s.substr(0, pos);
-									pushNorm.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									pushNorm.xyz[i] = std::strtof(token.c_str(), nullptr);
 									i++;
 									s.erase(0, pos + 1);
 								}
-								pushNorm.w = 1;
 							}
 							else if (elementType == "Gravity")
 							{
@@ -424,14 +442,107 @@ namespace Epoch {
 								while ((pos = s.find(",")) != std::string::npos)
 								{
 									std::string token = s.substr(0, pos);
-									gravity.xyzw[i] = std::strtof(token.c_str(), nullptr);
+									gravity.xyz[i] = std::strtof(token.c_str(), nullptr);
 									i++;
 									s.erase(0, pos + 1);
 								}
-								gravity.w = 1;
 							}
 							else if (elementType == "NormalForce")
 								normF = std::strtof(pData->Value(), nullptr);
+							else if(elementType == "MaxParticles")
+								maxParticles = std::strtof(pData->Value(), nullptr);
+							else if (elementType == "TotalParticles")
+								totalParticles = std::strtof(pData->Value(), nullptr);
+							else if(elementType == "Texture")
+								particleTexture = pData->Value();
+							else if(elementType == "PPS")
+								PPS = std::strtof(pData->Value(), nullptr);
+							else if(elementType == "LifeTime")
+								lifeTime = std::strtof(pData->Value(), nullptr);
+							else if(elementType == "StartSize")
+								startSize = std::strtof(pData->Value(), nullptr);
+							else if(elementType == "EndSize")
+								endSize = std::strtof(pData->Value(), nullptr);
+							else if (elementType == "StartAlpha")
+								startAlpha = std::strtof(pData->Value(), nullptr);
+							else if(elementType == "EndAlpha")
+								endAlpha = std::strtof(pData->Value(), nullptr);
+							else if (elementType == "Radial")
+							{
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									particleRadius.xyz[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+							}
+							else if(elementType == "StartColor")
+							{
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									startColor.xyz[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+							}
+							else if (elementType == "StartColor")
+							{
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									endColor.xyz[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+							}
+							else if(elementType == "SoundName")
+								soundName = pData->Value();
+							else if (elementType == "SFX")
+							{
+								SFX = true;
+								std::string t = pData->Value();
+								char* c;
+								sfxFile = std::strtol(t.c_str(), &c, 16);
+							}
+							else if (elementType == "Play")
+							{
+								Loop = true;
+								std::string t = pData->Value();
+								char* c;
+								playFile = std::strtol(t.c_str(), &c, 16);
+							}
+							else if (elementType == "Pause")
+							{
+								Loop = true;
+								std::string t = pData->Value();
+								char* c;
+								pauseFile = std::strtol(t.c_str(), &c, 16);
+							}
+							else if (elementType == "Stop")
+							{
+								Loop = true;
+								std::string t = pData->Value();
+								char* c;
+								stopFile = std::strtol(t.c_str(), &c, 16);
+							}
+							else if (elementType == "Resume")
+							{
+								Loop = true;
+								std::string t = pData->Value();
+								char* c;
+								resumeFile = std::strtol(t.c_str(), &c, 16);
+							}
 							else
 								codeComs.push_back(elementType);
 
@@ -463,6 +574,42 @@ namespace Epoch {
 						mesh->AddTexture(path.c_str(), eTEX_DIFFUSE);
 						obj->AddComponent(mesh);
 					
+					}
+
+					if (particle)
+					{
+						ParticleEmitter* emitter = new ParticleEmitter(totalParticles, maxParticles, PPS, position);
+						emitter->SetTexture(particleTexture.c_str());
+						Particle* p = &Particle::Init();
+						p->SetColors(startColor, endColor);
+						p->SetLife(lifeTime);
+						p->SetSize(startSize, endSize);
+						emitter->SetParticle(p);
+						ParticleSystem::Instance()->AddEmitter(emitter);
+						Effect* e = new Effect();
+						e->mEmitter = emitter;
+						obj->AddComponent(e);
+					}
+
+					if (sound)
+					{
+						if (SFX)
+						{
+							Emitter* sound = new Emitter();
+							sound->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, sfxFile);
+							Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(sound, soundName.c_str())));
+							obj->AddComponent(sound);
+						}
+						if (Loop)
+						{
+							Emitter* sound = new Emitter();
+							sound->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, playFile);
+							sound->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, pauseFile);
+							sound->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, resumeFile);
+							sound->AddSoundEvent(Emitter::sfxTypes::eStopLoop, stopFile);
+							Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(sound, soundName.c_str())));
+							obj->AddComponent(sound);
+						}
 					}
 
 					if (colliderType == "OBB")
@@ -542,13 +689,6 @@ namespace Epoch {
 							obj->AddComponent(code);
 						}
 					}
-
-					if (physical)
-						Physics::Instance()->mObjects.push_back(obj);
-
-					if (canMove || obj->GetName() == "Door1" || obj->GetName() == "Door2")
-						TimeManager::Instance()->AddObjectToTimeline(obj);
-
 					AddObject(obj);
 					pObject = pObject->NextSiblingElement("Object");
 				}

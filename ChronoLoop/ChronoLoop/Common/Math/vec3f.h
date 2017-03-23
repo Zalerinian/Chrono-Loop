@@ -13,8 +13,8 @@ namespace Epoch {
 			float xyz[3];
 		};
 
-		vec3f();
-		vec3f(float _x, float _y, float _z);
+		vec3f() { x = y = z = 0; };
+		vec3f(float _x, float _y, float _z) { x = _x; y = _y; z = _z; };
 		vec3f(const vec3f& _copy);
 		vec3f(const vec4f& _copy);
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <sstream>
 #include <fstream>
+#include <mutex>
 
 namespace Epoch
 {
@@ -14,6 +15,7 @@ namespace Epoch
 	class SL
 	{
 		std::ofstream mOutput;
+		std::mutex mMutex;
 		friend class SystemLogger;
 		SL(const char* _path);
 		~SL();

@@ -10,6 +10,7 @@
 #include "IndexBufferManager.h"
 #include "MeshCache.h"
 #include <memory>
+#include "RenderShaderDefines.hlsli"
 
 
 namespace Epoch {
@@ -120,6 +121,48 @@ namespace Epoch {
 		mContext.mGeoShaderFormat = _gf;
 	}
 
+	void RenderShape::SetVertexShader(VertexShaderFormat _vf)
+	{
+		if (_vf < 0 || _vf >= eVS_MAX) {
+			SystemLogger::Error() << "The given vertex shader format (" << _vf << ") is invalid. Forcing to eVS_MAX." << std::endl;
+			_vf = eVS_MAX;
+		}
+		mContext.mVertexShaderFormat = _vf;
+	}
+
+	void RenderShape::SetPixelShader(PixelShaderFormat _pf)
+	{
+		if (_pf < 0 || _pf >= ePS_MAX) {
+			SystemLogger::Error() << "The given pixel shader format (" << _pf << ") is invalid. Forcing to ePS_MAX." << std::endl;
+			_pf = ePS_MAX;
+		}
+		mContext.mPixelShaderFormat = _pf;
+	}
+
+	void RenderShape::SetGeometryShader(GeometryShaderFormat _gf)
+	{
+		if (_gf < 0 || _gf >= eGS_MAX) {
+			SystemLogger::Error() << "The given geometry shader format (" << _gf << ") is invalid. Forcing to eGS_MAX." << std::endl;
+			_gf = eGS_MAX;
+		}
+		mContext.mGeoShaderFormat = _gf;
+	}
+
+	VertexShaderFormat RenderShape::GetVertexShader()
+	{
+		return mContext.mVertexShaderFormat;
+	}
+
+	PixelShaderFormat RenderShape::GetPixelShader()
+	{
+		return mContext.mPixelShaderFormat;
+	}
+
+	GeometryShaderFormat RenderShape::GetGeometryShader()
+	{
+		return mContext.mGeoShaderFormat;
+	}
+
 	RenderShape& RenderShape::AddTexture(const char * _path, TextureType _position) {
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
 		TextureManager::TextureStatus stat = TextureManager::Instance()->iGetTexture2D(_path, &srv, nullptr);
@@ -144,7 +187,11 @@ namespace Epoch {
 		Microsoft::WRL::ComPtr<ID3D11Buffer> vBuffer = VertexBufferManager::GetBuffer(eVERT_POSNORMTEX);
 		Renderer::Instance()->GetContext()->IASetIndexBuffer(IndexBufferManager::GetBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
 		Renderer::Instance()->GetContext()->IASetVertexBuffers(0, 1, vBuffer.GetAddressOf(), &stride, &offset);
+#if ENABLE_INSTANCING
 		Renderer::Instance()->GetContext()->DrawIndexedInstanced(mIndexCount, _instanceCount, mIndexOffset, mVertexOffset, 0);
+#else
+		Renderer::Instance()->GetContext()->DrawIndexed(mIndexCount, mIndexOffset, mVertexOffset);
+#endif
 	}
 
 	bool RenderShape::operator==(const RenderShape & _other) const {

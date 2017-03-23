@@ -36,6 +36,7 @@ namespace Epoch
 			mFloorObject = cLevel->FindObjectWithName("mmFloor");
 			mRoomObject = cLevel->FindObjectWithName("mmRoom");
 			mCubeObject = cLevel->FindObjectWithName("mmCube");
+			mCubeObject->GetTransform().GetMatrix().Position.Set(0, -30000, 0, 1);
 
 			mChamberInterp->SetEasingFunction(Easing::CubicInOut);
 			mPlayerInterp->SetEasingFunction(Easing::CubicInOut);
@@ -66,13 +67,14 @@ namespace Epoch
 			//for (int i = 0; i < ARRAYSIZE(objects); ++i) {
 			//	awdforward.Set(0, 0, 1, 0);
 			//	matrix4 inverse = (mat * objects[i]->GetTransform().GetMatrix().Invert());
-			//	vec4f meshPos = inverse.Position;
+			//	vec3f meshPos = inverse.Position;
 			//	awdforward *= inverse;
+			//	vec3f fwd = awdforward;
 			//	Triangle *tris = meshes[i]->GetTriangles();
 			//	size_t numTris = meshes[i]->GetTriangleCount();
 			//	for (unsigned int j = 0; j < numTris; ++j) {
 			//		float hitTime;
-			//		if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, awdforward, hitTime)) {
+			//		if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, fwd, hitTime)) {
 			//			mCubeObject->GetTransform().SetMatrix(matrix4::CreateScale(0.1f, 0.1f, 0.1f) * mat);
 			//			mCubeObject->GetTransform().GetMatrix().Position.x += (vec4f(0, 0, 1, 0) * mat).x * hitTime;
 			//			mCubeObject->GetTransform().GetMatrix().Position.y += (vec4f(0, 0, 1, 0) * mat).y * hitTime;

@@ -62,6 +62,7 @@ namespace Epoch
 				}
 				ID3D11ShaderResourceView *srv;
 				ID3D11Resource *texture;
+				Renderer::Instance()->GetRendererLock().lock();
 				hr = CreateShaderResourceView(Renderer::Instance()->GetDevice().Get(), scratch.GetImage(0, 0, 0), 1, tMeta, &srv);
 				if (FAILED(hr))
 				{
@@ -69,6 +70,7 @@ namespace Epoch
 					// We don't return false because the shader resource view is technically unnecessary, a texture2D might have been the goal all along.
 				}
 				hr = CreateTexture(Renderer::Instance()->GetDevice().Get(), scratch.GetImage(0, 0, 0), 1, tMeta, &texture);
+				Renderer::Instance()->GetRendererLock().unlock();
 				if (FAILED(hr))
 				{
 					SystemLogger::GetError() << "[Error] Failed to create Texture2D for \"" << _path << "\": 0x" << hex << hr << dec << endl;
@@ -108,6 +110,7 @@ namespace Epoch
 			delete[] buffer;
 			ID3D11Resource *texture;
 			ID3D11ShaderResourceView *srv;
+			Renderer::Instance()->GetRendererLock().lock();
 			hr = CreateDDSTextureFromMemory(Renderer::Instance()->GetDevice().Get(), scratch.GetPixels(), scratch.GetPixelsSize(), &texture, &srv);
 			if (FAILED(hr))
 			{
@@ -122,7 +125,7 @@ namespace Epoch
 				}
 				return false;
 			}
-
+			Renderer::Instance()->GetRendererLock().unlock();
 #if _DEBUG
 			string textureName = "Texture loaded from " + string(_path);
 			string viewName = "Texture view for " + string(_path);

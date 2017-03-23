@@ -36,7 +36,10 @@ namespace Epoch
 	//Listener----------------------------------------------------
 #pragma region Listener
 
-//void Listener::Update(){}
+	void Listener::Destroy()
+	{
+		AudioWrapper::GetInstance().RemoveListener(this);
+	}
 
 
 
@@ -179,7 +182,8 @@ namespace Epoch
 
 	void Collider::SetPos(const vec3f& _newPos)
 	{
-		mObject->GetTransform().GetMatrix().fourth = vec4f(_newPos);
+		vec4f v(_newPos);
+		mObject->GetTransform().GetMatrix().fourth = v;
 	}
 
 	//MeshCollider::MeshCollider(BaseObject* _obj, bool _move, vec3f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, char * _path)
@@ -274,8 +278,8 @@ namespace Epoch
 	}
 
 	void CubeCollider::Update() {
-	/*	if (mNode == nullptr) {
-			mNode = Renderer::Instance()->AddNode(mShape);
+		/*if (mNode == nullptr) {
+			mNode = Renderer::Instance()->AddOpaqueNode(mShape);
 		}
 		vec3f size = mMax - mMin;
 		matrix4 pos = matrix4::CreateScale(size.x, size.y, size.z);
@@ -291,7 +295,7 @@ namespace Epoch
 
 	void CubeCollider::SetPos(const vec3f& _newPos)
 	{
-		mObject->GetTransform().GetMatrix().fourth = _newPos;
+		mObject->GetTransform().GetMatrix().fourth = vec4f(_newPos);
 		mMin = mMinOffset + _newPos;
 		mMax = mMaxOffset + _newPos;
 	}

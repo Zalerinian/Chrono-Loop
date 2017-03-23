@@ -181,10 +181,10 @@ namespace Epoch
 	struct m_Emitter
 	{
 		Emitter* mEmitter;
-		char* mName;
+		const char* mName;
 
 		m_Emitter() {}
-		m_Emitter(Emitter* _emitter, char* _name) { mEmitter = _emitter; mName = _name; }
+		m_Emitter(Emitter* _emitter, const char* _name) { mEmitter = _emitter; mName = _name; }
 	};
 
 	struct m_FLT

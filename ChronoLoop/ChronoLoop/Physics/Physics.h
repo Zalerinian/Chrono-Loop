@@ -3,6 +3,7 @@
 #include "..\Common\Math.h"
 #include "..\Rendering\Mesh.h"
 #include <vector>
+#include <mutex>
 #define PMIN(x, y) ((x < y) ? x : y)
 #define PMAX(x, y) ((x > y) ? x : y)
 #define SameSign(x, y) ((x > 0 && y > 0) || (x < 0 && y < 0))
@@ -27,6 +28,7 @@ namespace Epoch
 
 	public:
 		std::vector< BaseObject*> mObjects;
+		std::mutex PhysicsLock;
 
 		static Physics* Instance();
 		static void		Destroy();
