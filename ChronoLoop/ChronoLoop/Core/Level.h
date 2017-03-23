@@ -63,6 +63,7 @@ namespace Epoch
 
 		//**CONSOLE COMMAND FUNCS**//
 		static void ToggleEntireLevelsWireframe(void * _command, std::wstring _ifOn);
+		static void LoadLevelCmnd(void* _commandConsole, std::wstring _Level);
 
 	};
 
