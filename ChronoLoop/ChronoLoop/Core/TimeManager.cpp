@@ -273,7 +273,8 @@ namespace Epoch {
 					SystemLogger::GetLog() << "Clone id:" << mClones[i]->GetUniqueID() << " has been deleted" << std::endl;
 					//Remove it from being tracked by timeline
 					mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueId());
-					Pool::Instance()->iRemoveObject(mClones[i]->GetUniqueID());
+					LevelManager::GetInstance().GetCurrentLevel()->RemoveObject(mClones[i]);
+					Pool::Instance()->iAddObject(mClones[i]);
 					mClones.erase(mClones.begin() + i);
 					del = true;
 				}
