@@ -1,11 +1,11 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
 mtllib UIClone.mtl
-g default
-v 0.047726 -0.013247 -0.004697
-v 0.094761 -0.013247 -0.004697
-v 0.047726 -0.013247 -0.051732
-v 0.094761 -0.013247 -0.051732
+g default1
+v -0.023517 0.000000 0.023517
+v 0.023517 0.000000 0.023517
+v -0.023517 0.000000 -0.023517
+v 0.023517 0.000000 -0.023517
 vt 0.000000 0.000000
 vt 1.000000 0.000000
 vt 0.000000 1.000000
@@ -15,5 +15,5 @@ vn 0.000000 1.000000 0.000000
 vn 0.000000 1.000000 0.000000
 vn 0.000000 1.000000 0.000000
 s off
-g initialShadingGroup pPlane1
+g initialShadingGroup initialShadingGroup1 pPlane1 polySurface1
 f 1/1/1 2/2/2 4/4/3 3/3/4
