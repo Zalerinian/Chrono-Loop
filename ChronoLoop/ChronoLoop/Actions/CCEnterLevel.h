@@ -89,12 +89,12 @@ namespace Epoch
 					timeDisplay->SetParent(RightController);
 					RightController->AddChild(timeDisplay);
 
-					BaseObject *timeDisplayNeedle = Pool::Instance()->iGetObject()->Reset("TimeIndicatorNeedle", identity);
+					BaseObject *timeDisplayNeedle = Pool::Instance()->iGetObject()->Reset("TimeIndicatorNeedle", t);
 					MeshComponent* tdispn = new MeshComponent("../Resources/TimeIndicator.obj");
 					tdispn->AddTexture("../Resources/TimeIndicator.png", eTEX_DIFFUSE);
 					timeDisplayNeedle->AddComponent(tdispn);
-					timeDisplayNeedle->SetParent(timeDisplay);
-					timeDisplay->AddChild(timeDisplayNeedle);
+					timeDisplayNeedle->SetParent(RightController);
+					RightController->AddChild(timeDisplayNeedle);
 
 					//pat added
 					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
