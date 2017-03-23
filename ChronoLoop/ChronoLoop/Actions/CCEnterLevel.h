@@ -6,6 +6,7 @@
 #include "..\Core\Pool.h"
 #include "..\Core\TimeManager.h"
 #include "..\Common\Settings.h"
+#include "..\Actions\UIRewind.h"
 
 namespace Epoch 
 {
@@ -96,9 +97,12 @@ namespace Epoch
 					timeDisplayNeedle->SetParent(RightController);
 					RightController->AddChild(timeDisplayNeedle);
 
-					BaseObject *rewindDisplay = Pool::Instance()->iGetObject()->Reset("RewindDisplay", identity);
+					t.SetMatrix(matrix4::CreateTranslation(0, .015f, .054f));
+					BaseObject *rewindDisplay = Pool::Instance()->iGetObject()->Reset("RewindDisplay", t);
 					MeshComponent* rewind = new MeshComponent("../Resources/UIRewind.obj");
 					rewind->AddTexture("../Resources/rewind.png", eTEX_DIFFUSE);
+					UIRewind* spin = new UIRewind();
+					rewindDisplay->AddComponent(spin);
 					rewindDisplay->AddComponent(rewind);
 					rewindDisplay->SetParent(RightController);
 					RightController->AddChild(rewindDisplay);
