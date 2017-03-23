@@ -96,9 +96,9 @@ namespace Epoch {
 			if (mCurrentLevel) {
 				delete mCurrentLevel;
 			}
-			Renderer::Instance()->ClearRenderSet();
 			VRInputManager::GetInstance().GetPlayerPosition().Position = mRequested->mStartPosition;
 			mCurrentLevel = mRequested;
+			Renderer::Instance()->ClearRenderSet();
 			mCurrentLevel->SetupObjects();
 			mCurrentLevel->CallStart();
 			mRequested = nullptr;

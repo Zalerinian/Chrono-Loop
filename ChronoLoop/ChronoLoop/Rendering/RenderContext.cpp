@@ -24,6 +24,16 @@ namespace Epoch {
 		for (int i = eTEX_DIFFUSE; i < eTEX_MAX; ++i) {
 			mTextures[i] = _copy.mTextures[i];
 		}
+
+		for (int i = eVB_BEGIN; i < eVB_MAX; ++i) {
+			mVertexCBuffers[i] = _copy.mVertexCBuffers[i];
+		}
+		for (int i = ePB_BEGIN; i < ePB_MAX; ++i) {
+			mPixelCBuffers[i] = _copy.mPixelCBuffers[i];
+		}
+		for (int i = eGB_BEGIN; i < eGB_MAX; ++i) {
+			mGeometryCBuffers[i] = _copy.mGeometryCBuffers[i];
+		}
 	}
 
 	RenderContext::~RenderContext() {}
@@ -139,6 +149,16 @@ namespace Epoch {
 		mType = _other.mType;
 		for (int i = eTEX_DIFFUSE; i < eTEX_MAX; ++i) {
 			mTextures[i] = _other.mTextures[i];
+		}
+
+		for (int i = eVB_BEGIN; i < eVB_MAX; ++i) {
+			mVertexCBuffers[i] = _other.mVertexCBuffers[i];
+		}
+		for (int i = ePB_BEGIN; i < ePB_MAX; ++i) {
+			mPixelCBuffers[i] = _other.mPixelCBuffers[i];
+		}
+		for (int i = eGB_BEGIN; i < eGB_MAX; ++i) {
+			mGeometryCBuffers[i] = _other.mGeometryCBuffers[i];
 		}
 		return *this;
 	}

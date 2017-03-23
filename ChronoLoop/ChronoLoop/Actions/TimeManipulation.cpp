@@ -1,6 +1,6 @@
 
 #include "../Objects/Component.h"
-#include "../Objects/MeshComponent.h"
+#include "../Objects/TransparentMeshComponent.h"
 #include "../Actions/CodeComponent.hpp"
 #include "../Objects/BaseObject.h"
 #include "../Core/LevelManager.h"
@@ -55,13 +55,15 @@ namespace Epoch
 			mCloneCount++;
 			//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
 			BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - " + std::to_string(mCloneCount),  identity ); //new BaseObject("headset" + std::to_string(rand), identity);
-			MeshComponent *visibleMesh = new MeshComponent("../Resources/Clone.obj");
+			TransparentMeshComponent *visibleMesh = new TransparentMeshComponent("../Resources/Clone.obj");
+			visibleMesh->SetAlpha(0.5f);
 			visibleMesh->AddTexture(TimeManager::Instance()->GetNextTexture().c_str(), eTEX_DIFFUSE);
 			headset->AddComponent(visibleMesh);
 
 			//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
 			BaseObject* Controller1 = Pool::Instance()->iGetObject()->Reset("Controller1 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
-			MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
+			TransparentMeshComponent *mc = new TransparentMeshComponent("../Resources/Controller.obj");
+			mc->SetAlpha(0.5f);
 			ControllerCollider* CubeColider = new ControllerCollider(Controller1, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
 			mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 			Controller1->AddComponent(mc);
@@ -71,7 +73,8 @@ namespace Epoch
 
 			//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be proble
 			BaseObject* Controller2 = Pool::Instance()->iGetObject()->Reset("Controller2 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
-			MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
+			TransparentMeshComponent *mc2 = new TransparentMeshComponent("../Resources/Controller.obj");
+			mc2->SetAlpha(0.5f);
 			ControllerCollider* CubeColider2 = new ControllerCollider(Controller2, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 			mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 			Controller2->AddComponent(mc2);
@@ -144,12 +147,12 @@ namespace Epoch
 		// Update effect interpolator
 		if (mDesaturationInterpolator.GetActive()) {
 			RenderShape* quad = Renderer::Instance()->GetSceneQuad();
-			Renderer::Instance()->GetContext()->UpdateSubresource(quad->GetContext().mPixelCBuffers[ePB_SLOT2].Get(), 0, NULL, &mEffectData, 0, 0);
+			Renderer::Instance()->GetContext()->UpdateSubresource(quad->GetContext().mPixelCBuffers[ePB_CUSTOM1].Get(), 0, NULL, &mEffectData, 0, 0);
 		}
 		if (mDesaturationInterpolator.Update(TimeManager::Instance()->GetDeltaTime())) {
 			mDesaturationInterpolator.SetActive(false);
 			RenderShape* quad = Renderer::Instance()->GetSceneQuad();
-			Renderer::Instance()->GetContext()->UpdateSubresource(quad->GetContext().mPixelCBuffers[ePB_SLOT2].Get(), 0, NULL, &mEffectData, 0, 0);
+			Renderer::Instance()->GetContext()->UpdateSubresource(quad->GetContext().mPixelCBuffers[ePB_CUSTOM1].Get(), 0, NULL, &mEffectData, 0, 0);
 		}
 
 
