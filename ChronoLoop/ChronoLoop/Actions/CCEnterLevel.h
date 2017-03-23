@@ -73,6 +73,29 @@ namespace Epoch
 					RightController->AddComponent(ambient);
 					ambient->Play();
 
+					BaseObject *cloneDisplay = Pool::Instance()->iGetObject()->Reset("CloneDisplay", identity);
+					MeshComponent* disp = new MeshComponent("../Resources/ClonePanel.obj");
+					disp->AddTexture("../Resources/ClonePanel.png", eTEX_DIFFUSE);
+					cloneDisplay->AddComponent(disp);
+					cloneDisplay->SetParent(RightController);
+					RightController->AddChild(cloneDisplay);
+
+					Transform t;
+					t.SetMatrix(matrix4::CreateScale(.1f, .1f, .1f));
+					BaseObject *timeDisplay = Pool::Instance()->iGetObject()->Reset("TimeIndicatorLine", t);
+					MeshComponent* tdisp = new MeshComponent("../Resources/TimeIndicatorLine.obj");
+					tdisp->AddTexture("../Resources/TimeIndicatorLine.png", eTEX_DIFFUSE);
+					timeDisplay->AddComponent(tdisp);
+					timeDisplay->SetParent(RightController);
+					RightController->AddChild(timeDisplay);
+
+					BaseObject *timeDisplayNeedle = Pool::Instance()->iGetObject()->Reset("TimeIndicatorNeedle", identity);
+					MeshComponent* tdispn = new MeshComponent("../Resources/TimeIndicator.obj");
+					tdispn->AddTexture("../Resources/TimeIndicator.png", eTEX_DIFFUSE);
+					timeDisplayNeedle->AddComponent(tdispn);
+					timeDisplayNeedle->SetParent(timeDisplay);
+					timeDisplay->AddChild(timeDisplayNeedle);
+
 					//pat added
 					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), true);
@@ -133,6 +156,9 @@ namespace Epoch
 					next->AddObject(headset);
 					next->AddObject(LeftController);
 					next->AddObject(RightController);
+					next->AddObject(cloneDisplay);
+					next->AddObject(timeDisplay);
+					next->AddObject(timeDisplayNeedle);
 
 					TimeManager::Instance()->AddObjectToTimeline(RightController);
 					TimeManager::Instance()->AddObjectToTimeline(LeftController);
