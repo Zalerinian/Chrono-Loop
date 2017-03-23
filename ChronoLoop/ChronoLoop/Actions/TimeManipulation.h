@@ -26,6 +26,10 @@ namespace Epoch
 		static unsigned int mCloneCount;
 		static unsigned short mCurrTexture;
 
+		BaseObject* mCurCloneHeadset = nullptr;
+		BaseObject* mCurCloneController1 = nullptr;
+		BaseObject* mCurCloneController2 = nullptr;
+
 		std::string mTextures[10] = { "../Resources/CloneTexture.png",
 			"../Resources/CloneTexture_Green.png",
 			"../Resources/CloneTexture_Pink.png",
@@ -48,6 +52,7 @@ namespace Epoch
 		void makeTimePaused(bool _isPaused) { mPauseTime = _isPaused; };
 		void Start();
 		void Update();
+		void MakeCloneBaseObjects(BaseObject* _headset, BaseObject* _controller1, BaseObject* _controller2);
 	};
 
 } // Epoch Namespace

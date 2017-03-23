@@ -5,7 +5,6 @@
 #include "../Objects/BaseObject.h"
 #include "../Core/LevelManager.h"
 #include "../Input/VRInputManager.h"
-#include "../Rendering/TextureManager.h"
 #include "../Rendering/Draw2D.h"
 #include "../Core/Pool.h"
 #include "TimeManipulation.h"
@@ -36,79 +35,7 @@ namespace Epoch
 	void TimeManipulation::Update() {
 		Level* currentLevel = LevelManager::GetInstance().GetCurrentLevel();
 		
-		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu)) {
-			int frameRewind = 30;
-
-
-			bool right, left;
-			if (currentLevel->GetRightTimeManipulator() != nullptr || currentLevel->GetLeftTimeManipulator() != nullptr) {
-				right = currentLevel->GetRightTimeManipulator()->isTimePaused();
-				left = currentLevel->GetLeftTimeManipulator()->isTimePaused();
-			}
-			if (!TimeManager::Instance()->CheckRewindAvaliable(frameRewind) || right || left)
-				return;
-
-			SystemLogger::GetLog() << "[Debug] A clone is being made, please hold: " << mCloneCount << " | Is left: " << mControllerRole << std::endl;
-
-			Transform identity;
-
-			mCloneCount++;
-			//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
-			BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - " + std::to_string(mCloneCount),  identity ); //new BaseObject("headset" + std::to_string(rand), identity);
-			MeshComponent *visibleMesh = new MeshComponent("../Resources/Clone.obj");
-			visibleMesh->AddTexture(TimeManager::Instance()->GetNextTexture().c_str(), eTEX_DIFFUSE);
-			headset->AddComponent(visibleMesh);
-
-			//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
-			BaseObject* Controller1 = Pool::Instance()->iGetObject()->Reset("Controller1 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
-			MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
-			ControllerCollider* CubeColider = new ControllerCollider(Controller1, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
-			mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
-			Controller1->AddComponent(mc);
-			Controller1->AddComponent(CubeColider);
-			BoxSnapToControllerAction* SN1 = new BoxSnapToControllerAction();
-			Controller1->AddComponent(SN1);
-
-			//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be proble
-			BaseObject* Controller2 = Pool::Instance()->iGetObject()->Reset("Controller2 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
-			MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
-			ControllerCollider* CubeColider2 = new ControllerCollider(Controller2, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
-			mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
-			Controller2->AddComponent(mc2);
-			Controller2->AddComponent(CubeColider2);
-			BoxSnapToControllerAction* SN2 = new BoxSnapToControllerAction();
-			Controller2->AddComponent(SN2);
-
-
-
-			//
-			//KEEP THIS ORDER NO MATTER WHAT!!!! 
-			//
-			//Make a clone 3 seconds ago.
-			TimeManager::Instance()->RewindMakeClone(TimeManager::Instance()->GetCurrentSnapFrame() - frameRewind, headset, Controller1, Controller2);
-			currentLevel->SetHeadsetAndControllers(headset, Controller1, Controller2, CubeColider, CubeColider2);
-			//it is extreamly important that the objects are added after time rewinded because of the objectLifeTimeStruct and more..
-			Physics::Instance()->mObjects.push_back(headset);
-			Physics::Instance()->mObjects.push_back(Controller1);
-			Physics::Instance()->mObjects.push_back(Controller2);
-			//new Objects are added to the timeline to update the old player BaseObject pointers
-			TimeManager::Instance()->UpdatePlayerObjectInTimeline(headset);
-			TimeManager::Instance()->UpdatePlayerObjectInTimeline(Controller1);
-			TimeManager::Instance()->UpdatePlayerObjectInTimeline(Controller2);
-			TimeManager::Instance()->UpdateCloneCreationTime(headset->GetUniqueID(),Controller1->GetUniqueID(),Controller2->GetUniqueID());
-			//Rewind InputTime
-			VRInputManager::GetInstance().RewindInputTimeline(TimeManager::Instance()->GetCurrentSnapFrame(), currentLevel->GetRightController()->GetUniqueID(), currentLevel->GetLeftController()->GetUniqueID());
-			//add Interpolators for the clones
-			TimeManager::Instance()->AddInterpolatorForClone(headset);
-			TimeManager::Instance()->AddInterpolatorForClone(Controller1);
-			TimeManager::Instance()->AddInterpolatorForClone(Controller2);
-			
-			TimeManager::Instance()->AssignTextureToClone(headset->GetUniqueId());
-			
-
-
-		}
-
+	
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
 			/*int frameRewind = 30;
 			if (!TimeManager::Instance()->CheckRewindAvaliable(frameRewind))
@@ -119,6 +46,15 @@ namespace Epoch
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			if (mPauseTime) {
 				// Resume Time
+
+				//put the original controll and headset back in control
+				//Remove the clone created
+				currentLevel->SetHeadsetAndControllers(mCurCloneHeadset, mCurCloneController1, mCurCloneController2);
+				TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneHeadset);
+				TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController1);
+				TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController2);
+				TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueID());
+
 				vec2f finalRatios(0, 0);
 				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
 				mDesaturationInterpolator.SetActive(true);
@@ -133,6 +69,13 @@ namespace Epoch
 				
 			} else {
 				// Stop time
+				//pat added
+				Transform identity;
+				mCurCloneHeadset = Pool::Instance()->iGetObject()->Reset("Headset - " + std::to_string(mCloneCount), identity); //new BaseObject("headset" + std::to_string(rand), identity);
+				mCurCloneController1 = Pool::Instance()->iGetObject()->Reset("Controller1 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
+				mCurCloneController2 = Pool::Instance()->iGetObject()->Reset("Controller2 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
+				MakeCloneBaseObjects(mCurCloneHeadset, mCurCloneController1, mCurCloneController2);
+
 				vec2f finalRatios(0.7f, 0.3f);
 				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
 				mDesaturationInterpolator.SetActive(true);
@@ -165,6 +108,7 @@ namespace Epoch
 
 			// Accept timeline position
 			if (left || right) {
+			
 				vec2f finalRatios(0, 0);
 				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
 				mDesaturationInterpolator.SetActive(true);
@@ -174,6 +118,20 @@ namespace Epoch
 					cLevel->GetRightController()->GetUniqueID(),
 					cLevel->GetLeftController()->GetUniqueID());
 
+				//rewind their creation time
+				TimeManager::Instance()->SetCreationTimeofClone(mCurCloneHeadset->GetUniqueID(), mCurCloneController1->GetUniqueID(), mCurCloneController2->GetUniqueID());
+				TimeManager::Instance()->UpdateCloneMadeTime(mCurCloneHeadset->GetUniqueID(), mCurCloneController1->GetUniqueID(), mCurCloneController2->GetUniqueID());
+				//add Interpolators for the clones
+				TimeManager::Instance()->AddInterpolatorForClone(mCurCloneHeadset);
+				TimeManager::Instance()->AddInterpolatorForClone(mCurCloneController1);
+				TimeManager::Instance()->AddInterpolatorForClone(mCurCloneController2);
+				TimeManager::Instance()->AssignTextureToClone(mCurCloneHeadset->GetUniqueId());
+				//it is extreamly important that the objects are added after time rewinded because of the objectLifeTimeStruct and more..
+				Physics::Instance()->mObjects.push_back(mCurCloneHeadset);
+				Physics::Instance()->mObjects.push_back(mCurCloneController1);
+				Physics::Instance()->mObjects.push_back(mCurCloneController2);
+
+				//rewind input timeline
 				VRInputManager::GetInstance().RewindInputTimeline(
 					TimeManager::Instance()->GetTempCurSnap(),
 					cLevel->GetRightController()->GetUniqueID(),
@@ -198,7 +156,49 @@ namespace Epoch
 		{
 			HotfixButtonDown = 0;
 		}
-	};
+	}
+	void TimeManipulation::MakeCloneBaseObjects(BaseObject * _headset, BaseObject * _controller1, BaseObject * _controller2)
+	{
+		Level* currentLevel = LevelManager::GetInstance().GetCurrentLevel();
+		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
+		mCloneCount++;
+		SystemLogger::GetLog() << "[Debug] A clone is being made, please hold: " << mCloneCount << " | Is left: " << mControllerRole << std::endl;
+
+		MeshComponent *visibleMesh = new MeshComponent("../Resources/Clone.obj");
+		visibleMesh->AddTexture(TimeManager::Instance()->GetNextTexture().c_str(), eTEX_DIFFUSE);
+		_headset->AddComponent(visibleMesh);
+
+		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
+		MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
+		ControllerCollider* CubeColider = new ControllerCollider(_controller1, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
+		mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+		_controller1->AddComponent(mc);
+		_controller1->AddComponent(CubeColider);
+		BoxSnapToControllerAction* SN1 = new BoxSnapToControllerAction();
+		_controller1->AddComponent(SN1);
+
+		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be proble
+		MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
+		ControllerCollider* CubeColider2 = new ControllerCollider(_controller2, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
+		mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+		_controller2->AddComponent(mc2);
+		_controller2->AddComponent(CubeColider2);
+		BoxSnapToControllerAction* SN2 = new BoxSnapToControllerAction();
+		_controller2->AddComponent(SN2);
+
+		//
+		//KEEP THIS ORDER NO MATTER WHAT!!!! 
+		//
+		//Make a clone 3 seconds ago.
+		TimeManager::Instance()->RewindMakeClone(TimeManager::Instance()->GetCurrentSnapFrame(), _headset, _controller1, _controller2);
+		currentLevel->SetHeadsetAndControllers(_headset, _controller1, _controller2);
+	
+		//new Objects are added to the timeline to update the old player BaseObject pointers
+		TimeManager::Instance()->UpdatePlayerObjectInTimeline(_headset);
+		TimeManager::Instance()->UpdatePlayerObjectInTimeline(_controller1);
+		TimeManager::Instance()->UpdatePlayerObjectInTimeline(_controller2);
+		
+	}
 
 	void TimeManipulation::RaycastCloneCheck() {
 		matrix4 mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();

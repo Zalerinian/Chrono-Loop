@@ -39,6 +39,11 @@ namespace Epoch {
 		}
 		mObjectRewindInterpolators.clear();
 	}
+	//made this function so the timeline could stay as a black box
+	void TimeManager::SetCreationTimeofClone(unsigned short _id1, unsigned short _id2, unsigned short _id3)
+	{
+		mTimeline->SetCloneObjectCreationTime(_id1, _id2, _id3);
+	}
 
 	void TimeManager::Update(float _delta) {
 	
@@ -106,7 +111,16 @@ namespace Epoch {
 				}
 		}
 	}
-		TimeManager * TimeManager::Instance() {
+	float TimeManager::GetTimeLineObjectInterpTime()
+	{
+		return mTimeline->GetObjectInterpolationTime();
+	}
+	void TimeManager::SetTimelineObjectInterpTime(float _time)
+	{
+		mTimeline->SetObjectInterpolationTime(_time);
+	}
+
+	TimeManager * TimeManager::Instance() {
 			if (!instanceTimemanager) {
 				instanceTimemanager = new TimeManager();
 
@@ -343,7 +357,7 @@ namespace Epoch {
 			mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
 		}
 
-		void TimeManager::UpdateCloneCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3)
+		void TimeManager::UpdateCloneMadeTime(unsigned short _id1, unsigned short _id2, unsigned short _id3)
 		{
 			unsigned short ids[3] = { _id1,_id2,_id3 };
 			mTimeline->ActivateCloneBitset(ids);
