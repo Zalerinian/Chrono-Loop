@@ -17,7 +17,10 @@ namespace Epoch
 		const wchar_t* _initSB = L"Init.bnk";
 		const wchar_t* _aSB = L"Test_Soundbank.bnk";
 
+		
 		bool once = true;
+		void SetOnce(bool _set) { once = _set; };
+		bool GetOnce() { return once; };
 		virtual void OnTriggerEnter(Collider& _col1, Collider& _col2) 
 		{
 			once = false;

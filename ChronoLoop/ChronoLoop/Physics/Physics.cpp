@@ -8,7 +8,7 @@
 #include "..\Input\VRInputManager.h"
 #include "..\Core\LevelManager.h"
 
-#define DEBUG_LEVEL1 1
+#define DEBUG_LEVEL1 0
 
 namespace Epoch
 {
@@ -29,8 +29,6 @@ namespace Epoch
 
 	void Physics::Destroy()
 	{
-
-
 		if (mInstance)
 		{
 			delete mInstance;
