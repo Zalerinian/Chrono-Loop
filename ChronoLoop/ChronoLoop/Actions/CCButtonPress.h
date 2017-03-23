@@ -36,8 +36,8 @@ namespace Epoch
 			exitCube = (CubeCollider*)Exit->mComponents[eCOMPONENT_COLLIDER][0];
 			//blockend = blockCube->GetPos() - vec3f(0, 2.6f, 0);
 			//exitend = exitCube->GetPos() + vec3f(0, 2.6f, 0);
-			blockend = blockCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, -2.6f, 0,1));
-			exitend = exitCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 2.6f, 0,1));
+			blockend = blockCube->GetTransform().GetMatrix() * blockCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, -2.6f, 0, 1));
+			exitend = exitCube->GetTransform().GetMatrix() * exitCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 2.6f, 0, 1));
 		}
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time)
@@ -57,30 +57,36 @@ namespace Epoch
 					_col.mAcceleration = vel / _time;
 					//blockCube->SetPos(blockend);
 					blockInterp->SetActive(true);
-					blockInterp->Prepare(1.0f, blockCube->GetTransform().GetMatrix(), blockend, blockCube->GetTransform().GetMatrix());
+					blockInterp->Prepare(0.69f, blockCube->GetTransform().GetMatrix(), blockend, blockCube->GetTransform().GetMatrix());
 
 					//exitCube->SetPos(exitend);
 					exitInterp->SetActive(true);
-					exitInterp->Prepare(1.0f, exitCube->GetTransform().GetMatrix(), exitend, exitCube->GetTransform().GetMatrix());
+					exitInterp->Prepare(0.69f, exitCube->GetTransform().GetMatrix(), exitend, exitCube->GetTransform().GetMatrix());
 
 					mCanDoorInterp = true;
+					mDoorDoneInterpolating = false;
 				}
 			}
 			else
+			{
 				colliding = false;
+			}
 		}
 		virtual void Update()
 		{
-			if (mCanDoorInterp && !mDoorDoneInterpolating)
-			{
-				mDoorDoneInterpolating = (blockInterp->Update(TimeManager::Instance()->GetDeltaTime()) || exitInterp->Update(TimeManager::Instance()->GetDeltaTime()));
-			}
-			else
-			{
-				blockInterp->SetActive(false);
-				exitInterp->SetActive(false);
-				exitCube->mShouldMove = false;
-				blockCube->mShouldMove = false;
+			if (!LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->isTimePaused() && !LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->isTimePaused()) {
+				if (mCanDoorInterp && !mDoorDoneInterpolating)
+				{
+					mDoorDoneInterpolating = (blockInterp->Update(TimeManager::Instance()->GetDeltaTime()) || exitInterp->Update(TimeManager::Instance()->GetDeltaTime()));
+				}
+				else
+				{
+					mCanDoorInterp = false;
+					blockInterp->SetActive(false);
+					exitInterp->SetActive(false);
+					exitCube->mShouldMove = false;
+					blockCube->mShouldMove = false;
+				}
 			}
 		}
 	};
