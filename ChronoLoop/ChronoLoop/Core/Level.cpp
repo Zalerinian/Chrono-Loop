@@ -755,8 +755,10 @@ namespace Epoch {
 			CommandConsole::Instance().DisplaySet(L"FAILED TO LOAD LEVEL :(");
 		else if (access->GetOnce() == false)
 			CommandConsole::Instance().DisplaySet(L"LEVEL IS ALREADY LOADED");
-		else if ((_Level == L"LEVELONE" || _Level == L"LEVEL_ONE") && access->GetOnce() == true)
+		else if ((_Level == L"LEVELONE" || _Level == L"LEVEL_ONE") && access->GetOnce() == true) {
 			access->SetOnce(false);
+			CommandConsole::Instance().Toggle();
+		}
 		else if (access->GetOnce() == true)
 			CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _Level + L"\nCORRECT INPUT: /LOAD (LEVELNAME)");
 
