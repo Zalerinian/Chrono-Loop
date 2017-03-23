@@ -1,0 +1,3 @@
+Open App.config, and after the ending startup tag (</startup), add the following line:
+
+<startup useLegacyV2RuntimeActivationPolicy="true"></startup>

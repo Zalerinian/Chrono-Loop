@@ -6,24 +6,50 @@ namespace Hourglass
 {
     public abstract class Component
     {
+		public delegate void OwnerChangedHandler();
+		public event OwnerChangedHandler OwnerChanged;
+
         protected GroupBox mGroupBox;
         protected ContextMenuStrip mMenuStrip;
         protected ToolStripMenuItem mMenuItemDelete, mMenuItemReset;
-        protected List<Component> mContainerReference;
         protected BaseObject mOwner = null;
 
+        private static readonly System.Drawing.Font 
+            mPlaceholderFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25f, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0))),
+            mActiveFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 
-        int Width {
+        public int Width {
             get {
                 return mGroupBox.Size.Width;
             }
         }
 
-        int Height {
+        public int Height {
             get {
                 return mGroupBox.Size.Height;
             }
         }
+
+        public System.Drawing.Font PlaceholderFont {
+            get { return mPlaceholderFont; }
+        }
+
+        public System.Drawing.Font ActiveFont {
+            get { return mActiveFont; }
+        }
+
+		public BaseObject Owner {
+			get {
+				return mOwner;
+			}
+			set {
+				mOwner = value;
+				if(OwnerChanged != null)
+				{
+					OwnerChanged();
+				}
+			}
+		}
 
         /// <summary>
         ///     A component is a property of an object that affects what it does in the
@@ -41,11 +67,8 @@ namespace Hourglass
         ///     This is true for everything except an object's transform (Position,
         ///     Rotation, Scale), and its name.
         /// </param>
-        public Component(BaseObject _owner, bool _destructible = true)
+        public Component(bool _destructible = true)
         {
-            mOwner = _owner;
-            mContainerReference = _owner.GetComponents();
-            mContainerReference.Add(this);
 
             mGroupBox = new GroupBox();
             mGroupBox.AutoSize = false;
@@ -70,8 +93,7 @@ namespace Hourglass
 
         protected virtual void OnMenuClick_Delete(object sender, EventArgs e)
         {
-            mContainerReference.Remove(this);
-            mGroupBox.Parent = null;
+            Owner.RemoveComponent(this);
         }
 
         protected virtual void OnMenuClick_Reset(object sender, EventArgs e)

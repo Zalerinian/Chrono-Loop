@@ -22,5 +22,17 @@ namespace Hourglass.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ProjectDirectory {
+            get {
+                return ((string)(this["ProjectDirectory"]));
+            }
+            set {
+                this["ProjectDirectory"] = value;
+            }
+        }
     }
 }

@@ -13,6 +13,7 @@
 #include "../Actions\CCEnterLevel.h"
 #include "../Actions/MainMenuBT.h"
 #include "../Objects/MeshComponent.h"
+#include "../Objects/TransparentMeshComponent.h"
 #include "../tinyxml/tinyxml.h"
 #include "../tinyxml/tinystr.h"
 #include "../Common/Settings.h"

@@ -1,4 +1,5 @@
 #include "VertexLayouts.hlsli"
+#include "../RenderShaderDefines.hlsli"
 
 struct PSI {
 	float4 position : SV_POSITION;

@@ -96,6 +96,13 @@ namespace Epoch
 					timeDisplayNeedle->SetParent(RightController);
 					RightController->AddChild(timeDisplayNeedle);
 
+					BaseObject *rewindDisplay = Pool::Instance()->iGetObject()->Reset("RewindDisplay", identity);
+					MeshComponent* rewind = new MeshComponent("../Resources/UIRewind.obj");
+					rewind->AddTexture("../Resources/rewind.png", eTEX_DIFFUSE);
+					rewindDisplay->AddComponent(rewind);
+					rewindDisplay->SetParent(RightController);
+					RightController->AddChild(rewindDisplay);
+
 					//pat added
 					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), true);
@@ -159,6 +166,7 @@ namespace Epoch
 					next->AddObject(cloneDisplay);
 					next->AddObject(timeDisplay);
 					next->AddObject(timeDisplayNeedle);
+					next->AddObject(rewindDisplay);
 
 					TimeManager::Instance()->AddObjectToTimeline(RightController);
 					TimeManager::Instance()->AddObjectToTimeline(LeftController);

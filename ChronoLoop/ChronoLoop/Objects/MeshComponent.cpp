@@ -5,21 +5,18 @@
 #include "../Rendering/Renderer.h"
 #include "../Common/Settings.h"
 
-#define DESTROY_NODE(x) { \
-	if(x != nullptr) { \
-		delete x; \
-		x = nullptr; \
-	} \
-}
-
 namespace Epoch {
+	void MeshComponent::CreateNode()
+	{
+		mNode = Renderer::Instance()->AddOpaqueNode(mShape);
+	}
 
 	MeshComponent::MeshComponent(const char * _path) {
 		mType = eCOMPONENT_MESH;
 		mShape = new RenderShape(_path, true, ePS_TEXTURED, eVS_TEXTURED, eGS_PosNormTex);
 		mShape->GetContext().mRasterState = eRS_FILLED;
-		if (!Settings::GetInstance().GetBool("LevelIsLoading")) {
-			mNode = Renderer::Instance()->AddNode(mShape);
+		if (CanCreateNode()) {
+			CreateNode();
 			mVisible = true;
 		}
 		else
@@ -53,7 +50,7 @@ namespace Epoch {
 		// access to the position of the object.
 		if (_vis) {
 			if (!mVisible) {
-				mNode = Renderer::Instance()->AddNode(mShape);
+				CreateNode();
 				mVisible = true;
 			}
 		}
@@ -70,7 +67,7 @@ namespace Epoch {
 		DESTROY_NODE(mNode);
 		mShape->AddTexture(_path, _type);
 		if (mVisible) {
-			mNode = Renderer::Instance()->AddNode(mShape);
+			CreateNode();
 		}
 		return this;
 	}
@@ -80,9 +77,14 @@ namespace Epoch {
 			DESTROY_NODE(mNode);
 			mShape->GetContext().mRasterState = _t;
 			if (mVisible) {
-				mNode = Renderer::Instance()->AddNode(mShape);
+				CreateNode();
 			}
 		}
+	}
+
+	bool MeshComponent::CanCreateNode()
+	{
+		return !Settings::GetInstance().GetBool("LevelIsLoading");
 	}
 
 }

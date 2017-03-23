@@ -28,13 +28,13 @@ namespace Hourglass
             InitializeComponent();
             mObject = new BaseObject(new TreeNode());
             
-            mTransformTest = new TransformComponent(mObject);
-            mMeshTest = new MeshComponent(mObject);
-            mColliderTest = new ColliderComponent(mObject);
-            mBoxTest = new BoxCollider(mObject);
-            mPlaneTest = new PlaneCollider(mObject);
-            mSphereTest = new SphereCollider(mObject);
-            mButtonTest = new ButtonCollider(mObject);
+            mTransformTest = new TransformComponent();
+            mMeshTest = new MeshComponent();
+            mColliderTest = new ColliderComponent();
+            mBoxTest = new BoxCollider();
+            mPlaneTest = new PlaneCollider();
+            mSphereTest = new SphereCollider();
+            mButtonTest = new ButtonCollider();
             Controls.Add(mTransformTest.GetGroupbox());
             Controls.Add(mMeshTest.GetGroupbox());
             Controls.Add(mColliderTest.GetGroupbox());
