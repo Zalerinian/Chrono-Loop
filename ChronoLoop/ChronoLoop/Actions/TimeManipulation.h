@@ -29,6 +29,7 @@ namespace Epoch
 		BaseObject* mCurCloneHeadset = nullptr;
 		BaseObject* mCurCloneController1 = nullptr;
 		BaseObject* mCurCloneController2 = nullptr;
+		bool mIsBeingMade = false;
 
 		std::string mTextures[10] = { "../Resources/CloneTexture.png",
 			"../Resources/CloneTexture_Green.png",

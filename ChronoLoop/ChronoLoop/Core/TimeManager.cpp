@@ -187,7 +187,7 @@ namespace Epoch {
 				}
 			}
 
-			SystemLogger::GetLog() << "Bitset:";
+		/*	SystemLogger::GetLog() << "Bitset:";
 			for (unsigned int i = 0; i < mCloneTextureBitset.size(); i++)
 			{
 				if(mCloneTextureBitset[i] == true)
@@ -195,7 +195,7 @@ namespace Epoch {
 				else
 					SystemLogger::GetLog() << "0";
 			}
-			SystemLogger::GetLog() << std::endl;
+			SystemLogger::GetLog() << std::endl;*/
 	}
 
 		void TimeManager::UpdatePlayerObjectInTimeline(BaseObject *  _obj) {
@@ -270,7 +270,7 @@ namespace Epoch {
 							break;
 						}
 					}*/
-
+					SystemLogger::GetLog() << "Clone id:" << mClones[i]->GetUniqueID() << " has been deleted" << std::endl;
 					//Remove it from being tracked by timeline
 					mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueId());
 					Pool::Instance()->iRemoveObject(mClones[i]->GetUniqueID());
@@ -312,10 +312,10 @@ namespace Epoch {
 					TimeManipulation* left = LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator();
 					TimeManipulation* right = LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator();
 					if (left) {
-						SystemLogger::GetLog() << "Left Controller returned " << left->GetTexture(i) << std::endl;
+						//SystemLogger::GetLog() << "Left Controller returned " << left->GetTexture(i) << std::endl;
 						return left->GetTexture(i);
 					} else if (right) {
-						SystemLogger::GetLog() << "Right Controller returned " << right->GetTexture(i) << std::endl;
+						//SystemLogger::GetLog() << "Right Controller returned " << right->GetTexture(i) << std::endl;
 						return right->GetTexture(i);
 					}
 				}
