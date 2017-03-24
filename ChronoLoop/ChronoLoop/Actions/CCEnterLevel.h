@@ -9,6 +9,7 @@
 #include "..\Actions\UIRewind.h"
 #include "..\Actions\CCPauseToCancel.h"
 #include "..\Actions\CCTeleToPlay.h"
+#include "..\Actions\CCDisplayOnPause.h"
 
 namespace Epoch 
 {
@@ -107,6 +108,8 @@ namespace Epoch
 					MeshComponent* rewind = new MeshComponent("../Resources/UIRewind.obj");
 					rewind->AddTexture("../Resources/rewind.png", eTEX_DIFFUSE);
 					UIRewind* spin = new UIRewind();
+					CCDisplayOnPause* rdop = new CCDisplayOnPause();
+					rewindDisplay->AddComponent(rdop);
 					rewindDisplay->AddComponent(spin);
 					rewindDisplay->AddComponent(rewind);
 					rewindDisplay->SetParent(RightController);
@@ -123,26 +126,32 @@ namespace Epoch
 					t.SetMatrix(matrix4::CreateTranslation(-0.039f, 0.015f, 0.054f));
 					BaseObject *rewindHelp = Pool::Instance()->iGetObject()->Reset("RewindHelp", t);
 					MeshComponent* rhdisp = new MeshComponent("../Resources/help.obj");
+					rhdisp->SetVisible(false);
 					rhdisp->AddTexture("../Resources/rewindHelp.png", eTEX_DIFFUSE);
+					CCDisplayOnPause* dop = new CCDisplayOnPause();
+					rewindHelp->AddComponent(dop);
 					rewindHelp->AddComponent(rhdisp);
 					rewindHelp->SetParent(RightController);
 					RightController->AddChild(rewindHelp);
 
-					t.SetMatrix(matrix4::CreateTranslation(0, 0.015f, 0.054f));
-					BaseObject *playHelp = Pool::Instance()->iGetObject()->Reset("playHelp", t);
-					MeshComponent* plhdisp = new MeshComponent("../Resources/help.obj");
-					plhdisp->AddTexture("../Resources/play.png", eTEX_DIFFUSE);
-					playHelp->AddComponent(plhdisp);
-					playHelp->SetParent(RightController);
-					RightController->AddChild(playHelp);
-
 					//t.SetMatrix(matrix4::CreateTranslation(0, 0.015f, 0.054f));
-					//BaseObject *teleportHelp = Pool::Instance()->iGetObject()->Reset("teleportHelp", t);
-					//MeshComponent* thdisp = new MeshComponent("../Resources/help.obj");
-					//thdisp->AddTexture("../Resources/teleport.png", eTEX_DIFFUSE);
-					//teleportHelp->AddComponent(thdisp);
-					//teleportHelp->SetParent(RightController);
-					//RightController->AddChild(teleportHelp);
+					//BaseObject *playHelp = Pool::Instance()->iGetObject()->Reset("playHelp", t);
+					//MeshComponent* plhdisp = new MeshComponent("../Resources/help.obj");
+					//plhdisp->AddTexture("../Resources/play.png", eTEX_DIFFUSE);
+					//playHelp->AddComponent(plhdisp);
+					//playHelp->SetParent(RightController);
+					//RightController->AddChild(playHelp);
+
+					t.SetMatrix(matrix4::CreateTranslation(0, 0.015f, 0.054f));
+					BaseObject *teleportHelp = Pool::Instance()->iGetObject()->Reset("teleportHelp", t);
+					teleportHelp->GetTransform().GetMatrix().RotateInPlace(vec3f(0, 1, 0), DirectX::XM_PI);
+					MeshComponent* thdisp = new MeshComponent("../Resources/help.obj");
+					thdisp->AddTexture("../Resources/teleport.png", eTEX_DIFFUSE);
+					CCTeleToPlay* ttp = new CCTeleToPlay();
+					teleportHelp->AddComponent(ttp);
+					teleportHelp->AddComponent(thdisp);
+					teleportHelp->SetParent(RightController);
+					RightController->AddChild(teleportHelp);
 
 					t.SetMatrix(matrix4::CreateTranslation(-0.039f, -0.007f, 0.089f));
 					BaseObject *pauseHelp = Pool::Instance()->iGetObject()->Reset("pauseHelp", t);
@@ -166,8 +175,8 @@ namespace Epoch
 					BaseObject *cloneHelp = Pool::Instance()->iGetObject()->Reset("cloneHelp", t);
 					MeshComponent* chdisp = new MeshComponent("../Resources/help.obj");
 					chdisp->AddTexture("../Resources/clone.png", eTEX_DIFFUSE);
-					CCTeleToPlay* ttp = new CCTeleToPlay();
-					cloneHelp->AddComponent(ttp);
+					CCDisplayOnPause* cdop = new CCDisplayOnPause();
+					cloneHelp->AddComponent(cdop);
 					cloneHelp->AddComponent(chdisp);
 					cloneHelp->SetParent(RightController);
 					RightController->AddChild(cloneHelp);
@@ -240,8 +249,8 @@ namespace Epoch
 					next->AddObject(rewindHelp);
 					next->AddObject(pauseHelp);
 					next->AddObject(cloneHelp);
-					next->AddObject(playHelp);
-					//next->AddObject(teleportHelp);
+					next->AddObject(teleportHelp);
+					//next->AddObject(playHelp);
 					//next->AddObject(cancelHelp);
 					
 					TimeManager::Instance()->AddObjectToTimeline(RightController);
