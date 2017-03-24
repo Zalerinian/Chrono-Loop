@@ -10,18 +10,6 @@ namespace Hourglass
         protected Label mLbMesh, mLbDiffuse;
 		protected ComboBox mMesh;
 
-        public struct TextBoxTag
-        {
-            public bool Placeholder;
-            public string PlaceholderText;
-
-            public TextBoxTag(bool _p, string _t)
-            {
-                Placeholder = _p;
-                PlaceholderText = _t;
-            }
-        }
-
         public MeshComponent(int _yOffset = 0) : base()
         {
             #region Component Creation
@@ -57,7 +45,7 @@ namespace Hourglass
 			mMesh.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
 			mMesh.Location = new System.Drawing.Point(90, 21 + _yOffset);
 			mMesh.Size = new System.Drawing.Size(ContentWidth - mMesh.Left, 24);
-			mMesh.Tag = new TextBoxTag(true, "Mesh File...");
+			mMesh.DropDownStyle = ComboBoxStyle.DropDownList;
 
 			#endregion
 

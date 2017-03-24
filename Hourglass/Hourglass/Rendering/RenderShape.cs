@@ -72,5 +72,6 @@ namespace Hourglass
 		}
 
 		public abstract void FillBuffers();
+		public abstract void Dispose();
 	}
 }

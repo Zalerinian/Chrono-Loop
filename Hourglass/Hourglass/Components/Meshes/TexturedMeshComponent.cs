@@ -22,7 +22,7 @@ namespace Hourglass
 			mTexture.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
 			mTexture.Location = new System.Drawing.Point(90, 51);
 			mTexture.Size = new System.Drawing.Size(ContentWidth - mTexture.Left, 24);
-			mTexture.Tag = new TextBoxTag(true, "Texture File...");
+			mTexture.DropDownStyle = ComboBoxStyle.DropDownList;
 
 			{
 				List<string>.Enumerator it = ResourceManager.Instance.Objects.GetEnumerator();
@@ -67,6 +67,13 @@ namespace Hourglass
 			{
 				mShape.SetTexture(TexturedShape.TextureType.Diffuse, Settings.ProjectPath + ResourceManager.Instance.ResourceDirectory + mTexture.Text);
 			}
+		}
+
+		protected override void OnMenuClick_Delete(object sender, EventArgs e)
+		{
+			base.OnMenuClick_Delete(sender, e);
+			Renderer.Instance.RemoveShape(mShape);
+			mShape.Dispose();
 		}
 
 		protected override void OnMenuClick_Reset(object sender, EventArgs e)

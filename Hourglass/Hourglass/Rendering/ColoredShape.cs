@@ -243,5 +243,19 @@ namespace Hourglass
 			mIndices = ind.ToArray();
 			FillBuffers();
 		}
+
+		public override void Dispose()
+		{
+			if (mIndexBuffer != null)
+			{
+				mIndexBuffer.Dispose();
+				mIndexBuffer = null;
+			}
+			if (mVertexBuffer != null)
+			{
+				mVertexBuffer.Dispose();
+				mVertexBuffer = null;
+			}
+		}
 	}
 }
