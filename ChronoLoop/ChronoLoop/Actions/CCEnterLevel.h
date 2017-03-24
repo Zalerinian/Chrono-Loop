@@ -144,7 +144,6 @@ namespace Epoch
 
 					t.SetMatrix(matrix4::CreateTranslation(0, 0.015f, 0.054f));
 					BaseObject *teleportHelp = Pool::Instance()->iGetObject()->Reset("teleportHelp", t);
-					teleportHelp->GetTransform().GetMatrix().RotateInPlace(vec3f(0, 1, 0), DirectX::XM_PI);
 					MeshComponent* thdisp = new MeshComponent("../Resources/help.obj");
 					thdisp->AddTexture("../Resources/teleport.png", eTEX_DIFFUSE);
 					CCTeleToPlay* ttp = new CCTeleToPlay();
