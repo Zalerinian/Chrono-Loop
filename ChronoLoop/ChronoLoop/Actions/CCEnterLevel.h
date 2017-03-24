@@ -7,6 +7,8 @@
 #include "..\Core\TimeManager.h"
 #include "..\Common\Settings.h"
 #include "..\Actions\UIRewind.h"
+#include "..\Actions\CCPauseToCancel.h"
+#include "..\Actions\CCTeleToPlay.h"
 
 namespace Epoch 
 {
@@ -77,12 +79,12 @@ namespace Epoch
 					RightController->AddComponent(ambient);
 					ambient->Play();
 
-					BaseObject *cloneDisplay = Pool::Instance()->iGetObject()->Reset("CloneDisplay", identity);
+					BaseObject *clonePanel = Pool::Instance()->iGetObject()->Reset("ClonePanel", identity);
 					MeshComponent* disp = new MeshComponent("../Resources/ClonePanel.obj");
 					disp->AddTexture("../Resources/ClonePanel.png", eTEX_DIFFUSE);
-					cloneDisplay->AddComponent(disp);
-					cloneDisplay->SetParent(RightController);
-					RightController->AddChild(cloneDisplay);
+					clonePanel->AddComponent(disp);
+					clonePanel->SetParent(RightController);
+					RightController->AddChild(clonePanel);
 
 					Transform t;
 					t.SetMatrix(matrix4::CreateScale(.1f, .1f, .1f));
@@ -109,6 +111,66 @@ namespace Epoch
 					rewindDisplay->AddComponent(rewind);
 					rewindDisplay->SetParent(RightController);
 					RightController->AddChild(rewindDisplay);
+
+					t.SetMatrix(matrix4::CreateTranslation(0.073f, -0.016f, -0.043f));
+					BaseObject *cloneDisplay = Pool::Instance()->iGetObject()->Reset("cloneDisplay", t);
+					MeshComponent* cdisp = new MeshComponent("../Resources/UIClone.obj");
+					cdisp->AddTexture("../Resources/rewind.png", eTEX_DIFFUSE);
+					cloneDisplay->AddComponent(cdisp);
+					cloneDisplay->SetParent(RightController);
+					RightController->AddChild(cloneDisplay);
+
+					t.SetMatrix(matrix4::CreateTranslation(-0.039f, 0.015f, 0.054f));
+					BaseObject *rewindHelp = Pool::Instance()->iGetObject()->Reset("RewindHelp", t);
+					MeshComponent* rhdisp = new MeshComponent("../Resources/help.obj");
+					rhdisp->AddTexture("../Resources/rewindHelp.png", eTEX_DIFFUSE);
+					rewindHelp->AddComponent(rhdisp);
+					rewindHelp->SetParent(RightController);
+					RightController->AddChild(rewindHelp);
+
+					t.SetMatrix(matrix4::CreateTranslation(0, 0.015f, 0.054f));
+					BaseObject *playHelp = Pool::Instance()->iGetObject()->Reset("playHelp", t);
+					MeshComponent* plhdisp = new MeshComponent("../Resources/help.obj");
+					plhdisp->AddTexture("../Resources/play.png", eTEX_DIFFUSE);
+					playHelp->AddComponent(plhdisp);
+					playHelp->SetParent(RightController);
+					RightController->AddChild(playHelp);
+
+					//t.SetMatrix(matrix4::CreateTranslation(0, 0.015f, 0.054f));
+					//BaseObject *teleportHelp = Pool::Instance()->iGetObject()->Reset("teleportHelp", t);
+					//MeshComponent* thdisp = new MeshComponent("../Resources/help.obj");
+					//thdisp->AddTexture("../Resources/teleport.png", eTEX_DIFFUSE);
+					//teleportHelp->AddComponent(thdisp);
+					//teleportHelp->SetParent(RightController);
+					//RightController->AddChild(teleportHelp);
+
+					t.SetMatrix(matrix4::CreateTranslation(-0.039f, -0.007f, 0.089f));
+					BaseObject *pauseHelp = Pool::Instance()->iGetObject()->Reset("pauseHelp", t);
+					MeshComponent* phdisp = new MeshComponent("../Resources/help.obj");
+					phdisp->AddTexture("../Resources/pause.png", eTEX_DIFFUSE);
+					CCPauseToCancel* ptc = new CCPauseToCancel();
+					pauseHelp->AddComponent(ptc);
+					pauseHelp->AddComponent(phdisp);
+					pauseHelp->SetParent(RightController);
+					RightController->AddChild(pauseHelp);
+					
+					//t.SetMatrix(matrix4::CreateTranslation(-0.039f, -0.007f, 0.089f));
+					//BaseObject *cancelHelp = Pool::Instance()->iGetObject()->Reset("cancelHelp", t);
+					//MeshComponent* cahdisp = new MeshComponent("../Resources/help.obj");
+					//cahdisp->AddTexture("../Resources/cancel.png", eTEX_DIFFUSE);
+					//cancelHelp->AddComponent(cahdisp);
+					//cancelHelp->SetParent(RightController);
+					//RightController->AddChild(cancelHelp);
+
+					t.SetMatrix(matrix4::CreateTranslation(0.042f, -0.03f, 0.047f));
+					BaseObject *cloneHelp = Pool::Instance()->iGetObject()->Reset("cloneHelp", t);
+					MeshComponent* chdisp = new MeshComponent("../Resources/help.obj");
+					chdisp->AddTexture("../Resources/rewind.png", eTEX_DIFFUSE);
+					CCTeleToPlay* ttp = new CCTeleToPlay();
+					cloneHelp->AddComponent(ttp);
+					cloneHelp->AddComponent(chdisp);
+					cloneHelp->SetParent(RightController);
+					RightController->AddChild(cloneHelp);
 
 					//pat added
 					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
@@ -171,10 +233,17 @@ namespace Epoch
 					next->AddObject(LeftController);
 					next->AddObject(RightController);
 					next->AddObject(cloneDisplay);
+					next->AddObject(clonePanel);
 					next->AddObject(timeDisplay);
 					next->AddObject(timeDisplayNeedle);
 					next->AddObject(rewindDisplay);
-
+					next->AddObject(rewindHelp);
+					next->AddObject(pauseHelp);
+					next->AddObject(cloneHelp);
+					next->AddObject(playHelp);
+					//next->AddObject(teleportHelp);
+					//next->AddObject(cancelHelp);
+					
 					TimeManager::Instance()->AddObjectToTimeline(RightController);
 					TimeManager::Instance()->AddObjectToTimeline(LeftController);
 					TimeManager::Instance()->AddObjectToTimeline(headset);

@@ -14,6 +14,7 @@ vn 0.000000 1.000000 0.000000
 vn 0.000000 1.000000 0.000000
 vn 0.000000 1.000000 0.000000
 vn 0.000000 1.000000 0.000000
-s off
-g initialShadingGroup initialShadingGroup1 pPlane1 polySurface1
-f 1/1/1 2/2/2 4/4/3 3/3/4
+s 1
+g initialShadingGroup initialShadingGroup1 initialShadingGroup2 pPlane1 polySurface2 polySurface1
+f 1/1/1 2/2/2 3/3/3
+f 3/3/3 2/2/2 4/4/4
