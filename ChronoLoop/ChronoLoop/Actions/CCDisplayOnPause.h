@@ -7,20 +7,20 @@
 namespace Epoch
 {
 
-	struct CCTeleToPlay : public CodeComponent
+	struct CCDisplayOnPause : public CodeComponent
 	{
 		bool once = false;
 		virtual void Update()
 		{
 			if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->isTimePaused())
 			{
-				((MeshComponent*)mObject->GetComponentIndexed(eCOMPONENT_MESH, 0))->AddTexture("../Resources/play.png", eTEX_DIFFUSE);
+				((MeshComponent*)mObject->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
 				once = false;
 			}
 			else if (!once)
 			{
 				once = true;
-				((MeshComponent*)mObject->GetComponentIndexed(eCOMPONENT_MESH, 0))->AddTexture("../Resources/teleport.png", eTEX_DIFFUSE);
+				((MeshComponent*)mObject->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 			}
 
 		}
