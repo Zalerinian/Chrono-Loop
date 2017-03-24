@@ -489,8 +489,8 @@ namespace Epoch {
 			else if (_gesture == 1)
 				_frameRewind *= -1;
 			else if (_gesture == 2) {
-				LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->RaycastCloneCheck();
-				LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->RaycastCloneCheck();
+				/*LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->RaycastCloneCheck();
+				LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->RaycastCloneCheck();*/
 				return;
 			}
 

@@ -12,6 +12,9 @@
 
 namespace Epoch
 {
+	BaseObject* TimeManipulation::mCurCloneController1 = nullptr;
+	BaseObject* TimeManipulation::mCurCloneController2 = nullptr;
+	BaseObject* TimeManipulation::mCurCloneHeadset = nullptr;
 
 	TimeManipulation::TimeManipulation() {
 	}
@@ -191,9 +194,13 @@ namespace Epoch
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::k_EButton_SteamVR_Trigger))
 		{
 			//toggle to have clone turn on or off
-			if(mPauseTime)
-			mIsBeingMade = !mIsBeingMade;
+			if (mPauseTime)
+			{
+				if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->RaycastCloneCheck() == false && 
+				LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->RaycastCloneCheck() == false)
+				mIsBeingMade = !mIsBeingMade;
 			//TODO PAT: Update const buffer to make clone transparent or opaque
+			}
 		}
 	}
 	void TimeManipulation::MakeCloneBaseObjects(BaseObject * _headset, BaseObject * _controller1, BaseObject * _controller2)
@@ -238,17 +245,19 @@ namespace Epoch
 		
 	}
 
-	void TimeManipulation::RaycastCloneCheck() {
+	bool TimeManipulation::RaycastCloneCheck() {
 		if(!VRInputManager::GetInstance().GetController(mControllerRole).GetValid())
 		{
-			return;
+			return false;
 		}
 		matrix4 mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
 		mObject->GetTransform().SetMatrix(mat);
 
 			std::vector<BaseObject*> clones = TimeManager::Instance()->GetClonesVec();
-		
 			for (int i = 0; i < clones.size(); ++i) {
+				if (clones[i]->GetUniqueID() == mCurCloneHeadset->GetUniqueID() || clones[i]->GetUniqueID() == mCurCloneController1->GetUniqueID() ||
+					clones[i]->GetUniqueID() == mCurCloneController2->GetUniqueID())
+					continue;
 				MeshComponent* mesh = (MeshComponent*)clones[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				vec4f forward;
 				forward.Set(0, 0, 1, 0);
@@ -263,7 +272,7 @@ namespace Epoch
 					if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, fwd, hitTime)) {
 						//TODO PAT: There is a bug at the moment whenever you resume time it says verticle wrongness and deletes clone when you werent pointing at them. 
 							TimeManager::Instance()->DeleteClone(clones[i]->GetUniqueId());
-							return;
+							return true;
 					}
 				}
 			}
