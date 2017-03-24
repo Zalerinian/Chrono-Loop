@@ -87,6 +87,8 @@ namespace Hourglass
 			this.audioComponentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.mObjectStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.texturedMeshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.coloredMeshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.spHierarchyPanel)).BeginInit();
 			this.spHierarchyPanel.Panel1.SuspendLayout();
@@ -432,7 +434,7 @@ namespace Hourglass
 			this.spWorldView.Panel2.Controls.Add(this.btnComponentAdd);
 			this.spWorldView.Panel2MinSize = 300;
 			this.spWorldView.Size = new System.Drawing.Size(784, 628);
-			this.spWorldView.SplitterDistance = 463;
+			this.spWorldView.SplitterDistance = 459;
 			this.spWorldView.SplitterWidth = 8;
 			this.spWorldView.TabIndex = 3;
 			// 
@@ -444,7 +446,7 @@ namespace Hourglass
 			this.graphicsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.graphicsPanel1.Location = new System.Drawing.Point(0, 0);
 			this.graphicsPanel1.Name = "graphicsPanel1";
-			this.graphicsPanel1.Size = new System.Drawing.Size(463, 628);
+			this.graphicsPanel1.Size = new System.Drawing.Size(459, 628);
 			this.graphicsPanel1.TabIndex = 2;
 			this.graphicsPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.OnPaint);
 			this.graphicsPanel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseClick);
@@ -477,7 +479,7 @@ namespace Hourglass
 			// 
 			this.RightToggle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.RightToggle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.RightToggle.Location = new System.Drawing.Point(430, 3);
+			this.RightToggle.Location = new System.Drawing.Point(426, 3);
 			this.RightToggle.MinimumSize = new System.Drawing.Size(1, 1);
 			this.RightToggle.Name = "RightToggle";
 			this.RightToggle.Size = new System.Drawing.Size(23, 23);
@@ -509,7 +511,7 @@ namespace Hourglass
             this.meshComponentToolStripMenuItem,
             this.audioComponentToolStripMenuItem});
 			this.mComponentStrip.Name = "contextMenuStrip1";
-			this.mComponentStrip.Size = new System.Drawing.Size(175, 114);
+			this.mComponentStrip.Size = new System.Drawing.Size(175, 136);
 			// 
 			// toolStripMenuItem1
 			// 
@@ -605,11 +607,13 @@ namespace Hourglass
 			// 
 			// meshComponentToolStripMenuItem
 			// 
+			this.meshComponentToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.texturedMeshToolStripMenuItem,
+            this.coloredMeshToolStripMenuItem});
 			this.meshComponentToolStripMenuItem.Name = "meshComponentToolStripMenuItem";
 			this.meshComponentToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
-			this.meshComponentToolStripMenuItem.Tag = "Mesh";
+			this.meshComponentToolStripMenuItem.Tag = "";
 			this.meshComponentToolStripMenuItem.Text = "Mesh Component";
-			this.meshComponentToolStripMenuItem.Click += new System.EventHandler(this.AddComponentHandler);
 			// 
 			// audioComponentToolStripMenuItem
 			// 
@@ -629,6 +633,22 @@ namespace Hourglass
 			// 
 			this.mObjectStrip.Name = "mObjectStrip";
 			this.mObjectStrip.Size = new System.Drawing.Size(61, 4);
+			// 
+			// texturedMeshToolStripMenuItem
+			// 
+			this.texturedMeshToolStripMenuItem.Name = "texturedMeshToolStripMenuItem";
+			this.texturedMeshToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.texturedMeshToolStripMenuItem.Tag = "TMesh";
+			this.texturedMeshToolStripMenuItem.Text = "Textured Mesh";
+			this.texturedMeshToolStripMenuItem.Click += new System.EventHandler(this.AddComponentHandler);
+			// 
+			// coloredMeshToolStripMenuItem
+			// 
+			this.coloredMeshToolStripMenuItem.Name = "coloredMeshToolStripMenuItem";
+			this.coloredMeshToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.coloredMeshToolStripMenuItem.Tag = "CMesh";
+			this.coloredMeshToolStripMenuItem.Text = "Colored Mesh";
+			this.coloredMeshToolStripMenuItem.Click += new System.EventHandler(this.AddComponentHandler);
 			// 
 			// Editor
 			// 
@@ -721,6 +741,8 @@ namespace Hourglass
 		private System.Windows.Forms.ToolStripMenuItem iDCToolStripMenuItem;
 		private MenuButton btnComponentAdd;
 		private System.Windows.Forms.Button btnFocus;
+		private System.Windows.Forms.ToolStripMenuItem texturedMeshToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem coloredMeshToolStripMenuItem;
 	}
 }
 

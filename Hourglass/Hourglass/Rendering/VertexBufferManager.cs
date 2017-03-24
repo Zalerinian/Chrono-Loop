@@ -17,8 +17,8 @@ namespace Hourglass
 		}
 
 
-		private Dictionary<string, KeyValuePair<int[], CustomVertex.PositionNormalTextured[]>> mTexturedMeshes;
-		private Dictionary<string, KeyValuePair<int[], CustomVertex.PositionNormalColored[]>> mColoredMeshes;
+		//private Dictionary<string, KeyValuePair<int[], CustomVertex.PositionNormalTextured[]>> mTexturedMeshes;
+		//private Dictionary<string, KeyValuePair<int[], CustomVertex.PositionNormalColored[]>> mColoredMeshes;
 
 		//public GetTexturedMesh(string file)
 		//{

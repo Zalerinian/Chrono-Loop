@@ -97,7 +97,6 @@ namespace Hourglass
 		private void OnPaint(object sender, PaintEventArgs e)
 		{
 			UpdateKeyboardInput();
-
 			Renderer.Instance.Render();
 			return;
 			//device.RenderState.ZBufferEnable = true;
@@ -355,8 +354,8 @@ namespace Hourglass
 					break;
 
 				// Non-Grouped components that *aren't* code components
-				case "Mesh":
-					obj.AddComponent(new MeshComponent());
+				case "TMesh":
+					obj.AddComponent(new TexturedMeshComponent());
 					break;
 				case "Audio":
 					break;
@@ -501,6 +500,7 @@ namespace Hourglass
 					this.Close();
 				}
 			}
+			ResourceManager.Instance.BuildAssetList();
 			// Discover and load object files.
 			// Discover and load texture files.
 		}

@@ -109,7 +109,8 @@
     <Compile Include="Components\Colliders\PlaneCollider.cs" />
     <Compile Include="Components\Gizmo.cs" />
     <Compile Include="Components\IGizmoAttachment.cs" />
-    <Compile Include="Components\MeshComponent.cs" />
+    <Compile Include="Components\Meshes\MeshComponent.cs" />
+    <Compile Include="Components\Meshes\TexturedMeshComponent.cs" />
     <Compile Include="Components\TransformComponent.cs" />
     <Compile Include="Controls\MenuButton.cs">
       <SubType>Component</SubType>
@@ -123,7 +124,7 @@
     <Compile Include="Forms\EditorSetupForm.Designer.cs">
       <DependentUpon>EditorSetupForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FileOperations.cs" />
+    <Compile Include="FileOperations.cs" />
     <Compile Include="Forms\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -159,6 +160,7 @@
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Rendering\ColoredShape.cs" />
     <Compile Include="Rendering\RenderShape.cs" />
+    <Compile Include="Rendering\ResourceManager.cs" />
     <Compile Include="Rendering\TexturedShape.cs" />
     <Compile Include="Rendering\VertexBufferManager.cs" />
     <Compile Include="Settings.cs" />
@@ -193,6 +195,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Assets\Cube.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Error.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Assets\Gizmo\GizmoRotate.obj">

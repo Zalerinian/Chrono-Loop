@@ -12,7 +12,7 @@ namespace Hourglass
 		private static readonly Renderer sInstance = new Renderer();
 
 		private List<RenderShape> mRenderSet;
-		private bool mInitialized = false, mCameraNeedsRebuild = false, mRenderGrid = true, mPanelResizing = false;
+		private bool mInitialized = false, mCameraNeedsRebuild = false, /*mRenderGrid = true,*/ mPanelResizing = false;
 		private Device mDevice;
 		private Control mPanel;
 		private ColoredShape mGrid;
@@ -106,6 +106,7 @@ namespace Hourglass
 			mDevice.RenderState.FillMode = FillMode.Solid;
 			mDevice.RenderState.ZBufferWriteEnable = true;
 			mDevice.RenderState.ZBufferEnable = true;
+			
 
 			RebuildProjectionMatrix();
 			RebuildViewMatrix();
@@ -153,6 +154,7 @@ namespace Hourglass
 			}
 
 			mDevice.BeginScene();
+			
 			if(RenderGrid)
 			{
 
@@ -193,7 +195,7 @@ namespace Hourglass
 				mDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, it.Current.Indices.Length, 0, it.Current.Indices.Length / 3);
 			}
 			Gizmo.Instance.Render();
-
+			
 			mDevice.EndScene();
 			mDevice.Present();
 		}
@@ -208,9 +210,9 @@ namespace Hourglass
 			mRenderSet.Add(_m);
 		}
 
-		public void RemoveShape(TexturedShape _m)
+		public bool RemoveShape(TexturedShape _m)
 		{
-			mRenderSet.Remove(_m);
+			return mRenderSet.Remove(_m);
 		}
 
 		private Vector3 RotateInto(Vector3 _p, Matrix _m)

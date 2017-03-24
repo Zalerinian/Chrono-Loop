@@ -141,7 +141,7 @@ namespace Hourglass
 			if(mAttached == null)
 			{
 				// The gizmo won't render if it's not attached to anything.
-				//return;
+				return;
 			}
 			Device dev = Renderer.Instance.Device;
 			dev.VertexFormat = CustomVertex.PositionNormalColored.Format;

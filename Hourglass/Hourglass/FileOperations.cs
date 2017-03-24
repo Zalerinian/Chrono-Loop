@@ -23,7 +23,7 @@ namespace Hourglass
 			XmlReaderSettings s = new XmlReaderSettings();
 			s.DtdProcessing = DtdProcessing.Parse;
 			XmlReader reader = XmlReader.Create("settings.exs", s);
-			reader.MoveToContent();
+			//reader.MoveToContent();
 			while(reader.Read())
 			{
 				switch(reader.NodeType)
@@ -56,9 +56,10 @@ namespace Hourglass
 			s.OmitXmlDeclaration = true;
 			XmlWriter writer = XmlWriter.Create("settings.exs", s);
 
+			writer.WriteStartElement("Settings");
 			writer.WriteElementString("SettingsVersion", Settings.SettingsVersion.ToString());
 			writer.WriteElementString("ProjectPath", Settings.ProjectPath);
-
+			writer.WriteEndElement();
 
 			writer.Close();
 			return true;

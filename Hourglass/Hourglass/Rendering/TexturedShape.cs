@@ -103,11 +103,19 @@ namespace Hourglass
 
 		public void SetTexture(TextureType location, BaseTexture t)
 		{
+			if(mTextures[(int)location] != null)
+			{
+				mTextures[(int)location].Dispose();
+			}
 			mTextures[(int)location] = t;
 		}
 
 		public void SetTexture(TextureType location, string file)
 		{
+			if (mTextures[(int)location] != null)
+			{
+				mTextures[(int)location].Dispose();
+			}
 			SetTexture(location, Renderer.Instance.LoadTexture(file));
 		}
 
