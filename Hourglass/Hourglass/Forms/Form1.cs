@@ -357,6 +357,9 @@ namespace Hourglass
 				case "TMesh":
 					obj.AddComponent(new TexturedMeshComponent());
 					break;
+				case "CMesh":
+					obj.AddComponent(new ColoredMeshComponent());
+					break;
 				case "Audio":
 					break;
 
@@ -501,8 +504,6 @@ namespace Hourglass
 				}
 			}
 			ResourceManager.Instance.BuildAssetList();
-			// Discover and load object files.
-			// Discover and load texture files.
 		}
 
 		private void Editor_FormClosing(object sender, FormClosingEventArgs e)
@@ -511,6 +512,11 @@ namespace Hourglass
 			{
 				FileIO.SaveSettings();
 			}
+		}
+
+		private void spWorldView_Panel2_Click(object sender, EventArgs e)
+		{
+			btnFocus.Select();
 		}
 
 		private void Editor_ClientSizeChanged(object sender, EventArgs e)

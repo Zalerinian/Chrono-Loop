@@ -59,6 +59,7 @@ namespace Hourglass
 			{
 				Renderer.Instance.RemoveShape(mShape);
 			}
+			ReleaseControl();
 		}
 
 		protected void OnTextureSelectionChange(object sender, EventArgs e)
@@ -67,6 +68,7 @@ namespace Hourglass
 			{
 				mShape.SetTexture(TexturedShape.TextureType.Diffuse, Settings.ProjectPath + ResourceManager.Instance.ResourceDirectory + mTexture.Text);
 			}
+			ReleaseControl();
 		}
 
 		protected override void OnMenuClick_Delete(object sender, EventArgs e)

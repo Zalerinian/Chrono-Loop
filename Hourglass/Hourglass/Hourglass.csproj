@@ -110,6 +110,7 @@
     <Compile Include="Components\Gizmo.cs" />
     <Compile Include="Components\IGizmoAttachment.cs" />
     <Compile Include="Components\Meshes\MeshComponent.cs" />
+    <Compile Include="Components\Meshes\ColoredMeshComponent.cs" />
     <Compile Include="Components\Meshes\TexturedMeshComponent.cs" />
     <Compile Include="Components\TransformComponent.cs" />
     <Compile Include="Controls\MenuButton.cs">

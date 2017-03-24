@@ -6,8 +6,9 @@ namespace Hourglass
 {
     public abstract class Component
     {
-		public delegate void OwnerChangedHandler();
-		public event OwnerChangedHandler OwnerChanged;
+		public delegate void GenericEventHandler();
+		public event GenericEventHandler OwnerChanged;
+		public event GenericEventHandler RemoveControl;
 
         protected GroupBox mGroupBox;
         protected ContextMenuStrip mMenuStrip;
@@ -91,17 +92,30 @@ namespace Hourglass
             return mGroupBox;
         }
 
+		/// <summary>
+		/// Removes focus from the component and gives it back to the main graphics panel.
+		/// </summary>
+		protected void ReleaseControl()
+		{
+			if(RemoveControl != null)
+			{
+				RemoveControl();
+			}
+		}
+
         protected virtual void OnMenuClick_Delete(object sender, EventArgs e)
         {
             Owner.RemoveComponent(this);
-        }
+			ReleaseControl();
+		}
 
         protected virtual void OnMenuClick_Reset(object sender, EventArgs e)
         {
             MessageBox.Show("Someone was lazy and didn't implement the Reset option for this component.",
                 "Error: ID10-T",
                 MessageBoxButtons.OK);
-        }
+			ReleaseControl();
+		}
 
         protected virtual void OnGroupBoxClick(object sender, EventArgs e)
         {

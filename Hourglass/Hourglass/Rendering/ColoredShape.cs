@@ -18,11 +18,14 @@ namespace Hourglass
 			}
 			set {
 				mColor = value;
-				for(int i = 0; i < mVertices.Length; ++i)
+				if (mVertices.Length > 0)
 				{
-					mVertices[i].Color = value.ToArgb();
+					for (int i = 0; i < mVertices.Length; ++i)
+					{
+						mVertices[i].Color = value.ToArgb();
+					}
+					FillBuffers();
 				}
-				FillBuffers();
 			}
 		}
 
@@ -38,12 +41,14 @@ namespace Hourglass
 
 		public ColoredShape()
 		{
+			mVertices = new CustomVertex.PositionNormalColored[0];
 			mType = ShapeType.Colored;
 			World = Matrix.Identity;
 		}
 
 		public ColoredShape(string file)
 		{
+			mVertices = new CustomVertex.PositionNormalColored[0];
 			mType = ShapeType.Colored;
 			World = Matrix.Identity;
 			SetMesh(file);
@@ -102,7 +107,7 @@ namespace Hourglass
 								Ind.Add(vertices.Count);
 								vertices.Add(new CustomVertex.PositionNormalColored(Verts[Convert.ToInt32(points[0]) - 1],
 									Norms[Convert.ToInt32(points[2]) - 1],
-									Color.SeaGreen.ToArgb()));
+									this.Color.ToArgb()));
 							}
 							break;
 						default:

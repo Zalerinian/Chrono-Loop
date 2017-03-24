@@ -210,7 +210,7 @@ namespace Hourglass
 			mRenderSet.Add(_m);
 		}
 
-		public bool RemoveShape(TexturedShape _m)
+		public bool RemoveShape(RenderShape _m)
 		{
 			return mRenderSet.Remove(_m);
 		}

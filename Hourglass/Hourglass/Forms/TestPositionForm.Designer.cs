@@ -108,15 +108,15 @@
 			this.label18 = new System.Windows.Forms.Label();
 			this.label19 = new System.Windows.Forms.Label();
 			this.gbMeshComponent = new System.Windows.Forms.GroupBox();
+			this.cbMeshTexture = new System.Windows.Forms.ComboBox();
+			this.cbMeshObject = new System.Windows.Forms.ComboBox();
 			this.label20 = new System.Windows.Forms.Label();
 			this.label23 = new System.Windows.Forms.Label();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.btnColor = new System.Windows.Forms.Button();
+			this.cbColoredMeshObject = new System.Windows.Forms.ComboBox();
 			this.label21 = new System.Windows.Forms.Label();
 			this.label22 = new System.Windows.Forms.Label();
-			this.cbMeshObject = new System.Windows.Forms.ComboBox();
-			this.cbMeshTexture = new System.Windows.Forms.ComboBox();
-			this.cbColoredMeshObject = new System.Windows.Forms.ComboBox();
-			this.btnColor = new System.Windows.Forms.Button();
 			this.gbCollider.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.udKineticFriction)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.udStaticFriction)).BeginInit();
@@ -1173,6 +1173,22 @@
 			this.gbMeshComponent.Text = "[]Mesh Component";
 			this.gbMeshComponent.Visible = false;
 			// 
+			// cbMeshTexture
+			// 
+			this.cbMeshTexture.FormattingEnabled = true;
+			this.cbMeshTexture.Location = new System.Drawing.Point(90, 53);
+			this.cbMeshTexture.Name = "cbMeshTexture";
+			this.cbMeshTexture.Size = new System.Drawing.Size(227, 21);
+			this.cbMeshTexture.TabIndex = 9;
+			// 
+			// cbMeshObject
+			// 
+			this.cbMeshObject.FormattingEnabled = true;
+			this.cbMeshObject.Location = new System.Drawing.Point(90, 24);
+			this.cbMeshObject.Name = "cbMeshObject";
+			this.cbMeshObject.Size = new System.Drawing.Size(227, 21);
+			this.cbMeshObject.TabIndex = 8;
+			// 
 			// label20
 			// 
 			this.label20.AutoSize = true;
@@ -1206,6 +1222,24 @@
 			this.groupBox1.Text = "[]Mesh Component";
 			this.groupBox1.Visible = false;
 			// 
+			// btnColor
+			// 
+			this.btnColor.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnColor.Location = new System.Drawing.Point(90, 51);
+			this.btnColor.Name = "btnColor";
+			this.btnColor.Size = new System.Drawing.Size(227, 23);
+			this.btnColor.TabIndex = 9;
+			this.btnColor.Text = "Object Color";
+			this.btnColor.UseVisualStyleBackColor = true;
+			// 
+			// cbColoredMeshObject
+			// 
+			this.cbColoredMeshObject.FormattingEnabled = true;
+			this.cbColoredMeshObject.Location = new System.Drawing.Point(90, 24);
+			this.cbColoredMeshObject.Name = "cbColoredMeshObject";
+			this.cbColoredMeshObject.Size = new System.Drawing.Size(227, 21);
+			this.cbColoredMeshObject.TabIndex = 8;
+			// 
 			// label21
 			// 
 			this.label21.AutoSize = true;
@@ -1223,40 +1257,6 @@
 			this.label22.Size = new System.Drawing.Size(31, 13);
 			this.label22.TabIndex = 1;
 			this.label22.Text = "Color";
-			// 
-			// cbMeshObject
-			// 
-			this.cbMeshObject.FormattingEnabled = true;
-			this.cbMeshObject.Location = new System.Drawing.Point(90, 24);
-			this.cbMeshObject.Name = "cbMeshObject";
-			this.cbMeshObject.Size = new System.Drawing.Size(227, 21);
-			this.cbMeshObject.TabIndex = 8;
-			// 
-			// cbMeshTexture
-			// 
-			this.cbMeshTexture.FormattingEnabled = true;
-			this.cbMeshTexture.Location = new System.Drawing.Point(90, 53);
-			this.cbMeshTexture.Name = "cbMeshTexture";
-			this.cbMeshTexture.Size = new System.Drawing.Size(227, 21);
-			this.cbMeshTexture.TabIndex = 9;
-			// 
-			// cbColoredMeshObject
-			// 
-			this.cbColoredMeshObject.FormattingEnabled = true;
-			this.cbColoredMeshObject.Location = new System.Drawing.Point(90, 24);
-			this.cbColoredMeshObject.Name = "cbColoredMeshObject";
-			this.cbColoredMeshObject.Size = new System.Drawing.Size(227, 21);
-			this.cbColoredMeshObject.TabIndex = 8;
-			// 
-			// btnColor
-			// 
-			this.btnColor.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnColor.Location = new System.Drawing.Point(90, 51);
-			this.btnColor.Name = "btnColor";
-			this.btnColor.Size = new System.Drawing.Size(227, 23);
-			this.btnColor.TabIndex = 9;
-			this.btnColor.Text = "Object Color";
-			this.btnColor.UseVisualStyleBackColor = true;
 			// 
 			// TestPositionForm
 			// 
