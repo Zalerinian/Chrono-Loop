@@ -80,6 +80,7 @@ namespace Hourglass
 		{
 			base.OnMenuClick_Reset(sender, e);
 			mTexture.SelectedIndex = -1;
+			mShape.Dispose();
 		}
 	}
 }
