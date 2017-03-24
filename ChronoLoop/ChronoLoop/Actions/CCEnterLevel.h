@@ -165,7 +165,7 @@ namespace Epoch
 					t.SetMatrix(matrix4::CreateTranslation(0.042f, -0.03f, 0.047f));
 					BaseObject *cloneHelp = Pool::Instance()->iGetObject()->Reset("cloneHelp", t);
 					MeshComponent* chdisp = new MeshComponent("../Resources/help.obj");
-					chdisp->AddTexture("../Resources/rewind.png", eTEX_DIFFUSE);
+					chdisp->AddTexture("../Resources/clone.png", eTEX_DIFFUSE);
 					CCTeleToPlay* ttp = new CCTeleToPlay();
 					cloneHelp->AddComponent(ttp);
 					cloneHelp->AddComponent(chdisp);
