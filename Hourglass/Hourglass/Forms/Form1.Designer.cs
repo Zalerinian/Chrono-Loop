@@ -432,7 +432,7 @@ namespace Hourglass
 			this.spWorldView.Panel2.Controls.Add(this.btnComponentAdd);
 			this.spWorldView.Panel2MinSize = 300;
 			this.spWorldView.Size = new System.Drawing.Size(784, 628);
-			this.spWorldView.SplitterDistance = 471;
+			this.spWorldView.SplitterDistance = 463;
 			this.spWorldView.SplitterWidth = 8;
 			this.spWorldView.TabIndex = 3;
 			// 
@@ -440,11 +440,11 @@ namespace Hourglass
 			// 
 			this.graphicsPanel1.Controls.Add(this.btnFocus);
 			this.graphicsPanel1.Controls.Add(this.LeftToggle);
-			this.graphicsPanel1.Controls.Add(this.RightToggle); 
+			this.graphicsPanel1.Controls.Add(this.RightToggle);
 			this.graphicsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.graphicsPanel1.Location = new System.Drawing.Point(0, 0);
 			this.graphicsPanel1.Name = "graphicsPanel1";
-			this.graphicsPanel1.Size = new System.Drawing.Size(471, 628);
+			this.graphicsPanel1.Size = new System.Drawing.Size(463, 628);
 			this.graphicsPanel1.TabIndex = 2;
 			this.graphicsPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.OnPaint);
 			this.graphicsPanel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseClick);
@@ -477,7 +477,7 @@ namespace Hourglass
 			// 
 			this.RightToggle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.RightToggle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.RightToggle.Location = new System.Drawing.Point(438, 3);
+			this.RightToggle.Location = new System.Drawing.Point(430, 3);
 			this.RightToggle.MinimumSize = new System.Drawing.Size(1, 1);
 			this.RightToggle.Name = "RightToggle";
 			this.RightToggle.Size = new System.Drawing.Size(23, 23);
@@ -642,6 +642,8 @@ namespace Hourglass
 			this.MinimumSize = new System.Drawing.Size(914, 507);
 			this.Name = "Editor";
 			this.Text = "Level Editor";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Editor_FormClosing);
+			this.Load += new System.EventHandler(this.Editor_Load);
 			this.ClientSizeChanged += new System.EventHandler(this.Editor_ClientSizeChanged);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();

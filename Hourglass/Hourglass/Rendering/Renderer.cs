@@ -192,6 +192,8 @@ namespace Hourglass
 				mDevice.Transform.World = it.Current.World;
 				mDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, it.Current.Indices.Length, 0, it.Current.Indices.Length / 3);
 			}
+			Gizmo.Instance.Render();
+
 			mDevice.EndScene();
 			mDevice.Present();
 		}

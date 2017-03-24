@@ -85,18 +85,6 @@ namespace Hourglass
 			btnComponentAdd.Location = new Point(spWorldView.Panel2.ClientRectangle.Width / 4, btnComponentAdd.Location.Y);
 			btnComponentAdd.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
 			spWorldView.Panel2.Controls.Add(btnComponentAdd);
-
-			//if(string.IsNullOrWhiteSpace(Properties.Settings.Default.ProjectDirectory))
-			//{
-			//	FolderBrowserDialog o = new FolderBrowserDialog();
-			//	if(o.ShowDialog() == DialogResult.OK)
-			//	{
-			//		Debug.Print("Ye");
-			//	} else
-			//	{
-			//		Debug.Print("Ne");
-			//	}
-			//}
 		}
 
 		public void InitializeKeyboard()
@@ -383,14 +371,14 @@ namespace Hourglass
 
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			openLevel();
+			FileIO.openLevel();
 		}
 
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (currentFile != string.Empty)
 			{
-				saveLevel(currentFile);
+				FileIO.saveLevel(currentFile);
 			}
 			else
 			{
@@ -401,7 +389,7 @@ namespace Hourglass
 				file.RestoreDirectory = true;
 				if (file.ShowDialog() == DialogResult.OK)
 				{
-					saveLevel(file.FileName);
+					FileIO.saveLevel(file.FileName);
 				}
 			}
 		}
@@ -416,7 +404,7 @@ namespace Hourglass
 			if (saveFile.ShowDialog() == DialogResult.OK)
 			{
 				currentFile = saveFile.FileName;
-				saveLevel(saveFile.FileName);
+				FileIO.saveLevel(saveFile.FileName);
 			}
 		}
 
@@ -496,6 +484,33 @@ namespace Hourglass
 		{
 			spWorldView.Panel2.Controls.Add(_c.GetGroupbox());
 			ReorderComponents(spWorldView.Panel2, EventArgs.Empty);
+		}
+
+		private void Editor_Load(object sender, EventArgs e)
+		{
+			bool settingsLoaded = FileIO.LoadSettings();
+			if (!settingsLoaded)
+			{
+				EditorSetupForm setup = new EditorSetupForm();
+				if (setup.ShowDialog() == DialogResult.OK)
+				{
+					Settings.ProjectPath = setup.tbProjDir.Text;
+				}
+				else
+				{
+					this.Close();
+				}
+			}
+			// Discover and load object files.
+			// Discover and load texture files.
+		}
+
+		private void Editor_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			if(!string.IsNullOrWhiteSpace(Settings.ProjectPath))
+			{
+				FileIO.SaveSettings();
+			}
 		}
 
 		private void Editor_ClientSizeChanged(object sender, EventArgs e)

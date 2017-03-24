@@ -49,6 +49,13 @@ namespace Hourglass
 			SetMesh(file);
 		}
 
+		public ColoredShape(string file, Color color)
+		{
+			mType = ShapeType.Colored;
+			World = Matrix.Identity;
+			SetMesh(file, color);
+		}
+
 		public void Load(string _File)
 		{
 			List<Vector3> Verts = new List<Vector3>();
@@ -107,11 +114,77 @@ namespace Hourglass
 			Indices = Ind.ToArray();
 		}
 
+		public void Load(string _File, Color _c)
+		{
+			List<Vector3> Verts = new List<Vector3>();
+			List<Vector3> Norms = new List<Vector3>();
+			List<Vector2> UVs = new List<Vector2>();
+			List<CustomVertex.PositionNormalColored> vertices = new List<CustomVertex.PositionNormalColored>();
+			List<int> Ind = new List<int>();
+			StreamReader sr = new StreamReader(_File);
+			string line = string.Empty;
+			while ((line = sr.ReadLine()) != null)
+			{
+				string[] parts = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+				if (parts.Length > 0)
+				{
+					Vector3 vec = new Vector3();
+					switch (parts[0])
+					{
+						case "o":
+							//mName = parts[1];
+							break;
+						case "v":
+							vec.X = (float)Convert.ToDouble(parts[1]);
+							vec.Y = (float)Convert.ToDouble(parts[2]);
+							vec.Z = (float)Convert.ToDouble(parts[3]);
+							Verts.Add(vec);
+							break;
+						case "vn":
+							vec.X = (float)Convert.ToDouble(parts[1]);
+							vec.Y = (float)Convert.ToDouble(parts[2]);
+							vec.Z = (float)Convert.ToDouble(parts[3]);
+							Norms.Add(vec);
+							break;
+						case "vt":
+							Vector2 uv = new Vector2();
+							uv.X = (float)Convert.ToDouble(parts[1]);
+							uv.Y = (float)Convert.ToDouble(parts[2]);
+							UVs.Add(uv);
+							break;
+						case "f":
+							for (int i = 1; i < 4; i++)
+							{
+								string[] points = parts[i].Split(new char[] { '/' }, StringSplitOptions.None);
+								Ind.Add(vertices.Count);
+								vertices.Add(new CustomVertex.PositionNormalColored(Verts[Convert.ToInt32(points[0]) - 1],
+									Norms[Convert.ToInt32(points[2]) - 1],
+									_c.ToArgb()));
+							}
+							break;
+						default:
+							break;
+					}
+				}
+			}
+			Vertices = vertices.ToArray();
+			Indices = Ind.ToArray();
+		}
+
 		public void SetMesh(string file)
 		{
 			Vertices = null;
 			Indices = null;
 			Load(file);
+			FillBuffers();
+		}
+
+		public void SetMesh(string file, Color _c)
+		{
+			Vertices = null;
+			Indices = null;
+			Load(file, _c);
 			FillBuffers();
 		}
 
