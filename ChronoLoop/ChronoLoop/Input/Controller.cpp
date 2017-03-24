@@ -81,12 +81,12 @@ namespace Epoch {
 								if (mSpeedCCW != 0) {
 									mSpeedCCW = 0;
 									mSpeedCW = 1;
-									mIncreaseGestureSpeed = 5;
-									tempTimeLine->SetObjectInterpolationTime(0.20f);
+									mIncreaseGestureSpeed = 7;
+									tempTimeLine->SetObjectInterpolationTime(0.40f);
 								}
-								if (mSpeedCW % 35 == 0 && mIncreaseGestureSpeed != 1)
+								if (mSpeedCW % 50 == 0 && mIncreaseGestureSpeed != 1)
 								{
-									tempTimeLine->SetObjectInterpolationTime(tempTimeLine->GetObjectInterpolationTime() - 0.03f);
+									tempTimeLine->SetObjectInterpolationTime(tempTimeLine->GetObjectInterpolationTime() - 0.05f);
 									mIncreaseGestureSpeed--;
 								}
 								if (TimeManager::Instance()->GetShouldPulse())
@@ -102,11 +102,11 @@ namespace Epoch {
 								if (mSpeedCW != 0) {
 									mSpeedCW = 0;
 									mSpeedCCW = 1;
-									mIncreaseGestureSpeed = 5;
-									tempTimeLine->SetObjectInterpolationTime(0.20f);
+									mIncreaseGestureSpeed = 7;
+									tempTimeLine->SetObjectInterpolationTime(0.40f);
 								}
-								if (mSpeedCCW % 35 == 0 && mIncreaseGestureSpeed != 1) {
-									tempTimeLine->SetObjectInterpolationTime(tempTimeLine->GetObjectInterpolationTime() - 0.03f);
+								if (mSpeedCCW % 50 == 0 && mIncreaseGestureSpeed != 1) {
+									tempTimeLine->SetObjectInterpolationTime(tempTimeLine->GetObjectInterpolationTime() - 0.05f);
 									mIncreaseGestureSpeed--;
 								}
 								if(TimeManager::Instance()->GetShouldPulse())
