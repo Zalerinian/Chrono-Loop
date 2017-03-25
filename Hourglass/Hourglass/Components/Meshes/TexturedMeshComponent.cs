@@ -7,11 +7,12 @@ namespace Hourglass
 	public class TexturedMeshComponent : MeshComponent
 	{
 		private ComboBox mTexture = new ComboBox();
-		private TexturedShape mShape = new TexturedShape();
 
 		public TexturedMeshComponent(int _yOffset = 0) : base(_yOffset)
 		{
 			#region Component Creation
+			mShape = new TexturedShape();
+
 			mGroupBox.Controls.Add(mTexture);
 
 			#endregion
@@ -50,14 +51,8 @@ namespace Hourglass
 		{
 			if(!string.IsNullOrWhiteSpace(mMesh.Text))
 			{
-				mShape.Load(Settings.ProjectPath + ResourceManager.Instance.ResourceDirectory + mMesh.Text);
+				((TexturedShape)mShape).Load(Settings.ProjectPath + ResourceManager.Instance.ResourceDirectory + mMesh.Text);
 				mShape.FillBuffers();
-				Renderer.Instance.RemoveShape(mShape);
-				Renderer.Instance.AddShape(mShape);
-			}
-			else
-			{
-				Renderer.Instance.RemoveShape(mShape);
 			}
 			ReleaseControl();
 		}
@@ -66,7 +61,7 @@ namespace Hourglass
 		{
 			if(!string.IsNullOrWhiteSpace(mTexture.Text))
 			{
-				mShape.SetTexture(TexturedShape.TextureType.Diffuse, Settings.ProjectPath + ResourceManager.Instance.ResourceDirectory + mTexture.Text);
+				((TexturedShape)mShape).SetTexture(TexturedShape.TextureType.Diffuse, Settings.ProjectPath + ResourceManager.Instance.ResourceDirectory + mTexture.Text);
 			}
 			ReleaseControl();
 		}
@@ -74,7 +69,6 @@ namespace Hourglass
 		protected override void OnMenuClick_Delete(object sender, EventArgs e)
 		{
 			base.OnMenuClick_Delete(sender, e);
-			Renderer.Instance.RemoveShape(mShape);
 			mShape.Dispose();
 		}
 
@@ -82,7 +76,6 @@ namespace Hourglass
 		{
 			base.OnMenuClick_Reset(sender, e);
 			mTexture.SelectedIndex = -1;
-			mShape.Dispose();
 		}
 	}
 }

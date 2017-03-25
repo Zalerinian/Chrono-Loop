@@ -34,7 +34,7 @@ namespace Hourglass
 		private bool mCurrentFileChanged = false;
 		private MouseEventArgs mMouseState;
 
-		private ColoredShape mGrid;
+		private BaseObject mGrid;
 
 		string Filename {
 			get {
@@ -60,11 +60,13 @@ namespace Hourglass
 			InitializeKeyboard();
 			Renderer.Instance.AttachToControl(graphicsPanel1);
 
-			mGrid = new ColoredShape();
-			mGrid.MakeGrid();
-			mGrid.FillMode = FillMode.WireFrame;
-			mGrid.Color = Color.White;
-			Renderer.Instance.AddShape(mGrid);
+			ColoredMeshComponent Grid = new ColoredMeshComponent();
+			((ColoredShape)Grid.Shape).MakeGrid();
+			Grid.Shape.FillMode = FillMode.WireFrame;
+			((ColoredShape)Grid.Shape).Color = Color.White;
+			mGrid = new BaseObject(null);
+			mGrid.AddComponent(Grid);
+			Renderer.Instance.AddObject(mGrid);
 
 			mFPSTimer.Start();
 			mRotationSpeed = 0.005f;
@@ -458,6 +460,7 @@ namespace Hourglass
 			BaseObject b = new BaseObject(n, "Empty Object");
 			b.ComponentAdded += ObjectAddComponent;
 			b.ComponentRemoved += ObjectRemoveComponent;
+			Renderer.Instance.AddObject(b);
 			n.Tag = b;
 			if (_parent != null)
 			{

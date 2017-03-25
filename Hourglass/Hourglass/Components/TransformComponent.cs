@@ -143,6 +143,18 @@ namespace Hourglass
 			SetupTransformPanel(mPosPanel, 90, 50 + _yOffset, ContentWidth, mLbPosX, mLbPosY, mLbPosZ, mPosX, mPosY, mPosZ);
 			SetupTransformPanel(mRotPanel, 90, 75 + _yOffset, ContentWidth, mLbRotX, mLbRotY, mLbRotZ, mRotX, mRotY, mRotZ);
 			SetupTransformPanel(mScalePanel, 90, 100 + _yOffset, ContentWidth, mLbScaleX, mLbScaleY, mLbScaleZ, mScaleX, mScaleY, mScaleZ);
+
+			// Events
+			mPosX.ValueChanged += OnMatrixUpdated;
+			mPosY.ValueChanged += OnMatrixUpdated;
+			mPosZ.ValueChanged += OnMatrixUpdated;
+			mRotX.ValueChanged += OnMatrixUpdated;
+			mRotY.ValueChanged += OnMatrixUpdated;
+			mRotZ.ValueChanged += OnMatrixUpdated;
+			mScaleX.ValueChanged += OnMatrixUpdated;
+			mScaleY.ValueChanged += OnMatrixUpdated;
+			mScaleZ.ValueChanged += OnMatrixUpdated;
+
 			#endregion
 
 			mGroupBox.Text = "Transform";
@@ -170,11 +182,12 @@ namespace Hourglass
 
 		public Matrix CreateMatrix()
 		{
-			// Matrix multiplication order is Scale, Rotation, and then Translation.
-			Matrix mat = new Matrix();
-			mat.Scale(GetScaleVector());
-			mat.RotateYawPitchRoll((float)mRotY.Value * D2R, (float)mRotX.Value * D2R, (float)mRotZ.Value * D2R);
-			mat.Translate(GetPositionVector());
+			// Matrix multiplication order is Rotation, Translation, then scaling. Always remember to play RTS!
+			// This is assuming you want it to rotate in place. To rotate around a point, you'd do TRS.
+			Matrix mat = Matrix.Identity;
+			mat *= Matrix.RotationYawPitchRoll((float)mRotY.Value * D2R, (float)mRotX.Value * D2R, (float)mRotZ.Value * D2R);
+			mat *= Matrix.Translation(GetPositionVector());
+			mat *= Matrix.Scaling(GetScaleVector());
 			return mat;
 		}
 
@@ -233,6 +246,14 @@ namespace Hourglass
 					mOwner.Node.NodeFont = ActiveFont;
 					mOwner.Node.Text = mName.Text;
 				}
+			}
+		}
+
+		protected void OnMatrixUpdated(object sender, EventArgs e)
+		{
+			if(Owner != null)
+			{
+				Owner.InvalidateMatrix();
 			}
 		}
 
