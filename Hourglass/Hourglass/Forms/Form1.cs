@@ -522,6 +522,11 @@ namespace Hourglass
 			btnFocus.Select();
 		}
 
+		private void graphicsPanel1_MouseDown(object sender, MouseEventArgs e)
+		{
+			btnFocus.Select();
+		}
+
 		private void Editor_ClientSizeChanged(object sender, EventArgs e)
 		{
 			// Ensure the graphics panel can't get too small.
