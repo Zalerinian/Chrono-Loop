@@ -1013,7 +1013,7 @@ namespace Epoch
 							}
 						}
 					}
-					else if (collider->mColliderType == Collider::eCOLLIDER_Controller)//Update ControllerCollider position, do not apply physics to player
+					else if (collider->mColliderType == Collider::eCOLLIDER_Controller && VRInputManager::GetInstance().IsVREnabled())//Update ControllerCollider position, do not apply physics to player
 					{
 						CubeCollider* aabb1 = (CubeCollider*)collider;
 						for (int j = 0; j < objs; ++j)

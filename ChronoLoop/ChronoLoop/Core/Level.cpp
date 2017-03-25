@@ -646,7 +646,7 @@ namespace Epoch {
 					else if (colliderType == "Plane")
 					{
 						physical = true;
-
+						
 						PlaneCollider* col = new PlaneCollider(obj, trigger, staticF, kineticF, fabsf((colliderPosition + position) * normal), normal);//TODO: Fix offset
 						obj->AddComponent(col);
 					}

@@ -58,11 +58,13 @@ namespace Epoch
 					Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(ambient, "ambiance")));
 
 					//new stuff
-					Transform identity;
-					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", identity);// new BaseObject("Controller", identity);
-					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity); //new BaseObject("Controller2", identity);
-					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity); //new BaseObject("headset", transform);
+					Transform identity, t;
+					t.SetMatrix(matrix4::CreateXRotation(DirectX::XM_PI / 2) * matrix4::CreateTranslation(8.8f, 1.3f, -4.75f));
+					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", t);
+					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity); 
+					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
+
 					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), false);
 					BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
 					((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
@@ -87,7 +89,6 @@ namespace Epoch
 					clonePanel->SetParent(RightController);
 					RightController->AddChild(clonePanel);
 
-					Transform t;
 					t.SetMatrix(matrix4::CreateScale(.1f, .1f, .1f));
 					BaseObject *timeDisplay = Pool::Instance()->iGetObject()->Reset("TimeIndicatorLine", t);
 					MeshComponent* tdisp = new MeshComponent("../Resources/TimeIndicatorLine.obj");
@@ -134,14 +135,6 @@ namespace Epoch
 					rewindHelp->SetParent(RightController);
 					RightController->AddChild(rewindHelp);
 
-					//t.SetMatrix(matrix4::CreateTranslation(0, 0.015f, 0.054f));
-					//BaseObject *playHelp = Pool::Instance()->iGetObject()->Reset("playHelp", t);
-					//MeshComponent* plhdisp = new MeshComponent("../Resources/help.obj");
-					//plhdisp->AddTexture("../Resources/play.png", eTEX_DIFFUSE);
-					//playHelp->AddComponent(plhdisp);
-					//playHelp->SetParent(RightController);
-					//RightController->AddChild(playHelp);
-
 					t.SetMatrix(matrix4::CreateTranslation(0, 0.015f, 0.054f));
 					BaseObject *teleportHelp = Pool::Instance()->iGetObject()->Reset("teleportHelp", t);
 					MeshComponent* thdisp = new MeshComponent("../Resources/help.obj");
@@ -152,7 +145,7 @@ namespace Epoch
 					teleportHelp->SetParent(RightController);
 					RightController->AddChild(teleportHelp);
 
-					t.SetMatrix(matrix4::CreateTranslation(-0.039f, -0.007f, 0.089f));
+					t.SetMatrix(matrix4::CreateTranslation(-0.03f, -0.01f, 0.089f));
 					BaseObject *pauseHelp = Pool::Instance()->iGetObject()->Reset("pauseHelp", t);
 					MeshComponent* phdisp = new MeshComponent("../Resources/help.obj");
 					phdisp->AddTexture("../Resources/pause.png", eTEX_DIFFUSE);
@@ -162,15 +155,7 @@ namespace Epoch
 					pauseHelp->SetParent(RightController);
 					RightController->AddChild(pauseHelp);
 					
-					//t.SetMatrix(matrix4::CreateTranslation(-0.039f, -0.007f, 0.089f));
-					//BaseObject *cancelHelp = Pool::Instance()->iGetObject()->Reset("cancelHelp", t);
-					//MeshComponent* cahdisp = new MeshComponent("../Resources/help.obj");
-					//cahdisp->AddTexture("../Resources/cancel.png", eTEX_DIFFUSE);
-					//cancelHelp->AddComponent(cahdisp);
-					//cancelHelp->SetParent(RightController);
-					//RightController->AddChild(cancelHelp);
-
-					t.SetMatrix(matrix4::CreateTranslation(0.042f, -0.03f, 0.047f));
+					t.SetMatrix(matrix4::CreateTranslation(0.032f, -0.03f, 0.047f));
 					BaseObject *cloneHelp = Pool::Instance()->iGetObject()->Reset("cloneHelp", t);
 					MeshComponent* chdisp = new MeshComponent("../Resources/help.obj");
 					chdisp->AddTexture("../Resources/clone.png", eTEX_DIFFUSE);
@@ -179,6 +164,16 @@ namespace Epoch
 					cloneHelp->AddComponent(chdisp);
 					cloneHelp->SetParent(RightController);
 					RightController->AddChild(cloneHelp);
+
+					t.SetMatrix(matrix4::CreateScale(.5f, .5f, .5f) * matrix4::CreateTranslation(0.042f, -0.03f, 0.047f));
+					BaseObject *clonePlus = Pool::Instance()->iGetObject()->Reset("clonePlus", t);
+					MeshComponent* cphdisp = new MeshComponent("../Resources/help.obj");
+					cphdisp->AddTexture("../Resources/plus.png", eTEX_DIFFUSE);
+					CCDisplayOnPause* cpdop = new CCDisplayOnPause();
+					clonePlus->AddComponent(cpdop);
+					clonePlus->AddComponent(cphdisp);
+					clonePlus->SetParent(RightController);
+					RightController->AddChild(clonePlus);
 
 					//pat added
 					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
@@ -249,8 +244,7 @@ namespace Epoch
 					next->AddObject(pauseHelp);
 					next->AddObject(cloneHelp);
 					next->AddObject(teleportHelp);
-					//next->AddObject(playHelp);
-					//next->AddObject(cancelHelp);
+					next->AddObject(clonePlus);
 					
 					TimeManager::Instance()->AddObjectToTimeline(RightController);
 					TimeManager::Instance()->AddObjectToTimeline(LeftController);

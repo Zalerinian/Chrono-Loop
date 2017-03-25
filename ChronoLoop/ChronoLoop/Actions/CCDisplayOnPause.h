@@ -12,7 +12,7 @@ namespace Epoch
 		bool once = false;
 		virtual void Update()
 		{
-			if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->isTimePaused())
+			if (/*LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->isTimePaused()*/ (GetAsyncKeyState(VK_SHIFT)))
 			{
 				((MeshComponent*)mObject->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
 				once = false;
@@ -22,9 +22,7 @@ namespace Epoch
 				once = true;
 				((MeshComponent*)mObject->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 			}
-
 		}
-
 	};
 
 }

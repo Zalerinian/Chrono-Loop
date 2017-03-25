@@ -10,10 +10,28 @@ namespace Epoch
 
 	struct UIRewind : public CodeComponent
 	{
+		bool once = false;
 		virtual void Update()
 		{
-			if (VRInputManager::GetInstance().GetController(ControllerType::eControllerType_Primary).CheckGesture() == -1)
-				mObject->GetTransform().SetMatrix(mObject->GetTransform().GetMatrix().RotateInPlace(vec3f(0,1,0), 0.261799f));
+			if (/*VRInputManager::GetInstance().GetController(ControllerType::eControllerType_Primary).CheckGesture() == -1*/ GetAsyncKeyState(VK_LEFT) & 1)
+			{
+				if (!once)
+				{
+					once = true;
+					((MeshComponent*)mObject->GetComponentIndexed(eCOMPONENT_MESH, 0))->AddTexture("../Resources/rewind.png", eTEX_DIFFUSE);
+				}
+				mObject->GetTransform().SetMatrix(mObject->GetTransform().GetMatrix().RotateInPlace(vec3f(0, 1, 0), 0.261799f));
+				
+			}
+			else if (/*VRInputManager::GetInstance().GetController(ControllerType::eControllerType_Primary).CheckGesture() == 1*/GetAsyncKeyState(VK_RIGHT) & 1)
+			{
+				if (once)
+				{
+					once = false;
+					((MeshComponent*)mObject->GetComponentIndexed(eCOMPONENT_MESH, 0))->AddTexture("../Resources/fastForward.png", eTEX_DIFFUSE);
+				}
+				mObject->GetTransform().SetMatrix(mObject->GetTransform().GetMatrix().RotateInPlace(vec3f(0, 1, 0), -0.261799f));
+			}
 		}
 	};
 
