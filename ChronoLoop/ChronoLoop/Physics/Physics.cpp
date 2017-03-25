@@ -721,6 +721,11 @@ namespace Epoch
 				int cols = (int)Colliders.size();
 				for (int x = 0; x < cols; ++x)
 				{
+#if DEBUG_LEVEL1
+					if (mObjects[i]->GetName() == "mmDoor")
+						((CodeComponent*)mObjects[i]->GetComponents(eCOMPONENT_CODE)[0])->OnTriggerEnter(*collider, *otherCol);
+#endif
+
 					collider = (Collider*)Colliders[x];
 					if (collider->IsEnabled() && (collider->mIsTrigger || collider->mShouldMove))
 					{

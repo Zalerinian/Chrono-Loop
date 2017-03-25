@@ -26,6 +26,11 @@ namespace Epoch
 		static unsigned int mCloneCount;
 		static unsigned short mCurrTexture;
 
+		static BaseObject* mCurCloneHeadset;
+		static BaseObject* mCurCloneController1;
+		static BaseObject* mCurCloneController2;
+		bool mIsBeingMade = false;
+
 		std::string mTextures[10] = { "../Resources/CloneTexture.png",
 			"../Resources/CloneTexture_Green.png",
 			"../Resources/CloneTexture_Pink.png",
@@ -42,12 +47,13 @@ namespace Epoch
 		TimeManipulation(ControllerType _t) { mControllerRole = _t; };
 		~TimeManipulation();
 		std::string GetTexture(unsigned short _indx) { return mTextures[_indx]; }
-		void RaycastCloneCheck();
+		bool RaycastCloneCheck();
 		bool isTimePaused() { return mPauseTime; };
 		unsigned int GetNumClones() { return mCloneCount; };
 		void makeTimePaused(bool _isPaused) { mPauseTime = _isPaused; };
 		void Start();
 		void Update();
+		void MakeCloneBaseObjects(BaseObject* _headset, BaseObject* _controller1, BaseObject* _controller2);
 	};
 
 } // Epoch Namespace
