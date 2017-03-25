@@ -66,13 +66,13 @@ namespace Hourglass
 			ReleaseControl();
 		}
 
-		protected override void OnMenuClick_Delete(object sender, EventArgs e)
+		public override void OnMenuClick_Delete(object sender, EventArgs e)
 		{
 			base.OnMenuClick_Delete(sender, e);
 			mShape.Dispose();
 		}
 
-		protected override void OnMenuClick_Reset(object sender, EventArgs e)
+		public override void OnMenuClick_Reset(object sender, EventArgs e)
 		{
 			base.OnMenuClick_Reset(sender, e);
 			mTexture.SelectedIndex = -1;

@@ -503,6 +503,7 @@ namespace Hourglass
 			this.btnComponentAdd.TabIndex = 2;
 			this.btnComponentAdd.Text = "Add Component";
 			this.btnComponentAdd.UseVisualStyleBackColor = true;
+			this.btnComponentAdd.Visible = false;
 			// 
 			// mComponentStrip
 			// 

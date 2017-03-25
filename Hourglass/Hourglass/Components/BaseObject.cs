@@ -31,6 +31,15 @@ namespace Hourglass
             get { return mNode; }
         }
 
+		public BaseObject Parent {
+			get {
+				return mParent;
+			}
+			set {
+				mParent = value;
+			}
+		}
+
         public BaseObject(TreeNode _node) : this(_node, "") {
         }
 
@@ -95,6 +104,14 @@ namespace Hourglass
 		public void InvalidateMatrix()
 		{
 			mWorld = ((TransformComponent)mComponents[0]).CreateMatrix();
+		}
+
+		public void Delete()
+		{
+			for(int i = mComponents.Count - 1; i >= 0 ; --i)
+			{
+				mComponents[i].OnMenuClick_Delete(null, null);
+			}
 		}
     }
 }

@@ -191,7 +191,7 @@ namespace Hourglass
 			return mat;
 		}
 
-		protected override void OnMenuClick_Reset(object sender, EventArgs e)
+		public override void OnMenuClick_Reset(object sender, EventArgs e)
 		{
 			mNameIsPlaceholder = true;
 			Name = "Object Name...";

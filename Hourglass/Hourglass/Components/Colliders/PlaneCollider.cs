@@ -94,7 +94,7 @@ namespace Hourglass {
             OnMenuClick_Reset(null, null);
         }
 
-        protected override void OnMenuClick_Reset(object sender, EventArgs e) {
+        public override void OnMenuClick_Reset(object sender, EventArgs e) {
             base.OnMenuClick_Reset(sender, e);
             mOffset.Value = 0;
             mNX.Value = 0;

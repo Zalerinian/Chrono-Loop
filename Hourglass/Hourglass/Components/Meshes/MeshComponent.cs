@@ -61,7 +61,7 @@ namespace Hourglass
             OnMenuClick_Reset(null, null);
         }
 
-        protected override void OnMenuClick_Reset(object sender, EventArgs e)
+        public override void OnMenuClick_Reset(object sender, EventArgs e)
         {
             mMesh.SelectedIndex = -1;
 			if(mShape != null)
