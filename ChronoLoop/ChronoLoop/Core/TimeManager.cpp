@@ -497,13 +497,13 @@ namespace Epoch {
 			if ((mtempCurSnapFrame != 0 && _gesture == -1) || (mtempCurSnapFrame != temp && _gesture == 1)) {
 				int placeHolder = mtempCurSnapFrame;
 				mtempCurSnapFrame -= _frameRewind;
+				SystemLogger::GetLog() << "mTempCurSnapFrame: " << mtempCurSnapFrame << std::endl;
 				mTimeline->PrepareAllObjectInterpolators(placeHolder, mtempCurSnapFrame);
 				mShouldUpdateInterpolators = true;
 				mShouldPulse = true;
 			}
 			else {
 				mShouldPulse = false;
-
 			}
 
 		
