@@ -149,7 +149,7 @@ namespace Hourglass {
             mGroupBox.Size = mGroupBox.PreferredSize;
         }
 
-        protected override void OnMenuClick_Reset(object sender, EventArgs e) {
+        public override void OnMenuClick_Reset(object sender, EventArgs e) {
             base.OnMenuClick_Reset(sender, e);
             mPosX.Value = 0;
             mPosY.Value = 0;

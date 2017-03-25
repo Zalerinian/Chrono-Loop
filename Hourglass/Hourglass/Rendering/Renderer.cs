@@ -11,7 +11,7 @@ namespace Hourglass
 	{
 		private static readonly Renderer sInstance = new Renderer();
 
-		private List<RenderShape> mRenderSet;
+		private List<BaseObject> mRenderSet;
 		private bool mInitialized = false, mCameraNeedsRebuild = false, /*mRenderGrid = true,*/ mPanelResizing = false;
 		private Device mDevice;
 		private Control mPanel;
@@ -111,7 +111,7 @@ namespace Hourglass
 			RebuildProjectionMatrix();
 			RebuildViewMatrix();
 
-			mRenderSet = new List<RenderShape>();
+			mRenderSet = new List<BaseObject>();
 			mGrid = new ColoredShape();
 			mGrid.MakeGrid();
 
@@ -155,44 +155,48 @@ namespace Hourglass
 
 			mDevice.BeginScene();
 			
-			if(RenderGrid)
-			{
-
-			}
-			List<RenderShape>.Enumerator it = mRenderSet.GetEnumerator();
+			List<BaseObject>.Enumerator objectIterator = mRenderSet.GetEnumerator();
 			mDevice.Clear(ClearFlags.ZBuffer, 0, 1.0f, 0);
 			mDevice.Clear(ClearFlags.Target, System.Drawing.Color.Black, 1.0f, 0);
-			while (it.MoveNext())
+			while (objectIterator.MoveNext())
 			{
-
-				// Render the shape.
-
-				if(it.Current.Type == RenderShape.ShapeType.Textured)
+				// Find which components are shapes
+				List<Component>.Enumerator componentIterator = objectIterator.Current.GetComponents().GetEnumerator();
+				while(componentIterator.MoveNext())
 				{
-					mDevice.VertexFormat = CustomVertex.PositionNormalTextured.Format;
-					TexturedShape ts = it.Current as TexturedShape;
-					if(ts.Textures[(int)TexturedShape.TextureType.Diffuse] != null)
+					// Render the shape.
+					if(!(componentIterator.Current is IRenderable) || !((IRenderable)componentIterator.Current).Shape.Valid)
 					{
-						mDevice.SetTexture(0, ts.Textures[(int)TexturedShape.TextureType.Diffuse]);
+						continue;
+					}
+
+					if(((IRenderable)componentIterator.Current).Shape.Type == RenderShape.ShapeType.Textured)
+					{
+						mDevice.VertexFormat = CustomVertex.PositionNormalTextured.Format;
+						TexturedShape ts = ((IRenderable)componentIterator.Current).Shape as TexturedShape;
+						if(ts.Textures[(int)TexturedShape.TextureType.Diffuse] != null)
+						{
+							mDevice.SetTexture(0, ts.Textures[(int)TexturedShape.TextureType.Diffuse]);
+						}
+						else
+						{
+							// TODO: Default texture.
+							mDevice.SetTexture(0, null);
+						}
 					}
 					else
 					{
-						// TODO: Default texture.
+						mDevice.VertexFormat = CustomVertex.PositionNormalColored.Format;
 						mDevice.SetTexture(0, null);
+						mDevice.RenderState.AlphaBlendEnable = false;
+						mDevice.RenderState.CullMode = Cull.None;
 					}
+					mDevice.Indices = ((IRenderable)componentIterator.Current).Shape.IndexBuffer;
+					mDevice.SetStreamSource(0, ((IRenderable)componentIterator.Current).Shape.VertexBuffer, 0);
+					mDevice.RenderState.FillMode = ((IRenderable)componentIterator.Current).Shape.FillMode;
+					mDevice.Transform.World = ((IRenderable)componentIterator.Current).Shape.World * objectIterator.Current.GetMatrix();
+					mDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, ((IRenderable)componentIterator.Current).Shape.Indices.Length, 0, ((IRenderable)componentIterator.Current).Shape.Indices.Length / 3);
 				}
-				else
-				{
-					mDevice.VertexFormat = CustomVertex.PositionNormalColored.Format;
-					mDevice.SetTexture(0, null);
-					mDevice.RenderState.AlphaBlendEnable = false;
-					mDevice.RenderState.CullMode = Cull.None;
-				}
-				mDevice.Indices = it.Current.IndexBuffer;
-				mDevice.SetStreamSource(0, it.Current.VertexBuffer, 0);
-				mDevice.RenderState.FillMode = it.Current.FillMode;
-				mDevice.Transform.World = it.Current.World;
-				mDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, it.Current.Indices.Length, 0, it.Current.Indices.Length / 3);
 			}
 			Gizmo.Instance.Render();
 			
@@ -205,12 +209,12 @@ namespace Hourglass
 			return TextureLoader.FromFile(mDevice, file);
 		}
 
-		public void AddShape(RenderShape _m)
+		public void AddObject(BaseObject _m)
 		{
 			mRenderSet.Add(_m);
 		}
 
-		public bool RemoveShape(RenderShape _m)
+		public bool RemoveObject(BaseObject _m)
 		{
 			return mRenderSet.Remove(_m);
 		}
@@ -249,7 +253,14 @@ namespace Hourglass
 				RebuildProjectionMatrix();
 				for(int i = 0; i < mRenderSet.Count; ++i)
 				{
-					mRenderSet[i].FillBuffers();
+					List<Component> comps = mRenderSet[i].GetComponents();
+					for (int j = 0; j < comps.Count; ++j)
+					{
+						if(comps[j] is MeshComponent)
+						{
+							((MeshComponent)comps[j]).Shape.FillBuffers();
+						}
+					}
 				}
 			}
 		}

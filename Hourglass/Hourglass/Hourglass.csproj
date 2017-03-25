@@ -109,6 +109,7 @@
     <Compile Include="Components\Colliders\PlaneCollider.cs" />
     <Compile Include="Components\Gizmo.cs" />
     <Compile Include="Components\IGizmoAttachment.cs" />
+    <Compile Include="Components\IRenderable.cs" />
     <Compile Include="Components\Meshes\MeshComponent.cs" />
     <Compile Include="Components\Meshes\ColoredMeshComponent.cs" />
     <Compile Include="Components\Meshes\TexturedMeshComponent.cs" />
@@ -195,6 +196,15 @@
     <None Include="Assets\AxisGizmo.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Assets\Colliders\Cube.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Colliders\Plane.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Colliders\Sphere.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Assets\Cube.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -258,6 +268,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

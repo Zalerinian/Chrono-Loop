@@ -32,9 +32,9 @@ namespace Hourglass
 		// Variables added by Drew
 		private string mCurrentFilename = string.Empty;
 		private bool mCurrentFileChanged = false;
-		private MouseEventArgs mMouseState;
-
-		private ColoredShape mGrid;
+		private MouseEventArgs mMouseState = null;
+		private List<Key> mKeys = null, mPreviousKeys = null;
+		private BaseObject mGrid = null;
 
 		string Filename {
 			get {
@@ -60,11 +60,13 @@ namespace Hourglass
 			InitializeKeyboard();
 			Renderer.Instance.AttachToControl(graphicsPanel1);
 
-			mGrid = new ColoredShape();
-			mGrid.MakeGrid();
-			mGrid.FillMode = FillMode.WireFrame;
-			mGrid.Color = Color.White;
-			Renderer.Instance.AddShape(mGrid);
+			ColoredMeshComponent Grid = new ColoredMeshComponent();
+			((ColoredShape)Grid.Shape).MakeGrid();
+			Grid.Shape.FillMode = FillMode.WireFrame;
+			((ColoredShape)Grid.Shape).Color = Color.White;
+			mGrid = new BaseObject(null);
+			mGrid.AddComponent(Grid);
+			Renderer.Instance.AddObject(mGrid);
 
 			mFPSTimer.Start();
 			mRotationSpeed = 0.005f;
@@ -98,83 +100,6 @@ namespace Hourglass
 		{
 			UpdateKeyboardInput();
 			Renderer.Instance.Render();
-			return;
-			//device.RenderState.ZBufferEnable = true;
-			//device.Clear(ClearFlags.ZBuffer, 0, 1.0f, 0);
-			//device.Clear(ClearFlags.Target, Color.Black, 1.0f, 0);
-			//
-			//device.BeginScene();
-			////Grid
-			//device.VertexFormat = CustomVertex.PositionNormalColored.Format;
-			//device.RenderState.CullMode = Cull.None;
-			//device.SetTexture(0, null);
-			//device.RenderState.AlphaBlendEnable = false;
-			//device.RenderState.FillMode = debugObjs[0].IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
-			//device.SetStreamSource(0, debugObjs[0].VertexBuffer, 0);
-			//device.Indices = debugObjs[0].IndexBuffer;
-			//device.Transform.World = debugObjs[0].Transform;
-			//device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, debugObjs[0].Indices.Length, 0, debugObjs[0].Indices.Length / 3);
-			//if (loaded)
-			//{
-			//	//Scene
-			//	device.RenderState.AlphaBlendEnable = false;
-			//	foreach (ToolObject tObj in higharchy)
-			//	{
-			//		if (tObj.Vertices != null)
-			//		{
-			//			device.VertexFormat = CustomVertex.PositionNormalTextured.Format;
-			//			device.RenderState.CullMode = Cull.Clockwise;
-			//			device.RenderState.FillMode = tObj.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
-			//			device.SetStreamSource(0, tObj.VertexBuffer, 0);
-			//			device.Indices = tObj.IndexBuffer;
-			//			if (tObj.Texture == null)
-			//				device.SetTexture(0, null);
-			//			else
-			//				device.SetTexture(0, tObj.Texture);
-			//			device.Transform.World = tObj.Transform;
-			//			device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Indices.Length, 0, tObj.Indices.Length / 3);
-			//		}
-			//		if (tObj.Collider != null && tObj.Collider.Visible == true)
-			//		{
-			//			device.VertexFormat = CustomVertex.PositionNormalColored.Format;
-			//			device.RenderState.CullMode = Cull.None;
-			//			device.RenderState.FillMode = tObj.Collider.IsWireFrame ? FillMode.WireFrame : FillMode.Solid;
-			//			device.SetStreamSource(0, tObj.Collider.VertexBuffer, 0);
-			//			device.Indices = tObj.Collider.IndexBuffer;
-			//			device.SetTexture(0, null);
-			//			if (tObj.ColliderType == "Sphere")
-			//				device.Transform.World = Matrix.Translation(tObj.Position) * tObj.Collider.Transform;
-			//			else
-			//				device.Transform.World = tObj.Collider.Transform * tObj.Transform;
-			//			device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj.Collider.Indices.Length, 0, tObj.Collider.Indices.Length / 3);
-			//		}
-			//	}
-			//}
-			////Axis Gizmo
-			//device.Clear(ClearFlags.ZBuffer, 0, 1.0f, 0);
-			//if (selectedObject != null)
-			//{
-			//	device.VertexFormat = CustomVertex.PositionNormalColored.Format;
-			//	device.RenderState.CullMode = Cull.None;
-			//	device.SetTexture(0, null);
-			//	device.RenderState.AlphaBlendEnable = true;
-			//	float scale = (cameraPos - selectedObject.Position).Length();
-			//	gizmoScale = Matrix.Scaling(Vector3.Maximize(new Vector3(scale, scale, scale) * 0.05f, new Vector3(0.05f, 0.05f, 0.05f)));
-			//	foreach (ToolObjectColor tObj2 in debugObjs[1].Children)
-			//	{
-			//		device.RenderState.FillMode = FillMode.Solid;
-			//		device.SetStreamSource(0, tObj2.VertexBuffer, 0);
-			//		device.Indices = tObj2.IndexBuffer;
-			//		device.Transform.World = gizmoScale * Matrix.Translation(selectedObject.Position) * debugObjs[1].Transform * tObj2.Transform;
-			//		device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, tObj2.Indices.Length, 0, tObj2.Indices.Length / 3);
-			//	}
-			//}
-			//device.EndScene();
-			//
-			//device.Present();
-			//device.RenderState.ZBufferEnable = false;
-			//device.RenderState.UseWBuffer = true;
-			//UpdateKeyboardInput();
 		}
 
 		private void graphicsPanel1_MouseLeave(object sender, EventArgs e)
@@ -258,39 +183,69 @@ namespace Hourglass
 				return;
 			}
 			// Todo add movement controls.
-			KeyboardState keys = mKeyboard.GetCurrentKeyboardState();
-
+			mPreviousKeys = mKeys;
+			mKeys = new List<Key>(mKeyboard.GetPressedKeys());
 			if (btnFocus.ContainsFocus)
 			{
 				// Lateral movement, only if no Control key is held down.
-				if (!keys[Key.LeftControl] && !keys[Key.RightControl])
+				if (!mKeys.Contains(Key.LeftControl) && !mKeys.Contains(Key.RightControl))
 				{
-					if (keys[Key.W])
+					if (mKeys.Contains(Key.W))
 					{
 						Renderer.Instance.CameraPosition -= Renderer.Instance.Forward * 0.1f;
 					}
-					if (keys[Key.S])
+					if (mKeys.Contains(Key.S))
 					{
 						Renderer.Instance.CameraPosition += Renderer.Instance.Forward * 0.1f;
 					}
-					if (keys[Key.A])
+					if (mKeys.Contains(Key.A))
 					{
 						Renderer.Instance.CameraPosition -= Renderer.Instance.Right * 0.1f;
 					}
-					if (keys[Key.D])
+					if (mKeys.Contains(Key.D))
 					{
 						Renderer.Instance.CameraPosition += Renderer.Instance.Right * 0.1f;
 					}
-					if (keys[Key.Space])
+					if (mKeys.Contains(Key.Space))
 					{
 						Renderer.Instance.CameraPosition += Renderer.Instance.Up * 0.1f;
 					}
-					if (keys[Key.LeftShift] || keys[Key.RightShift])
+					if (mKeys.Contains(Key.LeftShift )|| mKeys.Contains(Key.RightShift))
 					{
 						Renderer.Instance.CameraPosition -= Renderer.Instance.Up * 0.1f;
 					}
-				} // END Not holding control keys
-			} // Ensure the Grapics Panel's focus textbox is selected.
+				} // END Not holding control
+			}  // Ensure the Grapics Panel's focus textbox is selected.
+			else if (Tree.ContainsFocus)
+			{
+				// If the tree is focused and we press delete, destroy the current node and object.
+				// Check the previous key state to ensure we don't delete more than one per press.
+				if (!mKeys.Contains(Key.LeftControl) && !mKeys.Contains(Key.RightControl))
+				{
+					if (mKeys.Contains(Key.Delete) && !mPreviousKeys.Contains(Key.Delete))
+					{
+						if (Tree.SelectedNode != null)
+						{
+							RemoveTreeNode(Tree.SelectedNode);
+							Tree_AfterSelect(null, null);
+							btnFocus.Select();
+						}
+					}
+				}
+			}
+			mPreviousKeys = mKeys;
+		}
+
+		private void RemoveTreeNode(TreeNode n)
+		{
+			BaseObject b = (BaseObject)n.Tag;
+			b.Delete();
+			Renderer.Instance.RemoveObject(b);
+			for (int i = n.Nodes.Count - 1; i >= 0; --i)
+			{
+				RemoveTreeNode(n.Nodes[i]);
+			}
+			Tree.Nodes.Remove(n);
 		}
 
 		private void RightToggle_Click(object sender, EventArgs e)
@@ -427,14 +382,13 @@ namespace Hourglass
 			spWorldView.Panel2.Controls.Clear();
 			// Needed to keep the component button on the side panel.
 			spWorldView.Panel2.Controls.Add(btnComponentAdd);
-			BaseObject obj = (BaseObject)Tree.SelectedNode.Tag;
-			if (obj == null)
+			if (Tree.SelectedNode != null)
 			{
-				Debug.Print("AfterSelect object is null!");
-			}
-			for (int i = 0; i < obj.GetComponents().Count; ++i)
-			{
-				spWorldView.Panel2.Controls.Add(obj.GetComponents()[i].GetGroupbox());
+				BaseObject obj = (BaseObject)Tree.SelectedNode.Tag;
+				for (int i = 0; i < obj.GetComponents().Count; ++i)
+				{
+					spWorldView.Panel2.Controls.Add(obj.GetComponents()[i].GetGroupbox());
+				}
 			}
 		}
 
@@ -456,8 +410,13 @@ namespace Hourglass
 			TreeNode n = new TreeNode();
 			n.ContextMenuStrip = mObjectStrip;
 			BaseObject b = new BaseObject(n, "Empty Object");
+			if(_parent != null)
+			{
+				b.Parent = (BaseObject)_parent.Tag;
+			}
 			b.ComponentAdded += ObjectAddComponent;
 			b.ComponentRemoved += ObjectRemoveComponent;
+			Renderer.Instance.AddObject(b);
 			n.Tag = b;
 			if (_parent != null)
 			{
@@ -519,6 +478,11 @@ namespace Hourglass
 			btnFocus.Select();
 		}
 
+		private void graphicsPanel1_MouseDown(object sender, MouseEventArgs e)
+		{
+			btnFocus.Select();
+		}
+
 		private void Editor_ClientSizeChanged(object sender, EventArgs e)
 		{
 			// Ensure the graphics panel can't get too small.
@@ -536,6 +500,11 @@ namespace Hourglass
 
 		private void ReorderComponents(object sender, EventArgs e)
 		{
+			if(Tree.SelectedNode == null)
+			{
+				btnComponentAdd.Visible = false;
+				return;
+			}
 			Point position = new Point(AutoScrollPosition.X, AutoScrollPosition.Y);
 			int ControlWidth = ((Control)sender).ClientSize.Width;
 			HorizontalScroll.Value = 0;
@@ -562,6 +531,7 @@ namespace Hourglass
 			position.Y += 15;
 			position.X = btnComponentAdd.Left;
 			btnComponentAdd.Location = position;
+			btnComponentAdd.Visible = true;
 		}
 		
 
