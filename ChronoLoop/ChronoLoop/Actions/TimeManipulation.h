@@ -29,7 +29,7 @@ namespace Epoch
 		static BaseObject* mCurCloneHeadset;
 		static BaseObject* mCurCloneController1;
 		static BaseObject* mCurCloneController2;
-		bool mIsBeingMade = false;
+		static bool mIsBeingMade;
 
 		std::string mTextures[10] = { "../Resources/CloneTexture.png",
 			"../Resources/CloneTexture_Green.png",

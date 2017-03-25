@@ -15,6 +15,7 @@ namespace Epoch
 	BaseObject* TimeManipulation::mCurCloneController1 = nullptr;
 	BaseObject* TimeManipulation::mCurCloneController2 = nullptr;
 	BaseObject* TimeManipulation::mCurCloneHeadset = nullptr;
+	bool TimeManipulation::mIsBeingMade = false;
 
 	TimeManipulation::TimeManipulation() {
 	}
