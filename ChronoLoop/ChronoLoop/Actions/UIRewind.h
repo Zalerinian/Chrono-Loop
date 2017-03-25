@@ -13,7 +13,7 @@ namespace Epoch
 		bool once = false;
 		virtual void Update()
 		{
-			if (/*VRInputManager::GetInstance().GetController(ControllerType::eControllerType_Primary).CheckGesture() == -1*/ GetAsyncKeyState(VK_LEFT) & 1)
+			if (VRInputManager::GetInstance().GetController(ControllerType::eControllerType_Primary).CheckGesture() == -1 /*GetAsyncKeyState(VK_LEFT) & 1*/)
 			{
 				if (!once)
 				{
@@ -23,7 +23,7 @@ namespace Epoch
 				mObject->GetTransform().SetMatrix(mObject->GetTransform().GetMatrix().RotateInPlace(vec3f(0, 1, 0), 0.261799f));
 				
 			}
-			else if (/*VRInputManager::GetInstance().GetController(ControllerType::eControllerType_Primary).CheckGesture() == 1*/GetAsyncKeyState(VK_RIGHT) & 1)
+			else if (VRInputManager::GetInstance().GetController(ControllerType::eControllerType_Primary).CheckGesture() == 1 /*GetAsyncKeyState(VK_RIGHT) & 1*/)
 			{
 				if (once)
 				{

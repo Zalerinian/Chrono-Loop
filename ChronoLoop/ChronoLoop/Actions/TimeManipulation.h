@@ -29,7 +29,6 @@ namespace Epoch
 		static BaseObject* mCurCloneHeadset;
 		static BaseObject* mCurCloneController1;
 		static BaseObject* mCurCloneController2;
-		static bool mIsBeingMade;
 
 		std::string mTextures[10] = { "../Resources/CloneTexture.png",
 			"../Resources/CloneTexture_Green.png",
@@ -43,6 +42,7 @@ namespace Epoch
 			"../Resources/CloneTexture_Grey.png" };
 
 	public:
+		static bool mIsBeingMade;
 		TimeManipulation();
 		TimeManipulation(ControllerType _t) { mControllerRole = _t; };
 		~TimeManipulation();

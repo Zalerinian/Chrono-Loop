@@ -13,15 +13,15 @@ namespace Epoch
 		bool once = false;
 		virtual void Update()
 		{
-			if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator(). /*(GetAsyncKeyState(VK_UP))*/)
+			if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->mIsBeingMade)
 			{
-				((MeshComponent*)mObject->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+				((MeshComponent*)mObject->GetComponentIndexed(eCOMPONENT_MESH, 0))->AddTexture("../Resources/minus.png", eTEX_DIFFUSE);
 				once = false;
 			}
 			else if (!once)
 			{
 				once = true;
-				((MeshComponent*)mObject->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
+				((MeshComponent*)mObject->GetComponentIndexed(eCOMPONENT_MESH, 0))->AddTexture("../Resources/plus.png", eTEX_DIFFUSE);
 			}
 		}
 	};

@@ -10,6 +10,7 @@
 #include "..\Actions\CCPauseToCancel.h"
 #include "..\Actions\CCTeleToPlay.h"
 #include "..\Actions\CCDisplayOnPause.h"
+#include "..\Actions\UICreateToDeleteClone.h"
 
 namespace Epoch 
 {
@@ -60,7 +61,7 @@ namespace Epoch
 					//new stuff
 					Transform identity, t;
 					t.SetMatrix(matrix4::CreateXRotation(DirectX::XM_PI / 2) * matrix4::CreateTranslation(8.8f, 1.3f, -4.75f));
-					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", t);
+					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", identity);
 					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity); 
 					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
@@ -170,7 +171,9 @@ namespace Epoch
 					MeshComponent* cphdisp = new MeshComponent("../Resources/help.obj");
 					cphdisp->AddTexture("../Resources/plus.png", eTEX_DIFFUSE);
 					CCDisplayOnPause* cpdop = new CCDisplayOnPause();
+					UICreateToDeleteClone* cd = new UICreateToDeleteClone();
 					clonePlus->AddComponent(cpdop);
+					clonePlus->AddComponent(cd);
 					clonePlus->AddComponent(cphdisp);
 					clonePlus->SetParent(RightController);
 					RightController->AddChild(clonePlus);

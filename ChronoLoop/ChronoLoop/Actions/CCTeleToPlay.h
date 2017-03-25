@@ -12,7 +12,7 @@ namespace Epoch
 		bool once = false;
 		virtual void Update()
 		{
-			if (/*LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->isTimePaused()*/ (GetAsyncKeyState(VK_SHIFT)))
+			if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->isTimePaused() /*(GetAsyncKeyState(VK_SHIFT))*/)
 			{
 				((MeshComponent*)mObject->GetComponentIndexed(eCOMPONENT_MESH, 0))->AddTexture("../Resources/play.png", eTEX_DIFFUSE);
 				once = false;
