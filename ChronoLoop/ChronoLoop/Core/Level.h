@@ -52,7 +52,7 @@ namespace Epoch
 
 		//**SETTERS**//
 		void SetId(unsigned short _set) { mId = _set; };
-		void SetHeadsetAndControllers(BaseObject*& _headset, BaseObject*& _controller1, BaseObject*& _controller2);
+		void SetHeadsetAndControllers(BaseObject*& _headset, BaseObject*& _controller1, BaseObject*& _controller2, bool _addNewHeadsetToLevel);
 		void SwapPlayerComponentIds(BaseObject *& _first, BaseObject*& _other);
 
 		//**FUNCTIONS**//

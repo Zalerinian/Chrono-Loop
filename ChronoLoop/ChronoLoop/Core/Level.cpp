@@ -131,7 +131,7 @@ namespace Epoch {
 		}
 	}
 
-	void Level::SetHeadsetAndControllers(BaseObject *& _headset, BaseObject *& _controller1, BaseObject *& _controller2) {
+	void Level::SetHeadsetAndControllers(BaseObject *& _headset, BaseObject *& _controller1, BaseObject *& _controller2, bool _addNewHeadsetToLevel) {
 		//Swap component ids
 		SwapPlayerComponentIds(mHeadset, _headset);
 		SwapPlayerComponentIds(mController1, _controller1);
@@ -173,11 +173,12 @@ namespace Epoch {
 		mController1->SetName(Controller1name);
 		mController2->SetName(Controller2name);
 	
-
-		mObjectList.push_back(_headset);
-		mObjectList.push_back(_controller1);
-		mObjectList.push_back(_controller2);
-
+		if (_addNewHeadsetToLevel)
+		{
+			mObjectList.push_back(_headset);
+			mObjectList.push_back(_controller1);
+			mObjectList.push_back(_controller2);
+		}
 		////Add the headset and controllers to the time manager with their new ids
 		TimeManager::Instance()->AddObjectToTimeline(mHeadset);
 		TimeManager::Instance()->AddObjectToTimeline(mController1);

@@ -101,8 +101,7 @@ namespace Epoch
 		void InitializeScreenBitmap();
 
 
-		void DrawTextToBitmap(float _left, float _top, float _right, float _bottom,
-													Font _font, std::wstring _text, ID2D1Bitmap* _bitmap);
+		void DrawTextToBitmap(float _left, float _top, float _right, float _bottom, Font _font, std::wstring _text, ID2D1Bitmap* _bitmap);
 		void DrawRectangleToBitmap(float _left, float _top, float _right, float _bottom, D2D1::ColorF _color, ID2D1Bitmap* _bitmap);
 		ID2D1Bitmap1* CreateBitmapForTexture(ID3D11Texture2D* _texture);
 

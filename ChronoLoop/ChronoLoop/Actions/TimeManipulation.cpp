@@ -54,7 +54,7 @@ namespace Epoch
 				//Remove the clone created
 				if (mCurCloneHeadset && mCurCloneController1 && mCurCloneController2)
 				{
-					currentLevel->SetHeadsetAndControllers(mCurCloneHeadset, mCurCloneController1, mCurCloneController2);
+					currentLevel->SetHeadsetAndControllers(mCurCloneHeadset, mCurCloneController1, mCurCloneController2,false);
 					TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneHeadset);
 					TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController1);
 					TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController2);
@@ -150,11 +150,16 @@ namespace Epoch
 					if (mCurCloneHeadset && mCurCloneController1 && mCurCloneController2)
 					{
 						//switch with the headset to get our old info back and delete temp clone
-						currentLevel->SetHeadsetAndControllers(mCurCloneHeadset, mCurCloneController1, mCurCloneController2);
+						currentLevel->SetHeadsetAndControllers(mCurCloneHeadset, mCurCloneController1, mCurCloneController2,false);
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneHeadset);
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController1);
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController2);
 						TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueID());
+
+						//set the player headset and controllers birth back
+						TimeManager::Instance()->SetCreationTimeofClone(cLevel->GetLeftController()->GetUniqueID(), cLevel->GetRightController()->GetUniqueID(), cLevel->GetHeadset()->GetUniqueID());
+						//Update the made time of the old headset and controllers
+						TimeManager::Instance()->UpdateCloneMadeTime(cLevel->GetLeftController()->GetUniqueID(), cLevel->GetRightController()->GetUniqueID(), cLevel->GetHeadset()->GetUniqueID());
 
 						//rewind time after that was done to correctly update the player
 						TimeManager::Instance()->RewindTimeline(
@@ -198,7 +203,9 @@ namespace Epoch
 			{
 				if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->RaycastCloneCheck() == false && 
 				LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->RaycastCloneCheck() == false)
-				mIsBeingMade = !mIsBeingMade;
+				{
+				mIsBeingMade = !mIsBeingMade;	
+				}
 			//TODO PAT: Update const buffer to make clone transparent or opaque
 			}
 		}
@@ -236,7 +243,7 @@ namespace Epoch
 		//
 		//Make a clone 3 seconds ago.
 		TimeManager::Instance()->RewindMakeClone(TimeManager::Instance()->GetCurrentSnapFrame(), _headset, _controller1, _controller2);
-		currentLevel->SetHeadsetAndControllers(_headset, _controller1, _controller2);
+		currentLevel->SetHeadsetAndControllers(_headset, _controller1, _controller2,true);
 	
 		//new Objects are added to the timeline to update the old player BaseObject pointers
 		TimeManager::Instance()->UpdatePlayerObjectInTimeline(_headset);
@@ -276,6 +283,7 @@ namespace Epoch
 					}
 				}
 			}
+			return false;
 		}
 	
 } // Epoch Namespace
