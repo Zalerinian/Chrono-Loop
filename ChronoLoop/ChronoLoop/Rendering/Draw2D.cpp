@@ -19,8 +19,6 @@ namespace Epoch
 		(*mGIDevice)->Release();
 		(*mContext2D)->Release();
 		(*mDWrite)->Release();
-		(*mTextformat)->Release();
-		(*mBrush)->Release();
 		(*mScreenBitmap)->Release();
 
 		mTextFactory.reset();
@@ -28,9 +26,25 @@ namespace Epoch
 		mGIDevice.reset();
 		mContext2D.reset();
 		mDWrite.reset();
-		mTextformat.reset();
-		mBrush.reset();
 		mScreenBitmap.reset();
+
+		for (std::pair<unsigned int, std::pair<Font, IDWriteTextFormat*>> x : mFonts)
+		{
+			x.second.second->Release();
+			delete &x.second.first;
+			
+		}
+		for (std::pair<unsigned int, std::pair<D2D1::ColorF, ID2D1SolidColorBrush*>> x : mColorBrushes)
+		{
+			x.second.second->Release();
+		}
+		for (std::pair<ID3D11Texture2D*, ID2D1Bitmap1*> x : mBitmaps)
+		{
+			x.second->Release();
+			x.first->Release();
+			
+		}
+
 	}
 
 	Draw & Draw::Instance()
@@ -82,12 +96,6 @@ namespace Epoch
 	}
 	void Draw::InitializeScreenBitmap()
 	{
-		//ID3D11Texture2D* backbuffer2D;
-		//ThrowIfFailed((*mChain)->GetBuffer(0, IID_PPV_ARGS(&backbuffer2D)));
-
-		//sInstance->mScreenBitmap = make_shared<ID2D1Bitmap1*>(CreateBitmapForTexture(backbuffer2D));
-		//(*mContext2D)->SetTarget((*mScreenBitmap));
-
 		sInstance->mScreenBitmap = std::make_shared<ID2D1Bitmap1*>(CreateBitmapForTexture(Renderer::Instance()->GetRTViewTexture().Get()));
 	}
 	//////
@@ -101,11 +109,6 @@ namespace Epoch
 			if (x.second.first == _font)
 				return;
 		}
-		//for (std::pair <Font, IDWriteTextFormat*> x : mFonts)
-		//{
-		//	if (x.first == _font)
-		//		return;
-		//}
 		CreateNewTextFormat(_font);
 	}
 	//////
@@ -133,12 +136,16 @@ namespace Epoch
 			if (x.second.first == _font)
 				return x.second.second;
 		}
-		//for (std::pair<Font, IDWriteTextFormat*> x : mFonts)
-		//{
-		//	if (x.first == _font)
-		//		return x.second;
-		//}
 		return CreateNewTextFormat(_font);
+	}
+	ID2D1Bitmap1* Draw::GetBitMap(ID3D11Texture2D* _texture)
+	{
+		for(std::pair<ID3D11Texture2D*, ID2D1Bitmap1*> x : mBitmaps)
+		{
+			if (x.first == _texture)
+				return x.second;
+		}
+		return CreateNewBitmap(_texture);
 	}
 	ID2D1SolidColorBrush * Draw::CreateNewBrush(D2D1::ColorF _color)
 	{
@@ -168,7 +175,13 @@ namespace Epoch
 
 		return WriteFormat;
 	}
-
+	ID2D1Bitmap1* Draw::CreateNewBitmap(ID3D11Texture2D* _texture)
+	{
+		ID2D1Bitmap1* mtempBitmap;
+		mtempBitmap = CreateBitmapForTexture(_texture);
+		mBitmaps.insert({_texture,mtempBitmap});
+		return mtempBitmap;
+	}
 	void Draw::DrawTextToBitmap(float _left, float _top, float _right, float _bottom,
 															Font _font, std::wstring _text, ID2D1Bitmap* _bitmap)
 	{

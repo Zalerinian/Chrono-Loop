@@ -30,20 +30,17 @@ namespace Epoch
 		{
 			mFontName = _fontName;
 			mFontSize = _fontSize;
-			//SetColor(mColor,_color);
+			mTextAlignment = DWRITE_TEXT_ALIGNMENT_CENTER;
+			mParagraphAlignment = DWRITE_PARAGRAPH_ALIGNMENT_CENTER;
 		}
 		Font(wchar_t _fontName[], float _fontSize, D2D1::ColorF _color, DWRITE_TEXT_ALIGNMENT _TextAlignment, DWRITE_PARAGRAPH_ALIGNMENT _ParagraphAlignment) : mColor(_color)
 		{
 			mFontName = _fontName;
 			mFontSize = _fontSize;
-			//SetColor(mColor, _color);
 			mTextAlignment = _TextAlignment;
 			mParagraphAlignment = _ParagraphAlignment;
 		}
-		~Font()
-		{
-			
-		}
+		~Font(){}
 		bool operator==(Font _equals)
 		{
 			if (this->mFontName == _equals.mFontName &&
@@ -66,22 +63,23 @@ namespace Epoch
 		std::shared_ptr<IDXGIDevice*> mGIDevice;
 		std::shared_ptr<ID2D1DeviceContext*>mContext2D;
 		std::shared_ptr<IDWriteFactory*> mDWrite;
-		std::shared_ptr<IDWriteTextFormat*>mTextformat;
-		std::shared_ptr<ID2D1DCRenderTarget*> m2DRenderTarget;
-		std::shared_ptr<ID2D1SolidColorBrush*>mBrush;
+
 		std::shared_ptr<ID2D1Bitmap1*>mScreenBitmap;
 
-		//std::unordered_map<Font, IDWriteTextFormat*> mFonts;
 		unsigned int mFontIDs;
 		std::unordered_map<unsigned int, std::pair<Font, IDWriteTextFormat*>> mFonts;
 		IDWriteTextFormat* CreateNewTextFormat(Font _font);
 		void ProcessFont(Font _font);
 
-		//std::unordered_map<D2D1::ColorF,ID2D1SolidColorBrush*> mColorBrushes;
 		unsigned int mColorIDs;
 		std::unordered_map<unsigned int, std::pair<D2D1::ColorF, ID2D1SolidColorBrush*>> mColorBrushes;
 		ID2D1SolidColorBrush* CreateNewBrush(D2D1::ColorF _color);
 		bool isColorSame(D2D1::ColorF _color1, D2D1::ColorF _color2);
+
+
+		std::unordered_map<ID3D11Texture2D*, ID2D1Bitmap1*> mBitmaps;
+		ID2D1Bitmap1* CreateNewBitmap(ID3D11Texture2D* _texture);
+		ID2D1Bitmap1* CreateBitmapForTexture(ID3D11Texture2D* _texture);
 
 	public:
 		Draw();
@@ -89,13 +87,14 @@ namespace Epoch
 		static Draw& Instance();
 		static void DestroyInstance();
 
-		inline std::shared_ptr<ID2D1Device*> GetDevice2D() { return mDevice2D; }
-		inline std::shared_ptr<ID2D1DeviceContext*> GetContext2D() { return mContext2D; }
-		inline std::shared_ptr<ID2D1Bitmap1*> GetScreenBitmap() { return mScreenBitmap; }
+		std::shared_ptr<ID2D1Device*> GetDevice2D() { return mDevice2D; }
+		std::shared_ptr<ID2D1DeviceContext*> GetContext2D() { return mContext2D; }
+		std::shared_ptr<ID2D1Bitmap1*> GetScreenBitmap() { return mScreenBitmap; }
 
 
 		ID2D1SolidColorBrush* GetBrush(D2D1::ColorF _color);
 		IDWriteTextFormat* GetTextFormat(Font _font);
+		ID2D1Bitmap1* GetBitMap(ID3D11Texture2D* _texture);
 
 		void InitializeDirect2D();
 		void InitializeScreenBitmap();
@@ -104,7 +103,7 @@ namespace Epoch
 		void DrawTextToBitmap(float _left, float _top, float _right, float _bottom,
 													Font _font, std::wstring _text, ID2D1Bitmap* _bitmap);
 		void DrawRectangleToBitmap(float _left, float _top, float _right, float _bottom, D2D1::ColorF _color, ID2D1Bitmap* _bitmap);
-		ID2D1Bitmap1* CreateBitmapForTexture(ID3D11Texture2D* _texture);
+		
 
 	};
 
