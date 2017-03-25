@@ -108,17 +108,13 @@
 			this.label18 = new System.Windows.Forms.Label();
 			this.label19 = new System.Windows.Forms.Label();
 			this.gbMeshComponent = new System.Windows.Forms.GroupBox();
-			this.button1 = new System.Windows.Forms.Button();
-			this.btnFileSelect = new System.Windows.Forms.Button();
-			this.textBox2 = new System.Windows.Forms.TextBox();
-			this.textBox1 = new System.Windows.Forms.TextBox();
+			this.cbMeshTexture = new System.Windows.Forms.ComboBox();
+			this.cbMeshObject = new System.Windows.Forms.ComboBox();
 			this.label20 = new System.Windows.Forms.Label();
 			this.label23 = new System.Windows.Forms.Label();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.button2 = new System.Windows.Forms.Button();
-			this.button3 = new System.Windows.Forms.Button();
-			this.textBox3 = new System.Windows.Forms.TextBox();
-			this.textBox4 = new System.Windows.Forms.TextBox();
+			this.btnColor = new System.Windows.Forms.Button();
+			this.cbColoredMeshObject = new System.Windows.Forms.ComboBox();
 			this.label21 = new System.Windows.Forms.Label();
 			this.label22 = new System.Windows.Forms.Label();
 			this.gbCollider.SuspendLayout();
@@ -1164,10 +1160,8 @@
 			// 
 			// gbMeshComponent
 			// 
-			this.gbMeshComponent.Controls.Add(this.button1);
-			this.gbMeshComponent.Controls.Add(this.btnFileSelect);
-			this.gbMeshComponent.Controls.Add(this.textBox2);
-			this.gbMeshComponent.Controls.Add(this.textBox1);
+			this.gbMeshComponent.Controls.Add(this.cbMeshTexture);
+			this.gbMeshComponent.Controls.Add(this.cbMeshObject);
 			this.gbMeshComponent.Controls.Add(this.label20);
 			this.gbMeshComponent.Controls.Add(this.label23);
 			this.gbMeshComponent.Dock = System.Windows.Forms.DockStyle.Top;
@@ -1179,45 +1173,21 @@
 			this.gbMeshComponent.Text = "[]Mesh Component";
 			this.gbMeshComponent.Visible = false;
 			// 
-			// button1
+			// cbMeshTexture
 			// 
-			this.button1.Location = new System.Drawing.Point(294, 20);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(26, 26);
-			this.button1.TabIndex = 14;
-			this.button1.Text = "...";
-			this.button1.UseVisualStyleBackColor = true;
+			this.cbMeshTexture.FormattingEnabled = true;
+			this.cbMeshTexture.Location = new System.Drawing.Point(90, 53);
+			this.cbMeshTexture.Name = "cbMeshTexture";
+			this.cbMeshTexture.Size = new System.Drawing.Size(227, 21);
+			this.cbMeshTexture.TabIndex = 9;
 			// 
-			// btnFileSelect
+			// cbMeshObject
 			// 
-			this.btnFileSelect.Location = new System.Drawing.Point(294, 50);
-			this.btnFileSelect.Name = "btnFileSelect";
-			this.btnFileSelect.Size = new System.Drawing.Size(26, 26);
-			this.btnFileSelect.TabIndex = 13;
-			this.btnFileSelect.Text = "...";
-			this.btnFileSelect.UseVisualStyleBackColor = true;
-			// 
-			// textBox2
-			// 
-			this.textBox2.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.textBox2.ForeColor = System.Drawing.SystemColors.ControlDark;
-			this.textBox2.Location = new System.Drawing.Point(90, 51);
-			this.textBox2.Margin = new System.Windows.Forms.Padding(0);
-			this.textBox2.Name = "textBox2";
-			this.textBox2.Size = new System.Drawing.Size(200, 24);
-			this.textBox2.TabIndex = 12;
-			this.textBox2.Text = "Texture File...";
-			// 
-			// textBox1
-			// 
-			this.textBox1.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.textBox1.ForeColor = System.Drawing.SystemColors.ControlDark;
-			this.textBox1.Location = new System.Drawing.Point(90, 21);
-			this.textBox1.Margin = new System.Windows.Forms.Padding(0);
-			this.textBox1.Name = "textBox1";
-			this.textBox1.Size = new System.Drawing.Size(200, 24);
-			this.textBox1.TabIndex = 8;
-			this.textBox1.Text = "Mesh File...";
+			this.cbMeshObject.FormattingEnabled = true;
+			this.cbMeshObject.Location = new System.Drawing.Point(90, 24);
+			this.cbMeshObject.Name = "cbMeshObject";
+			this.cbMeshObject.Size = new System.Drawing.Size(227, 21);
+			this.cbMeshObject.TabIndex = 8;
 			// 
 			// label20
 			// 
@@ -1239,10 +1209,8 @@
 			// 
 			// groupBox1
 			// 
-			this.groupBox1.Controls.Add(this.button2);
-			this.groupBox1.Controls.Add(this.button3);
-			this.groupBox1.Controls.Add(this.textBox3);
-			this.groupBox1.Controls.Add(this.textBox4);
+			this.groupBox1.Controls.Add(this.btnColor);
+			this.groupBox1.Controls.Add(this.cbColoredMeshObject);
 			this.groupBox1.Controls.Add(this.label21);
 			this.groupBox1.Controls.Add(this.label22);
 			this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
@@ -1254,45 +1222,23 @@
 			this.groupBox1.Text = "[]Mesh Component";
 			this.groupBox1.Visible = false;
 			// 
-			// button2
+			// btnColor
 			// 
-			this.button2.Location = new System.Drawing.Point(294, 20);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(26, 26);
-			this.button2.TabIndex = 14;
-			this.button2.Text = "...";
-			this.button2.UseVisualStyleBackColor = true;
+			this.btnColor.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnColor.Location = new System.Drawing.Point(90, 51);
+			this.btnColor.Name = "btnColor";
+			this.btnColor.Size = new System.Drawing.Size(227, 23);
+			this.btnColor.TabIndex = 9;
+			this.btnColor.Text = "Object Color";
+			this.btnColor.UseVisualStyleBackColor = true;
 			// 
-			// button3
+			// cbColoredMeshObject
 			// 
-			this.button3.Location = new System.Drawing.Point(294, 50);
-			this.button3.Name = "button3";
-			this.button3.Size = new System.Drawing.Size(26, 26);
-			this.button3.TabIndex = 13;
-			this.button3.Text = "...";
-			this.button3.UseVisualStyleBackColor = true;
-			// 
-			// textBox3
-			// 
-			this.textBox3.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.textBox3.ForeColor = System.Drawing.SystemColors.ControlDark;
-			this.textBox3.Location = new System.Drawing.Point(90, 51);
-			this.textBox3.Margin = new System.Windows.Forms.Padding(0);
-			this.textBox3.Name = "textBox3";
-			this.textBox3.Size = new System.Drawing.Size(200, 24);
-			this.textBox3.TabIndex = 12;
-			this.textBox3.Text = "Texture File...";
-			// 
-			// textBox4
-			// 
-			this.textBox4.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.textBox4.ForeColor = System.Drawing.SystemColors.ControlDark;
-			this.textBox4.Location = new System.Drawing.Point(90, 21);
-			this.textBox4.Margin = new System.Windows.Forms.Padding(0);
-			this.textBox4.Name = "textBox4";
-			this.textBox4.Size = new System.Drawing.Size(200, 24);
-			this.textBox4.TabIndex = 8;
-			this.textBox4.Text = "Mesh File...";
+			this.cbColoredMeshObject.FormattingEnabled = true;
+			this.cbColoredMeshObject.Location = new System.Drawing.Point(90, 24);
+			this.cbColoredMeshObject.Name = "cbColoredMeshObject";
+			this.cbColoredMeshObject.Size = new System.Drawing.Size(227, 21);
+			this.cbColoredMeshObject.TabIndex = 8;
 			// 
 			// label21
 			// 
@@ -1469,18 +1415,14 @@
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.GroupBox gbMeshComponent;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label23;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button btnFileSelect;
 		private System.Windows.Forms.GroupBox groupBox1;
-		private System.Windows.Forms.Button button2;
-		private System.Windows.Forms.Button button3;
-		private System.Windows.Forms.TextBox textBox3;
-		private System.Windows.Forms.TextBox textBox4;
 		private System.Windows.Forms.Label label21;
 		private System.Windows.Forms.Label label22;
+		private System.Windows.Forms.ComboBox cbMeshTexture;
+		private System.Windows.Forms.ComboBox cbMeshObject;
+		private System.Windows.Forms.Button btnColor;
+		private System.Windows.Forms.ComboBox cbColoredMeshObject;
 	}
 }

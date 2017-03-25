@@ -8,7 +8,7 @@ namespace Hourglass
 {
 	public class TexturedShape : RenderShape
 	{
-		public enum TextureType { Diffuse = 0, Normal, Specular, Emissive };
+		public enum TextureType { Diffuse = 0, Normal, Specular, Emissive, Max };
 		public BaseTexture[] mTextures = new BaseTexture[4];
 		public CustomVertex.PositionNormalTextured[] mVertices;
 
@@ -103,11 +103,19 @@ namespace Hourglass
 
 		public void SetTexture(TextureType location, BaseTexture t)
 		{
+			if(mTextures[(int)location] != null)
+			{
+				mTextures[(int)location].Dispose();
+			}
 			mTextures[(int)location] = t;
 		}
 
 		public void SetTexture(TextureType location, string file)
 		{
+			if (mTextures[(int)location] != null)
+			{
+				mTextures[(int)location].Dispose();
+			}
 			SetTexture(location, Renderer.Instance.LoadTexture(file));
 		}
 
@@ -138,6 +146,27 @@ namespace Hourglass
 
 			mIndexBuffer.SetData(mIndices, 0, LockFlags.None);
 			mVertexBuffer.SetData(mVertices, 0, LockFlags.None);
+		}
+
+		public override void Dispose()
+		{
+			if(mIndexBuffer != null)
+			{
+				mIndexBuffer.Dispose();
+				mIndexBuffer = null;
+			}
+			if (mVertexBuffer != null)
+			{
+				mVertexBuffer.Dispose();
+				mVertexBuffer = null;
+			}
+			for(TextureType t = TextureType.Diffuse; t < TextureType.Max; ++t)
+			{
+				if(mTextures[(int)t] != null)
+				{
+					mTextures[(int)t].Dispose();
+				}
+			}
 		}
 	}
 }

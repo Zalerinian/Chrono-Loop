@@ -148,6 +148,8 @@ namespace Hourglass
 			mGroupBox.Text = "Transform";
 			mGroupBox.Size = mGroupBox.PreferredSize;
 			OnMenuClick_Reset(null, null);
+
+			this.OwnerChanged += OnUpdateName;
 		}
 
 		public TransformComponent(string _name) : this()
@@ -232,6 +234,11 @@ namespace Hourglass
 					mOwner.Node.Text = mName.Text;
 				}
 			}
+		}
+
+		protected void OnUpdateName()
+		{
+			OnUpdateName(null, null);
 		}
 
 
