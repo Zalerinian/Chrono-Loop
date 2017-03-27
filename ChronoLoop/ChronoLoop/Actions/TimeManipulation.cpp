@@ -9,7 +9,7 @@
 #include "../Core/Pool.h"
 #include "TimeManipulation.h"
 #include "BoxSnapToControllerAction.hpp"
-
+#include "../Objects/TransparentMeshComponent.h"
 namespace Epoch
 {
 	BaseObject* TimeManipulation::mCurCloneController1 = nullptr;
