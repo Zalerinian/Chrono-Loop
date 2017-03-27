@@ -81,5 +81,16 @@ namespace Hourglass
 			byte term = 0;
 			w.Write(term);
 		}
+
+		public override void ReadData(BinaryReader r)
+		{
+			string filename = new string(r.ReadChars(r.ReadInt32()));
+			filename = filename.Substring(filename.LastIndexOf("\\"));
+			int index = mMesh.Items.IndexOf(filename);
+			if (index >= 0)
+			{
+				mMesh.SelectedIndex = index;
+			}
+		}
 	}
 }

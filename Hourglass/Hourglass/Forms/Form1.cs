@@ -240,11 +240,11 @@ namespace Hourglass
 				{
 					if (mKeys.Contains(Key.W))
 					{
-						Renderer.Instance.CameraPosition -= Renderer.Instance.Forward * 0.1f;
+						Renderer.Instance.CameraPosition += Renderer.Instance.Forward * 0.1f;
 					}
 					if (mKeys.Contains(Key.S))
 					{
-						Renderer.Instance.CameraPosition += Renderer.Instance.Forward * 0.1f;
+						Renderer.Instance.CameraPosition -= Renderer.Instance.Forward * 0.1f;
 					}
 					if (mKeys.Contains(Key.A))
 					{
@@ -376,7 +376,19 @@ namespace Hourglass
 
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			FileIO.openLevel();
+			OpenFileDialog o = new OpenFileDialog();
+			o.Filter = "Binary XML Files (*.xml)|*.xml";
+			o.FilterIndex = 1;
+			o.Title = "Open a level...";
+			if(o.ShowDialog() == DialogResult.OK)
+			{
+				FileIO.openLevel(o.FileName, Tree);
+				// Attach Object Handlers
+				for(int i = 0; i < Tree.Nodes.Count; ++i)
+				{
+					PostLoadAddHandlers(Tree.Nodes[i]);
+				}
+			}
 		}
 
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -475,6 +487,16 @@ namespace Hourglass
 				Tree.Nodes.Add(n);
 			}
 			return n;
+		}
+
+		private void PostLoadAddHandlers(TreeNode n)
+		{
+			for(int i = 0; i < n.Nodes.Count; ++i)
+			{
+				PostLoadAddHandlers(n.Nodes[i]);
+			}
+			((BaseObject)n.Tag).ComponentAdded += ObjectAddComponent;
+			((BaseObject)n.Tag).ComponentRemoved += ObjectRemoveComponent;
 		}
 
 		private void levelSettingsToolStripMenuItem_Click(object sender, EventArgs e)

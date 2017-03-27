@@ -91,5 +91,17 @@ namespace Hourglass
 			w.Write(term);
 		}
 
+		public override void ReadData(BinaryReader r)
+		{
+			base.ReadData(r);
+			string filename = new string(r.ReadChars(r.ReadInt32()));
+			filename = filename.Substring(filename.LastIndexOf("\\"));
+			int index = mTexture.Items.IndexOf(filename);
+			if (index >= 0)
+			{
+				mTexture.SelectedIndex = index;
+			}
+		}
+
 	}
 }

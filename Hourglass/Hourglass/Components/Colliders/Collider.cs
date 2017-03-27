@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Hourglass
@@ -172,6 +173,15 @@ namespace Hourglass
 			w.Write((float)mKineticFriction.Value);
 			w.Write((float)mElasticity.Value);
 			w.Write((float)mDrag.Value);
+		}
+
+		public override void ReadData(BinaryReader r)
+		{
+			mMass.Value            = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mStaticFriction.Value  = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mKineticFriction.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mElasticity.Value      = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mDrag.Value            = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 		}
 
 	}

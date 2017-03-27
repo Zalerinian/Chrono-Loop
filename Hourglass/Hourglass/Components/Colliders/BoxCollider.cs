@@ -222,11 +222,21 @@ namespace Hourglass {
 			w.Write((float)mScaleZ.Value);
 		}
 
-		//public override void ReadData()
-		//{
-		//	base.ReadData();
-		//	throw new NotImplementedException();
-		//}
+		public override void ReadData(System.IO.BinaryReader r)
+		{
+			base.ReadData(r);
+			mPosX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mPosY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mPosZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+
+			mRotX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mRotY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mRotZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+
+			mScaleX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mScaleY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mScaleZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+		}
 	}
 
 }

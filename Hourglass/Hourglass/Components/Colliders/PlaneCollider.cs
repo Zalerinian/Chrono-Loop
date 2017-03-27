@@ -118,6 +118,15 @@ namespace Hourglass
 			w.Write((float)mNZ.Value);
 		}
 
+		public override void ReadData(BinaryReader r)
+		{
+			base.ReadData(r);
+			mOffset.Value = (decimal)((float)r.ReadInt32());
+			mNX.Value = (decimal)((float)r.ReadInt32());
+			mNY.Value = (decimal)((float)r.ReadInt32());
+			mNZ.Value = (decimal)((float)r.ReadInt32());
+		}
+
 
 	}
 }

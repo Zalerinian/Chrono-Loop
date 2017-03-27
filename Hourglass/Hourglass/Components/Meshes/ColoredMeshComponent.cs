@@ -80,5 +80,11 @@ namespace Hourglass
 			base.WriteData(w);
 			w.Write(mColor.BackColor.ToArgb());
 		}
+
+		public override void ReadData(BinaryReader r)
+		{
+			base.ReadData(r);
+			mColor.BackColor = System.Drawing.Color.FromArgb(r.ReadInt32());
+		}
 	}
 }
