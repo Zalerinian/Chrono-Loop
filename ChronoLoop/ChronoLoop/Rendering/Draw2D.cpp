@@ -82,12 +82,6 @@ namespace Epoch
 	}
 	void Draw::InitializeScreenBitmap()
 	{
-		//ID3D11Texture2D* backbuffer2D;
-		//ThrowIfFailed((*mChain)->GetBuffer(0, IID_PPV_ARGS(&backbuffer2D)));
-
-		//sInstance->mScreenBitmap = make_shared<ID2D1Bitmap1*>(CreateBitmapForTexture(backbuffer2D));
-		//(*mContext2D)->SetTarget((*mScreenBitmap));
-
 		sInstance->mScreenBitmap = std::make_shared<ID2D1Bitmap1*>(CreateBitmapForTexture(Renderer::Instance()->GetRTViewTexture().Get()));
 	}
 	//////
