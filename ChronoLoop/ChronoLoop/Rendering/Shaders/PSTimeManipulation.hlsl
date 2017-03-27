@@ -1,3 +1,5 @@
+#include "../RenderShaderDefines.hlsli"
+
 texture2D tDiffuse : register(t0);
 SamplerState diffuseFilter : register(s0);
 
@@ -17,14 +19,14 @@ struct PSI {
 
 float4 main(PSI input) : SV_TARGET
 {
-	float4 diffuseColor = tDiffuse.Sample(diffuseFilter, float4(input.texCoord.xy,0,0));
+	float4 diffuseColor = tDiffuse.Sample(diffuseFilter, input.texCoord.xy);
 
 	diffuseColor.rgb = lerp(diffuseColor.rgb, dot(diffuseColor.rgb, desaturationColor.rgb), ratios.x);
 
 	float tintRatio = (ratios.y / fullRatios.y);
 	float4 fullColor = (float4(1, 1, 1, 1) * (1 - tintRatio));
 
-	diffuseColor.rgb *= fullColor + (tintColor.rgb * tintRatio);
+	diffuseColor.rgb *= fullColor.rgb + (tintColor.rgb * tintRatio);
 	diffuseColor.a = 1;
 
 

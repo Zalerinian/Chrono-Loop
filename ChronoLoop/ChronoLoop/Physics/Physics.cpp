@@ -713,6 +713,12 @@ namespace Epoch
 			int objs = (int)mObjects.size();
 			for (int i = 0; i < objs; ++i)
 			{
+
+#if DEBUG_LEVEL1
+				if (mObjects[i]->GetName() == "mmDoor")
+					((CodeComponent*)mObjects[i]->GetComponents(eCOMPONENT_CODE)[0])->OnTriggerEnter(*collider, *otherCol);
+#endif
+
 				Colliders = mObjects[i]->mComponents[eCOMPONENT_COLLIDER];
 				int cols = (int)Colliders.size();
 				for (int x = 0; x < cols; ++x)
@@ -834,9 +840,6 @@ namespace Epoch
 						}
 						else if (collider->mColliderType == Collider::eCOLLIDER_Cube)//Check CubeCollider's collision with other objects
 						{
-							//if (collider->mObject->GetName() == "mmDoor")
-							//	((CodeComponent*)codeComponents[0])->OnTriggerEnter(*collider, *otherCol);
-
 							CubeCollider* aabb1 = (CubeCollider*)collider;
 							for (int j = 0; j < objs; ++j)
 							{

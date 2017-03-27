@@ -1,6 +1,6 @@
 
 #include "../Objects/Component.h"
-#include "../Objects/MeshComponent.h"
+#include "../Objects/TransparentMeshComponent.h"
 #include "../Actions/CodeComponent.hpp"
 #include "../Objects/BaseObject.h"
 #include "../Core/LevelManager.h"
@@ -41,12 +41,7 @@ namespace Epoch
 		
 
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
-			/*int frameRewind = 30;
-			if (!TimeManager::Instance()->CheckRewindAvaliable(frameRewind))
-				return;
-
-			TimeManager::Instance()->RewindTimeline(TimeManager::Instance()->GetCurrentSnapFrame() - frameRewind, Level::Instance()->iGetHeadset()->GetUniqueID(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());
-			VRInputManager::GetInstance().RewindInputTimeline(TimeManager::Instance()->GetCurrentSnapFrame(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());*/
+			
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			if (mPauseTime) {
 				// Resume Time
@@ -96,12 +91,12 @@ namespace Epoch
 		// Update effect interpolator
 		if (mDesaturationInterpolator.GetActive()) {
 			RenderShape* quad = Renderer::Instance()->GetSceneQuad();
-			Renderer::Instance()->GetContext()->UpdateSubresource(quad->GetContext().mPixelCBuffers[ePB_SLOT2].Get(), 0, NULL, &mEffectData, 0, 0);
+			Renderer::Instance()->GetContext()->UpdateSubresource(quad->GetContext().mPixelCBuffers[ePB_CUSTOM1].Get(), 0, NULL, &mEffectData, 0, 0);
 		}
 		if (mDesaturationInterpolator.Update(TimeManager::Instance()->GetDeltaTime())) {
 			mDesaturationInterpolator.SetActive(false);
 			RenderShape* quad = Renderer::Instance()->GetSceneQuad();
-			Renderer::Instance()->GetContext()->UpdateSubresource(quad->GetContext().mPixelCBuffers[ePB_SLOT2].Get(), 0, NULL, &mEffectData, 0, 0);
+			Renderer::Instance()->GetContext()->UpdateSubresource(quad->GetContext().mPixelCBuffers[ePB_CUSTOM1].Get(), 0, NULL, &mEffectData, 0, 0);
 		}
 
 
@@ -207,7 +202,22 @@ namespace Epoch
 				{
 				mIsBeingMade = !mIsBeingMade;	
 				}
-			//TODO PAT: Update const buffer to make clone transparent or opaque
+
+				if(mCurCloneController1 && mCurCloneController2 && mCurCloneHeadset)
+				{
+					if(mIsBeingMade)
+					{
+						((TransparentMeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+						((TransparentMeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+						((TransparentMeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+					}
+					else
+					{
+						((TransparentMeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.5f);
+						((TransparentMeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.5f);
+						((TransparentMeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.5f);
+					}
+				}
 			}
 		}
 	}

@@ -6,6 +6,10 @@ namespace Hourglass
 {
     public class MeshComponent : Component
     {
+		//public delegate void dTextBoxUpdate(string value);
+		//public event dTextBoxUpdate MeshUpdated;
+		//public event dTextBoxUpdate TextureUpdated;
+
         protected System.Drawing.Font mPlaceholderFont, mActiveFont;
 
         protected Label mLbMesh, mLbDiffuse;
@@ -38,7 +42,7 @@ namespace Hourglass
             }
         }
 
-        public MeshComponent(BaseObject _owner) : base(_owner)
+        public MeshComponent() : base()
         {
             #region Component Creation
 
@@ -95,6 +99,7 @@ namespace Hourglass
             mMesh.Location = new System.Drawing.Point(90, 21);
             mMesh.Size = new System.Drawing.Size(ContentWidth - mMesh.Left - mMeshSelect.Width, 24);
             mMesh.Tag = new TextBoxTag(true, "Mesh File...");
+			mMesh.Enabled = false;
             mMesh.GotFocus += OnTextBoxGetFocus;
             mMesh.LostFocus += OnTextBoxLostFocus;
 
@@ -102,6 +107,7 @@ namespace Hourglass
             mDiffuse.Location = new System.Drawing.Point(90, 51);
             mDiffuse.Size = new System.Drawing.Size(ContentWidth - mDiffuse.Left - mDiffuseSelect.Width, 24);
             mDiffuse.Tag = new TextBoxTag(true, "Texture File...");
+			mDiffuse.Enabled = false;
             mDiffuse.GotFocus += OnTextBoxGetFocus;
             mDiffuse.LostFocus += OnTextBoxLostFocus;
 
@@ -115,12 +121,12 @@ namespace Hourglass
         protected override void OnMenuClick_Reset(object sender, EventArgs e)
         {
             mMesh.Text = "Mesh File...";
-            mMesh.Font = mPlaceholderFont;
+            mMesh.Font = PlaceholderFont;
             mMesh.ForeColor = System.Drawing.SystemColors.ControlDark;
             mMesh.Tag = new TextBoxTag(true, "Mesh File...");
 
             mDiffuse.Text = "Texture File...";
-            mDiffuse.Font = mPlaceholderFont;
+            mDiffuse.Font = PlaceholderFont;
             mDiffuse.ForeColor = System.Drawing.SystemColors.ControlDark;
             mDiffuse.Tag = new TextBoxTag(true, "Texture File...");
         }
@@ -137,7 +143,7 @@ namespace Hourglass
             {
                 TextBoxTag tag = ((TextBoxTag)tb.Tag);
                 tag.Placeholder = false;
-                tb.Font = mActiveFont;
+                tb.Font = ActiveFont;
                 tb.ForeColor = System.Drawing.SystemColors.ControlText;
                 tb.Text = "";
             }
