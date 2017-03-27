@@ -38,6 +38,10 @@ namespace Hourglass
 								reader.Read();
 								Settings.ProjectPath = reader.Value;
 								break;
+							case "BackgroundColor":
+								reader.Read();
+								Settings.BackgroundColor = Color.FromArgb(int.Parse(reader.Value));
+								break;
 							default:
 								Debug.Print("Unexpected element type: " + reader.Name);
 								break;
@@ -59,6 +63,7 @@ namespace Hourglass
 			writer.WriteStartElement("Settings");
 			writer.WriteElementString("SettingsVersion", Settings.SettingsVersion.ToString());
 			writer.WriteElementString("ProjectPath", Settings.ProjectPath);
+			writer.WriteElementString("BackgroundColor", Settings.BackgroundColor.ToArgb().ToString());
 			writer.WriteEndElement();
 
 			writer.Close();

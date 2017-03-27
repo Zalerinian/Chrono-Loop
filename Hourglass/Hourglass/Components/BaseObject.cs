@@ -20,6 +20,7 @@ namespace Hourglass
         protected List<Component> mComponents;
         protected BaseObject mParent = null;
         protected TreeNode mNode = null;
+		protected Matrix mWorld = Matrix.Identity;
 
         public string Name {
             get { return ((TransformComponent)mComponents[0]).Name; }
@@ -29,6 +30,15 @@ namespace Hourglass
         public TreeNode Node {
             get { return mNode; }
         }
+
+		public BaseObject Parent {
+			get {
+				return mParent;
+			}
+			set {
+				mParent = value;
+			}
+		}
 
         public BaseObject(TreeNode _node) : this(_node, "") {
         }
@@ -48,13 +58,13 @@ namespace Hourglass
 
 		public Matrix GetMatrix()
 		{
-			if (mParent != null && ImplementHierarchy)
+			if (mParent != null)
 			{
-				return ((TransformComponent)mComponents[0]).CreateMatrix() * mParent.GetMatrix();
+				return mWorld * mParent.GetMatrix();
 			}
 			else
 			{
-				return ((TransformComponent)mComponents[0]).CreateMatrix();
+				return mWorld;
 			}
 		}
 
@@ -85,7 +95,23 @@ namespace Hourglass
 
 		public void RelinquishControl()
 		{
-			((Editor)mNode.TreeView.FindForm()).btnFocus.Select();
+			if(mNode != null)
+			{
+				((Editor)mNode.TreeView.FindForm()).btnFocus.Select();
+			}
+		}
+
+		public void InvalidateMatrix()
+		{
+			mWorld = ((TransformComponent)mComponents[0]).CreateMatrix();
+		}
+
+		public void Delete()
+		{
+			for(int i = mComponents.Count - 1; i >= 0 ; --i)
+			{
+				mComponents[i].OnMenuClick_Delete(null, null);
+			}
 		}
     }
 }

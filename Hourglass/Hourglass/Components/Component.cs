@@ -103,13 +103,13 @@ namespace Hourglass
 			}
 		}
 
-        protected virtual void OnMenuClick_Delete(object sender, EventArgs e)
+        public virtual void OnMenuClick_Delete(object sender, EventArgs e)
         {
             Owner.RemoveComponent(this);
 			ReleaseControl();
 		}
 
-        protected virtual void OnMenuClick_Reset(object sender, EventArgs e)
+        public virtual void OnMenuClick_Reset(object sender, EventArgs e)
         {
             MessageBox.Show("Someone was lazy and didn't implement the Reset option for this component.",
                 "Error: ID10-T",

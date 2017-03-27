@@ -3,12 +3,19 @@ using System.Windows.Forms;
 
 namespace Hourglass
 {
-    public class MeshComponent : Component
+    public class MeshComponent : Component, IRenderable
     {
         protected System.Drawing.Font mPlaceholderFont, mActiveFont;
 
         protected Label mLbMesh, mLbDiffuse;
 		protected ComboBox mMesh;
+		protected RenderShape mShape = null;
+
+		public RenderShape Shape {
+			get {
+				return mShape;
+			}
+		}
 
         public MeshComponent(int _yOffset = 0) : base()
         {
@@ -54,9 +61,13 @@ namespace Hourglass
             OnMenuClick_Reset(null, null);
         }
 
-        protected override void OnMenuClick_Reset(object sender, EventArgs e)
+        public override void OnMenuClick_Reset(object sender, EventArgs e)
         {
             mMesh.SelectedIndex = -1;
+			if(mShape != null)
+			{
+				mShape.Dispose();
+			}
 			ReleaseControl();
 		}
     }
