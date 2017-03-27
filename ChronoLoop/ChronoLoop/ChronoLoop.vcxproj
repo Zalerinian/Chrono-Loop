@@ -215,6 +215,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Actions\TeleportAction.hpp" />
     <ClInclude Include="Actions\TimelineIndicator.hpp" />
     <ClInclude Include="Actions\TimeManipulation.h" />
+    <ClInclude Include="Actions\UIClonePlusToMinus.h" />
     <ClInclude Include="Actions\UICreateToDeleteClone.h" />
     <ClInclude Include="Actions\UIRewind.h" />
     <ClInclude Include="Actions\WhatInHellAmIHitting.hpp" />

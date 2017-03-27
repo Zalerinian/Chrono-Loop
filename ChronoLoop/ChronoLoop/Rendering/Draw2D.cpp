@@ -253,7 +253,7 @@ namespace Epoch
 				0		//defaults to 96
 			);
 
-		IDXGISurface* surface;
+		IDXGISurface* surface = nullptr;
 		Renderer::Instance()->ThrowIfFailed(_texture->QueryInterface(IID_IDXGISurface, (void**)&surface));
 
 		ID2D1Bitmap1* bitmap;

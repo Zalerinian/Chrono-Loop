@@ -11,6 +11,12 @@
 #include "..\Actions\CCTeleToPlay.h"
 #include "..\Actions\CCDisplayOnPause.h"
 #include "..\Actions\UICreateToDeleteClone.h"
+#include "..\Actions\UIClonePlusToMinus.h"
+#include "..\Rendering\Draw2D.h"
+#include "..\Rendering\Renderer.h"
+#include "..\Rendering\TextureManager.h"
+#include <wrl\client.h>
+
 
 namespace Epoch 
 {
@@ -61,7 +67,7 @@ namespace Epoch
 					//new stuff
 					Transform identity, t;
 					t.SetMatrix(matrix4::CreateXRotation(DirectX::XM_PI / 2) * matrix4::CreateTranslation(8.8f, 1.3f, -4.75f));
-					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", identity);
+					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", t);
 					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity); 
 					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
@@ -120,7 +126,35 @@ namespace Epoch
 					t.SetMatrix(matrix4::CreateTranslation(0.073f, -0.016f, -0.043f));
 					BaseObject *cloneDisplay = Pool::Instance()->iGetObject()->Reset("cloneDisplay", t);
 					MeshComponent* cdisp = new MeshComponent("../Resources/UIClone.obj");
-					cdisp->AddTexture("../Resources/rewind.png", eTEX_DIFFUSE);
+					//cdisp->AddTexture("../Resources/clear.png", eTEX_DIFFUSE);
+
+					HRESULT hr;
+					Microsoft::WRL::ComPtr<ID3D11Texture2D> screenTex;
+					D3D11_TEXTURE2D_DESC bitmapDesc;
+					bitmapDesc.Width = 256;
+					bitmapDesc.Height = 256;
+					bitmapDesc.MipLevels = 1;
+					bitmapDesc.ArraySize = 1;
+					bitmapDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+					bitmapDesc.SampleDesc.Count = 1;
+					bitmapDesc.SampleDesc.Quality = 0;
+					bitmapDesc.Usage = D3D11_USAGE_DEFAULT;
+					bitmapDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+					bitmapDesc.CPUAccessFlags = 0;
+					bitmapDesc.MiscFlags = 0;
+
+
+					hr = Renderer::Instance()->GetDevice()->CreateTexture2D(&bitmapDesc, nullptr, screenTex.GetAddressOf());
+					Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
+					std::string str("Clone Display");
+					TextureManager::Instance()->iAddTexture2D(str, screenTex, &srv);
+					cdisp->AddTexture(str.c_str(), eTEX_DIFFUSE);
+
+					Font* font = new Font();
+					font->mFontSize = 100;
+					Draw::Instance().DrawTextToBitmap(0, 0, 256, 256, *font, L"WEEB", Draw::Instance().GetBitmap(screenTex.Get()));
+
+					cdisp->GetContext().mTextures[eTEX_DIFFUSE] = srv;
 					cloneDisplay->AddComponent(cdisp);
 					cloneDisplay->SetParent(RightController);
 					RightController->AddChild(cloneDisplay);
@@ -159,8 +193,10 @@ namespace Epoch
 					t.SetMatrix(matrix4::CreateTranslation(0.032f, -0.03f, 0.047f));
 					BaseObject *cloneHelp = Pool::Instance()->iGetObject()->Reset("cloneHelp", t);
 					MeshComponent* chdisp = new MeshComponent("../Resources/help.obj");
-					chdisp->AddTexture("../Resources/clone.png", eTEX_DIFFUSE);
+					chdisp->AddTexture("../Resources/createClone.png", eTEX_DIFFUSE);
 					CCDisplayOnPause* cdop = new CCDisplayOnPause();
+					UICreateToDeleteClone* cd = new UICreateToDeleteClone();
+					cloneHelp->AddComponent(cd);
 					cloneHelp->AddComponent(cdop);
 					cloneHelp->AddComponent(chdisp);
 					cloneHelp->SetParent(RightController);
@@ -169,11 +205,11 @@ namespace Epoch
 					t.SetMatrix(matrix4::CreateScale(.5f, .5f, .5f) * matrix4::CreateTranslation(0.042f, -0.03f, 0.047f));
 					BaseObject *clonePlus = Pool::Instance()->iGetObject()->Reset("clonePlus", t);
 					MeshComponent* cphdisp = new MeshComponent("../Resources/help.obj");
-					cphdisp->AddTexture("../Resources/plus.png", eTEX_DIFFUSE);
+					cphdisp->AddTexture("../Resources/createClone.png", eTEX_DIFFUSE);
 					CCDisplayOnPause* cpdop = new CCDisplayOnPause();
-					UICreateToDeleteClone* cd = new UICreateToDeleteClone();
+					UIClonePlusToMinus* pm = new UIClonePlusToMinus();
+					clonePlus->AddComponent(pm);
 					clonePlus->AddComponent(cpdop);
-					clonePlus->AddComponent(cd);
 					clonePlus->AddComponent(cphdisp);
 					clonePlus->SetParent(RightController);
 					RightController->AddChild(clonePlus);
