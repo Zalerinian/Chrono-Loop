@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Diagnostics;
 using Microsoft.DirectX;
+using System.IO;
 
 namespace Hourglass
 {
@@ -47,6 +48,8 @@ namespace Hourglass
 
 		public TransformComponent(int _yOffset = 0) : base(false)
 		{
+			mType = ComponentType.Transform;
+
 			if (_yOffset != 0)
 			{
 				Debug.Print("A transform component has a Y-Offset. Wat.");
@@ -262,6 +265,26 @@ namespace Hourglass
 			OnUpdateName(null, null);
 		}
 
+		public override void WriteData(BinaryWriter w)
+		{
+			base.WriteData(w);
+			w.Write(mName.Text.Length + 1);
+			w.Write(mName.Text.ToCharArray());
+			byte nullTerm = 0;
+			w.Write(nullTerm);
+
+			w.Write((float)mPosX.Value);
+			w.Write((float)mPosY.Value);
+			w.Write((float)mPosZ.Value);
+
+			w.Write((float)mRotX.Value);
+			w.Write((float)mRotY.Value);
+			w.Write((float)mRotZ.Value);
+
+			w.Write((float)mScaleX.Value);
+			w.Write((float)mScaleY.Value);
+			w.Write((float)mScaleZ.Value);
+		}
 
 	}
 }

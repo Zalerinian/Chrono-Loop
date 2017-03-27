@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Hourglass
@@ -10,6 +11,8 @@ namespace Hourglass
 
 		public TexturedMeshComponent(int _yOffset = 0) : base(_yOffset)
 		{
+			mType = ComponentType.TexturedMesh;
+
 			#region Component Creation
 			mShape = new TexturedShape();
 
@@ -77,5 +80,16 @@ namespace Hourglass
 			base.OnMenuClick_Reset(sender, e);
 			mTexture.SelectedIndex = -1;
 		}
+
+		public override void WriteData(BinaryWriter w)
+		{
+			base.WriteData(w);
+			string s = (".." + ResourceManager.Instance.ResourceDirectory + mTexture.Text);
+			w.Write(s.Length + 1);
+			w.Write(s.ToCharArray());
+			byte term = 0;
+			w.Write(term);
+		}
+
 	}
 }

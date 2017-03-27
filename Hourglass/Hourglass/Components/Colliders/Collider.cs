@@ -164,6 +164,16 @@ namespace Hourglass
 			}
 		}
 
+		public override void WriteData(System.IO.BinaryWriter w)
+		{
+			base.WriteData(w);
+			w.Write((float)mMass.Value);
+			w.Write((float)mStaticFriction.Value);
+			w.Write((float)mKineticFriction.Value);
+			w.Write((float)mElasticity.Value);
+			w.Write((float)mDrag.Value);
+		}
+
 	}
 
 }

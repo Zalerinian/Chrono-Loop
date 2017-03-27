@@ -128,7 +128,7 @@ namespace Hourglass
 		public void Reposition()
 		{
 			Matrix position = (mAttached == null) ? Matrix.Identity : mAttached.GizmoWorld;
-			Matrix posX = Matrix.RotationY(-(float)(Math.PI / 2)) * position;
+			Matrix posX = Matrix.RotationY((float)(Math.PI / 2)) * position;
 			Matrix posY = Matrix.RotationX(-(float)(Math.PI / 2)) * position;
 			Matrix posZ = position;
 

@@ -24,7 +24,6 @@ namespace Hourglass
 		private List<long> advMillisecond = new List<long>();
 		private Vector3 cameraPos = new Vector3(0, 0, 0), prevHit = new Vector3(0, 0, 0), curHit = new Vector3(0, 0, 0);
 		private Vector2 prevMouse, curMouse;
-		private Vector3 mStartPos, mStartRot;
 		private string selectedName = string.Empty, colliderType = string.Empty, currentFile = string.Empty;
 		Matrix gizmoScale = Matrix.Identity;
 		Matrix rotate = Matrix.Identity;
@@ -71,10 +70,6 @@ namespace Hourglass
 			mFPSTimer.Start();
 			mRotationSpeed = 0.005f;
 			mMouseState = new MouseEventArgs(MouseButtons.None, 0, 0, 0, 0);
-
-			// Level settings McBootleg
-			mStartPos = new Vector3(0, 0, 0);
-			mStartRot = new Vector3(0, 0, 0);
 
 			spWorldView.Panel2.ControlAdded += ReorderComponents;
 			spWorldView.Panel2.ControlRemoved += ReorderComponents;
@@ -388,7 +383,7 @@ namespace Hourglass
 		{
 			if (currentFile != string.Empty)
 			{
-				FileIO.saveLevel(currentFile);
+				FileIO.saveLevel(currentFile, Tree);
 			}
 			else
 			{
@@ -399,7 +394,7 @@ namespace Hourglass
 				file.RestoreDirectory = true;
 				if (file.ShowDialog() == DialogResult.OK)
 				{
-					FileIO.saveLevel(file.FileName);
+					FileIO.saveLevel(file.FileName, Tree);
 				}
 			}
 		}
@@ -414,7 +409,7 @@ namespace Hourglass
 			if (saveFile.ShowDialog() == DialogResult.OK)
 			{
 				currentFile = saveFile.FileName;
-				FileIO.saveLevel(saveFile.FileName);
+				FileIO.saveLevel(saveFile.FileName, Tree);
 			}
 		}
 
@@ -485,12 +480,12 @@ namespace Hourglass
 		private void levelSettingsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			Forms.LevelSettingsForm settings = new Forms.LevelSettingsForm();
-			settings.SetPosition(mStartPos);
-			settings.SetRotation(mStartRot);
+			settings.SetPosition(Settings.StartPos);
+			settings.SetRotation(Settings.StartRot);
 			if (settings.ShowDialog() == DialogResult.OK)
 			{
-				mStartPos = settings.GetPosition();
-				mStartRot = settings.GetRotation();
+				Settings.StartPos = settings.GetPosition();
+				Settings.StartRot = settings.GetRotation();
 			}
 		}
 

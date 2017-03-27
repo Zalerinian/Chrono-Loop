@@ -14,9 +14,11 @@ namespace Hourglass
 	public static class FileIO
 	{
 
+		enum ObjectOperation { OP_NONE, OP_PUSH, OP_POP };
+
 		public static bool LoadSettings()
 		{
-			if(!File.Exists("settings.exs"))
+			if (!File.Exists("settings.exs"))
 			{
 				return false;
 			}
@@ -24,12 +26,12 @@ namespace Hourglass
 			s.DtdProcessing = DtdProcessing.Parse;
 			XmlReader reader = XmlReader.Create("settings.exs", s);
 			//reader.MoveToContent();
-			while(reader.Read())
+			while (reader.Read())
 			{
-				switch(reader.NodeType)
+				switch (reader.NodeType)
 				{
 					case XmlNodeType.Element:
-						switch(reader.Name)
+						switch (reader.Name)
 						{
 							case "SettingsVersion":
 								// Ignore this for now.
@@ -71,8 +73,55 @@ namespace Hourglass
 		}
 
 
-		public static void saveLevel(string file)
+		public static void saveLevel(string file, TreeView tree)
 		{
+			// Binary file writing.
+			FileStream fs = new FileStream(file, FileMode.Create);
+			using (BinaryWriter writer = new BinaryWriter(fs))
+			{
+				Int32 SettingsOffset = 0, ObjectsOffset = 0;
+				// Header
+				//  * File Writer Version
+				//  * Section offsets
+				writer.Write(1u);
+				// Section offsets are initially 0, but we need to reserve the space here, so write 0s.
+				// There is no offset for editor settings, as only the editor needs to know about these,
+				// and it is located immediately after the header.
+				writer.Write(0);
+				writer.Write(0);
+
+				// Editor settings
+				// TODO: Write editor data
+
+				// Level Settings
+				SettingsOffset = (Int32)writer.BaseStream.Position;
+				writer.Write(Settings.StartPos.X);
+				writer.Write(Settings.StartPos.Y);
+				writer.Write(Settings.StartPos.Z);
+
+				writer.Write(Settings.StartRot.X);
+				writer.Write(Settings.StartRot.Y);
+				writer.Write(Settings.StartRot.Z);
+
+
+				// Level Objects
+				writer.Write((byte)0x4B);
+				writer.Write((byte)0x4B);
+				writer.Write((byte)0x4B);
+				writer.Write((byte)0x4B);
+				ObjectsOffset = (Int32)writer.BaseStream.Position;
+				for (int i = 0; i < tree.Nodes.Count; ++i)
+				{
+					WriteObject(writer, tree.Nodes[i]);
+				}
+
+				writer.Seek(sizeof(Int32), SeekOrigin.Begin);
+				writer.Write(SettingsOffset);
+				writer.Write(ObjectsOffset);
+
+			}
+
+			#region XML Writing
 			//XmlWriterSettings settings = new XmlWriterSettings();
 			//settings.Indent = true;
 			//settings.OmitXmlDeclaration = true;
@@ -176,10 +225,49 @@ namespace Hourglass
 			//    writer.Close();
 			//    FileChanged = false;
 			//}
+			#endregion
+		}
+
+		private static void WriteObject(BinaryWriter w, TreeNode n)
+		{
+			// Format:
+			// Number of components
+			// all the components
+			// Object Operation (Push, Pop, None)
+			// repeat
+
+			BaseObject b = (BaseObject)n.Tag;
+			List<Component> comps = b.GetComponents();
+			w.Write(comps.Count);
+			for (int i = 0; i < comps.Count; ++i)
+			{
+				comps[i].WriteData(w);
+			}
+			if (n.Nodes.Count > 0)
+			{
+				// Write the push command, and the recurse through our children.
+				w.Write((byte)ObjectOperation.OP_PUSH);
+
+				for(int i = 0; i < n.Nodes.Count; ++i)
+				{
+					WriteObject(w, n.Nodes[i]);
+				}
+				// Now that children are done writing, overwrite the previous "none" command by the last object with no children
+				// with a pop command so that we follow "object, op, object, op" model.
+				w.Seek(-1, SeekOrigin.Current);
+				w.Write((byte)ObjectOperation.OP_POP);
+			}
+			else
+			{
+				// No children, write in the no-op command.
+				w.Write((byte)ObjectOperation.OP_NONE);
+			}
 		}
 
 		public static void openLevel()
 		{
+
+			#region XML Reading
 			//OpenFileDialog openFileDialog1 = new OpenFileDialog();
 			//OpenFileDialog openFileDialog2 = new OpenFileDialog();
 			//
@@ -434,6 +522,7 @@ namespace Hourglass
 			//        MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
 			//    }
 			//}
+			#endregion
 		}
 
 	}

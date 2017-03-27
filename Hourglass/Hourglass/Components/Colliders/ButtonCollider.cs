@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Hourglass
@@ -18,9 +19,11 @@ namespace Hourglass
 
         public ButtonCollider(int _yOffset = 0) : base()
         {
-            #region Component Creation
+			mType = ComponentType.ButtonCollider;
 
-            mLbPosition = new Label();
+			#region Component Creation
+
+			mLbPosition = new Label();
             mLbScale = new Label();
             mLbNormal = new Label();
             mLbMass = new Label();
@@ -174,5 +177,21 @@ namespace Hourglass
             mForce.Value = 0;
         }
 
-    }
+		public override void WriteData(BinaryWriter w)
+		{
+			base.WriteData(w);
+			w.Write((float)mMass.Value);
+			w.Write((float)mForce.Value);
+			w.Write((float)mPosX.Value);
+			w.Write((float)mPosY.Value);
+			w.Write((float)mPosZ.Value);
+			w.Write((float)mScaleX.Value);
+			w.Write((float)mScaleY.Value);
+			w.Write((float)mScaleZ.Value);
+			w.Write((float)mNX.Value);
+			w.Write((float)mNY.Value);
+			w.Write((float)mNZ.Value);
+		}
+
+	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Hourglass
@@ -70,5 +71,15 @@ namespace Hourglass
 			}
 			ReleaseControl();
 		}
-    }
+
+		public override void WriteData(BinaryWriter w)
+		{
+			base.WriteData(w);
+			string s = ".." + ResourceManager.Instance.ResourceDirectory + mMesh.Text;
+			w.Write(s.Length + 1);
+			w.Write(s.ToCharArray());
+			byte term = 0;
+			w.Write(term);
+		}
+	}
 }
