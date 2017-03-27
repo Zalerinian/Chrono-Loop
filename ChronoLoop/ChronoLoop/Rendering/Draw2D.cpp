@@ -134,6 +134,15 @@ namespace Epoch
 		//}
 		return CreateNewTextFormat(_font);
 	}
+	ID2D1Bitmap1 * Draw::GetBitmap(ID3D11Texture2D * _texture)
+	{
+		for (std::pair<ID3D11Texture2D*, ID2D1Bitmap1*> x : mBitmaps)
+		{
+			if (x.first == _texture)
+				return x.second;
+		}
+		return CreateNewBitmap(_texture);
+	}
 	ID2D1SolidColorBrush * Draw::CreateNewBrush(D2D1::ColorF _color)
 	{
 		//Color and Draw
@@ -222,6 +231,14 @@ namespace Epoch
 		Renderer::Instance()->ThrowIfFailed((*mContext2D)->EndDraw());
 		brush->Release();
 
+	}
+
+	ID2D1Bitmap1 * Draw::CreateNewBitmap(ID3D11Texture2D * _texture)
+	{
+		ID2D1Bitmap1* temp = nullptr;
+		temp = CreateBitmapForTexture(_texture);
+		mBitmaps.insert({ _texture,temp });
+		return temp;
 	}
 
 	//IF YOU USE THIS, CLEAN UP AFTER YOURSELF

@@ -83,6 +83,11 @@ namespace Epoch
 		ID2D1SolidColorBrush* CreateNewBrush(D2D1::ColorF _color);
 		bool isColorSame(D2D1::ColorF _color1, D2D1::ColorF _color2);
 
+		std::unordered_map<ID3D11Texture2D*, ID2D1Bitmap1*> mBitmaps;
+		ID2D1Bitmap1* CreateNewBitmap(ID3D11Texture2D* _texture);
+		ID2D1Bitmap1* CreateBitmapForTexture(ID3D11Texture2D* _texture);
+
+
 	public:
 		Draw();
 		~Draw();
@@ -96,14 +101,13 @@ namespace Epoch
 
 		ID2D1SolidColorBrush* GetBrush(D2D1::ColorF _color);
 		IDWriteTextFormat* GetTextFormat(Font _font);
-
+		ID2D1Bitmap1* GetBitmap(ID3D11Texture2D* _texture);
 		void InitializeDirect2D();
 		void InitializeScreenBitmap();
 
 
 		void DrawTextToBitmap(float _left, float _top, float _right, float _bottom, Font _font, std::wstring _text, ID2D1Bitmap* _bitmap);
 		void DrawRectangleToBitmap(float _left, float _top, float _right, float _bottom, D2D1::ColorF _color, ID2D1Bitmap* _bitmap);
-		ID2D1Bitmap1* CreateBitmapForTexture(ID3D11Texture2D* _texture);
 
 	};
 
