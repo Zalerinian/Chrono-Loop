@@ -66,9 +66,9 @@ namespace Epoch
 		std::shared_ptr<IDXGIDevice*> mGIDevice;
 		std::shared_ptr<ID2D1DeviceContext*>mContext2D;
 		std::shared_ptr<IDWriteFactory*> mDWrite;
-		std::shared_ptr<IDWriteTextFormat*>mTextformat;
-		std::shared_ptr<ID2D1DCRenderTarget*> m2DRenderTarget;
-		std::shared_ptr<ID2D1SolidColorBrush*>mBrush;
+		//std::shared_ptr<IDWriteTextFormat*>mTextformat;
+		//std::shared_ptr<ID2D1DCRenderTarget*> m2DRenderTarget;
+		//std::shared_ptr<ID2D1SolidColorBrush*>mBrush;
 		std::shared_ptr<ID2D1Bitmap1*>mScreenBitmap;
 
 		//std::unordered_map<Font, IDWriteTextFormat*> mFonts;

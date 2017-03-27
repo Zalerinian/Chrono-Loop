@@ -19,8 +19,8 @@ namespace Epoch
 		(*mGIDevice)->Release();
 		(*mContext2D)->Release();
 		(*mDWrite)->Release();
-		(*mTextformat)->Release();
-		(*mBrush)->Release();
+		//(*mTextformat)->Release();
+		//(*mBrush)->Release();
 		(*mScreenBitmap)->Release();
 
 		mTextFactory.reset();
@@ -28,8 +28,8 @@ namespace Epoch
 		mGIDevice.reset();
 		mContext2D.reset();
 		mDWrite.reset();
-		mTextformat.reset();
-		mBrush.reset();
+		//mTextformat.reset();
+		//mBrush.reset();
 		mScreenBitmap.reset();
 	}
 
@@ -95,11 +95,6 @@ namespace Epoch
 			if (x.second.first == _font)
 				return;
 		}
-		//for (std::pair <Font, IDWriteTextFormat*> x : mFonts)
-		//{
-		//	if (x.first == _font)
-		//		return;
-		//}
 		CreateNewTextFormat(_font);
 	}
 	//////
@@ -127,11 +122,6 @@ namespace Epoch
 			if (x.second.first == _font)
 				return x.second.second;
 		}
-		//for (std::pair<Font, IDWriteTextFormat*> x : mFonts)
-		//{
-		//	if (x.first == _font)
-		//		return x.second;
-		//}
 		return CreateNewTextFormat(_font);
 	}
 	ID2D1Bitmap1 * Draw::GetBitmap(ID3D11Texture2D * _texture)
@@ -175,6 +165,8 @@ namespace Epoch
 	void Draw::DrawTextToBitmap(float _left, float _top, float _right, float _bottom,
 															Font _font, std::wstring _text, ID2D1Bitmap* _bitmap)
 	{
+		
+		
 		(*mContext2D)->SetTarget(_bitmap);
 		float color[4] = { 0.3f, 0.3f, 1, 1 };
 
