@@ -134,6 +134,15 @@ namespace Epoch
 		//}
 		return CreateNewTextFormat(_font);
 	}
+	ID2D1Bitmap1 * Draw::GetBitmap(ID3D11Texture2D * _texture)
+	{
+		for (std::pair<ID3D11Texture2D*, ID2D1Bitmap1*> x : mBitmaps)
+		{
+			if (x.first == _texture)
+				return x.second;
+		}
+		return CreateNewBitmap(_texture);
+	}
 	ID2D1SolidColorBrush * Draw::CreateNewBrush(D2D1::ColorF _color)
 	{
 		//Color and Draw
@@ -224,6 +233,14 @@ namespace Epoch
 
 	}
 
+	ID2D1Bitmap1 * Draw::CreateNewBitmap(ID3D11Texture2D * _texture)
+	{
+		ID2D1Bitmap1* temp = nullptr;
+		temp = CreateBitmapForTexture(_texture);
+		mBitmaps.insert({ _texture,temp });
+		return temp;
+	}
+
 	//IF YOU USE THIS, CLEAN UP AFTER YOURSELF
 	ID2D1Bitmap1 * Draw::CreateBitmapForTexture(ID3D11Texture2D * _texture)
 	{
@@ -236,7 +253,7 @@ namespace Epoch
 				0		//defaults to 96
 			);
 
-		IDXGISurface* surface;
+		IDXGISurface* surface = nullptr;
 		Renderer::Instance()->ThrowIfFailed(_texture->QueryInterface(IID_IDXGISurface, (void**)&surface));
 
 		ID2D1Bitmap1* bitmap;
