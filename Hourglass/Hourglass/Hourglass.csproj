@@ -126,7 +126,7 @@
     <Compile Include="Forms\EditorSetupForm.Designer.cs">
       <DependentUpon>EditorSetupForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="FileOperations.cs" />
+    <Compile Include="General\FileOperations.cs" />
     <Compile Include="Forms\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -151,6 +151,7 @@
     <Compile Include="Forms\LevelSettingsForm.Designer.cs">
       <DependentUpon>LevelSettingsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="General\MathExtension.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\TestPositionForm.cs">
