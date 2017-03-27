@@ -192,7 +192,7 @@ namespace Epoch
 		{
 			HotfixButtonDown = 0;
 		}
-		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::k_EButton_SteamVR_Trigger))
+		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Trigger))
 		{
 			//toggle to have clone turn on or off
 			if (mPauseTime)
@@ -203,21 +203,21 @@ namespace Epoch
 				mIsBeingMade = !mIsBeingMade;	
 				}
 
-				if(mCurCloneController1 && mCurCloneController2 && mCurCloneHeadset)
-				{
-					if(mIsBeingMade)
-					{
-						((TransparentMeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
-						((TransparentMeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
-						((TransparentMeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
-					}
-					else
-					{
-						((TransparentMeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.5f);
-						((TransparentMeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.5f);
-						((TransparentMeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.5f);
-					}
-				}
+				//if(mCurCloneController1 && mCurCloneController2 && mCurCloneHeadset)
+				//{
+				//	if(mIsBeingMade)
+				//	{
+				//		((TransparentMeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+				//		((TransparentMeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+				//		((TransparentMeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+				//	}
+				//	else
+				//	{
+				//		((TransparentMeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.5f);
+				//		((TransparentMeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.5f);
+				//		((TransparentMeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.5f);
+				//	}
+				//}
 			}
 		}
 	}

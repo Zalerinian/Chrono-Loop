@@ -35,8 +35,8 @@ namespace Epoch
 				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtv.Get(), color);
 
 				Font* font = new Font();
-				font->mFontName = L"Comic Sans MS";
-				font->mFontSize = 100;
+				font->mFontName = L"Agency FB";
+				font->mFontSize = 200;
 				std::wstring num = std::to_wstring(prev);
 				Draw::Instance().DrawTextToBitmap(0, 0, 256, 256, *font, num, Draw::Instance().GetBitmap(tex.Get()));
 			}
