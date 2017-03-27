@@ -12,6 +12,7 @@
 #include "..\Actions\CCDisplayOnPause.h"
 #include "..\Actions\UICreateToDeleteClone.h"
 #include "..\Actions\UIClonePlusToMinus.h"
+#include "..\Actions\UICloneText.h"
 #include "..\Rendering\Draw2D.h"
 #include "..\Rendering\Renderer.h"
 #include "..\Rendering\TextureManager.h"
@@ -151,10 +152,13 @@ namespace Epoch
 					cdisp->AddTexture(str.c_str(), eTEX_DIFFUSE);
 
 					Font* font = new Font();
+					//font->mFontName = L"Comic Sans MS";
 					font->mFontSize = 100;
-					Draw::Instance().DrawTextToBitmap(0, 0, 256, 256, *font, L"WEEB", Draw::Instance().GetBitmap(screenTex.Get()));
+					Draw::Instance().DrawTextToBitmap(0, 0, 256, 256, *font, L"weeb", Draw::Instance().GetBitmap(screenTex.Get()));
 
 					cdisp->GetContext().mTextures[eTEX_DIFFUSE] = srv;
+					UICloneText* ct = new UICloneText();
+					cloneDisplay->AddComponent(ct);
 					cloneDisplay->AddComponent(cdisp);
 					cloneDisplay->SetParent(RightController);
 					RightController->AddChild(cloneDisplay);

@@ -42,8 +42,18 @@ namespace Hourglass
 		private ColoredShape mScaleX, mScaleY, mScaleZ;
 		private IGizmoAttachment mAttached = null;
 		private GizmoMode mMode = GizmoMode.Position;
+		private bool mGrabbed = false;
 
-		private ColoredShape[] GetVisibleComponents()
+		public bool Grabbed {
+			get {
+				return mGrabbed;
+			}
+			set {
+				mGrabbed = value;
+			}
+		}
+
+		public ColoredShape[] GetVisibleComponents()
 		{
 			int count = 0, index = 0;
 			count += ((mMode & GizmoMode.Position) != 0) ? 3 : 0;

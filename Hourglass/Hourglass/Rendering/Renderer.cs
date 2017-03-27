@@ -219,7 +219,7 @@ namespace Hourglass
 			return mRenderSet.Remove(_m);
 		}
 
-		private Vector3 RotateInto(Vector3 _p, Matrix _m)
+		public Vector3 RotateInto(Vector3 _p, Matrix _m)
 		{
 			// These matrices are column major, so be sure to multiply correctly!
 			Vector3 transformed = new Vector3(0, 0, 0);
@@ -229,7 +229,7 @@ namespace Hourglass
 			return transformed;
 		}
 
-		private Vector3 RotateInto(Vector4 _p, Matrix _m)
+		public Vector3 RotateInto(Vector4 _p, Matrix _m)
 		{
 			// These matrices are column major, so be sure to multiply correctly!
 			Vector3 transformed = new Vector3(0, 0, 0);

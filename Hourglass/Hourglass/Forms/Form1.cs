@@ -112,6 +112,59 @@ namespace Hourglass
 			btnFocus.Select();
 			if (e.Button == MouseButtons.Left)
 			{
+				if(Gizmo.Instance.Grabbed)
+				{
+					
+				}
+				else
+				{
+					TreeNode closest = null;
+					float closestTime = float.MinValue;
+					Microsoft.DirectX.Direct3D.Device dev = Renderer.Instance.Device;
+					for(int i = 0; i < Tree.Nodes.Count; ++i)
+					{
+						BaseObject b = (BaseObject)Tree.Nodes[i].Tag;
+						List<Component> comps = b.GetComponents();
+						for(int j = 0; j < comps.Count; ++j)
+						{
+							if(comps[j] is MeshComponent)
+							{
+								MeshComponent c = (MeshComponent)comps[j];
+								Vector3 start = Vector3.Unproject(new Vector3(e.X, e.Y, 0),
+									dev.Viewport,
+									dev.Transform.Projection,
+									dev.Transform.View,
+									b.GetMatrix() * c.Shape.World);
+								Vector3 end = Vector3.Unproject(new Vector3(e.X, e.Y, 1),
+									dev.Viewport,
+									dev.Transform.Projection,
+									dev.Transform.View,
+									b.GetMatrix() * c.Shape.World);
+								Vector3 dir = (end - start);
+								dir.Normalize();
+								float time = 0;
+								if(c.Shape.CheckRaycast(start, dir, out time))
+								{
+									// For reasons currently unbeknownst to me, the closer the object is to the camera, the *higher* the "time"
+									// to hit the object we're pointing at is. This is not what anyone expects to check in order to find the
+									// closest object to the camera, but since the axes here are pretty screwed up, that's what we're getting.
+
+									// But yeah, this *is* currently the correct way to raycast to the closest object when we click on the screen.
+									if(time > closestTime)
+									{
+										Debug.Print("Shape booped at index " + i + " (" + b.Name + ") is the closest!");
+										closestTime = time;
+										closest = Tree.Nodes[i];
+									}
+								}
+							}
+						}
+					}
+					if(closest != null)
+					{
+						Tree.SelectedNode = closest;
+					}
+				}
 				// TODO: Raycast to hit an object. Be sure to apply the camera's rotation in there somehow.
 				// I.E. make an identity matrix, put the mouse X/Y in the position spots, and multiply by the inverse view matrix
 

@@ -9,7 +9,7 @@
 #include "../Core/Pool.h"
 #include "TimeManipulation.h"
 #include "BoxSnapToControllerAction.hpp"
-
+#include "../Objects/TransparentMeshComponent.h"
 namespace Epoch
 {
 	BaseObject* TimeManipulation::mCurCloneController1 = nullptr;
@@ -41,12 +41,7 @@ namespace Epoch
 		
 
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
-			/*int frameRewind = 30;
-			if (!TimeManager::Instance()->CheckRewindAvaliable(frameRewind))
-				return;
-
-			TimeManager::Instance()->RewindTimeline(TimeManager::Instance()->GetCurrentSnapFrame() - frameRewind, Level::Instance()->iGetHeadset()->GetUniqueID(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());
-			VRInputManager::GetInstance().RewindInputTimeline(TimeManager::Instance()->GetCurrentSnapFrame(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());*/
+			
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			if (mPauseTime) {
 				// Resume Time
@@ -207,7 +202,22 @@ namespace Epoch
 				{
 				mIsBeingMade = !mIsBeingMade;	
 				}
-			//TODO PAT: Update const buffer to make clone transparent or opaque
+
+				if(mCurCloneController1 && mCurCloneController2 && mCurCloneHeadset)
+				{
+					if(mIsBeingMade)
+					{
+						((TransparentMeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+						((TransparentMeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+						((TransparentMeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+					}
+					else
+					{
+						((TransparentMeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.5f);
+						((TransparentMeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.5f);
+						((TransparentMeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.5f);
+					}
+				}
 			}
 		}
 	}

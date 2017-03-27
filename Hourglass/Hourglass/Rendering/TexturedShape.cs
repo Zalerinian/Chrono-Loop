@@ -168,5 +168,26 @@ namespace Hourglass
 				}
 			}
 		}
+
+		public override bool CheckRaycast(Vector3 _start, Vector3 _dir, out float _time)
+		{
+			for (int TriIndex = 0; TriIndex < Indices.Length; TriIndex += 3)
+			{
+				Vector3 norm = mVertices[Indices[TriIndex + 0]].Normal + mVertices[Indices[TriIndex + 1]].Normal + mVertices[Indices[TriIndex + 2]].Normal;
+				norm.Multiply(1.0f / 3.0f);
+				float t = 0;
+				if (RayToTriangle(mVertices[Indices[TriIndex + 0]].Position, mVertices[Indices[TriIndex + 1]].Position, mVertices[Indices[TriIndex + 2]].Position, norm, _start, _dir, out t))
+				{
+					_time = t;
+					return true;
+				}
+			}
+			_time = 0;
+			return false;
+		}
+
+
+
+
 	}
 }

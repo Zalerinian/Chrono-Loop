@@ -462,6 +462,9 @@
     <ClInclude Include="Actions\UIClonePlusToMinus.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\UICloneText.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
