@@ -441,6 +441,9 @@
     <ClInclude Include="Actions\TimelineIndicator.hpp">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="PauseMenu.hpp">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">

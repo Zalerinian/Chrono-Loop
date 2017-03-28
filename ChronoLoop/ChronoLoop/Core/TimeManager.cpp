@@ -375,7 +375,6 @@ namespace Epoch {
 				CloneLifeTime* temp = (CloneLifeTime*)mTimeline->GetObjectLifetime(mClones[i]->GetUniqueId());
 				if(temp &&temp->mMade == curr->mMade && (mClones[i]->GetName().find("Headset") != std::string::npos || mClones[i]->GetName().find("Controller") != std::string::npos))
 				{
-				
 					if(!pair1)
 					{
 						_pair.mOther1 = mClones[i]->GetUniqueId();

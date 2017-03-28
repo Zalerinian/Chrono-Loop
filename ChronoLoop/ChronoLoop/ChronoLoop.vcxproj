@@ -261,6 +261,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Particles\ParticleComponents.h" />
     <ClInclude Include="Particles\ParticleSystem.h" />
     <ClInclude Include="PathPlanning.h" />
+    <ClInclude Include="PauseMenu.hpp" />
     <ClInclude Include="Physics\Physics.h" />
     <ClInclude Include="Rendering\Draw2D.h" />
     <ClInclude Include="Rendering\IndexBufferManager.h" />

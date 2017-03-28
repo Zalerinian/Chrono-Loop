@@ -214,6 +214,7 @@ namespace Epoch
 	void Draw::DrawRectangleToBitmap(float _left, float _top, float _right, float _bottom, D2D1::ColorF _color, ID2D1Bitmap * _bitmap)
 	{
 		(*mContext2D)->SetTarget(_bitmap);
+		(*mContext2D)->Clear();
 		float color[4] = { 1, 1, 1, 1 };
 
 		// Retrieve the size of the render target.st
