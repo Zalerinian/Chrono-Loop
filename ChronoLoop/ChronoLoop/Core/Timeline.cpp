@@ -457,17 +457,13 @@ namespace Epoch {
 			{
 				SnapComponent_Physics* temp = new SnapComponent_Physics();
 				memcpy(temp, (SnapComponent_Physics*)_src->mComponents[i], sizeof(SnapComponent_Physics));
-				_dst->mComponents.push_back(temp);
 			}
 			else
 			{
 				SnapComponent* temp = new SnapComponent();
 				memcpy(temp, _src->mComponents[i], sizeof(SnapComponent));
-				_dst->mComponents.push_back(temp);
 			}
 		}
-		_dst->mComponents = _src->mComponents;
-
 	}
 
 	ObjectLifeTime * Timeline::GetObjectLifetime(unsigned short _id) {

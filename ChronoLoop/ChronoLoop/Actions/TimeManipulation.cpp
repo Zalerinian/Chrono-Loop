@@ -55,6 +55,9 @@ namespace Epoch
 					TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController1);
 					TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController2);
 					TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueID());
+					mCurCloneHeadset = nullptr;
+					mCurCloneController1 = nullptr;
+					mCurCloneController2 = nullptr;
 				}
 
 				vec2f finalRatios(0, 0);
@@ -100,7 +103,7 @@ namespace Epoch
 		}
 
 
-		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::k_EButton_SteamVR_Touchpad)) {
+		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Touchpad)) {
 			bool right = false;
 			bool left = false;
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
@@ -203,21 +206,23 @@ namespace Epoch
 				mIsBeingMade = !mIsBeingMade;	
 				}
 
-				//if(mCurCloneController1 && mCurCloneController2 && mCurCloneHeadset)
-				//{
-				//	if(mIsBeingMade)
-				//	{
-				//		((TransparentMeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
-				//		((TransparentMeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
-				//		((TransparentMeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
-				//	}
-				//	else
-				//	{
-				//		((TransparentMeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.5f);
-				//		((TransparentMeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.5f);
-				//		((TransparentMeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.5f);
-				//	}
-				//}
+				if(mCurCloneController1 && mCurCloneController2 && mCurCloneHeadset)
+				{
+					if(mIsBeingMade)
+					{
+						((TransparentMeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+						((TransparentMeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+						((TransparentMeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+						SystemLogger::GetLog() << "Opaque" << std::endl;
+					}
+					else
+					{
+						((TransparentMeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
+						((TransparentMeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
+						((TransparentMeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
+						SystemLogger::GetLog() << "Transparent" << std::endl;
+					}
+				}
 			}
 		}
 	}
@@ -227,12 +232,12 @@ namespace Epoch
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
 		SystemLogger::GetLog() << "[Debug] A clone is being made, please hold: " << mCloneCount << " | Is left: " << mControllerRole << std::endl;
 
-		MeshComponent *visibleMesh = new MeshComponent("../Resources/Clone.obj");
+		TransparentMeshComponent *visibleMesh = new TransparentMeshComponent("../Resources/Clone.obj",.35f);
 		visibleMesh->AddTexture(TimeManager::Instance()->GetNextTexture().c_str(), eTEX_DIFFUSE);
 		_headset->AddComponent(visibleMesh);
 
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
-		MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
+		TransparentMeshComponent *mc = new TransparentMeshComponent("../Resources/Controller.obj",.35f);
 		ControllerCollider* CubeColider = new ControllerCollider(_controller1, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
 		mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 		_controller1->AddComponent(mc);
@@ -241,7 +246,7 @@ namespace Epoch
 		_controller1->AddComponent(SN1);
 
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be proble
-		MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
+		TransparentMeshComponent *mc2 = new TransparentMeshComponent("../Resources/Controller.obj",.35f);
 		ControllerCollider* CubeColider2 = new ControllerCollider(_controller2, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 		mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 		_controller2->AddComponent(mc2);
