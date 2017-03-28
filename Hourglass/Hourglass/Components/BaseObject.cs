@@ -13,14 +13,14 @@ namespace Hourglass
 		public event ComponentChangeHandler ComponentAdded;
 		public event ComponentChangeHandler ComponentRemoved;
 
-        private const bool ImplementHierarchy = false;
+		private const bool ImplementHierarchy = false;
 
         protected static uint UID = 0;
-        protected string mNodeKey;
         protected uint mObjectUID = UID++;
         protected List<Component> mComponents;
         protected BaseObject mParent = null;
         protected TreeNode mNode = null;
+		protected Matrix mWorld = Matrix.Identity;
 
         public string Name {
             get { return ((TransformComponent)mComponents[0]).Name; }
@@ -31,17 +31,24 @@ namespace Hourglass
             get { return mNode; }
         }
 
-        public BaseObject(TreeNode _node) {
-            mNode = _node;
-            mComponents = new List<Component>();
-            TransformComponent transform = new TransformComponent();
-			AddComponent(transform);
+		public BaseObject Parent {
+			get {
+				return mParent;
+			}
+			set {
+				mParent = value;
+			}
+		}
+
+        public BaseObject(TreeNode _node) : this(_node, "") {
         }
 
-        public BaseObject(TreeNode _node, string _name) : this(_node)
+        public BaseObject(TreeNode _node, string _name)
         {
-            ((TransformComponent)mComponents[0]).Name = _name;
-            _node.Text = _name;
+            mNode = _node;
+            mComponents = new List<Component>();
+            TransformComponent transform = new TransformComponent(_name);
+			AddComponent(transform);
         }
 
         public List<Component> GetComponents()
@@ -51,13 +58,13 @@ namespace Hourglass
 
 		public Matrix GetMatrix()
 		{
-			if (mParent != null && ImplementHierarchy)
+			if (mParent != null)
 			{
-				return ((TransformComponent)mComponents[0]).CreateMatrix() * mParent.GetMatrix();
+				return mWorld * mParent.GetMatrix();
 			}
 			else
 			{
-				return ((TransformComponent)mComponents[0]).CreateMatrix();
+				return mWorld;
 			}
 		}
 
@@ -65,6 +72,7 @@ namespace Hourglass
 		{
 			mComponents.Add(_c);
 			_c.Owner = this;
+			_c.RemoveControl += RelinquishControl;
 			if(ComponentAdded != null)
 			{ 
 				ComponentAdded(_c);
@@ -75,6 +83,9 @@ namespace Hourglass
 		{
 			mComponents.Remove(_c);
 			_c.Owner = null;
+
+			// Is this actually needed, since we don't swap components with other objects?
+			_c.RemoveControl -= RelinquishControl;
 			if(ComponentRemoved != null)
 			{
 				ComponentRemoved(_c);
@@ -82,5 +93,25 @@ namespace Hourglass
 			_c.GetGroupbox().Parent = null;
 		}
 
+		public void RelinquishControl()
+		{
+			if(mNode != null)
+			{
+				((Editor)mNode.TreeView.FindForm()).btnFocus.Select();
+			}
+		}
+
+		public void InvalidateMatrix()
+		{
+			mWorld = ((TransformComponent)mComponents[0]).CreateMatrix();
+		}
+
+		public void Delete()
+		{
+			for(int i = mComponents.Count - 1; i >= 0 ; --i)
+			{
+				mComponents[i].OnMenuClick_Delete(null, null);
+			}
+		}
     }
 }

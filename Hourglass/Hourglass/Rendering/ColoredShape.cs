@@ -5,6 +5,7 @@ using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using System.IO;
 
+
 namespace Hourglass
 {
 	public class ColoredShape : RenderShape
@@ -18,11 +19,14 @@ namespace Hourglass
 			}
 			set {
 				mColor = value;
-				for(int i = 0; i < mVertices.Length; ++i)
+				if (mVertices.Length > 0)
 				{
-					mVertices[i].Color = value.ToArgb();
+					for (int i = 0; i < mVertices.Length; ++i)
+					{
+						mVertices[i].Color = value.ToArgb();
+					}
+					FillBuffers();
 				}
-				FillBuffers();
 			}
 		}
 
@@ -38,15 +42,24 @@ namespace Hourglass
 
 		public ColoredShape()
 		{
+			mVertices = new CustomVertex.PositionNormalColored[0];
 			mType = ShapeType.Colored;
 			World = Matrix.Identity;
 		}
 
 		public ColoredShape(string file)
 		{
+			mVertices = new CustomVertex.PositionNormalColored[0];
 			mType = ShapeType.Colored;
 			World = Matrix.Identity;
 			SetMesh(file);
+		}
+
+		public ColoredShape(string file, Color color)
+		{
+			mType = ShapeType.Colored;
+			World = Matrix.Identity;
+			SetMesh(file, color);
 		}
 
 		public void Load(string _File)
@@ -95,7 +108,65 @@ namespace Hourglass
 								Ind.Add(vertices.Count);
 								vertices.Add(new CustomVertex.PositionNormalColored(Verts[Convert.ToInt32(points[0]) - 1],
 									Norms[Convert.ToInt32(points[2]) - 1],
-									Color.SeaGreen.ToArgb()));
+									this.Color.ToArgb()));
+							}
+							break;
+						default:
+							break;
+					}
+				}
+			}
+			Vertices = vertices.ToArray();
+			Indices = Ind.ToArray();
+		}
+
+		public void Load(string _File, Color _c)
+		{
+			List<Vector3> Verts = new List<Vector3>();
+			List<Vector3> Norms = new List<Vector3>();
+			List<Vector2> UVs = new List<Vector2>();
+			List<CustomVertex.PositionNormalColored> vertices = new List<CustomVertex.PositionNormalColored>();
+			List<int> Ind = new List<int>();
+			StreamReader sr = new StreamReader(_File);
+			string line = string.Empty;
+			while ((line = sr.ReadLine()) != null)
+			{
+				string[] parts = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+				if (parts.Length > 0)
+				{
+					Vector3 vec = new Vector3();
+					switch (parts[0])
+					{
+						case "o":
+							//mName = parts[1];
+							break;
+						case "v":
+							vec.X = (float)Convert.ToDouble(parts[1]);
+							vec.Y = (float)Convert.ToDouble(parts[2]);
+							vec.Z = (float)Convert.ToDouble(parts[3]);
+							Verts.Add(vec);
+							break;
+						case "vn":
+							vec.X = (float)Convert.ToDouble(parts[1]);
+							vec.Y = (float)Convert.ToDouble(parts[2]);
+							vec.Z = (float)Convert.ToDouble(parts[3]);
+							Norms.Add(vec);
+							break;
+						case "vt":
+							Vector2 uv = new Vector2();
+							uv.X = (float)Convert.ToDouble(parts[1]);
+							uv.Y = (float)Convert.ToDouble(parts[2]);
+							UVs.Add(uv);
+							break;
+						case "f":
+							for (int i = 1; i < 4; i++)
+							{
+								string[] points = parts[i].Split(new char[] { '/' }, StringSplitOptions.None);
+								Ind.Add(vertices.Count);
+								vertices.Add(new CustomVertex.PositionNormalColored(Verts[Convert.ToInt32(points[0]) - 1],
+									Norms[Convert.ToInt32(points[2]) - 1],
+									_c.ToArgb()));
 							}
 							break;
 						default:
@@ -112,6 +183,14 @@ namespace Hourglass
 			Vertices = null;
 			Indices = null;
 			Load(file);
+			FillBuffers();
+		}
+
+		public void SetMesh(string file, Color _c)
+		{
+			Vertices = null;
+			Indices = null;
+			Load(file, _c);
 			FillBuffers();
 		}
 
@@ -169,6 +248,38 @@ namespace Hourglass
 			mVertices = verts.ToArray();
 			mIndices = ind.ToArray();
 			FillBuffers();
+		}
+
+		public override void Dispose()
+		{
+			if (mIndexBuffer != null)
+			{
+				mIndexBuffer.Dispose();
+				mIndexBuffer = null;
+			}
+			if (mVertexBuffer != null)
+			{
+				mVertexBuffer.Dispose();
+				mVertexBuffer = null;
+			}
+		}
+
+		public override bool CheckRaycast(Vector3 _start, Vector3 _dir, out float _time)
+		{
+			for(int TriIndex = 0; TriIndex < Indices.Length; TriIndex += 3)
+			{
+				Vector3 norm = mVertices[Indices[TriIndex + 0]].Normal + mVertices[Indices[TriIndex + 1]].Normal + mVertices[Indices[TriIndex + 2]].Normal;
+				norm.Multiply(1.0f / 3.0f);
+				norm.Normalize();
+				float t = 0;
+				if (RayToTriangle(mVertices[Indices[TriIndex + 0]].Position, mVertices[Indices[TriIndex + 1]].Position, mVertices[Indices[TriIndex + 2]].Position, norm, _start, _dir, out t))
+				{
+					_time = t;
+					return true;
+				}
+			}
+			_time = 0;
+			return false;
 		}
 	}
 }

@@ -143,11 +143,25 @@ namespace Hourglass
 			SetupTransformPanel(mPosPanel, 90, 50 + _yOffset, ContentWidth, mLbPosX, mLbPosY, mLbPosZ, mPosX, mPosY, mPosZ);
 			SetupTransformPanel(mRotPanel, 90, 75 + _yOffset, ContentWidth, mLbRotX, mLbRotY, mLbRotZ, mRotX, mRotY, mRotZ);
 			SetupTransformPanel(mScalePanel, 90, 100 + _yOffset, ContentWidth, mLbScaleX, mLbScaleY, mLbScaleZ, mScaleX, mScaleY, mScaleZ);
+
+			// Events
+			mPosX.ValueChanged += OnMatrixUpdated;
+			mPosY.ValueChanged += OnMatrixUpdated;
+			mPosZ.ValueChanged += OnMatrixUpdated;
+			mRotX.ValueChanged += OnMatrixUpdated;
+			mRotY.ValueChanged += OnMatrixUpdated;
+			mRotZ.ValueChanged += OnMatrixUpdated;
+			mScaleX.ValueChanged += OnMatrixUpdated;
+			mScaleY.ValueChanged += OnMatrixUpdated;
+			mScaleZ.ValueChanged += OnMatrixUpdated;
+
 			#endregion
 
 			mGroupBox.Text = "Transform";
 			mGroupBox.Size = mGroupBox.PreferredSize;
 			OnMenuClick_Reset(null, null);
+
+			this.OwnerChanged += OnUpdateName;
 		}
 
 		public TransformComponent(string _name) : this()
@@ -168,15 +182,16 @@ namespace Hourglass
 
 		public Matrix CreateMatrix()
 		{
-			// Matrix multiplication order is Scale, Rotation, and then Translation.
-			Matrix mat = new Matrix();
-			mat.Scale(GetScaleVector());
-			mat.RotateYawPitchRoll((float)mRotY.Value * D2R, (float)mRotX.Value * D2R, (float)mRotZ.Value * D2R);
-			mat.Translate(GetPositionVector());
+			// Matrix multiplication order is Rotation, Translation, then scaling. Always remember to play RTS!
+			// This is assuming you want it to rotate in place. To rotate around a point, you'd do TRS.
+			Matrix mat = Matrix.Identity;
+			mat *= Matrix.RotationYawPitchRoll((float)mRotY.Value * D2R, (float)mRotX.Value * D2R, (float)mRotZ.Value * D2R);
+			mat *= Matrix.Translation(GetPositionVector());
+			mat *= Matrix.Scaling(GetScaleVector());
 			return mat;
 		}
 
-		protected override void OnMenuClick_Reset(object sender, EventArgs e)
+		public override void OnMenuClick_Reset(object sender, EventArgs e)
 		{
 			mNameIsPlaceholder = true;
 			Name = "Object Name...";
@@ -188,10 +203,10 @@ namespace Hourglass
 			mRotX.Value = 0;
 			mRotY.Value = 0;
 			mRotZ.Value = 0;
-
-			mScaleX.Value = 0;
-			mScaleY.Value = 0;
-			mScaleZ.Value = 0;
+			
+			mScaleX.Value = 1;
+			mScaleY.Value = 1;
+			mScaleZ.Value = 1;
 		}
 
 		protected void OnNameGetFocus(object sender, EventArgs e)
@@ -232,6 +247,19 @@ namespace Hourglass
 					mOwner.Node.Text = mName.Text;
 				}
 			}
+		}
+
+		protected void OnMatrixUpdated(object sender, EventArgs e)
+		{
+			if(Owner != null)
+			{
+				Owner.InvalidateMatrix();
+			}
+		}
+
+		protected void OnUpdateName()
+		{
+			OnUpdateName(null, null);
 		}
 
 

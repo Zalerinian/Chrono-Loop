@@ -30,9 +30,12 @@ namespace Hourglass {
 
             mGroupBox.Controls.Add(mOffset);
 
-            #endregion
+			#endregion
 
-            #region Component Setup
+			#region Component Setup
+
+			mShape.Load("Assets\\Plane.obj");
+			mShape.FillMode = Microsoft.DirectX.Direct3D.FillMode.WireFrame;
 
             int ContentWidth = (mGroupBox.Size - mGroupBox.Padding.Size - mGroupBox.Margin.Size).Width;
 
@@ -91,7 +94,7 @@ namespace Hourglass {
             OnMenuClick_Reset(null, null);
         }
 
-        protected override void OnMenuClick_Reset(object sender, EventArgs e) {
+        public override void OnMenuClick_Reset(object sender, EventArgs e) {
             base.OnMenuClick_Reset(sender, e);
             mOffset.Value = 0;
             mNX.Value = 0;

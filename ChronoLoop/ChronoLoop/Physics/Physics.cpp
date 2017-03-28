@@ -8,7 +8,7 @@
 #include "..\Input\VRInputManager.h"
 #include "..\Core\LevelManager.h"
 
-#define DEBUG_LEVEL1 0
+#define DEBUG_LEVEL1 1
 
 namespace Epoch
 {
@@ -701,8 +701,8 @@ namespace Epoch
 		if (!left && !right)
 		{
 			//SystemLogger::GetLog() << _time << std::endl;
-			Collider* collider;
-			Collider* otherCol;
+			Collider* collider = nullptr;
+			Collider* otherCol = nullptr;
 			vec3f norm;
 			std::vector<Component*> codeComponents;
 			std::vector<Component*> Colliders;
@@ -1013,7 +1013,7 @@ namespace Epoch
 							}
 						}
 					}
-					else if (collider->mColliderType == Collider::eCOLLIDER_Controller)//Update ControllerCollider position, do not apply physics to player
+					else if (collider->mColliderType == Collider::eCOLLIDER_Controller && VRInputManager::GetInstance().IsVREnabled())//Update ControllerCollider position, do not apply physics to player
 					{
 						CubeCollider* aabb1 = (CubeCollider*)collider;
 						for (int j = 0; j < objs; ++j)

@@ -1,18 +1,22 @@
 
 #include "../Objects/Component.h"
-#include "../Objects/TransparentMeshComponent.h"
+#include "../Objects/MeshComponent.h"
 #include "../Actions/CodeComponent.hpp"
 #include "../Objects/BaseObject.h"
 #include "../Core/LevelManager.h"
 #include "../Input/VRInputManager.h"
-#include "../Rendering/TextureManager.h"
 #include "../Rendering/Draw2D.h"
 #include "../Core/Pool.h"
 #include "TimeManipulation.h"
 #include "BoxSnapToControllerAction.hpp"
-
+#include "../Objects/TransparentMeshComponent.h"
 namespace Epoch
 {
+	BaseObject* TimeManipulation::mCurCloneController1 = nullptr;
+	BaseObject* TimeManipulation::mCurCloneController2 = nullptr;
+	BaseObject* TimeManipulation::mCurCloneHeadset = nullptr;
+	bool TimeManipulation::mIsBeingMade = false;
+	unsigned short TimeManipulation::mNumOfConfirmedClones = 0;
 
 	TimeManipulation::TimeManipulation() {
 	}
@@ -36,92 +40,27 @@ namespace Epoch
 	void TimeManipulation::Update() {
 		Level* currentLevel = LevelManager::GetInstance().GetCurrentLevel();
 		
-		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu)) {
-			int frameRewind = 30;
-
-
-			bool right, left;
-			if (currentLevel->GetRightTimeManipulator() != nullptr || currentLevel->GetLeftTimeManipulator() != nullptr) {
-				right = currentLevel->GetRightTimeManipulator()->isTimePaused();
-				left = currentLevel->GetLeftTimeManipulator()->isTimePaused();
-			}
-			if (!TimeManager::Instance()->CheckRewindAvaliable(frameRewind) || right || left)
-				return;
-
-			SystemLogger::GetLog() << "[Debug] A clone is being made, please hold: " << mCloneCount << " | Is left: " << mControllerRole << std::endl;
-
-			Transform identity;
-
-			mCloneCount++;
-			//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
-			BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - " + std::to_string(mCloneCount),  identity ); //new BaseObject("headset" + std::to_string(rand), identity);
-			TransparentMeshComponent *visibleMesh = new TransparentMeshComponent("../Resources/Clone.obj");
-			visibleMesh->SetAlpha(0.5f);
-			visibleMesh->AddTexture(TimeManager::Instance()->GetNextTexture().c_str(), eTEX_DIFFUSE);
-			headset->AddComponent(visibleMesh);
-
-			//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
-			BaseObject* Controller1 = Pool::Instance()->iGetObject()->Reset("Controller1 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
-			TransparentMeshComponent *mc = new TransparentMeshComponent("../Resources/Controller.obj");
-			mc->SetAlpha(0.5f);
-			ControllerCollider* CubeColider = new ControllerCollider(Controller1, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
-			mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
-			Controller1->AddComponent(mc);
-			Controller1->AddComponent(CubeColider);
-			BoxSnapToControllerAction* SN1 = new BoxSnapToControllerAction();
-			Controller1->AddComponent(SN1);
-
-			//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be proble
-			BaseObject* Controller2 = Pool::Instance()->iGetObject()->Reset("Controller2 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
-			TransparentMeshComponent *mc2 = new TransparentMeshComponent("../Resources/Controller.obj");
-			mc2->SetAlpha(0.5f);
-			ControllerCollider* CubeColider2 = new ControllerCollider(Controller2, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
-			mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
-			Controller2->AddComponent(mc2);
-			Controller2->AddComponent(CubeColider2);
-			BoxSnapToControllerAction* SN2 = new BoxSnapToControllerAction();
-			Controller2->AddComponent(SN2);
-
-
-
-			//
-			//KEEP THIS ORDER NO MATTER WHAT!!!! 
-			//
-			//Make a clone 3 seconds ago.
-			TimeManager::Instance()->RewindMakeClone(TimeManager::Instance()->GetCurrentSnapFrame() - frameRewind, headset, Controller1, Controller2);
-			currentLevel->SetHeadsetAndControllers(headset, Controller1, Controller2, CubeColider, CubeColider2);
-			//it is extreamly important that the objects are added after time rewinded because of the objectLifeTimeStruct and more..
-			Physics::Instance()->mObjects.push_back(headset);
-			Physics::Instance()->mObjects.push_back(Controller1);
-			Physics::Instance()->mObjects.push_back(Controller2);
-			//new Objects are added to the timeline to update the old player BaseObject pointers
-			TimeManager::Instance()->UpdatePlayerObjectInTimeline(headset);
-			TimeManager::Instance()->UpdatePlayerObjectInTimeline(Controller1);
-			TimeManager::Instance()->UpdatePlayerObjectInTimeline(Controller2);
-			TimeManager::Instance()->UpdateCloneCreationTime(headset->GetUniqueID(),Controller1->GetUniqueID(),Controller2->GetUniqueID());
-			//Rewind InputTime
-			VRInputManager::GetInstance().RewindInputTimeline(TimeManager::Instance()->GetCurrentSnapFrame(), currentLevel->GetRightController()->GetUniqueID(), currentLevel->GetLeftController()->GetUniqueID());
-			//add Interpolators for the clones
-			TimeManager::Instance()->AddInterpolatorForClone(headset);
-			TimeManager::Instance()->AddInterpolatorForClone(Controller1);
-			TimeManager::Instance()->AddInterpolatorForClone(Controller2);
-			
-			TimeManager::Instance()->AssignTextureToClone(headset->GetUniqueId());
-			
-
-
-		}
 
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
-			/*int frameRewind = 30;
-			if (!TimeManager::Instance()->CheckRewindAvaliable(frameRewind))
-				return;
-
-			TimeManager::Instance()->RewindTimeline(TimeManager::Instance()->GetCurrentSnapFrame() - frameRewind, Level::Instance()->iGetHeadset()->GetUniqueID(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());
-			VRInputManager::GetInstance().RewindInputTimeline(TimeManager::Instance()->GetCurrentSnapFrame(), Level::Instance()->iGetRightController()->GetUniqueID(), Level::Instance()->iGetLeftController()->GetUniqueID());*/
+			
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			if (mPauseTime) {
 				// Resume Time
+
+				//put the original controll and headset back in control
+				//Remove the clone created
+				if (mCurCloneHeadset && mCurCloneController1 && mCurCloneController2)
+				{
+					currentLevel->SetHeadsetAndControllers(mCurCloneHeadset, mCurCloneController1, mCurCloneController2,false);
+					TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneHeadset);
+					TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController1);
+					TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController2);
+					TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueID());
+					mCurCloneHeadset = nullptr;
+					mCurCloneController1 = nullptr;
+					mCurCloneController2 = nullptr;
+				}
+
 				vec2f finalRatios(0, 0);
 				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
 				mDesaturationInterpolator.SetActive(true);
@@ -133,9 +72,18 @@ namespace Epoch
 					cLevel->GetRightController()->GetUniqueID(),
 					cLevel->GetLeftController()->GetUniqueID());
 					
+				mIsBeingMade = false;
 				
 			} else {
 				// Stop time
+				
+				Transform identity;
+				mCloneCount++;
+				mCurCloneHeadset = Pool::Instance()->iGetObject()->Reset("Headset - " + std::to_string(mCloneCount), identity); //new BaseObject("headset" + std::to_string(rand), identity);
+				mCurCloneController1 = Pool::Instance()->iGetObject()->Reset("Controller1 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
+				mCurCloneController2 = Pool::Instance()->iGetObject()->Reset("Controller2 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
+				MakeCloneBaseObjects(mCurCloneHeadset, mCurCloneController1, mCurCloneController2);
+
 				vec2f finalRatios(0.7f, 0.3f);
 				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
 				mDesaturationInterpolator.SetActive(true);
@@ -156,7 +104,7 @@ namespace Epoch
 		}
 
 
-		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::k_EButton_SteamVR_Touchpad)) {
+		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Touchpad)) {
 			bool right = false;
 			bool left = false;
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
@@ -168,15 +116,62 @@ namespace Epoch
 
 			// Accept timeline position
 			if (left || right) {
+			
 				vec2f finalRatios(0, 0);
 				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
 				mDesaturationInterpolator.SetActive(true);
-				TimeManager::Instance()->RewindTimeline(
-					TimeManager::Instance()->GetTempCurSnap(),
-					cLevel->GetHeadset()->GetUniqueID(),
-					cLevel->GetRightController()->GetUniqueID(),
-					cLevel->GetLeftController()->GetUniqueID());
+		
 
+				if (mIsBeingMade)
+				{
+					//rewind first then enable clone
+					TimeManager::Instance()->RewindTimeline(
+						TimeManager::Instance()->GetTempCurSnap(),
+						cLevel->GetHeadset()->GetUniqueID(),
+						cLevel->GetRightController()->GetUniqueID(),
+						cLevel->GetLeftController()->GetUniqueID());
+
+					//rewind their creation time of the headset. This way its begining of the timeline is right after the last clones birth
+					TimeManager::Instance()->SetCreationTimeofClone(cLevel->GetLeftController()->GetUniqueID(), cLevel->GetRightController()->GetUniqueID(), cLevel->GetHeadset()->GetUniqueID());
+					//Update the made time of the clone
+					TimeManager::Instance()->UpdateCloneMadeTime(mCurCloneHeadset->GetUniqueID(), mCurCloneController1->GetUniqueID(), mCurCloneController2->GetUniqueID());
+					//add Interpolators for the clones
+					TimeManager::Instance()->AddInterpolatorForClone(mCurCloneHeadset);
+					TimeManager::Instance()->AddInterpolatorForClone(mCurCloneController1);
+					TimeManager::Instance()->AddInterpolatorForClone(mCurCloneController2);
+					TimeManager::Instance()->AssignTextureToClone(mCurCloneHeadset->GetUniqueId());
+					//it is extreamly important that the objects are added after time rewinded because of the objectLifeTimeStruct and more..
+					Physics::Instance()->mObjects.push_back(mCurCloneHeadset);
+					Physics::Instance()->mObjects.push_back(mCurCloneController1);
+					Physics::Instance()->mObjects.push_back(mCurCloneController2);
+					++mNumOfConfirmedClones;
+				}
+				else
+				{
+					if (mCurCloneHeadset && mCurCloneController1 && mCurCloneController2)
+					{
+						//switch with the headset to get our old info back and delete temp clone
+						currentLevel->SetHeadsetAndControllers(mCurCloneHeadset, mCurCloneController1, mCurCloneController2,false);
+						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneHeadset);
+						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController1);
+						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController2);
+						TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueID());
+
+						//set the player headset and controllers birth back
+						TimeManager::Instance()->SetCreationTimeofClone(cLevel->GetLeftController()->GetUniqueID(), cLevel->GetRightController()->GetUniqueID(), cLevel->GetHeadset()->GetUniqueID());
+						//Update the made time of the old headset and controllers
+						TimeManager::Instance()->UpdateCloneMadeTime(cLevel->GetLeftController()->GetUniqueID(), cLevel->GetRightController()->GetUniqueID(), cLevel->GetHeadset()->GetUniqueID());
+
+						//rewind time after that was done to correctly update the player
+						TimeManager::Instance()->RewindTimeline(
+							TimeManager::Instance()->GetTempCurSnap(),
+							cLevel->GetHeadset()->GetUniqueID(),
+							cLevel->GetRightController()->GetUniqueID(),
+							cLevel->GetLeftController()->GetUniqueID());
+					}
+				}
+
+				//rewind input timeline
 				VRInputManager::GetInstance().RewindInputTimeline(
 					TimeManager::Instance()->GetTempCurSnap(),
 					cLevel->GetRightController()->GetUniqueID(),
@@ -184,12 +179,13 @@ namespace Epoch
 
 				cLevel->GetLeftTimeManipulator()->makeTimePaused(false);
 				cLevel->GetRightTimeManipulator()->makeTimePaused(false);
+				mIsBeingMade = false;
 			}
 
 		
 			else
 			{
-				SystemLogger::GetLog() << HotfixButtonDown << std::endl;
+				//SystemLogger::GetLog() << HotfixButtonDown << std::endl;
 				HotfixButtonDown++;
 				if (HotfixButtonDown > 100) {
 					HotfixButtonDown = 0;
@@ -201,15 +197,92 @@ namespace Epoch
 		{
 			HotfixButtonDown = 0;
 		}
-	};
+		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Trigger))
+		{
+			//toggle to have clone turn on or off
+			if (mPauseTime)
+			{
+				if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->RaycastCloneCheck() == false && 
+				LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->RaycastCloneCheck() == false)
+				{
+				mIsBeingMade = !mIsBeingMade;	
+				}
 
-	void TimeManipulation::RaycastCloneCheck() {
+				if(mCurCloneController1 && mCurCloneController2 && mCurCloneHeadset)
+				{
+					if(mIsBeingMade)
+					{
+						((TransparentMeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+						((TransparentMeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+						((TransparentMeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+						SystemLogger::GetLog() << "Opaque" << std::endl;
+					}
+					else
+					{
+						((TransparentMeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
+						((TransparentMeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
+						((TransparentMeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
+						SystemLogger::GetLog() << "Transparent" << std::endl;
+					}
+				}
+			}
+		}
+	}
+	void TimeManipulation::MakeCloneBaseObjects(BaseObject * _headset, BaseObject * _controller1, BaseObject * _controller2)
+	{
+		Level* currentLevel = LevelManager::GetInstance().GetCurrentLevel();
+		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
+		SystemLogger::GetLog() << "[Debug] A clone is being made, please hold: " << mCloneCount << " | Is left: " << mControllerRole << std::endl;
+
+		TransparentMeshComponent *visibleMesh = new TransparentMeshComponent("../Resources/Clone.obj",.35f);
+		visibleMesh->AddTexture(TimeManager::Instance()->GetNextTexture().c_str(), eTEX_DIFFUSE);
+		_headset->AddComponent(visibleMesh);
+
+		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
+		TransparentMeshComponent *mc = new TransparentMeshComponent("../Resources/Controller.obj",.35f);
+		ControllerCollider* CubeColider = new ControllerCollider(_controller1, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
+		mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+		_controller1->AddComponent(mc);
+		_controller1->AddComponent(CubeColider);
+		BoxSnapToControllerAction* SN1 = new BoxSnapToControllerAction();
+		_controller1->AddComponent(SN1);
+
+		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be proble
+		TransparentMeshComponent *mc2 = new TransparentMeshComponent("../Resources/Controller.obj",.35f);
+		ControllerCollider* CubeColider2 = new ControllerCollider(_controller2, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
+		mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+		_controller2->AddComponent(mc2);
+		_controller2->AddComponent(CubeColider2);
+		BoxSnapToControllerAction* SN2 = new BoxSnapToControllerAction();
+		_controller2->AddComponent(SN2);
+
+		//
+		//KEEP THIS ORDER NO MATTER WHAT!!!! 
+		//
+		//Make a clone 3 seconds ago.
+		TimeManager::Instance()->RewindMakeClone(TimeManager::Instance()->GetCurrentSnapFrame(), _headset, _controller1, _controller2);
+		currentLevel->SetHeadsetAndControllers(_headset, _controller1, _controller2,true);
+	
+		//new Objects are added to the timeline to update the old player BaseObject pointers
+		TimeManager::Instance()->UpdatePlayerObjectInTimeline(_headset);
+		TimeManager::Instance()->UpdatePlayerObjectInTimeline(_controller1);
+		TimeManager::Instance()->UpdatePlayerObjectInTimeline(_controller2);
+		
+	}
+
+	bool TimeManipulation::RaycastCloneCheck() {
+		if(!VRInputManager::GetInstance().GetController(mControllerRole).GetValid())
+		{
+			return false;
+		}
 		matrix4 mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
 		mObject->GetTransform().SetMatrix(mat);
 
 			std::vector<BaseObject*> clones = TimeManager::Instance()->GetClonesVec();
-		
 			for (int i = 0; i < clones.size(); ++i) {
+				if (clones[i]->GetUniqueID() == mCurCloneHeadset->GetUniqueID() || clones[i]->GetUniqueID() == mCurCloneController1->GetUniqueID() ||
+					clones[i]->GetUniqueID() == mCurCloneController2->GetUniqueID())
+					continue;
 				MeshComponent* mesh = (MeshComponent*)clones[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				vec4f forward;
 				forward.Set(0, 0, 1, 0);
@@ -221,12 +294,14 @@ namespace Epoch
 				size_t numTris = mesh->GetTriangleCount();
 				for (unsigned int j = 0; j < numTris; ++j) {
 					float hitTime;
-					if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, fwd, hitTime)) {
+					if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, fwd, hitTime)) { 
 							TimeManager::Instance()->DeleteClone(clones[i]->GetUniqueId());
-							return;
+							--mNumOfConfirmedClones;
+							return true;
 					}
 				}
 			}
+			return false;
 		}
 	
 } // Epoch Namespace

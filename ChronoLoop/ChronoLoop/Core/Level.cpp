@@ -95,38 +95,35 @@ namespace Epoch {
 	{
 		std::vector<Component*> components = _first->GetComponents(eCOMPONENT_COLLIDER);
 		std::vector<Component*> othersComponents = _other->GetComponents(eCOMPONENT_COLLIDER);
-
-			for (int i = 0; i < othersComponents.size(); ++i) {
-				unsigned int FirstCompId = components[i]->GetColliderId();
-				components[i]->SetComponentId(othersComponents[i]->GetColliderId());
-				othersComponents[i]->SetComponentId(FirstCompId);
+		//This only works for the controllers because the head doesnt have a collider
+		for (unsigned int i = 0; i < othersComponents.size(); i++)
+		{
+			for (int j = 0; j < components.size(); ++j) {
+				if (dynamic_cast<ControllerCollider*>(othersComponents[i]) && dynamic_cast<ControllerCollider*>(components[j]))
+				{
+					unsigned int FirstCompId = components[j]->GetColliderId();
+					components[j]->SetComponentId(othersComponents[i]->GetColliderId());
+					othersComponents[i]->SetComponentId(FirstCompId);
+				}
 			}
-		
+		}
 
-		/*components = _first->GetComponents(eCOMPONENT_AUDIOEMITTER);
-		othersComponents = _other->GetComponents(eCOMPONENT_AUDIOEMITTER);
-		for (int i = 0; i < components.size(); ++i) {
-			unsigned int FirstCompId = components[i]->GetColliderId();
-			components[i]->SetComponentId(othersComponents[i]->GetColliderId());
-			othersComponents[i]->SetComponentId(FirstCompId);
-		}*/
-
-		/*components = _first->GetComponents(eCOMPONENT_AUDIOLISTENER);
-		othersComponents = _other->GetComponents(eCOMPONENT_AUDIOLISTENER);
-		for (int i = 0; i < components.size(); ++i) {
-			unsigned int FirstCompId = components[i]->GetColliderId();
-			components[i]->SetComponentId(othersComponents[i]->GetColliderId());
-			othersComponents[i]->SetComponentId(FirstCompId);
-		}*/
 
 		components = _first->GetComponents(eCOMPONENT_CODE);
 		othersComponents = _other->GetComponents(eCOMPONENT_CODE);
 
-			for (int i = 0; i <othersComponents.size(); ++i) {
-				unsigned int FirstCompId = components[i]->GetColliderId();
-				components[i]->SetComponentId(othersComponents[i]->GetColliderId());
-				othersComponents[i]->SetComponentId(FirstCompId);
+		for (unsigned int i = 0; i < othersComponents.size(); i++)
+		{
+			for (int j = 0; j < components.size(); ++j) {
+				if (dynamic_cast<BoxSnapToControllerAction*>(othersComponents[i]) && dynamic_cast<BoxSnapToControllerAction*>(components[j]))
+				{
+					unsigned int FirstCompId = components[j]->GetColliderId();
+					components[j]->SetComponentId(othersComponents[i]->GetColliderId());
+					othersComponents[i]->SetComponentId(FirstCompId);
+				}
+
 			}
+		}
 
 	
 		components = _first->GetComponents(eCOMPONENT_MESH);
@@ -139,26 +136,9 @@ namespace Epoch {
 				othersComponents[i]->SetComponentId(FirstCompId);
 			}
 		}
-		
-
-	/*	components = _first->GetComponents(eCOMPONENT_UI);
-		othersComponents = _other->GetComponents(eCOMPONENT_UI);
-		for (int i = 0; i < components.size(); ++i) {
-			unsigned int FirstCompId = components[i]->GetColliderId();
-			components[i]->SetComponentId(othersComponents[i]->GetColliderId());
-			othersComponents[i]->SetComponentId(FirstCompId);
-		}*/
-
-		components = _first->GetComponents(eCOMPONENT_UNKNOWN);
-		othersComponents = _other->GetComponents(eCOMPONENT_UNKNOWN);
-			for (int i = 0; i < othersComponents.size(); ++i) {
-				unsigned int FirstCompId = components[i]->GetColliderId();
-				components[i]->SetComponentId(othersComponents[i]->GetColliderId());
-				othersComponents[i]->SetComponentId(FirstCompId);
-			}
 	}
 
-	void Level::SetHeadsetAndControllers(BaseObject *& _headset, BaseObject *& _controller1, BaseObject *& _controller2, ControllerCollider* _c1Collider, ControllerCollider* _c2Collider) {
+	void Level::SetHeadsetAndControllers(BaseObject *& _headset, BaseObject *& _controller1, BaseObject *& _controller2, bool _addNewHeadsetToLevel) {
 		//Swap component ids
 		SwapPlayerComponentIds(mHeadset, _headset);
 		SwapPlayerComponentIds(mController1, _controller1);
@@ -167,8 +147,6 @@ namespace Epoch {
 		unsigned short headid = _headset->GetUniqueID();
 		unsigned short cl1id = _controller1->GetUniqueID();
 		unsigned short cl2id = _controller2->GetUniqueID();
-		unsigned short c1paramCodeCollid = _c1Collider->GetColliderId();
-		unsigned short c2paramCodeCollid = _c2Collider->GetColliderId();
 
 
 		std::string headname = _headset->GetName();
@@ -202,11 +180,12 @@ namespace Epoch {
 		mController1->SetName(Controller1name);
 		mController2->SetName(Controller2name);
 	
-
-		mObjectList.push_back(_headset);
-		mObjectList.push_back(_controller1);
-		mObjectList.push_back(_controller2);
-
+		if (_addNewHeadsetToLevel)
+		{
+			mObjectList.push_back(_headset);
+			mObjectList.push_back(_controller1);
+			mObjectList.push_back(_controller2);
+		}
 		////Add the headset and controllers to the time manager with their new ids
 		TimeManager::Instance()->AddObjectToTimeline(mHeadset);
 		TimeManager::Instance()->AddObjectToTimeline(mController1);
@@ -646,7 +625,7 @@ namespace Epoch {
 					else if (colliderType == "Plane")
 					{
 						physical = true;
-
+						
 						PlaneCollider* col = new PlaneCollider(obj, trigger, staticF, kineticF, fabsf((colliderPosition + position) * normal), normal);//TODO: Fix offset
 						obj->AddComponent(col);
 					}

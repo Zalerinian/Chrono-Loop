@@ -8,7 +8,7 @@ namespace Hourglass
 {
 	public class TexturedShape : RenderShape
 	{
-		public enum TextureType { Diffuse = 0, Normal, Specular, Emissive };
+		public enum TextureType { Diffuse = 0, Normal, Specular, Emissive, Max };
 		public BaseTexture[] mTextures = new BaseTexture[4];
 		public CustomVertex.PositionNormalTextured[] mVertices;
 
@@ -70,7 +70,7 @@ namespace Hourglass
 						case "vt":
 							Vector2 uv = new Vector2();
 							uv.X = (float)Convert.ToDouble(parts[1]);
-							uv.Y = (float)Convert.ToDouble(parts[2]);
+							uv.Y = 1 - (float)Convert.ToDouble(parts[2]);
 							UVs.Add(uv);
 							break;
 						case "f":
@@ -103,11 +103,19 @@ namespace Hourglass
 
 		public void SetTexture(TextureType location, BaseTexture t)
 		{
+			if(mTextures[(int)location] != null)
+			{
+				mTextures[(int)location].Dispose();
+			}
 			mTextures[(int)location] = t;
 		}
 
 		public void SetTexture(TextureType location, string file)
 		{
+			if (mTextures[(int)location] != null)
+			{
+				mTextures[(int)location].Dispose();
+			}
 			SetTexture(location, Renderer.Instance.LoadTexture(file));
 		}
 
@@ -139,5 +147,47 @@ namespace Hourglass
 			mIndexBuffer.SetData(mIndices, 0, LockFlags.None);
 			mVertexBuffer.SetData(mVertices, 0, LockFlags.None);
 		}
+
+		public override void Dispose()
+		{
+			if(mIndexBuffer != null)
+			{
+				mIndexBuffer.Dispose();
+				mIndexBuffer = null;
+			}
+			if (mVertexBuffer != null)
+			{
+				mVertexBuffer.Dispose();
+				mVertexBuffer = null;
+			}
+			for(TextureType t = TextureType.Diffuse; t < TextureType.Max; ++t)
+			{
+				if(mTextures[(int)t] != null)
+				{
+					mTextures[(int)t].Dispose();
+				}
+			}
+		}
+
+		public override bool CheckRaycast(Vector3 _start, Vector3 _dir, out float _time)
+		{
+			for (int TriIndex = 0; TriIndex < Indices.Length; TriIndex += 3)
+			{
+				Vector3 norm = mVertices[Indices[TriIndex + 0]].Normal + mVertices[Indices[TriIndex + 1]].Normal + mVertices[Indices[TriIndex + 2]].Normal;
+				norm.Multiply(1.0f / 3.0f);
+				float t = 0;
+				if (RayToTriangle(mVertices[Indices[TriIndex + 0]].Position, mVertices[Indices[TriIndex + 1]].Position, mVertices[Indices[TriIndex + 2]].Position, norm, _start, _dir, out t))
+				{
+					_time = t;
+					return true;
+				}
+			}
+			_time = 0;
+			return false;
+		}
+
+
+
+
 	}
 }

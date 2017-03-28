@@ -55,6 +55,7 @@ namespace Epoch {
 				std::forward<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>(srv),
 				std::forward<Microsoft::WRL::ComPtr<ID3D11Texture2D>>(_tex)
 			);
+		_tex = mTextureMap2D[_name].second;
 		if (_srv) {
 			(*_srv) = mTextureMap2D[_name].first;
 		}

@@ -200,11 +200,14 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="..\DXTK\scoped.h" />
     <ClInclude Include="Actions\BoxSnapToControllerAction.hpp" />
     <ClInclude Include="Actions\CCButtonPress.h" />
+    <ClInclude Include="Actions\CCDisplayOnPause.h" />
     <ClInclude Include="Actions\CCElasticAABBtoAABB.h" />
     <ClInclude Include="Actions\CCElasticAABBToSphere.h" />
     <ClInclude Include="Actions\CCElasticReactionWithPlane.h" />
     <ClInclude Include="Actions\CCElasticSphereToSphere.h" />
     <ClInclude Include="Actions\CCEnterLevel.h" />
+    <ClInclude Include="Actions\CCPauseToCancel.h" />
+    <ClInclude Include="Actions\CCTeleToPlay.h" />
     <ClInclude Include="Actions\CodeComponent.hpp" />
     <ClInclude Include="Actions\GestureDetection.hpp" />
     <ClInclude Include="Actions\HeadsetFollow.hpp" />
@@ -212,6 +215,10 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Actions\TeleportAction.hpp" />
     <ClInclude Include="Actions\TimelineIndicator.hpp" />
     <ClInclude Include="Actions\TimeManipulation.h" />
+    <ClInclude Include="Actions\UIClonePlusToMinus.h" />
+    <ClInclude Include="Actions\UICloneText.h" />
+    <ClInclude Include="Actions\UICreateToDeleteClone.h" />
+    <ClInclude Include="Actions\UIRewind.h" />
     <ClInclude Include="Actions\WhatInHellAmIHitting.hpp" />
     <ClInclude Include="Common\Breakpoint.h" />
     <ClInclude Include="Common\Common.h" />
