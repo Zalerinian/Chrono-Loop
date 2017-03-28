@@ -121,6 +121,28 @@ namespace Epoch {
 		mTimeline->SetObjectInterpolationTime(_time);
 	}
 
+	void TimeManager::SetupClonePairs(unsigned short _id1, unsigned short _id2, unsigned short _id3)
+	{
+		//annoying but helps for finding clones
+		Clonepair* p1 = new Clonepair();
+		Clonepair* p2 = new Clonepair();
+		Clonepair* p3 = new Clonepair();
+		p1->mCur = _id1;
+		p1->mOther1 = _id2;
+		p1->mOther2 = _id3;
+		SetClonePair(_id1, p1);
+
+		p2->mCur = _id2;
+		p2->mOther1 = _id1;
+		p2->mOther2 = _id3;
+		SetClonePair(_id2, p2);
+
+		p3->mCur = _id3;
+		p3->mOther1 = _id1;
+		p3->mOther2 = _id2;
+		SetClonePair(_id3, p3);
+	}
+
 	TimeManager * TimeManager::Instance() {
 			if (!instanceTimemanager) {
 				instanceTimemanager = new TimeManager();
