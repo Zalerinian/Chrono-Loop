@@ -665,7 +665,7 @@ namespace Epoch {
 						}
 						else if (codeComs[i] == "EnterLevel")
 						{
-							if (name == "Door2")
+							if (name == "DoorEmitter2")
 							{
 								CCLoadHub* code = new CCLoadHub();
 								obj->AddComponent(code);
