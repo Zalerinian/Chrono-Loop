@@ -10,7 +10,7 @@ namespace Hourglass
         protected NumericUpDown mRadius, mX, mY, mZ;
         protected Panel mPosPanel;
 
-        public SphereCollider(BaseObject _owner, int _yOffset = 0) : base(_owner, 64 + _yOffset)
+        public SphereCollider(int _yOffset = 0) : base(64 + _yOffset)
         {
             #region Component Creation
 

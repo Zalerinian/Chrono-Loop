@@ -269,6 +269,7 @@ namespace Hourglass
             mVertices = vertices.ToArray();
             mIndices = Ind.ToArray();
         }
+
         public Vector3 TriNormal(int _triangleIndice)
         {
             Vector3 n1, n2, n3, nOut;

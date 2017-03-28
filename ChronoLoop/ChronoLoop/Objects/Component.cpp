@@ -279,7 +279,7 @@ namespace Epoch
 
 	void CubeCollider::Update() {
 		/*if (mNode == nullptr) {
-			mNode = Renderer::Instance()->AddNode(mShape);
+			mNode = Renderer::Instance()->AddOpaqueNode(mShape);
 		}
 		vec3f size = mMax - mMin;
 		matrix4 pos = matrix4::CreateScale(size.x, size.y, size.z);

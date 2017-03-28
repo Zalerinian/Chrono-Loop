@@ -1,4 +1,6 @@
-		struct EyeData
+#include "../RenderShaderDefines.hlsli"
+
+struct EyeData
 {
 	matrix view;
 	matrix projection;

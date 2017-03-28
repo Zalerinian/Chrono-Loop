@@ -15,7 +15,6 @@ xcopy /y /d /e "Resources" "_Build\Resources"
 echo D | xcopy /y /d /e "Legal" "_Build\Legal"
 del /q /s "_Build\bin64\*.ipdb"
 del /q /s "_Build\bin64\*.iobj"
-del /q /s "_Build\bin64\*.pdb"
 del /q /s "_Build\bin64\PDB Files"
 del /q /s "_Build\Resources\*.mtl"
 

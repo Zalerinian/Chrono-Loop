@@ -30,6 +30,9 @@ namespace Hourglass
         [DefaultValue(4)]
         public int ArrowHeight { get; set; }
 
+		[DefaultValue(true)]
+		public bool ArrowVisible { get; set; }
+
         public MenuButton() : base()
         {
             Menu = null;
@@ -38,6 +41,7 @@ namespace Hourglass
             ArrowMargin = 4;
             ArrowWidth = 7;
             ArrowHeight = 4;
+			ArrowVisible = true;
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
@@ -48,7 +52,7 @@ namespace Hourglass
             }
             else if (e.Button == MouseButtons.Left)
             {
-                if (e.X >= ClientRectangle.Width - ArrowAreaWidth)
+                if (e.X >= ClientRectangle.Width - ArrowAreaWidth || !ArrowVisible)
                 {
 
 
@@ -75,14 +79,14 @@ namespace Hourglass
         {
             base.OnPaint(e);
 
-            if (Menu != null)
+            if (Menu != null && ArrowVisible)
             {
                 int arrowX = ClientRectangle.Width - ArrowAreaWidth + ArrowMargin;
                 int arrowY = ClientRectangle.Height / 2 - 1;
 
                 Brush brush = Enabled ? SystemBrushes.ControlText : SystemBrushes.ButtonShadow;
                 Point[] arrows = new Point[] { new Point(arrowX, arrowY), new Point(arrowX + ArrowWidth, arrowY), new Point(arrowX + (ArrowWidth / 2), arrowY + ArrowHeight) };
-                e.Graphics.FillPolygon(brush, arrows);
+                e.Graphics.FillPolygon(brush, arrows); 
 
                 float lineMargin = ClientRectangle.Height * 0.2f;
                 e.Graphics.DrawLine(SystemPens.AppWorkspace, ClientRectangle.Width - ArrowAreaWidth - 1, lineMargin, ClientRectangle.Width - ArrowAreaWidth - 1, ClientRectangle.Height - lineMargin);
