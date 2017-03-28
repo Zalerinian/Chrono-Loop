@@ -31,12 +31,13 @@ namespace Epoch {
 		bool mRewindMakeClone = false;
 		bool mShouldUpdateInterpolators = false;
 		bool mShouldPulse = false;
-		int mtempCurSnapFrame = 0;
+		unsigned int mtempCurSnapFrame = 0;
 		std::vector<BaseObject*>mClones;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneInterpolators;
 		//This is for the hitboxes for the controller
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneColliderInterpolators;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mObjectRewindInterpolators; 
+		std::unordered_map<unsigned short, Clonepair*>mClonePairs;
 		//Timeline* GetTimeLine();
 
 		
@@ -45,6 +46,7 @@ namespace Epoch {
 		std::unordered_map<unsigned short, unsigned int>mCloneTextures;
 
 		
+		Timeline* GetTimeLine() { return mTimeline; };
 
 		TimeManager();
 		~TimeManager();
@@ -64,7 +66,7 @@ namespace Epoch {
 		void DeleteClone(unsigned short _id1);
 		static void Destroy();
 		bool DoesCloneExist(unsigned short _id,unsigned int _frame);
-		void FindOtherClones(Clonepair& _pair);
+		//void FindOtherClones(Clonepair& _pair);
 		//Returns the current snapshot indx
 		unsigned int GetCurrentSnapFrame();
 		//Retrieves delta time
@@ -72,27 +74,30 @@ namespace Epoch {
 		Interpolator<matrix4>* GetCloneInterpolator(unsigned short _id);
 		Interpolator<matrix4>* GetCloneColliderInterpolator(unsigned short _id);
 		Interpolator<matrix4>* GetObjectInterpolator(unsigned short _id);
-
+		Clonepair* GetClonePair(unsigned short _id);
 		std::vector<BaseObject*>& GetClonesVec() { return mClones; };
-		//DONT GET RID OF THIS PLZ
-		Timeline* GetTimeLine() { return mTimeline; };
 		std::string GetNextTexture();
-		int GetTempCurSnap() { return mtempCurSnapFrame; };
+		unsigned int GetTempCurSnap() { return mtempCurSnapFrame; };
 		bool GetShouldPulse() { return mShouldPulse; };
-		void SetTempCurSnap() { mtempCurSnapFrame = GetCurrentSnapFrame(); };
+		float GetTimeLineObjectInterpTime();
+		static TimeManager* Instance();
 		unsigned int GetTotalSnapsmade();
 		//Go back into time. Send in dest frame and send in player headset and conrollers id
 		void RewindTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		//Go back into time and make clone. Send in dest frame and send in player headset and conrollers baseObjects
 		void RewindMakeClone(unsigned int _frame, BaseObject*& _ob1, BaseObject*& _ob2, BaseObject*& _ob3);
-		static TimeManager* Instance();
+		void SetCreationTimeofClone(unsigned short _id1, unsigned short _id2, unsigned short _id3);
+		void SetClonePair(unsigned short _id, Clonepair* _pair) { mClonePairs[_id] = _pair; };
+		void SetTempCurSnap() { mtempCurSnapFrame = GetCurrentSnapFrame(); };
+		void SetTimelineObjectInterpTime(float _time);
 		void Update(float _delta);
+
 		//Function Pointer / Command Console
 		static void ToggleCloneCountDisplay(void* _command, std::wstring _ifOn);
 		static void ToggleSnapshotCountDisplay(void* _command, std::wstring _ifOn);
 		void DisplayCloneCount();
 		void DisplaySnapshotCount();
-		void UpdateCloneCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);
+		void UpdateCloneMadeTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void BrowseTimeline(int _gesture, int _frameRewind);
 		void MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC);
 

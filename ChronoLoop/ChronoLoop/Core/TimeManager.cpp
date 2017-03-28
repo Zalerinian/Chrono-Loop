@@ -37,7 +37,13 @@ namespace Epoch {
 		for (auto it = mObjectRewindInterpolators.begin(); it != mObjectRewindInterpolators.end(); ++it) {
 			delete it->second;
 		}
+
 		mObjectRewindInterpolators.clear();
+	}
+	//made this function so the timeline could stay as a black box
+	void TimeManager::SetCreationTimeofClone(unsigned short _id1, unsigned short _id2, unsigned short _id3)
+	{
+		mTimeline->SetCloneObjectCreationTime(_id1, _id2, _id3);
 	}
 
 	void TimeManager::Update(float _delta) {
@@ -106,7 +112,16 @@ namespace Epoch {
 				}
 		}
 	}
-		TimeManager * TimeManager::Instance() {
+	float TimeManager::GetTimeLineObjectInterpTime()
+	{
+		return mTimeline->GetObjectInterpolationTime();
+	}
+	void TimeManager::SetTimelineObjectInterpTime(float _time)
+	{
+		mTimeline->SetObjectInterpolationTime(_time);
+	}
+
+	TimeManager * TimeManager::Instance() {
 			if (!instanceTimemanager) {
 				instanceTimemanager = new TimeManager();
 
@@ -173,7 +188,7 @@ namespace Epoch {
 				}
 			}
 
-			SystemLogger::GetLog() << "Bitset:";
+		/*	SystemLogger::GetLog() << "Bitset:";
 			for (unsigned int i = 0; i < mCloneTextureBitset.size(); i++)
 			{
 				if(mCloneTextureBitset[i] == true)
@@ -181,7 +196,7 @@ namespace Epoch {
 				else
 					SystemLogger::GetLog() << "0";
 			}
-			SystemLogger::GetLog() << std::endl;
+			SystemLogger::GetLog() << std::endl;*/
 	}
 
 		void TimeManager::UpdatePlayerObjectInTimeline(BaseObject *  _obj) {
@@ -196,6 +211,10 @@ namespace Epoch {
 			for (auto Interp : mCloneInterpolators) {
 				if (Interp.second)
 					delete Interp.second;
+			}
+			for (auto pair : mClonePairs) {
+				if (pair.second)
+					delete pair.second;
 			}
 			/*for (auto InterpCollider : mCloneColliderInterpolators) {
 				if (InterpCollider.second)
@@ -215,9 +234,11 @@ namespace Epoch {
 
 		void TimeManager::DeleteClone(unsigned short _id1)
 	{
-			Clonepair pair;
-			pair.mCur = _id1;
-			FindOtherClones(pair);
+			/*Clonepair pair;
+			pair.mCur = _id1;*/
+			//FindOtherClones(pair);
+			//USe a copy instead of a pointer so you will still have it after the pair gets deleted
+			Clonepair pair = *GetClonePair(_id1);
 			bool del = false;
 			for (int i = 0; i < mClones.size(); ) {
 				del = false;
@@ -248,18 +269,30 @@ namespace Epoch {
 							break;
 						}
 					}
+
+					//Find the clone's pair and delete it
+					for (auto j = mClonePairs.begin(); j != mClonePairs.end(); ++j) {
+						if (j->first == mClones[i]->GetUniqueID())
+						{
+							delete mClonePairs[j->first];
+							mClonePairs.erase(mClones[i]->GetUniqueID());
+							break;
+						}
+					}
+
 					/*for (auto j = mCloneColliderInterpolators.begin(); j != mCloneColliderInterpolators.end(); ++j) {
 						if (mClones[i]->GetComponentCount(eCOMPONENT_COLLIDER) > 0 && j->first == mClones[i]->GetComponentIndexed(eCOMPONENT_COLLIDER,0)->GetColliderId())
 						{
-							delete mCloneInterpolators[j->first];
-							mCloneInterpolators.erase(mClones[i]->GetUniqueID());
+							delete mCloneColliderInterpolators[j->first];
+							mCloneColliderInterpolators.erase(mClones[i]->GetUniqueID());
 							break;
 						}
 					}*/
-
+					SystemLogger::GetLog() << "Clone id:" << mClones[i]->GetUniqueID() << " has been deleted" << std::endl;
 					//Remove it from being tracked by timeline
 					mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueId());
-					Pool::Instance()->iRemoveObject(mClones[i]->GetUniqueID());
+					LevelManager::GetInstance().GetCurrentLevel()->RemoveObject(mClones[i]);
+					Pool::Instance()->iAddObject(mClones[i]);
 					mClones.erase(mClones.begin() + i);
 					del = true;
 				}
@@ -284,6 +317,12 @@ namespace Epoch {
 				return mObjectRewindInterpolators[_id];
 			return nullptr;
 		}
+		Clonepair * TimeManager::GetClonePair(unsigned short _id)
+		{
+			if (mClonePairs.find(_id) != mClonePairs.end())
+				return mClonePairs[_id];
+			return nullptr;
+		}
 		//Interpolator<matrix4>* TimeManager::GetCloneColliderInterpolator(unsigned short _id) {
 
 			//if (mCloneColliderInterpolators.find(_id) != mCloneColliderInterpolators.end())
@@ -298,10 +337,10 @@ namespace Epoch {
 					TimeManipulation* left = LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator();
 					TimeManipulation* right = LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator();
 					if (left) {
-						SystemLogger::GetLog() << "Left Controller returned " << left->GetTexture(i) << std::endl;
+						//SystemLogger::GetLog() << "Left Controller returned " << left->GetTexture(i) << std::endl;
 						return left->GetTexture(i);
 					} else if (right) {
-						SystemLogger::GetLog() << "Right Controller returned " << right->GetTexture(i) << std::endl;
+						//SystemLogger::GetLog() << "Right Controller returned " << right->GetTexture(i) << std::endl;
 						return right->GetTexture(i);
 					}
 				}
@@ -343,7 +382,7 @@ namespace Epoch {
 			mLevelTime = mTimeline->GetCurrentGameTimeIndx() + 1;
 		}
 
-		void TimeManager::UpdateCloneCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3)
+		void TimeManager::UpdateCloneMadeTime(unsigned short _id1, unsigned short _id2, unsigned short _id3)
 		{
 			unsigned short ids[3] = { _id1,_id2,_id3 };
 			mTimeline->ActivateCloneBitset(ids);
@@ -362,35 +401,35 @@ namespace Epoch {
 
 		}
 
-		void TimeManager::FindOtherClones(Clonepair & _pair)
-		{
-			CloneLifeTime* curr = (CloneLifeTime*)mTimeline->GetObjectLifetime(_pair.mCur);
-			if (!curr)
-				return;
-			bool pair1 = false;
+		//void TimeManager::FindOtherClones(Clonepair & _pair)
+		//{
+		//	CloneLifeTime* curr = (CloneLifeTime*)mTimeline->GetObjectLifetime(_pair.mCur);
+		//	if (!curr)
+		//		return;
+		//	bool pair1 = false;
 
-			for (unsigned int i = 0; i < mClones.size(); i++) {
-				if (mClones[i]->GetUniqueId() == _pair.mCur)
-					continue;
-				CloneLifeTime* temp = (CloneLifeTime*)mTimeline->GetObjectLifetime(mClones[i]->GetUniqueId());
-				if(temp &&temp->mMade == curr->mMade && (mClones[i]->GetName().find("Headset") != std::string::npos || mClones[i]->GetName().find("Controller") != std::string::npos))
-				{
-				
-					if(!pair1)
-					{
-						_pair.mOther1 = mClones[i]->GetUniqueId();
-						pair1 = true;
-					}
-					else
-					{
-						//found the last pair
-						_pair.mOther2 = mClones[i]->GetUniqueId();
-						return;
-					}
+		//	for (unsigned int i = 0; i < mClones.size(); i++) {
+		//		if (mClones[i]->GetUniqueId() == _pair.mCur)
+		//			continue;
+		//		CloneLifeTime* temp = (CloneLifeTime*)mTimeline->GetObjectLifetime(mClones[i]->GetUniqueId());
+		//		if(temp && temp->mBirth == curr->mBirth && (mClones[i]->GetName().find("Headset") != std::string::npos || mClones[i]->GetName().find("Controller") != std::string::npos))
+		//		{
+		//		
+		//			if(!pair1)
+		//			{
+		//				_pair.mOther1 = mClones[i]->GetUniqueId();
+		//				pair1 = true;
+		//			}
+		//			else
+		//			{
+		//				//found the last pair
+		//				_pair.mOther2 = mClones[i]->GetUniqueId();
+		//				return;
+		//			}
 
-				}
-			}
-		}
+		//		}
+		//	}
+		//}
 
 		void TimeManager::ToggleCloneCountDisplay(void * _command, std::wstring _ifOn) {
 			CommandConsole* cc = (CommandConsole*)_command;
@@ -474,21 +513,21 @@ namespace Epoch {
 			else if (_gesture == 1)
 				_frameRewind *= -1;
 			else if (_gesture == 2) {
-				LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->RaycastCloneCheck();
-				LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->RaycastCloneCheck();
+				/*LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->RaycastCloneCheck();
+				LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->RaycastCloneCheck();*/
 				return;
 			}
 
 			if ((mtempCurSnapFrame != 0 && _gesture == -1) || (mtempCurSnapFrame != temp && _gesture == 1)) {
 				int placeHolder = mtempCurSnapFrame;
 				mtempCurSnapFrame -= _frameRewind;
+				SystemLogger::GetLog() << "mTempCurSnapFrame: " << mtempCurSnapFrame << std::endl;
 				mTimeline->PrepareAllObjectInterpolators(placeHolder, mtempCurSnapFrame);
 				mShouldUpdateInterpolators = true;
 				mShouldPulse = true;
 			}
 			else {
 				mShouldPulse = false;
-
 			}
 
 		

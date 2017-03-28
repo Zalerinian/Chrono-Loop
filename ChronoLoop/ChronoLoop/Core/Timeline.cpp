@@ -367,6 +367,8 @@ namespace Epoch {
 		newObject2->mBirth = mSnaptimes[mCurrentGameTimeIndx];
 		mObjectLifeTimes[_id3] = newObject2;
 
+		SystemLogger::GetLog() << "Clone Birth: " << mCurrentGameTimeIndx << " snapshot" << std::endl;
+
 	}
 
 	void Timeline::SetCloneDeathTime(unsigned short _id1, unsigned short _id2, unsigned short _id3) {
@@ -385,6 +387,7 @@ namespace Epoch {
 			ObjectLifeTime* newObject2 = mObjectLifeTimes[_id3];
 			newObject2->mDeath = mSnaptimes[mCurrentGameTimeIndx];
 		}
+		SystemLogger::GetLog() << "Clone Death: " << mCurrentGameTimeIndx << " snapshot" << std::endl;
 	}
 
 	void Timeline::SetCloneMadeTime(unsigned short _id1, unsigned short _id2, unsigned short _id3) {
@@ -400,6 +403,7 @@ namespace Epoch {
 		newObject2->mMade = mSnaptimes[mCurrentGameTimeIndx];
 		mObjectLifeTimes[_id3] = newObject2;
 
+		SystemLogger::GetLog() << "Clone MadeTime: " << mCurrentGameTimeIndx << " snapshot" << std::endl;
 	}
 
 	void Timeline::SetBaseObjectDeathTime(unsigned short _id) {
@@ -453,17 +457,13 @@ namespace Epoch {
 			{
 				SnapComponent_Physics* temp = new SnapComponent_Physics();
 				memcpy(temp, (SnapComponent_Physics*)_src->mComponents[i], sizeof(SnapComponent_Physics));
-				_dst->mComponents.push_back(temp);
 			}
 			else
 			{
 				SnapComponent* temp = new SnapComponent();
 				memcpy(temp, _src->mComponents[i], sizeof(SnapComponent));
-				_dst->mComponents.push_back(temp);
 			}
 		}
-		_dst->mComponents = _src->mComponents;
-
 	}
 
 	ObjectLifeTime * Timeline::GetObjectLifetime(unsigned short _id) {

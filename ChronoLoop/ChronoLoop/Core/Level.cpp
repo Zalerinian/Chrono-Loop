@@ -8,9 +8,9 @@
 #include "../Actions/CCElasticAABBToSphere.h"
 #include "../Actions/TimeManipulation.h"
 #include "../Actions/HeadsetFollow.hpp"
-#include "../Actions\CodeComponent.hpp"
+#include "../Actions/CodeComponent.hpp"
 #include "../Actions/CCButtonPress.h"
-#include "../Actions\CCEnterLevel.h"
+#include "../Actions/CCEnterLevel.h"
 #include "../Actions/MainMenuBT.h"
 #include "../Objects/MeshComponent.h"
 #include "../Objects/TransparentMeshComponent.h"
@@ -18,10 +18,15 @@
 #include "../tinyxml/tinystr.h"
 #include "../Common/Settings.h"
 #include "../Particles/ParticleComponents.h"
+#include "../Input/CommandConsole.h"
 
 namespace Epoch {
 
-	Level::Level() {}
+	CCEnterLevel* access = nullptr;
+	Level::Level() 
+	{
+		CommandConsole::Instance().AddCommand(L"/LOAD", LoadLevelCmnd);
+	}
 
 	Level::~Level() {
 		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
@@ -90,38 +95,35 @@ namespace Epoch {
 	{
 		std::vector<Component*> components = _first->GetComponents(eCOMPONENT_COLLIDER);
 		std::vector<Component*> othersComponents = _other->GetComponents(eCOMPONENT_COLLIDER);
-
-			for (int i = 0; i < othersComponents.size(); ++i) {
-				unsigned int FirstCompId = components[i]->GetColliderId();
-				components[i]->SetComponentId(othersComponents[i]->GetColliderId());
-				othersComponents[i]->SetComponentId(FirstCompId);
+		//This only works for the controllers because the head doesnt have a collider
+		for (unsigned int i = 0; i < othersComponents.size(); i++)
+		{
+			for (int j = 0; j < components.size(); ++j) {
+				if (dynamic_cast<ControllerCollider*>(othersComponents[i]) && dynamic_cast<ControllerCollider*>(components[j]))
+				{
+					unsigned int FirstCompId = components[j]->GetColliderId();
+					components[j]->SetComponentId(othersComponents[i]->GetColliderId());
+					othersComponents[i]->SetComponentId(FirstCompId);
+				}
 			}
-		
+		}
 
-		/*components = _first->GetComponents(eCOMPONENT_AUDIOEMITTER);
-		othersComponents = _other->GetComponents(eCOMPONENT_AUDIOEMITTER);
-		for (int i = 0; i < components.size(); ++i) {
-			unsigned int FirstCompId = components[i]->GetColliderId();
-			components[i]->SetComponentId(othersComponents[i]->GetColliderId());
-			othersComponents[i]->SetComponentId(FirstCompId);
-		}*/
-
-		/*components = _first->GetComponents(eCOMPONENT_AUDIOLISTENER);
-		othersComponents = _other->GetComponents(eCOMPONENT_AUDIOLISTENER);
-		for (int i = 0; i < components.size(); ++i) {
-			unsigned int FirstCompId = components[i]->GetColliderId();
-			components[i]->SetComponentId(othersComponents[i]->GetColliderId());
-			othersComponents[i]->SetComponentId(FirstCompId);
-		}*/
 
 		components = _first->GetComponents(eCOMPONENT_CODE);
 		othersComponents = _other->GetComponents(eCOMPONENT_CODE);
 
-			for (int i = 0; i <othersComponents.size(); ++i) {
-				unsigned int FirstCompId = components[i]->GetColliderId();
-				components[i]->SetComponentId(othersComponents[i]->GetColliderId());
-				othersComponents[i]->SetComponentId(FirstCompId);
+		for (unsigned int i = 0; i < othersComponents.size(); i++)
+		{
+			for (int j = 0; j < components.size(); ++j) {
+				if (dynamic_cast<BoxSnapToControllerAction*>(othersComponents[i]) && dynamic_cast<BoxSnapToControllerAction*>(components[j]))
+				{
+					unsigned int FirstCompId = components[j]->GetColliderId();
+					components[j]->SetComponentId(othersComponents[i]->GetColliderId());
+					othersComponents[i]->SetComponentId(FirstCompId);
+				}
+
 			}
+		}
 
 	
 		components = _first->GetComponents(eCOMPONENT_MESH);
@@ -134,26 +136,9 @@ namespace Epoch {
 				othersComponents[i]->SetComponentId(FirstCompId);
 			}
 		}
-		
-
-	/*	components = _first->GetComponents(eCOMPONENT_UI);
-		othersComponents = _other->GetComponents(eCOMPONENT_UI);
-		for (int i = 0; i < components.size(); ++i) {
-			unsigned int FirstCompId = components[i]->GetColliderId();
-			components[i]->SetComponentId(othersComponents[i]->GetColliderId());
-			othersComponents[i]->SetComponentId(FirstCompId);
-		}*/
-
-		components = _first->GetComponents(eCOMPONENT_UNKNOWN);
-		othersComponents = _other->GetComponents(eCOMPONENT_UNKNOWN);
-			for (int i = 0; i < othersComponents.size(); ++i) {
-				unsigned int FirstCompId = components[i]->GetColliderId();
-				components[i]->SetComponentId(othersComponents[i]->GetColliderId());
-				othersComponents[i]->SetComponentId(FirstCompId);
-			}
 	}
 
-	void Level::SetHeadsetAndControllers(BaseObject *& _headset, BaseObject *& _controller1, BaseObject *& _controller2, ControllerCollider* _c1Collider, ControllerCollider* _c2Collider) {
+	void Level::SetHeadsetAndControllers(BaseObject *& _headset, BaseObject *& _controller1, BaseObject *& _controller2, bool _addNewHeadsetToLevel) {
 		//Swap component ids
 		SwapPlayerComponentIds(mHeadset, _headset);
 		SwapPlayerComponentIds(mController1, _controller1);
@@ -162,8 +147,6 @@ namespace Epoch {
 		unsigned short headid = _headset->GetUniqueID();
 		unsigned short cl1id = _controller1->GetUniqueID();
 		unsigned short cl2id = _controller2->GetUniqueID();
-		unsigned short c1paramCodeCollid = _c1Collider->GetColliderId();
-		unsigned short c2paramCodeCollid = _c2Collider->GetColliderId();
 
 
 		std::string headname = _headset->GetName();
@@ -197,11 +180,12 @@ namespace Epoch {
 		mController1->SetName(Controller1name);
 		mController2->SetName(Controller2name);
 	
-
-		mObjectList.push_back(_headset);
-		mObjectList.push_back(_controller1);
-		mObjectList.push_back(_controller2);
-
+		if (_addNewHeadsetToLevel)
+		{
+			mObjectList.push_back(_headset);
+			mObjectList.push_back(_controller1);
+			mObjectList.push_back(_controller2);
+		}
 		////Add the headset and controllers to the time manager with their new ids
 		TimeManager::Instance()->AddObjectToTimeline(mHeadset);
 		TimeManager::Instance()->AddObjectToTimeline(mController1);
@@ -450,15 +434,15 @@ namespace Epoch {
 							else if (elementType == "NormalForce")
 								normF = std::strtof(pData->Value(), nullptr);
 							else if(elementType == "MaxParticles")
-								maxParticles = std::strtof(pData->Value(), nullptr);
+								maxParticles = (int)std::strtof(pData->Value(), nullptr);
 							else if (elementType == "TotalParticles")
-								totalParticles = std::strtof(pData->Value(), nullptr);
+								totalParticles = (int)std::strtof(pData->Value(), nullptr);
 							else if(elementType == "Texture")
 								particleTexture = pData->Value();
 							else if(elementType == "PPS")
-								PPS = std::strtof(pData->Value(), nullptr);
+								PPS = (int)std::strtof(pData->Value(), nullptr);
 							else if(elementType == "LifeTime")
-								lifeTime = std::strtof(pData->Value(), nullptr);
+								lifeTime = (int)std::strtof(pData->Value(), nullptr);
 							else if(elementType == "StartSize")
 								startSize = std::strtof(pData->Value(), nullptr);
 							else if(elementType == "EndSize")
@@ -641,7 +625,7 @@ namespace Epoch {
 					else if (colliderType == "Plane")
 					{
 						physical = true;
-
+						
 						PlaneCollider* col = new PlaneCollider(obj, trigger, staticF, kineticF, fabsf((colliderPosition + position) * normal), normal);//TODO: Fix offset
 						obj->AddComponent(col);
 					}
@@ -723,6 +707,42 @@ namespace Epoch {
 		else {
 			CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /WIREFRAME (ON/OFF)");
 		}
+	}
+	void Level::LoadLevelCmnd(void* _commandConsole, std::wstring _Level)
+	{
+		CommandConsole* self = (CommandConsole*)_commandConsole;
+
+		if (access == nullptr)
+		{
+			std::list<BaseObject*> copyList = LevelManager::GetInstance().GetCurrentLevel()->GetLevelObjects();
+			for (auto it = copyList.begin(); it != copyList.end(); ++it) {
+				std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+				if (CodeComps.size() > 0) {
+					for (size_t x = 0; x < CodeComps.size(); ++x)
+					{
+						if (dynamic_cast<CCEnterLevel*>(CodeComps[x])) {
+							access = ((CCEnterLevel*)CodeComps[x]);
+							break;
+						}
+					}
+					if (access != nullptr)
+						break;
+				}
+			}
+		}
+		//std::list<BaseObject*> objects = mObjectList;
+		if (access == nullptr)
+			CommandConsole::Instance().DisplaySet(L"FAILED TO LOAD LEVEL :(");
+		else if (access->GetOnce() == false)
+			CommandConsole::Instance().DisplaySet(L"LEVEL IS ALREADY LOADED");
+		else if ((_Level == L"LEVELONE" || _Level == L"LEVEL_ONE") && access->GetOnce() == true) {
+			access->SetOnce(false);
+			CommandConsole::Instance().Toggle();
+		}
+		else if (access->GetOnce() == true)
+			CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _Level + L"\nCORRECT INPUT: /LOAD (LEVELNAME)");
+
+
 	}
 
 } // Epoch Namespace

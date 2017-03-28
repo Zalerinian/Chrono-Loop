@@ -27,8 +27,12 @@ namespace Epoch {
 	}
 
 	void MeshComponent::Update() {
-		if (mNode) {
-			mObject->GetTransform().GetMatrix(mNode->data);
+		if (mNode) 
+		{
+			if (mObject->GetParent())
+				mNode->data = mObject->GetTransform().GetMatrix() * mObject->GetParent()->GetTransform().GetMatrix();
+			else
+				mObject->GetTransform().GetMatrix(mNode->data);
 		}
 	}
 
