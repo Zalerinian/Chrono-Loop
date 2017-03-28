@@ -47,6 +47,7 @@ namespace Epoch {
 
 	void TransparentMeshComponent::SetAlpha(float _a)
 	{
+		SystemLogger::Debug() << "Setting alpha of " << std::hex << (int)this << std::dec << " to: " << _a << std::endl;
 		mAlpha = _a;
 		auto buffer = mShape->GetContext().mPixelCBuffers[ePB_TP_Alpha];
 		Renderer::Instance()->GetContext()->UpdateSubresource(buffer.Get(), 0, NULL, &mAlpha, 0, 0);
