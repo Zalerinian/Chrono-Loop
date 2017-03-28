@@ -15,18 +15,13 @@ namespace Hourglass
 
 		public const float RADIANS_TO_DEGREES = ((180.0f / 3.14f));
 		public const float DEGREES_TO_RADIANS = (1 / 180.0f * 3.14f);
-		private float mRotationSpeed;
+		private float mRotationSpeed = 0.005f, mGizmoSpeed = 25.0f;
 		private Microsoft.DirectX.DirectInput.Device mKeyboard;
-		private List<ToolObject> objects = new List<ToolObject>();
-		private List<ToolObject> higharchy = new List<ToolObject>();
-		private List<ToolObjectColor> debugObjs = new List<ToolObjectColor>();
 		private Stopwatch mFPSTimer = new Stopwatch();
 		private List<long> advMillisecond = new List<long>();
-		private Vector3 cameraPos = new Vector3(0, 0, 0), prevHit = new Vector3(0, 0, 0), curHit = new Vector3(0, 0, 0);
+		private Vector3 cameraPos = new Vector3(0, 0, 0);
 		private Vector2 prevMouse, curMouse;
-		private string selectedName = string.Empty, colliderType = string.Empty, currentFile = string.Empty;
-		Matrix gizmoScale = Matrix.Identity;
-		Matrix rotate = Matrix.Identity;
+		private string currentFile = string.Empty;
 
 		// Variables added by Drew
 		private string mCurrentFilename = string.Empty;
@@ -68,7 +63,6 @@ namespace Hourglass
 			Renderer.Instance.AddObject(mGrid);
 
 			mFPSTimer.Start();
-			mRotationSpeed = 0.005f;
 			mMouseState = new MouseEventArgs(MouseButtons.None, 0, 0, 0, 0);
 
 			spWorldView.Panel2.ControlAdded += ReorderComponents;
@@ -104,34 +98,40 @@ namespace Hourglass
 		private void graphicsPanel1_MouseClick(object sender, MouseEventArgs e)
 		{
 			// Give the Focus textbox focus so that we can gladly accept input for the graphics panel.
+			
+		}
+
+		private void graphicsPanel1_MouseDown(object sender, MouseEventArgs e)
+		{
 			btnFocus.Select();
 			if (e.Button == MouseButtons.Left)
 			{
-				if(Gizmo.Instance.Grabbed)
+				// Check against the gizmo first, because if that's selcted, we don't change targets
+				if (RaycastGizmo())
 				{
-					
+					Debug.Print("Gizmo Hit!");
+					return;
+				}
+
+
+				TreeNode closest = null;
+				float closestTime = float.MinValue;
+				for (int i = 0; i < Tree.Nodes.Count; ++i)
+				{
+					RecursiveCheckRaycast(Tree.Nodes[i], e, ref closestTime, ref closest);
+				}
+				Debug.WriteLine("--------------------------------");
+				if (closest != null)
+				{
+					Tree.SelectedNode = closest;
+					BaseObject b = ((BaseObject)closest.Tag);
+					Gizmo.Instance.Attach(((TransformComponent)b.GetComponents()[0]));
 				}
 				else
 				{
-					TreeNode closest = null;
-					float closestTime = float.MinValue;
-					for(int i = 0; i < Tree.Nodes.Count; ++i)
-					{
-						RecursiveCheckRaycast(Tree.Nodes[i], e, ref closestTime, ref closest);
-					}
-					Debug.WriteLine("--------------------------------");
-					if(closest != null)
-					{
-						Tree.SelectedNode = closest;
-						BaseObject b = ((BaseObject)closest.Tag);
-						Gizmo.Instance.Attach(((TransformComponent)b.GetComponents()[0]));
-					}
-					else
-					{
-						Tree.SelectedNode = null;
-						Gizmo.Instance.Attach(null);
-						
-					}
+					Tree.SelectedNode = null;
+					Gizmo.Instance.Attach(null);
+
 				}
 			}
 		}
@@ -182,18 +182,65 @@ namespace Hourglass
 			}
 		}
 
+		private bool RaycastGizmo()
+		{
+			if(!Gizmo.Instance.Valid)
+			{
+				return false;
+			}
+			ColoredShape[] gizmos = Gizmo.Instance.GetVisibleComponents();
+			Microsoft.DirectX.Direct3D.Device dev = Renderer.Instance.Device;
+			float time = float.MinValue;
+			int closest = -1;
+			for (int i = 0; i < gizmos.Length; ++i)
+			{
+				Vector3 start = Vector3.Unproject(new Vector3(mMouseState.X, mMouseState.Y, 0),
+					dev.Viewport,
+					dev.Transform.Projection,
+					dev.Transform.View,
+					gizmos[i].World
+				);
+				Vector3 end = Vector3.Unproject(new Vector3(mMouseState.X, mMouseState.Y, 1),
+					dev.Viewport,
+					dev.Transform.Projection,
+					dev.Transform.View,
+					gizmos[i].World
+				);
+				Vector3 dir = end - start;
+				dir.Normalize();
+				float hit = 0;
+				if(gizmos[i].CheckRaycast(start, dir, out hit))
+				{
+					if(hit > time)
+					{
+						time = hit;
+						closest = i;
+						Debug.Print("Hit gizmo " + i);
+					}
+				}
+			}
+			if(closest >= 0)
+			{
+				Gizmo.Instance.Grabbed = gizmos[closest];
+				return true;
+			} 
+			return false;
+		}
+
 		private void graphicsPanel1_MouseMove(object sender, MouseEventArgs e)
 		{
-			// Update Mouse Input
-			prevMouse = curMouse;
-			curMouse = new Vector2(e.X, e.Y);
-
-			if(ActiveForm != this)
+			if (ActiveForm != this)
 			{
 				// Ensure we're the active window.
 				return;
 			}
+			// Update Mouse Input
+			prevMouse = curMouse;
+			curMouse = new Vector2(e.X, e.Y);
+			mMouseState = e;
+
 			Vector2 delta = curMouse - prevMouse;
+			Microsoft.DirectX.Direct3D.Device dev = Renderer.Instance.Device;
 			switch(e.Button)
 			{
 				case MouseButtons.Middle:
@@ -207,9 +254,33 @@ namespace Hourglass
 
 					// TODO: When the cursor approaches the corners of the current monitor, wrap its position.
 					break;
+				case MouseButtons.Left:
+					if(Gizmo.Instance.Grabbed != null)
+					{
+						Vector3 prev = Vector3.Unproject(new Vector3(prevMouse.X, prevMouse.Y, 0),
+							dev.Viewport,
+							dev.Transform.Projection,
+							dev.Transform.View,
+							Renderer.Instance.View
+						);
+						Vector3 curr = Vector3.Unproject(new Vector3(e.X, e.Y, 0),
+							dev.Viewport,
+							dev.Transform.Projection,
+							dev.Transform.View,
+							Renderer.Instance.View
+						);
+						Vector3 pr = Renderer.Instance.RotateInto(prev, Gizmo.Instance.Grabbed.World);
+						Vector3 cr = Renderer.Instance.RotateInto(curr, Gizmo.Instance.Grabbed.World);
+						Vector3 deltaCast = Renderer.Instance.RotateInto(cr - pr, Renderer.Instance.View);
+						Vector3 gPos = new Vector3(Gizmo.Instance.Position.M41, Gizmo.Instance.Position.M42, Gizmo.Instance.Position.M43);
+						Vector3 cPos = new Vector3(Renderer.Instance.View.M41, Renderer.Instance.View.M42, Renderer.Instance.View.M43);
+						float gizmoScale = (cPos - gPos).LengthSq();
+						deltaCast.Multiply(mGizmoSpeed * gizmoScale);
+						Debug.Print("Delta Cast: (" + deltaCast.X + ", " + deltaCast.Y + ", " + deltaCast.Z + ")");
+						Gizmo.Instance.Apply(deltaCast);
+					}
+					break;
 			}
-
-			mMouseState = e;
 		}
 
 		private Vector3 GetVector3(Vector4 v)
@@ -540,11 +611,6 @@ namespace Hourglass
 		}
 
 		private void spWorldView_Panel2_Click(object sender, EventArgs e)
-		{
-			btnFocus.Select();
-		}
-
-		private void graphicsPanel1_MouseDown(object sender, MouseEventArgs e)
 		{
 			btnFocus.Select();
 		}

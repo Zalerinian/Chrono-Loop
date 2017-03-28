@@ -158,6 +158,7 @@ namespace Hourglass
 			List<BaseObject>.Enumerator objectIterator = mRenderSet.GetEnumerator();
 			mDevice.Clear(ClearFlags.ZBuffer, 0, 1.0f, 0);
 			mDevice.Clear(ClearFlags.Target, System.Drawing.Color.Black, 1.0f, 0);
+			mDevice.RenderState.ZBufferEnable = true;
 			while (objectIterator.MoveNext())
 			{
 				// Find which components are shapes

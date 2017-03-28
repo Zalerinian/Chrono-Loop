@@ -31,6 +31,21 @@ namespace Hourglass
 			mScaleY = new ColoredShape("Assets\\Gizmo\\GizmoScale.obj", System.Drawing.Color.Green);
 			mScaleZ = new ColoredShape("Assets\\Gizmo\\GizmoScale.obj", System.Drawing.Color.Blue);
 
+			GizmoTag X = new GizmoTag(new Vector3(1, 0, 0), System.Drawing.Color.Red);
+			GizmoTag Y = new GizmoTag(new Vector3(0, 1, 0), System.Drawing.Color.Green);
+			GizmoTag Z = new GizmoTag(new Vector3(0, 0, 1), System.Drawing.Color.Blue);
+			mTranslateX.Tag = X;
+			mRotateX.Tag = X;
+			mScaleX.Tag = X;
+
+			mTranslateY.Tag = Y;
+			mRotateY.Tag = Y;
+			mScaleY.Tag = Y;
+
+			mTranslateZ.Tag = Z;
+			mRotateZ.Tag = Z;
+			mScaleZ.Tag = Z;
+
 
 			Reposition();
 		}
@@ -42,14 +57,61 @@ namespace Hourglass
 		private ColoredShape mScaleX, mScaleY, mScaleZ;
 		private IGizmoAttachment mAttached = null;
 		private GizmoMode mMode = GizmoMode.Position;
-		private bool mGrabbed = false;
+		private ColoredShape mGrabbed = null;
 
-		public bool Grabbed {
+
+		private struct GizmoTag
+		{
+			public Vector3 Axis;
+			public System.Drawing.Color Color;
+			public GizmoTag(Vector3 _axis, System.Drawing.Color _color)
+			{
+				Axis = _axis;
+				Color = _color;
+			}
+		}
+
+		public ColoredShape Grabbed {
 			get {
-				return mGrabbed;
+				if(!Valid)
+				{
+					return null;
+				}
+				else
+				{
+					return mGrabbed;
+				}
 			}
 			set {
 				mGrabbed = value;
+			}
+		}
+
+		public bool Valid {
+			get {
+				return mAttached != null;
+			}
+		}
+
+		public GizmoMode Mode {
+			get {
+				return mMode;
+			}
+			set {
+				mMode = value;
+			}
+		}
+
+		public Matrix Position {
+			get {
+				if(Valid)
+				{
+					return mAttached.GizmoWorld;
+				}
+				else
+				{
+					return Matrix.Identity;
+				}
 			}
 		}
 
@@ -79,21 +141,6 @@ namespace Hourglass
 				ary[index++] = mScaleZ;
 			}
 			return ary;
-		}
-
-		public bool Valid {
-			get {
-				return mAttached != null;
-			}
-		}
-
-		public GizmoMode Mode {
-			get {
-				return mMode;
-			}
-			set {
-				mMode = value;
-			}
 		}
 
 		public bool CanPosition()
@@ -147,6 +194,58 @@ namespace Hourglass
 			mScaleZ.World = posZ;
 		}
 
+		public bool Apply(Vector3 _movement)
+		{
+			if(Grabbed == null)
+			{
+				return false;
+			}
+			switch(mMode)
+			{
+				case GizmoMode.Position:
+					ApplyPosition(_movement);
+					break;
+				case GizmoMode.Rotation:
+					ApplyRotation(_movement);
+					break;
+				case GizmoMode.Scale:
+					ApplyScale(_movement);
+					break;
+			}
+
+			return true;
+		}
+
+		private void ApplyPosition(Vector3 _movement)
+		{
+			Vector3 axis = ((GizmoTag)Grabbed.Tag).Axis;
+			Vector3 raxis = Renderer.Instance.RotateInto(axis, Renderer.Instance.View);
+			if(axis.X > 0)
+			{
+				mAttached.PX.Value -= (decimal)Vector3.Dot(raxis, _movement);
+			}
+			else if(axis.Y > 0)
+			{
+				mAttached.PY.Value -= (decimal)Vector3.Dot(raxis, _movement);
+
+			}
+			else if (axis.Z > 0)
+			{
+				mAttached.PZ.Value += (decimal)Vector3.Dot(raxis, _movement);
+
+			}
+		}
+
+		private void ApplyRotation(Vector3 _movement)
+		{
+
+		}
+
+		private void ApplyScale(Vector3 _movement)
+		{
+
+		}
+
 		public void Render()
 		{
 			if(mAttached == null)
@@ -159,6 +258,8 @@ namespace Hourglass
 			dev.SetTexture(0, null);
 			dev.RenderState.AlphaBlendEnable = false;
 			dev.RenderState.CullMode = Cull.None;
+			dev.Clear(ClearFlags.ZBuffer, 0, 1.0f, 0);
+
 
 			ColoredShape[] components = GetVisibleComponents();
 			for(int i = 0; i < components.Length; ++i)
