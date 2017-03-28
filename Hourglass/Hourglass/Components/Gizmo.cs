@@ -123,6 +123,7 @@ namespace Hourglass
 		public void Attach(IGizmoAttachment _attachable)
 		{
 			mAttached = _attachable;
+			Reposition();
 		}
 
 		public void Reposition()

@@ -118,10 +118,10 @@ namespace Hourglass
 		public override void ReadData(BinaryReader r)
 		{
 			base.ReadData(r);
-			mRadius.Value = (decimal)((float)r.ReadInt32());
-			mX.Value = (decimal)((float)r.ReadInt32());
-			mY.Value = (decimal)((float)r.ReadInt32());
-			mZ.Value = (decimal)((float)r.ReadInt32());
+			mRadius.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 		}
 
 	}

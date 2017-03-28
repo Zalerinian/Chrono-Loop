@@ -84,8 +84,9 @@ namespace Hourglass
 
 		public override void ReadData(BinaryReader r)
 		{
-			string filename = new string(r.ReadChars(r.ReadInt32()));
-			filename = filename.Substring(filename.LastIndexOf("\\"));
+			string filename = new string(r.ReadChars(r.ReadInt32() - 1));
+			r.ReadByte(); // The null terminator breaks things in C#, but is necessary in C++, so we need to skip it in C#
+			filename = filename.Substring(filename.LastIndexOf("\\") + 1);
 			int index = mMesh.Items.IndexOf(filename);
 			if (index >= 0)
 			{

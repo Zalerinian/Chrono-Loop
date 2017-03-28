@@ -7,7 +7,7 @@ using System.IO;
 
 namespace Hourglass
 {
-	public class TransformComponent : Component
+	public class TransformComponent : Component, IGizmoAttachment
 	{
 		private const float D2R = ((1 / 180.0f) * 3.14f);
 		private const float R2D = (180 / 3.14f);
@@ -25,6 +25,71 @@ namespace Hourglass
 
 		protected bool mNameIsPlaceholder = true;
 		protected string mLastText = "";
+
+
+		#region IGizmoAttachment
+
+		public NumericUpDown PX {
+			get {
+				return mPosX;
+			}
+		}
+
+		public NumericUpDown PY {
+			get {
+				return mPosY;
+			}
+		}
+
+		public NumericUpDown PZ {
+			get {
+				return mPosZ;
+			}
+		}
+
+		public NumericUpDown RX {
+			get {
+				return mRotX;
+			}
+		}
+
+		public NumericUpDown RY {
+			get {
+				return mRotY;
+			}
+		}
+
+		public NumericUpDown RZ {
+			get {
+				return mRotZ;
+			}
+		}
+
+		public NumericUpDown SX {
+			get {
+				return mScaleX;
+			}
+		}
+
+		public NumericUpDown SY {
+			get {
+				return mScaleY;
+			}
+		}
+
+		public NumericUpDown SZ {
+			get {
+				return mScaleZ;
+			}
+		}
+
+		public Matrix GizmoWorld {
+			get {
+				return CreateMatrix();
+			}
+		}
+
+		#endregion
 
 		public string Name {
 			get { return mNameIsPlaceholder ? "" : mName.Text; }

@@ -115,76 +115,70 @@ namespace Hourglass
 				{
 					TreeNode closest = null;
 					float closestTime = float.MinValue;
-					Microsoft.DirectX.Direct3D.Device dev = Renderer.Instance.Device;
 					for(int i = 0; i < Tree.Nodes.Count; ++i)
 					{
-						BaseObject b = (BaseObject)Tree.Nodes[i].Tag;
-						List<Component> comps = b.GetComponents();
-						for(int j = 0; j < comps.Count; ++j)
-						{
-							if(comps[j] is MeshComponent)
-							{
-								MeshComponent c = (MeshComponent)comps[j];
-								Vector3 start = Vector3.Unproject(new Vector3(e.X, e.Y, 0),
-									dev.Viewport,
-									dev.Transform.Projection,
-									dev.Transform.View,
-									b.GetMatrix() * c.Shape.World);
-								Vector3 end = Vector3.Unproject(new Vector3(e.X, e.Y, 1),
-									dev.Viewport,
-									dev.Transform.Projection,
-									dev.Transform.View,
-									b.GetMatrix() * c.Shape.World);
-								Vector3 dir = (end - start);
-								dir.Normalize();
-								float time = 0;
-								if(c.Shape.CheckRaycast(start, dir, out time))
-								{
-									// For reasons currently unbeknownst to me, the closer the object is to the camera, the *higher* the "time"
-									// to hit the object we're pointing at is. This is not what anyone expects to check in order to find the
-									// closest object to the camera, but since the axes here are pretty screwed up, that's what we're getting.
-
-									// But yeah, this *is* currently the correct way to raycast to the closest object when we click on the screen.
-									if(time > closestTime)
-									{
-										Debug.Print("Shape booped at index " + i + " (" + b.Name + ") is the closest!");
-										closestTime = time;
-										closest = Tree.Nodes[i];
-									}
-								}
-							}
-						}
+						RecursiveCheckRaycast(Tree.Nodes[i], e, ref closestTime, ref closest);
 					}
+					Debug.WriteLine("--------------------------------");
 					if(closest != null)
 					{
 						Tree.SelectedNode = closest;
+						BaseObject b = ((BaseObject)closest.Tag);
+						Gizmo.Instance.Attach(((TransformComponent)b.GetComponents()[0]));
+					}
+					else
+					{
+						Tree.SelectedNode = null;
+						Gizmo.Instance.Attach(null);
+						
 					}
 				}
-				// TODO: Raycast to hit an object. Be sure to apply the camera's rotation in there somehow.
-				// I.E. make an identity matrix, put the mouse X/Y in the position spots, and multiply by the inverse view matrix
+			}
+		}
 
-				//Vector3 near, far, hit;
-				//hit = new Vector3(1000.0f, 1000.0f, 1000.0f);
-				//int selection = -1;
-				//
-				//if (selection == -1)
-				//{
-				//	hit = new Vector3(1000.0f, 1000.0f, 1000.0f);
-				//	for (int i = 0; i < higharchy.Count; i++)
-				//	{
-				//		Vector3 testHit = new Vector3();
-				//		near = new Vector3(curMouse.X, curMouse.Y, 0);
-				//		far = new Vector3(curMouse.X, curMouse.Y, 1);
-				//		near.Unproject(device.Viewport, device.Transform.Projection, device.Transform.View, higharchy[i].Transform);
-				//		far.Unproject(device.Viewport, device.Transform.Projection, device.Transform.View, higharchy[i].Transform);
-				//		if (higharchy[i].RayHit(out testHit, near, far))
-				//			if ((testHit - cameraPos).LengthSq() < (hit - cameraPos).LengthSq())
-				//			{
-				//				hit = testHit;
-				//				selection = i;
-				//			}
-				//	}
-				//}
+		private void RecursiveCheckRaycast(TreeNode n, MouseEventArgs e, ref float closestTime, ref TreeNode closest)
+		{
+			Microsoft.DirectX.Direct3D.Device dev = Renderer.Instance.Device;
+
+			BaseObject b = (BaseObject)n.Tag;
+			List<Component> comps = b.GetComponents();
+			for (int j = 0; j < comps.Count; ++j)
+			{
+				if (comps[j] is MeshComponent)
+				{
+					MeshComponent c = (MeshComponent)comps[j];
+					Vector3 start = Vector3.Unproject(new Vector3(e.X, e.Y, 0),
+						dev.Viewport,
+						dev.Transform.Projection,
+						dev.Transform.View,
+						b.GetMatrix() * c.Shape.World);
+					Vector3 end = Vector3.Unproject(new Vector3(e.X, e.Y, 1),
+						dev.Viewport,
+						dev.Transform.Projection,
+						dev.Transform.View,
+						b.GetMatrix() * c.Shape.World);
+					Vector3 dir = (end - start);
+					dir.Normalize();
+					float time = 0;
+					if (c.Shape.CheckRaycast(start, dir, out time))
+					{
+						// For reasons currently unbeknownst to me, the closer the object is to the camera, the *higher* the "time"
+						// to hit the object we're pointing at is. This is not what anyone expects to check in order to find the
+						// closest object to the camera, but since the axes here are pretty screwed up, that's what we're getting.
+
+						// But yeah, this *is* currently the correct way to raycast to the closest object when we click on the screen.
+						if (time > closestTime)
+						{
+							Debug.WriteLine("Shape '" + b.Name + "' is the closest!");
+							closestTime = time;
+							closest = n;
+						}
+					}
+				}
+			}
+			for(int i = 0; i < n.Nodes.Count; ++i)
+			{
+				RecursiveCheckRaycast(n.Nodes[i], e, ref closestTime, ref closest);
 			}
 		}
 
@@ -240,11 +234,11 @@ namespace Hourglass
 				{
 					if (mKeys.Contains(Key.W))
 					{
-						Renderer.Instance.CameraPosition += Renderer.Instance.Forward * 0.1f;
+						Renderer.Instance.CameraPosition -= Renderer.Instance.Forward * 0.1f;
 					}
 					if (mKeys.Contains(Key.S))
 					{
-						Renderer.Instance.CameraPosition -= Renderer.Instance.Forward * 0.1f;
+						Renderer.Instance.CameraPosition += Renderer.Instance.Forward * 0.1f;
 					}
 					if (mKeys.Contains(Key.A))
 					{
@@ -377,7 +371,7 @@ namespace Hourglass
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			OpenFileDialog o = new OpenFileDialog();
-			o.Filter = "Binary XML Files (*.xml)|*.xml";
+			o.Filter = "Epoch Level Files (*.elf)|*.elf";
 			o.FilterIndex = 1;
 			o.Title = "Open a level...";
 			if(o.ShowDialog() == DialogResult.OK)
@@ -386,7 +380,7 @@ namespace Hourglass
 				// Attach Object Handlers
 				for(int i = 0; i < Tree.Nodes.Count; ++i)
 				{
-					PostLoadAddHandlers(Tree.Nodes[i]);
+					PostLoadSetup(Tree.Nodes[i]);
 				}
 			}
 		}
@@ -452,7 +446,6 @@ namespace Hourglass
 			}
 		}
 
-
 		private void mCreateMenuAddChild_Click(object sender, EventArgs e)
 		{
 			TreeNode n = ConstructTreeObject(Tree.SelectedNode);
@@ -489,14 +482,17 @@ namespace Hourglass
 			return n;
 		}
 
-		private void PostLoadAddHandlers(TreeNode n)
+		private void PostLoadSetup(TreeNode n)
 		{
 			for(int i = 0; i < n.Nodes.Count; ++i)
 			{
-				PostLoadAddHandlers(n.Nodes[i]);
+				PostLoadSetup(n.Nodes[i]);
 			}
 			((BaseObject)n.Tag).ComponentAdded += ObjectAddComponent;
 			((BaseObject)n.Tag).ComponentRemoved += ObjectRemoveComponent;
+
+			// Add the loaded objects into the renderer so we can see them.
+			Renderer.Instance.AddObject((BaseObject)n.Tag);
 		}
 
 		private void levelSettingsToolStripMenuItem_Click(object sender, EventArgs e)

@@ -125,7 +125,7 @@ namespace Hourglass
 
 		public void RebuildProjectionMatrix()
 		{
-			mDevice.Transform.Projection = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, (float)mPanel.Width / (float)mPanel.Height, 0.1f, 1000);
+			mDevice.Transform.Projection = Matrix.PerspectiveFovRH((float)Math.PI / 4.0f, (float)mPanel.Width / (float)mPanel.Height, 0.1f, 1000);
 		}
 
 		public void RebuildViewMatrix()
@@ -133,7 +133,7 @@ namespace Hourglass
 			Matrix rotate = Matrix.RotationYawPitchRoll(mAngleY, mAngleX, 0);
 			Vector4 transform = Vector3.Transform(new Vector3(0, 0, 3), rotate);
 			Vector3 look = mCameraPos + new Vector3(transform.X, transform.Y, transform.Z);
-			mDevice.Transform.View = Matrix.LookAtLH(mCameraPos, look, new Vector3(0, 1, 0));
+			mDevice.Transform.View = Matrix.LookAtRH(mCameraPos, look, new Vector3(0, 1, 0));
 			mDevice.RenderState.Lighting = false;
 			mDevice.RenderState.ZBufferEnable = true;
 			mDevice.RenderState.CullMode = Cull.Clockwise;

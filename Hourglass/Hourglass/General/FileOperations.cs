@@ -600,16 +600,48 @@ namespace Hourglass
 			for(int i = 0; i < CompCount; ++i)
 			{
 				short compType = r.ReadInt16();
+				Component com = null;
 				switch(compType)
 				{
+					case (short)Component.ComponentType.Code:
+						// TODO: Code components
+						break;
 					case (short)Component.ComponentType.Transform:
 						b.GetComponents()[0].ReadData(r);
 						n.Text = ((TransformComponent)b.GetComponents()[0]).Name;
 						break;
 					case (short)Component.ComponentType.BoxCollider:
-						BoxCollider c = new BoxCollider();
-						c.ReadData(r);
-						b.AddComponent(c);
+						com = new BoxCollider();
+						com.ReadData(r);
+						b.AddComponent(com);
+						break;
+					case (short)Component.ComponentType.ButtonCollider:
+						com = new ButtonCollider();
+						com.ReadData(r);
+						b.AddComponent(com);
+						break;
+					case (short)Component.ComponentType.PlaneCollider:
+						com = new PlaneCollider();
+						com.ReadData(r);
+						b.AddComponent(com);
+						break;
+					case (short)Component.ComponentType.SphereCollider:
+						com = new SphereCollider();
+						com.ReadData(r);
+						b.AddComponent(com);
+						break;
+					case (short)Component.ComponentType.ColoredMesh:
+						com = new ColoredMeshComponent();
+						com.ReadData(r);
+						b.AddComponent(com);
+						break;
+					case (short)Component.ComponentType.TexturedMesh:
+						com = new TexturedMeshComponent();
+						com.ReadData(r);
+						b.AddComponent(com);
+						break;
+					default:
+						Debug.Print("An unexpected component type has bee found. This may indicate corruption: " + compType);
 						break;
 				}
 			}

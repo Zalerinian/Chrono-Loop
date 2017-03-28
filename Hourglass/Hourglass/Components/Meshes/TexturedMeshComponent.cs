@@ -94,12 +94,19 @@ namespace Hourglass
 		public override void ReadData(BinaryReader r)
 		{
 			base.ReadData(r);
-			string filename = new string(r.ReadChars(r.ReadInt32()));
-			filename = filename.Substring(filename.LastIndexOf("\\"));
+			string filename = new string(r.ReadChars(r.ReadInt32() - 1));
+			r.ReadByte(); // The null terminator breaks things in C#, but is necessary in C++, so we need to skip it in C#
+			filename = filename.Substring(filename.LastIndexOf("\\") + 1);
 			int index = mTexture.Items.IndexOf(filename);
 			if (index >= 0)
 			{
 				mTexture.SelectedIndex = index;
+			}
+			else
+			{
+				((TexturedShape)mShape).Load("Assets\\Error.obj");
+				((TexturedShape)mShape).SetTexture(TexturedShape.TextureType.Diffuse, "Assets\\red.png");
+				mMesh.Text = "Error locating old mesh";
 			}
 		}
 

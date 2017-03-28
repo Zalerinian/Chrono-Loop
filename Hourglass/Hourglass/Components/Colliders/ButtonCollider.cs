@@ -195,20 +195,20 @@ namespace Hourglass
 
 		public override void ReadData(BinaryReader r)
 		{
-			mMass.Value = (decimal)((float)r.ReadInt32());
-			mForce.Value = (decimal)((float)r.ReadInt32());
+			mMass.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mForce.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 
-			mPosX.Value = (decimal)((float)r.ReadInt32());
-			mPosY.Value = (decimal)((float)r.ReadInt32());
-			mPosZ.Value = (decimal)((float)r.ReadInt32());
+			mPosX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mPosY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mPosZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 
-			mScaleX.Value = (decimal)((float)r.ReadInt32());
-			mScaleY.Value = (decimal)((float)r.ReadInt32());
-			mScaleZ.Value = (decimal)((float)r.ReadInt32());
+			mScaleX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mScaleY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mScaleZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 
-			mNX.Value = (decimal)((float)r.ReadInt32());
-			mNY.Value = (decimal)((float)r.ReadInt32());
-			mNZ.Value = (decimal)((float)r.ReadInt32());
+			mNX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mNY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mNZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 		}
 
 	}

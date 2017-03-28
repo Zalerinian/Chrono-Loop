@@ -85,6 +85,7 @@ namespace Hourglass
 		{
 			base.ReadData(r);
 			mColor.BackColor = System.Drawing.Color.FromArgb(r.ReadInt32());
+			((ColoredShape)mShape).Color = mColor.BackColor;
 		}
 	}
 }
