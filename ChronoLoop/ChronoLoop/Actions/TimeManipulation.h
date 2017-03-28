@@ -25,6 +25,7 @@ namespace Epoch
 		Interpolator<vec2f> mDesaturationInterpolator;
 		static unsigned int mCloneCount;
 		static unsigned short mCurrTexture;
+		static unsigned short mNumOfConfirmedClones;
 
 		static BaseObject* mCurCloneHeadset;
 		static BaseObject* mCurCloneController1;

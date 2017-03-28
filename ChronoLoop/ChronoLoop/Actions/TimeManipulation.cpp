@@ -16,6 +16,7 @@ namespace Epoch
 	BaseObject* TimeManipulation::mCurCloneController2 = nullptr;
 	BaseObject* TimeManipulation::mCurCloneHeadset = nullptr;
 	bool TimeManipulation::mIsBeingMade = false;
+	unsigned short TimeManipulation::mNumOfConfirmedClones = 0;
 
 	TimeManipulation::TimeManipulation() {
 	}
@@ -143,6 +144,7 @@ namespace Epoch
 					Physics::Instance()->mObjects.push_back(mCurCloneHeadset);
 					Physics::Instance()->mObjects.push_back(mCurCloneController1);
 					Physics::Instance()->mObjects.push_back(mCurCloneController2);
+					++mNumOfConfirmedClones;
 				}
 				else
 				{
@@ -292,9 +294,9 @@ namespace Epoch
 				size_t numTris = mesh->GetTriangleCount();
 				for (unsigned int j = 0; j < numTris; ++j) {
 					float hitTime;
-					if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, fwd, hitTime)) {
-						//TODO PAT: There is a bug at the moment whenever you resume time it says verticle wrongness and deletes clone when you werent pointing at them. 
+					if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, fwd, hitTime)) { 
 							TimeManager::Instance()->DeleteClone(clones[i]->GetUniqueId());
+							--mNumOfConfirmedClones;
 							return true;
 					}
 				}
