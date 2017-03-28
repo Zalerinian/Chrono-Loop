@@ -1,0 +1,5 @@
+LevelEditor/bin/*
+LevelEditor/obj/*
+LevelEditor/x64/*
+*.db
+*.user
