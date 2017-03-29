@@ -12,6 +12,7 @@
 #include "../Actions/CCButtonPress.h"
 #include "../Actions/CCEnterLevel.h"
 #include "../Actions/MainMenuBT.h"
+#include "../Actions/CCLoadHub.h"
 #include "../Objects/MeshComponent.h"
 #include "../Objects/TransparentMeshComponent.h"
 #include "../tinyxml/tinyxml.h"
@@ -688,8 +689,16 @@ namespace Epoch {
 						}
 						else if (codeComs[i] == "EnterLevel")
 						{
-							CCEnterLevel* code = new CCEnterLevel();
-							obj->AddComponent(code);
+							if (name == "DoorEmitter2")
+							{
+								CCLoadHub* code = new CCLoadHub();
+								obj->AddComponent(code);
+							}
+							else
+							{
+								CCEnterLevel* code = new CCEnterLevel();
+								obj->AddComponent(code);
+							}
 						}
 						else if (codeComs[i] == "HeadsetFollow")
 						{
