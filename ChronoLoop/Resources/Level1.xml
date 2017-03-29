@@ -93,7 +93,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>1,1,1</Scale>
         <Move>True</Move>
-        <Gravity>0,0,0</Gravity>
+        <Gravity>0,-9.810001,0</Gravity>
         <Mass>25</Mass>
         <Elasticity>0.1</Elasticity>
         <StaticFriction>0.3</StaticFriction>
@@ -134,6 +134,7 @@
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components>
+      <ButtonHold>Enabled</ButtonHold>
       <Collider>
         <Type>Button</Type>
         <Trigger>False</Trigger>
@@ -165,7 +166,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>1,1,1</Scale>
         <Move>True</Move>
-        <Gravity>0,0,0</Gravity>
+        <Gravity>0,-9.810001,0</Gravity>
         <Mass>10</Mass>
         <Elasticity>0.4</Elasticity>
         <StaticFriction>0.3</StaticFriction>
@@ -280,7 +281,7 @@
     <Texture>raycube.png</Texture>
     <Position>-3.904167,0.5843749,0.6343668</Position>
     <Rotation>0,0,0</Rotation>
-    <Scale>1,1,1</Scale>
+    <Scale>0.5,0.5,0.5</Scale>
     <Components>
       <AABBtoAABB>Enabled</AABBtoAABB>
       <AABBtoSphere>Enabled</AABBtoSphere>
@@ -292,7 +293,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>1,1,1</Scale>
         <Move>True</Move>
-        <Gravity>0,0,0</Gravity>
+        <Gravity>0,-9.810001,0</Gravity>
         <Mass>50</Mass>
         <Elasticity>0.04</Elasticity>
         <StaticFriction>0.3</StaticFriction>
@@ -476,7 +477,7 @@
   <Object>
     <Name>Wall5</Name>
     <Position>1.6,1.5,1.8</Position>
-    <Rotation>0,1.57,0</Rotation>
+    <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components>
       <Collider>
@@ -484,7 +485,7 @@
         <Trigger>False</Trigger>
         <Position>0,0,0</Position>
         <Rotation>0,0,0</Rotation>
-        <Scale>3,3,0.5</Scale>
+        <Scale>0.5,3,3</Scale>
         <Move>False</Move>
         <Gravity>0,0,0</Gravity>
         <Mass>100</Mass>
@@ -494,5 +495,14 @@
         <Drag>0</Drag>
       </Collider>
     </Components>
+  </Object>
+  <Object>
+    <Name>Servers</Name>
+    <Mesh>raycube.obj</Mesh>
+    <Texture>raycube.png</Texture>
+    <Position>7.325522,500,0</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
   </Object>
 </Level>
