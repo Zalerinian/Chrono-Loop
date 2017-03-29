@@ -441,6 +441,33 @@
     <ClInclude Include="Actions\TimelineIndicator.hpp">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Objects\TransparentMeshComponent.h">
+      <Filter>Objects\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\UIRewind.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCPauseToCancel.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCTeleToPlay.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCDisplayOnPause.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\UICreateToDeleteClone.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\UIClonePlusToMinus.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\UICloneText.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCLoadHub.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -716,6 +743,9 @@
     <ClCompile Include="PathPlanning.cpp">
       <Filter>Pathing</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\TransparentMeshComponent.cpp">
+      <Filter>Objects\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Rendering\Renderer.cpp">
       <Filter>Rendering\Source Files</Filter>
     </ClCompile>
@@ -760,12 +790,6 @@
     <FxCompile Include="Rendering\Shaders\BasicPixel.hlsl">
       <Filter>Rendering\Shaders\Pixel shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\PSPureTexture.hlsl">
-      <Filter>Rendering\Shaders\Pixel shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\PSTimeManipulation.hlsl">
-      <Filter>Rendering\Shaders\Pixel shaders</Filter>
-    </FxCompile>
     <FxCompile Include="Rendering\Shaders\TexturedPixel.hlsl">
       <Filter>Rendering\Shaders\Pixel shaders</Filter>
     </FxCompile>
@@ -781,14 +805,26 @@
     <FxCompile Include="Rendering\Shaders\GSDuplicateMesh.hlsl">
       <Filter>Rendering\Shaders\Geometry Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\GSNDC.hlsl">
-      <Filter>Rendering\Shaders\Geometry Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="Rendering\Shaders\NDCVertex.hlsl">
       <Filter>Rendering\Shaders\Vertex Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Rendering\Shaders\ShadowVS.hlsl">
       <Filter>Rendering\Shaders\Vertex Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\GSNDC.hlsl">
+      <Filter>Rendering\Shaders\Geometry Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\PSTimeManipulation.hlsl">
+      <Filter>Rendering\Shaders\Pixel shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\PSTransparent.hlsl">
+      <Filter>Rendering\Shaders\Pixel shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\PSPureTexture.hlsl">
+      <Filter>Rendering\Shaders\Pixel shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\PSTransparentScanline.hlsl">
+      <Filter>Rendering\Shaders\Pixel shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -829,6 +865,9 @@
     </None>
     <None Include="..\DXTK\DirectXTex.inl">
       <Filter>DXTK</Filter>
+    </None>
+    <None Include="Rendering\RenderShaderDefines.hlsli">
+      <Filter>Rendering\Header Files</Filter>
     </None>
   </ItemGroup>
 </Project>

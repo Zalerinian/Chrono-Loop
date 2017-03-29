@@ -59,12 +59,12 @@ namespace Epoch {
 						float slope = (CurPos.y - InitialPos.y) / (CurPos.x - InitialPos.x);
 						if ((slope >= 3 || slope <= -3) &&
 							(CurPos.x < 0.3f && CurPos.x > -0.3f)) {
-							SystemLogger::GetLog() << "Vertical Wrongness" << std::endl;
+							///SystemLogger::GetLog() << "Vertical Wrongness" << std::endl;
 							return 2;
 						}
 						if ((slope <= 0.33f && slope >= -0.33f) &&
 							(CurPos.y < 0.3f && CurPos.y > -0.3f)) {
-							SystemLogger::GetLog() << "Horizontal Wrongness" << std::endl;
+							//SystemLogger::GetLog() << "Horizontal Wrongness" << std::endl;
 							return 0;
 						}
 						InitialPos = CurPos;
@@ -72,21 +72,20 @@ namespace Epoch {
 							//SystemLogger::GetLog() << "Outside the Circle" << std::endl;
 							//SystemLogger::GetLog() << "Difference: " << diff << std::endl; 
 							//SystemLogger::GetLog() << "InitialPos: (" << InitialPos.x << "," << InitialPos.y << ")" << "\nCurPos: (" << CurPos.x << "," << CurPos.y << ")" << std::endl;
-							Timeline* tempTimeLine = TimeManager::Instance()->GetTimeLine();
 							if (diff * line > 0) {
-								SystemLogger::GetLog() << "Somewhat Clockwise" << std::endl;
+								//SystemLogger::GetLog() << "Somewhat Clockwise" << std::endl;
 								if (mIncreaseGestureSpeed != 1)
 									mSpeedCW++;
-								SystemLogger::GetLog() << "Speed: " << mSpeedCW << std::endl << "GestureSpeed: " << mIncreaseGestureSpeed << std::endl << std::endl;
+								//SystemLogger::GetLog() << "Speed: " << mSpeedCW << std::endl << "GestureSpeed: " << mIncreaseGestureSpeed << std::endl << std::endl;
 								if (mSpeedCCW != 0) {
 									mSpeedCCW = 0;
 									mSpeedCW = 1;
 									mIncreaseGestureSpeed = 5;
-									tempTimeLine->SetObjectInterpolationTime(0.20f);
+									TimeManager::Instance()->SetTimelineObjectInterpTime(.2f);
 								}
 								if (mSpeedCW % 35 == 0 && mIncreaseGestureSpeed != 1)
 								{
-									tempTimeLine->SetObjectInterpolationTime(tempTimeLine->GetObjectInterpolationTime() - 0.03f);
+									TimeManager::Instance()->SetTimelineObjectInterpTime(TimeManager::Instance()->GetTimeLineObjectInterpTime() - 0.03f);
 									mIncreaseGestureSpeed--;
 								}
 								if (TimeManager::Instance()->GetShouldPulse())
@@ -95,18 +94,18 @@ namespace Epoch {
 								return 1;
 							}
 							else if (diff * line < 0) {
-								SystemLogger::GetLog() << "Somewhat Counter-Clockwise" << std::endl;
+								//SystemLogger::GetLog() << "Somewhat Counter-Clockwise" << std::endl;
 								if (mIncreaseGestureSpeed != 1)
 									mSpeedCCW++;
-								SystemLogger::GetLog() << "Speed: " << mSpeedCCW << std::endl << "GestureSpeed: " << mIncreaseGestureSpeed << std::endl << std::endl;
+								//SystemLogger::GetLog() << "Speed: " << mSpeedCCW << std::endl << "GestureSpeed: " << mIncreaseGestureSpeed << std::endl << std::endl;
 								if (mSpeedCW != 0) {
 									mSpeedCW = 0;
 									mSpeedCCW = 1;
 									mIncreaseGestureSpeed = 5;
-									tempTimeLine->SetObjectInterpolationTime(0.20f);
+									TimeManager::Instance()->SetTimelineObjectInterpTime(0.20f);
 								}
 								if (mSpeedCCW % 35 == 0 && mIncreaseGestureSpeed != 1) {
-									tempTimeLine->SetObjectInterpolationTime(tempTimeLine->GetObjectInterpolationTime() - 0.03f);
+									TimeManager::Instance()->SetTimelineObjectInterpTime(TimeManager::Instance()->GetTimeLineObjectInterpTime() - 0.03f);
 									mIncreaseGestureSpeed--;
 								}
 								if(TimeManager::Instance()->GetShouldPulse())

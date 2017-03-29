@@ -8,7 +8,6 @@ namespace Epoch
 	{
 	private:
 		matrix4 mMatrix;//World
-		vec4f mUp, mFoward, mRight; //Local//y,z,x
 
 	public:
 		void TranslateLocal(float x, float y, float z);

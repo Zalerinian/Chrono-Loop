@@ -8,6 +8,8 @@
 #include "..\Input\VRInputManager.h"
 #include "..\Core\LevelManager.h"
 
+#define DEBUG_LEVEL1 0
+
 namespace Epoch
 {
 
@@ -27,8 +29,6 @@ namespace Epoch
 
 	void Physics::Destroy()
 	{
-
-
 		if (mInstance)
 		{
 			delete mInstance;
@@ -701,8 +701,8 @@ namespace Epoch
 		if (!left && !right)
 		{
 			//SystemLogger::GetLog() << _time << std::endl;
-			Collider* collider;
-			Collider* otherCol;
+			Collider* collider = nullptr;
+			Collider* otherCol = nullptr;
 			vec3f norm;
 			std::vector<Component*> codeComponents;
 			std::vector<Component*> Colliders;
@@ -711,6 +711,12 @@ namespace Epoch
 			int objs = (int)mObjects.size();
 			for (int i = 0; i < objs; ++i)
 			{
+
+#if DEBUG_LEVEL1
+				if (mObjects[i]->GetName() == "mmDoor")
+					((CodeComponent*)mObjects[i]->GetComponents(eCOMPONENT_CODE)[0])->OnTriggerEnter(*collider, *otherCol);
+#endif
+
 				Colliders = mObjects[i]->mComponents[eCOMPONENT_COLLIDER];
 				int cols = (int)Colliders.size();
 				for (int x = 0; x < cols; ++x)
@@ -827,9 +833,6 @@ namespace Epoch
 						}
 						else if (collider->mColliderType == Collider::eCOLLIDER_Cube)//Check CubeCollider's collision with other objects
 						{
-							//if (collider->mObject->GetName() == "mmDoor")
-							//	((CodeComponent*)codeComponents[0])->OnTriggerEnter(*collider, *otherCol);
-
 							CubeCollider* aabb1 = (CubeCollider*)collider;
 							for (int j = 0; j < objs; ++j)
 							{
@@ -1010,7 +1013,7 @@ namespace Epoch
 							}
 						}
 					}
-					else if (collider->mColliderType == Collider::eCOLLIDER_Controller)//Update ControllerCollider position, do not apply physics to player
+					else if (collider->mColliderType == Collider::eCOLLIDER_Controller && VRInputManager::GetInstance().IsVREnabled())//Update ControllerCollider position, do not apply physics to player
 					{
 						CubeCollider* aabb1 = (CubeCollider*)collider;
 						for (int j = 0; j < objs; ++j)

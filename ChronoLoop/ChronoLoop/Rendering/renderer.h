@@ -38,11 +38,14 @@ namespace Epoch {
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDSView;
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> mDepthBuffer, mSceneTexture;
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> mSamplerState;
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> mTransparentState, mOpaqueState;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mSceneSRV;
+		Microsoft::WRL::ComPtr<ID3D11BlendState> mOpaqueBlendState, mTransparentBlendState;
 		D3D11_VIEWPORT mLeftViewport, mRightViewport, mFullViewport;
 		HWND mWindow;
 
 		vr::IVRSystem* mVrSystem;
-		RenderSet mRenderSet;
+		RenderSet mOpaqueSet, mTransparentSet;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mVPBuffer, mPositionBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mLBuffer;
 		bool mUseVsync = false;
@@ -50,7 +53,7 @@ namespace Epoch {
 		Microsoft::WRL::ComPtr<ID3D11VertexShader> mShadowVS;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mSDSView1, mSDSView2, mSDSView3;
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> mShadowTextures1, mShadowTextures2, mShadowTextures3;
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mShadowSRV1, mShadowSRV2, mShadowSRV3, mSceneSRV;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mShadowSRV1, mShadowSRV2, mShadowSRV3;
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> mSSamplerState;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mDLBufferS, mPLBufferS, mSLBufferS;
 		ViewProjectionBuffer mSLVPB, mDLVPB, mPLVPB;
@@ -76,6 +79,7 @@ namespace Epoch {
 		void InitializeObjectNames();
 		void InitializeSceneQuad();
 		void SetStaticBuffers();
+		void InitializeStates();
 
 		matrix4 mEyePosLeft, mEyePosRight, mEyeProjLeft, mEyeProjRight, mHMDPos;
 
@@ -93,6 +97,7 @@ namespace Epoch {
 		void UpdateCamera(float const moveSpd, float const rotSpd, float delta);
 		void RenderNoVR(float _delta);
 		void ProcessRenderSet();
+		void RenderScreenQuad();
 
 		Renderer();
 		~Renderer();
@@ -111,7 +116,8 @@ namespace Epoch {
 			bool vsync, int fps, bool fullscreen, float farPlane, float nearPlane,
 			vr::IVRSystem* vrsys);
 		void ThrowIfFailed(HRESULT hr);
-		GhostList<matrix4>::GhostNode* AddNode(RenderShape *_node);
+		GhostList<matrix4>::GhostNode* AddOpaqueNode(RenderShape *_node);
+		GhostList<matrix4>::GhostNode* AddTransparentNode(RenderShape *_node);
 		void Render(float _deltaTime);
 
 		void ClearRenderSet();

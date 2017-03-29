@@ -52,7 +52,7 @@ namespace Epoch
 
 		//**SETTERS**//
 		void SetId(unsigned short _set) { mId = _set; };
-		void SetHeadsetAndControllers(BaseObject*& _headset, BaseObject*& _controller1, BaseObject*& _controller2, ControllerCollider* _c1Collider, ControllerCollider* _c2Collider);
+		void SetHeadsetAndControllers(BaseObject*& _headset, BaseObject*& _controller1, BaseObject*& _controller2, bool _addNewHeadsetToLevel);
 		void SwapPlayerComponentIds(BaseObject *& _first, BaseObject*& _other);
 
 		//**FUNCTIONS**//
@@ -63,6 +63,7 @@ namespace Epoch
 
 		//**CONSOLE COMMAND FUNCS**//
 		static void ToggleEntireLevelsWireframe(void * _command, std::wstring _ifOn);
+		static void LoadLevelCmnd(void* _commandConsole, std::wstring _Level);
 
 	};
 

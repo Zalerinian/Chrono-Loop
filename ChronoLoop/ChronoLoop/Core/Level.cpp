@@ -8,18 +8,26 @@
 #include "../Actions/CCElasticAABBToSphere.h"
 #include "../Actions/TimeManipulation.h"
 #include "../Actions/HeadsetFollow.hpp"
-#include "../Actions\CodeComponent.hpp"
+#include "../Actions/CodeComponent.hpp"
 #include "../Actions/CCButtonPress.h"
-#include "../Actions\CCEnterLevel.h"
+#include "../Actions/CCEnterLevel.h"
 #include "../Actions/MainMenuBT.h"
+#include "../Actions/CCLoadHub.h"
 #include "../Objects/MeshComponent.h"
+#include "../Objects/TransparentMeshComponent.h"
 #include "../tinyxml/tinyxml.h"
 #include "../tinyxml/tinystr.h"
 #include "../Common/Settings.h"
+#include "../Particles/ParticleComponents.h"
+#include "../Input/CommandConsole.h"
 
 namespace Epoch {
 
-	Level::Level() {}
+	CCEnterLevel* access = nullptr;
+	Level::Level() 
+	{
+		CommandConsole::Instance().AddCommand(L"/LOAD", LoadLevelCmnd);
+	}
 
 	Level::~Level() {
 		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
@@ -88,38 +96,35 @@ namespace Epoch {
 	{
 		std::vector<Component*> components = _first->GetComponents(eCOMPONENT_COLLIDER);
 		std::vector<Component*> othersComponents = _other->GetComponents(eCOMPONENT_COLLIDER);
-
-			for (int i = 0; i < othersComponents.size(); ++i) {
-				unsigned int FirstCompId = components[i]->GetColliderId();
-				components[i]->SetComponentId(othersComponents[i]->GetColliderId());
-				othersComponents[i]->SetComponentId(FirstCompId);
+		//This only works for the controllers because the head doesnt have a collider
+		for (unsigned int i = 0; i < othersComponents.size(); i++)
+		{
+			for (int j = 0; j < components.size(); ++j) {
+				if (dynamic_cast<ControllerCollider*>(othersComponents[i]) && dynamic_cast<ControllerCollider*>(components[j]))
+				{
+					unsigned int FirstCompId = components[j]->GetColliderId();
+					components[j]->SetComponentId(othersComponents[i]->GetColliderId());
+					othersComponents[i]->SetComponentId(FirstCompId);
+				}
 			}
-		
+		}
 
-		/*components = _first->GetComponents(eCOMPONENT_AUDIOEMITTER);
-		othersComponents = _other->GetComponents(eCOMPONENT_AUDIOEMITTER);
-		for (int i = 0; i < components.size(); ++i) {
-			unsigned int FirstCompId = components[i]->GetColliderId();
-			components[i]->SetComponentId(othersComponents[i]->GetColliderId());
-			othersComponents[i]->SetComponentId(FirstCompId);
-		}*/
-
-		/*components = _first->GetComponents(eCOMPONENT_AUDIOLISTENER);
-		othersComponents = _other->GetComponents(eCOMPONENT_AUDIOLISTENER);
-		for (int i = 0; i < components.size(); ++i) {
-			unsigned int FirstCompId = components[i]->GetColliderId();
-			components[i]->SetComponentId(othersComponents[i]->GetColliderId());
-			othersComponents[i]->SetComponentId(FirstCompId);
-		}*/
 
 		components = _first->GetComponents(eCOMPONENT_CODE);
 		othersComponents = _other->GetComponents(eCOMPONENT_CODE);
 
-			for (int i = 0; i <othersComponents.size(); ++i) {
-				unsigned int FirstCompId = components[i]->GetColliderId();
-				components[i]->SetComponentId(othersComponents[i]->GetColliderId());
-				othersComponents[i]->SetComponentId(FirstCompId);
+		for (unsigned int i = 0; i < othersComponents.size(); i++)
+		{
+			for (int j = 0; j < components.size(); ++j) {
+				if (dynamic_cast<BoxSnapToControllerAction*>(othersComponents[i]) && dynamic_cast<BoxSnapToControllerAction*>(components[j]))
+				{
+					unsigned int FirstCompId = components[j]->GetColliderId();
+					components[j]->SetComponentId(othersComponents[i]->GetColliderId());
+					othersComponents[i]->SetComponentId(FirstCompId);
+				}
+
 			}
+		}
 
 	
 		components = _first->GetComponents(eCOMPONENT_MESH);
@@ -132,26 +137,9 @@ namespace Epoch {
 				othersComponents[i]->SetComponentId(FirstCompId);
 			}
 		}
-		
-
-	/*	components = _first->GetComponents(eCOMPONENT_UI);
-		othersComponents = _other->GetComponents(eCOMPONENT_UI);
-		for (int i = 0; i < components.size(); ++i) {
-			unsigned int FirstCompId = components[i]->GetColliderId();
-			components[i]->SetComponentId(othersComponents[i]->GetColliderId());
-			othersComponents[i]->SetComponentId(FirstCompId);
-		}*/
-
-		components = _first->GetComponents(eCOMPONENT_UNKNOWN);
-		othersComponents = _other->GetComponents(eCOMPONENT_UNKNOWN);
-			for (int i = 0; i < othersComponents.size(); ++i) {
-				unsigned int FirstCompId = components[i]->GetColliderId();
-				components[i]->SetComponentId(othersComponents[i]->GetColliderId());
-				othersComponents[i]->SetComponentId(FirstCompId);
-			}
 	}
 
-	void Level::SetHeadsetAndControllers(BaseObject *& _headset, BaseObject *& _controller1, BaseObject *& _controller2, ControllerCollider* _c1Collider, ControllerCollider* _c2Collider) {
+	void Level::SetHeadsetAndControllers(BaseObject *& _headset, BaseObject *& _controller1, BaseObject *& _controller2, bool _addNewHeadsetToLevel) {
 		//Swap component ids
 		SwapPlayerComponentIds(mHeadset, _headset);
 		SwapPlayerComponentIds(mController1, _controller1);
@@ -160,17 +148,12 @@ namespace Epoch {
 		unsigned short headid = _headset->GetUniqueID();
 		unsigned short cl1id = _controller1->GetUniqueID();
 		unsigned short cl2id = _controller2->GetUniqueID();
-		unsigned short c1paramCodeCollid = _c1Collider->GetColliderId();
-		unsigned short c2paramCodeCollid = _c2Collider->GetColliderId();
 
 
 		std::string headname = _headset->GetName();
 		std::string Controller1name = _controller1->GetName();
 		std::string Controller2name = _controller2->GetName();
 
-		//mObjectMap[_headset->GetName()].push_back(_headset);
-		//mObjectMap[_controller1->GetName()].push_back(_controller1);
-		//mObjectMap[_controller2->GetName()].push_back(_controller2);
 
 		_headset->SetUniqueID(mHeadset->GetUniqueID());
 		_controller1->SetUniqueID(mController1->GetUniqueID());
@@ -186,20 +169,48 @@ namespace Epoch {
 		mHeadset->SetName(headname);
 		mController1->SetName(Controller1name);
 		mController2->SetName(Controller2name);
+
+		//Update the clone pair of the new baseObjects if it already exist
+		Clonepair* temp = TimeManager::Instance()->GetClonePair(mHeadset->GetUniqueID());
+		if (temp)
+		{
+			temp->mCur = _headset->GetUniqueID();
+			temp->mOther1 = _controller1->GetUniqueID();
+			temp->mOther2 = _controller2->GetUniqueID();
+			//remove the one on the old key and create a new one with the new key
+			TimeManager::Instance()->EraseClonePair(mHeadset->GetUniqueID());
+			TimeManager::Instance()->SetClonePair(_headset->GetUniqueID(), temp);
+		}
+
+		temp = TimeManager::Instance()->GetClonePair(mController1->GetUniqueID());
+		if (temp)
+		{
+			temp->mCur = _controller1->GetUniqueID();
+			temp->mOther1 = _headset->GetUniqueID();
+			temp->mOther2 = _controller2->GetUniqueID();
+			//remove the one on the old key and create a new one with the new key
+			TimeManager::Instance()->EraseClonePair(mController1->GetUniqueID());
+			TimeManager::Instance()->SetClonePair(_controller1->GetUniqueID(), temp);
+		}
+
+		temp = TimeManager::Instance()->GetClonePair(mController2->GetUniqueID());
+		if (temp)
+		{
+			temp->mCur = _controller2->GetUniqueID();
+			temp->mOther1 = _controller1->GetUniqueID();
+			temp->mOther2 = _headset->GetUniqueID();
+			//remove the one on the old key and create a new one with the new key
+			TimeManager::Instance()->EraseClonePair(mController2->GetUniqueID());
+			TimeManager::Instance()->SetClonePair(_controller2->GetUniqueID(), temp);
+		}
 	
-
-		mHeadset->SetUniqueID(headid);
-		mController1->SetUniqueID(cl1id);
-		mController2->SetUniqueID(cl2id);
-		mHeadset->SetName(headname);
-		mController1->SetName(Controller1name);
-		mController2->SetName(Controller2name);
 	
-
-		mObjectList.push_back(_headset);
-		mObjectList.push_back(_controller1);
-		mObjectList.push_back(_controller2);
-
+		if (_addNewHeadsetToLevel)
+		{
+			mObjectList.push_back(_headset);
+			mObjectList.push_back(_controller1);
+			mObjectList.push_back(_controller2);
+		}
 		////Add the headset and controllers to the time manager with their new ids
 		TimeManager::Instance()->AddObjectToTimeline(mHeadset);
 		TimeManager::Instance()->AddObjectToTimeline(mController1);
@@ -291,10 +302,12 @@ namespace Epoch {
 				while (pObject)
 				{
 					std::vector<std::string> codeComs;
-					std::string elementType, name, meshFile, textureFile, colliderType;
-					vec3f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity;
-					float mass, elasticity, staticF, kineticF, normF, drag, radius;
-					bool collider = false, trigger = false, canMove = false, physical = false;
+					std::string elementType, name, meshFile, textureFile, colliderType, particleTexture, soundName;
+					vec3f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity, particleRadius, startColor, endColor;
+					float mass, elasticity, staticF, kineticF, normF, drag, radius, startSize, endSize, startAlpha, endAlpha;
+					int totalParticles, maxParticles, PPS, lifeTime;
+					bool collider = false, trigger = false, canMove = false, physical = false, particle = false, sound = false, SFX = false, Loop = false;
+					unsigned long sfxFile, playFile, pauseFile, stopFile, resumeFile;
 					pData = pObject->FirstChildElement();
 					while (pData)
 					{
@@ -304,6 +317,10 @@ namespace Epoch {
 							elementType = std::string(pData->Value());
 							if (elementType == "Collider")
 								collider = true;
+							else if (elementType == "ParticleEmitter")
+								particle = true;
+							else if (elementType == "SoundEmitter")
+								sound = true;
 							pData = (TiXmlElement*)pData->FirstChild();
 							break;
 						case TiXmlNode::NodeType::TINYXML_TEXT:
@@ -370,7 +387,6 @@ namespace Epoch {
 							{
 								std::string temp(pData->Value());
 								canMove = temp.find("True") != std::string::npos;
-								int thing = 0;
 							}
 							else if (elementType == "Type")
 								colliderType = pData->Value();
@@ -442,6 +458,100 @@ namespace Epoch {
 							}
 							else if (elementType == "NormalForce")
 								normF = std::strtof(pData->Value(), nullptr);
+							else if(elementType == "MaxParticles")
+								maxParticles = (int)std::strtof(pData->Value(), nullptr);
+							else if (elementType == "TotalParticles")
+								totalParticles = (int)std::strtof(pData->Value(), nullptr);
+							else if(elementType == "Texture")
+								particleTexture = pData->Value();
+							else if(elementType == "PPS")
+								PPS = (int)std::strtof(pData->Value(), nullptr);
+							else if(elementType == "LifeTime")
+								lifeTime = (int)std::strtof(pData->Value(), nullptr);
+							else if(elementType == "StartSize")
+								startSize = std::strtof(pData->Value(), nullptr);
+							else if(elementType == "EndSize")
+								endSize = std::strtof(pData->Value(), nullptr);
+							else if (elementType == "StartAlpha")
+								startAlpha = std::strtof(pData->Value(), nullptr);
+							else if(elementType == "EndAlpha")
+								endAlpha = std::strtof(pData->Value(), nullptr);
+							else if (elementType == "Radial")
+							{
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									particleRadius.xyz[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+							}
+							else if(elementType == "StartColor")
+							{
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									startColor.xyz[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+							}
+							else if (elementType == "StartColor")
+							{
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									endColor.xyz[i] = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+							}
+							else if(elementType == "SoundName")
+								soundName = pData->Value();
+							else if (elementType == "SFX")
+							{
+								SFX = true;
+								std::string t = pData->Value();
+								char* c;
+								sfxFile = std::strtol(t.c_str(), &c, 16);
+							}
+							else if (elementType == "Play")
+							{
+								Loop = true;
+								std::string t = pData->Value();
+								char* c;
+								playFile = std::strtol(t.c_str(), &c, 16);
+							}
+							else if (elementType == "Pause")
+							{
+								Loop = true;
+								std::string t = pData->Value();
+								char* c;
+								pauseFile = std::strtol(t.c_str(), &c, 16);
+							}
+							else if (elementType == "Stop")
+							{
+								Loop = true;
+								std::string t = pData->Value();
+								char* c;
+								stopFile = std::strtol(t.c_str(), &c, 16);
+							}
+							else if (elementType == "Resume")
+							{
+								Loop = true;
+								std::string t = pData->Value();
+								char* c;
+								resumeFile = std::strtol(t.c_str(), &c, 16);
+							}
 							else
 								codeComs.push_back(elementType);
 
@@ -475,6 +585,42 @@ namespace Epoch {
 					
 					}
 
+					if (particle)
+					{
+						ParticleEmitter* emitter = new ParticleEmitter(totalParticles, maxParticles, PPS, position);
+						emitter->SetTexture(particleTexture.c_str());
+						Particle* p = &Particle::Init();
+						p->SetColors(startColor, endColor);
+						p->SetLife(lifeTime);
+						p->SetSize(startSize, endSize);
+						emitter->SetParticle(p);
+						ParticleSystem::Instance()->AddEmitter(emitter);
+						Effect* e = new Effect();
+						e->mEmitter = emitter;
+						obj->AddComponent(e);
+					}
+
+					if (sound)
+					{
+						if (SFX)
+						{
+							Emitter* sound = new Emitter();
+							sound->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, sfxFile);
+							Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(sound, soundName.c_str())));
+							obj->AddComponent(sound);
+						}
+						if (Loop)
+						{
+							Emitter* sound = new Emitter();
+							sound->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, playFile);
+							sound->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, pauseFile);
+							sound->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, resumeFile);
+							sound->AddSoundEvent(Emitter::sfxTypes::eStopLoop, stopFile);
+							Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(sound, soundName.c_str())));
+							obj->AddComponent(sound);
+						}
+					}
+
 					if (colliderType == "OBB")
 					{
 						physical = true;
@@ -504,7 +650,7 @@ namespace Epoch {
 					else if (colliderType == "Plane")
 					{
 						physical = true;
-
+						
 						PlaneCollider* col = new PlaneCollider(obj, trigger, staticF, kineticF, fabsf((colliderPosition + position) * normal), normal);//TODO: Fix offset
 						obj->AddComponent(col);
 					}
@@ -543,8 +689,16 @@ namespace Epoch {
 						}
 						else if (codeComs[i] == "EnterLevel")
 						{
-							CCEnterLevel* code = new CCEnterLevel();
-							obj->AddComponent(code);
+							if (name == "DoorEmitter2")
+							{
+								CCLoadHub* code = new CCLoadHub();
+								obj->AddComponent(code);
+							}
+							else
+							{
+								CCEnterLevel* code = new CCEnterLevel();
+								obj->AddComponent(code);
+							}
 						}
 						else if (codeComs[i] == "HeadsetFollow")
 						{
@@ -586,6 +740,42 @@ namespace Epoch {
 		else {
 			CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /WIREFRAME (ON/OFF)");
 		}
+	}
+	void Level::LoadLevelCmnd(void* _commandConsole, std::wstring _Level)
+	{
+		CommandConsole* self = (CommandConsole*)_commandConsole;
+
+		if (access == nullptr)
+		{
+			std::list<BaseObject*> copyList = LevelManager::GetInstance().GetCurrentLevel()->GetLevelObjects();
+			for (auto it = copyList.begin(); it != copyList.end(); ++it) {
+				std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+				if (CodeComps.size() > 0) {
+					for (size_t x = 0; x < CodeComps.size(); ++x)
+					{
+						if (dynamic_cast<CCEnterLevel*>(CodeComps[x])) {
+							access = ((CCEnterLevel*)CodeComps[x]);
+							break;
+						}
+					}
+					if (access != nullptr)
+						break;
+				}
+			}
+		}
+		//std::list<BaseObject*> objects = mObjectList;
+		if (access == nullptr)
+			CommandConsole::Instance().DisplaySet(L"FAILED TO LOAD LEVEL :(");
+		else if (access->GetOnce() == false)
+			CommandConsole::Instance().DisplaySet(L"LEVEL IS ALREADY LOADED");
+		else if ((_Level == L"LEVELONE" || _Level == L"LEVEL_ONE") && access->GetOnce() == true) {
+			access->SetOnce(false);
+			CommandConsole::Instance().Toggle();
+		}
+		else if (access->GetOnce() == true)
+			CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _Level + L"\nCORRECT INPUT: /LOAD (LEVELNAME)");
+
+
 	}
 
 } // Epoch Namespace

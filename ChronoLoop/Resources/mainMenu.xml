@@ -30,6 +30,9 @@
     <Scale>1,1.25,0.5</Scale>
     <Components>
       <EnterLevel>Enabled</EnterLevel>
+      <EnterLevel>Enabled</EnterLevel>
+      <EnterLevel>Enabled</EnterLevel>
+      <EnterLevel>Enabled</EnterLevel>
       <Collider>
         <Type>OBB</Type>
         <Trigger>True</Trigger>
@@ -81,5 +84,31 @@
     <Rotation>0,0,0</Rotation>
     <Scale>50,50,50</Scale>
     <Components />
+  </Object>
+  <Object>
+    <Name>mmDoor</Name>
+    <Mesh>mmDoor.obj</Mesh>
+    <Texture>fieldGen.png</Texture>
+    <Position>2.61,-10,0</Position>
+    <Rotation>0,1.57,0</Rotation>
+    <Scale>1,1.25,0.5</Scale>
+    <Components>
+      <EnterLevel>Enabled</EnterLevel>
+      <EnterLevel>Enabled</EnterLevel>
+      <Collider>
+        <Type>OBB</Type>
+        <Trigger>False</Trigger>
+        <Position>0,1,0</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>1.2,1.8,0.4</Scale>
+        <Move>False</Move>
+        <Gravity>0,0,0</Gravity>
+        <Mass>0</Mass>
+        <Elasticity>0</Elasticity>
+        <StaticFriction>0</StaticFriction>
+        <KeneticFriction>0</KeneticFriction>
+        <Drag>0</Drag>
+      </Collider>
+    </Components>
   </Object>
 </Level>

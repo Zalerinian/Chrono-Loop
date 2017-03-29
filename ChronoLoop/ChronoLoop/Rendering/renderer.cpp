@@ -16,6 +16,7 @@
 #include "../Input/CommandConsole.h"
 #include "../Rendering/Draw2D.h"
 #include "../Particles/ParticleSystem.h"
+#include "RenderShaderDefines.hlsli"
 
 #define ENABLE_TEXT 1
 
@@ -195,6 +196,10 @@ namespace Epoch {
 		ThrowIfFailed(mDevice->CreateRenderTargetView(bbuffer, NULL, &rtv));
 		mMainView.Attach(rtv);
 		mMainViewTexture.Attach((ID3D11Texture2D*)bbuffer);
+		D3D11_TEXTURE2D_DESC texdesc;
+		mMainViewTexture->GetDesc(&texdesc);
+		D3D11_RENDER_TARGET_VIEW_DESC rtvdesc;
+		mMainView->GetDesc(&rtvdesc);
 
 		ID3D11Texture2D *depthTexture;
 		ID3D11DepthStencilView *depthView;
@@ -388,7 +393,7 @@ namespace Epoch {
 		initialData.pSysMem = &initial;
 		CD3D11_BUFFER_DESC bufferDesc(sizeof(TimeManipulationEffectData), D3D11_BIND_CONSTANT_BUFFER);
 		mDevice->CreateBuffer(&bufferDesc, &initialData, &ColorRatioBuffer);
-		mScenePPQuad->GetContext().mPixelCBuffers[ePB_SLOT2].Attach(ColorRatioBuffer);
+		mScenePPQuad->GetContext().mPixelCBuffers[ePB_PP_Ratios].Attach(ColorRatioBuffer);
 
 		mSceneScreenQuad = new RenderShape("../Resources/VerticalPlaneHalfU.obj", true, ePS_PURETEXTURE, eVS_NDC, eGS_PosNormTex_NDC);
 		mSceneScreenQuad->GetContext().mTextures[eTEX_DIFFUSE] = mSceneSRV;
@@ -403,6 +408,44 @@ namespace Epoch {
 
 		//(*mContext)->PSSetConstantBuffers(0, 1, nullptr); // This will crash. - Light Buffer
 	}
+
+	void Renderer::InitializeStates()
+	{
+		ID3D11DepthStencilState *opaqueState, *transparentState;
+		D3D11_DEPTH_STENCIL_DESC opaqueDepth, transparentDepth;
+		memset(&opaqueDepth, 0, sizeof(opaqueDepth));
+		opaqueDepth.DepthEnable = true;
+		opaqueDepth.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		opaqueDepth.DepthFunc = D3D11_COMPARISON_LESS;
+		transparentDepth = opaqueDepth;
+		transparentDepth.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+		ThrowIfFailed(mDevice->CreateDepthStencilState(&opaqueDepth, &opaqueState));
+		ThrowIfFailed(mDevice->CreateDepthStencilState(&transparentDepth, &transparentState));
+		mOpaqueState.Attach(opaqueState);
+		mTransparentState.Attach(transparentState);
+
+
+		ID3D11BlendState *opaqueBS, *transparentBS;
+		D3D11_BLEND_DESC opaqueBlend, transparentBlend;
+		transparentBlend.IndependentBlendEnable = FALSE;
+		transparentBlend.AlphaToCoverageEnable = FALSE;
+		transparentBlend.RenderTarget[0].BlendEnable = TRUE;
+		transparentBlend.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+		transparentBlend.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+		transparentBlend.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+		transparentBlend.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
+		transparentBlend.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
+		transparentBlend.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		transparentBlend.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+		
+		opaqueBlend = transparentBlend;
+		opaqueBlend.RenderTarget[0].BlendEnable = FALSE;
+		ThrowIfFailed(mDevice->CreateBlendState(&opaqueBlend, &opaqueBS));
+		ThrowIfFailed(mDevice->CreateBlendState(&transparentBlend, &transparentBS));
+		mOpaqueBlendState.Attach(opaqueBS);
+		mTransparentBlendState.Attach(transparentBS);
+	}
+	
 	void Renderer::UpdateCamera(float const _moveSpd, float const _rotSpd, float _delta) {
 #if _DEBUG || 1
 		if (GetActiveWindow() != mWindow) {
@@ -499,10 +542,7 @@ namespace Epoch {
 		UpdateLBuffers();
 		ProcessRenderSet();
 
-		// Apply post processing to the texture.
-		mContext->OMSetRenderTargets(1, mMainView.GetAddressOf(), mDSView.Get());
-		mScenePPQuad->GetContext().Apply();
-		mScenePPQuad->Render();
+		RenderScreenQuad();
 
 
 		vr::Texture_t submitTexture = { (void*)mMainViewTexture.Get(), vr::TextureType_DirectX, vr::ColorSpace_Auto };
@@ -528,10 +568,7 @@ namespace Epoch {
 	void Renderer::RenderNoVR(float _delta) {
 		UpdateCamera(2, 2, _delta);
 		ProcessRenderSet();
-
-		mContext->OMSetRenderTargets(1, mMainView.GetAddressOf(), mDSView.Get());
-		mScenePPQuad->GetContext().Apply();
-		mScenePPQuad->Render();
+		RenderScreenQuad();
 
 		CommandConsole::Instance().SetVRBool(false);
 		CommandConsole::Instance().Update();
@@ -557,18 +594,63 @@ namespace Epoch {
 		// will crash due to copying garbage memory into the graphics driver for the buffer's contents. Fix that.
 		std::vector<matrix4> positions;
 		positions.reserve(256);
-		for (auto it = mRenderSet.Begin(); it != mRenderSet.End(); ++it) {
+
+		// Go through opaque objects first
+
+		mContext->OMSetDepthStencilState(mOpaqueState.Get(), 1);
+		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
+		for (auto it = mOpaqueSet.Begin(); it != mOpaqueSet.End(); ++it) {
 			(*it)->mPositions.GetData(positions);
 			if (positions.size() > 0) {
 				unsigned int offset = 0;
+#if ENABLE_INSTANCING
 				while (positions.size() - offset <= positions.size()) {
 					(*it)->mShape.GetContext().Apply();
 					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, positions.data() + offset, 0, 0);
 					(*it)->mShape.Render((UINT)positions.size() - offset);
 					offset += 256;
 				}
+#else
+				(*it)->mShape.GetContext().Apply();
+				for (unsigned int i = 0; i < positions.size(); ++i) {
+					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i] + offset, 0, 0);
+					(*it)->mShape.Render(1); // Without instancing, the instance count doesn't matter, but we're only drawing one :)
+				}
+#endif
 			}
 		}
+
+
+		mContext->OMSetDepthStencilState(mTransparentState.Get(), 1);
+		mContext->OMSetBlendState(mTransparentBlendState.Get(), NULL, 0xFFFFFFFF);
+		for (auto it = mTransparentSet.Begin(); it != mTransparentSet.End(); ++it) {
+			(*it)->mPositions.GetData(positions);
+			if (positions.size() > 0) {
+				unsigned int offset = 0;
+#if ENABLE_INSTANCING
+				while (positions.size() - offset <= positions.size()) {
+					(*it)->mShape.GetContext().Apply();
+					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, positions.data() + offset, 0, 0);
+					(*it)->mShape.Render((UINT)positions.size() - offset);
+					offset += 256;
+				}
+#else
+				(*it)->mShape.GetContext().Apply();
+				for (unsigned int i = 0; i < positions.size(); ++i) {
+					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i] + offset, 0, 0);
+					(*it)->mShape.Render(1); // Without instancing, the instance count doesn't matter, but we're only drawing one :)
+				}
+#endif
+			}
+		}
+	}
+
+	void Renderer::RenderScreenQuad()
+	{
+		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
+		mContext->OMSetRenderTargets(1, mMainView.GetAddressOf(), mDSView.Get());
+		mScenePPQuad->GetContext().Apply();
+		mScenePPQuad->Render();
 	}
 
 	 
@@ -576,8 +658,13 @@ namespace Epoch {
 
 #pragma region Public Functions
 
-	GhostList<matrix4>::GhostNode* Renderer::AddNode(RenderShape *_node) {
-		return mRenderSet.AddShape(*_node);
+	GhostList<matrix4>::GhostNode* Renderer::AddOpaqueNode(RenderShape *_node) {
+		return mOpaqueSet.AddShape(*_node);
+	}
+
+	GhostList<matrix4>::GhostNode * Renderer::AddTransparentNode(RenderShape * _node)
+	{
+		return mTransparentSet.AddShape(*_node);
 	}
 
 	bool Renderer::iInitialize(HWND _Window, unsigned int _width, unsigned int _height, bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane, vr::IVRSystem * _vrsys) {
@@ -612,6 +699,7 @@ namespace Epoch {
 		InitializeViews(rtvWidth, rtvHeight);
 		InitializeBuffers();
 		InitializeSceneQuad();
+		InitializeStates();
 
 #if _DEBUG
 		InitializeObjectNames();
@@ -639,7 +727,8 @@ namespace Epoch {
 
 	void Renderer::ClearRenderSet()
 	{
-		mRenderSet.ClearSet();
+		mOpaqueSet.ClearSet();
+		mTransparentSet.ClearSet();
 	}
 
 

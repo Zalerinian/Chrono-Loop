@@ -19,8 +19,8 @@ namespace Epoch
 		(*mGIDevice)->Release();
 		(*mContext2D)->Release();
 		(*mDWrite)->Release();
-		(*mTextformat)->Release();
-		(*mBrush)->Release();
+		//(*mTextformat)->Release();
+		//(*mBrush)->Release();
 		(*mScreenBitmap)->Release();
 
 		mTextFactory.reset();
@@ -28,8 +28,8 @@ namespace Epoch
 		mGIDevice.reset();
 		mContext2D.reset();
 		mDWrite.reset();
-		mTextformat.reset();
-		mBrush.reset();
+		//mTextformat.reset();
+		//mBrush.reset();
 		mScreenBitmap.reset();
 	}
 
@@ -82,12 +82,6 @@ namespace Epoch
 	}
 	void Draw::InitializeScreenBitmap()
 	{
-		//ID3D11Texture2D* backbuffer2D;
-		//ThrowIfFailed((*mChain)->GetBuffer(0, IID_PPV_ARGS(&backbuffer2D)));
-
-		//sInstance->mScreenBitmap = make_shared<ID2D1Bitmap1*>(CreateBitmapForTexture(backbuffer2D));
-		//(*mContext2D)->SetTarget((*mScreenBitmap));
-
 		sInstance->mScreenBitmap = std::make_shared<ID2D1Bitmap1*>(CreateBitmapForTexture(Renderer::Instance()->GetRTViewTexture().Get()));
 	}
 	//////
@@ -101,11 +95,6 @@ namespace Epoch
 			if (x.second.first == _font)
 				return;
 		}
-		//for (std::pair <Font, IDWriteTextFormat*> x : mFonts)
-		//{
-		//	if (x.first == _font)
-		//		return;
-		//}
 		CreateNewTextFormat(_font);
 	}
 	//////
@@ -133,12 +122,16 @@ namespace Epoch
 			if (x.second.first == _font)
 				return x.second.second;
 		}
-		//for (std::pair<Font, IDWriteTextFormat*> x : mFonts)
-		//{
-		//	if (x.first == _font)
-		//		return x.second;
-		//}
 		return CreateNewTextFormat(_font);
+	}
+	ID2D1Bitmap1 * Draw::GetBitmap(ID3D11Texture2D * _texture)
+	{
+		for (std::pair<ID3D11Texture2D*, ID2D1Bitmap1*> x : mBitmaps)
+		{
+			if (x.first == _texture)
+				return x.second;
+		}
+		return CreateNewBitmap(_texture);
 	}
 	ID2D1SolidColorBrush * Draw::CreateNewBrush(D2D1::ColorF _color)
 	{
@@ -172,6 +165,8 @@ namespace Epoch
 	void Draw::DrawTextToBitmap(float _left, float _top, float _right, float _bottom,
 															Font _font, std::wstring _text, ID2D1Bitmap* _bitmap)
 	{
+		
+		
 		(*mContext2D)->SetTarget(_bitmap);
 		float color[4] = { 0.3f, 0.3f, 1, 1 };
 
@@ -230,6 +225,14 @@ namespace Epoch
 
 	}
 
+	ID2D1Bitmap1 * Draw::CreateNewBitmap(ID3D11Texture2D * _texture)
+	{
+		ID2D1Bitmap1* temp = nullptr;
+		temp = CreateBitmapForTexture(_texture);
+		mBitmaps.insert({ _texture,temp });
+		return temp;
+	}
+
 	//IF YOU USE THIS, CLEAN UP AFTER YOURSELF
 	ID2D1Bitmap1 * Draw::CreateBitmapForTexture(ID3D11Texture2D * _texture)
 	{
@@ -242,7 +245,7 @@ namespace Epoch
 				0		//defaults to 96
 			);
 
-		IDXGISurface* surface;
+		IDXGISurface* surface = nullptr;
 		Renderer::Instance()->ThrowIfFailed(_texture->QueryInterface(IID_IDXGISurface, (void**)&surface));
 
 		ID2D1Bitmap1* bitmap;

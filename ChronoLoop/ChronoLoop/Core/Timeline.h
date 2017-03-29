@@ -13,9 +13,9 @@ namespace Epoch {
 		unsigned int mId;
 	};
 	struct SnapComponent_Physics : SnapComponent {
-		vec4f mForces;
-		vec4f mVel;
-		vec4f mAcc;
+		vec3f mForces;
+		vec3f mVel;
+		vec3f mAcc;
 	};
 	//Add more componets when we need it
 #pragma endregion ComponetStructs
@@ -69,7 +69,7 @@ namespace Epoch {
 	class Timeline {
 		//Where we are at in the timeline
 		unsigned int mCurrentGameTimeIndx = 0;
-		float mObjectInterpolationTime = 0.20f;
+		float mObjectInterpolationTime = 0.40f;
 		std::vector<unsigned int> mSnaptimes;
 		std::unordered_map<unsigned int, Snapshot*> mSnapshots;		//The key will be the time they were taken (mSnapTimes)
 		std::unordered_map<unsigned short, BaseObject*> mLiveObjects;
@@ -94,7 +94,7 @@ namespace Epoch {
 		SnapInfo* GenerateSnapInfo(BaseObject* _object, SnapInfo* _info);							//Error check agianst the BaseObject* if it is null or not
 		Snapshot* GenerateSnapShot(unsigned int _time, std::vector<BaseObject*> & _clones);
 		//SnapInfoPlayer * GenerateSnapInfoPlayer();
-		unsigned int GetCurrentGameTimeIndx() { return mCurrentGameTimeIndx; }
+		const unsigned int& GetCurrentGameTimeIndx() { return mCurrentGameTimeIndx; }
 		unsigned int GetTotalSnaps() { return (unsigned int)mSnapshots.size(); };
 		float GetObjectInterpolationTime() { return mObjectInterpolationTime; };
 		void SetObjectInterpolationTime(float _set) { mObjectInterpolationTime = _set; };

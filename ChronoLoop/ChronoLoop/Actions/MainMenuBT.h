@@ -21,7 +21,7 @@ namespace Epoch
 		Interpolator<matrix4>* mChamberInterp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mPlayerInterp = new Interpolator<matrix4>();
 		MeshComponent *mChamberMesh, *mStartMesh, *mExitMesh, *mFloorMesh, *mRoomMesh;
-		BaseObject *mChamberObject, *mStartObject, *mExitObject, *mFloorObject, *mRoomObject, *mCubeObject;
+		BaseObject *mChamberObject, *mStartObject, *mExitObject, *mFloorObject, *mRoomObject/*, *mCubeObject*/;
 		ControllerType mControllerRole = eControllerType_Primary;
 		Level* cLevel = nullptr;
 		bool mBooped = false;
@@ -35,8 +35,8 @@ namespace Epoch
 			mExitObject = cLevel->FindObjectWithName("mmExit");
 			mFloorObject = cLevel->FindObjectWithName("mmFloor");
 			mRoomObject = cLevel->FindObjectWithName("mmRoom");
-			mCubeObject = cLevel->FindObjectWithName("mmCube");
-			mCubeObject->GetTransform().GetMatrix().Position.Set(0, -30000, 0, 1);
+			//mCubeObject = cLevel->FindObjectWithName("mmCube");
+			//mCubeObject->GetTransform().GetMatrix().Position.Set(0, -30000, 0, 1);
 
 			mChamberInterp->SetEasingFunction(Easing::CubicInOut);
 			mPlayerInterp->SetEasingFunction(Easing::CubicInOut);

@@ -84,7 +84,7 @@ namespace Epoch {
 			mChildren = _children;
 		}
 
-		inline std::vector<Component*> GetComponents(ComponentType _type) {
+		inline std::vector<Component*>& GetComponents(ComponentType _type) {
 			return mComponents[_type];
 		}
 

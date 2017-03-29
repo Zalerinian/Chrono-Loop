@@ -206,6 +206,8 @@ namespace Epoch
 	{
 	public:
 		Effect() : Component(ComponentType::eCOMPONENT_EFFECT) {}
+		void Update() {}
+		void Destroy() {}
 		ParticleEmitter* mEmitter;
 
 		void FireEffect()
