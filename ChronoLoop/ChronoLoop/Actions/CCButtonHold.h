@@ -16,7 +16,7 @@ namespace Epoch
 		bool colliding = false, mCanDoorInterp = false, mDoorDoneInterpolating = false, mFlip = false;
 		BaseObject *Block = nullptr, *Exit = nullptr;
 		CubeCollider* blockCube, *exitCube;
-		matrix4 blockend, exitend;
+		matrix4 blockend, exitend , blockstart, exitstart;
 		Interpolator<matrix4>* blockInterp;
 		Interpolator<matrix4>* exitInterp;
 		//vec3f blockend, exitend;
@@ -38,6 +38,8 @@ namespace Epoch
 			exitCube = (CubeCollider*)Exit->mComponents[eCOMPONENT_COLLIDER][0];
 			//blockend = blockCube->GetPos() - vec3f(0, 2.6f, 0);
 			//exitend = exitCube->GetPos() + vec3f(0, 2.6f, 0);
+			blockstart = blockCube->GetTransform().GetMatrix();
+			exitstart = exitCube->GetTransform().GetMatrix();
 			blockend = blockCube->GetTransform().GetMatrix() * blockCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, -2.6f, 0, 1));
 			exitend = exitCube->GetTransform().GetMatrix() * exitCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 2.6f, 0, 1));
 		}
@@ -98,11 +100,10 @@ namespace Epoch
 					{
 						mFlip = false;
 						blockInterp->SetActive(true);
-						blockInterp->Prepare(0.69f, blockCube->GetTransform().GetMatrix(), blockCube->GetTransform().GetMatrix() * blockCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 2.6f, 0, 1)), blockCube->GetTransform().GetMatrix());
+						blockInterp->Prepare(0.69f, blockCube->GetTransform().GetMatrix(), blockstart, blockCube->GetTransform().GetMatrix());
 
-						//exitCube->SetPos(exitend);
 						exitInterp->SetActive(true);
-						exitInterp->Prepare(0.69f, exitCube->GetTransform().GetMatrix(), exitCube->GetTransform().GetMatrix() * exitCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, -2.6f, 0, 1)), exitCube->GetTransform().GetMatrix());
+						exitInterp->Prepare(0.69f, exitCube->GetTransform().GetMatrix(), exitstart, exitCube->GetTransform().GetMatrix());
 
 						mCanDoorInterp = true;
 						mDoorDoneInterpolating = false;
