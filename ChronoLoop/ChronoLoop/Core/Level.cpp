@@ -11,6 +11,7 @@
 #include "../Actions/CodeComponent.hpp"
 #include "../Actions/CCButtonPress.h"
 #include "../Actions/CCEnterLevel.h"
+#include "../Actions/CCEnterLevel1.h"
 #include "../Actions/MainMenuBT.h"
 #include "../Actions/CCLoadHub.h"
 #include "../Objects/MeshComponent.h"
@@ -358,7 +359,10 @@ namespace Epoch {
 								while ((pos = s.find(",")) != std::string::npos)
 								{
 									std::string token = s.substr(0, pos);
-									rotation.xyz[i] = std::strtof(token.c_str(), nullptr);
+									if (!collider)
+									{
+										rotation.xyz[i] = std::strtof(token.c_str(), nullptr);
+									}
 									i++;
 									s.erase(0, pos + 1);
 								}
@@ -692,6 +696,11 @@ namespace Epoch {
 							if (name == "DoorEmitter2")
 							{
 								CCLoadHub* code = new CCLoadHub();
+								obj->AddComponent(code);
+							}
+							else if (name == "mmDoor")
+							{
+								CCEnterLevel1* code = new CCEnterLevel1();
 								obj->AddComponent(code);
 							}
 							else
