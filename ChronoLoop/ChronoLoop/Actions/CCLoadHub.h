@@ -7,7 +7,7 @@
 #include "..\Common\Settings.h"
 #include "..\Actions\MainMenuBT.h"
 #include "..\Objects\MeshComponent.h"
-
+#include "..\Sound\SoundEngine.h"
 
 namespace Epoch
 {
@@ -24,7 +24,8 @@ namespace Epoch
 		bool GetOnce() { return once; };
 		virtual void OnTriggerEnter(Collider& _col1, Collider& _col2)
 		{
-			once = false;
+			if(_col2.mColliderType == Collider::eCOLLIDER_Controller)
+				once = false;
 		}
 
 		virtual void Update()
@@ -40,10 +41,22 @@ namespace Epoch
 				if (/*status == LM::LevelStatus::Success*/ true)
 				{
 					// Clean up the current level and request the new one be used next time.
+					Listener* l =  ((Listener*)LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOLISTENER, 0));
+					Emitter* e = ((Emitter*)LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0));
+
+					std::vector<Component*>& lcoms = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetComponents(eCOMPONENT_AUDIOLISTENER);
+					lcoms.erase(lcoms.begin());
+					std::vector<Component*>& ecoms = LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetComponents(eCOMPONENT_AUDIOEMITTER);
+					ecoms.erase(ecoms.begin());
+
+					Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::REMOVE_Listener, 0, false, (void*)l));
+					Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::REMOVE_Emitter, 0, false, (void*)e));
+
 					Physics::Instance()->PhysicsLock.lock();
 					TimeManager::Instance()->Destroy();
 					Physics::Instance()->mObjects.clear();
 					LevelManager::GetInstance().RequestLevelChange(next);
+					
 
 					TimeManager::Instance();
 
