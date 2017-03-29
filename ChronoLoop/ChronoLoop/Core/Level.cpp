@@ -11,6 +11,7 @@
 #include "../Actions/CodeComponent.hpp"
 #include "../Actions/CCButtonPress.h"
 #include "../Actions/CCEnterLevel.h"
+#include "../Actions/CCEnterLevel1.h"
 #include "../Actions/MainMenuBT.h"
 #include "../Actions/CCLoadHub.h"
 #include "../Objects/MeshComponent.h"
@@ -692,6 +693,11 @@ namespace Epoch {
 							if (name == "DoorEmitter2")
 							{
 								CCLoadHub* code = new CCLoadHub();
+								obj->AddComponent(code);
+							}
+							else if (name == "mmDoor2")
+							{
+								CCEnterLevel1* code = new CCEnterLevel1();
 								obj->AddComponent(code);
 							}
 							else

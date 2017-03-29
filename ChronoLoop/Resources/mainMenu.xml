@@ -86,13 +86,14 @@
     <Components />
   </Object>
   <Object>
-    <Name>mmDoor</Name>
+    <Name>mmDoor2</Name>
     <Mesh>mmDoor.obj</Mesh>
     <Texture>fieldGen.png</Texture>
     <Position>2.61,-10,0</Position>
     <Rotation>0,1.57,0</Rotation>
     <Scale>1,1.25,0.5</Scale>
     <Components>
+      <EnterLevel>Enabled</EnterLevel>
       <EnterLevel>Enabled</EnterLevel>
       <EnterLevel>Enabled</EnterLevel>
       <Collider>
