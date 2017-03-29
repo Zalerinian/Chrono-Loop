@@ -81,6 +81,7 @@ namespace Epoch
 			if (!LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->isTimePaused() && !LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->isTimePaused()) {
 				if (colliding)
 				{
+					colliding = false;
 					mFlip = true;
 					if (mCanDoorInterp && !mDoorDoneInterpolating)
 					{
@@ -118,11 +119,11 @@ namespace Epoch
 						mCanDoorInterp = false;
 						blockInterp->SetActive(false);
 						exitInterp->SetActive(false);
-
 					}
 
 				}
 			}
+			
 		}
 	};
 }
