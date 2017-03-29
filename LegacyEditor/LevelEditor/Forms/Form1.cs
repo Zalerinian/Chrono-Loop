@@ -659,6 +659,11 @@ namespace LevelEditor
             }
         }
 
+        private void componetsCheck_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
         private void levelSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Forms.LevelSettingsForm settings = new Forms.LevelSettingsForm();

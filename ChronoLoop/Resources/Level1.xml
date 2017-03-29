@@ -254,6 +254,9 @@
       <AABBtoSphere>Enabled</AABBtoSphere>
       <AABBtoAABB>Enabled</AABBtoAABB>
       <ElasticPlane>Enabled</ElasticPlane>
+      <AABBtoAABB>Enabled</AABBtoAABB>
+      <AABBtoSphere>Enabled</AABBtoSphere>
+      <ElasticPlane>Enabled</ElasticPlane>
       <Collider>
         <Type>OBB</Type>
         <Trigger>False</Trigger>
@@ -306,6 +309,10 @@
       <ButtonPress>Enabled</ButtonPress>
       <ButtonPress>Enabled</ButtonPress>
       <ButtonPress>Enabled</ButtonPress>
+      <ButtonHold>Enabled</ButtonHold>
+      <ButtonPress>Enabled</ButtonPress>
+      <ButtonHold>Enabled</ButtonHold>
+      <ButtonPress>Enabled</ButtonPress>
       <Collider>
         <Type>Button</Type>
         <Trigger>False</Trigger>
@@ -327,6 +334,9 @@
     <Rotation>0,0,0</Rotation>
     <Scale>0.5,0.5,0.5</Scale>
     <Components>
+      <AABBtoAABB>Enabled</AABBtoAABB>
+      <AABBtoSphere>Enabled</AABBtoSphere>
+      <ElasticPlane>Enabled</ElasticPlane>
       <AABBtoAABB>Enabled</AABBtoAABB>
       <AABBtoSphere>Enabled</AABBtoSphere>
       <ElasticPlane>Enabled</ElasticPlane>
@@ -372,6 +382,7 @@
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components>
+      <EnterLevel>Enabled</EnterLevel>
       <EnterLevel>Enabled</EnterLevel>
       <EnterLevel>Enabled</EnterLevel>
       <Collider>
@@ -424,10 +435,10 @@
     <Components />
   </Object>
   <Object>
-    <Name>Door1</Name>
+    <Name>Door2</Name>
     <Mesh>Door1.obj</Mesh>
     <Texture>enrgyField.png</Texture>
-    <Position>0,0,10.12072</Position>
+    <Position>0,2.6,10.12072</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components />
@@ -440,6 +451,9 @@
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components>
+      <AABBtoAABB>Enabled</AABBtoAABB>
+      <AABBtoSphere>Enabled</AABBtoSphere>
+      <ElasticPlane>Enabled</ElasticPlane>
       <AABBtoAABB>Enabled</AABBtoAABB>
       <AABBtoSphere>Enabled</AABBtoSphere>
       <ElasticPlane>Enabled</ElasticPlane>
@@ -467,5 +481,29 @@
     <Rotation>0,0,0</Rotation>
     <Scale>50,50,50</Scale>
     <Components />
+  </Object>
+  <Object>
+    <Name>Wall</Name>
+    <Mesh>TiledWall.obj</Mesh>
+    <Texture>wallTextureM.png</Texture>
+    <Position>1.587147,1.5,1.797392</Position>
+    <Rotation>0,1.57,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components>
+      <Collider>
+        <Type>OBB</Type>
+        <Trigger>False</Trigger>
+        <Position>0,0,0</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>3,3,0.5</Scale>
+        <Move>False</Move>
+        <Gravity>0,0,0</Gravity>
+        <Mass>100</Mass>
+        <Elasticity>0.1</Elasticity>
+        <StaticFriction>0.2</StaticFriction>
+        <KeneticFriction>0.1</KeneticFriction>
+        <Drag>0</Drag>
+      </Collider>
+    </Components>
   </Object>
 </Level>
