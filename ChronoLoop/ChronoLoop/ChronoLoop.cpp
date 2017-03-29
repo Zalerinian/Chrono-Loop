@@ -583,8 +583,7 @@ void Update() {
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_initSB)));
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
 
-	Transform identity, transform;
-	BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", identity);// new BaseObject("Controller", identity);
+	// new BaseObject("Controller", identity);
 
 	//BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("RController", identity);// new BaseObject("Controller", identity);
 	//MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
@@ -636,7 +635,9 @@ void Update() {
 	//headset->AddComponent(ears);
 	//TimeManager::Instance()->AddObjectToTimeline(headset);
 
-	//BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("RController", identity);// new BaseObject("Controller", identity);
+
+	Transform identity, transform;
+	BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", identity);
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 	MeshComponent *rightRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
 	rightRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
@@ -667,12 +668,12 @@ void Update() {
 	headset->AddComponent(hfollow);
 	TimeManager::Instance()->AddObjectToTimeline(headset);
 
-	Transform cubeScale;
-	cubeScale.SetMatrix(matrix4::CreateScale(0.01f, 0.01f, 0.01f));
-	BaseObject* mmCube = Pool::Instance()->iGetObject()->Reset("mmCube", cubeScale);// new BaseObject("walls", PlaneTransform);
-	MeshComponent *mmCubeMesh = new MeshComponent("../Resources/Cube.obj");
-	mmCubeMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
-	mmCube->AddComponent(mmCubeMesh);
+	//Transform cubeScale;
+	//cubeScale.SetMatrix(matrix4::CreateScale(0.01f, 0.01f, 0.01f));
+	//BaseObject* mmCube = Pool::Instance()->iGetObject()->Reset("mmCube", cubeScale);// new BaseObject("walls", PlaneTransform);
+	//MeshComponent *mmCubeMesh = new MeshComponent("../Resources/Cube.obj");
+	//mmCubeMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
+	//mmCube->AddComponent(mmCubeMesh);
 
 	Physics::Instance()->mObjects.push_back(RightController);
 	Physics::Instance()->mObjects.push_back(LeftController);
@@ -685,11 +686,13 @@ void Update() {
 	mainMenu->AddObject(RightController);
 	mainMenu->AddObject(headset);
 	mainMenu->AddObject(LeftController);
-	mainMenu->AddObject(mmCube);
+	//mainMenu->AddObject(mmCube);
 	//LevelManager::GetInstance().LoadLevelAsync("../Resources/LEVEL1/collider.xml", &L1);
 	auto& levelObjects = mainMenu->GetLevelObjects();
-	for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it) {
-		if ((*it)->mComponents[eCOMPONENT_COLLIDER].size() > 0) {
+	for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it)
+	{
+		if ((*it)->mComponents[eCOMPONENT_COLLIDER].size() > 0)
+		{
 			Physics::Instance()->mObjects.push_back((*it));
 		}
 	}

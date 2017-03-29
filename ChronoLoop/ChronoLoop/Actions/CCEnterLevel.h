@@ -13,9 +13,12 @@
 #include "..\Actions\UICreateToDeleteClone.h"
 #include "..\Actions\UIClonePlusToMinus.h"
 #include "..\Actions\UICloneText.h"
+#include "..\Actions\BoxSnapToControllerAction.hpp"
+#include "..\Actions\TeleportAction.hpp"
 #include "..\Rendering\Draw2D.h"
 #include "..\Rendering\Renderer.h"
 #include "..\Rendering\TextureManager.h"
+#include "..\Objects\TransparentMeshComponent.h"
 #include <wrl\client.h>
 
 
@@ -123,6 +126,14 @@ namespace Epoch
 					rewindDisplay->AddComponent(rewind);
 					rewindDisplay->SetParent(RightController);
 					RightController->AddChild(rewindDisplay);
+
+					t.SetMatrix(matrix4::CreateScale(.75f, 1, 1) * matrix4::CreateTranslation(0.073f, -0.018f, -0.043f));
+					BaseObject *cloneDisplayBack = Pool::Instance()->iGetObject()->Reset("cloneDisplayBack", t);
+					TransparentMeshComponent* cdispb = new TransparentMeshComponent("../Resources/UIClone.obj");
+					cdispb->AddTexture("../Resources/clearBlue.png", eTEX_DIFFUSE);
+					cloneDisplayBack->AddComponent(cdispb);
+					cloneDisplayBack->SetParent(RightController);
+					RightController->AddChild(cloneDisplayBack);
 
 					t.SetMatrix(matrix4::CreateTranslation(0.073f, -0.016f, -0.043f));
 					BaseObject *cloneDisplay = Pool::Instance()->iGetObject()->Reset("cloneDisplay", t);
@@ -240,6 +251,7 @@ namespace Epoch
 					headset->AddComponent(hfollow);
 					headset->AddComponent(ears);
 
+
 					LevelManager::GetInstance().RequestLevelChange(next);
 
 
@@ -275,6 +287,7 @@ namespace Epoch
 					next->AddObject(LeftController);
 					next->AddObject(RightController);
 					next->AddObject(cloneDisplay);
+					next->AddObject(cloneDisplayBack);
 					next->AddObject(clonePanel);
 					next->AddObject(timeDisplay);
 					next->AddObject(timeDisplayNeedle);

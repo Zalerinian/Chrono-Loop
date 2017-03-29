@@ -66,6 +66,7 @@ namespace Epoch {
 		void DeleteClone(unsigned short _id1);
 		static void Destroy();
 		bool DoesCloneExist(unsigned short _id,unsigned int _frame);
+		void EraseClonePair(unsigned short _id) { mClonePairs.erase(_id); };
 		//void FindOtherClones(Clonepair& _pair);
 		//Returns the current snapshot indx
 		unsigned int GetCurrentSnapFrame();
@@ -90,6 +91,7 @@ namespace Epoch {
 		void SetClonePair(unsigned short _id, Clonepair* _pair) { mClonePairs[_id] = _pair; };
 		void SetTempCurSnap() { mtempCurSnapFrame = GetCurrentSnapFrame(); };
 		void SetTimelineObjectInterpTime(float _time);
+		void SetupClonePairs(unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void Update(float _delta);
 
 		//Function Pointer / Command Console
