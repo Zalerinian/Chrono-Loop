@@ -26,21 +26,24 @@ struct PSI
 #if ENABLE_INSTANCING
 PSI main(VERTEX_POSNORMTEX input, uint id : SV_InstanceID) {
 #else
-PSI main(VERTEX_POSNORMTEX input) {
+PSI main(VERTEX_POSNORMTEX input)
+{
 #endif
-	PSI output;
-	output.wpos = input.position;
+    PSI output;
+    matrix light = view / determinant(view);
+    float4 lpos = light[3];
+
 #if ENABLE_INSTANCING
 	output.position = mul(input.position, model[id]);
+	output.wpos = output.position;
 	output.normal = mul(input.normal, model[id]);
 #else
-	output.position = mul(input.position, model[0]);
-	output.normal = mul(input.normal, model[0]);
+    output.position = mul(input.position, model[0]);
+    output.wpos = output.position;
+    output.normal = mul(input.normal, model[0]);
 #endif
-	output.texCoord = input.texCoord;
+    output.texCoord = input.texCoord;
 
-    output.shadowPos = mul(output.wpos, model[id]);
-    output.shadowPos = mul(output.shadowPos, view);
-    output.shadowPos = mul(output.shadowPos, proj);
-	return output;
+    output.shadowPos = mul(output.wpos, view);
+    return output;
 }

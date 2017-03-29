@@ -16,6 +16,7 @@
 #include "../Input/CommandConsole.h"
 #include "../Rendering/Draw2D.h"
 #include "../Particles/ParticleSystem.h"
+#include "RasterizerStateManager.h"
 #include "RenderShaderDefines.hlsli"
 
 #define ENABLE_TEXT 1
@@ -99,14 +100,16 @@ namespace Epoch {
 
 	void Renderer::UpdateLBuffers()
 	{
-		Light buffs[] = { mDLData, mPLData, mSLData };
+		Light buffs[] = { (*mLData[0]), (*mLData[1]), (*mLData[2]) };
 		mContext->UpdateSubresource(mLBuffer.Get(), 0, nullptr, buffs, 0, 0);
 
 		//mContext->UpdateSubresource(mDLBufferS.Get(), 0, nullptr, &mDLVPB, 0, 0);
 		//mContext->UpdateSubresource(mSLBufferS.Get(), 0, nullptr, &mSLVPB, 0, 0);
 		mPLVPB.view = matrix4();
-		mPLVPB.view.fourth = mPLData.mPosition;
+		mPLVPB.view.fourth = mLData[0]->Position;
+		mPLVPB.view = mPLVPB.view.Invert();
 		mPLVPB.projection = DirectX::XMMatrixPerspectiveFovRH(360, (float)1366.0f / (float)720.0f, 0.1f, 1000);
+		//6 dir, cube map or parabolic for performance
 		mContext->UpdateSubresource(mPLBufferS.Get(), 0, nullptr, &mPLVPB, 0, 0);
 	}
 	Renderer::Renderer() {}
@@ -261,30 +264,26 @@ namespace Epoch {
 		//Shadows
 		depthStencilDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
 		depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
-		
+
 		D3D11_DEPTH_STENCIL_VIEW_DESC dvsDesc;
 		dvsDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 		dvsDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 		dvsDesc.Texture2D.MipSlice = 0;
 		dvsDesc.Flags = 0;
-		
+
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 		srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
 		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		srvDesc.Texture2D.MipLevels = depthStencilDesc.MipLevels;
 		srvDesc.Texture2D.MostDetailedMip = 0;
-		
-		mDevice->CreateTexture2D(&depthStencilDesc, NULL, mShadowTextures1.GetAddressOf());
-		mDevice->CreateDepthStencilView(mShadowTextures1.Get(), &dvsDesc, mSDSView1.GetAddressOf());
-		mDevice->CreateShaderResourceView(mShadowTextures1.Get(), &srvDesc, &mShadowSRV1);
-		
-		//mDevice->CreateTexture2D(&depthStencilDesc, NULL, mShadowTextures2.GetAddressOf());
-		//mDevice->CreateDepthStencilView(mShadowTextures2.Get(), &dvsDesc, mSDSView2.GetAddressOf());
-		//mDevice->CreateShaderResourceView(mShadowTextures2.Get(), &srvDesc, &mShadowSRV2);
-		//
-		//mDevice->CreateTexture2D(&depthStencilDesc, NULL, mShadowTextures3.GetAddressOf());
-		//mDevice->CreateDepthStencilView(mShadowTextures3.Get(), &dvsDesc, mSDSView3.GetAddressOf());
-		//mDevice->CreateShaderResourceView(mShadowTextures3.Get(), &srvDesc, &mShadowSRV3);
+
+		//Point light
+		for (int i = 0; i < 2; i++)
+		{
+			mDevice->CreateTexture2D(&depthStencilDesc, NULL, mShadowTextures[i].GetAddressOf());
+			mDevice->CreateDepthStencilView(mShadowTextures[i].Get(), &dvsDesc, mSDSView[i].GetAddressOf());
+			mDevice->CreateShaderResourceView(mShadowTextures[i].Get(), &srvDesc, mShadowSRV[i].GetAddressOf());
+		}
 
 	}
 
@@ -309,26 +308,29 @@ namespace Epoch {
 
 		desc.ByteWidth = sizeof(ViewProjectionBuffer);
 		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
-		mDLBufferS.Attach(pBuff);
-		
-		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
 		mPLBufferS.Attach(pBuff);
-		
+
+		desc.ByteWidth = sizeof(float) * 4;
 		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
-		mSLBufferS.Attach(pBuff);
+		mPLBSDir.Attach(pBuff);
+
+		for (int i = 0; i < 3; i++)
+			mLData[i] = new Light();
 
 		//TODO: GET RID OF THIS
-		mDLData.mColor = vec4f(.5, .5, .5, 1);
-		mDLData.mDirection = vec4f(0, -1, 0, 0);
+		mLData[1]->Type = 1;
+		mLData[1]->Color = vec3f(.5, .5, .5);
+		mLData[1]->Direction = vec3f(0, -1, 0);
 
-		mPLData.mPosition = vec4f(0, 0, 0, 0);
-		mPLData.mColor = vec4f(1, 1, 1, 1);
+		mLData[0]->Type = 2;
+		mLData[0]->Position = vec3f(5, 1, 2);
+		mLData[0]->Color = vec3f(1, 1, 1);
 
-		mSLData.mColor = vec4f(0, .25, .25, 1);
-		mSLData.mConeDirection = vec4f(0, -1, 0, 0);
-		mSLData.mPosition = vec4f(3, 4, 0, 0);
-		mSLData.mConeRatio = .5;
-		UpdateLBuffers();
+		mLData[2]->Type = 4;
+		mLData[2]->Color = vec3f(0, .25, .25);
+		mLData[2]->ConeDirection = vec3f(0, -1, 0);
+		mLData[2]->Position = vec3f(3, 4, 0);
+		mLData[2]->ConeRatio = .5;
 
 	}
 
@@ -357,6 +359,7 @@ namespace Epoch {
 		int bytes;
 		FileIO::LoadBytes("ShadowVS.cso", &buffer, bytes);
 		mDevice->CreateVertexShader(buffer, bytes, NULL, mShadowVS.GetAddressOf());
+		delete buffer;
 	}
 
 	void Renderer::InitializeObjectNames() {
@@ -519,18 +522,31 @@ namespace Epoch {
 
 	void Renderer::RenderShadowMaps(float _delta)
 	{
+		//TODO: Rasterstate set back face culling to NO
+		RasterizerStateManager::Instance()->ApplyState(RasterState::eRS_NO_CULL);
 		//Directional TODO: IGNORE
-		mContext->OMSetRenderTargets(0, 0, mSDSView1.Get());
-		mContext->ClearDepthStencilView(mSDSView1.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+		//TODO: TO-Drew fix buffer thing
+		mContext->OMSetRenderTargets(0, 0, mSDSView[0].Get());
+		mContext->ClearDepthStencilView(mSDSView[0].Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 		//Set VS & PS & GS and light buffer
+		//TODO: Need stages, this shit gets over-written
 		mContext->GSSetShader(NULL, NULL, NULL);
 		mContext->VSSetShader(mShadowVS.Get(), 0, 0);
-		mContext->PSSetShader(NULL, NULL, NULL);
+		mContext->PSSetShader(mPSST.Get(), 0, 0);
 
 		mContext->VSSetConstantBuffers(1, 1, mPLBufferS.GetAddressOf());
-		//TODO: DRAW
+		mContext->VSSetConstantBuffers(2, 1, mPLBSDir.GetAddressOf());
+
 		ProcessRenderSet();
 
+		mContext->VSSetShader(mShadowVS2.Get(), 0, 0);
+
+		mContext->OMSetRenderTargets(0, 0, mSDSView[1].Get());
+		mContext->ClearDepthStencilView(mSDSView[1].Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+		ProcessRenderSet();
+
+		RasterizerStateManager::Instance()->ApplyState(RasterState::eRS_FILLED);
 		SetStaticBuffers();
 		mContext->OMSetRenderTargets(1, mMainView.GetAddressOf(), mDSView.Get());
 	}
@@ -541,6 +557,7 @@ namespace Epoch {
 		UpdateGSBuffers();
 		UpdateLBuffers();
 		ProcessRenderSet();
+		ParticleSystem::Instance()->Render();
 
 		RenderScreenQuad();
 
@@ -567,7 +584,9 @@ namespace Epoch {
 
 	void Renderer::RenderNoVR(float _delta) {
 		UpdateCamera(2, 2, _delta);
+		UpdateLBuffers();
 		ProcessRenderSet();
+		ParticleSystem::Instance()->Render();
 		RenderScreenQuad();
 
 		CommandConsole::Instance().SetVRBool(false);
@@ -738,13 +757,16 @@ namespace Epoch {
 
 		// Setup the Scene Render Target 
 		mRendererLock.lock();
-		RenderShadowMaps(_deltaTime);
+		//RenderShadowMaps(_deltaTime);
 		mContext->OMSetRenderTargets(1, mSceneView.GetAddressOf(), mDSView.Get());
 		mContext->ClearRenderTargetView(mSceneView.Get(), color);
 		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-		ParticleSystem::Instance()->Render();
-		mContext->PSSetShaderResources(3, 1, mShadowSRV1.GetAddressOf());
+		mContext->PSSetConstantBuffers(0, 1, mLBuffer.GetAddressOf());
+		mContext->PSSetShaderResources(3, 1, mShadowSRV[0].GetAddressOf());
+		mContext->PSSetShaderResources(4, 1, mShadowSRV[1].GetAddressOf());
 		mContext->PSSetSamplers(3, 1, mSSamplerState.GetAddressOf());
+		mContext->VSSetConstantBuffers(1, 1, mPLBufferS.GetAddressOf());
+
 		if (nullptr == mVrSystem) {
 			RenderNoVR(_deltaTime);
 		}

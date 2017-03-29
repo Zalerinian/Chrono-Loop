@@ -468,6 +468,9 @@
     <ClInclude Include="Actions\CCLoadHub.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="..\Resources\Soundbanks\Wwise_IDs.h">
+      <Filter>Messanger\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">

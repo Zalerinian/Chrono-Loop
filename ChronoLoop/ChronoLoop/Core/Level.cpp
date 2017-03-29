@@ -18,7 +18,7 @@
 #include "../tinyxml/tinyxml.h"
 #include "../tinyxml/tinystr.h"
 #include "../Common/Settings.h"
-#include "../Particles/ParticleComponents.h"
+#include "../Particles/ParticleSystem.h"
 #include "../Input/CommandConsole.h"
 
 namespace Epoch {
@@ -572,6 +572,40 @@ namespace Epoch {
 						matrix4::CreateTranslation(position.x, position.y, position.z);
 					transform.SetMatrix(mat);
 					BaseObject* obj = new BaseObject(name, transform);
+
+					if (name == "cube.001" || name == "cube.002" || name == "cube.003" || name == "cube.004")
+					{
+						Emitter* e = new Emitter();
+						e->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::SFX_BOUNCEEFFECTS);
+						obj->AddComponent(e);
+					}
+					else if (name == "Door" || name == "Door2")
+					{
+						Emitter* e = new Emitter();
+						e->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::SFX_DOORSOUND);
+						obj->AddComponent(e);
+					}
+					else if (name == "Button")
+					{
+						Emitter* e = new Emitter();
+						e->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::SFX_TOGGLE);
+						obj->AddComponent(e);
+					}
+					else if (name == "mmChamber")
+					{
+						Emitter * e = new Emitter();
+						e->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::SFX_METALLICSOUND);
+						e->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_FUTURETECHSOUND);
+						e->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_FUTURETECHSOUND);
+						e->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_FUTURETECHSOUND);
+						e->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_FUTURETECHSOUND);
+
+						e->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_CASUAL_LEVEL_LOOP);
+						e->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_CASUAL_LEVEL_LOOP);
+						e->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_CASUAL_LEVEL_LOOP);
+						e->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_CASUAL_LEVEL_LOOP);
+						e->Play(1);
+					}
 
 					if (!meshFile.empty())
 					{
