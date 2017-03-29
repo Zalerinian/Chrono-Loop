@@ -17,6 +17,7 @@ struct GSOutput
 	float4 normal : NORMAL0;
 	float4 texCoord : COLOR;
 	float4 wpos : WORLDPOS;
+	float  instanceID : CL_InstanceID;
 	uint viewport : SV_ViewportArrayIndex;
 };
 
@@ -26,14 +27,13 @@ struct GSInput
 	float4 normal : NORMAL0;
 	float4 texCoord : COLOR;
 	float4 wpos : WORLDPOS;
+	float  instanceID : CL_InstanceID;
 };
 
 [maxvertexcount(6)]
 void main(triangle GSInput input[3], inout TriangleStream<GSOutput> TriStream)
 {
 	GSOutput output;
-	// TODO: Does this do instancing....???
-	// Triangle 1
 	[unroll]
 	for (uint i = 0; i < 3; ++i)
 	{
@@ -41,6 +41,7 @@ void main(triangle GSInput input[3], inout TriangleStream<GSOutput> TriStream)
 		output.normal = input[i].normal;
 		output.texCoord = input[i].texCoord;
 		output.wpos = input[i].wpos;
+		output.instanceID = input[i].instanceID;
 		output.viewport = 0;
 		TriStream.Append(output);
 	}
@@ -54,6 +55,7 @@ void main(triangle GSInput input[3], inout TriangleStream<GSOutput> TriStream)
 		output.normal = input[j].normal;
 		output.texCoord = input[j].texCoord;
 		output.wpos = input[j].wpos;
+		output.instanceID = input[j].instanceID;
 		output.viewport = 1;
 		TriStream.Append(output);
 	}

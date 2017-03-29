@@ -6,6 +6,7 @@ struct PSI {
 	float4 normal : NORMAL0;
 	float4 texCoord : COLOR;
 	float4 wpos : WORLDPOS;
+	float  instanceID : CL_InstanceID;
 };
 
 
@@ -15,5 +16,6 @@ PSI main(VERTEX_POSNORMTEX input) {
 	output.normal = input.normal;
 	output.texCoord = input.texCoord;
 	output.wpos = input.position;
+	output.instanceID = 0;
 	return output;
 }

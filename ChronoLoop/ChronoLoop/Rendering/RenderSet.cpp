@@ -12,13 +12,12 @@ namespace Epoch {
 		for (auto it = mRenderList.begin(); it != mRenderList.end(); ++it) {
 			if ((*it)->mShape == _shape) {
 				// Same mesh and context
-				return (*it)->Push(_shape.mPosition);
+				return (*it)->Push(_shape);
 			}
 		}
 		// No comparable rneder list was found. Make a new entry.
-		RenderList *r = new RenderList;
-		r->mShape = _shape;
-		GhostList<matrix4>::GhostNode* n = r->Push(_shape.mPosition);
+		RenderList *r = new RenderList(_shape);
+		GhostList<matrix4>::GhostNode* n = r->Push(_shape);
 		mRenderList.push_back(r);
 		return n;
 	}

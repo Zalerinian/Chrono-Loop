@@ -286,6 +286,9 @@ namespace Epoch {
 
 	void Renderer::InitializeBuffers() {
 		ID3D11Buffer* pBuff;
+		D3D11_SUBRESOURCE_DATA InitialData;
+
+
 
 		// View-Projction buffer
 		CD3D11_BUFFER_DESC desc(sizeof(ViewProjectionBuffer) * 2, D3D11_BIND_CONSTANT_BUFFER);
@@ -297,6 +300,16 @@ namespace Epoch {
 		desc.ByteWidth = sizeof(matrix4) * 256;
 		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
 		mPositionBuffer.Attach(pBuff);
+
+		// Simulated Instance ID Buffer
+		// This buffer is used for when Instancing is disabled for pixel debugging.
+		// It is necessary because pixel shaders rely on the instance ID to access
+		// instance-specific buffer data to draw it correctly. The simulated instance
+		// ID stored in this buffer will let them access the buffer correctly.
+		vec4f initialSimID(0, 0, 0, 0);
+		InitialData.pSysMem = &initialSimID;
+		desc.ByteWidth = sizeof(vec4f);
+		mDevice->CreateBuffer(&desc, &InitialData, mSimInstanceBuffer.GetAddressOf());
 
 		//Light buffers
 		desc.ByteWidth = sizeof(Light) * 3;
@@ -391,8 +404,9 @@ namespace Epoch {
 	}
 
 	void Renderer::SetStaticBuffers() {
-		mContext->GSSetConstantBuffers(0, 1, mVPBuffer.GetAddressOf());
 		mContext->VSSetConstantBuffers(0, 1, mPositionBuffer.GetAddressOf());
+		mContext->VSSetConstantBuffers(1, 1, mSimInstanceBuffer.GetAddressOf());
+		mContext->GSSetConstantBuffers(0, 1, mVPBuffer.GetAddressOf());
 		mContext->PSSetConstantBuffers(0, 1, mLBuffer.GetAddressOf());
 		//(*mContext)->VSSetConstantBuffers(2, 1, nullptr); // This will crash. - Instance Buffer
 		//(*mContext)->VSSetConstantBuffers(3, 1, nullptr); // This will crash. - Animation Data Buffer
@@ -603,7 +617,10 @@ namespace Epoch {
 				}
 #else
 				(*it)->mShape.GetContext().Apply();
+				vec4f SimulatedInstanceID(0, 0, 0, 0);
 				for (unsigned int i = 0; i < positions.size(); ++i) {
+					SimulatedInstanceID.x = i;
+					mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimulatedInstanceID, 0, 0);
 					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i] + offset, 0, 0);
 					(*it)->mShape.Render(1); // Without instancing, the instance count doesn't matter, but we're only drawing one :)
 				}
@@ -627,7 +644,10 @@ namespace Epoch {
 				}
 #else
 				(*it)->mShape.GetContext().Apply();
+				vec4f SimulatedInstanceID(0, 0, 0, 0);
 				for (unsigned int i = 0; i < positions.size(); ++i) {
+					SimulatedInstanceID.x = i;
+					mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimulatedInstanceID, 0, 0);
 					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i] + offset, 0, 0);
 					(*it)->mShape.Render(1); // Without instancing, the instance count doesn't matter, but we're only drawing one :)
 				}
@@ -649,13 +669,21 @@ namespace Epoch {
 
 #pragma region Public Functions
 
-	GhostList<matrix4>::GhostNode* Renderer::AddOpaqueNode(RenderShape *_node) {
-		return mOpaqueSet.AddShape(*_node);
+	GhostList<matrix4>::GhostNode* Renderer::AddOpaqueNode(RenderShape &_node) {
+		return mOpaqueSet.AddShape(_node);
 	}
 
-	GhostList<matrix4>::GhostNode * Renderer::AddTransparentNode(RenderShape * _node)
+	GhostList<matrix4>::GhostNode* Renderer::AddTransparentNode(RenderShape &_node)
 	{
-		return mTransparentSet.AddShape(*_node);
+		return mTransparentSet.AddShape(_node);
+	}
+
+	void Renderer::RemoveOpaqueNode(RenderShape & _node)
+	{
+	}
+
+	void Renderer::RemovetransparentNode(RenderShape & _node)
+	{
 	}
 
 	bool Renderer::iInitialize(HWND _Window, unsigned int _width, unsigned int _height, bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane, vr::IVRSystem * _vrsys) {

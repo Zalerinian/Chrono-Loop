@@ -9,7 +9,7 @@ namespace Epoch {
 	void MeshComponent::CreateNode()
 	{
 		DESTROY_NODE(mNode);
-		mNode = Renderer::Instance()->AddOpaqueNode(mShape);
+		mNode = Renderer::Instance()->AddOpaqueNode(*mShape);
 	}
 
 	MeshComponent::MeshComponent(const char * _path) {

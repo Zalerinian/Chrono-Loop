@@ -7,7 +7,7 @@ namespace Epoch {
 	void TransparentMeshComponent::CreateNode()
 	{
 		DESTROY_NODE(mNode);
-		mNode = Renderer::Instance()->AddTransparentNode(mShape);
+		mNode = Renderer::Instance()->AddTransparentNode(*mShape);
 	}
 
 	void TransparentMeshComponent::CreateAlphaBuffer()

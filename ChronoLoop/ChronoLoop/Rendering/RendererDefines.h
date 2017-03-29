@@ -75,6 +75,8 @@ namespace Epoch {
 	// assign the shaders at run-time.
 	enum VertexBufferType {
 		eVB_Instances = 0,
+		eVB_SimInstanceID,
+		eVB_OFFSET,
 		eVB_CUSTOM1 = 0,
 		eVB_CUSTOM2,
 		eVB_CUSTOM3,
@@ -83,9 +85,7 @@ namespace Epoch {
 		eVB_CUSTOM6,
 		eVB_CUSTOM7,
 		eVB_CUSTOM8,
-		eVB_CUSTOM9,
 		eVB_MAX,
-		eVB_OFFSET = eVB_Instances + 1,
 		eVB_BEGIN = 0
 	};
 

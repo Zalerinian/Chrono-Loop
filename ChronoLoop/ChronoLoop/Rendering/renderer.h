@@ -46,7 +46,7 @@ namespace Epoch {
 
 		vr::IVRSystem* mVrSystem;
 		RenderSet mOpaqueSet, mTransparentSet;
-		Microsoft::WRL::ComPtr<ID3D11Buffer> mVPBuffer, mPositionBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mVPBuffer, mPositionBuffer, mSimInstanceBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mLBuffer;
 		bool mUseVsync = false;
 		//ShadowMap 1 - Directional, 2 - Point, 3 - Spot
@@ -115,8 +115,10 @@ namespace Epoch {
 			bool vsync, int fps, bool fullscreen, float farPlane, float nearPlane,
 			vr::IVRSystem* vrsys);
 		void ThrowIfFailed(HRESULT hr);
-		GhostList<matrix4>::GhostNode* AddOpaqueNode(RenderShape *_node);
-		GhostList<matrix4>::GhostNode* AddTransparentNode(RenderShape *_node);
+		GhostList<matrix4>::GhostNode* AddOpaqueNode(RenderShape& _node);
+		GhostList<matrix4>::GhostNode* AddTransparentNode(RenderShape& _node);
+		void RemoveOpaqueNode(RenderShape& _node);
+		void RemovetransparentNode(RenderShape& _node);
 		void Render(float _deltaTime);
 
 		void ClearRenderSet();

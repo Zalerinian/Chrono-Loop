@@ -10,6 +10,7 @@ namespace Epoch {
 
 	struct RenderShape : public RenderNode {
 		friend class RenderSet;
+		friend class RenderList;
 		unsigned int mIndexCount = 0, mVertexOffset = 0, mIndexOffset = 0;
 
 		matrix4 mPosition;

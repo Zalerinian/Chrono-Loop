@@ -5,12 +5,17 @@ cbuffer ModelBuffer : register(b0) {
 	matrix model[256];
 }
 
+cbuffer InstanceID : register(b1) {
+	int SimInstanceID;
+}
+
 struct PSI
 {
 	float4 position :	SV_POSITION;
 	float4 normal	:	NORMAL0;
 	float4 texCoord :	COLOR;
 	float4 wpos : WORLDPOS;
+	float  instanceID : CL_InstanceID;
 };
 
 // Instancing interferes with the Graphic's Debugger's ability to create a pixel history, which is
@@ -26,9 +31,11 @@ PSI main(VERTEX_POSNORMTEX input) {
 #if ENABLE_INSTANCING
 	output.position = mul(input.position, model[id]);
 	output.normal = mul(input.normal, model[id]);
+	output.instanceID = id;
 #else
 	output.position = mul(input.position, model[0]);
 	output.normal = mul(input.normal, model[0]);
+	output.instanceID = SimInstanceID;
 #endif
 	output.texCoord = input.texCoord;
 	return output;
