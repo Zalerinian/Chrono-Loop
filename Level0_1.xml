@@ -1,6 +1,6 @@
 ﻿<Level>
   <Settings>
-    <StartPos>0,0,0</StartPos>
+    <StartPos>0.46,0,-10.15</StartPos>
     <StartRot>0,0,0</StartRot>
   </Settings>
   <Object>
@@ -261,6 +261,30 @@
         <Scale>13,1,25</Scale>
         <Move>False</Move>
         <Normal>0,-1,0</Normal>
+        <Mass>0</Mass>
+        <Elasticity>0</Elasticity>
+        <StaticFriction>0</StaticFriction>
+        <KeneticFriction>0</KeneticFriction>
+        <Drag>0</Drag>
+      </Collider>
+    </Components>
+  </Object>
+  <Object>
+    <Name>cube</Name>
+    <Mesh>raycube.obj</Mesh>
+    <Texture>raycube.png</Texture>
+    <Position>-5.038424,0.2764754,-0.7980169</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>0.5,0.5,0.5</Scale>
+    <Components>
+      <Collider>
+        <Type>OBB</Type>
+        <Trigger>False</Trigger>
+        <Position>0,0,0</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>1,1,1</Scale>
+        <Move>False</Move>
+        <Gravity>0,0,0</Gravity>
         <Mass>0</Mass>
         <Elasticity>0</Elasticity>
         <StaticFriction>0</StaticFriction>
