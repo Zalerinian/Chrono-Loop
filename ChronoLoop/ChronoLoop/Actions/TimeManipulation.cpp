@@ -155,7 +155,7 @@ namespace Epoch
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneHeadset);
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController1);
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController2);
-						TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueID());
+						TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueId());
 
 						//set the player headset and controllers birth back
 						TimeManager::Instance()->SetCreationTimeofClone(cLevel->GetLeftController()->GetUniqueID(), cLevel->GetRightController()->GetUniqueID(), cLevel->GetHeadset()->GetUniqueID());
@@ -268,6 +268,7 @@ namespace Epoch
 		TimeManager::Instance()->UpdatePlayerObjectInTimeline(_controller1);
 		TimeManager::Instance()->UpdatePlayerObjectInTimeline(_controller2);
 		
+		TimeManager::Instance()->SetupClonePairs(_headset->GetUniqueID(),_controller1->GetUniqueID(), _controller2->GetUniqueID());
 	}
 
 	bool TimeManipulation::RaycastCloneCheck() {

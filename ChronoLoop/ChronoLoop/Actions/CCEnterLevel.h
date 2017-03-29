@@ -251,6 +251,7 @@ namespace Epoch
 					headset->AddComponent(hfollow);
 					headset->AddComponent(ears);
 
+
 					LevelManager::GetInstance().RequestLevelChange(next);
 
 

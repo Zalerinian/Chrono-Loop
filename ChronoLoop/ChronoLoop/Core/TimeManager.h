@@ -37,6 +37,7 @@ namespace Epoch {
 		//This is for the hitboxes for the controller
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mCloneColliderInterpolators;
 		std::unordered_map<unsigned short, Interpolator<matrix4>*>mObjectRewindInterpolators; 
+		std::unordered_map<unsigned short, Clonepair*>mClonePairs;
 		//Timeline* GetTimeLine();
 
 		
@@ -65,7 +66,8 @@ namespace Epoch {
 		void DeleteClone(unsigned short _id1);
 		static void Destroy();
 		bool DoesCloneExist(unsigned short _id,unsigned int _frame);
-		void FindOtherClones(Clonepair& _pair);
+		void EraseClonePair(unsigned short _id) { mClonePairs.erase(_id); };
+		//void FindOtherClones(Clonepair& _pair);
 		//Returns the current snapshot indx
 		unsigned int GetCurrentSnapFrame();
 		//Retrieves delta time
@@ -73,7 +75,7 @@ namespace Epoch {
 		Interpolator<matrix4>* GetCloneInterpolator(unsigned short _id);
 		Interpolator<matrix4>* GetCloneColliderInterpolator(unsigned short _id);
 		Interpolator<matrix4>* GetObjectInterpolator(unsigned short _id);
-
+		Clonepair* GetClonePair(unsigned short _id);
 		std::vector<BaseObject*>& GetClonesVec() { return mClones; };
 		std::string GetNextTexture();
 		unsigned int GetTempCurSnap() { return mtempCurSnapFrame; };
@@ -86,8 +88,10 @@ namespace Epoch {
 		//Go back into time and make clone. Send in dest frame and send in player headset and conrollers baseObjects
 		void RewindMakeClone(unsigned int _frame, BaseObject*& _ob1, BaseObject*& _ob2, BaseObject*& _ob3);
 		void SetCreationTimeofClone(unsigned short _id1, unsigned short _id2, unsigned short _id3);
+		void SetClonePair(unsigned short _id, Clonepair* _pair) { mClonePairs[_id] = _pair; };
 		void SetTempCurSnap() { mtempCurSnapFrame = GetCurrentSnapFrame(); };
 		void SetTimelineObjectInterpTime(float _time);
+		void SetupClonePairs(unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void Update(float _delta);
 
 		//Function Pointer / Command Console

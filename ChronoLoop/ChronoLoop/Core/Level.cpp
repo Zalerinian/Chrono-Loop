@@ -154,9 +154,6 @@ namespace Epoch {
 		std::string Controller1name = _controller1->GetName();
 		std::string Controller2name = _controller2->GetName();
 
-		//mObjectMap[_headset->GetName()].push_back(_headset);
-		//mObjectMap[_controller1->GetName()].push_back(_controller1);
-		//mObjectMap[_controller2->GetName()].push_back(_controller2);
 
 		_headset->SetUniqueID(mHeadset->GetUniqueID());
 		_controller1->SetUniqueID(mController1->GetUniqueID());
@@ -172,14 +169,41 @@ namespace Epoch {
 		mHeadset->SetName(headname);
 		mController1->SetName(Controller1name);
 		mController2->SetName(Controller2name);
-	
 
-		mHeadset->SetUniqueID(headid);
-		mController1->SetUniqueID(cl1id);
-		mController2->SetUniqueID(cl2id);
-		mHeadset->SetName(headname);
-		mController1->SetName(Controller1name);
-		mController2->SetName(Controller2name);
+		//Update the clone pair of the new baseObjects if it already exist
+		Clonepair* temp = TimeManager::Instance()->GetClonePair(mHeadset->GetUniqueID());
+		if (temp)
+		{
+			temp->mCur = _headset->GetUniqueID();
+			temp->mOther1 = _controller1->GetUniqueID();
+			temp->mOther2 = _controller2->GetUniqueID();
+			//remove the one on the old key and create a new one with the new key
+			TimeManager::Instance()->EraseClonePair(mHeadset->GetUniqueID());
+			TimeManager::Instance()->SetClonePair(_headset->GetUniqueID(), temp);
+		}
+
+		temp = TimeManager::Instance()->GetClonePair(mController1->GetUniqueID());
+		if (temp)
+		{
+			temp->mCur = _controller1->GetUniqueID();
+			temp->mOther1 = _headset->GetUniqueID();
+			temp->mOther2 = _controller2->GetUniqueID();
+			//remove the one on the old key and create a new one with the new key
+			TimeManager::Instance()->EraseClonePair(mController1->GetUniqueID());
+			TimeManager::Instance()->SetClonePair(_controller1->GetUniqueID(), temp);
+		}
+
+		temp = TimeManager::Instance()->GetClonePair(mController2->GetUniqueID());
+		if (temp)
+		{
+			temp->mCur = _controller2->GetUniqueID();
+			temp->mOther1 = _controller1->GetUniqueID();
+			temp->mOther2 = _headset->GetUniqueID();
+			//remove the one on the old key and create a new one with the new key
+			TimeManager::Instance()->EraseClonePair(mController2->GetUniqueID());
+			TimeManager::Instance()->SetClonePair(_controller2->GetUniqueID(), temp);
+		}
+	
 	
 		if (_addNewHeadsetToLevel)
 		{
