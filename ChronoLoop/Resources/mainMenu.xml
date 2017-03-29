@@ -79,9 +79,10 @@
       <EnterLevel>Enabled</EnterLevel>
       <EnterLevel>Enabled</EnterLevel>
       <EnterLevel>Enabled</EnterLevel>
+      <EnterLevel>Enabled</EnterLevel>
       <Collider>
         <Type>OBB</Type>
-        <Trigger>False</Trigger>
+        <Trigger>True</Trigger>
         <Position>0,1,0</Position>
         <Rotation>0,0,0</Rotation>
         <Scale>0.2,2,2.2</Scale>
