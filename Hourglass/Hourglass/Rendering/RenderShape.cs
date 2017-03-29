@@ -12,6 +12,17 @@ namespace Hourglass
 		protected int[] mIndices;
 		public enum ShapeType { Textured = 0, Colored };
 		protected ShapeType mType;
+		private object mTag;
+
+
+		public object Tag {
+			get {
+				return mTag;
+			}
+			set {
+				mTag = value;
+			}
+		}
 
 		public bool Valid {
 			get {

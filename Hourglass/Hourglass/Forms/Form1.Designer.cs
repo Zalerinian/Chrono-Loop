@@ -404,6 +404,7 @@ namespace Hourglass
 			this.Tree.BackColor = System.Drawing.SystemColors.Control;
 			this.Tree.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.Tree.CausesValidation = false;
+			this.Tree.FullRowSelect = true;
 			this.Tree.HideSelection = false;
 			this.Tree.Indent = 10;
 			this.Tree.Location = new System.Drawing.Point(0, 22);

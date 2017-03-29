@@ -820,6 +820,9 @@
     <FxCompile Include="Rendering\Shaders\PSPureTexture.hlsl">
       <Filter>Rendering\Shaders\Pixel shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Rendering\Shaders\PSTransparentScanline.hlsl">
+      <Filter>Rendering\Shaders\Pixel shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">

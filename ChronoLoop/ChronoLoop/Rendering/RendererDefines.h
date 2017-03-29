@@ -1,6 +1,19 @@
 #pragma once
+#include "../Common/Math/vec4f.h"
 
 namespace Epoch {
+
+	struct PSTransparentScanline_Data {
+		float alpha;
+
+		// X: Multiscan V offset
+		// Y: Multiscan Alpha
+		// Z: Scanline V Offset
+		// W: Scanline Alpha
+		vec4f ScanlineData;
+		float p1, p2, p3;
+	};
+
 
 	enum RasterState {
 		eRS_FILLED = 0,
@@ -29,6 +42,7 @@ namespace Epoch {
 		ePS_POSTPROCESS,
 		ePS_PURETEXTURE,
 		ePS_TRANSPARENT,
+		ePS_TRANSPARENT_SCANLINE,
 		ePS_MAX
 	};
 

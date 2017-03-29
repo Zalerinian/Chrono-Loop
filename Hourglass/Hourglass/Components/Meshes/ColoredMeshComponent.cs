@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Hourglass
@@ -10,6 +11,8 @@ namespace Hourglass
 
 		public ColoredMeshComponent(int _yOffset = 0) : base(_yOffset)
 		{
+			mType = ComponentType.ColoredMesh;
+
 			#region Component Creation
 			mShape = new ColoredShape();
 
@@ -70,6 +73,19 @@ namespace Hourglass
 		public override void OnMenuClick_Reset(object sender, EventArgs e)
 		{
 			base.OnMenuClick_Reset(sender, e);
+		}
+
+		public override void WriteData(BinaryWriter w)
+		{
+			base.WriteData(w);
+			w.Write(mColor.BackColor.ToArgb());
+		}
+
+		public override void ReadData(BinaryReader r)
+		{
+			base.ReadData(r);
+			mColor.BackColor = System.Drawing.Color.FromArgb(r.ReadInt32());
+			((ColoredShape)mShape).Color = mColor.BackColor;
 		}
 	}
 }

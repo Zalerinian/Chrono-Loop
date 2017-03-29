@@ -6,6 +6,7 @@ namespace Epoch {
 
 	void TransparentMeshComponent::CreateNode()
 	{
+		DESTROY_NODE(mNode);
 		mNode = Renderer::Instance()->AddTransparentNode(mShape);
 	}
 
@@ -15,8 +16,7 @@ namespace Epoch {
 		ID3D11Buffer* AlphaBuff;
 		CD3D11_BUFFER_DESC AlphaDesc(sizeof(float) * 4, D3D11_BIND_CONSTANT_BUFFER);
 		D3D11_SUBRESOURCE_DATA AlphaData;
-		float alpha = 1.0f;
-		AlphaData.pSysMem = &alpha;
+		AlphaData.pSysMem = &mAlpha;
 		auto device = Renderer::Instance()->GetDevice();
 		HRESULT hr = device->CreateBuffer(&AlphaDesc, &AlphaData, &AlphaBuff);
 		SetD3DName(AlphaBuff, (mShape->GetName() + " alpha buffer").c_str());
@@ -47,6 +47,7 @@ namespace Epoch {
 
 	void TransparentMeshComponent::SetAlpha(float _a)
 	{
+		return;
 		SystemLogger::Debug() << "Setting alpha of " << std::hex << (int)this << std::dec << " to: " << _a << std::endl;
 		mAlpha = _a;
 		auto buffer = mShape->GetContext().mPixelCBuffers[ePB_TP_Alpha];

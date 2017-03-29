@@ -18,7 +18,7 @@ namespace Hourglass
 		private ColoredShape mGrid;
 		private Timer mResizeTimeout = new Timer();
 
-		private Vector3 mCameraPos = new Vector3(0, 2, -4);
+		private Vector3 mCameraPos = new Vector3(0, 2, 4);
 		private float mAngleX = 0, mAngleY = 0;
 
 		public static Renderer Instance {
@@ -158,6 +158,7 @@ namespace Hourglass
 			List<BaseObject>.Enumerator objectIterator = mRenderSet.GetEnumerator();
 			mDevice.Clear(ClearFlags.ZBuffer, 0, 1.0f, 0);
 			mDevice.Clear(ClearFlags.Target, System.Drawing.Color.Black, 1.0f, 0);
+			mDevice.RenderState.ZBufferEnable = true;
 			while (objectIterator.MoveNext())
 			{
 				// Find which components are shapes

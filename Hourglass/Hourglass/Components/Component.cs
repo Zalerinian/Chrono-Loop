@@ -6,6 +6,10 @@ namespace Hourglass
 {
     public abstract class Component
     {
+		public enum ComponentType { None = 0, BoxCollider, ButtonCollider, PlaneCollider, SphereCollider, ColoredMesh, TexturedMesh, Transform, Code, MAX }
+
+
+
 		public delegate void GenericEventHandler();
 		public event GenericEventHandler OwnerChanged;
 		public event GenericEventHandler RemoveControl;
@@ -14,6 +18,7 @@ namespace Hourglass
         protected ContextMenuStrip mMenuStrip;
         protected ToolStripMenuItem mMenuItemDelete, mMenuItemReset;
         protected BaseObject mOwner = null;
+		protected ComponentType mType = ComponentType.None;
 
         private static readonly System.Drawing.Font 
             mPlaceholderFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25f, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0))),
@@ -30,6 +35,12 @@ namespace Hourglass
                 return mGroupBox.Size.Height;
             }
         }
+
+		public ComponentType Type {
+			get {
+				return mType;
+			}
+		}
 
         public System.Drawing.Font PlaceholderFont {
             get { return mPlaceholderFont; }
@@ -209,5 +220,12 @@ namespace Hourglass
             nz.Top = 0;
             nz.Left = lz.Left + lz.Size.Width;
         }
+
+		public virtual void WriteData(System.IO.BinaryWriter w)
+		{
+			w.Write((short)mType);
+		}
+
+		public abstract void ReadData(System.IO.BinaryReader r);
     }
 }
