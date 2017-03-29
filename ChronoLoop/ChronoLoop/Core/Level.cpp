@@ -359,7 +359,10 @@ namespace Epoch {
 								while ((pos = s.find(",")) != std::string::npos)
 								{
 									std::string token = s.substr(0, pos);
-									rotation.xyz[i] = std::strtof(token.c_str(), nullptr);
+									if (!collider)
+									{
+										rotation.xyz[i] = std::strtof(token.c_str(), nullptr);
+									}
 									i++;
 									s.erase(0, pos + 1);
 								}
@@ -695,7 +698,7 @@ namespace Epoch {
 								CCLoadHub* code = new CCLoadHub();
 								obj->AddComponent(code);
 							}
-							else if (name == "mmDoor2")
+							else if (name == "mmDoor")
 							{
 								CCEnterLevel1* code = new CCEnterLevel1();
 								obj->AddComponent(code);
