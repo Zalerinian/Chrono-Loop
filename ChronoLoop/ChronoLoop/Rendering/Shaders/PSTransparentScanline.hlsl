@@ -19,8 +19,9 @@ SamplerState fScanline : register(s4);
 
 cbuffer Ratios : register(b1) {
 	float  alpha;
-	float  MultiscanOffset;
+	float2 MultiscanData;
 	float2 ScanlineRatio;
+	float3 padding;
 }
 
 struct PSI {
@@ -33,11 +34,11 @@ struct PSI {
 float4 main(PSI input) : SV_TARGET
 {
 	float4 diffuseColor = tDiffuse.Sample(diffuseFilter, input.texCoord.xy);
-	float4 multiscanColor = tMultiscan.Sample(fMultiscan, input.texCoord.xy);
+	float4 multiscanColor = tMultiscan.Sample(diffuseFilter, input.texCoord.xy);
 
 	float scanlineAlpha = saturate((1 - (input.texCoord.y + ScanlineRatio.x)) / ScanlineRatio.y);
 
-	float4 scanlineColor = tScanline.Sample(fScanline, input.texCoord.xy) * scanlineAlpha;
+	float4 scanlineColor = tScanline.Sample(diffuseFilter, input.texCoord.xy) * scanlineAlpha;
 	scanlineColor *= scanlineColor.a;
 
 	float4 combinedColor = float4(diffuseColor.rgb + multiscanColor.rgb + scanlineColor.rgb, diffuseColor.a * alpha);
