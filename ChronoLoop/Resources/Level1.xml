@@ -1,4 +1,4 @@
-﻿<Level>
+<Level>
   <Settings>
     <StartPos>0.46,0,-10.15</StartPos>
     <StartRot>0,0,0</StartRot>
@@ -254,9 +254,6 @@
       <AABBtoSphere>Enabled</AABBtoSphere>
       <AABBtoAABB>Enabled</AABBtoAABB>
       <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
-      <ElasticPlane>Enabled</ElasticPlane>
       <Collider>
         <Type>OBB</Type>
         <Trigger>False</Trigger>
@@ -305,14 +302,7 @@
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components>
-      <ButtonPress>Enabled</ButtonPress>
-      <ButtonPress>Enabled</ButtonPress>
-      <ButtonPress>Enabled</ButtonPress>
-      <ButtonPress>Enabled</ButtonPress>
       <ButtonHold>Enabled</ButtonHold>
-      <ButtonPress>Enabled</ButtonPress>
-      <ButtonHold>Enabled</ButtonHold>
-      <ButtonPress>Enabled</ButtonPress>
       <Collider>
         <Type>Button</Type>
         <Trigger>False</Trigger>
@@ -334,9 +324,6 @@
     <Rotation>0,0,0</Rotation>
     <Scale>0.5,0.5,0.5</Scale>
     <Components>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
-      <ElasticPlane>Enabled</ElasticPlane>
       <AABBtoAABB>Enabled</AABBtoAABB>
       <AABBtoSphere>Enabled</AABBtoSphere>
       <ElasticPlane>Enabled</ElasticPlane>
@@ -382,8 +369,6 @@
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components>
-      <EnterLevel>Enabled</EnterLevel>
-      <EnterLevel>Enabled</EnterLevel>
       <EnterLevel>Enabled</EnterLevel>
       <Collider>
         <Type>OBB</Type>
@@ -441,7 +426,22 @@
     <Position>0,2.6,10.12072</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
-    <Components />
+    <Components>
+      <Collider>
+        <Type>OBB</Type>
+        <Trigger>False</Trigger>
+        <Position>0,1.5,0</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>2.5,2.5,0.3</Scale>
+        <Move>False</Move>
+        <Gravity>0,0,0</Gravity>
+        <Mass>50</Mass>
+        <Elasticity>0.2</Elasticity>
+        <StaticFriction>0.2</StaticFriction>
+        <KeneticFriction>0.1</KeneticFriction>
+        <Drag>0</Drag>
+      </Collider>
+    </Components>
   </Object>
   <Object>
     <Name>cube</Name>
@@ -451,9 +451,6 @@
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
-      <ElasticPlane>Enabled</ElasticPlane>
       <AABBtoAABB>Enabled</AABBtoAABB>
       <AABBtoSphere>Enabled</AABBtoSphere>
       <ElasticPlane>Enabled</ElasticPlane>
