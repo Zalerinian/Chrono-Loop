@@ -1,6 +1,14 @@
 #pragma once
+#include "../Common/Math/vec2f.h"
 
 namespace Epoch {
+
+	struct PSTransparentScanline_Data {
+		float alpha;
+		float MultiscanAlpha;
+		vec2f ScanlineRatios;
+	};
+
 
 	enum RasterState {
 		eRS_FILLED = 0,
@@ -29,6 +37,7 @@ namespace Epoch {
 		ePS_POSTPROCESS,
 		ePS_PURETEXTURE,
 		ePS_TRANSPARENT,
+		ePS_TRANSPARENT_SCANLINE,
 		ePS_MAX
 	};
 

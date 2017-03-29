@@ -235,14 +235,33 @@ namespace Epoch
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
 		SystemLogger::GetLog() << "[Debug] A clone is being made, please hold: " << mCloneCount << " | Is left: " << mControllerRole << std::endl;
 
+		PSTransparentScanline_Data _data;
+		_data.alpha = 1;
+		_data.MultiscanAlpha = 0.2f;
+		_data.ScanlineRatios.x = 0;
+		_data.ScanlineRatios.y = 0.8f;
 		TransparentMeshComponent *visibleMesh = new TransparentMeshComponent("../Resources/Clone.obj",.35f);
 		visibleMesh->AddTexture(TimeManager::Instance()->GetNextTexture().c_str(), eTEX_DIFFUSE);
+		visibleMesh->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
+		visibleMesh->AddTexture("../Resources/Scanline.png", eTEX_CUSTOM2);
+
+		visibleMesh->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
+		D3D11_SUBRESOURCE_DATA initialData;
+		initialData.pSysMem = &_data;
+		CD3D11_BUFFER_DESC bufferDesc(sizeof(PSTransparentScanline_Data), D3D11_BIND_CONSTANT_BUFFER);
+		Renderer::Instance()->GetDevice()->CreateBuffer(&bufferDesc, &initialData, visibleMesh->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].GetAddressOf());
 		_headset->AddComponent(visibleMesh);
 
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
 		TransparentMeshComponent *mc = new TransparentMeshComponent("../Resources/Controller.obj",.35f);
 		ControllerCollider* CubeColider = new ControllerCollider(_controller1, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
 		mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+		mc->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
+		mc->AddTexture("../Resources/Scanline.png", eTEX_CUSTOM2);
+
+		mc->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
+		initialData.pSysMem = &_data;
+		Renderer::Instance()->GetDevice()->CreateBuffer(&bufferDesc, &initialData, mc->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].GetAddressOf());
 		_controller1->AddComponent(mc);
 		_controller1->AddComponent(CubeColider);
 		BoxSnapToControllerAction* SN1 = new BoxSnapToControllerAction();
@@ -252,6 +271,12 @@ namespace Epoch
 		TransparentMeshComponent *mc2 = new TransparentMeshComponent("../Resources/Controller.obj",.35f);
 		ControllerCollider* CubeColider2 = new ControllerCollider(_controller2, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 		mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+		mc2->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
+		mc2->AddTexture("../Resources/Scanline.png", eTEX_CUSTOM2);
+
+		mc2->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
+		initialData.pSysMem = &_data;
+		Renderer::Instance()->GetDevice()->CreateBuffer(&bufferDesc, &initialData, mc2->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].GetAddressOf());
 		_controller2->AddComponent(mc2);
 		_controller2->AddComponent(CubeColider2);
 		BoxSnapToControllerAction* SN2 = new BoxSnapToControllerAction();

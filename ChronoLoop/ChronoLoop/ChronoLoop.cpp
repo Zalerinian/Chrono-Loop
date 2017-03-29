@@ -638,8 +638,8 @@ void Update() {
 
 	//BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("RController", identity);// new BaseObject("Controller", identity);
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
-	MeshComponent *rightRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
-	rightRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
+	MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
+	rightRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
 	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 	MainMenuBT *bt = new MainMenuBT(eControllerType_Primary);
 	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
@@ -651,8 +651,8 @@ void Update() {
 
 	BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity); //new BaseObject("Controller2", identity);
 	MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
-	MeshComponent *leftRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
-	leftRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
+	MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
+	leftRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
 	mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 	MainMenuBT *bt2 = new MainMenuBT(eControllerType_Secondary);
 	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);

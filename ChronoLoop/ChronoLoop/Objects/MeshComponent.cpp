@@ -8,6 +8,7 @@
 namespace Epoch {
 	void MeshComponent::CreateNode()
 	{
+		DESTROY_NODE(mNode);
 		mNode = Renderer::Instance()->AddOpaqueNode(mShape);
 	}
 
@@ -80,6 +81,49 @@ namespace Epoch {
 				CreateNode();
 			}
 		}
+	}
+
+	void MeshComponent::SetVertexShader(VertexShaderFormat _vf)
+	{
+		if (_vf != mShape->GetContext().mGeoShaderFormat) {
+			DESTROY_NODE(mNode);
+			mShape->GetContext().mVertexShaderFormat = _vf;
+			if (mVisible) {
+				CreateNode();
+			}
+		}
+	}
+
+	void MeshComponent::SetPixelShader(PixelShaderFormat _pf)
+	{
+		if (_pf != mShape->GetContext().mGeoShaderFormat) {
+			DESTROY_NODE(mNode);
+			mShape->GetContext().mPixelShaderFormat = _pf;
+			if (mVisible) {
+				CreateNode();
+			}
+		}
+	}
+
+	void MeshComponent::SetGeometryShader(GeometryShaderFormat _gf)
+	{
+		if (_gf != mShape->GetContext().mGeoShaderFormat) {
+			DESTROY_NODE(mNode);
+			mShape->GetContext().mGeoShaderFormat = _gf;
+			if (mVisible) {
+				CreateNode();
+			}
+		}
+	}
+
+	RenderShape * MeshComponent::GetShape()
+	{
+		return mShape;
+	}
+
+	void MeshComponent::ForceReinsertion()
+	{
+		CreateNode();
 	}
 
 	bool MeshComponent::CanCreateNode()
