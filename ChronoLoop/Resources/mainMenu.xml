@@ -1,4 +1,4 @@
-﻿<Level>
+<Level>
   <Settings>
     <StartPos>0,0,0</StartPos>
     <StartRot>0,0,0</StartRot>
@@ -20,9 +20,6 @@
     <Rotation>0,0,0</Rotation>
     <Scale>1,1.25,0.5</Scale>
     <Components>
-      <EnterLevel>Enabled</EnterLevel>
-      <EnterLevel>Enabled</EnterLevel>
-      <EnterLevel>Enabled</EnterLevel>
       <EnterLevel>Enabled</EnterLevel>
       <Collider>
         <Type>OBB</Type>
@@ -75,10 +72,6 @@
     <Rotation>0,1.57,0</Rotation>
     <Scale>1,1.25,0.5</Scale>
     <Components>
-      <EnterLevel>Enabled</EnterLevel>
-      <EnterLevel>Enabled</EnterLevel>
-      <EnterLevel>Enabled</EnterLevel>
-      <EnterLevel>Enabled</EnterLevel>
       <EnterLevel>Enabled</EnterLevel>
       <Collider>
         <Type>OBB</Type>

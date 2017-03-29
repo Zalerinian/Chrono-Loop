@@ -297,7 +297,11 @@ namespace Epoch {
 
 
 		// Model position buffer
+#if ENABLE_INSTANCING
 		desc.ByteWidth = sizeof(matrix4) * 256;
+#else
+		desc.ByteWidth = sizeof(matrix4);
+#endif
 		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
 		mPositionBuffer.Attach(pBuff);
 
@@ -606,7 +610,7 @@ namespace Epoch {
 		//	}
 		//	head = head->GetNext();
 		//}
-
+		
 		// TODO: Make a ShaderLimits.h file that has macros for the number of instances and other such arrays a shader supports.
 
 		// Big TODO: When rendering more than 256 instances of a given mesh, there is a pretty good chance the game
@@ -631,14 +635,16 @@ namespace Epoch {
 				}
 #else
 				(*it)->mShape.GetContext().Apply();
+				//SystemLogger::Debug() << "Number of \"instances\": " << positions.size() << std::endl;
 				for (unsigned int i = 0; i < positions.size(); ++i) {
+					//SystemLogger::Debug() << "\"instance\" number: " << i << std::endl;
 					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i] + offset, 0, 0);
+					//SystemLogger::Debug() << "Post-update" << i << std::endl;
 					(*it)->mShape.Render(1); // Without instancing, the instance count doesn't matter, but we're only drawing one :)
 				}
 #endif
 			}
 		}
-
 
 		mContext->OMSetDepthStencilState(mTransparentState.Get(), 1);
 		mContext->OMSetBlendState(mTransparentBlendState.Get(), NULL, 0xFFFFFFFF);
