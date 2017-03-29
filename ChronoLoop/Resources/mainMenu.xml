@@ -100,7 +100,7 @@
     <Name>RoomFloor</Name>
     <Mesh>mmRoomFloor.obj</Mesh>
     <Texture>SM_Floor_Two_SM_Floor_AlbedoTransparency.png</Texture>
-    <Position>0,0,0</Position>
+    <Position>0,-0.3,0</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,4.334252,1</Scale>
     <Components />

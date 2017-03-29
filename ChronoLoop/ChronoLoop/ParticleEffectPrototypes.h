@@ -3,7 +3,7 @@
 
 namespace Epoch
 {
-
+	//Don't use these atm
 	void CreateTeleportEffect(vec4f _pos)
 	{
 		Particle * p = &Particle::Init();
@@ -11,7 +11,7 @@ namespace Epoch
 		p->SetLife(200);
 		p->SetSize(1.25 / 2.0, .15 / 2.0);
 		p->SetPos(vec4f());
-		IDC* emit = new IDC(-1, 250, 2, _pos);
+		TeleportEffect* emit = new TeleportEffect(-1, 250, 2, _pos);
 		emit->SetTexture("../Resources/BasicRectP.png");
 		emit->SetParticle(p);
 		emit->y1 = 8;
@@ -23,7 +23,7 @@ namespace Epoch
 		p->SetLife(1000);
 		p->SetSize(.25 / 2.0, .05 / 2.0);
 		p->SetPos(vec4f());
-		emit = new IDC(-1, 150, 1, _pos);
+		emit = new TeleportEffect(-1, 150, 1, _pos);
 		emit->SetTexture("../Resources/BasicCircleP.png");
 		emit->SetParticle(p);
 		emit->y1 = 1;

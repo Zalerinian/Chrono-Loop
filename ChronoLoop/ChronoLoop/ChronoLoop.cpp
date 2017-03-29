@@ -53,6 +53,7 @@ bool VREnabled = false;
 const wchar_t* _basePath = L"../Resources/Soundbanks/";
 const wchar_t* _initSB = L"Init.bnk";
 const wchar_t* _aSB = L"Test_Soundbank.bnk";
+const wchar_t* _mainS = L"Chrono_Sound.bnk";
 
 #if defined(_WIN64)
 typedef unsigned __int64 AudioEvent;				///< Integer (unsigned) type for pointers
@@ -145,7 +146,7 @@ void Update() {
 
 	// TODO: Replace all this with a level to run.
 	///*///////////////////////Using this to test physics//////////////////
-
+	//_CrtSetBreakAlloc(4390);
 #if MAINMENU
 
 	Transform transform;
@@ -582,6 +583,7 @@ void Update() {
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::SET_BasePath, 0, false, (void*)new m_Path(_basePath)));
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_initSB)));
 	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
+	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_mainS)));
 
 	// new BaseObject("Controller", identity);
 

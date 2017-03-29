@@ -64,41 +64,23 @@ namespace Epoch
 	{
 	public:
 		int Type;
-
-	protected:
-		float pad2[3];
-		vec4f Position, Direction, ConeDirection, Color;
-		float ConeRatio;
 		float pad[3];
+
+		vec3f Position;
+
+		vec3f Direction;
+
+		vec3f ConeDirection;
+
+		vec3f Color;
+
+		float ConeRatio;
+		float pad1[3];
+
+		Light()
+		{
+			//TODO: idk
+		}
 	};
 
-	struct Directional : public Light
-	{
-		vec4f & mDirection = Direction;
-		vec4f & mColor = Color;
-		Directional()
-		{
-			Type = 1;
-		}
-	};
-	struct Point : public Light
-	{
-		vec4f & mPosition = Position;
-		vec4f & mColor = Color;
-		Point()
-		{
-			Type = 2;
-		}
-	};
-	struct Spot : public Light
-	{
-		vec4f & mConeDirection = ConeDirection;
-		vec4f & mPosition = Position;
-		vec4f & mColor = Color;
-		float & mConeRatio = ConeRatio;
-		Spot()
-		{
-			Type = 4;
-		}
-	};
 }

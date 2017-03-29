@@ -13,6 +13,8 @@
 #include <wrl/client.h>
 #include <mutex>
 
+#define num_lights 3
+
 namespace Epoch {
 
 	class Renderer {
@@ -23,9 +25,7 @@ namespace Epoch {
 
 		static Renderer* sInstance;
 		//TODO: Light buffers
-		Directional mDLData;
-		Point mPLData;
-		Spot mSLData;
+		Light * mLData[num_lights];
 
 		// Instance members
 		// D3D11 Variables
@@ -50,13 +50,15 @@ namespace Epoch {
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mLBuffer;
 		bool mUseVsync = false;
 		//ShadowMap 1 - Directional, 2 - Point, 3 - Spot
-		Microsoft::WRL::ComPtr<ID3D11VertexShader> mShadowVS;
-		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mSDSView1, mSDSView2, mSDSView3;
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> mShadowTextures1, mShadowTextures2, mShadowTextures3;
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mShadowSRV1, mShadowSRV2, mShadowSRV3;
+		Microsoft::WRL::ComPtr<ID3D11VertexShader> mShadowVS, mShadowVS2;
+		Microsoft::WRL::ComPtr<ID3D11PixelShader> mPSST;
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mSDSView[2];
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> mShadowTextures[2];
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mShadowSRV[2];
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> mSSamplerState;
-		Microsoft::WRL::ComPtr<ID3D11Buffer> mDLBufferS, mPLBufferS, mSLBufferS;
-		ViewProjectionBuffer mSLVPB, mDLVPB, mPLVPB;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mPLBufferS, mPLBSDir;
+		ViewProjectionBuffer mPLVPB;
+		D3D11_VIEWPORT mShadowVP;
 
 		RenderShape* mScenePPQuad = nullptr, *mSceneScreenQuad = nullptr;
 

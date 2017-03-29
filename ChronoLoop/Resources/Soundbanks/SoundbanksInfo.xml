@@ -16,30 +16,76 @@
 			<ShortName>Init</ShortName>
 			<Path>Init.bnk</Path>
 		</SoundBank>
+		<SoundBank Id="3592913328" Language="SFX">
+			<ObjectPath>\SoundBanks\Default Work Unit\Chrono_Sound</ObjectPath>
+			<ShortName>Chrono_Sound</ShortName>
+			<Path>Chrono_Sound.bnk</Path>
+			<IncludedEvents>
+				<Event Id="3707190201" Name="Pause_Casual_Level_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Pause_Casual_Level_LOOP"/>
+				<Event Id="3600779026" Name="Pause_FutureTechSound" ObjectPath="\Events\Default Work Unit\SFX_EVENTS\Pause_FutureTechSound"/>
+				<Event Id="1196397114" Name="Pause_Hangar_Escape_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Pause_Hangar_Escape_LOOP"/>
+				<Event Id="3445986553" Name="Pause_Orbit_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Pause_Orbit_LOOP"/>
+				<Event Id="3005238139" Name="Play_Casual_Level_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Play_Casual_Level_LOOP"/>
+				<Event Id="1604770128" Name="Play_FutureTechSound" ObjectPath="\Events\Default Work Unit\SFX_EVENTS\Play_FutureTechSound"/>
+				<Event Id="996404944" Name="Play_Hangar_Escape_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Play_Hangar_Escape_LOOP"/>
+				<Event Id="3699510579" Name="Play_Orbit_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Play_Orbit_LOOP"/>
+				<Event Id="3851757052" Name="Resume_Casual_Level_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Resume_Casual_Level_LOOP"/>
+				<Event Id="3760069047" Name="Resume_FutureTechSound" ObjectPath="\Events\Default Work Unit\SFX_EVENTS\Resume_FutureTechSound"/>
+				<Event Id="595909313" Name="Resume_Hangar_Escape_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Resume_Hangar_Escape_LOOP"/>
+				<Event Id="1208877918" Name="Resume_Orbit_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Resume_Orbit_LOOP"/>
+				<Event Id="715006247" Name="SFX_MetallicSound" ObjectPath="\Events\Default Work Unit\SFX_EVENTS\SFX_MetallicSound"/>
+				<Event Id="831993537" Name="Stop_Casual_Level_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Stop_Casual_Level_LOOP"/>
+				<Event Id="4276321770" Name="Stop_FutureTechSound" ObjectPath="\Events\Default Work Unit\SFX_EVENTS\Stop_FutureTechSound"/>
+				<Event Id="458173698" Name="Stop_Hangar_Escape_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Stop_Hangar_Escape_LOOP"/>
+				<Event Id="4280461585" Name="Stop_Orbit_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Stop_Orbit_LOOP"/>
+			</IncludedEvents>
+			<IncludedMemoryFiles>
+				<File Id="145064967" Language="SFX">
+					<ShortName>Sci Fi - Starship Sub Amb.wav</ShortName>
+					<Path>SFX\Sci Fi - Starship Sub Amb_4B8CC0C5.wem</Path>
+				</File>
+				<File Id="312620889" Language="SFX">
+					<ShortName>Puzzles\Casual Level LOOP.wav</ShortName>
+					<Path>SFX\Puzzles\Casual Level LOOP_4B8CC0C5.wem</Path>
+				</File>
+				<File Id="596824733" Language="SFX">
+					<ShortName>Metallic Noise 004.wav</ShortName>
+					<Path>SFX\Metallic Noise 004_9E69E797.wem</Path>
+				</File>
+				<File Id="753352436" Language="SFX">
+					<ShortName>Orbit LOOP.wav</ShortName>
+					<Path>SFX\Orbit LOOP_4B8CC0C5.wem</Path>
+				</File>
+				<File Id="883031343" Language="SFX">
+					<ShortName>Hangar Escape LOOP.wav</ShortName>
+					<Path>SFX\Hangar Escape LOOP_4B8CC0C5.wem</Path>
+				</File>
+			</IncludedMemoryFiles>
+		</SoundBank>
 		<SoundBank Id="4154996803" Language="SFX">
 			<ObjectPath>\SoundBanks\Default Work Unit\Test_Soundbank</ObjectPath>
 			<ShortName>Test_Soundbank</ShortName>
 			<Path>Test_Soundbank.bnk</Path>
 			<IncludedEvents>
-				<Event Id="1123068841" Name="BEEP" ObjectPath="\Events\Default Work Unit\BEEP"/>
-				<Event Id="1762045322" Name="BLOP" ObjectPath="\Events\Default Work Unit\BLOP"/>
-				<Event Id="381359574" Name="BUTTON_PRESS1" ObjectPath="\Events\Default Work Unit\BUTTON_PRESS1"/>
-				<Event Id="381359573" Name="BUTTON_PRESS2" ObjectPath="\Events\Default Work Unit\BUTTON_PRESS2"/>
-				<Event Id="2580845818" Name="DOORSOUND" ObjectPath="\Events\Default Work Unit\DOORSOUND"/>
-				<Event Id="1888362325" Name="PAUSE_Test1" ObjectPath="\Events\Default Work Unit\PAUSE_Test1"/>
-				<Event Id="1888362326" Name="PAUSE_Test2" ObjectPath="\Events\Default Work Unit\PAUSE_Test2"/>
-				<Event Id="3759155919" Name="PLAY_Test1" ObjectPath="\Events\Default Work Unit\PLAY_Test1"/>
-				<Event Id="3759155916" Name="PLAY_Test2" ObjectPath="\Events\Default Work Unit\PLAY_Test2"/>
-				<Event Id="3909886823" Name="PlayBounceEffects" ObjectPath="\Events\Default Work Unit\PlayBounceEffects"/>
-				<Event Id="652836727" Name="PLING" ObjectPath="\Events\Default Work Unit\PLING"/>
-				<Event Id="1235130312" Name="RESUME_Test1" ObjectPath="\Events\Default Work Unit\RESUME_Test1"/>
-				<Event Id="1235130315" Name="RESUME_Test2" ObjectPath="\Events\Default Work Unit\RESUME_Test2"/>
-				<Event Id="2344782521" Name="SHORTCIRUIT" ObjectPath="\Events\Default Work Unit\SHORTCIRUIT"/>
-				<Event Id="2011175805" Name="STOP_Test1" ObjectPath="\Events\Default Work Unit\STOP_Test1"/>
-				<Event Id="2011175806" Name="STOP_Test2" ObjectPath="\Events\Default Work Unit\STOP_Test2"/>
-				<Event Id="751805364" Name="SWOOSH" ObjectPath="\Events\Default Work Unit\SWOOSH"/>
-				<Event Id="2755031898" Name="TICK" ObjectPath="\Events\Default Work Unit\TICK"/>
-				<Event Id="894718049" Name="TOGGLE" ObjectPath="\Events\Default Work Unit\TOGGLE"/>
+				<Event Id="1888362325" Name="PAUSE_Test1" ObjectPath="\Events\Default Work Unit\OTHER\PAUSE_Test1"/>
+				<Event Id="1888362326" Name="PAUSE_Test2" ObjectPath="\Events\Default Work Unit\OTHER\PAUSE_Test2"/>
+				<Event Id="3759155919" Name="PLAY_Test1" ObjectPath="\Events\Default Work Unit\OTHER\PLAY_Test1"/>
+				<Event Id="3759155916" Name="PLAY_Test2" ObjectPath="\Events\Default Work Unit\OTHER\PLAY_Test2"/>
+				<Event Id="1235130312" Name="RESUME_Test1" ObjectPath="\Events\Default Work Unit\OTHER\RESUME_Test1"/>
+				<Event Id="1235130315" Name="RESUME_Test2" ObjectPath="\Events\Default Work Unit\OTHER\RESUME_Test2"/>
+				<Event Id="984516265" Name="SFX_BEEP" ObjectPath="\Events\Default Work Unit\OTHER\SFX_BEEP"/>
+				<Event Id="1623492746" Name="SFX_BLOP" ObjectPath="\Events\Default Work Unit\OTHER\SFX_BLOP"/>
+				<Event Id="1794490945" Name="SFX_BounceEffects" ObjectPath="\Events\Default Work Unit\OTHER\SFX_BounceEffects"/>
+				<Event Id="1009907414" Name="SFX_BUTTON_PRESS1" ObjectPath="\Events\Default Work Unit\OTHER\SFX_BUTTON_PRESS1"/>
+				<Event Id="1009907413" Name="SFX_BUTTON_PRESS2" ObjectPath="\Events\Default Work Unit\OTHER\SFX_BUTTON_PRESS2"/>
+				<Event Id="3559876090" Name="SFX_DOORSOUND" ObjectPath="\Events\Default Work Unit\OTHER\SFX_DOORSOUND"/>
+				<Event Id="650723447" Name="SFX_PLING" ObjectPath="\Events\Default Work Unit\OTHER\SFX_PLING"/>
+				<Event Id="1687962553" Name="SFX_SHORTCIRUIT" ObjectPath="\Events\Default Work Unit\OTHER\SFX_SHORTCIRUIT"/>
+				<Event Id="4195120820" Name="SFX_SWOOSH" ObjectPath="\Events\Default Work Unit\OTHER\SFX_SWOOSH"/>
+				<Event Id="2616479322" Name="SFX_TICK" ObjectPath="\Events\Default Work Unit\OTHER\SFX_TICK"/>
+				<Event Id="43066209" Name="SFX_TOGGLE" ObjectPath="\Events\Default Work Unit\OTHER\SFX_TOGGLE"/>
+				<Event Id="2011175805" Name="STOP_Test1" ObjectPath="\Events\Default Work Unit\OTHER\STOP_Test1"/>
+				<Event Id="2011175806" Name="STOP_Test2" ObjectPath="\Events\Default Work Unit\OTHER\STOP_Test2"/>
 			</IncludedEvents>
 			<IncludedMemoryFiles>
 				<File Id="82772906" Language="SFX">
