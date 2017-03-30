@@ -15,7 +15,7 @@
 #include "Common/Math.h"
 #include "Objects/MeshComponent.h"
 
-#include "Messager\Messager.h"
+#include "Sound\SoundEngine.h"
 #include "Objects\BaseObject.h"
 #include "Actions/TeleportAction.hpp"
 #include "Actions/CCElasticReactionWithPlane.h"
@@ -579,12 +579,12 @@ void Update() {
 
 	
 	////Sound Initializing---------------------------------------------------
-	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::INITIALIZE_Audio, 0, false));
+	AudioWrapper::GetInstance().Initialize();
 	//Soundbanks
-	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::SET_BasePath, 0, false, (void*)new m_Path(_basePath)));
-	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_initSB)));
-	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
-	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_mainS)));
+	AudioWrapper::GetInstance().SetBasePath(_basePath);
+	AudioWrapper::GetInstance().LoadSoundBank(_initSB);
+	AudioWrapper::GetInstance().LoadSoundBank(_aSB);
+	AudioWrapper::GetInstance().LoadSoundBank(_mainS);
 
 	// new BaseObject("Controller", identity);
 
@@ -749,27 +749,26 @@ void Update() {
 				break;
 			}
 			//Particle Testing
-			if (GetAsyncKeyState(VK_TAB))
+			if (GetAsyncKeyState(VK_TAB) & 0x1)
 			{
 				Particle * p = &Particle::Init();
 				p->SetColors(vec4f(1, 1, 1, 1), vec4f());
-				p->SetLife(250);
+				p->SetLife((rand()% 250) + 250);
 				p->SetSize(.25f, .15f);
-				vec3f EPos = vec3f(0, 0, 0);
-				ParticleEmitter *emit = new ParticleEmitter(200, 200, 20, EPos);
+				vec3f EPos = vec3f((rand() % 10) - 5,rand() % 5, (rand() % 10) - 5);
+				ParticleEmitter *emit = new ParticleEmitter(-1, 200, 20, EPos);
 				emit->SetParticle(p);
 				emit->SetTexture("../Resources/BasicCircleP.png");
 				ParticleSystem::Instance()->AddEmitter(emit);
 				emit->FIRE();
-				AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::PLAY_A_TIMELAPSE);
+				//AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::PLAY_A_TIMELAPSE);
 			}
 			if (GetAsyncKeyState('P'))
 			{
 				AudioWrapper::GetInstance().STOP();
 			}
 
-			Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false, (void*)nullptr));
-
+			AudioWrapper::GetInstance().Update();
 			//SystemLogger::GetLog() << "[Debug] Regular Update " << std::endl;
 			UpdateTime();
 			LevelManager::GetInstance().Update();
@@ -871,8 +870,8 @@ void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftControl
 	ambient->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_TEST2);
 	ambient->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_TEST2);
 	ambient->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_TEST2);
-	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(ears, "Listener")));
-	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(ambient, "ambiance")));
+	AudioWrapper::GetInstance().AddListener(ears, "Listener");
+	AudioWrapper::GetInstance().AddEmitter(ambient, "ambience");
 
 
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");

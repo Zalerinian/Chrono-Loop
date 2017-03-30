@@ -2,7 +2,6 @@
 #include "CodeComponent.hpp"
 #include "..\Common\Logger.h"
 #include "..\Core\LevelManager.h"
-#include "..\Messager\Messager.h"
 #include "..\Core\Pool.h"
 #include "..\Common\Settings.h"
 #include "..\Actions\MainMenuBT.h"
@@ -48,9 +47,8 @@ namespace Epoch
 					lcoms.erase(lcoms.begin());
 					std::vector<Component*>& ecoms = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetComponents(eCOMPONENT_AUDIOEMITTER);
 					ecoms.erase(ecoms.begin());
-
-					Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::REMOVE_Listener, 0, false, (void*)l));
-					Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::REMOVE_Emitter, 0, false, (void*)e));
+					AudioWrapper::GetInstance().RemoveListener(l);
+					AudioWrapper::GetInstance().RemoveEmitter(e);
 
 					Physics::Instance()->PhysicsLock.lock();
 					TimeManager::Instance()->Destroy();

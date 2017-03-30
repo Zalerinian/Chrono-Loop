@@ -1,8 +1,8 @@
 //#include "stdafx.h"
 #include "Component.h"
 #include "BaseObject.h"
-#include "..\Messager\Messager.h"
 #include "../Rendering/renderer.h"
+#include "../Sound/SoundEngine.h"
 
 namespace Epoch
 {
@@ -67,9 +67,7 @@ namespace Epoch
 			return;
 		if (mIsSounds[_id].first)
 			return;
-		m_Event* evnt = new m_Event(mSFX[ePlayLoop][_id], this);
-		Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
-		Messager::Instance().SendInMessage(msg);
+		AudioWrapper::GetInstance().MakeEvent(mSFX[ePlayLoop][_id], this);
 		mIsSounds[_id].first = true;
 	}
 
@@ -80,16 +78,12 @@ namespace Epoch
 
 		if (mIsSounds[_id].second)
 		{
-			m_Event* evnt = new m_Event(mSFX[eResumeLoop][_id], this);
-			Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
-			Messager::Instance().SendInMessage(msg);
+			AudioWrapper::GetInstance().MakeEvent(mSFX[eResumeLoop][_id], this);
 			mIsSounds[_id].second = false;
 		}
 		else
 		{
-			m_Event* evnt = new m_Event(mSFX[ePauseLoop][_id], this);
-			Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
-			Messager::Instance().SendInMessage(msg);
+			AudioWrapper::GetInstance().MakeEvent(mSFX[ePauseLoop][_id], this);
 			mIsSounds[_id].second = true;
 		}
 	}
@@ -100,9 +94,7 @@ namespace Epoch
 			return;
 		if (!mIsSounds[_id].first)
 			return;
-		m_Event* evnt = new m_Event(mSFX[eStopLoop][_id], this);
-		Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Event, 0, false, (void*)evnt);
-		Messager::Instance().SendInMessage(msg);
+		AudioWrapper::GetInstance().MakeEvent(mSFX[eStopLoop][_id], this);
 		mIsSounds[_id].first = false;
 
 	}
@@ -114,9 +106,7 @@ namespace Epoch
 			return;
 
 		const vec4f * pos = GetTransform().GetPosition();
-		m_LocEvent* evnt = new m_LocEvent(mSFX[ePlaySFX][_id], pos);
-		Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Loc, 0, false, (void*)evnt);
-		Messager::Instance().SendInMessage(msg);
+		AudioWrapper::GetInstance().MakeEvent(mSFX[ePlaySFX][_id], this);
 	}
 	void Emitter::PlaySFX(int _id, const vec4f* _pos)
 	{
@@ -124,9 +114,7 @@ namespace Epoch
 			return;
 
 		const vec4f * pos = _pos;
-		m_LocEvent* evnt = new m_LocEvent(mSFX[ePlaySFX][_id], pos);
-		Message* msg = new Message(msgTypes::mSound, soundMsg::MAKEEVENT_Loc, 0, false, (void*)evnt);
-		Messager::Instance().SendInMessage(msg);
+		AudioWrapper::GetInstance().MakeEvent(mSFX[ePlaySFX][_id], this);
 	}
 
 	void Emitter::AddSoundEvent(sfxTypes _type, int64_t _event)

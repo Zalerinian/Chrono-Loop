@@ -645,7 +645,7 @@ namespace Epoch {
 						{
 							Emitter* sound = new Emitter();
 							sound->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, sfxFile);
-							Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(sound, soundName.c_str())));
+							AudioWrapper::GetInstance().AddEmitter(sound, soundName.c_str());
 							obj->AddComponent(sound);
 						}
 						if (Loop)
@@ -655,7 +655,7 @@ namespace Epoch {
 							sound->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, pauseFile);
 							sound->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, resumeFile);
 							sound->AddSoundEvent(Emitter::sfxTypes::eStopLoop, stopFile);
-							Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(sound, soundName.c_str())));
+							AudioWrapper::GetInstance().AddEmitter(sound, soundName.c_str());
 							obj->AddComponent(sound);
 						}
 					}
