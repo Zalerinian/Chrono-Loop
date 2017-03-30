@@ -47,6 +47,7 @@ namespace AK
         static const AkUniqueID SFX_TICK = 2616479322U;
         static const AkUniqueID SFX_TOGGLE = 43066209U;
         static const AkUniqueID STOP_A_TIMELAPSE = 2745027494U;
+        static const AkUniqueID STOP_ALL = 452547817U;
         static const AkUniqueID STOP_CASUAL_LEVEL_LOOP = 831993537U;
         static const AkUniqueID STOP_FUTURETECHSOUND = 4276321770U;
         static const AkUniqueID STOP_HANGAR_ESCAPE_LOOP = 458173698U;

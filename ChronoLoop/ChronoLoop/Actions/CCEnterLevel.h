@@ -253,9 +253,11 @@ namespace Epoch
 					headset->AddComponent(hfollow);
 					headset->AddComponent(ears);
 					headset->AddComponent(ambient);
+
+
+					AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::STOP_ALL);
 					ambient->Play();
 
-					AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::STOP_TEST1);
 
 					LevelManager::GetInstance().RequestLevelChange(next);
 
