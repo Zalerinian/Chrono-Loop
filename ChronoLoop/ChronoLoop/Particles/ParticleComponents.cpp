@@ -349,7 +349,6 @@ namespace Epoch
 
 	void ParticleEmitter::EmitParticles()
 	{
-		static int total = 0;
 
 		for (int i = 0; i < mPerSec; i++)
 		{
