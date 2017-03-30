@@ -185,7 +185,7 @@ namespace Epoch
 
 		virtual void OnDestroy()
 		{
-			((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Stop(1);
+			//((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Stop(1);
 
 			delete mChamberInterp;
 			delete mPlayerInterp;
