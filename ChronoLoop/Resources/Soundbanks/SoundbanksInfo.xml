@@ -21,19 +21,23 @@
 			<ShortName>Chrono_Sound</ShortName>
 			<Path>Chrono_Sound.bnk</Path>
 			<IncludedEvents>
+				<Event Id="1185437150" Name="Pause_A_Timelapse" ObjectPath="\Events\Default Work Unit\Pause_A_Timelapse"/>
 				<Event Id="3707190201" Name="Pause_Casual_Level_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Pause_Casual_Level_LOOP"/>
 				<Event Id="3600779026" Name="Pause_FutureTechSound" ObjectPath="\Events\Default Work Unit\SFX_EVENTS\Pause_FutureTechSound"/>
 				<Event Id="1196397114" Name="Pause_Hangar_Escape_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Pause_Hangar_Escape_LOOP"/>
 				<Event Id="3445986553" Name="Pause_Orbit_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Pause_Orbit_LOOP"/>
+				<Event Id="2042848668" Name="Play_A_Timelapse" ObjectPath="\Events\Default Work Unit\Play_A_Timelapse"/>
 				<Event Id="3005238139" Name="Play_Casual_Level_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Play_Casual_Level_LOOP"/>
 				<Event Id="1604770128" Name="Play_FutureTechSound" ObjectPath="\Events\Default Work Unit\SFX_EVENTS\Play_FutureTechSound"/>
 				<Event Id="996404944" Name="Play_Hangar_Escape_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Play_Hangar_Escape_LOOP"/>
 				<Event Id="3699510579" Name="Play_Orbit_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Play_Orbit_LOOP"/>
+				<Event Id="1121098459" Name="Resume_A_Timelapse" ObjectPath="\Events\Default Work Unit\Resume_A_Timelapse"/>
 				<Event Id="3851757052" Name="Resume_Casual_Level_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Resume_Casual_Level_LOOP"/>
 				<Event Id="3760069047" Name="Resume_FutureTechSound" ObjectPath="\Events\Default Work Unit\SFX_EVENTS\Resume_FutureTechSound"/>
 				<Event Id="595909313" Name="Resume_Hangar_Escape_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Resume_Hangar_Escape_LOOP"/>
 				<Event Id="1208877918" Name="Resume_Orbit_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Resume_Orbit_LOOP"/>
 				<Event Id="715006247" Name="SFX_MetallicSound" ObjectPath="\Events\Default Work Unit\SFX_EVENTS\SFX_MetallicSound"/>
+				<Event Id="2745027494" Name="Stop_A_Timelapse" ObjectPath="\Events\Default Work Unit\Stop_A_Timelapse"/>
 				<Event Id="831993537" Name="Stop_Casual_Level_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Stop_Casual_Level_LOOP"/>
 				<Event Id="4276321770" Name="Stop_FutureTechSound" ObjectPath="\Events\Default Work Unit\SFX_EVENTS\Stop_FutureTechSound"/>
 				<Event Id="458173698" Name="Stop_Hangar_Escape_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Stop_Hangar_Escape_LOOP"/>
@@ -55,6 +59,10 @@
 				<File Id="753352436" Language="SFX">
 					<ShortName>Orbit LOOP.wav</ShortName>
 					<Path>SFX\Orbit LOOP_4B8CC0C5.wem</Path>
+				</File>
+				<File Id="859612369" Language="SFX">
+					<ShortName>A_Timelapse.wav</ShortName>
+					<Path>SFX\A_Timelapse_4B8CC0C5.wem</Path>
 				</File>
 				<File Id="883031343" Language="SFX">
 					<ShortName>Hangar Escape LOOP.wav</ShortName>
@@ -84,6 +92,7 @@
 				<Event Id="4195120820" Name="SFX_SWOOSH" ObjectPath="\Events\Default Work Unit\OTHER\SFX_SWOOSH"/>
 				<Event Id="2616479322" Name="SFX_TICK" ObjectPath="\Events\Default Work Unit\OTHER\SFX_TICK"/>
 				<Event Id="43066209" Name="SFX_TOGGLE" ObjectPath="\Events\Default Work Unit\OTHER\SFX_TOGGLE"/>
+				<Event Id="452547817" Name="Stop_All" ObjectPath="\Events\Default Work Unit\Stop_All"/>
 				<Event Id="2011175805" Name="STOP_Test1" ObjectPath="\Events\Default Work Unit\OTHER\STOP_Test1"/>
 				<Event Id="2011175806" Name="STOP_Test2" ObjectPath="\Events\Default Work Unit\OTHER\STOP_Test2"/>
 			</IncludedEvents>
