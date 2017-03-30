@@ -152,12 +152,12 @@ namespace Epoch
 
 					//TODO: MAKE CLONE PARTICLE
 					Particle* p = &Particle::Init();
-					p->SetColors(vec4f(), vec4f());
-					p->SetLife(1000);
+					p->SetColors(vec4f(0, .25, 1,1), vec4f(.2f, .55f, .8f,1));
+					p->SetLife(250);
 					p->SetSize(.25f, .15f);
 
 					vec3f EPos = vec3f(mCurCloneHeadset->GetTransform().GetPosition()->x,mCurCloneHeadset->GetTransform().GetPosition()->y, mCurCloneHeadset->GetTransform().GetPosition()->z);
-					ParticleEmitter* emit = new RadialEmitter(700, 300, 20, EPos);
+					ParticleEmitter* emit = new RadialEmitter(500, 250, 25, EPos);
 					emit->SetParticle(p);
 					emit->SetTexture("../Resources/BasicCircleP.png");
 					ParticleSystem::Instance()->AddEmitter(emit);
