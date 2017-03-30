@@ -255,7 +255,8 @@ namespace Epoch
 					headset->AddComponent(ambient);
 
 
-					AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::STOP_ALL);
+					AudioWrapper::GetInstance().STOP();
+
 					ambient->Play();
 
 

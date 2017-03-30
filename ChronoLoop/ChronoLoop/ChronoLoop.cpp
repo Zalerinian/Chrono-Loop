@@ -761,6 +761,11 @@ void Update() {
 				emit->SetTexture("../Resources/BasicCircleP.png");
 				ParticleSystem::Instance()->AddEmitter(emit);
 				emit->FIRE();
+				AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::PLAY_A_TIMELAPSE);
+			}
+			if (GetAsyncKeyState('P'))
+			{
+				AudioWrapper::GetInstance().STOP();
 			}
 
 			Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false, (void*)nullptr));
