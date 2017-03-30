@@ -255,6 +255,8 @@ namespace Epoch
 					headset->AddComponent(ambient);
 					ambient->Play();
 
+					AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::STOP_TEST1);
+
 					LevelManager::GetInstance().RequestLevelChange(next);
 
 
