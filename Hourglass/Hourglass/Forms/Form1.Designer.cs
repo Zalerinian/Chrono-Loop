@@ -516,7 +516,7 @@ namespace Hourglass
             this.meshComponentToolStripMenuItem,
             this.audioComponentToolStripMenuItem});
             this.mComponentStrip.Name = "contextMenuStrip1";
-            this.mComponentStrip.Size = new System.Drawing.Size(175, 114);
+            this.mComponentStrip.Size = new System.Drawing.Size(175, 136);
             // 
             // toolStripMenuItem1
             // 
@@ -608,7 +608,9 @@ namespace Hourglass
             // 
             this.codeComponentsToolStripMenuItem.Name = "codeComponentsToolStripMenuItem";
             this.codeComponentsToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.codeComponentsToolStripMenuItem.Tag = "CodeComp";
             this.codeComponentsToolStripMenuItem.Text = "Code Components";
+            this.codeComponentsToolStripMenuItem.Click += new System.EventHandler(this.AddComponentHandler);
             // 
             // meshComponentToolStripMenuItem
             // 

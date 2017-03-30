@@ -25,7 +25,7 @@ namespace Hourglass
 		public event ResourceChangedHandler ResourceUpdated;
 		public event ResourceChangedHandler ResourceDeleted;
 		public event ResourceRenamedHandler ResourceRenamed;
-		private List<string> mObjects, mTextures;
+		private List<string> mObjects, mTextures, mCode;
 		private List<FileSystemWatcher> mWatchers;
 
 		public string ResourceDirectory {
@@ -34,6 +34,12 @@ namespace Hourglass
 			}
 		}
 
+        public string ActionDirectory {
+            get {
+                return "\\ChronoLoop\\Actions\\";
+            }
+        }
+
 		public string[] ObjectFileFilters {
 			get {
 				string[] ary = { "*.obj" };
@@ -41,7 +47,15 @@ namespace Hourglass
 			}
 		}
 
-		public string[] TextureFileFilters {
+
+        public string[] CodeFileFilters {
+            get {
+                string[] ary = { "*.h", "*.hpp" };
+                return ary;
+            }
+        }
+
+        public string[] TextureFileFilters {
 			get {
 				string[] ary = { "*.png", "*.jpg", "*.jpeg", "*.bmp", "*.gif", "*.dds" };
 				return ary;
@@ -58,9 +72,15 @@ namespace Hourglass
 			get {
 				return mTextures;
 			}
-		}
+        }
 
-		public string ResourcePrefix {
+        public List<string> Codes {
+            get {
+                return mCode;
+            }
+        }
+
+        public string ResourcePrefix {
 			get {
 				return ".." + ResourceDirectory;
 			}
@@ -70,6 +90,7 @@ namespace Hourglass
 		{
 			mObjects = new List<string>();
 			mTextures = new List<string>();
+            mCode = new List<string>();
 			mWatchers = new List<FileSystemWatcher>();
 		}
 
@@ -105,6 +126,15 @@ namespace Hourglass
 				Debug.Print("Well the project path is null, so there must not be any resources!");
 				return;
 			}
+
+            for (int i = 0; i < CodeFileFilters.Length; i++)
+            {
+                IEnumerator<string> it = Directory.EnumerateFiles(Settings.ProjectPath + "\\ChronoLoop\\Actions\\", CodeFileFilters[i], SearchOption.AllDirectories).GetEnumerator();
+                while (it.MoveNext())
+                {
+                    mCode.Add(it.Current.Substring(Settings.ProjectPath.Length + "\\ChronoLoop\\Actions\\".Length));
+                }
+            }
 
 			for (int i = 0; i < ObjectFileFilters.Length; ++i)
 			{

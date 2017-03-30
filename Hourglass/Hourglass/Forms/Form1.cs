@@ -446,10 +446,12 @@ namespace Hourglass
 				case "Audio":
 					break;
 
-				// Code Components
+                // Code Components
+                case "CodeComp":
+                    obj.AddComponent(new CodeComponent());
+                    break;
 
-
-				default:
+                default:
 					break;
 			}
 		}
