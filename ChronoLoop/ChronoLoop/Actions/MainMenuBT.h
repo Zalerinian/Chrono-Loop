@@ -200,6 +200,9 @@ namespace Epoch
 			//TODO: This is being destroyed at some point before this so wtf, figure this out i guess
 			//((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Stop(1);
 
+			//SUPER FUCKING JANK END ME
+			AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::STOP_TEST1);
+
 			delete mChamberInterp;
 			delete mPlayerInterp;
 		}
