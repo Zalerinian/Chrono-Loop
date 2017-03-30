@@ -255,7 +255,7 @@ namespace Epoch {
 				return true;
 		}
 
-		void TimeManager::DeleteClone(unsigned short _id1)
+		void TimeManager::DeleteClone(unsigned short _id1, bool _useParticleEffect)
 	{
 			/*Clonepair pair;
 			pair.mCur = _id1;*/
@@ -267,7 +267,7 @@ namespace Epoch {
 				del = false;
 				if (mClones[i]->GetUniqueId() == _id1 || mClones[i]->GetUniqueId() == pair.mOther1 || mClones[i]->GetUniqueId() == pair.mOther2) {
 
-					if (mClones[i]->GetUniqueID() == pair.mCur)
+					if (mClones[i]->GetUniqueID() == pair.mCur && _useParticleEffect)
 					{
 						Particle * p = &Particle::Init();
 						p->SetColors(vec4f(1, 1, 1, 1), vec4f());
@@ -320,7 +320,7 @@ namespace Epoch {
 							break;
 						}
 					}
-
+					//TODO COmment this back in sometime
 					/*for (auto j = mCloneColliderInterpolators.begin(); j != mCloneColliderInterpolators.end(); ++j) {
 						if (mClones[i]->GetComponentCount(eCOMPONENT_COLLIDER) > 0 && j->first == mClones[i]->GetComponentIndexed(eCOMPONENT_COLLIDER,0)->GetColliderId())
 						{

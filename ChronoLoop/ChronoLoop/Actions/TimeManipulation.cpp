@@ -59,7 +59,7 @@ namespace Epoch
 					TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneHeadset);
 					TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController1);
 					TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController2);
-					TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueID());
+					TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueID(),false);
 					mCurCloneHeadset = nullptr;
 					mCurCloneController1 = nullptr;
 					mCurCloneController2 = nullptr;
@@ -175,7 +175,7 @@ namespace Epoch
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneHeadset);
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController1);
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController2);
-						TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueId());
+						TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueId(),false);
 
 						//set the player headset and controllers birth back
 						TimeManager::Instance()->SetCreationTimeofClone(cLevel->GetLeftController()->GetUniqueID(), cLevel->GetRightController()->GetUniqueID(), cLevel->GetHeadset()->GetUniqueID());
@@ -345,7 +345,7 @@ namespace Epoch
 				for (unsigned int j = 0; j < numTris; ++j) {
 					float hitTime;
 					if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, fwd, hitTime)) { 
-							TimeManager::Instance()->DeleteClone(clones[i]->GetUniqueId());
+							TimeManager::Instance()->DeleteClone(clones[i]->GetUniqueId(),true);
 							--mNumOfConfirmedClones;
 							return true;
 					}
