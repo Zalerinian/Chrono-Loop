@@ -53,7 +53,7 @@ namespace Epoch
 			mChamberObject->AddComponent(l);
 
 			AudioWrapper::GetInstance().AddListener(l, "shit");
-			((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Play(1);
+			//((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Play(1);
 		}
 
 		virtual void Update()
