@@ -468,8 +468,12 @@
     <ClInclude Include="Actions\CCLoadHub.h">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="..\Resources\Soundbanks\Wwise_IDs.h">
-      <Filter>Messanger\Header Files</Filter>
+    <ClInclude Include="Actions\CCEnterLevel1.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resources\Soundbanks\Wwise_IDs.h" />
+    <ClInclude Include="Actions\CCButtonHold.h">
+      <Filter>Actions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -607,6 +611,9 @@
     </ClCompile>
     <ClCompile Include="Common\Logger.cpp">
       <Filter>Common\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Renderer.cpp">
+      <Filter>Rendering\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Input\Controller.cpp">
       <Filter>Input\Source Files</Filter>
@@ -749,9 +756,6 @@
     <ClCompile Include="Objects\TransparentMeshComponent.cpp">
       <Filter>Objects\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rendering\Renderer.cpp">
-      <Filter>Rendering\Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
@@ -811,9 +815,6 @@
     <FxCompile Include="Rendering\Shaders\NDCVertex.hlsl">
       <Filter>Rendering\Shaders\Vertex Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Rendering\Shaders\ShadowVS.hlsl">
-      <Filter>Rendering\Shaders\Vertex Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="Rendering\Shaders\GSNDC.hlsl">
       <Filter>Rendering\Shaders\Geometry Shaders</Filter>
     </FxCompile>
@@ -829,6 +830,7 @@
     <FxCompile Include="Rendering\Shaders\PSTransparentScanline.hlsl">
       <Filter>Rendering\Shaders\Pixel shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Rendering\Shaders\ShadowVS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">

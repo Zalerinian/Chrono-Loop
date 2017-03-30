@@ -32,7 +32,7 @@ namespace Epoch
 		{
 			if (!once)
 			{
-				Settings::GetInstance().SetBool("HubIsLoading", true);
+				Settings::GetInstance().SetBool("LevelIsLoading", true);
 				Level* next = new Level;
 				next->LoadLevel("../Resources/mainMenu.xml");
 				// Todo: Un-hardcode this
@@ -42,11 +42,11 @@ namespace Epoch
 				{
 					// Clean up the current level and request the new one be used next time.
 					Listener* l =  ((Listener*)LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOLISTENER, 0));
-					Emitter* e = ((Emitter*)LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0));
+					Emitter* e = ((Emitter*)LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0));
 
 					std::vector<Component*>& lcoms = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetComponents(eCOMPONENT_AUDIOLISTENER);
 					lcoms.erase(lcoms.begin());
-					std::vector<Component*>& ecoms = LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetComponents(eCOMPONENT_AUDIOEMITTER);
+					std::vector<Component*>& ecoms = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetComponents(eCOMPONENT_AUDIOEMITTER);
 					ecoms.erase(ecoms.begin());
 
 					Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::REMOVE_Listener, 0, false, (void*)l));

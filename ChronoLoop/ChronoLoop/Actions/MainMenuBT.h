@@ -35,7 +35,7 @@ namespace Epoch
 			mStartObject = cLevel->FindObjectWithName("mmStart");
 			mExitObject = cLevel->FindObjectWithName("mmExit");
 			mFloorObject = cLevel->FindObjectWithName("mmFloor");
-			mRoomObject = cLevel->FindObjectWithName("mmRoom");
+			mRoomObject = cLevel->FindObjectWithName("RoomFloor");
 			//mCubeObject = cLevel->FindObjectWithName("mmCube");
 			//mCubeObject->GetTransform().GetMatrix().Position.Set(0, -30000, 0, 1);
 

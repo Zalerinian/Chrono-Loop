@@ -885,7 +885,6 @@ void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftControl
 	RightController->AddComponent(rightRaycaster);
 	RightController->AddComponent(ta);
 	RightController->AddComponent(tm);
-	RightController->AddComponent(ambient);
 	ambient->Play();
 	TimeManager::Instance()->AddObjectToTimeline(RightController);
 
@@ -927,6 +926,7 @@ void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftControl
 	HeadsetFollow* hfollow = new HeadsetFollow();
 	headset->AddComponent(hfollow);
 	headset->AddComponent(ears);
+	headset->AddComponent(ambient);
 	TimeManager::Instance()->AddObjectToTimeline(headset);
 }
 

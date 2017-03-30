@@ -1,4 +1,4 @@
-﻿<Level>
+<Level>
   <Settings>
     <StartPos>0,0,0</StartPos>
     <StartRot>0,0,0</StartRot>
@@ -13,15 +13,6 @@
     <Components />
   </Object>
   <Object>
-    <Name>mmFloor</Name>
-    <Mesh>mmFloor.obj</Mesh>
-    <Texture>black.png</Texture>
-    <Position>0,-10,0</Position>
-    <Rotation>0,0,0</Rotation>
-    <Scale>1,1,1</Scale>
-    <Components />
-  </Object>
-  <Object>
     <Name>mmDoor</Name>
     <Mesh>mmDoor.obj</Mesh>
     <Texture>fieldGen.png</Texture>
@@ -29,9 +20,6 @@
     <Rotation>0,0,0</Rotation>
     <Scale>1,1.25,0.5</Scale>
     <Components>
-      <EnterLevel>Enabled</EnterLevel>
-      <EnterLevel>Enabled</EnterLevel>
-      <EnterLevel>Enabled</EnterLevel>
       <EnterLevel>Enabled</EnterLevel>
       <Collider>
         <Type>OBB</Type>
@@ -68,15 +56,6 @@
     <Components />
   </Object>
   <Object>
-    <Name>mmRoom</Name>
-    <Mesh>mmRoom.obj</Mesh>
-    <Texture>black.png</Texture>
-    <Position>0,0,0</Position>
-    <Rotation>0,0,0</Rotation>
-    <Scale>1,1,1</Scale>
-    <Components />
-  </Object>
-  <Object>
     <Name>Cube_Cube.025</Name>
     <Mesh>mmSkybox.obj</Mesh>
     <Texture>mmSkyboxLight.png</Texture>
@@ -86,7 +65,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>mmDoor</Name>
+    <Name>mmDoor2</Name>
     <Mesh>mmDoor.obj</Mesh>
     <Texture>fieldGen.png</Texture>
     <Position>2.61,-10,0</Position>
@@ -94,13 +73,12 @@
     <Scale>1,1.25,0.5</Scale>
     <Components>
       <EnterLevel>Enabled</EnterLevel>
-      <EnterLevel>Enabled</EnterLevel>
       <Collider>
         <Type>OBB</Type>
-        <Trigger>False</Trigger>
+        <Trigger>True</Trigger>
         <Position>0,1,0</Position>
         <Rotation>0,0,0</Rotation>
-        <Scale>1.2,1.8,0.4</Scale>
+        <Scale>0.2,2,2.2</Scale>
         <Move>False</Move>
         <Gravity>0,0,0</Gravity>
         <Mass>0</Mass>
@@ -110,5 +88,41 @@
         <Drag>0</Drag>
       </Collider>
     </Components>
+  </Object>
+  <Object>
+    <Name>RoomFloor</Name>
+    <Mesh>mmRoomFloor.obj</Mesh>
+    <Texture>SM_Floor_Two_SM_Floor_AlbedoTransparency.png</Texture>
+    <Position>0,-0.3,0</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,4.334252,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>RoomWalls</Name>
+    <Mesh>mmRoomWalls.obj</Mesh>
+    <Texture>SM_Wall_SM_wall_AlbedoTransparency.png</Texture>
+    <Position>0,0,0</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>0.98,1,0.98</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>RoomCeiling</Name>
+    <Mesh>mmRoomCeiling.obj</Mesh>
+    <Texture>SM_Ceiling_SM_Ceiling_AlbedoTransparency.png</Texture>
+    <Position>0,0,0</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>0.98,1,0.98</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>mmFloor</Name>
+    <Mesh>mmFloor.obj</Mesh>
+    <Texture>SM_Floor_Two_SM_Floor_AlbedoTransparency.png</Texture>
+    <Position>0,-10,0</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
   </Object>
 </Level>
