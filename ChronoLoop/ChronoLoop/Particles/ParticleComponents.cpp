@@ -579,8 +579,6 @@ namespace Epoch
 
 	void RadialEmitter::EmitParticles()
 	{
-		static int total = 0;
-
 		for (int i = 0; i < mPerSec; i++)
 		{
 			if (total >= mTotalParticles && mTotalParticles != -1 && mParticles.size() == 0)
@@ -625,8 +623,6 @@ namespace Epoch
 
 	void TeleportEffect::EmitParticles()
 	{
-		static int total = 0;
-
 		for (int i = 0; i < mPerSec; i++)
 		{
 			if (total >= mTotalParticles && mTotalParticles != -1 && mParticles.size() == 0)

@@ -247,6 +247,9 @@ namespace Epoch
 					visibleMesh2->SetVisible(false);
 					headset->AddComponent(ambient);
 					headset->AddComponent(visibleMesh2);
+
+					AudioWrapper::GetInstance().STOP();
+
 					ambient->Play();
 
 					HeadsetFollow* hfollow = new HeadsetFollow();
