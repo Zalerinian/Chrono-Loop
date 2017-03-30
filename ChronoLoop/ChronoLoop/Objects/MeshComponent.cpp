@@ -6,10 +6,13 @@
 #include "../Common/Settings.h"
 
 namespace Epoch {
-	void MeshComponent::CreateNode()
-	{
-		DESTROY_NODE(mNode);
+	void MeshComponent::CreateNode() {
 		mNode = Renderer::Instance()->AddOpaqueNode(*mShape);
+	}
+
+	void MeshComponent::RemoveShape() {
+		DESTROY_NODE(mNode);
+		Renderer::Instance()->RemoveOpaqueNode(*mShape);
 	}
 
 	MeshComponent::MeshComponent(const char * _path) {
@@ -19,27 +22,25 @@ namespace Epoch {
 		if (CanCreateNode()) {
 			CreateNode();
 			mVisible = true;
-		}
-		else
-		{
+		} else {
 			mVisible = false;
 			mNode = nullptr;
 		}
 	}
 
 	void MeshComponent::Update() {
-		if (mNode && mVisible) 
-		{
-			if (mObject->GetParent())
+		if (mNode && mVisible) {
+			if (mObject->GetParent()) {
 				mNode->data = mObject->GetTransform().GetMatrix() * mObject->GetParent()->GetTransform().GetMatrix();
-			else
+			} else {
 				mObject->GetTransform().GetMatrix(mNode->data);
+			}
 		}
 	}
 
 	void MeshComponent::Destroy() {
 		SystemLogger::Debug() << "Destroying shape " << mShape->GetName() << std::endl;
-		DESTROY_NODE(mNode);
+		RemoveShape();
 		delete mShape;
 	}
 
@@ -47,17 +48,14 @@ namespace Epoch {
 		if (_vis) {
 			if (!mVisible) {
 				mVisible = true;
-				if(mNode == nullptr && CanCreateNode())
-				{
+				if (mNode == nullptr && CanCreateNode()) {
 					CreateNode();
 				}
 				Update();
 			}
-		}
-		else {
+		} else {
 			if (mVisible) {
-				if(mNode)
-				{
+				if (mNode) {
 					memset(&mNode->data, 0, sizeof(mNode->data));
 				}
 				mVisible = false;
@@ -72,7 +70,7 @@ namespace Epoch {
 		mShape->AddTexture(_path, _type);
 		postTexture = mShape->GetContext().mTextures[_type].Get();
 		if (preTexture != postTexture) {
-			DESTROY_NODE(mNode);
+			RemoveShape();
 			if (mVisible) {
 				CreateNode();
 			}
@@ -82,7 +80,7 @@ namespace Epoch {
 
 	void MeshComponent::SetRasterState(RasterState _t) {
 		if (_t != mShape->GetContext().mRasterState) {
-			DESTROY_NODE(mNode);
+			RemoveShape();
 			mShape->GetContext().mRasterState = _t;
 			if (mVisible) {
 				CreateNode();
@@ -90,10 +88,9 @@ namespace Epoch {
 		}
 	}
 
-	void MeshComponent::SetVertexShader(VertexShaderFormat _vf)
-	{
+	void MeshComponent::SetVertexShader(VertexShaderFormat _vf) {
 		if (_vf != mShape->GetContext().mGeoShaderFormat) {
-			DESTROY_NODE(mNode);
+			RemoveShape();
 			mShape->GetContext().mVertexShaderFormat = _vf;
 			if (mVisible) {
 				CreateNode();
@@ -101,10 +98,9 @@ namespace Epoch {
 		}
 	}
 
-	void MeshComponent::SetPixelShader(PixelShaderFormat _pf)
-	{
+	void MeshComponent::SetPixelShader(PixelShaderFormat _pf) {
 		if (_pf != mShape->GetContext().mGeoShaderFormat) {
-			DESTROY_NODE(mNode);
+			RemoveShape();
 			mShape->GetContext().mPixelShaderFormat = _pf;
 			if (mVisible) {
 				CreateNode();
@@ -112,10 +108,9 @@ namespace Epoch {
 		}
 	}
 
-	void MeshComponent::SetGeometryShader(GeometryShaderFormat _gf)
-	{
+	void MeshComponent::SetGeometryShader(GeometryShaderFormat _gf) {
 		if (_gf != mShape->GetContext().mGeoShaderFormat) {
-			DESTROY_NODE(mNode);
+			RemoveShape();
 			mShape->GetContext().mGeoShaderFormat = _gf;
 			if (mVisible) {
 				CreateNode();
@@ -123,18 +118,16 @@ namespace Epoch {
 		}
 	}
 
-	RenderShape * MeshComponent::GetShape()
-	{
+	RenderShape * MeshComponent::GetShape() {
 		return mShape;
 	}
 
-	void MeshComponent::ForceReinsertion()
-	{
+	void MeshComponent::ForceReinsertion() {
+		RemoveShape();
 		CreateNode();
 	}
 
-	bool MeshComponent::CanCreateNode()
-	{
+	bool MeshComponent::CanCreateNode() {
 		return !Settings::GetInstance().GetBool("LevelIsLoading");
 	}
 

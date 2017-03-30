@@ -3,6 +3,7 @@
 #include "../Common/GhostList.h"
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 namespace Epoch {
 
@@ -19,14 +20,18 @@ namespace Epoch {
 		unsigned int EnlargeBuffer(Microsoft::WRL::ComPtr<ID3D11Buffer>& _toGrow, std::string _name, BufferWidth _filler);
 		void Cut(Microsoft::WRL::ComPtr<ID3D11Buffer>& _toCut, std::string _name, unsigned int index);
 
+		std::unordered_map<unsigned int, unsigned int> mIdMap;
+		unsigned int mMasterId = 0;
+		unsigned int GetBufferIndex();
+
 	public:
 		RenderShape mShape;
-
 		GhostList<matrix4> mPositions;
 
 		RenderList(RenderShape& _reference);
 
 		GhostList<matrix4>::GhostNode* Push(RenderShape& _shape);
+		void Pop(RenderShape& _shape);
 	};
 
 } // Epoch Namespace

@@ -6,8 +6,27 @@ namespace Epoch {
 
 	void TransparentMeshComponent::CreateNode()
 	{
-		DESTROY_NODE(mNode);
-		mNode = Renderer::Instance()->AddTransparentNode(*mShape);
+		if (IsOpaque()) {
+			mNode = Renderer::Instance()->AddOpaqueNode(*mShape);
+		} else {
+			mNode = Renderer::Instance()->AddTransparentNode(*mShape);
+		}
+	}
+
+	void TransparentMeshComponent::RemoveShape() {
+		if (IsOpaque()) {
+			RemoveOpaqueShape();
+		} else {
+			RemoveTransparentShape();
+		}
+	}
+
+	void TransparentMeshComponent::RemoveTransparentShape() {
+		Renderer::Instance()->RemoveTransparentNode(*mShape);
+	}
+
+	void TransparentMeshComponent::RemoveOpaqueShape() {
+		Renderer::Instance()->RemoveOpaqueNode(*mShape);
 	}
 
 	void TransparentMeshComponent::CreateAlphaBuffer()
@@ -28,7 +47,7 @@ namespace Epoch {
 	{
 		mAlpha = _alpha;
 		mShape->SetPixelShader(ePS_TRANSPARENT);
-		DESTROY_NODE(mNode);
+		RemoveShape();
 		if (CanCreateNode()) {
 			CreateNode();
 			mVisible = true;
@@ -52,6 +71,13 @@ namespace Epoch {
 		mAlpha = _a;
 		auto buffer = mShape->GetContext().mPixelCBuffers[ePB_TP_Alpha];
 		Renderer::Instance()->GetContext()->UpdateSubresource(buffer.Get(), 0, NULL, &mAlpha, 0, 0);
+	}
+
+	bool TransparentMeshComponent::IsOpaque() {
+		//mWasOpaque = mOpaque;
+		//mOpaque = mAlpha >= 1.0f;
+		//return mOpaque;
+		return mAlpha >= 1.0f;
 	}
 
 } // Epoch namespace

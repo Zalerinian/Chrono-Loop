@@ -711,10 +711,12 @@ namespace Epoch {
 
 	void Renderer::RemoveOpaqueNode(RenderShape & _node)
 	{
+		mOpaqueSet.RemoveShape(_node);
 	}
 
-	void Renderer::RemovetransparentNode(RenderShape & _node)
+	void Renderer::RemoveTransparentNode(RenderShape & _node)
 	{
+		mTransparentSet.RemoveShape(_node);
 	}
 
 	bool Renderer::iInitialize(HWND _Window, unsigned int _width, unsigned int _height, bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane, vr::IVRSystem * _vrsys) {

@@ -22,6 +22,15 @@ namespace Epoch {
 		return n;
 	}
 
+	void RenderSet::RemoveShape(RenderShape& _shape) {
+		for (auto it = mRenderList.begin(); it != mRenderList.end(); ++it) {
+			if ((*it)->mShape == _shape) {
+				// Same mesh and context
+				(*it)->Pop(_shape);
+			}
+		}
+	}
+
 	void RenderSet::ClearSet()
 	{
 		for (auto it = mRenderList.begin(); it != mRenderList.end(); ++it) {

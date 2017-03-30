@@ -12,6 +12,7 @@ namespace Epoch {
 		friend class RenderSet;
 		friend class RenderList;
 		unsigned int mIndexCount = 0, mVertexOffset = 0, mIndexOffset = 0;
+		int mVBIndex = -1, mPBIndex = -1, mGBIndex = -1;
 
 		matrix4 mPosition;
 

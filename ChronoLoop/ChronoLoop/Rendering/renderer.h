@@ -120,7 +120,7 @@ namespace Epoch {
 		GhostList<matrix4>::GhostNode* AddOpaqueNode(RenderShape& _node);
 		GhostList<matrix4>::GhostNode* AddTransparentNode(RenderShape& _node);
 		void RemoveOpaqueNode(RenderShape& _node);
-		void RemovetransparentNode(RenderShape& _node);
+		void RemoveTransparentNode(RenderShape& _node);
 		void Render(float _deltaTime);
 
 		void ClearRenderSet();

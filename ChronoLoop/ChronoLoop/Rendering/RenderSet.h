@@ -14,6 +14,7 @@ namespace Epoch {
 
 	public:
 		GhostList<matrix4>::GhostNode* AddShape(RenderShape& _shape);
+		void RemoveShape(RenderShape& _shape);
 		void ClearSet();
 		//void SortNodes();
 		std::list<RenderList*>::iterator Begin();

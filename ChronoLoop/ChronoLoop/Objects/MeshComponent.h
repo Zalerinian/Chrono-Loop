@@ -23,6 +23,7 @@ namespace Epoch
 		bool mVisible = true;
 
 		virtual void CreateNode();
+		virtual void RemoveShape();
 	public:
 		MeshComponent(const char *_path);
 		virtual void Update() override;
