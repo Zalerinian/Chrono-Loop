@@ -222,6 +222,12 @@ namespace Epoch {
 		NullData.e2.Position.Set(24, 24, 24, 24);
 
 
+    // TODO: Use the GetBufferIndex function, since EnlargeBuffer now returns a unique ID.
+    // TODO: Use the GetBufferIndex function, since EnlargeBuffer now returns a unique ID.
+    // TODO: Use the GetBufferIndex function, since EnlargeBuffer now returns a unique ID.
+    // TODO: Use the GetBufferIndex function, since EnlargeBuffer now returns a unique ID.
+    // TODO: Use the GetBufferIndex function, since EnlargeBuffer now returns a unique ID.
+    // TODO: Use the GetBufferIndex function, since EnlargeBuffer now returns a unique ID.
 		int vbIndex = -1, pbIndex = -1, gbIndex = -1;
 		// Prepare the vertex buffers.
 		std::string bufferName;
