@@ -13,18 +13,21 @@ namespace AK
 {
     namespace EVENTS
     {
+        static const AkUniqueID PAUSE_A_TIMELAPSE = 1185437150U;
         static const AkUniqueID PAUSE_CASUAL_LEVEL_LOOP = 3707190201U;
         static const AkUniqueID PAUSE_FUTURETECHSOUND = 3600779026U;
         static const AkUniqueID PAUSE_HANGAR_ESCAPE_LOOP = 1196397114U;
         static const AkUniqueID PAUSE_ORBIT_LOOP = 3445986553U;
         static const AkUniqueID PAUSE_TEST1 = 1888362325U;
         static const AkUniqueID PAUSE_TEST2 = 1888362326U;
+        static const AkUniqueID PLAY_A_TIMELAPSE = 2042848668U;
         static const AkUniqueID PLAY_CASUAL_LEVEL_LOOP = 3005238139U;
         static const AkUniqueID PLAY_FUTURETECHSOUND = 1604770128U;
         static const AkUniqueID PLAY_HANGAR_ESCAPE_LOOP = 996404944U;
         static const AkUniqueID PLAY_ORBIT_LOOP = 3699510579U;
         static const AkUniqueID PLAY_TEST1 = 3759155919U;
         static const AkUniqueID PLAY_TEST2 = 3759155916U;
+        static const AkUniqueID RESUME_A_TIMELAPSE = 1121098459U;
         static const AkUniqueID RESUME_CASUAL_LEVEL_LOOP = 3851757052U;
         static const AkUniqueID RESUME_FUTURETECHSOUND = 3760069047U;
         static const AkUniqueID RESUME_HANGAR_ESCAPE_LOOP = 595909313U;
@@ -43,6 +46,7 @@ namespace AK
         static const AkUniqueID SFX_SWOOSH = 4195120820U;
         static const AkUniqueID SFX_TICK = 2616479322U;
         static const AkUniqueID SFX_TOGGLE = 43066209U;
+        static const AkUniqueID STOP_A_TIMELAPSE = 2745027494U;
         static const AkUniqueID STOP_CASUAL_LEVEL_LOOP = 831993537U;
         static const AkUniqueID STOP_FUTURETECHSOUND = 4276321770U;
         static const AkUniqueID STOP_HANGAR_ESCAPE_LOOP = 458173698U;

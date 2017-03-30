@@ -11,6 +11,8 @@
 #include "BoxSnapToControllerAction.hpp"
 #include "../Objects/TransparentMeshComponent.h"
 #include "../Common/Common.h"
+#include "../Messager/Messager.h"
+#include "../Particles/ParticleSystem.h"
 
 namespace Epoch
 {
@@ -147,6 +149,21 @@ namespace Epoch
 					Physics::Instance()->mObjects.push_back(mCurCloneController1);
 					Physics::Instance()->mObjects.push_back(mCurCloneController2);
 					++mNumOfConfirmedClones;
+
+					//TODO: MAKE CLONE PARTICLE
+					Particle* p = &Particle::Init();
+					p->SetColors(vec4f(), vec4f());
+					p->SetLife(1000);
+					p->SetSize(.25f, .15f);
+
+					vec3f EPos = vec3f(mCurCloneHeadset->GetTransform().GetPosition()->x,mCurCloneHeadset->GetTransform().GetPosition()->y, mCurCloneHeadset->GetTransform().GetPosition()->z);
+					ParticleEmitter* emit = new RadialEmitter(700, 300, 20, EPos);
+					emit->SetParticle(p);
+					emit->SetTexture("../Resources/BasicCircleP.png");
+					ParticleSystem::Instance()->AddEmitter(emit);
+					vec4f temp = EPos;
+					AudioWrapper::GetInstance().MakeEventAtLocation(AK::EVENTS::SFX_SHORTCIRUIT, &temp);
+					emit->FIRE();
 				}
 				else
 				{
