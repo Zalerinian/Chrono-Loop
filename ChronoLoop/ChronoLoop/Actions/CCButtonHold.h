@@ -40,13 +40,13 @@ namespace Epoch
 			//exitend = exitCube->GetPos() + vec3f(0, 2.6f, 0);
 			blockstart = blockCube->GetTransform().GetMatrix();
 			exitstart = exitCube->GetTransform().GetMatrix();
-			blockend = blockCube->GetTransform().GetMatrix() * blockCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, -2.6f, 0, 1));
-			exitend = exitCube->GetTransform().GetMatrix() * exitCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 2.6f, 0, 1));
+			blockend = blockCube->GetTransform().GetMatrix() * blockCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 2.6f, 0, 1));
+			exitend = exitCube->GetTransform().GetMatrix() * exitCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, -2.6f, 0, 1));
 		}
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time)
 		{
-			if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane)
+			if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName() != "Buttonstand")
 			{
 				colliding = true;
 				//Interp stuff

@@ -81,8 +81,8 @@ namespace Epoch
 					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), false);
 					BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
 					((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
-					MeshComponent *rightRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
-					rightRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
+					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
+					rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 					TeleportAction *ta = new TeleportAction(eControllerType_Primary);
 					TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
@@ -92,8 +92,6 @@ namespace Epoch
 					RightController->AddComponent(rightRaycaster);
 					RightController->AddComponent(ta);
 					RightController->AddComponent(tm);
-					RightController->AddComponent(ambient);
-					ambient->Play();
 
 					BaseObject *clonePanel = Pool::Instance()->iGetObject()->Reset("ClonePanel", identity);
 					MeshComponent* disp = new MeshComponent("../Resources/ClonePanel.obj");
@@ -232,8 +230,8 @@ namespace Epoch
 					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), true);
 					BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
 					((BoxSnapToControllerAction*)pickup2)->mControllerRole = eControllerType_Secondary;
-					MeshComponent *leftRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
-					leftRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
+					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
+					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 					TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
 					TimeManipulation* tm2 = new TimeManipulation(eControllerType_Secondary);
@@ -247,7 +245,9 @@ namespace Epoch
 					MeshComponent *visibleMesh2 = new MeshComponent("../Resources/TinyCube.obj");
 					visibleMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 					visibleMesh2->SetVisible(false);
+					headset->AddComponent(ambient);
 					headset->AddComponent(visibleMesh2);
+					ambient->Play();
 
 					HeadsetFollow* hfollow = new HeadsetFollow();
 					headset->AddComponent(hfollow);

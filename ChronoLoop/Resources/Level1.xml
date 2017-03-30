@@ -115,7 +115,7 @@
         <Trigger>False</Trigger>
         <Position>0,0.6,0</Position>
         <Rotation>0,0,0</Rotation>
-        <Scale>0.5,1.35,0.5</Scale>
+        <Scale>0.5,1.05,0.5</Scale>
         <Move>False</Move>
         <Gravity>0,0,0</Gravity>
         <Mass>0</Mass>
@@ -140,7 +140,7 @@
         <Trigger>False</Trigger>
         <Position>0,0.04,0</Position>
         <Rotation>0,0,0</Rotation>
-        <Scale>0.5,0.1,0.4</Scale>
+        <Scale>0.4,0.1,0.4</Scale>
         <Move>True</Move>
         <PushNormal>0,1,0</PushNormal>
         <Mass>2</Mass>
