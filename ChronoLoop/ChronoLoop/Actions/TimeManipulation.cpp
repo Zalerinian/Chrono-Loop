@@ -71,7 +71,7 @@ namespace Epoch
 
 				mPauseTime = false;
 				TimeManager::Instance()->RewindTimeline(
-					TimeManager::Instance()->GetCurrentSnapFrame(),
+					TimeManager::Instance()->GetCurrentSnapFrame() -1,
 					cLevel->GetHeadset()->GetUniqueID(),
 					cLevel->GetRightController()->GetUniqueID(),
 					cLevel->GetLeftController()->GetUniqueID());

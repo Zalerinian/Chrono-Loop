@@ -326,6 +326,9 @@ namespace LevelEditor {
                                                 case "BoxSnapToController":
                                                     addition.Components.Add("Box Snap");
                                                     break;
+                                                case "ButtonHold":
+                                                    addition.Components.Add("Button Hold");
+                                                    break;
                                                 case "ButtonPress":
                                                     addition.Components.Add("Button Press");
                                                     break;
