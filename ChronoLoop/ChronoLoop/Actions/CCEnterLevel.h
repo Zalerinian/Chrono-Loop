@@ -277,7 +277,7 @@ namespace Epoch
 					p->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
 					p->SetLife(1000);
 					p->SetSize(.25f, .05f);
-					emit = new TeleportEffect(500, 150, 1, vec4f(8.88f, 0, -4.1f, 1));
+					emit = new TeleportEffect(-1, 150, 1, vec4f(8.88f, 0, -4.1f, 1));
 					emit->SetTexture("../Resources/BasicCircleP.png");
 					emit->SetParticle(p);
 					((TeleportEffect*)emit)->y1 = 1;
