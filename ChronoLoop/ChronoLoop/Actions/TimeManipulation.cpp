@@ -82,6 +82,7 @@ namespace Epoch
 				// Stop time
 				
 				Transform identity;
+				memset(&identity.GetMatrix(), 0, sizeof(identity.GetMatrix()));
 				mCloneCount++;
 				mCurCloneHeadset = Pool::Instance()->iGetObject()->Reset("Headset - " + std::to_string(mCloneCount), identity); //new BaseObject("headset" + std::to_string(rand), identity);
 				mCurCloneController1 = Pool::Instance()->iGetObject()->Reset("Controller1 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);

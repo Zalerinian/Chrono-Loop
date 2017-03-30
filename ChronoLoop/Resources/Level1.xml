@@ -56,7 +56,7 @@
     <Mesh>GenericFloorTile.obj</Mesh>
     <Texture>floor.png</Texture>
     <Position>0,2.982029,0</Position>
-    <Rotation>0,0,0</Rotation>
+    <Rotation>3.14,0,0</Rotation>
     <Scale>13,1,25</Scale>
     <Components>
       <Collider>
