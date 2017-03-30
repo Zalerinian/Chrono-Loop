@@ -44,14 +44,8 @@ namespace Epoch {
 	}
 
 	MeshComponent* MeshComponent::SetVisible(bool _vis) {
-		// TODO: Check to see if this is an efficient way to make meshes appear and disappear, because this involves
-		// a bit of looping. It could possibly be more efficient to set a bool on the render shape saying it's
-		// invisible.
-		// Side thought: Make the render set actually a list of MeshComponents, since they have shapes and direct
-		// access to the position of the object.
 		if (_vis) {
 			if (!mVisible) {
-				//CreateNode();
 				mVisible = true;
 				if(mNode == nullptr && CanCreateNode())
 				{
@@ -62,7 +56,6 @@ namespace Epoch {
 		}
 		else {
 			if (mVisible) {
-				//DESTROY_NODE(mNode);
 				if(mNode)
 				{
 					memset(&mNode->data, 0, sizeof(mNode->data));
@@ -74,10 +67,15 @@ namespace Epoch {
 	}
 
 	MeshComponent* MeshComponent::AddTexture(const char * _path, TextureType _type) {
-		DESTROY_NODE(mNode);
+		ID3D11ShaderResourceView *preTexture, *postTexture;
+		preTexture = mShape->GetContext().mTextures[_type].Get();
 		mShape->AddTexture(_path, _type);
-		if (mVisible) {
-			CreateNode();
+		postTexture = mShape->GetContext().mTextures[_type].Get();
+		if (preTexture != postTexture) {
+			DESTROY_NODE(mNode);
+			if (mVisible) {
+				CreateNode();
+			}
 		}
 		return this;
 	}
