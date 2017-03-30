@@ -297,7 +297,11 @@ namespace Epoch {
 
 
 		// Model position buffer
+	#if ENABLE_INSTANCING
 		desc.ByteWidth = sizeof(matrix4) * 256;
+	#else
+		desc.ByteWidth = sizeof(matrix4);
+	#endif
 		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
 		mPositionBuffer.Attach(pBuff);
 

@@ -12,6 +12,7 @@
 #include "LevelManager.h"
 #include "../Common/Settings.h"
 #include "../Particles/ParticleSystem.h"
+#include "../ParticleEffectPrototypes.h"
 #include "../Messager/Messager.h"
 
 namespace Epoch {
@@ -267,15 +268,7 @@ namespace Epoch {
 				del = false;
 				if (mClones[i]->GetUniqueId() == _id1 || mClones[i]->GetUniqueId() == pair.mOther1 || mClones[i]->GetUniqueId() == pair.mOther2) {
 
-					Particle * p = &Particle::Init();
-					p->SetColors(vec4f(1, 1, 1, 1), vec4f());
-					p->SetLife(300);
-					p->SetSize(.25f, .15f);
-					vec3f EPos = vec3f(mClones[i]->GetTransform().GetPosition()->x, mClones[i]->GetTransform().GetPosition()->y, mClones[i]->GetTransform().GetPosition()->z);
-					ParticleEmitter *emit = new ParticleEmitter(600, 200, 20, EPos);
-					emit->SetParticle(p);
-					emit->SetTexture("../Resources/BasicCircleP.png");
-					ParticleSystem::Instance()->AddEmitter(emit);
+					CreateCloneDeathEffect(*mClones[i]->GetTransform().GetPosition());
 
 					mClones[i]->RemoveAllComponents();
 
@@ -330,9 +323,7 @@ namespace Epoch {
 					mClones.erase(mClones.begin() + i);
 					del = true;
 
-					vec4f temp = EPos;
-					AudioWrapper::GetInstance().MakeEventAtLocation(AK::EVENTS::SFX_BLOP, &temp);
-					emit->FIRE();
+					//AudioWrapper::GetInstance().MakeEventAtLocation(AK::EVENTS::SFX_BLOP, &temp);
 				}
 				if (!del)
 					i++;

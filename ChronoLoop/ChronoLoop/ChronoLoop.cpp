@@ -38,6 +38,7 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 #include "Actions/TimelineIndicator.hpp"
+//#include "ParticleEffectPrototypes.h"
 
 using namespace Epoch;
 #define LEVEL_1 0
@@ -747,6 +748,21 @@ void Update() {
 			if (GetAsyncKeyState(VK_ESCAPE) && GetActiveWindow() == Renderer::Instance()->GetWindow()) {
 				break;
 			}
+			//Particle Testing
+			if (GetAsyncKeyState(VK_TAB))
+			{
+				Particle * p = &Particle::Init();
+				p->SetColors(vec4f(1, 1, 1, 1), vec4f());
+				p->SetLife(250);
+				p->SetSize(.25f, .15f);
+				vec3f EPos = vec3f(0, 0, 0);
+				ParticleEmitter *emit = new ParticleEmitter(200, 200, 20, EPos);
+				emit->SetParticle(p);
+				emit->SetTexture("../Resources/BasicCircleP.png");
+				ParticleSystem::Instance()->AddEmitter(emit);
+				emit->FIRE();
+			}
+
 			Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false, (void*)nullptr));
 
 			//SystemLogger::GetLog() << "[Debug] Regular Update " << std::endl;
