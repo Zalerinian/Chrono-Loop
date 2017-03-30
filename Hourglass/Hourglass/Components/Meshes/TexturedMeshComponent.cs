@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Hourglass
@@ -10,6 +11,8 @@ namespace Hourglass
 
 		public TexturedMeshComponent(int _yOffset = 0) : base(_yOffset)
 		{
+			mType = ComponentType.TexturedMesh;
+
 			#region Component Creation
 			mShape = new TexturedShape();
 
@@ -77,5 +80,35 @@ namespace Hourglass
 			base.OnMenuClick_Reset(sender, e);
 			mTexture.SelectedIndex = -1;
 		}
+
+		public override void WriteData(BinaryWriter w)
+		{
+			base.WriteData(w);
+			string s = (".." + ResourceManager.Instance.ResourceDirectory + mTexture.Text);
+			w.Write(s.Length + 1);
+			w.Write(s.ToCharArray());
+			byte term = 0;
+			w.Write(term);
+		}
+
+		public override void ReadData(BinaryReader r)
+		{
+			base.ReadData(r);
+			string filename = new string(r.ReadChars(r.ReadInt32() - 1));
+			r.ReadByte(); // The null terminator breaks things in C#, but is necessary in C++, so we need to skip it in C#
+			filename = filename.Substring(filename.LastIndexOf("\\") + 1);
+			int index = mTexture.Items.IndexOf(filename);
+			if (index >= 0)
+			{
+				mTexture.SelectedIndex = index;
+			}
+			else
+			{
+				((TexturedShape)mShape).Load("Assets\\Error.obj");
+				((TexturedShape)mShape).SetTexture(TexturedShape.TextureType.Diffuse, "Assets\\red.png");
+				mMesh.Text = "Error locating old mesh";
+			}
+		}
+
 	}
 }

@@ -14,7 +14,7 @@ namespace Epoch
 
 		return *p;
 	}
-	Particle& Particle::Init(int _life, float _ss, float _es, float _so, float _eo, float _xr, float _yr, float _zr, vec4f _pos, vec4f _vel, vec4f _scol, vec4f _ecol)
+	Particle& Particle::Init(int _life, float _ss, float _es, float _so, float _eo, float _xr, float _yr, float _zr, vec3f _pos, vec3f _vel, vec4f _scol, vec4f _ecol)
 	{
 		Particle* p = new Particle();
 		p->mLife = p->mTotalLife = _life;
@@ -79,15 +79,15 @@ namespace Epoch
 		_y = &mYRadial;
 		_z = &mZRadial;
 	}
-	vec4f* Particle::GetPos()
+	vec3f* Particle::GetPos()
 	{
 		return &mPos;
 	}
-	vec4f* Particle::GetPrevPos()
+	vec3f* Particle::GetPrevPos()
 	{
 		return &mPrevPos;
 	}
-	vec4f Particle::GetVelocity() const
+	vec3f Particle::GetVelocity() const
 	{
 		return mVelocity;
 	}
@@ -100,17 +100,15 @@ namespace Epoch
 	{
 		mLife = mTotalLife = _life;
 	}
-	void Particle::SetPos(vec4f _pos)
+	void Particle::SetPos(vec3f _pos)
 	{
 		mPos = _pos;
-		mPos.w = 1;
 	}
 	void Particle::SetPos(float _x, float _y, float _z)
 	{
 		mPos.x = _x;
 		mPos.y = _y;
 		mPos.z = _z;
-		mPos.w = 1;
 	}
 	void Particle::SetSize(float _ssize, float _esize)
 	{
@@ -123,17 +121,15 @@ namespace Epoch
 		mYRadial = _y;
 		mZRadial = _z;
 	}
-	void Particle::SetVelocity(vec4f _vel)
+	void Particle::SetVelocity(vec3f _vel)
 	{
 		mVelocity = _vel;
-		mVelocity.w = 0;
 	}
 	void Particle::SetVelocity(float _x, float _y, float _z)
 	{
 		mVelocity.x = _x;
 		mVelocity.y = _y;
 		mVelocity.z = _z;
-		mVelocity.w = 0;
 	}
 	void Particle::SetColors(vec4f _scol, vec4f _ecol)
 	{
@@ -173,7 +169,7 @@ namespace Epoch
 
 #pragma region Base Emitter
 
-	ParticleEmitter::ParticleEmitter(int _totalp, int _maxp, int _persec, vec4f _pos)
+	ParticleEmitter::ParticleEmitter(int _totalp, int _maxp, int _persec, vec3f _pos)
 	{
 		mTotalParticles = _totalp;
 		mMaxParticles = _maxp;
@@ -181,6 +177,7 @@ namespace Epoch
 		mPos = _pos;
 		mActive = true;
 		mEnabled = false;
+		mIsAnimated = mWrap = false;
 		CreateBuffers();
 	}
 
@@ -199,7 +196,6 @@ namespace Epoch
 		}
 		mParticles.clear();
 		mTotalParticles = mMaxParticles = 0;
-		mVBuffer->Release();
 
 	}
 
@@ -241,7 +237,7 @@ namespace Epoch
 
 	ID3D11Buffer* ParticleEmitter::GetVertexBuffer()
 	{
-		return mVBuffer;
+		return mVBuffer.Get();
 	}
 
 	ID3D11ShaderResourceView* ParticleEmitter::GetTexture()
@@ -326,11 +322,11 @@ namespace Epoch
 			mGParticles[i] = gps;
 		}
 
-		Renderer::Instance()->GetContext()->Map(mVBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mRes);
+		Renderer::Instance()->GetContext()->Map(mVBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mRes);
 
 		memcpy(mRes.pData, mGParticles.data(), sizeof(GSParticle) * mGParticles.size());
 		//Graphics 2 slides
-		Renderer::Instance()->GetContext()->Unmap(mVBuffer, 0);
+		Renderer::Instance()->GetContext()->Unmap(mVBuffer.Get(), 0);
 	}
 
 	void ParticleEmitter::CleanUpParticles()
@@ -375,7 +371,7 @@ namespace Epoch
 				x = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - -3.0f)));
 				y = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - -3.0f)));
 				z = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - -3.0f)));
-				p->SetVelocity(x, 0, z);
+				p->SetVelocity(x, y, z);
 
 				mParticles.push_back(p);
 				total++;
@@ -387,7 +383,7 @@ namespace Epoch
 
 #pragma region Volume Emitter
 
-	VolumeEmitter::VolumeEmitter(int _totalp, int _maxp, int _persec, vec4f _pos) : ParticleEmitter(_totalp, _maxp, _persec, _pos)
+	VolumeEmitter::VolumeEmitter(int _totalp, int _maxp, int _persec, vec3f _pos) : ParticleEmitter(_totalp, _maxp, _persec, _pos)
 	{
 
 	}
@@ -559,7 +555,7 @@ namespace Epoch
 
 #pragma region Radial
 
-	RadialEmitter::RadialEmitter(int _totalp, int _maxp, int _persec, vec4f _pos) : ParticleEmitter(_totalp, _maxp, _persec, _pos)
+	RadialEmitter::RadialEmitter(int _totalp, int _maxp, int _persec, vec3f _pos) : ParticleEmitter(_totalp, _maxp, _persec, _pos)
 	{
 
 	}
@@ -618,17 +614,17 @@ namespace Epoch
 
 #pragma region Teleport
 
-	IDC::IDC(int _totalp, int _maxp, int _persec, vec4f _pos) : ParticleEmitter(_totalp, _maxp, _persec, _pos)
+	TeleportEffect::TeleportEffect(int _totalp, int _maxp, int _persec, vec3f _pos) : ParticleEmitter(_totalp, _maxp, _persec, _pos)
 	{
 
 	}
 
-	void IDC::UpdateParticle(Particle* _p, float _delta)
+	void TeleportEffect::UpdateParticle(Particle* _p, float _delta)
 	{
 		ParticleEmitter::UpdateParticle(_p, _delta);
 	}
 
-	void IDC::EmitParticles()
+	void TeleportEffect::EmitParticles()
 	{
 		static int total = 0;
 
@@ -649,7 +645,7 @@ namespace Epoch
 				p->SetPos(x, 0, z);
 				*p->GetPos() = *p->GetPos() + mPos;
 				x = -.05f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05f - -.05f)));
-				y = y1 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (y2 - y1)));
+				y = 3.0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (5.0 - 3.0)));
 				z = -.05f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05f - -.05f)));
 				p->SetVelocity(0, y, 0);
 

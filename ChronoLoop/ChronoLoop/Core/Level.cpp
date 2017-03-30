@@ -11,14 +11,17 @@
 #include "../Actions/CodeComponent.hpp"
 #include "../Actions/CCButtonPress.h"
 #include "../Actions/CCEnterLevel.h"
+#include "../Actions/CCEnterLevel1.h"
 #include "../Actions/MainMenuBT.h"
+#include "../Actions/CCLoadHub.h"
 #include "../Objects/MeshComponent.h"
 #include "../Objects/TransparentMeshComponent.h"
 #include "../tinyxml/tinyxml.h"
 #include "../tinyxml/tinystr.h"
 #include "../Common/Settings.h"
-#include "../Particles/ParticleComponents.h"
+#include "../Particles/ParticleSystem.h"
 #include "../Input/CommandConsole.h"
+#include "../Actions/CCButtonHold.h"
 
 namespace Epoch {
 
@@ -153,9 +156,6 @@ namespace Epoch {
 		std::string Controller1name = _controller1->GetName();
 		std::string Controller2name = _controller2->GetName();
 
-		//mObjectMap[_headset->GetName()].push_back(_headset);
-		//mObjectMap[_controller1->GetName()].push_back(_controller1);
-		//mObjectMap[_controller2->GetName()].push_back(_controller2);
 
 		_headset->SetUniqueID(mHeadset->GetUniqueID());
 		_controller1->SetUniqueID(mController1->GetUniqueID());
@@ -171,14 +171,41 @@ namespace Epoch {
 		mHeadset->SetName(headname);
 		mController1->SetName(Controller1name);
 		mController2->SetName(Controller2name);
-	
 
-		mHeadset->SetUniqueID(headid);
-		mController1->SetUniqueID(cl1id);
-		mController2->SetUniqueID(cl2id);
-		mHeadset->SetName(headname);
-		mController1->SetName(Controller1name);
-		mController2->SetName(Controller2name);
+		//Update the clone pair of the new baseObjects if it already exist
+		Clonepair* temp = TimeManager::Instance()->GetClonePair(mHeadset->GetUniqueID());
+		if (temp)
+		{
+			temp->mCur = _headset->GetUniqueID();
+			temp->mOther1 = _controller1->GetUniqueID();
+			temp->mOther2 = _controller2->GetUniqueID();
+			//remove the one on the old key and create a new one with the new key
+			TimeManager::Instance()->EraseClonePair(mHeadset->GetUniqueID());
+			TimeManager::Instance()->SetClonePair(_headset->GetUniqueID(), temp);
+		}
+
+		temp = TimeManager::Instance()->GetClonePair(mController1->GetUniqueID());
+		if (temp)
+		{
+			temp->mCur = _controller1->GetUniqueID();
+			temp->mOther1 = _headset->GetUniqueID();
+			temp->mOther2 = _controller2->GetUniqueID();
+			//remove the one on the old key and create a new one with the new key
+			TimeManager::Instance()->EraseClonePair(mController1->GetUniqueID());
+			TimeManager::Instance()->SetClonePair(_controller1->GetUniqueID(), temp);
+		}
+
+		temp = TimeManager::Instance()->GetClonePair(mController2->GetUniqueID());
+		if (temp)
+		{
+			temp->mCur = _controller2->GetUniqueID();
+			temp->mOther1 = _controller1->GetUniqueID();
+			temp->mOther2 = _headset->GetUniqueID();
+			//remove the one on the old key and create a new one with the new key
+			TimeManager::Instance()->EraseClonePair(mController2->GetUniqueID());
+			TimeManager::Instance()->SetClonePair(_controller2->GetUniqueID(), temp);
+		}
+	
 	
 		if (_addNewHeadsetToLevel)
 		{
@@ -333,7 +360,10 @@ namespace Epoch {
 								while ((pos = s.find(",")) != std::string::npos)
 								{
 									std::string token = s.substr(0, pos);
-									rotation.xyz[i] = std::strtof(token.c_str(), nullptr);
+									if (!collider)
+									{
+										rotation.xyz[i] = std::strtof(token.c_str(), nullptr);
+									}
 									i++;
 									s.erase(0, pos + 1);
 								}
@@ -548,6 +578,40 @@ namespace Epoch {
 					transform.SetMatrix(mat);
 					BaseObject* obj = new BaseObject(name, transform);
 
+					if (name == "cube.001" || name == "cube.002" || name == "cube.003" || name == "cube.004")
+					{
+						Emitter* e = new Emitter();
+						e->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::SFX_BOUNCEEFFECTS);
+						obj->AddComponent(e);
+					}
+					else if (name == "Door" || name == "Door2")
+					{
+						Emitter* e = new Emitter();
+						e->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::SFX_DOORSOUND);
+						obj->AddComponent(e);
+					}
+					else if (name == "Button")
+					{
+						Emitter* e = new Emitter();
+						e->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::SFX_TOGGLE);
+						obj->AddComponent(e);
+					}
+					else if (name == "mmChamber")
+					{
+						Emitter * e = new Emitter();
+						e->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::SFX_METALLICSOUND);
+						e->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_FUTURETECHSOUND);
+						e->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_FUTURETECHSOUND);
+						e->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_FUTURETECHSOUND);
+						e->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_FUTURETECHSOUND);
+
+						e->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_CASUAL_LEVEL_LOOP);
+						e->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_CASUAL_LEVEL_LOOP);
+						e->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_CASUAL_LEVEL_LOOP);
+						e->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_CASUAL_LEVEL_LOOP);
+						obj->AddComponent(e);
+					}
+
 					if (!meshFile.empty())
 					{
 						std::string path = "../Resources/";
@@ -637,6 +701,11 @@ namespace Epoch {
 							BoxSnapToControllerAction* code = new BoxSnapToControllerAction();
 							obj->AddComponent(code);
 						}
+						else if (codeComs[i] == "ButtonHold")
+						{
+							CCButtonHold* code = new CCButtonHold();
+							obj->AddComponent(code);
+						}
 						else if (codeComs[i] == "ButtonPress")
 						{
 							CCButtonPress* code = new CCButtonPress();
@@ -664,8 +733,21 @@ namespace Epoch {
 						}
 						else if (codeComs[i] == "EnterLevel")
 						{
-							CCEnterLevel* code = new CCEnterLevel();
-							obj->AddComponent(code);
+							if (name == "DoorEmitter2")
+							{
+								CCLoadHub* code = new CCLoadHub();
+								obj->AddComponent(code);
+							}
+							else if (name == "mmDoor")
+							{
+								CCEnterLevel1* code = new CCEnterLevel1();
+								obj->AddComponent(code);
+							}
+							else
+							{
+								CCEnterLevel* code = new CCEnterLevel();
+								obj->AddComponent(code);
+							}
 						}
 						else if (codeComs[i] == "HeadsetFollow")
 						{

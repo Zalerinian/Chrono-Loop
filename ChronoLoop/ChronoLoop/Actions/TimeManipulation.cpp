@@ -10,6 +10,10 @@
 #include "TimeManipulation.h"
 #include "BoxSnapToControllerAction.hpp"
 #include "../Objects/TransparentMeshComponent.h"
+#include "../Common/Common.h"
+#include "../Messager/Messager.h"
+#include "../Particles/ParticleSystem.h"
+
 namespace Epoch
 {
 	BaseObject* TimeManipulation::mCurCloneController1 = nullptr;
@@ -145,6 +149,21 @@ namespace Epoch
 					Physics::Instance()->mObjects.push_back(mCurCloneController1);
 					Physics::Instance()->mObjects.push_back(mCurCloneController2);
 					++mNumOfConfirmedClones;
+
+					//TODO: MAKE CLONE PARTICLE
+					Particle* p = &Particle::Init();
+					p->SetColors(vec4f(0, .25, 1,1), vec4f(.2f, .55f, .8f,1));
+					p->SetLife(250);
+					p->SetSize(.25f, .15f);
+
+					vec3f EPos = vec3f(mCurCloneHeadset->GetTransform().GetPosition()->x,mCurCloneHeadset->GetTransform().GetPosition()->y, mCurCloneHeadset->GetTransform().GetPosition()->z);
+					ParticleEmitter* emit = new RadialEmitter(500, 250, 25, EPos);
+					emit->SetParticle(p);
+					emit->SetTexture("../Resources/BasicCircleP.png");
+					ParticleSystem::Instance()->AddEmitter(emit);
+					vec4f temp = EPos;
+					AudioWrapper::GetInstance().MakeEventAtLocation(AK::EVENTS::SFX_SHORTCIRUIT, &temp);
+					emit->FIRE();
 				}
 				else
 				{
@@ -155,7 +174,7 @@ namespace Epoch
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneHeadset);
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController1);
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController2);
-						TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueID());
+						TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueId());
 
 						//set the player headset and controllers birth back
 						TimeManager::Instance()->SetCreationTimeofClone(cLevel->GetLeftController()->GetUniqueID(), cLevel->GetRightController()->GetUniqueID(), cLevel->GetHeadset()->GetUniqueID());
@@ -234,14 +253,36 @@ namespace Epoch
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
 		SystemLogger::GetLog() << "[Debug] A clone is being made, please hold: " << mCloneCount << " | Is left: " << mControllerRole << std::endl;
 
+		PSTransparentScanline_Data _data;
+		_data.alpha = 1;
+		_data.ScanlineData.x = 0;
+		_data.ScanlineData.y = 0.2f;
+		_data.ScanlineData.z = 0;
+		_data.ScanlineData.w = 0.8f;
 		TransparentMeshComponent *visibleMesh = new TransparentMeshComponent("../Resources/Clone.obj",.35f);
 		visibleMesh->AddTexture(TimeManager::Instance()->GetNextTexture().c_str(), eTEX_DIFFUSE);
+		//visibleMesh->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
+		//visibleMesh->AddTexture("../Resources/Scanline.png", eTEX_CUSTOM2);
+
+		//visibleMesh->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
+		//D3D11_SUBRESOURCE_DATA initialData;
+		//initialData.pSysMem = &_data;
+		//CD3D11_BUFFER_DESC bufferDesc(sizeof(PSTransparentScanline_Data), D3D11_BIND_CONSTANT_BUFFER);
+		//Renderer::Instance()->GetDevice()->CreateBuffer(&bufferDesc, &initialData, visibleMesh->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].GetAddressOf());
+		//SetD3DName(visibleMesh->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].Get(), "Headset scanline buffer");
 		_headset->AddComponent(visibleMesh);
 
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
 		TransparentMeshComponent *mc = new TransparentMeshComponent("../Resources/Controller.obj",.35f);
 		ControllerCollider* CubeColider = new ControllerCollider(_controller1, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
 		mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+		//mc->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
+		//mc->AddTexture("../Resources/Scanline.png", eTEX_CUSTOM2);
+
+		//mc->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
+		//initialData.pSysMem = &_data;
+		//Renderer::Instance()->GetDevice()->CreateBuffer(&bufferDesc, &initialData, mc->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].GetAddressOf());
+		//SetD3DName(mc->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].Get(), "Controller1 scanline buffer");
 		_controller1->AddComponent(mc);
 		_controller1->AddComponent(CubeColider);
 		BoxSnapToControllerAction* SN1 = new BoxSnapToControllerAction();
@@ -251,6 +292,13 @@ namespace Epoch
 		TransparentMeshComponent *mc2 = new TransparentMeshComponent("../Resources/Controller.obj",.35f);
 		ControllerCollider* CubeColider2 = new ControllerCollider(_controller2, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 		mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+		//mc2->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
+		//mc2->AddTexture("../Resources/Scanline.png", eTEX_CUSTOM2);
+
+		//mc2->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
+		//initialData.pSysMem = &_data;
+		//Renderer::Instance()->GetDevice()->CreateBuffer(&bufferDesc, &initialData, mc2->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].GetAddressOf());
+		//SetD3DName(mc->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].Get(), "Controller2 scanline buffer");
 		_controller2->AddComponent(mc2);
 		_controller2->AddComponent(CubeColider2);
 		BoxSnapToControllerAction* SN2 = new BoxSnapToControllerAction();
@@ -268,6 +316,7 @@ namespace Epoch
 		TimeManager::Instance()->UpdatePlayerObjectInTimeline(_controller1);
 		TimeManager::Instance()->UpdatePlayerObjectInTimeline(_controller2);
 		
+		TimeManager::Instance()->SetupClonePairs(_headset->GetUniqueID(),_controller1->GetUniqueID(), _controller2->GetUniqueID());
 	}
 
 	bool TimeManipulation::RaycastCloneCheck() {

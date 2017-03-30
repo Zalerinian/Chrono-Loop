@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Diagnostics;
 using Microsoft.DirectX;
+using System.IO;
 
 namespace Hourglass
 {
-	public class TransformComponent : Component
+	public class TransformComponent : Component, IGizmoAttachment
 	{
 		private const float D2R = ((1 / 180.0f) * 3.14f);
 		private const float R2D = (180 / 3.14f);
@@ -24,6 +25,71 @@ namespace Hourglass
 
 		protected bool mNameIsPlaceholder = true;
 		protected string mLastText = "";
+
+
+		#region IGizmoAttachment
+
+		public NumericUpDown PX {
+			get {
+				return mPosX;
+			}
+		}
+
+		public NumericUpDown PY {
+			get {
+				return mPosY;
+			}
+		}
+
+		public NumericUpDown PZ {
+			get {
+				return mPosZ;
+			}
+		}
+
+		public NumericUpDown RX {
+			get {
+				return mRotX;
+			}
+		}
+
+		public NumericUpDown RY {
+			get {
+				return mRotY;
+			}
+		}
+
+		public NumericUpDown RZ {
+			get {
+				return mRotZ;
+			}
+		}
+
+		public NumericUpDown SX {
+			get {
+				return mScaleX;
+			}
+		}
+
+		public NumericUpDown SY {
+			get {
+				return mScaleY;
+			}
+		}
+
+		public NumericUpDown SZ {
+			get {
+				return mScaleZ;
+			}
+		}
+
+		public Matrix GizmoWorld {
+			get {
+				return CreateMatrix();
+			}
+		}
+
+		#endregion
 
 		public string Name {
 			get { return mNameIsPlaceholder ? "" : mName.Text; }
@@ -47,6 +113,8 @@ namespace Hourglass
 
 		public TransformComponent(int _yOffset = 0) : base(false)
 		{
+			mType = ComponentType.Transform;
+
 			if (_yOffset != 0)
 			{
 				Debug.Print("A transform component has a Y-Offset. Wat.");
@@ -260,6 +328,45 @@ namespace Hourglass
 		protected void OnUpdateName()
 		{
 			OnUpdateName(null, null);
+		}
+
+		public override void WriteData(BinaryWriter w)
+		{
+			base.WriteData(w);
+			w.Write(mName.Text.Length + 1);
+			w.Write(mName.Text.ToCharArray());
+			byte nullTerm = 0;
+			w.Write(nullTerm);
+
+			w.Write((float)mPosX.Value);
+			w.Write((float)mPosY.Value);
+			w.Write((float)mPosZ.Value);
+
+			w.Write((float)mRotX.Value);
+			w.Write((float)mRotY.Value);
+			w.Write((float)mRotZ.Value);
+
+			w.Write((float)mScaleX.Value);
+			w.Write((float)mScaleY.Value);
+			w.Write((float)mScaleZ.Value);
+		}
+
+		public override void ReadData(System.IO.BinaryReader r)
+		{
+			mNameIsPlaceholder = false;
+			Name = new string(r.ReadChars(r.ReadInt32()));
+			Owner.Node.Text = Name;
+			mPosX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mPosY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mPosZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+
+			mRotX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mRotY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mRotZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+
+			mScaleX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mScaleY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mScaleZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 		}
 
 

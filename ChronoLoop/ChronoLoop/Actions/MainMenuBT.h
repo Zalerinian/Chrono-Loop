@@ -21,10 +21,11 @@ namespace Epoch
 		Interpolator<matrix4>* mChamberInterp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mPlayerInterp = new Interpolator<matrix4>();
 		MeshComponent *mChamberMesh, *mStartMesh, *mExitMesh, *mFloorMesh, *mRoomMesh;
-		BaseObject *mChamberObject, *mStartObject, *mExitObject, *mFloorObject, *mRoomObject, *mCubeObject;
+		BaseObject *mChamberObject, *mStartObject, *mExitObject, *mFloorObject, *mRoomObject/*, *mCubeObject*/;
 		ControllerType mControllerRole = eControllerType_Primary;
 		Level* cLevel = nullptr;
 		bool mBooped = false;
+		bool AudioToggle = false;
 
 		virtual void Start()
 		{
@@ -34,9 +35,9 @@ namespace Epoch
 			mStartObject = cLevel->FindObjectWithName("mmStart");
 			mExitObject = cLevel->FindObjectWithName("mmExit");
 			mFloorObject = cLevel->FindObjectWithName("mmFloor");
-			mRoomObject = cLevel->FindObjectWithName("mmRoom");
-			mCubeObject = cLevel->FindObjectWithName("mmCube");
-			mCubeObject->GetTransform().GetMatrix().Position.Set(0, -30000, 0, 1);
+			mRoomObject = cLevel->FindObjectWithName("RoomFloor");
+			//mCubeObject = cLevel->FindObjectWithName("mmCube");
+			//mCubeObject->GetTransform().GetMatrix().Position.Set(0, -30000, 0, 1);
 
 			mChamberInterp->SetEasingFunction(Easing::CubicInOut);
 			mPlayerInterp->SetEasingFunction(Easing::CubicInOut);
@@ -47,10 +48,22 @@ namespace Epoch
 			mFloorMesh = (MeshComponent*)mFloorObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			mRoomMesh = (MeshComponent*)mRoomObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 
+			//Not sure but i have to make another listener
+			Listener* l = new Listener();
+			mChamberObject->AddComponent(l);
+
+			AudioWrapper::GetInstance().AddListener(l, "shit");
+			((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Play(1);
 		}
 
 		virtual void Update()
 		{
+			if (!AudioToggle)
+			{
+				AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::PLAY_TEST1);
+				AudioToggle = true;
+			}
+
 			if (!VRInputManager::GetInstance().IsVREnabled())
 			{
 				return;
@@ -114,6 +127,9 @@ namespace Epoch
 								mPlayerInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(0, -10, 0), VRInputManager::GetInstance().GetPlayerPosition());
 								mPlayerInterp->SetActive(true);
 								mBooped = true;
+								((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->PlaySFX(0);
+								((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Play(0);
+
 								cLevel->mmflip = false;
 							}
 							else if (i == 1)
@@ -167,19 +183,26 @@ namespace Epoch
 				}
 			}
 
-			if (mBooped) 
+			if (mBooped)
 			{
-					mChamberInterp->Update(TimeManager::Instance()->GetDeltaTime());
-					bool complete = mPlayerInterp->Update(TimeManager::Instance()->GetDeltaTime());
-					if (complete)
-					{
-						mBooped = false;
-					}
+				mChamberInterp->Update(TimeManager::Instance()->GetDeltaTime());
+				bool complete = mPlayerInterp->Update(TimeManager::Instance()->GetDeltaTime());
+				if (complete)
+				{
+					((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Stop(0);
+					mBooped = false;
+				}
 			}
 		}
 
 		virtual void OnDestroy()
 		{
+			//TODO: This is being destroyed at some point before this so wtf, figure this out i guess
+			//((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Stop(1);
+
+			//SUPER FUCKING JANK END ME
+			AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::STOP_TEST1);
+
 			delete mChamberInterp;
 			delete mPlayerInterp;
 		}

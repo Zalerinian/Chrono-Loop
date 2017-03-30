@@ -34,6 +34,11 @@ namespace Epoch
 		inline size_t GetTriangleCount() { return mShape->GetTriangleCount(); }
 		inline RenderContext& GetContext() { return mShape->GetContext(); }
 		void SetRasterState(RasterState _t);
+		void SetVertexShader(VertexShaderFormat _vf);
+		void SetPixelShader(PixelShaderFormat _pf);
+		void SetGeometryShader(GeometryShaderFormat _gf);
+		RenderShape* GetShape();
+		void ForceReinsertion();
 
 		bool CanCreateNode();
 	};
