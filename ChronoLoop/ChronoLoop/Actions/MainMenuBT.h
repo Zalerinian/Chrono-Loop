@@ -47,6 +47,7 @@ namespace Epoch
 			mFloorMesh = (MeshComponent*)mFloorObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			mRoomMesh = (MeshComponent*)mRoomObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 
+			((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Play(1);
 		}
 
 		virtual void Update()
@@ -114,6 +115,9 @@ namespace Epoch
 								mPlayerInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(0, -10, 0), VRInputManager::GetInstance().GetPlayerPosition());
 								mPlayerInterp->SetActive(true);
 								mBooped = true;
+								((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->PlaySFX(0);
+								((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Play(0);
+
 								cLevel->mmflip = false;
 							}
 							else if (i == 1)
@@ -173,6 +177,7 @@ namespace Epoch
 					bool complete = mPlayerInterp->Update(TimeManager::Instance()->GetDeltaTime());
 					if (complete)
 					{
+						((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Stop(0);
 						mBooped = false;
 					}
 			}
@@ -180,6 +185,8 @@ namespace Epoch
 
 		virtual void OnDestroy()
 		{
+			((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Stop(1);
+
 			delete mChamberInterp;
 			delete mPlayerInterp;
 		}
