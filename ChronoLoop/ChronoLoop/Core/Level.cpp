@@ -605,7 +605,6 @@ namespace Epoch {
 						e->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_CASUAL_LEVEL_LOOP);
 						e->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_CASUAL_LEVEL_LOOP);
 						obj->AddComponent(e);
-						e->Play(1);
 					}
 
 					if (!meshFile.empty())

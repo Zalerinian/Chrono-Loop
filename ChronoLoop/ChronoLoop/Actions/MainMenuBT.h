@@ -25,6 +25,7 @@ namespace Epoch
 		ControllerType mControllerRole = eControllerType_Primary;
 		Level* cLevel = nullptr;
 		bool mBooped = false;
+		bool AudioToggle = false;
 
 		virtual void Start()
 		{
@@ -47,11 +48,22 @@ namespace Epoch
 			mFloorMesh = (MeshComponent*)mFloorObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			mRoomMesh = (MeshComponent*)mRoomObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 
+			//Not sure but i have to make another listener
+			Listener* l = new Listener();
+			mChamberObject->AddComponent(l);
+
+			AudioWrapper::GetInstance().AddListener(l, "shit");
 			((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Play(1);
 		}
 
 		virtual void Update()
 		{
+			if (!AudioToggle)
+			{
+				AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::PLAY_TEST1);
+				AudioToggle = true;
+			}
+
 			if (!VRInputManager::GetInstance().IsVREnabled())
 			{
 				return;
@@ -171,21 +183,22 @@ namespace Epoch
 				}
 			}
 
-			if (mBooped) 
+			if (mBooped)
 			{
-					mChamberInterp->Update(TimeManager::Instance()->GetDeltaTime());
-					bool complete = mPlayerInterp->Update(TimeManager::Instance()->GetDeltaTime());
-					if (complete)
-					{
-						((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Stop(0);
-						mBooped = false;
-					}
+				mChamberInterp->Update(TimeManager::Instance()->GetDeltaTime());
+				bool complete = mPlayerInterp->Update(TimeManager::Instance()->GetDeltaTime());
+				if (complete)
+				{
+					((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Stop(0);
+					mBooped = false;
+				}
 			}
 		}
 
 		virtual void OnDestroy()
 		{
-			((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Stop(1);
+			//TODO: This is being destroyed at some point before this so wtf, figure this out i guess
+			//((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Stop(1);
 
 			delete mChamberInterp;
 			delete mPlayerInterp;

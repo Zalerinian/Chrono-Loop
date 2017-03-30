@@ -64,10 +64,13 @@ namespace Epoch
 					exitInterp->Prepare(0.69f, exitCube->GetTransform().GetMatrix(), exitend, exitCube->GetTransform().GetMatrix());
 
 
-					if (_col.GetBaseObject()->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0 && !mCanDoorInterp)
+					if (_col.GetBaseObject()->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0)
 						((Emitter*)_col.GetBaseObject()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->PlaySFX();
 
-					
+					if (Block->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0)
+						((Emitter*)Block->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->PlaySFX();
+					if (Exit->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0)
+						((Emitter*)Exit->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->PlaySFX();
 
 					mCanDoorInterp = true;
 					mDoorDoneInterpolating = false;
@@ -87,10 +90,7 @@ namespace Epoch
 				}
 				else
 				{
-					if (Block->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0)
-						((Emitter*)Block->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->PlaySFX();
-					if (Exit->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0)
-						((Emitter*)Exit->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->PlaySFX();
+					
 
 					mCanDoorInterp = false;
 					blockInterp->SetActive(false);
