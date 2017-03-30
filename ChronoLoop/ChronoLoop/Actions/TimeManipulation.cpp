@@ -82,7 +82,7 @@ namespace Epoch
 				// Stop time
 				
 				Transform identity;
-				memset(&identity.GetMatrix(), 0, sizeof(identity.GetMatrix()));
+				//memset(&identity.GetMatrix(), 0, sizeof(identity.GetMatrix()));
 				mCloneCount++;
 				mCurCloneHeadset = Pool::Instance()->iGetObject()->Reset("Headset - " + std::to_string(mCloneCount), identity); //new BaseObject("headset" + std::to_string(rand), identity);
 				mCurCloneController1 = Pool::Instance()->iGetObject()->Reset("Controller1 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
@@ -158,7 +158,7 @@ namespace Epoch
 					p->SetSize(.25f, .15f);
 
 					vec3f EPos = vec3f(mCurCloneHeadset->GetTransform().GetPosition()->x,mCurCloneHeadset->GetTransform().GetPosition()->y, mCurCloneHeadset->GetTransform().GetPosition()->z);
-					ParticleEmitter* emit = new RadialEmitter(500, 250, 25, EPos);
+					ParticleEmitter* emit = new RadialEmitter(250, 250, 25, EPos);
 					emit->SetParticle(p);
 					emit->SetTexture("../Resources/BasicCircleP.png");
 					ParticleSystem::Instance()->AddEmitter(emit);
