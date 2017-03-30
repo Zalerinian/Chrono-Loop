@@ -5,7 +5,7 @@ namespace Epoch {
 
 	class TransparentMeshComponent : public MeshComponent {
 	protected:
-		float mAlpha = 1.0f;
+		vec4f mAlpha;
 		virtual void CreateNode();
 		void CreateAlphaBuffer();
 	public:
