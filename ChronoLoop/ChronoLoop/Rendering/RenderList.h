@@ -1,8 +1,7 @@
 #pragma once
-#include <vector>
 #include "RenderShape.h"
 #include "../Common/GhostList.h"
-#include "../Common/Math/matrix4.h"
+#include <vector>
 #include <string>
 
 namespace Epoch {
@@ -18,7 +17,7 @@ namespace Epoch {
 		// whe it is removed later, it can be cut out of these buffers.
 		unsigned int EnlargeBuffer(Microsoft::WRL::ComPtr<ID3D11Buffer>& _toGrow, std::string _name, Microsoft::WRL::ComPtr<ID3D11Buffer> _copy);
 		unsigned int EnlargeBuffer(Microsoft::WRL::ComPtr<ID3D11Buffer>& _toGrow, std::string _name, BufferWidth _filler);
-		void Cut(unsigned int index);
+		void Cut(Microsoft::WRL::ComPtr<ID3D11Buffer>& _toCut, std::string _name, unsigned int index);
 
 	public:
 		RenderShape mShape;
