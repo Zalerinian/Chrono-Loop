@@ -10,8 +10,6 @@ using namespace Microsoft::WRL;
 
 namespace Epoch {
 
-
-
 	unsigned int RenderList::EnlargeBuffer(Microsoft::WRL::ComPtr<ID3D11Buffer>& _toGrow, std::string _name, Microsoft::WRL::ComPtr<ID3D11Buffer> _copy) {
 		Renderer::Instance()->GetRendererLock().lock();
 		ComPtr<ID3D11DeviceContext> ctx = Renderer::Instance()->GetContext();
@@ -131,7 +129,6 @@ namespace Epoch {
 		Renderer::Instance()->GetRendererLock().unlock();
 	}
 
-
 	RenderList::RenderList(RenderShape & _reference) {
 		mShape = _reference;
 		CD3D11_BUFFER_DESC bufferDesc(sizeof(BufferWidth), D3D11_BIND_CONSTANT_BUFFER);
@@ -187,8 +184,6 @@ namespace Epoch {
 			SystemLogger::Warn() << "The Pixel Buffer Index [" << pbIndex << "] and Geometry Buffer index [" << gbIndex << "] are not the same for " << mShape.mName << "." << std::endl;
 		}
 	}
-
-
 
 	GhostList<matrix4>::GhostNode* RenderList::Push(RenderShape& _shape) {
 		BufferWidth NullData;

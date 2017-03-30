@@ -11,6 +11,8 @@
 #include "../Common/Breakpoint.h"
 #include "LevelManager.h"
 #include "../Common/Settings.h"
+#include "../Particles/ParticleSystem.h"
+#include "../Messager/Messager.h"
 
 namespace Epoch {
 
@@ -24,7 +26,6 @@ namespace Epoch {
 		CommandConsole::Instance().AddCommand(L"/SNAPCOUNT", ToggleSnapshotCountDisplay);
 
 	}
-
 
 	TimeManager::~TimeManager() {
 		//Level manager will clear delete clones
@@ -119,6 +120,28 @@ namespace Epoch {
 	void TimeManager::SetTimelineObjectInterpTime(float _time)
 	{
 		mTimeline->SetObjectInterpolationTime(_time);
+	}
+
+	void TimeManager::SetupClonePairs(unsigned short _id1, unsigned short _id2, unsigned short _id3)
+	{
+		//annoying but helps for finding clones
+		Clonepair* p1 = new Clonepair();
+		Clonepair* p2 = new Clonepair();
+		Clonepair* p3 = new Clonepair();
+		p1->mCur = _id1;
+		p1->mOther1 = _id2;
+		p1->mOther2 = _id3;
+		SetClonePair(_id1, p1);
+
+		p2->mCur = _id2;
+		p2->mOther1 = _id1;
+		p2->mOther2 = _id3;
+		SetClonePair(_id2, p2);
+
+		p3->mCur = _id3;
+		p3->mOther1 = _id1;
+		p3->mOther2 = _id2;
+		SetClonePair(_id3, p3);
 	}
 
 	TimeManager * TimeManager::Instance() {
@@ -226,6 +249,24 @@ namespace Epoch {
 			for (int i = 0; i < mClones.size(); ) {
 				del = false;
 				if (mClones[i]->GetUniqueId() == _id1 || mClones[i]->GetUniqueId() == pair.mOther1 || mClones[i]->GetUniqueId() == pair.mOther2) {
+
+					if (mClones[i]->GetUniqueID() == pair.mCur)
+					{
+						Particle * p = &Particle::Init();
+						p->SetColors(vec4f(1, 1, 1, 1), vec4f());
+						p->SetLife(300);
+						p->SetSize(.25f, .15f);
+						vec3f EPos = vec3f(mClones[i]->GetTransform().GetPosition()->x, mClones[i]->GetTransform().GetPosition()->y, mClones[i]->GetTransform().GetPosition()->z);
+						ParticleEmitter *emit = new ParticleEmitter(600, 200, 20, EPos);
+						emit->SetParticle(p);
+						emit->SetTexture("../Resources/BasicCircleP.png");
+						ParticleSystem::Instance()->AddEmitter(emit);
+
+						vec4f temp = EPos;
+						AudioWrapper::GetInstance().MakeEventAtLocation(AK::EVENTS::SFX_BLOP, &temp);
+						emit->FIRE();
+					}
+
 					mClones[i]->RemoveAllComponents();
 
 					for (int k = 0; k < Physics::Instance()->mObjects.size(); ++k) {

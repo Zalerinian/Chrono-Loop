@@ -11,6 +11,8 @@
 #include "BoxSnapToControllerAction.hpp"
 #include "../Objects/TransparentMeshComponent.h"
 #include "../Common/Common.h"
+#include "../Messager/Messager.h"
+#include "../Particles/ParticleSystem.h"
 
 namespace Epoch
 {
@@ -147,6 +149,21 @@ namespace Epoch
 					Physics::Instance()->mObjects.push_back(mCurCloneController1);
 					Physics::Instance()->mObjects.push_back(mCurCloneController2);
 					++mNumOfConfirmedClones;
+
+					//TODO: MAKE CLONE PARTICLE
+					Particle* p = &Particle::Init();
+					p->SetColors(vec4f(), vec4f());
+					p->SetLife(1000);
+					p->SetSize(.25f, .15f);
+
+					vec3f EPos = vec3f(mCurCloneHeadset->GetTransform().GetPosition()->x,mCurCloneHeadset->GetTransform().GetPosition()->y, mCurCloneHeadset->GetTransform().GetPosition()->z);
+					ParticleEmitter* emit = new RadialEmitter(700, 300, 20, EPos);
+					emit->SetParticle(p);
+					emit->SetTexture("../Resources/BasicCircleP.png");
+					ParticleSystem::Instance()->AddEmitter(emit);
+					vec4f temp = EPos;
+					AudioWrapper::GetInstance().MakeEventAtLocation(AK::EVENTS::SFX_SHORTCIRUIT, &temp);
+					emit->FIRE();
 				}
 				else
 				{
@@ -157,7 +174,6 @@ namespace Epoch
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneHeadset);
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController1);
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController2);
-						//use the level's headset id because we swapped the id's above and the timeline stored it with their id
 						TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueId());
 
 						//set the player headset and controllers birth back
@@ -299,22 +315,7 @@ namespace Epoch
 		TimeManager::Instance()->UpdatePlayerObjectInTimeline(_controller1);
 		TimeManager::Instance()->UpdatePlayerObjectInTimeline(_controller2);
 		
-		//annoying but helps for finding clones
-		Clonepair* p1 = new Clonepair();
-		Clonepair* p2 = new Clonepair();
-		Clonepair* p3 = new Clonepair();
-		p1->mCur = _headset->GetUniqueId();
-		p1->mOther1 = _controller1->GetUniqueId();
-		p1->mOther2 = _controller2->GetUniqueId();
-		TimeManager::Instance()->SetClonePair(_headset->GetUniqueId(), p1);
-		p2->mCur = _controller1->GetUniqueId(); 
-		p2->mOther1 = _headset->GetUniqueId();
-		p2->mOther2 = _controller2->GetUniqueId();
-		TimeManager::Instance()->SetClonePair(_controller1->GetUniqueId(), p2);
-		p3->mCur = _controller2->GetUniqueId(); 
-		p3->mOther1 = _controller1->GetUniqueId();
-		p3->mOther2 = _headset->GetUniqueId();
-		TimeManager::Instance()->SetClonePair(_controller2->GetUniqueId(), p3);
+		TimeManager::Instance()->SetupClonePairs(_headset->GetUniqueID(),_controller1->GetUniqueID(), _controller2->GetUniqueID());
 	}
 
 	bool TimeManipulation::RaycastCloneCheck() {

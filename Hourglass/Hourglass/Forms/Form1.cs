@@ -261,14 +261,14 @@ namespace Hourglass
 							dev.Viewport,
 							dev.Transform.Projection,
 							dev.Transform.View,
-							Renderer.Instance.View
+							Gizmo.Instance.Grabbed.World
 						);
 						Vector3 curr = Vector3.Unproject(new Vector3(e.X, e.Y, 0),
 							dev.Viewport,
 							dev.Transform.Projection,
 							dev.Transform.View,
-							Renderer.Instance.View
-						);
+                            Gizmo.Instance.Grabbed.World
+                        );
 						Vector3 pr = Renderer.Instance.RotateInto(prev, Gizmo.Instance.Grabbed.World);
 						Vector3 cr = Renderer.Instance.RotateInto(curr, Gizmo.Instance.Grabbed.World);
 						Vector3 deltaCast = Renderer.Instance.RotateInto(cr - pr, Renderer.Instance.View);
@@ -665,9 +665,12 @@ namespace Hourglass
 			btnComponentAdd.Location = position;
 			btnComponentAdd.Visible = true;
 		}
-		
 
-		private void timer1_Tick(object sender, EventArgs e)
+        private void graphicsPanel1_Resize(object sender, EventArgs e)
+        {
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
 		{
 			graphicsPanel1.Invalidate();
 			mFPSTimer.Stop();

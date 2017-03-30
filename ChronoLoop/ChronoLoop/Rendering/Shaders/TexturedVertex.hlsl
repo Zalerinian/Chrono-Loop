@@ -9,12 +9,12 @@ cbuffer InstanceID : register(b1) {
 	int SimInstanceID;
 }
 
-struct PSI
-{
+struct PSI {
 	float4 position :	SV_POSITION;
 	float4 normal	:	NORMAL0;
 	float4 texCoord :	COLOR;
 	float4 wpos : WORLDPOS;
+	float4 shadowPos : SHADOW;
 	float  instanceID : CL_InstanceID;
 };
 
@@ -27,16 +27,23 @@ PSI main(VERTEX_POSNORMTEX input, uint id : SV_InstanceID) {
 PSI main(VERTEX_POSNORMTEX input) {
 #endif
 	PSI output;
-	output.wpos = input.position;
+	//matrix light = view / determinant(view);
+	//float4 lpos = light[3];
+
 #if ENABLE_INSTANCING
 	output.position = mul(input.position, model[id]);
+	output.wpos = output.position;
 	output.normal = mul(input.normal, model[id]);
 	output.instanceID = id;
 #else
 	output.position = mul(input.position, model[0]);
+	output.wpos = output.position;
 	output.normal = mul(input.normal, model[0]);
 	output.instanceID = SimInstanceID;
 #endif
 	output.texCoord = input.texCoord;
+
+	//output.shadowPos = mul(output.wpos, view);
+	output.shadowPos = float4(0, 0, 0, 0);
 	return output;
 }

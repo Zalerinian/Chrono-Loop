@@ -13,10 +13,13 @@
 #include "..\Actions\UICreateToDeleteClone.h"
 #include "..\Actions\UIClonePlusToMinus.h"
 #include "..\Actions\UICloneText.h"
+#include "..\Actions\BoxSnapToControllerAction.hpp"
+#include "..\Actions\TeleportAction.hpp"
 #include "..\Rendering\Draw2D.h"
 #include "..\Rendering\Renderer.h"
 #include "..\Objects\TransparentMeshComponent.h"
 #include "..\Rendering\TextureManager.h"
+#include "..\Objects\TransparentMeshComponent.h"
 #include <wrl\client.h>
 
 
@@ -28,6 +31,7 @@ namespace Epoch
 		const wchar_t* _basePath = L"../Resources/Soundbanks/";
 		const wchar_t* _initSB = L"Init.bnk";
 		const wchar_t* _aSB = L"Test_Soundbank.bnk";
+		const wchar_t* _mainS = L"Chrono_Sound.bnk";
 
 		
 		bool once = true;
@@ -42,7 +46,7 @@ namespace Epoch
 			if (!once) {
 				Settings::GetInstance().SetBool("LevelIsLoading", true);
 				Level* next = new Level;
-				next->LoadLevel("../Resources/Level1_2_6.xml");
+				next->LoadLevel("../Resources/Level2.xml");
 				// Todo: Un-hardcode this
 				// use a setting string for next level path?
 				//LM::LevelStatus status = LevelManager::GetInstance().LoadLevelAsync("../Resources/Level1_2_6.xml", &next);
@@ -59,10 +63,10 @@ namespace Epoch
 
 					Listener* ears = new Listener();
 					Emitter* ambient = new Emitter();
-					ambient->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_TEST2);
-					ambient->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_TEST2);
-					ambient->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_TEST2);
-					ambient->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_TEST2);
+					ambient->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_A_TIMELAPSE);
+					ambient->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_A_TIMELAPSE);
+					ambient->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_A_TIMELAPSE);
+					ambient->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_A_TIMELAPSE);
 					Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(ears, "Listener")));
 					Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(ambient, "ambiance")));
 
@@ -89,8 +93,6 @@ namespace Epoch
 					RightController->AddComponent(rightRaycaster);
 					RightController->AddComponent(ta);
 					RightController->AddComponent(tm);
-					RightController->AddComponent(ambient);
-					ambient->Play();
 
 					BaseObject *clonePanel = Pool::Instance()->iGetObject()->Reset("ClonePanel", identity);
 					MeshComponent* disp = new MeshComponent("../Resources/ClonePanel.obj");
@@ -125,6 +127,14 @@ namespace Epoch
 					rewindDisplay->AddComponent(rewind);
 					rewindDisplay->SetParent(RightController);
 					RightController->AddChild(rewindDisplay);
+
+					t.SetMatrix(matrix4::CreateScale(.75f, 1, 1) * matrix4::CreateTranslation(0.073f, -0.018f, -0.043f));
+					BaseObject *cloneDisplayBack = Pool::Instance()->iGetObject()->Reset("cloneDisplayBack", t);
+					TransparentMeshComponent* cdispb = new TransparentMeshComponent("../Resources/UIClone.obj");
+					cdispb->AddTexture("../Resources/clearBlue.png", eTEX_DIFFUSE);
+					cloneDisplayBack->AddComponent(cdispb);
+					cloneDisplayBack->SetParent(RightController);
+					RightController->AddChild(cloneDisplayBack);
 
 					t.SetMatrix(matrix4::CreateTranslation(0.073f, -0.016f, -0.043f));
 					BaseObject *cloneDisplay = Pool::Instance()->iGetObject()->Reset("cloneDisplay", t);
@@ -242,6 +252,8 @@ namespace Epoch
 					HeadsetFollow* hfollow = new HeadsetFollow();
 					headset->AddComponent(hfollow);
 					headset->AddComponent(ears);
+					headset->AddComponent(ambient);
+					ambient->Play();
 
 					LevelManager::GetInstance().RequestLevelChange(next);
 
@@ -251,12 +263,12 @@ namespace Epoch
 					p->SetPos(vec3f(8.88f, 0, -4.1f));
 					p->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));
 					p->SetLife(200);
-					p->SetSize(1.25f / 2.0f, .15f / .2f);
-					ParticleEmitter* emit = new IDC(500, 250, 2, vec3f(8.88f, 0, -4.1f));
+					p->SetSize(1.25f / 2.0f, .15f / 2.0f);
+					ParticleEmitter* emit = new TeleportEffect(500, 250, 2, vec4f(8.88f, 0, -4.1f, 1));
 					emit->SetParticle(p);
 					emit->SetTexture("../Resources/BasicRectP.png");
-					((IDC*)emit)->y1 = 8;
-					((IDC*)emit)->y2 = 12;
+					((TeleportEffect*)emit)->y1 = 8;
+					((TeleportEffect*)emit)->y2 = 12;
 					ParticleSystem::Instance()->AddEmitter(emit);
 					emit->FIRE();
 
@@ -265,11 +277,11 @@ namespace Epoch
 					p->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
 					p->SetLife(1000);
 					p->SetSize(.25f, .05f);
-					emit = new IDC(500, 150, 1, vec3f(8.88f, 0, -4.1f));
+					emit = new TeleportEffect(500, 150, 1, vec4f(8.88f, 0, -4.1f, 1));
 					emit->SetTexture("../Resources/BasicCircleP.png");
 					emit->SetParticle(p);
-					((IDC*)emit)->y1 = 1;
-					((IDC*)emit)->y2 = 5;
+					((TeleportEffect*)emit)->y1 = 1;
+					((TeleportEffect*)emit)->y2 = 5;
 					ParticleSystem::Instance()->AddEmitter(emit);
 					emit->FIRE();
 
@@ -278,6 +290,7 @@ namespace Epoch
 					next->AddObject(LeftController);
 					next->AddObject(RightController);
 					next->AddObject(cloneDisplay);
+					next->AddObject(cloneDisplayBack);
 					next->AddObject(clonePanel);
 					next->AddObject(timeDisplay);
 					next->AddObject(timeDisplayNeedle);

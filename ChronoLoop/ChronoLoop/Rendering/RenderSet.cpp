@@ -15,7 +15,7 @@ namespace Epoch {
 				return (*it)->Push(_shape);
 			}
 		}
-		// No comparable rneder list was found. Make a new entry.
+		// No comparable render list was found. Make a new entry.
 		RenderList *r = new RenderList(_shape);
 		GhostList<matrix4>::GhostNode* n = r->Push(_shape);
 		mRenderList.push_back(r);
