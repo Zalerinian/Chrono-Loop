@@ -188,7 +188,6 @@ namespace Epoch
 		
 			else
 			{
-				//SystemLogger::GetLog() << HotfixButtonDown << std::endl;
 				HotfixButtonDown++;
 				if (HotfixButtonDown > 100) {
 					HotfixButtonDown = 0;

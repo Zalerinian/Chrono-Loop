@@ -187,16 +187,6 @@ namespace Epoch {
 					AddAllTexturesToQueue();	
 				}
 			}
-
-		/*	SystemLogger::GetLog() << "Bitset:";
-			for (unsigned int i = 0; i < mCloneTextureBitset.size(); i++)
-			{
-				if(mCloneTextureBitset[i] == true)
-					SystemLogger::GetLog() << "1";
-				else
-					SystemLogger::GetLog() << "0";
-			}
-			SystemLogger::GetLog() << std::endl;*/
 	}
 
 		void TimeManager::UpdatePlayerObjectInTimeline(BaseObject *  _obj) {
@@ -216,10 +206,6 @@ namespace Epoch {
 				if (pair.second)
 					delete pair.second;
 			}
-			/*for (auto InterpCollider : mCloneColliderInterpolators) {
-				if (InterpCollider.second)
-					delete InterpCollider.second;
-			}*/
 			mCloneInterpolators.clear();
 		}
 
@@ -234,9 +220,6 @@ namespace Epoch {
 
 		void TimeManager::DeleteClone(unsigned short _id1)
 	{
-			/*Clonepair pair;
-			pair.mCur = _id1;*/
-			//FindOtherClones(pair);
 			//USe a copy instead of a pointer so you will still have it after the pair gets deleted
 			Clonepair pair = *GetClonePair(_id1);
 			bool del = false;

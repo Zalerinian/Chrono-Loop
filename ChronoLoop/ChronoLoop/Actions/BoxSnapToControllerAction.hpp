@@ -41,11 +41,9 @@ namespace Epoch {
 					(temp->mData.mLastFrame == mInput->mData.mLastFrame && temp->mData.mTime < mInput->mData.mTime))) {
 					mHeld = false;
 					mPickUp->mShouldMove = true;
-					//	SystemLogger::GetLog() << "Should move on:: Old: snap = " << mInput->mData.mLastFrame << " time= " << mInput->mData.mTime << "   New: snap = " << temp->mData.mLastFrame << " time= " << temp->mData.mTime << std::endl;
 				}
 				mInput = temp;
 			}
-			//SystemLogger::GetLog() << mCollider->mHitting.size() << std::endl;
 			if (VRInputManager::GetInstance().IsVREnabled() && mInput) {
 				if (mHeld && mPickUp != nullptr) {
 					matrix4 m = mObject->GetTransform().GetMatrix();
@@ -84,32 +82,6 @@ namespace Epoch {
 			SomethingtoController();
 			}
 			*/
-
-#pragma region Gestures
-			//vec2f touch = leftController.GetAxis();
-			//mBootleg.AddHead(touch);
-
-			////SystemLogger::GetLog() << "(" << touch.x << "," << touch.y << ")" << std::endl;
-			//if (mBootleg.mSize == mBootleg.mLimit) {
-			//	// Get initial point, get vector from it's negation (v - (-v)), and then cross it (v.y, -v.x)
-			//	vec2f initialPoint = mBootleg[0];
-			//	vec2f line = (initialPoint - (-initialPoint));
-			//	vec2f counterClockwise = line.Cross().Normalize();
-
-			//	vec2f pointEight = mBootleg[8];
-			//	vec2f leg = (pointEight - initialPoint);
-			//	vec2f nLeg = leg.Normalize();
-			//	if (leg.SquaredMagnitude() >= 0.01f) {
-			//		if (nLeg * counterClockwise < 0) {
-			//			SystemLogger::GetLog() << "Somewhat Clockwise" << std::endl;
-			//		}
-			//		if (nLeg * counterClockwise > 0) {
-			//			SystemLogger::GetLog() << "Somewhat Counter-Clockwise" << std::endl;
-			//		}
-			//	}
-			//}
-			//SystemLogger::GetLog() << "[Debug] Touchpad Axis: (" << touch.x << ", " << touch.y << ")" << std::endl;
-#pragma endregion Gestures
 		}
 		//mObject->GetTransform().SetMatrix(Math::MatrixRotateInPlace(mObject->GetTransform().GetMatrix(), 1, 0, 0, DirectX::XM_PI / 1024.0f));
 

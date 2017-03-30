@@ -75,12 +75,6 @@ namespace Epoch {
 		} else {
 			mLeftController.Update();
 		}
-		mDebugDeltaTime += TimeManager::Instance()->GetDeltaTime();
-		if (mDebugDeltaTime >= 5) {
-			mDebugDeltaTime -= 5;
-			//SystemLogger::Debug() << "Index for left controller: " << mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand) << std::endl;
-			//SystemLogger::Debug() << "Index for Right controller: " << mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_RightHand) << std::endl;
-		}
 
 		vr::VRCompositor()->WaitGetPoses(mPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
 
@@ -131,24 +125,19 @@ namespace Epoch {
 
 		if (_event->eventType == vr::EVREventType::VREvent_ButtonPress) {
 			node->mData.mButtonState = -1;
-			//SystemLogger::GetLog() << std::to_string(_event->data.controller.button) << " Button Down:";
 		} else if (_event->eventType == vr::EVREventType::VREvent_ButtonUnpress) {
 			node->mData.mButtonState = 1;
-			//SystemLogger::GetLog() <<  std::to_string(_event->data.controller.button) << " Up:";
 		}
 
 		if (_event->trackedDeviceIndex == mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand)) {
 			node->mData.mControllerId = cLevel->GetLeftController()->GetUniqueId();
 			node->mData.mVelocity = mLeftController.GetVelocity();
 			node->mData.mPrimary = mIsLeftPrimary;
-			//SystemLogger::GetLog() << "Lefthand" << std::endl;
 		} else {
 			node->mData.mControllerId = cLevel->GetRightController()->GetUniqueId();
 			node->mData.mVelocity = mRightController.GetVelocity();
 			node->mData.mPrimary = !mIsLeftPrimary;
-			//SystemLogger::GetLog() <<  "Righthand" << std::endl;
 		}
-		//SystemLogger::GetLog() << node->mData.mControllerId << std::endl;
 		mInputTimeline->Insert(node);
 		//mInputTimeline->DisplayTimeline();
 	}
@@ -157,7 +146,6 @@ namespace Epoch {
 	void VIM::RewindInputTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2) {
 
 		InputTimeline::InputNode* temp = mInputTimeline->GetCurr();
-		//SystemLogger::GetLog() << "Rewind to " << _frame << std::endl;
 		while (temp) {
 			//Have reached the point we want to stop
 			if (temp->mData.mLastFrame < _frame) {
@@ -182,7 +170,6 @@ namespace Epoch {
 					if (del->mNext)
 						del->mNext->mPrev = temp;
 				} else {
-					//SystemLogger::GetLog() << "End of the input Timeline" << std::endl;
 					temp = nullptr;
 				}
 				delete del;
@@ -193,15 +180,11 @@ namespace Epoch {
 
 			mInputTimeline->SetCurr(temp);
 		}
-
-		//mInputTimeline->DisplayTimeline();
-		//SystemLogger::GetLog() << "Rewinded to before " << _frame << std::endl;
 	}
 
 	void VIM::MoveInputTimeline(unsigned int _frame) {
 
 		InputTimeline::InputNode* temp = mInputTimeline->GetCurr();
-		//SystemLogger::GetLog() << "Rewind to " << _frame << std::endl;
 		while (temp) {
 			//Have reached the point we want to stop
 			if (temp->mData.mLastFrame < _frame) {
@@ -214,8 +197,6 @@ namespace Epoch {
 			}
 		mInputTimeline->SetCurr(temp);
 		}
-		//mInputTimeline->DisplayTimeline();
-		//SystemLogger::GetLog() << "Rewinded to before " << _frame << std::endl;
 	}
 	//_fromTempCurrent is if you want to go back to current of rewind action
 	InputTimeline::InputNode * VIM::FindLastInput(unsigned short _id, bool _fromTempCurrent) {
