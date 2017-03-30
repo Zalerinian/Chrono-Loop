@@ -25,7 +25,10 @@
 
 namespace Epoch {
 
-	CCEnterLevel* access = nullptr;
+	CCEnterLevel* accessLevelTwo = nullptr;
+	CCEnterLevel1* accessLevelOne = nullptr;
+	CCLoadHub* accessHub = nullptr;
+
 	Level::Level() 
 	{
 		CommandConsole::Instance().AddCommand(L"/LOAD", LoadLevelCmnd);
@@ -790,41 +793,98 @@ namespace Epoch {
 			CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /WIREFRAME (ON/OFF)");
 		}
 	}
+
 	void Level::LoadLevelCmnd(void* _commandConsole, std::wstring _Level)
 	{
 		CommandConsole* self = (CommandConsole*)_commandConsole;
-
-		if (access == nullptr)
+		std::list<BaseObject*> copyList = LevelManager::GetInstance().GetCurrentLevel()->GetLevelObjects();
+		if (accessLevelTwo == nullptr)
 		{
-			std::list<BaseObject*> copyList = LevelManager::GetInstance().GetCurrentLevel()->GetLevelObjects();
-			for (auto it = copyList.begin(); it != copyList.end(); ++it) {
+			for (auto it = copyList.begin(); it != copyList.end(); ++it)
+			{
 				std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
-				if (CodeComps.size() > 0) {
+				if (CodeComps.size() > 0)
+				{
 					for (size_t x = 0; x < CodeComps.size(); ++x)
 					{
-						if (dynamic_cast<CCEnterLevel*>(CodeComps[x])) {
-							access = ((CCEnterLevel*)CodeComps[x]);
+						if (dynamic_cast<CCEnterLevel*>(CodeComps[x]))
+						{
+							accessLevelTwo = ((CCEnterLevel*)CodeComps[x]);
 							break;
 						}
 					}
-					if (access != nullptr)
+					if (accessLevelTwo != nullptr)
 						break;
 				}
 			}
 		}
+		if (accessLevelOne == nullptr)
+		{
+			for (auto it = copyList.begin(); it != copyList.end(); ++it)
+			{
+				std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+				if (CodeComps.size() > 0)
+				{
+					for (size_t x = 0; x < CodeComps.size(); ++x)
+					{
+						if (dynamic_cast<CCEnterLevel1*>(CodeComps[x]))
+						{
+							accessLevelOne = ((CCEnterLevel1*)CodeComps[x]);
+							break;
+						}
+					}
+					if (accessLevelOne != nullptr)
+						break;
+				}
+			}
+		}
+
+		if (accessHub == nullptr)
+		{
+			for (auto it = copyList.begin(); it != copyList.end(); ++it)
+			{
+				std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+				if (CodeComps.size() > 0)
+				{
+					for (size_t x = 0; x < CodeComps.size(); ++x)
+					{
+						if (dynamic_cast<CCLoadHub*>(CodeComps[x]))
+						{
+							accessHub = ((CCLoadHub*)CodeComps[x]);
+							break;
+						}
+					}
+					if (accessHub != nullptr)
+						break;
+				}
+			}
+		}
+
 		//std::list<BaseObject*> objects = mObjectList;
-		if (access == nullptr)
+		if (accessLevelTwo == nullptr || accessLevelOne == nullptr || (accessHub == nullptr && (accessLevelTwo == nullptr && accessLevelOne == nullptr)))
 			CommandConsole::Instance().DisplaySet(L"FAILED TO LOAD LEVEL :(");
-		else if (access->GetOnce() == false)
-			CommandConsole::Instance().DisplaySet(L"LEVEL IS ALREADY LOADED");
-		else if ((_Level == L"LEVELONE" || _Level == L"LEVEL_ONE") && access->GetOnce() == true) {
-			access->SetOnce(false);
+		else if ((_Level == L"LEVELTWO" || _Level == L"LVLTWO") && accessLevelTwo->GetOnce() == true)
+		{
+			accessLevelTwo->SetOnce(false);
 			CommandConsole::Instance().Toggle();
 		}
-		else if (access->GetOnce() == true)
+		else if ((_Level == L"LEVELONE" || _Level == L"LVLONE") && accessLevelOne->GetOnce() == true)
+		{
+			accessLevelOne->SetOnce(false);
+			CommandConsole::Instance().Toggle();
+		}
+		else if ((_Level == L"HUBWORLD" || _Level == L"HUB") && accessHub->GetOnce() == true)
+		{
+			accessHub->SetOnce(false);
+			CommandConsole::Instance().Toggle();
+		}
+		else if (accessLevelTwo->GetOnce() == false || accessLevelOne->GetOnce() == false || (accessHub != nullptr && accessHub->GetOnce() == false))
+			CommandConsole::Instance().DisplaySet(L"LEVEL IS ALREADY LOADED");
+		else if (accessLevelTwo->GetOnce() == true || accessLevelOne->GetOnce() == true)
 			CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _Level + L"\nCORRECT INPUT: /LOAD (LEVELNAME)");
 
 
 	}
+
 
 } // Epoch Namespace

@@ -27,7 +27,10 @@ namespace Epoch
 			if(_col2.mColliderType == Collider::eCOLLIDER_Controller)
 				once = false;
 		}
-
+		virtual void Start()
+		{
+			once = true;
+		}
 		virtual void Update()
 		{
 			if (!once)

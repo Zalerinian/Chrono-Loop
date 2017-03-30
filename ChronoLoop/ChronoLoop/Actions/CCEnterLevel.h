@@ -41,12 +41,15 @@ namespace Epoch
 		{
 			once = false;
 		}
-
+		virtual void Start()
+		{
+			once = true;
+		}
 		virtual void Update() {
 			if (!once) {
 				Settings::GetInstance().SetBool("LevelIsLoading", true);
 				Level* next = new Level;
-				next->LoadLevel("../Resources/Level1.xml");
+				next->LoadLevel("../Resources/Level2.xml");
 				// Todo: Un-hardcode this
 				// use a setting string for next level path?
 				//LM::LevelStatus status = LevelManager::GetInstance().LoadLevelAsync("../Resources/Level1_2_6.xml", &next);
