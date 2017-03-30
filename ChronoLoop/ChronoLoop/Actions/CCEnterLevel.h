@@ -41,7 +41,10 @@ namespace Epoch
 		{
 			once = false;
 		}
-
+		virtual void Start()
+		{
+			once = true;
+		}
 		virtual void Update() {
 			if (!once) {
 				Settings::GetInstance().SetBool("LevelIsLoading", true);

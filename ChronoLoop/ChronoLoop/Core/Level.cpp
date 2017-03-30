@@ -25,8 +25,9 @@
 
 namespace Epoch {
 
-	CCEnterLevel* access = nullptr;
-	CCEnterLevel1* access1 = nullptr;
+	CCEnterLevel* accessLevelTwo = nullptr;
+	CCEnterLevel1* accessLevelOne = nullptr;
+	CCLoadHub* accessHub = nullptr;
 
 	Level::Level() 
 	{
@@ -797,7 +798,7 @@ namespace Epoch {
 	{
 		CommandConsole* self = (CommandConsole*)_commandConsole;
 		std::list<BaseObject*> copyList = LevelManager::GetInstance().GetCurrentLevel()->GetLevelObjects();
-		if (access == nullptr)
+		if (accessLevelTwo == nullptr)
 		{
 			for (auto it = copyList.begin(); it != copyList.end(); ++it)
 			{
@@ -808,16 +809,16 @@ namespace Epoch {
 					{
 						if (dynamic_cast<CCEnterLevel*>(CodeComps[x]))
 						{
-							access = ((CCEnterLevel*)CodeComps[x]);
+							accessLevelTwo = ((CCEnterLevel*)CodeComps[x]);
 							break;
 						}
 					}
-					if (access != nullptr)
+					if (accessLevelTwo != nullptr)
 						break;
 				}
 			}
 		}
-		if (access1 == nullptr)
+		if (accessLevelOne == nullptr)
 		{
 			for (auto it = copyList.begin(); it != copyList.end(); ++it)
 			{
@@ -828,31 +829,58 @@ namespace Epoch {
 					{
 						if (dynamic_cast<CCEnterLevel1*>(CodeComps[x]))
 						{
-							access1 = ((CCEnterLevel1*)CodeComps[x]);
+							accessLevelOne = ((CCEnterLevel1*)CodeComps[x]);
 							break;
 						}
 					}
-					if (access1 != nullptr)
+					if (accessLevelOne != nullptr)
 						break;
 				}
 			}
 		}
+
+		if (accessHub == nullptr)
+		{
+			for (auto it = copyList.begin(); it != copyList.end(); ++it)
+			{
+				std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+				if (CodeComps.size() > 0)
+				{
+					for (size_t x = 0; x < CodeComps.size(); ++x)
+					{
+						if (dynamic_cast<CCLoadHub*>(CodeComps[x]))
+						{
+							accessHub = ((CCLoadHub*)CodeComps[x]);
+							break;
+						}
+					}
+					if (accessHub != nullptr)
+						break;
+				}
+			}
+		}
+
 		//std::list<BaseObject*> objects = mObjectList;
-		if (access == nullptr || access1 == nullptr)
+		if (accessLevelTwo == nullptr || accessLevelOne == nullptr || (accessHub == nullptr && (accessLevelTwo == nullptr && accessLevelOne == nullptr)))
 			CommandConsole::Instance().DisplaySet(L"FAILED TO LOAD LEVEL :(");
-		else if (access->GetOnce() == false || access->GetOnce() == false)
+		else if ((_Level == L"LEVELTWO" || _Level == L"LVLTWO") && accessLevelTwo->GetOnce() == true)
+		{
+			accessLevelTwo->SetOnce(false);
+			CommandConsole::Instance().Toggle();
+		}
+		else if ((_Level == L"LEVELONE" || _Level == L"LVLONE") && accessLevelOne->GetOnce() == true)
+		{
+			accessLevelOne->SetOnce(false);
+			CommandConsole::Instance().Toggle();
+		}
+		else if ((_Level == L"HUBWORLD" || _Level == L"HUB") && accessHub->GetOnce() == true)
+		{
+			accessHub->SetOnce(false);
+			CommandConsole::Instance().Toggle();
+		}
+		else if (accessLevelTwo->GetOnce() == false || accessLevelOne->GetOnce() == false || (accessHub != nullptr && accessHub->GetOnce() == false))
 			CommandConsole::Instance().DisplaySet(L"LEVEL IS ALREADY LOADED");
-		else if ((_Level == L"LEVELTWO" || _Level == L"LVLTWO") && access->GetOnce() == true)
-		{
-			access->SetOnce(false);
-			CommandConsole::Instance().Toggle();
-		}
-		else if ((_Level == L"LEVELONE" || _Level == L"LVLONE") && access1->GetOnce() == true)
-		{
-			access1->SetOnce(false);
-			CommandConsole::Instance().Toggle();
-		}
-		else if (access->GetOnce() == true || access1->GetOnce() == true)
+		else if (accessLevelTwo->GetOnce() == true || accessLevelOne->GetOnce() == true)
 			CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _Level + L"\nCORRECT INPUT: /LOAD (LEVELNAME)");
 
 

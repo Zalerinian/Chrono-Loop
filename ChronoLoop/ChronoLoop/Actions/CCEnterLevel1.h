@@ -39,7 +39,10 @@ namespace Epoch
 		{
 			once = false;
 		}
-
+		virtual void Start()
+		{
+			once = true;
+		}
 		virtual void Update()
 		{
 			if (!once)
@@ -314,6 +317,7 @@ namespace Epoch
 					Physics::Instance()->PhysicsLock.unlock();
 					Settings::GetInstance().SetBool("LevelIsLoading", false);
 				}
+				//once = true;
 			}
 		}
 	};
