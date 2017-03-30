@@ -151,7 +151,7 @@ namespace Epoch
 					TextureManager::Instance()->iAddTexture2D(str, screenTex, &srv);
 					cdisp->AddTexture(str.c_str(), eTEX_DIFFUSE);
 
-					Font* font = new Font();
+					//Font* font = new Font();
 					cdisp->GetContext().mTextures[eTEX_DIFFUSE] = srv;
 					UICloneText* ct = new UICloneText();
 					cloneDisplay->AddComponent(ct);

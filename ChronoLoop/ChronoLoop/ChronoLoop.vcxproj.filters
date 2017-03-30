@@ -468,6 +468,12 @@
     <ClInclude Include="Actions\UICloneText.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="PMResume.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="PMHubworld.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
