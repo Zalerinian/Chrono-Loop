@@ -93,6 +93,7 @@
 				<Event Id="2616479322" Name="SFX_TICK" ObjectPath="\Events\Default Work Unit\OTHER\SFX_TICK"/>
 				<Event Id="43066209" Name="SFX_TOGGLE" ObjectPath="\Events\Default Work Unit\OTHER\SFX_TOGGLE"/>
 				<Event Id="452547817" Name="Stop_All" ObjectPath="\Events\Default Work Unit\Stop_All"/>
+				<Event Id="4071198641" Name="Stop_All_Except_EMPTY" ObjectPath="\Events\Default Work Unit\Stop_All_Except_EMPTY"/>
 				<Event Id="2011175805" Name="STOP_Test1" ObjectPath="\Events\Default Work Unit\OTHER\STOP_Test1"/>
 				<Event Id="2011175806" Name="STOP_Test2" ObjectPath="\Events\Default Work Unit\OTHER\STOP_Test2"/>
 			</IncludedEvents>
