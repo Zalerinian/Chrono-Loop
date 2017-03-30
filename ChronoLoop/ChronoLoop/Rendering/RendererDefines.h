@@ -1,12 +1,17 @@
 #pragma once
-#include "../Common/Math/vec2f.h"
+#include "../Common/Math/vec4f.h"
 
 namespace Epoch {
 
 	struct PSTransparentScanline_Data {
 		float alpha;
-		float MultiscanAlpha;
-		vec2f ScanlineRatios;
+
+		// X: Multiscan V offset
+		// Y: Multiscan Alpha
+		// Z: Scanline V Offset
+		// W: Scanline Alpha
+		vec4f ScanlineData;
+		float p1, p2, p3;
 	};
 
 

@@ -10,6 +10,8 @@
 #include "TimeManipulation.h"
 #include "BoxSnapToControllerAction.hpp"
 #include "../Objects/TransparentMeshComponent.h"
+#include "../Common/Common.h"
+
 namespace Epoch
 {
 	BaseObject* TimeManipulation::mCurCloneController1 = nullptr;
@@ -237,9 +239,10 @@ namespace Epoch
 
 		PSTransparentScanline_Data _data;
 		_data.alpha = 1;
-		_data.MultiscanAlpha = 0.2f;
-		_data.ScanlineRatios.x = 0;
-		_data.ScanlineRatios.y = 0.8f;
+		_data.ScanlineData.x = 0;
+		_data.ScanlineData.y = 0.2f;
+		_data.ScanlineData.z = 0;
+		_data.ScanlineData.w = 0.8f;
 		TransparentMeshComponent *visibleMesh = new TransparentMeshComponent("../Resources/Clone.obj",.35f);
 		visibleMesh->AddTexture(TimeManager::Instance()->GetNextTexture().c_str(), eTEX_DIFFUSE);
 		visibleMesh->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
@@ -250,6 +253,7 @@ namespace Epoch
 		initialData.pSysMem = &_data;
 		CD3D11_BUFFER_DESC bufferDesc(sizeof(PSTransparentScanline_Data), D3D11_BIND_CONSTANT_BUFFER);
 		Renderer::Instance()->GetDevice()->CreateBuffer(&bufferDesc, &initialData, visibleMesh->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].GetAddressOf());
+		SetD3DName(visibleMesh->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].Get(), "Headset scanline buffer");
 		_headset->AddComponent(visibleMesh);
 
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
@@ -262,6 +266,7 @@ namespace Epoch
 		mc->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
 		initialData.pSysMem = &_data;
 		Renderer::Instance()->GetDevice()->CreateBuffer(&bufferDesc, &initialData, mc->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].GetAddressOf());
+		SetD3DName(mc->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].Get(), "Controller1 scanline buffer");
 		_controller1->AddComponent(mc);
 		_controller1->AddComponent(CubeColider);
 		BoxSnapToControllerAction* SN1 = new BoxSnapToControllerAction();
@@ -277,6 +282,7 @@ namespace Epoch
 		mc2->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
 		initialData.pSysMem = &_data;
 		Renderer::Instance()->GetDevice()->CreateBuffer(&bufferDesc, &initialData, mc2->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].GetAddressOf());
+		SetD3DName(mc->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].Get(), "Controller2 scanline buffer");
 		_controller2->AddComponent(mc2);
 		_controller2->AddComponent(CubeColider2);
 		BoxSnapToControllerAction* SN2 = new BoxSnapToControllerAction();
