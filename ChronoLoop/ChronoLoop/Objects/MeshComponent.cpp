@@ -28,7 +28,7 @@ namespace Epoch {
 	}
 
 	void MeshComponent::Update() {
-		if (mNode) 
+		if (mNode && mVisible) 
 		{
 			if (mObject->GetParent())
 				mNode->data = mObject->GetTransform().GetMatrix() * mObject->GetParent()->GetTransform().GetMatrix();
@@ -51,13 +51,22 @@ namespace Epoch {
 		// access to the position of the object.
 		if (_vis) {
 			if (!mVisible) {
-				CreateNode();
+				//CreateNode();
 				mVisible = true;
+				if(mNode == nullptr && CanCreateNode())
+				{
+					CreateNode();
+				}
+				Update();
 			}
 		}
 		else {
 			if (mVisible) {
-				DESTROY_NODE(mNode);
+				//DESTROY_NODE(mNode);
+				if(mNode)
+				{
+					memset(&mNode->data, 0, sizeof(mNode->data));
+				}
 				mVisible = false;
 			}
 		}
