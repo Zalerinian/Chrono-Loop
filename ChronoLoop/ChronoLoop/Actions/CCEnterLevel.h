@@ -46,7 +46,7 @@ namespace Epoch
 			if (!once) {
 				Settings::GetInstance().SetBool("LevelIsLoading", true);
 				Level* next = new Level;
-				next->LoadLevel("../Resources/Level2.xml");
+				next->LoadLevel("../Resources/Level1.xml");
 				// Todo: Un-hardcode this
 				// use a setting string for next level path?
 				//LM::LevelStatus status = LevelManager::GetInstance().LoadLevelAsync("../Resources/Level1_2_6.xml", &next);
@@ -304,17 +304,6 @@ namespace Epoch
 					TimeManager::Instance()->AddObjectToTimeline(RightController);
 					TimeManager::Instance()->AddObjectToTimeline(LeftController);
 					TimeManager::Instance()->AddObjectToTimeline(headset);
-
-					auto& levelObjects = next->GetLevelObjects();
-					for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it) {
-						if ((*it)->mComponents[eCOMPONENT_COLLIDER].size() > 0) {
-							Physics::Instance()->mObjects.push_back((*it));
-							if (((Collider*)(*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mShouldMove || (*it)->GetName() == "Door1" || (*it)->GetName() == "Door2")
-							{
-								TimeManager::Instance()->AddObjectToTimeline(*it);
-							}
-						}
-					}
 
 
 					SystemLogger::Debug() << "Loading complete" << std::endl;

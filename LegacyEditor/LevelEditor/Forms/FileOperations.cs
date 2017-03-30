@@ -37,6 +37,9 @@ namespace LevelEditor {
                             case "Box Snap":
                                 writer.WriteElementString("BoxSnapToController", "Enabled");
                                 break;
+                            case "Button Hold":
+                                writer.WriteElementString("ButtonHold", "Enabled");
+                                break;
                             case "Button Press":
                                 writer.WriteElementString("ButtonPress", "Enabled");
                                 break;

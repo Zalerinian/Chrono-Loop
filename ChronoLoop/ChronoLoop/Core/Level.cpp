@@ -21,6 +21,7 @@
 #include "../Common/Settings.h"
 #include "../Particles/ParticleSystem.h"
 #include "../Input/CommandConsole.h"
+#include "../Actions/CCButtonHold.h"
 
 namespace Epoch {
 
@@ -699,6 +700,11 @@ namespace Epoch {
 						if (codeComs[i] == "BoxSnapToController")
 						{
 							BoxSnapToControllerAction* code = new BoxSnapToControllerAction();
+							obj->AddComponent(code);
+						}
+						else if (codeComs[i] == "ButtonHold")
+						{
+							CCButtonHold* code = new CCButtonHold();
 							obj->AddComponent(code);
 						}
 						else if (codeComs[i] == "ButtonPress")
