@@ -13,7 +13,7 @@ namespace Epoch
 
 	struct CCButtonHold : public CodeComponent
 	{
-		bool colliding = false, mCanDoorInterp = false, mDoorDoneInterpolating = false, mFlip = false;
+		bool colliding = false, mhitting = false,  mCanDoorInterp = false, mDoorDoneInterpolating = false, mFlip = false;
 		BaseObject *Block = nullptr, *Exit = nullptr;
 		CubeCollider* blockCube, *exitCube;
 		matrix4 blockend, exitend , blockstart, exitstart;
@@ -56,6 +56,7 @@ namespace Epoch
 				vec3f accel = norm * (norm * _other.mAcceleration);
 				if (tForce * norm < 0 && vel * norm < 0 && accel * norm < 0)
 				{
+					SystemLogger::GetLog() << "Colliding" << std::endl;
 					_col.mTotalForce = tForce;
 					_col.mVelocity = vel;
 					_col.mAcceleration = vel / _time;
@@ -81,7 +82,6 @@ namespace Epoch
 			if (!LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->isTimePaused() && !LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->isTimePaused()) {
 				if (colliding)
 				{
-					colliding = false;
 					mFlip = true;
 					if (mCanDoorInterp && !mDoorDoneInterpolating)
 					{
@@ -92,11 +92,11 @@ namespace Epoch
 						mCanDoorInterp = false;
 						blockInterp->SetActive(false);
 						exitInterp->SetActive(false);
-
 					}
 				}
 				else
 				{
+					SystemLogger::GetLog() << "Not Colliding" << std::endl;
 					if(mFlip)
 					{
 						mFlip = false;
@@ -122,6 +122,7 @@ namespace Epoch
 					}
 
 				}
+				colliding = false;
 			}
 			
 		}

@@ -1,4 +1,4 @@
-<Level>
+﻿<Level>
   <Settings>
     <StartPos>0.46,0,-10.15</StartPos>
     <StartRot>0,0,0</StartRot>
@@ -140,10 +140,10 @@
         <Trigger>False</Trigger>
         <Position>0,0.04,0</Position>
         <Rotation>0,0,0</Rotation>
-        <Scale>0.4,0.07,0.3</Scale>
+        <Scale>0.5,0.1,0.4</Scale>
         <Move>True</Move>
-        <PushNormal>0,0,0</PushNormal>
-        <Mass>1</Mass>
+        <PushNormal>0,1,0</PushNormal>
+        <Mass>2</Mass>
         <NormalForce>1</NormalForce>
       </Collider>
     </Components>
