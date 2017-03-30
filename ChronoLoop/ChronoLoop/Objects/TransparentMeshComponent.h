@@ -1,11 +1,25 @@
 #pragma once
 #include "MeshComponent.h"
+#include "../Rendering/RenderList.h"
 
 namespace Epoch {
 
 	class TransparentMeshComponent : public MeshComponent {
 	protected:
-		float mAlpha = 1.0f;
+		struct AlphaData {
+			union {
+				struct {
+					vec4f alpha;
+				};
+				BufferWidth padding;
+			};
+
+			AlphaData() {
+				alpha.Set(0, 0, 0, 0);
+			}
+		};
+
+		AlphaData mAlpha;
 		//bool mOpaque = true, mWasOpaque = true;
 		virtual void CreateNode();
 		virtual void RemoveShape();

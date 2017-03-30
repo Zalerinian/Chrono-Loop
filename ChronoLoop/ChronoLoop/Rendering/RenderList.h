@@ -22,7 +22,7 @@ namespace Epoch {
 
 		std::unordered_map<unsigned int, unsigned int> mIdMap;
 		unsigned int mMasterId = 0;
-		unsigned int GetBufferIndex();
+		unsigned int GetBufferIndex(unsigned int _uid);
 
 	public:
 		RenderShape mShape;

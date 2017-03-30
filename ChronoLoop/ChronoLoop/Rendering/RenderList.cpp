@@ -22,7 +22,8 @@ namespace Epoch {
 			dev->CreateBuffer(&desc, nullptr, _toGrow.GetAddressOf());
 			ctx->CopyResource(_toGrow.Get(), _copy.Get());
 			Renderer::Instance()->GetRendererLock().unlock();
-			return 0;
+			mIdMap[mMasterId] = 0;
+			return mMasterId++;
 		}
 
 
@@ -46,7 +47,8 @@ namespace Epoch {
 
 		_toGrow = newBuffer;
 		Renderer::Instance()->GetRendererLock().unlock();
-		return OldCount;
+		mIdMap[mMasterId] = OldCount;
+		return mMasterId++;
 	}
 
 	unsigned int RenderList::EnlargeBuffer(Microsoft::WRL::ComPtr<ID3D11Buffer>& _toGrow, std::string _name, BufferWidth _filler) {
@@ -95,7 +97,6 @@ namespace Epoch {
 		ComPtr<ID3D11Device> dev = Renderer::Instance()->GetDevice();
 
 		if (_toCut.Get() == nullptr) {
-			SystemLogger::Debug() << "Can't cut nullptr!" << std::endl;
 			Renderer::Instance()->GetRendererLock().unlock();
 			return;
 		}
@@ -104,6 +105,8 @@ namespace Epoch {
 		_toCut->GetDesc(&desc);
 
 		unsigned int OldCount = desc.ByteWidth / sizeof(BufferWidth);
+
+		index = GetBufferIndex(index);
 
 		if (index < 0 || index >= OldCount) {
 			SystemLogger::Debug() << "Can't cut buffer, invalid index given: Given: " << index << " Max: " << (OldCount - 1) << std::endl;
@@ -186,8 +189,8 @@ namespace Epoch {
 		Renderer::Instance()->GetRendererLock().unlock();
 	}
 
-	unsigned int RenderList::GetBufferIndex() {
-		return 0;
+	unsigned int RenderList::GetBufferIndex(unsigned int _uid) {
+		return mIdMap[_uid];
 	}
 
 	RenderList::RenderList(RenderShape & _reference) {
@@ -221,13 +224,6 @@ namespace Epoch {
 		NullData.e2.zAxis.Set(25, 25, 25, 25);
 		NullData.e2.Position.Set(24, 24, 24, 24);
 
-
-    // TODO: Use the GetBufferIndex function, since EnlargeBuffer now returns a unique ID.
-    // TODO: Use the GetBufferIndex function, since EnlargeBuffer now returns a unique ID.
-    // TODO: Use the GetBufferIndex function, since EnlargeBuffer now returns a unique ID.
-    // TODO: Use the GetBufferIndex function, since EnlargeBuffer now returns a unique ID.
-    // TODO: Use the GetBufferIndex function, since EnlargeBuffer now returns a unique ID.
-    // TODO: Use the GetBufferIndex function, since EnlargeBuffer now returns a unique ID.
 		int vbIndex = -1, pbIndex = -1, gbIndex = -1;
 		// Prepare the vertex buffers.
 		std::string bufferName;
@@ -246,8 +242,8 @@ namespace Epoch {
 			if (vbIndex < 0) {
 				vbIndex = nIdx;
 			} else {
-				if (nIdx != vbIndex) {
-					SystemLogger::Error() << "A different index than expected (" << vbIndex << ") was returned for Vertex Constant Buffer " << i << " for " << mShape.GetName() << ". " << nIdx << " was received." << std::endl;
+				if (GetBufferIndex(nIdx) != GetBufferIndex(vbIndex)) {
+					SystemLogger::Error() << "A different index than expected (" << GetBufferIndex(vbIndex) << ") was returned for Vertex Constant Buffer " << i << " for " << mShape.GetName() << ". " << GetBufferIndex(nIdx) << " was received." << std::endl;
 				}
 			}
 		}
@@ -268,8 +264,8 @@ namespace Epoch {
 			if (pbIndex < 0) {
 				pbIndex = nIdx;
 			} else {
-				if (pbIndex != nIdx) {
-					SystemLogger::Error() << "A different index than expected (" << pbIndex << ") was returned for Pixel Constant Buffer " << i << " for " << mShape.GetName() << ". " << nIdx << " was received." << std::endl;
+				if (GetBufferIndex(pbIndex) != GetBufferIndex(nIdx)) {
+					SystemLogger::Error() << "A different index than expected (" << GetBufferIndex(pbIndex) << ") was returned for Pixel Constant Buffer " << i << " for " << mShape.GetName() << ". " << GetBufferIndex(nIdx) << " was received." << std::endl;
 				}
 			}
 		}
@@ -290,22 +286,22 @@ namespace Epoch {
 			if (gbIndex < 0) {
 				gbIndex = nIdx;
 			} else {
-				if (gbIndex != nIdx) {
-					SystemLogger::Error() << "A different index than expected (" << gbIndex << ") was returned for Geometry Constant Buffer " << i << " for " << mShape.GetName() << ". " << nIdx << " was received." << std::endl;
+				if (GetBufferIndex(gbIndex) != GetBufferIndex(nIdx)) {
+					SystemLogger::Error() << "A different index than expected (" << GetBufferIndex(gbIndex) << ") was returned for Geometry Constant Buffer " << i << " for " << mShape.GetName() << ". " << GetBufferIndex(nIdx) << " was received." << std::endl;
 				}
 			}
 		}
 
-		if (vbIndex != pbIndex) {
-			SystemLogger::Warn() << "The Vertex Buffer Index [" << vbIndex << "] and Pixel Buffer index [" << pbIndex << "] are not the same for " << mShape.mName << "." << std::endl;
+		if (GetBufferIndex(vbIndex) != GetBufferIndex(pbIndex)) {
+			SystemLogger::Error() << "The Vertex Buffer Index [" << vbIndex << "] and Pixel Buffer index [" << pbIndex << "] are not the same for " << mShape.mName << "." << std::endl;
 		}
-		if (pbIndex != gbIndex) {
-			SystemLogger::Warn() << "The Pixel Buffer Index [" << pbIndex << "] and Geometry Buffer index [" << gbIndex << "] are not the same for " << mShape.mName << "." << std::endl;
+		if (GetBufferIndex(pbIndex) != GetBufferIndex(gbIndex)) {
+			SystemLogger::Error() << "The Pixel Buffer Index [" << pbIndex << "] and Geometry Buffer index [" << gbIndex << "] are not the same for " << mShape.mName << "." << std::endl;
 		}
 
-		_shape.mVBIndex = vbIndex;
-		_shape.mPBIndex = pbIndex;
-		_shape.mGBIndex = gbIndex;
+		_shape.mVBIndex = vbIndex;  // Unless something is wrong, these all have the same buffer indices.
+		_shape.mPBIndex = pbIndex;  // Unless something is wrong, these all have the same buffer indices.
+		_shape.mGBIndex = gbIndex;  // Unless something is wrong, these all have the same buffer indices.
 
 		return mPositions.Push(_shape.mPosition);
 	}

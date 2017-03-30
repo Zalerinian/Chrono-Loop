@@ -33,7 +33,7 @@ namespace Epoch {
 	{
 		Renderer::Instance()->GetRendererLock().lock();
 		ID3D11Buffer* AlphaBuff;
-		CD3D11_BUFFER_DESC AlphaDesc(sizeof(float) * 4, D3D11_BIND_CONSTANT_BUFFER);
+		CD3D11_BUFFER_DESC AlphaDesc(sizeof(AlphaData), D3D11_BIND_CONSTANT_BUFFER);
 		D3D11_SUBRESOURCE_DATA AlphaData;
 		AlphaData.pSysMem = &mAlpha;
 		auto device = Renderer::Instance()->GetDevice();
@@ -45,7 +45,7 @@ namespace Epoch {
 
 	TransparentMeshComponent::TransparentMeshComponent(const char * _file, float _alpha) : MeshComponent(_file)
 	{
-		mAlpha = _alpha;
+		mAlpha.alpha.x = _alpha;
 		mShape->SetPixelShader(ePS_TRANSPARENT);
 		RemoveShape();
 		if (CanCreateNode()) {
@@ -61,14 +61,14 @@ namespace Epoch {
 
 	float TransparentMeshComponent::GetAlpha()
 	{
-		return mAlpha;
+		return mAlpha.alpha.x;
 	}
 
 	void TransparentMeshComponent::SetAlpha(float _a)
 	{
-		return;
+		//return;
 		SystemLogger::Debug() << "Setting alpha of " << std::hex << (int)this << std::dec << " to: " << _a << std::endl;
-		mAlpha = _a;
+		mAlpha.alpha.x = _a;
 		auto buffer = mShape->GetContext().mPixelCBuffers[ePB_TP_Alpha];
 		Renderer::Instance()->GetContext()->UpdateSubresource(buffer.Get(), 0, NULL, &mAlpha, 0, 0);
 	}
@@ -77,7 +77,7 @@ namespace Epoch {
 		//mWasOpaque = mOpaque;
 		//mOpaque = mAlpha >= 1.0f;
 		//return mOpaque;
-		return mAlpha >= 1.0f;
+		return mAlpha.alpha.x >= 1.0f;
 	}
 
 } // Epoch namespace
