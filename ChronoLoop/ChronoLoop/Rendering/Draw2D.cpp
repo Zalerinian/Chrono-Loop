@@ -242,8 +242,8 @@ namespace Epoch
 			D2D1::BitmapProperties1(
 				D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
 				D2D1::PixelFormat(DXGI_FORMAT_R16G16B16A16_FLOAT, D2D1_ALPHA_MODE_IGNORE),
-				0,
-				0		//defaults to 96
+				96.0f,
+				96.0f		//defaults to 96
 			);
 
 		IDXGISurface* surface = nullptr;
