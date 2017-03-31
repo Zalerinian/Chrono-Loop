@@ -123,6 +123,7 @@ namespace Epoch
 		std::list<Particle*> mParticles;
 		std::vector<GSParticle> mGParticles;
 		int mTotalParticles, mMaxParticles, mPerSec;
+		int total = 0;
 		vec4f mStartColor, mEndColor;
 		bool mIsAnimated, mWrap;
 		float mOffset, mSpeed;

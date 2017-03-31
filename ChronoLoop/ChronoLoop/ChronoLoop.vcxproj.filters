@@ -471,6 +471,10 @@
     <ClInclude Include="Actions\CCEnterLevel1.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="..\Resources\Soundbanks\Wwise_IDs.h" />
+    <ClInclude Include="Actions\CCButtonHold.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -826,6 +830,7 @@
     <FxCompile Include="Rendering\Shaders\PSTransparentScanline.hlsl">
       <Filter>Rendering\Shaders\Pixel shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Rendering\Shaders\ShadowVS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">

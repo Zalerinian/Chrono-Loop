@@ -34,15 +34,17 @@ namespace Epoch
 
 	void CreateCloneDeathEffect(vec4f _pos)
 	{
-		Particle* p = &Particle::Init();
-		p->SetColors(vec4f(0, 0, 0, 0), vec4f(1, 1, 1, 1));
-		p->SetLife(1000);
-		p->SetSize(.15, .05);
-		p->SetPos(vec4f());
-		ParticleEmitter * emitt = new ParticleEmitter(-1, 2000, 20, _pos);
-		emitt->SetTexture("../Resources/BasicCircleP.png");
-		emitt->SetParticle(p);
-		ParticleSystem::Instance()->AddEmitter(emitt);
+		Particle * p = &Particle::Init();
+		p->SetColors(vec4f(1, 1, 1, 1), vec4f());
+		p->SetLife(550);
+		p->SetSize(.25f, .15f);
+		vec3f EPos = vec3f(_pos.x, _pos.y, _pos.z);
+		//vec3f EPos = vec3f(0,0,0);
+		ParticleEmitter *emit = new ParticleEmitter(600, 200, 20, EPos);
+		emit->SetParticle(p);
+		emit->SetTexture("../Resources/BasicCircleP.png");
+		ParticleSystem::Instance()->AddEmitter(emit);
+		emit->FIRE();
 	}
 
 }

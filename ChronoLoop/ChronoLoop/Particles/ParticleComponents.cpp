@@ -349,7 +349,6 @@ namespace Epoch
 
 	void ParticleEmitter::EmitParticles()
 	{
-		static int total = 0;
 
 		for (int i = 0; i < mPerSec; i++)
 		{
@@ -580,8 +579,6 @@ namespace Epoch
 
 	void RadialEmitter::EmitParticles()
 	{
-		static int total = 0;
-
 		for (int i = 0; i < mPerSec; i++)
 		{
 			if (total >= mTotalParticles && mTotalParticles != -1 && mParticles.size() == 0)
@@ -626,8 +623,6 @@ namespace Epoch
 
 	void TeleportEffect::EmitParticles()
 	{
-		static int total = 0;
-
 		for (int i = 0; i < mPerSec; i++)
 		{
 			if (total >= mTotalParticles && mTotalParticles != -1 && mParticles.size() == 0)
@@ -645,7 +640,7 @@ namespace Epoch
 				p->SetPos(x, 0, z);
 				*p->GetPos() = *p->GetPos() + mPos;
 				x = -.05f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05f - -.05f)));
-				y = .5 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1.0 - .5)));
+				y = 3.0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (5.0 - 3.0)));
 				z = -.05f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.05f - -.05f)));
 				p->SetVelocity(0, y, 0);
 

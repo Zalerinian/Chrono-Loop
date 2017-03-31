@@ -59,7 +59,7 @@ namespace Epoch
 					TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneHeadset);
 					TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController1);
 					TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController2);
-					TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueID());
+					TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueID(),false);
 					mCurCloneHeadset = nullptr;
 					mCurCloneController1 = nullptr;
 					mCurCloneController2 = nullptr;
@@ -82,6 +82,7 @@ namespace Epoch
 				// Stop time
 				
 				Transform identity;
+				memset(&identity.GetMatrix(), 0, sizeof(identity.GetMatrix()));
 				mCloneCount++;
 				mCurCloneHeadset = Pool::Instance()->iGetObject()->Reset("Headset - " + std::to_string(mCloneCount), identity); //new BaseObject("headset" + std::to_string(rand), identity);
 				mCurCloneController1 = Pool::Instance()->iGetObject()->Reset("Controller1 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
@@ -152,12 +153,12 @@ namespace Epoch
 
 					//TODO: MAKE CLONE PARTICLE
 					Particle* p = &Particle::Init();
-					p->SetColors(vec4f(), vec4f());
-					p->SetLife(1000);
+					p->SetColors(vec4f(0, .25, 1,1), vec4f(.2f, .55f, .8f,1));
+					p->SetLife(250);
 					p->SetSize(.25f, .15f);
 
 					vec3f EPos = vec3f(mCurCloneHeadset->GetTransform().GetPosition()->x,mCurCloneHeadset->GetTransform().GetPosition()->y, mCurCloneHeadset->GetTransform().GetPosition()->z);
-					ParticleEmitter* emit = new RadialEmitter(700, 300, 20, EPos);
+					ParticleEmitter* emit = new RadialEmitter(250, 250, 25, EPos);
 					emit->SetParticle(p);
 					emit->SetTexture("../Resources/BasicCircleP.png");
 					ParticleSystem::Instance()->AddEmitter(emit);
@@ -174,7 +175,7 @@ namespace Epoch
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneHeadset);
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController1);
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController2);
-						TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueId());
+						TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueId(),false);
 
 						//set the player headset and controllers birth back
 						TimeManager::Instance()->SetCreationTimeofClone(cLevel->GetLeftController()->GetUniqueID(), cLevel->GetRightController()->GetUniqueID(), cLevel->GetHeadset()->GetUniqueID());
@@ -260,15 +261,15 @@ namespace Epoch
 		_data.ScanlineData.w = 0.8f;
 		TransparentMeshComponent *visibleMesh = new TransparentMeshComponent("../Resources/Clone.obj",.35f);
 		visibleMesh->AddTexture(TimeManager::Instance()->GetNextTexture().c_str(), eTEX_DIFFUSE);
-		/*visibleMesh->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
-		visibleMesh->AddTexture("../Resources/Scanline.png", eTEX_CUSTOM2);
+		//visibleMesh->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
+		//visibleMesh->AddTexture("../Resources/Scanline.png", eTEX_CUSTOM2);
 
-		visibleMesh->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
-		D3D11_SUBRESOURCE_DATA initialData;
-		initialData.pSysMem = &_data;
-		CD3D11_BUFFER_DESC bufferDesc(sizeof(PSTransparentScanline_Data), D3D11_BIND_CONSTANT_BUFFER);
-		Renderer::Instance()->GetDevice()->CreateBuffer(&bufferDesc, &initialData, visibleMesh->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].GetAddressOf());
-		SetD3DName(visibleMesh->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].Get(), "Headset scanline buffer");*/
+		//visibleMesh->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
+		//D3D11_SUBRESOURCE_DATA initialData;
+		//initialData.pSysMem = &_data;
+		//CD3D11_BUFFER_DESC bufferDesc(sizeof(PSTransparentScanline_Data), D3D11_BIND_CONSTANT_BUFFER);
+		//Renderer::Instance()->GetDevice()->CreateBuffer(&bufferDesc, &initialData, visibleMesh->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].GetAddressOf());
+		//SetD3DName(visibleMesh->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].Get(), "Headset scanline buffer");
 		_headset->AddComponent(visibleMesh);
 
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
@@ -343,7 +344,7 @@ namespace Epoch
 				for (unsigned int j = 0; j < numTris; ++j) {
 					float hitTime;
 					if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, fwd, hitTime)) { 
-							TimeManager::Instance()->DeleteClone(clones[i]->GetUniqueId());
+							TimeManager::Instance()->DeleteClone(clones[i]->GetUniqueId(),true);
 							--mNumOfConfirmedClones;
 							return true;
 					}

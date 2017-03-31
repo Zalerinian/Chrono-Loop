@@ -41,7 +41,10 @@ namespace Epoch
 		{
 			once = false;
 		}
-
+		virtual void Start()
+		{
+			once = true;
+		}
 		virtual void Update() {
 			if (!once) {
 				Settings::GetInstance().SetBool("LevelIsLoading", true);
@@ -253,7 +256,12 @@ namespace Epoch
 					headset->AddComponent(hfollow);
 					headset->AddComponent(ears);
 					headset->AddComponent(ambient);
+
+
+					AudioWrapper::GetInstance().STOP();
+
 					ambient->Play();
+
 
 					LevelManager::GetInstance().RequestLevelChange(next);
 
@@ -262,9 +270,9 @@ namespace Epoch
 					Particle* p = &Particle::Init();
 					p->SetPos(vec3f(8.88f, 0, -4.1f));
 					p->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));
-					p->SetLife(200);
+					p->SetLife(500);
 					p->SetSize(1.25f / 2.0f, .15f / 2.0f);
-					ParticleEmitter* emit = new TeleportEffect(500, 250, 2, vec4f(8.88f, 0, -4.1f, 1));
+					ParticleEmitter* emit = new TeleportEffect(600, 250, 2, vec4f(8.88f, 0, -4.1f, 1));
 					emit->SetParticle(p);
 					emit->SetTexture("../Resources/BasicRectP.png");
 					((TeleportEffect*)emit)->y1 = 8;
@@ -275,9 +283,9 @@ namespace Epoch
 					p = &Particle::Init();
 					p->SetPos(vec3f(8.88f, 0, -4.1f));
 					p->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
-					p->SetLife(1000);
+					p->SetLife(500);
 					p->SetSize(.25f, .05f);
-					emit = new TeleportEffect(500, 150, 1, vec4f(8.88f, 0, -4.1f, 1));
+					emit = new TeleportEffect(600, 150, 1, vec4f(8.88f, 0, -4.1f, 1));
 					emit->SetTexture("../Resources/BasicCircleP.png");
 					emit->SetParticle(p);
 					((TeleportEffect*)emit)->y1 = 1;
@@ -304,17 +312,6 @@ namespace Epoch
 					TimeManager::Instance()->AddObjectToTimeline(RightController);
 					TimeManager::Instance()->AddObjectToTimeline(LeftController);
 					TimeManager::Instance()->AddObjectToTimeline(headset);
-
-					auto& levelObjects = next->GetLevelObjects();
-					for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it) {
-						if ((*it)->mComponents[eCOMPONENT_COLLIDER].size() > 0) {
-							Physics::Instance()->mObjects.push_back((*it));
-							if (((Collider*)(*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mShouldMove || (*it)->GetName() == "Door1" || (*it)->GetName() == "Door2")
-							{
-								TimeManager::Instance()->AddObjectToTimeline(*it);
-							}
-						}
-					}
 
 
 					SystemLogger::Debug() << "Loading complete" << std::endl;
