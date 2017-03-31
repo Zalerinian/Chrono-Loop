@@ -766,6 +766,7 @@ void Update() {
 			if (GetAsyncKeyState('P'))
 			{
 				AudioWrapper::GetInstance().STOP();
+				ParticleSystem::Instance()->Clear();
 			}
 
 			AudioWrapper::GetInstance().Update();

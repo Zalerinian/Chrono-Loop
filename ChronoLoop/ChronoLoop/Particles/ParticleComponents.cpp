@@ -321,12 +321,13 @@ namespace Epoch
 			gps.col = vec4f(0, 0, 0, 0);
 			mGParticles[i] = gps;
 		}
-
+		Renderer::Instance()->GetRendererLock().lock();
 		Renderer::Instance()->GetContext()->Map(mVBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mRes);
 
 		memcpy(mRes.pData, mGParticles.data(), sizeof(GSParticle) * mGParticles.size());
 		//Graphics 2 slides
 		Renderer::Instance()->GetContext()->Unmap(mVBuffer.Get(), 0);
+		Renderer::Instance()->GetRendererLock().unlock();
 	}
 
 	void ParticleEmitter::CleanUpParticles()
