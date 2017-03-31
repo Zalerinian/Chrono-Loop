@@ -1,103 +1,132 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
 
-namespace Hourglass {
-    class PlaneCollider : ColliderComponent {
-        protected Label mLbOffset, mLbNormal, mLbNX, mLbNY, mLbNZ;
-        protected NumericUpDown mOffset, mNX, mNY, mNZ;
-        protected Panel mNormalPanel;
+namespace Hourglass
+{
+	class PlaneCollider : ColliderComponent
+	{
+		protected Label mLbOffset, mLbNormal, mLbNX, mLbNY, mLbNZ;
+		protected NumericUpDown mOffset, mNX, mNY, mNZ;
+		protected Panel mNormalPanel;
 
-        public PlaneCollider(BaseObject _owner, int _yOffset = 0) : base(_owner, 64 + _yOffset) {
-            #region Component Creation
+		public PlaneCollider(int _yOffset = 0) : base(64 + _yOffset)
+		{
+			mType = ComponentType.PlaneCollider;
 
-            mLbOffset = new Label();
-            mLbNormal = new Label();
-            mLbNX = new Label();
-            mLbNY = new Label();
-            mLbNZ = new Label();
+			#region Component Creation
 
-            mOffset = new NumericUpDown();
-            mNX = new NumericUpDown();
-            mNY = new NumericUpDown();
-            mNZ = new NumericUpDown();
+			mLbOffset = new Label();
+			mLbNormal = new Label();
+			mLbNX = new Label();
+			mLbNY = new Label();
+			mLbNZ = new Label();
 
-            mNormalPanel = new Panel();
+			mOffset = new NumericUpDown();
+			mNX = new NumericUpDown();
+			mNY = new NumericUpDown();
+			mNZ = new NumericUpDown();
 
-            mGroupBox.Controls.Add(mNormalPanel);
-            mGroupBox.Controls.Add(mLbOffset);
-            mGroupBox.Controls.Add(mLbNormal);
+			mNormalPanel = new Panel();
 
-            mGroupBox.Controls.Add(mOffset);
+			mGroupBox.Controls.Add(mNormalPanel);
+			mGroupBox.Controls.Add(mLbOffset);
+			mGroupBox.Controls.Add(mLbNormal);
 
-            #endregion
+			mGroupBox.Controls.Add(mOffset);
 
-            #region Component Setup
+			#endregion
 
-            int ContentWidth = (mGroupBox.Size - mGroupBox.Padding.Size - mGroupBox.Margin.Size).Width;
+			#region Component Setup
 
-            // Numeric Up-Downs
-            mOffset.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
-            mOffset.Location = new System.Drawing.Point(90, 17 + _yOffset);
-            mOffset.Name = "offset";
-            mOffset.Size = new System.Drawing.Size(ContentWidth - mOffset.Left, 20);
-            mOffset.TabIndex = 45;
+			mShape.Load("Assets\\Plane.obj");
+			mShape.FillMode = Microsoft.DirectX.Direct3D.FillMode.WireFrame;
 
+			int ContentWidth = (mGroupBox.Size - mGroupBox.Padding.Size - mGroupBox.Margin.Size).Width;
 
-            // These numeric up-downs are children of the panel, which is docked to the top, left, and right.
-            // These are not docked to the right, because their resizing is a special case.
-            mNY.Name = "Y";
-            mNY.TabIndex = 14;
-
-            mNZ.Name = "Z";
-            mNZ.TabIndex = 14;
-
-
-            mNX.Name = "X";
-            mNX.TabIndex = 14;
+			// Numeric Up-Downs
+			mOffset.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
+			mOffset.Location = new System.Drawing.Point(90, 17 + _yOffset);
+			mOffset.Name = "offset";
+			mOffset.Size = new System.Drawing.Size(ContentWidth - mOffset.Left, 20);
+			mOffset.TabIndex = 45;
 
 
-            // Labels
-            mLbNZ.Name = "mLbNZ";
-            mLbNZ.TabIndex = 33;
+			// These numeric up-downs are children of the panel, which is docked to the top, left, and right.
+			// These are not docked to the right, because their resizing is a special case.
+			mNY.Name = "Y";
+			mNY.TabIndex = 14;
 
-            mLbNY.Name = "mLbNY";
-            mLbNY.TabIndex = 32;
+			mNZ.Name = "Z";
+			mNZ.TabIndex = 14;
 
-            mLbNX.Name = "mLbNX";
-            mLbNX.TabIndex = 31;
 
-            mLbNormal.AutoSize = true;
-            mLbNormal.Location = new System.Drawing.Point(6, 49 + _yOffset);
-            mLbNormal.Name = "mLbNormal";
-            mLbNormal.Size = new System.Drawing.Size(40, 13);
-            mLbNormal.TabIndex = 11;
-            mLbNormal.Text = "Normal";
+			mNX.Name = "X";
+			mNX.TabIndex = 14;
 
-            mLbOffset.AutoSize = true;
-            mLbOffset.Location = new System.Drawing.Point(6, 19 + _yOffset);
-            mLbOffset.Name = "mLbOffset";
-            mLbOffset.Size = new System.Drawing.Size(35, 13);
-            mLbOffset.TabIndex = 10;
-            mLbOffset.Text = "Offset";
 
-            SetupTransformPanel(mNormalPanel, 90, 50 + _yOffset, ContentWidth, mLbNX, mLbNY, mLbNZ, mNX, mNY, mNZ);
-            
+			// Labels
+			mLbNZ.Name = "mLbNZ";
+			mLbNZ.TabIndex = 33;
 
-            #endregion
+			mLbNY.Name = "mLbNY";
+			mLbNY.TabIndex = 32;
 
-            mGroupBox.Text = "Plane Collider";
-            mGroupBox.Size = mGroupBox.PreferredSize;
-            OnMenuClick_Reset(null, null);
-        }
+			mLbNX.Name = "mLbNX";
+			mLbNX.TabIndex = 31;
 
-        protected override void OnMenuClick_Reset(object sender, EventArgs e) {
-            base.OnMenuClick_Reset(sender, e);
-            mOffset.Value = 0;
-            mNX.Value = 0;
-            mNY.Value = 1;
-            mNZ.Value = 0;
-        }
+			mLbNormal.AutoSize = true;
+			mLbNormal.Location = new System.Drawing.Point(6, 49 + _yOffset);
+			mLbNormal.Name = "mLbNormal";
+			mLbNormal.Size = new System.Drawing.Size(40, 13);
+			mLbNormal.TabIndex = 11;
+			mLbNormal.Text = "Normal";
 
-    }
+			mLbOffset.AutoSize = true;
+			mLbOffset.Location = new System.Drawing.Point(6, 19 + _yOffset);
+			mLbOffset.Name = "mLbOffset";
+			mLbOffset.Size = new System.Drawing.Size(35, 13);
+			mLbOffset.TabIndex = 10;
+			mLbOffset.Text = "Offset";
+
+			SetupTransformPanel(mNormalPanel, 90, 50 + _yOffset, ContentWidth, mLbNX, mLbNY, mLbNZ, mNX, mNY, mNZ);
+
+
+			#endregion
+
+			mGroupBox.Text = "Plane Collider";
+			mGroupBox.Size = mGroupBox.PreferredSize;
+			OnMenuClick_Reset(null, null);
+		}
+
+		public override void OnMenuClick_Reset(object sender, EventArgs e)
+		{
+			base.OnMenuClick_Reset(sender, e);
+			mOffset.Value = 0;
+			mNX.Value = 0;
+			mNY.Value = 1;
+			mNZ.Value = 0;
+		}
+
+		public override void WriteData(BinaryWriter w)
+		{
+			base.WriteData(w);
+			w.Write((float)mOffset.Value);
+			w.Write((float)mNX.Value);
+			w.Write((float)mNY.Value);
+			w.Write((float)mNZ.Value);
+		}
+
+		public override void ReadData(BinaryReader r)
+		{
+			base.ReadData(r);
+			mOffset.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mNX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mNY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mNZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+		}
+
+
+	}
 }

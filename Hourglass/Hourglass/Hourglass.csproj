@@ -100,7 +100,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Changes.cs" />
     <Compile Include="Components\BaseObject.cs" />
     <Compile Include="Components\Colliders\BoxCollider.cs" />
     <Compile Include="Components\Colliders\ButtonCollider.cs" />
@@ -108,7 +107,12 @@
     <Compile Include="Components\Colliders\SphereCollider.cs" />
     <Compile Include="Components\Component.cs" />
     <Compile Include="Components\Colliders\PlaneCollider.cs" />
-    <Compile Include="Components\MeshComponent.cs" />
+    <Compile Include="Components\Gizmo.cs" />
+    <Compile Include="Components\IGizmoAttachment.cs" />
+    <Compile Include="Components\IRenderable.cs" />
+    <Compile Include="Components\Meshes\MeshComponent.cs" />
+    <Compile Include="Components\Meshes\ColoredMeshComponent.cs" />
+    <Compile Include="Components\Meshes\TexturedMeshComponent.cs" />
     <Compile Include="Components\TransformComponent.cs" />
     <Compile Include="Controls\MenuButton.cs">
       <SubType>Component</SubType>
@@ -116,9 +120,13 @@
     <Compile Include="Controls\MenuButton.Designer.cs">
       <DependentUpon>MenuButton.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FileOperations.cs">
+    <Compile Include="Forms\EditorSetupForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\EditorSetupForm.Designer.cs">
+      <DependentUpon>EditorSetupForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General\FileOperations.cs" />
     <Compile Include="Forms\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -143,6 +151,7 @@
     <Compile Include="Forms\LevelSettingsForm.Designer.cs">
       <DependentUpon>LevelSettingsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="General\MathExtension.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\TestPositionForm.cs">
@@ -151,9 +160,18 @@
     <Compile Include="Forms\TestPositionForm.Designer.cs">
       <DependentUpon>TestPositionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Rendering\Renderer.cs" />
+    <Compile Include="Rendering\ColoredShape.cs" />
+    <Compile Include="Rendering\RenderShape.cs" />
+    <Compile Include="Rendering\ResourceManager.cs" />
+    <Compile Include="Rendering\TexturedShape.cs" />
+    <Compile Include="Rendering\VertexBufferManager.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="ToolObject.cs" />
     <Compile Include="ToolObjectColor.cs" />
+    <EmbeddedResource Include="Forms\EditorSetupForm.resx">
+      <DependentUpon>EditorSetupForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -179,7 +197,28 @@
     <None Include="Assets\AxisGizmo.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Assets\Colliders\Cube.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Colliders\Plane.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Colliders\Sphere.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Assets\Cube.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Error.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Gizmo\GizmoRotate.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Gizmo\GizmoScale.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\Gizmo\GizmoTranslate.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Assets\Plane.obj">
@@ -230,6 +269,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

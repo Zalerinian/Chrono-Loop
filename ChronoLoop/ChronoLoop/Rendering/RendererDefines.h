@@ -1,6 +1,19 @@
 #pragma once
+#include "../Common/Math/vec4f.h"
 
 namespace Epoch {
+
+	struct PSTransparentScanline_Data {
+		float alpha;
+
+		// X: Multiscan V offset
+		// Y: Multiscan Alpha
+		// Z: Scanline V Offset
+		// W: Scanline Alpha
+		vec4f ScanlineData;
+		float p1, p2, p3;
+	};
+
 
 	enum RasterState {
 		eRS_FILLED = 0,
@@ -28,6 +41,8 @@ namespace Epoch {
 		ePS_TEXTURED,
 		ePS_POSTPROCESS,
 		ePS_PURETEXTURE,
+		ePS_TRANSPARENT,
+		ePS_TRANSPARENT_SCANLINE,
 		ePS_MAX
 	};
 
@@ -64,60 +79,55 @@ namespace Epoch {
 	// are not available in these enums, and the OFFSET values are used to properly
 	// assign the shaders at run-time.
 	enum VertexBufferType {
-		eVB_SLOT2 = 0,
-		eVB_SLOT3,
-		eVB_SLOT4,
-		eVB_SLOT5,
-		eVB_SLOT6,
-		eVB_SLOT7,
-		eVB_SLOT8,
-		eVB_SLOT9,
-		eVB_SLOT10,
-		eVB_SLOT11,
-		eVB_SLOT12,
-		eVB_SLOT13,
-		eVB_SLOT14,
+		eVB_Instances = 0,
+		eVB_CUSTOM1 = 0,
+		eVB_CUSTOM2,
+		eVB_CUSTOM3,
+		eVB_CUSTOM4,
+		eVB_CUSTOM5,
+		eVB_CUSTOM6,
+		eVB_CUSTOM7,
+		eVB_CUSTOM8,
+		eVB_CUSTOM9,
 		eVB_MAX,
-		eVB_OFFSET = 1,
-		eVB_BEGIN = eVB_SLOT2
+		eVB_OFFSET = eVB_Instances + 1,
+		eVB_BEGIN = 0
 	};
 
+
+
 	enum PixelBufferType {
-		ePB_SLOT2 = 0,
-		ePB_SLOT3,
-		ePB_SLOT4,
-		ePB_SLOT5,
-		ePB_SLOT6,
-		ePB_SLOT7,
-		ePB_SLOT8,
-		ePB_SLOT9,
-		ePB_SLOT10,
-		ePB_SLOT11,
-		ePB_SLOT12,
-		ePB_SLOT13,
-		ePB_SLOT14,
+		ePB_Lights = 0,
+		ePB_TP_Alpha = 0,
+		ePB_PP_Ratios = 0,
+		ePB_CUSTOM1 = 0,
+		ePB_CUSTOM2,
+		ePB_CUSTOM3,
+		ePB_CUSTOM4,
+		ePB_CUSTOM5,
+		ePB_CUSTOM6,
+		ePB_CUSTOM7,
+		ePB_CUSTOM8,
+		ePB_CUSTOM9,
 		ePB_MAX,
-		ePB_OFFSET = 1,
-		ePB_BEGIN = ePB_SLOT2
+		ePB_OFFSET = ePB_Lights + 1,
+		ePB_BEGIN = 0
 	};
 
 	enum GeometryBufferType {
-		eGB_SLOT2 = 0,
-		eGB_SLOT3,
-		eGB_SLOT4,
-		eGB_SLOT5,
-		eGB_SLOT6,
-		eGB_SLOT7,
-		eGB_SLOT8,
-		eGB_SLOT9,
-		eGB_SLOT10,
-		eGB_SLOT11,
-		eGB_SLOT12,
-		eGB_SLOT13,
-		eGB_SLOT14,
+		eGB_Eyes = 0,
+		eGB_CUSTOM1 = 0,
+		eGB_CUSTOM2,
+		eGB_CUSTOM3,
+		eGB_CUSTOM4,
+		eGB_CUSTOM5,
+		eGB_CUSTOM6,
+		eGB_CUSTOM7,
+		eGB_CUSTOM8,
+		eGB_CUSTOM9,
 		eGB_MAX,
-		eGB_OFFSET = 1,
-		eGB_BEGIN = eGB_SLOT2
+		eGB_OFFSET = eGB_Eyes + 1,
+		eGB_BEGIN = 0
 	};
 
 }

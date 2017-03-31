@@ -71,6 +71,8 @@ namespace  Epoch {
 		}
 		mTweenTime += _deltaTime;
 		Interpolate();
+		if (mTweenTime >= mDuration)
+			mTweenTime = mDuration;
 		return mTweenTime >= mDuration;
 	}
 

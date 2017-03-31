@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Hourglass
@@ -16,11 +17,13 @@ namespace Hourglass
         protected NumericUpDown mNX, mNY, mNZ;
         protected Panel mPosPanel, mScalePanel, mNormalPanel;
 
-        public ButtonCollider(BaseObject _owner, int _yOffset = 0) : base(_owner)
+        public ButtonCollider(int _yOffset = 0) : base()
         {
-            #region Component Creation
+			mType = ComponentType.ButtonCollider;
 
-            mLbPosition = new Label();
+			#region Component Creation
+
+			mLbPosition = new Label();
             mLbScale = new Label();
             mLbNormal = new Label();
             mLbMass = new Label();
@@ -156,7 +159,7 @@ namespace Hourglass
             OnMenuClick_Reset(null, null);
         }
 
-        protected override void OnMenuClick_Reset(object sender, EventArgs e)
+        public override void OnMenuClick_Reset(object sender, EventArgs e)
         {
             mPosX.Value = 0;
             mPosY.Value = 0;
@@ -174,5 +177,39 @@ namespace Hourglass
             mForce.Value = 0;
         }
 
-    }
+		public override void WriteData(BinaryWriter w)
+		{
+			base.WriteData(w);
+			w.Write((float)mMass.Value);
+			w.Write((float)mForce.Value);
+			w.Write((float)mPosX.Value);
+			w.Write((float)mPosY.Value);
+			w.Write((float)mPosZ.Value);
+			w.Write((float)mScaleX.Value);
+			w.Write((float)mScaleY.Value);
+			w.Write((float)mScaleZ.Value);
+			w.Write((float)mNX.Value);
+			w.Write((float)mNY.Value);
+			w.Write((float)mNZ.Value);
+		}
+
+		public override void ReadData(BinaryReader r)
+		{
+			mMass.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mForce.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+
+			mPosX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mPosY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mPosZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+
+			mScaleX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mScaleY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mScaleZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+
+			mNX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mNY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mNZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+		}
+
+	}
 }

@@ -29,13 +29,15 @@ namespace Epoch
 
 	struct Particle
 	{
+	private:
+		//TODO: Privatize stuff
 	public:
 		bool mAlive;
 		int mLife, mTotalLife;
 		float mSize, mStartSize, mEndSize;
 		float mOpacity, mStartOpacity, mEndOpacity;
 		float mXRadial, mYRadial, mZRadial;
-		vec4f mPos, mPrevPos, mVelocity;
+		vec3f mPos, mPrevPos, mVelocity;
 		vec4f mColor, mStartColor, mEndColor;
 
 		//Constructors
@@ -44,11 +46,10 @@ namespace Epoch
 
 
 		//Initialize functions
-
 		static Particle& Init(const Particle& _other);
 
 		/// <summary>Initializes a particle</summary>
-		//<returns>The new particle</returns>
+		///<returns>The new particle</returns>
 		static Particle& Init(int _life = 250 /**< [in] Life of the particle. */,
 			float _ss = 0.5f /**< [in] Starting size. */,
 			float _es = 0.5f /**< [in] Ending size. */,
@@ -57,8 +58,8 @@ namespace Epoch
 			float _xr = 0.0f /**< [in] X radial (for moving x in a circular pattern). */,
 			float _yr = 0.0f /**< [in] Y radial (for moving y in a circular pattern).. */,
 			float _zr = 0.0f /**< [in] Z radial (for moving z in a circular pattern).. */,
-			vec4f _pos = vec4f(0, 0, 0, 0) /**< [in] Position. */,
-			vec4f _vel = vec4f(0, 0, 0, 0) /**< [in] Initial velocity. */,
+			vec3f _pos = vec3f(0, 0, 0) /**< [in] Position. */,
+			vec3f _vel = vec3f(0, 0, 0) /**< [in] Initial velocity. */,
 			vec4f _scol = vec4f(0, 0, 0, 0) /**< [in] Starting color. */,
 			vec4f _ecol = vec4f(0, 0, 0, 0) /**< [in] Ending color. */);
 
@@ -69,19 +70,22 @@ namespace Epoch
 		int GetLife() const;
 		float GetSize() const;
 		void GetRadials(float* _x, float* _y, float* _z);
-		vec4f* GetPos();
-		vec4f* GetPrevPos();
-		vec4f GetVelocity() const;
+		float* GetXRadial();
+		float* GetYRadial();
+		float* GetZRadial();
+		vec3f* GetPos();
+		vec3f* GetPrevPos();
+		vec3f GetVelocity() const;
 		vec4f GetColor() const;
 
 		//Setters
 
 		void SetLife(int _life);
-		void SetPos(vec4f _pos);
+		void SetPos(vec3f _pos);
 		void SetPos(float _x, float _y, float _z);
 		void SetSize(float _ssize, float _esize);
 		void SetRadials(float _x, float _y, float _z);
-		void SetVelocity(vec4f _vel);
+		void SetVelocity(vec3f _vel);
 		void SetVelocity(float _x, float _y, float _z);
 		void SetColors(vec4f _scol, vec4f _ecol);
 		void DecLife();
@@ -108,20 +112,21 @@ namespace Epoch
 		const char* mTName;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> tv;
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> text;
-		ID3D11Buffer* mVBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mVBuffer;
 		//BlendMode
 		//BoundingBox
 		//TODO: Make this attachable, basically a position pointer
-		vec4f mPos;
+		vec3f mPos;
 
 		
 		Particle* mBase;
 		std::list<Particle*> mParticles;
 		std::vector<GSParticle> mGParticles;
 		int mTotalParticles, mMaxParticles, mPerSec;
+		int total = 0;
 		vec4f mStartColor, mEndColor;
-		bool mIsAnimated;
-		float mOffset;
+		bool mIsAnimated, mWrap;
+		float mOffset, mSpeed;
 		//TODO: If animated, need to send offset to geometry shader or pixel shader
 
 		virtual void UpdateParticle(Particle* _p, float _delta);
@@ -134,7 +139,7 @@ namespace Epoch
 	public:
 		bool mActive, mEnabled;
 
-		ParticleEmitter(int _totalp, int _maxp, int _persec, vec4f _pos);
+		ParticleEmitter(int _totalp, int _maxp, int _persec, vec3f _pos);
 		virtual ~ParticleEmitter();
 
 		ID3D11Buffer* GetVertexBuffer();
@@ -180,7 +185,7 @@ namespace Epoch
 		};
 	public:
 		VolumeEmitter();
-		VolumeEmitter(int _totalp, int _maxp, int _persec, vec4f _pos);
+		VolumeEmitter(int _totalp, int _maxp, int _persec, vec3f _pos);
 
 		void SetBoundingVolume(float _l, float _w, float _h);
 		void SetBoundingVolume(float _r);
@@ -199,20 +204,20 @@ namespace Epoch
 
 	public:
 		RadialEmitter();
-		RadialEmitter(int _totalp, int _maxp, int _persec, vec4f _pos);
+		RadialEmitter(int _totalp, int _maxp, int _persec, vec3f _pos);
 	private:
 		virtual void UpdateParticle(Particle* _p, float _delta);
 		virtual void EmitParticles();
 
 	};
 
-	class IDC : public ParticleEmitter
+	class TeleportEffect : public ParticleEmitter
 	{
 	public:
 		float y1, y2;
 
-		IDC();
-		IDC(int _totalp, int _maxp, int _persec, vec4f _pos);
+		TeleportEffect();
+		TeleportEffect(int _totalp, int _maxp, int _persec, vec3f _pos);
 	private:
 		virtual void UpdateParticle(Particle* _p, float _delta);
 		virtual void EmitParticles();

@@ -19,6 +19,8 @@ namespace Epoch
 		(*mGIDevice)->Release();
 		(*mContext2D)->Release();
 		(*mDWrite)->Release();
+		//(*mTextformat)->Release();
+		//(*mBrush)->Release();
 		(*mScreenBitmap)->Release();
 
 		mTextFactory.reset();
@@ -26,6 +28,8 @@ namespace Epoch
 		mGIDevice.reset();
 		mContext2D.reset();
 		mDWrite.reset();
+		//mTextformat.reset();
+		//mBrush.reset();
 		mScreenBitmap.reset();
 
 		for (std::pair<unsigned int, std::pair<Font, IDWriteTextFormat*>> x : mFonts)
@@ -138,9 +142,9 @@ namespace Epoch
 		}
 		return CreateNewTextFormat(_font);
 	}
-	ID2D1Bitmap1* Draw::GetBitMap(ID3D11Texture2D* _texture)
+	ID2D1Bitmap1 * Draw::GetBitmap(ID3D11Texture2D * _texture)
 	{
-		for(std::pair<ID3D11Texture2D*, ID2D1Bitmap1*> x : mBitmaps)
+		for (std::pair<ID3D11Texture2D*, ID2D1Bitmap1*> x : mBitmaps)
 		{
 			if (x.first == _texture)
 				return x.second;
@@ -185,6 +189,8 @@ namespace Epoch
 	void Draw::DrawTextToBitmap(float _left, float _top, float _right, float _bottom,
 															Font _font, std::wstring _text, ID2D1Bitmap* _bitmap)
 	{
+		
+		
 		(*mContext2D)->SetTarget(_bitmap);
 		float color[4] = { 0.3f, 0.3f, 1, 1 };
 
@@ -218,6 +224,7 @@ namespace Epoch
 	void Draw::DrawRectangleToBitmap(float _left, float _top, float _right, float _bottom, D2D1::ColorF _color, ID2D1Bitmap * _bitmap)
 	{
 		(*mContext2D)->SetTarget(_bitmap);
+		(*mContext2D)->Clear();
 		float color[4] = { 1, 1, 1, 1 };
 
 		// Retrieve the size of the render target.st
@@ -243,6 +250,14 @@ namespace Epoch
 
 	}
 
+	ID2D1Bitmap1 * Draw::CreateNewBitmap(ID3D11Texture2D * _texture)
+	{
+		ID2D1Bitmap1* temp = nullptr;
+		temp = CreateBitmapForTexture(_texture);
+		mBitmaps.insert({ _texture,temp });
+		return temp;
+	}
+
 	//IF YOU USE THIS, CLEAN UP AFTER YOURSELF
 	ID2D1Bitmap1 * Draw::CreateBitmapForTexture(ID3D11Texture2D * _texture)
 	{
@@ -251,11 +266,11 @@ namespace Epoch
 			D2D1::BitmapProperties1(
 				D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
 				D2D1::PixelFormat(DXGI_FORMAT_R16G16B16A16_FLOAT, D2D1_ALPHA_MODE_IGNORE),
-				0,
-				0		//defaults to 96
+				96.0f,
+				96.0f		//defaults to 96
 			);
 
-		IDXGISurface* surface;
+		IDXGISurface* surface = nullptr;
 		Renderer::Instance()->ThrowIfFailed(_texture->QueryInterface(IID_IDXGISurface, (void**)&surface));
 
 		ID2D1Bitmap1* bitmap;

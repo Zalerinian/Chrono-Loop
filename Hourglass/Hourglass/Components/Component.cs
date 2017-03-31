@@ -6,24 +6,62 @@ namespace Hourglass
 {
     public abstract class Component
     {
+		public enum ComponentType { None = 0, BoxCollider, ButtonCollider, PlaneCollider, SphereCollider, ColoredMesh, TexturedMesh, Transform, Code, MAX }
+
+
+
+		public delegate void GenericEventHandler();
+		public event GenericEventHandler OwnerChanged;
+		public event GenericEventHandler RemoveControl;
+
         protected GroupBox mGroupBox;
         protected ContextMenuStrip mMenuStrip;
         protected ToolStripMenuItem mMenuItemDelete, mMenuItemReset;
-        protected List<Component> mContainerReference;
         protected BaseObject mOwner = null;
+		protected ComponentType mType = ComponentType.None;
 
+        private static readonly System.Drawing.Font 
+            mPlaceholderFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25f, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0))),
+            mActiveFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 
-        int Width {
+        public int Width {
             get {
                 return mGroupBox.Size.Width;
             }
         }
 
-        int Height {
+        public int Height {
             get {
                 return mGroupBox.Size.Height;
             }
         }
+
+		public ComponentType Type {
+			get {
+				return mType;
+			}
+		}
+
+        public System.Drawing.Font PlaceholderFont {
+            get { return mPlaceholderFont; }
+        }
+
+        public System.Drawing.Font ActiveFont {
+            get { return mActiveFont; }
+        }
+
+		public BaseObject Owner {
+			get {
+				return mOwner;
+			}
+			set {
+				mOwner = value;
+				if(OwnerChanged != null)
+				{
+					OwnerChanged();
+				}
+			}
+		}
 
         /// <summary>
         ///     A component is a property of an object that affects what it does in the
@@ -41,11 +79,8 @@ namespace Hourglass
         ///     This is true for everything except an object's transform (Position,
         ///     Rotation, Scale), and its name.
         /// </param>
-        public Component(BaseObject _owner, bool _destructible = true)
+        public Component(bool _destructible = true)
         {
-            mOwner = _owner;
-            mContainerReference = _owner.GetComponents();
-            mContainerReference.Add(this);
 
             mGroupBox = new GroupBox();
             mGroupBox.AutoSize = false;
@@ -68,18 +103,30 @@ namespace Hourglass
             return mGroupBox;
         }
 
-        protected virtual void OnMenuClick_Delete(object sender, EventArgs e)
-        {
-            mContainerReference.Remove(this);
-            mGroupBox.Parent = null;
-        }
+		/// <summary>
+		/// Removes focus from the component and gives it back to the main graphics panel.
+		/// </summary>
+		protected void ReleaseControl()
+		{
+			if(RemoveControl != null)
+			{
+				RemoveControl();
+			}
+		}
 
-        protected virtual void OnMenuClick_Reset(object sender, EventArgs e)
+        public virtual void OnMenuClick_Delete(object sender, EventArgs e)
+        {
+            Owner.RemoveComponent(this);
+			ReleaseControl();
+		}
+
+        public virtual void OnMenuClick_Reset(object sender, EventArgs e)
         {
             MessageBox.Show("Someone was lazy and didn't implement the Reset option for this component.",
                 "Error: ID10-T",
                 MessageBoxButtons.OK);
-        }
+			ReleaseControl();
+		}
 
         protected virtual void OnGroupBoxClick(object sender, EventArgs e)
         {
@@ -173,5 +220,12 @@ namespace Hourglass
             nz.Top = 0;
             nz.Left = lz.Left + lz.Size.Width;
         }
+
+		public virtual void WriteData(System.IO.BinaryWriter w)
+		{
+			w.Write((short)mType);
+		}
+
+		public abstract void ReadData(System.IO.BinaryReader r);
     }
 }

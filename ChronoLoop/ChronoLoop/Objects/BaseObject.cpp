@@ -4,6 +4,7 @@
 #include "../Common/Logger.h"
 #include "../Common/Breakpoint.h"
 #include "../Core/Level.h"
+#include "../Core/LevelManager.h"
 #include "../Common/Settings.h"
 
 namespace Epoch {
@@ -71,6 +72,7 @@ namespace Epoch {
 	void BaseObject::Destroy() {
 		mParent = nullptr;
 		for (auto it = mChildren.begin(); it != mChildren.end(); ++it) {
+			LevelManager::GetInstance().GetCurrentLevel()->RemoveObject(*it);
 			delete (*it);
 		}
 		mChildren.clear();

@@ -96,10 +96,21 @@ namespace Epoch {
 			if (mCurrentLevel) {
 				delete mCurrentLevel;
 			}
-			Renderer::Instance()->ClearRenderSet();
 			VRInputManager::GetInstance().GetPlayerPosition().Position = mRequested->mStartPosition;
 			mCurrentLevel = mRequested;
+			Renderer::Instance()->ClearRenderSet();
 			mCurrentLevel->SetupObjects();
+			for (auto it = mCurrentLevel->GetLevelObjects().begin(); it != mCurrentLevel->GetLevelObjects().end(); ++it)
+			{
+				if ((*it)->mComponents[eCOMPONENT_COLLIDER].size() > 0)
+				{
+					Physics::Instance()->mObjects.push_back((*it));
+					if (((Collider*)(*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mShouldMove || (*it)->GetName() == "Door1" || (*it)->GetName() == "Door2")
+					{
+						TimeManager::Instance()->AddObjectToTimeline(*it);
+					}
+				}
+			}
 			mCurrentLevel->CallStart();
 			mRequested = nullptr;
 		}

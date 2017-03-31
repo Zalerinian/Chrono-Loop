@@ -1,23 +1,25 @@
 Event	ID	Name			Wwise Object Path	Notes
-	381359573	BUTTON_PRESS2			\Default Work Unit\BUTTON_PRESS2	
-	381359574	BUTTON_PRESS1			\Default Work Unit\BUTTON_PRESS1	
-	652836727	PLING			\Default Work Unit\PLING	
-	751805364	SWOOSH			\Default Work Unit\SWOOSH	
-	894718049	TOGGLE			\Default Work Unit\TOGGLE	
-	1123068841	BEEP			\Default Work Unit\BEEP	
-	1235130312	RESUME_Test1			\Default Work Unit\RESUME_Test1	
-	1235130315	RESUME_Test2			\Default Work Unit\RESUME_Test2	
-	1762045322	BLOP			\Default Work Unit\BLOP	
-	1888362325	PAUSE_Test1			\Default Work Unit\PAUSE_Test1	
-	1888362326	PAUSE_Test2			\Default Work Unit\PAUSE_Test2	
-	2011175805	STOP_Test1			\Default Work Unit\STOP_Test1	
-	2011175806	STOP_Test2			\Default Work Unit\STOP_Test2	
-	2344782521	SHORTCIRUIT			\Default Work Unit\SHORTCIRUIT	
-	2580845818	DOORSOUND			\Default Work Unit\DOORSOUND	
-	2755031898	TICK			\Default Work Unit\TICK	
-	3759155916	PLAY_Test2			\Default Work Unit\PLAY_Test2	
-	3759155919	PLAY_Test1			\Default Work Unit\PLAY_Test1	
-	3909886823	PlayBounceEffects			\Default Work Unit\PlayBounceEffects	
+	43066209	SFX_TOGGLE			\Default Work Unit\OTHER\SFX_TOGGLE	
+	452547817	Stop_All			\Default Work Unit\Stop_All	
+	650723447	SFX_PLING			\Default Work Unit\OTHER\SFX_PLING	
+	984516265	SFX_BEEP			\Default Work Unit\OTHER\SFX_BEEP	
+	1009907413	SFX_BUTTON_PRESS2			\Default Work Unit\OTHER\SFX_BUTTON_PRESS2	
+	1009907414	SFX_BUTTON_PRESS1			\Default Work Unit\OTHER\SFX_BUTTON_PRESS1	
+	1235130312	RESUME_Test1			\Default Work Unit\OTHER\RESUME_Test1	
+	1235130315	RESUME_Test2			\Default Work Unit\OTHER\RESUME_Test2	
+	1623492746	SFX_BLOP			\Default Work Unit\OTHER\SFX_BLOP	
+	1687962553	SFX_SHORTCIRUIT			\Default Work Unit\OTHER\SFX_SHORTCIRUIT	
+	1794490945	SFX_BounceEffects			\Default Work Unit\OTHER\SFX_BounceEffects	
+	1888362325	PAUSE_Test1			\Default Work Unit\OTHER\PAUSE_Test1	
+	1888362326	PAUSE_Test2			\Default Work Unit\OTHER\PAUSE_Test2	
+	2011175805	STOP_Test1			\Default Work Unit\OTHER\STOP_Test1	
+	2011175806	STOP_Test2			\Default Work Unit\OTHER\STOP_Test2	
+	2616479322	SFX_TICK			\Default Work Unit\OTHER\SFX_TICK	
+	3559876090	SFX_DOORSOUND			\Default Work Unit\OTHER\SFX_DOORSOUND	
+	3759155916	PLAY_Test2			\Default Work Unit\OTHER\PLAY_Test2	
+	3759155919	PLAY_Test1			\Default Work Unit\OTHER\PLAY_Test1	
+	4071198641	Stop_All_Except_EMPTY			\Default Work Unit\Stop_All_Except_EMPTY	
+	4195120820	SFX_SWOOSH			\Default Work Unit\OTHER\SFX_SWOOSH	
 
 In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	82772906	Button_Press_2-Marianne_Gagnon-1415267358	D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Button_Press_2-Marianne_Gagnon-1415267358_9E69E797.wem		\Actor-Mixer Hierarchy\Default Work Unit\Button_Press_2-Marianne_Gagnon-1415267358		44608

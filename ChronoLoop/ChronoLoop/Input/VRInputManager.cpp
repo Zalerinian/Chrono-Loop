@@ -78,8 +78,8 @@ namespace Epoch {
 		mDebugDeltaTime += TimeManager::Instance()->GetDeltaTime();
 		if (mDebugDeltaTime >= 5) {
 			mDebugDeltaTime -= 5;
-			SystemLogger::Debug() << "Index for left controller: " << mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand) << std::endl;
-			SystemLogger::Debug() << "Index for Right controller: " << mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_RightHand) << std::endl;
+			//SystemLogger::Debug() << "Index for left controller: " << mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand) << std::endl;
+			//SystemLogger::Debug() << "Index for Right controller: " << mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_RightHand) << std::endl;
 		}
 
 		vr::VRCompositor()->WaitGetPoses(mPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
@@ -148,7 +148,7 @@ namespace Epoch {
 			node->mData.mPrimary = !mIsLeftPrimary;
 			//SystemLogger::GetLog() <<  "Righthand" << std::endl;
 		}
-		SystemLogger::GetLog() << node->mData.mControllerId << std::endl;
+		//SystemLogger::GetLog() << node->mData.mControllerId << std::endl;
 		mInputTimeline->Insert(node);
 		//mInputTimeline->DisplayTimeline();
 	}

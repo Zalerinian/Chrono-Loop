@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Hourglass
@@ -10,11 +11,13 @@ namespace Hourglass
         protected NumericUpDown mRadius, mX, mY, mZ;
         protected Panel mPosPanel;
 
-        public SphereCollider(BaseObject _owner, int _yOffset = 0) : base(_owner, 64 + _yOffset)
+        public SphereCollider(int _yOffset = 0) : base(64 + _yOffset)
         {
-            #region Component Creation
+			mType = ComponentType.SphereCollider;
 
-            mLbRadius = new Label();
+			#region Component Creation
+
+			mLbRadius = new Label();
             mLbPosition = new Label();
             mLbX = new Label();
             mLbY = new Label();
@@ -94,7 +97,7 @@ namespace Hourglass
             OnMenuClick_Reset(null, null);
         }
 
-        protected override void OnMenuClick_Reset(object sender, EventArgs e)
+        public override void OnMenuClick_Reset(object sender, EventArgs e)
         {
             base.OnMenuClick_Reset(sender, e);
             mRadius.Value = 1;
@@ -103,5 +106,23 @@ namespace Hourglass
             mZ.Value = 0;
         }
 
-    }
+		public override void WriteData(BinaryWriter w)
+		{
+			base.WriteData(w);
+			w.Write((float)mRadius.Value);
+			w.Write((float)mX.Value);
+			w.Write((float)mY.Value);
+			w.Write((float)mZ.Value);
+		}
+
+		public override void ReadData(BinaryReader r)
+		{
+			base.ReadData(r);
+			mRadius.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+		}
+
+	}
 }

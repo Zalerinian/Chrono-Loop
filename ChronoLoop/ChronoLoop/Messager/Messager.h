@@ -1,6 +1,6 @@
 #pragma once
 #include "..\Sound\SoundEngine.h"
-#include "..\Sound\Sound\Soundbanks\Wwise_IDs.h"
+#include "../../Resources/Soundbanks/Wwise_IDs.h"
 #include <queue>
 #include <vector>
 #include <thread>

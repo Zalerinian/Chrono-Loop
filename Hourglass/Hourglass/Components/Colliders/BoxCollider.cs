@@ -16,7 +16,9 @@ namespace Hourglass {
         protected NumericUpDown mScaleX, mScaleY, mScaleZ;
 
 
-        public BoxCollider(BaseObject _owner, int _yOffset = 0) : base(_owner, 100 + _yOffset) {
+        public BoxCollider(int _yOffset = 0) : base(100 + _yOffset) {
+			mType = ComponentType.BoxCollider;
+
 
             #region Component Creation
 
@@ -149,7 +151,7 @@ namespace Hourglass {
             mGroupBox.Size = mGroupBox.PreferredSize;
         }
 
-        protected override void OnMenuClick_Reset(object sender, EventArgs e) {
+        public override void OnMenuClick_Reset(object sender, EventArgs e) {
             base.OnMenuClick_Reset(sender, e);
             mPosX.Value = 0;
             mPosY.Value = 0;
@@ -203,6 +205,38 @@ namespace Hourglass {
             // Z Numeric Up-Down
             nz.Size = size;
         }
-    }
+
+		public override void WriteData(System.IO.BinaryWriter w)
+		{
+			base.WriteData(w);
+			w.Write((float)mPosX.Value);
+			w.Write((float)mPosY.Value);
+			w.Write((float)mPosZ.Value);
+
+			w.Write((float)mRotX.Value);
+			w.Write((float)mRotY.Value);
+			w.Write((float)mRotZ.Value);
+
+			w.Write((float)mScaleX.Value);
+			w.Write((float)mScaleY.Value);
+			w.Write((float)mScaleZ.Value);
+		}
+
+		public override void ReadData(System.IO.BinaryReader r)
+		{
+			base.ReadData(r);
+			mPosX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mPosY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mPosZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+
+			mRotX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mRotY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mRotZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+
+			mScaleX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mScaleY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mScaleZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+		}
+	}
 
 }
