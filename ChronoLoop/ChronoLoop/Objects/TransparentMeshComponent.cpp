@@ -34,10 +34,10 @@ namespace Epoch {
 		Renderer::Instance()->GetRendererLock().lock();
 		ID3D11Buffer* AlphaBuff;
 		CD3D11_BUFFER_DESC AlphaDesc(sizeof(AlphaData), D3D11_BIND_CONSTANT_BUFFER);
-		D3D11_SUBRESOURCE_DATA AlphaData;
-		AlphaData.pSysMem = &mAlpha;
+		D3D11_SUBRESOURCE_DATA BufferData;
+		BufferData.pSysMem = &mAlpha;
 		auto device = Renderer::Instance()->GetDevice();
-		HRESULT hr = device->CreateBuffer(&AlphaDesc, &AlphaData, &AlphaBuff);
+		HRESULT hr = device->CreateBuffer(&AlphaDesc, &BufferData, &AlphaBuff);
 		SetD3DName(AlphaBuff, (mShape->GetName() + " alpha buffer").c_str());
 		mShape->GetContext().mPixelCBuffers[ePB_TP_Alpha].Attach(AlphaBuff);
 		Renderer::Instance()->GetRendererLock().unlock();
