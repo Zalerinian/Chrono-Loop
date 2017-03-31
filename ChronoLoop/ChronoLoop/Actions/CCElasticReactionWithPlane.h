@@ -18,7 +18,7 @@ namespace Epoch
 				vec4f normalVel = (((PlaneCollider*)&_other)->mNormal * -(_col.mVelocity * ((PlaneCollider*)&_other)->mNormal));
 				_col.mVelocity += normalVel * (1 + _col.mElasticity);
 
-				if (_col.mVelocity.x > .001 || _col.mVelocity.y > .001 || _col.mVelocity.z > .001)
+				if (_col.mVelocity.Magnitude() > .75f && _col.mVelocity.y > .1f)
 				{
 					if (mObject->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0)
 						((Emitter*)mObject->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->PlaySFX();

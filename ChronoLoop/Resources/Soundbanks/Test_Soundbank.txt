@@ -1,5 +1,6 @@
 Event	ID	Name			Wwise Object Path	Notes
 	43066209	SFX_TOGGLE			\Default Work Unit\OTHER\SFX_TOGGLE	
+	452547817	Stop_All			\Default Work Unit\Stop_All	
 	650723447	SFX_PLING			\Default Work Unit\OTHER\SFX_PLING	
 	984516265	SFX_BEEP			\Default Work Unit\OTHER\SFX_BEEP	
 	1009907413	SFX_BUTTON_PRESS2			\Default Work Unit\OTHER\SFX_BUTTON_PRESS2	
@@ -17,6 +18,7 @@ Event	ID	Name			Wwise Object Path	Notes
 	3559876090	SFX_DOORSOUND			\Default Work Unit\OTHER\SFX_DOORSOUND	
 	3759155916	PLAY_Test2			\Default Work Unit\OTHER\PLAY_Test2	
 	3759155919	PLAY_Test1			\Default Work Unit\OTHER\PLAY_Test1	
+	4071198641	Stop_All_Except_EMPTY			\Default Work Unit\Stop_All_Except_EMPTY	
 	4195120820	SFX_SWOOSH			\Default Work Unit\OTHER\SFX_SWOOSH	
 
 In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size

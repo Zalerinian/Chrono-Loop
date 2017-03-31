@@ -63,7 +63,7 @@ namespace Epoch {
 		void ClearClones();
 		//Checks and see if you can rewind to passed in frame
 		bool CheckRewindAvaliable(unsigned int _RewindNumOfframes);
-		void DeleteClone(unsigned short _id1);
+		void DeleteClone(unsigned short _id1, bool _useParticleEffect);
 		static void Destroy();
 		bool DoesCloneExist(unsigned short _id,unsigned int _frame);
 		void EraseClonePair(unsigned short _id) { mClonePairs.erase(_id); };
