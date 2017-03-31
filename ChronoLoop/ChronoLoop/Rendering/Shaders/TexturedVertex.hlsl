@@ -5,8 +5,8 @@ cbuffer ModelBuffer : register(b0) {
 	matrix model[256];
 }
 
-cbuffer InstanceID : register(b1) {
-	int SimInstanceID;
+cbuffer IID : register(b1) {
+	uint SimIID;
 }
 
 struct PSI {
@@ -15,14 +15,14 @@ struct PSI {
 	float4 texCoord :	COLOR;
 	float4 wpos : WORLDPOS;
 	float4 shadowPos : SHADOW;
-	float  instanceID : CL_InstanceID;
+	uint IID : CL_IID;
 };
 
 // Instancing interferes with the Graphic's Debugger's ability to create a pixel history, which is
 // useful in determining why something looks the way it does. By disabling instancing, we can
 // debug these issues much more easily.
 #if ENABLE_INSTANCING
-PSI main(VERTEX_POSNORMTEX input, uint id : SV_InstanceID) {
+PSI main(VERTEX_POSNORMTEX input, uint id : SV_IID) {
 #else
 PSI main(VERTEX_POSNORMTEX input) {
 #endif
@@ -34,12 +34,12 @@ PSI main(VERTEX_POSNORMTEX input) {
 	output.position = mul(input.position, model[id]);
 	output.wpos = output.position;
 	output.normal = mul(input.normal, model[id]);
-	output.instanceID = id;
+	output.IID = id;
 #else
 	output.position = mul(input.position, model[0]);
 	output.wpos = output.position;
 	output.normal = mul(input.normal, model[0]);
-	output.instanceID = SimInstanceID;
+	output.IID = SimIID;
 #endif
 	output.texCoord = input.texCoord;
 

@@ -391,6 +391,7 @@ namespace Epoch {
 		SetD3DName(mDepthBuffer.Get(), "Main Depth Buffer");
 		SetD3DName(mVPBuffer.Get(), "View-Projection Constant Buffer");
 		SetD3DName(mPositionBuffer.Get(), "Model Constant Buffer");
+		SetD3DName(mSimInstanceBuffer.Get(), "Simulated Instance ID Constant Buffer");
 
 		SetD3DName(mSceneTexture.Get(), "Post Processing Texture");
 		SetD3DName(mSceneSRV.Get(), "Scene Texture SRV");
@@ -649,10 +650,10 @@ namespace Epoch {
 				}
 #else
 				(*it)->mShape.GetContext().Apply();
-				vec4f SimulatedInstanceID(0, 0, 0, 0);
+				vec4f SimInstanceID(0, 0, 0, 0);
 				for (unsigned int i = 0; i < positions.size(); ++i) {
-					SimulatedInstanceID.x = i;
-					mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimulatedInstanceID, 0, 0);
+					SimInstanceID.x = i;
+					mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimInstanceID, 0, 0);
 					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i] + offset, 0, 0);
 					(*it)->mShape.Render(1); // Without instancing, the instance count doesn't matter, but we're only drawing one :)
 				}
@@ -675,10 +676,10 @@ namespace Epoch {
 				}
 #else
 				(*it)->mShape.GetContext().Apply();
-				vec4f SimulatedInstanceID(0, 0, 0, 0);
+				vec4f SimulatedIID(0, 0, 0, 0);
 				for (unsigned int i = 0; i < positions.size(); ++i) {
-					SimulatedInstanceID.x = i;
-					mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimulatedInstanceID, 0, 0);
+					SimulatedIID.x = i;
+					mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimulatedIID, 0, 0);
 					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i] + offset, 0, 0);
 					(*it)->mShape.Render(1); // Without instancing, the instance count doesn't matter, but we're only drawing one :)
 				}
@@ -794,11 +795,11 @@ namespace Epoch {
 		mContext->OMSetRenderTargets(1, mSceneView.GetAddressOf(), mDSView.Get());
 		mContext->ClearRenderTargetView(mSceneView.Get(), color);
 		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-		mContext->PSSetConstantBuffers(0, 1, mLBuffer.GetAddressOf());
-		mContext->PSSetShaderResources(3, 1, mShadowSRV[0].GetAddressOf());
-		mContext->PSSetShaderResources(4, 1, mShadowSRV[1].GetAddressOf());
-		mContext->PSSetSamplers(3, 1, mSSamplerState.GetAddressOf());
-		mContext->VSSetConstantBuffers(1, 1, mPLBufferS.GetAddressOf());
+		//mContext->PSSetConstantBuffers(0, 1, mLBuffer.GetAddressOf());
+		//mContext->PSSetShaderResources(3, 1, mShadowSRV[0].GetAddressOf());
+		//mContext->PSSetShaderResources(4, 1, mShadowSRV[1].GetAddressOf());
+		//mContext->PSSetSamplers(3, 1, mSSamplerState.GetAddressOf());
+		//mContext->VSSetConstantBuffers(1, 1, mPLBufferS.GetAddressOf());
 
 		if (nullptr == mVrSystem) {
 			RenderNoVR(_deltaTime);

@@ -21,6 +21,7 @@ namespace Epoch {
 			_copy->GetDesc(&desc);
 			dev->CreateBuffer(&desc, nullptr, _toGrow.GetAddressOf());
 			ctx->CopyResource(_toGrow.Get(), _copy.Get());
+			SetD3DName(_toGrow.Get(), _name.c_str());
 			Renderer::Instance()->GetRendererLock().unlock();
 			mIdMap[mMasterId] = 0;
 			return mMasterId++;
@@ -61,6 +62,7 @@ namespace Epoch {
 			iData.pSysMem = &_filler;
 			CD3D11_BUFFER_DESC desc(sizeof(_filler), D3D11_BIND_CONSTANT_BUFFER);
 			dev->CreateBuffer(&desc, &iData, _toGrow.GetAddressOf());
+			SetD3DName(_toGrow.Get(), _name.c_str());
 			Renderer::Instance()->GetRendererLock().unlock();
 			mIdMap[mMasterId] = 0;
 			return mMasterId++;

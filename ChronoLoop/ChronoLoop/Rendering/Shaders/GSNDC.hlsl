@@ -5,7 +5,7 @@ struct GSOutput {
 	float4 normal : NORMAL0;
 	float4 texCoord : COLOR;
 	float4 wpos : WORLDPOS;
-	float  instanceID : CL_InstanceID;
+	uint IID : CL_IID;
 	uint viewport : SV_ViewportArrayIndex;
 };
 
@@ -14,7 +14,7 @@ struct GSInput {
 	float4 normal : NORMAL0;
 	float4 texCoord : COLOR;
 	float4 wpos : WORLDPOS;
-	float  instanceID : CL_InstanceID;
+	uint IID : CL_IID;
 };
 
 [maxvertexcount(3)]
@@ -33,7 +33,7 @@ void main(triangle GSInput input[3], inout TriangleStream<GSOutput> TriStream) {
 		output.normal = input[i].normal;
 		output.texCoord = input[i].texCoord;
 		output.wpos = input[i].wpos;
-		output.instanceID = input[i].instanceID;
+		output.IID = input[i].IID;
 		output.viewport = 2;
 		TriStream.Append(output);
 	}
