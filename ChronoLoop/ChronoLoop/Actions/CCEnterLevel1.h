@@ -260,7 +260,6 @@ namespace Epoch
 					headset->AddComponent(hfollow);
 					headset->AddComponent(ears);
 					PauseMenu* pauseComp = new PauseMenu();
-					pauseComp->Disable();
 					headset->AddComponent(pauseComp);
 
 					LevelManager::GetInstance().RequestLevelChange(next);

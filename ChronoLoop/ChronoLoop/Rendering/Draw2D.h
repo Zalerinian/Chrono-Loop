@@ -96,7 +96,7 @@ namespace Epoch
 
 		ID2D1SolidColorBrush* GetBrush(D2D1::ColorF _color);
 		IDWriteTextFormat* GetTextFormat(Font _font);
-		ID2D1Bitmap1* GetBitMap(ID3D11Texture2D* _texture);
+		ID2D1Bitmap1* GetBitmap(ID3D11Texture2D* _texture);
 		void InitializeDirect2D();
 		void InitializeScreenBitmap();
 

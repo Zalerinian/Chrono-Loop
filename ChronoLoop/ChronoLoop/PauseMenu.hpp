@@ -54,7 +54,7 @@ namespace Epoch
 		{
 			mCurOptions.clear();
 			for (auto iter = _set.begin(); iter != _set.end(); iter++)
-				mCurOptions.push_back(iter);
+				mCurOptions.push_back((*iter));
 		}
 		void SetCurrentMenu(MENU_NAME _set) {mCurMenu = _set;}
 	};
@@ -92,7 +92,7 @@ namespace Epoch
 		virtual void Start()
 		{
 			//Pause Menu Base Initialize
-			SetUpThisObjectForMe(pPauseMenuBase, mcPauseMenuBase, std::string("PauseMenu - Base"),identity);
+			SetUpThisObjectForMe(&pPauseMenuBase, &mcPauseMenuBase, std::string("PauseMenu - Base"),identity);
 
 			#pragma region Commented Out
 			//pPauseMenuBase = Pool::Instance()->iGetObject()->Reset("PauseMenu - Base", identity);
@@ -108,13 +108,13 @@ namespace Epoch
 
 			pPauseMenuBase->AddComponent(mcPauseMenuBase);
 			Draw::Instance().DrawRectangleToBitmap(
-				0, 0, 256, 256, 
+				0, 0, 256.0f, 256.0f, 
 				(D2D1::ColorF::Black, 0.5f), 
 				Draw::Instance().GetBitmap(mPauseMenuTextures.at(pPauseMenuBase)));
 			mMeshComps.insert({ PAUSEMENU_ON,mcPauseMenuBase });
 			//PANEL SET UP
 				//Main Pause Menu Panel Initialize
-				SetUpThisObjectForMe(pMainPanel, mcMainPanel, std::string("PauseMenu - Main Menu"), identity);
+				SetUpThisObjectForMe(&pMainPanel, &mcMainPanel, std::string("PauseMenu - Main Menu"), identity);
 
 				#pragma region Commented Out
 			//pMainPanel = Pool::Instance()->iGetObject()->Reset("PauseMenu - Main Panel", identity);
@@ -135,12 +135,12 @@ namespace Epoch
 				mMeshComps.insert({ MAIN_MENU,mcMainPanel });
 
 				Draw::Instance().DrawRectangleToBitmap(
-					0, 0, 256, 256,
+					0, 0, 256.0f, 256.0f,
 					(D2D1::ColorF::Black, 0.8f),
 					Draw::Instance().GetBitmap(mPauseMenuTextures.at(pMainPanel)));
 
 				//Settings Panel Initialize
-				SetUpThisObjectForMe(pSettingsPanel, mcSettingsPanel, std::string("PauseMenu - Settings Panel"), identity);
+				SetUpThisObjectForMe(&pSettingsPanel, &mcSettingsPanel, std::string("PauseMenu - Settings Panel"), identity);
 				
 				#pragma region Commented Out
 			//pSettingsPanel = Pool::Instance()->iGetObject()->Reset("PauseMenu - Settings Panel", identity);
@@ -171,7 +171,7 @@ namespace Epoch
 			//OPTIONS SET UP
 				//Main Panel Options
 					//Resume Option Initialize
-					SetUpThisObjectForMe(pResume, mcResume, std::string("PauseMenu - Resume Option"), identity);
+					SetUpThisObjectForMe(&pResume, &mcResume, std::string("PauseMenu - Resume Option"), identity);
 
 					pResume->AddComponent(mcResume);
 					pResume->SetParent(pMainPanel);
@@ -184,7 +184,7 @@ namespace Epoch
 						Draw::Instance().GetBitmap(mPauseMenuTextures.at(pResume)));
 						
 					//Settings Option Initialize
-					SetUpThisObjectForMe(pSettings, mcSettings, std::string("PauseMenu - Settings Option"), identity);
+					SetUpThisObjectForMe(&pSettings, &mcSettings, std::string("PauseMenu - Settings Option"), identity);
 
 					pSettings->AddComponent(mcSettings);
 					pSettings->SetParent(pMainPanel);
@@ -195,7 +195,7 @@ namespace Epoch
 						*tempFont, L"Settings",
 						Draw::Instance().GetBitmap(mPauseMenuTextures.at(pSettings)));
 					//Hubworld Option Initialize
-					SetUpThisObjectForMe(pHubworld, mcHubworld, std::string("PauseMenu - Hubworld Option"), identity);
+					SetUpThisObjectForMe(&pHubworld, &mcHubworld, std::string("PauseMenu - Hubworld Option"), identity);
 
 					pHubworld->AddComponent(mcHubworld);
 					pHubworld->SetParent(pMainPanel);
@@ -212,7 +212,7 @@ namespace Epoch
 					pMainPanel->AddChild(pHubworld);
 				//Settings Panel Options
 					//Audio Option Initialize
-					SetUpThisObjectForMe(pAudio, mcAudio, std::string("PauseMenu - Audio Option"), identity);
+					SetUpThisObjectForMe(&pAudio, &mcAudio, std::string("PauseMenu - Audio Option"), identity);
 
 					pAudio->AddComponent(mcAudio);
 					pAudio->SetParent(pSettingsPanel);
@@ -223,7 +223,7 @@ namespace Epoch
 						*tempFont, L"Audio",
 						Draw::Instance().GetBitmap(mPauseMenuTextures.at(pAudio)));
 					//Misc Option Initialize
-					SetUpThisObjectForMe(pMisc, mcMisc, std::string("PauseMenu - Misc Option"), identity);
+					SetUpThisObjectForMe(&pMisc, &mcMisc, std::string("PauseMenu - Misc Option"), identity);
 
 					pMisc->AddComponent(mcMisc);
 					pMisc->SetParent(pSettingsPanel);
@@ -243,12 +243,20 @@ namespace Epoch
 				mActivePanel.SetCurrentMenu(PAUSEMENU_ON);
 			//Panel Start Up
 				SwitchPanel(&mActivePanel);
+				OnDisable();
 		}
 		virtual void Update()
 		{
-			if (PauseMenuisUp) 
+			if(GetAsyncKeyState(80) & 0x1)
 			{
-
+				if (PauseMenuisUp) {
+					PauseMenuisUp = false;
+					OnDisable();
+				}
+				else {
+					PauseMenuisUp = true;
+					OnEnable();
+				}
 			}
 		}
 		virtual void OnEnable()
@@ -272,7 +280,6 @@ namespace Epoch
 		}
 		void SwitchPanel(ActivePanel* _activepanel)
 		{
-
 			switch (_activepanel->mCurMenu)
 			{
 			case PAUSEMENU_ON:
@@ -282,8 +289,8 @@ namespace Epoch
 				}
 			case MAIN_MENU:
 				{
-				SetVisiblity(mPanels.at(MAIN_MENU), true);
-				SetVisiblity(mPanels.at(SETTINGS), false);
+				SetVisiblity(&mPanels.at(MAIN_MENU), true);
+				SetVisiblity(&mPanels.at(SETTINGS), false);
 					/*for (auto it : mMeshComps)
 					{
 						if (it.first == MAIN_MENU)
@@ -300,8 +307,8 @@ namespace Epoch
 				break;
 			case SETTINGS:
 				{
-				SetVisiblity(mPanels.at(MAIN_MENU), false);
-				SetVisiblity(mPanels.at(SETTINGS), true);
+				SetVisiblity(&mPanels.at(MAIN_MENU), false);
+				SetVisiblity(&mPanels.at(SETTINGS), true);
 					//for (auto it : mMeshComps)
 					//{
 					//	if (it.first == SETTINGS)
@@ -328,7 +335,7 @@ namespace Epoch
 				break;
 			case PAUSEMENU_OFF:
 				{
-					SetVisiblity(pPauseMenuBase, false);
+					SetVisiblity(&pPauseMenuBase, false);
 				}
 			break;
 			default:
@@ -338,16 +345,18 @@ namespace Epoch
 				break;
 			}
 		}
-		void SetUpThisObjectForMe(BaseObject* _obj, MeshComponent* _mc, std::string _name,Transform _t)
+		void SetUpThisObjectForMe(BaseObject** _obj, MeshComponent** _mc, std::string _name,Transform _t)
 		{
-			_obj = Pool::Instance()->iGetObject()->Reset("PauseMenu - Base", _t);
-			_mc = new MeshComponent("../Resources/help.obj");
+			*_obj = Pool::Instance()->iGetObject()->Reset(_name, _t);
+			*_mc = new MeshComponent("../Resources/help.obj");
 
 			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
-			TextureManager::Instance()->iAddTexture2D(_name, GetTexture(_obj), &srv);
+			TextureManager::Instance()->iAddTexture2D(_name, GetTexture(*_obj), &srv);
 
-			_mc->AddTexture(_name.c_str(), eTEX_DIFFUSE);
-			_mc->GetContext().mTextures[eTEX_DIFFUSE] = srv;
+			(*_mc)->AddTexture(_name.c_str(), eTEX_DIFFUSE);
+			(*_mc)->GetContext().mTextures[eTEX_DIFFUSE] = srv;
+
+			//(*_obj)->AddComponent((*_mc));
 		}
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> GetTexture(BaseObject* _obj,unsigned int _width = 256,unsigned int _height = 256)
 		{
@@ -379,14 +388,21 @@ namespace Epoch
 			bitmapDesc.MiscFlags = 0;
 			return bitmapDesc;
 		}
-		void SetVisiblity(BaseObject* _obj, bool _isVisible)
+		void SetVisiblity(BaseObject** _obj, bool _isVisible)
 		{
 			//_obj->GetChildren();
-			for (auto it = _obj->GetChildren().begin(); it != _obj->GetChildren().end(); ++it)
+			//std::list<BaseObject*>::iterator it,end;
+			//for (it = (*_obj)->GetChildren().begin(), end = (*_obj)->GetChildren().end(); it != end; ++it)
+			//{
+			//	BaseObject** temp = &(*it);
+			//	SetVisiblity(temp, _isVisible);
+			//}
+			for(auto it : (*_obj)->GetChildren())
 			{
-				SetVisiblity((*it), _isVisible);
+				BaseObject* temp = (&*it);
+				SetVisiblity(&temp, _isVisible);
 			}
-			std::vector<Component*> CodeComps = _obj->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+			std::vector<Component*> CodeComps = (*_obj)->GetComponents(Epoch::ComponentType::eCOMPONENT_MESH);
 			if (CodeComps.size() > 0) {
 				for (size_t x = 0; x < CodeComps.size(); ++x)
 				{

@@ -179,13 +179,6 @@ namespace Epoch
 
 		return WriteFormat;
 	}
-	ID2D1Bitmap1* Draw::CreateNewBitmap(ID3D11Texture2D* _texture)
-	{
-		ID2D1Bitmap1* mtempBitmap;
-		mtempBitmap = CreateBitmapForTexture(_texture);
-		mBitmaps.insert({_texture,mtempBitmap});
-		return mtempBitmap;
-	}
 	void Draw::DrawTextToBitmap(float _left, float _top, float _right, float _bottom,
 															Font _font, std::wstring _text, ID2D1Bitmap* _bitmap)
 	{
@@ -224,7 +217,7 @@ namespace Epoch
 	void Draw::DrawRectangleToBitmap(float _left, float _top, float _right, float _bottom, D2D1::ColorF _color, ID2D1Bitmap * _bitmap)
 	{
 		(*mContext2D)->SetTarget(_bitmap);
-		(*mContext2D)->Clear();
+		//(*mContext2D)->Clear();
 		float color[4] = { 1, 1, 1, 1 };
 
 		// Retrieve the size of the render target.st

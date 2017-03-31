@@ -258,7 +258,6 @@ namespace Epoch
 					headset->AddComponent(ears);
 					headset->AddComponent(ambient);
 					PauseMenu* pauseComp = new PauseMenu();
-					pauseComp->Disable();
 					headset->AddComponent(pauseComp);
 
 					AudioWrapper::GetInstance().STOP();

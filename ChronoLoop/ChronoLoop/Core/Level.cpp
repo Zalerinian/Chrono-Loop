@@ -863,7 +863,7 @@ namespace Epoch {
 		//std::list<BaseObject*> objects = mObjectList;
 		if (accessLevelTwo == nullptr || accessLevelOne == nullptr || (accessHub == nullptr && (accessLevelTwo == nullptr && accessLevelOne == nullptr)))
 			CommandConsole::Instance().DisplaySet(L"FAILED TO LOAD LEVEL :(");
-		else if (accessLevelTwo->GetOnce() == false || accessLevelOne->GetOnce() == false || accessHub->GetOnce() == false)
+		else if (accessLevelTwo->GetOnce() == false || accessLevelOne->GetOnce() == false)// || accessHub->GetOnce() == false)
 			CommandConsole::Instance().DisplaySet(L"LEVEL IS ALREADY LOADED");
 		else if ((_Level == L"HUBWORLD" || _Level == L"HUB") && accessHub->GetOnce() == true) {
 			accessHub->SetOnce(false);
