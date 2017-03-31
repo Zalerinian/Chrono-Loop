@@ -66,9 +66,6 @@ namespace Epoch {
 						vec3f meshPos = inverse.Position;
 						forward *= inverse;
 						vec3f fwd(forward);
-						fwd.x *= (1 / objMatInv.xAxis[0]);
-						fwd.y *= (1 / objMatInv.yAxis[1]);
-						fwd.z *= (1 / objMatInv.zAxis[2]);
 						Triangle *tris = meshes[i]->GetTriangles();
 						size_t numTris = meshes[i]->GetTriangleCount();
 						for (unsigned int i = 0; i < numTris; ++i) {

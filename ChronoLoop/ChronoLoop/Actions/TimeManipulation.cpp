@@ -158,7 +158,7 @@ namespace Epoch
 					p->SetSize(.25f, .15f);
 
 					vec3f EPos = vec3f(mCurCloneHeadset->GetTransform().GetPosition()->x,mCurCloneHeadset->GetTransform().GetPosition()->y, mCurCloneHeadset->GetTransform().GetPosition()->z);
-					ParticleEmitter* emit = new RadialEmitter(500, 250, 25, EPos);
+					ParticleEmitter* emit = new RadialEmitter(250, 250, 25, EPos);
 					emit->SetParticle(p);
 					emit->SetTexture("../Resources/BasicCircleP.png");
 					ParticleSystem::Instance()->AddEmitter(emit);

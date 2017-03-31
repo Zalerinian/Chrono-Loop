@@ -274,7 +274,7 @@ namespace Epoch {
 						p->SetLife(300);
 						p->SetSize(.25f, .15f);
 						vec3f EPos = vec3f(mClones[i]->GetTransform().GetPosition()->x, mClones[i]->GetTransform().GetPosition()->y, mClones[i]->GetTransform().GetPosition()->z);
-						ParticleEmitter *emit = new ParticleEmitter(600, 200, 20, EPos);
+						ParticleEmitter *emit = new ParticleEmitter(200, 200, 20, EPos);
 						emit->SetParticle(p);
 						emit->SetTexture("../Resources/BasicCircleP.png");
 						ParticleSystem::Instance()->AddEmitter(emit);
@@ -562,7 +562,7 @@ namespace Epoch {
 			if ((mtempCurSnapFrame != 0 && _gesture == -1) || (mtempCurSnapFrame != temp && _gesture == 1)) {
 				int placeHolder = mtempCurSnapFrame;
 				mtempCurSnapFrame -= _frameRewind;
-				SystemLogger::GetLog() << "mTempCurSnapFrame: " << mtempCurSnapFrame << std::endl;
+				//SystemLogger::GetLog() << "mTempCurSnapFrame: " << mtempCurSnapFrame << std::endl;
 				mTimeline->PrepareAllObjectInterpolators(placeHolder, mtempCurSnapFrame);
 				mShouldUpdateInterpolators = true;
 				mShouldPulse = true;
