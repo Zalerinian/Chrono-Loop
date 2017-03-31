@@ -4,6 +4,7 @@
 #include <map>
 #include "..\Common\Logger.h"
 #include "AkSoundEngineDLL.h"
+#include "../../Resources/Soundbanks/Wwise_IDs.h"
 
 namespace Epoch
 {

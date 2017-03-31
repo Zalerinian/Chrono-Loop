@@ -152,4 +152,15 @@ namespace Epoch
 
 		return false;
 	}
+
+	void ParticleSystem::Clear()
+	{
+		for (int i = 0; i < mPEmitters.size(); i++)
+		{
+			if (DoesExist(mPEmitters[i]))
+			{
+				RemoveEmitter(mPEmitters[i]);
+			}
+		}
+	}
 }

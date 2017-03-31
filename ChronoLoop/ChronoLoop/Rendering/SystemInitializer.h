@@ -17,7 +17,7 @@
 #include "../Common/Settings.h"
 #include "../Rendering/RendererDefines.h"
 #include "../Particles/ParticleSystem.h"
-#include "../Messager/Messager.h"
+#include "../Sound/SoundEngine.h"
 
 namespace Epoch {
 	bool InitializeSystems(HWND _Window, unsigned int _width, unsigned int _height,
@@ -56,7 +56,7 @@ namespace Epoch {
 		Physics::Destroy();
 		ParticleSystem::Destroy();
 
-		Messager::Destroy();
+		AudioWrapper::Destroy();
 		Pool::DestroyInstance();
 		ShaderManager::DestroyInstance();
 		TextureManager::DestroyInstance();
