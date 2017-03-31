@@ -863,19 +863,19 @@ namespace Epoch {
 		//std::list<BaseObject*> objects = mObjectList;
 		if (accessLevelTwo == nullptr || accessLevelOne == nullptr || (accessHub == nullptr && (accessLevelTwo == nullptr && accessLevelOne == nullptr)))
 			CommandConsole::Instance().DisplaySet(L"FAILED TO LOAD LEVEL :(");
-		else if (access->GetOnce() == false || access->GetOnce() == false || accessHub->GetOnce() == false)
+		else if (accessLevelTwo->GetOnce() == false || accessLevelOne->GetOnce() == false || accessHub->GetOnce() == false)
 			CommandConsole::Instance().DisplaySet(L"LEVEL IS ALREADY LOADED");
 		else if ((_Level == L"HUBWORLD" || _Level == L"HUB") && accessHub->GetOnce() == true) {
 			accessHub->SetOnce(false);
 			CommandConsole::Instance().Toggle();
 		}
-		else if ((_Level == L"LEVELONE" || _Level == L"LVLONE") && access->GetOnce() == true) {
-			access->SetOnce(false);
+		else if ((_Level == L"LEVELONE" || _Level == L"LVLONE") && accessLevelOne->GetOnce() == true) {
+			accessLevelOne->SetOnce(false);
 			CommandConsole::Instance().Toggle();
 		}
-		else if ((_Level == L"LEVELONE" || _Level == L"LVLONE") && accessLevelOne->GetOnce() == true)
+		else if ((_Level == L"LEVELTWO" || _Level == L"LVLTWO") && accessLevelTwo->GetOnce() == true)
 		{
-			accessLevelOne->SetOnce(false);
+			accessLevelTwo->SetOnce(false);
 			CommandConsole::Instance().Toggle();
 		}
 		else if ((_Level == L"HUBWORLD" || _Level == L"HUB") && accessHub->GetOnce() == true)

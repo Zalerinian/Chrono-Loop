@@ -15,6 +15,7 @@
 #include "..\Actions\UICloneText.h"
 #include "..\Actions\BoxSnapToControllerAction.hpp"
 #include "..\Actions\TeleportAction.hpp"
+#include "..\PauseMenu.hpp"
 #include "..\Rendering\Draw2D.h"
 #include "..\Rendering\Renderer.h"
 #include "..\Objects\TransparentMeshComponent.h"
@@ -256,7 +257,9 @@ namespace Epoch
 					headset->AddComponent(hfollow);
 					headset->AddComponent(ears);
 					headset->AddComponent(ambient);
-
+					PauseMenu* pauseComp = new PauseMenu();
+					pauseComp->Disable();
+					headset->AddComponent(pauseComp);
 
 					AudioWrapper::GetInstance().STOP();
 

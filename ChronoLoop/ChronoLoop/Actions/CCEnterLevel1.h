@@ -15,6 +15,7 @@
 #include "..\Actions\UICloneText.h"
 #include "..\Actions\BoxSnapToControllerAction.hpp"
 #include "..\Actions\TeleportAction.hpp"
+#include "..\PauseMenu.hpp"
 #include "..\Rendering\Draw2D.h"
 #include "..\Rendering\Renderer.h"
 #include "..\Rendering\TextureManager.h"
@@ -258,7 +259,9 @@ namespace Epoch
 					HeadsetFollow* hfollow = new HeadsetFollow();
 					headset->AddComponent(hfollow);
 					headset->AddComponent(ears);
-
+					PauseMenu* pauseComp = new PauseMenu();
+					pauseComp->Disable();
+					headset->AddComponent(pauseComp);
 
 					LevelManager::GetInstance().RequestLevelChange(next);
 
