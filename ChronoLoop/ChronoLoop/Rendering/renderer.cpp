@@ -414,7 +414,7 @@ namespace Epoch {
 		initialData.pSysMem = &initial;
 		CD3D11_BUFFER_DESC bufferDesc(sizeof(TimeManipulationEffectData), D3D11_BIND_CONSTANT_BUFFER);
 		mDevice->CreateBuffer(&bufferDesc, &initialData, &ColorRatioBuffer);
-		mScenePPQuad->GetContext().mPixelCBuffers[ePB_PP_Ratios].Attach(ColorRatioBuffer);
+		mScenePPQuad->GetContext().mPixelCBuffers[ePB_REGISTER1].Attach(ColorRatioBuffer);
 
 		mSceneScreenQuad = new RenderShape("../Resources/VerticalPlaneHalfU.obj", true, ePS_PURETEXTURE, eVS_NDC, eGS_PosNormTex_NDC);
 		mSceneScreenQuad->GetContext().mTextures[eTEX_DIFFUSE] = mSceneSRV;
@@ -718,6 +718,48 @@ namespace Epoch {
 	void Renderer::RemoveTransparentNode(RenderShape & _node)
 	{
 		mTransparentSet.RemoveShape(_node);
+	}
+
+	void Renderer::UpdateOpaqueNodeBuffer(RenderShape & _node, ConstantBufferType _t, unsigned int _index) {
+		RenderList* list = mOpaqueSet.GetListForShape(_node);
+		if (list == nullptr) {
+			SystemLogger::Error() << "Could not update opaque node: The given shape had no associated render list." << std::endl;
+			return;
+		}
+		switch (_t) {
+			case eCB_VERTEX:
+				list->UpdateBuffer(_t, _node.GetContext().mVertexCBuffers[_index], _index, _node.mVBIndex);
+				break;
+			case eCB_PIXEL:
+				list->UpdateBuffer(_t, _node.GetContext().mPixelCBuffers[_index], _index, _node.mPBIndex);
+				break;
+			case eCB_GEO:
+				list->UpdateBuffer(_t, _node.GetContext().mGeometryCBuffers[_index], _index, _node.mGBIndex);
+				break;
+			default:
+				break;
+		}
+	}
+
+	void Renderer::UpdateTransparentNodeBuffer(RenderShape & _node, ConstantBufferType _t, unsigned int _index) {
+		RenderList* list = mTransparentSet.GetListForShape(_node);
+		if (list == nullptr) {
+			SystemLogger::Error() << "Could not update transparent node: The given shape had no associated render list." << std::endl;
+			return;
+		}
+		switch (_t) {
+			case eCB_VERTEX:
+				list->UpdateBuffer(_t, _node.GetContext().mVertexCBuffers[_index], _index, _node.mVBIndex);
+				break;
+			case eCB_PIXEL:
+				list->UpdateBuffer(_t, _node.GetContext().mPixelCBuffers[_index], _index, _node.mPBIndex);
+				break;
+			case eCB_GEO:
+				list->UpdateBuffer(_t, _node.GetContext().mGeometryCBuffers[_index], _index, _node.mGBIndex);
+				break;
+			default:
+				break;
+		}
 	}
 
 	bool Renderer::iInitialize(HWND _Window, unsigned int _width, unsigned int _height, bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane, vr::IVRSystem * _vrsys) {

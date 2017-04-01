@@ -121,18 +121,20 @@ namespace Epoch {
 		GhostList<matrix4>::GhostNode* AddTransparentNode(RenderShape& _node);
 		void RemoveOpaqueNode(RenderShape& _node);
 		void RemoveTransparentNode(RenderShape& _node);
+		void UpdateOpaqueNodeBuffer(RenderShape& _node, ConstantBufferType _t, unsigned int _index);
+		void UpdateTransparentNodeBuffer(RenderShape& _node, ConstantBufferType _t, unsigned int _index);
 		void Render(float _deltaTime);
 
 		void ClearRenderSet();
 
 
-		inline Microsoft::WRL::ComPtr<ID3D11Device> GetDevice() { return mDevice; }
-		inline Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetContext() { return mContext; }
-		inline Microsoft::WRL::ComPtr<IDXGISwapChain> GetChain() { return mChain; }
-		inline Microsoft::WRL::ComPtr<IDXGIFactory1> GetFactory() { return mFactory; }
-		inline Microsoft::WRL::ComPtr<ID3D11RenderTargetView> GetRTView() { return mMainView; }
-		inline Microsoft::WRL::ComPtr<ID3D11DepthStencilView> GetDSView() { return mDSView; }
-		inline Microsoft::WRL::ComPtr<ID3D11Texture2D> GetRTViewTexture() { return mMainViewTexture; }
+		inline Microsoft::WRL::ComPtr<ID3D11Device>& GetDevice() { return mDevice; }
+		inline Microsoft::WRL::ComPtr<ID3D11DeviceContext>& GetContext() { return mContext; }
+		inline Microsoft::WRL::ComPtr<IDXGISwapChain>& GetChain() { return mChain; }
+		inline Microsoft::WRL::ComPtr<IDXGIFactory1>& GetFactory() { return mFactory; }
+		inline Microsoft::WRL::ComPtr<ID3D11RenderTargetView>& GetRTView() { return mMainView; }
+		inline Microsoft::WRL::ComPtr<ID3D11DepthStencilView>& GetDSView() { return mDSView; }
+		inline Microsoft::WRL::ComPtr<ID3D11Texture2D>& GetRTViewTexture() { return mMainViewTexture; }
 		inline HWND GetWindow() { return mWindow; }
 		inline RenderShape* GetSceneQuad() { return mScenePPQuad; }
 		inline std::mutex& GetRendererLock() { return mRendererLock; }

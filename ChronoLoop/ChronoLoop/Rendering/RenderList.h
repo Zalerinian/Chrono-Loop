@@ -19,6 +19,7 @@ namespace Epoch {
 		unsigned int EnlargeBuffer(Microsoft::WRL::ComPtr<ID3D11Buffer>& _toGrow, std::string _name, Microsoft::WRL::ComPtr<ID3D11Buffer> _copy);
 		unsigned int EnlargeBuffer(Microsoft::WRL::ComPtr<ID3D11Buffer>& _toGrow, std::string _name, BufferWidth _filler);
 		void Cut(Microsoft::WRL::ComPtr<ID3D11Buffer>& _toCut, std::string _name, unsigned int index);
+		void UpdateBuffer(Microsoft::WRL::ComPtr<ID3D11Buffer>& _toUpdate, Microsoft::WRL::ComPtr<ID3D11Buffer>& _data, unsigned int index);
 
 		std::unordered_map<unsigned int, unsigned int> mIdMap;
 		unsigned int mMasterId = 0;
@@ -32,6 +33,7 @@ namespace Epoch {
 
 		GhostList<matrix4>::GhostNode* Push(RenderShape& _shape);
 		void Pop(RenderShape& _shape);
+		void UpdateBuffer(ConstantBufferType _t, Microsoft::WRL::ComPtr<ID3D11Buffer> _data, unsigned int _bufferIndex, unsigned int _dataIndex);
 	};
 
 } // Epoch Namespace

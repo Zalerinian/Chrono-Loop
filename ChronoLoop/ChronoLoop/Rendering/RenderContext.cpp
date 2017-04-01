@@ -25,13 +25,13 @@ namespace Epoch {
 			mTextures[i] = _copy.mTextures[i];
 		}
 
-		for (int i = eVB_BEGIN; i < eVB_MAX; ++i) {
+		for (int i = 0; i < eVB_MAX; ++i) {
 			mVertexCBuffers[i] = _copy.mVertexCBuffers[i];
 		}
-		for (int i = ePB_BEGIN; i < ePB_MAX; ++i) {
+		for (int i = 0; i < ePB_MAX; ++i) {
 			mPixelCBuffers[i] = _copy.mPixelCBuffers[i];
 		}
-		for (int i = eGB_BEGIN; i < eGB_MAX; ++i) {
+		for (int i = 0; i < eGB_MAX; ++i) {
 			mGeometryCBuffers[i] = _copy.mGeometryCBuffers[i];
 		}
 	}
@@ -65,13 +65,13 @@ namespace Epoch {
 		}
 
 		ID3D11Buffer *pixelBuffers[ePB_MAX], *vertexBuffers[eVB_MAX], *geoBuffers[eGB_MAX];
-		for (int i = eVB_BEGIN; i < eVB_MAX; ++i) {
+		for (int i = 0; i < eVB_MAX; ++i) {
 			vertexBuffers[i] = mVertexCBuffers[i].Get();
 		}
-		for (int i = ePB_BEGIN; i < ePB_MAX; ++i) {
+		for (int i = 0; i < ePB_MAX; ++i) {
 			pixelBuffers[i] = mPixelCBuffers[i].Get();
 		}
-		for (int i = eGB_BEGIN; i < eGB_MAX; ++i) {
+		for (int i = 0; i < eGB_MAX; ++i) {
 			geoBuffers[i] = mGeometryCBuffers[i].Get();
 		}
 		
@@ -106,13 +106,13 @@ namespace Epoch {
 		}
 
 		ID3D11Buffer *pixelBuffers[ePB_MAX], *vertexBuffers[eVB_MAX], *geoBuffers[eGB_MAX];
-		for (int i = eVB_BEGIN; i < eVB_MAX; ++i) {
+		for (int i = 0; i < eVB_MAX; ++i) {
 			vertexBuffers[i] = mVertexCBuffers[i].Get();
 		}
-		for (int i = ePB_BEGIN; i < ePB_MAX; ++i) {
+		for (int i = 0; i < ePB_MAX; ++i) {
 			pixelBuffers[i] = mPixelCBuffers[i].Get();
 		}
-		for (int i = eGB_BEGIN; i < eGB_MAX; ++i) {
+		for (int i = 0; i < eGB_MAX; ++i) {
 			geoBuffers[i] = mGeometryCBuffers[i].Get();
 		}
 		Renderer::Instance()->GetContext()->VSSetConstantBuffers(eVB_OFFSET, eVB_MAX, vertexBuffers);
@@ -151,13 +151,13 @@ namespace Epoch {
 			mTextures[i] = _other.mTextures[i];
 		}
 
-		for (int i = eVB_BEGIN; i < eVB_MAX; ++i) {
+		for (int i = 0; i < eVB_MAX; ++i) {
 			mVertexCBuffers[i] = _other.mVertexCBuffers[i];
 		}
-		for (int i = ePB_BEGIN; i < ePB_MAX; ++i) {
+		for (int i = 0; i < ePB_MAX; ++i) {
 			mPixelCBuffers[i] = _other.mPixelCBuffers[i];
 		}
-		for (int i = eGB_BEGIN; i < eGB_MAX; ++i) {
+		for (int i = 0; i < eGB_MAX; ++i) {
 			mGeometryCBuffers[i] = _other.mGeometryCBuffers[i];
 		}
 		return *this;

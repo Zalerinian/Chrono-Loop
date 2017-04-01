@@ -82,52 +82,54 @@ namespace Epoch {
 		eVB_Instances = 0,
 		eVB_SimInstanceID,
 		eVB_OFFSET,
-		eVB_CUSTOM1 = 0,
-		eVB_CUSTOM2,
-		eVB_CUSTOM3,
-		eVB_CUSTOM4,
-		eVB_CUSTOM5,
-		eVB_CUSTOM6,
-		eVB_CUSTOM7,
-		eVB_CUSTOM8,
-		eVB_MAX,
-		eVB_BEGIN = 0
+		eVB_REGISTER2 = 0,
+		eVB_REGISTER3,
+		eVB_REGISTER4,
+		eVB_REGISTER5,
+		eVB_REGISTER6,
+		eVB_REGISTER7,
+		eVB_REGISTER8,
+		eVB_REGISTER9,
+		eVB_MAX
 	};
 
 
 
 	enum PixelBufferType {
 		ePB_Lights = 0,
-		ePB_TP_Alpha = 0,
-		ePB_PP_Ratios = 0,
-		ePB_CUSTOM1 = 0,
-		ePB_CUSTOM2,
-		ePB_CUSTOM3,
-		ePB_CUSTOM4,
-		ePB_CUSTOM5,
-		ePB_CUSTOM6,
-		ePB_CUSTOM7,
-		ePB_CUSTOM8,
-		ePB_CUSTOM9,
-		ePB_MAX,
-		ePB_OFFSET = ePB_Lights + 1,
-		ePB_BEGIN = 0
+		ePB_OFFSET,
+		ePB_REGISTER1 = 0,
+		ePB_REGISTER2,
+		ePB_REGISTER3,
+		ePB_REGISTER4,
+		ePB_REGISTER5,
+		ePB_REGISTER6,
+		ePB_REGISTER7,
+		ePB_REGISTER8,
+		ePB_REGISTER9,
+		ePB_MAX
 	};
 
 	enum GeometryBufferType {
 		eGB_Eyes = 0,
-		eGB_CUSTOM1 = 0,
-		eGB_CUSTOM2,
-		eGB_CUSTOM3,
-		eGB_CUSTOM4,
-		eGB_CUSTOM5,
-		eGB_CUSTOM6,
-		eGB_CUSTOM7,
-		eGB_CUSTOM8,
-		eGB_CUSTOM9,
-		eGB_MAX,
-		eGB_OFFSET = eGB_Eyes + 1,
-		eGB_BEGIN = 0
+		eGB_OFFSET,
+		eGB_REGISTER1 = 0,
+		eGB_REGISTER2,
+		eGB_REGISTER3,
+		eGB_REGISTER4,
+		eGB_REGISTER5,
+		eGB_REGISTER6,
+		eGB_REGISTER7,
+		eGB_REGISTER8,
+		eGB_REGISTER9,
+		eGB_MAX
+	};
+
+	enum ConstantBufferType {
+		eCB_VERTEX = 0,
+		eCB_PIXEL,
+		eCB_GEO,
+		eCB_MAX
 	};
 
 }

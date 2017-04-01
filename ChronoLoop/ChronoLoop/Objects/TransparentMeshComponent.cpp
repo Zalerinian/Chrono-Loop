@@ -37,10 +37,9 @@ namespace Epoch {
 		CD3D11_BUFFER_DESC AlphaDesc(sizeof(AlphaData), D3D11_BIND_CONSTANT_BUFFER);
 		D3D11_SUBRESOURCE_DATA BufferData;
 		BufferData.pSysMem = &mAlpha;
-		auto device = Renderer::Instance()->GetDevice();
-		HRESULT hr = device->CreateBuffer(&AlphaDesc, &BufferData, &AlphaBuff);
+		HRESULT hr = Renderer::Instance()->GetDevice()->CreateBuffer(&AlphaDesc, &BufferData, &AlphaBuff);
 		SetD3DName(AlphaBuff, (mShape->GetName() + " alpha buffer").c_str());
-		mShape->GetContext().mPixelCBuffers[ePB_TP_Alpha].Attach(AlphaBuff);
+		mShape->GetContext().mPixelCBuffers[ePB_REGISTER1].Attach(AlphaBuff);
 		Renderer::Instance()->GetRendererLock().unlock();
 	}
 
@@ -69,9 +68,15 @@ namespace Epoch {
 	{
 		//return;
 		SystemLogger::Debug() << "Setting alpha of " << std::hex << (int)this << std::dec << " to: " << _a << std::endl;
+		float PrevAlpha = mAlpha.alpha.x;
 		mAlpha.alpha.x = _a;
-		auto buffer = mShape->GetContext().mPixelCBuffers[ePB_TP_Alpha];
+		auto buffer = mShape->GetContext().mPixelCBuffers[ePB_REGISTER1];
 		Renderer::Instance()->GetContext()->UpdateSubresource(buffer.Get(), 0, NULL, &mAlpha, 0, 0);
+		if (PrevAlpha >= 1.0f) {
+			Renderer::Instance()->UpdateOpaqueNodeBuffer(*mShape, eCB_PIXEL, ePB_REGISTER1);
+		} else {
+			Renderer::Instance()->UpdateTransparentNodeBuffer(*mShape, eCB_PIXEL, ePB_REGISTER1);
+		}
 	}
 
 	bool TransparentMeshComponent::IsOpaque() {

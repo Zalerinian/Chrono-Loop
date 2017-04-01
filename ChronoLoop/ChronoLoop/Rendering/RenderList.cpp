@@ -12,8 +12,8 @@ namespace Epoch {
 
 	unsigned int RenderList::EnlargeBuffer(Microsoft::WRL::ComPtr<ID3D11Buffer>& _toGrow, std::string _name, Microsoft::WRL::ComPtr<ID3D11Buffer> _copy) {
 		Renderer::Instance()->GetRendererLock().lock();
-		ComPtr<ID3D11DeviceContext> ctx = Renderer::Instance()->GetContext();
-		ComPtr<ID3D11Device> dev = Renderer::Instance()->GetDevice();
+		auto& ctx = Renderer::Instance()->GetContext();
+		auto& dev = Renderer::Instance()->GetDevice();
 
 		// If the buffer doesn't exist, just copy the _copy buffer.
 		if (_toGrow.Get() == nullptr) {
@@ -54,8 +54,8 @@ namespace Epoch {
 
 	unsigned int RenderList::EnlargeBuffer(Microsoft::WRL::ComPtr<ID3D11Buffer>& _toGrow, std::string _name, BufferWidth _filler) {
 		Renderer::Instance()->GetRendererLock().lock();
-		ComPtr<ID3D11DeviceContext> ctx = Renderer::Instance()->GetContext();
-		ComPtr<ID3D11Device> dev = Renderer::Instance()->GetDevice();
+		auto& ctx = Renderer::Instance()->GetContext();
+		auto& dev = Renderer::Instance()->GetDevice();
 
 		if (_toGrow.Get() == nullptr) {
 			D3D11_SUBRESOURCE_DATA iData;
@@ -95,8 +95,8 @@ namespace Epoch {
 
 	void RenderList::Cut(Microsoft::WRL::ComPtr<ID3D11Buffer>& _toCut, std::string _name, unsigned int index) {
 		Renderer::Instance()->GetRendererLock().lock();
-		ComPtr<ID3D11DeviceContext> ctx = Renderer::Instance()->GetContext();
-		ComPtr<ID3D11Device> dev = Renderer::Instance()->GetDevice();
+		auto& ctx = Renderer::Instance()->GetContext();
+		auto& dev = Renderer::Instance()->GetDevice();
 
 		if (_toCut.Get() == nullptr) {
 			Renderer::Instance()->GetRendererLock().unlock();
@@ -190,6 +190,25 @@ namespace Epoch {
 			}
 		}
 		Renderer::Instance()->GetRendererLock().unlock();
+	}
+
+	void RenderList::UpdateBuffer(Microsoft::WRL::ComPtr<ID3D11Buffer>& _toUpdate, Microsoft::WRL::ComPtr<ID3D11Buffer>& _data, unsigned int index) {
+		if (_toUpdate.Get() == nullptr) {
+			SystemLogger::Error() << "Could not update a buffer, because there *is*no buffer." << std::endl;
+			return;
+		}
+		
+		D3D11_BUFFER_DESC desc;
+		_toUpdate->GetDesc(&desc);
+		unsigned int count = desc.ByteWidth / sizeof(BufferWidth);
+		
+		unsigned int BufferIndex = GetBufferIndex(index);
+		if (BufferIndex < 0 || BufferIndex >= count) {
+			SystemLogger::Error() << "Cannot update a buffer because somehow, an index is out of range!" << std::endl;
+			return;
+		}
+
+		Renderer::Instance()->GetContext()->CopySubresourceRegion(_toUpdate.Get(), 0, sizeof(BufferWidth) * BufferIndex, 0, 0, _data.Get(), 0, nullptr);
 	}
 
 	unsigned int RenderList::GetBufferIndex(unsigned int _uid) {
@@ -325,6 +344,23 @@ namespace Epoch {
 		for (int i = 0; i < eGB_MAX; ++i) {
 			bufferName = mShape.mName + std::string(" master geometry buffer at index ") + std::to_string(i);
 			Cut(mShape.mContext.mGeometryCBuffers[i], bufferName, _shape.mGBIndex);
+		}
+	}
+
+	void RenderList::UpdateBuffer(ConstantBufferType _t, Microsoft::WRL::ComPtr<ID3D11Buffer> _data, unsigned int _bufferIndex, unsigned int _dataIndex) {
+		switch (_t) {
+			case eCB_VERTEX:
+				UpdateBuffer(mShape.mContext.mVertexCBuffers[_bufferIndex], _data, _dataIndex);
+				break;
+			case eCB_PIXEL:
+				UpdateBuffer(mShape.mContext.mPixelCBuffers[_bufferIndex], _data, _dataIndex);
+				break;
+			case eCB_GEO:
+				UpdateBuffer(mShape.mContext.mGeometryCBuffers[_bufferIndex], _data, _dataIndex);
+				break;
+			default:
+				SystemLogger::Error() << "Invalid buffer type passed to UpdateBuffer: " << _t << std::endl;
+				break;
 		}
 	}
 

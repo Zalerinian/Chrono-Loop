@@ -46,6 +46,16 @@ namespace Epoch {
 		mRenderList.clear();
 	}
 
+	RenderList * RenderSet::GetListForShape(RenderShape & _shape) {
+		for (auto it = mRenderList.begin(); it != mRenderList.end(); ++it) {
+			if ((*it)->mShape == _shape) {
+				// Same mesh and context
+				return *it;
+			}
+		}
+		return nullptr;
+	}
+
 
 	std::list<RenderList*>::iterator RenderSet::Begin() {
 		return mRenderList.begin();
