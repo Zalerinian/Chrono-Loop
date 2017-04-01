@@ -620,7 +620,7 @@ namespace Epoch {
 						std::string path = "../Resources/";
 						path.append(meshFile);
 						MeshComponent* mesh;
-						if(obj->GetName().find("Transparent"))
+						if(obj->GetName().find("Transparent") != std::string::npos)
 						{
 							mesh = new TransparentMeshComponent(path.c_str(), .3f);
 						}
