@@ -1,4 +1,4 @@
-<Level>
+﻿<Level>
   <Settings>
     <StartPos>0,0,0</StartPos>
     <StartRot>0,0,0</StartRot>
@@ -7,9 +7,9 @@
     <Name>mmChamber</Name>
     <Mesh>mmChamber.obj</Mesh>
     <Texture>grey.png</Texture>
-    <Position>0,0,0</Position>
+    <Position>0,0.04,3.905513</Position>
     <Rotation>0,0,0</Rotation>
-    <Scale>1,1.25,1</Scale>
+    <Scale>1,1.5,1</Scale>
     <Components />
   </Object>
   <Object>
@@ -43,7 +43,7 @@
     <Texture>start.png</Texture>
     <Position>0,1,1.5</Position>
     <Rotation>1.57,3.14,0</Rotation>
-    <Scale>1,1,1</Scale>
+    <Scale>0.5,1,0.5</Scale>
     <Components />
   </Object>
   <Object>
@@ -52,7 +52,7 @@
     <Texture>exit.png</Texture>
     <Position>-1.5,1,0</Position>
     <Rotation>1.57,1.57,0</Rotation>
-    <Scale>1,1,1</Scale>
+    <Scale>0.5,1,0.5</Scale>
     <Components />
   </Object>
   <Object>
@@ -123,6 +123,96 @@
     <Position>0,-10,0</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>mmChamber2</Name>
+    <Mesh>mmChamber.obj</Mesh>
+    <Texture>grey.png</Texture>
+    <Position>0,0.04477047,-3.916032</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1.5,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>mmChamber3</Name>
+    <Mesh>mmChamber.obj</Mesh>
+    <Texture>grey.png</Texture>
+    <Position>0,0,0</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1.5,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>mmChamber4</Name>
+    <Mesh>mmChamber.obj</Mesh>
+    <Texture>grey.png</Texture>
+    <Position>-3.906852,0.04,0</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1.5,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>mmChamber5</Name>
+    <Mesh>mmChamber.obj</Mesh>
+    <Texture>grey.png</Texture>
+    <Position>3.918808,0.04,0</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1.5,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Clone</Name>
+    <Mesh>Clone.obj</Mesh>
+    <Texture>CloneTexture.png</Texture>
+    <Position>3.972854,1.570289,0</Position>
+    <Rotation>-0.5233334,1.57,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>vr_controller_lowpoly_vr_controller_lowpoly_mesh</Name>
+    <Mesh>Controller.obj</Mesh>
+    <Texture>vr_controller_lowpoly_texture.png</Texture>
+    <Position>3.872773,0.9692521,-0.2105372</Position>
+    <Rotation>-0.8722222,1.57,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>vr_controller_lowpoly_vr_controller_lowpoly_mesh</Name>
+    <Mesh>Controller.obj</Mesh>
+    <Texture>vr_controller_lowpoly_texture.png</Texture>
+    <Position>3.87,0.97,0.21</Position>
+    <Rotation>-0.8722222,1.57,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>mmCube</Name>
+    <Mesh>raycube.obj</Mesh>
+    <Texture>raycube.png</Texture>
+    <Position>0,1.412648,-3.872531</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>0.5,0.5,0.5</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>entrytest</Name>
+    <Mesh>PlaneCorrection.obj</Mesh>
+    <Texture>EntryTest.png</Texture>
+    <Position>0,-7.667752,2.508215</Position>
+    <Rotation>1.57,3.14,0</Rotation>
+    <Scale>0.5,1,0.2</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>noviceTest</Name>
+    <Mesh>PlaneCorrection.obj</Mesh>
+    <Texture>Novice.png</Texture>
+    <Position>2.507524,-7.67,0</Position>
+    <Rotation>1.57,-1.57,0</Rotation>
+    <Scale>0.5,1,0.2</Scale>
     <Components />
   </Object>
 </Level>

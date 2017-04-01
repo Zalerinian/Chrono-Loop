@@ -14,6 +14,7 @@
 #include "../Actions/CCEnterLevel1.h"
 #include "../Actions/MainMenuBT.h"
 #include "../Actions/CCLoadHub.h"
+#include "../Actions/CCBoxSpin.h"
 #include "../Objects/MeshComponent.h"
 #include "../Objects/TransparentMeshComponent.h"
 #include "../tinyxml/tinyxml.h"
@@ -580,6 +581,12 @@ namespace Epoch {
 						matrix4::CreateTranslation(position.x, position.y, position.z);
 					transform.SetMatrix(mat);
 					BaseObject* obj = new BaseObject(name, transform);
+
+					if (name == "mmCube")
+					{
+						CCBoxSpin* spin = new CCBoxSpin();
+						obj->AddComponent(spin);
+					}
 
 					if (name == "cube.001" || name == "cube.002" || name == "cube.003" || name == "cube.004")
 					{

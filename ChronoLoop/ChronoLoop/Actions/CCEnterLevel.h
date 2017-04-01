@@ -265,6 +265,7 @@ namespace Epoch
 
 					LevelManager::GetInstance().RequestLevelChange(next);
 
+					ParticleSystem::Instance()->Clear();
 
 					//Enter effect
 					Particle* p = &Particle::Init();
@@ -312,7 +313,6 @@ namespace Epoch
 					TimeManager::Instance()->AddObjectToTimeline(RightController);
 					TimeManager::Instance()->AddObjectToTimeline(LeftController);
 					TimeManager::Instance()->AddObjectToTimeline(headset);
-
 
 					SystemLogger::Debug() << "Loading complete" << std::endl;
 					Physics::Instance()->PhysicsLock.unlock();

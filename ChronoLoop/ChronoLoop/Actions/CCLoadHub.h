@@ -125,10 +125,9 @@ namespace Epoch
 						if (((BaseObject*)*it)->GetName() == "mmChamber")
 						{
 							Transform t;
-							matrix4 mat = matrix4::CreateTranslation(0, -10, 0);
-							t.SetMatrix(mat);
+							t.SetMatrix(matrix4::CreateTranslation(0, -10, 0));
 							((BaseObject*)*it)->SetTransform(t);
-							VRInputManager::GetInstance().GetPlayerPosition() = mat;
+							next->GetStartPos() = vec4f(0, -10, 0, 1);
 						}
 
 						if ((*it)->mComponents[eCOMPONENT_COLLIDER].size() > 0)

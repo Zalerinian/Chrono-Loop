@@ -200,6 +200,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="..\DXTK\scoped.h" />
     <ClInclude Include="..\Resources\Soundbanks\Wwise_IDs.h" />
     <ClInclude Include="Actions\BoxSnapToControllerAction.hpp" />
+    <ClInclude Include="Actions\CCBoxSpin.h" />
     <ClInclude Include="Actions\CCButtonHold.h" />
     <ClInclude Include="Actions\CCButtonPress.h" />
     <ClInclude Include="Actions\CCDisplayOnPause.h" />

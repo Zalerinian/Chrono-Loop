@@ -155,7 +155,7 @@ namespace Epoch
 
 	void ParticleSystem::Clear()
 	{
-		for (int i = 0; i < mPEmitters.size(); i++)
+		for (int i = mPEmitters.size() - 1; i >= 0; i--)
 		{
 			if (DoesExist(mPEmitters[i]))
 			{
