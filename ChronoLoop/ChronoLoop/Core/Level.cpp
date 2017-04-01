@@ -619,11 +619,19 @@ namespace Epoch {
 					{
 						std::string path = "../Resources/";
 						path.append(meshFile);
-						MeshComponent* mesh = new MeshComponent(path.c_str());
-						path = "../Resources/";
-						path.append(textureFile);
-						mesh->AddTexture(path.c_str(), eTEX_DIFFUSE);
-						obj->AddComponent(mesh);
+						MeshComponent* mesh;
+						if(obj->GetName().find("Transparent"))
+						{
+							mesh = new TransparentMeshComponent(path.c_str(), .3f);
+						}
+						else
+						{
+							mesh = new MeshComponent(path.c_str());
+						}
+							path = "../Resources/";
+							path.append(textureFile);
+							mesh->AddTexture(path.c_str(), eTEX_DIFFUSE);
+							obj->AddComponent(mesh);
 					
 					}
 

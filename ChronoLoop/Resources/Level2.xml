@@ -7,7 +7,7 @@
     <Name>Button</Name>
     <Mesh>Button.obj</Mesh>
     <Texture>red.png</Texture>
-    <Position>-3.010293,1.129413,8.11148</Position>
+    <Position>0.07529334,1.129413,8.11148</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1.079898</Scale>
     <Components>
@@ -38,7 +38,7 @@
     <Name>Buttonstand</Name>
     <Mesh>Buttonstand.obj</Mesh>
     <Texture>white.png</Texture>
-    <Position>-3.003416,0,8.112746</Position>
+    <Position>0.0825746,0,8.112746</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,0.85,1</Scale>
     <Components>
@@ -631,5 +631,123 @@
         <Drag>0</Drag>
       </Collider>
     </Components>
+  </Object>
+  <Object>
+    <Name>TransparentWall</Name>
+    <Mesh>TiledWall.obj</Mesh>
+    <Texture>wallTextureM.png</Texture>
+    <Position>-5.330216,1.5,4.80321</Position>
+    <Rotation>0,1.57,0</Rotation>
+    <Scale>2.9,1,0.5</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>TransparentWallCollider</Name>
+    <Position>-5.33,1.5,4.8</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components>
+      <Collider>
+        <Type>OBB</Type>
+        <Trigger>False</Trigger>
+        <Position>0,0,0</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>0.3,3,9</Scale>
+        <Move>False</Move>
+        <Gravity>0,0,0</Gravity>
+        <Mass>50</Mass>
+        <Elasticity>0.02</Elasticity>
+        <StaticFriction>0.02</StaticFriction>
+        <KeneticFriction>0</KeneticFriction>
+        <Drag>0</Drag>
+      </Collider>
+    </Components>
+  </Object>
+  <Object>
+    <Name>Camera2</Name>
+    <Mesh>PlaceHolderCamera.obj</Mesh>
+    <Texture>enrgyField.png</Texture>
+    <Position>-4.834053,3.005262,0.969017</Position>
+    <Rotation>0,0.785,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Table</Name>
+    <Mesh>PlaceHolderTable.obj</Mesh>
+    <Texture>mmSkyboxDark.png</Texture>
+    <Position>-6.21589,0,5.030473</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>0.4,0.6,0.6</Scale>
+    <Components>
+      <Collider>
+        <Type>OBB</Type>
+        <Trigger>False</Trigger>
+        <Position>0,0.8,0</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>2.9,1.6,7.9</Scale>
+        <Move>False</Move>
+        <Gravity>0,0,0</Gravity>
+        <Mass>0</Mass>
+        <Elasticity>0</Elasticity>
+        <StaticFriction>0</StaticFriction>
+        <KeneticFriction>0</KeneticFriction>
+        <Drag>0</Drag>
+      </Collider>
+    </Components>
+  </Object>
+  <Object>
+    <Name>Chair1</Name>
+    <Mesh>PlaceHolderChair.obj</Mesh>
+    <Texture>Floorg.png</Texture>
+    <Position>-6.754942,0.003758817,6.346926</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>0.025,0.025,0.03</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Chair2</Name>
+    <Mesh>PlaceHolderChair.obj</Mesh>
+    <Texture>Floorg.png</Texture>
+    <Position>-6.80906,0.003758817,3.488871</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>0.025,0.025,0.03</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Computer2</Name>
+    <Mesh>PC12.obj</Mesh>
+    <Texture>CloneTexture.png</Texture>
+    <Position>-6.92008,0.891376,3.384273</Position>
+    <Rotation>0,4.664644,0</Rotation>
+    <Scale>0.05,0.05,0.05</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Computer</Name>
+    <Mesh>PC12.obj</Mesh>
+    <Texture>CloneTexture.png</Texture>
+    <Position>-6.92008,0.891376,6.214364</Position>
+    <Rotation>0,4.664644,0</Rotation>
+    <Scale>0.05,0.05,0.05</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Chair3</Name>
+    <Mesh>PlaceHolderChair.obj</Mesh>
+    <Texture>Floorg.png</Texture>
+    <Position>-7.201356,0.003758817,4.793186</Position>
+    <Rotation>0,0.5529889,0</Rotation>
+    <Scale>0.025,0.025,0.03</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Camera1</Name>
+    <Mesh>PlaceHolderCamera.obj</Mesh>
+    <Texture>enrgyField.png</Texture>
+    <Position>4.149428,3.005262,-0.02514611</Position>
+    <Rotation>0,4.1605,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
   </Object>
 </Level>
