@@ -23,11 +23,18 @@ namespace Epoch {
 	}
 
 	void RenderSet::RemoveShape(RenderShape& _shape) {
+		int timesFound = 0;
 		for (auto it = mRenderList.begin(); it != mRenderList.end(); ++it) {
 			if ((*it)->mShape == _shape) {
 				// Same mesh and context
 				(*it)->Pop(_shape);
+				timesFound++;
 			}
+		}
+		if (timesFound == 0) {
+			SystemLogger::Error() << _shape.GetName() << " was not found in the render set!" << std::endl;
+		} else if (timesFound > 1) {
+			SystemLogger::Error() << _shape.GetName() << " was found *multiple times* in the same render set!" << std::endl;
 		}
 	}
 

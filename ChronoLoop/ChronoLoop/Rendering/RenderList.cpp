@@ -119,6 +119,7 @@ namespace Epoch {
 		desc.ByteWidth -= sizeof(BufferWidth);
 		if (desc.ByteWidth <= 0) {
 			_toCut = nullptr;
+			mIdMap.erase(index);
 			Renderer::Instance()->GetRendererLock().unlock();
 			return;
 		}

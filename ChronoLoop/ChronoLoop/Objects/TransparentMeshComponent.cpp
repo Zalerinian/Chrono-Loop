@@ -14,6 +14,7 @@ namespace Epoch {
 	}
 
 	void TransparentMeshComponent::RemoveShape() {
+		DESTROY_NODE(mNode);
 		if (IsOpaque()) {
 			RemoveOpaqueShape();
 		} else {

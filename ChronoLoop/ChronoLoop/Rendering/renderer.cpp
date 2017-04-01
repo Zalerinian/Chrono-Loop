@@ -313,9 +313,9 @@ namespace Epoch {
 		// It is necessary because pixel shaders rely on the instance ID to access
 		// instance-specific buffer data to draw it correctly. The simulated instance
 		// ID stored in this buffer will let them access the buffer correctly.
-		vec4f initialSimID(0, 0, 0, 0);
+		vec4i initialSimID(0, 0, 0, 0);
 		InitialData.pSysMem = &initialSimID;
-		desc.ByteWidth = sizeof(vec4f);
+		desc.ByteWidth = sizeof(vec4i);
 		mDevice->CreateBuffer(&desc, &InitialData, mSimInstanceBuffer.GetAddressOf());
 
 		//Light buffers
@@ -650,7 +650,7 @@ namespace Epoch {
 				}
 #else
 				(*it)->mShape.GetContext().Apply();
-				vec4f SimInstanceID(0, 0, 0, 0);
+				vec4i SimInstanceID(0, 0, 0, 0);
 				for (unsigned int i = 0; i < positions.size(); ++i) {
 					SimInstanceID.x = i;
 					mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimInstanceID, 0, 0);
@@ -676,7 +676,7 @@ namespace Epoch {
 				}
 #else
 				(*it)->mShape.GetContext().Apply();
-				vec4f SimulatedIID(0, 0, 0, 0);
+				vec4i SimulatedIID(0, 0, 0, 0);
 				for (unsigned int i = 0; i < positions.size(); ++i) {
 					SimulatedIID.x = i;
 					mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimulatedIID, 0, 0);

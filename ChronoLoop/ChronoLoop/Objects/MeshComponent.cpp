@@ -65,14 +65,17 @@ namespace Epoch {
 	}
 
 	MeshComponent* MeshComponent::AddTexture(const char * _path, TextureType _type) {
-		ID3D11ShaderResourceView *preTexture, *postTexture;
-		preTexture = mShape->GetContext().mTextures[_type].Get();
-		mShape->AddTexture(_path, _type);
-		postTexture = mShape->GetContext().mTextures[_type].Get();
-		if (preTexture != postTexture) {
-			RemoveShape();
-			if (mVisible) {
-				CreateNode();
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
+		if (TextureManager::Instance()->iGetTexture2D(_path, &srv, nullptr) == TextureManager::TextureStatus::eSuccess) {
+
+			// If the texture at the given path is not what is already set, remove the shape from the render set, add the
+			// texture, and, if visible, reinsert the shape.
+			if (srv != mShape->GetContext().mTextures[_type]) {
+				RemoveShape();
+				mShape->AddTexture(_path, _type);
+				if (mVisible) {
+					CreateNode();
+				}
 			}
 		}
 		return this;

@@ -122,7 +122,7 @@ namespace Epoch {
 
 	bool RenderContext::operator==(const RenderContext & other) const {
 		for (int i = eTEX_DIFFUSE; i < eTEX_MAX; ++i) {
-			if (other.mTextures[i].Get() == nullptr || other.mTextures[i].Get() == this->mTextures[i].Get()) {
+			if (/*other.mTextures[i].Get() == nullptr || */other.mTextures[i].Get() == this->mTextures[i].Get()) {
 				// If the textures aren't different, or aren't used, we can continue on.
 				continue;
 			}
