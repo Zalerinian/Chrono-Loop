@@ -768,7 +768,7 @@ void Update() {
 	((TeleportEffect*)startEmit)->y2 = 12;
 	ParticleSystem::Instance()->AddEmitter(startEmit);
 	startEmit->FIRE();
-
+	
 	start = &Particle::Init();
 	start->SetPos(vec3f(0, 0, 0));
 	start->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));

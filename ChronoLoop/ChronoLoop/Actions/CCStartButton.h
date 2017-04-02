@@ -26,7 +26,7 @@ namespace Epoch
 
 		Listener* l;
 
-		BaseObject *mChamberObject, *mStartButton, *mStartStand, *mStartSign, *mExitStand, *mExitSign;
+		BaseObject *mChamberObject, *mExitButton, *mStartStand, *mStartSign, *mExitStand, *mExitSign;
 		Level* cLevel = nullptr;
 
 		virtual void Start()
@@ -37,9 +37,9 @@ namespace Epoch
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
 			mChamberObject = cLevel->FindObjectWithName("mmChamber");
-			mStartSign = cLevel->FindObjectWithName("mmStart");
-			mExitSign = cLevel->FindObjectWithName("mmExit");
-			mStartButton = cLevel->FindObjectWithName("mmStartButton");
+			mStartSign = cLevel->FindObjectWithName("mmStartSign");
+			mExitSign = cLevel->FindObjectWithName("mmExitSign");
+			mExitButton = cLevel->FindObjectWithName("mmExitButton");
 			mStartStand = cLevel->FindObjectWithName("mmStartStand");
 			mExitStand = cLevel->FindObjectWithName("mmExitStand");
 
@@ -48,7 +48,7 @@ namespace Epoch
 			AudioWrapper::GetInstance().AddListener(l, "shit");
 		}
 
-		virtual void OnCollision(Collider* _col1, Collider* _col2)
+		virtual void OnCollision(Collider& _col1, Collider& _col2, float _time)
 		{
 			if (levels < 1)
 			{
@@ -60,8 +60,8 @@ namespace Epoch
 				mPlayerInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(0, -10, 0), VRInputManager::GetInstance().GetPlayerPosition());
 				mPlayerInterp->SetActive(true);
 
-				mat = mStartButton->GetTransform().GetMatrix();
-				mStartButtonInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(0, -10, 0), mStartButton->GetTransform().GetMatrix());
+				mat = mObject->GetTransform().GetMatrix();
+				mStartButtonInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(0, -10, 0), mObject->GetTransform().GetMatrix());
 				mStartButtonInterp->SetActive(true);
 
 				mat = mStartStand->GetTransform().GetMatrix();
@@ -72,8 +72,8 @@ namespace Epoch
 				mStartSignInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(0, -10, 0), mStartSign->GetTransform().GetMatrix());
 				mStartSignInterp->SetActive(true);
 
-				mat = mObject->GetTransform().GetMatrix();
-				mExitButtonInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(0, -10, 0), mObject->GetTransform().GetMatrix());
+				mat = mExitButton->GetTransform().GetMatrix();
+				mExitButtonInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(0, -10, 0), mExitButton->GetTransform().GetMatrix());
 				mExitButtonInterp->SetActive(true);
 
 				mat = mExitStand->GetTransform().GetMatrix();
@@ -111,6 +111,9 @@ namespace Epoch
 				mExitButtonInterp->Update(TimeManager::Instance()->GetDeltaTime());
 				mExitStandInterp->Update(TimeManager::Instance()->GetDeltaTime());
 				mExitSignInterp->Update(TimeManager::Instance()->GetDeltaTime());
+				
+				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mObject->GetTransform().GetMatrix().fourth);
+				((ButtonCollider*)mExitButton->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mExitButton->GetTransform().GetMatrix().fourth);
 
 
 				bool complete = mPlayerInterp->Update(TimeManager::Instance()->GetDeltaTime());
