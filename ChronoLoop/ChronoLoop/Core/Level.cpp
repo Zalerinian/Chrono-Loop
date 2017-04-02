@@ -15,6 +15,8 @@
 #include "../Actions/MainMenuBT.h"
 #include "../Actions/CCLoadHub.h"
 #include "../Actions/CCBoxSpin.h"
+#include "../Actions/CCExit.h"
+#include "../Actions/CCStartButton.h"
 #include "../Objects/MeshComponent.h"
 #include "../Objects/TransparentMeshComponent.h"
 #include "../tinyxml/tinyxml.h"
@@ -582,13 +584,22 @@ namespace Epoch {
 					transform.SetMatrix(mat);
 					BaseObject* obj = new BaseObject(name, transform);
 
-					if (name == "mmCube")
+					if (name == "mmStartButton")
+					{
+						CCStartButton* start = new CCStartButton();
+						obj->AddComponent(start);
+					}
+					else if (name == "mmExitButton")
+					{
+						CCExit* exit = new CCExit();
+						obj->AddComponent(exit);
+					}
+					else if (name == "mmCube")
 					{
 						CCBoxSpin* spin = new CCBoxSpin();
 						obj->AddComponent(spin);
 					}
-
-					if (name == "cube.001" || name == "cube.002" || name == "cube.003" || name == "cube.004")
+					else if (name == "cube.001" || name == "cube.002" || name == "cube.003" || name == "cube.004")
 					{
 						Emitter* e = new Emitter();
 						e->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::SFX_BOUNCEEFFECTS);

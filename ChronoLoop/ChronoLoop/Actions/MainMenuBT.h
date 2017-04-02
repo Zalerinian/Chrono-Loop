@@ -18,33 +18,33 @@ namespace Epoch
 	{
 		MainMenuBT(ControllerType _t) { mControllerRole = _t; };
 
-		Interpolator<matrix4>* mChamberInterp = new Interpolator<matrix4>();
-		Interpolator<matrix4>* mPlayerInterp = new Interpolator<matrix4>();
-		MeshComponent *mChamberMesh, *mStartMesh, *mExitMesh, *mFloorMesh, *mRoomMesh;
+		//Interpolator<matrix4>* mChamberInterp = new Interpolator<matrix4>();
+		//Interpolator<matrix4>* mPlayerInterp = new Interpolator<matrix4>();
+		MeshComponent *mChamberMesh, /**mStartMesh, *mExitMesh,*/ *mFloorMesh, *mRoomMesh;
 		BaseObject *mChamberObject, *mStartObject, *mExitObject, *mFloorObject, *mRoomObject/*, *mCubeObject*/;
 		ControllerType mControllerRole = eControllerType_Primary;
 		Level* cLevel = nullptr;
 		bool mBooped = false;
-		bool AudioToggle = false;
+		//bool AudioToggle = false;
 
 		virtual void Start()
 		{
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
 			mChamberObject = cLevel->FindObjectWithName("mmChamber");
-			mStartObject = cLevel->FindObjectWithName("mmStart");
-			mExitObject = cLevel->FindObjectWithName("mmExit");
+			//mStartObject = cLevel->FindObjectWithName("mmStart");
+			//mExitObject = cLevel->FindObjectWithName("mmExit");
 			mFloorObject = cLevel->FindObjectWithName("mmFloor");
 			mRoomObject = cLevel->FindObjectWithName("RoomFloor");
 			//mCubeObject = cLevel->FindObjectWithName("mmCube");
 			//mCubeObject->GetTransform().GetMatrix().Position.Set(0, -30000, 0, 1);
 
-			mChamberInterp->SetEasingFunction(Easing::CubicInOut);
-			mPlayerInterp->SetEasingFunction(Easing::CubicInOut);
-
+			//mChamberInterp->SetEasingFunction(Easing::CubicInOut);
+			//mPlayerInterp->SetEasingFunction(Easing::CubicInOut);
+			//
 			mChamberMesh = (MeshComponent*)mChamberObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mStartMesh = (MeshComponent*)mStartObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mExitMesh = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			//mStartMesh = (MeshComponent*)mStartObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			//mExitMesh = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			mFloorMesh = (MeshComponent*)mFloorObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			mRoomMesh = (MeshComponent*)mRoomObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 
@@ -52,17 +52,17 @@ namespace Epoch
 			Listener* l = new Listener();
 			mChamberObject->AddComponent(l);
 
-			AudioWrapper::GetInstance().AddListener(l, "shit");
+			//AudioWrapper::GetInstance().AddListener(l, "shit");
 			//((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Play(1);
 		}
 
 		virtual void Update()
 		{
-			if (!AudioToggle)
-			{
-				AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::PLAY_TEST1);
-				AudioToggle = true;
-			}
+			//if (!AudioToggle)
+			//{
+			//	AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::PLAY_TEST1);
+			//	AudioToggle = true;
+			//}
 
 			if (!VRInputManager::GetInstance().IsVREnabled())
 			{
@@ -99,46 +99,46 @@ namespace Epoch
 
 
 
-			if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Trigger))
-			{
-				MeshComponent* meshes[] = { mStartMesh, mExitMesh };
-				BaseObject* objects[] = { mStartObject, mExitObject };
-				for (int i = 0; i < ARRAYSIZE(meshes); ++i)
-				{
-					vec4f forward(0, 0, 1, 0);
-					matrix4 inverse = (mat * objects[i]->GetTransform().GetMatrix().Invert());
-					vec3f meshPos = inverse.Position;
-					forward *= inverse;
-					vec3f fwd = forward;
-					Triangle *tris = meshes[i]->GetTriangles();
-					size_t numTris = meshes[i]->GetTriangleCount();
-					for (unsigned int j = 0; j < numTris; ++j)
-					{
-						float hitTime;
-						if (cLevel->mmflip && Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, fwd, hitTime))
-						{
-							if (i == 0)
-							{
-								matrix4 mat = mChamberObject->GetTransform().GetMatrix();
-								mChamberInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(0, -10, 0), mChamberObject->GetTransform().GetMatrix());
-								mChamberInterp->SetActive(true);
-
-								mat = VRInputManager::GetInstance().GetPlayerPosition();
-								mPlayerInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(0, -10, 0), VRInputManager::GetInstance().GetPlayerPosition());
-								mPlayerInterp->SetActive(true);
-								mBooped = true;
-								((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->PlaySFX(0);
-								((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Play(0);
-
-								cLevel->mmflip = false;
-							}
-							else if (i == 1)
-								cLevel->ChronoLoop = false;
-						}
-					}
-				}
-			}
-			else if (mChamberMesh->GetTransform().GetPosition()->y < -9.9f && VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad))
+			//if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Trigger))
+			//{
+			//	MeshComponent* meshes[] = { mStartMesh, mExitMesh };
+			//	BaseObject* objects[] = { mStartObject, mExitObject };
+			//	for (int i = 0; i < ARRAYSIZE(meshes); ++i)
+			//	{
+			//		vec4f forward(0, 0, 1, 0);
+			//		matrix4 inverse = (mat * objects[i]->GetTransform().GetMatrix().Invert());
+			//		vec3f meshPos = inverse.Position;
+			//		forward *= inverse;
+			//		vec3f fwd = forward;
+			//		Triangle *tris = meshes[i]->GetTriangles();
+			//		size_t numTris = meshes[i]->GetTriangleCount();
+			//		for (unsigned int j = 0; j < numTris; ++j)
+			//		{
+			//			float hitTime;
+			//			if (cLevel->mmflip && Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, fwd, hitTime))
+			//			{
+			//				if (i == 0)
+			//				{
+			//					matrix4 mat = mChamberObject->GetTransform().GetMatrix();
+			//					mChamberInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(0, -10, 0), mChamberObject->GetTransform().GetMatrix());
+			//					mChamberInterp->SetActive(true);
+			//
+			//					mat = VRInputManager::GetInstance().GetPlayerPosition();
+			//					mPlayerInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(0, -10, 0), VRInputManager::GetInstance().GetPlayerPosition());
+			//					mPlayerInterp->SetActive(true);
+			//					mBooped = true;
+			//					((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->PlaySFX(0);
+			//					((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Play(0);
+			//
+			//					cLevel->mmflip = false;
+			//				}
+			//				else if (i == 1)
+			//					cLevel->ChronoLoop = false;
+			//			}
+			//		}
+			//	}
+			//}
+			if (mChamberMesh->GetTransform().GetPosition()->y < -9.9f && VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad))
 			{
 				vec4f forward(0, 0, 1, 0);
 				forward *= mObject->GetTransform().GetMatrix();
@@ -183,29 +183,29 @@ namespace Epoch
 				}
 			}
 
-			if (mBooped)
-			{
-				mChamberInterp->Update(TimeManager::Instance()->GetDeltaTime());
-				bool complete = mPlayerInterp->Update(TimeManager::Instance()->GetDeltaTime());
-				if (complete)
-				{
-					((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Stop(0);
-					mBooped = false;
-				}
-			}
+			//if (mBooped)
+			//{
+			//	mChamberInterp->Update(TimeManager::Instance()->GetDeltaTime());
+			//	bool complete = mPlayerInterp->Update(TimeManager::Instance()->GetDeltaTime());
+			//	if (complete)
+			//	{
+			//		((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Stop(0);
+			//		mBooped = false;
+			//	}
+			//}
 		}
 
-		virtual void OnDestroy()
-		{
-			//TODO: This is being destroyed at some point before this so wtf, figure this out i guess
-			//((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Stop(1);
-
-			//SUPER FUCKING JANK END ME
-			AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::STOP_TEST1);
-
-			delete mChamberInterp;
-			delete mPlayerInterp;
-		}
+		//virtual void OnDestroy()
+		//{
+		//	//TODO: This is being destroyed at some point before this so wtf, figure this out i guess
+		//	//((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Stop(1);
+		//
+		//	//SUPER FUCKING JANK END ME
+		//	AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::STOP_TEST1);
+		//
+		//	delete mChamberInterp;
+		//	delete mPlayerInterp;
+		//}
 	};
 
 }

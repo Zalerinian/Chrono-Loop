@@ -41,18 +41,18 @@
     <Name>mmStart</Name>
     <Mesh>PlaneCorrection.obj</Mesh>
     <Texture>start.png</Texture>
-    <Position>0,1,1.5</Position>
-    <Rotation>1.57,3.14,0</Rotation>
-    <Scale>0.5,1,0.5</Scale>
+    <Position>0.8526929,0.9714952,0.8452581</Position>
+    <Rotation>1.57,3.925,0</Rotation>
+    <Scale>0.2,1,0.1</Scale>
     <Components />
   </Object>
   <Object>
     <Name>mmExit</Name>
     <Mesh>PlaneCorrection.obj</Mesh>
     <Texture>exit.png</Texture>
-    <Position>-1.5,1,0</Position>
-    <Rotation>1.57,1.57,0</Rotation>
-    <Scale>0.5,1,0.5</Scale>
+    <Position>-0.8454487,1,0.8458318</Position>
+    <Rotation>1.57,2.355,0</Rotation>
+    <Scale>0.2,1,0.1</Scale>
     <Components />
   </Object>
   <Object>
@@ -213,6 +213,44 @@
     <Position>2.507524,-7.67,0</Position>
     <Rotation>1.57,-1.57,0</Rotation>
     <Scale>0.5,1,0.2</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>StartButtonstand</Name>
+    <Mesh>ButtonStand.obj</Mesh>
+    <Texture>white.png</Texture>
+    <Position>0.738628,0.16,0.7070983</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>0.5,0.5,0.5</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>ExitButtonstand</Name>
+    <Mesh>ButtonStand.obj</Mesh>
+    <Texture>white.png</Texture>
+    <Position>-0.74,0.16,0.71</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>0.5,0.5,0.5</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>mmExitButton</Name>
+    <Mesh>Button.obj</Mesh>
+    <Texture>red.png</Texture>
+    <Position>-0.74,0.8309309,0.71</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>0.5,0.5,0.5</Scale>
+    <Components>
+      <ButtonPress>Enabled</ButtonPress>
+    </Components>
+  </Object>
+  <Object>
+    <Name>mmStartButton</Name>
+    <Mesh>Button.obj</Mesh>
+    <Texture>red.png</Texture>
+    <Position>0.74,0.83,0.71</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>0.5,0.5,0.5</Scale>
     <Components />
   </Object>
 </Level>
