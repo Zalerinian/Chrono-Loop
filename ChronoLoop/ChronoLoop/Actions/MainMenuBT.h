@@ -49,8 +49,8 @@ namespace Epoch
 			mRoomMesh = (MeshComponent*)mRoomObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 
 			//Not sure but i have to make another listener
-			Listener* l = new Listener();
-			mChamberObject->AddComponent(l);
+			//Listener* l = new Listener();
+			//mChamberObject->AddComponent(l);
 
 			//AudioWrapper::GetInstance().AddListener(l, "shit");
 			//((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Play(1);

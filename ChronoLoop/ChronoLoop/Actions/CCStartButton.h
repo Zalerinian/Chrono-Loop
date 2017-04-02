@@ -24,6 +24,8 @@ namespace Epoch
 		Interpolator<matrix4>* mExitStandInterp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mExitSignInterp = new Interpolator<matrix4>();
 
+		Listener* l;
+
 		BaseObject *mChamberObject, *mStartButton, *mStartStand, *mStartSign, *mExitStand, *mExitSign;
 		Level* cLevel = nullptr;
 
@@ -41,6 +43,8 @@ namespace Epoch
 			mStartStand = cLevel->FindObjectWithName("mmStartStand");
 			mExitStand = cLevel->FindObjectWithName("mmExitStand");
 
+			l = new Listener();
+			mChamberObject->AddComponent(l);
 			AudioWrapper::GetInstance().AddListener(l, "shit");
 		}
 

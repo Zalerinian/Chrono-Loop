@@ -241,7 +241,17 @@
     <Rotation>0,0,0</Rotation>
     <Scale>0.5,0.5,0.5</Scale>
     <Components>
-      <ButtonPress>Enabled</ButtonPress>
+      <Collider>
+        <Type>Button</Type>
+        <Trigger>False</Trigger>
+        <Position>0,0.04,0</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>0.4,0.06,0.4</Scale>
+        <Move>False</Move>
+        <PushNormal>0,0,0</PushNormal>
+        <Mass>0</Mass>
+        <NormalForce>0</NormalForce>
+      </Collider>
     </Components>
   </Object>
   <Object>
@@ -251,6 +261,18 @@
     <Position>0.74,0.83,0.71</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>0.5,0.5,0.5</Scale>
-    <Components />
+    <Components>
+      <Collider>
+        <Type>Button</Type>
+        <Trigger>False</Trigger>
+        <Position>0,0.04,0</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>0.4,0.06,0.4</Scale>
+        <Move>False</Move>
+        <PushNormal>0,0,0</PushNormal>
+        <Mass>0</Mass>
+        <NormalForce>0</NormalForce>
+      </Collider>
+    </Components>
   </Object>
 </Level>
