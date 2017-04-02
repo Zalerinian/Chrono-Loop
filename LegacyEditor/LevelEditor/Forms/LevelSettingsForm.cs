@@ -14,10 +14,16 @@ namespace LevelEditor.Forms
     public partial class LevelSettingsForm : Form
     {
         private Vector3 mPos, mRot;
+        private uint mNumofClones;
 
         public LevelSettingsForm()
         {
             InitializeComponent();
+        }
+        public uint GetMaxCloneCount()
+        {
+            mNumofClones = (uint)mClonebox.Value;
+            return mNumofClones;
         }
 
         public Vector3 GetPosition()
@@ -42,6 +48,10 @@ namespace LevelEditor.Forms
             nPY.Value = (decimal)_pos.Y;
             nPZ.Value = (decimal)_pos.Z;
         }
+        public void SetMaxCloneCount(uint _count)
+        {
+            mClonebox.Value = (decimal)_count;
+        }
 
         public void SetRotation(Vector3 _rot)
         {
@@ -49,5 +59,21 @@ namespace LevelEditor.Forms
             nRY.Value = (decimal)_rot.Y;
             nRZ.Value = (decimal)_rot.Z;
         }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LevelSettingsForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }

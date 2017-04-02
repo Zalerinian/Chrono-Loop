@@ -127,7 +127,7 @@ namespace Epoch
 				mDesaturationInterpolator.SetActive(true);
 		
 
-				if (mIsBeingMade)
+				if (mIsBeingMade &&  mNumOfConfirmedClones < cLevel->GetMaxClones())
 				{
 					//rewind first then enable clone
 					TimeManager::Instance()->RewindTimeline(

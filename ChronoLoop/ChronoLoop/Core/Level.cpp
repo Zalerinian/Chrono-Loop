@@ -292,6 +292,19 @@ namespace Epoch {
 								}
 								SystemLogger::Debug() << "Start rotation: " << mStartRotation << std::endl;
 							}
+							else if (nodeType == "MaxClones") {
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									mMaxNumofClones = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+								SystemLogger::Debug() << "Max Clones: " << mMaxNumofClones << std::endl;
+							}
 							break;
 						default:
 							SystemLogger::Error() << "Wat" << std::endl;
