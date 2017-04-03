@@ -30,10 +30,7 @@ namespace Epoch {
 	void MeshComponent::Update() {
 		if (mNode) 
 		{
-			if (mObject->GetParent())
-				mNode->data = mObject->GetTransform().GetMatrix() * mObject->GetParent()->GetTransform().GetMatrix();
-			else
-				mObject->GetTransform().GetMatrix(mNode->data);
+			mNode->data = mObject->GetWorld();
 		}
 	}
 

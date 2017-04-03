@@ -130,6 +130,14 @@ namespace Epoch {
 		mName = _name;
 	}
 
+	matrix4 BaseObject::GetWorld() {
+		if (mParent) {
+			return mTransform.GetMatrix() * mParent->GetWorld();
+		} else {
+			return mTransform.GetMatrix();
+		}
+	}
+
 	BaseObject* BaseObject::AddComponent(Component * _comp) {
 		if (_comp->GetType() == eCOMPONENT_MAX) {
 			SystemLogger::Error() << "Trying to add a component with an invalid type. This is not allowed, returning -1U." << std::endl;
