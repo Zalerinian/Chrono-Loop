@@ -2,7 +2,6 @@
 #include "CodeComponent.hpp"
 #include "..\Common\Logger.h"
 #include "..\Core\LevelManager.h"
-#include "..\Messager\Messager.h"
 #include "..\Core\Pool.h"
 #include "..\Core\TimeManager.h"
 #include "..\Common\Settings.h"
@@ -65,17 +64,17 @@ namespace Epoch
 					TimeManager::Instance();
 
 					Listener* ears = new Listener();
-					Emitter* ambient = new Emitter();
-					ambient->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_TEST2);
-					ambient->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_TEST2);
-					ambient->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_TEST2);
-					ambient->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_TEST2);
-					Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(ears, "Listener")));
-					Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(ambient, "ambiance")));
+					Emitter* ambient = new AudioEmitter();
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_A_TIMELAPSE);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_A_TIMELAPSE);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_A_TIMELAPSE);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_A_TIMELAPSE);
+					AudioWrapper::GetInstance().AddListener(ears, "Listener");
+					AudioWrapper::GetInstance().AddEmitter(ambient, "ambiance");
 
 					//new stuff
 					Transform identity, t;
-					t.SetMatrix(matrix4::CreateXRotation(DirectX::XM_PI / 2) * matrix4::CreateTranslation(8.8f, 1.3f, -4.75f));
+					t.SetMatrix(matrix4::CreateXRotation(DirectX::XM_PI / 2) * matrix4::CreateTranslation(0, 1.3f, 0));
 					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", t);
 					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity);
 					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity);
@@ -253,7 +252,7 @@ namespace Epoch
 
 					AudioWrapper::GetInstance().STOP();
 
-					ambient->Play();
+					((AudioEmitter*)ambient)->CallEvent(Emitter::EventType::ePlay);
 
 					HeadsetFollow* hfollow = new HeadsetFollow();
 					headset->AddComponent(hfollow);
@@ -262,6 +261,7 @@ namespace Epoch
 
 					LevelManager::GetInstance().RequestLevelChange(next);
 
+					ParticleSystem::Instance()->Clear();
 
 					//Enter effect
 					Particle* p = &Particle::Init();
@@ -310,12 +310,10 @@ namespace Epoch
 					TimeManager::Instance()->AddObjectToTimeline(LeftController);
 					TimeManager::Instance()->AddObjectToTimeline(headset);
 
-
-
-
 					SystemLogger::Debug() << "Loading complete" << std::endl;
 					Physics::Instance()->PhysicsLock.unlock();
 					Settings::GetInstance().SetBool("LevelIsLoading", false);
+					Settings::GetInstance().SetBool("PlayingLevel1", true);
 				}
 				//once = true;
 			}
