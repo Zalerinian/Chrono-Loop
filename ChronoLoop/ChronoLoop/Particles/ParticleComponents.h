@@ -200,8 +200,6 @@ namespace Epoch
 	class RadialEmitter : public ParticleEmitter
 	{
 
-		float mYLRate, mYHRate;
-
 	public:
 		RadialEmitter();
 		RadialEmitter(int _totalp, int _maxp, int _persec, vec3f _pos);

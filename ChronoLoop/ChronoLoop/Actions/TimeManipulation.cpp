@@ -11,8 +11,8 @@
 #include "BoxSnapToControllerAction.hpp"
 #include "../Objects/TransparentMeshComponent.h"
 #include "../Common/Common.h"
-#include "../Messager/Messager.h"
 #include "../Particles/ParticleSystem.h"
+#include "../Sound/SoundEngine.h"
 
 namespace Epoch
 {
@@ -127,7 +127,7 @@ namespace Epoch
 				mDesaturationInterpolator.SetActive(true);
 		
 
-				if (mIsBeingMade)
+				if (mIsBeingMade &&  mNumOfConfirmedClones < cLevel->GetMaxClones())
 				{
 					//rewind first then enable clone
 					TimeManager::Instance()->RewindTimeline(
