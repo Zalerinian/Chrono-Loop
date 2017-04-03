@@ -153,7 +153,7 @@
   <Object>
     <Name>Servers</Name>
     <Mesh>Servers.obj</Mesh>
-    <Texture>grey.png</Texture>
+    <Texture>SM_Floor_Two_SM_Floor_AlbedoTransparency.png</Texture>
     <Position>-2.678491,0,5.218486</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
