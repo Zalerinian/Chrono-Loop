@@ -18,10 +18,13 @@ namespace Epoch
 				vec4f normalVel = (((PlaneCollider*)&_other)->mNormal * -(_col.mVelocity * ((PlaneCollider*)&_other)->mNormal));
 				_col.mVelocity += normalVel * (1 + _col.mElasticity);
 
-				if (_col.mVelocity.Magnitude() > .75f && _col.mVelocity.y > .1f)
+				if (_col.mVelocity.Magnitude() > .5f && _col.mVelocity.y > .1f)
 				{
 					if (mObject->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0)
-						((Emitter*)mObject->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->PlaySFX();
+					{
+						if (dynamic_cast<SFXEmitter*>(mObject->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0)))
+							((SFXEmitter*)mObject->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+					}
 				}
 			}
 			else

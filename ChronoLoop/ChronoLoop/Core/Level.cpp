@@ -601,36 +601,49 @@ namespace Epoch {
 					}
 					else if (name == "cube.001" || name == "cube.002" || name == "cube.003" || name == "cube.004")
 					{
-						Emitter* e = new Emitter();
-						e->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::SFX_BOUNCEEFFECTS);
+						Emitter* e = new SFXEmitter();
+						((SFXEmitter*)e)->SetEvent(AK::EVENTS::SFX_BOUNCEEFFECTS);
 						obj->AddComponent(e);
+						AudioWrapper::GetInstance().AddEmitter(e, name.c_str());
+
 					}
 					else if (name == "Door" || name == "Door2")
 					{
-						Emitter* e = new Emitter();
-						e->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::SFX_DOORSOUND);
+						Emitter* e = new SFXEmitter();
+						((SFXEmitter*)e)->SetEvent(AK::EVENTS::SFX_DOORSOUND);
 						obj->AddComponent(e);
+						AudioWrapper::GetInstance().AddEmitter(e, name.c_str());
 					}
 					else if (name == "Button")
 					{
-						Emitter* e = new Emitter();
-						e->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::SFX_TOGGLE);
+						Emitter* e = new SFXEmitter();
+						((SFXEmitter*)e)->SetEvent(AK::EVENTS::SFX_TOGGLE);
 						obj->AddComponent(e);
+						AudioWrapper::GetInstance().AddEmitter(e, name.c_str());
 					}
 					else if (name == "mmChamber")
 					{
-						Emitter * e = new Emitter();
-						e->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::SFX_METALLICSOUND);
-						e->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_FUTURETECHSOUND);
-						e->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_FUTURETECHSOUND);
-						e->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_FUTURETECHSOUND);
-						e->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_FUTURETECHSOUND);
-
-						e->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_CASUAL_LEVEL_LOOP);
-						e->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_CASUAL_LEVEL_LOOP);
-						e->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_CASUAL_LEVEL_LOOP);
-						e->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_CASUAL_LEVEL_LOOP);
+						Emitter* e = new SFXEmitter();
+						((SFXEmitter*)e)->SetEvent(AK::EVENTS::SFX_METALLICSOUND);
 						obj->AddComponent(e);
+						AudioWrapper::GetInstance().AddEmitter(e, name.c_str() + 0);
+
+						e = new AudioEmitter();
+						((AudioEmitter*)e)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_FUTURETECHSOUND);
+						((AudioEmitter*)e)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_FUTURETECHSOUND);
+						((AudioEmitter*)e)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_FUTURETECHSOUND);
+						((AudioEmitter*)e)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_FUTURETECHSOUND);
+						obj->AddComponent(e);
+						AudioWrapper::GetInstance().AddEmitter(e, name.c_str() + 1);
+
+
+						e = new AudioEmitter();
+						((AudioEmitter*)e)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_CASUAL_LEVEL_LOOP);
+						((AudioEmitter*)e)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_CASUAL_LEVEL_LOOP);
+						((AudioEmitter*)e)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_CASUAL_LEVEL_LOOP);
+						((AudioEmitter*)e)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_CASUAL_LEVEL_LOOP);
+						obj->AddComponent(e);
+						AudioWrapper::GetInstance().AddEmitter(e, name.c_str() + 2);
 					}
 
 					if (!meshFile.empty())
@@ -664,18 +677,18 @@ namespace Epoch {
 					{
 						if (SFX)
 						{
-							Emitter* sound = new Emitter();
-							sound->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, sfxFile);
+							Emitter* sound = new SFXEmitter();
+							((SFXEmitter*)sound)->SetEvent(sfxFile);
 							AudioWrapper::GetInstance().AddEmitter(sound, soundName.c_str());
 							obj->AddComponent(sound);
 						}
 						if (Loop)
 						{
-							Emitter* sound = new Emitter();
-							sound->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, playFile);
-							sound->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, pauseFile);
-							sound->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, resumeFile);
-							sound->AddSoundEvent(Emitter::sfxTypes::eStopLoop, stopFile);
+							Emitter* sound = new AudioEmitter();
+							((AudioEmitter*)sound)->AddEvent(Emitter::EventType::ePlay, playFile);
+							((AudioEmitter*)sound)->AddEvent(Emitter::EventType::ePlay, pauseFile);
+							((AudioEmitter*)sound)->AddEvent(Emitter::EventType::ePlay, resumeFile);
+							((AudioEmitter*)sound)->AddEvent(Emitter::EventType::ePlay, stopFile);
 							AudioWrapper::GetInstance().AddEmitter(sound, soundName.c_str());
 							obj->AddComponent(sound);
 						}
