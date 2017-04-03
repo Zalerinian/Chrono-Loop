@@ -1,6 +1,7 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
 g blendShape1Set tweakSet1
+o Camera
 v -0.041637 -0.534531 0.065211
 v -0.079509 -0.437240 0.113951
 v 0.073533 -0.437240 0.113951

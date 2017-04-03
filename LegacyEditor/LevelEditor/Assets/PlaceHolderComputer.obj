@@ -1,6 +1,7 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
 g default
+o ComputerTower
 v -1.015109 0.037677 0.498093
 v -1.014084 0.037677 0.499122
 v -1.014084 0.036652 0.498093

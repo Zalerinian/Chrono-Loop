@@ -1,6 +1,7 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
 g default
+o ComputerMonitor
 v -0.327199 -0.036968 0.923883
 v -0.327199 -0.021328 0.934536
 v -0.346214 -0.021328 0.923883

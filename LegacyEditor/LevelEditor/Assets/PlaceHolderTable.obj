@@ -1,6 +1,7 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
 g default
+o Table
 v -1.426145 1.396863 3.988524
 v 1.426145 1.396863 3.988524
 v -1.426145 1.600766 3.988524

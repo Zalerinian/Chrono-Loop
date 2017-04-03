@@ -1,6 +1,7 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
 g default
+o Level1Walls
 v 1.250000 -1.500000 -3.000000
 v 6.350000 -1.500000 -3.000000
 v 1.250000 1.500000 -3.000000
