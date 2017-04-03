@@ -39,7 +39,7 @@ namespace Hourglass
 
         public SoundComponent(int _yOffset = 0) : base()
         {
-            mType = ComponentType.Code;
+            mType = ComponentType.Audio;
             mCombos = new Dictionary<string, List<string>>();
             mID = new Dictionary<string, List<UInt64>>();
             #region Component Creation
