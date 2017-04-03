@@ -12,9 +12,8 @@ namespace Epoch
 	struct CCTimeIndicator : public CodeComponent
 	{
 		vec3f start, end;
-		unsigned int totalSnaps, currentSnap;
+		float totalSnaps, currentSnap, ratio;
 		Interpolator<matrix4> interp;
-		float ratio;
 		bool once;
 
 		virtual void Start()
@@ -22,9 +21,9 @@ namespace Epoch
 			totalSnaps = currentSnap = 0;
 			ratio = 0;
 			once = true;
-			start = vec3f(mObject->GetTransform().GetMatrix().fourth);
-			end = start;
-			end.x -= .1f;
+			end = vec3f(mObject->GetTransform().GetMatrix().fourth);
+			start = end;
+			start.x -= .1f;
 		}
 
 		virtual void Update()
@@ -34,16 +33,19 @@ namespace Epoch
 				if (once)
 				{
 					once = false;
-					currentSnap = totalSnaps = TimeManager::Instance()->GetTotalSnapsmade();
+					currentSnap = totalSnaps = TimeManager::Instance()->GetCurrentSnapFrame();
 				}
 
-				currentSnap = TimeManager::Instance()->GetCurrentSnapFrame();
+				currentSnap = TimeManager::Instance()->GetTempCurSnap();
 
 				ratio = currentSnap / totalSnaps;
 				mObject->GetTransform().GetMatrix().fourth = (start + (end - start) * ratio);
 			}
 			else if (!once)
+			{
 				once = true;
+				mObject->GetTransform().GetMatrix().fourth = end;
+			}
 		}
 	};
 
