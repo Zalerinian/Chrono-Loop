@@ -81,10 +81,10 @@ namespace Epoch
 		float dt = TimeManager::Instance()->GetDeltaTime();
 		for (ParticleEmitter* emit : mPEmitters)
 		{
-				if (emit->mActive)
+			if (emit->mActive)
 				emit->Update(dt);
 		}
-		for (int i =0; i < mPEmitters.size(); i++)
+		for (int i = 0; i < mPEmitters.size(); i++)
 		{
 			if (mPEmitters[i]->mActive == false)
 			{
@@ -132,7 +132,7 @@ namespace Epoch
 
 	void ParticleSystem::AddEmitter(ParticleEmitter* _pemitter)
 	{
-				mPEmitters.push_back(_pemitter);
+		mPEmitters.push_back(_pemitter);
 	}
 
 	void ParticleSystem::RemoveEmitter(ParticleEmitter* _pemitter)
@@ -155,7 +155,7 @@ namespace Epoch
 
 	void ParticleSystem::Clear()
 	{
-		for (int i = mPEmitters.size() - 1; i >= 0 ; i--)
+		for (int i = mPEmitters.size() - 1; i >= 0; i--)
 		{
 			if (DoesExist(mPEmitters[i]))
 			{

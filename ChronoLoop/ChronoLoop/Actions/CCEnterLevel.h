@@ -14,6 +14,7 @@
 #include "..\Actions\UICloneText.h"
 #include "..\Actions\BoxSnapToControllerAction.hpp"
 #include "..\Actions\TeleportAction.hpp"
+#include "..\Actions\CCTimeIndicator.h"
 #include "..\Rendering\Draw2D.h"
 #include "..\Rendering\Renderer.h"
 #include "..\Objects\TransparentMeshComponent.h"
@@ -115,6 +116,8 @@ namespace Epoch
 
 					BaseObject *timeDisplayNeedle = Pool::Instance()->iGetObject()->Reset("TimeIndicatorNeedle", t);
 					MeshComponent* tdispn = new MeshComponent("../Resources/TimeIndicator.obj");
+					CCTimeIndicator* time = new CCTimeIndicator();
+					timeDisplayNeedle->AddComponent(time);
 					tdispn->AddTexture("../Resources/TimeIndicator.png", eTEX_DIFFUSE);
 					timeDisplayNeedle->AddComponent(tdispn);
 					timeDisplayNeedle->SetParent(RightController);
@@ -264,9 +267,9 @@ namespace Epoch
 					((AudioEmitter*)ambient)->CallEvent(Emitter::EventType::ePlay);
 
 
+					ParticleSystem::Instance()->Clear();
 					LevelManager::GetInstance().RequestLevelChange(next);
 
-					ParticleSystem::Instance()->Clear();
 
 					//Enter effect
 					Particle* p = &Particle::Init();
