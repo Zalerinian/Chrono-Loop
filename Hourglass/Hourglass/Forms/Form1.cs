@@ -446,7 +446,7 @@ namespace Hourglass
 				case "Audio":
                     SoundComponent sc = new SoundComponent();
                     sc.Resize += ReorderComponents;
-                    sc.Parent = this;
+                    sc.Parent = spWorldView.Panel2;
                     obj.AddComponent(sc);
 					break;
 
