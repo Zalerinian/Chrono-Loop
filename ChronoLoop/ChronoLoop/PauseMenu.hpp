@@ -72,9 +72,7 @@ namespace Epoch
 		MeshComponent *mcPauseMenuBase = nullptr;
 
 		BaseObject *pMainPanel = nullptr, *pSettingsPanel = nullptr; //Children of the Entire Pause Menu
-		std::unordered_map<MENU_NAME, BaseObject*> mPanels;
 		MeshComponent *mcMainPanel = nullptr, *mcSettingsPanel = nullptr;
-
 
 		BaseObject *pResume = nullptr, *pSettings = nullptr, *pHubworld = nullptr, *pAudio = nullptr, *pMisc = nullptr;//Children of Panels
 		MeshComponent *mcResume = nullptr, *mcSettings = nullptr, *mcHubworld = nullptr, *mcAudio = nullptr, *mcMisc = nullptr;
@@ -99,7 +97,6 @@ namespace Epoch
 		{
 			
 			//Pause Menu Base Initialize
-			identity.SetMatrix(matrix4::CreateScale(2, 2, 2));
 			SetUpThisObjectForMe(&pPauseMenuBase, (MeshComponent**)&mcPauseMenuBase, std::string("PauseMenu - Base"), (identity));
 
 			pPauseMenuBase->AddComponent(mcPauseMenuBase);
@@ -115,7 +112,6 @@ namespace Epoch
 
 				pMainPanel->AddComponent(mcMainPanel);
 				pMainPanel->SetParent(pPauseMenuBase);
-				mPanels.insert({ MAIN_MENU, pMainPanel });
 				mMeshComps.insert({ MAIN_MENU,mcMainPanel });
 
 				//Settings Panel Initialize
@@ -124,7 +120,6 @@ namespace Epoch
 
 				pSettingsPanel->AddComponent(mcSettingsPanel);
 				pSettingsPanel->SetParent(pPauseMenuBase);
-				mPanels.insert({SETTINGS,pSettingsPanel });
 				mMeshComps.insert({ SETTINGS,mcSettingsPanel });
 
 				//Setting Children of Pause Menu Base
@@ -196,7 +191,7 @@ namespace Epoch
 					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texMisc.Get(), NULL, rtvMisc.GetAddressOf());
 
 			//Active Panel Start Up
-				mActivePanel.SetOptions(mPanels.at(MAIN_MENU)->GetChildren());
+				mActivePanel.SetOptions(pMainPanel->GetChildren());
 				mActivePanel.SetCurrentMenu(PAUSEMENU_ON);
 			//Panel Start Up
 				SwitchPanel(&mActivePanel);
@@ -209,27 +204,27 @@ namespace Epoch
 	
 			Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvPauseMenuBase.Get(), transparentColor);
 			Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvMainPanel.Get(), transparentColor);
-			//Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvSettingsPanel.Get(), transparentColor);
+			Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvSettingsPanel.Get(), transparentColor);
 			Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvResume.Get(), transparentColor);
-			//Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvSettings.Get(), transparentColor);
+			Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvSettings.Get(), transparentColor);
 			//Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvHubworld.Get(), transparentColor);
 			//Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvAudio.Get(), transparentColor);
 			//Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvMisc.Get(), transparentColor);
 
 			D2D1::ColorF tempColor = { 0,0,1,0.5f };
-			//Draw::Instance().DrawRectangleToBitmap(
-			//	0, 0, 256.0f,256.0f, 
-			//	tempColor,
-			//	Draw::Instance().GetBitmap(texPauseMenuBase.Get()));
+			Draw::Instance().DrawRectangleToBitmap(
+				0, 0, 256.0f,256.0f, 
+				tempColor,
+				Draw::Instance().GetBitmap(texPauseMenuBase.Get()));
 			//Draw::Instance().DrawTextToBitmap(
 			//	0, 0, 256.0f, 256.0f,
 			//	*mainFont, L"Fuck you",
 			//	Draw::Instance().GetBitmap(texPauseMenuBase.Get()));
 
-			//Draw::Instance().DrawRectangleToBitmap(
-			//	0, 0, 256.0f, 256.0f,
-			//	(D2D1::ColorF::Black, 1.0f),
-			//	Draw::Instance().GetBitmap(texMainPanel.Get()));
+			Draw::Instance().DrawRectangleToBitmap(
+				0, 0, 256.0f, 256.0f,
+				(D2D1::ColorF::Black, 1.0f),
+				Draw::Instance().GetBitmap(texMainPanel.Get()));
 
 			//Draw::Instance().DrawRectangleToBitmap(
 			//	0, 0, 256.0f, 256.0f,
@@ -240,7 +235,12 @@ namespace Epoch
 				0, 0, 256.0f, 256.0f,
 				*mainFont, L"Resume",
 				Draw::Instance().GetBitmap(texResume.Get()));
+			tempColor = { 0,1,0,0.5f };
 
+			Draw::Instance().DrawRectangleToBitmap(
+				0, 0, 256.0f, 256.0f,
+				tempColor,
+				Draw::Instance().GetBitmap(texResume.Get()));
 			//Draw::Instance().DrawTextToBitmap(
 			//	0, 0, 256.0f, 256.0f,
 			//	*mainFont, L"Settings",
@@ -272,7 +272,7 @@ namespace Epoch
 		}
 		virtual void OnEnable()
 		{
-			mActivePanel.SetOptions(mPanels.at(MAIN_MENU)->GetChildren());
+			mActivePanel.SetOptions(pMainPanel->GetChildren());
 			mActivePanel.SetCurrentMenu(PAUSEMENU_ON);
 			SwitchPanel(&mActivePanel);
 			PauseMenuisUp = true;
@@ -282,13 +282,12 @@ namespace Epoch
 			
 			tempT.SetMatrix(playerPos.CreateXRotation(1.39626) * playerPos.CreateScale(20,20,20) * (playerPos) * playerPos.CreateTranslation(playerRot));// * playerPos.CreateTranslation(0, 5.0f, 5.0f)));// *playerPos.CreateTranslation(playerRot));
 			pPauseMenuBase->SetTransform(tempT);
-			tempT.SetMatrix(playerPos.CreateScale(0.85f, 0.85f, 0.85f) * playerPos.CreateTranslation(0, 0.0001f, 0));
+			tempT.SetMatrix(playerPos.CreateScale(0.85f, 0.85f, 0.85f) * playerPos.CreateTranslation(0, 0.001f, 0));
 			pMainPanel->SetTransform(tempT);
-			tempT.SetMatrix(playerPos.CreateScale(0.85f, 0.85f, 0.85f) * playerPos.CreateTranslation(0, 0.0001f, 0));
+			tempT.SetMatrix(playerPos.CreateScale(0.85f, 0.85f, 0.85f) * playerPos.CreateTranslation(0, 0.001f, 0));
 			pSettingsPanel->SetTransform(tempT);
-			tempT.SetMatrix(playerPos.CreateTranslation(0, 0.0001f, 0));
+			tempT.SetMatrix(playerPos.CreateScale(0.85f, 0.85f, 0.85f) * playerPos.CreateTranslation(0, 0.001f, 0));
 			pResume->SetTransform(tempT);
-
 		}
 		virtual void OnDisable()
 		{
@@ -308,8 +307,8 @@ namespace Epoch
 				break;
 			case MAIN_MENU:
 				{
-				SetVisiblity(&mPanels.at(MAIN_MENU), true);
-				SetVisiblity(&mPanels.at(SETTINGS), false);
+				SetVisiblity(&pMainPanel, true);
+				SetVisiblity(&pSettingsPanel, false);
 					/*for (auto it : mMeshComps)
 					{
 						if (it.first == MAIN_MENU)
@@ -326,8 +325,8 @@ namespace Epoch
 				break;
 			case SETTINGS:
 				{
-				SetVisiblity(&mPanels.at(MAIN_MENU), false);
-				SetVisiblity(&mPanels.at(SETTINGS), true);
+				SetVisiblity(&pMainPanel, false);
+				SetVisiblity(&pSettingsPanel, true);
 					//for (auto it : mMeshComps)
 					//{
 					//	if (it.first == SETTINGS)
