@@ -15,7 +15,7 @@
 #include "Common/Math.h"
 #include "Objects/MeshComponent.h"
 
-#include "Messager\Messager.h"
+#include "Sound\SoundEngine.h"
 #include "Objects\BaseObject.h"
 #include "Actions/TeleportAction.hpp"
 #include "Actions/CCElasticReactionWithPlane.h"
@@ -38,6 +38,7 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 #include "Actions/TimelineIndicator.hpp"
+//#include "ParticleEffectPrototypes.h"
 
 using namespace Epoch;
 #define LEVEL_1 0
@@ -53,6 +54,7 @@ bool VREnabled = false;
 const wchar_t* _basePath = L"../Resources/Soundbanks/";
 const wchar_t* _initSB = L"Init.bnk";
 const wchar_t* _aSB = L"Test_Soundbank.bnk";
+const wchar_t* _mainS = L"Chrono_Sound.bnk";
 
 #if defined(_WIN64)
 typedef unsigned __int64 AudioEvent;				///< Integer (unsigned) type for pointers
@@ -145,7 +147,7 @@ void Update() {
 
 	// TODO: Replace all this with a level to run.
 	///*///////////////////////Using this to test physics//////////////////
-
+	//_CrtSetBreakAlloc(4390);
 #if MAINMENU
 
 	Transform transform;
@@ -577,11 +579,12 @@ void Update() {
 
 	
 	////Sound Initializing---------------------------------------------------
-	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::INITIALIZE_Audio, 0, false));
+	AudioWrapper::GetInstance().Initialize();
 	//Soundbanks
-	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::SET_BasePath, 0, false, (void*)new m_Path(_basePath)));
-	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_initSB)));
-	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Soundbank, 0, false, (void*)new m_Path(_aSB)));
+	AudioWrapper::GetInstance().SetBasePath(_basePath);
+	AudioWrapper::GetInstance().LoadSoundBank(_initSB);
+	AudioWrapper::GetInstance().LoadSoundBank(_aSB);
+	AudioWrapper::GetInstance().LoadSoundBank(_mainS);
 
 	// new BaseObject("Controller", identity);
 
@@ -668,6 +671,118 @@ void Update() {
 	headset->AddComponent(hfollow);
 	TimeManager::Instance()->AddObjectToTimeline(headset);
 
+	//Level 1 door////////////////////////////////////////////////////////////////////////
+	Particle* p1 = &Particle::Init();
+	p1->SetPos(vec3f(0, 0, 0));
+	p1->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
+	p1->SetLife(5000);
+	p1->SetSize(1.25f / 2.0f, .15f / 2.0f);
+	ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.611548f, 1));
+	emit11->SetParticle(p1);
+	emit11->SetTexture("../Resources/BasicRectP.png");
+	((TeleportEffect*)emit11)->y1 = 8;
+	((TeleportEffect*)emit11)->y2 = 12;
+	ParticleSystem::Instance()->AddEmitter(emit11);
+	emit11->FIRE();
+
+	p1 = &Particle::Init();
+	p1->SetPos(vec3f(0, 0, 0));
+	p1->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
+	p1->SetLife(5000);
+	p1->SetSize(.25f, .05f);
+	ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.611548f, 1));
+	emit12->SetTexture("../Resources/BasicCircleP.png");
+	emit12->SetParticle(p1);
+	((TeleportEffect*)emit12)->y1 = 1;
+	((TeleportEffect*)emit12)->y2 = 5;
+	ParticleSystem::Instance()->AddEmitter(emit12);
+	emit12->FIRE();
+	//////////////////////////////////////////////////////////////////////////////////////
+
+	//Level 2 door////////////////////////////////////////////////////////////////////////
+	Particle* p2 = &Particle::Init();
+	p2->SetPos(vec3f(0, 0, 0));
+	p2->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
+	p2->SetLife(5000);
+	p2->SetSize(1.25f / 2.0f, .15f / 2.0f);
+	ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(2.61, -10, 0, 1));
+	emit21->SetParticle(p2);
+	emit21->SetTexture("../Resources/BasicRectP.png");
+	((TeleportEffect*)emit21)->y1 = 8;
+	((TeleportEffect*)emit21)->y2 = 12;
+	ParticleSystem::Instance()->AddEmitter(emit21);
+	emit21->FIRE();
+
+	p2 = &Particle::Init();
+	p2->SetPos(vec3f(0, 0, 0));
+	p2->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
+	p2->SetLife(5000);
+	p2->SetSize(.25f, .05f);
+	ParticleEmitter* emit22 = new TeleportEffect(-1, 150, 2, vec4f(2.61, -10, 0, 1));
+	emit22->SetTexture("../Resources/BasicCircleP.png");
+	emit22->SetParticle(p2);
+	((TeleportEffect*)emit22)->y1 = 1;
+	((TeleportEffect*)emit22)->y2 = 5;
+	ParticleSystem::Instance()->AddEmitter(emit22);
+	emit22->FIRE();
+	//////////////////////////////////////////////////////////////////////////////////////
+
+	//Exit Side Chamber////////////////////////////////////////////////////////////////////////
+	Particle* exit = &Particle::Init();
+	exit->SetPos(vec3f(0, 0, 0));
+	exit->SetColors(vec3f(0, 0, 1), vec3f(0, .5f, .5f));
+	exit->SetLife(500);
+	exit->SetSize(1.25f / 2.0f, .15f / 2.0f);
+	ParticleEmitter* exitEmit = new ParticleEmitter(-1, 150, 2, vec4f(-3.918808f, 1.5f, 0, 1));
+	exitEmit->SetParticle(exit);
+	exitEmit->SetTexture("../Resources/BasicRectP.png");
+	((TeleportEffect*)exitEmit)->y1 = 8;
+	((TeleportEffect*)exitEmit)->y2 = 12;
+	ParticleSystem::Instance()->AddEmitter(exitEmit);
+	exitEmit->FIRE();
+	
+	exit = &Particle::Init();
+	exit->SetPos(vec3f(0, 0, 0));
+	exit->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
+	exit->SetLife(500);
+	exit->SetSize(.25f, .05f);
+	ParticleEmitter* exitEmit2 = new ParticleEmitter(-1, 150, 2, vec4f(-3.918808f, 1.5f, 0, 1));
+	exitEmit2->SetTexture("../Resources/BasicCircleP.png");
+	exitEmit2->SetParticle(exit);
+	((TeleportEffect*)exitEmit2)->y1 = 1;
+	((TeleportEffect*)exitEmit2)->y2 = 5;
+	ParticleSystem::Instance()->AddEmitter(exitEmit2);
+	exitEmit2->FIRE();
+	//////////////////////////////////////////////////////////////////////////////////////
+
+	//Exit Side Chamber////////////////////////////////////////////////////////////////////////
+	Particle* start = &Particle::Init();
+	start->SetPos(vec3f(0, 0, 0));
+	start->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));
+	start->SetLife(500);
+	start->SetSize(1.25f / 2.0f, .15f / 2.0f);
+	ParticleEmitter* startEmit = new TeleportEffect(-1, 150, 2, vec4f(0, .04, 3.918808f, 1));
+	startEmit->SetParticle(start);
+	startEmit->SetTexture("../Resources/BasicRectP.png");
+	((TeleportEffect*)startEmit)->y1 = 8;
+	((TeleportEffect*)startEmit)->y2 = 12;
+	ParticleSystem::Instance()->AddEmitter(startEmit);
+	startEmit->FIRE();
+	
+	start = &Particle::Init();
+	start->SetPos(vec3f(0, 0, 0));
+	start->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
+	start->SetLife(500);
+	start->SetSize(.25f, .05f);
+	ParticleEmitter* startEmit2 = new TeleportEffect(-1, 150, 2, vec4f(0, .04, 3.918808f, 1));
+	startEmit2->SetTexture("../Resources/BasicCircleP.png");
+	startEmit2->SetParticle(start);
+	((TeleportEffect*)startEmit2)->y1 = 1;
+	((TeleportEffect*)startEmit2)->y2 = 5;
+	ParticleSystem::Instance()->AddEmitter(startEmit2);
+	startEmit2->FIRE();
+	//////////////////////////////////////////////////////////////////////////////////////
+
 	//Transform cubeScale;
 	//cubeScale.SetMatrix(matrix4::CreateScale(0.01f, 0.01f, 0.01f));
 	//BaseObject* mmCube = Pool::Instance()->iGetObject()->Reset("mmCube", cubeScale);// new BaseObject("walls", PlaneTransform);
@@ -745,8 +860,28 @@ void Update() {
 			if (GetAsyncKeyState(VK_ESCAPE) && GetActiveWindow() == Renderer::Instance()->GetWindow()) {
 				break;
 			}
-			Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::UPDATE_Audio, 0, false, (void*)nullptr));
+			//Particle Testing
+			if (GetAsyncKeyState(VK_TAB) & 0x1)
+			{
+				Particle * p = &Particle::Init();
+				p->SetColors(vec4f(1, 1, 1, 1), vec4f());
+				p->SetLife((rand()% 250) + 250);
+				p->SetSize(.25f, .15f);
+				vec3f EPos = vec3f((rand() % 10) - 5,rand() % 5, (rand() % 10) - 5);
+				ParticleEmitter *emit = new ParticleEmitter(-1, 200, 20, EPos);
+				emit->SetParticle(p);
+				emit->SetTexture("../Resources/BasicCircleP.png");
+				ParticleSystem::Instance()->AddEmitter(emit);
+				emit->FIRE();
+				//AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::PLAY_A_TIMELAPSE);
+			}
+			if (GetAsyncKeyState('P'))
+			{
+				AudioWrapper::GetInstance().STOP();
+				ParticleSystem::Instance()->Clear();
+			}
 
+			AudioWrapper::GetInstance().Update();
 			//SystemLogger::GetLog() << "[Debug] Regular Update " << std::endl;
 			UpdateTime();
 			LevelManager::GetInstance().Update();
@@ -848,8 +983,8 @@ void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftControl
 	ambient->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_TEST2);
 	ambient->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_TEST2);
 	ambient->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_TEST2);
-	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(ears, "Listener")));
-	Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(ambient, "ambiance")));
+	AudioWrapper::GetInstance().AddListener(ears, "Listener");
+	AudioWrapper::GetInstance().AddEmitter(ambient, "ambience");
 
 
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
@@ -867,7 +1002,6 @@ void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftControl
 	RightController->AddComponent(rightRaycaster);
 	RightController->AddComponent(ta);
 	RightController->AddComponent(tm);
-	RightController->AddComponent(ambient);
 	ambient->Play();
 	TimeManager::Instance()->AddObjectToTimeline(RightController);
 
@@ -909,6 +1043,7 @@ void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftControl
 	HeadsetFollow* hfollow = new HeadsetFollow();
 	headset->AddComponent(hfollow);
 	headset->AddComponent(ears);
+	headset->AddComponent(ambient);
 	TimeManager::Instance()->AddObjectToTimeline(headset);
 }
 

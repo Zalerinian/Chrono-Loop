@@ -5,6 +5,7 @@
 #include "..\Physics\Physics.h"
 #include <unordered_set>
 #include "../Rendering/RenderSet.h"	
+#include "../Rendering/Structures.h"
 #include "../Particles/ParticleSystem.h"
 
 namespace Epoch
@@ -23,6 +24,7 @@ namespace Epoch
 		eCOMPONENT_UI,
 		eCOMPONENT_MESH,
 		eCOMPONENT_EFFECT,
+		eCOMPONENT_LIGHT,
 		eCOMPONENT_MAX
 	};
 
@@ -215,8 +217,23 @@ namespace Epoch
 			if (mEmitter)
 				mEmitter->FIRE();
 		}
-
 	};
+
+	class LightSource : public Component
+	{
+		Light * mLight;
+		LightSource() : Component(ComponentType::eCOMPONENT_LIGHT) {}
+		void Update()
+		{
+			//TODO: FIx this
+			//mLight->Position = *GetTransform().GetPosition();
+		}
+		void Destroy()
+		{
+			delete mLight;
+		}
+	};
+
 	/*
 	business entity- gmail, twitter, facebook, steam account
 	art, audio, marketing, designer students ?

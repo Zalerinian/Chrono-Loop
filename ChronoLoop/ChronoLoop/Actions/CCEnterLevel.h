@@ -2,7 +2,6 @@
 #include "CodeComponent.hpp"
 #include "..\Common\Logger.h"
 #include "..\Core\LevelManager.h"
-#include "..\Messager\Messager.h"
 #include "..\Core\Pool.h"
 #include "..\Core\TimeManager.h"
 #include "..\Common\Settings.h"
@@ -21,6 +20,7 @@
 #include "..\Rendering\TextureManager.h"
 #include "..\Objects\TransparentMeshComponent.h"
 #include <wrl\client.h>
+#include "../Sound/SoundEngine.h"
 
 
 namespace Epoch 
@@ -31,6 +31,7 @@ namespace Epoch
 		const wchar_t* _basePath = L"../Resources/Soundbanks/";
 		const wchar_t* _initSB = L"Init.bnk";
 		const wchar_t* _aSB = L"Test_Soundbank.bnk";
+		const wchar_t* _mainS = L"Chrono_Sound.bnk";
 
 		
 		bool once = true;
@@ -40,7 +41,10 @@ namespace Epoch
 		{
 			once = false;
 		}
-
+		virtual void Start()
+		{
+			once = true;
+		}
 		virtual void Update() {
 			if (!once) {
 				Settings::GetInstance().SetBool("LevelIsLoading", true);
@@ -62,12 +66,12 @@ namespace Epoch
 
 					Listener* ears = new Listener();
 					Emitter* ambient = new Emitter();
-					ambient->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_TEST2);
-					ambient->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_TEST2);
-					ambient->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_TEST2);
-					ambient->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_TEST2);
-					Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(ears, "Listener")));
-					Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(ambient, "ambiance")));
+					ambient->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_A_TIMELAPSE);
+					ambient->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_A_TIMELAPSE);
+					ambient->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_A_TIMELAPSE);
+					ambient->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_A_TIMELAPSE);
+					AudioWrapper::GetInstance().AddListener(ears, "Listener");
+					AudioWrapper::GetInstance().AddEmitter(ambient, "ambiance");
 
 					//new stuff
 					Transform identity, t;
@@ -92,8 +96,6 @@ namespace Epoch
 					RightController->AddComponent(rightRaycaster);
 					RightController->AddComponent(ta);
 					RightController->AddComponent(tm);
-					RightController->AddComponent(ambient);
-					ambient->Play();
 
 					BaseObject *clonePanel = Pool::Instance()->iGetObject()->Reset("ClonePanel", identity);
 					MeshComponent* disp = new MeshComponent("../Resources/ClonePanel.obj");
@@ -253,35 +255,42 @@ namespace Epoch
 					HeadsetFollow* hfollow = new HeadsetFollow();
 					headset->AddComponent(hfollow);
 					headset->AddComponent(ears);
+					headset->AddComponent(ambient);
+
+
+					AudioWrapper::GetInstance().STOP();
+
+					ambient->Play();
 
 
 					LevelManager::GetInstance().RequestLevelChange(next);
 
+					ParticleSystem::Instance()->Clear();
 
 					//Enter effect
 					Particle* p = &Particle::Init();
 					p->SetPos(vec3f(8.88f, 0, -4.1f));
 					p->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));
-					p->SetLife(200);
-					p->SetSize(1.25f / 2.0f, .15f / .2f);
-					ParticleEmitter* emit = new IDC(500, 250, 2, vec3f(8.88f, 0, -4.1f));
+					p->SetLife(500);
+					p->SetSize(1.25f / 2.0f, .15f / 2.0f);
+					ParticleEmitter* emit = new TeleportEffect(600, 250, 2, vec4f(8.88f, 0, -4.1f, 1));
 					emit->SetParticle(p);
 					emit->SetTexture("../Resources/BasicRectP.png");
-					((IDC*)emit)->y1 = 8;
-					((IDC*)emit)->y2 = 12;
+					((TeleportEffect*)emit)->y1 = 8;
+					((TeleportEffect*)emit)->y2 = 12;
 					ParticleSystem::Instance()->AddEmitter(emit);
 					emit->FIRE();
 
 					p = &Particle::Init();
 					p->SetPos(vec3f(8.88f, 0, -4.1f));
 					p->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
-					p->SetLife(1000);
+					p->SetLife(500);
 					p->SetSize(.25f, .05f);
-					emit = new IDC(500, 150, 1, vec3f(8.88f, 0, -4.1f));
+					emit = new TeleportEffect(600, 150, 1, vec4f(8.88f, 0, -4.1f, 1));
 					emit->SetTexture("../Resources/BasicCircleP.png");
 					emit->SetParticle(p);
-					((IDC*)emit)->y1 = 1;
-					((IDC*)emit)->y2 = 5;
+					((TeleportEffect*)emit)->y1 = 1;
+					((TeleportEffect*)emit)->y2 = 5;
 					ParticleSystem::Instance()->AddEmitter(emit);
 					emit->FIRE();
 
@@ -305,21 +314,10 @@ namespace Epoch
 					TimeManager::Instance()->AddObjectToTimeline(LeftController);
 					TimeManager::Instance()->AddObjectToTimeline(headset);
 
-					auto& levelObjects = next->GetLevelObjects();
-					for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it) {
-						if ((*it)->mComponents[eCOMPONENT_COLLIDER].size() > 0) {
-							Physics::Instance()->mObjects.push_back((*it));
-							if (((Collider*)(*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mShouldMove || (*it)->GetName() == "Door1" || (*it)->GetName() == "Door2")
-							{
-								TimeManager::Instance()->AddObjectToTimeline(*it);
-							}
-						}
-					}
-
-
 					SystemLogger::Debug() << "Loading complete" << std::endl;
 					Physics::Instance()->PhysicsLock.unlock();
 					Settings::GetInstance().SetBool("LevelIsLoading", false);
+					Settings::GetInstance().SetBool("PlayingLevel2", true);
 				}
 			}
 		}

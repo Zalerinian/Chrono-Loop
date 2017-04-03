@@ -3,7 +3,7 @@
 
 namespace Epoch
 {
-
+	//Don't use these atm
 	void CreateTeleportEffect(vec4f _pos)
 	{
 		Particle * p = &Particle::Init();
@@ -11,7 +11,7 @@ namespace Epoch
 		p->SetLife(200);
 		p->SetSize(1.25 / 2.0, .15 / 2.0);
 		p->SetPos(vec4f());
-		IDC* emit = new IDC(-1, 250, 2, _pos);
+		TeleportEffect* emit = new TeleportEffect(-1, 250, 2, _pos);
 		emit->SetTexture("../Resources/BasicRectP.png");
 		emit->SetParticle(p);
 		emit->y1 = 8;
@@ -23,7 +23,7 @@ namespace Epoch
 		p->SetLife(1000);
 		p->SetSize(.25 / 2.0, .05 / 2.0);
 		p->SetPos(vec4f());
-		emit = new IDC(-1, 150, 1, _pos);
+		emit = new TeleportEffect(-1, 150, 1, _pos);
 		emit->SetTexture("../Resources/BasicCircleP.png");
 		emit->SetParticle(p);
 		emit->y1 = 1;
@@ -34,15 +34,17 @@ namespace Epoch
 
 	void CreateCloneDeathEffect(vec4f _pos)
 	{
-		Particle* p = &Particle::Init();
-		p->SetColors(vec4f(0, 0, 0, 0), vec4f(1, 1, 1, 1));
-		p->SetLife(1000);
-		p->SetSize(.15, .05);
-		p->SetPos(vec4f());
-		ParticleEmitter * emitt = new ParticleEmitter(-1, 2000, 20, _pos);
-		emitt->SetTexture("../Resources/BasicCircleP.png");
-		emitt->SetParticle(p);
-		ParticleSystem::Instance()->AddEmitter(emitt);
+		Particle * p = &Particle::Init();
+		p->SetColors(vec4f(1, 1, 1, 1), vec4f());
+		p->SetLife(550);
+		p->SetSize(.25f, .15f);
+		vec3f EPos = vec3f(_pos.x, _pos.y, _pos.z);
+		//vec3f EPos = vec3f(0,0,0);
+		ParticleEmitter *emit = new ParticleEmitter(600, 200, 20, EPos);
+		emit->SetParticle(p);
+		emit->SetTexture("../Resources/BasicCircleP.png");
+		ParticleSystem::Instance()->AddEmitter(emit);
+		emit->FIRE();
 	}
 
 }

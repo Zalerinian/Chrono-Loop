@@ -248,7 +248,7 @@ namespace LevelEditor
                         case "vt":
                             Vector2 uv = new Vector2();
                             uv.X = (float)Convert.ToDouble(parts[1]);
-                            uv.Y = (float)Convert.ToDouble(parts[2]);
+                            uv.Y = 1 - (float)Convert.ToDouble(parts[2]);
                             UVs.Add(uv);
                             break;
                         case "f":

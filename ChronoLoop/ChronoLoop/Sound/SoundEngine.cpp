@@ -258,13 +258,13 @@ namespace Epoch
 
 		if (SoundEngine::PostEvent((AkUniqueID)_id, (AkGameObjectID)_emitter) == AK_INVALID_PLAYING_ID)
 			return false;
-
+		
 		return true;
 	}
 
 	bool AudioWrapper::MakeEventAtListener(AudioEvent _id, unsigned int _listenerID)
 	{
-		if ((mListeners.size() - _listenerID) < 0)
+		if ((mListeners.size() - _listenerID) < 0 || mListeners.size() == 0)
 			return false;
 
 		if (SoundEngine::PostEvent((AkUniqueID)_id, (AkGameObjectID)mListeners[_listenerID]) == AK_INVALID_PLAYING_ID)

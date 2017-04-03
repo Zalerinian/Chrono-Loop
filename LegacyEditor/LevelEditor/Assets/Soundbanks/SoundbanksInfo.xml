@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="11" SoundbankVersion="120">
+	<RootPaths>
+		<ProjectRoot>D:\College\NthDimensionalSound\NthDimensional\</ProjectRoot>
+		<SourceFilesRoot>D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>D:\College\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</SoundBanksRoot>
+		<ExternalSourcesInputFile></ExternalSourcesInputFile>
+		<ExternalSourcesOutputRoot>D:\College\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
+	</RootPaths>
+	<DialogueEvents/>
+	<StreamedFiles/>
+	<MediaFilesNotInAnyBank/>
+	<SoundBanks>
+		<SoundBank Id="1355168291" Language="SFX">
+			<ObjectPath>Init</ObjectPath>
+			<ShortName>Init</ShortName>
+			<Path>Init.bnk</Path>
+		</SoundBank>
+		<SoundBank Id="4154996803" Language="SFX">
+			<ObjectPath>\SoundBanks\Default Work Unit\Test_Soundbank</ObjectPath>
+			<ShortName>Test_Soundbank</ShortName>
+			<Path>Test_Soundbank.bnk</Path>
+			<IncludedEvents>
+				<Event Id="1123068841" Name="BEEP" ObjectPath="\Events\Default Work Unit\BEEP"/>
+				<Event Id="1762045322" Name="BLOP" ObjectPath="\Events\Default Work Unit\BLOP"/>
+				<Event Id="381359574" Name="BUTTON_PRESS1" ObjectPath="\Events\Default Work Unit\BUTTON_PRESS1"/>
+				<Event Id="381359573" Name="BUTTON_PRESS2" ObjectPath="\Events\Default Work Unit\BUTTON_PRESS2"/>
+				<Event Id="2580845818" Name="DOORSOUND" ObjectPath="\Events\Default Work Unit\DOORSOUND"/>
+				<Event Id="1888362325" Name="PAUSE_Test1" ObjectPath="\Events\Default Work Unit\PAUSE_Test1"/>
+				<Event Id="1888362326" Name="PAUSE_Test2" ObjectPath="\Events\Default Work Unit\PAUSE_Test2"/>
+				<Event Id="3759155919" Name="PLAY_Test1" ObjectPath="\Events\Default Work Unit\PLAY_Test1"/>
+				<Event Id="3759155916" Name="PLAY_Test2" ObjectPath="\Events\Default Work Unit\PLAY_Test2"/>
+				<Event Id="3909886823" Name="PlayBounceEffects" ObjectPath="\Events\Default Work Unit\PlayBounceEffects"/>
+				<Event Id="652836727" Name="PLING" ObjectPath="\Events\Default Work Unit\PLING"/>
+				<Event Id="1235130312" Name="RESUME_Test1" ObjectPath="\Events\Default Work Unit\RESUME_Test1"/>
+				<Event Id="1235130315" Name="RESUME_Test2" ObjectPath="\Events\Default Work Unit\RESUME_Test2"/>
+				<Event Id="2344782521" Name="SHORTCIRUIT" ObjectPath="\Events\Default Work Unit\SHORTCIRUIT"/>
+				<Event Id="2011175805" Name="STOP_Test1" ObjectPath="\Events\Default Work Unit\STOP_Test1"/>
+				<Event Id="2011175806" Name="STOP_Test2" ObjectPath="\Events\Default Work Unit\STOP_Test2"/>
+				<Event Id="751805364" Name="SWOOSH" ObjectPath="\Events\Default Work Unit\SWOOSH"/>
+				<Event Id="2755031898" Name="TICK" ObjectPath="\Events\Default Work Unit\TICK"/>
+				<Event Id="894718049" Name="TOGGLE" ObjectPath="\Events\Default Work Unit\TOGGLE"/>
+			</IncludedEvents>
+			<IncludedMemoryFiles>
+				<File Id="82772906" Language="SFX">
+					<ShortName>Button_Press_2-Marianne_Gagnon-1415267358.wav</ShortName>
+					<Path>SFX\Button_Press_2-Marianne_Gagnon-1415267358_9E69E797.wem</Path>
+				</File>
+				<File Id="227580179" Language="SFX">
+					<ShortName>Fuzzy Beep-SoundBible.com-1580329899.wav</ShortName>
+					<Path>SFX\Fuzzy Beep-SoundBible.com-1580329899_9E69E797.wem</Path>
+				</File>
+				<File Id="290553790" Language="SFX">
+					<ShortName>Toggle-SoundBible.com-231290292.wav</ShortName>
+					<Path>SFX\Toggle-SoundBible.com-231290292_9E69E797.wem</Path>
+				</File>
+				<File Id="306683277" Language="SFX">
+					<ShortName>Bounce-SoundBible.wav</ShortName>
+					<Path>SFX\Bounce-SoundBible_9E69E797.wem</Path>
+				</File>
+				<File Id="333267623" Language="SFX">
+					<ShortName>Pling-KevanGC-1485374730.wav</ShortName>
+					<Path>SFX\Pling-KevanGC-1485374730_9E69E797.wem</Path>
+				</File>
+				<File Id="515445552" Language="SFX">
+					<ShortName>Metroid_Door-Brandino480-995195341.wav</ShortName>
+					<Path>SFX\Metroid_Door-Brandino480-995195341_9E69E797.wem</Path>
+				</File>
+				<File Id="625422023" Language="SFX">
+					<ShortName>Swoosh 1-SoundBible.com-231145780.wav</ShortName>
+					<Path>SFX\Swoosh 1-SoundBible.com-231145780_9E69E797.wem</Path>
+				</File>
+				<File Id="668283606" Language="SFX">
+					<ShortName>Tick-DeepFrozenApps-397275646.wav</ShortName>
+					<Path>SFX\Tick-DeepFrozenApps-397275646_9E69E797.wem</Path>
+				</File>
+				<File Id="706655945" Language="SFX">
+					<ShortName>Button_Press-Marianne_Gagnon-779186363.wav</ShortName>
+					<Path>SFX\Button_Press-Marianne_Gagnon-779186363_9E69E797.wem</Path>
+				</File>
+				<File Id="731758138" Language="SFX">
+					<ShortName>Short Circuit-SoundBible.com-1450168875.wav</ShortName>
+					<Path>SFX\Short Circuit-SoundBible.com-1450168875_9E69E797.wem</Path>
+				</File>
+				<File Id="868747748" Language="SFX">
+					<ShortName>Kevin_MacLeod_-_02_-_Impact_Andante.wav</ShortName>
+					<Path>SFX\Kevin_MacLeod_-_02_-_Impact_Andante_4B8CC0C5.wem</Path>
+				</File>
+				<File Id="919470358" Language="SFX">
+					<ShortName>Kevin_MacLeod_-_Crossing_the_Divide.wav</ShortName>
+					<Path>SFX\Kevin_MacLeod_-_Crossing_the_Divide_9E69E797.wem</Path>
+				</File>
+				<File Id="937585891" Language="SFX">
+					<ShortName>Blop-Mark_DiAngelo-79054334.wav</ShortName>
+					<Path>SFX\Blop-Mark_DiAngelo-79054334_9E69E797.wem</Path>
+				</File>
+			</IncludedMemoryFiles>
+		</SoundBank>
+	</SoundBanks>
+</SoundBanksInfo>

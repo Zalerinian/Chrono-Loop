@@ -11,6 +11,8 @@
 #include "../Common/Breakpoint.h"
 #include "LevelManager.h"
 #include "../Common/Settings.h"
+#include "../Particles/ParticleSystem.h"
+#include "../Sound/SoundEngine.h"
 
 namespace Epoch {
 
@@ -24,7 +26,6 @@ namespace Epoch {
 		CommandConsole::Instance().AddCommand(L"/SNAPCOUNT", ToggleSnapshotCountDisplay);
 
 	}
-
 
 	TimeManager::~TimeManager() {
 		//Level manager will clear delete clones
@@ -254,7 +255,7 @@ namespace Epoch {
 				return true;
 		}
 
-		void TimeManager::DeleteClone(unsigned short _id1)
+		void TimeManager::DeleteClone(unsigned short _id1, bool _useParticleEffect)
 	{
 			/*Clonepair pair;
 			pair.mCur = _id1;*/
@@ -265,6 +266,24 @@ namespace Epoch {
 			for (int i = 0; i < mClones.size(); ) {
 				del = false;
 				if (mClones[i]->GetUniqueId() == _id1 || mClones[i]->GetUniqueId() == pair.mOther1 || mClones[i]->GetUniqueId() == pair.mOther2) {
+
+					if (mClones[i]->GetUniqueID() == pair.mCur && _useParticleEffect)
+					{
+						Particle * p = &Particle::Init();
+						p->SetColors(vec4f(1, 1, 1, 1), vec4f());
+						p->SetLife(300);
+						p->SetSize(.25f, .15f);
+						vec3f EPos = vec3f(mClones[i]->GetTransform().GetPosition()->x, mClones[i]->GetTransform().GetPosition()->y, mClones[i]->GetTransform().GetPosition()->z);
+						ParticleEmitter *emit = new ParticleEmitter(200, 200, 20, EPos);
+						emit->SetParticle(p);
+						emit->SetTexture("../Resources/BasicCircleP.png");
+						ParticleSystem::Instance()->AddEmitter(emit);
+
+						vec4f temp = EPos;
+						AudioWrapper::GetInstance().MakeEventAtLocation(AK::EVENTS::SFX_BLOP, &temp);
+						emit->FIRE();
+					}
+
 					mClones[i]->RemoveAllComponents();
 
 					for (int k = 0; k < Physics::Instance()->mObjects.size(); ++k) {
@@ -301,7 +320,7 @@ namespace Epoch {
 							break;
 						}
 					}
-
+					//TODO COmment this back in sometime
 					/*for (auto j = mCloneColliderInterpolators.begin(); j != mCloneColliderInterpolators.end(); ++j) {
 						if (mClones[i]->GetComponentCount(eCOMPONENT_COLLIDER) > 0 && j->first == mClones[i]->GetComponentIndexed(eCOMPONENT_COLLIDER,0)->GetColliderId())
 						{
@@ -543,7 +562,7 @@ namespace Epoch {
 			if ((mtempCurSnapFrame != 0 && _gesture == -1) || (mtempCurSnapFrame != temp && _gesture == 1)) {
 				int placeHolder = mtempCurSnapFrame;
 				mtempCurSnapFrame -= _frameRewind;
-				SystemLogger::GetLog() << "mTempCurSnapFrame: " << mtempCurSnapFrame << std::endl;
+				//SystemLogger::GetLog() << "mTempCurSnapFrame: " << mtempCurSnapFrame << std::endl;
 				mTimeline->PrepareAllObjectInterpolators(placeHolder, mtempCurSnapFrame);
 				mShouldUpdateInterpolators = true;
 				mShouldPulse = true;

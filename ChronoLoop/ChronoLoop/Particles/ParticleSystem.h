@@ -36,6 +36,7 @@ namespace Epoch
 		void Render();
 		void AddEmitter(ParticleEmitter* _pemitter);
 		void RemoveEmitter(ParticleEmitter* _pemitter);
+		void Clear();
 		bool DoesExist(ParticleEmitter* _pemitter);
 
 	};
