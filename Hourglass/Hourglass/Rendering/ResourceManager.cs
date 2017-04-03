@@ -25,7 +25,7 @@ namespace Hourglass
 		public event ResourceChangedHandler ResourceUpdated;
 		public event ResourceChangedHandler ResourceDeleted;
 		public event ResourceRenamedHandler ResourceRenamed;
-		private List<string> mObjects, mTextures, mCode;
+		private List<string> mObjects, mTextures, mCode, mSound;
 		private List<FileSystemWatcher> mWatchers;
 
 		public string ResourceDirectory {
@@ -40,17 +40,29 @@ namespace Hourglass
             }
         }
 
-		public string[] ObjectFileFilters {
+        public string SoundDirectory {
+            get {
+                return "\\Resources\\Soundbanks\\";
+            }
+        }
+
+        public string[] ObjectFileFilters {
 			get {
 				string[] ary = { "*.obj" };
 				return ary;
 			}
 		}
 
-
         public string[] CodeFileFilters {
             get {
                 string[] ary = { "*.h", "*.hpp" };
+                return ary;
+            }
+        }
+
+        public string[] SoundFileFilter {
+            get {
+                string[] ary = { "*.txt" };
                 return ary;
             }
         }
@@ -80,6 +92,12 @@ namespace Hourglass
             }
         }
 
+        public List<string> Sounds {
+            get {
+                return mSound;
+            }
+        }
+
         public string ResourcePrefix {
 			get {
 				return ".." + ResourceDirectory;
@@ -91,6 +109,7 @@ namespace Hourglass
 			mObjects = new List<string>();
 			mTextures = new List<string>();
             mCode = new List<string>();
+            mSound = new List<string>();
 			mWatchers = new List<FileSystemWatcher>();
 		}
 
@@ -136,7 +155,16 @@ namespace Hourglass
                 }
             }
 
-			for (int i = 0; i < ObjectFileFilters.Length; ++i)
+            for (int i = 0; i < SoundFileFilter.Length; i++)
+            {
+                IEnumerator<string> it = Directory.EnumerateFiles(Settings.ProjectPath + SoundDirectory, SoundFileFilter[i], SearchOption.AllDirectories).GetEnumerator();
+                while (it.MoveNext())
+                {
+                    mSound.Add(it.Current.Substring(Settings.ProjectPath.Length + SoundDirectory.Length));
+                }
+            }
+
+            for (int i = 0; i < ObjectFileFilters.Length; ++i)
 			{
 
 				IEnumerator<string> it = Directory.EnumerateFiles(Settings.ProjectPath + ResourceDirectory, ObjectFileFilters[i], SearchOption.AllDirectories).GetEnumerator();

@@ -444,6 +444,10 @@ namespace Hourglass
 					obj.AddComponent(new ColoredMeshComponent());
 					break;
 				case "Audio":
+                    SoundComponent sc = new SoundComponent();
+                    sc.Resize += ReorderComponents;
+                    sc.Parent = this;
+                    obj.AddComponent(sc);
 					break;
 
                 // Code Components
