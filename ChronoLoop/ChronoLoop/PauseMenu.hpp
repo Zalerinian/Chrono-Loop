@@ -80,6 +80,9 @@ namespace Epoch
 
 		std::unordered_map<MENU_NAME, MeshComponent*> mMeshComps;
 		std::unordered_map<BaseObject*, ID3D11Texture2D*> mPauseMenuTextures;
+
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> texPauseMenuBase, texMainPanel,texSettingsPanel, texResume,texSettings,texHubworld,texAudio,texMisc;
+
 	public:
 		//Accessors
 		ActivePanel* GetActivePanel() { return &mActivePanel; }
@@ -105,13 +108,19 @@ namespace Epoch
 			//mcPauseMenuBase->AddTexture(tempStr1.c_str(), eTEX_DIFFUSE);
 			//mcPauseMenuBase->GetContext().mTextures[eTEX_DIFFUSE] = srv1;
 			#pragma endregion
-
+			Font* tempFont = new Font(L"Agency FB", 50, (D2D1::ColorF::White, 1.0f));
 			pPauseMenuBase->AddComponent(mcPauseMenuBase);
-			Draw::Instance().DrawRectangleToBitmap(
-				0, 0, 256.0f, 256.0f, 
-				(D2D1::ColorF::Black, 0.5f), 
-				Draw::Instance().GetBitmap(mPauseMenuTextures.at(pPauseMenuBase)));
+			TextureManager::Instance()->iGetTexture2D("memory:PauseMenu - Base", nullptr, &texPauseMenuBase);
+			//Draw::Instance().DrawRectangleToBitmap(
+			//	0, 0, 256.0f,256.0f, 
+			//	(D2D1::ColorF::Blue, 1.0f), 
+			//	Draw::Instance().GetBitmap(texPauseMenuBase.Get()));
+			Draw::Instance().DrawTextToBitmap(
+				0, 0, 256, 256,
+				*tempFont, L"Fuck you",
+				Draw::Instance().GetBitmap(texPauseMenuBase.Get()));
 			mMeshComps.insert({ PAUSEMENU_ON,mcPauseMenuBase });
+
 			//PANEL SET UP
 				//Main Pause Menu Panel Initialize
 				SetUpThisObjectForMe(&pMainPanel, &mcMainPanel, std::string("PauseMenu - Main Menu"), identity);
@@ -177,7 +186,7 @@ namespace Epoch
 					pResume->SetParent(pMainPanel);
 					
 					mMeshComps.insert({ MAIN_MENU,mcResume });
-					Font* tempFont = new Font(L"Agency FB", 50, (D2D1::ColorF::White, 1.0f));
+					//Font* tempFont = new Font(L"Agency FB", 50, (D2D1::ColorF::White, 1.0f));
 					Draw::Instance().DrawTextToBitmap(
 						0, 0, 256, 256,
 						*tempFont, L"Resume",
@@ -243,21 +252,20 @@ namespace Epoch
 				mActivePanel.SetCurrentMenu(PAUSEMENU_ON);
 			//Panel Start Up
 				SwitchPanel(&mActivePanel);
-				OnDisable();
+				//OnDisable();  
+			OnEnable();
+			
 		}
 		virtual void Update()
 		{
-			if(GetAsyncKeyState(80) & 0x1)
-			{
-				if (PauseMenuisUp) {
-					PauseMenuisUp = false;
-					OnDisable();
-				}
-				else {
-					PauseMenuisUp = true;
-					OnEnable();
-				}
-			}
+			//if (PauseMenuisUp) {
+			//	PauseMenuisUp = false;
+			//	OnDisable();
+			//}
+			//else {
+			//	PauseMenuisUp = true;
+			//	OnEnable();
+			//}
 		}
 		virtual void OnEnable()
 		{
@@ -267,9 +275,9 @@ namespace Epoch
 			PauseMenuisUp = true;
 			Transform tempT;
 			matrix4 playerPos = VRInputManager::GetInstance().GetPlayerView();
-			vec4f playerRot = vec4f(0, 0, 1, 0) *  playerPos;
+			//vec4f playerRot = vec4f(0, 0, 1, 0) *  playerPos;
 			
-			tempT.SetMatrix((playerPos * playerPos.CreateTranslation(0, 0, 5.0f)) * playerPos.CreateTranslation(playerRot));
+			tempT.SetMatrix(matrix4::CreateScale(10,10,10) * (playerPos));// * playerPos.CreateTranslation(0, 5.0f, 5.0f)));// *playerPos.CreateTranslation(playerRot));
 			pPauseMenuBase->SetTransform(tempT);
 		}
 		virtual void OnDisable()
@@ -287,6 +295,7 @@ namespace Epoch
 					mcPauseMenuBase->SetVisible(true);
 					_activepanel->SetCurrentMenu(MAIN_MENU);
 				}
+				break;
 			case MAIN_MENU:
 				{
 				SetVisiblity(&mPanels.at(MAIN_MENU), true);
@@ -345,20 +354,18 @@ namespace Epoch
 				break;
 			}
 		}
-		void SetUpThisObjectForMe(BaseObject** _obj, MeshComponent** _mc, std::string _name,Transform _t)
+		void SetUpThisObjectForMe(BaseObject** _obj, MeshComponent** _mc, std::string _name,Transform _t,unsigned int _width = 256, unsigned int _height = 256)
 		{
 			*_obj = Pool::Instance()->iGetObject()->Reset(_name, _t);
-			*_mc = new MeshComponent("../Resources/help.obj");
-
+			*_mc = new MeshComponent("../Resources/UIClone.obj");
+			Microsoft::WRL::ComPtr<ID3D11Texture2D> temp = GetTexture(*_obj, _width, _height);
 			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
-			TextureManager::Instance()->iAddTexture2D(_name, GetTexture(*_obj), &srv);
-
+			TextureManager::Instance()->iAddTexture2D(_name, temp, &srv);
 			(*_mc)->AddTexture(_name.c_str(), eTEX_DIFFUSE);
-			(*_mc)->GetContext().mTextures[eTEX_DIFFUSE] = srv;
-
-			//(*_obj)->AddComponent((*_mc));
+			GetTexture(*_obj, _width, _height);
+			LevelManager::GetInstance().GetCurrentLevel()->AddObject(*_obj);
 		}
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> GetTexture(BaseObject* _obj,unsigned int _width = 256,unsigned int _height = 256)
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> GetTexture(BaseObject* _obj,unsigned int _width,unsigned int _height)
 		{
 			for (auto it : mPauseMenuTextures)
 			{
@@ -390,13 +397,6 @@ namespace Epoch
 		}
 		void SetVisiblity(BaseObject** _obj, bool _isVisible)
 		{
-			//_obj->GetChildren();
-			//std::list<BaseObject*>::iterator it,end;
-			//for (it = (*_obj)->GetChildren().begin(), end = (*_obj)->GetChildren().end(); it != end; ++it)
-			//{
-			//	BaseObject** temp = &(*it);
-			//	SetVisiblity(temp, _isVisible);
-			//}
 			for(auto it : (*_obj)->GetChildren())
 			{
 				BaseObject* temp = (&*it);
