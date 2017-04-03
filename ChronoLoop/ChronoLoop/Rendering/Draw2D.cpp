@@ -182,10 +182,8 @@ namespace Epoch
 	void Draw::DrawTextToBitmap(float _left, float _top, float _right, float _bottom,
 															Font _font, std::wstring _text, ID2D1Bitmap* _bitmap)
 	{
-		
-		
+
 		(*mContext2D)->SetTarget(_bitmap);
-		float color[4] = { 0.3f, 0.3f, 1, 1 };
 
 		// Retrieve the size of the render target.
 		D2D1_SIZE_F renderTargetSize = (*mContext2D)->GetSize();
@@ -218,7 +216,7 @@ namespace Epoch
 	{
 		(*mContext2D)->SetTarget(_bitmap);
 		//(*mContext2D)->Clear();
-		float color[4] = { 1, 1, 1, 1 };
+		//float color[4] = { 1, 1, 1, 1 };
 
 		// Retrieve the size of the render target.st
 		D2D1_SIZE_F renderTargetSize = (*mContext2D)->GetSize();
@@ -226,6 +224,7 @@ namespace Epoch
 		(*mContext2D)->BeginDraw();
 		(*mContext2D)->SetTransform(D2D1::Matrix3x2F::Identity());
 		(*mContext2D)->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
+
 
 		//(*mContext2D)->CreateSolidColorBrush(
 		//	D2D1::Point2F(100.0f, 100.1f),

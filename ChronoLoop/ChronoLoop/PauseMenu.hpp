@@ -1,6 +1,7 @@
 #pragma once
 #include "Actions/CodeComponent.hpp"
 #include "Objects/MeshComponent.h"
+#include "Objects/TransparentMeshComponent.h"
 #include "Objects/BaseObject.h"
 #include "Core/LevelManager.h"
 #include "Core/Pool.h"
@@ -80,9 +81,11 @@ namespace Epoch
 
 		std::unordered_map<MENU_NAME, MeshComponent*> mMeshComps;
 		std::unordered_map<BaseObject*, ID3D11Texture2D*> mPauseMenuTextures;
-
+		D2D1::ColorF wut = { 1,0,0,1 };
+		Font* mainFont = new Font(L"Agency FB", 50, wut);
+		float transparentColor[4] = { 0,0,0,0 };
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> texPauseMenuBase, texMainPanel,texSettingsPanel, texResume,texSettings,texHubworld,texAudio,texMisc;
-
+		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> rtvPauseMenuBase, rtvMainPanel, rtvSettingsPanel, rtvResume, rtvSettings, rtvHubworld, rtvAudio, rtvMisc;
 	public:
 		//Accessors
 		ActivePanel* GetActivePanel() { return &mActivePanel; }
@@ -94,85 +97,35 @@ namespace Epoch
 		//
 		virtual void Start()
 		{
+			
 			//Pause Menu Base Initialize
-			SetUpThisObjectForMe(&pPauseMenuBase, &mcPauseMenuBase, std::string("PauseMenu - Base"),identity);
+			identity.SetMatrix(matrix4::CreateScale(2, 2, 2));
+			SetUpThisObjectForMe(&pPauseMenuBase, (MeshComponent**)&mcPauseMenuBase, std::string("PauseMenu - Base"), (identity));
 
-			#pragma region Commented Out
-			//pPauseMenuBase = Pool::Instance()->iGetObject()->Reset("PauseMenu - Base", identity);
-			//mcPauseMenuBase = new MeshComponent("../Resources/help.obj");
-
-			//std::string tempStr1("PauseMenu - Base");
-			//Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv1;
-			//TextureManager::Instance()->iAddTexture2D(tempStr1, GetTexture(pPauseMenuBase), &srv1);
-
-			//mcPauseMenuBase->AddTexture(tempStr1.c_str(), eTEX_DIFFUSE);
-			//mcPauseMenuBase->GetContext().mTextures[eTEX_DIFFUSE] = srv1;
-			#pragma endregion
-			Font* tempFont = new Font(L"Agency FB", 50, (D2D1::ColorF::White, 1.0f));
 			pPauseMenuBase->AddComponent(mcPauseMenuBase);
 			TextureManager::Instance()->iGetTexture2D("memory:PauseMenu - Base", nullptr, &texPauseMenuBase);
-			//Draw::Instance().DrawRectangleToBitmap(
-			//	0, 0, 256.0f,256.0f, 
-			//	(D2D1::ColorF::Blue, 1.0f), 
-			//	Draw::Instance().GetBitmap(texPauseMenuBase.Get()));
-			Draw::Instance().DrawTextToBitmap(
-				0, 0, 256, 256,
-				*tempFont, L"Fuck you",
-				Draw::Instance().GetBitmap(texPauseMenuBase.Get()));
+
 			mMeshComps.insert({ PAUSEMENU_ON,mcPauseMenuBase });
 
 			//PANEL SET UP
 				//Main Pause Menu Panel Initialize
+				//identity.SetMatrix(matrix4::CreateTranslation(0, 0, 0.9f));
 				SetUpThisObjectForMe(&pMainPanel, &mcMainPanel, std::string("PauseMenu - Main Menu"), identity);
-
-				#pragma region Commented Out
-			//pMainPanel = Pool::Instance()->iGetObject()->Reset("PauseMenu - Main Panel", identity);
-			//mcMainPanel = new MeshComponent("../Resources/help.obj");
-
-			//std::string tempStr2("PauseMenu - Main Panel");
-			//Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv2;
-			//TextureManager::Instance()->iAddTexture2D(tempStr2, GetTexture(pMainPanel), &srv2);
-
-			//mcMainPanel->AddTexture(tempStr2.c_str(), eTEX_DIFFUSE);
-			//mcMainPanel->GetContext().mTextures[eTEX_DIFFUSE] = srv2;
-			#pragma endregion
+				TextureManager::Instance()->iGetTexture2D("memory:PauseMenu - Main Menu", nullptr, &texMainPanel);
 
 				pMainPanel->AddComponent(mcMainPanel);
 				pMainPanel->SetParent(pPauseMenuBase);
-
 				mPanels.insert({ MAIN_MENU, pMainPanel });
 				mMeshComps.insert({ MAIN_MENU,mcMainPanel });
 
-				Draw::Instance().DrawRectangleToBitmap(
-					0, 0, 256.0f, 256.0f,
-					(D2D1::ColorF::Black, 0.8f),
-					Draw::Instance().GetBitmap(mPauseMenuTextures.at(pMainPanel)));
-
 				//Settings Panel Initialize
 				SetUpThisObjectForMe(&pSettingsPanel, &mcSettingsPanel, std::string("PauseMenu - Settings Panel"), identity);
-				
-				#pragma region Commented Out
-			//pSettingsPanel = Pool::Instance()->iGetObject()->Reset("PauseMenu - Settings Panel", identity);
-			//mcSettingsPanel = new MeshComponent("../Resources/help.obj");
-
-			//std::string tempStr3("PauseMenu - Settings Panel");
-			//Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv3;
-			//TextureManager::Instance()->iAddTexture2D(tempStr3, GetTexture(pSettingsPanel), &srv3);
-
-			//mcSettingsPanel->AddTexture(tempStr3.c_str(), eTEX_DIFFUSE);
-			//mcSettingsPanel->GetContext().mTextures[eTEX_DIFFUSE] = srv3;
-			#pragma endregion
+				TextureManager::Instance()->iGetTexture2D("memory:PauseMenu - Settings Panel", nullptr, &texSettingsPanel);
 
 				pSettingsPanel->AddComponent(mcSettingsPanel);
 				pSettingsPanel->SetParent(pPauseMenuBase);
-				
 				mPanels.insert({SETTINGS,pSettingsPanel });
 				mMeshComps.insert({ SETTINGS,mcSettingsPanel });
-
-				Draw::Instance().DrawRectangleToBitmap(
-					0, 0, 256, 256,
-					(D2D1::ColorF::Black, 0.8f),
-					Draw::Instance().GetBitmap(mPauseMenuTextures.at(pSettingsPanel)));
 
 				//Setting Children of Pause Menu Base
 				pPauseMenuBase->AddChild(pMainPanel);
@@ -181,39 +134,28 @@ namespace Epoch
 				//Main Panel Options
 					//Resume Option Initialize
 					SetUpThisObjectForMe(&pResume, &mcResume, std::string("PauseMenu - Resume Option"), identity);
+					TextureManager::Instance()->iGetTexture2D("memory:PauseMenu - Resume Option", nullptr, &texResume);
 
 					pResume->AddComponent(mcResume);
 					pResume->SetParent(pMainPanel);
-					
 					mMeshComps.insert({ MAIN_MENU,mcResume });
-					//Font* tempFont = new Font(L"Agency FB", 50, (D2D1::ColorF::White, 1.0f));
-					Draw::Instance().DrawTextToBitmap(
-						0, 0, 256, 256,
-						*tempFont, L"Resume",
-						Draw::Instance().GetBitmap(mPauseMenuTextures.at(pResume)));
-						
+
 					//Settings Option Initialize
 					SetUpThisObjectForMe(&pSettings, &mcSettings, std::string("PauseMenu - Settings Option"), identity);
+					TextureManager::Instance()->iGetTexture2D("memory:PauseMenu - Settings Option", nullptr, &texSettings);
 
 					pSettings->AddComponent(mcSettings);
 					pSettings->SetParent(pMainPanel);
 					mMeshComps.insert({ MAIN_MENU,mcSettings });
 
-					Draw::Instance().DrawTextToBitmap(
-						0, 0, 256, 256,
-						*tempFont, L"Settings",
-						Draw::Instance().GetBitmap(mPauseMenuTextures.at(pSettings)));
 					//Hubworld Option Initialize
 					SetUpThisObjectForMe(&pHubworld, &mcHubworld, std::string("PauseMenu - Hubworld Option"), identity);
+					TextureManager::Instance()->iGetTexture2D("memory:PauseMenu - Hubworld Option", nullptr, &texHubworld);
 
 					pHubworld->AddComponent(mcHubworld);
 					pHubworld->SetParent(pMainPanel);
 
 					mMeshComps.insert({ MAIN_MENU,mcHubworld });
-					Draw::Instance().DrawTextToBitmap(
-						0, 0, 256, 256,
-						*tempFont, L"Hubworld",
-						Draw::Instance().GetBitmap(mPauseMenuTextures.at(pHubworld)));
 
 					//Setting Children for Main Panel
 					pMainPanel->AddChild(pResume);
@@ -221,31 +163,37 @@ namespace Epoch
 					pMainPanel->AddChild(pHubworld);
 				//Settings Panel Options
 					//Audio Option Initialize
+					//identity.SetMatrix(matrix4::CreateTranslation(0, 0, 0.8f));
 					SetUpThisObjectForMe(&pAudio, &mcAudio, std::string("PauseMenu - Audio Option"), identity);
+					TextureManager::Instance()->iGetTexture2D("memory:PauseMenu - Audio Option", nullptr, &texAudio);
 
 					pAudio->AddComponent(mcAudio);
 					pAudio->SetParent(pSettingsPanel);
 					mMeshComps.insert({ SETTINGS,mcAudio });
 
-					Draw::Instance().DrawTextToBitmap(
-						0, 0, 256, 256,
-						*tempFont, L"Audio",
-						Draw::Instance().GetBitmap(mPauseMenuTextures.at(pAudio)));
+
 					//Misc Option Initialize
+					//identity.SetMatrix(matrix4::CreateTranslation(0, 0, 0.8f));
 					SetUpThisObjectForMe(&pMisc, &mcMisc, std::string("PauseMenu - Misc Option"), identity);
+					TextureManager::Instance()->iGetTexture2D("memory:PauseMenu - Misc Option", nullptr, &texMisc);
 
 					pMisc->AddComponent(mcMisc);
 					pMisc->SetParent(pSettingsPanel);
 					mMeshComps.insert({ SETTINGS,mcMisc});
 
-					Draw::Instance().DrawTextToBitmap(
-						0, 0, 256, 256,
-						*tempFont, L"Misc",
-						Draw::Instance().GetBitmap(mPauseMenuTextures.at(pMisc)));
 
 					//Setting Children for Settings Panel
 					pSettingsPanel->AddChild(pAudio);
 					pSettingsPanel->AddChild(pMisc);
+			//RTV Creation
+					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texPauseMenuBase.Get(), NULL, rtvPauseMenuBase.GetAddressOf());
+					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texMainPanel.Get(), NULL, rtvMainPanel.GetAddressOf());
+					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texSettingsPanel.Get(), NULL, rtvSettingsPanel.GetAddressOf());
+					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texResume.Get(), NULL, rtvResume.GetAddressOf());
+					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texSettings.Get(), NULL, rtvSettings.GetAddressOf());
+					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texHubworld.Get(), NULL, rtvHubworld.GetAddressOf());
+					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texAudio.Get(), NULL, rtvAudio.GetAddressOf());
+					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texMisc.Get(), NULL, rtvMisc.GetAddressOf());
 
 			//Active Panel Start Up
 				mActivePanel.SetOptions(mPanels.at(MAIN_MENU)->GetChildren());
@@ -258,6 +206,61 @@ namespace Epoch
 		}
 		virtual void Update()
 		{
+	
+			Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvPauseMenuBase.Get(), transparentColor);
+			Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvMainPanel.Get(), transparentColor);
+			//Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvSettingsPanel.Get(), transparentColor);
+			Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvResume.Get(), transparentColor);
+			//Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvSettings.Get(), transparentColor);
+			//Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvHubworld.Get(), transparentColor);
+			//Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvAudio.Get(), transparentColor);
+			//Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvMisc.Get(), transparentColor);
+
+			D2D1::ColorF tempColor = { 0,0,1,0.5f };
+			//Draw::Instance().DrawRectangleToBitmap(
+			//	0, 0, 256.0f,256.0f, 
+			//	tempColor,
+			//	Draw::Instance().GetBitmap(texPauseMenuBase.Get()));
+			//Draw::Instance().DrawTextToBitmap(
+			//	0, 0, 256.0f, 256.0f,
+			//	*mainFont, L"Fuck you",
+			//	Draw::Instance().GetBitmap(texPauseMenuBase.Get()));
+
+			//Draw::Instance().DrawRectangleToBitmap(
+			//	0, 0, 256.0f, 256.0f,
+			//	(D2D1::ColorF::Black, 1.0f),
+			//	Draw::Instance().GetBitmap(texMainPanel.Get()));
+
+			//Draw::Instance().DrawRectangleToBitmap(
+			//	0, 0, 256.0f, 256.0f,
+			//	(D2D1::ColorF::Black, 0.8f),
+			//	Draw::Instance().GetBitmap(texSettingsPanel.Get()));
+
+			Draw::Instance().DrawTextToBitmap(
+				0, 0, 256.0f, 256.0f,
+				*mainFont, L"Resume",
+				Draw::Instance().GetBitmap(texResume.Get()));
+
+			//Draw::Instance().DrawTextToBitmap(
+			//	0, 0, 256.0f, 256.0f,
+			//	*mainFont, L"Settings",
+			//	Draw::Instance().GetBitmap(texSettings.Get()));
+
+			//Draw::Instance().DrawTextToBitmap(
+			//	0, 0, 256.0f, 256.0f,
+			//	*mainFont, L"Hubworld",
+			//	Draw::Instance().GetBitmap(texHubworld.Get()));
+
+			//Draw::Instance().DrawTextToBitmap(
+			//	0, 0, 256.0f, 256.0f,
+			//	*mainFont, L"Audio",
+			//	Draw::Instance().GetBitmap(texAudio.Get()));
+
+			//Draw::Instance().DrawTextToBitmap(
+			//	0, 0, 256.0f, 256.0f,
+			//	*mainFont, L"Misc",
+			//	Draw::Instance().GetBitmap(texMisc.Get()));
+			//OnEnable();
 			//if (PauseMenuisUp) {
 			//	PauseMenuisUp = false;
 			//	OnDisable();
@@ -275,10 +278,17 @@ namespace Epoch
 			PauseMenuisUp = true;
 			Transform tempT;
 			matrix4 playerPos = VRInputManager::GetInstance().GetPlayerView();
-			//vec4f playerRot = vec4f(0, 0, 1, 0) *  playerPos;
+			vec4f playerRot = vec4f(0, 0, 1, 0) *  playerPos;
 			
-			tempT.SetMatrix(matrix4::CreateScale(10,10,10) * (playerPos));// * playerPos.CreateTranslation(0, 5.0f, 5.0f)));// *playerPos.CreateTranslation(playerRot));
+			tempT.SetMatrix(playerPos.CreateXRotation(1.39626) * playerPos.CreateScale(20,20,20) * (playerPos) * playerPos.CreateTranslation(playerRot));// * playerPos.CreateTranslation(0, 5.0f, 5.0f)));// *playerPos.CreateTranslation(playerRot));
 			pPauseMenuBase->SetTransform(tempT);
+			tempT.SetMatrix(playerPos.CreateScale(0.85f, 0.85f, 0.85f) * playerPos.CreateTranslation(0, 0.0001f, 0));
+			pMainPanel->SetTransform(tempT);
+			tempT.SetMatrix(playerPos.CreateScale(0.85f, 0.85f, 0.85f) * playerPos.CreateTranslation(0, 0.0001f, 0));
+			pSettingsPanel->SetTransform(tempT);
+			tempT.SetMatrix(playerPos.CreateTranslation(0, 0.0001f, 0));
+			pResume->SetTransform(tempT);
+
 		}
 		virtual void OnDisable()
 		{
