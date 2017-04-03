@@ -14,6 +14,9 @@
 #include "../Actions/CCEnterLevel1.h"
 #include "../Actions/MainMenuBT.h"
 #include "../Actions/CCLoadHub.h"
+#include "../Actions/CCBoxSpin.h"
+#include "../Actions/CCExit.h"
+#include "../Actions/CCStartButton.h"
 #include "../Objects/MeshComponent.h"
 #include "../Objects/TransparentMeshComponent.h"
 #include "../tinyxml/tinyxml.h"
@@ -581,7 +584,22 @@ namespace Epoch {
 					transform.SetMatrix(mat);
 					BaseObject* obj = new BaseObject(name, transform);
 
-					if (name == "cube.001" || name == "cube.002" || name == "cube.003" || name == "cube.004")
+					if (name == "mmStartButton")
+					{
+						CCStartButton* start = new CCStartButton();
+						obj->AddComponent(start);
+					}
+					else if (name == "mmExitButton")
+					{
+						CCExit* exit = new CCExit();
+						obj->AddComponent(exit);
+					}
+					else if (name == "mmCube")
+					{
+						CCBoxSpin* spin = new CCBoxSpin();
+						obj->AddComponent(spin);
+					}
+					else if (name == "cube.001" || name == "cube.002" || name == "cube.003" || name == "cube.004")
 					{
 						Emitter* e = new Emitter();
 						e->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::SFX_BOUNCEEFFECTS);
@@ -648,7 +666,7 @@ namespace Epoch {
 						{
 							Emitter* sound = new Emitter();
 							sound->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, sfxFile);
-							Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(sound, soundName.c_str())));
+							AudioWrapper::GetInstance().AddEmitter(sound, soundName.c_str());
 							obj->AddComponent(sound);
 						}
 						if (Loop)
@@ -658,7 +676,7 @@ namespace Epoch {
 							sound->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, pauseFile);
 							sound->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, resumeFile);
 							sound->AddSoundEvent(Emitter::sfxTypes::eStopLoop, stopFile);
-							Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(sound, soundName.c_str())));
+							AudioWrapper::GetInstance().AddEmitter(sound, soundName.c_str());
 							obj->AddComponent(sound);
 						}
 					}

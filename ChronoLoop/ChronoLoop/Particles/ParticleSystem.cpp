@@ -15,10 +15,10 @@ namespace Epoch
 	}
 	ParticleSystem::~ParticleSystem()
 	{
-		for (int i = 0; i < mPEmitters.size(); ++i)
-			delete mPEmitters[i];
+		//for (int i = 0; i < mPEmitters.size(); ++i)
+		//	delete mPEmitters[i];
 
-		//mPEmitters.clear();
+		mPEmitters.clear();
 		mILayout->Release();
 		mVBuff->Release();
 		mVShader->Release();
@@ -151,5 +151,16 @@ namespace Epoch
 			return true;
 
 		return false;
+	}
+
+	void ParticleSystem::Clear()
+	{
+		for (int i = mPEmitters.size() - 1; i >= 0; i--)
+		{
+			if (DoesExist(mPEmitters[i]))
+			{
+				RemoveEmitter(mPEmitters[i]);
+			}
+		}
 	}
 }
