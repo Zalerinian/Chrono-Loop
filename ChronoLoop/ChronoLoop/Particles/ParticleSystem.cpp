@@ -116,8 +116,8 @@ namespace Epoch
 			UINT offset = 0;
 			ID3D11Buffer* buffer = mPEmitters[i]->GetVertexBuffer();
 			cntxt->IASetVertexBuffers(0, 1, &buffer, &stride, &offset);
-			ID3D11ShaderResourceView* srv = mPEmitters[i]->GetTexture();
-			cntxt->PSSetShaderResources(0, 1, &srv);
+			ID3D11ShaderResourceView* srv[] = { mPEmitters[i]->GetTexture(), mPEmitters[i]->GetTexture(1), mPEmitters[i]->GetTexture(2) };
+			cntxt->PSSetShaderResources(0, 3, srv);
 			//draw call
 			cntxt->Draw(mPEmitters[i]->GetVertexCount(), 0);
 			//Unset gbuffer

@@ -180,7 +180,7 @@ namespace Epoch
 		mReuse = false;
 
 		SetPosBounds(vec3f(), vec3f());
-		SetVelBounds(vec3f(-2,-2,-2), vec3f(2,2,2));
+		SetVelBounds(vec3f(-2, -2, -2), vec3f(2, 2, 2));
 
 		CreateBuffers();
 	}
@@ -231,6 +231,16 @@ namespace Epoch
 		vData.SysMemSlicePitch = 0;
 
 		Renderer::Instance()->GetDevice()->CreateBuffer(&vDesc, &vData, &mVBuffer);
+
+		//TODO: Make pixel shader buffer
+		vDesc.Usage = D3D11_USAGE_DEFAULT;
+		vDesc.ByteWidth = sizeof(mPSData);
+		vDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		vDesc.CPUAccessFlags = 0;
+		vDesc.MiscFlags = 0;
+
+		vData.pSysMem = &mPSData;
+		Renderer::Instance()->GetDevice()->CreateBuffer(&vDesc, &vData, &mPBuffer);
 	}
 
 	void ParticleEmitter::CreateTextureResource()
@@ -257,6 +267,7 @@ namespace Epoch
 	{
 		mTName[_index] = _tex;
 		mTextures[_index].mType = 0;
+		mPSData.types[_index] = 0;
 		TextureManager::Instance()->iGetTexture2D(mTName[_index], &mTextures[_index].tv, &mTextures[_index].text);
 
 	}
@@ -266,6 +277,7 @@ namespace Epoch
 		mTextures[_index].mType = 2;
 		mTextures[_index].mAnimated = _animated;
 		mTextures[_index].mOffset = _offset;
+		mPSData.types[_index] = _offset;
 		TextureManager::Instance()->iGetTexture2D(mTName[_index], &mTextures[_index].tv, &mTextures[_index].text);
 	}
 	void ParticleEmitter::SetTexture(const char* _tex, bool _wrap, float _speed, bool _not, int _index)
@@ -274,6 +286,7 @@ namespace Epoch
 		mTextures[_index].mType = 3;
 		mTextures[_index].mWrap = _wrap;
 		mTextures[_index].mSpeed = _speed;
+		mPSData.types[_index] = _speed;
 		TextureManager::Instance()->iGetTexture2D(mTName[_index], &mTextures[_index].tv, &mTextures[_index].text);
 	}
 
@@ -297,7 +310,7 @@ namespace Epoch
 		mMinVX = _min.x;
 		mMinVY = _min.y;
 		mMinVZ = _min.z;
-			
+
 		mMaxVX = _max.x;
 		mMaxVY = _max.y;
 		mMaxVZ = _max.z;
@@ -370,7 +383,22 @@ namespace Epoch
 		memcpy(mRes.pData, mGParticles.data(), sizeof(GSParticle) * mGParticles.size());
 		//Graphics 2 slides
 		Renderer::Instance()->GetContext()->Unmap(mVBuffer.Get(), 0);
+
+		for (int i = 0; i < 3; i++)
+		{
+			if (mTextures[i].mType == 1)
+				continue;
+			if (mTextures[i].mType == 3)
+				mPSData.types[i] += mTextures[i].mSpeed;
+			else
+				mPSData.types[i] += mTextures[i].mOffset;
+
+		}
+
+		Renderer::Instance()->GetContext()->UpdateSubresource(mPBuffer.Get(), 0, nullptr, &mPSData, 0, 0);
 		Renderer::Instance()->GetRendererLock().unlock();
+
+
 	}
 
 	void ParticleEmitter::CleanUpParticles()
@@ -437,7 +465,7 @@ namespace Epoch
 
 		mParticles.clear();
 	}
-	
+
 	void ParticleEmitter::Reset()
 	{
 		Clear();
@@ -669,7 +697,7 @@ namespace Epoch
 				y = (mMinPY + mPos.y) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPY + mPos.y) - (mMinPY + mPos.y))));
 				z = (mMinPZ + mPos.z) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPZ + mPos.z) - (mMinPZ + mPos.z))));
 				p->SetPos(0, 0, 0);
-				
+
 				p->SetRadials(0, y, 0);
 				x = mMinVX + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (mMaxVX - mMinVX)));
 				y = mMinVY + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (mMaxVY - mMinVY)));

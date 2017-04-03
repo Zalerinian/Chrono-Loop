@@ -40,8 +40,8 @@ namespace Epoch
 			};
 			struct
 			{
-				float mOffset;
 				bool mAnimated;
+				float mOffset;
 			};
 		};
 	};
@@ -130,8 +130,12 @@ namespace Epoch
 	protected:
 		const char* mTName[3];
 		Texture mTextures[3];
+		struct
+		{
+			float types[4];
+		} mPSData;
 
-		Microsoft::WRL::ComPtr<ID3D11Buffer> mVBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mVBuffer, mPBuffer;
 		//BlendMode
 		//BoundingBox
 		//TODO: Make this attachable, basically a position pointer
