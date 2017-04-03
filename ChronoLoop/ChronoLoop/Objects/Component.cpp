@@ -6,7 +6,7 @@
 
 namespace Epoch
 {
-	
+
 	unsigned short Component::mComponentCount = 0;
 
 	Component::Component()
@@ -52,109 +52,52 @@ namespace Epoch
 
 
 #pragma endregion
-//------------------------------------------------------------
-//Emitter-----------------------------------------------------
-#pragma region Emitter
+	//------------------------------------------------------------
+	//Emitter-----------------------------------------------------
+#pragma region Audio
 
 	void Emitter::Update()
 	{
 
 	}
 
-	void Emitter::Play(int _id)
-	{
-		if (_id < 0 || _id > mSFX[ePlayLoop].size() - 1 || mSFX[ePlayLoop].size() == 0)
-			return;
-		if (mIsSounds[_id].first)
-			return;
-		AudioWrapper::GetInstance().MakeEvent(mSFX[ePlayLoop][_id], this);
-		mIsSounds[_id].first = true;
-	}
-
-	void Emitter::Pause(int _id)
-	{
-		if (_id < 0 || _id > mSFX[ePauseLoop].size() - 1 || mSFX[eResumeLoop].size() - 1 || mSFX[eResumeLoop].size() == 0 || mSFX[ePauseLoop].size() == 0)
-			return;
-
-		if (mIsSounds[_id].second)
-		{
-			AudioWrapper::GetInstance().MakeEvent(mSFX[eResumeLoop][_id], this);
-			mIsSounds[_id].second = false;
-		}
-		else
-		{
-			AudioWrapper::GetInstance().MakeEvent(mSFX[ePauseLoop][_id], this);
-			mIsSounds[_id].second = true;
-		}
-	}
-
-	void Emitter::Stop(int _id)
-	{
-		if (_id < 0 || _id > mSFX[eStopLoop].size() - 1 || mSFX[eStopLoop].size() == 0)
-			return;
-		if (!mIsSounds[_id].first)
-			return;
-		AudioWrapper::GetInstance().MakeEvent(mSFX[eStopLoop][_id], this);
-		mIsSounds[_id].first = false;
-
-	}
-
-	void Emitter::PlaySFX(int _id)
-	{
-		//TODO: DOUBLE CHECK THIS
-		if (_id < 0 || _id > mSFX[ePlaySFX].size() - 1 || mSFX[ePlaySFX].size() == 0)
-			return;
-
-		const vec4f * pos = GetTransform().GetPosition();
-		AudioWrapper::GetInstance().MakeEvent(mSFX[ePlaySFX][_id], this);
-	}
-	void Emitter::PlaySFX(int _id, const vec4f* _pos)
-	{
-		if (_id < 0 || _id > mSFX[ePlaySFX].size() - 1 || mSFX[ePlaySFX].size() == 0)
-			return;
-
-		const vec4f * pos = _pos;
-		AudioWrapper::GetInstance().MakeEvent(mSFX[ePlaySFX][_id], this);
-	}
-
-	void Emitter::AddSoundEvent(sfxTypes _type, int64_t _event)
-	{
-		
-		switch (_type)
-		{
-		case sfxTypes::ePlayLoop:
-		{
-			mSFX[_type].push_back(_event);
-			mIsSounds.push_back(std::pair<bool, bool>(false, false));
-		}
-		break;
-		case sfxTypes::ePauseLoop:
-		{
-			mSFX[_type].push_back(_event);
-		}
-		break;
-		case sfxTypes::eResumeLoop:
-		{
-			mSFX[_type].push_back(_event);
-		}
-		break;
-		case sfxTypes::eStopLoop:
-		{
-			mSFX[_type].push_back(_event);
-		}
-		break;
-		case sfxTypes::ePlaySFX:
-		{
-			mSFX[_type].push_back(_event);
-		}
-		break;
-		}
-
-	}
-
 	void Emitter::Destroy()
 	{
+		AudioWrapper::GetInstance().RemoveEmitter(this);
+	}
 
+	void Emitter::SendEvent(uint64_t _event)
+	{
+		if (AudioWrapper::GetInstance().IsInitialized())
+			AudioWrapper::GetInstance().MakeEvent(_event, this);
+	}
+
+	void AudioEmitter::AddEvent(EventType _et, uint64_t _event)
+	{
+		if (eNone == _et)
+			return;
+
+		mEvents[_et] = _event;
+	}
+
+	void AudioEmitter::StopAllSound()
+	{
+		AudioWrapper::GetInstance().StopEmitter(this);
+	}
+
+	void AudioEmitter::CallEvent(EventType _et)
+	{
+		if (_et != eNone && mEvents[_et])
+			SendEvent(mEvents[_et]);
+	}
+
+	void SFXEmitter::SetEvent(uint64_t _event)
+	{
+		mEvent = _event;
+	}
+	void SFXEmitter::CallEvent(EventType _et)
+	{
+		SendEvent(mEvent);
 	}
 #pragma endregion
 	//------------------------------------------------------------
@@ -378,7 +321,7 @@ namespace Epoch
 		mAcceleration = vec3f(0.0f, 0.0f, 0.0f);
 		mTotalForce = mGravity * _mass;
 		mImpulsiveForce = vec3f(0.0f, 0.0f, 0.0f);
-		
+
 		mMass = _mass;
 		if (mMass == 0)
 			mInvMass = 0;

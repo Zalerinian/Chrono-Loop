@@ -21,7 +21,10 @@ namespace Epoch
 				if (_col.mVelocity.x > .001 || _col.mVelocity.y > .001 || _col.mVelocity.z > .001)
 				{
 					if (mObject->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0)
-						((Emitter*)mObject->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->PlaySFX();
+					{
+						if (dynamic_cast<SFXEmitter*>(mObject->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0)))
+							((SFXEmitter*)mObject->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+					}
 				}
 			}
 			else

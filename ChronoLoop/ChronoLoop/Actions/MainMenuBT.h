@@ -127,8 +127,8 @@ namespace Epoch
 								mPlayerInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(0, -10, 0), VRInputManager::GetInstance().GetPlayerPosition());
 								mPlayerInterp->SetActive(true);
 								mBooped = true;
-								((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->PlaySFX(0);
-								((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Play(0);
+								((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->CallEvent(Emitter::EventType::ePlay);
+								((SFXEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 1))->CallEvent();
 
 								cLevel->mmflip = false;
 							}
@@ -189,7 +189,7 @@ namespace Epoch
 				bool complete = mPlayerInterp->Update(TimeManager::Instance()->GetDeltaTime());
 				if (complete)
 				{
-					((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Stop(0);
+					((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->CallEvent(Emitter::EventType::eStop);
 					mBooped = false;
 				}
 			}
