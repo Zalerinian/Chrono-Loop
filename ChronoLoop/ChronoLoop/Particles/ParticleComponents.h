@@ -26,6 +26,25 @@ namespace Epoch
 	{
 		matrix4 model;
 	};
+	struct Texture
+	{
+		int mType;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> tv;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> text;
+		union
+		{
+			struct
+			{
+				bool mWrap;
+				float mSpeed;
+			};
+			struct
+			{
+				bool mAnimated;
+				float mOffset;
+			};
+		};
+	};
 
 	struct Particle
 	{
@@ -109,24 +128,29 @@ namespace Epoch
 		char* mName;
 
 	protected:
-		const char* mTName;
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> tv;
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> text;
-		Microsoft::WRL::ComPtr<ID3D11Buffer> mVBuffer;
+		const char* mTName[3];
+		Texture mTextures[3];
+		struct
+		{
+			float types[4];
+		} mPSData;
+
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mVBuffer, mPBuffer;
 		//BlendMode
 		//BoundingBox
 		//TODO: Make this attachable, basically a position pointer
 		vec3f mPos;
-
 		
 		Particle* mBase;
 		std::list<Particle*> mParticles;
 		std::vector<GSParticle> mGParticles;
 		int mTotalParticles, mMaxParticles, mPerSec;
 		int total = 0;
-		vec4f mStartColor, mEndColor;
-		bool mIsAnimated, mWrap;
-		float mOffset, mSpeed;
+
+		float mMinPX, mMinPY, mMinPZ, mMinVX, mMinVY, mMinVZ;
+		float mMaxPX, mMaxPY, mMaxPZ, mMaxVX, mMaxVY, mMaxVZ;
+
+
 		//TODO: If animated, need to send offset to geometry shader or pixel shader
 
 		virtual void UpdateParticle(Particle* _p, float _delta);
@@ -135,22 +159,25 @@ namespace Epoch
 		void UpdateBuffers();
 		void CleanUpParticles();
 		virtual void EmitParticles();
-
+		void Clear();
 	public:
-		bool mActive, mEnabled;
+		bool mActive, mEnabled, mReuse;
 
 		ParticleEmitter(int _totalp, int _maxp, int _persec, vec3f _pos);
 		virtual ~ParticleEmitter();
 
 		ID3D11Buffer* GetVertexBuffer();
-		ID3D11ShaderResourceView* GetTexture();
+		ID3D11ShaderResourceView* GetTexture(int _index = 0);
 		int GetVertexCount();
 
-		void SetTexture(const char* _tex);
-		void SetTexture(const char* _tex, bool _animate, float offset);
+		void SetTexture(const char* _tex, int _index = 0);
+		void SetTexture(const char* _tex, bool _animate, float offset, int _index = 0);
+		void SetTexture(const char* _tex, bool _wrap, float _speed, bool _not, int _index = 0);
 		virtual void SetParticle(Particle* _p);
+		void SetPosBounds(vec3f _min, vec3f _max);
+		void SetVelBounds(vec3f _min, vec3f _max);
 		void FIRE() { mEnabled = true; }
-
+		virtual void Reset();
 		void Update(float _delta);
 
 	};
