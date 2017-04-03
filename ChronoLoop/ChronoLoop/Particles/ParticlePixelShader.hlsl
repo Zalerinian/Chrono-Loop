@@ -9,12 +9,15 @@ struct GSOutput
 	float4 normal : NORMAL;
 };
 
-texture2D text2D : register(t0);
+//TODO: Make constant buffer
+texture2D text2D0 : register(t0);
+texture2D text2D1 : register(t1);
+texture2D text2D2 : register(t2);
 SamplerState samp : register(s0);
 
 float4 main(GSOutput input) : SV_TARGET
 {
-	float4 col = text2D.Sample(samp, input.uv.xy);
+	float4 col = text2D0.Sample(samp, input.uv.xy);
 	clip(col.a - .25);
 	col *= input.col;
 
