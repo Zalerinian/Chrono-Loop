@@ -46,7 +46,7 @@ namespace Epoch
 				}
 			}
 			mObject->GetTransform().GetMatrix().RotateInPlace(vec3f(1, 1, 1), angle);
-			angle += 1.5708 * TimeManager::Instance()->GetDeltaTime();
+			angle += 1.5708f * TimeManager::Instance()->GetDeltaTime();
 			//rot = matrix4::CreateXRotation(angle) * matrix4::CreateXRotation(angle) * matrix4::CreateXRotation(angle);
 		}
 	};

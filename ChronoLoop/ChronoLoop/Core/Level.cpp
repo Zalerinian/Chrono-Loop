@@ -620,7 +620,7 @@ namespace Epoch {
 						AudioWrapper::GetInstance().AddEmitter(e, name.c_str());
 
 					}
-					else if (name == "Door" || name == "Door2")
+					else if (name == "TransparentDoor1" || name == "TransparentDoor2")
 					{
 						Emitter* e = new SFXEmitter();
 						((SFXEmitter*)e)->SetEvent(AK::EVENTS::SFX_DOORSOUND);
@@ -666,7 +666,17 @@ namespace Epoch {
 						MeshComponent* mesh;
 						if(obj->GetName().find("Transparent") != std::string::npos)
 						{
-							mesh = new TransparentMeshComponent(path.c_str(), .3f);
+							float alpha = 1;
+							//TODO PAT: FIX ALL THIS 
+							if(obj->GetName().find("Door") != std::string::npos)
+							{
+								alpha = .6f;
+							}
+							else
+							{
+								alpha = .3f;
+							}
+							mesh = new TransparentMeshComponent(path.c_str(), alpha);
 						}
 						else
 						{
