@@ -701,7 +701,7 @@ namespace Epoch
 				x = (mMinPX + mPos.x) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPX + mPos.x) - (mMinPX + mPos.x))));
 				y = (mMinPY + mPos.y) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPY + mPos.y) - (mMinPY + mPos.y))));
 				z = (mMinPZ + mPos.z) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPZ + mPos.z) - (mMinPZ + mPos.z))));
-				p->SetPos(0, 0, 0);
+				p->SetPos(0, mPos.y, 0);
 
 				p->SetRadials(0, y, 0);
 				x = mMinVX + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (mMaxVX - mMinVX)));
