@@ -800,23 +800,26 @@ void Update() {
 	//mmCubeMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 	//mmCube->AddComponent(mmCubeMesh);
 	Light* l1 = new Light();
+	memset(l1, 0, sizeof(l1));
 	l1->Type = 4;
 	l1->Color = vec3f(.7f, .7f, 1);
 	l1->ConeDirection = vec3f(0, -1, 0);
 	l1->Position = vec3f(0, 2, 0);
-	l1->ConeRatio = 0;
+	l1->ConeRatio = 500000;
 
 	Light* l2 = new Light();
+	memset(l2, 0, sizeof(l2));
 	l2->Type = 2;
 	l2->Position = vec3f(3.972854, 1.570289, 0);
 	l2->Color = vec3f(0, 0, 1);
 	
 	Light* l3 = new Light();
+	memset(l3, 0, sizeof(l3));
 	l3->Type = 4;
 	l3->Color = vec3f(0, 1, .5f);
 	l3->ConeDirection = vec3f(0, -1, 0);
 	l3->Position = vec3f(0, 2, -3.872531);
-	l3->ConeRatio = 0;
+	l3->ConeRatio = 3.14159f;
 
 	Renderer::Instance()->SetLight(l1, 0);
 	Renderer::Instance()->SetLight(l2, 1);
@@ -873,6 +876,17 @@ void Update() {
 	//planeObj->AddTexture(AddedTextureName.c_str(), eTEX_CUSTOM1);
 
 	//*////////////////////////////////////////////////////////////////////
+
+	volatile int Typeoffset = (int)(&(((Light*)0)->Type));
+	volatile int padoffset = (int)(&(((Light*)0)->pad));
+	volatile int Positionoffset = (int)(&(((Light*)0)->Position));
+	volatile int Directionoffset = (int)(&(((Light*)0)->Direction));
+	volatile int ConeDirectionoffset = (int)(&(((Light*)0)->ConeDirection));
+	volatile int ConeRatiooffset = (int)(&(((Light*)0)->Color));
+	volatile int pad1offset = (int)(&(((Light*)0)->pad1));
+
+
+
 
 	if (VREnabled) {
 		VRInputManager::GetInstance().Update();

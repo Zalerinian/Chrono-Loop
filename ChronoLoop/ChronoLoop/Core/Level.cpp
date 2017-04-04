@@ -667,10 +667,13 @@ namespace Epoch {
 						if(obj->GetName().find("Transparent") != std::string::npos)
 						{
 							float alpha = 1;
-							if (obj->GetName().find("Door") != std::string::npos){
-								alpha=.6f;
+							//TODO PAT: FIX ALL THIS 
+							if(obj->GetName().find("Door") != std::string::npos)
+							{
+								alpha = .6f;
 							}
-							else 								{
+							else
+							{
 								alpha = .3f;
 							}
 							mesh = new TransparentMeshComponent(path.c_str(), alpha);
