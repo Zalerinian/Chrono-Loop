@@ -9,9 +9,7 @@ namespace Epoch {
 
 	struct matrix4;
 
-	struct BufferWidth {
-		matrix4 e1, e2;
-	};
+	
 
 	class RenderList {
 		// returns the index into the buffer that the given data occupies. this number should be stored in the shape so that

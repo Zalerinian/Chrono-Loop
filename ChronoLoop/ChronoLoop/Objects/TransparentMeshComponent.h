@@ -6,20 +6,7 @@ namespace Epoch {
 
 	class TransparentMeshComponent : public MeshComponent {
 	protected:
-		struct AlphaData {
-			union {
-				struct {
-					vec4f alpha;
-				};
-				BufferWidth padding;
-			};
-
-			AlphaData() {
-				alpha.Set(0, 0, 0, 0);
-			}
-		};
-
-		AlphaData mAlpha;
+		PSTransparent_Data mAlpha;
 		//bool mOpaque = true, mWasOpaque = true;
 		virtual void CreateNode();
 		virtual void RemoveShape();

@@ -26,6 +26,20 @@ namespace Epoch {
 			mVisible = false;
 			mNode = nullptr;
 		}
+
+		for (int i = 0; i < eVB_MAX; ++i) {
+			mVertexBufferTypes[i] = eBufferDataType_Nullptr;
+		}
+
+		for (int i = 0; i < ePB_MAX; ++i) {
+			mPixelBufferTypes[i] = eBufferDataType_Nullptr;
+		}
+
+		for (int i = 0; i < eGB_MAX; ++i) {
+			mGeoBufferTypes[i] = eBufferDataType_Nullptr;
+		}
+
+		mPixelBufferTypes[ePB_REGISTER1] = eBufferDataType_Alpha;
 	}
 
 	void MeshComponent::Update() {
@@ -56,6 +70,20 @@ namespace Epoch {
 				}
 				mVisible = false;
 			}
+		}
+		return this;
+	}
+
+	MeshComponent * MeshComponent::SetAlpha(float _a) {
+		if (mPixelBufferTypes[ePB_REGISTER1] != eBufferDataType_Alpha) {
+			SystemLogger::Error() << "Attempted to set the alpha of a mesh whos Register 1 pixel buffer is not an alpha buffer!" << std::endl;
+			return this;
+		}
+		PSTransparent_Data alpha;
+		alpha.alpha.x = _a;
+		Renderer::Instance()->GetContext()->UpdateSubresource(mShape->GetContext().mPixelCBuffers[ePB_REGISTER1].Get(), 0, 0, &alpha, 0, 0);
+		if (mBuffersCanUpdate) {
+
 		}
 		return this;
 	}
@@ -124,6 +152,56 @@ namespace Epoch {
 	void MeshComponent::ForceReinsertion() {
 		RemoveShape();
 		CreateNode();
+	}
+
+	void MeshComponent::EnableBufferUpdates(bool _updateNow) {
+		mBuffersCanUpdate = true;
+		if (_updateNow) {
+			// Todo: only update buffers that actually changed in the future.
+			for (int i = 0; i < eVB_MAX; ++i) {
+				Renderer::Instance()->UpdateOpaqueNodeBuffer(*mShape, eCB_VERTEX, i);
+			}
+
+			for (int i = 0; i < eVB_MAX; ++i) {
+				Renderer::Instance()->UpdateOpaqueNodeBuffer(*mShape, eCB_PIXEL, i);
+			}
+
+			for (int i = 0; i < eVB_MAX; ++i) {
+				Renderer::Instance()->UpdateOpaqueNodeBuffer(*mShape, eCB_GEO, i);
+			}
+		}
+	}
+
+	void MeshComponent::DisableBufferUpdates() {
+		mBuffersCanUpdate = false;
+	}
+
+	bool MeshComponent::GetBufferUpdates() {
+		return mBuffersCanUpdate;
+	}
+
+	void MeshComponent::SetData(ConstantBufferType _t, BufferDataType _bt, unsigned char _index, void * _data) {
+		ID3D11Buffer* buff = nullptr;
+		switch (_t) {
+			case eCB_VERTEX:
+				buff = mShape->GetContext().mVertexCBuffers[_index].Get();
+				mVertexBufferTypes[_index] = _bt;
+				break;
+			case eCB_PIXEL:
+				buff = mShape->GetContext().mPixelCBuffers[_index].Get();
+				mPixelBufferTypes[_index] = _bt;
+				break;
+			case eCB_GEO:
+				buff = mShape->GetContext().mGeometryCBuffers[_index].Get();
+				mGeoBufferTypes[_index] = _bt;
+				break;
+			default:
+				return;
+		}
+		Renderer::Instance()->GetContext()->UpdateSubresource(buff, 0, 0, _data, 0, 0);
+		if (GetBufferUpdates()) {
+			Renderer::Instance()->UpdateOpaqueNodeBuffer(*mShape, _t, _index);
+		}
 	}
 
 	bool MeshComponent::CanCreateNode() {

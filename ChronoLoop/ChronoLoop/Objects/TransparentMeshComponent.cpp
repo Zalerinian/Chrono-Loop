@@ -34,7 +34,7 @@ namespace Epoch {
 	{
 		Renderer::Instance()->GetRendererLock().lock();
 		ID3D11Buffer* AlphaBuff;
-		CD3D11_BUFFER_DESC AlphaDesc(sizeof(AlphaData), D3D11_BIND_CONSTANT_BUFFER);
+		CD3D11_BUFFER_DESC AlphaDesc(sizeof(mAlpha), D3D11_BIND_CONSTANT_BUFFER);
 		D3D11_SUBRESOURCE_DATA BufferData;
 		BufferData.pSysMem = &mAlpha;
 		HRESULT hr = Renderer::Instance()->GetDevice()->CreateBuffer(&AlphaDesc, &BufferData, &AlphaBuff);

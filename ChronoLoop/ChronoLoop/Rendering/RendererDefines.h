@@ -1,17 +1,41 @@
 #pragma once
 #include "../Common/Math/vec4f.h"
+#include "../Common/Math/matrix4.h"
 
 namespace Epoch {
 
-	struct PSTransparentScanline_Data {
-		float alpha;
+	struct BufferWidth {
+		matrix4 e1, e2;
+	};
 
-		// X: Multiscan V offset
-		// Y: Multiscan Alpha
-		// Z: Scanline V Offset
-		// W: Scanline Alpha
-		vec4f ScanlineData;
-		float p1, p2, p3;
+	struct PSTransparentScanline_Data {
+		union {
+			struct {
+				float alpha;
+
+				// X: Multiscan V offset
+				// Y: Multiscan Alpha
+				// Z: Scanline V Offset
+				// W: Scanline Alpha
+				vec4f ScanlineData;
+				float p1, p2, p3;
+			};
+			BufferWidth padding;
+		};
+		PSTransparentScanline_Data() {};
+	};
+
+	struct PSTransparent_Data {
+		union {
+			struct {
+				vec4f alpha;
+			};
+			BufferWidth padding;
+		};
+
+		PSTransparent_Data() {
+			alpha.Set(0, 0, 0, 0);
+		}
 	};
 
 
