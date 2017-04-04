@@ -350,7 +350,7 @@ namespace Epoch
 					l1->Type = 4;
 					l1->Color = vec3f(1, 1, 1);
 					l1->ConeDirection = vec3f(0, -1, 0);
-					l1->Position = vec3f(0.07529334, 1.129413, 8.11148);
+					l1->Position = vec3f(0.07529334f, 1.129413f, 8.11148f);
 					l1->ConeRatio = .1f;
 
 					Light* l2 = new Light();

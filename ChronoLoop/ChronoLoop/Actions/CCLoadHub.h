@@ -227,7 +227,7 @@ namespace Epoch
 						p2->SetColors(vec3f(0, 1, 0), vec3f(0, .5f, .5f));
 						p2->SetLife(500);
 						p2->SetSize(.35f, .15f);
-						ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(-2.61, -10, 0, 1));
+						ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(-2.61f, -10, 0, 1));
 						emit21->SetParticle(p2);
 						emit21->SetTexture("../Resources/BasicRectP.png");
 						((TeleportEffect*)emit21)->y1 = 8;
