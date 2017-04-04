@@ -61,6 +61,7 @@ namespace Epoch {
 		D3D11_VIEWPORT mShadowVP;
 
 		RenderShape* mScenePPQuad = nullptr, *mSceneScreenQuad = nullptr;
+		RenderContext mCurrentContext;
 
 		std::mutex mRendererLock;
 

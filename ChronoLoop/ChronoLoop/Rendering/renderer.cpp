@@ -643,13 +643,15 @@ namespace Epoch {
 				unsigned int offset = 0;
 #if ENABLE_INSTANCING
 				while (positions.size() - offset <= positions.size()) {
-					(*it)->mShape.GetContext().Apply();
+					(*it)->mShape.GetContext().Apply(/*mCurrentContext*/);
+					mCurrentContext = (*it)->mShape.GetContext();
 					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, positions.data() + offset, 0, 0);
 					(*it)->mShape.Render((UINT)positions.size() - offset);
 					offset += 256;
 				}
 #else
-				(*it)->mShape.GetContext().Apply();
+				(*it)->mShape.GetContext().Apply(/*mCurrentContext*/);
+				mCurrentContext = (*it)->mShape.GetContext();
 				vec4i SimInstanceID(0, 0, 0, 0);
 				for (unsigned int i = 0; i < positions.size(); ++i) {
 					SimInstanceID.x = i;
@@ -669,13 +671,15 @@ namespace Epoch {
 				unsigned int offset = 0;
 #if ENABLE_INSTANCING
 				while (positions.size() - offset <= positions.size()) {
-					(*it)->mShape.GetContext().Apply();
+					(*it)->mShape.GetContext().Apply(/*mCurrentContext*/);
+					mCurrentContext = (*it)->mShape.GetContext();
 					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, positions.data() + offset, 0, 0);
 					(*it)->mShape.Render((UINT)positions.size() - offset);
 					offset += 256;
 				}
 #else
-				(*it)->mShape.GetContext().Apply();
+				(*it)->mShape.GetContext().Apply(/*mCurrentContext*/);
+				mCurrentContext = (*it)->mShape.GetContext();
 				vec4i SimulatedIID(0, 0, 0, 0);
 				for (unsigned int i = 0; i < positions.size(); ++i) {
 					SimulatedIID.x = i;

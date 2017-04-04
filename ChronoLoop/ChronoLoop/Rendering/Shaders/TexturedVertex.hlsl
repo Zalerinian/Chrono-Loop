@@ -22,7 +22,7 @@ struct PSI {
 // useful in determining why something looks the way it does. By disabling instancing, we can
 // debug these issues much more easily.
 #if ENABLE_INSTANCING
-PSI main(VERTEX_POSNORMTEX input, uint id : SV_IID) {
+PSI main(VERTEX_POSNORMTEX input, uint id : SV_InstanceID) {
 #else
 PSI main(VERTEX_POSNORMTEX input) {
 #endif
