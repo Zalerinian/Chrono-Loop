@@ -19,6 +19,7 @@
 #include "..\Rendering\Renderer.h"
 #include "..\Rendering\TextureManager.h"
 #include "..\Objects\TransparentMeshComponent.h"
+#include "..\Rendering\TextureManager.h"
 #include <wrl\client.h>
 
 
@@ -147,33 +148,47 @@ namespace Epoch
 
 					HRESULT hr;
 					Microsoft::WRL::ComPtr<ID3D11Texture2D> screenTex;
-					D3D11_TEXTURE2D_DESC bitmapDesc;
-					bitmapDesc.Width = 256;
-					bitmapDesc.Height = 256;
-					bitmapDesc.MipLevels = 1;
-					bitmapDesc.ArraySize = 1;
-					bitmapDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-					bitmapDesc.SampleDesc.Count = 1;
-					bitmapDesc.SampleDesc.Quality = 0;
-					bitmapDesc.Usage = D3D11_USAGE_DEFAULT;
-					bitmapDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
-					bitmapDesc.CPUAccessFlags = 0;
-					bitmapDesc.MiscFlags = 0;
-
-
-					hr = Renderer::Instance()->GetDevice()->CreateTexture2D(&bitmapDesc, nullptr, screenTex.GetAddressOf());
 					Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
-					std::string str("Clone Display");
-					TextureManager::Instance()->iAddTexture2D(str, screenTex, &srv);
-					cdisp->AddTexture(str.c_str(), eTEX_DIFFUSE);
 
-					Font* font = new Font();
-					cdisp->GetContext().mTextures[eTEX_DIFFUSE] = srv;
-					UICloneText* ct = new UICloneText();
-					cloneDisplay->AddComponent(ct);
-					cloneDisplay->AddComponent(cdisp);
-					cloneDisplay->SetParent(RightController);
-					RightController->AddChild(cloneDisplay);
+					if (TextureManager::Instance()->iGetTexture2D("memory:Clone Display", &srv, &screenTex) != TextureManager::TextureStatus::eError)
+					{
+						std::string str("Clone Display");
+						cdisp->AddTexture(str.c_str(), eTEX_DIFFUSE);
+						Font* font = new Font();
+						cdisp->GetContext().mTextures[eTEX_DIFFUSE] = srv;
+						UICloneText* ct = new UICloneText();
+						cloneDisplay->AddComponent(ct);
+						cloneDisplay->AddComponent(cdisp);
+						cloneDisplay->SetParent(RightController);
+						RightController->AddChild(cloneDisplay);
+					}
+					else
+					{
+						D3D11_TEXTURE2D_DESC bitmapDesc;
+						bitmapDesc.Width = 256;
+						bitmapDesc.Height = 256;
+						bitmapDesc.MipLevels = 1;
+						bitmapDesc.ArraySize = 1;
+						bitmapDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+						bitmapDesc.SampleDesc.Count = 1;
+						bitmapDesc.SampleDesc.Quality = 0;
+						bitmapDesc.Usage = D3D11_USAGE_DEFAULT;
+						bitmapDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+						bitmapDesc.CPUAccessFlags = 0;
+						bitmapDesc.MiscFlags = 0;
+						hr = Renderer::Instance()->GetDevice()->CreateTexture2D(&bitmapDesc, nullptr, screenTex.GetAddressOf());
+						std::string str("Clone Display");
+						TextureManager::Instance()->iAddTexture2D(str, screenTex, &srv);
+						cdisp->AddTexture(str.c_str(), eTEX_DIFFUSE);
+
+						Font* font = new Font();
+						cdisp->GetContext().mTextures[eTEX_DIFFUSE] = srv;
+						UICloneText* ct = new UICloneText();
+						cloneDisplay->AddComponent(ct);
+						cloneDisplay->AddComponent(cdisp);
+						cloneDisplay->SetParent(RightController);
+						RightController->AddChild(cloneDisplay);
+					}
 
 					t.SetMatrix(matrix4::CreateTranslation(-0.039f, 0.015f, 0.054f));
 					BaseObject *rewindHelp = Pool::Instance()->iGetObject()->Reset("RewindHelp", t);
