@@ -134,16 +134,18 @@ namespace Epoch
 
 							if (temp == "mmStartButton")
 							{
-								((CCStartButton*)(((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_CODE, 0)))->levels = 1;
-								((ButtonCollider*)(((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->SetPos(((BaseObject*)*it)->GetTransform().GetMatrix().fourth);
-								((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset += mObject->GetTransform().GetMatrix().fourth.y;
-								((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset += mObject->GetTransform().GetMatrix().fourth.y;
+								matrix4 mat = mObject->GetTransform().GetMatrix();
+								((CCStartButton*)mObject->GetComponentIndexed(eCOMPONENT_CODE, 0))->levels = 1;
+								((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mat.fourth);
+								((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mat.fourth.y - .2f;
+								((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mat.fourth.y + .2f;
 							}
 							else if(temp == "mmExitButton")
 							{
-								((ButtonCollider*)(((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->SetPos(((BaseObject*)*it)->GetTransform().GetMatrix().fourth);
-								((ButtonCollider*)(((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mLowerBound.mOffset += (((BaseObject*)*it)->GetTransform().GetMatrix().fourth.y);
-								((ButtonCollider*)(((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mUpperBound.mOffset += (((BaseObject*)*it)->GetTransform().GetMatrix().fourth.y);
+								matrix4 mat = ((BaseObject*)*it)->GetTransform().GetMatrix();
+								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(((BaseObject*)*it)->GetTransform().GetMatrix().fourth);
+								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = ((BaseObject*)*it)->GetTransform().GetMatrix().fourth.y - .2f;
+								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = ((BaseObject*)*it)->GetTransform().GetMatrix().fourth.y - .2f;
 							}
 						}
 
