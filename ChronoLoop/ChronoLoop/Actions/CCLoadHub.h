@@ -136,9 +136,15 @@ namespace Epoch
 							{
 								((CCStartButton*)(((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_CODE, 0)))->levels = 1;
 								((ButtonCollider*)(((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->SetPos(((BaseObject*)*it)->GetTransform().GetMatrix().fourth);
+								((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset += mObject->GetTransform().GetMatrix().fourth.y;
+								((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset += mObject->GetTransform().GetMatrix().fourth.y;
 							}
 							else if(temp == "mmExitButton")
+							{
 								((ButtonCollider*)(((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->SetPos(((BaseObject*)*it)->GetTransform().GetMatrix().fourth);
+								((ButtonCollider*)(((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mLowerBound.mOffset += (((BaseObject*)*it)->GetTransform().GetMatrix().fourth.y);
+								((ButtonCollider*)(((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->mUpperBound.mOffset += (((BaseObject*)*it)->GetTransform().GetMatrix().fourth.y);
+							}
 						}
 
 						if ((*it)->mComponents[eCOMPONENT_COLLIDER].size() > 0)
