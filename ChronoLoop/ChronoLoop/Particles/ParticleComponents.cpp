@@ -271,16 +271,17 @@ namespace Epoch
 		TextureManager::Instance()->iGetTexture2D(mTName[_index], &mTextures[_index].tv, &mTextures[_index].text);
 
 	}
-	void ParticleEmitter::SetTexture(const char* _tex, bool _animated, float _offset, int _index)
+	void ParticleEmitter::SetTexture(const char* _tex, bool _animated, float _offset, int _frames, int _index)
 	{
 		mTName[_index] = _tex;
 		mTextures[_index].mType = 2;
 		mTextures[_index].mAnimated = _animated;
 		mTextures[_index].mOffset = _offset;
+		mTextures[_index].mFrames = _frames;
 		mPSData.types[_index] = _offset;
 		TextureManager::Instance()->iGetTexture2D(mTName[_index], &mTextures[_index].tv, &mTextures[_index].text);
 	}
-	void ParticleEmitter::SetTexture(const char* _tex, bool _wrap, float _speed, bool _not, int _index)
+	void ParticleEmitter::SetTexture(const char* _tex, bool _wrap, float _speed, int _index)
 	{
 		mTName[_index] = _tex;
 		mTextures[_index].mType = 3;
@@ -391,7 +392,11 @@ namespace Epoch
 			if (mTextures[i].mType == 3)
 				mPSData.types[i] += mTextures[i].mSpeed;
 			else
+			{
 				mPSData.types[i] += mTextures[i].mOffset;
+				if (mPSData.types[i] > mTextures[i].mOffset * mTextures[i].mFrames)
+					mPSData.types[i] = 0;
+			}
 
 		}
 
@@ -696,7 +701,7 @@ namespace Epoch
 				x = (mMinPX + mPos.x) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPX + mPos.x) - (mMinPX + mPos.x))));
 				y = (mMinPY + mPos.y) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPY + mPos.y) - (mMinPY + mPos.y))));
 				z = (mMinPZ + mPos.z) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPZ + mPos.z) - (mMinPZ + mPos.z))));
-				p->SetPos(0, 0, 0);
+				p->SetPos(0, mPos.y, 0);
 
 				p->SetRadials(0, y, 0);
 				x = mMinVX + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (mMaxVX - mMinVX)));
@@ -752,7 +757,7 @@ namespace Epoch
 				//x = -1.25f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1.25f - (-1.25f))));
 				//y = -3.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - (-3.0f))));
 				//z = -1.25f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1.25f - (-1.25f))));
-				p->SetPos(x, 0, z);
+				p->SetPos(x, mPos.y, z);
 
 				x = mMinVX + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (mMaxVX - mMinVX)));
 				y = mMinVY + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (mMaxVY - mMinVY)));

@@ -675,28 +675,30 @@ void Update() {
 	Particle* p1 = &Particle::Init();
 	p1->SetPos(vec3f(0, 0, 0));
 	p1->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
-	p1->SetLife(500);
-	p1->SetSize(1.25f / 2.0f, .15f / 2.0f);
+	p1->SetLife(550);
+	p1->SetSize(.35f, .15f);
 	ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.611548f, 1));
 	emit11->SetParticle(p1);
 	emit11->SetTexture("../Resources/BasicRectP.png");
 	((TeleportEffect*)emit11)->y1 = 8;
 	((TeleportEffect*)emit11)->y2 = 12;
-	((TeleportEffect*)emit11)->SetPosBounds(vec3f(0,0,0), vec3f(0,0,0));
+	((TeleportEffect*)emit11)->SetPosBounds(vec3f(-.37f, 0, 0), vec3f(.37f, 1, 0));
+	((TeleportEffect*)emit11)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 	ParticleSystem::Instance()->AddEmitter(emit11);
 	emit11->FIRE();
 
 	p1 = &Particle::Init();
 	p1->SetPos(vec3f(0, 0, 0));
 	p1->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
-	p1->SetLife(5000);
-	p1->SetSize(.25f, .05f);
+	p1->SetLife(550);
+	p1->SetSize(.15f, .05f);
 	ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.611548f, 1));
 	emit12->SetTexture("../Resources/BasicCircleP.png");
 	emit12->SetParticle(p1);
 	((TeleportEffect*)emit12)->y1 = 1;
 	((TeleportEffect*)emit12)->y2 = 5;
-	((TeleportEffect*)emit12)->SetPosBounds(vec3f(0, 0, 0), vec3f(0, 0, 0));
+	((TeleportEffect*)emit12)->SetPosBounds(vec3f(-.37f, 0, 0), vec3f(.37f, 1, 0));
+	((TeleportEffect*)emit12)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 	ParticleSystem::Instance()->AddEmitter(emit12);
 	emit12->FIRE();
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -712,7 +714,8 @@ void Update() {
 	emit21->SetTexture("../Resources/BasicRectP.png");
 	((TeleportEffect*)emit21)->y1 = 8;
 	((TeleportEffect*)emit21)->y2 = 12;
-	((TeleportEffect*)emit21)->SetPosBounds(vec3f(0, 0, 0), vec3f(0, 0, 0));
+	((TeleportEffect*)emit21)->SetPosBounds(vec3f(0, 0, -.37f), vec3f(0, 1, .37f));
+	((TeleportEffect*)emit21)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 	ParticleSystem::Instance()->AddEmitter(emit21);
 	emit21->FIRE();
 
@@ -726,7 +729,8 @@ void Update() {
 	emit22->SetParticle(p2);
 	((TeleportEffect*)emit22)->y1 = 1;
 	((TeleportEffect*)emit22)->y2 = 5;
-	((TeleportEffect*)emit22)->SetPosBounds(vec3f(0, 0, 0), vec3f(0, 0, 0));
+	((TeleportEffect*)emit22)->SetPosBounds(vec3f(0, 0, -.37f), vec3f(0, 1, .37f));
+	((TeleportEffect*)emit22)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 	ParticleSystem::Instance()->AddEmitter(emit22);
 	emit22->FIRE();
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -740,9 +744,7 @@ void Update() {
 	ParticleEmitter* exitEmit = new ParticleEmitter(-1, 150, 2, vec4f(-3.918808f, 1.5f, 0, 1));
 	exitEmit->SetParticle(exit);
 	exitEmit->SetTexture("../Resources/BasicRectP.png");
-	((TeleportEffect*)exitEmit)->y1 = 8;
-	((TeleportEffect*)exitEmit)->y2 = 12;
-	((TeleportEffect*)exitEmit)->SetPosBounds(vec3f(-.25f, -.25f, -.25f), vec3f(.25f, .25f, .25f));
+	((ParticleEmitter*)exitEmit)->SetPosBounds(vec3f(-.25f, -.25f, -.25f), vec3f(.25f, .25f, .25f));
 	ParticleSystem::Instance()->AddEmitter(exitEmit);
 	exitEmit->FIRE();
 	
@@ -754,14 +756,12 @@ void Update() {
 	ParticleEmitter* exitEmit2 = new ParticleEmitter(-1, 150, 2, vec4f(-3.918808f, 1.5f, 0, 1));
 	exitEmit2->SetTexture("../Resources/BasicCircleP.png");
 	exitEmit2->SetParticle(exit);
-	((TeleportEffect*)exitEmit2)->y1 = 1;
-	((TeleportEffect*)exitEmit2)->y2 = 5;
-	((TeleportEffect*)exitEmit2)->SetPosBounds(vec3f(-.25f, -.25f, -.25f), vec3f(.25f, .25f, .25f));
+	((ParticleEmitter*)exitEmit2)->SetPosBounds(vec3f(-.25f, -.25f, -.25f), vec3f(.25f, .25f, .25f));
 	ParticleSystem::Instance()->AddEmitter(exitEmit2);
 	exitEmit2->FIRE();
 	//////////////////////////////////////////////////////////////////////////////////////
 
-	//Exit Side Chamber////////////////////////////////////////////////////////////////////////
+	//Start Side Chamber////////////////////////////////////////////////////////////////////////
 	Particle* start = &Particle::Init();
 	start->SetPos(vec3f(0, 0, 0));
 	start->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));

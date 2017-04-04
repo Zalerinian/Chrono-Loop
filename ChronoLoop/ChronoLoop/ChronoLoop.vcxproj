@@ -228,6 +228,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Actions\UICreateToDeleteClone.h" />
     <ClInclude Include="Actions\UIRewind.h" />
     <ClInclude Include="Actions\WhatInHellAmIHitting.hpp" />
+    <ClInclude Include="BVH.h" />
     <ClInclude Include="Common\Breakpoint.h" />
     <ClInclude Include="Common\Common.h" />
     <ClInclude Include="Common\EasingFunctions.h" />
@@ -388,6 +389,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Actions\TimeManipulation.cpp" />
+    <ClCompile Include="BVH.cpp" />
     <ClCompile Include="ChronoLoop.cpp" />
     <ClCompile Include="Common\Breakpoint.cpp" />
     <ClCompile Include="Common\Common.cpp" />
