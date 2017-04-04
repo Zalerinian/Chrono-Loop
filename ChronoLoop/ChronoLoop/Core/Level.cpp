@@ -789,6 +789,210 @@ namespace Epoch {
 		}
 	}
 
+	void Level::BinaryLoadLevel(std::string _file)
+	{
+		std::ifstream file(_file, std::ios::in | std::ios::binary);
+		if (file.is_open())
+		{
+			UINT32 version = 0;
+			INT32 settingOffest = 0, objectOffest = 0;
+			file.read((char *)&version, sizeof(UINT32));
+			file.read((char *)&settingOffest, sizeof(INT32));
+			file.read((char *)&objectOffest, sizeof(INT32));
+			//settings
+			file.seekg(settingOffest, std::ios_base::beg);
+			vec3f startPosition, startRotatioon;
+			file.read((char *)&startPosition.x, sizeof(float));
+			file.read((char *)&startPosition.y, sizeof(float));
+			file.read((char *)&startPosition.z, sizeof(float));
+
+			file.read((char *)&startRotatioon.x, sizeof(float));
+			file.read((char *)&startRotatioon.y, sizeof(float));
+			file.read((char *)&startRotatioon.z, sizeof(float));
+			//Objects
+			file.seekg(objectOffest, std::ios_base::beg);
+			INT32 objectCount = 0;
+			file.read((char *)&objectCount, sizeof(INT32));
+			for (INT32 i = 0; i < objectCount; i++)
+			{
+				//TODO: Create empty base object
+				//Components
+				INT32 componentCount = 0;
+				file.read((char *)&componentCount, sizeof(INT32));
+				for (INT32 j = 0; j < componentCount; j++)
+				{
+					INT16 type = 0;
+					file.read((char *)&type, sizeof(INT16));
+					switch (type)
+					{
+					case 0: //None
+						break;
+					case 1: //BoxCollider
+					{
+						float mass = 0, staticFriction = 0, kineticFriction = 0, elasticity = 0, drag = 0;
+						file.read((char *)&mass, sizeof(float));
+						file.read((char *)&staticFriction, sizeof(float));
+						file.read((char *)&kineticFriction, sizeof(float));
+						file.read((char *)&elasticity, sizeof(float));
+						file.read((char *)&drag, sizeof(float));
+
+						vec3f position, rotation, scale;
+						file.read((char *)&position.x, sizeof(float));
+						file.read((char *)&position.y, sizeof(float));
+						file.read((char *)&position.z, sizeof(float));
+
+						file.read((char *)&rotation.x, sizeof(float));
+						file.read((char *)&rotation.y, sizeof(float));
+						file.read((char *)&rotation.z, sizeof(float));
+
+						file.read((char *)&scale.x, sizeof(float));
+						file.read((char *)&scale.y, sizeof(float));
+						file.read((char *)&scale.z, sizeof(float));
+					}
+						break;
+					case 2: //ButtonCollider
+					{
+						float mass = 0, force = 0;
+						file.read((char *)&mass, sizeof(float));
+						file.read((char *)&force, sizeof(float));
+
+						vec3f position, scale, normal;
+						file.read((char *)&position.x, sizeof(float));
+						file.read((char *)&position.y, sizeof(float));
+						file.read((char *)&position.z, sizeof(float));
+
+						file.read((char *)&scale.x, sizeof(float));
+						file.read((char *)&scale.y, sizeof(float));
+						file.read((char *)&scale.z, sizeof(float));
+
+						file.read((char *)&normal.x, sizeof(float));
+						file.read((char *)&normal.y, sizeof(float));
+						file.read((char *)&normal.z, sizeof(float));
+					}
+						break;
+					case 3: //PlaneCollider
+					{
+						float mass = 0, staticFriction = 0, kineticFriction = 0, elasticity = 0, drag = 0, offset = 0;
+						file.read((char *)&mass, sizeof(float));
+						file.read((char *)&staticFriction, sizeof(float));
+						file.read((char *)&kineticFriction, sizeof(float));
+						file.read((char *)&elasticity, sizeof(float));
+						file.read((char *)&drag, sizeof(float));
+						file.read((char *)&offset, sizeof(float));
+
+						vec3f normal;
+						file.read((char *)&normal.x, sizeof(float));
+						file.read((char *)&normal.y, sizeof(float));
+						file.read((char *)&normal.z, sizeof(float));
+					}
+						break;
+					case 4: //SphereCollider
+					{
+						float mass = 0, staticFriction = 0, kineticFriction = 0, elasticity = 0, drag = 0, radius = 0;
+						file.read((char *)&mass, sizeof(float));
+						file.read((char *)&staticFriction, sizeof(float));
+						file.read((char *)&kineticFriction, sizeof(float));
+						file.read((char *)&elasticity, sizeof(float));
+						file.read((char *)&drag, sizeof(float));
+						file.read((char *)&radius, sizeof(float));
+
+						vec3f position;
+						file.read((char *)&position.x, sizeof(float));
+						file.read((char *)&position.y, sizeof(float));
+						file.read((char *)&position.z, sizeof(float));
+					}
+						break;
+					case 5: //ColoredMesh
+					{
+						INT32 pathLength = 0, argbColor = 0;
+						std::string mesh;
+
+						file.read((char *)&pathLength, sizeof(INT32));
+						char* temp = new char[pathLength];
+						file.read(temp, pathLength);
+						mesh = temp;
+						delete[] temp;
+						file.read((char *)&argbColor, sizeof(INT32));
+					}
+						break;
+					case 6: //TexturedMesh
+					{
+						INT32 pathLength = 0;
+						std::string mesh, texture;
+
+						file.read((char *)&pathLength, sizeof(INT32));
+						char* temp = new char[pathLength];
+						file.read(temp, pathLength);
+						mesh = temp;
+						delete[] temp;
+
+						file.read((char *)&pathLength, sizeof(INT32));
+						temp = new char[pathLength];
+						file.read(temp, pathLength);
+						texture = temp;
+						delete[] temp;
+					}
+						break;
+					case 7: //Transform
+					{
+						INT32 len = 0;
+						std::string name;
+						vec3f position, rotation, scale;
+
+						file.read((char *)&len, sizeof(INT32));
+						char* temp = new char[len];
+						file.read(temp, len);
+						name = temp;
+						delete[] temp;
+
+						file.read((char *)&position.x, sizeof(float));
+						file.read((char *)&position.y, sizeof(float));
+						file.read((char *)&position.z, sizeof(float));
+
+						file.read((char *)&rotation.x, sizeof(float));
+						file.read((char *)&rotation.y, sizeof(float));
+						file.read((char *)&rotation.z, sizeof(float));
+
+						file.read((char *)&scale.x, sizeof(float));
+						file.read((char *)&scale.y, sizeof(float));
+						file.read((char *)&scale.z, sizeof(float));
+					}
+						break;
+					case 8: //Code
+					{
+						INT32 len = 0;
+						std::string path;
+
+						file.read((char *)&len, sizeof(INT32));
+						char* temp = new char[len];
+						file.read(temp, len);
+						path = temp;
+						delete[] temp;
+					}
+						break;
+					case 9: //Audio
+					{
+						INT32 numSounds = 0;
+						file.read((char *)&numSounds, sizeof(INT32));
+						for (INT32 k = 0; k < numSounds; k++)
+						{
+							char playType = 0;
+							UINT64 id = 0;
+							file.read(&playType, sizeof(char));
+							file.read((char *)&id, sizeof(UINT64));
+						}
+					}
+						break;
+					default:
+						//someone kucked it in the file
+						break;
+					}
+				}
+			}
+			file.close();
+		}
+	}
+
 	void Level::Update() {
 		//*Insert Code Here When we Get to It**//
 		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {

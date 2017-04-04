@@ -815,6 +815,8 @@ void Update() {
 	LevelManager::GetInstance().RequestLevelChange(mainMenu);
 	mainMenu->CallStart();
 
+	LevelManager::GetInstance().GetCurrentLevel()->BinaryLoadLevel("../Resources/test.elf");
+
 	//ParticleEmitter * emitt = new ParticleEmitter(-1, 2000, 20, vec4f());
 	//emitt->SetTexture("../Resources/BasicCircleP.png");
 	//emitt->SetParticle(new Particle(500, .25, .15, vec4f(), vec4f(0, 0, 0, 0), vec4f(1, 1, 1, 1)));
