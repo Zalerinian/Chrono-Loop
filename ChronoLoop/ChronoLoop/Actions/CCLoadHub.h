@@ -211,7 +211,7 @@ namespace Epoch
 						p2->SetColors(vec3f(0, 1, 0), vec3f(0, .5f, .5f));
 						p2->SetLife(5000);
 						p2->SetSize(1.25f / 2.0f, .15f / 2.0f);
-						ParticleEmitter* emit2 = new TeleportEffect(-1, 150, 2, vec4f(2.61, -10, 0, 1));
+						ParticleEmitter* emit2 = new TeleportEffect(-1.0f, 150.0f, 2.0f, vec4f(2.61f, -10.0f, 0.0f, 1.0f));
 						emit2->SetParticle(p2);
 						emit2->SetTexture("../Resources/BasicRectP.png");
 						((TeleportEffect*)emit2)->y1 = 8;
@@ -224,7 +224,7 @@ namespace Epoch
 						p2->SetColors(vec3f(0, .5f, .5f), vec3f(0, 1, 0));
 						p2->SetLife(5000);
 						p2->SetSize(.25f, .05f);
-						emit2 = new TeleportEffect(-1, 150, 1, vec4f(2.61, -10, 0, 1));
+						emit2 = new TeleportEffect(-1.0f, 150.0f, 1.0f, vec4f(2.61f, -10.0f, 0.0f, 1.0f));
 						emit2->SetTexture("../Resources/BasicCircleP.png");
 						emit2->SetParticle(p2);
 						((TeleportEffect*)emit2)->y1 = 1;
@@ -239,7 +239,7 @@ namespace Epoch
 						p2->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
 						p2->SetLife(5000);
 						p2->SetSize(1.25f / 2.0f, .15f / 2.0f);
-						ParticleEmitter* emit2 = new TeleportEffect(-1, 150, 2, vec4f(2.61, -10, 0, 1));
+						ParticleEmitter* emit2 = new TeleportEffect(-1.0f, 150.0f, 2.0f, vec4f(2.61f, -10.0f, 0.0f, 1.0f));
 						emit2->SetParticle(p2);
 						emit2->SetTexture("../Resources/BasicRectP.png");
 						((TeleportEffect*)emit2)->y1 = 8;
@@ -252,7 +252,7 @@ namespace Epoch
 						p2->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
 						p2->SetLife(5000);
 						p2->SetSize(.25f, .05f);
-						emit2 = new TeleportEffect(-1, 150, 1, vec4f(2.61, -10, 0, 1));
+						emit2 = new TeleportEffect(-1.0f, 150.0f, 1.0f, vec4f(2.61f, -10.0f, 0.0, 1.0f));
 						emit2->SetTexture("../Resources/BasicCircleP.png");
 						emit2->SetParticle(p2);
 						((TeleportEffect*)emit2)->y1 = 1;
@@ -261,7 +261,7 @@ namespace Epoch
 						emit2->FIRE();
 					}
 
-					LevelManager::GetInstance().GetCurrentLevel()->GetStartPos() = vec4f(0, -10, 0, 1);
+					LevelManager::GetInstance().GetCurrentLevel()->GetStartPos() = vec4f(0.0f, -10.0f, 0.0f, 1.0f);
 					SystemLogger::Debug() << "Loading complete" << std::endl;
 					Physics::Instance()->PhysicsLock.unlock();
 					Settings::GetInstance().SetBool("LevelIsLoading", false);
