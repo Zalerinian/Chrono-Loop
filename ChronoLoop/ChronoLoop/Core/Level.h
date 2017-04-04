@@ -24,7 +24,7 @@ namespace Epoch
 		std::list<BaseObject*> mObjectList;
 		unsigned short mId;
 		vec4f mStartPosition, mStartRotation;
-
+		unsigned int mMaxNumofClones;
 
 	public:
 		Level();
@@ -44,6 +44,7 @@ namespace Epoch
 		inline BaseObject* GetHeadset() { return mHeadset; }
 		inline BaseObject* GetLeftController() { return mController1; }
 		inline BaseObject* GetRightController() { return mController2; }
+		inline unsigned int GetMaxClones() { return mMaxNumofClones; }
 		inline vec4f& GetStartPos() { return mStartPosition; }
 		inline vec4f GetStartRot() { return mStartRotation; }
 		TimeManipulation* GetLeftTimeManipulator() { return mTMComponent1; }

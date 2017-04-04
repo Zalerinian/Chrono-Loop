@@ -28,6 +28,7 @@ namespace LevelEditor
         private Vector3 cameraPos = new Vector3(0, 0, 0), prevHit = new Vector3(0, 0, 0), curHit = new Vector3(0, 0, 0);
         private Vector2 prevMouse, curMouse;
         private Vector3 mStartPos, mStartRot;
+        private uint mMaxnumofclones;
         private int selectedIndex = 0;
         private bool canMove = false, grab = false, snap = false, loaded = true;
         private string selectedName = string.Empty, colliderType = string.Empty, currentFile = string.Empty;
@@ -664,10 +665,12 @@ namespace LevelEditor
             Forms.LevelSettingsForm settings = new Forms.LevelSettingsForm();
             settings.SetPosition(mStartPos);
             settings.SetRotation(mStartRot);
+            settings.SetMaxCloneCount(10);
             if(settings.ShowDialog() == DialogResult.OK)
             {
                 mStartPos = settings.GetPosition();
                 mStartRot = settings.GetRotation();
+                mMaxnumofclones = settings.GetMaxCloneCount();
             }
         }
 
