@@ -475,6 +475,9 @@
     <ClInclude Include="Actions\CCButtonHold.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="BVH.h">
+      <Filter>Physics\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -755,6 +758,9 @@
     </ClCompile>
     <ClCompile Include="Objects\TransparentMeshComponent.cpp">
       <Filter>Objects\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BVH.cpp">
+      <Filter>Physics\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
