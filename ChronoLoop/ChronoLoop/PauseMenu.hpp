@@ -79,8 +79,8 @@ namespace Epoch
 
 		std::unordered_map<MENU_NAME, MeshComponent*> mMeshComps;
 		std::unordered_map<BaseObject*, ID3D11Texture2D*> mPauseMenuTextures;
-		D2D1::ColorF wut = { 1,0,0,1 };
-		Font* mainFont = new Font(L"Agency FB", 50, wut);
+		D2D1::ColorF wut = { 1,1,1,1 };
+		Font* mainFont = new Font(L"Agency FB", 75, wut);
 		float transparentColor[4] = { 0,0,0,0 };
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> texPauseMenuBase, texMainPanel,texSettingsPanel, texResume,texSettings,texHubworld,texAudio,texMisc;
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> rtvPauseMenuBase, rtvMainPanel, rtvSettingsPanel, rtvResume, rtvSettings, rtvHubworld, rtvAudio, rtvMisc;
@@ -195,80 +195,149 @@ namespace Epoch
 				mActivePanel.SetCurrentMenu(PAUSEMENU_ON);
 			//Panel Start Up
 				SwitchPanel(&mActivePanel);
-				//OnDisable();  
-			OnEnable();
+				OnDisable();  
+				//OnEnable();
 			
 		}
 		virtual void Update()
 		{
-	
-			Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvPauseMenuBase.Get(), transparentColor);
-			Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvMainPanel.Get(), transparentColor);
-			Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvSettingsPanel.Get(), transparentColor);
-			Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvResume.Get(), transparentColor);
-			Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvSettings.Get(), transparentColor);
-			//Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvHubworld.Get(), transparentColor);
-			//Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvAudio.Get(), transparentColor);
-			//Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvMisc.Get(), transparentColor);
+			if(VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu) == true || 
+				VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu) == true)
+			{
+				if (PauseMenuisUp) 
+					OnDisable();
+				else
+					OnEnable();
+			}
+			if (PauseMenuisUp) {
+				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvPauseMenuBase.Get(), transparentColor);
+				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvMainPanel.Get(), transparentColor);
+				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvSettingsPanel.Get(), transparentColor);
+				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvResume.Get(), transparentColor);
+				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvSettings.Get(), transparentColor);
+				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvHubworld.Get(), transparentColor);
+				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvAudio.Get(), transparentColor);
+				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvMisc.Get(), transparentColor);
 
-			D2D1::ColorF tempColor = { 0,0,1,0.5f };
-			Draw::Instance().DrawRectangleToBitmap(
-				0, 0, 256.0f,256.0f, 
-				tempColor,
-				Draw::Instance().GetBitmap(texPauseMenuBase.Get()));
-			//Draw::Instance().DrawTextToBitmap(
-			//	0, 0, 256.0f, 256.0f,
-			//	*mainFont, L"Fuck you",
-			//	Draw::Instance().GetBitmap(texPauseMenuBase.Get()));
+				D2D1::ColorF tempColor = { 0,0,1,0.5f };
+				Draw::Instance().DrawRectangleToBitmap(
+					0, 0, 256.0f, 256.0f,
+					tempColor,
+					Draw::Instance().GetBitmap(texPauseMenuBase.Get())); //Blue Square Base
+				//Draw::Instance().DrawTextToBitmap(
+				//	0, 0, 256.0f, 256.0f,
+				//	*mainFont, L"Fuck you",
+				//	Draw::Instance().GetBitmap(texPauseMenuBase.Get()));
 
-			Draw::Instance().DrawRectangleToBitmap(
-				0, 0, 256.0f, 256.0f,
-				(D2D1::ColorF::Black, 1.0f),
-				Draw::Instance().GetBitmap(texMainPanel.Get()));
+				Draw::Instance().DrawRectangleToBitmap(
+					0, 0, 256.0f, 256.0f,
+					(D2D1::ColorF::Black, 1.0f),
+					Draw::Instance().GetBitmap(texMainPanel.Get()));
 
-			//Draw::Instance().DrawRectangleToBitmap(
-			//	0, 0, 256.0f, 256.0f,
-			//	(D2D1::ColorF::Black, 0.8f),
-			//	Draw::Instance().GetBitmap(texSettingsPanel.Get()));
+				mainFont->mColor = D2D1::ColorF::WhiteSmoke;
+				mainFont->mFontSize = 35;
+				Draw::Instance().DrawTextToBitmap(
+					85.33f, 0, 170.67f, 50.0f,
+					*mainFont, L"Main",
+					Draw::Instance().GetBitmap(texMainPanel.Get()));
 
-			Draw::Instance().DrawTextToBitmap(
-				0, 0, 256.0f, 256.0f,
-				*mainFont, L"Resume",
-				Draw::Instance().GetBitmap(texResume.Get()));
-			tempColor = { 0,1,0,0.5f };
+				Draw::Instance().DrawRectangleToBitmap(
+					0, 0, 256.0f, 256.0f,
+					(D2D1::ColorF::Black, 0.8f),
+					Draw::Instance().GetBitmap(texSettingsPanel.Get()));
+				Draw::Instance().DrawTextToBitmap(
+					85.33f, 0, 170.67f, 50.0f,
+					*mainFont, L"Settings",
+					Draw::Instance().GetBitmap(texSettingsPanel.Get()));
 
-			Draw::Instance().DrawRectangleToBitmap(
-				0, 0, 256.0f, 256.0f,
-				tempColor,
-				Draw::Instance().GetBitmap(texResume.Get()));
-			//Draw::Instance().DrawTextToBitmap(
-			//	0, 0, 256.0f, 256.0f,
-			//	*mainFont, L"Settings",
-			//	Draw::Instance().GetBitmap(texSettings.Get()));
+				mainFont->mColor = D2D1::ColorF::Black;
+				mainFont->mFontSize = 75;
 
-			//Draw::Instance().DrawTextToBitmap(
-			//	0, 0, 256.0f, 256.0f,
-			//	*mainFont, L"Hubworld",
-			//	Draw::Instance().GetBitmap(texHubworld.Get()));
+				tempColor = { 0,0,0.9f,0.5f };
+				Draw::Instance().DrawRectangleToBitmap(
+					0, 0, 256.0f, 256.0f,
+					tempColor,
+					Draw::Instance().GetBitmap(texResume.Get()));
+				Draw::Instance().DrawTextToBitmap(
+					0, 0, 256.0f, 256.0f,
+					*mainFont, L"Resume",
+					Draw::Instance().GetBitmap(texResume.Get()));
+				Draw::Instance().DrawRectangleToBitmap(
+					0, 0, 256.0f, 256.0f,
+					tempColor,
+					Draw::Instance().GetBitmap(texSettings.Get()));
+				Draw::Instance().DrawTextToBitmap(
+					0, 0, 256.0f, 256.0f,
+					*mainFont, L"Settings",
+					Draw::Instance().GetBitmap(texSettings.Get()));
+				Draw::Instance().DrawRectangleToBitmap(
+					0, 0, 256.0f, 256.0f,
+					tempColor,
+					Draw::Instance().GetBitmap(texHubworld.Get()));
+				Draw::Instance().DrawTextToBitmap(
+					0, 0, 256.0f, 256.0f,
+					*mainFont, L"Hubworld",
+					Draw::Instance().GetBitmap(texHubworld.Get()));
+				Draw::Instance().DrawRectangleToBitmap(
+					0, 0, 256.0f, 256.0f,
+					tempColor,
+					Draw::Instance().GetBitmap(texAudio.Get()));
+				Draw::Instance().DrawTextToBitmap(
+					0, 0, 256.0f, 256.0f,
+					*mainFont, L"Does Nothing",
+					Draw::Instance().GetBitmap(texAudio.Get()));
+				Draw::Instance().DrawRectangleToBitmap(
+					0, 0, 256.0f, 256.0f,
+					tempColor,
+					Draw::Instance().GetBitmap(texMisc.Get()));
+				Draw::Instance().DrawTextToBitmap(
+					0, 0, 256.0f, 256.0f,
+					*mainFont, L"Back",
+					Draw::Instance().GetBitmap(texMisc.Get()));
 
-			//Draw::Instance().DrawTextToBitmap(
-			//	0, 0, 256.0f, 256.0f,
-			//	*mainFont, L"Audio",
-			//	Draw::Instance().GetBitmap(texAudio.Get()));
+				if (VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Trigger))
+				{
+					if (RaycastToMenu(&pResume, &mcResume,true)) {
+						mActivePanel.SetCurrentMenu(RESUME);
+						SwitchPanel(&mActivePanel);
+					} else if (RaycastToMenu(&pSettings, &mcSettings, true)) {
+						mActivePanel.SetOptions(pSettingsPanel->GetChildren());
+						mActivePanel.SetCurrentMenu(SETTINGS);
+						SwitchPanel(&mActivePanel);
+					} else if (RaycastToMenu(&pHubworld, &mcHubworld, true)) {
+						mActivePanel.SetCurrentMenu(HUBWORLD);
+						SwitchPanel(&mActivePanel);
+					} else if (RaycastToMenu(&pAudio, &mcAudio, true)) {
 
-			//Draw::Instance().DrawTextToBitmap(
-			//	0, 0, 256.0f, 256.0f,
-			//	*mainFont, L"Misc",
-			//	Draw::Instance().GetBitmap(texMisc.Get()));
-			//OnEnable();
-			//if (PauseMenuisUp) {
-			//	PauseMenuisUp = false;
-			//	OnDisable();
-			//}
-			//else {
-			//	PauseMenuisUp = true;
-			//	OnEnable();
-			//}
+					} else if (RaycastToMenu(&pMisc, &mcMisc, true)) {
+						mActivePanel.SetOptions(pMainPanel->GetChildren());
+						mActivePanel.SetCurrentMenu(MAIN_MENU);
+						SwitchPanel(&mActivePanel);
+					}
+				}
+				if (VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Trigger)) 
+				{
+					if (RaycastToMenu(&pResume, &mcResume,false)) {
+						mActivePanel.SetCurrentMenu(RESUME);
+						SwitchPanel(&mActivePanel);
+					} else if (RaycastToMenu(&pSettings, &mcSettings, false)) {
+						mActivePanel.SetOptions(pSettingsPanel->GetChildren());
+						mActivePanel.SetCurrentMenu(SETTINGS);
+						SwitchPanel(&mActivePanel);
+					} else if (RaycastToMenu(&pHubworld, &mcHubworld, false)) {
+						mActivePanel.SetCurrentMenu(HUBWORLD);
+						SwitchPanel(&mActivePanel);
+					} else if (RaycastToMenu(&pAudio, &mcAudio, false)) {
+
+					} else if (RaycastToMenu(&pMisc, &mcMisc, false)) {
+						mActivePanel.SetOptions(pMainPanel->GetChildren());
+						mActivePanel.SetCurrentMenu(MAIN_MENU);
+						SwitchPanel(&mActivePanel);
+					}
+
+
+				}
+			}
 		}
 		virtual void OnEnable()
 		{
@@ -282,12 +351,20 @@ namespace Epoch
 			
 			tempT.SetMatrix(playerPos.CreateXRotation(1.39626) * playerPos.CreateScale(20,20,20) * (playerPos) * playerPos.CreateTranslation(playerRot));// * playerPos.CreateTranslation(0, 5.0f, 5.0f)));// *playerPos.CreateTranslation(playerRot));
 			pPauseMenuBase->SetTransform(tempT);
-			tempT.SetMatrix(playerPos.CreateScale(0.85f, 0.85f, 0.85f) * playerPos.CreateTranslation(0, 0.001f, 0));
+			tempT.SetMatrix(playerPos.CreateScale(0.85f, 1, 0.85f) * playerPos.CreateTranslation(0, 0.001f, 0));
 			pMainPanel->SetTransform(tempT);
-			tempT.SetMatrix(playerPos.CreateScale(0.85f, 0.85f, 0.85f) * playerPos.CreateTranslation(0, 0.001f, 0));
+			tempT.SetMatrix(playerPos.CreateScale(0.85f, 1, 0.85f) * playerPos.CreateTranslation(0, 0.001f, 0));
 			pSettingsPanel->SetTransform(tempT);
-			tempT.SetMatrix(playerPos.CreateScale(0.85f, 0.85f, 0.85f) * playerPos.CreateTranslation(0, 0.001f, 0));
+			tempT.SetMatrix(playerPos.CreateScale(0.4f, 1, 0.2f) * playerPos.CreateTranslation(0, 0.001f, -0.01f));
 			pResume->SetTransform(tempT);
+			tempT.SetMatrix(playerPos.CreateScale(0.4f, 1, 0.2f) * playerPos.CreateTranslation(0, 0.001f, 0));
+			pSettings->SetTransform(tempT);
+			tempT.SetMatrix(playerPos.CreateScale(0.4f, 1, 0.2f) * playerPos.CreateTranslation(0, 0.001f, 0.01f));
+			pHubworld->SetTransform(tempT);
+			tempT.SetMatrix(playerPos.CreateScale(0.4f, 1, 0.2f) * playerPos.CreateTranslation(0, 0.001f, 0));
+			pAudio->SetTransform(tempT);
+			tempT.SetMatrix(playerPos.CreateScale(0.4f, 1, 0.2f) * playerPos.CreateTranslation(0, 0.001f, 0.015f));
+			pMisc->SetTransform(tempT);
 		}
 		virtual void OnDisable()
 		{
@@ -304,36 +381,22 @@ namespace Epoch
 					mcPauseMenuBase->SetVisible(true);
 					_activepanel->SetCurrentMenu(MAIN_MENU);
 				}
-				break;
 			case MAIN_MENU:
 				{
 				SetVisiblity(&pMainPanel, true);
 				SetVisiblity(&pSettingsPanel, false);
-					/*for (auto it : mMeshComps)
-					{
-						if (it.first == MAIN_MENU)
-							it.second->SetVisible(true);
-						else
-							it.second->SetVisible(false);
-					}*/
 				}
 				break;
 			case RESUME:
 				{
-
+					PauseMenuisUp = false;
 				}
 				break;
 			case SETTINGS:
 				{
 				SetVisiblity(&pMainPanel, false);
 				SetVisiblity(&pSettingsPanel, true);
-					//for (auto it : mMeshComps)
-					//{
-					//	if (it.first == SETTINGS)
-					//		it.second->SetVisible(true);
-					//	else
-					//		it.second->SetVisible(false);
-					//}
+
 				}
 				break;
 			case HUBWORLD:
@@ -346,11 +409,11 @@ namespace Epoch
 
 				}
 				break;
-			case MISC:
-				{
-
-				}
-				break;
+			//case MISC:
+			//	{
+			//		
+			//	}
+			//	break;
 			case PAUSEMENU_OFF:
 				{
 					SetVisiblity(&pPauseMenuBase, false);
@@ -421,6 +484,35 @@ namespace Epoch
 					}
 				}
 			}
+		}
+
+		bool RaycastToMenu(BaseObject** _obj, MeshComponent** _mc, bool _isLeft) {
+			float meshTime = 0.0f;
+			Triangle* tris = (*_mc)->GetTriangles();
+			size_t numTris = (*_mc)->GetTriangleCount();
+			matrix4 objMat = (*_obj)->GetTransform().GetMatrix();
+			matrix4 inverseP = (VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPosition() * objMat.Invert());
+			matrix4 inverseS = (VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPosition() * objMat.Invert());
+			vec3f meshPosP = inverseP.Position;
+			vec3f meshPosS = inverseS.Position;
+			vec4f forwardP, forwardS;
+			forwardP.Set(0, 0, 1, 0);
+			forwardS.Set(0, 0, 1, 0);
+			forwardP *= inverseP;
+			forwardS *= inverseS;
+			vec3f fwdP = forwardP;
+			vec3f fwdS = forwardS;
+			for (unsigned int i = 0; i < numTris; ++i) {
+				if (_isLeft) {
+					if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, meshPosP, fwdP, meshTime))
+						return true;
+				}
+				else {
+					if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, meshPosS, fwdS, meshTime))
+						return true;
+				}
+			}
+			return false;
 		}
 	};
 }
