@@ -64,6 +64,8 @@ namespace Epoch {
 			return mTransform;
 		};
 
+		matrix4 GetWorld();
+
 		inline void SetTransform(Transform _transform) {
 			mTransform = _transform;
 		}

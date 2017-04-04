@@ -40,12 +40,15 @@
             this.nRX = new System.Windows.Forms.NumericUpDown();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.mClonebox = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nPX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nPY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nPZ)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nRZ)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nRY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nRX)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mClonebox)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -225,7 +228,7 @@
             // btnOK
             // 
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(24, 231);
+            this.btnOK.Location = new System.Drawing.Point(24, 357);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 10;
@@ -235,18 +238,37 @@
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(132, 231);
+            this.btnCancel.Location = new System.Drawing.Point(132, 357);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 11;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // mClonebox
+            // 
+            this.mClonebox.Location = new System.Drawing.Point(24, 270);
+            this.mClonebox.Name = "mClonebox";
+            this.mClonebox.Size = new System.Drawing.Size(57, 20);
+            this.mClonebox.TabIndex = 12;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(21, 244);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(114, 13);
+            this.label5.TabIndex = 13;
+            this.label5.Text = "Max Number of Clones";
             // 
             // LevelSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(244, 266);
+            this.ClientSize = new System.Drawing.Size(241, 392);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.mClonebox);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.nRZ);
@@ -261,12 +283,14 @@
             this.Controls.Add(this.label1);
             this.Name = "LevelSettingsForm";
             this.Text = "LevelSettingsForm";
+            this.Load += new System.EventHandler(this.LevelSettingsForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.nPX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nPY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nPZ)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nRZ)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nRY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nRX)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mClonebox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -286,5 +310,7 @@
         private System.Windows.Forms.NumericUpDown nRX;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.NumericUpDown mClonebox;
+        private System.Windows.Forms.Label label5;
     }
 }

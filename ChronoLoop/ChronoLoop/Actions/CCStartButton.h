@@ -85,9 +85,8 @@ namespace Epoch
 				mExitSignInterp->SetActive(true);
 
 
-				((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->PlaySFX(0);
-				((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Play(0);
-
+				((SFXEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+				((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::EventType::ePlay);
 				mBooped = true;
 				levels++;
 			}
@@ -119,7 +118,7 @@ namespace Epoch
 				bool complete = mPlayerInterp->Update(TimeManager::Instance()->GetDeltaTime());
 				if (complete)
 				{
-					((Emitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->Stop(0);
+					((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::EventType::eStop);
 					mBooped = false;
 				}
 			}

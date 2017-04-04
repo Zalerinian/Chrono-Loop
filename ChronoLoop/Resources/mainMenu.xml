@@ -2,6 +2,7 @@
   <Settings>
     <StartPos>0,0,0</StartPos>
     <StartRot>0,0,0</StartRot>
+    <MaxClones>0</MaxClones>
   </Settings>
   <Object>
     <Name>mmChamber3</Name>
@@ -20,6 +21,7 @@
     <Rotation>0,0,0</Rotation>
     <Scale>1,1.25,0.5</Scale>
     <Components>
+      <EnterLevel>Enabled</EnterLevel>
       <EnterLevel>Enabled</EnterLevel>
       <Collider>
         <Type>OBB</Type>
@@ -68,7 +70,7 @@
     <Name>mmDoor2</Name>
     <Mesh>mmDoor.obj</Mesh>
     <Texture>fieldGen.png</Texture>
-    <Position>2.61,-10,0</Position>
+    <Position>-2.548366,-10,0</Position>
     <Rotation>0,1.57,0</Rotation>
     <Scale>1,1.25,0.5</Scale>
     <Components>
@@ -210,8 +212,8 @@
     <Name>noviceTest</Name>
     <Mesh>PlaneCorrection.obj</Mesh>
     <Texture>Novice.png</Texture>
-    <Position>2.507524,-7.67,0</Position>
-    <Rotation>1.57,-1.57,0</Rotation>
+    <Position>-2.432258,-7.67,0</Position>
+    <Rotation>1.57,1.57,0</Rotation>
     <Scale>0.5,1,0.2</Scale>
     <Components />
   </Object>

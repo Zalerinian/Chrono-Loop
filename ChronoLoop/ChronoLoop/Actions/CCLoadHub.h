@@ -5,6 +5,7 @@
 #include "..\Core\Pool.h"
 #include "..\Common\Settings.h"
 #include "..\Actions\MainMenuBT.h"
+#include "..\Actions\CCStartButton.h"
 #include "..\Objects\MeshComponent.h"
 #include "..\Sound\SoundEngine.h"
 
@@ -70,6 +71,7 @@ namespace Epoch
 					//ambient->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_TEST2);
 					//Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(ears, "Listener")));
 					//Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(ambient, "ambiance")));
+					AudioWrapper::GetInstance().STOP();
 
 					//new stuff
 					Transform identity, transform;
@@ -122,12 +124,21 @@ namespace Epoch
 					auto& levelObjects = next->GetLevelObjects();
 					for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it)
 					{
-						if (((BaseObject*)*it)->GetName() == "mmChamber")
+						std::string temp = ((BaseObject*)*it)->GetName();
+						if (temp == "mmChamber" || temp == "mmStartSign" || temp == "mmExitSign" || temp == "mmExitButton" || temp == "mmStartButton" || temp == "mmStartStand" || temp == "mmExitStand")
 						{
 							Transform t;
-							t.SetMatrix(matrix4::CreateTranslation(0, -10, 0));
+							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateTranslation(0, -10, 0));
 							((BaseObject*)*it)->SetTransform(t);
 							next->GetStartPos() = vec4f(0, -10, 0, 1);
+
+							if (temp == "mmStartButton")
+							{
+								((CCStartButton*)(((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_CODE, 0)))->levels = 1;
+								((ButtonCollider*)(((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->SetPos(((BaseObject*)*it)->GetTransform().GetMatrix().fourth);
+							}
+							else if(temp == "mmExitButton")
+								((ButtonCollider*)(((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)))->SetPos(((BaseObject*)*it)->GetTransform().GetMatrix().fourth);
 						}
 
 						if ((*it)->mComponents[eCOMPONENT_COLLIDER].size() > 0)
@@ -250,6 +261,7 @@ namespace Epoch
 						emit2->FIRE();
 					}
 
+					LevelManager::GetInstance().GetCurrentLevel()->GetStartPos() = vec4f(0, -10, 0, 1);
 					SystemLogger::Debug() << "Loading complete" << std::endl;
 					Physics::Instance()->PhysicsLock.unlock();
 					Settings::GetInstance().SetBool("LevelIsLoading", false);

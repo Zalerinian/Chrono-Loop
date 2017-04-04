@@ -36,7 +36,7 @@ namespace  Epoch {
 		inline Type GetEdit() { if(mEdit != nullptr) return *mEdit; };
 		inline void SetEasingFunction(EasingFunction _m) { mEasingFunction = _m; }
 		void Prepare(float _duration, Type& _start, Type& _end, Type& _edit);
-		virtual bool Update(float _deltaTime);
+		virtual bool Update(float _deltaTime, float _overrideRatio = -1);
 		void Interpolate();
 		inline float GetProgress() { return mTweenTime / mDuration; }
 	};
@@ -59,7 +59,7 @@ namespace  Epoch {
 	inline Interpolator<Type>::~Interpolator() {}
 
 	template<class Type>
-	inline bool Interpolator<Type>::Update(float _deltaTime) {
+	inline bool Interpolator<Type>::Update(float _deltaTime, float _overrideRatio) {
 		if (!mActive)
 			return false;
 		if (mDuration <= 0) {
@@ -69,7 +69,12 @@ namespace  Epoch {
 		if (GetProgress() >= 1.1f) {
 			SystemLogger::Warn() << "The interpolator is still running! It is " << (GetProgress() * 100) << "% complete!" << std::endl;
 		}
-		mTweenTime += _deltaTime;
+		if (_overrideRatio < 0.0f)
+			mTweenTime += _deltaTime;
+		else if (mTweenTime + _deltaTime > mDuration)
+			mTweenTime = mDuration;
+		else
+			mTweenTime = mDuration * _overrideRatio;
 		Interpolate();
 		return mTweenTime >= mDuration;
 	}
