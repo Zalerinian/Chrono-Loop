@@ -42,18 +42,9 @@ struct PSI {
 float4 main(PSI input) : SV_TARGET
 {
 	float4 color = float4(0,0,0,0);
-	float4 l1, l2, l3;
 	float4 diffuseColor = tDiffuse.Sample(diffuseFilter, input.texCoord.xy);
 	//float4 diffuseColor = float4(1, 1, 1, 1);
 	clip(diffuseColor.a - 0.25);
-
-	//l1 = ApplyDirectionalLight(DirLight.dir, input.normal, DirLight.color, diffuseColor);
-	//l2 = ApplyPointLight(PointLight.pos, input.wpos, input.normal, PointLight.color, diffuseColor);
-	//l3 = ApplySpotLight(input.normal, SpotLight.pos, input.wpos, SpotLight.dir, SpotLight.ratio, SpotLight.color, diffuseColor);
-
-	//color = l1 + l2 + l3;
-
-	//float4 finalDiffuse = (saturate(color) + float4(.25, .25, .25, 0))  * diffuseColor;
 
 	return float4(diffuseColor.rgb, diffuseColor.a * alpha);
 }
