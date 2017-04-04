@@ -42,6 +42,7 @@ namespace Hourglass
             mType = ComponentType.Audio;
             mCombos = new Dictionary<string, List<string>>();
             mID = new Dictionary<string, List<UInt64>>();
+
             #region Component Creation
 
             mLbEvent = new Label();
@@ -237,23 +238,31 @@ namespace Hourglass
                 {
                     case 0:
                         if (mID["play"].Contains(id))
-                            mEvent[i].SelectedText = "play";
+                        {
+                            mEvent[i].SelectedIndex = mEvent[i].Items.IndexOf("play");
+                            mSound[i].SelectedIndex = mID["play"].IndexOf(id);
+                        }
                         else
-                            mEvent[i].SelectedText = "sfx";
+                        {
+                            mEvent[i].SelectedIndex = mEvent[i].Items.IndexOf("sfx");
+                            mSound[i].SelectedIndex = mID["sfx"].IndexOf(id);
+                        }
                         break;
                     case 1:
-                        mEvent[i].SelectedText = "pause";
+                        mEvent[i].SelectedIndex = mEvent[i].Items.IndexOf("pause");
+                        mSound[i].SelectedIndex = mID["pause"].IndexOf(id);
                         break;
                     case 2:
-                        mEvent[i].SelectedText = "resume";
+                        mEvent[i].SelectedIndex = mEvent[i].Items.IndexOf("resume");
+                        mSound[i].SelectedIndex = mID["resume"].IndexOf(id);
                         break;
                     case 3:
-                        mEvent[i].SelectedText = "stop";
+                        mEvent[i].SelectedIndex = mEvent[i].Items.IndexOf("stop");
+                        mSound[i].SelectedIndex = mID["stop"].IndexOf(id);
                         break;
                     default:
                         break;
                 }
-                mSound[i].SelectedIndex = mID[mEvent[i].SelectedText].IndexOf(id);
             }
         }
 

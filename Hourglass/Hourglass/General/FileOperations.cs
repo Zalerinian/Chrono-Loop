@@ -640,6 +640,11 @@ namespace Hourglass
 						com.ReadData(r);
 						b.AddComponent(com);
 						break;
+                    case (short)Component.ComponentType.Audio:
+                        com = new SoundComponent();
+                        com.ReadData(r);
+                        b.AddComponent(com);
+                        break;
 					default:
 						Debug.Print("An unexpected component type has bee found. This may indicate corruption: " + compType);
 						break;
