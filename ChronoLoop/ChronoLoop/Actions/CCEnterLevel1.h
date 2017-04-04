@@ -358,25 +358,55 @@ namespace Epoch
 					ParticleSystem::Instance()->AddEmitter(startEmit2);
 					startEmit2->FIRE();
 
+					Particle* p1 = &Particle::Init();
+					p1->SetPos(vec3f(0, 0, 0));
+					p1->SetColors(vec3f(0, 0, 1), vec3f(.5f, 0, .5f));
+					p1->SetLife(550);
+					p1->SetSize(.35f, .15f);
+					ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(0, 0, 12.12225, 1));
+					emit11->SetParticle(p1);
+					emit11->SetTexture("../Resources/BasicRectP.png");
+					((TeleportEffect*)emit11)->y1 = 8;
+					((TeleportEffect*)emit11)->y2 = 12;
+					((TeleportEffect*)emit11)->SetPosBounds(vec3f(-.37f, 0, 0), vec3f(.37f, 1, 0));
+					((TeleportEffect*)emit11)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+					ParticleSystem::Instance()->AddEmitter(emit11);
+					emit11->FIRE();
+
+					p1 = &Particle::Init();
+					p1->SetPos(vec3f(0, 0, 0));
+					p1->SetColors(vec3f(.5f, 0, .5f), vec3f(0, 0, 1));
+					p1->SetLife(550);
+					p1->SetSize(.15f, .05f);
+					ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(0, 0, 12.12225, 1));
+					emit12->SetTexture("../Resources/BasicCircleP.png");
+					emit12->SetParticle(p1);
+					((TeleportEffect*)emit12)->y1 = 1;
+					((TeleportEffect*)emit12)->y2 = 5;
+					((TeleportEffect*)emit12)->SetPosBounds(vec3f(-.37f, 0, 0), vec3f(.37f, 1, 0));
+					((TeleportEffect*)emit12)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+					ParticleSystem::Instance()->AddEmitter(emit12);
+					emit12->FIRE();
+
 					Light* l1 = new Light();
 					l1->Type = 4;
 					l1->Color = vec3f(1, 1, 1);
-					l1->ConeDirection = vec3f(0, -1, 0);
-					l1->Position = vec3f(4, 2, 2.523626);
-					l1->ConeRatio = .1f;
+					l1->ConeDirection = vec3f(0, -1, -.1f);
+					l1->Position = vec3f(3.75f, 3.8f, 2.2f);
+					l1->ConeRatio = .9f;
 
 					Light* l2 = new Light();
 					l2->Type = 2;
-					l2->Position = vec3f(3.743129f, 2, 1.5f);
-					l2->Color = vec3f(.2f, 0, 0);
+					l2->Position = vec3f(0, 4, 0);
+					l2->Color = vec3f(.5f, .5f, 1);
 					
 
 					Light* l3 = new Light();
 					l3->Type = 4;
-					l3->Color = vec3f(.9f, .9f, 1);
-					l3->ConeDirection = vec3f(0, -1, 0);
-					l3->Position = vec3f(0, 2, 1.5f);
-					l3->ConeRatio = .5f;
+					l3->Color = vec3f(1, 1, 1);
+					l3->ConeDirection = vec3f(-.1f, -1, 0);
+					l3->Position = vec3f(-5.7f, 3.1f, -7.1f);
+					l3->ConeRatio = .8f;
 
 					Renderer::Instance()->SetLight(l1, 0);
 					Renderer::Instance()->SetLight(l2, 1);

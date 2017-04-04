@@ -801,27 +801,28 @@ void Update() {
 	//mmCube->AddComponent(mmCubeMesh);
 	Light* l1 = new Light();
 	l1->Type = 4;
-	l1->Color = vec3f(.7f, .7f, 1);
+	l1->Color = vec3f(1, 1, 1);
 	l1->ConeDirection = vec3f(0, -1, 0);
-	l1->Position = vec3f(0, 2, 0);
-	l1->ConeRatio = 0;
+	l1->Position = vec3f(0, 4, 0);
+	l1->ConeRatio = .85f;
 
 	Light* l2 = new Light();
-	l2->Type = 2;
-	l2->Position = vec3f(3.972854, 1.570289, 0);
+	l2->Type = 4;
 	l2->Color = vec3f(0, 0, 1);
-	
+	l2->ConeDirection = vec3f(0, -1, 0);
+	l2->Position = vec3f(3.972854, 5, 0);
+	l2->ConeRatio = .9f;
+
 	Light* l3 = new Light();
 	l3->Type = 4;
-	l3->Color = vec3f(0, 1, .5f);
+	l3->Color = vec3f(0, 1, 0);
 	l3->ConeDirection = vec3f(0, -1, 0);
-	l3->Position = vec3f(0, 2, -3.872531);
-	l3->ConeRatio = 0;
+	l3->Position = vec3f(0, 5, -3.872531);
+	l3->ConeRatio = .9f;
 
 	Renderer::Instance()->SetLight(l1, 0);
 	Renderer::Instance()->SetLight(l2, 1);
 	Renderer::Instance()->SetLight(l3, 2);
-
 
 	Physics::Instance()->mObjects.push_back(RightController);
 	Physics::Instance()->mObjects.push_back(LeftController);
