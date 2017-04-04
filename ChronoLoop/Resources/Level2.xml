@@ -1,4 +1,4 @@
-﻿<Level>
+<Level>
   <Settings>
     <StartPos>8.8,0,-4.1</StartPos>
     <StartRot>0,1.57,0</StartRot>
@@ -60,7 +60,7 @@
     </Components>
   </Object>
   <Object>
-    <Name>Door1</Name>
+    <Name>TransparentDoor1</Name>
     <Mesh>Door1.obj</Mesh>
     <Texture>enrgyField.png</Texture>
     <Position>2.430154,2.6,0.3991617</Position>
@@ -610,7 +610,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Door2</Name>
+    <Name>TransparentDoor2</Name>
     <Mesh>Door2.obj</Mesh>
     <Texture>enrgyField.png</Texture>
     <Position>-12.08702,0,-4.256869</Position>

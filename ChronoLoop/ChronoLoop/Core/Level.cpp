@@ -620,7 +620,7 @@ namespace Epoch {
 						AudioWrapper::GetInstance().AddEmitter(e, name.c_str());
 
 					}
-					else if (name == "Door" || name == "Door2")
+					else if (name == "TransparentDoor1" || name == "TransparentDoor2")
 					{
 						Emitter* e = new SFXEmitter();
 						((SFXEmitter*)e)->SetEvent(AK::EVENTS::SFX_DOORSOUND);
