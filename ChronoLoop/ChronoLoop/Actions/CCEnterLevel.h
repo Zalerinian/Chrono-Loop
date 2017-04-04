@@ -322,6 +322,29 @@ namespace Epoch
 					TimeManager::Instance()->AddObjectToTimeline(LeftController);
 					TimeManager::Instance()->AddObjectToTimeline(headset);
 
+					Light* l1 = new Light();
+					l1->Type = 4;
+					l1->Color = vec3f(1, 1, 1);
+					l1->ConeDirection = vec3f(0, -1, 0);
+					l1->Position = vec3f(0.07529334, 1.129413, 8.11148);
+					l1->ConeRatio = .1f;
+
+					Light* l2 = new Light();
+					l2->Type = 2;
+					l2->Position = vec3f(-4, 0, -5);
+					l2->Color = vec3f(0, 0, .2f);
+
+					Light* l3 = new Light();
+					l3->Type = 4;
+					l3->Color = vec3f(.9f, .9f, 1);
+					l3->ConeDirection = vec3f(0, -1, 0);
+					l3->Position = vec3f(-8.8f, 0, 5);
+					l3->ConeRatio = .5f;
+
+					Renderer::Instance()->SetLight(l1, 0);
+					Renderer::Instance()->SetLight(l2, 1);
+					Renderer::Instance()->SetLight(l3, 2);
+
 					SystemLogger::Debug() << "Loading complete" << std::endl;
 					Physics::Instance()->PhysicsLock.unlock();
 					Settings::GetInstance().SetBool("LevelIsLoading", false);

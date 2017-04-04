@@ -799,11 +799,28 @@ void Update() {
 	//MeshComponent *mmCubeMesh = new MeshComponent("../Resources/Cube.obj");
 	//mmCubeMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 	//mmCube->AddComponent(mmCubeMesh);
-	
+	Light* l1 = new Light();
+	l1->Type = 4;
+	l1->Color = vec3f(.7f, .7f, 1);
+	l1->ConeDirection = vec3f(0, -1, 0);
+	l1->Position = vec3f(0, 2, 0);
+	l1->ConeRatio = 0;
 
-	//Renderer::Instance()->SetLight(, 0);
-	//Renderer::Instance()->SetLight(, 1);
-	//Renderer::Instance()->SetLight(, 2);
+	Light* l2 = new Light();
+	l2->Type = 2;
+	l2->Position = vec3f(3.972854, 1.570289, 0);
+	l2->Color = vec3f(0, 0, 1);
+	
+	Light* l3 = new Light();
+	l3->Type = 4;
+	l3->Color = vec3f(0, 1, .5f);
+	l3->ConeDirection = vec3f(0, -1, 0);
+	l3->Position = vec3f(0, 2, -3.872531);
+	l3->ConeRatio = 0;
+
+	Renderer::Instance()->SetLight(l1, 0);
+	Renderer::Instance()->SetLight(l2, 1);
+	Renderer::Instance()->SetLight(l3, 2);
 
 
 	Physics::Instance()->mObjects.push_back(RightController);

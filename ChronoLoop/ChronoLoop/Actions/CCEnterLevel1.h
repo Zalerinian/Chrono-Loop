@@ -313,6 +313,60 @@ namespace Epoch
 					TimeManager::Instance()->AddObjectToTimeline(LeftController);
 					TimeManager::Instance()->AddObjectToTimeline(headset);
 
+					Particle* start = &Particle::Init();
+					start->SetPos(vec3f(0, 0, 0));
+					start->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));
+					start->SetLife(500);
+					start->SetSize(.35f, .15f);
+					ParticleEmitter* startEmit = new TeleportEffect(400, 250, 2, vec4f(0.46, 0, -10.15, 1));
+					startEmit->SetParticle(start);
+					startEmit->SetTexture("../Resources/BasicRectP.png");
+					((TeleportEffect*)startEmit)->y1 = 8;
+					((TeleportEffect*)startEmit)->y2 = 12;
+					((TeleportEffect*)startEmit)->SetPosBounds(vec3f(-1, 0, -1), vec3f(1, 1, 1));
+					((TeleportEffect*)startEmit)->SetVelBounds(vec3f(.5f, 1, .5f), vec3f(.5f, 5, .5f));
+					ParticleSystem::Instance()->AddEmitter(startEmit);
+					startEmit->FIRE();
+
+					start = &Particle::Init();
+					start->SetPos(vec3f(0, 0, 0));
+					start->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
+					start->SetLife(500);
+					start->SetSize(.15f, .05f);
+					ParticleEmitter* startEmit2 = new TeleportEffect(400, 150, 1, vec4f(0.46, 0, -10.15, 1));
+					startEmit2->SetTexture("../Resources/BasicCircleP.png");
+					startEmit2->SetParticle(start);
+					((TeleportEffect*)startEmit2)->y1 = 1;
+					((TeleportEffect*)startEmit2)->y2 = 5;
+					((TeleportEffect*)startEmit2)->SetPosBounds(vec3f(-1, 0, -1), vec3f(1, 1, 1));
+					((TeleportEffect*)startEmit2)->SetVelBounds(vec3f(.5f, 1, .5f), vec3f(.5f, 5, .5f));
+					ParticleSystem::Instance()->AddEmitter(startEmit2);
+					startEmit2->FIRE();
+
+					Light* l1 = new Light();
+					l1->Type = 4;
+					l1->Color = vec3f(1, 1, 1);
+					l1->ConeDirection = vec3f(0, -1, 0);
+					l1->Position = vec3f(4, 2, 2.523626);
+					l1->ConeRatio = .1f;
+
+					Light* l2 = new Light();
+					l2->Type = 2;
+					l2->Position = vec3f(3.743129f, 2, 1.5f);
+					l2->Color = vec3f(.2f, 0, 0);
+					
+
+					Light* l3 = new Light();
+					l3->Type = 4;
+					l3->Color = vec3f(.9f, .9f, 1);
+					l3->ConeDirection = vec3f(0, -1, 0);
+					l3->Position = vec3f(0, 2, 1.5f);
+					l3->ConeRatio = .5f;
+
+					Renderer::Instance()->SetLight(l1, 0);
+					Renderer::Instance()->SetLight(l2, 1);
+					Renderer::Instance()->SetLight(l3, 2);
+
 					SystemLogger::Debug() << "Loading complete" << std::endl;
 					Physics::Instance()->PhysicsLock.unlock();
 					Settings::GetInstance().SetBool("LevelIsLoading", false);
