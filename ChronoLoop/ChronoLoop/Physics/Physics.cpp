@@ -691,15 +691,13 @@ namespace Epoch
 		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
 		//Time pause
-		bool right = false;
-		bool left = false;
+		bool paused = false;
 
-		if (cLevel->GetRightTimeManipulator() != nullptr || cLevel->GetLeftTimeManipulator() != nullptr)
+		if (cLevel->GetTimeManipulator() != nullptr)
 		{
-			right = cLevel->GetRightTimeManipulator()->isTimePaused();
-			left = cLevel->GetLeftTimeManipulator()->isTimePaused();
+			paused = cLevel->GetTimeManipulator()->isTimePaused();
 		}
-		if (!left && !right)
+		if (!paused)
 		{
 			//SystemLogger::GetLog() << _time << std::endl;
 			Collider* collider = nullptr;

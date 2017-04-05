@@ -44,16 +44,15 @@ namespace Epoch {
 			// I'm lazy so, let's just set this thing's position to the controller's position.
 			matrix4 mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
 			mObject->GetTransform().SetMatrix(mat);
-			bool right = false;
-			bool left = false;
+			bool paused = false;
 
-			if (cLevel->GetRightTimeManipulator() != nullptr || cLevel->GetLeftTimeManipulator() != nullptr) {
-				right = cLevel->GetRightTimeManipulator()->isTimePaused();
-				left = cLevel->GetLeftTimeManipulator()->isTimePaused();
+			if (cLevel->GetTimeManipulator() != nullptr) {
+				paused = cLevel->GetTimeManipulator()->isTimePaused();
+				
 			}
 			
 			if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad)) {
-				if (!left && !right) {
+				if (!paused) {
 					vec4f forward(0, 0, 1, 0);
 					MeshComponent* meshes[] = { mWallsMesh, mBlockMesh, mExitMesh, mServerMesh };
 					BaseObject* objects[] = { mWallsObject, mBlockObject, mExitObject, mServerObject };

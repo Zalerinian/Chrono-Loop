@@ -254,13 +254,11 @@ namespace Epoch
 					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 					TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
-					TimeManipulation* tm2 = new TimeManipulation(eControllerType_Secondary);
 					LeftController->AddComponent(mc2);
 					LeftController->AddComponent(leftConCol);
 					LeftController->AddComponent(pickup2);
 					LeftController->AddComponent(leftRaycaster);
 					LeftController->AddComponent(ta2);
-					LeftController->AddComponent(tm2);
 
 					MeshComponent *visibleMesh2 = new MeshComponent("../Resources/TinyCube.obj");
 					visibleMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);

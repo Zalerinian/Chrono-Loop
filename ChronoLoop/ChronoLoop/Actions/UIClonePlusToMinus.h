@@ -13,7 +13,7 @@ namespace Epoch
 		bool once = false;
 		virtual void Update()
 		{
-			if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->mIsBeingMade)
+			if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->GetifCloneIsBeingMade())
 			{
 				((MeshComponent*)mObject->GetComponentIndexed(eCOMPONENT_MESH, 0))->AddTexture("../Resources/minus.png", eTEX_DIFFUSE);
 				once = false;

@@ -21,16 +21,14 @@ namespace Epoch {
 		virtual void Update() override {
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
-			bool mRight = false;
-			bool mLeft = false;
+			bool paused = false;
 
-			if (cLevel->GetRightTimeManipulator()!= nullptr || cLevel->GetLeftTimeManipulator() != nullptr) {
-				mRight = cLevel->GetRightTimeManipulator()->isTimePaused();
-				mLeft = cLevel->GetLeftTimeManipulator()->isTimePaused();
+			if (cLevel->GetTimeManipulator()!= nullptr ) {
+				paused= cLevel->GetTimeManipulator()->isTimePaused();
 			}
 			if (VRInputManager::GetInstance().IsVREnabled() && mCollider) {
 				InputTimeline::InputNode*temp;
-				if (mRight || mLeft) {
+				if (paused) {
 					temp = VRInputManager::GetInstance().FindLastInput(mCollider->GetBaseObject()->GetUniqueID(), true);
 				}
 				else {
@@ -50,7 +48,7 @@ namespace Epoch {
 				if (mHeld && mPickUp != nullptr) {
 					matrix4 m = mObject->GetTransform().GetMatrix();
 					mPickUp->SetPos(m.Position);
-					if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == 1 && mHeld || (mLeft || mRight)) {
+					if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == 1 && mHeld || (paused)) {
 						SystemLogger::GetLog() << "Id: " << mCollider->GetBaseObject()->GetUniqueId() << " Released object" << std::endl;
 						if (mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueId() || mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueId()) {
 							VRInputManager::GetInstance().GetController((mInput->mData.mPrimary) ? eControllerType_Primary : eControllerType_Secondary).TriggerHapticPulse(1000, mInput->mData.mButton);
@@ -58,7 +56,7 @@ namespace Epoch {
 						ReleaseObject();
 					}
 				}
-				else if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == -1 && !mHeld && !mCollider->mHitting.empty() && (!mLeft && !mRight)) {
+				else if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == -1 && !mHeld && !mCollider->mHitting.empty() && (!paused)) {
 					SomethingtoController();
 					if (mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueId()) {
 						VRInputManager::GetInstance().GetController(eControllerType_Secondary).TriggerHapticPulse(1000);
