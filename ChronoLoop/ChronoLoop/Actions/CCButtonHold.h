@@ -29,8 +29,8 @@ namespace Epoch
 		{
 
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
-			Block = cLevel->FindObjectWithName("Door1");
-			Exit = cLevel->FindObjectWithName("Door2");
+			Block = cLevel->FindObjectWithName("TransparentDoor1");
+			Exit = cLevel->FindObjectWithName("TransparentDoor2");
 			blockInterp = TimeManager::Instance()->GetObjectInterpolator(Block->GetUniqueID());
 			exitInterp = TimeManager::Instance()->GetObjectInterpolator(Exit->GetUniqueID());
 
@@ -59,7 +59,6 @@ namespace Epoch
 
 				mCanDoorInterp = true;
 				mDoorDoneInterpolating = false;
-				SystemLogger::GetLog() << "Colliding" << std::endl;
 
 				vec3f norm = ((ButtonCollider*)&_col)->mPushNormal;
 				vec3f tForce = norm * (norm * _other.mTotalForce);
@@ -97,7 +96,6 @@ namespace Epoch
 				}
 				else
 				{
-					SystemLogger::GetLog() << "Not Colliding" << std::endl;
 					if(mFlip)
 					{
 						mFlip = false;

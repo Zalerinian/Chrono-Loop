@@ -475,9 +475,19 @@
     <ClInclude Include="Actions\CCButtonHold.h">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="BVH.h">
-      <Filter>Physics\Header Files</Filter>
+    <ClInclude Include="Actions\CCBoxSpin.h">
+      <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\CCExit.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCStartButton.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCTimeIndicator.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="BVH.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -759,9 +769,7 @@
     <ClCompile Include="Objects\TransparentMeshComponent.cpp">
       <Filter>Objects\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BVH.cpp">
-      <Filter>Physics\Source Files</Filter>
-    </ClCompile>
+    <ClCompile Include="BVH.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">

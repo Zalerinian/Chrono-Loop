@@ -200,6 +200,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="..\DXTK\scoped.h" />
     <ClInclude Include="..\Resources\Soundbanks\Wwise_IDs.h" />
     <ClInclude Include="Actions\BoxSnapToControllerAction.hpp" />
+    <ClInclude Include="Actions\CCBoxSpin.h" />
     <ClInclude Include="Actions\CCButtonHold.h" />
     <ClInclude Include="Actions\CCButtonPress.h" />
     <ClInclude Include="Actions\CCDisplayOnPause.h" />
@@ -209,9 +210,12 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Actions\CCElasticSphereToSphere.h" />
     <ClInclude Include="Actions\CCEnterLevel.h" />
     <ClInclude Include="Actions\CCEnterLevel1.h" />
+    <ClInclude Include="Actions\CCExit.h" />
     <ClInclude Include="Actions\CCLoadHub.h" />
     <ClInclude Include="Actions\CCPauseToCancel.h" />
+    <ClInclude Include="Actions\CCStartButton.h" />
     <ClInclude Include="Actions\CCTeleToPlay.h" />
+    <ClInclude Include="Actions\CCTimeIndicator.h" />
     <ClInclude Include="Actions\CodeComponent.hpp" />
     <ClInclude Include="Actions\GestureDetection.hpp" />
     <ClInclude Include="Actions\HeadsetFollow.hpp" />
@@ -604,6 +608,10 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+      <DisableOptimizations Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DisableOptimizations>
+      <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</EnableDebuggingInformation>
+      <DisableOptimizations Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DisableOptimizations>
+      <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</EnableDebuggingInformation>
     </FxCompile>
     <FxCompile Include="Rendering\Shaders\TexturedVertex.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>

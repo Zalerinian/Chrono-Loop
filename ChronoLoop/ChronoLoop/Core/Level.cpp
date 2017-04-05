@@ -14,6 +14,9 @@
 #include "../Actions/CCEnterLevel1.h"
 #include "../Actions/MainMenuBT.h"
 #include "../Actions/CCLoadHub.h"
+#include "../Actions/CCBoxSpin.h"
+#include "../Actions/CCExit.h"
+#include "../Actions/CCStartButton.h"
 #include "../Objects/MeshComponent.h"
 #include "../Objects/TransparentMeshComponent.h"
 #include "../tinyxml/tinyxml.h"
@@ -25,7 +28,10 @@
 
 namespace Epoch {
 
-	CCEnterLevel* access = nullptr;
+	CCEnterLevel* accessLevelTwo = nullptr;
+	CCEnterLevel1* accessLevelOne = nullptr;
+	CCLoadHub* accessHub = nullptr;
+
 	Level::Level() 
 	{
 		CommandConsole::Instance().AddCommand(L"/LOAD", LoadLevelCmnd);
@@ -288,6 +294,19 @@ namespace Epoch {
 									s.erase(0, pos + 1);
 								}
 								SystemLogger::Debug() << "Start rotation: " << mStartRotation << std::endl;
+							}
+							else if (nodeType == "MaxClones") {
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									mMaxNumofClones = std::strtof(token.c_str(), nullptr);
+									i++;
+									s.erase(0, pos + 1);
+								}
+								SystemLogger::Debug() << "Max Clones: " << mMaxNumofClones << std::endl;
 							}
 							break;
 						default:
@@ -578,7 +597,22 @@ namespace Epoch {
 					transform.SetMatrix(mat);
 					BaseObject* obj = new BaseObject(name, transform);
 
-					if (name == "cube.001" || name == "cube.002" || name == "cube.003" || name == "cube.004")
+					if (name == "mmStartButton")
+					{
+						CCStartButton* start = new CCStartButton();
+						obj->AddComponent(start);
+					}
+					else if (name == "mmExitButton")
+					{
+						CCExit* exit = new CCExit();
+						obj->AddComponent(exit);
+					}
+					else if (name == "mmCube")
+					{
+						CCBoxSpin* spin = new CCBoxSpin();
+						obj->AddComponent(spin);
+					}
+					else if (name == "cube.001" || name == "cube.002" || name == "cube.003" || name == "cube.004")
 					{
 						Emitter* e = new SFXEmitter();
 						((SFXEmitter*)e)->SetEvent(AK::EVENTS::SFX_BOUNCEEFFECTS);
@@ -586,7 +620,7 @@ namespace Epoch {
 						AudioWrapper::GetInstance().AddEmitter(e, name.c_str());
 
 					}
-					else if (name == "Door" || name == "Door2")
+					else if (name == "TransparentDoor1" || name == "TransparentDoor2")
 					{
 						Emitter* e = new SFXEmitter();
 						((SFXEmitter*)e)->SetEvent(AK::EVENTS::SFX_DOORSOUND);
@@ -629,11 +663,29 @@ namespace Epoch {
 					{
 						std::string path = "../Resources/";
 						path.append(meshFile);
-						MeshComponent* mesh = new MeshComponent(path.c_str());
-						path = "../Resources/";
-						path.append(textureFile);
-						mesh->AddTexture(path.c_str(), eTEX_DIFFUSE);
-						obj->AddComponent(mesh);
+						MeshComponent* mesh;
+						if(obj->GetName().find("Transparent") != std::string::npos)
+						{
+							float alpha = 1;
+							//TODO PAT: FIX ALL THIS 
+							if(obj->GetName().find("Door") != std::string::npos)
+							{
+								alpha = .6f;
+							}
+							else
+							{
+								alpha = .3f;
+							}
+							mesh = new TransparentMeshComponent(path.c_str(), alpha);
+						}
+						else
+						{
+							mesh = new MeshComponent(path.c_str());
+						}
+							path = "../Resources/";
+							path.append(textureFile);
+							mesh->AddTexture(path.c_str(), eTEX_DIFFUSE);
+							obj->AddComponent(mesh);
 					
 					}
 
@@ -803,41 +855,98 @@ namespace Epoch {
 			CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /WIREFRAME (ON/OFF)");
 		}
 	}
+
 	void Level::LoadLevelCmnd(void* _commandConsole, std::wstring _Level)
 	{
 		CommandConsole* self = (CommandConsole*)_commandConsole;
-
-		if (access == nullptr)
+		std::list<BaseObject*> copyList = LevelManager::GetInstance().GetCurrentLevel()->GetLevelObjects();
+		if (accessLevelTwo == nullptr)
 		{
-			std::list<BaseObject*> copyList = LevelManager::GetInstance().GetCurrentLevel()->GetLevelObjects();
-			for (auto it = copyList.begin(); it != copyList.end(); ++it) {
+			for (auto it = copyList.begin(); it != copyList.end(); ++it)
+			{
 				std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
-				if (CodeComps.size() > 0) {
+				if (CodeComps.size() > 0)
+				{
 					for (size_t x = 0; x < CodeComps.size(); ++x)
 					{
-						if (dynamic_cast<CCEnterLevel*>(CodeComps[x])) {
-							access = ((CCEnterLevel*)CodeComps[x]);
+						if (dynamic_cast<CCEnterLevel*>(CodeComps[x]))
+						{
+							accessLevelTwo = ((CCEnterLevel*)CodeComps[x]);
 							break;
 						}
 					}
-					if (access != nullptr)
+					if (accessLevelTwo != nullptr)
 						break;
 				}
 			}
 		}
+		if (accessLevelOne == nullptr)
+		{
+			for (auto it = copyList.begin(); it != copyList.end(); ++it)
+			{
+				std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+				if (CodeComps.size() > 0)
+				{
+					for (size_t x = 0; x < CodeComps.size(); ++x)
+					{
+						if (dynamic_cast<CCEnterLevel1*>(CodeComps[x]))
+						{
+							accessLevelOne = ((CCEnterLevel1*)CodeComps[x]);
+							break;
+						}
+					}
+					if (accessLevelOne != nullptr)
+						break;
+				}
+			}
+		}
+
+		if (accessHub == nullptr)
+		{
+			for (auto it = copyList.begin(); it != copyList.end(); ++it)
+			{
+				std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+				if (CodeComps.size() > 0)
+				{
+					for (size_t x = 0; x < CodeComps.size(); ++x)
+					{
+						if (dynamic_cast<CCLoadHub*>(CodeComps[x]))
+						{
+							accessHub = ((CCLoadHub*)CodeComps[x]);
+							break;
+						}
+					}
+					if (accessHub != nullptr)
+						break;
+				}
+			}
+		}
+
 		//std::list<BaseObject*> objects = mObjectList;
-		if (access == nullptr)
+		if (accessLevelTwo == nullptr || accessLevelOne == nullptr || (accessHub == nullptr && (accessLevelTwo == nullptr && accessLevelOne == nullptr)))
 			CommandConsole::Instance().DisplaySet(L"FAILED TO LOAD LEVEL :(");
-		else if (access->GetOnce() == false)
-			CommandConsole::Instance().DisplaySet(L"LEVEL IS ALREADY LOADED");
-		else if ((_Level == L"LEVELONE" || _Level == L"LEVEL_ONE") && access->GetOnce() == true) {
-			access->SetOnce(false);
+		else if ((_Level == L"LEVELTWO" || _Level == L"LVLTWO") && accessLevelTwo->GetOnce() == true)
+		{
+			accessLevelTwo->SetOnce(false);
 			CommandConsole::Instance().Toggle();
 		}
-		else if (access->GetOnce() == true)
+		else if ((_Level == L"LEVELONE" || _Level == L"LVLONE") && accessLevelOne->GetOnce() == true)
+		{
+			accessLevelOne->SetOnce(false);
+			CommandConsole::Instance().Toggle();
+		}
+		else if ((_Level == L"HUBWORLD" || _Level == L"HUB") && accessHub->GetOnce() == true)
+		{
+			accessHub->SetOnce(false);
+			CommandConsole::Instance().Toggle();
+		}
+		else if (accessLevelTwo->GetOnce() == false || accessLevelOne->GetOnce() == false || (accessHub != nullptr && accessHub->GetOnce() == false))
+			CommandConsole::Instance().DisplaySet(L"LEVEL IS ALREADY LOADED");
+		else if (accessLevelTwo->GetOnce() == true || accessLevelOne->GetOnce() == true)
 			CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _Level + L"\nCORRECT INPUT: /LOAD (LEVELNAME)");
 
 
 	}
+
 
 } // Epoch Namespace

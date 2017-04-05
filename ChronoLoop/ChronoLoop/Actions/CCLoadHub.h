@@ -5,6 +5,7 @@
 #include "..\Core\Pool.h"
 #include "..\Common\Settings.h"
 #include "..\Actions\MainMenuBT.h"
+#include "..\Actions\CCStartButton.h"
 #include "..\Objects\MeshComponent.h"
 #include "..\Sound\SoundEngine.h"
 
@@ -26,7 +27,10 @@ namespace Epoch
 			if(_col2.mColliderType == Collider::eCOLLIDER_Controller)
 				once = false;
 		}
-
+		virtual void Start()
+		{
+			once = true;
+		}
 		virtual void Update()
 		{
 			if (!once)
@@ -73,8 +77,8 @@ namespace Epoch
 					Transform identity, transform;
 					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", identity);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
-					MeshComponent *rightRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
-					rightRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
+					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
+					rightRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
 					mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 					MainMenuBT *bt = new MainMenuBT(eControllerType_Primary);
 					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
@@ -86,8 +90,8 @@ namespace Epoch
 
 					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity); //new BaseObject("Controller2", identity);
 					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
-					MeshComponent *leftRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
-					leftRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
+					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
+					leftRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
 					mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 					MainMenuBT *bt2 = new MainMenuBT(eControllerType_Secondary);
 					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
@@ -120,12 +124,191 @@ namespace Epoch
 					auto& levelObjects = next->GetLevelObjects();
 					for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it)
 					{
+						std::string temp = ((BaseObject*)*it)->GetName();
+						if (temp == "mmChamber" || temp == "mmStartSign" || temp == "mmExitSign" || temp == "mmExitButton" || temp == "mmStartButton" || temp == "mmStartStand" || temp == "mmExitStand")
+						{
+							Transform t;
+							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateTranslation(0, -10, 0));
+							((BaseObject*)*it)->SetTransform(t);
+							next->GetStartPos() = vec4f(0, -10, 0, 1);
+
+							if (temp == "mmStartButton")
+							{
+								matrix4 mat = mObject->GetTransform().GetMatrix();
+								((CCStartButton*)mObject->GetComponentIndexed(eCOMPONENT_CODE, 0))->levels = 1;
+								((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mat.fourth);
+								((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mat.fourth.y - .2f;
+								((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mat.fourth.y + .2f;
+							}
+							else if(temp == "mmExitButton")
+							{
+								matrix4 mat = ((BaseObject*)*it)->GetTransform().GetMatrix();
+								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(((BaseObject*)*it)->GetTransform().GetMatrix().fourth);
+								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = ((BaseObject*)*it)->GetTransform().GetMatrix().fourth.y - .2f;
+								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = ((BaseObject*)*it)->GetTransform().GetMatrix().fourth.y - .2f;
+							}
+						}
+
 						if ((*it)->mComponents[eCOMPONENT_COLLIDER].size() > 0)
 						{
 							Physics::Instance()->mObjects.push_back((*it));
 						}
 					}
 
+					if (Settings::GetInstance().GetBool("PlayingLevel1"))
+					{
+						Particle* p1 = &Particle::Init();
+						p1->SetPos(vec3f(0, 0, 0));
+						p1->SetColors(vec3f(0, 1, 0), vec3f(0, .5f, .5f));
+						p1->SetLife(550);
+						p1->SetSize(.35f, .15f);
+						ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.611548f, 1));
+						emit11->SetParticle(p1);
+						emit11->SetTexture("../Resources/BasicRectP.png");
+						((TeleportEffect*)emit11)->y1 = 8;
+						((TeleportEffect*)emit11)->y2 = 12;
+						((TeleportEffect*)emit11)->SetPosBounds(vec3f(-.37f, 0, 0), vec3f(.37f, 1, 0));
+						((TeleportEffect*)emit11)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+						ParticleSystem::Instance()->AddEmitter(emit11);
+						emit11->FIRE();
+
+						p1 = &Particle::Init();
+						p1->SetPos(vec3f(0, 0, 0));
+						p1->SetColors(vec3f(0, .5f, .5f), vec3f(0, 1, 0));
+						p1->SetLife(550);
+						p1->SetSize(.15f, .05f);
+						ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.611548f, 1));
+						emit12->SetTexture("../Resources/BasicCircleP.png");
+						emit12->SetParticle(p1);
+						((TeleportEffect*)emit12)->y1 = 1;
+						((TeleportEffect*)emit12)->y2 = 5;
+						((TeleportEffect*)emit12)->SetPosBounds(vec3f(-.37f, 0, 0), vec3f(.37f, 1, 0));
+						((TeleportEffect*)emit12)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+						ParticleSystem::Instance()->AddEmitter(emit12);
+						emit12->FIRE();
+					}
+					else
+					{
+						Particle* p1 = &Particle::Init();
+						p1->SetPos(vec3f(0, 0, 0));
+						p1->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
+						p1->SetLife(550);
+						p1->SetSize(.35f, .15f);
+						ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.611548f, 1));
+						emit11->SetParticle(p1);
+						emit11->SetTexture("../Resources/BasicRectP.png");
+						((TeleportEffect*)emit11)->y1 = 8;
+						((TeleportEffect*)emit11)->y2 = 12;
+						((TeleportEffect*)emit11)->SetPosBounds(vec3f(-.37f, 0, 0), vec3f(.37f, 1, 0));
+						((TeleportEffect*)emit11)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+						ParticleSystem::Instance()->AddEmitter(emit11);
+						emit11->FIRE();
+
+						p1 = &Particle::Init();
+						p1->SetPos(vec3f(0, 0, 0));
+						p1->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
+						p1->SetLife(550);
+						p1->SetSize(.15f, .05f);
+						ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.611548f, 1));
+						emit12->SetTexture("../Resources/BasicCircleP.png");
+						emit12->SetParticle(p1);
+						((TeleportEffect*)emit12)->y1 = 1;
+						((TeleportEffect*)emit12)->y2 = 5;
+						((TeleportEffect*)emit12)->SetPosBounds(vec3f(-.37f, 0, 0), vec3f(.37f, 1, 0));
+						((TeleportEffect*)emit12)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+						ParticleSystem::Instance()->AddEmitter(emit12);
+						emit12->FIRE();
+					}
+					
+					if (Settings::GetInstance().GetBool("PlayingLevel2"))
+					{
+						Particle* p2 = &Particle::Init();
+						p2->SetPos(vec3f(0, 0, 0));
+						p2->SetColors(vec3f(0, 1, 0), vec3f(0, .5f, .5f));
+						p2->SetLife(500);
+						p2->SetSize(.35f, .15f);
+						ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(-2.61, -10, 0, 1));
+						emit21->SetParticle(p2);
+						emit21->SetTexture("../Resources/BasicRectP.png");
+						((TeleportEffect*)emit21)->y1 = 8;
+						((TeleportEffect*)emit21)->y2 = 12;
+						((TeleportEffect*)emit21)->SetPosBounds(vec3f(0, 0, -.37f), vec3f(0, 1, .37f));
+						((TeleportEffect*)emit21)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+						ParticleSystem::Instance()->AddEmitter(emit21);
+						emit21->FIRE();
+
+						p2 = &Particle::Init();
+						p2->SetPos(vec3f(0, 0, 0));
+						p2->SetColors(vec3f(0, .5f, .5f), vec3f(0, 1, 0));
+						p2->SetLife(500);
+						p2->SetSize(.15f, .05f);
+						ParticleEmitter* emit22 = new TeleportEffect(-1, 150, 2, vec4f(-2.61, -10, 0, 1));
+						emit22->SetTexture("../Resources/BasicCircleP.png");
+						emit22->SetParticle(p2);
+						((TeleportEffect*)emit22)->y1 = 1;
+						((TeleportEffect*)emit22)->y2 = 5;
+						((TeleportEffect*)emit22)->SetPosBounds(vec3f(0, 0, -.37f), vec3f(0, 1, .37f));
+						((TeleportEffect*)emit22)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+						ParticleSystem::Instance()->AddEmitter(emit22);
+						emit22->FIRE();
+					}
+					else
+					{
+						Particle* p2 = &Particle::Init();
+						p2->SetPos(vec3f(0, 0, 0));
+						p2->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
+						p2->SetLife(500);
+						p2->SetSize(.35f, .15f);
+						ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(-2.61, -10, 0, 1));
+						emit21->SetParticle(p2);
+						emit21->SetTexture("../Resources/BasicRectP.png");
+						((TeleportEffect*)emit21)->y1 = 8;
+						((TeleportEffect*)emit21)->y2 = 12;
+						((TeleportEffect*)emit21)->SetPosBounds(vec3f(0, 0, -.37f), vec3f(0, 1, .37f));
+						((TeleportEffect*)emit21)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+						ParticleSystem::Instance()->AddEmitter(emit21);
+						emit21->FIRE();
+
+						p2 = &Particle::Init();
+						p2->SetPos(vec3f(0, 0, 0));
+						p2->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
+						p2->SetLife(500);
+						p2->SetSize(.15f, .05f);
+						ParticleEmitter* emit22 = new TeleportEffect(-1, 150, 2, vec4f(-2.61, -10, 0, 1));
+						emit22->SetTexture("../Resources/BasicCircleP.png");
+						emit22->SetParticle(p2);
+						((TeleportEffect*)emit22)->y1 = 1;
+						((TeleportEffect*)emit22)->y2 = 5;
+						((TeleportEffect*)emit22)->SetPosBounds(vec3f(0, 0, -.37f), vec3f(0, 1, .37f));
+						((TeleportEffect*)emit22)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+						ParticleSystem::Instance()->AddEmitter(emit22);
+						emit22->FIRE();
+					}
+
+					Light* l1 = new Light();
+					l1->Type = 4;
+					l1->Color = vec3f(.7f, .7f, 1);
+					l1->ConeDirection = vec3f(0, -1, 0);
+					l1->Position = vec3f(0, 2, 0);
+					l1->ConeRatio = .5f;
+
+					Light* l2 = new Light();
+					l2->Type = 2;
+					l2->Position = vec3f(3.972854, 1.570289, 0);
+					l2->Color = vec3f(0, 0, 1);
+
+					Light* l3 = new Light();
+					l3->Type = 4;
+					l3->Color = vec3f(0, 1, .5f);
+					l3->ConeDirection = vec3f(0, -1, 0);
+					l3->Position = vec3f(0, 2, -3.872531);
+					l3->ConeRatio = .5f;
+
+					Renderer::Instance()->SetLight(l1, 0);
+					Renderer::Instance()->SetLight(l2, 1);
+					Renderer::Instance()->SetLight(l3, 2);
+
+					LevelManager::GetInstance().GetCurrentLevel()->GetStartPos() = vec4f(0, -10, 0, 1);
 					SystemLogger::Debug() << "Loading complete" << std::endl;
 					Physics::Instance()->PhysicsLock.unlock();
 					Settings::GetInstance().SetBool("LevelIsLoading", false);

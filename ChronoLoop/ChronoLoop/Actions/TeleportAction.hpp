@@ -23,8 +23,8 @@ namespace Epoch {
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			mPlaneObject  = cLevel->FindObjectWithName("Floor");
 			mWallsObject  = cLevel->FindObjectWithName("Walls");
-			mBlockObject  = cLevel->FindObjectWithName("Door1");
-			mExitObject   = cLevel->FindObjectWithName("Door2");
+			mBlockObject  = cLevel->FindObjectWithName("TransparentDoor1");
+			mExitObject   = cLevel->FindObjectWithName("TransparentDoor2");
 			mServerObject = cLevel->FindObjectWithName("Servers");
 			if(mPlaneObject)
 			{
@@ -60,7 +60,9 @@ namespace Epoch {
 					float meshTime = 0, wallTime = FLT_MAX;
 					for (int i = 0; i < ARRAYSIZE(meshes); ++i) {
 						forward.Set(0, 0, 1, 0);
-						matrix4 inverse = (mat * objects[i]->GetTransform().GetMatrix().Invert());
+						matrix4 objMat = objects[i]->GetTransform().GetMatrix();
+						matrix4 objMatInv = objects[i]->GetTransform().GetMatrix().Invert();
+						matrix4 inverse = (mat * objMatInv);
 						vec3f meshPos = inverse.Position;
 						forward *= inverse;
 						vec3f fwd(forward);
@@ -68,16 +70,18 @@ namespace Epoch {
 						size_t numTris = meshes[i]->GetTriangleCount();
 						for (unsigned int i = 0; i < numTris; ++i) {
 							float hitTime = FLT_MAX;
-							Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, meshPos, fwd, hitTime);
-							if (hitTime < wallTime) {
-								wallTime = hitTime;
+							if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, meshPos, fwd, hitTime)) {
+								if (hitTime < wallTime) {
+									wallTime = hitTime;
+								}
 							}
 						}
 					}
 
 					Triangle *tris = mPlaneMesh->GetTriangles();
 					size_t numTris = mPlaneMesh->GetTriangleCount();
-					matrix4 inverse = (mat * mPlaneObject->GetTransform().GetMatrix().Invert());
+					matrix4 objMat = mPlaneObject->GetTransform().GetMatrix();
+					matrix4 inverse = (mat * objMat.Invert());
 					vec3f position = inverse.Position;
 					forward.Set(0, 0, 1, 0);
 					forward *= inverse;
@@ -86,8 +90,8 @@ namespace Epoch {
 						if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, fwd, meshTime)) {
 							if (meshTime < wallTime) {
 								forward *= meshTime;
-								VRInputManager::GetInstance().GetPlayerPosition()[3][0] += forward[0]; // x
-								VRInputManager::GetInstance().GetPlayerPosition()[3][2] += forward[2]; // z
+								VRInputManager::GetInstance().GetPlayerPosition()[3][0] += fwd[0] * objMat.xAxis[0]; // x
+								VRInputManager::GetInstance().GetPlayerPosition()[3][2] += fwd[2] * objMat.zAxis[2]; // z
 																									   //VRInputManager::Instance().iGetPlayerPosition()[3][3] += forward[3]; // w
 							} else {
 								SystemLogger::GetLog() << "[DEBUG] Can't let you do that, Starfox." << std::endl;

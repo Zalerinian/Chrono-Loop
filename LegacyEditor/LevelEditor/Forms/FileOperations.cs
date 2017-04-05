@@ -19,6 +19,7 @@ namespace LevelEditor {
                 writer.WriteStartElement("Settings");
                 writer.WriteElementString("StartPos", mStartPos.X + "," + mStartPos.Y + "," + mStartPos.Z);
                 writer.WriteElementString("StartRot", (mStartRot.X * DEGREES_TO_RADIANS) + "," + (mStartRot.Y * DEGREES_TO_RADIANS) + "," + (mStartRot.Z * DEGREES_TO_RADIANS));
+                writer.WriteElementString("MaxClones", mMaxnumofclones.ToString());
                 writer.WriteEndElement();
                 //*** END Level Settings ***//
                 foreach (ToolObject tObj in higharchy) {
@@ -204,6 +205,9 @@ namespace LevelEditor {
                                             mStartRot.Y = float.Parse(parts[1]) * RADIANS_TO_DEGREES;
                                             mStartRot.Z = float.Parse(parts[2]) * RADIANS_TO_DEGREES;
                                             break;
+                                        case "MaxClones":
+                                            mMaxnumofclones = uint.Parse(reader.Value);
+                                            break;
                                         case "Name":
                                             name = reader.Value;
                                             break;
@@ -325,6 +329,9 @@ namespace LevelEditor {
                                             switch (element) {
                                                 case "BoxSnapToController":
                                                     addition.Components.Add("Box Snap");
+                                                    break;
+                                                case "ButtonHold":
+                                                    addition.Components.Add("Button Hold");
                                                     break;
                                                 case "ButtonPress":
                                                     addition.Components.Add("Button Press");

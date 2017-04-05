@@ -1,6 +1,6 @@
 #include "VertexLayouts.hlsli"
 #include "LightFunctions.hlsli"
-#include "../RenderShaderDefines.hlsli"
+//#include "../RenderShaderDefines.hlsli"
 
 texture2D tDiffuse : register(t0);
 SamplerState diffuseFilter : register(s0);
@@ -24,6 +24,7 @@ struct Light
     float3 dir;
     float3 cdir;
     float3 color;
+	float colorAlpha;
 
     float ratio;
     float3 p2;

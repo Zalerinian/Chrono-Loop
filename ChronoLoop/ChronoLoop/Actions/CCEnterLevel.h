@@ -14,6 +14,7 @@
 #include "..\Actions\UICloneText.h"
 #include "..\Actions\BoxSnapToControllerAction.hpp"
 #include "..\Actions\TeleportAction.hpp"
+#include "..\Actions\CCTimeIndicator.h"
 #include "..\Rendering\Draw2D.h"
 #include "..\Rendering\Renderer.h"
 #include "..\Objects\TransparentMeshComponent.h"
@@ -41,12 +42,15 @@ namespace Epoch
 		{
 			once = false;
 		}
-
+		virtual void Start()
+		{
+			once = true;
+		}
 		virtual void Update() {
 			if (!once) {
 				Settings::GetInstance().SetBool("LevelIsLoading", true);
 				Level* next = new Level;
-				next->LoadLevel("../Resources/Level1.xml");
+				next->LoadLevel("../Resources/Level2.xml");
 				// Todo: Un-hardcode this
 				// use a setting string for next level path?
 				//LM::LevelStatus status = LevelManager::GetInstance().LoadLevelAsync("../Resources/Level1_2_6.xml", &next);
@@ -112,6 +116,8 @@ namespace Epoch
 
 					BaseObject *timeDisplayNeedle = Pool::Instance()->iGetObject()->Reset("TimeIndicatorNeedle", t);
 					MeshComponent* tdispn = new MeshComponent("../Resources/TimeIndicator.obj");
+					CCTimeIndicator* time = new CCTimeIndicator();
+					timeDisplayNeedle->AddComponent(time);
 					tdispn->AddTexture("../Resources/TimeIndicator.png", eTEX_DIFFUSE);
 					timeDisplayNeedle->AddComponent(tdispn);
 					timeDisplayNeedle->SetParent(RightController);
@@ -144,33 +150,47 @@ namespace Epoch
 
 					HRESULT hr;
 					Microsoft::WRL::ComPtr<ID3D11Texture2D> screenTex;
-					D3D11_TEXTURE2D_DESC bitmapDesc;
-					bitmapDesc.Width = 256;
-					bitmapDesc.Height = 256;
-					bitmapDesc.MipLevels = 1;
-					bitmapDesc.ArraySize = 1;
-					bitmapDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-					bitmapDesc.SampleDesc.Count = 1;
-					bitmapDesc.SampleDesc.Quality = 0;
-					bitmapDesc.Usage = D3D11_USAGE_DEFAULT;
-					bitmapDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
-					bitmapDesc.CPUAccessFlags = 0;
-					bitmapDesc.MiscFlags = 0;
-
-
-					hr = Renderer::Instance()->GetDevice()->CreateTexture2D(&bitmapDesc, nullptr, screenTex.GetAddressOf());
 					Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
-					std::string str("Clone Display");
-					TextureManager::Instance()->iAddTexture2D(str, screenTex, &srv);
-					cdisp->AddTexture(str.c_str(), eTEX_DIFFUSE);
 
-					Font* font = new Font();
-					cdisp->GetContext().mTextures[eTEX_DIFFUSE] = srv;
-					UICloneText* ct = new UICloneText();
-					cloneDisplay->AddComponent(ct);
-					cloneDisplay->AddComponent(cdisp);
-					cloneDisplay->SetParent(RightController);
-					RightController->AddChild(cloneDisplay);
+					if (TextureManager::Instance()->iGetTexture2D("memory:Clone Display", &srv, &screenTex) != TextureManager::TextureStatus::eError)
+					{
+						std::string str("Clone Display");
+						cdisp->AddTexture(str.c_str(), eTEX_DIFFUSE);
+						Font* font = new Font();
+						cdisp->GetContext().mTextures[eTEX_DIFFUSE] = srv;
+						UICloneText* ct = new UICloneText();
+						cloneDisplay->AddComponent(ct);
+						cloneDisplay->AddComponent(cdisp);
+						cloneDisplay->SetParent(RightController);
+						RightController->AddChild(cloneDisplay);
+					}
+					else
+					{
+						D3D11_TEXTURE2D_DESC bitmapDesc;
+						bitmapDesc.Width = 256;
+						bitmapDesc.Height = 256;
+						bitmapDesc.MipLevels = 1;
+						bitmapDesc.ArraySize = 1;
+						bitmapDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+						bitmapDesc.SampleDesc.Count = 1;
+						bitmapDesc.SampleDesc.Quality = 0;
+						bitmapDesc.Usage = D3D11_USAGE_DEFAULT;
+						bitmapDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+						bitmapDesc.CPUAccessFlags = 0;
+						bitmapDesc.MiscFlags = 0;
+						hr = Renderer::Instance()->GetDevice()->CreateTexture2D(&bitmapDesc, nullptr, screenTex.GetAddressOf());
+						std::string str("Clone Display");
+						TextureManager::Instance()->iAddTexture2D(str, screenTex, &srv);
+						cdisp->AddTexture(str.c_str(), eTEX_DIFFUSE);
+
+						Font* font = new Font();
+						cdisp->GetContext().mTextures[eTEX_DIFFUSE] = srv;
+						UICloneText* ct = new UICloneText();
+						cloneDisplay->AddComponent(ct);
+						cloneDisplay->AddComponent(cdisp);
+						cloneDisplay->SetParent(RightController);
+						RightController->AddChild(cloneDisplay);
+					}
 
 					t.SetMatrix(matrix4::CreateTranslation(-0.039f, 0.015f, 0.054f));
 					BaseObject *rewindHelp = Pool::Instance()->iGetObject()->Reset("RewindHelp", t);
@@ -261,35 +281,40 @@ namespace Epoch
 					((AudioEmitter*)ambient)->CallEvent(Emitter::EventType::ePlay);
 
 
+					ParticleSystem::Instance()->Clear();
 					LevelManager::GetInstance().RequestLevelChange(next);
 
 
 					//Enter effect
-					Particle* p = &Particle::Init();
-					p->SetPos(vec3f(8.88f, 0, -4.1f));
-					p->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));
-					p->SetLife(500);
-					p->SetSize(1.25f / 2.0f, .15f / 2.0f);
-					ParticleEmitter* emit = new TeleportEffect(600, 250, 2, vec4f(8.88f, 0, -4.1f, 1));
-					emit->SetParticle(p);
-					emit->SetTexture("../Resources/BasicRectP.png");
-					((TeleportEffect*)emit)->y1 = 8;
-					((TeleportEffect*)emit)->y2 = 12;
-					ParticleSystem::Instance()->AddEmitter(emit);
-					emit->FIRE();
+					Particle* start = &Particle::Init();
+					start->SetPos(vec3f(0, 0, 0));
+					start->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));
+					start->SetLife(500);
+					start->SetSize(.35f, .15f);
+					ParticleEmitter* startEmit = new TeleportEffect(400, 250, 2, vec4f(8, 0, -4, 1));
+					startEmit->SetParticle(start);
+					startEmit->SetTexture("../Resources/BasicRectP.png");
+					((TeleportEffect*)startEmit)->y1 = 8;
+					((TeleportEffect*)startEmit)->y2 = 12;
+					((TeleportEffect*)startEmit)->SetPosBounds(vec3f(-1, 0, -1), vec3f(1, 1, 1));
+					((TeleportEffect*)startEmit)->SetVelBounds(vec3f(.5f, 1, .5f), vec3f(.5f, 5, .5f));
+					ParticleSystem::Instance()->AddEmitter(startEmit);
+					startEmit->FIRE();
 
-					p = &Particle::Init();
-					p->SetPos(vec3f(8.88f, 0, -4.1f));
-					p->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
-					p->SetLife(500);
-					p->SetSize(.25f, .05f);
-					emit = new TeleportEffect(600, 150, 1, vec4f(8.88f, 0, -4.1f, 1));
-					emit->SetTexture("../Resources/BasicCircleP.png");
-					emit->SetParticle(p);
-					((TeleportEffect*)emit)->y1 = 1;
-					((TeleportEffect*)emit)->y2 = 5;
-					ParticleSystem::Instance()->AddEmitter(emit);
-					emit->FIRE();
+					start = &Particle::Init();
+					start->SetPos(vec3f(0, 0, 0));
+					start->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
+					start->SetLife(500);
+					start->SetSize(.15f, .05f);
+					ParticleEmitter* startEmit2 = new TeleportEffect(400, 150, 1, vec4f(8, 0, -4, 1));
+					startEmit2->SetTexture("../Resources/BasicCircleP.png");
+					startEmit2->SetParticle(start);
+					((TeleportEffect*)startEmit2)->y1 = 1;
+					((TeleportEffect*)startEmit2)->y2 = 5;
+					((TeleportEffect*)startEmit2)->SetPosBounds(vec3f(-1, 0, -1), vec3f(1, 1, 1));
+					((TeleportEffect*)startEmit2)->SetVelBounds(vec3f(.5f, 1, .5f), vec3f(.5f, 5, .5f));
+					ParticleSystem::Instance()->AddEmitter(startEmit2);
+					startEmit2->FIRE();
 
 					next->AssignPlayerControls(headset, LeftController, RightController);
 					next->AddObject(headset);
@@ -311,10 +336,33 @@ namespace Epoch
 					TimeManager::Instance()->AddObjectToTimeline(LeftController);
 					TimeManager::Instance()->AddObjectToTimeline(headset);
 
+					Light* l1 = new Light();
+					l1->Type = 4;
+					l1->Color = vec3f(1, 1, 1);
+					l1->ConeDirection = vec3f(0, -1, 0);
+					l1->Position = vec3f(0.07529334, 1.129413, 8.11148);
+					l1->ConeRatio = .1f;
+
+					Light* l2 = new Light();
+					l2->Type = 2;
+					l2->Position = vec3f(-4, 0, -5);
+					l2->Color = vec3f(0, 0, .2f);
+
+					Light* l3 = new Light();
+					l3->Type = 4;
+					l3->Color = vec3f(.9f, .9f, 1);
+					l3->ConeDirection = vec3f(0, -1, 0);
+					l3->Position = vec3f(-8.8f, 0, 5);
+					l3->ConeRatio = .5f;
+
+					Renderer::Instance()->SetLight(l1, 0);
+					Renderer::Instance()->SetLight(l2, 1);
+					Renderer::Instance()->SetLight(l3, 2);
 
 					SystemLogger::Debug() << "Loading complete" << std::endl;
 					Physics::Instance()->PhysicsLock.unlock();
 					Settings::GetInstance().SetBool("LevelIsLoading", false);
+					Settings::GetInstance().SetBool("PlayingLevel2", true);
 				}
 			}
 		}

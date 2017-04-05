@@ -59,7 +59,7 @@ namespace Epoch
 					TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneHeadset);
 					TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController1);
 					TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController2);
-					TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueID());
+					TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueID(),false);
 					mCurCloneHeadset = nullptr;
 					mCurCloneController1 = nullptr;
 					mCurCloneController2 = nullptr;
@@ -82,6 +82,7 @@ namespace Epoch
 				// Stop time
 				
 				Transform identity;
+				memset(&identity.GetMatrix(), 0, sizeof(identity.GetMatrix()));
 				mCloneCount++;
 				mCurCloneHeadset = Pool::Instance()->iGetObject()->Reset("Headset - " + std::to_string(mCloneCount), identity); //new BaseObject("headset" + std::to_string(rand), identity);
 				mCurCloneController1 = Pool::Instance()->iGetObject()->Reset("Controller1 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
@@ -126,7 +127,7 @@ namespace Epoch
 				mDesaturationInterpolator.SetActive(true);
 		
 
-				if (mIsBeingMade)
+				if (mIsBeingMade &&  mNumOfConfirmedClones < cLevel->GetMaxClones())
 				{
 					//rewind first then enable clone
 					TimeManager::Instance()->RewindTimeline(
@@ -157,7 +158,7 @@ namespace Epoch
 					p->SetSize(.25f, .15f);
 
 					vec3f EPos = vec3f(mCurCloneHeadset->GetTransform().GetPosition()->x,mCurCloneHeadset->GetTransform().GetPosition()->y, mCurCloneHeadset->GetTransform().GetPosition()->z);
-					ParticleEmitter* emit = new RadialEmitter(500, 250, 25, EPos);
+					ParticleEmitter* emit = new RadialEmitter(250, 250, 25, EPos);
 					emit->SetParticle(p);
 					emit->SetTexture("../Resources/BasicCircleP.png");
 					ParticleSystem::Instance()->AddEmitter(emit);
@@ -174,7 +175,7 @@ namespace Epoch
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneHeadset);
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController1);
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController2);
-						TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueId());
+						TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueId(),false);
 
 						//set the player headset and controllers birth back
 						TimeManager::Instance()->SetCreationTimeofClone(cLevel->GetLeftController()->GetUniqueID(), cLevel->GetRightController()->GetUniqueID(), cLevel->GetHeadset()->GetUniqueID());
@@ -344,7 +345,7 @@ namespace Epoch
 				for (unsigned int j = 0; j < numTris; ++j) {
 					float hitTime;
 					if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, fwd, hitTime)) { 
-							TimeManager::Instance()->DeleteClone(clones[i]->GetUniqueId());
+							TimeManager::Instance()->DeleteClone(clones[i]->GetUniqueId(),true);
 							--mNumOfConfirmedClones;
 							return true;
 					}
