@@ -80,9 +80,12 @@ namespace Epoch
 
 		std::unordered_map<MENU_NAME, MeshComponent*> mMeshComps;
 		std::unordered_map<BaseObject*, ID3D11Texture2D*> mPauseMenuTextures;
+
 		D2D1::ColorF wut = { 1,1,1,1 };
 		Font* mainFont = new Font(L"Agency FB", 75, wut);
+
 		float transparentColor[4] = { 0,0,0,0 };
+
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> texPauseMenuBase, texMainPanel,texSettingsPanel, texResume,texSettings,texHubworld,texAudio,texMisc;
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> rtvPauseMenuBase, rtvMainPanel, rtvSettingsPanel, rtvResume, rtvSettings, rtvHubworld, rtvAudio, rtvMisc;
 	public:
@@ -394,7 +397,7 @@ namespace Epoch
 				break;
 			case RESUME:
 				{
-				OnDisable();
+					OnDisable();
 				}
 				break;
 			case SETTINGS:
@@ -513,7 +516,6 @@ namespace Epoch
 							(tris + i)->Normal, meshPosP, fwdP, meshTime))
 							return true;
 				}
-
 			}
 			else 
 			{

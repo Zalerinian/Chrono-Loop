@@ -93,7 +93,7 @@ namespace Epoch {
 	}
 
 	void MeshComponent::Update() {
-		if (mNode) {
+		if (mNode && mVisible) {
 			mNode->data = mObject->GetWorld();
 		}
 	}

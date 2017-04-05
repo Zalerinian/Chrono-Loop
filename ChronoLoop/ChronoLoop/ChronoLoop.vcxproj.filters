@@ -441,9 +441,6 @@
     <ClInclude Include="Actions\TimelineIndicator.hpp">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="PauseMenu.hpp">
-      <Filter>Actions</Filter>
-    </ClInclude>
     <ClInclude Include="Actions\UIRewind.h">
       <Filter>Actions</Filter>
     </ClInclude>
@@ -494,6 +491,9 @@
       <Filter>Actions</Filter>
     </ClInclude>
     <ClInclude Include="BVH.h" />
+    <ClInclude Include="Actions\PauseMenu.hpp">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">

@@ -221,6 +221,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Actions\GestureDetection.hpp" />
     <ClInclude Include="Actions\HeadsetFollow.hpp" />
     <ClInclude Include="Actions\MainMenuBT.h" />
+    <ClInclude Include="Actions\PauseMenu.hpp" />
     <ClInclude Include="Actions\TeleportAction.hpp" />
     <ClInclude Include="Actions\TimelineIndicator.hpp" />
     <ClInclude Include="Actions\TimeManipulation.h" />
@@ -278,7 +279,6 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Particles\ParticleComponents.h" />
     <ClInclude Include="Particles\ParticleSystem.h" />
     <ClInclude Include="PathPlanning.h" />
-    <ClInclude Include="PauseMenu.hpp" />
     <ClInclude Include="Physics\Physics.h" />
     <ClInclude Include="PMHubworld.h" />
     <ClInclude Include="PMResume.h" />

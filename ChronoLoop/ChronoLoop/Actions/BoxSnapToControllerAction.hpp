@@ -55,7 +55,7 @@ namespace Epoch {
 						ReleaseObject();
 					}
 				}
-				else if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == -1 && !mHeld && !mCollider->mHitting.empty() && (!paused) || !Settings::GetInstance().GetBool("PauseMenuUp")) {
+				else if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == -1 && !mHeld && !mCollider->mHitting.empty() && ((!paused) || !Settings::GetInstance().GetBool("PauseMenuUp"))) {
 					SomethingtoController();
 					if (mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueId()) {
 						VRInputManager::GetInstance().GetController(eControllerType_Secondary).TriggerHapticPulse(1000);
