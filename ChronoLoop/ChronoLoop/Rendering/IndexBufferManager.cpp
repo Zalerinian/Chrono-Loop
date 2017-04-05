@@ -56,7 +56,6 @@ namespace Epoch {
 				HRESULT hr = Renderer::Instance()->GetDevice()->CreateBuffer(&desc, &initData, &newBuffer);
 				Renderer::Instance()->GetContext()->CopySubresourceRegion(newBuffer, 0, 0, 0, 0, sInstance->mIndexBuffer.Get(), 0, 0);
 				sInstance->mIndexBuffer.Attach(newBuffer);
-				//sInstance->mIndexBuffer = newBuffer;
 				std::string name = "The Index Buffer, mk" + std::to_string(sInstance->mOffsets.size());
 				SetD3DName(sInstance->mIndexBuffer.Get(), name.c_str());
 				delete[] initData.pSysMem;

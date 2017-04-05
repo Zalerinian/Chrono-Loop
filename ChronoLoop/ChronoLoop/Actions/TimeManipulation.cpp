@@ -90,12 +90,12 @@ namespace Epoch
 		// Update effect interpolator
 		if (mDesaturationInterpolator.GetActive()) {
 			RenderShape* quad = Renderer::Instance()->GetSceneQuad();
-			Renderer::Instance()->GetContext()->UpdateSubresource(quad->GetContext().mPixelCBuffers[ePB_CUSTOM1].Get(), 0, NULL, &mEffectData, 0, 0);
+			Renderer::Instance()->GetContext()->UpdateSubresource(quad->GetContext().mPixelCBuffers[ePB_REGISTER1].Get(), 0, NULL, &mEffectData, 0, 0);
 		}
 		if (mDesaturationInterpolator.Update(TimeManager::Instance()->GetDeltaTime())) {
 			mDesaturationInterpolator.SetActive(false);
 			RenderShape* quad = Renderer::Instance()->GetSceneQuad();
-			Renderer::Instance()->GetContext()->UpdateSubresource(quad->GetContext().mPixelCBuffers[ePB_CUSTOM1].Get(), 0, NULL, &mEffectData, 0, 0);
+			Renderer::Instance()->GetContext()->UpdateSubresource(quad->GetContext().mPixelCBuffers[ePB_REGISTER1].Get(), 0, NULL, &mEffectData, 0, 0);
 		}
 
 
@@ -192,7 +192,6 @@ namespace Epoch
 		
 			else
 			{
-				//SystemLogger::GetLog() << HotfixButtonDown << std::endl;
 				HotfixButtonDown++;
 				if (HotfixButtonDown > 100) {
 					HotfixButtonDown = 0;

@@ -289,6 +289,9 @@ namespace Epoch {
 
 	void Renderer::InitializeBuffers() {
 		ID3D11Buffer* pBuff;
+		D3D11_SUBRESOURCE_DATA InitialData;
+
+
 
 		// View-Projction buffer
 		CD3D11_BUFFER_DESC desc(sizeof(ViewProjectionBuffer) * 2, D3D11_BIND_CONSTANT_BUFFER);
@@ -304,6 +307,16 @@ namespace Epoch {
 #endif
 		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
 		mPositionBuffer.Attach(pBuff);
+
+		// Simulated Instance ID Buffer
+		// This buffer is used for when Instancing is disabled for pixel debugging.
+		// It is necessary because pixel shaders rely on the instance ID to access
+		// instance-specific buffer data to draw it correctly. The simulated instance
+		// ID stored in this buffer will let them access the buffer correctly.
+		vec4i initialSimID(0, 0, 0, 0);
+		InitialData.pSysMem = &initialSimID;
+		desc.ByteWidth = sizeof(vec4i);
+		mDevice->CreateBuffer(&desc, &InitialData, mSimInstanceBuffer.GetAddressOf());
 
 		//Light buffers
 		desc.ByteWidth = sizeof(Light) * 3;
@@ -378,6 +391,7 @@ namespace Epoch {
 		SetD3DName(mDepthBuffer.Get(), "Main Depth Buffer");
 		SetD3DName(mVPBuffer.Get(), "View-Projection Constant Buffer");
 		SetD3DName(mPositionBuffer.Get(), "Model Constant Buffer");
+		SetD3DName(mSimInstanceBuffer.Get(), "Simulated Instance ID Constant Buffer");
 
 		SetD3DName(mSceneTexture.Get(), "Post Processing Texture");
 		SetD3DName(mSceneSRV.Get(), "Scene Texture SRV");
@@ -400,15 +414,16 @@ namespace Epoch {
 		initialData.pSysMem = &initial;
 		CD3D11_BUFFER_DESC bufferDesc(sizeof(TimeManipulationEffectData), D3D11_BIND_CONSTANT_BUFFER);
 		mDevice->CreateBuffer(&bufferDesc, &initialData, &ColorRatioBuffer);
-		mScenePPQuad->GetContext().mPixelCBuffers[ePB_PP_Ratios].Attach(ColorRatioBuffer);
+		mScenePPQuad->GetContext().mPixelCBuffers[ePB_REGISTER1].Attach(ColorRatioBuffer);
 
 		mSceneScreenQuad = new RenderShape("../Resources/VerticalPlaneHalfU.obj", true, ePS_PURETEXTURE, eVS_NDC, eGS_PosNormTex_NDC);
 		mSceneScreenQuad->GetContext().mTextures[eTEX_DIFFUSE] = mSceneSRV;
 	}
 
 	void Renderer::SetStaticBuffers() {
-		mContext->GSSetConstantBuffers(0, 1, mVPBuffer.GetAddressOf());
 		mContext->VSSetConstantBuffers(0, 1, mPositionBuffer.GetAddressOf());
+		mContext->VSSetConstantBuffers(1, 1, mSimInstanceBuffer.GetAddressOf());
+		mContext->GSSetConstantBuffers(0, 1, mVPBuffer.GetAddressOf());
 		mContext->PSSetConstantBuffers(0, 1, mLBuffer.GetAddressOf());
 		//(*mContext)->VSSetConstantBuffers(2, 1, nullptr); // This will crash. - Instance Buffer
 		//(*mContext)->VSSetConstantBuffers(3, 1, nullptr); // This will crash. - Animation Data Buffer
@@ -628,18 +643,20 @@ namespace Epoch {
 				unsigned int offset = 0;
 #if ENABLE_INSTANCING
 				while (positions.size() - offset <= positions.size()) {
-					(*it)->mShape.GetContext().Apply();
+					(*it)->mShape.GetContext().Apply(/*mCurrentContext*/);
+					mCurrentContext = (*it)->mShape.GetContext();
 					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, positions.data() + offset, 0, 0);
 					(*it)->mShape.Render((UINT)positions.size() - offset);
 					offset += 256;
 				}
 #else
-				(*it)->mShape.GetContext().Apply();
-				//SystemLogger::Debug() << "Number of \"instances\": " << positions.size() << std::endl;
+				(*it)->mShape.GetContext().Apply(/*mCurrentContext*/);
+				mCurrentContext = (*it)->mShape.GetContext();
+				vec4i SimInstanceID(0, 0, 0, 0);
 				for (unsigned int i = 0; i < positions.size(); ++i) {
-					//SystemLogger::Debug() << "\"instance\" number: " << i << std::endl;
+					SimInstanceID.x = i;
+					mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimInstanceID, 0, 0);
 					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i] + offset, 0, 0);
-					//SystemLogger::Debug() << "Post-update" << i << std::endl;
 					(*it)->mShape.Render(1); // Without instancing, the instance count doesn't matter, but we're only drawing one :)
 				}
 #endif
@@ -654,14 +671,19 @@ namespace Epoch {
 				unsigned int offset = 0;
 #if ENABLE_INSTANCING
 				while (positions.size() - offset <= positions.size()) {
-					(*it)->mShape.GetContext().Apply();
+					(*it)->mShape.GetContext().Apply(/*mCurrentContext*/);
+					mCurrentContext = (*it)->mShape.GetContext();
 					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, positions.data() + offset, 0, 0);
 					(*it)->mShape.Render((UINT)positions.size() - offset);
 					offset += 256;
 				}
 #else
-				(*it)->mShape.GetContext().Apply();
+				(*it)->mShape.GetContext().Apply(/*mCurrentContext*/);
+				mCurrentContext = (*it)->mShape.GetContext();
+				vec4i SimulatedIID(0, 0, 0, 0);
 				for (unsigned int i = 0; i < positions.size(); ++i) {
+					SimulatedIID.x = i;
+					mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimulatedIID, 0, 0);
 					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i] + offset, 0, 0);
 					(*it)->mShape.Render(1); // Without instancing, the instance count doesn't matter, but we're only drawing one :)
 				}
@@ -683,13 +705,65 @@ namespace Epoch {
 
 #pragma region Public Functions
 
-	GhostList<matrix4>::GhostNode* Renderer::AddOpaqueNode(RenderShape *_node) {
-		return mOpaqueSet.AddShape(*_node);
+	GhostList<matrix4>::GhostNode* Renderer::AddOpaqueNode(RenderShape &_node) {
+		return mOpaqueSet.AddShape(_node);
 	}
 
-	GhostList<matrix4>::GhostNode * Renderer::AddTransparentNode(RenderShape * _node)
+	GhostList<matrix4>::GhostNode* Renderer::AddTransparentNode(RenderShape &_node)
 	{
-		return mTransparentSet.AddShape(*_node);
+		return mTransparentSet.AddShape(_node);
+	}
+
+	void Renderer::RemoveOpaqueNode(RenderShape & _node)
+	{
+		mOpaqueSet.RemoveShape(_node);
+	}
+
+	void Renderer::RemoveTransparentNode(RenderShape & _node)
+	{
+		mTransparentSet.RemoveShape(_node);
+	}
+
+	void Renderer::UpdateOpaqueNodeBuffer(RenderShape & _node, ConstantBufferType _t, unsigned int _index) {
+		RenderList* list = mOpaqueSet.GetListForShape(_node);
+		if (list == nullptr) {
+			SystemLogger::Error() << "Could not update opaque node: The given shape had no associated render list." << std::endl;
+			return;
+		}
+		switch (_t) {
+			case eCB_VERTEX:
+				list->UpdateBuffer(_t, _node.GetContext().mVertexCBuffers[_index], _index, _node.mVBIndex);
+				break;
+			case eCB_PIXEL:
+				list->UpdateBuffer(_t, _node.GetContext().mPixelCBuffers[_index], _index, _node.mPBIndex);
+				break;
+			case eCB_GEO:
+				list->UpdateBuffer(_t, _node.GetContext().mGeometryCBuffers[_index], _index, _node.mGBIndex);
+				break;
+			default:
+				break;
+		}
+	}
+
+	void Renderer::UpdateTransparentNodeBuffer(RenderShape & _node, ConstantBufferType _t, unsigned int _index) {
+		RenderList* list = mTransparentSet.GetListForShape(_node);
+		if (list == nullptr) {
+			SystemLogger::Error() << "Could not update transparent node: The given shape had no associated render list." << std::endl;
+			return;
+		}
+		switch (_t) {
+			case eCB_VERTEX:
+				list->UpdateBuffer(_t, _node.GetContext().mVertexCBuffers[_index], _index, _node.mVBIndex);
+				break;
+			case eCB_PIXEL:
+				list->UpdateBuffer(_t, _node.GetContext().mPixelCBuffers[_index], _index, _node.mPBIndex);
+				break;
+			case eCB_GEO:
+				list->UpdateBuffer(_t, _node.GetContext().mGeometryCBuffers[_index], _index, _node.mGBIndex);
+				break;
+			default:
+				break;
+		}
 	}
 
 	bool Renderer::iInitialize(HWND _Window, unsigned int _width, unsigned int _height, bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane, vr::IVRSystem * _vrsys) {
@@ -767,11 +841,11 @@ namespace Epoch {
 		mContext->OMSetRenderTargets(1, mSceneView.GetAddressOf(), mDSView.Get());
 		mContext->ClearRenderTargetView(mSceneView.Get(), color);
 		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-		mContext->PSSetConstantBuffers(0, 1, mLBuffer.GetAddressOf());
-		mContext->PSSetShaderResources(3, 1, mShadowSRV[0].GetAddressOf());
-		mContext->PSSetShaderResources(4, 1, mShadowSRV[1].GetAddressOf());
-		mContext->PSSetSamplers(3, 1, mSSamplerState.GetAddressOf());
-		mContext->VSSetConstantBuffers(1, 1, mPLBufferS.GetAddressOf());
+		//mContext->PSSetConstantBuffers(0, 1, mLBuffer.GetAddressOf());
+		//mContext->PSSetShaderResources(3, 1, mShadowSRV[0].GetAddressOf());
+		//mContext->PSSetShaderResources(4, 1, mShadowSRV[1].GetAddressOf());
+		//mContext->PSSetSamplers(3, 1, mSSamplerState.GetAddressOf());
+		//mContext->VSSetConstantBuffers(1, 1, mPLBufferS.GetAddressOf());
 
 		if (nullptr == mVrSystem) {
 			RenderNoVR(_deltaTime);

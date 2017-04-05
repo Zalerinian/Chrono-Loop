@@ -324,7 +324,7 @@ namespace Epoch {
 				while (pObject)
 				{
 					std::vector<std::string> codeComs;
-					std::string elementType, name, meshFile, textureFile, colliderType, particleTexture, soundName;
+					std::string elementType, name, meshFile, textureFile, emissiveTexture, colliderType, particleTexture, soundName;
 					vec3f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity, particleRadius, startColor, endColor;
 					float mass, elasticity, staticF, kineticF, normF, drag, radius, startSize, endSize, startAlpha, endAlpha;
 					int totalParticles, maxParticles, PPS, lifeTime;
@@ -352,6 +352,9 @@ namespace Epoch {
 								meshFile = pData->Value();
 							else if (elementType == "Texture")
 								textureFile = pData->Value();
+							else if (elementType == "Emissive") {
+								emissiveTexture = pData->Value();
+							}
 							else if (elementType == "Position")
 							{
 								size_t pos = 0;
@@ -690,6 +693,11 @@ namespace Epoch {
 							path = "../Resources/";
 							path.append(textureFile);
 							mesh->AddTexture(path.c_str(), eTEX_DIFFUSE);
+							if (!emissiveTexture.empty()) {
+								path = "../Resources/";
+								path.append(emissiveTexture);
+								mesh->AddTexture(path.c_str(), eTEX_EMISSIVE);
+							}
 							obj->AddComponent(mesh);
 					
 					}

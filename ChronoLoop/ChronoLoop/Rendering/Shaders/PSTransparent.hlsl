@@ -5,31 +5,14 @@
 texture2D tDiffuse : register(t0);
 SamplerState diffuseFilter : register(s0);
 
-texture2D tNormal : register(t1);
-SamplerState normalFilter : register(s1);
-
-texture2D tSpecular : register(t2);
-SamplerState specularFilter : register(s2);
-
-struct Light {
-	int type;
-	float3 p1;
-	float4 pos;
-	float4 dir;
-	float4 cdir;
-	float4 color;
-	float  ratio;
-	float3 p2;
-};
-
-cbuffer _Light : register(b0) {
-	Light DirLight;
-	Light PointLight;
-	Light SpotLight;
+struct AlphaBuffer {
+	float alpha;
+	float3 padding;
+	float4 padding2[7];
 };
 
 cbuffer _Alpha : register(b1) {
-	float alpha;
+	AlphaBuffer aBuffers[256];
 }
 
 struct PSI {
@@ -37,16 +20,17 @@ struct PSI {
 	float4 normal	:	NORMAL0;
 	float4 texCoord :	COLOR;
 	float4 wpos : WORLDPOS;
+	float4 shadowPos : SHADOW;
+	uint IID : CL_IID;
 };
 
 float4 main(PSI input) : SV_TARGET
 {
 	float4 color = float4(0,0,0,0);
 	float4 diffuseColor = tDiffuse.Sample(diffuseFilter, input.texCoord.xy);
-	//float4 diffuseColor = float4(1, 1, 1, 1);
 	clip(diffuseColor.a - 0.25);
 
-	return float4(diffuseColor.rgb, diffuseColor.a * alpha);
+	return float4(diffuseColor.rgb, diffuseColor.a * aBuffers[input.IID].alpha);
 }
 
 //Empty object, light component
