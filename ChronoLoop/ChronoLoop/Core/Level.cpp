@@ -18,7 +18,6 @@
 #include "../Actions/CCExit.h"
 #include "../Actions/CCStartButton.h"
 #include "../Objects/MeshComponent.h"
-#include "../Objects/TransparentMeshComponent.h"
 #include "../tinyxml/tinyxml.h"
 #include "../tinyxml/tinystr.h"
 #include "../Common/Settings.h"
@@ -303,7 +302,7 @@ namespace Epoch {
 								while ((pos = s.find(",")) != std::string::npos)
 								{
 									std::string token = s.substr(0, pos);
-									mMaxNumofClones = std::strtof(token.c_str(), nullptr);
+									mMaxNumofClones = std::strtol(token.c_str(), nullptr, 10);
 									i++;
 									s.erase(0, pos + 1);
 								}
@@ -680,7 +679,9 @@ namespace Epoch {
 							{
 								alpha = .3f;
 							}
-							mesh = new TransparentMeshComponent(path.c_str(), alpha);
+							//mesh = new MeshComponent(path.c_str(), alpha);
+							mesh = new MeshComponent(path.c_str(), alpha);
+							mesh->SetPixelShader(ePS_TRANSPARENT);
 						}
 						else
 						{
