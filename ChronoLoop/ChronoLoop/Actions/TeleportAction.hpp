@@ -70,7 +70,11 @@ namespace Epoch {
 						size_t numTris = meshes[i]->GetTriangleCount();
 						for (unsigned int i = 0; i < numTris; ++i) {
 							float hitTime = FLT_MAX;
-							if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, meshPos, fwd, hitTime)) {
+							if (Physics::Instance()->RayToTriangle(
+								(tris + i)->Vertex[0],
+								(tris + i)->Vertex[1], 
+								(tris + i)->Vertex[2],
+								(tris + i)->Normal, meshPos, fwd, hitTime)) {
 								if (hitTime < wallTime) {
 									wallTime = hitTime;
 								}

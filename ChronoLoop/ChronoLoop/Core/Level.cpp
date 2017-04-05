@@ -930,27 +930,19 @@ namespace Epoch {
 		else if ((_Level == L"HUBWORLD" || _Level == L"HUB") && accessHub->GetOnce() == true) {
 			accessHub->SetOnce(false);
 			CommandConsole::Instance().Toggle();
+			accessHub = nullptr;
 		}
 		else if ((_Level == L"LEVELONE" || _Level == L"LVLONE") && accessLevelOne->GetOnce() == true) {
 			accessLevelOne->SetOnce(false);
 			CommandConsole::Instance().Toggle();
+			accessLevelOne = nullptr;
 		}
 		else if ((_Level == L"LEVELTWO" || _Level == L"LVLTWO") && accessLevelTwo->GetOnce() == true)
 		{
 			accessLevelTwo->SetOnce(false);
 			CommandConsole::Instance().Toggle();
+			accessLevelTwo = nullptr;
 		}
-		else if ((_Level == L"HUBWORLD" || _Level == L"HUB") && accessHub->GetOnce() == true)
-		{
-			accessHub->SetOnce(false);
-			CommandConsole::Instance().Toggle();
-		}
-		else if (accessLevelTwo->GetOnce() == false || accessLevelOne->GetOnce() == false || (accessHub != nullptr && accessHub->GetOnce() == false))
-			CommandConsole::Instance().DisplaySet(L"LEVEL IS ALREADY LOADED");
-		else if (accessLevelTwo->GetOnce() == true || accessLevelOne->GetOnce() == true)
-			CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _Level + L"\nCORRECT INPUT: /LOAD (LEVELNAME)");
-
-
 	}
 
 

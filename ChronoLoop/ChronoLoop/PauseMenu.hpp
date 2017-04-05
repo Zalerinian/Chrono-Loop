@@ -246,11 +246,11 @@ namespace Epoch
 					(D2D1::ColorF::Black, 0.8f),
 					Draw::Instance().GetBitmap(texSettingsPanel.Get()));
 				Draw::Instance().DrawTextToBitmap(
-					85.33f, 0, 170.67f, 50.0f,
+					80.0f, 0, 176.0f, 50.0f,
 					*mainFont, L"Settings",
 					Draw::Instance().GetBitmap(texSettingsPanel.Get()));
 
-				mainFont->mColor = D2D1::ColorF::Black;
+				mainFont->mColor = D2D1::ColorF::WhiteSmoke;
 				mainFont->mFontSize = 75;
 
 				tempColor = { 0,0,0.9f,0.5f };
@@ -284,7 +284,7 @@ namespace Epoch
 					Draw::Instance().GetBitmap(texAudio.Get()));
 				Draw::Instance().DrawTextToBitmap(
 					0, 0, 256.0f, 256.0f,
-					*mainFont, L"Does Nothing",
+					*mainFont, L"Does Nothing Atm",
 					Draw::Instance().GetBitmap(texAudio.Get()));
 				Draw::Instance().DrawRectangleToBitmap(
 					0, 0, 256.0f, 256.0f,
@@ -389,7 +389,7 @@ namespace Epoch
 				break;
 			case RESUME:
 				{
-					PauseMenuisUp = false;
+				OnDisable();
 				}
 				break;
 			case SETTINGS:
@@ -401,7 +401,7 @@ namespace Epoch
 				break;
 			case HUBWORLD:
 				{
-
+					LevelManager::GetInstance().GetCurrentLevel()->LoadLevelCmnd(nullptr, L"HUB");
 				}
 				break;
 			case AUDIO:
@@ -487,28 +487,44 @@ namespace Epoch
 		}
 
 		bool RaycastToMenu(BaseObject** _obj, MeshComponent** _mc, bool _isLeft) {
-			float meshTime = 0.0f;
+			float meshTime = FLT_MAX;
 			Triangle* tris = (*_mc)->GetTriangles();
 			size_t numTris = (*_mc)->GetTriangleCount();
-			matrix4 objMat = (*_obj)->GetTransform().GetMatrix();
-			matrix4 inverseP = (VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPosition() * objMat.Invert());
-			matrix4 inverseS = (VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPosition() * objMat.Invert());
-			vec3f meshPosP = inverseP.Position;
-			vec3f meshPosS = inverseS.Position;
-			vec4f forwardP, forwardS;
-			forwardP.Set(0, 0, 1, 0);
-			forwardS.Set(0, 0, 1, 0);
-			forwardP *= inverseP;
-			forwardS *= inverseS;
-			vec3f fwdP = forwardP;
-			vec3f fwdS = forwardS;
-			for (unsigned int i = 0; i < numTris; ++i) {
-				if (_isLeft) {
-					if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, meshPosP, fwdP, meshTime))
-						return true;
+			matrix4 objMat = (*_obj)->GetWorld();
+			if(_isLeft)
+			{
+				vec4f forwardP;
+				forwardP.Set(0, 0, 1, 0);
+				matrix4 mat = (VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPosition());
+				matrix4 inverseP = (mat * objMat.Invert());
+				vec3f meshPosP = inverseP.Position;
+				forwardP *= inverseP;
+				vec3f fwdP(forwardP);
+				for (unsigned int i = 0; i < numTris; ++i) {
+						if (Physics::Instance()->RayToTriangle(
+							(tris + i)->Vertex[0],
+							(tris + i)->Vertex[1],
+							(tris + i)->Vertex[2],
+							(tris + i)->Normal, meshPosP, fwdP, meshTime))
+							return true;
 				}
-				else {
-					if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, meshPosS, fwdS, meshTime))
+
+			}
+			else 
+			{
+				vec4f forwardS;
+				forwardS.Set(0, 0, 1, 0);
+				matrix4 mat = (VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPosition());
+				matrix4 inverseS = (mat * objMat.Invert());
+				vec3f meshPosS = inverseS.Position;
+				forwardS *= inverseS;
+				vec3f fwdS(forwardS);
+				for (unsigned int i = 0; i < numTris; ++i) {
+					if (Physics::Instance()->RayToTriangle(
+						(tris + i)->Vertex[0],
+						(tris + i)->Vertex[1],
+						(tris + i)->Vertex[2],
+						(tris + i)->Normal, meshPosS, fwdS, meshTime))
 						return true;
 				}
 			}
