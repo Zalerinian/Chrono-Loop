@@ -770,6 +770,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
   </ItemGroup>
   <ItemGroup>
     <None Include="..\DXTK\DirectXTex.inl" />
+    <None Include="Effects.hlsli" />
     <None Include="Rendering\RenderShaderDefines.hlsli" />
     <None Include="Rendering\Shaders\VertexLayouts.hlsli" />
   </ItemGroup>
