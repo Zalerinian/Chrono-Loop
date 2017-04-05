@@ -24,7 +24,7 @@ namespace Epoch
 		unsigned int HotfixButtonDown = 0;
 		unsigned int mCloneCount;
 		unsigned short mCurrTexture;
-		unsigned short mNumOfConfirmedClones;
+		unsigned short mNumOfConfirmedClones = 0;
 		BaseObject* mCurCloneHeadset;
 		BaseObject* mCurCloneController1;
 		BaseObject* mCurCloneController2;

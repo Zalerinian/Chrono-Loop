@@ -1,6 +1,7 @@
 #pragma once
 #include "../Common/Math/vec4f.h"
 #include "../Common/Math/matrix4.h"
+#include <memory>
 
 namespace Epoch {
 
@@ -22,7 +23,9 @@ namespace Epoch {
 			};
 			BufferWidth padding;
 		};
-		PSTransparentScanline_Data() {};
+		PSTransparentScanline_Data() {
+			memset(this, 0, sizeof(*this));
+		};
 	};
 
 	struct PSTransparent_Data {
@@ -36,6 +39,40 @@ namespace Epoch {
 		PSTransparent_Data() {
 			alpha.Set(0, 0, 0, 0);
 		}
+	};
+
+	struct PSAnimatedMultiscan_Data {
+		union {
+			struct {
+				float DiffuseAlpha;
+				float MultiscanAlpha;
+				float MultiscanVOffset;
+			};
+			BufferWidth padding;
+		};
+		PSAnimatedMultiscan_Data() {
+			memset(this, 0, sizeof(*this));
+			DiffuseAlpha = 1.0f;
+			MultiscanAlpha = 0.4f;
+		}
+	};
+
+	enum BufferDataType {
+		/// <summary>
+		/// Represents that the buffer does not contain any data.
+		/// </summary>
+		eBufferDataType_Nullptr,
+
+		/// <summary>The buffer only holds an alpha value, used to control transparency.</summary>
+		eBufferDataType_Alpha,
+
+		/// <summary>
+		/// The buffer holds an alpha value, and a vec4f for multi-texturing offsets. 
+		/// The vec4f contains, in order, the Multiscan V offset, the Multiscan alpha value,
+		/// the Scanline V offset, and the Scanline Alpha value.
+		/// </summary>
+		eBufferDataType_Scanline
+
 	};
 
 
@@ -88,7 +125,6 @@ namespace Epoch {
 		eTEX_NORMAL,
 		eTEX_SPECULAR,
 		eTEX_EMISSIVE,
-		eTEX_REGISTER3,
 		eTEX_REGISTER4,
 		eTEX_REGISTER5,
 		eTEX_REGISTER6,

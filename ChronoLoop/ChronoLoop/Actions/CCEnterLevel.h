@@ -17,9 +17,9 @@
 #include "..\Actions\CCTimeIndicator.h"
 #include "..\Rendering\Draw2D.h"
 #include "..\Rendering\Renderer.h"
-#include "..\Objects\TransparentMeshComponent.h"
+#include "..\Objects\MeshComponent.h"
 #include "..\Rendering\TextureManager.h"
-#include "..\Objects\TransparentMeshComponent.h"
+#include "..\Objects\MeshComponent.h"
 #include <wrl\client.h>
 #include "../Sound/SoundEngine.h"
 
@@ -86,7 +86,7 @@ namespace Epoch
 					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), false);
 					BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
 					((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
-					TransparentMeshComponent *rightRaycaster = new TransparentMeshComponent("../Resources/RaycastCylinder.obj");
+					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					rightRaycaster->SetAlpha(0.4f);
 					mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
@@ -137,7 +137,7 @@ namespace Epoch
 
 					t.SetMatrix(matrix4::CreateScale(.75f, 1, 1) * matrix4::CreateTranslation(0.073f, -0.018f, -0.043f));
 					BaseObject *cloneDisplayBack = Pool::Instance()->iGetObject()->Reset("cloneDisplayBack", t);
-					TransparentMeshComponent* cdispb = new TransparentMeshComponent("../Resources/UIClone.obj", .9f);
+					MeshComponent* cdispb = new MeshComponent("../Resources/UIClone.obj", 0.9f);
 					cdispb->AddTexture("../Resources/clearBlue.png", eTEX_DIFFUSE);
 					cloneDisplayBack->AddComponent(cdispb);
 					cloneDisplayBack->SetParent(RightController);
@@ -252,7 +252,7 @@ namespace Epoch
 					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), true);
 					BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
 					((BoxSnapToControllerAction*)pickup2)->mControllerRole = eControllerType_Secondary;
-					TransparentMeshComponent *leftRaycaster = new TransparentMeshComponent("../Resources/RaycastCylinder.obj");
+					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					leftRaycaster->SetAlpha(0.4f);
 					mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);

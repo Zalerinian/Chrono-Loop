@@ -59,7 +59,6 @@ namespace Epoch {
 		if (_srv) {
 			(*_srv) = mTextureMap2D[_name].first;
 		}
-		Renderer::Instance()->GetContext()->PSSetShaderResources(3, 1, &srv);
 		return TextureStatus::eSuccess;
 	}
 
