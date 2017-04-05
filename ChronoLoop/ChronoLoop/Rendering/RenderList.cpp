@@ -111,7 +111,7 @@ namespace Epoch {
 		index = GetBufferIndex(index);
 
 		if (index < 0 || index >= OldCount) {
-			SystemLogger::Debug() << "Can't cut buffer, invalid index given: Given: " << index << " Max: " << (OldCount - 1) << std::endl;
+			SystemLogger::Error() << "Can't cut buffer, invalid index given: Given: " << index << " Max: " << (OldCount - 1) << std::endl;
 			Renderer::Instance()->GetRendererLock().unlock();
 			return;
 		}
@@ -128,12 +128,10 @@ namespace Epoch {
 		ID3D11Buffer *newBuffer;
 		HRESULT hr = dev->CreateBuffer(&desc, nullptr, &newBuffer);
 		SetD3DName(newBuffer, _name.c_str());
-		SystemLogger::Debug() << "Cutting index " << index << " out of '" << mShape.mName << "'  (" << OldCount << ")... ";
 
 		bool idsNeedUpdating = true;
 		// Copy in the data we wanted to add.
 		if (index == 0) {
-			SystemLogger::GetLog() << "The shape being removed was the first one!" << std::endl;
 			// The one to be removed is the first element
 			D3D11_BOX dataBoundary;
 			dataBoundary.left = sizeof(BufferWidth);
@@ -144,7 +142,6 @@ namespace Epoch {
 			dataBoundary.bottom = 1;
 			ctx->CopySubresourceRegion(newBuffer, 0, 0, 0, 0, _toCut.Get(), 0, &dataBoundary);
 		} else if (index == OldCount - 1) {
-			SystemLogger::GetLog() << "The shape being removed was the last one!" << std::endl;
 			idsNeedUpdating = false;
 
 			// The one to be removed is the last element
@@ -157,7 +154,6 @@ namespace Epoch {
 			dataBoundary.bottom = 1;
 			ctx->CopySubresourceRegion(newBuffer, 0, 0, 0, 0, _toCut.Get(), 0, &dataBoundary);
 		} else {
-			SystemLogger::GetLog() << "The shape being removed was in the middle!" << std::endl;
 			// The data to remove is in the middle, we need to do 2 copies.
 			D3D11_BOX leftBoundary;
 			leftBoundary.left = 0;
@@ -194,7 +190,7 @@ namespace Epoch {
 
 	void RenderList::UpdateBuffer(Microsoft::WRL::ComPtr<ID3D11Buffer>& _toUpdate, Microsoft::WRL::ComPtr<ID3D11Buffer>& _data, unsigned int index) {
 		if (_toUpdate.Get() == nullptr) {
-			SystemLogger::Error() << "Could not update a buffer, because there *is*no buffer." << std::endl;
+			SystemLogger::Error() << "Could not update a buffer, because there *is* no buffer." << std::endl;
 			return;
 		}
 		

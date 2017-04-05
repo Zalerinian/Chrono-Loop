@@ -51,6 +51,7 @@ namespace Epoch {
 
 	void MeshComponent::CreateAlphaBuffer(float alpha) {
 		Renderer::Instance()->GetRendererLock().lock();
+		mPixelBufferTypes[ePB_REGISTER1] = eBufferDataType_Alpha;
 		ID3D11Buffer* AlphaBuff;
 		CD3D11_BUFFER_DESC AlphaDesc(sizeof(PSTransparent_Data), D3D11_BIND_CONSTANT_BUFFER);
 		D3D11_SUBRESOURCE_DATA BufferData;
@@ -63,16 +64,13 @@ namespace Epoch {
 		Renderer::Instance()->GetRendererLock().unlock();
 	}
 
-	MeshComponent::MeshComponent(const char * _path, bool _EnableBlending) {
+	MeshComponent::MeshComponent(const char * _path, float _alpha) {
 		mType = eCOMPONENT_MESH;
 		mShape = new RenderShape(_path, true, ePS_TEXTURED, eVS_TEXTURED, eGS_PosNormTex);
 		mShape->GetContext().mRasterState = eRS_FILLED;
+		mBlended = _alpha < 1.0f;
 		if (CanCreateNode()) {
-			if (_EnableBlending) {
-				CreateTransparentNode();
-			} else {
-				CreateOpaqueNode();
-			}
+			CreateNode();
 			mVisible = true;
 		} else {
 			mVisible = false;
@@ -91,7 +89,7 @@ namespace Epoch {
 			mGeoBufferTypes[i] = eBufferDataType_Nullptr;
 		}
 
-		mPixelBufferTypes[ePB_REGISTER1] = eBufferDataType_Alpha;
+		CreateAlphaBuffer(_alpha);
 	}
 
 	void MeshComponent::Update() {
@@ -135,7 +133,7 @@ namespace Epoch {
 		alpha.alpha.x = _a;
 		Renderer::Instance()->GetContext()->UpdateSubresource(mShape->GetContext().mPixelCBuffers[ePB_REGISTER1].Get(), 0, 0, &alpha, 0, 0);
 		if (mBuffersCanUpdate) {
-
+			UpdateBuffer(eCB_PIXEL, ePB_REGISTER1);
 		}
 		return this;
 	}

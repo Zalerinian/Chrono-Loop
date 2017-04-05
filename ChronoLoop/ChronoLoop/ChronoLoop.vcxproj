@@ -273,7 +273,6 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Objects\Component.h" />
     <ClInclude Include="Objects\MeshComponent.h" />
     <ClInclude Include="Objects\Transform.h" />
-    <ClInclude Include="Objects\TransparentMeshComponent.h" />
     <ClInclude Include="ParticleEffectPrototypes.h" />
     <ClInclude Include="Particles\ParticleComponents.h" />
     <ClInclude Include="Particles\ParticleSystem.h" />
@@ -430,7 +429,6 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClCompile Include="Objects\Component.cpp" />
     <ClCompile Include="Objects\MeshComponent.cpp" />
     <ClCompile Include="Objects\Transform.cpp" />
-    <ClCompile Include="Objects\TransparentMeshComponent.cpp" />
     <ClCompile Include="Particles\ParticleComponents.cpp" />
     <ClCompile Include="Particles\ParticleSystem.cpp" />
     <ClCompile Include="PathPlanning.cpp" />

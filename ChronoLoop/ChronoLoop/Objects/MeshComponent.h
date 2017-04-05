@@ -57,7 +57,7 @@ namespace Epoch
 		virtual void UpdateBuffer(ConstantBufferType _t, unsigned char _index);
 		void CreateAlphaBuffer(float alpha = 1.0f);
 	public:
-		MeshComponent(const char *_path, bool _EnableBlending = false);
+		MeshComponent(const char *_path, float _alpha = 1.0f);
 		virtual void Update() override;
 		virtual void Destroy() override;
 		MeshComponent* SetVisible(bool _vis);

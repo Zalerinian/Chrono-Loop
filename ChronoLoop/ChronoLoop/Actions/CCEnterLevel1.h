@@ -18,7 +18,7 @@
 #include "..\Rendering\Draw2D.h"
 #include "..\Rendering\Renderer.h"
 #include "..\Rendering\TextureManager.h"
-#include "..\Objects\TransparentMeshComponent.h"
+#include "..\Objects\MeshComponent.h"
 #include "..\Rendering\TextureManager.h"
 #include <wrl\client.h>
 
@@ -135,7 +135,7 @@ namespace Epoch
 
 					t.SetMatrix(matrix4::CreateScale(.75f, 1, 1) * matrix4::CreateTranslation(0.073f, -0.018f, -0.043f));
 					BaseObject *cloneDisplayBack = Pool::Instance()->iGetObject()->Reset("cloneDisplayBack", t);
-					TransparentMeshComponent* cdispb = new TransparentMeshComponent("../Resources/UIClone.obj");
+					MeshComponent* cdispb = new MeshComponent("../Resources/UIClone.obj");
 					cdispb->AddTexture("../Resources/clearBlue.png", eTEX_DIFFUSE);
 					cloneDisplayBack->AddComponent(cdispb);
 					cloneDisplayBack->SetParent(RightController);

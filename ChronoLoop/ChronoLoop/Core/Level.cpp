@@ -18,7 +18,6 @@
 #include "../Actions/CCExit.h"
 #include "../Actions/CCStartButton.h"
 #include "../Objects/MeshComponent.h"
-#include "../Objects/TransparentMeshComponent.h"
 #include "../tinyxml/tinyxml.h"
 #include "../tinyxml/tinystr.h"
 #include "../Common/Settings.h"
@@ -680,7 +679,9 @@ namespace Epoch {
 							{
 								alpha = .3f;
 							}
-							mesh = new TransparentMeshComponent(path.c_str(), alpha);
+							//mesh = new MeshComponent(path.c_str(), alpha);
+							mesh = new MeshComponent(path.c_str(), alpha);
+							mesh->SetPixelShader(ePS_TRANSPARENT);
 						}
 						else
 						{

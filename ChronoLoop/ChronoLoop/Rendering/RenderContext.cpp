@@ -57,12 +57,12 @@ namespace Epoch {
 		if (mGeoShaderFormat != eGS_MAX) {
 			ShaderManager::Instance()->ApplyGShader(mGeoShaderFormat);
 		}
+
+		ID3D11ShaderResourceView* textures[eTEX_MAX];
 		for (int i = eTEX_DIFFUSE; i < eTEX_MAX; ++i) {
-			//if (mTextures[i].Get() != nullptr) {
-				Renderer::Instance()->GetContext()->PSSetShaderResources((UINT)i, 1, mTextures[i].GetAddressOf());
-				//(*Renderer::Instance()->GetContext())->PSSetSamplers((UINT)it->first, 1, nullptr); //TODO: Consider adding samplers to contexts. Curently a global sampler is applied in the renderer.
-			//}
+			textures[i] = mTextures[i].Get();
 		}
+		Renderer::Instance()->GetContext()->PSSetShaderResources(0, eTEX_MAX, textures);
 
 		ID3D11Buffer *pixelBuffers[ePB_MAX], *vertexBuffers[eVB_MAX], *geoBuffers[eGB_MAX];
 		for (int i = 0; i < eVB_MAX; ++i) {

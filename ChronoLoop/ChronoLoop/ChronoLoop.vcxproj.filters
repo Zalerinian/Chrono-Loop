@@ -441,9 +441,6 @@
     <ClInclude Include="Actions\TimelineIndicator.hpp">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\TransparentMeshComponent.h">
-      <Filter>Objects\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Actions\UIRewind.h">
       <Filter>Actions</Filter>
     </ClInclude>
@@ -765,9 +762,6 @@
     </ClCompile>
     <ClCompile Include="PathPlanning.cpp">
       <Filter>Pathing</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\TransparentMeshComponent.cpp">
-      <Filter>Objects\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BVH.cpp" />
   </ItemGroup>
