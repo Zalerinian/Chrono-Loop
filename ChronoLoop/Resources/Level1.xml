@@ -87,12 +87,6 @@
       <AABBtoSphere>Enabled</AABBtoSphere>
       <AABBtoAABB>Enabled</AABBtoAABB>
       <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
-      <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
-      <ElasticPlane>Enabled</ElasticPlane>
       <Collider>
         <Type>OBB</Type>
         <Trigger>False</Trigger>
@@ -212,9 +206,9 @@
       <Collider>
         <Type>OBB</Type>
         <Trigger>True</Trigger>
-        <Position>0,1.4,1.9</Position>
+        <Position>0,1.4,2.5</Position>
         <Rotation>0,0,0</Rotation>
-        <Scale>11.5,2.9,1.6</Scale>
+        <Scale>2.7,3.3,1</Scale>
         <Move>False</Move>
         <Gravity>0,0,0</Gravity>
         <Mass>0</Mass>
@@ -310,7 +304,7 @@
     </Components>
   </Object>
   <Object>
-    <Name>SKybox</Name>
+    <Name>Skybox</Name>
     <Mesh>mmSkybox.obj</Mesh>
     <Texture>mmSkyboxLight.png</Texture>
     <Position>0,0,0</Position>
@@ -828,6 +822,24 @@
     <Position>-5.95,1.32,-7.699566</Position>
     <Rotation>1.57,1.57,0</Rotation>
     <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>DoorFrame1asdf</Name>
+    <Mesh>DoorFrame1.obj</Mesh>
+    <Texture>fieldGen.png</Texture>
+    <Position>0,0,12.12225</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Success</Name>
+    <Mesh>PlaneCorrection.obj</Mesh>
+    <Texture>Success.png</Texture>
+    <Position>0,2.894122,11.94945</Position>
+    <Rotation>1.57,3.14,0</Rotation>
+    <Scale>0.5,1,0.2</Scale>
     <Components />
   </Object>
 </Level>

@@ -660,7 +660,17 @@ namespace LevelEditor
             }
         }
 
-        private void levelSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnEmissiveSelect_Click(object sender, EventArgs e) {
+            OpenFileDialog d = new OpenFileDialog();
+            d.Filter = "Emissive Textures (*.png)|*.png";
+            d.Title = "Pick an emissive texture.";
+            if(d.ShowDialog() == DialogResult.OK) {
+                tbEmissive.Text = d.FileName;
+                selectedObject.mEmissiveTexture = d.FileName;
+            }
+        }
+
+    private void levelSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Forms.LevelSettingsForm settings = new Forms.LevelSettingsForm();
             settings.SetPosition(mStartPos);
@@ -936,6 +946,7 @@ namespace LevelEditor
                 scaleY.Value =  (decimal)selectedObject.Scale.Y;
                 scaleZ.Value =  (decimal)selectedObject.Scale.Z;
                 textureFileBox.Text = selectedObject.Texture != null ? selectedObject.TextureFile : "None";
+                tbEmissive.Text = selectedObject.mEmissiveTexture == string.Empty ? "None" : selectedObject.mEmissiveTexture;
                 for (int i = 4; i < 14; i++)
                     if (selectedObject.Components.Contains((string)componetsCheck.Items[i]))
                         componetsCheck.SetItemChecked(i, true);

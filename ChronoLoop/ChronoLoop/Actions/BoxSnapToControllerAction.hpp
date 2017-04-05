@@ -22,16 +22,14 @@ namespace Epoch {
 		virtual void Update() override {
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
-			bool mRight = false;
-			bool mLeft = false;
+			bool paused = false;
 
-			if (cLevel->GetRightTimeManipulator()!= nullptr || cLevel->GetLeftTimeManipulator() != nullptr) {
-				mRight = cLevel->GetRightTimeManipulator()->isTimePaused();
-				mLeft = cLevel->GetLeftTimeManipulator()->isTimePaused();
+			if (cLevel->GetTimeManipulator()!= nullptr ) {
+				paused= cLevel->GetTimeManipulator()->isTimePaused();
 			}
 			if (VRInputManager::GetInstance().IsVREnabled() && mCollider) {
 				InputTimeline::InputNode*temp;
-				if (mRight || mLeft) {
+				if (paused) {
 					temp = VRInputManager::GetInstance().FindLastInput(mCollider->GetBaseObject()->GetUniqueID(), true);
 				}
 				else {
@@ -42,16 +40,14 @@ namespace Epoch {
 					(temp->mData.mLastFrame == mInput->mData.mLastFrame && temp->mData.mTime < mInput->mData.mTime))) {
 					mHeld = false;
 					mPickUp->mShouldMove = true;
-					//	SystemLogger::GetLog() << "Should move on:: Old: snap = " << mInput->mData.mLastFrame << " time= " << mInput->mData.mTime << "   New: snap = " << temp->mData.mLastFrame << " time= " << temp->mData.mTime << std::endl;
 				}
 				mInput = temp;
 			}
-			//SystemLogger::GetLog() << mCollider->mHitting.size() << std::endl;
 			if (VRInputManager::GetInstance().IsVREnabled() && mInput) {
 				if (mHeld && mPickUp != nullptr) {
 					matrix4 m = mObject->GetTransform().GetMatrix();
 					mPickUp->SetPos(m.Position);
-					if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == 1 && mHeld || (mLeft || mRight)) {
+					if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == 1 && mHeld || (paused)) {
 						SystemLogger::GetLog() << "Id: " << mCollider->GetBaseObject()->GetUniqueId() << " Released object" << std::endl;
 						if (mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueId() || mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueId()) {
 							VRInputManager::GetInstance().GetController((mInput->mData.mPrimary) ? eControllerType_Primary : eControllerType_Secondary).TriggerHapticPulse(1000, mInput->mData.mButton);
@@ -59,7 +55,7 @@ namespace Epoch {
 						ReleaseObject();
 					}
 				}
-				else if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == -1 && !mHeld && !mCollider->mHitting.empty() && ((!mLeft && !mRight) || !Settings::GetInstance().GetBool("PauseMenuUp"))) {
+				else if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == -1 && !mHeld && !mCollider->mHitting.empty() && (!paused) || !Settings::GetInstance().GetBool("PauseMenuUp")) {
 					SomethingtoController();
 					if (mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueId()) {
 						VRInputManager::GetInstance().GetController(eControllerType_Secondary).TriggerHapticPulse(1000);
@@ -85,32 +81,6 @@ namespace Epoch {
 			SomethingtoController();
 			}
 			*/
-
-#pragma region Gestures
-			//vec2f touch = leftController.GetAxis();
-			//mBootleg.AddHead(touch);
-
-			////SystemLogger::GetLog() << "(" << touch.x << "," << touch.y << ")" << std::endl;
-			//if (mBootleg.mSize == mBootleg.mLimit) {
-			//	// Get initial point, get vector from it's negation (v - (-v)), and then cross it (v.y, -v.x)
-			//	vec2f initialPoint = mBootleg[0];
-			//	vec2f line = (initialPoint - (-initialPoint));
-			//	vec2f counterClockwise = line.Cross().Normalize();
-
-			//	vec2f pointEight = mBootleg[8];
-			//	vec2f leg = (pointEight - initialPoint);
-			//	vec2f nLeg = leg.Normalize();
-			//	if (leg.SquaredMagnitude() >= 0.01f) {
-			//		if (nLeg * counterClockwise < 0) {
-			//			SystemLogger::GetLog() << "Somewhat Clockwise" << std::endl;
-			//		}
-			//		if (nLeg * counterClockwise > 0) {
-			//			SystemLogger::GetLog() << "Somewhat Counter-Clockwise" << std::endl;
-			//		}
-			//	}
-			//}
-			//SystemLogger::GetLog() << "[Debug] Touchpad Axis: (" << touch.x << ", " << touch.y << ")" << std::endl;
-#pragma endregion Gestures
 		}
 		//mObject->GetTransform().SetMatrix(Math::MatrixRotateInPlace(mObject->GetTransform().GetMatrix(), 1, 0, 0, DirectX::XM_PI / 1024.0f));
 

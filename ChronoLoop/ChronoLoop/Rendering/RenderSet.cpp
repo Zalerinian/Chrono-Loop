@@ -12,15 +12,30 @@ namespace Epoch {
 		for (auto it = mRenderList.begin(); it != mRenderList.end(); ++it) {
 			if ((*it)->mShape == _shape) {
 				// Same mesh and context
-				return (*it)->Push(_shape.mPosition);
+				return (*it)->Push(_shape);
 			}
 		}
-		// No comparable rneder list was found. Make a new entry.
-		RenderList *r = new RenderList;
-		r->mShape = _shape;
-		GhostList<matrix4>::GhostNode* n = r->Push(_shape.mPosition);
+		// No comparable render list was found. Make a new entry.
+		RenderList *r = new RenderList(_shape);
+		GhostList<matrix4>::GhostNode* n = r->Push(_shape);
 		mRenderList.push_back(r);
 		return n;
+	}
+
+	void RenderSet::RemoveShape(RenderShape& _shape) {
+		int timesFound = 0;
+		for (auto it = mRenderList.begin(); it != mRenderList.end(); ++it) {
+			if ((*it)->mShape == _shape) {
+				// Same mesh and context
+				(*it)->Pop(_shape);
+				timesFound++;
+			}
+		}
+		if (timesFound == 0) {
+			SystemLogger::Error() << _shape.GetName() << " was not found in the render set!" << std::endl;
+		} else if (timesFound > 1) {
+			SystemLogger::Error() << _shape.GetName() << " was found *multiple times* in the same render set!" << std::endl;
+		}
 	}
 
 	void RenderSet::ClearSet()
@@ -29,6 +44,16 @@ namespace Epoch {
 			delete *it;
 		}
 		mRenderList.clear();
+	}
+
+	RenderList * RenderSet::GetListForShape(RenderShape & _shape) {
+		for (auto it = mRenderList.begin(); it != mRenderList.end(); ++it) {
+			if ((*it)->mShape == _shape) {
+				// Same mesh and context
+				return *it;
+			}
+		}
+		return nullptr;
 	}
 
 

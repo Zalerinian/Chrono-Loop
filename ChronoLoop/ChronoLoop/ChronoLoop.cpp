@@ -741,7 +741,7 @@ void Update() {
 	exit->SetColors(vec3f(0, 0, 1), vec3f(0, .5f, .5f));
 	exit->SetLife(500);
 	exit->SetSize(.35f, .15f);
-	ParticleEmitter* exitEmit = new ParticleEmitter(-1, 150, 2, vec4f(-3.918808f, 1.5f, 0, 1));
+	ParticleEmitter* exitEmit = new TeleportEffect(-1, 150, 2, vec4f(-3.918808f, 1.5f, 0, 1));
 	exitEmit->SetParticle(exit);
 	exitEmit->SetTexture("../Resources/BasicRectP.png");
 	((ParticleEmitter*)exitEmit)->SetPosBounds(vec3f(-.25f, -.25f, -.25f), vec3f(.25f, .25f, .25f));
@@ -753,7 +753,7 @@ void Update() {
 	exit->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
 	exit->SetLife(500);
 	exit->SetSize(.15f, .05f);
-	ParticleEmitter* exitEmit2 = new ParticleEmitter(-1, 150, 2, vec4f(-3.918808f, 1.5f, 0, 1));
+	ParticleEmitter* exitEmit2 = new TeleportEffect(-1, 150, 2, vec4f(-3.918808f, 1.5f, 0, 1));
 	exitEmit2->SetTexture("../Resources/BasicCircleP.png");
 	exitEmit2->SetParticle(exit);
 	((ParticleEmitter*)exitEmit2)->SetPosBounds(vec3f(-.25f, -.25f, -.25f), vec3f(.25f, .25f, .25f));
@@ -800,31 +800,29 @@ void Update() {
 	//mmCubeMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 	//mmCube->AddComponent(mmCubeMesh);
 	Light* l1 = new Light();
-	memset(l1, 0, sizeof(l1));
 	l1->Type = 4;
-	l1->Color = vec3f(.7f, .7f, 1);
+	l1->Color = vec3f(1, 1, 1);
 	l1->ConeDirection = vec3f(0, -1, 0);
-	l1->Position = vec3f(0, 2, 0);
-	l1->ConeRatio = 500000;
+	l1->Position = vec3f(0, 4, 0);
+	l1->ConeRatio = .85f;
 
 	Light* l2 = new Light();
-	memset(l2, 0, sizeof(l2));
-	l2->Type = 2;
-	l2->Position = vec3f(3.972854, 1.570289, 0);
+	l2->Type = 4;
 	l2->Color = vec3f(0, 0, 1);
-	
+	l2->ConeDirection = vec3f(0, -1, 0);
+	l2->Position = vec3f(3.972854, 5, 0);
+	l2->ConeRatio = .9f;
+
 	Light* l3 = new Light();
-	memset(l3, 0, sizeof(l3));
 	l3->Type = 4;
-	l3->Color = vec3f(0, 1, .5f);
+	l3->Color = vec3f(0, 1, 0);
 	l3->ConeDirection = vec3f(0, -1, 0);
-	l3->Position = vec3f(0, 2, -3.872531);
-	l3->ConeRatio = 3.14159f;
+	l3->Position = vec3f(0, 5, -3.872531);
+	l3->ConeRatio = .9f;
 
 	Renderer::Instance()->SetLight(l1, 0);
 	Renderer::Instance()->SetLight(l2, 1);
 	Renderer::Instance()->SetLight(l3, 2);
-
 
 	Physics::Instance()->mObjects.push_back(RightController);
 	Physics::Instance()->mObjects.push_back(LeftController);
@@ -876,17 +874,6 @@ void Update() {
 	//planeObj->AddTexture(AddedTextureName.c_str(), eTEX_CUSTOM1);
 
 	//*////////////////////////////////////////////////////////////////////
-
-	volatile int Typeoffset = (int)(&(((Light*)0)->Type));
-	volatile int padoffset = (int)(&(((Light*)0)->pad));
-	volatile int Positionoffset = (int)(&(((Light*)0)->Position));
-	volatile int Directionoffset = (int)(&(((Light*)0)->Direction));
-	volatile int ConeDirectionoffset = (int)(&(((Light*)0)->ConeDirection));
-	volatile int ConeRatiooffset = (int)(&(((Light*)0)->Color));
-	volatile int pad1offset = (int)(&(((Light*)0)->pad1));
-
-
-
 
 	if (VREnabled) {
 		VRInputManager::GetInstance().Update();
@@ -1076,13 +1063,11 @@ void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftControl
 	leftRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
 	mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 	TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
-	TimeManipulation* tm2 = new TimeManipulation(eControllerType_Secondary);
 	LeftController->AddComponent(mc2);
 	LeftController->AddComponent(leftConCol);
 	LeftController->AddComponent(pickup2);
 	LeftController->AddComponent(leftRaycaster);
 	LeftController->AddComponent(ta2);
-	LeftController->AddComponent(tm2);
 	TimeManager::Instance()->AddObjectToTimeline(LeftController);
 
 

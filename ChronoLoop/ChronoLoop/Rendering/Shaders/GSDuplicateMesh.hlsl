@@ -17,7 +17,8 @@ struct GSOutput
 	float4 normal : NORMAL0;
 	float4 texCoord : COLOR;
 	float4 wpos : WORLDPOS;
-    float4 shadowPos : SHADOW;
+	float4 shadowPos : SHADOW;
+	uint IID : CL_IID;
 	uint viewport : SV_ViewportArrayIndex;
 };
 
@@ -27,15 +28,14 @@ struct GSInput
 	float4 normal : NORMAL0;
 	float4 texCoord : COLOR;
 	float4 wpos : WORLDPOS;
-    float4 shadowPos : SHADOW;
+	float4 shadowPos : SHADOW;
+	uint IID : CL_IID;
 };
 
 [maxvertexcount(6)]
 void main(triangle GSInput input[3], inout TriangleStream<GSOutput> TriStream)
 {
 	GSOutput output;
-	// TODO: Does this do instancing....???
-	// Triangle 1
 	[unroll]
 	for (uint i = 0; i < 3; ++i)
 	{
@@ -43,8 +43,9 @@ void main(triangle GSInput input[3], inout TriangleStream<GSOutput> TriStream)
 		output.normal = input[i].normal;
 		output.texCoord = input[i].texCoord;
 		output.wpos = input[i].wpos;
+		output.IID = input[i].IID;
 		output.viewport = 0;
-        output.shadowPos = input[i].shadowPos;
+		output.shadowPos = input[i].shadowPos;
 		TriStream.Append(output);
 	}
 
@@ -57,8 +58,9 @@ void main(triangle GSInput input[3], inout TriangleStream<GSOutput> TriStream)
 		output.normal = input[j].normal;
 		output.texCoord = input[j].texCoord;
 		output.wpos = input[j].wpos;
+		output.IID = input[j].IID;
 		output.viewport = 1;
-        output.shadowPos = input[j].shadowPos;
+		output.shadowPos = input[j].shadowPos;
 		TriStream.Append(output);
 	}
 	TriStream.RestartStrip();

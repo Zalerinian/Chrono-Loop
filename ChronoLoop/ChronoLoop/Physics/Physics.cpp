@@ -9,6 +9,7 @@
 #include "..\Core\LevelManager.h"
 
 #define DEBUG_LEVEL1 0
+#define DEBUG_LEVEL2 0
 
 namespace Epoch
 {
@@ -690,19 +691,17 @@ namespace Epoch
 		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
 		//Time pause
-		bool right = false;
-		bool left = false;
+		bool paused = false;
 		//bool paused = false;
 		//if(cLevel->GetPauseMenu() != nullptr)
 		//{
 		//	paused = cLevel->GetPauseMenu()->isPauseMenuOn();
 		//}
-		if (cLevel->GetRightTimeManipulator() != nullptr || cLevel->GetLeftTimeManipulator() != nullptr)
+		if (cLevel->GetTimeManipulator() != nullptr)
 		{
-			right = cLevel->GetRightTimeManipulator()->isTimePaused();
-			left = cLevel->GetLeftTimeManipulator()->isTimePaused();
+			paused = cLevel->GetTimeManipulator()->isTimePaused();
 		}
-		if (!left && !right)// || !paused)
+		if (!paused)
 		{
 			//SystemLogger::GetLog() << _time << std::endl;
 			Collider* collider = nullptr;
@@ -718,6 +717,11 @@ namespace Epoch
 
 #if DEBUG_LEVEL1
 				if (mObjects[i]->GetName() == "mmDoor")
+					((CodeComponent*)mObjects[i]->GetComponents(eCOMPONENT_CODE)[0])->OnTriggerEnter(*collider, *otherCol);
+#endif
+
+#if DEBUG_LEVEL2
+				if (mObjects[i]->GetName() == "mmDoor2")
 					((CodeComponent*)mObjects[i]->GetComponents(eCOMPONENT_CODE)[0])->OnTriggerEnter(*collider, *otherCol);
 #endif
 

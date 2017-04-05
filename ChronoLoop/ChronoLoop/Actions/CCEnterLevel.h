@@ -18,9 +18,9 @@
 #include "..\Actions\CCTimeIndicator.h"
 #include "..\Rendering\Draw2D.h"
 #include "..\Rendering\Renderer.h"
-#include "..\Objects\TransparentMeshComponent.h"
+#include "..\Objects\MeshComponent.h"
 #include "..\Rendering\TextureManager.h"
-#include "..\Objects\TransparentMeshComponent.h"
+#include "..\Objects\MeshComponent.h"
 #include <wrl\client.h>
 #include "../Sound/SoundEngine.h"
 
@@ -87,7 +87,7 @@ namespace Epoch
 					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), false);
 					BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
 					((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
-					TransparentMeshComponent *rightRaycaster = new TransparentMeshComponent("../Resources/RaycastCylinder.obj");
+					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					rightRaycaster->SetAlpha(0.4f);
 					mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
@@ -138,7 +138,7 @@ namespace Epoch
 
 					t.SetMatrix(matrix4::CreateScale(.75f, 1, 1) * matrix4::CreateTranslation(0.073f, -0.018f, -0.043f));
 					BaseObject *cloneDisplayBack = Pool::Instance()->iGetObject()->Reset("cloneDisplayBack", t);
-					TransparentMeshComponent* cdispb = new TransparentMeshComponent("../Resources/UIClone.obj");
+					MeshComponent* cdispb = new MeshComponent("../Resources/UIClone.obj", 0.9f);
 					cdispb->AddTexture("../Resources/clearBlue.png", eTEX_DIFFUSE);
 					cloneDisplayBack->AddComponent(cdispb);
 					cloneDisplayBack->SetParent(RightController);
@@ -261,18 +261,16 @@ namespace Epoch
 					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), true);
 					BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
 					((BoxSnapToControllerAction*)pickup2)->mControllerRole = eControllerType_Secondary;
-					TransparentMeshComponent *leftRaycaster = new TransparentMeshComponent("../Resources/RaycastCylinder.obj");
+					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					leftRaycaster->SetAlpha(0.4f);
 					mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 					TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
-					TimeManipulation* tm2 = new TimeManipulation(eControllerType_Secondary);
 					LeftController->AddComponent(mc2);
 					LeftController->AddComponent(leftConCol);
 					LeftController->AddComponent(pickup2);
 					LeftController->AddComponent(leftRaycaster);
 					LeftController->AddComponent(ta2);
-					LeftController->AddComponent(tm2);
 
 					MeshComponent *visibleMesh2 = new MeshComponent("../Resources/TinyCube.obj");
 					visibleMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
@@ -326,6 +324,36 @@ namespace Epoch
 					ParticleSystem::Instance()->AddEmitter(startEmit2);
 					startEmit2->FIRE();
 
+					Particle* p2 = &Particle::Init();
+					p2->SetPos(vec3f(0, 0, 0));
+					p2->SetColors(vec3f(0, 0, 1), vec3f(.5f, 0, .5f));
+					p2->SetLife(500);
+					p2->SetSize(.35f, .15f);
+					ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(-14.64397, 0, -4.25, 1));
+					emit21->SetParticle(p2);
+					emit21->SetTexture("../Resources/BasicRectP.png");
+					((TeleportEffect*)emit21)->y1 = 8;
+					((TeleportEffect*)emit21)->y2 = 12;
+					((TeleportEffect*)emit21)->SetPosBounds(vec3f(0, 0, -.75f), vec3f(0, 1, .75f));
+					((TeleportEffect*)emit21)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+					ParticleSystem::Instance()->AddEmitter(emit21);
+					emit21->FIRE();
+
+					p2 = &Particle::Init();
+					p2->SetPos(vec3f(0, 0, 0));
+					p2->SetColors(vec3f(.5f, 0, .5f), vec3f(0, 0, 1));
+					p2->SetLife(500);
+					p2->SetSize(.15f, .05f);
+					ParticleEmitter* emit22 = new TeleportEffect(-1, 150, 2, vec4f(-14.64397, 0, -4.25, 1));
+					emit22->SetTexture("../Resources/BasicCircleP.png");
+					emit22->SetParticle(p2);
+					((TeleportEffect*)emit22)->y1 = 1;
+					((TeleportEffect*)emit22)->y2 = 5;
+					((TeleportEffect*)emit22)->SetPosBounds(vec3f(0, 0, -.75f), vec3f(0, 1, .75f));
+					((TeleportEffect*)emit22)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+					ParticleSystem::Instance()->AddEmitter(emit22);
+					emit22->FIRE();
+
 					next->AssignPlayerControls(headset, LeftController, RightController);
 					next->AddObject(headset);
 					next->AddObject(LeftController);
@@ -350,20 +378,20 @@ namespace Epoch
 					l1->Type = 4;
 					l1->Color = vec3f(1, 1, 1);
 					l1->ConeDirection = vec3f(0, -1, 0);
-					l1->Position = vec3f(0.07529334f, 1.129413f, 8.11148f);
-					l1->ConeRatio = .1f;
+					l1->Position = vec3f(0.07529334f, 4, 8.11148f);
+					l1->ConeRatio = .9f;
 
 					Light* l2 = new Light();
 					l2->Type = 2;
-					l2->Position = vec3f(-4, 0, -5);
-					l2->Color = vec3f(0, 0, .2f);
+					l2->Position = vec3f(0, 4, 0);
+					l2->Color = vec3f(.5f, .5f, 1);
 
 					Light* l3 = new Light();
 					l3->Type = 4;
-					l3->Color = vec3f(.9f, .9f, 1);
+					l3->Color = vec3f(0, 0, 1);
 					l3->ConeDirection = vec3f(0, -1, 0);
-					l3->Position = vec3f(-8.8f, 0, 5);
-					l3->ConeRatio = .5f;
+					l3->Position = vec3f(-8.9f, 5, 5);
+					l3->ConeRatio = .8f;
 
 					Renderer::Instance()->SetLight(l1, 0);
 					Renderer::Instance()->SetLight(l2, 1);

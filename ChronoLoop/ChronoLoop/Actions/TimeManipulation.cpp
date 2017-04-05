@@ -9,29 +9,19 @@
 #include "../Core/Pool.h"
 #include "TimeManipulation.h"
 #include "BoxSnapToControllerAction.hpp"
-#include "../Objects/TransparentMeshComponent.h"
+#include "../Objects/MeshComponent.h"
 #include "../Common/Common.h"
 #include "../Particles/ParticleSystem.h"
 #include "../Sound/SoundEngine.h"
 
 namespace Epoch
 {
-	BaseObject* TimeManipulation::mCurCloneController1 = nullptr;
-	BaseObject* TimeManipulation::mCurCloneController2 = nullptr;
-	BaseObject* TimeManipulation::mCurCloneHeadset = nullptr;
-	bool TimeManipulation::mIsBeingMade = false;
-	unsigned short TimeManipulation::mNumOfConfirmedClones = 0;
 
 	TimeManipulation::TimeManipulation() {
 	}
 
 
 	TimeManipulation::~TimeManipulation() {}
-
-	
-
-	unsigned int TimeManipulation::mCloneCount = 0;
-	unsigned short TimeManipulation::mCurrTexture = 0;
 
 	void TimeManipulation::Start()
 	{
@@ -103,27 +93,25 @@ namespace Epoch
 		// Update effect interpolator
 		if (mDesaturationInterpolator.GetActive()) {
 			RenderShape* quad = Renderer::Instance()->GetSceneQuad();
-			Renderer::Instance()->GetContext()->UpdateSubresource(quad->GetContext().mPixelCBuffers[ePB_CUSTOM1].Get(), 0, NULL, &mEffectData, 0, 0);
+			Renderer::Instance()->GetContext()->UpdateSubresource(quad->GetContext().mPixelCBuffers[ePB_REGISTER1].Get(), 0, NULL, &mEffectData, 0, 0);
 		}
 		if (mDesaturationInterpolator.Update(TimeManager::Instance()->GetDeltaTime())) {
 			mDesaturationInterpolator.SetActive(false);
 			RenderShape* quad = Renderer::Instance()->GetSceneQuad();
-			Renderer::Instance()->GetContext()->UpdateSubresource(quad->GetContext().mPixelCBuffers[ePB_CUSTOM1].Get(), 0, NULL, &mEffectData, 0, 0);
+			Renderer::Instance()->GetContext()->UpdateSubresource(quad->GetContext().mPixelCBuffers[ePB_REGISTER1].Get(), 0, NULL, &mEffectData, 0, 0);
 		}
 
 
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Touchpad)) {
-			bool right = false;
-			bool left = false;
+			bool paused = false;
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
-			if (cLevel->GetRightTimeManipulator() != nullptr || cLevel->GetLeftTimeManipulator() != nullptr) {
-				right = cLevel->GetRightTimeManipulator()->isTimePaused();
-				left = cLevel->GetLeftTimeManipulator()->isTimePaused();
+			if (cLevel->GetTimeManipulator() != nullptr ) {
+				paused = cLevel->GetTimeManipulator()->isTimePaused();
 			}
 
 			// Accept timeline position
-			if (left || right) {
+			if (paused) {
 			
 				vec2f finalRatios(0, 0);
 				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
@@ -200,15 +188,13 @@ namespace Epoch
 					cLevel->GetRightController()->GetUniqueID(),
 					cLevel->GetLeftController()->GetUniqueID());
 
-				cLevel->GetLeftTimeManipulator()->makeTimePaused(false);
-				cLevel->GetRightTimeManipulator()->makeTimePaused(false);
+				cLevel->GetTimeManipulator()->makeTimePaused(false);
 				mIsBeingMade = false;
 			}
 
 		
 			else
 			{
-				//SystemLogger::GetLog() << HotfixButtonDown << std::endl;
 				HotfixButtonDown++;
 				if (HotfixButtonDown > 100) {
 					HotfixButtonDown = 0;
@@ -225,8 +211,7 @@ namespace Epoch
 			//toggle to have clone turn on or off
 			if (mPauseTime)
 			{
-				if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->RaycastCloneCheck() == false && 
-				LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->RaycastCloneCheck() == false)
+				if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck() == false)
 				{
 				mIsBeingMade = !mIsBeingMade;	
 				}
@@ -235,16 +220,16 @@ namespace Epoch
 				{
 					if(mIsBeingMade)
 					{
-						((TransparentMeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
-						((TransparentMeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
-						((TransparentMeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+						((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+						((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+						((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
 						SystemLogger::GetLog() << "Opaque" << std::endl;
 					}
 					else
 					{
-						((TransparentMeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
-						((TransparentMeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
-						((TransparentMeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
+						((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
+						((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
+						((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
 						SystemLogger::GetLog() << "Transparent" << std::endl;
 					}
 				}
@@ -263,7 +248,7 @@ namespace Epoch
 		_data.ScanlineData.y = 0.2f;
 		_data.ScanlineData.z = 0;
 		_data.ScanlineData.w = 0.8f;
-		TransparentMeshComponent *visibleMesh = new TransparentMeshComponent("../Resources/Clone.obj",.35f);
+		MeshComponent *visibleMesh = new MeshComponent("../Resources/Clone.obj",.35f);
 		visibleMesh->AddTexture(TimeManager::Instance()->GetNextTexture().c_str(), eTEX_DIFFUSE);
 		//visibleMesh->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
 		//visibleMesh->AddTexture("../Resources/Scanline.png", eTEX_CUSTOM2);
@@ -277,7 +262,7 @@ namespace Epoch
 		_headset->AddComponent(visibleMesh);
 
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
-		TransparentMeshComponent *mc = new TransparentMeshComponent("../Resources/Controller.obj",.35f);
+		MeshComponent *mc = new MeshComponent("../Resources/Controller.obj",.35f);
 		ControllerCollider* CubeColider = new ControllerCollider(_controller1, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
 		mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 		//mc->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
@@ -293,7 +278,7 @@ namespace Epoch
 		_controller1->AddComponent(SN1);
 
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be proble
-		TransparentMeshComponent *mc2 = new TransparentMeshComponent("../Resources/Controller.obj",.35f);
+		MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj",.35f);
 		ControllerCollider* CubeColider2 = new ControllerCollider(_controller2, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 		mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 		//mc2->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);

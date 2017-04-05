@@ -58,7 +58,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Cube_Cube.025</Name>
+    <Name>Skybox</Name>
     <Mesh>mmSkybox.obj</Mesh>
     <Texture>mmSkyboxLight.png</Texture>
     <Position>0,0,0</Position>
@@ -104,6 +104,7 @@
     <Name>RoomWalls</Name>
     <Mesh>mmRoomWalls.obj</Mesh>
     <Texture>SM_Wall_SM_wall_AlbedoTransparency.png</Texture>
+    <Emissive>SM_Wall_SM_wall_Emission.png</Emissive>
     <Position>0,0,0</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>0.98,1,0.98</Scale>
@@ -113,6 +114,7 @@
     <Name>RoomCeiling</Name>
     <Mesh>mmRoomCeiling.obj</Mesh>
     <Texture>SM_Ceiling_SM_Ceiling_AlbedoTransparency.png</Texture>
+    <Emissive>SM_Ceiling_SM_Ceiling_Emission.png</Emissive>
     <Position>0,0,0</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>0.98,1,0.98</Scale>

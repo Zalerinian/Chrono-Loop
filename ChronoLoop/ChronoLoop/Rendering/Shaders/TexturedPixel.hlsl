@@ -11,9 +11,11 @@ SamplerState normalFilter : register(s1);
 texture2D tSpecular : register(t2);
 SamplerState specularFilter : register(s2);
 
-texture2D Shadow : register(t3);
-texture2D Shadow2 : register(t4);
-SamplerComparisonState ShadowFilter : register(s3);
+texture2D tEmissive : register(t3);
+
+texture2D Shadow : register(t30);
+texture2D Shadow2 : register(t40);
+SamplerComparisonState ShadowFilter : register(s30);
 
 struct Light
 {
@@ -50,7 +52,8 @@ float4 main(PSI input) : SV_TARGET
 {
     float4 color = float4(0, 0, 0, 0);
     float4 l1, l2, l3;
-    float4 diffuseColor = tDiffuse.Sample(diffuseFilter, float4(input.texCoord.xy, 0, 0));
+    float4 diffuseColor = tDiffuse.Sample(diffuseFilter, input.texCoord.xy);
+	float4 emissiveColor = tEmissive.Sample(diffuseFilter, input.texCoord.xy);
 	//float4 diffuseColor = float4(1, 1, 1, 1);
     clip(diffuseColor.a - 0.25);
     
@@ -68,7 +71,7 @@ float4 main(PSI input) : SV_TARGET
 
     color = l1 + l2 + l3;
 
-    return (saturate(color) + float4(.05, .05, .05, 0)) * diffuseColor;
+    return ((saturate(color) + float4(.05, .05, .05, 0)) * diffuseColor) + emissiveColor;
 
     input.shadowPos.xyz /= input.shadowPos.w;
 

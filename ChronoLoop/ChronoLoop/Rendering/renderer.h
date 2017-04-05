@@ -46,7 +46,7 @@ namespace Epoch {
 
 		vr::IVRSystem* mVrSystem;
 		RenderSet mOpaqueSet, mTransparentSet;
-		Microsoft::WRL::ComPtr<ID3D11Buffer> mVPBuffer, mPositionBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mVPBuffer, mPositionBuffer, mSimInstanceBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mLBuffer;
 		bool mUseVsync = false;
 		//ShadowMap 1 - Directional, 2 - Point, 3 - Spot
@@ -61,6 +61,7 @@ namespace Epoch {
 		D3D11_VIEWPORT mShadowVP;
 
 		RenderShape* mScenePPQuad = nullptr, *mSceneScreenQuad = nullptr;
+		RenderContext mCurrentContext;
 
 		std::mutex mRendererLock;
 
@@ -117,20 +118,24 @@ namespace Epoch {
 			bool vsync, int fps, bool fullscreen, float farPlane, float nearPlane,
 			vr::IVRSystem* vrsys);
 		void ThrowIfFailed(HRESULT hr);
-		GhostList<matrix4>::GhostNode* AddOpaqueNode(RenderShape *_node);
-		GhostList<matrix4>::GhostNode* AddTransparentNode(RenderShape *_node);
+		GhostList<matrix4>::GhostNode* AddOpaqueNode(RenderShape& _node);
+		GhostList<matrix4>::GhostNode* AddTransparentNode(RenderShape& _node);
+		void RemoveOpaqueNode(RenderShape& _node);
+		void RemoveTransparentNode(RenderShape& _node);
+		void UpdateOpaqueNodeBuffer(RenderShape& _node, ConstantBufferType _t, unsigned int _index);
+		void UpdateTransparentNodeBuffer(RenderShape& _node, ConstantBufferType _t, unsigned int _index);
 		void Render(float _deltaTime);
 
 		void ClearRenderSet();
 
 
-		inline Microsoft::WRL::ComPtr<ID3D11Device> GetDevice() { return mDevice; }
-		inline Microsoft::WRL::ComPtr<ID3D11DeviceContext> GetContext() { return mContext; }
-		inline Microsoft::WRL::ComPtr<IDXGISwapChain> GetChain() { return mChain; }
-		inline Microsoft::WRL::ComPtr<IDXGIFactory1> GetFactory() { return mFactory; }
-		inline Microsoft::WRL::ComPtr<ID3D11RenderTargetView> GetRTView() { return mMainView; }
-		inline Microsoft::WRL::ComPtr<ID3D11DepthStencilView> GetDSView() { return mDSView; }
-		inline Microsoft::WRL::ComPtr<ID3D11Texture2D> GetRTViewTexture() { return mMainViewTexture; }
+		inline Microsoft::WRL::ComPtr<ID3D11Device>& GetDevice() { return mDevice; }
+		inline Microsoft::WRL::ComPtr<ID3D11DeviceContext>& GetContext() { return mContext; }
+		inline Microsoft::WRL::ComPtr<IDXGISwapChain>& GetChain() { return mChain; }
+		inline Microsoft::WRL::ComPtr<IDXGIFactory1>& GetFactory() { return mFactory; }
+		inline Microsoft::WRL::ComPtr<ID3D11RenderTargetView>& GetRTView() { return mMainView; }
+		inline Microsoft::WRL::ComPtr<ID3D11DepthStencilView>& GetDSView() { return mDSView; }
+		inline Microsoft::WRL::ComPtr<ID3D11Texture2D>& GetRTViewTexture() { return mMainViewTexture; }
 		inline HWND GetWindow() { return mWindow; }
 		inline RenderShape* GetSceneQuad() { return mScenePPQuad; }
 		inline std::mutex& GetRendererLock() { return mRendererLock; }

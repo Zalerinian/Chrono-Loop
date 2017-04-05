@@ -29,6 +29,9 @@ namespace LevelEditor {
                         writer.WriteElementString("Mesh", tObj.MeshFile.Split('\\').Last());
                     if (tObj.TextureFile != null)
                         writer.WriteElementString("Texture", tObj.TextureFile == null ? "" : tObj.TextureFile.Split('\\').Last());
+                    if(tObj.mEmissiveTexture != string.Empty) {
+                        writer.WriteElementString("Emissive", tObj.mEmissiveTexture.Split('\\').Last());
+                    }
                     writer.WriteElementString("Position", tObj.Position.X + "," + tObj.Position.Y + "," + tObj.Position.Z);
                     writer.WriteElementString("Rotation", tObj.Rotation.X + "," + tObj.Rotation.Y + "," + tObj.Rotation.Z);
                     writer.WriteElementString("Scale", tObj.Scale.X + "," + tObj.Scale.Y + "," + tObj.Scale.Z);
@@ -245,6 +248,19 @@ namespace LevelEditor {
                                             if (!contained) {
                                                 objects.Add(new ToolObject(mesh, texutre, ref device));
                                                 Tree.Nodes[0].Nodes.Add(objects.Last().Name);
+                                            }
+                                            break;
+                                        case "Emissive":
+                                            if (File.Exists("Assets\\" + reader.Value))
+                                                addition.mEmissiveTexture = "Assets\\" + reader.Value;
+                                            else {
+                                                openFileDialog2.Title = "Please find \"" + reader.Value + "\"";
+                                                openFileDialog2.InitialDirectory = Application.StartupPath;
+                                                openFileDialog2.Filter = "Texture files (*.png)|*.png";
+                                                openFileDialog2.FilterIndex = 1;
+                                                openFileDialog2.RestoreDirectory = true;
+                                                if (openFileDialog2.ShowDialog() == DialogResult.OK)
+                                                    addition.mEmissiveTexture = openFileDialog2.FileName;
                                             }
                                             break;
                                         case "Position":
