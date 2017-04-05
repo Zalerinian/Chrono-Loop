@@ -169,8 +169,8 @@
     <Name>Clone</Name>
     <Mesh>Clone.obj</Mesh>
     <Texture>CloneTexture.png</Texture>
-    <Position>3.972854,1.570289,0</Position>
-    <Rotation>-0.5233334,1.57,0</Rotation>
+    <Position>8.43913,-9.662964,-8.627776</Position>
+    <Rotation>-0.5233334,3.003994,2.148065</Rotation>
     <Scale>1,1,1</Scale>
     <Components />
   </Object>
@@ -278,5 +278,302 @@
         <NormalForce>1</NormalForce>
       </Collider>
     </Components>
+  </Object>
+  <Object>
+    <Name>Buttonstand</Name>
+    <Mesh>ButtonStand.obj</Mesh>
+    <Texture>white.png</Texture>
+    <Position>-4.941377,-7.322212,6.285453</Position>
+    <Rotation>0.8999121,-0.9872818,-0.4883112</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Button</Name>
+    <Mesh>Button.obj</Mesh>
+    <Texture>red.png</Texture>
+    <Position>6.651857,-8.061782,0.9497904</Position>
+    <Rotation>2.139865,0.2284427,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Cube</Name>
+    <Mesh>mmChamber.obj</Mesh>
+    <Texture>grey.png</Texture>
+    <Position>7.982812,-6.906094,9.841545</Position>
+    <Rotation>0.785,1.781442,-2.973833</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Camera</Name>
+    <Mesh>PlaceHolderCamera.obj</Mesh>
+    <Texture>enrgyField.png</Texture>
+    <Position>-2.639488,-6.635296,-2.644496</Position>
+    <Rotation>0,0.785,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Camera</Name>
+    <Mesh>PlaceHolderCamera.obj</Mesh>
+    <Texture>enrgyField.png</Texture>
+    <Position>3.056682,-6.641142,-3.191057</Position>
+    <Rotation>0,-0.785,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Camera</Name>
+    <Mesh>PlaceHolderCamera.obj</Mesh>
+    <Texture>enrgyField.png</Texture>
+    <Position>3.064592,-6.64,2.840218</Position>
+    <Rotation>0,3.925,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Camera</Name>
+    <Mesh>PlaceHolderCamera.obj</Mesh>
+    <Texture>enrgyField.png</Texture>
+    <Position>-3.03789,-6.64,2.822639</Position>
+    <Rotation>0,-3.925,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Chair</Name>
+    <Mesh>PlaceHolderChair.obj</Mesh>
+    <Texture>black.png</Texture>
+    <Position>-5.197937,-9.546037,5.196693</Position>
+    <Rotation>-2.478845,0.6217037,0</Rotation>
+    <Scale>0.025,0.025,0.025</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>ComputerMonitor</Name>
+    <Mesh>PlaceHolderMonitor.obj</Mesh>
+    <Texture>black.png</Texture>
+    <Position>2.052045,-8.426782,4.893848</Position>
+    <Rotation>2.093333,-1.033501,0.06977778</Rotation>
+    <Scale>0.1,0.1,-0.1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Table</Name>
+    <Mesh>PlaceHolderTable.obj</Mesh>
+    <Texture>black.png</Texture>
+    <Position>-1.248313,-4.467346,-11.3643</Position>
+    <Rotation>0.9263639,-1.780377,0.565204</Rotation>
+    <Scale>0.5,0.5,0.5</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>aCube</Name>
+    <Mesh>raycube.obj</Mesh>
+    <Texture>raycube.png</Texture>
+    <Position>3.40121,-6.070265,-8.33979</Position>
+    <Rotation>-2.186682,-1.556261,-1.161823</Rotation>
+    <Scale>0.5,0.5,0.5</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Chair</Name>
+    <Mesh>PlaceHolderChair.obj</Mesh>
+    <Texture>black.png</Texture>
+    <Position>-4.67181,-9.546037,-12.39428</Position>
+    <Rotation>-2.478845,-2.451564,1.359444</Rotation>
+    <Scale>0.025,0.025,0.025</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>aCube</Name>
+    <Mesh>raycube.obj</Mesh>
+    <Texture>raycube.png</Texture>
+    <Position>8.33297,-6.070265,0</Position>
+    <Rotation>-2.186682,0.5136496,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Cube</Name>
+    <Mesh>mmChamber.obj</Mesh>
+    <Texture>grey.png</Texture>
+    <Position>-8.665651,-7.385867,-10.12152</Position>
+    <Rotation>0,1.300334,0.5109112</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Table</Name>
+    <Mesh>PlaceHolderTable.obj</Mesh>
+    <Texture>black.png</Texture>
+    <Position>0,-5.72388,8.638133</Position>
+    <Rotation>0.9263639,1.285848,0</Rotation>
+    <Scale>0.5,0.5,0.5</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Button</Name>
+    <Mesh>Button.obj</Mesh>
+    <Texture>red.png</Texture>
+    <Position>-8.616087,-9.729722,-11.04456</Position>
+    <Rotation>2.762951,2.198445,-1.363299</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Buttonstand</Name>
+    <Mesh>ButtonStand.obj</Mesh>
+    <Texture>white.png</Texture>
+    <Position>-12.04419,-10.90603,4.682432</Position>
+    <Rotation>0.8999121,1.483086,-0.4883112</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Clone</Name>
+    <Mesh>Clone.obj</Mesh>
+    <Texture>CloneTexture.png</Texture>
+    <Position>3.972854,1.570289,0</Position>
+    <Rotation>-0.5233334,1.57,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Clone</Name>
+    <Mesh>Clone.obj</Mesh>
+    <Texture>CloneTexture.png</Texture>
+    <Position>-10.29394,-6.57332,5.698068</Position>
+    <Rotation>0.2496534,-0.2170424,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Cube</Name>
+    <Mesh>mmChamber.obj</Mesh>
+    <Texture>grey.png</Texture>
+    <Position>-0.5767013,-7.385867,-10.12152</Position>
+    <Rotation>0,-1.271496,-2.973833</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Table</Name>
+    <Mesh>PlaceHolderTable.obj</Mesh>
+    <Texture>black.png</Texture>
+    <Position>-8.609168,-7.50042,-4.65023</Position>
+    <Rotation>-2.110818,0.3851983,1.853299</Rotation>
+    <Scale>0.5,0.5,0.5</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>aCubeasdf</Name>
+    <Mesh>raycube.obj</Mesh>
+    <Texture>raycube.png</Texture>
+    <Position>-6.832744,-10.75877,-6.77217</Position>
+    <Rotation>-2.186682,0.5136496,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>ComputerMonitor</Name>
+    <Mesh>PlaceHolderMonitor.obj</Mesh>
+    <Texture>black.png</Texture>
+    <Position>4.72739,-8.426782,-2.960933</Position>
+    <Rotation>2.093333,0.4237083,-2.853744</Rotation>
+    <Scale>0.1,0.1,-0.1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Button</Name>
+    <Mesh>Button.obj</Mesh>
+    <Texture>red.png</Texture>
+    <Position>-9.524455,-10.26193,4.818427</Position>
+    <Rotation>2.139865,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Clone</Name>
+    <Mesh>Clone.obj</Mesh>
+    <Texture>CloneTexture.png</Texture>
+    <Position>5.912019,-10.11408,6.083706</Position>
+    <Rotation>1.395556,-0.2170424,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>general controlls</Name>
+    <Mesh>PlaneCorrection.obj</Mesh>
+    <Texture>GeneralControlScheme.png</Texture>
+    <Position>-1.093232,-8.166304,2.644096</Position>
+    <Rotation>1.57,3.14,0</Rotation>
+    <Scale>1,-0.03908483,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Time controlls</Name>
+    <Mesh>PlaneCorrection.obj</Mesh>
+    <Texture>TimeControlScheme.png</Texture>
+    <Position>-1.09,-9.289726,2.64</Position>
+    <Rotation>1.57,3.14,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Chair</Name>
+    <Mesh>PlaceHolderChair.obj</Mesh>
+    <Texture>black.png</Texture>
+    <Position>5.989806,-9.546037,-11.18096</Position>
+    <Rotation>-2.478845,0.6217037,2.789519</Rotation>
+    <Scale>0.025,0.025,0.025</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Button</Name>
+    <Mesh>Button.obj</Mesh>
+    <Texture>red.png</Texture>
+    <Position>2.731716,-12.0392,-11.04456</Position>
+    <Rotation>2.139865,2.198445,-1.363299</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>sdfg</Name>
+    <Mesh>Clone.obj</Mesh>
+    <Texture>CloneTexture_Green.png</Texture>
+    <Position>-2.055995,-10.38598,-7.158942</Position>
+    <Rotation>1.337691,2.239209,0.8744429</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>gsdfs</Name>
+    <Mesh>Clone.obj</Mesh>
+    <Texture>CloneTexture_Orange.png</Texture>
+    <Position>6.121644,-8.300357,3.017736</Position>
+    <Rotation>0.2689531,1.579409,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>gsdfs</Name>
+    <Mesh>Clone.obj</Mesh>
+    <Texture>CloneTexture_Orange.png</Texture>
+    <Position>-3.954084,-8.53442,4.446226</Position>
+    <Rotation>0.2689531,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>sdfg</Name>
+    <Mesh>Clone.obj</Mesh>
+    <Texture>CloneTexture_Green.png</Texture>
+    <Position>7.776074,-8.87972,-1.89197</Position>
+    <Rotation>0,2.239209,0.8744429</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
   </Object>
 </Level>

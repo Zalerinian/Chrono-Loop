@@ -15,8 +15,7 @@ namespace Epoch
 	}
 	ParticleSystem::~ParticleSystem()
 	{
-		for (int i = 0; i < mPEmitters.size(); ++i)
-			delete mPEmitters[i];
+		Clear();
 
 		//mPEmitters.clear();
 		mILayout->Release();

@@ -1,6 +1,7 @@
 #include "ParticleComponents.h"
 #include "../Rendering\renderer.h"
 #include <d3d11.h>
+#include "../Core\TimeManager.h"
 
 namespace Epoch
 {
@@ -660,18 +661,18 @@ namespace Epoch
 
 	void RadialEmitter::UpdateParticle(Particle* _p, float _delta)
 	{
-		vec4f tvel = _p->GetVelocity();
-		_p->mYRadial += .01f;
-		//tvel.y += .01f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.1f - .01f)));
-		//_p->SetVelocity(tvel);
-		tvel = *_p->GetPos();
-		tvel.y = 0;
-		tvel.w = 0;
-		//float radius = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - (0.0f))));
-		float radius = (tvel - mPos).Magnitude();
-
-		(*_p->GetPos()).x = radius * cos(_p->mYRadial) + mPos.x;
-		(*_p->GetPos()).z = radius * sin(-_p->mYRadial) + mPos.z;
+		//vec4f tvel = _p->GetVelocity();
+		//_p->mYRadial += .01f;
+		////tvel.y += .01f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (.1f - .01f)));
+		////_p->SetVelocity(tvel);
+		//tvel = *_p->GetPos();
+		//tvel.y = 0;
+		//tvel.w = 0;
+		////float radius = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (3.0f - (0.0f))));
+		//float radius = (tvel - mPos).Magnitude();
+		//
+		//(*_p->GetPos()).x = radius * cos(_p->mYRadial) + mPos.x;
+		//(*_p->GetPos()).z = radius * sin(-_p->mYRadial) + mPos.z;
 		ParticleEmitter::UpdateParticle(_p, _delta);
 
 	}
@@ -771,4 +772,81 @@ namespace Epoch
 	}
 
 #pragma endregion
+
+#pragma region Sparks
+
+	Sparks::Sparks(int _totalp, int _maxp, int _persec, vec3f _pos) : ParticleEmitter(_totalp, _maxp, _persec, _pos)
+	{
+
+	}
+
+	void Sparks::UpdateParticle(Particle* _p, float _delta)
+	{
+		//TODO: Special update
+		// x = x, y = sin(t), z = z // t -> yradial
+		_p->SetVelocity(vec3f(_p->GetVelocity().x, cos(_p->mYRadial) * 2.25, _p->GetVelocity().z));
+		_p->mYRadial += static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / .3));
+		ParticleEmitter::UpdateParticle(_p, _delta);
+	}
+
+	void Sparks::EmitParticles()
+	{
+		timer += TimeManager::Instance()->GetDeltaTime();
+
+		if ((int)timer % 4 != 0)
+			return;
+
+		for (int i = 0; i < mPerSec; i++)
+		{
+			if (total >= mTotalParticles && mTotalParticles != -1 && mParticles.size() == 0)
+			{
+				if (mReuse)
+				{
+					Reset();
+					mEnabled = false;
+					break;
+				}
+				else
+				{
+					mActive = false;
+					break;
+				}
+			}
+			if (mParticles.size() < mMaxParticles && (total < mTotalParticles || mTotalParticles == -1))
+			{
+				Particle* p = &Particle::Init(*mBase);
+				float x, y, z;
+				x = (mMinPX + mPos.x) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPX + mPos.x) - (mMinPX + mPos.x))));
+				y = (mMinPY + mPos.y) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPY + mPos.y) - (mMinPY + mPos.y))));
+				z = (mMinPZ + mPos.z) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPZ + mPos.z) - (mMinPZ + mPos.z))));
+				p->SetPos(x, y, z);
+				p->SetLife((rand() % 51) + 50);
+
+
+				vec3f sc, ec;
+				x = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 1.0));
+				y = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 1.0));
+				z = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 1.0));
+				sc = vec3f(x, y, x);												
+				x = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 1.0));
+				y = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 1.0));
+				z = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 1.0));
+				ec = vec3f(x, y, x);
+
+				//p->SetColors(sc, sc);
+
+				x = mMinVX + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (mMaxVX - mMinVX)));
+				y = mMinVY + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (mMaxVY - mMinVY)));
+				z = mMinVZ + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (mMaxVZ - mMinVZ)));
+				p->SetVelocity(x, 0, z);
+				p->mYRadial = 0;
+
+				mParticles.push_back(p);
+				total++;
+			}
+		}
+	}
+
+#pragma endregion
+
 }
