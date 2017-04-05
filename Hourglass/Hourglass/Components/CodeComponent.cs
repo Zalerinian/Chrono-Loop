@@ -65,7 +65,7 @@ namespace Hourglass
         public override void WriteData(BinaryWriter w)
         {
             base.WriteData(w);
-            string s = ".." + ResourceManager.Instance.ActionDirectory + mLbCode.Text;
+            string s = mCode.Text;
             w.Write(s.Length + 1);
             w.Write(s.ToCharArray());
             byte term = 0;

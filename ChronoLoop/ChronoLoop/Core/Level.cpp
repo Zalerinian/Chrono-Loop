@@ -17,6 +17,8 @@
 #include "../Actions/CCBoxSpin.h"
 #include "../Actions/CCExit.h"
 #include "../Actions/CCStartButton.h"
+#include "../Actions/GestureDetection.hpp"
+#include "../Actions/TimelineIndicator.hpp"
 #include "../Objects/MeshComponent.h"
 #include "../Objects/TransparentMeshComponent.h"
 #include "../tinyxml/tinyxml.h"
@@ -813,9 +815,13 @@ namespace Epoch {
 			file.seekg(objectOffest, std::ios_base::beg);
 			INT32 objectCount = 0;
 			file.read((char *)&objectCount, sizeof(INT32));
+
+			BaseObject* parent = nullptr;
+			INT8 objOperation = 0;
+
 			for (INT32 i = 0; i < objectCount; i++)
 			{
-				//TODO: Create empty base object
+				BaseObject* obj = nullptr;
 				//Components
 				INT32 componentCount = 0;
 				file.read((char *)&componentCount, sizeof(INT32));
@@ -848,6 +854,14 @@ namespace Epoch {
 						file.read((char *)&scale.x, sizeof(float));
 						file.read((char *)&scale.y, sizeof(float));
 						file.read((char *)&scale.z, sizeof(float));
+						if (obj)
+						{
+							vec3f offset = vec3f(scale.x * scale.x, scale.y * scale.y, scale.z * scale.z) / 2;
+							vec3f min = position - offset;
+							vec3f max = position + offset;
+							CubeCollider* col = new CubeCollider(obj, false, false, vec3f(0, -1, 0), mass, elasticity, staticFriction, kineticFriction, drag, min, max);
+							obj->AddComponent(col);
+						}
 					}
 						break;
 					case 2: //ButtonCollider
@@ -868,6 +882,14 @@ namespace Epoch {
 						file.read((char *)&normal.x, sizeof(float));
 						file.read((char *)&normal.y, sizeof(float));
 						file.read((char *)&normal.z, sizeof(float));
+						if (obj)
+						{
+							vec3f offset = vec3f(scale.x * scale.x, scale.y * scale.y, scale.z * scale.z) / 2;
+							vec3f min = position - offset;
+							vec3f max = position + offset;
+							ButtonCollider* col = new ButtonCollider(obj, min, max, mass, force, normal);
+							obj->AddComponent(col);
+						}
 					}
 						break;
 					case 3: //PlaneCollider
@@ -884,6 +906,11 @@ namespace Epoch {
 						file.read((char *)&normal.x, sizeof(float));
 						file.read((char *)&normal.y, sizeof(float));
 						file.read((char *)&normal.z, sizeof(float));
+						if (obj)
+						{
+							PlaneCollider* col = new PlaneCollider(obj, false, staticFriction, kineticFriction, offset, normal);//TODO: Fix offset
+							obj->AddComponent(col);
+						}
 					}
 						break;
 					case 4: //SphereCollider
@@ -900,6 +927,11 @@ namespace Epoch {
 						file.read((char *)&position.x, sizeof(float));
 						file.read((char *)&position.y, sizeof(float));
 						file.read((char *)&position.z, sizeof(float));
+						if (obj)
+						{
+							SphereCollider* col = new SphereCollider(obj, false, false, vec3f(0, -1, 0), mass, elasticity, staticFriction, kineticFriction, drag, radius);
+							obj->AddComponent(col);
+						}
 					}
 						break;
 					case 5: //ColoredMesh
@@ -913,6 +945,14 @@ namespace Epoch {
 						mesh = temp;
 						delete[] temp;
 						file.read((char *)&argbColor, sizeof(INT32));
+						//Was informed to ignore it
+						//if (obj)
+						//{
+						//	std::string path = "../Resources/";
+						//	path.append(mesh);
+						//	MeshComponent* mesh = new MeshComponent(path.c_str());
+						//	obj->AddComponent(mesh);
+						//}
 					}
 						break;
 					case 6: //TexturedMesh
@@ -931,6 +971,16 @@ namespace Epoch {
 						file.read(temp, pathLength);
 						texture = temp;
 						delete[] temp;
+						if (obj)
+						{
+							std::string path = "../Resources/";
+							path.append(mesh);
+							MeshComponent* mesh = new MeshComponent(path.c_str());
+							path = "../Resources/";
+							path.append(texture);
+							mesh->AddTexture(path.c_str(), eTEX_DIFFUSE);
+							obj->AddComponent(mesh);
+						}
 					}
 						break;
 					case 7: //Transform
@@ -956,6 +1006,15 @@ namespace Epoch {
 						file.read((char *)&scale.x, sizeof(float));
 						file.read((char *)&scale.y, sizeof(float));
 						file.read((char *)&scale.z, sizeof(float));
+
+						matrix4 mat = matrix4::CreateScale(scale.x, scale.y, scale.z) *
+							matrix4::CreateXRotation(rotation.x) *
+							matrix4::CreateYRotation(rotation.y) *
+							matrix4::CreateZRotation(rotation.z) *
+							matrix4::CreateTranslation(position.x, position.y, position.z);
+						Transform trans;
+						trans.SetMatrix(mat);
+						obj = new BaseObject(name, trans);
 					}
 						break;
 					case 8: //Code
@@ -968,18 +1027,85 @@ namespace Epoch {
 						file.read(temp, len);
 						path = temp;
 						delete[] temp;
+						if (obj)
+						{
+							CodeComponent* codeCom = nullptr;
+							if (path == "TimeManipulation.h")
+								codeCom = new TimeManipulation();
+							if (path == "BoxSnapControllerAction.hpp")
+								codeCom = new BoxSnapToControllerAction();
+							if (path == "CCBoxSpin.h")
+								codeCom = new CCBoxSpin();
+							if (path == "CCButtonHold.h")
+								codeCom = new CCButtonHold();
+							if (path == "CCButtonPress.h")
+								codeCom = new CCButtonPress();
+							if (path == "CCDisplayOnPause.h")
+								codeCom = new CCDisplayOnPause();
+							if (path == "CCElasticAABBtoAABB.h")
+								codeCom = new CCElasticAABBtoAABB();
+							if (path == "CCElasticAABBtoSphere.h")
+								codeCom = new CCElasticAABBToSphere();
+							if (path == "CCElasticReactionWithPlane.h")
+								codeCom = new CCElasticReactionWithPlane();
+							if (path == "CCElasticSphereToSphere.h")
+								codeCom = new CCElasticSphereToSphere();
+							if (path == "CCEnterLevel.h")
+								codeCom = new CCEnterLevel();
+							if (path == "CCEnterLevel1.h")
+								codeCom = new CCEnterLevel1();
+							if (path == "CCExit.h")
+								codeCom = new CCExit();
+							if (path == "CCLoadHub.h")
+								codeCom = new CCLoadHub();
+							if (path == "CCPauseToCancel.h")
+								codeCom = new CCPauseToCancel();
+							if (path == "CCStartButton.h")
+								codeCom = new CCStartButton();
+							if (path == "CCTeleToPlay.h")
+								codeCom = new CCTeleToPlay();
+							if (path == "CodeComponent.hpp")
+								codeCom = new CodeComponent();
+							if (path == "GestureDetection.hpp")
+								codeCom = new GestureDetection();
+							if (path == "HeadsetFollow.hpp")
+								codeCom = new HeadsetFollow();
+							if (path == "UIClonePlusToMinus.h")
+								codeCom = new UIClonePlusToMinus();
+							if (path == "UICloneText.h")
+								codeCom = new UICloneText();
+							if (path == "UICreateToDeleteClone.h")
+								codeCom = new UICreateToDeleteClone();
+							if (path == "UIRewind.h")
+								codeCom = new UIRewind();
+
+							if (codeCom)
+							{
+								obj->AddComponent(codeCom);
+							}
+						}
 					}
 						break;
 					case 9: //Audio
 					{
 						INT32 numSounds = 0;
 						file.read((char *)&numSounds, sizeof(INT32));
+						Emitter* sound = nullptr;
+						if (obj)
+							sound = new Emitter();
 						for (INT32 k = 0; k < numSounds; k++)
 						{
 							char playType = 0;
 							UINT64 id = 0;
 							file.read(&playType, sizeof(char));
 							file.read((char *)&id, sizeof(UINT64));
+							if (sound)
+								sound->AddSoundEvent((Emitter::sfxTypes)playType, id);
+						}
+						if (sound)
+						{
+							AudioWrapper::GetInstance().AddEmitter(sound, (obj->GetName() + "_SOUND").c_str());
+							obj->AddComponent(sound);
 						}
 					}
 						break;
@@ -988,6 +1114,17 @@ namespace Epoch {
 						break;
 					}
 				}
+				file.read((char *)&objOperation, sizeof(INT8));
+				if (objOperation == 0 && parent)
+				{
+					parent->AddChild(obj);
+					obj->SetParent(parent);
+				}
+				if (objOperation == 1)
+					parent = obj;
+				if (objOperation == 2 && parent)
+					parent = parent->GetParent();
+				AddObject(obj);
 			}
 			file.close();
 		}
