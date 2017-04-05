@@ -1,4 +1,4 @@
-#include "../Effects.hlsli"
+//#include "../Effects.hlsli"
 
 struct GSOutput
 {
