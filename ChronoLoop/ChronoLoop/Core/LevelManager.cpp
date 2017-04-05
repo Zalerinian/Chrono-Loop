@@ -105,7 +105,7 @@ namespace Epoch {
 				if ((*it)->mComponents[eCOMPONENT_COLLIDER].size() > 0)
 				{
 					Physics::Instance()->mObjects.push_back((*it));
-					if (((Collider*)(*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mShouldMove || (*it)->GetName() == "Door1" || (*it)->GetName() == "Door2")
+					if (((Collider*)(*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mShouldMove || (*it)->GetName() == "TransparentDoor1" || (*it)->GetName() == "TransparentDoor2")
 					{
 						TimeManager::Instance()->AddObjectToTimeline(*it);
 					}

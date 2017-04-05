@@ -11,9 +11,11 @@ SamplerState normalFilter : register(s1);
 texture2D tSpecular : register(t2);
 SamplerState specularFilter : register(s2);
 
-texture2D Shadow : register(t3);
-texture2D Shadow2 : register(t4);
-SamplerComparisonState ShadowFilter : register(s3);
+texture2D tEmissive : register(t3);
+
+texture2D Shadow : register(t30);
+texture2D Shadow2 : register(t40);
+SamplerComparisonState ShadowFilter : register(s30);
 
 struct Light
 {
@@ -24,6 +26,7 @@ struct Light
     float3 dir;
     float3 cdir;
     float3 color;
+	float colorAlpha;
 
     float ratio;
     float3 p2;
@@ -49,52 +52,26 @@ float4 main(PSI input) : SV_TARGET
 {
     float4 color = float4(0, 0, 0, 0);
     float4 l1, l2, l3;
-    float4 diffuseColor = tDiffuse.Sample(diffuseFilter, float4(input.texCoord.xy, 0, 0));
+    float4 diffuseColor = tDiffuse.Sample(diffuseFilter, input.texCoord.xy);
+	float4 emissiveColor = tEmissive.Sample(diffuseFilter, input.texCoord.xy);
 	//float4 diffuseColor = float4(1, 1, 1, 1);
     clip(diffuseColor.a - 0.25);
     
-    if (One.type == 1)
-    {
-        l1 = ApplyDirectionalLight(One.dir, input.normal, float3(1, 1, 1), diffuseColor);
-    }
-    else if (One.type == 2)
-    {
-        l1 = ApplyPointLight(One.pos, input.wpos, input.normal, float3(1, 1, 1), diffuseColor);
-    }
-    else
-    {
-        l1 = ApplySpotLight(input.normal, One.pos, input.wpos, One.dir, One.ratio, float3(1, 1, 1), diffuseColor);
-    }
-    //---
-    if (Two.type == 1)
-    {
-        l2 = ApplyDirectionalLight(Two.dir, input.normal, Two.color, diffuseColor);
-    }
-    else if (Two.type == 2)
-    {
-        l2 = ApplyPointLight(Two.pos, input.wpos, input.normal, Two.color, diffuseColor);
-    }
-    else
-    {
-        l2 = ApplySpotLight(input.normal, Two.pos, input.wpos, Two.dir, Two.ratio, Two.color, diffuseColor);
-    }
-    //---
-    if (Three.type == 1)
-    {
-        l3 = ApplyDirectionalLight(Three.dir, input.normal, Three.color, diffuseColor);
-    }
-    else if (Three.type == 2)
-    {
-        l3 = ApplyPointLight(Three.pos, input.wpos, input.normal, Three.color, diffuseColor);
-    }
-    else
-    {
-        l3 = ApplySpotLight(input.normal, Three.pos, input.wpos, Three.dir, Three.ratio, Three.color, diffuseColor);
-    }
+    l1 = ApplyDirectionalLight(One.dir, input.normal, One.color, diffuseColor) * saturate(One.type & 1);
+    l1 += ApplyPointLight(One.pos, input.wpos, input.normal, One.color, diffuseColor) * saturate(One.type & 2);
+    l1 += ApplySpotLight(input.normal, One.pos, input.wpos, One.cdir, One.ratio, One.color, diffuseColor) * saturate(One.type & 4);
+
+    l2 = ApplyDirectionalLight(Two.dir, input.normal, Two.color, diffuseColor) * saturate(Two.type & 1);
+    l2 += ApplyPointLight(Two.pos, input.wpos, input.normal, Two.color, diffuseColor) * saturate(Two.type & 2);
+    l2 += ApplySpotLight(input.normal, Two.pos, input.wpos, Two.cdir, Two.ratio, Two.color, diffuseColor) * saturate(Two.type & 4);
+
+    l3 = ApplyDirectionalLight(Three.dir, input.normal, Three.color, diffuseColor) * saturate(Three.type & 1);
+    l3 += ApplyPointLight(Three.pos, input.wpos, input.normal, Three.color, diffuseColor) * saturate(Three.type & 2);
+    l3 += ApplySpotLight(input.normal, Three.pos, input.wpos, Three.cdir, Three.ratio, Three.color, diffuseColor) * saturate(Three.type & 4);
 
     color = l1 + l2 + l3;
 
-    return (saturate(color) + float4(.05, .05, .05, 0)) * diffuseColor;
+    return ((saturate(color) + float4(.05, .05, .05, 0)) * diffuseColor) + emissiveColor;
 
     input.shadowPos.xyz /= input.shadowPos.w;
 

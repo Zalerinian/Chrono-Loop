@@ -77,7 +77,7 @@ namespace Epoch
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="_ButWillItBlend"></param>
+		/// <param name="_ButWillItBlend"></param> 
 		/// <created>Drew,4/5/2017</created>
 		/// <changed>Drew,4/5/2017</changed>
 		// ********************************************************************************
@@ -89,6 +89,7 @@ namespace Epoch
 		void DisableBufferUpdates();
 		bool GetBufferUpdates();
 
+		// ********************************************************************************
 		/// <summary>
 		/// Sets the data and buffer data type for the given index.
 		/// </summary>
@@ -96,9 +97,10 @@ namespace Epoch
 		/// <param name="_bt">The Buffer Data Type, an enum value used to see what type of data is stored at a buffer slot, to help prevent errornous writes to a given index.</param>
 		/// <param name="_index">The index in the corresponding array of buffers for the shape, for the ConstantBufferType. This should be a e*B_REGISTERn enum value, where * is V, P, or G, and n is the register number it maps to.</param>
 		/// <param name="_data">The actual data to put into the buffer. Actual content depends on the buffer data type, but it should be no larger than the size of a BufferWidth object.</param>
+		// ********************************************************************************
 		void SetData(ConstantBufferType _t, BufferDataType _bt, unsigned char _index, void* _data);
 		void UpdateData(ConstantBufferType _t, unsigned char _index, void* _data);
-		//void SetDataBytes(ConstantBufferType _t, unsigned char _index, unsigned char _offset, unsigned char _size, void* _data);
+		//void SetDataBytes(ConstantBufferType _t, unsigned char _index, unsigned char _offset, unsigned char _size, void* _data); // Would use CopySubresourceRegion to update
 
 
 		bool CanCreateNode();

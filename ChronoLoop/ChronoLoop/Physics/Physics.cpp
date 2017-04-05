@@ -8,7 +8,8 @@
 #include "..\Input\VRInputManager.h"
 #include "..\Core\LevelManager.h"
 
-#define DEBUG_LEVEL1 1
+#define DEBUG_LEVEL1 0
+#define DEBUG_LEVEL2 0
 
 namespace Epoch
 {
@@ -714,6 +715,11 @@ namespace Epoch
 
 #if DEBUG_LEVEL1
 				if (mObjects[i]->GetName() == "mmDoor")
+					((CodeComponent*)mObjects[i]->GetComponents(eCOMPONENT_CODE)[0])->OnTriggerEnter(*collider, *otherCol);
+#endif
+
+#if DEBUG_LEVEL2
+				if (mObjects[i]->GetName() == "mmDoor2")
 					((CodeComponent*)mObjects[i]->GetComponents(eCOMPONENT_CODE)[0])->OnTriggerEnter(*collider, *otherCol);
 #endif
 

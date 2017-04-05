@@ -23,8 +23,8 @@ namespace Epoch {
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			mPlaneObject  = cLevel->FindObjectWithName("Floor");
 			mWallsObject  = cLevel->FindObjectWithName("Walls");
-			mBlockObject  = cLevel->FindObjectWithName("Door1");
-			mExitObject   = cLevel->FindObjectWithName("Door2");
+			mBlockObject  = cLevel->FindObjectWithName("TransparentDoor1");
+			mExitObject   = cLevel->FindObjectWithName("TransparentDoor2");
 			mServerObject = cLevel->FindObjectWithName("Servers");
 			if(mPlaneObject)
 			{

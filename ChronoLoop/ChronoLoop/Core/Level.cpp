@@ -323,7 +323,7 @@ namespace Epoch {
 				while (pObject)
 				{
 					std::vector<std::string> codeComs;
-					std::string elementType, name, meshFile, textureFile, colliderType, particleTexture, soundName;
+					std::string elementType, name, meshFile, textureFile, emissiveTexture, colliderType, particleTexture, soundName;
 					vec3f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity, particleRadius, startColor, endColor;
 					float mass, elasticity, staticF, kineticF, normF, drag, radius, startSize, endSize, startAlpha, endAlpha;
 					int totalParticles, maxParticles, PPS, lifeTime;
@@ -351,6 +351,9 @@ namespace Epoch {
 								meshFile = pData->Value();
 							else if (elementType == "Texture")
 								textureFile = pData->Value();
+							else if (elementType == "Emissive") {
+								emissiveTexture = pData->Value();
+							}
 							else if (elementType == "Position")
 							{
 								size_t pos = 0;
@@ -620,7 +623,7 @@ namespace Epoch {
 						AudioWrapper::GetInstance().AddEmitter(e, name.c_str());
 
 					}
-					else if (name == "Door" || name == "Door2")
+					else if (name == "TransparentDoor1" || name == "TransparentDoor2")
 					{
 						Emitter* e = new SFXEmitter();
 						((SFXEmitter*)e)->SetEvent(AK::EVENTS::SFX_DOORSOUND);
@@ -666,7 +669,17 @@ namespace Epoch {
 						MeshComponent* mesh;
 						if(obj->GetName().find("Transparent") != std::string::npos)
 						{
-							mesh = new TransparentMeshComponent(path.c_str(), .3f);
+							float alpha = 1;
+							//TODO PAT: FIX ALL THIS 
+							if(obj->GetName().find("Door") != std::string::npos)
+							{
+								alpha = .6f;
+							}
+							else
+							{
+								alpha = .3f;
+							}
+							mesh = new TransparentMeshComponent(path.c_str(), alpha);
 						}
 						else
 						{
@@ -675,6 +688,11 @@ namespace Epoch {
 							path = "../Resources/";
 							path.append(textureFile);
 							mesh->AddTexture(path.c_str(), eTEX_DIFFUSE);
+							if (!emissiveTexture.empty()) {
+								path = "../Resources/";
+								path.append(emissiveTexture);
+								mesh->AddTexture(path.c_str(), eTEX_EMISSIVE);
+							}
 							obj->AddComponent(mesh);
 					
 					}
