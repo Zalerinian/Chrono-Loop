@@ -4,23 +4,75 @@
 #include "../Rendering/RenderShape.h"
 #include "../Rendering/Renderer.h"
 #include "../Common/Settings.h"
+#include "../Common/Common.h"
 
 namespace Epoch {
-	void MeshComponent::CreateNode() {
+	void MeshComponent::CreateOpaqueNode() {
 		mNode = Renderer::Instance()->AddOpaqueNode(*mShape);
 	}
 
-	void MeshComponent::RemoveShape() {
+	void MeshComponent::CreateTransparentNode() {
+		mNode = Renderer::Instance()->AddTransparentNode(*mShape);
+	}
+
+	void MeshComponent::CreateNode() {
+		if (mBlended) {
+			CreateTransparentNode();
+		} else {
+			CreateOpaqueNode();
+		}
+	}
+
+	void MeshComponent::RemoveOpaqueNode() {
 		DESTROY_NODE(mNode);
 		Renderer::Instance()->RemoveOpaqueNode(*mShape);
 	}
 
-	MeshComponent::MeshComponent(const char * _path) {
+	void MeshComponent::RemoveTransparentNode() {
+		DESTROY_NODE(mNode);
+		Renderer::Instance()->RemoveTransparentNode(*mShape);
+	}
+
+	void MeshComponent::RemoveNode() {
+		if (mBlended) {
+			RemoveTransparentNode();
+		} else {
+			RemoveOpaqueNode();
+		}
+	}
+
+	void MeshComponent::UpdateBuffer(ConstantBufferType _t, unsigned char _index) {
+		if (mBlended) {
+			Renderer::Instance()->UpdateTransparentNodeBuffer(*mShape, _t, _index);
+		} else {
+			Renderer::Instance()->UpdateOpaqueNodeBuffer(*mShape, _t, _index);
+		}
+	}
+
+	void MeshComponent::CreateAlphaBuffer(float alpha) {
+		Renderer::Instance()->GetRendererLock().lock();
+		ID3D11Buffer* AlphaBuff;
+		CD3D11_BUFFER_DESC AlphaDesc(sizeof(PSTransparent_Data), D3D11_BIND_CONSTANT_BUFFER);
+		D3D11_SUBRESOURCE_DATA BufferData;
+		PSTransparent_Data a;
+		a.alpha.x = alpha;
+		BufferData.pSysMem = &a;
+		HRESULT hr = Renderer::Instance()->GetDevice()->CreateBuffer(&AlphaDesc, &BufferData, &AlphaBuff);
+		SetD3DName(AlphaBuff, (mShape->GetName() + " alpha buffer").c_str());
+		mShape->GetContext().mPixelCBuffers[ePB_REGISTER1].Attach(AlphaBuff);
+		Renderer::Instance()->GetRendererLock().unlock();
+	}
+
+	MeshComponent::MeshComponent(const char * _path, bool _EnableBlending) {
 		mType = eCOMPONENT_MESH;
 		mShape = new RenderShape(_path, true, ePS_TEXTURED, eVS_TEXTURED, eGS_PosNormTex);
 		mShape->GetContext().mRasterState = eRS_FILLED;
 		if (CanCreateNode()) {
-			CreateNode();
+			if (_EnableBlending) {
+				CreateTransparentNode();
+			} else {
+				CreateOpaqueNode();
+			}
 			mVisible = true;
 		} else {
 			mVisible = false;
@@ -50,7 +102,7 @@ namespace Epoch {
 
 	void MeshComponent::Destroy() {
 		SystemLogger::Debug() << "Destroying shape " << mShape->GetName() << std::endl;
-		RemoveShape();
+		RemoveNode();
 		delete mShape;
 	}
 
@@ -95,7 +147,7 @@ namespace Epoch {
 			// If the texture at the given path is not what is already set, remove the shape from the render set, add the
 			// texture, and, if visible, reinsert the shape.
 			if (srv != mShape->GetContext().mTextures[_type]) {
-				RemoveShape();
+				RemoveNode();
 				mShape->AddTexture(_path, _type);
 				if (mVisible) {
 					CreateNode();
@@ -107,7 +159,7 @@ namespace Epoch {
 
 	void MeshComponent::SetRasterState(RasterState _t) {
 		if (_t != mShape->GetContext().mRasterState) {
-			RemoveShape();
+			RemoveNode();
 			mShape->GetContext().mRasterState = _t;
 			if (mVisible) {
 				CreateNode();
@@ -117,7 +169,7 @@ namespace Epoch {
 
 	void MeshComponent::SetVertexShader(VertexShaderFormat _vf) {
 		if (_vf != mShape->GetContext().mGeoShaderFormat) {
-			RemoveShape();
+			RemoveNode();
 			mShape->GetContext().mVertexShaderFormat = _vf;
 			if (mVisible) {
 				CreateNode();
@@ -127,7 +179,7 @@ namespace Epoch {
 
 	void MeshComponent::SetPixelShader(PixelShaderFormat _pf) {
 		if (_pf != mShape->GetContext().mGeoShaderFormat) {
-			RemoveShape();
+			RemoveNode();
 			mShape->GetContext().mPixelShaderFormat = _pf;
 			if (mVisible) {
 				CreateNode();
@@ -137,10 +189,24 @@ namespace Epoch {
 
 	void MeshComponent::SetGeometryShader(GeometryShaderFormat _gf) {
 		if (_gf != mShape->GetContext().mGeoShaderFormat) {
-			RemoveShape();
+			RemoveNode();
 			mShape->GetContext().mGeoShaderFormat = _gf;
 			if (mVisible) {
 				CreateNode();
+			}
+		}
+	}
+
+	void MeshComponent::SetBlended(bool _ButWillItBlend) {
+		if(mBlended) {
+			if (!_ButWillItBlend) {
+				RemoveTransparentNode();
+				CreateOpaqueNode();
+			}
+		} else {
+			if (_ButWillItBlend) {
+				RemoveOpaqueNode();
+				CreateTransparentNode();
 			}
 		}
 	}
@@ -149,8 +215,12 @@ namespace Epoch {
 		return mShape;
 	}
 
+	bool MeshComponent::GetBlended() {
+		return mBlended;
+	}
+
 	void MeshComponent::ForceReinsertion() {
-		RemoveShape();
+		RemoveNode();
 		CreateNode();
 	}
 
@@ -201,6 +271,24 @@ namespace Epoch {
 		Renderer::Instance()->GetContext()->UpdateSubresource(buff, 0, 0, _data, 0, 0);
 		if (GetBufferUpdates()) {
 			Renderer::Instance()->UpdateOpaqueNodeBuffer(*mShape, _t, _index);
+		}
+	}
+
+	void MeshComponent::UpdateData(ConstantBufferType _t, unsigned char _index, void * _data) {
+		ID3D11Buffer* buff = nullptr;
+		switch (_t) {
+			case eCB_VERTEX:
+				break;
+			case eCB_PIXEL:
+				break;
+			case eCB_GEO:
+				break;
+			default:
+				return;
+		}
+		Renderer::Instance()->GetContext()->UpdateSubresource(buff, 0, 0, _data, 0, 0);
+		if (GetBufferUpdates()) {
+			UpdateBuffer(_t, _index);
 		}
 	}
 

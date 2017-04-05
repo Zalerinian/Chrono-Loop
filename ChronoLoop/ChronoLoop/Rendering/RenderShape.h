@@ -37,6 +37,7 @@ namespace Epoch {
 
 
 
+
 		inline RenderContext &GetContext() { return mContext; }
 		inline RenderContext GetContext() const { return mContext; }
 
