@@ -24,7 +24,7 @@ namespace Epoch
 		std::list<BaseObject*> mObjectList;
 		unsigned short mId;
 		vec4f mStartPosition, mStartRotation;
-		unsigned int mMaxNumofClones;
+		unsigned int mMaxNumofClones = 0;
 
 	public:
 		Level();

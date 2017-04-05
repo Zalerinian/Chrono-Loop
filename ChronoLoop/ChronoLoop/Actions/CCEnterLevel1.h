@@ -265,14 +265,16 @@ namespace Epoch
 					visibleMesh2->SetVisible(false);
 					headset->AddComponent(ambient);
 					headset->AddComponent(visibleMesh2);
-
 					AudioWrapper::GetInstance().STOP();
-
 					((AudioEmitter*)ambient)->CallEvent(Emitter::EventType::ePlay);
-
 					HeadsetFollow* hfollow = new HeadsetFollow();
 					headset->AddComponent(hfollow);
 					headset->AddComponent(ears);
+					//TODO PAT: UNcomment this when raymond gets sounds
+					/*	Emitter* sound = new SFXEmitter();
+					((SFXEmitter*)sound)->SetEvent(sfxFile);
+					AudioWrapper::GetInstance().AddEmitter(sound, soundName.c_str());
+					headset->AddComponent(sound);*/
 
 
 					LevelManager::GetInstance().RequestLevelChange(next);

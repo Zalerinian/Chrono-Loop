@@ -272,6 +272,11 @@ namespace Epoch
 					headset->AddComponent(hfollow);
 					headset->AddComponent(ears);
 					headset->AddComponent(ambient);
+					//TODO PAT: Uncomment this when raymond gets sounds
+					/*	Emitter* sound = new SFXEmitter();
+					((SFXEmitter*)sound)->SetEvent(sfxFile);
+					AudioWrapper::GetInstance().AddEmitter(sound, soundName.c_str());
+					headset->AddComponent(sound);*/
 
 
 					AudioWrapper::GetInstance().STOP();

@@ -1,4 +1,4 @@
-﻿<Level>
+<Level>
   <Settings>
     <StartPos>8.8,0,-4.1</StartPos>
     <StartRot>0,1.57,0</StartRot>
@@ -767,6 +767,24 @@
     <Position>-14.47182,2.89698,-4.182316</Position>
     <Rotation>1.57,1.57,0</Rotation>
     <Scale>0.5,1,0.3</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>General Controls</Name>
+    <Mesh>PlaneCorrection.obj</Mesh>
+    <Texture>GeneralControlScheme.png</Texture>
+    <Position>0.6806924,1.730055,8.910416</Position>
+    <Rotation>1.57,3.14,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Time Controlls</Name>
+    <Mesh>PlaneCorrection.obj</Mesh>
+    <Texture>TimeControlScheme.png</Texture>
+    <Position>-0.4240379,1.726474,8.91</Position>
+    <Rotation>1.57,3.14,0</Rotation>
+    <Scale>1,1,1</Scale>
     <Components />
   </Object>
 </Level>

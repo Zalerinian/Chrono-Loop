@@ -105,6 +105,11 @@ namespace Epoch
 					HeadsetFollow* hfollow = new HeadsetFollow();
 					headset->AddComponent(hfollow);
 					TimeManager::Instance()->AddObjectToTimeline(headset);
+					//TODO PAT: UNcomment this when raymond gets sounds
+				/*	Emitter* sound = new SFXEmitter();
+					((SFXEmitter*)sound)->SetEvent(sfxFile);
+					AudioWrapper::GetInstance().AddEmitter(sound, soundName.c_str());
+					headset->AddComponent(sound);*/
 
 					Transform cubeScale;
 					cubeScale.SetMatrix(matrix4::CreateScale(0.01f, 0.01f, 0.01f));
