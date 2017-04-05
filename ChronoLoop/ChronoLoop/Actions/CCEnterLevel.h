@@ -326,7 +326,7 @@ namespace Epoch
 					emit21->SetTexture("../Resources/BasicRectP.png");
 					((TeleportEffect*)emit21)->y1 = 8;
 					((TeleportEffect*)emit21)->y2 = 12;
-					((TeleportEffect*)emit21)->SetPosBounds(vec3f(0, 0, -.37f), vec3f(0, 1, .37f));
+					((TeleportEffect*)emit21)->SetPosBounds(vec3f(0, 0, -.75f), vec3f(0, 1, .75f));
 					((TeleportEffect*)emit21)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 					ParticleSystem::Instance()->AddEmitter(emit21);
 					emit21->FIRE();
@@ -341,7 +341,7 @@ namespace Epoch
 					emit22->SetParticle(p2);
 					((TeleportEffect*)emit22)->y1 = 1;
 					((TeleportEffect*)emit22)->y2 = 5;
-					((TeleportEffect*)emit22)->SetPosBounds(vec3f(0, 0, -.37f), vec3f(0, 1, .37f));
+					((TeleportEffect*)emit22)->SetPosBounds(vec3f(0, 0, -.75f), vec3f(0, 1, .75f));
 					((TeleportEffect*)emit22)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 					ParticleSystem::Instance()->AddEmitter(emit22);
 					emit22->FIRE();

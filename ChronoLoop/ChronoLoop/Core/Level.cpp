@@ -682,6 +682,10 @@ namespace Epoch {
 						{
 							mesh = new MeshComponent(path.c_str());
 						}
+
+						if (name == "Skybox")
+							mesh->SetPixelShader(ePS_PURETEXTURE);
+
 							path = "../Resources/";
 							path.append(textureFile);
 							mesh->AddTexture(path.c_str(), eTEX_DIFFUSE);
