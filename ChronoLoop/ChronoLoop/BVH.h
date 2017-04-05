@@ -100,7 +100,7 @@ namespace Epoch
 		unsigned int GetAxis() { return mAxis; }
 		float GetOffset() { return mOffset; }
 
-		void Traversal(TraversalData* _data);
+		void Traverse(TraversalData* _data);
 
 		~Internal();
 
@@ -124,12 +124,24 @@ namespace Epoch
 	public:
 		~Tree();
 
+		void Traverse(TraversalData*);
 		void Insert(BaseObject*);
 		void Remove(BaseObject*);
 
-		Tree* CreateTree(AABB);
+		static Tree* CreateTree(AABB);
 
-		int ClassifyAABBtoPlane(AABB, unsigned int, float);
+		static unsigned int ClassifyAABBtoPlane(AABB, unsigned int, float);
+		static unsigned int ClassifyObjectPerSplit(Internal*, TraversalData*);
 
+		static bool InsertObjectPerLeaf(Leaf*, TraversalData*);
+
+		static void Retrieve(BaseObject*, TraversalData*);
+		void Get(std::vector<BaseObject*>&, BaseObject*);
+
+		void Update();
+
+		friend void BuildTree(Tree*, Leaf*);
 	};
+
+	void BuildAABB(AABB&);
 }
