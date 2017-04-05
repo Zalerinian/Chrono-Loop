@@ -322,14 +322,18 @@ namespace Epoch {
 			mLData[i] = new Light();
 
 		//TODO: GET RID OF THIS
+
+		//Directional
 		mLData[1]->Type = 1;
 		mLData[1]->Color = vec3f(.5, .5, .5);
 		mLData[1]->Direction = vec3f(0, -1, 0);
 
+		//Point
 		mLData[0]->Type = 2;
 		mLData[0]->Position = vec3f(5, 1, 2);
 		mLData[0]->Color = vec3f(1, 1, 1);
 
+		//Spot
 		mLData[2]->Type = 4;
 		mLData[2]->Color = vec3f(0, .25, .25);
 		mLData[2]->ConeDirection = vec3f(0, -1, 0);

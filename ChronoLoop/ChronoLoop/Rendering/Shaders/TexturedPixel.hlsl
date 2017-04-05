@@ -55,15 +55,15 @@ float4 main(PSI input) : SV_TARGET
     
     l1 = ApplyDirectionalLight(One.dir, input.normal, One.color, diffuseColor) * saturate(One.type & 1);
     l1 += ApplyPointLight(One.pos, input.wpos, input.normal, One.color, diffuseColor) * saturate(One.type & 2);
-    l1 += ApplySpotLight(input.normal, One.pos, input.wpos, One.dir, One.ratio, One.color, diffuseColor) * saturate(One.type & 4);
+    l1 += ApplySpotLight(input.normal, One.pos, input.wpos, One.cdir, One.ratio, One.color, diffuseColor) * saturate(One.type & 4);
 
     l2 = ApplyDirectionalLight(Two.dir, input.normal, Two.color, diffuseColor) * saturate(Two.type & 1);
     l2 += ApplyPointLight(Two.pos, input.wpos, input.normal, Two.color, diffuseColor) * saturate(Two.type & 2);
-    l2 += ApplySpotLight(input.normal, Two.pos, input.wpos, Two.dir, Two.ratio, Two.color, diffuseColor) * saturate(Two.type & 4);
+    l2 += ApplySpotLight(input.normal, Two.pos, input.wpos, Two.cdir, Two.ratio, Two.color, diffuseColor) * saturate(Two.type & 4);
 
     l3 = ApplyDirectionalLight(Three.dir, input.normal, Three.color, diffuseColor) * saturate(Three.type & 1);
     l3 += ApplyPointLight(Three.pos, input.wpos, input.normal, Three.color, diffuseColor) * saturate(Three.type & 2);
-    l3 += ApplySpotLight(input.normal, Three.pos, input.wpos, Three.dir, Three.ratio, Three.color, diffuseColor) * saturate(Three.type & 4);
+    l3 += ApplySpotLight(input.normal, Three.pos, input.wpos, Three.cdir, Three.ratio, Three.color, diffuseColor) * saturate(Three.type & 4);
 
     color = l1 + l2 + l3;
 

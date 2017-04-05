@@ -6,10 +6,14 @@
 // TODO: Change the light color to a Float 3, as lights shouldn't change the alpha of a pixel.
 float4 ApplyPointLight(float3 _lpos, float4 _spos, float4 _snorm, float3 _lcol, float4 _scol)
 {
+    //TODO: Dissipation
     float4 result;
-    float4 dir = normalize(float4(_lpos.xyz, 0) - _spos);
+    float4 lvec = float4(_lpos.xyz, 0) - float4(_spos.xyz, 0);
+    float att = 1.0f - saturate((length(lvec.xyz) / 1.0f));
+    float4 dir = normalize(lvec);
     float ratio = clamp(dot(dir, _snorm), 0, 1);
-    result = float4((ratio * _lcol).rgb, _scol.a);
+    result = float4((ratio * _lcol).rgb, 0);
+    result.a = _scol.a;
 
     return result;
 }
