@@ -51,9 +51,12 @@ namespace Epoch {
 	
 		mDeltaTime = _delta;
 
-		if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator() != nullptr || LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator() != nullptr) {
+		if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator() != nullptr ||
+			LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator() != nullptr) {
+			//||LevelManager::GetInstance().GetCurrentLevel()->GetPauseMenu() != nullptr ) {
 
-			if (!LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->isTimePaused() && !LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->isTimePaused()) {
+			if ((!LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->isTimePaused() && !LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->isTimePaused()) ){
+				//|| !LevelManager::GetInstance().GetCurrentLevel()->GetPauseMenu()->isPauseMenuOn()) {
 				mTimestamp += _delta;
 				//If its time for a snapshot
 				if (mTimestamp >= RecordingRate) {

@@ -64,6 +64,13 @@ namespace Epoch {
 				break;
 			}
 		}
+		//std::vector<Component*> codes3 = mHeadset->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+		//for (size_t x = 0; x < codes2.size(); ++x) {
+		//	if (dynamic_cast<PauseMenu*>(codes2[x])) {
+		//		mPauseMenu = ((PauseMenu*)codes2[x]);
+		//		break;
+		//	}
+		//}
 	}
 
 	BaseObject * Level::FindObjectWithName(std::string _name) {
@@ -923,11 +930,8 @@ namespace Epoch {
 		}
 
 		//std::list<BaseObject*> objects = mObjectList;
-		if (accessLevelTwo == nullptr || accessLevelOne == nullptr || (accessHub == nullptr && (accessLevelTwo == nullptr && accessLevelOne == nullptr)))
-			CommandConsole::Instance().DisplaySet(L"FAILED TO LOAD LEVEL :(");
-		else if (accessLevelTwo->GetOnce() == false || accessLevelOne->GetOnce() == false)// || accessHub->GetOnce() == false)
-			CommandConsole::Instance().DisplaySet(L"LEVEL IS ALREADY LOADED");
-		else if ((_Level == L"HUBWORLD" || _Level == L"HUB") && accessHub->GetOnce() == true) {
+
+		if ((_Level == L"HUBWORLD" || _Level == L"HUB") && accessHub->GetOnce() == true) {
 			accessHub->SetOnce(false);
 			CommandConsole::Instance().Toggle();
 			accessHub = nullptr;
@@ -943,6 +947,10 @@ namespace Epoch {
 			CommandConsole::Instance().Toggle();
 			accessLevelTwo = nullptr;
 		}
+		else if (accessLevelTwo == nullptr || accessLevelOne == nullptr || (accessHub == nullptr && (accessLevelTwo == nullptr && accessLevelOne == nullptr)))
+			CommandConsole::Instance().DisplaySet(L"FAILED TO LOAD LEVEL :(");
+		else if (accessLevelTwo->GetOnce() == false || accessLevelOne->GetOnce() == false)// || accessHub->GetOnce() == false)
+			CommandConsole::Instance().DisplaySet(L"LEVEL IS ALREADY LOADED");
 	}
 
 

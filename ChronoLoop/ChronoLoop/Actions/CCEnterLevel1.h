@@ -14,7 +14,7 @@
 #include "..\Actions\UICloneText.h"
 #include "..\Actions\BoxSnapToControllerAction.hpp"
 #include "..\Actions\TeleportAction.hpp"
-#include "..\PauseMenu.hpp"
+#include "..\Actions\PauseMenu.hpp"
 #include "..\Actions\CCTimeIndicator.h"
 #include "..\Rendering\Draw2D.h"
 #include "..\Rendering\Renderer.h"

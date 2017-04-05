@@ -46,7 +46,7 @@ namespace Epoch
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time)
 		{
-			if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName() != "Buttonstand")
+			if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName() != "Buttonstand" && !Settings::GetInstance().GetBool("PauseMenuUp"))
 			{
 				colliding = true;
 				//Interp stuff

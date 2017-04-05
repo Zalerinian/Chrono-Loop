@@ -8,6 +8,7 @@
 #include "../Core/Level.h"
 #include "../Core/TimeManager.h"
 #include "../Core/LevelManager.h"
+#include "../Common/Settings.h"
 #include "../Actions/HeadsetFollow.hpp"
 
 namespace Epoch {
@@ -52,8 +53,8 @@ namespace Epoch {
 				left = cLevel->GetLeftTimeManipulator()->isTimePaused();
 			}
 			
-			if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad)) {
-				if (!left && !right) {
+			if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && !Settings::GetInstance().GetBool("PauseMenuUp")) {
+				if ((!left && !right)) {
 					vec4f forward(0, 0, 1, 0);
 					MeshComponent* meshes[] = { mWallsMesh, mBlockMesh, mExitMesh, mServerMesh };
 					BaseObject* objects[] = { mWallsObject, mBlockObject, mExitObject, mServerObject };

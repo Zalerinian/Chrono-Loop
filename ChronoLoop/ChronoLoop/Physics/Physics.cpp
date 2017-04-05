@@ -692,13 +692,17 @@ namespace Epoch
 		//Time pause
 		bool right = false;
 		bool left = false;
-
+		//bool paused = false;
+		//if(cLevel->GetPauseMenu() != nullptr)
+		//{
+		//	paused = cLevel->GetPauseMenu()->isPauseMenuOn();
+		//}
 		if (cLevel->GetRightTimeManipulator() != nullptr || cLevel->GetLeftTimeManipulator() != nullptr)
 		{
 			right = cLevel->GetRightTimeManipulator()->isTimePaused();
 			left = cLevel->GetLeftTimeManipulator()->isTimePaused();
 		}
-		if (!left && !right)
+		if (!left && !right)// || !paused)
 		{
 			//SystemLogger::GetLog() << _time << std::endl;
 			Collider* collider = nullptr;

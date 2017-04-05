@@ -1,12 +1,13 @@
+
 #pragma once
-#include "Actions/CodeComponent.hpp"
-#include "Objects/MeshComponent.h"
-#include "Objects/TransparentMeshComponent.h"
-#include "Objects/BaseObject.h"
-#include "Core/LevelManager.h"
-#include "Core/Pool.h"
-#include "Rendering/Draw2D.h"
-#include "Input/VRInputManager.h"
+#include "CodeComponent.hpp"
+#include "../Objects/MeshComponent.h"
+#include "../Core/LevelManager.h"
+//#include "Objects/BaseObject.h"
+#include "../Common/Settings.h"
+#include "../Core/Pool.h"
+#include "../Rendering/Draw2D.h"
+#include "../Input/VRInputManager.h"
 //vrim->inst->Getpos
 #include <list>
 
@@ -95,7 +96,7 @@ namespace Epoch
 		//
 		virtual void Start()
 		{
-			
+			Settings::GetInstance().SetBool("PauseMenuUp", PauseMenuisUp);
 			//Pause Menu Base Initialize
 			SetUpThisObjectForMe(&pPauseMenuBase, (MeshComponent**)&mcPauseMenuBase, std::string("PauseMenu - Base"), (identity));
 
@@ -345,11 +346,14 @@ namespace Epoch
 			mActivePanel.SetCurrentMenu(PAUSEMENU_ON);
 			SwitchPanel(&mActivePanel);
 			PauseMenuisUp = true;
+			Settings::GetInstance().SetBool("PauseMenuUp", PauseMenuisUp);
 			Transform tempT;
 			matrix4 playerPos = VRInputManager::GetInstance().GetPlayerView();
-			vec4f playerRot = vec4f(0, 0, 1, 0) *  playerPos;
-			
-			tempT.SetMatrix(playerPos.CreateXRotation(1.39626) * playerPos.CreateScale(20,20,20) * (playerPos) * playerPos.CreateTranslation(playerRot));// * playerPos.CreateTranslation(0, 5.0f, 5.0f)));// *playerPos.CreateTranslation(playerRot));
+			vec4f playerRot = vec4f(0, 0, 1.5f, 0) *  playerPos;
+			//playerRot.x = 1;
+			//playerRot.y = 0;
+
+			tempT.SetMatrix(playerPos.CreateXRotation(1.5708f) * playerPos.CreateScale(20,20,20) * (playerPos) * playerPos.CreateTranslation(playerRot));// * playerPos.CreateTranslation(0, 5.0f, 5.0f)));// *playerPos.CreateTranslation(playerRot));
 			pPauseMenuBase->SetTransform(tempT);
 			tempT.SetMatrix(playerPos.CreateScale(0.85f, 1, 0.85f) * playerPos.CreateTranslation(0, 0.001f, 0));
 			pMainPanel->SetTransform(tempT);
@@ -371,6 +375,7 @@ namespace Epoch
 			mActivePanel.SetCurrentMenu(PAUSEMENU_OFF);
 			SwitchPanel(&mActivePanel);
 			PauseMenuisUp = false;
+			Settings::GetInstance().SetBool("PauseMenuUp", PauseMenuisUp);
 		}
 		void SwitchPanel(ActivePanel* _activepanel)
 		{
