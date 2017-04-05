@@ -51,9 +51,9 @@ namespace Epoch {
 	
 		mDeltaTime = _delta;
 
-		if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator() != nullptr || LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator() != nullptr) {
+		if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator() != nullptr) {
 
-			if (!LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->isTimePaused() && !LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->isTimePaused()) {
+			if (!LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->isTimePaused()) {
 				mTimestamp += _delta;
 				//If its time for a snapshot
 				if (mTimestamp >= RecordingRate) {
@@ -375,14 +375,10 @@ namespace Epoch {
 		std::string TimeManager::GetNextTexture() {
 			for (unsigned int i = 0; i < mCloneTextureBitset.size(); i++) {
 				if (mCloneTextureBitset[i] == false) {
-					TimeManipulation* left = LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator();
-					TimeManipulation* right = LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator();
-					if (left) {
+					TimeManipulation* timemanip = LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator();
+					if (timemanip) {
 						//SystemLogger::GetLog() << "Left Controller returned " << left->GetTexture(i) << std::endl;
-						return left->GetTexture(i);
-					} else if (right) {
-						//SystemLogger::GetLog() << "Right Controller returned " << right->GetTexture(i) << std::endl;
-						return right->GetTexture(i);
+						return timemanip->GetTexture(i);
 					}
 				}
 				if (mCloneTextureBitset[i] == 1 && i == mCloneTextureBitset.size() - 1) {

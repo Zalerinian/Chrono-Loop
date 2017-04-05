@@ -52,7 +52,7 @@ namespace Epoch {
 		std::vector<Component*> codes1 = mController1->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
 		for (size_t x = 0; x < codes1.size(); ++x) {
 			if (dynamic_cast<TimeManipulation*>(codes1[x])) {
-				mTMComponent1 = ((TimeManipulation*)codes1[x]);
+				mTMComponent = ((TimeManipulation*)codes1[x]);
 				break;
 			}
 		}
@@ -60,8 +60,9 @@ namespace Epoch {
 		std::vector<Component*> codes2 = mController2->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
 		for (size_t x = 0; x < codes2.size(); ++x) {
 			if (dynamic_cast<TimeManipulation*>(codes2[x])) {
-				mTMComponent2 = ((TimeManipulation*)codes2[x]);
-				break;
+				if (!mTMComponent) 
+					mTMComponent = ((TimeManipulation*)codes2[x]);
+					break;
 			}
 		}
 	}

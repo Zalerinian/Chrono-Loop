@@ -335,7 +335,7 @@ namespace Epoch {
 		{
 			Snapshot* _fromShot = mSnapshots[mSnaptimes[_fromSnapTime]];
 			Snapshot* _toShot = mSnapshots[mSnaptimes[_toSnapTime]];
-			unsigned int temp2 = LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->GetNumClones();
+			unsigned int temp2 = LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->GetNumClones();
 			for (std::pair<unsigned short, Epoch::BaseObject*> it : mLiveObjects) {
 				if (it.second->GetName().find("Controller1 - " + std::to_string(temp2)) == std::string::npos &&
 					it.second->GetName().find("Controller2 - " + std::to_string(temp2)) == std::string::npos) { //TODO RYAN: TEMPORARY FIX FOR INTERPOLATION

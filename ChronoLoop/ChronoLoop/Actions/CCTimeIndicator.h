@@ -28,7 +28,7 @@ namespace Epoch
 
 		virtual void Update()
 		{
-			if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->isTimePaused())
+			if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->isTimePaused())
 			{
 				if (once)
 				{

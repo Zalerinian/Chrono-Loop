@@ -1,4 +1,4 @@
-﻿<Level>
+<Level>
   <Settings>
     <StartPos>0.46,0,-10.15</StartPos>
     <StartRot>0,0,0</StartRot>
@@ -86,12 +86,6 @@
     <Components>
       <AABBtoSphere>Enabled</AABBtoSphere>
       <AABBtoAABB>Enabled</AABBtoAABB>
-      <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
-      <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
       <ElasticPlane>Enabled</ElasticPlane>
       <Collider>
         <Type>OBB</Type>

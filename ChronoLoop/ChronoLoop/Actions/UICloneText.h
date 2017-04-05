@@ -27,9 +27,9 @@ namespace Epoch
 
 		virtual void Update()
 		{
-			if (prev != LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->GetNumOfConfirmedClones())
+			if (prev != LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->GetNumOfConfirmedClones())
 			{
-				prev = LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->GetNumOfConfirmedClones();
+				prev = LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->GetNumOfConfirmedClones();
 				
 				float color[4] = { 0,0,0,0 };
 				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtv.Get(), color);
