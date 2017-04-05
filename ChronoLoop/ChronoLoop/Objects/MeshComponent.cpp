@@ -276,10 +276,13 @@ namespace Epoch {
 		ID3D11Buffer* buff = nullptr;
 		switch (_t) {
 			case eCB_VERTEX:
+				buff = mShape->GetContext().mVertexCBuffers[_index].Get();
 				break;
 			case eCB_PIXEL:
+				buff = mShape->GetContext().mPixelCBuffers[_index].Get();
 				break;
 			case eCB_GEO:
+				buff = mShape->GetContext().mGeometryCBuffers[_index].Get();
 				break;
 			default:
 				return;

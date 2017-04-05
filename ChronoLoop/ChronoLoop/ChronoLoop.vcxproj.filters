@@ -839,6 +839,9 @@
       <Filter>Rendering\Shaders\Pixel shaders</Filter>
     </FxCompile>
     <FxCompile Include="Rendering\Shaders\ShadowVS.hlsl" />
+    <FxCompile Include="Rendering\shaders\PSAnimatedMultiscan.hlsl">
+      <Filter>Rendering\Shaders\Pixel shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">

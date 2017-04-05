@@ -302,7 +302,7 @@ namespace Epoch {
 								while ((pos = s.find(",")) != std::string::npos)
 								{
 									std::string token = s.substr(0, pos);
-									mMaxNumofClones = std::strtof(token.c_str(), nullptr);
+									mMaxNumofClones = std::strtol(token.c_str(), nullptr, 10);
 									i++;
 									s.erase(0, pos + 1);
 								}

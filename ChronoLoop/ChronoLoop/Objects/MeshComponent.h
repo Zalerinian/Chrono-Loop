@@ -16,24 +16,6 @@ namespace Epoch
 {
 	struct RenderShape;
 
-	enum BufferDataType {
-		/// <summary>
-		/// Represents that the buffer does not contain any data.
-		/// </summary>
-		eBufferDataType_Nullptr,
-
-		/// <summary>The buffer only holds an alpha value, used to control transparency.</summary>
-		eBufferDataType_Alpha,
-
-		/// <summary>
-		/// The buffer holds an alpha value, and a vec4f for multi-texturing offsets. 
-		/// The vec4f contains, in order, the Multiscan V offset, the Multiscan alpha value,
-		/// the Scanline V offset, and the Scanline Alpha value.
-		/// </summary>
-		eBufferDataType_Scanline
-
-	};
-
 	class MeshComponent : public Component
 	{
 	protected:
