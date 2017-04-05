@@ -24,7 +24,7 @@ struct Light
     float3 dir;
     float3 cdir;
     float3 color;
-	float sdfghjkl;
+	float colorAlpha;
 
     float ratio;
     float3 p2;

@@ -542,7 +542,7 @@
       <Collider>
         <Type>OBB</Type>
         <Trigger>False</Trigger>
-        <Position>0,0.8,0</Position>
+        <Position>0,.4,0</Position>
         <Rotation>0,0,0</Rotation>
         <Scale>1,1.6,1</Scale>
         <Move>False</Move>
