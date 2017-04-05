@@ -13,12 +13,12 @@ namespace Epoch
 		bool once = false;
 		virtual void Update()
 		{
-			if (once && LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->mIsBeingMade)
+			if (once && LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->GetifCloneIsBeingMade())
 			{
 				((MeshComponent*)mObject->GetComponentIndexed(eCOMPONENT_MESH, 0))->AddTexture("../Resources/minus.png", eTEX_DIFFUSE);
 				once = false;
 			}
-			else if (!once && !LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->isTimePaused())
+			else if (!once && !LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->GetifCloneIsBeingMade())
 			{
 				once = true;
 				((MeshComponent*)mObject->GetComponentIndexed(eCOMPONENT_MESH, 0))->AddTexture("../Resources/plus.png", eTEX_DIFFUSE);

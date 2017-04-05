@@ -20,7 +20,7 @@ namespace Epoch
 		BaseObject* mHeadset;
 		BaseObject* mController1;
 		BaseObject* mController2;
-		TimeManipulation* mTMComponent1 = nullptr, *mTMComponent2 = nullptr;
+		TimeManipulation* mTMComponent = nullptr;
 		std::list<BaseObject*> mObjectList;
 		unsigned short mId;
 		vec4f mStartPosition, mStartRotation;
@@ -47,8 +47,7 @@ namespace Epoch
 		inline unsigned int GetMaxClones() { return mMaxNumofClones; }
 		inline vec4f& GetStartPos() { return mStartPosition; }
 		inline vec4f GetStartRot() { return mStartRotation; }
-		TimeManipulation* GetLeftTimeManipulator() { return mTMComponent1; }
-		TimeManipulation* GetRightTimeManipulator() { return mTMComponent2; }
+		TimeManipulation* GetTimeManipulator() { return mTMComponent; }
 
 
 		//**SETTERS**//

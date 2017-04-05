@@ -155,6 +155,8 @@ namespace Epoch
 						}
 					}
 
+					ParticleSystem::Instance()->Clear();
+
 					if (Settings::GetInstance().GetBool("PlayingLevel1"))
 					{
 						Particle* p1 = &Particle::Init();

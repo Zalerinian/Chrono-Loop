@@ -58,7 +58,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Cube_Cube.025</Name>
+    <Name>Skybox</Name>
     <Mesh>mmSkybox.obj</Mesh>
     <Texture>mmSkyboxLight.png</Texture>
     <Position>0,0,0</Position>

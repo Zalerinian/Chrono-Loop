@@ -1,4 +1,4 @@
-﻿<Level>
+<Level>
   <Settings>
     <StartPos>0.46,0,-10.15</StartPos>
     <StartRot>0,0,0</StartRot>
@@ -86,12 +86,6 @@
     <Components>
       <AABBtoSphere>Enabled</AABBtoSphere>
       <AABBtoAABB>Enabled</AABBtoAABB>
-      <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
-      <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <AABBtoSphere>Enabled</AABBtoSphere>
       <ElasticPlane>Enabled</ElasticPlane>
       <Collider>
         <Type>OBB</Type>
@@ -209,7 +203,6 @@
     <Scale>1,1,1</Scale>
     <Components>
       <EnterLevel>Enabled</EnterLevel>
-      <EnterLevel>Enabled</EnterLevel>
       <Collider>
         <Type>OBB</Type>
         <Trigger>True</Trigger>
@@ -311,7 +304,7 @@
     </Components>
   </Object>
   <Object>
-    <Name>SKybox</Name>
+    <Name>Skybox</Name>
     <Mesh>mmSkybox.obj</Mesh>
     <Texture>mmSkyboxLight.png</Texture>
     <Position>0,0,0</Position>

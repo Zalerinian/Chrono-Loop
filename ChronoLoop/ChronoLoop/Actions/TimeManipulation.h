@@ -18,19 +18,16 @@ namespace Epoch
 
 		bool mTexturedApplied = false;
 		bool mPauseTime = false;
-		ID3D11Texture2D* mCountTxt;
-		ID2D1Bitmap1* mCountMap;
-		unsigned int HotfixButtonDown = 0;
+		bool mIsBeingMade;
 		Renderer::TimeManipulationEffectData mEffectData;
 		Interpolator<vec2f> mDesaturationInterpolator;
-		static unsigned int mCloneCount;
-		static unsigned short mCurrTexture;
-		static unsigned short mNumOfConfirmedClones;
-
-		static BaseObject* mCurCloneHeadset;
-		static BaseObject* mCurCloneController1;
-		static BaseObject* mCurCloneController2;
-
+		unsigned int HotfixButtonDown = 0;
+		unsigned int mCloneCount;
+		unsigned short mCurrTexture;
+		unsigned short mNumOfConfirmedClones;
+		BaseObject* mCurCloneHeadset;
+		BaseObject* mCurCloneController1;
+		BaseObject* mCurCloneController2;
 		std::string mTextures[10] = { "../Resources/CloneTexture.png",
 			"../Resources/CloneTexture_Green.png",
 			"../Resources/CloneTexture_Pink.png",
@@ -43,7 +40,7 @@ namespace Epoch
 			"../Resources/CloneTexture_Grey.png" };
 
 	public:
-		static bool mIsBeingMade;
+		
 		TimeManipulation();
 		TimeManipulation(ControllerType _t) { mControllerRole = _t; };
 		~TimeManipulation();
@@ -52,10 +49,11 @@ namespace Epoch
 		bool isTimePaused() { return mPauseTime; };
 		unsigned int GetNumClones() { return mCloneCount; };
 		void makeTimePaused(bool _isPaused) { mPauseTime = _isPaused; };
+		bool GetifCloneIsBeingMade() { return mIsBeingMade; };
 		void Start();
 		void Update();
 		void MakeCloneBaseObjects(BaseObject* _headset, BaseObject* _controller1, BaseObject* _controller2);
-		inline unsigned short GetNumOfConfirmedClones() { return mNumOfConfirmedClones; };
+		unsigned short GetNumOfConfirmedClones() { return mNumOfConfirmedClones; };
 	};
 
 } // Epoch Namespace

@@ -16,22 +16,12 @@
 
 namespace Epoch
 {
-	BaseObject* TimeManipulation::mCurCloneController1 = nullptr;
-	BaseObject* TimeManipulation::mCurCloneController2 = nullptr;
-	BaseObject* TimeManipulation::mCurCloneHeadset = nullptr;
-	bool TimeManipulation::mIsBeingMade = false;
-	unsigned short TimeManipulation::mNumOfConfirmedClones = 0;
 
 	TimeManipulation::TimeManipulation() {
 	}
 
 
 	TimeManipulation::~TimeManipulation() {}
-
-	
-
-	unsigned int TimeManipulation::mCloneCount = 0;
-	unsigned short TimeManipulation::mCurrTexture = 0;
 
 	void TimeManipulation::Start()
 	{
@@ -110,17 +100,15 @@ namespace Epoch
 
 
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Touchpad)) {
-			bool right = false;
-			bool left = false;
+			bool paused = false;
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
-			if (cLevel->GetRightTimeManipulator() != nullptr || cLevel->GetLeftTimeManipulator() != nullptr) {
-				right = cLevel->GetRightTimeManipulator()->isTimePaused();
-				left = cLevel->GetLeftTimeManipulator()->isTimePaused();
+			if (cLevel->GetTimeManipulator() != nullptr ) {
+				paused = cLevel->GetTimeManipulator()->isTimePaused();
 			}
 
 			// Accept timeline position
-			if (left || right) {
+			if (paused) {
 			
 				vec2f finalRatios(0, 0);
 				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
@@ -197,8 +185,7 @@ namespace Epoch
 					cLevel->GetRightController()->GetUniqueID(),
 					cLevel->GetLeftController()->GetUniqueID());
 
-				cLevel->GetLeftTimeManipulator()->makeTimePaused(false);
-				cLevel->GetRightTimeManipulator()->makeTimePaused(false);
+				cLevel->GetTimeManipulator()->makeTimePaused(false);
 				mIsBeingMade = false;
 			}
 
@@ -221,8 +208,7 @@ namespace Epoch
 			//toggle to have clone turn on or off
 			if (mPauseTime)
 			{
-				if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->RaycastCloneCheck() == false && 
-				LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->RaycastCloneCheck() == false)
+				if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck() == false)
 				{
 				mIsBeingMade = !mIsBeingMade;	
 				}
