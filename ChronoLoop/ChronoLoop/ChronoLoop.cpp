@@ -714,7 +714,7 @@ void Update() {
 	emit21->SetTexture("../Resources/BasicRectP.png");
 	((TeleportEffect*)emit21)->y1 = 8;
 	((TeleportEffect*)emit21)->y2 = 12;
-	((TeleportEffect*)emit21)->SetPosBounds(vec3f(0, 0, -.37f), vec3f(0, 1, .37f));
+	((TeleportEffect*)emit21)->SetPosBounds(vec3f(0, 0, -.5f), vec3f(0, 1, .5f));
 	((TeleportEffect*)emit21)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 	ParticleSystem::Instance()->AddEmitter(emit21);
 	emit21->FIRE();
@@ -729,7 +729,7 @@ void Update() {
 	emit22->SetParticle(p2);
 	((TeleportEffect*)emit22)->y1 = 1;
 	((TeleportEffect*)emit22)->y2 = 5;
-	((TeleportEffect*)emit22)->SetPosBounds(vec3f(0, 0, -.37f), vec3f(0, 1, .37f));
+	((TeleportEffect*)emit22)->SetPosBounds(vec3f(0, 0, -.5f), vec3f(0, 1, .5f));
 	((TeleportEffect*)emit22)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 	ParticleSystem::Instance()->AddEmitter(emit22);
 	emit22->FIRE();
@@ -745,6 +745,7 @@ void Update() {
 	exitEmit->SetParticle(exit);
 	exitEmit->SetTexture("../Resources/BasicRectP.png");
 	((ParticleEmitter*)exitEmit)->SetPosBounds(vec3f(-.25f, -.25f, -.25f), vec3f(.25f, .25f, .25f));
+	((ParticleEmitter*)exitEmit)->SetVelBounds(vec3f(.25f, .25f, .25f), vec3f(.5f, .5f, .5f));
 	ParticleSystem::Instance()->AddEmitter(exitEmit);
 	exitEmit->FIRE();
 	
@@ -756,7 +757,8 @@ void Update() {
 	ParticleEmitter* exitEmit2 = new TeleportEffect(-1, 150, 2, vec4f(-3.918808f, 1.5f, 0, 1));
 	exitEmit2->SetTexture("../Resources/BasicCircleP.png");
 	exitEmit2->SetParticle(exit);
-	((ParticleEmitter*)exitEmit2)->SetPosBounds(vec3f(-.25f, -.25f, -.25f), vec3f(.25f, .25f, .25f));
+	((ParticleEmitter*)exitEmit2)->SetPosBounds(vec3f(-.25f, -.25f, -.25f), vec3f(1, 1, 1));
+	((ParticleEmitter*)exitEmit2)->SetVelBounds(vec3f(.25f, .25f, .25f), vec3f(5, 5, 5));
 	ParticleSystem::Instance()->AddEmitter(exitEmit2);
 	exitEmit2->FIRE();
 	//////////////////////////////////////////////////////////////////////////////////////

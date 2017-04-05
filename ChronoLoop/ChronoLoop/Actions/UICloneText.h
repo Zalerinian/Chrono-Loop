@@ -36,7 +36,7 @@ namespace Epoch
 
 				Font* font = new Font();
 				font->mFontName = L"Agency FB";
-				font->mFontSize = 150;
+				font->mFontSize = 125;
 				std::wstring num = std::to_wstring(prev) + L"/" + std::to_wstring(LevelManager::GetInstance().GetCurrentLevel()->GetMaxClones());
 				Draw::Instance().DrawTextToBitmap(0, 0, 256, 256, *font, num, Draw::Instance().GetBitmap(tex.Get()));
 			}

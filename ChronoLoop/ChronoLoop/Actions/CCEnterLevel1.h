@@ -135,7 +135,7 @@ namespace Epoch
 
 					t.SetMatrix(matrix4::CreateScale(.75f, 1, 1) * matrix4::CreateTranslation(0.073f, -0.018f, -0.043f));
 					BaseObject *cloneDisplayBack = Pool::Instance()->iGetObject()->Reset("cloneDisplayBack", t);
-					TransparentMeshComponent* cdispb = new TransparentMeshComponent("../Resources/UIClone.obj");
+					TransparentMeshComponent* cdispb = new TransparentMeshComponent("../Resources/UIClone.obj", .9f);
 					cdispb->AddTexture("../Resources/clearBlue.png", eTEX_DIFFUSE);
 					cloneDisplayBack->AddComponent(cdispb);
 					cloneDisplayBack->SetParent(RightController);
