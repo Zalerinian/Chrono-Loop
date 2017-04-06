@@ -748,8 +748,8 @@
     <Name>Clone3</Name>
     <Mesh>Clone.obj</Mesh>
     <Texture>CloneTexture_Green.png</Texture>
-    <Position>2.668173,0.3932321,8.32376</Position>
-    <Rotation>0.6070667,1.372878,5.931111</Rotation>
+    <Position>3.623517,0.3932321,8.32376</Position>
+    <Rotation>1.221111,1.372878,5.931111</Rotation>
     <Scale>1,1,1</Scale>
     <Components />
   </Object>
@@ -757,7 +757,7 @@
     <Name>cloneController1</Name>
     <Mesh>Controller.obj</Mesh>
     <Texture>vr_controller_lowpoly_texture.png</Texture>
-    <Position>2.467178,0.0692593,8.909224</Position>
+    <Position>2.942702,0.0692593,8.909224</Position>
     <Rotation>0.2860889,1.57,0.1657222</Rotation>
     <Scale>1,1,1</Scale>
     <Components />
@@ -793,7 +793,7 @@
     <Name>cloneController5</Name>
     <Mesh>Controller.obj</Mesh>
     <Texture>vr_controller_lowpoly_texture.png</Texture>
-    <Position>2.259746,0.0692593,7.800469</Position>
+    <Position>3.070417,0.0692593,7.800469</Position>
     <Rotation>0.2860889,2.093333,0.1674667</Rotation>
     <Scale>1,1,1</Scale>
     <Components />

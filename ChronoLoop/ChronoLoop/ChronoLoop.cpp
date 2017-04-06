@@ -255,7 +255,7 @@ void Update() {
 	emit11->SetTexture("../Resources/BasicRectP.png");
 	((TeleportEffect*)emit11)->y1 = 8;
 	((TeleportEffect*)emit11)->y2 = 12;
-	((TeleportEffect*)emit11)->SetPosBounds(vec3f(-.37f, 0, 0), vec3f(.37f, 1, 0));
+	((TeleportEffect*)emit11)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
 	((TeleportEffect*)emit11)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 	ParticleSystem::Instance()->AddEmitter(emit11);
 	emit11->FIRE();
@@ -270,7 +270,7 @@ void Update() {
 	emit12->SetParticle(p1);
 	((TeleportEffect*)emit12)->y1 = 1;
 	((TeleportEffect*)emit12)->y2 = 5;
-	((TeleportEffect*)emit12)->SetPosBounds(vec3f(-.37f, 0, 0), vec3f(.37f, 1, 0));
+	((TeleportEffect*)emit12)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
 	((TeleportEffect*)emit12)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 	ParticleSystem::Instance()->AddEmitter(emit12);
 	emit12->FIRE();
