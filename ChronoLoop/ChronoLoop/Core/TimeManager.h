@@ -27,6 +27,7 @@ namespace Epoch {
 		//Time variables
 		float mTimestamp = 0;
 		float mDeltaTime = 0;
+		float mTotalGameTime = 0;
 		unsigned int mLevelTime = 0;
 		bool mRewindMakeClone = false;
 		bool mShouldUpdateInterpolators = false;
@@ -82,6 +83,7 @@ namespace Epoch {
 		bool GetShouldPulse() { return mShouldPulse; };
 		float GetTimeLineObjectInterpTime();
 		static TimeManager* Instance();
+		float GetTotalGameTime() { return mTotalGameTime; };
 		unsigned int GetTotalSnapsmade();
 		//Go back into time. Send in dest frame and send in player headset and conrollers id
 		void RewindTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2, unsigned short _id3);
