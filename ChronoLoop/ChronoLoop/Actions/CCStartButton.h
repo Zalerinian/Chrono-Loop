@@ -23,10 +23,11 @@ namespace Epoch
 		Interpolator<matrix4>* mExitButtonInterp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mExitStandInterp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mExitSignInterp = new Interpolator<matrix4>();
+		Interpolator<matrix4>* mCloseInterp = new Interpolator<matrix4>();
 
 		Listener* l;
 
-		BaseObject *mChamberObject, *mExitButton, *mStartStand, *mStartSign, *mExitStand, *mExitSign;
+		BaseObject *mChamberObject, *mExitButton, *mStartStand, *mStartSign, *mExitStand, *mExitSign, *mClosePanel;
 		Level* cLevel = nullptr;
 
 		virtual void Start()
@@ -42,6 +43,7 @@ namespace Epoch
 			mExitButton = cLevel->FindObjectWithName("mmExitButton");
 			mStartStand = cLevel->FindObjectWithName("mmStartStand");
 			mExitStand = cLevel->FindObjectWithName("mmExitStand");
+			mClosePanel = cLevel->FindObjectWithName("mmClosingPanel");
 
 			l = new Listener();
 			mChamberObject->AddComponent(l);
@@ -84,6 +86,9 @@ namespace Epoch
 				mExitSignInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(0, -10, 0), mExitSign->GetTransform().GetMatrix());
 				mExitSignInterp->SetActive(true);
 
+				mat = mClosePanel->GetTransform().GetMatrix();
+				mCloseInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(2, 0, 0), mClosePanel->GetTransform().GetMatrix());
+				mCloseInterp->SetActive(true);
 
 				((SFXEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
 				((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::EventType::ePlay);
@@ -110,6 +115,9 @@ namespace Epoch
 				mExitButtonInterp->Update(TimeManager::Instance()->GetDeltaTime());
 				mExitStandInterp->Update(TimeManager::Instance()->GetDeltaTime());
 				mExitSignInterp->Update(TimeManager::Instance()->GetDeltaTime());
+
+				if (mChamberObject->GetTransform().GetMatrix().fourth.y < -3.64f)
+					mCloseInterp->Update(TimeManager::Instance()->GetDeltaTime());
 				
 				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mObject->GetTransform().GetMatrix().fourth);
 				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y - .2f;
