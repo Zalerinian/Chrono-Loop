@@ -3,15 +3,15 @@
 	<Platform GUID="{51B915F3-CC68-4F7A-B577-43F1D41FACAF}">
 		<Banks>
 			<Language ID="0">
-				<File Name="Chrono_Sound" Hash="2077783526" Timestamp="131353573467393890"/>
-				<File Name="Init" Hash="593700967" Timestamp="131310699036044935"/>
-				<File Name="SB_SoundPackage1" Hash="2585900399" Timestamp="131359090526334440"/>
-				<File Name="Test_Soundbank" Hash="2361732544" Timestamp="131353612020520435"/>
+				<File Name="Chrono_Sound" Hash="2796782717" Timestamp="131359686124254581"/>
+				<File Name="Init" Hash="593700967" Timestamp="131359686124389676"/>
+				<File Name="SB_SoundPackage1" Hash="995640164" Timestamp="131359686121682744"/>
+				<File Name="Test_Soundbank" Hash="2174058007" Timestamp="131359686123088918"/>
 			</Language>
 		</Banks>
 		<XMLInfo>
 			<Language ID="-1">
-				<File Name="" Hash="2834168434" Timestamp="131359090526465000"/>
+				<File Name="" Hash="1121150584" Timestamp="131359686124439710"/>
 			</Language>
 		</XMLInfo>
 	</Platform>
