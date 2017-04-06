@@ -226,7 +226,7 @@ namespace Epoch {
 			if (temp->mPrev) {
 				temp = temp->mPrev;
 			}
-			if (!temp->mPrev) {
+			else if (!temp->mPrev) {
 				return nullptr;
 			}
 		}
