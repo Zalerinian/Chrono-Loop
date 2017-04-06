@@ -46,5 +46,5 @@ float4 main(PSI input) : SV_TARGET
 	float4 ScanColor = tScanline.Sample(texFilter, float2(input.texCoord.x, saturate((input.texCoord.y - scanOffset) * 3)));
 	//ScanColor *= scanOffset > 0.8 ? 1 : 0;
 
-	return float4(diffuseColor.rgb + (multiColor.rgb * multiAlpha) + (ScanColor * scanAlpha), diffuseColor.a * dataBuffer[input.IID].DiffuseAlpha);
+	return float4(diffuseColor.rgb + (multiColor.rgb * multiAlpha) + (ScanColor.rbg * scanAlpha), diffuseColor.a * dataBuffer[input.IID].DiffuseAlpha);
 }
