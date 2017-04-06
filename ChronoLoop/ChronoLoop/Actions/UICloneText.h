@@ -29,7 +29,7 @@ namespace Epoch
 			TextureManager::Instance()->iGetTexture2D("memory:Clone Display", nullptr, &tex);
 			HRESULT hr = Renderer::Instance()->GetDevice()->CreateRenderTargetView(tex.Get(), &desc, rtv.GetAddressOf());
 			mDisplayBack = (MeshComponent*)LevelManager::GetInstance().GetCurrentLevel()->FindObjectWithName("cloneDisplayBack")->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mDisplayBack->AddTexture("../Resources/Multiscan.png", eTEX_REGISTER4);
+			mDisplayBack->AddTexture("../Resources/MultiscanUneven.png", eTEX_REGISTER4);
 			mDisplayBack->SetData(eCB_PIXEL, eBufferDataType_Scanline, ePB_REGISTER1, &mScanlineData);
 			mDisplayBack->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
 		}
