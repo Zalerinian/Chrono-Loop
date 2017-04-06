@@ -13,7 +13,6 @@
     <Scale>1,1,1.079898</Scale>
     <Components>
       <ButtonPress>Enabled</ButtonPress>
-      <ButtonPress>Enabled</ButtonPress>
       <Collider>
         <Type>Button</Type>
         <Trigger>False</Trigger>

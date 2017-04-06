@@ -34,10 +34,12 @@ namespace Epoch {
 	}
 
 	void MeshComponent::RemoveNode() {
-		if (mBlended) {
-			RemoveTransparentNode();
-		} else {
-			RemoveOpaqueNode();
+		if (mNode) {
+			if (mBlended) {
+				RemoveTransparentNode();
+			} else {
+				RemoveOpaqueNode();
+			}
 		}
 	}
 

@@ -33,10 +33,10 @@ namespace Epoch
 				if (once)
 				{
 					once = false;
-					currentSnap = totalSnaps = TimeManager::Instance()->GetCurrentSnapFrame();
+					currentSnap = totalSnaps = (float)TimeManager::Instance()->GetCurrentSnapFrame();
 				}
 
-				currentSnap = TimeManager::Instance()->GetTempCurSnap();
+				currentSnap = (float)TimeManager::Instance()->GetTempCurSnap();
 
 				ratio = currentSnap / totalSnaps;
 				mObject->GetTransform().GetMatrix().fourth = (start + (end - start) * ratio);

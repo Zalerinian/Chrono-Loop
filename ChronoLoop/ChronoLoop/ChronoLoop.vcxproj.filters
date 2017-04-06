@@ -462,6 +462,12 @@
     <ClInclude Include="Actions\UICloneText.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="PMResume.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="PMHubworld.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
     <ClInclude Include="Actions\CCLoadHub.h">
       <Filter>Actions</Filter>
     </ClInclude>
@@ -485,6 +491,9 @@
       <Filter>Actions</Filter>
     </ClInclude>
     <ClInclude Include="BVH.h" />
+    <ClInclude Include="Actions\PauseMenu.hpp">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">

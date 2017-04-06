@@ -55,55 +55,58 @@ namespace Epoch
 		}
 		
 
-		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
-			
+		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip) && !Settings::GetInstance().GetBool("PauseMenuUp")) {
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
-			if (mPauseTime) {
-				// Resume Time
+			//bool paused = false;
+			//if (cLevel->GetPauseMenu() != nullptr) {
+			//	paused = cLevel->GetPauseMenu()->isPauseMenuOn();
+			//}
+			//if (!paused) {
+				if (mPauseTime) {
+					// Resume Time
 
-				//put the original controll and headset back in control
-				//Remove the clone created
-				if (mCurCloneHeadset && mCurCloneController1 && mCurCloneController2)
-				{
-					currentLevel->SetHeadsetAndControllers(mCurCloneHeadset, mCurCloneController1, mCurCloneController2,false);
-					TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneHeadset);
-					TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController1);
-					TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController2);
-					TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueID(),false);
-					mCurCloneHeadset = nullptr;
-					mCurCloneController1 = nullptr;
-					mCurCloneController2 = nullptr;
-				}
+					//put the original controll and headset back in control
+					//Remove the clone created
+					if (mCurCloneHeadset && mCurCloneController1 && mCurCloneController2) {
+						currentLevel->SetHeadsetAndControllers(mCurCloneHeadset, mCurCloneController1, mCurCloneController2, false);
+						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneHeadset);
+						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController1);
+						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController2);
+						TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueID(), false);
+						mCurCloneHeadset = nullptr;
+						mCurCloneController1 = nullptr;
+						mCurCloneController2 = nullptr;
+					}
 
-				vec2f finalRatios(0, 0);
-				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
-				mDesaturationInterpolator.SetActive(true);
+					vec2f finalRatios(0, 0);
+					mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
+					mDesaturationInterpolator.SetActive(true);
 
-				mPauseTime = false;
-				TimeManager::Instance()->RewindTimeline(
-					TimeManager::Instance()->GetCurrentSnapFrame(),
-					cLevel->GetHeadset()->GetUniqueID(),
-					cLevel->GetRightController()->GetUniqueID(),
-					cLevel->GetLeftController()->GetUniqueID());
-					
-				mIsBeingMade = false;
-				
-			} else {
-				// Stop time
-				
-				Transform identity;
-				memset(&identity.GetMatrix(), 0, sizeof(identity.GetMatrix()));
-				mCloneCount++;
-				mCurCloneHeadset = Pool::Instance()->iGetObject()->Reset("Headset - " + std::to_string(mCloneCount), identity); //new BaseObject("headset" + std::to_string(rand), identity);
-				mCurCloneController1 = Pool::Instance()->iGetObject()->Reset("Controller1 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
-				mCurCloneController2 = Pool::Instance()->iGetObject()->Reset("Controller2 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
-				MakeCloneBaseObjects(mCurCloneHeadset, mCurCloneController1, mCurCloneController2);
+					mPauseTime = false;
+					TimeManager::Instance()->RewindTimeline(
+						TimeManager::Instance()->GetCurrentSnapFrame(),
+						cLevel->GetHeadset()->GetUniqueID(),
+						cLevel->GetRightController()->GetUniqueID(),
+						cLevel->GetLeftController()->GetUniqueID());
 
-				vec2f finalRatios(0.7f, 0.3f);
-				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
-				mDesaturationInterpolator.SetActive(true);
-				TimeManager::Instance()->SetTempCurSnap();
-				mPauseTime = true;
+					mIsBeingMade = false;
+
+				} else {
+					// Stop time
+
+					Transform identity;
+					memset(&identity.GetMatrix(), 0, sizeof(identity.GetMatrix()));
+					mCloneCount++;
+					mCurCloneHeadset = Pool::Instance()->iGetObject()->Reset("Headset - " + std::to_string(mCloneCount), identity); //new BaseObject("headset" + std::to_string(rand), identity);
+					mCurCloneController1 = Pool::Instance()->iGetObject()->Reset("Controller1 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
+					mCurCloneController2 = Pool::Instance()->iGetObject()->Reset("Controller2 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
+					MakeCloneBaseObjects(mCurCloneHeadset, mCurCloneController1, mCurCloneController2);
+
+					vec2f finalRatios(0.7f, 0.3f);
+					mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
+					mDesaturationInterpolator.SetActive(true);
+					TimeManager::Instance()->SetTempCurSnap();
+					mPauseTime = true;
 			}
 		}
 

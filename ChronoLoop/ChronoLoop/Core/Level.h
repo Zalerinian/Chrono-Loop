@@ -1,8 +1,4 @@
 #pragma once
-////////////////////
-//2/9/2017
-//Written by: Ryan Bronk & Drew Ritter
-///////////////////
 #include "../ChronoLoop/Objects/BaseObject.h"
 #include "../ChronoLoop/Rendering/renderer.h"
 #include "../Rendering/Draw2D.h"
@@ -21,6 +17,7 @@ namespace Epoch
 		BaseObject* mController1;
 		BaseObject* mController2;
 		TimeManipulation* mTMComponent = nullptr;
+		//PauseMenu* mPauseMenu = nullptr;
 		std::list<BaseObject*> mObjectList;
 		unsigned short mId;
 		vec4f mStartPosition, mStartRotation;
@@ -48,6 +45,7 @@ namespace Epoch
 		inline vec4f& GetStartPos() { return mStartPosition; }
 		inline vec4f GetStartRot() { return mStartRotation; }
 		TimeManipulation* GetTimeManipulator() { return mTMComponent; }
+		//PauseMenu* GetPauseMenu() { return mPauseMenu; }
 
 
 		//**SETTERS**//
