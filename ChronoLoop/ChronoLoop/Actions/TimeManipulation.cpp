@@ -249,6 +249,7 @@ namespace Epoch
 		_data.ScanlineData.z = 0;
 		_data.ScanlineData.w = 0.8f;
 		MeshComponent *visibleMesh = new MeshComponent("../Resources/Clone.obj",.35f);
+		visibleMesh->SetPixelShader(ePS_TRANSPARENT);
 		visibleMesh->AddTexture(TimeManager::Instance()->GetNextTexture().c_str(), eTEX_DIFFUSE);
 		//visibleMesh->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
 		//visibleMesh->AddTexture("../Resources/Scanline.png", eTEX_CUSTOM2);
@@ -264,6 +265,7 @@ namespace Epoch
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
 		MeshComponent *mc = new MeshComponent("../Resources/Controller.obj",.35f);
 		ControllerCollider* CubeColider = new ControllerCollider(_controller1, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
+		mc->SetPixelShader(ePS_TRANSPARENT);
 		mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 		//mc->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
 		//mc->AddTexture("../Resources/Scanline.png", eTEX_CUSTOM2);
@@ -280,6 +282,7 @@ namespace Epoch
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be proble
 		MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj",.35f);
 		ControllerCollider* CubeColider2 = new ControllerCollider(_controller2, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
+		mc2->SetPixelShader(ePS_TRANSPARENT);
 		mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 		//mc2->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
 		//mc2->AddTexture("../Resources/Scanline.png", eTEX_CUSTOM2);
