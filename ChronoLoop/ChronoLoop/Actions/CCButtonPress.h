@@ -90,7 +90,6 @@ namespace Epoch
 			}
 			else
 			{
-				once = false;
 				colliding = false;
 			}
 		}
@@ -104,7 +103,7 @@ namespace Epoch
 				else
 				{
 
-
+					once = false;
 					mCanDoorInterp = false;
 					blockInterp->SetActive(false);
 					exitInterp->SetActive(false);
