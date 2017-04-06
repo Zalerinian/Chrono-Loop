@@ -18,7 +18,7 @@
 #include "..\Rendering\Draw2D.h"
 #include "..\Rendering\Renderer.h"
 #include "..\Rendering\TextureManager.h"
-#include "..\Objects\TransparentMeshComponent.h"
+#include "..\Objects\MeshComponent.h"
 #include "..\Rendering\TextureManager.h"
 #include <wrl\client.h>
 
@@ -135,7 +135,7 @@ namespace Epoch
 
 					t.SetMatrix(matrix4::CreateScale(.75f, 1, 1) * matrix4::CreateTranslation(0.073f, -0.018f, -0.043f));
 					BaseObject *cloneDisplayBack = Pool::Instance()->iGetObject()->Reset("cloneDisplayBack", t);
-					TransparentMeshComponent* cdispb = new TransparentMeshComponent("../Resources/UIClone.obj");
+					MeshComponent* cdispb = new MeshComponent("../Resources/UIClone.obj", 0.9f);
 					cdispb->AddTexture("../Resources/clearBlue.png", eTEX_DIFFUSE);
 					cloneDisplayBack->AddComponent(cdispb);
 					cloneDisplayBack->SetParent(RightController);
@@ -271,10 +271,10 @@ namespace Epoch
 					headset->AddComponent(hfollow);
 					headset->AddComponent(ears);
 					//TODO PAT: UNcomment this when raymond gets sounds
-					/*	Emitter* sound = new SFXEmitter();
-					((SFXEmitter*)sound)->SetEvent(sfxFile);
-					AudioWrapper::GetInstance().AddEmitter(sound, soundName.c_str());
-					headset->AddComponent(sound);*/
+					//Emitter* sound = new SFXEmitter();
+					//((SFXEmitter*)sound)->SetEvent(AK::EVENTS::);
+					//AudioWrapper::GetInstance().AddEmitter(sound, headset->GetName().c_str());
+					//headset->AddComponent(sound);
 
 
 					LevelManager::GetInstance().RequestLevelChange(next);
@@ -368,7 +368,7 @@ namespace Epoch
 					emit11->SetTexture("../Resources/BasicRectP.png");
 					((TeleportEffect*)emit11)->y1 = 8;
 					((TeleportEffect*)emit11)->y2 = 12;
-					((TeleportEffect*)emit11)->SetPosBounds(vec3f(-.37f, 0, 0), vec3f(.37f, 1, 0));
+					((TeleportEffect*)emit11)->SetPosBounds(vec3f(-1, 0, 0), vec3f(1, 1, 0));
 					((TeleportEffect*)emit11)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 					ParticleSystem::Instance()->AddEmitter(emit11);
 					emit11->FIRE();
@@ -383,7 +383,7 @@ namespace Epoch
 					emit12->SetParticle(p1);
 					((TeleportEffect*)emit12)->y1 = 1;
 					((TeleportEffect*)emit12)->y2 = 5;
-					((TeleportEffect*)emit12)->SetPosBounds(vec3f(-.37f, 0, 0), vec3f(.37f, 1, 0));
+					((TeleportEffect*)emit12)->SetPosBounds(vec3f(-1, 0, 0), vec3f(1, 1, 0));
 					((TeleportEffect*)emit12)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 					ParticleSystem::Instance()->AddEmitter(emit12);
 					emit12->FIRE();

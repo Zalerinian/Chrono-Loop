@@ -1,17 +1,78 @@
 #pragma once
 #include "../Common/Math/vec4f.h"
+#include "../Common/Math/matrix4.h"
+#include <memory>
 
 namespace Epoch {
 
-	struct PSTransparentScanline_Data {
-		float alpha;
+	struct BufferWidth {
+		matrix4 e1, e2;
+	};
 
-		// X: Multiscan V offset
-		// Y: Multiscan Alpha
-		// Z: Scanline V Offset
-		// W: Scanline Alpha
-		vec4f ScanlineData;
-		float p1, p2, p3;
+	struct PSTransparentScanline_Data {
+		union {
+			struct {
+				float alpha;
+
+				// X: Multiscan V offset
+				// Y: Multiscan Alpha
+				// Z: Scanline V Offset
+				// W: Scanline Alpha
+				vec4f ScanlineData;
+				float p1, p2, p3;
+			};
+			BufferWidth padding;
+		};
+		PSTransparentScanline_Data() {
+			memset(this, 0, sizeof(*this));
+		};
+	};
+
+	struct PSTransparent_Data {
+		union {
+			struct {
+				vec4f alpha;
+			};
+			BufferWidth padding;
+		};
+
+		PSTransparent_Data() {
+			alpha.Set(0, 0, 0, 0);
+		}
+	};
+
+	struct PSAnimatedMultiscan_Data {
+		union {
+			struct {
+				float DiffuseAlpha;
+				float MultiscanAlpha;
+				float MultiscanVOffset;
+			};
+			BufferWidth padding;
+		};
+		PSAnimatedMultiscan_Data() {
+			memset(this, 0, sizeof(*this));
+			DiffuseAlpha = 1.0f;
+			MultiscanAlpha = 0.4f;
+		}
+	};
+
+	enum BufferDataType {
+		/// <summary>
+		/// Represents that the buffer does not contain any data.
+		/// </summary>
+		eBufferDataType_Nullptr,
+
+		/// <summary>The buffer only holds an alpha value, used to control transparency.</summary>
+		eBufferDataType_Alpha,
+
+		/// <summary>
+		/// The buffer holds an alpha value, and a vec4f for multi-texturing offsets. 
+		/// The vec4f contains, in order, the Multiscan V offset, the Multiscan alpha value,
+		/// the Scanline V offset, and the Scanline Alpha value.
+		/// </summary>
+		eBufferDataType_Scanline
+
 	};
 
 
@@ -63,12 +124,14 @@ namespace Epoch {
 		eTEX_DIFFUSE = 0,
 		eTEX_NORMAL,
 		eTEX_SPECULAR,
-		eTEX_CUSTOM1,
-		eTEX_CUSTOM2,
-		eTEX_CUSTOM3,
-		eTEX_CUSTOM4,
-		eTEX_CUSTOM5,
-		eTEX_CUSTOM6,
+		eTEX_EMISSIVE,
+		eTEX_REGISTER4,
+		eTEX_REGISTER5,
+		eTEX_REGISTER6,
+		eTEX_REGISTER7,
+		eTEX_REGISTER8,
+		eTEX_REGISTER9,
+		eTEX_REGISTER10,
 		eTEX_MAX
 	};
 
@@ -80,54 +143,56 @@ namespace Epoch {
 	// assign the shaders at run-time.
 	enum VertexBufferType {
 		eVB_Instances = 0,
-		eVB_CUSTOM1 = 0,
-		eVB_CUSTOM2,
-		eVB_CUSTOM3,
-		eVB_CUSTOM4,
-		eVB_CUSTOM5,
-		eVB_CUSTOM6,
-		eVB_CUSTOM7,
-		eVB_CUSTOM8,
-		eVB_CUSTOM9,
-		eVB_MAX,
-		eVB_OFFSET = eVB_Instances + 1,
-		eVB_BEGIN = 0
+		eVB_SimInstanceID,
+		eVB_OFFSET,
+		eVB_REGISTER2 = 0,
+		eVB_REGISTER3,
+		eVB_REGISTER4,
+		eVB_REGISTER5,
+		eVB_REGISTER6,
+		eVB_REGISTER7,
+		eVB_REGISTER8,
+		eVB_REGISTER9,
+		eVB_MAX
 	};
 
 
 
 	enum PixelBufferType {
 		ePB_Lights = 0,
-		ePB_TP_Alpha = 0,
-		ePB_PP_Ratios = 0,
-		ePB_CUSTOM1 = 0,
-		ePB_CUSTOM2,
-		ePB_CUSTOM3,
-		ePB_CUSTOM4,
-		ePB_CUSTOM5,
-		ePB_CUSTOM6,
-		ePB_CUSTOM7,
-		ePB_CUSTOM8,
-		ePB_CUSTOM9,
-		ePB_MAX,
-		ePB_OFFSET = ePB_Lights + 1,
-		ePB_BEGIN = 0
+		ePB_OFFSET,
+		ePB_REGISTER1 = 0,
+		ePB_REGISTER2,
+		ePB_REGISTER3,
+		ePB_REGISTER4,
+		ePB_REGISTER5,
+		ePB_REGISTER6,
+		ePB_REGISTER7,
+		ePB_REGISTER8,
+		ePB_REGISTER9,
+		ePB_MAX
 	};
 
 	enum GeometryBufferType {
 		eGB_Eyes = 0,
-		eGB_CUSTOM1 = 0,
-		eGB_CUSTOM2,
-		eGB_CUSTOM3,
-		eGB_CUSTOM4,
-		eGB_CUSTOM5,
-		eGB_CUSTOM6,
-		eGB_CUSTOM7,
-		eGB_CUSTOM8,
-		eGB_CUSTOM9,
-		eGB_MAX,
-		eGB_OFFSET = eGB_Eyes + 1,
-		eGB_BEGIN = 0
+		eGB_OFFSET,
+		eGB_REGISTER1 = 0,
+		eGB_REGISTER2,
+		eGB_REGISTER3,
+		eGB_REGISTER4,
+		eGB_REGISTER5,
+		eGB_REGISTER6,
+		eGB_REGISTER7,
+		eGB_REGISTER8,
+		eGB_REGISTER9,
+		eGB_MAX
+	};
+
+	enum ConstantBufferType {
+		eCB_VERTEX = 0,
+		eCB_PIXEL,
+		eCB_GEO,
+		eCB_MAX
 	};
 
 }

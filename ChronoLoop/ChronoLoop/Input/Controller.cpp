@@ -16,7 +16,6 @@ namespace Epoch {
 	void Controller::Update() {
 		//update the contoller pose/state when called. 
 		mPrevState = mState;
-		//SystemLogger::Deug() << "Controller update." << std::endl;
 		mValid = VRInputManager::GetInstance().GetVRSystem()->GetControllerStateWithPose(mTrackingSpace, mIndex, &mState, sizeof(mState), &mPose);
 		if (mPrevState.ulButtonPressed != mState.ulButtonPressed) {
 			UpdateHairTrigger();
@@ -59,24 +58,17 @@ namespace Epoch {
 						float slope = (CurPos.y - InitialPos.y) / (CurPos.x - InitialPos.x);
 						if ((slope >= 3 || slope <= -3) &&
 							(CurPos.x < 0.3f && CurPos.x > -0.3f)) {
-							///SystemLogger::GetLog() << "Vertical Wrongness" << std::endl;
 							return 2;
 						}
 						if ((slope <= 0.33f && slope >= -0.33f) &&
 							(CurPos.y < 0.3f && CurPos.y > -0.3f)) {
-							//SystemLogger::GetLog() << "Horizontal Wrongness" << std::endl;
 							return 0;
 						}
 						InitialPos = CurPos;
 						if ((powf((CurPos.x), 2) + powf((CurPos.y), 2)) > 0.16f) {
-							//SystemLogger::GetLog() << "Outside the Circle" << std::endl;
-							//SystemLogger::GetLog() << "Difference: " << diff << std::endl; 
-							//SystemLogger::GetLog() << "InitialPos: (" << InitialPos.x << "," << InitialPos.y << ")" << "\nCurPos: (" << CurPos.x << "," << CurPos.y << ")" << std::endl;
 							if (diff * line > 0) {
-								//SystemLogger::GetLog() << "Somewhat Clockwise" << std::endl;
 								if (mIncreaseGestureSpeed != 1)
 									mSpeedCW++;
-								//SystemLogger::GetLog() << "Speed: " << mSpeedCW << std::endl << "GestureSpeed: " << mIncreaseGestureSpeed << std::endl << std::endl;
 								if (mSpeedCCW != 0) {
 									mSpeedCCW = 0;
 									mSpeedCW = 1;
@@ -94,10 +86,8 @@ namespace Epoch {
 								return 1;
 							}
 							else if (diff * line < 0) {
-								//SystemLogger::GetLog() << "Somewhat Counter-Clockwise" << std::endl;
 								if (mIncreaseGestureSpeed != 1)
 									mSpeedCCW++;
-								//SystemLogger::GetLog() << "Speed: " << mSpeedCCW << std::endl << "GestureSpeed: " << mIncreaseGestureSpeed << std::endl << std::endl;
 								if (mSpeedCW != 0) {
 									mSpeedCW = 0;
 									mSpeedCCW = 1;

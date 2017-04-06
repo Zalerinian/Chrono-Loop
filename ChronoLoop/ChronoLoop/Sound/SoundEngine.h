@@ -72,7 +72,7 @@ namespace Epoch
 		bool MakeEventAtListener(AudioEvent _id, unsigned int _listenerID = 0);
 		bool MakeEvent(AudioEvent _id, const BaseObject* _obj);
 		void STOP() { AK::SoundEngine::StopAll(); }
-		void StopEmitter(Emitter* _emitter) { AK::SoundEngine::StopAll((AkUniqueID)_emitter); }
+		void StopEmitter(Emitter* _emitter) { AK::SoundEngine::StopAll((AkGameObjectID)_emitter); }
 
 		//Set soundbank path(s)
 		void SetBasePath(const wchar_t* _strPath);

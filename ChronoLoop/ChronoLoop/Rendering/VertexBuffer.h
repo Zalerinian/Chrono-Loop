@@ -37,8 +37,6 @@ namespace Epoch {
 			if (mVertexBuffer) {
 				D3D11_BUFFER_DESC desc;
 				mVertexBuffer->GetDesc(&desc);
-
-				SystemLogger::Debug() << "Vertex buffer mark '" << (mOffsets.size() + 1) << "'" << std::endl;
 				D3D11_SUBRESOURCE_DATA initData;
 				unsigned int oldSize = desc.ByteWidth / sizeof(T);
 				unsigned int newSize = oldSize + _numVerts;

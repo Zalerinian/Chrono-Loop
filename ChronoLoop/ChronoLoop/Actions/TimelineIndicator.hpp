@@ -22,7 +22,7 @@ namespace Epoch {
 		}
 
 		virtual void Update() override {
-			//if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->isTimePaused() || LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->isTimePaused()) {
+			//if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->isTimePaused() || LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->isTimePaused()) {
 				unsigned int CurSnap = TimeManager::Instance()->GetTempCurSnap();
 				unsigned int TotalSnap = TimeManager::Instance()->GetCurrentSnapFrame();
 				if (TotalSnap > 0) {

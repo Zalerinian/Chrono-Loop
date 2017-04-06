@@ -229,7 +229,6 @@ namespace Epoch
 	{
 
 	public:
-		RadialEmitter();
 		RadialEmitter(int _totalp, int _maxp, int _persec, vec3f _pos);
 	private:
 		virtual void UpdateParticle(Particle* _p, float _delta);
@@ -242,10 +241,20 @@ namespace Epoch
 	public:
 		float y1, y2;
 
-		TeleportEffect();
-		TeleportEffect(int _totalp, int _maxp, int _persec, vec3f _pos);
+		TeleportEffect(int _totalp, int _maxp, int _persec , vec3f _pos);
 	private:
 		virtual void UpdateParticle(Particle* _p, float _delta);
 		virtual void EmitParticles();
+	};
+
+	class Sparks : public ParticleEmitter
+	{
+	public:
+		Sparks(int _totalp, int _maxp, int _persec, vec3f _pos);
+
+		float timer = 0;
+	private:
+		void UpdateParticle(Particle* _p, float _delta);
+		void EmitParticles();
 	};
 }
