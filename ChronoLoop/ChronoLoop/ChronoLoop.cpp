@@ -55,6 +55,7 @@ const wchar_t* _basePath = L"../Resources/Soundbanks/";
 const wchar_t* _initSB = L"Init.bnk";
 const wchar_t* _aSB = L"Test_Soundbank.bnk";
 const wchar_t* _mainS = L"Chrono_Sound.bnk";
+const wchar_t* _sbpkg1 = L"SB_SoundPackage1.bnk";
 
 #if defined(_WIN64)
 typedef unsigned __int64 AudioEvent;				///< Integer (unsigned) type for pointers
@@ -156,7 +157,8 @@ void Update() {
 	AudioWrapper::GetInstance().LoadSoundBank(_initSB);
 	AudioWrapper::GetInstance().LoadSoundBank(_aSB);
 	AudioWrapper::GetInstance().LoadSoundBank(_mainS);
-
+	AudioWrapper::GetInstance().LoadSoundBank(_sbpkg1);
+	
 	// new BaseObject("Controller", identity);
 
 	//BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("RController", identity);// new BaseObject("Controller", identity);
