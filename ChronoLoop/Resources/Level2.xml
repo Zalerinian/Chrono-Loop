@@ -1,4 +1,4 @@
-﻿<Level>
+<Level>
   <Settings>
     <StartPos>8.8,0,-4.1</StartPos>
     <StartRot>0,1.57,0</StartRot>
@@ -770,7 +770,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>DoorFrame1</Name>
+    <Name>DoorFrame1a</Name>
     <Mesh>DoorFrame1.obj</Mesh>
     <Texture>grey.png</Texture>
     <Position>2.417033,0,0.3837723</Position>
