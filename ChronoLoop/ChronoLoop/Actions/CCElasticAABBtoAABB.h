@@ -15,7 +15,18 @@ namespace Epoch
 			if (!colliding && _other.mColliderType == Collider::eCOLLIDER_Cube)
 			{
 				colliding = true;
-
+				//If door collides with box or box collides with door
+				if(_col.GetBaseObject()->GetName().find("Door") != std::string::npos && _other.GetBaseObject()->GetName().find("cube") != std::string::npos)
+				{
+					if (dynamic_cast<SFXEmitter*>(_col.GetBaseObject()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
+						((SFXEmitter*)_col.GetBaseObject()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
+				}
+				else if(_col.GetBaseObject()->GetName().find("cube") != std::string::npos && _other.GetBaseObject()->GetName().find("Door") != std::string::npos)
+				{
+					if (dynamic_cast<SFXEmitter*>(_other.GetBaseObject()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
+						((SFXEmitter*)_other.GetBaseObject()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
+				}
+				
 				vec3f max = ((CubeCollider*)&_other)->mMax;
 				vec3f min = ((CubeCollider*)&_other)->mMin;
 				vec3f otherCenter = (max + min) * 0.5f;

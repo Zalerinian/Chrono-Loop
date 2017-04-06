@@ -29,7 +29,7 @@ namespace Epoch {
 	}
 
 	void InputTimeline::Insert(InputNode * _data) {
-
+		//DisplayTimeline();
 		if (!mCurrent) {
 			Push_back(_data);
 			return;
@@ -49,12 +49,36 @@ namespace Epoch {
 		while (temp) {
 			//If greater than current but there is no next
 			//Move Current pointer if we don't have a next so we can continue to record.
-			if ((_data->mData.mLastFrame >= temp->mData.mLastFrame || (_data->mData.mLastFrame == temp->mData.mLastFrame && _data->mData.mTime > temp->mData.mTime)) && !temp->mNext) {
+			if ((_data->mData.mLastFrame > temp->mData.mLastFrame || (_data->mData.mLastFrame == temp->mData.mLastFrame && _data->mData.mTime > temp->mData.mTime)) && !temp->mNext) {
 				Push_back(_data);
 				return;
 			}
-			//if greatr than temp but less then next
-			if ((_data->mData.mLastFrame >= temp->mData.mLastFrame || (_data->mData.mLastFrame == temp->mData.mLastFrame && _data->mData.mTime > temp->mData.mTime)) && temp->mNext &&
+			//if less than current but there is no next. This may happen if button spams quickly and steam vr event system gives you out of order event times
+			if ((_data->mData.mLastFrame < temp->mData.mLastFrame || (_data->mData.mLastFrame == temp->mData.mLastFrame && _data->mData.mTime < temp->mData.mTime)) && !temp->mNext)
+			{
+				/*We are only going to swap 1 place behind us because 99.9% of the time that will be enough. This insert is designed for speed and looses accuracy if button
+				 is mashed too quickly.*/
+				//if prev is head
+				if(temp->mPrev && temp->mPrev == mHead)
+				{
+					temp->mPrev->mNext = _data;
+					_data->mNext = temp;
+					_data->mPrev = temp->mPrev;
+					temp->mNext = nullptr;
+					mHead = _data;
+					return;
+				}
+				if(temp->mPrev)
+				{
+					temp->mPrev->mNext = _data;
+					_data->mNext = temp;
+					_data->mPrev = temp->mPrev;
+					temp->mNext = nullptr;
+					return;
+				}
+			}
+			//if greatr than current but less then next
+			if ((_data->mData.mLastFrame > temp->mData.mLastFrame || (_data->mData.mLastFrame == temp->mData.mLastFrame && _data->mData.mTime > temp->mData.mTime)) && temp->mNext &&
 				(_data->mData.mLastFrame <= temp->mNext->mData.mLastFrame || (_data->mData.mLastFrame == temp->mNext->mData.mLastFrame && _data->mData.mTime < temp->mNext->mData.mTime))) {
 				temp->mNext->mPrev = _data;
 				_data->mNext = temp->mNext;
@@ -62,6 +86,7 @@ namespace Epoch {
 				temp->mNext = _data;
 				return;
 			}
+			//Increment further in the tree because 
 			temp = temp->mNext;
 		}
 

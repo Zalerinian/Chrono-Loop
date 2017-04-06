@@ -46,9 +46,10 @@ namespace Epoch
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time)
 		{
-			if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName() != "Buttonstand")
+			if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName() != "Buttonstand" )
 			{
 				colliding = true;
+				//SystemLogger::GetLog() << "Colliding" << std::endl;
 				//Interp stuff
 				blockInterp->SetActive(true);
 				blockInterp->Prepare(0.69f, blockCube->GetTransform().GetMatrix(), blockend, blockCube->GetTransform().GetMatrix());
@@ -56,6 +57,9 @@ namespace Epoch
 				//exitCube->SetPos(exitend);
 				exitInterp->SetActive(true);
 				exitInterp->Prepare(0.69f, exitCube->GetTransform().GetMatrix(), exitend, exitCube->GetTransform().GetMatrix());
+
+				((Collider*)blockCube->GetBaseObject()->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(blockend.Position);
+				((Collider*)exitCube->GetBaseObject()->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(exitend.Position);
 
 				mCanDoorInterp = true;
 				mDoorDoneInterpolating = false;
@@ -72,16 +76,14 @@ namespace Epoch
 					//blockCube->SetPos(blockend);
 				}
 			}
-			else
-			{
-				colliding = false;
-			}
+			
 		}
 		virtual void Update()
 		{
 			if (!LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->isTimePaused()) {
 				if (colliding)
 				{
+					//SystemLogger::GetLog() << "Colliding" << std::endl;
 					mFlip = true;
 					if (mCanDoorInterp && !mDoorDoneInterpolating)
 					{
@@ -89,6 +91,7 @@ namespace Epoch
 					}
 					else
 					{
+						
 						mCanDoorInterp = false;
 						blockInterp->SetActive(false);
 						exitInterp->SetActive(false);
@@ -96,14 +99,18 @@ namespace Epoch
 				}
 				else
 				{
+					//SystemLogger::GetLog() << "Not Colliding" << std::endl;
 					if(mFlip)
 					{
+						
 						mFlip = false;
 						blockInterp->SetActive(true);
 						blockInterp->Prepare(0.69f, blockCube->GetTransform().GetMatrix(), blockstart, blockCube->GetTransform().GetMatrix());
 
 						exitInterp->SetActive(true);
 						exitInterp->Prepare(0.69f, exitCube->GetTransform().GetMatrix(), exitstart, exitCube->GetTransform().GetMatrix());
+						((Collider*)blockCube->GetBaseObject()->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(blockstart.Position);
+						((Collider*)exitCube->GetBaseObject()->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(exitstart.Position);
 
 						mCanDoorInterp = true;
 						mDoorDoneInterpolating = false;
@@ -121,9 +128,8 @@ namespace Epoch
 					}
 
 				}
-				colliding = false;
 			}
-			
+			colliding = false;
 		}
 	};
 }

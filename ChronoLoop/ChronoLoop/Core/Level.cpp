@@ -625,10 +625,17 @@ namespace Epoch {
 					}
 					else if (name == "TransparentDoor1" || name == "TransparentDoor2")
 					{
+						//door sound
 						Emitter* e = new SFXEmitter();
 						((SFXEmitter*)e)->SetEvent(AK::EVENTS::SFX_DOORSOUND);
 						obj->AddComponent(e);
 						AudioWrapper::GetInstance().AddEmitter(e, name.c_str());
+
+						//boxzap
+						Emitter* z = new SFXEmitter();
+						((SFXEmitter*)z)->SetEvent(AK::EVENTS::SFX_BOXDOORZAP);
+						obj->AddComponent(z);
+						AudioWrapper::GetInstance().AddEmitter(z, name.c_str());
 					}
 					else if (name == "Button")
 					{
@@ -654,10 +661,10 @@ namespace Epoch {
 
 
 						e = new AudioEmitter();
-						((AudioEmitter*)e)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_CASUAL_LEVEL_LOOP);
-						((AudioEmitter*)e)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_CASUAL_LEVEL_LOOP);
-						((AudioEmitter*)e)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_CASUAL_LEVEL_LOOP);
-						((AudioEmitter*)e)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_CASUAL_LEVEL_LOOP);
+						((AudioEmitter*)e)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_HUB0);
+						((AudioEmitter*)e)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_HUB0);
+						((AudioEmitter*)e)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_HUB0);
+						((AudioEmitter*)e)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_HUB0);
 						obj->AddComponent(e);
 						AudioWrapper::GetInstance().AddEmitter(e, name.c_str() + 2);
 					}
@@ -731,9 +738,9 @@ namespace Epoch {
 						{
 							Emitter* sound = new AudioEmitter();
 							((AudioEmitter*)sound)->AddEvent(Emitter::EventType::ePlay, playFile);
-							((AudioEmitter*)sound)->AddEvent(Emitter::EventType::ePlay, pauseFile);
-							((AudioEmitter*)sound)->AddEvent(Emitter::EventType::ePlay, resumeFile);
-							((AudioEmitter*)sound)->AddEvent(Emitter::EventType::ePlay, stopFile);
+							((AudioEmitter*)sound)->AddEvent(Emitter::EventType::ePause, pauseFile);
+							((AudioEmitter*)sound)->AddEvent(Emitter::EventType::eResume, resumeFile);
+							((AudioEmitter*)sound)->AddEvent(Emitter::EventType::eStop, stopFile);
 							AudioWrapper::GetInstance().AddEmitter(sound, soundName.c_str());
 							obj->AddComponent(sound);
 						}

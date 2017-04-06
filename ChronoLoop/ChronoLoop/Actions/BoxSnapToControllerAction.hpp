@@ -133,6 +133,7 @@ namespace Epoch {
 			force[2] *= -1; // SteamVR seems to Assume +Z goes into the screen.
 			mPickUp->mVelocity = force;
 			mPickUp->mShouldMove = true;
+			mPickUp = nullptr;
 			mHeld = false;
 		}
 	};

@@ -9,12 +9,13 @@
 #include "../Core/TimeManager.h"
 #include "../Core/LevelManager.h"
 #include "../Actions/HeadsetFollow.hpp"
+#include "BoxSnapToControllerAction.hpp"
 
 namespace Epoch {
 
 	struct TeleportAction : public CodeComponent {
 		MeshComponent *mPlaneMesh, *mWallsMesh, *mBlockMesh, *mExitMesh, *mServerMesh;
-		BaseObject *mPlaneObject, *mWallsObject, *mBlockObject, *mExitObject, *mServerObject;
+		BaseObject *mPlaneObject, *mWallsObject, *mBlockObject, *mExitObject, *mServerObject, *mHeadset;
 		ControllerType mControllerRole = eControllerType_Primary;
 		Level* cLevel = nullptr;
 		TeleportAction(ControllerType _t) { mControllerRole = _t; };
@@ -34,6 +35,8 @@ namespace Epoch {
 				mExitMesh     = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				mServerMesh = (MeshComponent*)mServerObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			}
+			mHeadset = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset();
+			
 		}
 
 		virtual void Update() {
@@ -91,7 +94,12 @@ namespace Epoch {
 								forward *= meshTime;
 								VRInputManager::GetInstance().GetPlayerPosition()[3][0] += fwd[0] * objMat.xAxis[0]; // x
 								VRInputManager::GetInstance().GetPlayerPosition()[3][2] += fwd[2] * objMat.zAxis[2]; // z
-																									   //VRInputManager::Instance().iGetPlayerPosition()[3][3] += forward[3]; // w
+								//VRInputManager::Instance().iGetPlayerPosition()[3][3] += forward[3]; // w
+								//Move any held objects along with player 
+							
+								if (mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1) != nullptr && dynamic_cast<SFXEmitter*>(mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
+									((SFXEmitter*)mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
+									 
 							} else {
 								SystemLogger::GetLog() << "[DEBUG] Can't let you do that, Starfox." << std::endl;
 							}
