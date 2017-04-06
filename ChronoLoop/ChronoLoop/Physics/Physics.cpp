@@ -8,7 +8,7 @@
 #include "..\Input\VRInputManager.h"
 #include "..\Core\LevelManager.h"
 
-#define DEBUG_LEVEL1 0
+#define DEBUG_LEVEL1 1
 #define DEBUG_LEVEL2 0
 
 namespace Epoch
@@ -692,7 +692,11 @@ namespace Epoch
 
 		//Time pause
 		bool paused = false;
-
+		//bool paused = false;
+		//if(cLevel->GetPauseMenu() != nullptr)
+		//{
+		//	paused = cLevel->GetPauseMenu()->isPauseMenuOn();
+		//}
 		if (cLevel->GetTimeManipulator() != nullptr)
 		{
 			paused = cLevel->GetTimeManipulator()->isTimePaused();

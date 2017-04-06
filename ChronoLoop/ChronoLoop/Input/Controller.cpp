@@ -58,6 +58,7 @@ namespace Epoch {
 						float slope = (CurPos.y - InitialPos.y) / (CurPos.x - InitialPos.x);
 						if ((slope >= 3 || slope <= -3) &&
 							(CurPos.x < 0.3f && CurPos.x > -0.3f)) {
+							//SystemLogger::GetLog() << "Vertical Wrongness" << std::endl;
 							return 2;
 						}
 						if ((slope <= 0.33f && slope >= -0.33f) &&
