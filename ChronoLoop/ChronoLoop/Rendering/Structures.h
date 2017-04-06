@@ -75,7 +75,8 @@ namespace Epoch
 		vec3f Color;
 
 		float ConeRatio;
-		float pad1[3];
+		float Range;
+		float pad1[2];
 
 		Light()
 		{
