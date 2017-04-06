@@ -193,14 +193,6 @@ namespace Epoch
 						RightController->AddChild(cloneDisplay);
 					}
 
-					//Font* font = new Font();
-					cdisp->GetContext().mTextures[eTEX_DIFFUSE] = srv;
-					UICloneText* ct = new UICloneText();
-					cloneDisplay->AddComponent(ct);
-					cloneDisplay->AddComponent(cdisp);
-					cloneDisplay->SetParent(RightController);
-					RightController->AddChild(cloneDisplay);
-
 					t.SetMatrix(matrix4::CreateTranslation(-0.039f, 0.015f, 0.054f));
 					BaseObject *rewindHelp = Pool::Instance()->iGetObject()->Reset("RewindHelp", t);
 					MeshComponent* rhdisp = new MeshComponent("../Resources/help.obj");
