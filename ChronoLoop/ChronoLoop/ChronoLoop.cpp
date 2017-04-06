@@ -460,18 +460,6 @@ void Update() {
 	ParticleSystem::Instance()->AddEmitter(spark);
 	spark->FIRE();*/
 
-	ParticleEmitter* em = new TeleportEffect(-1, 200, 25, vec3f(0, .25, -1));
-	Particle* sp = &Particle::Init();
-	sp->SetColors(vec3f(1, 1, 1), vec3f(0, 0, 0));
-	sp->SetLife(2500);
-	sp->SetSize(1.0, .15);
-	em->SetParticle(sp);
-	em->SetPosBounds(vec3f(-3, 0, -3), vec3f(3, 0, 3));
-	em->SetTexture("../Resources/BasicCircleP.png", 1);
-	em->SetTexture("../Resources/BasicRect2P.png");
-	ParticleSystem::Instance()->AddEmitter(em);
-	em->FIRE();
-
 	if (VREnabled) {
 		VRInputManager::GetInstance().Update();
 	}

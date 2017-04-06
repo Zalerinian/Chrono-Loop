@@ -14,6 +14,7 @@ cbuffer TextureData : register(b0)
     float4 offsetx;
     float4 offsety;
 }
+
 texture2D text2D0 : register(t0);
 texture2D text2D1 : register(t1);
 texture2D text2D2 : register(t2);
