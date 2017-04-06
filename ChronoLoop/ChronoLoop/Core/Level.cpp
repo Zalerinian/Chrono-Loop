@@ -948,18 +948,24 @@ namespace Epoch {
 		if ((_Level == L"HUBWORLD" || _Level == L"HUB") && accessHub->GetOnce() == true) {
 			accessHub->SetOnce(false);
 			CommandConsole::Instance().Toggle();
+			accessLevelOne = nullptr;
+			accessLevelTwo = nullptr;
 			accessHub = nullptr;
 		}
 		else if ((_Level == L"LEVELONE" || _Level == L"LVLONE") && accessLevelOne->GetOnce() == true) {
 			accessLevelOne->SetOnce(false);
 			CommandConsole::Instance().Toggle();
 			accessLevelOne = nullptr;
+			accessLevelTwo = nullptr;
+			accessHub = nullptr;
 		}
 		else if ((_Level == L"LEVELTWO" || _Level == L"LVLTWO") && accessLevelTwo->GetOnce() == true)
 		{
 			accessLevelTwo->SetOnce(false);
 			CommandConsole::Instance().Toggle();
+			accessLevelOne = nullptr;
 			accessLevelTwo = nullptr;
+			accessHub = nullptr;
 		}
 		else if (accessLevelTwo == nullptr || accessLevelOne == nullptr || (accessHub == nullptr && (accessLevelTwo == nullptr && accessLevelOne == nullptr)))
 			CommandConsole::Instance().DisplaySet(L"FAILED TO LOAD LEVEL :(");
