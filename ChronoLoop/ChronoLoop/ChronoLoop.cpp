@@ -467,8 +467,8 @@ void Update() {
 	sp->SetSize(1.0, .15);
 	em->SetParticle(sp);
 	em->SetPosBounds(vec3f(-3, 0, -3), vec3f(3, 0, 3));
-	em->SetTexture("../Resources/BasicCircleP.png");
-	em->SetTexture("../Resources/BasicRect2P.png",true, .01f, 1);
+	em->SetTexture("../Resources/BasicCircleP.png", 1);
+	em->SetTexture("../Resources/BasicRect2P.png");
 	ParticleSystem::Instance()->AddEmitter(em);
 	em->FIRE();
 

@@ -236,7 +236,8 @@ namespace Epoch
 		//TODO: Make pixel shader buffer
 		for (int i = 0; i < 4; i++)
 		{
-			mPSData.types[i] = 0;
+			mPSData.xoff[i] = 0;
+			mPSData.yoff[i] = 0;
 		}
 		vDesc.Usage = D3D11_USAGE_DEFAULT;
 		vDesc.ByteWidth = sizeof(mPSData);
@@ -265,6 +266,11 @@ namespace Epoch
 	{
 		return mVBuffer.Get();
 	}
+	ID3D11Buffer* ParticleEmitter::GetPixelBuffer()
+	{
+		return mPBuffer.Get();
+	}
+
 
 	ID3D11ShaderResourceView* ParticleEmitter::GetTexture(int _index)
 	{
@@ -279,7 +285,7 @@ namespace Epoch
 	{
 		mTName[_index] = _tex;
 		mTextures[_index].mType = 0;
-		mPSData.types[_index] = 0;
+		mPSData.xoff[_index] = 0;
 		TextureManager::Instance()->iGetTexture2D(mTName[_index], &mTextures[_index].tv, &mTextures[_index].text);
 
 	}
@@ -290,16 +296,15 @@ namespace Epoch
 		mTextures[_index].mAnimated = _animated;
 		mTextures[_index].mOffset = _offset;
 		mTextures[_index].mFrames = _frames;
-		mPSData.types[_index] = _offset;
 		TextureManager::Instance()->iGetTexture2D(mTName[_index], &mTextures[_index].tv, &mTextures[_index].text);
 	}
-	void ParticleEmitter::SetTexture(const char* _tex, bool _wrap, float _speed, int _index)
+	void ParticleEmitter::SetTexture(const char* _tex, bool _wrap, float _speedx, float _speedy, int _index)
 	{
 		mTName[_index] = _tex;
 		mTextures[_index].mType = 3;
 		mTextures[_index].mWrap = _wrap;
-		mTextures[_index].mSpeed = _speed;
-		mPSData.types[_index] = _speed;
+		mTextures[_index].mSpeed[0] = _speedx;
+		mTextures[_index].mSpeed[1] = _speedy;
 		TextureManager::Instance()->iGetTexture2D(mTName[_index], &mTextures[_index].tv, &mTextures[_index].text);
 	}
 
@@ -402,12 +407,15 @@ namespace Epoch
 			if (mTextures[i].mType == 1)
 				continue;
 			if (mTextures[i].mType == 3)
-				mPSData.types[i] += mTextures[i].mSpeed;
+			{
+				mPSData.xoff[i] += mTextures[i].mSpeed[0];
+				mPSData.yoff[i] += mTextures[i].mSpeed[1];
+			}
 			else
 			{
-				mPSData.types[i] += mTextures[i].mOffset;
-				if (mPSData.types[i] > mTextures[i].mOffset * mTextures[i].mFrames)
-					mPSData.types[i] = 0;
+				mPSData.xoff[i] += mTextures[i].mOffset;
+				if (mPSData.xoff[i] > mTextures[i].mOffset * mTextures[i].mFrames)
+					mPSData.xoff[i] = 0;
 			}
 
 		}
