@@ -40,8 +40,7 @@ namespace Epoch
 			exitend = exitCube->GetTransform().GetMatrix() * exitCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 2.6f, 0, 1));
 		}
 
-		virtual void OnCollision(Collider& _col, Collider& _other, float _time)
-		{
+		virtual void OnCollision(Collider& _col, Collider& _other, float _time) {
 			if (!Settings::GetInstance().GetBool("PauseMenuUp")) {
 				if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane) {
 					colliding = true;
@@ -62,35 +61,30 @@ namespace Epoch
 						exitInterp->SetActive(true);
 						exitInterp->Prepare(0.69f, exitCube->GetTransform().GetMatrix(), exitend, exitCube->GetTransform().GetMatrix());
 
-					if (!once)
-					{
-						if (_col.GetBaseObject()->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0)
-						{
-							if (dynamic_cast<SFXEmitter*>(_col.GetBaseObject()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0)))
-								((SFXEmitter*)_col.GetBaseObject()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+						if (!once) {
+							if (_col.GetBaseObject()->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0) {
+								if (dynamic_cast<SFXEmitter*>(_col.GetBaseObject()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0)))
+									((SFXEmitter*)_col.GetBaseObject()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+							}
+
+							if (Block->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0) {
+								if (dynamic_cast<SFXEmitter*>(Block->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0)))
+									((SFXEmitter*)Block->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+							}
+							if (Exit->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0) {
+								if (dynamic_cast<SFXEmitter*>(Exit->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0)))
+									((SFXEmitter*)Exit->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+							}
+							once = true;
 						}
 
-						if (Block->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0)
-						{
-							if (dynamic_cast<SFXEmitter*>(Block->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0)))
-								((SFXEmitter*)Block->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
-						}
-						if (Exit->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0)
-						{
-							if (dynamic_cast<SFXEmitter*>(Exit->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0)))
-								((SFXEmitter*)Exit->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
-						}
-						once = true;
+						mCanDoorInterp = true;
+						mDoorDoneInterpolating = false;
 					}
-
-					mCanDoorInterp = true;
-					mDoorDoneInterpolating = false;
+				} else {
+					once = false;
+					colliding = false;
 				}
-			}
-			else
-			{
-				once = false;
-				colliding = false;
 			}
 		}
 		virtual void Update()

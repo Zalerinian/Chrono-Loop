@@ -249,7 +249,7 @@ namespace Epoch
 						p2->SetColors(vec3f(0, .5f, .5f), vec3f(0, 1, 0));
 						p2->SetLife(500);
 						p2->SetSize(.15f, .05f);
-						ParticleEmitter* emit22 = new TeleportEffect(-1, 150, 2, vec4f(-2.61, -10, 0, 1));
+						ParticleEmitter* emit22 = new TeleportEffect(-1, 150, 2, vec4f(-2.61f, -10, 0, 1));
 						emit22->SetTexture("../Resources/BasicCircleP.png");
 						emit22->SetParticle(p2);
 						((TeleportEffect*)emit22)->y1 = 1;
@@ -266,7 +266,7 @@ namespace Epoch
 						p2->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
 						p2->SetLife(500);
 						p2->SetSize(.35f, .15f);
-						ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(-2.61, -10, 0, 1));
+						ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(-2.61f, -10, 0, 1));
 						emit21->SetParticle(p2);
 						emit21->SetTexture("../Resources/BasicRectP.png");
 						((TeleportEffect*)emit21)->y1 = 8;
@@ -281,7 +281,7 @@ namespace Epoch
 						p2->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
 						p2->SetLife(500);
 						p2->SetSize(.15f, .05f);
-						ParticleEmitter* emit22 = new TeleportEffect(-1, 150, 2, vec4f(-2.61, -10, 0, 1));
+						ParticleEmitter* emit22 = new TeleportEffect(-1, 150, 2, vec4f(-2.61f, -10, 0, 1));
 						emit22->SetTexture("../Resources/BasicCircleP.png");
 						emit22->SetParticle(p2);
 						((TeleportEffect*)emit22)->y1 = 1;
@@ -333,14 +333,14 @@ namespace Epoch
 					l2->Type = 4;
 					l2->Color = vec3f(0, 0, 1);
 					l2->ConeDirection = vec3f(0, -1, 0);
-					l2->Position = vec3f(3.972854, 5, 0);
+					l2->Position = vec3f(3.972854f, 5, 0);
 					l2->ConeRatio = .9f;
 
 					Light* l3 = new Light();
 					l3->Type = 4;
 					l3->Color = vec3f(0, 1, 0);
 					l3->ConeDirection = vec3f(0, -1, 0);
-					l3->Position = vec3f(0, 5, -3.872531);
+					l3->Position = vec3f(0, 5, -3.872531f);
 					l3->ConeRatio = .9f;
 
 					Renderer::Instance()->SetLight(l1, 0);
