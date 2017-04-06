@@ -209,6 +209,7 @@ namespace Epoch {
 				CreateTransparentNode();
 			}
 		}
+		mBlended = _ButWillItBlend;
 	}
 
 	RenderShape * MeshComponent::GetShape() {

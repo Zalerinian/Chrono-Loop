@@ -343,7 +343,7 @@ namespace Epoch {
 		}
 	}
 
-	void RenderList::UpdateBuffer(ConstantBufferType _t, Microsoft::WRL::ComPtr<ID3D11Buffer> _data, unsigned int _bufferIndex, unsigned int _dataIndex) {
+	void RenderList::UpdateBuffer(ConstantBufferType _t, Microsoft::WRL::ComPtr<ID3D11Buffer>& _data, unsigned int _bufferIndex, unsigned int _dataIndex) {
 		switch (_t) {
 			case eCB_VERTEX:
 				UpdateBuffer(mShape.mContext.mVertexCBuffers[_bufferIndex], _data, _dataIndex);
