@@ -309,6 +309,17 @@ namespace Epoch
 					ParticleSystem::Instance()->AddEmitter(emit);
 					emit->FIRE();
 
+					Particle* sp = &Particle::Init();
+					sp->SetPos(vec3f(0,0,0));
+					sp->SetColors(vec3f(.9f, .9f, 1), vec3f(.2f, .2f, 1));
+					sp->SetLife(100);
+					sp->SetSize(.25f, .05f);
+					ParticleEmitter* emits = new Sparks(-1, 250, 2, vec3f(2.668173f, 0.3932321f, 8.32376f));
+					emits->SetParticle(sp);
+					emits->SetTexture("../Resources/BasicCircleP.png");
+					ParticleSystem::Instance()->AddEmitter(emits);
+					emits->FIRE();
+
 					next->AssignPlayerControls(headset, LeftController, RightController);
 					next->AddObject(headset);
 					next->AddObject(LeftController);
