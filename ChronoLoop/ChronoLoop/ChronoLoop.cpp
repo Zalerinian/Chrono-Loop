@@ -598,10 +598,10 @@ void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftControl
 {
 	Listener* ears = new Listener();
 	Emitter* ambient = new AudioEmitter();
-	((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_TEST2);
-	((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_TEST2);
-	((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_TEST2);
-	((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_TEST2);
+	((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_HUB0);
+	((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_HUB0);
+	((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_HUB0);
+	((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_HUB0);
 	AudioWrapper::GetInstance().AddListener(ears, "Listener");
 	AudioWrapper::GetInstance().AddEmitter(ambient, "ambience");
 

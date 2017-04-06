@@ -15,7 +15,7 @@ namespace Epoch {
 
 	struct TeleportAction : public CodeComponent {
 		MeshComponent *mPlaneMesh, *mWallsMesh, *mBlockMesh, *mExitMesh, *mServerMesh;
-		BaseObject *mPlaneObject, *mWallsObject, *mBlockObject, *mExitObject, *mServerObject;
+		BaseObject *mPlaneObject, *mWallsObject, *mBlockObject, *mExitObject, *mServerObject, *mHeadset;
 		ControllerType mControllerRole = eControllerType_Primary;
 		Level* cLevel = nullptr;
 		TeleportAction(ControllerType _t) { mControllerRole = _t; };
@@ -35,7 +35,7 @@ namespace Epoch {
 				mExitMesh     = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				mServerMesh = (MeshComponent*)mServerObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			}
-
+			mHeadset = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset();
 			
 		}
 
@@ -97,8 +97,8 @@ namespace Epoch {
 								//VRInputManager::Instance().iGetPlayerPosition()[3][3] += forward[3]; // w
 								//Move any held objects along with player 
 							
-								if (mObject->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1) != nullptr && dynamic_cast<SFXEmitter*>(mObject->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
-									((SFXEmitter*)mObject->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
+								if (mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1) != nullptr && dynamic_cast<SFXEmitter*>(mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
+									((SFXEmitter*)mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
 									 
 							} else {
 								SystemLogger::GetLog() << "[DEBUG] Can't let you do that, Starfox." << std::endl;

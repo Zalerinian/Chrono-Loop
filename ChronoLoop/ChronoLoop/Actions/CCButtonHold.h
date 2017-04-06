@@ -58,6 +58,9 @@ namespace Epoch
 				exitInterp->SetActive(true);
 				exitInterp->Prepare(0.69f, exitCube->GetTransform().GetMatrix(), exitend, exitCube->GetTransform().GetMatrix());
 
+				((Collider*)blockCube->GetBaseObject()->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(blockend.Position);
+				((Collider*)exitCube->GetBaseObject()->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(exitend.Position);
+
 				mCanDoorInterp = true;
 				mDoorDoneInterpolating = false;
 
@@ -88,6 +91,7 @@ namespace Epoch
 					}
 					else
 					{
+						
 						mCanDoorInterp = false;
 						blockInterp->SetActive(false);
 						exitInterp->SetActive(false);
@@ -105,6 +109,8 @@ namespace Epoch
 
 						exitInterp->SetActive(true);
 						exitInterp->Prepare(0.69f, exitCube->GetTransform().GetMatrix(), exitstart, exitCube->GetTransform().GetMatrix());
+						((Collider*)blockCube->GetBaseObject()->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(blockstart.Position);
+						((Collider*)exitCube->GetBaseObject()->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(exitstart.Position);
 
 						mCanDoorInterp = true;
 						mDoorDoneInterpolating = false;
