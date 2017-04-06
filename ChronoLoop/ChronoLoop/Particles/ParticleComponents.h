@@ -172,7 +172,7 @@ namespace Epoch
 		int GetVertexCount();
 
 		void SetTexture(const char* _tex, int _index = 0);
-		void SetTexture(const char* _tex, bool _animate, float offset,int _frames, int _index = 0);
+		void SetTexture(const char* _tex, bool _animate, int _frames, float offset, int _index = 0);
 		void SetTexture(const char* _tex, bool _wrap, float _speed, int _index = 0);
 		virtual void SetParticle(Particle* _p);
 		void SetPosBounds(vec3f _min, vec3f _max);

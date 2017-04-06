@@ -234,6 +234,10 @@ namespace Epoch
 		Renderer::Instance()->GetDevice()->CreateBuffer(&vDesc, &vData, &mVBuffer);
 
 		//TODO: Make pixel shader buffer
+		for (int i = 0; i < 4; i++)
+		{
+			mPSData.types[i] = 0;
+		}
 		vDesc.Usage = D3D11_USAGE_DEFAULT;
 		vDesc.ByteWidth = sizeof(mPSData);
 		vDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -242,6 +246,13 @@ namespace Epoch
 
 		vData.pSysMem = &mPSData;
 		Renderer::Instance()->GetDevice()->CreateBuffer(&vDesc, &vData, &mPBuffer);
+
+		for (int i = 0; i < 3; i++)
+		{
+			mTextures[i].mAnimated = false;
+			mTextures[i].mOffset = 0;
+			mTextures[i].mFrames = 0;
+		}
 	}
 
 	void ParticleEmitter::CreateTextureResource()
@@ -272,7 +283,7 @@ namespace Epoch
 		TextureManager::Instance()->iGetTexture2D(mTName[_index], &mTextures[_index].tv, &mTextures[_index].text);
 
 	}
-	void ParticleEmitter::SetTexture(const char* _tex, bool _animated, float _offset, int _frames, int _index)
+	void ParticleEmitter::SetTexture(const char* _tex, bool _animated, int _frames, float _offset,  int _index)
 	{
 		mTName[_index] = _tex;
 		mTextures[_index].mType = 2;
@@ -786,7 +797,7 @@ namespace Epoch
 		// x = x, y = sin(t), z = z // t -> yradial
 		_p->SetVelocity(vec3f(_p->GetVelocity().x, cos(_p->mYRadial) * 2.25, _p->GetVelocity().z));
 		_p->mYRadial += static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / .3));
-		ParticleEmitter::UpdateParticle(_p, _delta);
+		ParticleEmitter::UpdateParticle(_p, _delta );
 	}
 
 	void Sparks::EmitParticles()

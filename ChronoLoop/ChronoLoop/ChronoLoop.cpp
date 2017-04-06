@@ -149,7 +149,7 @@ void Update() {
 	// TODO: Replace all this with a level to run.
 	///*///////////////////////Using this to test physics//////////////////
 	//_CrtSetBreakAlloc(4390);
-	
+
 	////Sound Initializing---------------------------------------------------
 	AudioWrapper::GetInstance().Initialize();
 	//Soundbanks
@@ -158,7 +158,7 @@ void Update() {
 	AudioWrapper::GetInstance().LoadSoundBank(_aSB);
 	AudioWrapper::GetInstance().LoadSoundBank(_mainS);
 	AudioWrapper::GetInstance().LoadSoundBank(_sbpkg1);
-	
+
 	// new BaseObject("Controller", identity);
 
 	//BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("RController", identity);// new BaseObject("Controller", identity);
@@ -321,7 +321,7 @@ void Update() {
 	((ParticleEmitter*)exitEmit)->SetVelBounds(vec3f(.25f, .25f, .25f), vec3f(.5f, .5f, .5f));
 	ParticleSystem::Instance()->AddEmitter(exitEmit);
 	exitEmit->FIRE();
-	
+
 	exit = &Particle::Init();
 	exit->SetPos(vec3f(0, 0, 0));
 	exit->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
@@ -351,7 +351,7 @@ void Update() {
 	((TeleportEffect*)startEmit)->SetVelBounds(vec3f(.5f, 1, .5f), vec3f(.5f, 5, .5f));
 	ParticleSystem::Instance()->AddEmitter(startEmit);
 	startEmit->FIRE();
-	
+
 	start = &Particle::Init();
 	start->SetPos(vec3f(0, 0, 0));
 	start->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
@@ -460,10 +460,22 @@ void Update() {
 	ParticleSystem::Instance()->AddEmitter(spark);
 	spark->FIRE();*/
 
+	ParticleEmitter* em = new TeleportEffect(-1, 200, 25, vec3f(0, .25, -1));
+	Particle* sp = &Particle::Init();
+	sp->SetColors(vec3f(1, 1, 1), vec3f(0, 0, 0));
+	sp->SetLife(2500);
+	sp->SetSize(1.0, .15);
+	em->SetParticle(sp);
+	em->SetPosBounds(vec3f(-3, 0, -3), vec3f(3, 0, 3));
+	em->SetTexture("../Resources/BasicCircleP.png");
+	em->SetTexture("../Resources/BasicRect2P.png",true, .01f, 1);
+	ParticleSystem::Instance()->AddEmitter(em);
+	em->FIRE();
+
 	if (VREnabled) {
 		VRInputManager::GetInstance().Update();
 	}
-	
+
 	UpdateTime();
 	fixedTime = 0;
 	while (LevelManager::GetInstance().GetCurrentLevel()->ChronoLoop) {
@@ -484,9 +496,9 @@ void Update() {
 			{
 				Particle * p = &Particle::Init();
 				p->SetColors(vec4f(1, 1, 1, 1), vec4f());
-				p->SetLife((rand()% 250) + 250);
+				p->SetLife((rand() % 250) + 250);
 				p->SetSize(.25f, .15f);
-				vec3f EPos = vec3f((rand() % 10) - 5,rand() % 5, (rand() % 10) - 5);
+				vec3f EPos = vec3f((rand() % 10) - 5, rand() % 5, (rand() % 10) - 5);
 				ParticleEmitter *emit = new ParticleEmitter(-1, 200, 20, EPos);
 				emit->SetParticle(p);
 				emit->SetTexture("../Resources/BasicCircleP.png");
@@ -506,11 +518,11 @@ void Update() {
 			LevelManager::GetInstance().Update();
 			ParticleSystem::Instance()->Update();
 			TimeManager::Instance()->Update(deltaTime);
-			Renderer::Instance()->Render(deltaTime); 
+			Renderer::Instance()->Render(deltaTime);
 			while (fixedTime >= FIXED_UPDATE_INTERVAL) {
 				Physics::Instance()->Update(FIXED_UPDATE_INTERVAL);
 				fixedTime -= FIXED_UPDATE_INTERVAL;
-				if(fixedTime >=  0.25f)
+				if (fixedTime >= 0.25f)
 				{
 					UpdateTime();
 					fixedTime = 0;
@@ -561,17 +573,17 @@ bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, b
 	}
 
 	hwnd = CreateWindowEx(                                     //Create our Extended Window
-		NULL,                                //Extended style
-		WndClassName,                        //Name of our windows class
-		L"Chrono::Loop",                     //Name in the title bar of our window
-		WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME, //style of our window
-		200, 200,                            //Top left corner of window
-		width,                               //Width of our window
-		height,                              //Height of our window
-		NULL,                                //Handle to parent window
-		NULL,                                //Handle to a Menu
-		hInstance,                           //Specifies instance of current program
-		NULL                                 //used for an MDI client window
+						  NULL,                                //Extended style
+						  WndClassName,                        //Name of our windows class
+						  L"Chrono::Loop",                     //Name in the title bar of our window
+						  WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME, //style of our window
+						  200, 200,                            //Top left corner of window
+						  width,                               //Width of our window
+						  height,                              //Height of our window
+						  NULL,                                //Handle to parent window
+						  NULL,                                //Handle to a Menu
+						  hInstance,                           //Specifies instance of current program
+						  NULL                                 //used for an MDI client window
 	);
 	if (!hwnd) {
 		MessageBox(NULL, L"Error creating window", L"Error", MB_OK | MB_ICONERROR);
@@ -594,7 +606,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 	return 0;
 }
 
-void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftController , BaseObject* RightController)
+void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftController, BaseObject* RightController)
 {
 	Listener* ears = new Listener();
 	Emitter* ambient = new AudioEmitter();

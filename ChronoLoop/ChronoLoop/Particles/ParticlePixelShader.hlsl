@@ -1,4 +1,3 @@
-//#include "../Effects.hlsli"
 
 struct GSOutput
 {
@@ -22,9 +21,14 @@ SamplerState samp : register(s0);
 float4 main(GSOutput input) : SV_TARGET
 {
     float4 col = text2D0.Sample(samp, float2(input.uv.x + offset[0], input.uv.y));
-    //col += text2D1.Sample(samp, float2(input.uv.x + offset[1], input.uv.y));
-    //col += text2D2.Sample(samp, float2(input.uv.x + offset[2], input.uv.y));
-	//float4 col = Glow(text2D0, text2D0, samp, 30, float4(1, 1, 1, 1), input.uv);
+    col += text2D1.Sample(samp, float2(input.uv.x + offset[1], input.uv.y));
+    col += text2D2.Sample(samp, float2(input.uv.x + offset[2], input.uv.y));
+
+    //col *= col1 != 0 ? float4(col1.xyz, 1) : 1;
+    //col *= col2 != 0 ? float4(col2.xyz,1) : 1;
+    //col.a += col1.a + col2.a;
+   
+    //saturate(col);
 	
 	clip(col.a - .25);
 	col *= input.col;
