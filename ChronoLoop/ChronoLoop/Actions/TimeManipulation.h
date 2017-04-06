@@ -18,7 +18,7 @@ namespace Epoch
 
 		bool mTexturedApplied = false;
 		bool mPauseTime = false;
-		bool mIsBeingMade;
+		bool mIsBeingMade, mFireCreationParticles;
 		Renderer::TimeManipulationEffectData mEffectData;
 		Interpolator<vec2f> mDesaturationInterpolator;
 		unsigned int HotfixButtonDown = 0;

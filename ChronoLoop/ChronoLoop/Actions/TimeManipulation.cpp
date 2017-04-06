@@ -33,6 +33,26 @@ namespace Epoch
 
 	void TimeManipulation::Update() {
 		Level* currentLevel = LevelManager::GetInstance().GetCurrentLevel();
+
+		//we fire particles here because we let the timeline update the position of the clone for 1 frame after they are made
+		//then we can shoot them off in the correct position
+		if(mFireCreationParticles)
+		{
+			Particle* p = &Particle::Init();
+			p->SetColors(vec4f(0, .25, 1, 1), vec4f(.2f, .55f, .8f, 1));
+			p->SetLife(250);
+			p->SetSize(.25f, .15f);
+
+			vec3f EPos = vec3f(mCurCloneHeadset->GetTransform().GetPosition()->x, mCurCloneHeadset->GetTransform().GetPosition()->y, mCurCloneHeadset->GetTransform().GetPosition()->z);
+			ParticleEmitter* emit = new RadialEmitter(250, 250, 25, EPos);
+			emit->SetParticle(p);
+			emit->SetTexture("../Resources/BasicCircleP.png");
+			ParticleSystem::Instance()->AddEmitter(emit);
+			vec4f temp = EPos;
+			AudioWrapper::GetInstance().MakeEventAtLocation(AK::EVENTS::SFX_SHORTCIRUIT, &temp);
+			emit->FIRE();
+			mFireCreationParticles = false;
+		}
 		
 
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
@@ -139,20 +159,6 @@ namespace Epoch
 					Physics::Instance()->mObjects.push_back(mCurCloneController2);
 					++mNumOfConfirmedClones;
 
-					//TODO: MAKE CLONE PARTICLE
-					Particle* p = &Particle::Init();
-					p->SetColors(vec4f(0, .25, 1,1), vec4f(.2f, .55f, .8f,1));
-					p->SetLife(250);
-					p->SetSize(.25f, .15f);
-
-					vec3f EPos = vec3f(mCurCloneHeadset->GetTransform().GetPosition()->x,mCurCloneHeadset->GetTransform().GetPosition()->y, mCurCloneHeadset->GetTransform().GetPosition()->z);
-					ParticleEmitter* emit = new RadialEmitter(250, 250, 25, EPos);
-					emit->SetParticle(p);
-					emit->SetTexture("../Resources/BasicCircleP.png");
-					ParticleSystem::Instance()->AddEmitter(emit);
-					vec4f temp = EPos;
-					AudioWrapper::GetInstance().MakeEventAtLocation(AK::EVENTS::SFX_SHORTCIRUIT, &temp);
-					emit->FIRE();
 				}
 				else
 				{
