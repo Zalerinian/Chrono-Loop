@@ -13,6 +13,7 @@
     <Scale>1,1,1.079898</Scale>
     <Components>
       <ButtonPress>Enabled</ButtonPress>
+      <ButtonPress>Enabled</ButtonPress>
       <Collider>
         <Type>Button</Type>
         <Trigger>False</Trigger>
@@ -87,8 +88,8 @@
     <Name>DoorFrame1</Name>
     <Mesh>DoorFrame1.obj</Mesh>
     <Texture>grey.png</Texture>
-    <Position>2.417033,0,0.3837723</Position>
-    <Rotation>0,0,0</Rotation>
+    <Position>-21.5733,-1.044846,2.796927</Position>
+    <Rotation>0.01744444,5.233334,0.785</Rotation>
     <Scale>1,1,1</Scale>
     <Components />
   </Object>
@@ -701,8 +702,8 @@
     <Name>Chair1</Name>
     <Mesh>PlaceHolderChair.obj</Mesh>
     <Texture>Floorg.png</Texture>
-    <Position>-6.754942,0.003758817,6.346926</Position>
-    <Rotation>0,0,0</Rotation>
+    <Position>-16.90526,-0.1962248,6.346926</Position>
+    <Rotation>-0.5112473,1.261655,0</Rotation>
     <Scale>0.025,0.025,0.03</Scale>
     <Components />
   </Object>
@@ -767,6 +768,96 @@
     <Position>-14.47182,2.89698,-4.182316</Position>
     <Rotation>1.57,1.57,0</Rotation>
     <Scale>0.5,1,0.3</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>DoorFrame1</Name>
+    <Mesh>DoorFrame1.obj</Mesh>
+    <Texture>grey.png</Texture>
+    <Position>2.417033,0,0.3837723</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>DoorEmitter2</Name>
+    <Mesh>DoorEmiters2.obj</Mesh>
+    <Texture>fieldGen.png</Texture>
+    <Position>-21.039,-0.05824603,-10.37694</Position>
+    <Rotation>2.556347,-0.9772043,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>asdf</Name>
+    <Mesh>Clone.obj</Mesh>
+    <Texture>CloneTexture_Orange.png</Texture>
+    <Position>-19.71792,-0.6083169,-0.6517964</Position>
+    <Rotation>0,-2.287725,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Camera2</Name>
+    <Mesh>PlaceHolderCamera.obj</Mesh>
+    <Texture>enrgyField.png</Texture>
+    <Position>-12.48516,3.005262,-0.5133716</Position>
+    <Rotation>0,-2.616667,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Servers</Name>
+    <Mesh>Servers.obj</Mesh>
+    <Texture>SM_Floor_Two_SM_Floor_AlbedoTransparency.png</Texture>
+    <Position>-24.69805,0,-4.364358</Position>
+    <Rotation>0.785,1.57,0.785</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Chair1</Name>
+    <Mesh>PlaceHolderChair.obj</Mesh>
+    <Texture>Floorg.png</Texture>
+    <Position>-6.754942,0.003758817,6.346926</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>0.025,0.025,0.03</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Button</Name>
+    <Mesh>Button.obj</Mesh>
+    <Texture>red.png</Texture>
+    <Position>-18.71062,0.530871,3.522284</Position>
+    <Rotation>-1.028777,-0.537679,0</Rotation>
+    <Scale>1,1,1.079898</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Buttonstand</Name>
+    <Mesh>Buttonstand.obj</Mesh>
+    <Texture>white.png</Texture>
+    <Position>-21.99042,0.8449958,-8.750456</Position>
+    <Rotation>0,0.7272689,1.084447</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>General Controls</Name>
+    <Mesh>PlaneCorrection.obj</Mesh>
+    <Texture>GeneralControlScheme.png</Texture>
+    <Position>0.6806924,1.730055,8.910416</Position>
+    <Rotation>1.57,3.14,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Time Controlls</Name>
+    <Mesh>PlaneCorrection.obj</Mesh>
+    <Texture>TimeControlScheme.png</Texture>
+    <Position>-0.4240379,1.726474,8.91</Position>
+    <Rotation>1.57,3.14,0</Rotation>
+    <Scale>1,1,1</Scale>
     <Components />
   </Object>
 </Level>

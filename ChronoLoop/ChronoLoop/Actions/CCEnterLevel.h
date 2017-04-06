@@ -68,10 +68,10 @@ namespace Epoch
 
 					Listener* ears = new Listener();
 					Emitter* ambient = new AudioEmitter();
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_A_TIMELAPSE);
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_A_TIMELAPSE);
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_A_TIMELAPSE);
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_A_TIMELAPSE);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_LEVEL1AMBIENT);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_LEVEL1AMBIENT);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_LEVEL1AMBIENT);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_LEVEL1AMBIENT);
 
 					AudioWrapper::GetInstance().AddListener(ears, "Listener");
 					AudioWrapper::GetInstance().AddEmitter(ambient, "ambiance");
@@ -283,6 +283,10 @@ namespace Epoch
 					headset->AddComponent(ambient);
 					PauseMenu* pauseComp = new PauseMenu();
 					headset->AddComponent(pauseComp);
+						Emitter* sound = new SFXEmitter();
+					((SFXEmitter*)sound)->SetEvent(AK::EVENTS::SFX_TELEPORTSOUND);
+					AudioWrapper::GetInstance().AddEmitter(sound, headset->GetName().c_str());
+					headset->AddComponent(sound);
 
 					AudioWrapper::GetInstance().STOP();
 
@@ -334,7 +338,7 @@ namespace Epoch
 					emit21->SetTexture("../Resources/BasicRectP.png");
 					((TeleportEffect*)emit21)->y1 = 8;
 					((TeleportEffect*)emit21)->y2 = 12;
-					((TeleportEffect*)emit21)->SetPosBounds(vec3f(0, 0, -.75f), vec3f(0, 1, .75f));
+					((TeleportEffect*)emit21)->SetPosBounds(vec3f(0, 0, -1), vec3f(0, 1, 1));
 					((TeleportEffect*)emit21)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 					ParticleSystem::Instance()->AddEmitter(emit21);
 					emit21->FIRE();
@@ -349,7 +353,7 @@ namespace Epoch
 					emit22->SetParticle(p2);
 					((TeleportEffect*)emit22)->y1 = 1;
 					((TeleportEffect*)emit22)->y2 = 5;
-					((TeleportEffect*)emit22)->SetPosBounds(vec3f(0, 0, -.75f), vec3f(0, 1, .75f));
+					((TeleportEffect*)emit22)->SetPosBounds(vec3f(0, 0, -1), vec3f(0, 1, 1));
 					((TeleportEffect*)emit22)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 					ParticleSystem::Instance()->AddEmitter(emit22);
 					emit22->FIRE();

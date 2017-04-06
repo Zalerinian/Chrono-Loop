@@ -21,11 +21,11 @@ SamplerState samp : register(s0);
 
 float4 main(GSOutput input) : SV_TARGET
 {
-    
     float4 col = text2D0.Sample(samp, float2(input.uv.x + offset[0], input.uv.y));
-    col += text2D1.Sample(samp, float2(input.uv.x + offset[1], input.uv.y));
-    col += text2D2.Sample(samp, float2(input.uv.x + offset[2], input.uv.y));
-
+    //col += text2D1.Sample(samp, float2(input.uv.x + offset[1], input.uv.y));
+    //col += text2D2.Sample(samp, float2(input.uv.x + offset[2], input.uv.y));
+	//float4 col = Glow(text2D0, text2D0, samp, 30, float4(1, 1, 1, 1), input.uv);
+	
 	clip(col.a - .25);
 	col *= input.col;
 

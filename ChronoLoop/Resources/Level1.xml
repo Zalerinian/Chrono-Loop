@@ -1,4 +1,4 @@
-<Level>
+﻿<Level>
   <Settings>
     <StartPos>0.46,0,-10.15</StartPos>
     <StartRot>0,0,0</StartRot>
@@ -135,6 +135,7 @@
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components>
+      <ButtonHold>Enabled</ButtonHold>
       <ButtonHold>Enabled</ButtonHold>
       <Collider>
         <Type>Button</Type>
@@ -535,7 +536,7 @@
       <Collider>
         <Type>OBB</Type>
         <Trigger>False</Trigger>
-        <Position>0,.4,0</Position>
+        <Position>0,0.4,0</Position>
         <Rotation>0,0,0</Rotation>
         <Scale>1,1.6,1</Scale>
         <Move>False</Move>
@@ -574,9 +575,9 @@
     <Name>Chair</Name>
     <Mesh>PlaceHolderChair.obj</Mesh>
     <Texture>Floorg.png</Texture>
-    <Position>-2.956782,0,5.440462</Position>
-    <Rotation>0,0.1744445,0</Rotation>
-    <Scale>0.03,0.025,0.025</Scale>
+    <Position>-4.585726,1.228842,18.43977</Position>
+    <Rotation>-2.250321,1.367699,0</Rotation>
+    <Scale>-0.0005902876,0.025,0.025</Scale>
     <Components />
   </Object>
   <Object>
@@ -684,8 +685,8 @@
     <Name>ComputerMonitor</Name>
     <Mesh>PlaceHolderMonitor.obj</Mesh>
     <Texture>RobotTexture.png</Texture>
-    <Position>-2.029978,0.8023034,5.255193</Position>
-    <Rotation>0,3.14,0</Rotation>
+    <Position>3.439844,0.1245345,16.74625</Position>
+    <Rotation>0,-0.7012571,0</Rotation>
     <Scale>0.2,0.2,0.2</Scale>
     <Components />
   </Object>
@@ -747,8 +748,8 @@
     <Name>Clone3</Name>
     <Mesh>Clone.obj</Mesh>
     <Texture>CloneTexture_Green.png</Texture>
-    <Position>2.668173,0.3932321,8.32376</Position>
-    <Rotation>0.6070667,1.372878,5.931111</Rotation>
+    <Position>3.623517,0.3932321,8.32376</Position>
+    <Rotation>1.221111,1.372878,5.931111</Rotation>
     <Scale>1,1,1</Scale>
     <Components />
   </Object>
@@ -756,7 +757,7 @@
     <Name>cloneController1</Name>
     <Mesh>Controller.obj</Mesh>
     <Texture>vr_controller_lowpoly_texture.png</Texture>
-    <Position>2.467178,0.0692593,8.909224</Position>
+    <Position>2.942702,0.0692593,8.909224</Position>
     <Rotation>0.2860889,1.57,0.1657222</Rotation>
     <Scale>1,1,1</Scale>
     <Components />
@@ -792,7 +793,7 @@
     <Name>cloneController5</Name>
     <Mesh>Controller.obj</Mesh>
     <Texture>vr_controller_lowpoly_texture.png</Texture>
-    <Position>2.259746,0.0692593,7.800469</Position>
+    <Position>3.070417,0.0692593,7.800469</Position>
     <Rotation>0.2860889,2.093333,0.1674667</Rotation>
     <Scale>1,1,1</Scale>
     <Components />
@@ -840,6 +841,78 @@
     <Position>0,2.894122,11.94945</Position>
     <Rotation>1.57,3.14,0</Rotation>
     <Scale>0.5,1,0.2</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Clone3</Name>
+    <Mesh>Clone.obj</Mesh>
+    <Texture>CloneTexture_Green.png</Texture>
+    <Position>4.495092,2.363051,15.84898</Position>
+    <Rotation>0.6070667,-1.178912,5.931111</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Camera</Name>
+    <Mesh>PlaceHolderCamera.obj</Mesh>
+    <Texture>enrgyField.png</Texture>
+    <Position>-5.676158,2.982083,10.7025</Position>
+    <Rotation>0,1.065856,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Chair</Name>
+    <Mesh>PlaceHolderChair.obj</Mesh>
+    <Texture>Floorg.png</Texture>
+    <Position>-2.956782,0,5.440462</Position>
+    <Rotation>0,0.1744445,0</Rotation>
+    <Scale>0.03,0.025,0.025</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>ComputerMonitor</Name>
+    <Mesh>PlaceHolderMonitor.obj</Mesh>
+    <Texture>RobotTexture.png</Texture>
+    <Position>-2.029978,0.8023034,5.255193</Position>
+    <Rotation>0,3.14,0</Rotation>
+    <Scale>0.2,0.2,0.2</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Button</Name>
+    <Mesh>Button.obj</Mesh>
+    <Texture>red.png</Texture>
+    <Position>-3.613762,2.908468,17.18809</Position>
+    <Rotation>-2.324289,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Buttonstand</Name>
+    <Mesh>Buttonstand.obj</Mesh>
+    <Texture>white.png</Texture>
+    <Position>6.472971,0,18.02397</Position>
+    <Rotation>-0.1568006,0.5555888,1.360667</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Cube</Name>
+    <Mesh>mmChamber.obj</Mesh>
+    <Texture>grey.png</Texture>
+    <Position>-6.607128,0.1787705,16.08304</Position>
+    <Rotation>-0.3856168,0.4117268,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Table</Name>
+    <Mesh>PlaceHolderTable.obj</Mesh>
+    <Texture>mmSkyboxDark.png</Texture>
+    <Position>6.720272,1.104371,14.66006</Position>
+    <Rotation>0.785,-1.099347,0</Rotation>
+    <Scale>0.3,0.6,0.3</Scale>
     <Components />
   </Object>
 </Level>

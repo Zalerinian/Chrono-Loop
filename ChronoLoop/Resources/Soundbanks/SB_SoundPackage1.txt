@@ -1,0 +1,33 @@
+Event	ID	Name			Wwise Object Path	Notes
+	549593657	Play_Level3Ambient			\Default Work Unit\Play_Level3Ambient	
+	1664409707	Stop_Level3Ambient			\Default Work Unit\Stop_Level3Ambient	
+	1773552409	Pause_Level1Ambient			\Default Work Unit\Pause_Level1Ambient	
+	1927416214	Resume_Level3Ambient			\Default Work Unit\Resume_Level3Ambient	
+	2189517885	SFX_BoxDoorZap			\Default Work Unit\SFX_BoxDoorZap	
+	2333167699	Play_Level1Ambient			\Default Work Unit\Play_Level1Ambient	
+	2587866054	Stop_Hub1			\Default Work Unit\Stop_Hub1	
+	2587866055	Stop_Hub0			\Default Work Unit\Stop_Hub0	
+	2619715208	Resume_Level1Ambient			\Default Work Unit\Resume_Level1Ambient	
+	2693013165	SFX_TeleportSound			\Default Work Unit\SFX_TeleportSound	
+	2873887262	Pause_Hub1			\Default Work Unit\Pause_Hub1	
+	2873887263	Pause_Hub0			\Default Work Unit\Pause_Hub0	
+	2962453674	Play_Level2Ambient			\Default Work Unit\Play_Level2Ambient	
+	3040040780	Pause_Level2Ambient			\Default Work Unit\Pause_Level2Ambient	
+	3157945905	Stop_Level1Ambient			\Default Work Unit\Stop_Level1Ambient	
+	3223701532	Play_Hub1			\Default Work Unit\Play_Hub1	
+	3223701533	Play_Hub0			\Default Work Unit\Play_Hub0	
+	3323973828	Stop_Level2Ambient			\Default Work Unit\Stop_Level2Ambient	
+	3395730328	Resume_Hub0			\Default Work Unit\Resume_Hub0	
+	3395730329	Resume_Hub1			\Default Work Unit\Resume_Hub1	
+	3649448405	Resume_Level2Ambient			\Default Work Unit\Resume_Level2Ambient	
+	4257110323	Pause_Level3Ambient			\Default Work Unit\Pause_Level3Ambient	
+
+In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
+	54674957	Hub0	D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Hub0_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Hub0		9131072
+	152781705	Hub1	D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Hub1_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Hub1		22600721
+	393391159	Level3Ambient	D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Level3Ambient_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Level3Ambient		8678662
+	589974881	Level1Ambient	D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Level1Ambient_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Level1Ambient		7587285
+	648589336	Level2Ambient	D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Level2Ambient_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Level2Ambient		8168453
+	771783799	BoxDoorZap	D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\BoxDoorZap_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\BoxDoorZap		141619
+	900826185	TeleportSound	D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\TeleportSound_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\TeleportSound		38022
+

@@ -22,6 +22,7 @@
 #include "..\Objects\MeshComponent.h"
 #include "..\Rendering\TextureManager.h"
 #include <wrl\client.h>
+#include "../../Resources/Soundbanks/Wwise_IDs.h"
 
 
 namespace Epoch
@@ -68,10 +69,10 @@ namespace Epoch
 
 					Listener* ears = new Listener();
 					Emitter* ambient = new AudioEmitter();
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_A_TIMELAPSE);
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_A_TIMELAPSE);
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_A_TIMELAPSE);
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_A_TIMELAPSE);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_LEVEL2AMBIENT);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_LEVEL2AMBIENT);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_LEVEL2AMBIENT);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_LEVEL2AMBIENT);
 					AudioWrapper::GetInstance().AddListener(ears, "Listener");
 					AudioWrapper::GetInstance().AddEmitter(ambient, "ambiance");
 
@@ -266,47 +267,35 @@ namespace Epoch
 					visibleMesh2->SetVisible(false);
 					headset->AddComponent(ambient);
 					headset->AddComponent(visibleMesh2);
-
 					AudioWrapper::GetInstance().STOP();
-
 					((AudioEmitter*)ambient)->CallEvent(Emitter::EventType::ePlay);
-
 					HeadsetFollow* hfollow = new HeadsetFollow();
 					headset->AddComponent(hfollow);
 					headset->AddComponent(ears);
 					PauseMenu* pauseComp = new PauseMenu();
 					headset->AddComponent(pauseComp);
+					//TODO PAT: UNcomment this when raymond gets sounds
+					Emitter* sound = new SFXEmitter();
+					((SFXEmitter*)sound)->SetEvent(AK::EVENTS::SFX_TELEPORTSOUND);
+					AudioWrapper::GetInstance().AddEmitter(sound, headset->GetName().c_str());
+					headset->AddComponent(sound);
 
 					LevelManager::GetInstance().RequestLevelChange(next);
 
 					ParticleSystem::Instance()->Clear();
 
-					//Enter effect
-					Particle* p = &Particle::Init();
-					p->SetPos(vec3f(8.88f, 0, -4.1f));
-					p->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));
-					p->SetLife(200);
-					p->SetSize(1.25f / 2.0f, .15f / .2f);
-					ParticleEmitter* emit = new TeleportEffect(500, 250, 2, vec3f(8.88f, 0, -4.1f));
-					emit->SetParticle(p);
-					emit->SetTexture("../Resources/BasicRectP.png");
-					((TeleportEffect*)emit)->y1 = 8;
-					((TeleportEffect*)emit)->y2 = 12;
-					ParticleSystem::Instance()->AddEmitter(emit);
-					emit->FIRE();
-
-					p = &Particle::Init();
-					p->SetPos(vec3f(8.88f, 0, -4.1f));
-					p->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
-					p->SetLife(1000);
-					p->SetSize(.25f, .05f);
-					emit = new TeleportEffect(500, 150, 1, vec3f(8.88f, 0, -4.1f));
-					emit->SetTexture("../Resources/BasicCircleP.png");
-					emit->SetParticle(p);
-					((TeleportEffect*)emit)->y1 = 1;
-					((TeleportEffect*)emit)->y2 = 5;
-					ParticleSystem::Instance()->AddEmitter(emit);
-					emit->FIRE();
+					//Sparks////////////////////////////////////////////////////////////////////////////////////
+					Particle* sp = &Particle::Init();
+					sp->SetPos(vec3f(0,0,0));
+					sp->SetColors(vec3f(.6f, .6f, 1), vec3f(.2f, .2f, 1));
+					sp->SetLife(100);
+					sp->SetSize(.05f, .03f);
+					ParticleEmitter* emits = new Sparks(-1, 250, 2, vec3f(3.623517f, 0.75f, 8.32376f));
+					emits->SetParticle(sp);
+					emits->SetTexture("../Resources/BasicCircleP.png");
+					ParticleSystem::Instance()->AddEmitter(emits);
+					emits->FIRE();
+					////////////////////////////////////////////////////////////////////////////////////////////////
 
 					next->AssignPlayerControls(headset, LeftController, RightController);
 					next->AddObject(headset);
@@ -328,6 +317,7 @@ namespace Epoch
 					TimeManager::Instance()->AddObjectToTimeline(LeftController);
 					TimeManager::Instance()->AddObjectToTimeline(headset);
 
+					//Enter///////////////////////////////////////////////////////////////////////////////////
 					Particle* start = &Particle::Init();
 					start->SetPos(vec3f(0, 0, 0));
 					start->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));
@@ -342,7 +332,7 @@ namespace Epoch
 					((TeleportEffect*)startEmit)->SetVelBounds(vec3f(.5f, 1, .5f), vec3f(.5f, 5, .5f));
 					ParticleSystem::Instance()->AddEmitter(startEmit);
 					startEmit->FIRE();
-
+					
 					start = &Particle::Init();
 					start->SetPos(vec3f(0, 0, 0));
 					start->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
@@ -357,7 +347,9 @@ namespace Epoch
 					((TeleportEffect*)startEmit2)->SetVelBounds(vec3f(.5f, 1, .5f), vec3f(.5f, 5, .5f));
 					ParticleSystem::Instance()->AddEmitter(startEmit2);
 					startEmit2->FIRE();
+					/////////////////////////////////////////////////////////////////////////////////////////////
 
+					//Exit///////////////////////////////////////////////////////////////////////////////////////
 					Particle* p1 = &Particle::Init();
 					p1->SetPos(vec3f(0, 0, 0));
 					p1->SetColors(vec3f(0, 0, 1), vec3f(.5f, 0, .5f));
@@ -368,11 +360,11 @@ namespace Epoch
 					emit11->SetTexture("../Resources/BasicRectP.png");
 					((TeleportEffect*)emit11)->y1 = 8;
 					((TeleportEffect*)emit11)->y2 = 12;
-					((TeleportEffect*)emit11)->SetPosBounds(vec3f(-1, 0, 0), vec3f(1, 1, 0));
+					((TeleportEffect*)emit11)->SetPosBounds(vec3f(-1.1f, 0, 0), vec3f(1.1f, 1, 0));
 					((TeleportEffect*)emit11)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 					ParticleSystem::Instance()->AddEmitter(emit11);
 					emit11->FIRE();
-
+					
 					p1 = &Particle::Init();
 					p1->SetPos(vec3f(0, 0, 0));
 					p1->SetColors(vec3f(.5f, 0, .5f), vec3f(0, 0, 1));
@@ -383,10 +375,11 @@ namespace Epoch
 					emit12->SetParticle(p1);
 					((TeleportEffect*)emit12)->y1 = 1;
 					((TeleportEffect*)emit12)->y2 = 5;
-					((TeleportEffect*)emit12)->SetPosBounds(vec3f(-1, 0, 0), vec3f(1, 1, 0));
+					((TeleportEffect*)emit12)->SetPosBounds(vec3f(-1.1f, 0, 0), vec3f(1.1f, 1, 0));
 					((TeleportEffect*)emit12)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 					ParticleSystem::Instance()->AddEmitter(emit12);
 					emit12->FIRE();
+					//////////////////////////////////////////////////////////////////////////////////////////////////
 
 					Light* l1 = new Light();
 					l1->Type = 4;

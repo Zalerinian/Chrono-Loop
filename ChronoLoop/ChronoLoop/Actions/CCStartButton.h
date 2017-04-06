@@ -97,7 +97,7 @@ namespace Epoch
 
 			if (!AudioToggle)
 			{
-				AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::PLAY_TEST1);
+				AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::PLAY_HUB0);
 				AudioToggle = true;
 			}
 

@@ -105,6 +105,11 @@ namespace Epoch
 					HeadsetFollow* hfollow = new HeadsetFollow();
 					headset->AddComponent(hfollow);
 					TimeManager::Instance()->AddObjectToTimeline(headset);
+					//TODO PAT: UNcomment this when raymond gets sounds
+					Emitter* sound = new SFXEmitter();
+					((SFXEmitter*)sound)->SetEvent(AK::EVENTS::SFX_TELEPORTSOUND);
+					AudioWrapper::GetInstance().AddEmitter(sound, headset->GetName().c_str());
+					headset->AddComponent(sound);
 
 					Transform cubeScale;
 					cubeScale.SetMatrix(matrix4::CreateScale(0.01f, 0.01f, 0.01f));
@@ -169,7 +174,7 @@ namespace Epoch
 						emit11->SetTexture("../Resources/BasicRectP.png");
 						((TeleportEffect*)emit11)->y1 = 8;
 						((TeleportEffect*)emit11)->y2 = 12;
-						((TeleportEffect*)emit11)->SetPosBounds(vec3f(-.37f, 0, 0), vec3f(.37f, 1, 0));
+						((TeleportEffect*)emit11)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
 						((TeleportEffect*)emit11)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 						ParticleSystem::Instance()->AddEmitter(emit11);
 						emit11->FIRE();
@@ -184,7 +189,7 @@ namespace Epoch
 						emit12->SetParticle(p1);
 						((TeleportEffect*)emit12)->y1 = 1;
 						((TeleportEffect*)emit12)->y2 = 5;
-						((TeleportEffect*)emit12)->SetPosBounds(vec3f(-.37f, 0, 0), vec3f(.37f, 1, 0));
+						((TeleportEffect*)emit12)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
 						((TeleportEffect*)emit12)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 						ParticleSystem::Instance()->AddEmitter(emit12);
 						emit12->FIRE();
@@ -201,7 +206,7 @@ namespace Epoch
 						emit11->SetTexture("../Resources/BasicRectP.png");
 						((TeleportEffect*)emit11)->y1 = 8;
 						((TeleportEffect*)emit11)->y2 = 12;
-						((TeleportEffect*)emit11)->SetPosBounds(vec3f(-.37f, 0, 0), vec3f(.37f, 1, 0));
+						((TeleportEffect*)emit11)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
 						((TeleportEffect*)emit11)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 						ParticleSystem::Instance()->AddEmitter(emit11);
 						emit11->FIRE();
@@ -216,7 +221,7 @@ namespace Epoch
 						emit12->SetParticle(p1);
 						((TeleportEffect*)emit12)->y1 = 1;
 						((TeleportEffect*)emit12)->y2 = 5;
-						((TeleportEffect*)emit12)->SetPosBounds(vec3f(-.37f, 0, 0), vec3f(.37f, 1, 0));
+						((TeleportEffect*)emit12)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
 						((TeleportEffect*)emit12)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 						ParticleSystem::Instance()->AddEmitter(emit12);
 						emit12->FIRE();
@@ -234,7 +239,7 @@ namespace Epoch
 						emit21->SetTexture("../Resources/BasicRectP.png");
 						((TeleportEffect*)emit21)->y1 = 8;
 						((TeleportEffect*)emit21)->y2 = 12;
-						((TeleportEffect*)emit21)->SetPosBounds(vec3f(0, 0, -.37f), vec3f(0, 1, .37f));
+						((TeleportEffect*)emit21)->SetPosBounds(vec3f(0, 0, -.5f), vec3f(0, 1, .5f));
 						((TeleportEffect*)emit21)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 						ParticleSystem::Instance()->AddEmitter(emit21);
 						emit21->FIRE();
@@ -249,7 +254,7 @@ namespace Epoch
 						emit22->SetParticle(p2);
 						((TeleportEffect*)emit22)->y1 = 1;
 						((TeleportEffect*)emit22)->y2 = 5;
-						((TeleportEffect*)emit22)->SetPosBounds(vec3f(0, 0, -.37f), vec3f(0, 1, .37f));
+						((TeleportEffect*)emit22)->SetPosBounds(vec3f(0, 0, -.5f), vec3f(0, 1, .5f));
 						((TeleportEffect*)emit22)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 						ParticleSystem::Instance()->AddEmitter(emit22);
 						emit22->FIRE();
@@ -266,7 +271,7 @@ namespace Epoch
 						emit21->SetTexture("../Resources/BasicRectP.png");
 						((TeleportEffect*)emit21)->y1 = 8;
 						((TeleportEffect*)emit21)->y2 = 12;
-						((TeleportEffect*)emit21)->SetPosBounds(vec3f(0, 0, -.37f), vec3f(0, 1, .37f));
+						((TeleportEffect*)emit21)->SetPosBounds(vec3f(0, 0, -.5f), vec3f(0, 1, .5f));
 						((TeleportEffect*)emit21)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 						ParticleSystem::Instance()->AddEmitter(emit21);
 						emit21->FIRE();
@@ -281,11 +286,41 @@ namespace Epoch
 						emit22->SetParticle(p2);
 						((TeleportEffect*)emit22)->y1 = 1;
 						((TeleportEffect*)emit22)->y2 = 5;
-						((TeleportEffect*)emit22)->SetPosBounds(vec3f(0, 0, -.37f), vec3f(0, 1, .37f));
+						((TeleportEffect*)emit22)->SetPosBounds(vec3f(0, 0, -.5f), vec3f(0, 1, .5f));
 						((TeleportEffect*)emit22)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 						ParticleSystem::Instance()->AddEmitter(emit22);
 						emit22->FIRE();
 					}
+
+					Particle* start = &Particle::Init();
+					start->SetPos(vec3f(0, 0, 0));
+					start->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));
+					start->SetLife(500);
+					start->SetSize(.35f, .15f);
+					ParticleEmitter* startEmit = new TeleportEffect(400, 250, 2, vec4f(0, -10, 0, 1));
+					startEmit->SetParticle(start);
+					startEmit->SetTexture("../Resources/BasicRectP.png");
+					((TeleportEffect*)startEmit)->y1 = 8;
+					((TeleportEffect*)startEmit)->y2 = 12;
+					((TeleportEffect*)startEmit)->SetPosBounds(vec3f(-1, 0, -1), vec3f(1, 1, 1));
+					((TeleportEffect*)startEmit)->SetVelBounds(vec3f(.5f, 1, .5f), vec3f(.5f, 5, .5f));
+					ParticleSystem::Instance()->AddEmitter(startEmit);
+					startEmit->FIRE();
+
+					start = &Particle::Init();
+					start->SetPos(vec3f(0, 0, 0));
+					start->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
+					start->SetLife(500);
+					start->SetSize(.15f, .05f);
+					ParticleEmitter* startEmit2 = new TeleportEffect(400, 150, 1, vec4f(0, -10, 0, 1));
+					startEmit2->SetTexture("../Resources/BasicCircleP.png");
+					startEmit2->SetParticle(start);
+					((TeleportEffect*)startEmit2)->y1 = 1;
+					((TeleportEffect*)startEmit2)->y2 = 5;
+					((TeleportEffect*)startEmit2)->SetPosBounds(vec3f(-1, 0, -1), vec3f(1, 1, 1));
+					((TeleportEffect*)startEmit2)->SetVelBounds(vec3f(.5f, 1, .5f), vec3f(.5f, 5, .5f));
+					ParticleSystem::Instance()->AddEmitter(startEmit2);
+					startEmit2->FIRE();
 
 					Light* l1 = new Light();
 					l1->Type = 4;
