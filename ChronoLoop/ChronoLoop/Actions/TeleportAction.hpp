@@ -8,6 +8,7 @@
 #include "../Core/Level.h"
 #include "../Core/TimeManager.h"
 #include "../Core/LevelManager.h"
+#include "../Common/Settings.h"
 #include "../Actions/HeadsetFollow.hpp"
 #include "BoxSnapToControllerAction.hpp"
 
@@ -54,7 +55,7 @@ namespace Epoch {
 				
 			}
 			
-			if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad)) {
+			if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && !Settings::GetInstance().GetBool("PauseMenuUp")) {
 				if (!paused) {
 					vec4f forward(0, 0, 1, 0);
 					MeshComponent* meshes[] = { mWallsMesh, mBlockMesh, mExitMesh, mServerMesh };
@@ -72,7 +73,11 @@ namespace Epoch {
 						size_t numTris = meshes[i]->GetTriangleCount();
 						for (unsigned int i = 0; i < numTris; ++i) {
 							float hitTime = FLT_MAX;
-							if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, meshPos, fwd, hitTime)) {
+							if (Physics::Instance()->RayToTriangle(
+								(tris + i)->Vertex[0],
+								(tris + i)->Vertex[1], 
+								(tris + i)->Vertex[2],
+								(tris + i)->Normal, meshPos, fwd, hitTime)) {
 								if (hitTime < wallTime) {
 									wallTime = hitTime;
 								}

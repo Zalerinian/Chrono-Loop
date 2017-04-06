@@ -692,7 +692,11 @@ namespace Epoch
 
 		//Time pause
 		bool paused = false;
-
+		//bool paused = false;
+		//if(cLevel->GetPauseMenu() != nullptr)
+		//{
+		//	paused = cLevel->GetPauseMenu()->isPauseMenuOn();
+		//}
 		if (cLevel->GetTimeManipulator() != nullptr)
 		{
 			paused = cLevel->GetTimeManipulator()->isTimePaused();

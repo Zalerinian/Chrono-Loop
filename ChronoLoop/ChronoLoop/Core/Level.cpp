@@ -60,6 +60,13 @@ namespace Epoch {
 					break;
 			}
 		}
+		//std::vector<Component*> codes3 = mHeadset->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+		//for (size_t x = 0; x < codes2.size(); ++x) {
+		//	if (dynamic_cast<PauseMenu*>(codes2[x])) {
+		//		mPauseMenu = ((PauseMenu*)codes2[x]);
+		//		break;
+		//	}
+		//}
 	}
 
 	BaseObject * Level::FindObjectWithName(std::string _name) {
@@ -931,6 +938,9 @@ namespace Epoch {
 			} else {
 				CommandConsole::Instance().DisplaySet(L"Failed to load level 2.");
 			}
+			accessLevelOne = nullptr;
+			accessLevelTwo = nullptr;
+			accessHub = nullptr;
 		}
 		else if ((_Level == L"LEVELONE" || _Level == L"LVLONE"))
 		{
@@ -941,6 +951,9 @@ namespace Epoch {
 			} else {
 				CommandConsole::Instance().DisplaySet(L"Failed to load level 1.");
 			}
+			accessLevelOne = nullptr;
+			accessLevelTwo = nullptr;
+			accessHub = nullptr;
 		}
 		else if ((_Level == L"HUBWORLD" || _Level == L"HUB"))
 		{
@@ -951,6 +964,9 @@ namespace Epoch {
 			} else {
 				CommandConsole::Instance().DisplaySet(L"Failed to load hub.");
 			}
+			accessLevelOne = nullptr;
+			accessLevelTwo = nullptr;
+			accessHub = nullptr;
 		}
 
 

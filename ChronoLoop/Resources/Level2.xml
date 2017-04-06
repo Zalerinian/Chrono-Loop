@@ -1,4 +1,4 @@
-﻿<Level>
+<Level>
   <Settings>
     <StartPos>8.8,0,-4.1</StartPos>
     <StartRot>0,1.57,0</StartRot>
@@ -12,7 +12,6 @@
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1.079898</Scale>
     <Components>
-      <ButtonPress>Enabled</ButtonPress>
       <ButtonPress>Enabled</ButtonPress>
       <Collider>
         <Type>Button</Type>
@@ -568,28 +567,10 @@
     <Components />
   </Object>
   <Object>
-    <Name>TimeControlsPlane2</Name>
-    <Mesh>PlaneCorrection.obj</Mesh>
-    <Texture>TimeControlScheme.png</Texture>
-    <Position>-1.140209,1.2,8.890001</Position>
-    <Rotation>-1.57,0,3.14</Rotation>
-    <Scale>1,1,1</Scale>
-    <Components />
-  </Object>
-  <Object>
     <Name>GeneralControlsPlane</Name>
     <Mesh>PlaneCorrection.obj</Mesh>
     <Texture>GeneralControlScheme.png</Texture>
     <Position>0,1.2,0</Position>
-    <Rotation>-1.57,0,3.14</Rotation>
-    <Scale>1,1,1</Scale>
-    <Components />
-  </Object>
-  <Object>
-    <Name>GeneralControlsPlane2</Name>
-    <Mesh>PlaneCorrection.obj</Mesh>
-    <Texture>GeneralControlScheme.png</Texture>
-    <Position>0,1.2,8.890001</Position>
     <Rotation>-1.57,0,3.14</Rotation>
     <Scale>1,1,1</Scale>
     <Components />
@@ -771,7 +752,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>DoorFrame1</Name>
+    <Name>DoorFrame1a</Name>
     <Mesh>DoorFrame1.obj</Mesh>
     <Texture>grey.png</Texture>
     <Position>2.417033,0,0.3837723</Position>
