@@ -16,7 +16,6 @@ namespace Epoch {
 	struct TeleportAction : public CodeComponent {
 		MeshComponent *mPlaneMesh, *mWallsMesh, *mBlockMesh, *mExitMesh, *mServerMesh;
 		BaseObject *mPlaneObject, *mWallsObject, *mBlockObject, *mExitObject, *mServerObject;
-		BoxSnapToControllerAction* leftSnap = nullptr , *rightSnap = nullptr;
 		ControllerType mControllerRole = eControllerType_Primary;
 		Level* cLevel = nullptr;
 		TeleportAction(ControllerType _t) { mControllerRole = _t; };
@@ -37,21 +36,7 @@ namespace Epoch {
 				mServerMesh = (MeshComponent*)mServerObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			}
 
-			//Search for controller's box snap to controller script
-			BaseObject* leftCon = LevelManager::GetInstance().GetCurrentLevel()->GetLeftController();
-			BaseObject* rightCon = LevelManager::GetInstance().GetCurrentLevel()->GetRightController();
-			if (leftCon && rightCon) {
-				for (unsigned int i = 0; i < leftCon->GetComponentCount(eCOMPONENT_CODE); i++) {
-					if (dynamic_cast<BoxSnapToControllerAction*>(leftCon->GetComponentIndexed(eCOMPONENT_CODE, i))) {
-						leftSnap = (BoxSnapToControllerAction*)leftCon->GetComponentIndexed(eCOMPONENT_CODE, i);
-					}
-				}
-				for (unsigned int i = 0; i < rightCon->GetComponentCount(eCOMPONENT_CODE); i++) {
-					if (dynamic_cast<BoxSnapToControllerAction*>(rightCon->GetComponentIndexed(eCOMPONENT_CODE, i))) {
-						rightSnap = (BoxSnapToControllerAction*)rightCon->GetComponentIndexed(eCOMPONENT_CODE, i);
-					}
-				}
-			}
+			
 		}
 
 		virtual void Update() {
@@ -111,20 +96,8 @@ namespace Epoch {
 								VRInputManager::GetInstance().GetPlayerPosition()[3][2] += fwd[2] * objMat.zAxis[2]; // z
 								//VRInputManager::Instance().iGetPlayerPosition()[3][3] += forward[3]; // w
 								//Move any held objects along with player 
-								if(leftSnap && leftSnap->mPickUp)
-								{
-									vec3f v = leftSnap->mPickUp->GetPos();
-									v.x += fwd[0] * objMat.xAxis[0];
-									v.z += fwd[2] * objMat.xAxis[2];
-									leftSnap->mPickUp->SetPos(v);
-								}
-								else if (rightSnap && rightSnap->mPickUp) {
-									vec3f v = rightSnap->mPickUp->GetPos();
-									v.x += fwd[0] * objMat.xAxis[0];
-									v.z += fwd[2] * objMat.xAxis[2];
-									rightSnap->mPickUp->SetPos(v);
-								}
-								if (dynamic_cast<SFXEmitter*>(mObject->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
+							
+								if (mObject->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1) != nullptr && dynamic_cast<SFXEmitter*>(mObject->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
 									((SFXEmitter*)mObject->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
 									 
 							} else {

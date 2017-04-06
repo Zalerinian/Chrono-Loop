@@ -49,6 +49,7 @@ namespace Epoch
 			if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName() != "Buttonstand" )
 			{
 				colliding = true;
+				//SystemLogger::GetLog() << "Colliding" << std::endl;
 				//Interp stuff
 				blockInterp->SetActive(true);
 				blockInterp->Prepare(0.69f, blockCube->GetTransform().GetMatrix(), blockend, blockCube->GetTransform().GetMatrix());
@@ -72,16 +73,14 @@ namespace Epoch
 					//blockCube->SetPos(blockend);
 				}
 			}
-			else
-			{
-				colliding = false;
-			}
+			
 		}
 		virtual void Update()
 		{
 			if (!LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->isTimePaused()) {
 				if (colliding)
 				{
+					//SystemLogger::GetLog() << "Colliding" << std::endl;
 					mFlip = true;
 					if (mCanDoorInterp && !mDoorDoneInterpolating)
 					{
@@ -96,8 +95,10 @@ namespace Epoch
 				}
 				else
 				{
+					//SystemLogger::GetLog() << "Not Colliding" << std::endl;
 					if(mFlip)
 					{
+						
 						mFlip = false;
 						blockInterp->SetActive(true);
 						blockInterp->Prepare(0.69f, blockCube->GetTransform().GetMatrix(), blockstart, blockCube->GetTransform().GetMatrix());
@@ -121,9 +122,8 @@ namespace Epoch
 					}
 
 				}
-				colliding = false;
 			}
-			
+			colliding = false;
 		}
 	};
 }

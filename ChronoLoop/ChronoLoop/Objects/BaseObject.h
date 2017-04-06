@@ -91,6 +91,8 @@ namespace Epoch {
 		}
 
 		inline Component* GetComponentIndexed(ComponentType _type, unsigned int _index) {
+			if (_index > mComponents[_type].size())
+				return nullptr;
 			return mComponents[_type][_index];
 		}
 
