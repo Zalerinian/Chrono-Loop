@@ -331,27 +331,27 @@ namespace Epoch {
 		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
 		mPLBSDir.Attach(pBuff);
 
-		for (int i = 0; i < 3; i++)
-			mLData[i] = new Light();
+		//for (int i = 0; i < 3; i++)
+		//	mLData[i] = new Light();
 
-		//TODO: GET RID OF THIS
+		////TODO: GET RID OF THIS
 
-		//Directional
-		mLData[1]->Type = 1;
-		mLData[1]->Color = vec3f(.5, .5, .5);
-		mLData[1]->Direction = vec3f(0, -1, 0);
+		////Directional
+		//mLData[1]->Type = 1;
+		//mLData[1]->Color = vec3f(.5, .5, .5);
+		//mLData[1]->Direction = vec3f(0, -1, 0);
 
-		//Point
-		mLData[0]->Type = 2;
-		mLData[0]->Position = vec3f(5, 1, 2);
-		mLData[0]->Color = vec3f(1, 1, 1);
+		////Point
+		//mLData[0]->Type = 2;
+		//mLData[0]->Position = vec3f(5, 1, 2);
+		//mLData[0]->Color = vec3f(1, 1, 1);
 
-		//Spot
-		mLData[2]->Type = 4;
-		mLData[2]->Color = vec3f(0, .25, .25);
-		mLData[2]->ConeDirection = vec3f(0, -1, 0);
-		mLData[2]->Position = vec3f(3, 4, 0);
-		mLData[2]->ConeRatio = .5;
+		////Spot
+		//mLData[2]->Type = 4;
+		//mLData[2]->Color = vec3f(0, .25, .25);
+		//mLData[2]->ConeDirection = vec3f(0, -1, 0);
+		//mLData[2]->Position = vec3f(3, 4, 0);
+		//mLData[2]->ConeRatio = .5;
 
 	}
 
@@ -867,9 +867,9 @@ namespace Epoch {
 		// Remove the Scene Shader Resource View from the input pipeline, as once the next render
 		// call happens, it will be bound to the output pipeline, as wel as the input pipeline,
 		// which will result in DirectX not setting it as an output.
+		SetStaticBuffers();
 		ID3D11ShaderResourceView *nullSRV = nullptr;
 		mContext->PSSetShaderResources(eTEX_DIFFUSE, 1, &nullSRV);
-
 
 		mChain->Present(mUseVsync ? 1 : 0, 0);
 		mRendererLock.unlock();
