@@ -272,26 +272,50 @@ namespace Epoch {
 	}
 
 	void MeshComponent::SetData(ConstantBufferType _t, BufferDataType _bt, unsigned char _index, void * _data) {
-		ID3D11Buffer* buff = nullptr;
+		Microsoft::WRL::ComPtr<ID3D11Buffer>* buff = nullptr;
 		switch (_t) {
 			case eCB_VERTEX:
-				buff = mShape->GetContext().mVertexCBuffers[_index].Get();
+				buff = &mShape->GetContext().mVertexCBuffers[_index];
 				mVertexBufferTypes[_index] = _bt;
 				break;
 			case eCB_PIXEL:
-				buff = mShape->GetContext().mPixelCBuffers[_index].Get();
+				buff = &mShape->GetContext().mPixelCBuffers[_index];
 				mPixelBufferTypes[_index] = _bt;
 				break;
 			case eCB_GEO:
-				buff = mShape->GetContext().mGeometryCBuffers[_index].Get();
+				buff = &mShape->GetContext().mGeometryCBuffers[_index];
 				mGeoBufferTypes[_index] = _bt;
 				break;
 			default:
+				SystemLogger::Error() << "Could not set buffer data: Invalid ConstantBufferType given: " << _t << std::endl;
 				return;
 		}
-		Renderer::Instance()->GetContext()->UpdateSubresource(buff, 0, 0, _data, 0, 0);
+		if (buff->Get() != nullptr) {
+			Renderer::Instance()->GetContext()->UpdateSubresource(buff->Get(), 0, 0, _data, 0, 0);
+		} else {
+			Renderer::Instance()->GetRendererLock().lock();
+
+			CD3D11_BUFFER_DESC desc(sizeof(GSAnimatedQuad_Data), D3D11_BIND_CONSTANT_BUFFER);
+			D3D11_SUBRESOURCE_DATA data;
+			data.pSysMem = _data;
+			Renderer::Instance()->GetDevice()->CreateBuffer(&desc, &data, buff->GetAddressOf());
+			switch (_t) {
+				case eCB_VERTEX:
+					mShape->GetContext().mVertexCBuffers[_index] = *buff;
+					break;
+				case eCB_PIXEL:
+					mShape->GetContext().mPixelCBuffers[_index] = *buff;
+					break;
+				case eCB_GEO:
+					mShape->GetContext().mGeometryCBuffers[_index] = *buff;
+					break;
+				default:
+					return;
+			}
+			Renderer::Instance()->GetRendererLock().unlock();
+		}
 		if (GetBufferUpdates()) {
-			Renderer::Instance()->UpdateOpaqueNodeBuffer(*mShape, _t, _index);
+			UpdateBuffer(_t, _index);
 		}
 	}
 
