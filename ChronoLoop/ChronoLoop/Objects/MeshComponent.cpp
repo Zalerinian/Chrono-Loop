@@ -131,6 +131,11 @@ namespace Epoch {
 			SystemLogger::Error() << "Attempted to set the alpha of a mesh whos Register 1 pixel buffer is not an alpha buffer!" << std::endl;
 			return this;
 		}
+		if(mShape->GetContext().mPixelShaderFormat != ePS_TRANSPARENT)
+		{
+			SystemLogger::Error() << "Attempted to set the alpha of a mesh whos pixel shader is not ePS_TRANSPARENT!" << std::endl;
+			return this;
+		}
 		PSTransparent_Data alpha;
 		alpha.alpha.x = _a;
 		Renderer::Instance()->GetContext()->UpdateSubresource(mShape->GetContext().mPixelCBuffers[ePB_REGISTER1].Get(), 0, 0, &alpha, 0, 0);
@@ -209,6 +214,7 @@ namespace Epoch {
 				CreateTransparentNode();
 			}
 		}
+		mBlended = _ButWillItBlend;
 	}
 
 	RenderShape * MeshComponent::GetShape() {

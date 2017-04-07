@@ -12,7 +12,7 @@ namespace Epoch
 	struct CCStartButton : public CodeComponent
 	{
 		int levels;
-		bool mBooped;
+		bool mBooped, mBooped2;
 		bool AudioToggle;
 
 		Interpolator<matrix4>* mChamberInterp = new Interpolator<matrix4>();
@@ -23,16 +23,17 @@ namespace Epoch
 		Interpolator<matrix4>* mExitButtonInterp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mExitStandInterp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mExitSignInterp = new Interpolator<matrix4>();
+		Interpolator<matrix4>* mCloseInterp = new Interpolator<matrix4>();
 
 		Listener* l;
 
-		BaseObject *mChamberObject, *mExitButton, *mStartStand, *mStartSign, *mExitStand, *mExitSign;
+		BaseObject *mChamberObject, *mExitButton, *mStartStand, *mStartSign, *mExitStand, *mExitSign, *mClosePanel;
 		Level* cLevel = nullptr;
 
 		virtual void Start()
 		{
 			AudioToggle = false;
-			mBooped = false;
+			mBooped = mBooped2 = false;
 			levels = 0;
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
@@ -42,6 +43,7 @@ namespace Epoch
 			mExitButton = cLevel->FindObjectWithName("mmExitButton");
 			mStartStand = cLevel->FindObjectWithName("mmStartStand");
 			mExitStand = cLevel->FindObjectWithName("mmExitStand");
+			mClosePanel = cLevel->FindObjectWithName("mmClosingPanel");
 
 			l = new Listener();
 			mChamberObject->AddComponent(l);
@@ -86,7 +88,6 @@ namespace Epoch
 				mExitSignInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(0, -10, 0), mExitSign->GetTransform().GetMatrix());
 				mExitSignInterp->SetActive(true);
 
-
 				((SFXEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
 				((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::EventType::ePlay);
 				mBooped = true;
@@ -113,6 +114,19 @@ namespace Epoch
 				mExitStandInterp->Update(TimeManager::Instance()->GetDeltaTime());
 				mExitSignInterp->Update(TimeManager::Instance()->GetDeltaTime());
 
+				if (mChamberObject->GetTransform().GetMatrix().fourth.y < -3.64f)
+				{
+					if (mBooped2)
+					{
+						matrix4 mat;
+						mat = mClosePanel->GetTransform().GetMatrix();
+						mCloseInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(2, 0, 0), mClosePanel->GetTransform().GetMatrix());
+						mCloseInterp->SetActive(true);
+						mBooped2 = false;
+					}
+					mCloseInterp->Update(TimeManager::Instance()->GetDeltaTime());
+				}
+				
 				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mObject->GetTransform().GetMatrix().fourth);
 				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y - .2f;
 				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y - .2f;
