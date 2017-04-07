@@ -22,7 +22,6 @@
     <Scale>1,1.25,0.5</Scale>
     <Components>
       <EnterLevel>Enabled</EnterLevel>
-      <EnterLevel>Enabled</EnterLevel>
       <Collider>
         <Type>OBB</Type>
         <Trigger>True</Trigger>
@@ -574,6 +573,15 @@
     <Position>7.776074,-8.87972,-1.89197</Position>
     <Rotation>0,2.239209,0.8744429</Rotation>
     <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>mmClosingPanel</Name>
+    <Mesh>PlaneCorrection.obj</Mesh>
+    <Texture>SM_Floor_Two_SM_Floor_AlbedoTransparency.png</Texture>
+    <Position>-2,-0.5,0</Position>
+    <Rotation>3.14,0,0</Rotation>
+    <Scale>2.1,1,2.1</Scale>
     <Components />
   </Object>
 </Level>

@@ -1,4 +1,4 @@
-﻿<Level>
+<Level>
   <Settings>
     <StartPos>0.46,0,-10.15</StartPos>
     <StartRot>0,0,0</StartRot>
@@ -80,7 +80,7 @@
     <Name>cube</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
-    <Position>-5.007672,1.304958,0.004849124</Position>
+    <Position>5.57156,1.304958,-0.5387666</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>0.5,0.5,0.5</Scale>
     <Components>
@@ -153,7 +153,7 @@
     <Name>cube</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
-    <Position>-4.794728,1.148723,-0.5494564</Position>
+    <Position>5.687682,1.148723,-1.164733</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>0.2,0.2,0.2</Scale>
     <Components>
@@ -280,7 +280,7 @@
     <Name>cube</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
-    <Position>-5.099504,1.280929,0.5084954</Position>
+    <Position>5.654684,1.280929,0.08234796</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>0.3,0.3,0.3</Scale>
     <Components>
@@ -528,7 +528,7 @@
     <Name>Table</Name>
     <Mesh>PlaceHolderTable.obj</Mesh>
     <Texture>mmSkyboxDark.png</Texture>
-    <Position>-4.990486,0,0</Position>
+    <Position>5.526108,0,-0.5224512</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>0.3,0.6,0.2</Scale>
     <Components>
@@ -550,9 +550,9 @@
   </Object>
   <Object>
     <Name>TableCollider</Name>
-    <Position>-5.052929,0.8301525,0</Position>
+    <Position>5.521881,0.8269265,-0.52672</Position>
     <Rotation>0,0,0</Rotation>
-    <Scale>1,1,1</Scale>
+    <Scale>0.9,0.9,0.99</Scale>
     <Components>
       <Collider>
         <Type>OBB</Type>
