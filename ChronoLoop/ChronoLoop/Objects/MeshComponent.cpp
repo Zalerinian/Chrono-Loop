@@ -68,7 +68,13 @@ namespace Epoch {
 
 	MeshComponent::MeshComponent(const char * _path, float _alpha) {
 		mType = eCOMPONENT_MESH;
-		mShape = new RenderShape(_path, true, ePS_TEXTURED, eVS_TEXTURED, eGS_PosNormTex);
+		mShape = new RenderShape(
+			_path,
+			true,
+			(_alpha < 1.0f ? ePS_TRANSPARENT : ePS_TEXTURED),
+			eVS_TEXTURED,
+			eGS_PosNormTex
+		);
 		mShape->GetContext().mRasterState = eRS_FILLED;
 		mBlended = _alpha < 1.0f;
 		if (CanCreateNode()) {
@@ -129,6 +135,20 @@ namespace Epoch {
 	MeshComponent * MeshComponent::SetAlpha(float _a) {
 		if (mPixelBufferTypes[ePB_REGISTER1] != eBufferDataType_Alpha) {
 			SystemLogger::Error() << "Attempted to set the alpha of a mesh whos Register 1 pixel buffer is not an alpha buffer!" << std::endl;
+			return this;
+		}
+		if (_a >= 1.0f && mShape->GetContext().mPixelShaderFormat == ePS_TRANSPARENT) {
+			SetPixelShader(ePS_TEXTURED);
+			SetBlended(false);
+			return this;
+		} else if (_a < 1.0f && mShape->GetPixelShader() == ePS_TEXTURED) {
+			SetPixelShader(ePS_TRANSPARENT);
+			SetBlended(true);
+			// Don't return, because we need to update the alpha of the object.
+		}
+
+		if (mShape->GetContext().mPixelShaderFormat != ePS_TRANSPARENT) {
+			SystemLogger::Error() << "Attempted to set the alpha of a mesh whos pixel shader is not ePS_TRANSPARENT!" << std::endl;
 			return this;
 		}
 		PSTransparent_Data alpha;
