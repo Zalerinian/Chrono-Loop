@@ -274,7 +274,7 @@ namespace Epoch
 					headset->AddComponent(ears);
 					PauseMenu* pauseComp = new PauseMenu();
 					headset->AddComponent(pauseComp);
-					//TODO PAT: UNcomment this when raymond gets sounds
+					
 					Emitter* sound = new SFXEmitter();
 					((SFXEmitter*)sound)->SetEvent(AK::EVENTS::SFX_TELEPORTSOUND);
 					AudioWrapper::GetInstance().AddEmitter(sound, headset->GetName().c_str());

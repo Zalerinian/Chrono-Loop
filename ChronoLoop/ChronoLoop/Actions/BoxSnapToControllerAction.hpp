@@ -55,34 +55,37 @@ namespace Epoch {
 						ReleaseObject();
 					}
 				}
-				else if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == -1 && !mHeld && !mCollider->mHitting.empty() && ((!paused) || !Settings::GetInstance().GetBool("PauseMenuUp"))) {
+				else if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == -1 && !mCollider->mHitting.empty() && ((!paused) || !Settings::GetInstance().GetBool("PauseMenuUp"))) {
 					SomethingtoController();
-					if (mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueId()) {
-						VRInputManager::GetInstance().GetController(eControllerType_Secondary).TriggerHapticPulse(1000);
-					}
-					else if (mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueId()) {
-						VRInputManager::GetInstance().GetController(eControllerType_Primary).TriggerHapticPulse(1000);
+					//TODO PAT: FIX THIS HARDCODED haptic feedback
+					if (mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueId()  
+						|| mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueId()) {
+						VRInputManager::GetInstance().GetController((mInput->mData.mPrimary) ? eControllerType_Primary : eControllerType_Secondary).TriggerHapticPulse(1000, mInput->mData.mButton);
 					}
 				}
 			}
 
-			/*Controller &controller = VRInputManager::GetInstance().GetController(mControllerRole);
-			if (mHeld && mPickUp != nullptr)
-			{
-			matrix4 m = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
-			mPickUp->SetPos(m.Position);
-			if (!controller.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger))
-			{
-			ReleaseObject();
-			}
-			}
-			else if (controller.GetPress(vr::EVRButtonId::k_EButton_SteamVR_Trigger) && !mHeld && !mCollider->mHitting.empty())
-			{
-			SomethingtoController();
-			}
-			*/
+		
 		}
-		//mObject->GetTransform().SetMatrix(Math::MatrixRotateInPlace(mObject->GetTransform().GetMatrix(), 1, 0, 0, DirectX::XM_PI / 1024.0f));
+
+		void CheckIfBoxAlreadyHeld()
+		{
+			std::vector<BaseObject*>clones = TimeManager::Instance()->GetClonesVec();
+			for (unsigned int i = 0; i < clones.size(); i++) {
+				//you would usally loop to find correct code component but i know that this is the only code components clones will have in our game
+				Component* temp = clones[i]->GetComponentIndexed(eCOMPONENT_CODE, 0);
+				if(temp && dynamic_cast<BoxSnapToControllerAction*>(temp))
+				{
+					//If my mPickup is the same as the other code component, make it release theirs so new code component can pick it up
+					if(((BoxSnapToControllerAction*)temp)->mHeld == true && ((BoxSnapToControllerAction*)temp)->mPickUp == mPickUp)
+					{
+						((BoxSnapToControllerAction*)temp)->ReleaseObject();
+						break;
+					}
+				}
+			}
+		}
+		
 
 		virtual void SomethingtoController() {
 			mHeld = true;
@@ -112,6 +115,8 @@ namespace Epoch {
 					}
 				}
 			}
+
+			CheckIfBoxAlreadyHeld();
 
 			if (mPickUp) {
 				if (!mPickUp->mShouldMove) {
