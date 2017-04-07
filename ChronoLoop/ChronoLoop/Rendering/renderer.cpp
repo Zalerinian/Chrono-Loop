@@ -867,7 +867,7 @@ namespace Epoch {
 		// Remove the Scene Shader Resource View from the input pipeline, as once the next render
 		// call happens, it will be bound to the output pipeline, as wel as the input pipeline,
 		// which will result in DirectX not setting it as an output.
-		SetStaticBuffers();
+		
 		ID3D11ShaderResourceView *nullSRV = nullptr;
 		mContext->PSSetShaderResources(eTEX_DIFFUSE, 1, &nullSRV);
 
