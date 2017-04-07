@@ -494,6 +494,9 @@
     <ClInclude Include="Actions\PauseMenu.hpp">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\CCSnapToPlayerPos.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">

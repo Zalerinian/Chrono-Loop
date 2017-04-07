@@ -81,8 +81,8 @@ namespace Epoch
 						mCanDoorInterp = true;
 						mDoorDoneInterpolating = false;
 					}
+
 				} else {
-					once = false;
 					colliding = false;
 				}
 			}
@@ -93,10 +93,13 @@ namespace Epoch
 				if (mCanDoorInterp && !mDoorDoneInterpolating)
 				{
 					mDoorDoneInterpolating = (blockInterp->Update(TimeManager::Instance()->GetDeltaTime()) || exitInterp->Update(TimeManager::Instance()->GetDeltaTime()));
+					blockCube->SetPos(Block->GetTransform().GetMatrix().fourth);
+					exitCube->SetPos(Exit->GetTransform().GetMatrix().fourth);
 				}
 				else
 				{
 
+					once = false;
 
 					mCanDoorInterp = false;
 					blockInterp->SetActive(false);

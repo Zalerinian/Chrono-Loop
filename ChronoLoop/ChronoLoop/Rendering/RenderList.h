@@ -31,7 +31,7 @@ namespace Epoch {
 
 		GhostList<matrix4>::GhostNode* Push(RenderShape& _shape);
 		void Pop(RenderShape& _shape);
-		void UpdateBuffer(ConstantBufferType _t, Microsoft::WRL::ComPtr<ID3D11Buffer> _data, unsigned int _bufferIndex, unsigned int _dataIndex);
+		void UpdateBuffer(ConstantBufferType _t, Microsoft::WRL::ComPtr<ID3D11Buffer>& _data, unsigned int _bufferIndex, unsigned int _dataIndex);
 	};
 
 } // Epoch Namespace
