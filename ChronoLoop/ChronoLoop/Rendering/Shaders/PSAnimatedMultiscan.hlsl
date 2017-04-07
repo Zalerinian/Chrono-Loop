@@ -13,8 +13,12 @@ struct MultiScanData {
 	float DiffuseAlpha;
 	float MultiscanAlpha;
 	float MultiscanVOffset;
-	float padding;
-	float4 padding2[7];
+	float ScanlineAlpha;
+	// Register Break
+	float ScanlineVOffset;
+	float3 padding;
+	// Register Break
+	float4 padding2[6];
 };
 
 cbuffer _MultiScanData : register(b1) {
@@ -23,6 +27,7 @@ cbuffer _MultiScanData : register(b1) {
 
 texture2D tDiffuse : register(t0);
 texture2D tMultiscan : register(t4);
+texture2D tScanline : register(t5);
 SamplerState texFilter : register(s0);
 
 
@@ -30,8 +35,16 @@ float4 main(PSI input) : SV_TARGET
 {
 	float4 diffuseColor = tDiffuse.Sample(texFilter, input.texCoord.xy);
 	clip(diffuseColor.a);
+	
+	// These are assigned because it makes debugging easy ( '-')b
 	float multiAlpha = dataBuffer[input.IID].MultiscanAlpha;
 	float multiOffset = dataBuffer[input.IID].MultiscanVOffset;
+	float scanAlpha = dataBuffer[input.IID].ScanlineAlpha;
+	float scanOffset = fmod(dataBuffer[input.IID].ScanlineVOffset, 2.5);
+
 	float4 multiColor = tMultiscan.Sample(texFilter, float2(input.texCoord.x, input.texCoord.y - multiOffset)); // Minus offset, because we want the texture to move down, and negative is down (think regular coordinate system)
-	return float4(diffuseColor.rgb + (multiColor.rgb * multiAlpha), diffuseColor.a * dataBuffer[input.IID].DiffuseAlpha);
+	float4 ScanColor = tScanline.Sample(texFilter, float2(input.texCoord.x, saturate((input.texCoord.y - scanOffset) * 3)));
+	//ScanColor *= scanOffset > 0.8 ? 1 : 0;
+
+	return float4(diffuseColor.rgb + (multiColor.rgb * multiAlpha) + (ScanColor.rbg * scanAlpha), diffuseColor.a * dataBuffer[input.IID].DiffuseAlpha);
 }

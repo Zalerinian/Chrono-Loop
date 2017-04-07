@@ -12,6 +12,7 @@
 #include "..\Actions\UICreateToDeleteClone.h"
 #include "..\Actions\UIClonePlusToMinus.h"
 #include "..\Actions\UICloneText.h"
+#include "..\Actions\CCSnapToPlayerPos.h"
 #include "..\Actions\BoxSnapToControllerAction.hpp"
 #include "..\Actions\TeleportAction.hpp"
 #include "..\Actions\PauseMenu.hpp"
@@ -279,6 +280,14 @@ namespace Epoch
 					((SFXEmitter*)sound)->SetEvent(AK::EVENTS::SFX_TELEPORTSOUND);
 					AudioWrapper::GetInstance().AddEmitter(sound, headset->GetName().c_str());
 					headset->AddComponent(sound);
+
+					BaseObject* magicalCube = Pool::Instance()->iGetObject()->Reset("Magical Cube That Follows Me");
+					MeshComponent* mcmc = new MeshComponent("../Resources/UnitCube.obj");
+					mcmc->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
+					magicalCube->AddComponent(mcmc);
+					magicalCube->AddComponent(new CCSnapToPlayerPos);
+					next->AddObject(magicalCube);
+
 
 					LevelManager::GetInstance().RequestLevelChange(next);
 

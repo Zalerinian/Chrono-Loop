@@ -47,6 +47,8 @@ namespace Epoch {
 				float DiffuseAlpha;
 				float MultiscanAlpha;
 				float MultiscanVOffset;
+				float ScanlineAlpha;
+				float ScanlineVOffset;
 			};
 			BufferWidth padding;
 		};

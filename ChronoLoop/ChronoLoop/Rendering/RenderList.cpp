@@ -243,6 +243,7 @@ namespace Epoch {
 		NullData.e2.Position.Set(24, 24, 24, 24);
 
 		int vbIndex = -1, pbIndex = -1, gbIndex = -1;
+		_shape.mNext = (RenderNode*)this;
 		// Prepare the vertex buffers.
 		std::string bufferName;
 		for (int i = 0; i < eVB_MAX; ++i) {
@@ -343,7 +344,7 @@ namespace Epoch {
 		}
 	}
 
-	void RenderList::UpdateBuffer(ConstantBufferType _t, Microsoft::WRL::ComPtr<ID3D11Buffer> _data, unsigned int _bufferIndex, unsigned int _dataIndex) {
+	void RenderList::UpdateBuffer(ConstantBufferType _t, Microsoft::WRL::ComPtr<ID3D11Buffer>& _data, unsigned int _bufferIndex, unsigned int _dataIndex) {
 		switch (_t) {
 			case eCB_VERTEX:
 				UpdateBuffer(mShape.mContext.mVertexCBuffers[_bufferIndex], _data, _dataIndex);

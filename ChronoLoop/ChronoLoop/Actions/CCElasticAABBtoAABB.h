@@ -16,21 +16,19 @@ namespace Epoch
 			if (!colliding && _other.mColliderType == Collider::eCOLLIDER_Cube)
 			{
 				colliding = true;
-				mAddDelta += TimeManager::Instance()->GetDeltaTime();
+				mAddDelta = TimeManager::Instance()->GetTotalGameTime();
 				//Make door sound go off every half second at max
-				if (mAddDelta > mTimeStamp + .5f) {
+				if (mAddDelta > mTimeStamp + .1f) {
 					//If door collides with box or box collides with door
 					if (_col.GetBaseObject()->GetName().find("Door") != std::string::npos && _other.GetBaseObject()->GetName().find("cube") != std::string::npos) {
 						if (dynamic_cast<SFXEmitter*>(_col.GetBaseObject()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))) {
 							((SFXEmitter*)_col.GetBaseObject()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
-							mTimeStamp = TimeManager::Instance()->GetTotalGameTime();
-							mAddDelta = mTimeStamp;
+							mTimeStamp = mAddDelta;
 						}
 					} else if (_col.GetBaseObject()->GetName().find("cube") != std::string::npos && _other.GetBaseObject()->GetName().find("Door") != std::string::npos) {
 						if (dynamic_cast<SFXEmitter*>(_other.GetBaseObject()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))) {
 							((SFXEmitter*)_other.GetBaseObject()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
-							mTimeStamp = TimeManager::Instance()->GetTotalGameTime();
-							mAddDelta = mTimeStamp;
+							mTimeStamp = mAddDelta;
 						}
 					}
 				}
