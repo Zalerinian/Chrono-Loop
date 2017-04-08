@@ -276,9 +276,6 @@
     <ClInclude Include="Objects\MeshComponent.h">
       <Filter>Objects\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\BoxSnapToControllerAction.hpp">
-      <Filter>Actions</Filter>
-    </ClInclude>
     <ClInclude Include="Actions\CodeComponent.hpp">
       <Filter>Actions</Filter>
     </ClInclude>
@@ -496,6 +493,9 @@
     </ClInclude>
     <ClInclude Include="Actions\CCSnapToPlayerPos.h">
       <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\BoxSnapToControllerAction.hpp">
+      <Filter>Actions\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -776,6 +776,9 @@
       <Filter>Pathing</Filter>
     </ClCompile>
     <ClCompile Include="BVH.cpp" />
+    <ClCompile Include="BoxSnapToControllerAction.cpp">
+      <Filter>Actions\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">

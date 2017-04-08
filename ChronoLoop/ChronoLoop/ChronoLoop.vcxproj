@@ -393,6 +393,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Actions\TimeManipulation.cpp" />
+    <ClCompile Include="BoxSnapToControllerAction.cpp" />
     <ClCompile Include="BVH.cpp" />
     <ClCompile Include="ChronoLoop.cpp" />
     <ClCompile Include="Common\Breakpoint.cpp" />
