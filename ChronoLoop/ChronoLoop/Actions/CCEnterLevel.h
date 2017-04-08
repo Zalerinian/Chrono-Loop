@@ -23,7 +23,7 @@
 #include "..\Objects\MeshComponent.h"
 #include <wrl\client.h>
 #include "../Sound/SoundEngine.h"
-#include "CCSnapToPlayerPos.h"
+#include "DirectXMath.h"
 
 
 namespace Epoch 
@@ -288,12 +288,12 @@ namespace Epoch
 
 					ParticleSystem::Instance()->Clear();
 
-					BaseObject* magicalCube = Pool::Instance()->iGetObject()->Reset("Magical Cube That Follows Me");
+					/*BaseObject* magicalCube = Pool::Instance()->iGetObject()->Reset("Magical Cube That Follows Me");
 					MeshComponent* mcmc = new MeshComponent("../Resources/UnitCube.obj");
 					mcmc->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 					magicalCube->AddComponent(mcmc);
 					magicalCube->AddComponent(new CCSnapToPlayerPos);
-					next->AddObject(magicalCube);
+					next->AddObject(magicalCube);*/
 
 
 

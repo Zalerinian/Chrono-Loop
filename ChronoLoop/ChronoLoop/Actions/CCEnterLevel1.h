@@ -12,7 +12,7 @@
 #include "..\Actions\UICreateToDeleteClone.h"
 #include "..\Actions\UIClonePlusToMinus.h"
 #include "..\Actions\UICloneText.h"
-#include "..\Actions\CCSnapToPlayerPos.h"
+
 #include "..\Actions\BoxSnapToControllerAction.hpp"
 #include "..\Actions\TeleportAction.hpp"
 #include "..\Actions\PauseMenu.hpp"
@@ -24,6 +24,7 @@
 #include "..\Rendering\TextureManager.h"
 #include <wrl\client.h>
 #include "../../Resources/Soundbanks/Wwise_IDs.h"
+#include "DirectXMath.h"
 
 
 namespace Epoch
@@ -281,12 +282,12 @@ namespace Epoch
 					AudioWrapper::GetInstance().AddEmitter(sound, headset->GetName().c_str());
 					headset->AddComponent(sound);
 
-					BaseObject* magicalCube = Pool::Instance()->iGetObject()->Reset("Magical Cube That Follows Me");
+					/*BaseObject* magicalCube = Pool::Instance()->iGetObject()->Reset("Magical Cube That Follows Me");
 					MeshComponent* mcmc = new MeshComponent("../Resources/UnitCube.obj");
 					mcmc->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 					magicalCube->AddComponent(mcmc);
 					magicalCube->AddComponent(new CCSnapToPlayerPos);
-					next->AddObject(magicalCube);
+					next->AddObject(magicalCube);*/
 
 
 					LevelManager::GetInstance().RequestLevelChange(next);
