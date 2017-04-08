@@ -42,8 +42,8 @@ namespace Epoch
 		BaseObject *pMainPanel = nullptr, *pSettingsPanel = nullptr; //Children of the Entire Pause Menu
 		MeshComponent *mcMainPanel = nullptr, *mcSettingsPanel = nullptr;
 
-		BaseObject *pResume = nullptr, *pSettings = nullptr, *pHubworld = nullptr, *pAudio = nullptr, *pMisc = nullptr;//Children of Panels
-		MeshComponent *mcResume = nullptr, *mcSettings = nullptr, *mcHubworld = nullptr, *mcAudio = nullptr, *mcMisc = nullptr;
+		BaseObject *pResume = nullptr, *pSettings = nullptr, *pHubworld = nullptr,*pRestartLevel = nullptr, *pAudio = nullptr, *pMisc = nullptr;//Children of Panels
+		MeshComponent *mcResume = nullptr, *mcSettings = nullptr, *mcHubworld = nullptr, *mcRestartLevel = nullptr,*mcAudio = nullptr, *mcMisc = nullptr;
 
 
 		D2D1::ColorF wut = { 1,1,1,1 };
@@ -51,8 +51,8 @@ namespace Epoch
 
 		float transparentColor[4] = { 0,0,0,0 };
 
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> texPauseMenuBase, texMainPanel,texSettingsPanel, texResume,texSettings,texHubworld,texAudio,texMisc;
-		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> rtvPauseMenuBase, rtvMainPanel, rtvSettingsPanel, rtvResume, rtvSettings, rtvHubworld, rtvAudio, rtvMisc;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> texPauseMenuBase, texMainPanel,texSettingsPanel, texResume,texSettings,texHubworld, texRestartLevel,texAudio,texMisc;
+		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> rtvPauseMenuBase, rtvMainPanel, rtvSettingsPanel, rtvResume, rtvSettings, rtvHubworld, rtvRestartLevel, rtvAudio, rtvMisc;
 	public:
 		//Accessors
 		bool isPauseMenuOn() { return PauseMenuisUp; }
@@ -112,12 +112,15 @@ namespace Epoch
 
 					pHubworld->AddComponent(mcHubworld);
 					pHubworld->SetParent(pMainPanel);
-
+					//Restart Level Option Initialize
+					SetUpThisObjectForMe(&pRestartLevel, &mcRestartLevel, std::string("PauseMenu - Restart Level Option"), identity);
+					TextureManager::Instance()->iGetTexture2D("memory:PauseMenu - Restart Level Option", nullptr, &texRestartLevel);
 
 					//Setting Children for Main Panel
 					pMainPanel->AddChild(pResume);
 					pMainPanel->AddChild(pSettings);
 					pMainPanel->AddChild(pHubworld);
+					pMainPanel->AddChild(pRestartLevel);
 				//Settings Panel Options
 					//Audio Option Initialize
 					//identity.SetMatrix(matrix4::CreateTranslation(0, 0, 0.8f));
@@ -126,7 +129,6 @@ namespace Epoch
 
 					pAudio->AddComponent(mcAudio);
 					pAudio->SetParent(pSettingsPanel);
-
 
 					//Misc Option Initialize
 					//identity.SetMatrix(matrix4::CreateTranslation(0, 0, 0.8f));
@@ -147,6 +149,7 @@ namespace Epoch
 					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texResume.Get(), NULL, rtvResume.GetAddressOf());
 					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texSettings.Get(), NULL, rtvSettings.GetAddressOf());
 					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texHubworld.Get(), NULL, rtvHubworld.GetAddressOf());
+					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texRestartLevel.Get(), NULL, rtvRestartLevel.GetAddressOf());
 					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texAudio.Get(), NULL, rtvAudio.GetAddressOf());
 					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texMisc.Get(), NULL, rtvMisc.GetAddressOf());
 			//Active Panel Start Up
@@ -174,6 +177,7 @@ namespace Epoch
 				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvResume.Get(), transparentColor);
 				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvSettings.Get(), transparentColor);
 				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvHubworld.Get(), transparentColor);
+				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvRestartLevel.Get(), transparentColor);
 				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvAudio.Get(), transparentColor);
 				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvMisc.Get(), transparentColor);
 
@@ -185,7 +189,6 @@ namespace Epoch
 					Draw::Instance().GetBitmap(texPauseMenuBase.Get()));
 				
 				//Pause Base's Children
-
 					//Main Panel Rectangle
 					Draw::Instance().DrawRectangleToBitmap(
 						0, 0, 256.0f, 256.0f,
@@ -248,6 +251,16 @@ namespace Epoch
 							*mainFont, L"Hubworld",
 							Draw::Instance().GetBitmap(texHubworld.Get()));
 
+						//Hubworld Option Rectangle 
+						Draw::Instance().DrawRectangleToBitmap(
+							0, 0, 256.0f, 256.0f,
+							tempColor,
+							Draw::Instance().GetBitmap(texRestartLevel.Get()));
+						//Hubworld Option Text
+						Draw::Instance().DrawTextToBitmap(
+							0, 0, 256.0f, 256.0f,
+							*mainFont, L"Restart Level",
+							Draw::Instance().GetBitmap(texRestartLevel.Get()));
 					//Setting Panel's Children
 
 						//Audio Option Rectangle 

@@ -98,7 +98,7 @@ float4 main(PSI input) : SV_TARGET
         percent += Shadow.SampleCmpLevelZero(ShadowFilter, float4(input.shadowPos.xy + offsets[0], 0, 0), depth).r;
         percent += Shadow.SampleCmpLevelZero(ShadowFilter, float4(input.shadowPos.xy + offsets[1], 0, 0), depth).r;
         percent += Shadow.SampleCmpLevelZero(ShadowFilter, float4(input.shadowPos.xy + offsets[2], 0, 0), depth).r;
-        percent += Shadow.SampleCmpLevelZero(ShadowFilter, float4(input.shadowPos.xy + offsets[3], 0, 0), depth).r;
+        percent += dddddShadow.SampleCmpLevelZero(ShadowFilter, float4(input.shadowPos.xy + offsets[3], 0, 0), depth).r;
         percent += Shadow.SampleCmpLevelZero(ShadowFilter, float4(input.shadowPos.xy + offsets[4], 0, 0), depth).r;
         percent += Shadow.SampleCmpLevelZero(ShadowFilter, float4(input.shadowPos.xy + offsets[5], 0, 0), depth).r;
         percent += Shadow.SampleCmpLevelZero(ShadowFilter, float4(input.shadowPos.xy + offsets[6], 0, 0), depth).r;
