@@ -473,7 +473,7 @@ namespace Epoch {
 	}
 	
 	void Renderer::UpdateCamera(float const _moveSpd, float const _rotSpd, float _delta) {
-#if _DEBUG || 1
+#if _DEBUG
 		if (GetActiveWindow() != mWindow) {
 			return;
 		}
@@ -538,8 +538,6 @@ namespace Epoch {
 
 		mVPLeftData.view = VRInputManager::GetInstance().GetPlayerPosition().Transpose().Invert();
 		mVPRightData = mVPLeftData;
-		UpdateGSBuffers();
-		//UpdateLBuffers();
 #endif
 	}
 
@@ -607,6 +605,7 @@ namespace Epoch {
 
 	void Renderer::RenderNoVR(float _delta) {
 		UpdateCamera(2, 2, _delta);
+		UpdateGSBuffers();
 		UpdateLBuffers();
 		ProcessRenderSet();
 		ParticleSystem::Instance()->Render();
@@ -619,48 +618,39 @@ namespace Epoch {
 	}
 
 	void Renderer::ProcessRenderSet() {
-		//const RenderNode* head = mRenderSet.GetHead();
-		//while (head != nullptr) {
-		//	if (head->mType == RenderNode::RenderNodeType::Context) {
-		//		((RenderContext*)head)->Apply();
-		//	} else if (head->mType == RenderNode::RenderNodeType::Shape) {
-		//		mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &((RenderShape*)head)->mPosition, 0, 0);
-		//		((RenderShape*)head)->Render(1);
-		//	}
-		//	head = head->GetNext();
-		//}
-		
 		// TODO: Make a ShaderLimits.h file that has macros for the number of instances and other such arrays a shader supports.
 
-		// Big TODO: When rendering more than 256 instances of a given mesh, there is a pretty good chance the game
-		// will crash due to copying garbage memory into the graphics driver for the buffer's contents. Fix that.
 		std::vector<matrix4> positions;
 		positions.reserve(256);
 
-		// Go through opaque objects first
+		// Remove empty lists
+		mOpaqueSet.Prune();
+		mTransparentSet.Prune();
 
+		// Go through opaque objects first
 		mContext->OMSetDepthStencilState(mOpaqueState.Get(), 1);
 		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
 		for (auto it = mOpaqueSet.Begin(); it != mOpaqueSet.End(); ++it) {
 			(*it)->mPositions.GetData(positions);
 			if (positions.size() > 0) {
-				unsigned int offset = 0;
 #if ENABLE_INSTANCING
+				unsigned int offset = 0;
+				positions.reserve((positions.size / 256 + 1) * 256);
 				while (positions.size() - offset <= positions.size()) {
 					(*it)->mShape.GetContext().Apply(/*mCurrentContext*/);
-					mCurrentContext = (*it)->mShape.GetContext();
+					mCurrentContext.SimpleClone((*it)->mShape.GetContext());
 					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, positions.data() + offset, 0, 0);
 					(*it)->mShape.Render((UINT)positions.size() - offset);
 					offset += 256;
 				}
 #else
-				(*it)->mShape.GetContext().Apply(/*mCurrentContext*/);
-				mCurrentContext = (*it)->mShape.GetContext();
+				(*it)->mShape.GetContext().Apply(mCurrentContext);
+				mCurrentContext.SimpleClone((*it)->mShape.GetContext());
 				vec4i SimInstanceID(0, 0, 0, 0);
 				for (unsigned int i = 0; i < positions.size(); ++i) {
 					SimInstanceID.x = i;
 					mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimInstanceID, 0, 0);
-					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i] + offset, 0, 0);
+					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
 					(*it)->mShape.Render(1); // Without instancing, the instance count doesn't matter, but we're only drawing one :)
 				}
 #endif
@@ -672,23 +662,24 @@ namespace Epoch {
 		for (auto it = mTransparentSet.Begin(); it != mTransparentSet.End(); ++it) {
 			(*it)->mPositions.GetData(positions);
 			if (positions.size() > 0) {
-				unsigned int offset = 0;
 #if ENABLE_INSTANCING
+				unsigned int offset = 0;
+				positions.reserve((positions.size / 256 + 1) * 256);
 				while (positions.size() - offset <= positions.size()) {
 					(*it)->mShape.GetContext().Apply(/*mCurrentContext*/);
-					mCurrentContext = (*it)->mShape.GetContext();
+					mCurrentContext.SimpleClone((*it)->mShape.GetContext());
 					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, positions.data() + offset, 0, 0);
 					(*it)->mShape.Render((UINT)positions.size() - offset);
 					offset += 256;
 				}
 #else
-				(*it)->mShape.GetContext().Apply(/*mCurrentContext*/);
-				mCurrentContext = (*it)->mShape.GetContext();
+				(*it)->mShape.GetContext().Apply(mCurrentContext);
+				mCurrentContext.SimpleClone((*it)->mShape.GetContext());
 				vec4i SimulatedIID(0, 0, 0, 0);
 				for (unsigned int i = 0; i < positions.size(); ++i) {
 					SimulatedIID.x = i;
 					mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimulatedIID, 0, 0);
-					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i] + offset, 0, 0);
+					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
 					(*it)->mShape.Render(1); // Without instancing, the instance count doesn't matter, but we're only drawing one :)
 				}
 #endif
@@ -702,6 +693,7 @@ namespace Epoch {
 		mContext->OMSetRenderTargets(1, mMainView.GetAddressOf(), mDSView.Get());
 		mScenePPQuad->GetContext().Apply();
 		mScenePPQuad->Render();
+		mCurrentContext.SimpleClone(mScenePPQuad->GetContext());
 	}
 
 	 

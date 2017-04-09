@@ -29,6 +29,7 @@ namespace Epoch {
 		void Apply(RenderContext& from);
 		virtual bool operator==(const RenderContext& other) const;
 		virtual RenderContext& operator=(const RenderContext & _other);
+		virtual RenderContext& SimpleClone(const RenderContext& _other);
 		virtual bool operator!=(RenderContext& _other);
 	};
 
