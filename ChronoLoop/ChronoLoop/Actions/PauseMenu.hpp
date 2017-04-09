@@ -8,6 +8,7 @@
 #include "../Rendering/Draw2D.h"
 #include "../Input/VRInputManager.h"
 #include "../Input/KeyboardInput.h"
+#include "../Core/TimeManager.h"
 #include <list>
 
 
@@ -23,6 +24,7 @@ namespace Epoch
 		RESUME,
 		SETTINGS,
 		HUBWORLD,
+		RESTART,
 		AUDIO,
 		MISC,
 		MAX
@@ -313,6 +315,9 @@ namespace Epoch
 					} else if (RaycastToMenu(&pHubworld, &mcHubworld, true)) {
 						mActiveMenu = HUBWORLD;
 						SwitchPanel(&mActiveMenu);
+					} else if (RaycastToMenu(&pRestartLevel, &mcRestartLevel, false)) {
+						mActiveMenu = RESTART;
+						SwitchPanel(&mActiveMenu);
 					} else if (RaycastToMenu(&pAudio, &mcAudio, true)) {
 
 					} else if (RaycastToMenu(&pMisc, &mcMisc, true)) {
@@ -328,8 +333,12 @@ namespace Epoch
 					} else if (RaycastToMenu(&pSettings, &mcSettings, false)) {
 						mActiveMenu = SETTINGS;
 						SwitchPanel(&mActiveMenu);
-					} else if (RaycastToMenu(&pHubworld, &mcHubworld, false)) {
+					}
+					else if (RaycastToMenu(&pHubworld, &mcHubworld, false)) {
 						mActiveMenu = HUBWORLD;
+						SwitchPanel(&mActiveMenu);
+					} else if (RaycastToMenu(&pRestartLevel, &mcRestartLevel, false)) {
+						mActiveMenu = RESTART;
 						SwitchPanel(&mActiveMenu);
 					} else if (RaycastToMenu(&pAudio, &mcAudio, false)) {
 
@@ -446,9 +455,14 @@ namespace Epoch
 					CommandConsole::Instance().Toggle();
 				}
 				break;
+			case RESTART:
+				{
+					TimeManager::Instance()->HotfixResetTimeline();
+				}
+				break;
 			case AUDIO:
 				{
-
+					
 				}
 				break;
 			//case MISC:
