@@ -7,6 +7,7 @@
 #include "../Core/Pool.h"
 #include "../Rendering/Draw2D.h"
 #include "../Input/VRInputManager.h"
+#include "../Input/KeyboardInput.h"
 #include <list>
 
 
@@ -53,6 +54,10 @@ namespace Epoch
 
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> texPauseMenuBase, texMainPanel,texSettingsPanel, texResume,texSettings,texHubworld, texRestartLevel,texAudio,texMisc;
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> rtvPauseMenuBase, rtvMainPanel, rtvSettingsPanel, rtvResume, rtvSettings, rtvHubworld, rtvRestartLevel, rtvAudio, rtvMisc;
+
+		matrix4 playerPos;
+		vec4f playerRot;
+		float scaleX = 0.0f, scaleY = 0.0f;
 	public:
 		//Accessors
 		bool isPauseMenuOn() { return PauseMenuisUp; }
@@ -116,6 +121,9 @@ namespace Epoch
 					SetUpThisObjectForMe(&pRestartLevel, &mcRestartLevel, std::string("PauseMenu - Restart Level Option"), identity);
 					TextureManager::Instance()->iGetTexture2D("memory:PauseMenu - Restart Level Option", nullptr, &texRestartLevel);
 
+					pRestartLevel->AddComponent(mcRestartLevel);
+					pRestartLevel->SetParent(pMainPanel);
+
 					//Setting Children for Main Panel
 					pMainPanel->AddChild(pResume);
 					pMainPanel->AddChild(pSettings);
@@ -162,12 +170,21 @@ namespace Epoch
 		}
 		virtual void Update()
 		{
+			if ((!PauseMenuisUp && scaleY > 0.0f) || (PauseMenuisUp && scaleX <= 20.0f)) {
+				if ((!PauseMenuisUp && scaleY > 0.0f)) {
+					OnEnable();
+					PauseMenuisUp = false;
+				}
+				else if ((PauseMenuisUp && scaleX <= 20.0f))
+					OnEnable();
+			}
 			if(VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu) == true || 
-				VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu) == true)
+				VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu) == true || 
+				(GetAsyncKeyState(Keys::M) & 0x1))
 			{
 				if (PauseMenuisUp) 
 					OnDisable();
-				else
+				else if (!PauseMenuisUp)
 					OnEnable();
 			}
 			if (PauseMenuisUp) {
@@ -251,12 +268,12 @@ namespace Epoch
 							*mainFont, L"Hubworld",
 							Draw::Instance().GetBitmap(texHubworld.Get()));
 
-						//Hubworld Option Rectangle 
+						//Restart Level Option Rectangle 
 						Draw::Instance().DrawRectangleToBitmap(
 							0, 0, 256.0f, 256.0f,
 							tempColor,
 							Draw::Instance().GetBitmap(texRestartLevel.Get()));
-						//Hubworld Option Text
+						//Restart Level Option Text
 						Draw::Instance().DrawTextToBitmap(
 							0, 0, 256.0f, 256.0f,
 							*mainFont, L"Restart Level",
@@ -321,6 +338,30 @@ namespace Epoch
 						SwitchPanel(&mActiveMenu);
 					}
 				}
+				if (scaleY < 18.0f) {
+					scaleX = 0.1f;
+					scaleY += 2.0f;
+				}
+				else if (scaleX < 20.0f)
+					scaleX += 1.0f;
+			}
+			else
+			{
+				if (scaleX > 0.1f){
+					scaleX -= 1.0f;
+					if (scaleX < 0.1f)
+						scaleX = 0.1f;
+				}
+				else if (scaleY > 0.0f) {
+					scaleY -= 2.0f;
+				}
+				else if (scaleY <= 0.0f) {
+					scaleX = 0.0f;
+					//scaleY = 0.0f;
+ 					OnDisable();
+				}
+				
+
 			}
 		}
 		virtual void OnEnable()
@@ -330,23 +371,33 @@ namespace Epoch
 			PauseMenuisUp = true;
 			Settings::GetInstance().SetBool("PauseMenuUp", PauseMenuisUp);
 			Transform tempT;
-			matrix4 playerPos = VRInputManager::GetInstance().GetPlayerView();
-			vec4f playerRot = vec4f(0, 0, 1.5f, 0) *  playerPos;
+			if (scaleY <= 0.0f)
+			{
+				scaleY = 0.0f;
+				scaleX = 0.0f;
+				playerPos = VRInputManager::GetInstance().GetPlayerView();
+				playerRot = vec4f(0, 0, 1.5f, 0) *  playerPos;
+			}
+			
 			//playerRot.x = 1;
 			//playerRot.y = 0;
 
-			tempT.SetMatrix(playerPos.CreateXRotation(1.5708f) * playerPos.CreateScale(20,20,20) * (playerPos) * playerPos.CreateTranslation(playerRot));// * playerPos.CreateTranslation(0, 5.0f, 5.0f)));// *playerPos.CreateTranslation(playerRot));
+			tempT.SetMatrix(playerPos.CreateXRotation(1.5708f) * playerPos.CreateScale(scaleX,scaleY,1) * (playerPos) * playerPos.CreateTranslation(playerRot));// * playerPos.CreateTranslation(0, 5.0f, 5.0f)));// *playerPos.CreateTranslation(playerRot));
 			pPauseMenuBase->SetTransform(tempT);
 			tempT.SetMatrix(playerPos.CreateScale(0.85f, 1, 0.85f) * playerPos.CreateTranslation(0, 0.001f, 0));
 			pMainPanel->SetTransform(tempT);
 			tempT.SetMatrix(playerPos.CreateScale(0.85f, 1, 0.85f) * playerPos.CreateTranslation(0, 0.001f, 0));
 			pSettingsPanel->SetTransform(tempT);
-			tempT.SetMatrix(playerPos.CreateScale(0.4f, 1, 0.2f) * playerPos.CreateTranslation(0, 0.001f, -0.01f));
+
+			tempT.SetMatrix(playerPos.CreateScale(0.3f, 1, 0.3f) * playerPos.CreateTranslation(-0.0075f, 0.001f, -0.0075f));
 			pResume->SetTransform(tempT);
-			tempT.SetMatrix(playerPos.CreateScale(0.4f, 1, 0.2f) * playerPos.CreateTranslation(0, 0.001f, 0));
+			tempT.SetMatrix(playerPos.CreateScale(0.3f, 1, 0.3f) * playerPos.CreateTranslation(0.0075f, 0.001f, -0.0075f));
 			pSettings->SetTransform(tempT);
-			tempT.SetMatrix(playerPos.CreateScale(0.4f, 1, 0.2f) * playerPos.CreateTranslation(0, 0.001f, 0.01f));
-			pHubworld->SetTransform(tempT);
+			tempT.SetMatrix(playerPos.CreateScale(0.3f, 1, 0.3f) * playerPos.CreateTranslation(-0.0075f, 0.001f, 0.0075f));
+			pHubworld->SetTransform(tempT);			
+			tempT.SetMatrix(playerPos.CreateScale(0.3f, 1, 0.3f) * playerPos.CreateTranslation(0.0075f, 0.001f, 0.0075f));
+			pRestartLevel->SetTransform(tempT);
+
 			tempT.SetMatrix(playerPos.CreateScale(0.4f, 1, 0.2f) * playerPos.CreateTranslation(0, 0.001f, 0));
 			pAudio->SetTransform(tempT);
 			tempT.SetMatrix(playerPos.CreateScale(0.3f, 1, 0.15f) * playerPos.CreateTranslation(0.015f, 0.001f, 0.0185f));
@@ -354,10 +405,14 @@ namespace Epoch
 		}
 		virtual void OnDisable()
 		{
-			mActiveMenu = PAUSEMENU_OFF;
-			SwitchPanel(&mActiveMenu);
+			if (scaleY <= 0.0f)
+			{
+				mActiveMenu = PAUSEMENU_OFF;
+				SwitchPanel(&mActiveMenu);
+			}
 			PauseMenuisUp = false;
 			Settings::GetInstance().SetBool("PauseMenuUp", PauseMenuisUp);
+			
 		}
 		void SwitchPanel(MENU_NAME* _activemenu)
 		{
