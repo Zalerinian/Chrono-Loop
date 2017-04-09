@@ -644,15 +644,15 @@ namespace Epoch {
 			if (positions.size() > 0) {
 #if ENABLE_INSTANCING
 				unsigned int offset = 0;
-				positions.reserve((positions.size / 256 + 1) * 256);
+				positions.reserve((positions.size() / 256 + 1) * 256);
 				while (positions.size() - offset <= positions.size()) {
-					(*it)->mShape.GetContext().Apply(/*mCurrentContext*/);
+					(*it)->mShape.GetContext().Apply(mCurrentContext);
 					mCurrentContext.SimpleClone((*it)->mShape.GetContext());
 					
 					D3D11_MAPPED_SUBRESOURCE map;
 					memset(&map, 0, sizeof(map));
 					HRESULT MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-					memcpy(map.pData, &positions + offset, sizeof(matrix4) * 256);
+					memcpy(map.pData, positions.data() + offset, sizeof(matrix4) * min(positions.size() - offset, 256));
 					mContext->Unmap(mPositionBuffer.Get(), 0);
 					//mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
 
@@ -692,14 +692,14 @@ namespace Epoch {
 			if (positions.size() > 0) {
 #if ENABLE_INSTANCING
 				unsigned int offset = 0;
-				positions.reserve((positions.size / 256 + 1) * 256);
+				positions.reserve((positions.size() / 256 + 1) * 256);
 				while (positions.size() - offset <= positions.size()) {
-					(*it)->mShape.GetContext().Apply(/*mCurrentContext*/);
+					(*it)->mShape.GetContext().Apply(mCurrentContext);
 					mCurrentContext.SimpleClone((*it)->mShape.GetContext());
 
 					D3D11_MAPPED_SUBRESOURCE map;
 					HRESULT MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-					memcpy(map.pData, &positions + offset, sizeof(matrix4) * 256);
+					memcpy(map.pData, positions.data() + offset, sizeof(matrix4) * min(positions.size() - offset, 256));
 					mContext->Unmap(mPositionBuffer.Get(), 0);
 					//mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
 
@@ -735,7 +735,7 @@ namespace Epoch {
 	{
 		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
 		mContext->OMSetRenderTargets(1, mMainView.GetAddressOf(), mDSView.Get());
-		mScenePPQuad->GetContext().Apply();
+		mScenePPQuad->GetContext().Apply(mCurrentContext);
 		mScenePPQuad->Render();
 		mCurrentContext.SimpleClone(mScenePPQuad->GetContext());
 	}
