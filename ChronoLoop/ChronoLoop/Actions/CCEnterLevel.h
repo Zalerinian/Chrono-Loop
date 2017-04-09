@@ -87,7 +87,6 @@ namespace Epoch
 
 					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), false);
 					BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
-					((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
 					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					rightRaycaster->SetAlpha(0.4f);
@@ -253,7 +252,6 @@ namespace Epoch
 					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), true);
 					BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
-					((BoxSnapToControllerAction*)pickup2)->mControllerRole = eControllerType_Secondary;
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					leftRaycaster->SetAlpha(0.4f);

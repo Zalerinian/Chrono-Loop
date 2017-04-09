@@ -53,15 +53,16 @@ namespace Epoch {
 					ReleaseObject();
 				}
 			} else if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == -1 && !mCollider->mHitting.empty() && ((!paused) || !Settings::GetInstance().GetBool("PauseMenuUp"))) {
-				SomethingtoController();
-				if (mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueId()
-					|| mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueId()) {
-					VRInputManager::GetInstance().GetController((mInput->mData.mPrimary) ? eControllerType_Primary : eControllerType_Secondary).TriggerHapticPulse(1000);
+				if (mIsGrabOnCooldown) {
+					(mGrabTimeout + mGrabTimestamp < TimeManager::Instance()->GetTotalGameTime()) ? mIsGrabOnCooldown = false : mIsGrabOnCooldown = true;
+				}
+				else {
+					SomethingtoController();
 				}
 			}
 		}
 	}
-	void BoxSnapToControllerAction::CheckIfBoxAlreadyHeld()
+	bool BoxSnapToControllerAction::CheckIfBoxAlreadyHeld()
 	{
 		for (unsigned int i = 0; i < mHands.size(); i++) {
 			if (mHands[i]->mObject->GetUniqueID() == mObject->GetUniqueID())
@@ -72,16 +73,23 @@ namespace Epoch {
 				//If my mPickup is the same as the other code component, make it release theirs so new code component can pick it up
 				if (temp->mHeld == true && temp->mPickUp == mPickUp) {
 					//TODO PAT: Have a time out system for non player hands to where they cant pick up an object after a certain amount of time
+					if (temp->mObject->GetUniqueID() != LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueId() &&
+						temp->mObject->GetUniqueID() != LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueId())
+					{
+					temp->mIsGrabOnCooldown = true;
+					temp->mGrabTimestamp = TimeManager::Instance()->GetTotalGameTime();
 					temp->ReleaseObject();
 					SystemLogger::GetLog() << "Released box" << std::endl;
-					break;
+					return true;
+					}
+					return false;
 				}
 			}
 		}
+		return true;
 	}
 	void BoxSnapToControllerAction::CheckIfBoxShouldMove()
 	{
-		//TODO PAT: Turn only should move true if nothing is holding it anymore
 		for (unsigned int i = 0; i < mHands.size(); i++) {
 			if (mHands[i]->mPickUp == mPickUp && mHands[i] != this) {
 				//dont set mShouldmove because another box is holding it
@@ -122,9 +130,9 @@ namespace Epoch {
 			}
 		}
 
-		CheckIfBoxAlreadyHeld();
+		
 
-		if (mPickUp) {
+		if (mPickUp && CheckIfBoxAlreadyHeld()) {
 			if (!mPickUp->mShouldMove) {
 				mCollider->mHitting.erase(mPickUp);
 				return;
@@ -136,11 +144,22 @@ namespace Epoch {
 			mPickUp->mForces = { 0,0,0 };
 			mPickUp->mVelocity = { 0,0,0 };
 			mPickUp->mAcceleration = { 0,0,0 };
+
+			if (mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueId()
+				|| mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueId()) {
+				VRInputManager::GetInstance().GetController((mInput->mData.mPrimary) ? eControllerType_Primary : eControllerType_Secondary).TriggerHapticPulse(1000);
+			}
+		}
+		else
+		{
+			mPickUp = nullptr;
 		}
 	}
 	void BoxSnapToControllerAction::ReleaseObject()
 	{
-		//vec4f force = VRInputManager::GetInstance().GetController(mControllerRole).GetVelocity();
+		if (!mInput)
+			return;
+		
 		vec4f force = mInput->mData.mVelocity;
 		force[2] *= -1; // SteamVR seems to Assume +Z goes into the screen.
 		mPickUp->mVelocity = force;

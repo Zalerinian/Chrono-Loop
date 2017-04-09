@@ -12,9 +12,9 @@ namespace Epoch {
 	
 
 	struct BoxSnapToControllerAction : public CodeComponent {
-		ControllerType mControllerRole = eControllerType_Primary;
 		static std::vector<BoxSnapToControllerAction*> mHands;
-		bool mHeld = false;
+		bool mHeld = false, mIsGrabOnCooldown = false;
+		float mGrabTimestamp = 0,  mGrabTimeout = 0.5f;
 		ControllerCollider* mCollider;
 		Collider* mPickUp = nullptr;
 		InputTimeline::InputNode* mInput = nullptr;
@@ -22,7 +22,7 @@ namespace Epoch {
 		virtual void Start();
 		virtual void OnDestroy();
 		virtual void Update() override;
-		void CheckIfBoxAlreadyHeld();
+		bool CheckIfBoxAlreadyHeld();
 		void CheckIfBoxShouldMove();
 		virtual void SomethingtoController();
 		virtual void ReleaseObject();

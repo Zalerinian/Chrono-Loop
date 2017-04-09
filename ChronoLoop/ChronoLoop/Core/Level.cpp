@@ -618,7 +618,7 @@ namespace Epoch {
 						CCBoxSpin* spin = new CCBoxSpin();
 						obj->AddComponent(spin);
 					}
-					else if (name == "cube.001" || name == "cube.002" || name == "cube.003" || name == "cube.004")
+					else if (name == "cube.001" || name == "cube.002" || name == "cube.003" || name == "cube.004" || name == "cube")
 					{
 						Emitter* e = new SFXEmitter();
 						((SFXEmitter*)e)->SetEvent(AK::EVENTS::SFX_BOUNCEEFFECTS);
@@ -756,6 +756,11 @@ namespace Epoch {
 						vec3f min = colliderPosition - offset;
 						vec3f max = colliderPosition + offset;
 						CubeCollider* col = new CubeCollider(obj, canMove, trigger, gravity, mass, elasticity, staticF, kineticF, drag, min, max);
+						//TODO PAT: MAKE THIS A CHECKBOX
+						if(name == "cube.001" || name == "cube.002" || name == "cube.003" || name == "cube.004" || name == "cube")
+						{
+							col->mPickUpAble = true;
+						}
 						obj->AddComponent(col);
 					}
 					else if (colliderType == "Sphere")
