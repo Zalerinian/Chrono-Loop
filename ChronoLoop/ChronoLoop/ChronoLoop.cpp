@@ -403,26 +403,6 @@ void Update() {
 			if (GetAsyncKeyState(VK_ESCAPE) && GetActiveWindow() == Renderer::Instance()->GetWindow()) {
 				break;
 			}
-			//Particle Testing
-			if (GetAsyncKeyState(VK_TAB) & 0x1)
-			{
-				Particle * p = &Particle::Init();
-				p->SetColors(vec4f(1, 1, 1, 1), vec4f());
-				p->SetLife((rand()% 250) + 250);
-				p->SetSize(.25f, .15f);
-				vec3f EPos = vec3f((rand() % 10) - 5,rand() % 5, (rand() % 10) - 5);
-				ParticleEmitter *emit = new ParticleEmitter(-1, 200, 20, EPos);
-				emit->SetParticle(p);
-				emit->SetTexture("../Resources/BasicCircleP.png");
-				ParticleSystem::Instance()->AddEmitter(emit);
-				emit->FIRE();
-				//AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::PLAY_A_TIMELAPSE);
-			}
-			if (GetAsyncKeyState('P'))
-			{
-				AudioWrapper::GetInstance().STOP();
-				ParticleSystem::Instance()->Clear();
-			}
 
 			AudioWrapper::GetInstance().Update();
 			//SystemLogger::GetLog() << "[Debug] Regular Update " << std::endl;

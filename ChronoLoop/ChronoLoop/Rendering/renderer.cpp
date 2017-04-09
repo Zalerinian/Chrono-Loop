@@ -95,13 +95,24 @@ namespace Epoch {
 
 	void Renderer::UpdateGSBuffers() {
 		ViewProjectionBuffer buffers[] = { mVPLeftData, mVPRightData };
-		mContext->UpdateSubresource(mVPBuffer.Get(), 0, nullptr, buffers, 0, 0);
+		//mContext->UpdateSubresource(mVPBuffer.Get(), 0, nullptr, buffers, 0, 0);
+
+		D3D11_MAPPED_SUBRESOURCE map;
+		memset(&map, 0, sizeof(map));
+		HRESULT MHR = mContext->Map(mVPBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+		memcpy(map.pData, buffers, sizeof(ViewProjectionBuffer) * 2);
+		mContext->Unmap(mVPBuffer.Get(), 0);
 	}
 
 	void Renderer::UpdateLBuffers()
 	{
 		Light buffs[] = { (*mLData[0]), (*mLData[1]), (*mLData[2]) };
-		mContext->UpdateSubresource(mLBuffer.Get(), 0, nullptr, buffs, 0, 0);
+		D3D11_MAPPED_SUBRESOURCE map;
+		memset(&map, 0, sizeof(map));
+		HRESULT MHR = mContext->Map(mLBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+		memcpy(map.pData, buffs, sizeof(Light) * 3);
+		mContext->Unmap(mLBuffer.Get(), 0);
+		//mContext->UpdateSubresource(mLBuffer.Get(), 0, nullptr, buffs, 0, 0);
 
 		//mContext->UpdateSubresource(mDLBufferS.Get(), 0, nullptr, &mDLVPB, 0, 0);
 		//mContext->UpdateSubresource(mSLBufferS.Get(), 0, nullptr, &mSLVPB, 0, 0);
@@ -291,11 +302,11 @@ namespace Epoch {
 		ID3D11Buffer* pBuff;
 		D3D11_SUBRESOURCE_DATA InitialData;
 
-
+		HRESULT buffRes = 0;
 
 		// View-Projction buffer
-		CD3D11_BUFFER_DESC desc(sizeof(ViewProjectionBuffer) * 2, D3D11_BIND_CONSTANT_BUFFER);
-		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
+		CD3D11_BUFFER_DESC desc(sizeof(ViewProjectionBuffer) * 2, D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
+		buffRes = mDevice->CreateBuffer(&desc, nullptr, &pBuff);
 		mVPBuffer.Attach(pBuff);
 
 
@@ -305,7 +316,7 @@ namespace Epoch {
 #else
 		desc.ByteWidth = sizeof(matrix4);
 #endif
-		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
+		buffRes = mDevice->CreateBuffer(&desc, nullptr, &pBuff);
 		mPositionBuffer.Attach(pBuff);
 
 		// Simulated Instance ID Buffer
@@ -316,19 +327,19 @@ namespace Epoch {
 		vec4i initialSimID(0, 0, 0, 0);
 		InitialData.pSysMem = &initialSimID;
 		desc.ByteWidth = sizeof(vec4i);
-		mDevice->CreateBuffer(&desc, &InitialData, mSimInstanceBuffer.GetAddressOf());
+		buffRes = mDevice->CreateBuffer(&desc, &InitialData, mSimInstanceBuffer.GetAddressOf());
 
 		//Light buffers
 		desc.ByteWidth = sizeof(Light) * 3;
-		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
+		buffRes = mDevice->CreateBuffer(&desc, nullptr, &pBuff);
 		mLBuffer.Attach(pBuff);
 
 		desc.ByteWidth = sizeof(ViewProjectionBuffer);
-		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
+		buffRes = mDevice->CreateBuffer(&desc, nullptr, &pBuff);
 		mPLBufferS.Attach(pBuff);
 
 		desc.ByteWidth = sizeof(float) * 4;
-		mDevice->CreateBuffer(&desc, nullptr, &pBuff);
+		buffRes = mDevice->CreateBuffer(&desc, nullptr, &pBuff);
 		mPLBSDir.Attach(pBuff);
 
 		for (int i = 0; i < 3; i++)
@@ -473,7 +484,6 @@ namespace Epoch {
 	}
 	
 	void Renderer::UpdateCamera(float const _moveSpd, float const _rotSpd, float _delta) {
-#if _DEBUG
 		if (GetActiveWindow() != mWindow) {
 			return;
 		}
@@ -538,7 +548,6 @@ namespace Epoch {
 
 		mVPLeftData.view = VRInputManager::GetInstance().GetPlayerPosition().Transpose().Invert();
 		mVPRightData = mVPLeftData;
-#endif
 	}
 
 	void Renderer::RenderShadowMaps(float _delta)
@@ -639,7 +648,14 @@ namespace Epoch {
 				while (positions.size() - offset <= positions.size()) {
 					(*it)->mShape.GetContext().Apply(/*mCurrentContext*/);
 					mCurrentContext.SimpleClone((*it)->mShape.GetContext());
-					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, positions.data() + offset, 0, 0);
+					
+					D3D11_MAPPED_SUBRESOURCE map;
+					memset(&map, 0, sizeof(map));
+					HRESULT MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+					memcpy(map.pData, &positions + offset, sizeof(matrix4) * 256);
+					mContext->Unmap(mPositionBuffer.Get(), 0);
+					//mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
+
 					(*it)->mShape.Render((UINT)positions.size() - offset);
 					offset += 256;
 				}
@@ -649,8 +665,20 @@ namespace Epoch {
 				vec4i SimInstanceID(0, 0, 0, 0);
 				for (unsigned int i = 0; i < positions.size(); ++i) {
 					SimInstanceID.x = i;
-					mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimInstanceID, 0, 0);
-					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
+
+					D3D11_MAPPED_SUBRESOURCE map;
+					memset(&map, 0, sizeof(map));
+					HRESULT MHR = mContext->Map(mSimInstanceBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+					memcpy(map.pData, &SimInstanceID, sizeof(vec4i));
+					mContext->Unmap(mSimInstanceBuffer.Get(), 0);
+
+					//mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimInstanceID, 0, 0);
+					
+					memset(&map, 0, sizeof(map));
+					MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+					memcpy(map.pData, &positions[i], sizeof(matrix4));
+					mContext->Unmap(mPositionBuffer.Get(), 0);
+					//mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
 					(*it)->mShape.Render(1); // Without instancing, the instance count doesn't matter, but we're only drawing one :)
 				}
 #endif
@@ -668,7 +696,13 @@ namespace Epoch {
 				while (positions.size() - offset <= positions.size()) {
 					(*it)->mShape.GetContext().Apply(/*mCurrentContext*/);
 					mCurrentContext.SimpleClone((*it)->mShape.GetContext());
-					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, positions.data() + offset, 0, 0);
+
+					D3D11_MAPPED_SUBRESOURCE map;
+					HRESULT MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+					memcpy(map.pData, &positions + offset, sizeof(matrix4) * 256);
+					mContext->Unmap(mPositionBuffer.Get(), 0);
+					//mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
+
 					(*it)->mShape.Render((UINT)positions.size() - offset);
 					offset += 256;
 				}
@@ -678,8 +712,18 @@ namespace Epoch {
 				vec4i SimulatedIID(0, 0, 0, 0);
 				for (unsigned int i = 0; i < positions.size(); ++i) {
 					SimulatedIID.x = i;
-					mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimulatedIID, 0, 0);
-					mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
+
+					D3D11_MAPPED_SUBRESOURCE map;
+					HRESULT MHR = mContext->Map(mSimInstanceBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+					memcpy(map.pData, &SimulatedIID, sizeof(vec4i));
+					mContext->Unmap(mSimInstanceBuffer.Get(), 0);
+
+					//mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimInstanceID, 0, 0);
+
+					MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+					memcpy(map.pData, &positions[i], sizeof(matrix4));
+					mContext->Unmap(mPositionBuffer.Get(), 0);
+					//mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
 					(*it)->mShape.Render(1); // Without instancing, the instance count doesn't matter, but we're only drawing one :)
 				}
 #endif
@@ -863,7 +907,7 @@ namespace Epoch {
 		mContext->PSSetShaderResources(eTEX_DIFFUSE, 1, &nullSRV);
 
 
-		mChain->Present(mUseVsync ? 1 : 0, 0);
+		mChain->Present(0, 0);
 		mRendererLock.unlock();
 	}
 
