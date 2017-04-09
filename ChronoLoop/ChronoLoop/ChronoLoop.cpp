@@ -111,7 +111,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	vr::VR_Shutdown();
 
 	for (int i = 0; i < 40; ++i) {
-		SystemLogger::Warn() << "THE CONSOLE HAS BEEN DETATCHED. IF THIS WINDOW IS STILL OPEN, IT IS OWNED BY THE STEAMVR SERVER. CLOSING THIS WILL CAUSE ISSUES WITH STEAMVR." << std::endl;
+		SystemLogger::Warn() << "THE CONSOLE HAS BEEN DETATCHED, AND IS NOW OWNED BY THE STEAMVR SERVER. DO NOT CLOSE IT." << std::endl;
 	}
 	SystemLogger::DestroyInstance();
 	vrsys = nullptr;
