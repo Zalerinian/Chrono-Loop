@@ -12,6 +12,7 @@
 #include "../Actions/CCButtonPress.h"
 #include "../Actions/CCEnterLevel.h"
 #include "../Actions/CCEnterLevel1.h"
+#include "../Actions/CCLoadTutorial.h"
 #include "../Actions/MainMenuBT.h"
 #include "../Actions/CCLoadHub.h"
 #include "../Actions/CCBoxSpin.h"
@@ -832,9 +833,14 @@ namespace Epoch {
 								CCEnterLevel1* code = new CCEnterLevel1();
 								obj->AddComponent(code);
 							}
-							else
+							else if(name == "mmDoor2")
 							{
 								CCEnterLevel* code = new CCEnterLevel();
+								obj->AddComponent(code);
+							}
+							else if (name == "mmDoor3")
+							{
+								CCLoadTutorial* code = new CCLoadTutorial();
 								obj->AddComponent(code);
 							}
 						}
@@ -886,6 +892,7 @@ namespace Epoch {
 
 		CCEnterLevel* accessLevelTwo = nullptr;
 		CCEnterLevel1* accessLevelOne = nullptr;
+		CCLoadTutorial* accessTut = nullptr;
 		CCLoadHub* accessHub = nullptr;
 
 		std::list<BaseObject*> copyList = LevelManager::GetInstance().GetCurrentLevel()->GetLevelObjects();
@@ -930,6 +937,24 @@ namespace Epoch {
 			}
 		}
 
+		for (auto it = copyList.begin(); it != copyList.end(); ++it)
+		{
+			std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+			if (CodeComps.size() > 0)
+			{
+				for (size_t x = 0; x < CodeComps.size(); ++x)
+				{
+					if (dynamic_cast<CCLoadTutorial*>(CodeComps[x]))
+					{
+						accessTut = ((CCLoadTutorial*)CodeComps[x]);
+						break;
+					}
+				}
+				if (accessTut != nullptr)
+					break;
+			}
+		}
+
 		if ((_Level == L"LEVELTWO" || _Level == L"LVLTWO"))
 		{
 			if (accessLevelTwo) {
@@ -968,7 +993,22 @@ namespace Epoch {
 			accessLevelTwo = nullptr;
 			accessHub = nullptr;
 		}
-
+		else if ((_Level == L"TUTORIAL" || _Level == L"TUT"))
+		{
+			if (accessTut)
+			{
+				accessTut->SetOnce(false);
+				CommandConsole::Instance().Toggle();
+			}
+			else
+			{
+				CommandConsole::Instance().DisplaySet(L"Failed to load tutorial.");
+			}
+			accessLevelOne = nullptr;
+			accessLevelTwo = nullptr;
+			accessHub = nullptr;
+			accessTut = nullptr;
+		}
 
 	}
 

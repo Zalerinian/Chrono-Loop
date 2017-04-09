@@ -17,8 +17,8 @@
     <Name>mmDoor</Name>
     <Mesh>mmDoor.obj</Mesh>
     <Texture>fieldGen.png</Texture>
-    <Position>0,-10,2.611548</Position>
-    <Rotation>0,0,0</Rotation>
+    <Position>2.820054,-10,0</Position>
+    <Rotation>0,1.57,0</Rotation>
     <Scale>1,1.25,0.5</Scale>
     <Components>
       <EnterLevel>Enabled</EnterLevel>
@@ -27,7 +27,7 @@
         <Trigger>True</Trigger>
         <Position>0,1,0</Position>
         <Rotation>0,0,0</Rotation>
-        <Scale>1.2,1.8,0.4</Scale>
+        <Scale>0.2,1.9,2.2</Scale>
         <Move>False</Move>
         <Gravity>0,0,0</Gravity>
         <Mass>0</Mass>
@@ -69,7 +69,7 @@
     <Name>mmDoor2</Name>
     <Mesh>mmDoor.obj</Mesh>
     <Texture>fieldGen.png</Texture>
-    <Position>-2.548366,-10,0</Position>
+    <Position>-2.82,-10,0</Position>
     <Rotation>0,1.57,0</Rotation>
     <Scale>1,1.25,0.5</Scale>
     <Components>
@@ -203,17 +203,17 @@
   <Object>
     <Name>entrytest</Name>
     <Mesh>PlaneCorrection.obj</Mesh>
-    <Texture>EntryTest.png</Texture>
-    <Position>0,-7.667752,2.508215</Position>
-    <Rotation>1.57,3.14,0</Rotation>
-    <Scale>0.5,1,0.2</Scale>
+    <Texture>Trivial.png</Texture>
+    <Position>2.713715,-7.667752,0</Position>
+    <Rotation>1.57,-1.57,0</Rotation>
+    <Scale>0.5,0.9932106,0.2</Scale>
     <Components />
   </Object>
   <Object>
     <Name>noviceTest</Name>
     <Mesh>PlaneCorrection.obj</Mesh>
     <Texture>Novice.png</Texture>
-    <Position>-2.432258,-7.67,0</Position>
+    <Position>-2.71793,-7.67,0</Position>
     <Rotation>1.57,1.57,0</Rotation>
     <Scale>0.5,1,0.2</Scale>
     <Components />
@@ -507,7 +507,7 @@
     <Name>general controlls</Name>
     <Mesh>PlaneCorrection.obj</Mesh>
     <Texture>GeneralControlScheme.png</Texture>
-    <Position>-1.093232,-8.166304,2.644096</Position>
+    <Position>-1.093232,-8.166304,2.780156</Position>
     <Rotation>1.57,3.14,0</Rotation>
     <Scale>1,-0.03908483,1</Scale>
     <Components />
@@ -516,7 +516,7 @@
     <Name>Time controlls</Name>
     <Mesh>PlaneCorrection.obj</Mesh>
     <Texture>TimeControlScheme.png</Texture>
-    <Position>-1.09,-9.289726,2.64</Position>
+    <Position>-1.09,-9.289726,2.78</Position>
     <Rotation>1.57,3.14,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components />
@@ -582,6 +582,40 @@
     <Position>-2,-0.5,0</Position>
     <Rotation>3.14,0,0</Rotation>
     <Scale>2.1,1,2.1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>mmDoor3</Name>
+    <Mesh>mmDoor.obj</Mesh>
+    <Texture>fieldGen.png</Texture>
+    <Position>0,-10,2.82</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1.25,0.5</Scale>
+    <Components>
+      <EnterLevel>Enabled</EnterLevel>
+      <Collider>
+        <Type>OBB</Type>
+        <Trigger>True</Trigger>
+        <Position>0,1,0</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>1.2,1.9,0.4</Scale>
+        <Move>False</Move>
+        <Gravity>0,0,0</Gravity>
+        <Mass>0</Mass>
+        <Elasticity>0</Elasticity>
+        <StaticFriction>0</StaticFriction>
+        <KeneticFriction>0</KeneticFriction>
+        <Drag>0</Drag>
+      </Collider>
+    </Components>
+  </Object>
+  <Object>
+    <Name>Conditioning</Name>
+    <Mesh>PlaneCorrection.obj</Mesh>
+    <Texture>Conditioning.png</Texture>
+    <Position>0,-7.67,2.714548</Position>
+    <Rotation>1.57,3.14,0</Rotation>
+    <Scale>0.5,1,0.2</Scale>
     <Components />
   </Object>
 </Level>
