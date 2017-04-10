@@ -77,7 +77,7 @@
     </Components>
   </Object>
   <Object>
-    <Name>cube</Name>
+    <Name>cube.001</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
     <Position>5.57156,1.304958,-0.5387666</Position>
@@ -150,7 +150,7 @@
     </Components>
   </Object>
   <Object>
-    <Name>cube</Name>
+    <Name>cube.002</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
     <Position>5.687682,1.148723,-1.164733</Position>
@@ -277,7 +277,7 @@
     </Components>
   </Object>
   <Object>
-    <Name>cube</Name>
+    <Name>cube.003</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
     <Position>5.654684,1.280929,0.08234796</Position>
