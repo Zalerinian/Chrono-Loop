@@ -316,266 +316,188 @@ namespace Hourglass
 					ReadObject(reader, _tree);
 				}
 			}
-
-			#region XML Reading
-			//OpenFileDialog openFileDialog1 = new OpenFileDialog();
-			//OpenFileDialog openFileDialog2 = new OpenFileDialog();
-			//
-			//openFileDialog1.InitialDirectory = Application.StartupPath;
-			//openFileDialog1.Filter = "Compatible Files (*.xml, *.obj)|*.xml;*.obj";
-			//openFileDialog1.FilterIndex = 1;
-			//openFileDialog1.RestoreDirectory = true;
-			//
-			//if (openFileDialog1.ShowDialog() == DialogResult.OK) {
-			//    try {
-			//        if (Path.GetExtension(openFileDialog1.FileName) == ".xml") {
-			//            loaded = false;
-			//            XmlReaderSettings settings = new XmlReaderSettings();
-			//            settings.DtdProcessing = DtdProcessing.Parse;
-			//            currentFile = openFileDialog1.FileName;
-			//            XmlReader reader = XmlReader.Create(openFileDialog1.FileName, settings);
-			//            reader.MoveToContent();
-			//            string element = string.Empty, mesh = string.Empty, texutre = string.Empty, name = string.Empty;
-			//            ToolObject addition = new ToolObject(ref device);
-			//            bool collider = false;
-			//            while (reader.Read()) {
-			//                string[] parts = { };
-			//                Vector3 point = new Vector3();
-			//                switch (reader.NodeType) {
-			//                    case XmlNodeType.Element:
-			//                        switch (reader.Name) {
-			//                            case "Object":
-			//                                addition = new ToolObject(ref device);
-			//                                addition.IsWireFrame = false;
-			//                                mesh = texutre = string.Empty;
-			//                                collider = false;
-			//                                break;
-			//                            case "Collider":
-			//                                addition.Collider = new ToolObjectColor(ref device);
-			//                                addition.Collider.IsWireFrame = true;
-			//                                collider = true;
-			//                                break;
-			//                            default:
-			//                                element = reader.Name;
-			//                                break;
-			//                        }
-			//                        break;
-			//                    case XmlNodeType.Text:
-			//                        switch (element) {
-			//                            case "StartPos":
-			//                                parts = reader.Value.Split(',');
-			//                                mStartPos.X = float.Parse(parts[0]);
-			//                                mStartPos.Y = float.Parse(parts[1]);
-			//                                mStartPos.Z = float.Parse(parts[2]);
-			//                                break;
-			//                            case "StartRot":
-			//                                parts = reader.Value.Split(',');
-			//                                mStartRot.X = float.Parse(parts[0]) * RADIANS_TO_DEGREES;
-			//                                mStartRot.Y = float.Parse(parts[1]) * RADIANS_TO_DEGREES;
-			//                                mStartRot.Z = float.Parse(parts[2]) * RADIANS_TO_DEGREES;
-			//                                break;
-			//                            case "Name":
-			//                                name = reader.Value;
-			//                                break;
-			//                            case "Mesh":
-			//                                if (File.Exists("Assets\\" + reader.Value))
-			//                                    addition.Load("Assets\\" + reader.Value);
-			//                                else {
-			//                                    openFileDialog2.Title = "Please find \"" + reader.Value + "\"";
-			//                                    openFileDialog2.InitialDirectory = Application.StartupPath;
-			//                                    openFileDialog2.Filter = "Object files (*.obj)|*.obj";
-			//                                    openFileDialog2.FilterIndex = 1;
-			//                                    openFileDialog2.RestoreDirectory = true;
-			//                                    if (openFileDialog2.ShowDialog() == DialogResult.OK)
-			//                                        addition.Load(openFileDialog2.FileName);
-			//                                }
-			//                                mesh = addition.MeshFile;
-			//                                break;
-			//                            case "Texture":
-			//                                if (File.Exists("Assets\\" + reader.Value))
-			//                                    addition.loadTexture("Assets\\" + reader.Value);
-			//                                else {
-			//                                    openFileDialog2.Title = "Please find \"" + reader.Value + "\"";
-			//                                    openFileDialog2.InitialDirectory = Application.StartupPath;
-			//                                    openFileDialog2.Filter = "Texture files (*.png)|*.png";
-			//                                    openFileDialog2.FilterIndex = 1;
-			//                                    openFileDialog2.RestoreDirectory = true;
-			//                                    if (openFileDialog2.ShowDialog() == DialogResult.OK)
-			//                                        addition.loadTexture(openFileDialog2.FileName);
-			//                                }
-			//                                texutre = addition.TextureFile;
-			//                                bool contained = false;
-			//                                for (int i = 0; i < objects.Count; i++)
-			//                                    if (objects[i].MeshFile == mesh && objects[i].TextureFile == texutre)
-			//                                        contained = true;
-			//                                if (!contained) {
-			//                                    objects.Add(new ToolObject(mesh, texutre, ref device));
-			//                                    Tree.Nodes[0].Nodes.Add(objects.Last().Name);
-			//                                }
-			//                                break;
-			//                            case "Position":
-			//                                parts = reader.Value.Split(',');
-			//                                point.X = float.Parse(parts[0]);
-			//                                point.Y = float.Parse(parts[1]);
-			//                                point.Z = float.Parse(parts[2]);
-			//                                if (collider)
-			//                                    addition.Collider.SetPosition(point);
-			//                                else
-			//                                    addition.SetPosition(point);
-			//                                break;
-			//                            case "Rotation":
-			//                                parts = reader.Value.Split(',');
-			//                                point.X = float.Parse(parts[0]);
-			//                                point.Y = float.Parse(parts[1]);
-			//                                point.Z = float.Parse(parts[2]);
-			//                                if (collider)
-			//                                    addition.Collider.SetRotate(point);
-			//                                else
-			//                                    addition.SetRotate(point);
-			//                                break;
-			//                            case "Scale":
-			//                                parts = reader.Value.Split(',');
-			//                                point.X = float.Parse(parts[0]);
-			//                                point.Y = float.Parse(parts[1]);
-			//                                point.Z = float.Parse(parts[2]);
-			//                                if (collider)
-			//                                    addition.Collider.SetScale(point);
-			//                                else
-			//                                    addition.SetScale(point);
-			//                                break;
-			//                            case "Type":
-			//                                addition.ColliderType = reader.Value;
-			//                                if (reader.Value == "Sphere")
-			//                                    addition.Collider.Load("Assets\\Sphere.obj");
-			//                                else if (reader.Value == "OBB" || reader.Value == "Button")
-			//                                    addition.Collider.Load("Assets\\Cube.obj");
-			//                                else
-			//                                    addition.Collider.Load("Assets\\Plane.obj");
-			//                                addition.Collider.Name = "Collider";
-			//                                break;
-			//                            case "Trigger":
-			//                                if (reader.Value == "True")
-			//                                    addition.Collider.IsSolid = false;
-			//                                else
-			//                                    addition.Collider.IsSolid = true;
-			//                                break;
-			//                            case "Radius":
-			//                                float radius = float.Parse(reader.Value);
-			//                                addition.Collider.SetScale(new Vector3(radius, radius, radius));
-			//                                break;
-			//                            case "PushNormal":
-			//                            case "Normal":
-			//                            case "Gravity":
-			//                                parts = reader.Value.Split(',');
-			//                                point.X = float.Parse(parts[0]);
-			//                                point.Y = float.Parse(parts[1]);
-			//                                point.Z = float.Parse(parts[2]);
-			//                                addition.Collider.Gravity = point;
-			//                                break;
-			//                            case "Move":
-			//                                addition.Collider.CanMove = reader.Value == "True";
-			//                                break;
-			//                            case "Mass":
-			//                                addition.Collider.Mass = float.Parse(reader.Value);
-			//                                break;
-			//                            case "Elasticity":
-			//                                addition.Collider.Elasticity = float.Parse(reader.Value);
-			//                                break;
-			//                            case "NormalForce":
-			//                            case "StaticFriction":
-			//                                addition.Collider.StaticF = float.Parse(reader.Value);
-			//                                break;
-			//                            case "KeneticFriction":
-			//                                addition.Collider.KeneticF = float.Parse(reader.Value);
-			//                                break;
-			//                            case "Drag":
-			//                                addition.Collider.Drag = float.Parse(reader.Value);
-			//                                break;
-			//                            default:
-			//                                switch (element) {
-			//                                    case "BoxSnapToController":
-			//                                        addition.Components.Add("Box Snap");
-			//                                        break;
-			//                                    case "ButtonPress":
-			//                                        addition.Components.Add("Button Press");
-			//                                        break;
-			//                                    case "AABBtoAABB":
-			//                                        addition.Components.Add("AABB to AABB");
-			//                                        break;
-			//                                    case "AABBtoSphere":
-			//                                        addition.Components.Add("AABB to Sphere");
-			//                                        break;
-			//                                    case "ElasticPlane":
-			//                                        addition.Components.Add("Elastic Plane");
-			//                                        break;
-			//                                    case "SpheretoSphere":
-			//                                        addition.Components.Add("Sphere to Sphere");
-			//                                        break;
-			//                                    case "EnterLevel":
-			//                                        addition.Components.Add("Enter Level");
-			//                                        break;
-			//                                    case "Gesture":
-			//                                        addition.Components.Add("Gesture");
-			//                                        break;
-			//                                    case "HeadsetFollow":
-			//                                        addition.Components.Add("Headset Follow");
-			//                                        break;
-			//                                    case "MainMenu":
-			//                                        addition.Components.Add("Main Menu");
-			//                                        break;
-			//                                    case "Teleport":
-			//                                        addition.Components.Add("Teleport");
-			//                                        break;
-			//                                }
-			//                                break;
-			//                        }
-			//                        break;
-			//                    case XmlNodeType.EndElement:
-			//                        switch (reader.Name) {
-			//                            case "Object":
-			//                                addition.Name = name;
-			//                                higharchy.Add(addition);
-			//                                Tree.Nodes[1].Nodes.Add(higharchy.Last().Name);
-			//                                Tree.Nodes[1].Expand();
-			//                                if (addition.Collider != null) {
-			//                                    Tree.Nodes[1].LastNode.Nodes.Add("Collider");
-			//                                    addition.Collider.ObjectColor = Color.Red;
-			//                                }
-			//                                break;
-			//                            default:
-			//                                break;
-			//                        }
-			//                        break;
-			//                    default:
-			//                        break;
-			//                }
-			//            }
-			//            loaded = true;
-			//            Filename = currentFile;
-			//            FileChanged = false;
-			//            HandleResetEvent(null, null);
-			//            reader.Close();
-			//        } else {
-			//            openFileDialog2.InitialDirectory = Application.StartupPath;
-			//            openFileDialog2.Filter = "Texture files (*.png)|*.png";
-			//            openFileDialog2.FilterIndex = 1;
-			//            openFileDialog2.RestoreDirectory = true;
-			//            if (openFileDialog2.ShowDialog() == DialogResult.OK) {
-			//                objects.Add(new ToolObject(openFileDialog1.FileName, openFileDialog2.FileName, ref device));
-			//                Tree.Nodes[0].Nodes.Add(objects.Last().Name);
-			//            } else {
-			//                objects.Add(new ToolObject(openFileDialog1.FileName, ref device));
-			//                Tree.Nodes[0].Nodes.Add(objects.Last().Name);
-			//            }
-			//        }
-			//    } catch (Exception ex) {
-			//        MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
-			//    }
-			//}
-			#endregion
 		}
 
-		private static void ReadObject(BinaryReader r, TreeView tree)
+        public static void ReadXMLFile(string _file, TreeView _tree) {
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            OpenFileDialog openFileDialog2 = new OpenFileDialog();
+
+            openFileDialog1.InitialDirectory = Application.StartupPath;
+            openFileDialog1.Filter = "Compatible Files (*.xml, *.obj)|*.xml;*.obj";
+            openFileDialog1.FilterIndex = 1;
+            openFileDialog1.RestoreDirectory = true;
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK) {
+                try {
+                    XmlReaderSettings settings = new XmlReaderSettings();
+                    settings.DtdProcessing = DtdProcessing.Parse;
+                    XmlReader reader = XmlReader.Create(openFileDialog1.FileName, settings);
+                    reader.MoveToContent();
+                    string element = string.Empty, mesh = string.Empty, texutre = string.Empty, name = string.Empty;
+                    TreeNode node = new TreeNode();
+                    TexturedMeshComponent tmc = null;
+                    ColliderComponent col = null;
+                    _tree.Nodes.Add(node);
+                    BaseObject addition = new BaseObject(node);
+                    bool collider = false;
+                    while (reader.Read()) {
+                        string[] parts = { };
+                        Vector3 point = new Vector3();
+                        switch (reader.NodeType) {
+                            case XmlNodeType.Element:
+                                switch (reader.Name) {
+                                    case "Object":
+                                        node = new TreeNode();
+                                        _tree.Nodes.Add(node);
+                                        addition = new BaseObject(node);
+                                        mesh = texutre = string.Empty;
+                                        collider = false;
+                                        break;
+                                    case "Collider":
+                                        collider = true;
+                                        break;
+                                    default:
+                                        element = reader.Name;
+                                        break;
+                                }
+                                break;
+                            case XmlNodeType.Text:
+                                switch (element) {
+                                    case "StartPos":
+                                        Vector3 pos = new Vector3();
+                                        parts = reader.Value.Split(',');
+                                        pos.X = float.Parse(parts[0]);
+                                        pos.Y = float.Parse(parts[1]);
+                                        pos.Z = float.Parse(parts[2]);
+                                        Settings.StartPos = pos;
+                                        break;
+                                    case "StartRot":
+                                        Vector3 rot = new Vector3();
+                                        parts = reader.Value.Split(',');
+                                        rot.X = float.Parse(parts[0]) * RADIANS_TO_DEGREES;
+                                        rot.Y = float.Parse(parts[1]) * RADIANS_TO_DEGREES;
+                                        rot.Z = float.Parse(parts[2]) * RADIANS_TO_DEGREES;
+                                        Settings.StartRot = rot;
+                                        break;
+                                    case "Name":
+                                        name = reader.Value;
+                                        break;
+                                    case "Mesh":
+                                        tmc = new TexturedMeshComponent();
+                                        tmc.SelectMesh(tmc.CheckForMesh(reader.Value));
+                                        addition.AddComponent(tmc);
+                                        break;
+                                    case "Texture":
+                                        if (tmc == null) {
+                                            tmc = new TexturedMeshComponent();
+                                            addition.AddComponent(tmc);
+                                        }
+                                        tmc.SelectTexture(tmc.CheckForTexture(reader.Value));
+                                        break;
+                                    case "Position":
+                                        parts = reader.Value.Split(',');
+                                        point.X = float.Parse(parts[0]);
+                                        point.Y = float.Parse(parts[1]);
+                                        point.Z = float.Parse(parts[2]);
+                                        if (collider) {
+                                            col.Shape.Position = point;
+                                        } else {
+                                            ((TransformComponent)addition.GetComponents()[0]).SetPosition(point);
+                                        }
+                                        break;
+                                    case "Rotation":
+                                        parts = reader.Value.Split(',');
+                                        point.X = float.Parse(parts[0]);
+                                        point.Y = float.Parse(parts[1]);
+                                        point.Z = float.Parse(parts[2]);
+                                        if (collider) {
+                                            col.Shape.Rotation = point;
+                                        } else {
+                                            ((TransformComponent)addition.GetComponents()[0]).SetRotation(point);
+                                        }
+                                        break;
+                                    case "Scale":
+                                        parts = reader.Value.Split(',');
+                                        point.X = float.Parse(parts[0]);
+                                        point.Y = float.Parse(parts[1]);
+                                        point.Z = float.Parse(parts[2]);
+                                        if (collider) {
+                                            col.Shape.Scale = point;
+                                        } else {
+                                            ((TransformComponent)addition.GetComponents()[0]).SetScale(point);
+                                        }
+                                        break;
+                                    case "Type":
+                                        if (reader.Value == "Sphere") {
+                                            col = new SphereCollider();
+                                            ((ColoredShape)col.Shape).Load("Assets\\Sphere.obj", Color.Red);
+                                        }
+                                        else if (reader.Value == "OBB" || reader.Value == "Button") {
+
+                                            col = new BoxCollider();
+                                            ((ColoredShape)col.Shape).Load("Assets\\Cube.obj", Color.Red);
+                                        }
+                                        else {
+                                            col = new PlaneCollider();
+                                            ((ColoredShape)col.Shape).Load("Assets\\Plane.obj", Color.Red);
+                                        }
+                                        break;
+                                    case "Trigger":
+                                        if (reader.Value == "True")
+                                            addition.Collider.IsSolid = false;
+                                        else
+                                            addition.Collider.IsSolid = true;
+                                        break;
+                                    case "Radius":
+                                        float radius = float.Parse(reader.Value);
+                                        addition.Collider.SetScale(new Vector3(radius, radius, radius));
+                                        break;
+                                    case "PushNormal":
+                                    case "Normal":
+                                    case "Gravity":
+                                        parts = reader.Value.Split(',');
+                                        point.X = float.Parse(parts[0]);
+                                        point.Y = float.Parse(parts[1]);
+                                        point.Z = float.Parse(parts[2]);
+                                        addition.Collider.Gravity = point;
+                                        break;
+                                    case "Move":
+                                        addition.Collider.CanMove = reader.Value == "True";
+                                        break;
+                                    case "Mass":
+                                        addition.Collider.Mass = float.Parse(reader.Value);
+                                        break;
+                                    case "Elasticity":
+                                        addition.Collider.Elasticity = float.Parse(reader.Value);
+                                        break;
+                                    case "NormalForce":
+                                    case "StaticFriction":
+                                        addition.Collider.StaticF = float.Parse(reader.Value);
+                                        break;
+                                    case "KeneticFriction":
+                                        addition.Collider.KeneticF = float.Parse(reader.Value);
+                                        break;
+                                    case "Drag":
+                                        addition.Collider.Drag = float.Parse(reader.Value);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            case XmlNodeType.EndElement:
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    reader.Close();
+                } catch (Exception ex) {
+                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+                }
+            }
+        }
+
+        private static void ReadObject(BinaryReader r, TreeView tree)
 		{
 			// Format:
 			// Number of components
@@ -640,6 +562,11 @@ namespace Hourglass
 						com.ReadData(r);
 						b.AddComponent(com);
 						break;
+                    case (short)Component.ComponentType.Audio:
+                        com = new SoundComponent();
+                        com.ReadData(r);
+                        b.AddComponent(com);
+                        break;
 					default:
 						Debug.Print("An unexpected component type has bee found. This may indicate corruption: " + compType);
 						break;

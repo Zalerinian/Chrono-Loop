@@ -29,14 +29,6 @@ namespace Hourglass
 			mTexture.DropDownStyle = ComboBoxStyle.DropDownList;
 
 			{
-				List<string>.Enumerator it = ResourceManager.Instance.Objects.GetEnumerator();
-				while(it.MoveNext())
-				{
-					mMesh.Items.Add(it.Current);
-				}
-			}
-
-			{
 				List<string>.Enumerator it = ResourceManager.Instance.Textures.GetEnumerator();
 				while (it.MoveNext())
 				{
@@ -110,5 +102,14 @@ namespace Hourglass
 			}
 		}
 
-	}
+        public int CheckForTexture(string _object) {
+            return CheckForValue(mTexture, _object);
+        }
+
+        public void SelectTexture(int _index) {
+            if(_index > 0 && _index < mTexture.Items.Count) {
+                mTexture.SelectedIndex = _index;
+            }
+        }
+    }
 }

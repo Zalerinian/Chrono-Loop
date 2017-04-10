@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace Hourglass
 {
@@ -55,9 +56,16 @@ namespace Hourglass
 			mMesh.Size = new System.Drawing.Size(ContentWidth - mMesh.Left, 24);
 			mMesh.DropDownStyle = ComboBoxStyle.DropDownList;
 
-			#endregion
+            {
+                List<string>.Enumerator it = ResourceManager.Instance.Objects.GetEnumerator();
+                while (it.MoveNext()) {
+                    mMesh.Items.Add(it.Current);
+                }
+            }
 
-			mGroupBox.Text = "Mesh Component";
+            #endregion
+
+            mGroupBox.Text = "Mesh Component";
             mGroupBox.Size = mGroupBox.PreferredSize;
             OnMenuClick_Reset(null, null);
         }
@@ -93,5 +101,25 @@ namespace Hourglass
 				mMesh.SelectedIndex = index;
 			}
 		}
-	}
+
+        protected int CheckForValue(ComboBox _box, string _value) {
+            for(int i = 0; i < _box.Items.Count; ++i) {
+                if((string)_box.Items[i] == _value) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public int CheckForMesh(string _object) {
+            return CheckForValue(mMesh, _object);
+        }
+
+        public void SelectMesh(int _index) {
+            if (_index > 0 && _index < mMesh.Items.Count) {
+                mMesh.SelectedIndex = _index;
+            }
+        }
+
+    }
 }

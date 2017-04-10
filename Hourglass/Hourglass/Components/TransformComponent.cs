@@ -259,7 +259,25 @@ namespace Hourglass
 			return mat;
 		}
 
-		public override void OnMenuClick_Reset(object sender, EventArgs e)
+        public void SetPosition(Vector3 _p) {
+            mPosX.Value = (decimal)_p.X;
+            mPosY.Value = (decimal)_p.Y;
+            mPosZ.Value = (decimal)_p.Z;
+        }
+
+        public void SetRotation(Vector3 _p) {
+            mRotX.Value = (decimal)_p.X;
+            mRotY.Value = (decimal)_p.Y;
+            mRotZ.Value = (decimal)_p.Z;
+        }
+
+        public void SetScale(Vector3 _p) {
+            mScaleX.Value = (decimal)_p.X;
+            mScaleY.Value = (decimal)_p.Y;
+            mScaleZ.Value = (decimal)_p.Z;
+        }
+
+        public override void OnMenuClick_Reset(object sender, EventArgs e)
 		{
 			mNameIsPlaceholder = true;
 			Name = "Object Name...";

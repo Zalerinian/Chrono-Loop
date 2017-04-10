@@ -328,6 +328,21 @@ namespace Hourglass
 						Renderer.Instance.CameraPosition -= Renderer.Instance.Up * 0.1f;
 					}
 				} // END Not holding control
+                else
+                {
+                    if (mKeys.Contains(Key.Q))
+                    {
+                        Gizmo.Instance.Mode = Gizmo.GizmoMode.Position;
+                    }
+                    if (mKeys.Contains(Key.W))
+                    {
+                        Gizmo.Instance.Mode = Gizmo.GizmoMode.Rotation;
+                    }
+                    if (mKeys.Contains(Key.E))
+                    {
+                        Gizmo.Instance.Mode = Gizmo.GizmoMode.Scale;
+                    }
+                }
 			}  // Ensure the Grapics Panel's focus textbox is selected.
 			else if (Tree.ContainsFocus)
 			{
@@ -429,12 +444,18 @@ namespace Hourglass
 					obj.AddComponent(new ColoredMeshComponent());
 					break;
 				case "Audio":
+                    SoundComponent sc = new SoundComponent();
+                    sc.Resize += ReorderComponents;
+                    sc.Parent = spWorldView.Panel2;
+                    obj.AddComponent(sc);
 					break;
 
-				// Code Components
+                // Code Components
+                case "CodeComp":
+                    obj.AddComponent(new CodeComponent());
+                    break;
 
-
-				default:
+                default:
 					break;
 			}
 		}

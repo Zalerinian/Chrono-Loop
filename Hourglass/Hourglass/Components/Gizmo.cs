@@ -227,24 +227,61 @@ namespace Hourglass
 			else if(axis.Y > 0)
 			{
 				mAttached.PY.Value -= (decimal)Vector3.Dot(raxis, _movement);
-
 			}
 			else if (axis.Z > 0)
 			{
 				mAttached.PZ.Value += (decimal)Vector3.Dot(raxis, _movement);
-
 			}
 		}
 
 		private void ApplyRotation(Vector3 _movement)
 		{
-
-		}
+            Vector3 axis = ((GizmoTag)Grabbed.Tag).Axis;
+            Vector3 raxis = Renderer.Instance.RotateInto(axis, Renderer.Instance.View);
+            if (axis.X > 0)
+            {
+                mAttached.RZ.Value -= (decimal)Vector3.Dot(raxis, _movement);
+            }
+            else if (axis.Y > 0)
+            {
+                mAttached.RX.Value -= (decimal)Vector3.Dot(raxis, _movement);
+            }
+            else if (axis.Z > 0)
+            {
+                mAttached.RY.Value += (decimal)Vector3.Dot(raxis, _movement);
+            }
+        }
 
 		private void ApplyScale(Vector3 _movement)
-		{
+        {
+            Vector3 axis = ((GizmoTag)Grabbed.Tag).Axis;
+            Vector3 raxis = Renderer.Instance.RotateInto(axis, Renderer.Instance.View);
+            if (axis.X > 0)
+            {
+                mAttached.SX.Value -= (decimal)Vector3.Dot(raxis, _movement);
+            }
+            else if (axis.Y > 0)
+            {
+                mAttached.SY.Value -= (decimal)Vector3.Dot(raxis, _movement);
+            }
+            else if (axis.Z > 0)
+            {
+                mAttached.SZ.Value += (decimal)Vector3.Dot(raxis, _movement);
+            }
+        }
 
-		}
+        public void Reset()
+        {
+            mTranslateX.FillBuffers();
+            mTranslateY.FillBuffers();
+            mTranslateZ.FillBuffers();
+            mScaleX.FillBuffers();
+            mScaleY.FillBuffers();
+            mScaleZ.FillBuffers();
+            mRotateX.FillBuffers();
+            mRotateY.FillBuffers();
+            mRotateZ.FillBuffers();
+        }
 
 		public void Render()
 		{
