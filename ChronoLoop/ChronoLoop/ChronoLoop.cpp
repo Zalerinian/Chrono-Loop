@@ -24,6 +24,7 @@
 #include "Actions/CCElasticAABBtoAABB.h"
 #include "Actions/CCElasticAABBToSphere.h"
 #include "Actions/TimeManipulation.h"
+#include "Actions/CCAnimationController.h"
 #include "Actions/HeadsetFollow.hpp"
 #include "Actions\CodeComponent.hpp"
 #include "Actions/CCButtonPress.h"
@@ -110,7 +111,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	vr::VR_Shutdown();
 
 	for (int i = 0; i < 40; ++i) {
-		SystemLogger::Warn() << "THE CONSOLE HAS BEEN DETATCHED. IF THIS WINDOW IS STILL OPEN, IT IS OWNED BY THE STEAMVR SERVER. CLOSING THIS WILL CAUSE ISSUES WITH STEAMVR." << std::endl;
+		SystemLogger::Warn() << "THE CONSOLE HAS BEEN DETATCHED, AND IS NOW OWNED BY THE STEAMVR SERVER. DO NOT CLOSE IT." << std::endl;
 	}
 	SystemLogger::DestroyInstance();
 	vrsys = nullptr;
@@ -316,6 +317,18 @@ void Update() {
 	startEmit2->FIRE();
 	//////////////////////////////////////////////////////////////////////////////////////
 
+	//Test Animate Quad///////////////////////////////////////////////////////////////////
+	Transform OneBack;
+	OneBack.SetMatrix(matrix4::CreateTranslation(0, 1, -3));
+	BaseObject *Forcefield = Pool::Instance()->iGetObject()->Reset("ForceField Quad", OneBack);
+	MeshComponent *forcefieldMesh = new MeshComponent("../Resources/UIPlane.obj", 0.25f);
+	forcefieldMesh->AddTexture("../Resources/Forcefield TextureSheet.png", eTEX_DIFFUSE);
+	forcefieldMesh->SetGeometryShader(eGS_PosNormTex_AnimQuad);
+	Forcefield->AddComponent(forcefieldMesh);
+	Forcefield->AddComponent(new CCAnimationController(8, 4, 32, 1.0f / 12.0f));
+	//////////////////////////////////////////////////////////////////////////////////////
+
+
 	/// Raycast debug cube
 	//Transform cubeScale;
 	//cubeScale.SetMatrix(matrix4::CreateScale(0.01f, 0.01f, 0.01f));
@@ -358,6 +371,7 @@ void Update() {
 	mainMenu->AddObject(RightController);
 	mainMenu->AddObject(headset);
 	mainMenu->AddObject(LeftController);
+	mainMenu->AddObject(Forcefield);
 	auto& levelObjects = mainMenu->GetLevelObjects();
 	for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it)
 	{
@@ -388,26 +402,6 @@ void Update() {
 		else {
 			if (GetAsyncKeyState(VK_ESCAPE) && GetActiveWindow() == Renderer::Instance()->GetWindow()) {
 				break;
-			}
-			//Particle Testing
-			if (GetAsyncKeyState(VK_TAB) & 0x1)
-			{
-				Particle * p = &Particle::Init();
-				p->SetColors(vec4f(1, 1, 1, 1), vec4f());
-				p->SetLife((rand() % 250) + 250);
-				p->SetSize(.25f, .15f);
-				vec3f EPos = vec3f((rand() % 10) - 5, rand() % 5, (rand() % 10) - 5);
-				ParticleEmitter *emit = new ParticleEmitter(-1, 200, 20, EPos);
-				emit->SetParticle(p);
-				emit->SetTexture("../Resources/BasicCircleP.png");
-				ParticleSystem::Instance()->AddEmitter(emit);
-				emit->FIRE();
-				//AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::PLAY_A_TIMELAPSE);
-			}
-			if (GetAsyncKeyState('P'))
-			{
-				AudioWrapper::GetInstance().STOP();
-				ParticleSystem::Instance()->Clear();
 			}
 
 			AudioWrapper::GetInstance().Update();

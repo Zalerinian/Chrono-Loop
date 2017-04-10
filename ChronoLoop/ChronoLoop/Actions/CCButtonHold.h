@@ -13,7 +13,7 @@ namespace Epoch
 
 	struct CCButtonHold : public CodeComponent
 	{
-		bool colliding = false, mhitting = false,  mCanDoorInterp = false, mDoorDoneInterpolating = false, mFlip = false;
+		bool colliding = false, mhitting = false, mCanDoorInterp = false, mDoorDoneInterpolating = false, mFlip = false, mSoundOnce = false;;
 		BaseObject *Block = nullptr, *Exit = nullptr;
 		CubeCollider* blockCube, *exitCube;
 		matrix4 blockend, exitend , blockstart, exitstart;
@@ -51,6 +51,10 @@ namespace Epoch
 				colliding = true;
 				//SystemLogger::GetLog() << "Colliding" << std::endl;
 				//Interp stuff
+				ButtonCollider* butCol = (ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
+				if (butCol->mPushNormal * _other.mVelocity < .1f)
+					_col.mVelocity = vec3f(0, 0, 0);
+
 				blockInterp->SetActive(true);
 				blockInterp->Prepare(0.69f, blockCube->GetTransform().GetMatrix(), blockend, blockCube->GetTransform().GetMatrix());
 
@@ -63,6 +67,24 @@ namespace Epoch
 
 				mCanDoorInterp = true;
 				mDoorDoneInterpolating = false;
+
+				// Sound 
+				if (!mSoundOnce) {
+					if (_col.GetBaseObject()->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0) {
+						if (dynamic_cast<SFXEmitter*>(_col.GetBaseObject()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0)))
+							((SFXEmitter*)_col.GetBaseObject()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+					}
+
+					if (Block->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0) {
+						if (dynamic_cast<SFXEmitter*>(Block->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0)))
+							((SFXEmitter*)Block->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+					}
+					if (Exit->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0) {
+						if (dynamic_cast<SFXEmitter*>(Exit->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0)))
+							((SFXEmitter*)Exit->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+					}
+				}
+					mSoundOnce = true;
 
 				vec3f norm = ((ButtonCollider*)&_col)->mPushNormal;
 				vec3f tForce = norm * (norm * _other.mTotalForce);
@@ -126,6 +148,7 @@ namespace Epoch
 						blockInterp->SetActive(false);
 						exitInterp->SetActive(false);
 					}
+					mSoundOnce = false;
 
 				}
 			}

@@ -68,7 +68,13 @@ namespace Epoch {
 
 	MeshComponent::MeshComponent(const char * _path, float _alpha) {
 		mType = eCOMPONENT_MESH;
-		mShape = new RenderShape(_path, true, ePS_TEXTURED, eVS_TEXTURED, eGS_PosNormTex);
+		mShape = new RenderShape(
+			_path,
+			true,
+			(_alpha < 1.0f ? ePS_TRANSPARENT : ePS_TEXTURED),
+			eVS_TEXTURED,
+			eGS_PosNormTex
+		);
 		mShape->GetContext().mRasterState = eRS_FILLED;
 		mBlended = _alpha < 1.0f;
 		if (CanCreateNode()) {
@@ -131,8 +137,17 @@ namespace Epoch {
 			SystemLogger::Error() << "Attempted to set the alpha of a mesh whos Register 1 pixel buffer is not an alpha buffer!" << std::endl;
 			return this;
 		}
-		if(mShape->GetContext().mPixelShaderFormat != ePS_TRANSPARENT)
-		{
+		if (_a >= 1.0f && mShape->GetContext().mPixelShaderFormat == ePS_TRANSPARENT) {
+			SetPixelShader(ePS_TEXTURED);
+			SetBlended(false);
+			return this;
+		} else if (_a < 1.0f && mShape->GetPixelShader() == ePS_TEXTURED) {
+			SetPixelShader(ePS_TRANSPARENT);
+			SetBlended(true);
+			// Don't return, because we need to update the alpha of the object.
+		}
+
+		if (mShape->GetContext().mPixelShaderFormat != ePS_TRANSPARENT) {
 			SystemLogger::Error() << "Attempted to set the alpha of a mesh whos pixel shader is not ePS_TRANSPARENT!" << std::endl;
 			return this;
 		}
@@ -257,26 +272,50 @@ namespace Epoch {
 	}
 
 	void MeshComponent::SetData(ConstantBufferType _t, BufferDataType _bt, unsigned char _index, void * _data) {
-		ID3D11Buffer* buff = nullptr;
+		Microsoft::WRL::ComPtr<ID3D11Buffer>* buff = nullptr;
 		switch (_t) {
 			case eCB_VERTEX:
-				buff = mShape->GetContext().mVertexCBuffers[_index].Get();
+				buff = &mShape->GetContext().mVertexCBuffers[_index];
 				mVertexBufferTypes[_index] = _bt;
 				break;
 			case eCB_PIXEL:
-				buff = mShape->GetContext().mPixelCBuffers[_index].Get();
+				buff = &mShape->GetContext().mPixelCBuffers[_index];
 				mPixelBufferTypes[_index] = _bt;
 				break;
 			case eCB_GEO:
-				buff = mShape->GetContext().mGeometryCBuffers[_index].Get();
+				buff = &mShape->GetContext().mGeometryCBuffers[_index];
 				mGeoBufferTypes[_index] = _bt;
 				break;
 			default:
+				SystemLogger::Error() << "Could not set buffer data: Invalid ConstantBufferType given: " << _t << std::endl;
 				return;
 		}
-		Renderer::Instance()->GetContext()->UpdateSubresource(buff, 0, 0, _data, 0, 0);
+		if (buff->Get() != nullptr) {
+			Renderer::Instance()->GetContext()->UpdateSubresource(buff->Get(), 0, 0, _data, 0, 0);
+		} else {
+			Renderer::Instance()->GetRendererLock().lock();
+
+			CD3D11_BUFFER_DESC desc(sizeof(GSAnimatedQuad_Data), D3D11_BIND_CONSTANT_BUFFER);
+			D3D11_SUBRESOURCE_DATA data;
+			data.pSysMem = _data;
+			Renderer::Instance()->GetDevice()->CreateBuffer(&desc, &data, buff->GetAddressOf());
+			switch (_t) {
+				case eCB_VERTEX:
+					mShape->GetContext().mVertexCBuffers[_index] = *buff;
+					break;
+				case eCB_PIXEL:
+					mShape->GetContext().mPixelCBuffers[_index] = *buff;
+					break;
+				case eCB_GEO:
+					mShape->GetContext().mGeometryCBuffers[_index] = *buff;
+					break;
+				default:
+					return;
+			}
+			Renderer::Instance()->GetRendererLock().unlock();
+		}
 		if (GetBufferUpdates()) {
-			Renderer::Instance()->UpdateOpaqueNodeBuffer(*mShape, _t, _index);
+			UpdateBuffer(_t, _index);
 		}
 	}
 
