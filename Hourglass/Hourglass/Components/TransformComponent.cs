@@ -23,6 +23,8 @@ namespace Hourglass
 		protected NumericUpDown mRotX, mRotY, mRotZ;
 		protected NumericUpDown mScaleX, mScaleY, mScaleZ;
 
+		protected CheckBox mRecord;
+
 		protected bool mNameIsPlaceholder = true;
 		protected string mLastText = "";
 
@@ -151,6 +153,8 @@ namespace Hourglass
 			mScaleY = new NumericUpDown();
 			mScaleZ = new NumericUpDown();
 
+			mRecord = new CheckBox();
+
 			mGroupBox.Controls.Add(mLbName);
 			mGroupBox.Controls.Add(mLbPosition);
 			mGroupBox.Controls.Add(mLbRotation);
@@ -160,6 +164,7 @@ namespace Hourglass
 			mGroupBox.Controls.Add(mPosPanel);
 			mGroupBox.Controls.Add(mRotPanel);
 			mGroupBox.Controls.Add(mScalePanel);
+			mGroupBox.Controls.Add(mRecord);
 			#endregion
 
 			#region Component Setup
@@ -211,6 +216,11 @@ namespace Hourglass
 			SetupTransformPanel(mPosPanel, 90, 50 + _yOffset, ContentWidth, mLbPosX, mLbPosY, mLbPosZ, mPosX, mPosY, mPosZ);
 			SetupTransformPanel(mRotPanel, 90, 75 + _yOffset, ContentWidth, mLbRotX, mLbRotY, mLbRotZ, mRotX, mRotY, mRotZ);
 			SetupTransformPanel(mScalePanel, 90, 100 + _yOffset, ContentWidth, mLbScaleX, mLbScaleY, mLbScaleZ, mScaleX, mScaleY, mScaleZ);
+
+			// Checkboxes
+			mRecord.Text = "Record object on Timeline";
+			mRecord.AutoSize = true;
+			mRecord.Location = new System.Drawing.Point(10, 135);
 
 			// Events
 			mPosX.ValueChanged += OnMatrixUpdated;
@@ -386,6 +396,8 @@ namespace Hourglass
 			w.Write((float)mScaleX.Value);
 			w.Write((float)mScaleY.Value);
 			w.Write((float)mScaleZ.Value);
+
+			w.Write(mRecord.Checked);
 		}
 
 		public override void ReadData(System.IO.BinaryReader r, int _version)
@@ -404,6 +416,10 @@ namespace Hourglass
 			mScaleX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mScaleY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mScaleZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+
+			if(_version >= 2) {
+				mRecord.Checked = r.ReadByte() == 1;
+			}
 		}
 
 

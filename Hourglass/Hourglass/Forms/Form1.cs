@@ -255,7 +255,7 @@ namespace Hourglass
 					Renderer.Instance.RebuildViewMatrix();
 					break;
 				case MouseButtons.Right:
-					// Minus-equals because Right handed systems have positive X going out of the screen.
+					// Minus-equals because Right handed systems have positive Z going out of the screen.
 					Renderer.Instance.CameraPosition -= Renderer.Instance.Forward * 0.05f * delta.X * Gizmo.Instance.ScaleFactor;
 					UpdateGizmoScale();
 
