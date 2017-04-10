@@ -318,14 +318,15 @@ void Update() {
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	//Test Animate Quad///////////////////////////////////////////////////////////////////
-	//Transform OneBack;
-	//OneBack.SetMatrix(matrix4::CreateTranslation(0, 1, -3));
-	//BaseObject *Forcefield = Pool::Instance()->iGetObject()->Reset("ForceField Quad", OneBack);
-	//MeshComponent *forcefieldMesh = new MeshComponent("../Resources/UIPlane.obj", 0.25f);
-	//forcefieldMesh->AddTexture("../Resources/Forcefield TextureSheet.png", eTEX_DIFFUSE);
-	//forcefieldMesh->SetGeometryShader(eGS_PosNormTex_AnimQuad);
-	//Forcefield->AddComponent(forcefieldMesh);
-	//Forcefield->AddComponent(new CCAnimationController(8, 4, 32, 1.0f / 12.0f));
+	Transform OneBack;
+	OneBack.SetMatrix(matrix4::CreateTranslation(0, 1, -0.25));
+	BaseObject *Forcefield = Pool::Instance()->iGetObject()->Reset("ForceField Quad", OneBack);
+	MeshComponent *forcefieldMesh = new MeshComponent("../Resources/AnimationPlane1x1.obj", 0.25f);
+	forcefieldMesh->AddTexture("../Resources/ForcefieldHex gray.png", eTEX_DIFFUSE);
+	forcefieldMesh->SetGeometryShader(eGS_PosNormTex_AnimQuad);
+	//forcefieldMesh->SetRasterState(eRS_NO_CULL);
+	Forcefield->AddComponent(forcefieldMesh);
+	Forcefield->AddComponent(new CCAnimationController(8, 6, 8 * 6, 1.0f / 24.0f));
 	//////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -364,9 +365,10 @@ void Update() {
 	Physics::Instance()->mObjects.push_back(RightController);
 	Physics::Instance()->mObjects.push_back(LeftController);
 
-	Level* mainMenu;
+	Level* mainMenu = new Level();
 
-	while (LevelManager::GetInstance().LoadLevelAsync("../Resources/mainMenu.xml", &mainMenu) != Epoch::LM::LevelStatus::Success) {}
+	//while (LevelManager::GetInstance().LoadLevelAsync("../Resources/mainMenu.xml", &mainMenu) != Epoch::LM::LevelStatus::Success) {}
+	mainMenu->BinaryLoadLevel("../Resources/Main.elf");
 	mainMenu->AssignPlayerControls(headset, LeftController, RightController);
 	mainMenu->AddObject(RightController);
 	mainMenu->AddObject(headset);

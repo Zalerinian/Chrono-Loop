@@ -40,12 +40,15 @@
             this.nRX = new System.Windows.Forms.NumericUpDown();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.MaxCloneLabel = new System.Windows.Forms.Label();
+            this.nMaxClone = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.nPX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nPY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nPZ)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nRZ)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nRY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nRX)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nMaxClone)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -225,7 +228,7 @@
             // btnOK
             // 
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(24, 231);
+            this.btnOK.Location = new System.Drawing.Point(24, 335);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 10;
@@ -235,18 +238,36 @@
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(132, 231);
+            this.btnCancel.Location = new System.Drawing.Point(132, 335);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 11;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
+            // MaxCloneLabel
+            // 
+            this.MaxCloneLabel.AutoSize = true;
+            this.MaxCloneLabel.Location = new System.Drawing.Point(20, 246);
+            this.MaxCloneLabel.Name = "MaxCloneLabel";
+            this.MaxCloneLabel.Size = new System.Drawing.Size(102, 13);
+            this.MaxCloneLabel.TabIndex = 12;
+            this.MaxCloneLabel.Text = "Max Clones Allowed";
+            // 
+            // nMaxClone
+            // 
+            this.nMaxClone.Location = new System.Drawing.Point(23, 271);
+            this.nMaxClone.Name = "nMaxClone";
+            this.nMaxClone.Size = new System.Drawing.Size(57, 20);
+            this.nMaxClone.TabIndex = 13;
+            // 
             // LevelSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(244, 266);
+            this.ClientSize = new System.Drawing.Size(238, 370);
+            this.Controls.Add(this.nMaxClone);
+            this.Controls.Add(this.MaxCloneLabel);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.nRZ);
@@ -261,12 +282,14 @@
             this.Controls.Add(this.label1);
             this.Name = "LevelSettingsForm";
             this.Text = "LevelSettingsForm";
+            this.Load += new System.EventHandler(this.LevelSettingsForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.nPX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nPY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nPZ)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nRZ)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nRY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nRX)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nMaxClone)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -286,5 +309,7 @@
         private System.Windows.Forms.NumericUpDown nRX;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.Label MaxCloneLabel;
+        private System.Windows.Forms.NumericUpDown nMaxClone;
     }
 }
