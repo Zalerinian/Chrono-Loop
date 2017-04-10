@@ -121,7 +121,7 @@ namespace Epoch {
 		mPLVPB.view = mPLVPB.view.Invert();
 		mPLVPB.projection = DirectX::XMMatrixPerspectiveFovRH(360, (float)1366.0f / (float)720.0f, 0.1f, 1000);
 		//6 dir, cube map or parabolic for performance
-		mContext->UpdateSubresource(mPLBufferS.Get(), 0, nullptr, &mPLVPB, 0, 0);
+		//mContext->UpdateSubresource(mPLBufferS.Get(), 0, nullptr, &mPLVPB, 0, 0);
 	}
 	Renderer::Renderer() {}
 

@@ -150,7 +150,7 @@ void Update() {
 	// TODO: Replace all this with a level to run.
 	///*///////////////////////Using this to test physics//////////////////
 	//_CrtSetBreakAlloc(4390);
-
+	
 	////Sound Initializing---------------------------------------------------
 	AudioWrapper::GetInstance().Initialize();
 	//Soundbanks
@@ -270,7 +270,7 @@ void Update() {
 	((ParticleEmitter*)exitEmit)->SetVelBounds(vec3f(-.5f, -.5f, -.5f), vec3f(.5f, .5f, .5f));
 	ParticleSystem::Instance()->AddEmitter(exitEmit);
 	exitEmit->FIRE();
-
+	
 	exit = &Particle::Init();
 	exit->SetPos(vec3f(0, 0, 0));
 	exit->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
@@ -300,7 +300,7 @@ void Update() {
 	((TeleportEffect*)startEmit)->SetVelBounds(vec3f(.5f, 1, .5f), vec3f(.5f, 5, .5f));
 	ParticleSystem::Instance()->AddEmitter(startEmit);
 	startEmit->FIRE();
-
+	
 	start = &Particle::Init();
 	start->SetPos(vec3f(0, 0, 0));
 	start->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
@@ -318,14 +318,14 @@ void Update() {
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	//Test Animate Quad///////////////////////////////////////////////////////////////////
-	Transform OneBack;
-	OneBack.SetMatrix(matrix4::CreateTranslation(0, 1, -3));
-	BaseObject *Forcefield = Pool::Instance()->iGetObject()->Reset("ForceField Quad", OneBack);
-	MeshComponent *forcefieldMesh = new MeshComponent("../Resources/UIPlane.obj", 0.25f);
-	forcefieldMesh->AddTexture("../Resources/Forcefield TextureSheet.png", eTEX_DIFFUSE);
-	forcefieldMesh->SetGeometryShader(eGS_PosNormTex_AnimQuad);
-	Forcefield->AddComponent(forcefieldMesh);
-	Forcefield->AddComponent(new CCAnimationController(8, 4, 32, 1.0f / 12.0f));
+	//Transform OneBack;
+	//OneBack.SetMatrix(matrix4::CreateTranslation(0, 1, -3));
+	//BaseObject *Forcefield = Pool::Instance()->iGetObject()->Reset("ForceField Quad", OneBack);
+	//MeshComponent *forcefieldMesh = new MeshComponent("../Resources/UIPlane.obj", 0.25f);
+	//forcefieldMesh->AddTexture("../Resources/Forcefield TextureSheet.png", eTEX_DIFFUSE);
+	//forcefieldMesh->SetGeometryShader(eGS_PosNormTex_AnimQuad);
+	//Forcefield->AddComponent(forcefieldMesh);
+	//Forcefield->AddComponent(new CCAnimationController(8, 4, 32, 1.0f / 12.0f));
 	//////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -371,7 +371,7 @@ void Update() {
 	mainMenu->AddObject(RightController);
 	mainMenu->AddObject(headset);
 	mainMenu->AddObject(LeftController);
-	mainMenu->AddObject(Forcefield);
+	//mainMenu->AddObject(Forcefield);
 	auto& levelObjects = mainMenu->GetLevelObjects();
 	for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it)
 	{
@@ -387,7 +387,7 @@ void Update() {
 	if (VREnabled) {
 		VRInputManager::GetInstance().Update();
 	}
-
+	
 	UpdateTime();
 	fixedTime = 0;
 	while (LevelManager::GetInstance().GetCurrentLevel()->ChronoLoop) {
@@ -410,11 +410,11 @@ void Update() {
 			LevelManager::GetInstance().Update();
 			ParticleSystem::Instance()->Update();
 			TimeManager::Instance()->Update(deltaTime);
-			Renderer::Instance()->Render(deltaTime);
+			Renderer::Instance()->Render(deltaTime); 
 			while (fixedTime >= FIXED_UPDATE_INTERVAL) {
 				Physics::Instance()->Update(FIXED_UPDATE_INTERVAL);
 				fixedTime -= FIXED_UPDATE_INTERVAL;
-				if (fixedTime >= 0.25f)
+				if(fixedTime >=  0.25f)
 				{
 					UpdateTime();
 					fixedTime = 0;
@@ -465,17 +465,17 @@ bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, b
 	}
 
 	hwnd = CreateWindowEx(                                     //Create our Extended Window
-						  NULL,                                //Extended style
-						  WndClassName,                        //Name of our windows class
-						  L"Chrono::Loop",                     //Name in the title bar of our window
-						  WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME, //style of our window
-						  200, 200,                            //Top left corner of window
-						  width,                               //Width of our window
-						  height,                              //Height of our window
-						  NULL,                                //Handle to parent window
-						  NULL,                                //Handle to a Menu
-						  hInstance,                           //Specifies instance of current program
-						  NULL                                 //used for an MDI client window
+		NULL,                                //Extended style
+		WndClassName,                        //Name of our windows class
+		L"Chrono::Loop",                     //Name in the title bar of our window
+		WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME, //style of our window
+		200, 200,                            //Top left corner of window
+		width,                               //Width of our window
+		height,                              //Height of our window
+		NULL,                                //Handle to parent window
+		NULL,                                //Handle to a Menu
+		hInstance,                           //Specifies instance of current program
+		NULL                                 //used for an MDI client window
 	);
 	if (!hwnd) {
 		MessageBox(NULL, L"Error creating window", L"Error", MB_OK | MB_ICONERROR);
