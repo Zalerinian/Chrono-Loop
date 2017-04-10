@@ -1,8 +1,8 @@
-﻿<Level>
+<Level>
   <Settings>
     <StartPos>3.5,0,0</StartPos>
     <StartRot>0,0,0</StartRot>
-    <MaxClones>0</MaxClones>
+    <MaxClones>2</MaxClones>
   </Settings>
   <Object>
     <Name>Walls</Name>
@@ -229,7 +229,6 @@
     <Scale>1,1,1</Scale>
     <Components>
       <EnterLevel>Enabled</EnterLevel>
-      <EnterLevel>Enabled</EnterLevel>
       <Collider>
         <Type>OBB</Type>
         <Trigger>True</Trigger>
@@ -256,7 +255,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>TransparentDoor1</Name>
+    <Name>TransparentDoor2</Name>
     <Mesh>Door1.obj</Mesh>
     <Texture>enrgyField.png</Texture>
     <Position>-4.725672,0,0</Position>
@@ -311,18 +310,17 @@
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components>
-      <ButtonHold>Enabled</ButtonHold>
-      <ButtonHold>Enabled</ButtonHold>
+      <ButtonPress>Enabled</ButtonPress>
       <Collider>
         <Type>Button</Type>
         <Trigger>False</Trigger>
         <Position>0,0.03,0</Position>
         <Rotation>0,0,0</Rotation>
         <Scale>0.4,0.1,0.4</Scale>
-        <Move>False</Move>
-        <PushNormal>0,0,0</PushNormal>
-        <Mass>0</Mass>
-        <NormalForce>0</NormalForce>
+        <Move>True</Move>
+        <PushNormal>0,1,0</PushNormal>
+        <Mass>2</Mass>
+        <NormalForce>1</NormalForce>
       </Collider>
     </Components>
   </Object>
@@ -354,10 +352,10 @@
     <Components />
   </Object>
   <Object>
-    <Name>TransparentDoor2</Name>
+    <Name>TransparentDoor1</Name>
     <Mesh>Door1.obj</Mesh>
     <Texture>enrgyField.png</Texture>
-    <Position>15.98476,4.457786,-2.876144</Position>
+    <Position>15.98476,4.457786,-0.09144278</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components>

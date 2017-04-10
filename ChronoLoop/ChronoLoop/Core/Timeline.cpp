@@ -812,6 +812,13 @@ namespace Epoch {
 			}
 			default:
 			{
+				for (unsigned int j = 0; j < _object->GetComponentCount(comp->mCompType); j++) {
+					Component* currComp = _object->GetComponentIndexed(comp->mCompType, j);
+					if (currComp->GetColliderId() == comp->mId) {
+						if (info->mBitset[comp->mBitNum] != currComp->IsEnabled())
+							return false;
+					}
+				}
 				break;
 			}
 			}

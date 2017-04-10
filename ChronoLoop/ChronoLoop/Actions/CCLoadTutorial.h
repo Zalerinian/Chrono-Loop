@@ -16,6 +16,7 @@
 #include "..\Actions\TeleportAction.hpp"
 #include "..\Actions\PauseMenu.hpp"
 #include "..\Actions\CCTimeIndicator.h"
+#include "..\Actions\CCTutorial.h"
 #include "..\Rendering\Draw2D.h"
 #include "..\Rendering\Renderer.h"
 #include "..\Rendering\TextureManager.h"
@@ -82,6 +83,8 @@ namespace Epoch
 					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", t);
 					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity);
 					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity);
+					CCTutorial* tut = new CCTutorial();
+					headset->AddComponent(tut);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 
 					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), false);

@@ -609,6 +609,11 @@ namespace Epoch {
 						CCStartButton* start = new CCStartButton();
 						obj->AddComponent(start);
 					}
+					else if(name == "mmTutButton")
+					{
+						CCLoadTutorial* tut = new CCLoadTutorial();
+						obj->AddComponent(tut);
+					}
 					else if (name == "mmExitButton")
 					{
 						CCExit* exit = new CCExit();
@@ -850,6 +855,8 @@ namespace Epoch {
 							obj->AddComponent(code);
 						}
 					}
+
+					
 					AddObject(obj);
 					pObject = pObject->NextSiblingElement("Object");
 				}

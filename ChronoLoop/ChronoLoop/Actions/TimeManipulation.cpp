@@ -42,7 +42,8 @@ namespace Epoch
 			//	paused = cLevel->GetPauseMenu()->isPauseMenuOn();
 			//}
 			//if (!paused) {
-				if (mPauseTime) {
+				if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 7)) //created clone
+				{
 					// Resume Time
 
 					//put the original controll and headset back in control
@@ -71,8 +72,11 @@ namespace Epoch
 
 					mIsBeingMade = false;
 
-				} else {
+				} else if (!mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 2)) {
 					// Stop time
+
+					if (Settings::GetInstance().GetInt("tutStep") == 3)//Paused time
+						Settings::GetInstance().SetInt("tutStep", 4);//Rewind
 
 					Transform identity;
 					memset(&identity.GetMatrix(), 0, sizeof(identity.GetMatrix()));
@@ -102,7 +106,9 @@ namespace Epoch
 		}
 
 
-		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Touchpad)) {
+		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Touchpad) 
+			&& (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 5))//Created Clone 
+		{
 			bool paused = false;
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
@@ -112,7 +118,8 @@ namespace Epoch
 
 			// Accept timeline position
 			if (paused) {
-			
+				if (Settings::GetInstance().GetInt("tutStep") == 6)//accepted time
+					Settings::GetInstance().SetInt("tutStep", 7);//delete clone
 				vec2f finalRatios(0, 0);
 				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
 				mDesaturationInterpolator.SetActive(true);
@@ -209,7 +216,7 @@ namespace Epoch
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Trigger))
 		{
 			//toggle to have clone turn on or off
-			if (mPauseTime)
+			if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 4))//rewound time
 			{
 				if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck() == false)
 				{
@@ -220,6 +227,9 @@ namespace Epoch
 				{
 					if(mIsBeingMade)
 					{
+						if (Settings::GetInstance().GetInt("tutStep") == 5)
+							Settings::GetInstance().SetInt("tutStep", 6);
+
 						((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
 						((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
 						((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
@@ -338,6 +348,10 @@ namespace Epoch
 					if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, fwd, hitTime)) { 
 							TimeManager::Instance()->DeleteClone(clones[i]->GetUniqueId(),true);
 							--mNumOfConfirmedClones;
+
+							if (Settings::GetInstance().GetInt("tutStep") == 7)//deleted clone
+								Settings::GetInstance().SetInt("tutStep", 8);//finished tutorial
+
 							return true;
 					}
 				}

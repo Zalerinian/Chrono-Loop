@@ -545,6 +545,9 @@ namespace Epoch {
 				mTimeline->PrepareAllObjectInterpolators(placeHolder, mtempCurSnapFrame);
 				mShouldUpdateInterpolators = true;
 				mShouldPulse = true;
+
+				if (Settings::GetInstance().GetInt("tutStep") == 4)//Rewind
+					Settings::GetInstance().SetInt("tutStep", 5);//Create Clone
 			}
 			else {
 				mShouldPulse = false;

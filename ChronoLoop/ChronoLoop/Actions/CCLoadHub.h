@@ -130,7 +130,9 @@ namespace Epoch
 					for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it)
 					{
 						std::string temp = ((BaseObject*)*it)->GetName();
-						if (temp == "mmChamber" || temp == "mmStartSign" || temp == "mmExitSign" || temp == "mmExitButton" || temp == "mmStartButton" || temp == "mmStartStand" || temp == "mmExitStand")
+						if (temp == "mmChamber" || temp == "mmStartSign" || temp == "mmExitSign" || temp == "mmExitButton" ||
+							temp == "mmStartButton" || temp == "mmStartStand" || temp == "mmExitStand" ||
+							temp == "mmTutButton" || temp == "mmTutSign" || temp == "mmTutStand")
 						{
 							Transform t;
 							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateTranslation(0, -10, 0));
@@ -147,6 +149,12 @@ namespace Epoch
 							}
 							else if(temp == "mmExitButton")
 							{
+								matrix4 mat = ((BaseObject*)*it)->GetTransform().GetMatrix();
+								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(((BaseObject*)*it)->GetTransform().GetMatrix().fourth);
+								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = ((BaseObject*)*it)->GetTransform().GetMatrix().fourth.y - .2f;
+								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = ((BaseObject*)*it)->GetTransform().GetMatrix().fourth.y - .2f;
+							}
+							else if (temp == "mmTutButton") {
 								matrix4 mat = ((BaseObject*)*it)->GetTransform().GetMatrix();
 								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(((BaseObject*)*it)->GetTransform().GetMatrix().fourth);
 								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = ((BaseObject*)*it)->GetTransform().GetMatrix().fourth.y - .2f;
@@ -169,12 +177,12 @@ namespace Epoch
 						p1->SetColors(vec3f(0, 1, 0), vec3f(0, .5f, .5f));
 						p1->SetLife(550);
 						p1->SetSize(.35f, .15f);
-						ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(2.820054, -10, 0, 1));
+						ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054, 1));
 						emit11->SetParticle(p1);
 						emit11->SetTexture("../Resources/BasicRectP.png");
 						((TeleportEffect*)emit11)->y1 = 8;
 						((TeleportEffect*)emit11)->y2 = 12;
-						((TeleportEffect*)emit11)->SetPosBounds(vec3f(0, 0, -.5f), vec3f(0, 1, .5f));
+						((TeleportEffect*)emit11)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
 						((TeleportEffect*)emit11)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 						ParticleSystem::Instance()->AddEmitter(emit11);
 						emit11->FIRE();
@@ -184,12 +192,12 @@ namespace Epoch
 						p1->SetColors(vec3f(0, .5f, .5f), vec3f(0, 1, 0));
 						p1->SetLife(550);
 						p1->SetSize(.15f, .05f);
-						ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(2.820054, -10, 0, 1));
+						ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054, 1));
 						emit12->SetTexture("../Resources/BasicCircleP.png");
 						emit12->SetParticle(p1);
 						((TeleportEffect*)emit12)->y1 = 1;
 						((TeleportEffect*)emit12)->y2 = 5;
-						((TeleportEffect*)emit12)->SetPosBounds(vec3f(0, 0, -.5f), vec3f(0, 1, .5f));
+						((TeleportEffect*)emit12)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
 						((TeleportEffect*)emit12)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 						ParticleSystem::Instance()->AddEmitter(emit12);
 						emit12->FIRE();
@@ -201,12 +209,12 @@ namespace Epoch
 						p1->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
 						p1->SetLife(550);
 						p1->SetSize(.35f, .15f);
-						ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(2.820054, -10, 0, 1));
+						ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054, 1));
 						emit11->SetParticle(p1);
 						emit11->SetTexture("../Resources/BasicRectP.png");
 						((TeleportEffect*)emit11)->y1 = 8;
 						((TeleportEffect*)emit11)->y2 = 12;
-						((TeleportEffect*)emit11)->SetPosBounds(vec3f(0, 0, -.5f), vec3f(0, 1, .5f));
+						((TeleportEffect*)emit11)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
 						((TeleportEffect*)emit11)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 						ParticleSystem::Instance()->AddEmitter(emit11);
 						emit11->FIRE();
@@ -216,12 +224,12 @@ namespace Epoch
 						p1->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
 						p1->SetLife(550);
 						p1->SetSize(.15f, .05f);
-						ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(2.820054, -10, 0, 1));
+						ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054, 1));
 						emit12->SetTexture("../Resources/BasicCircleP.png");
 						emit12->SetParticle(p1);
 						((TeleportEffect*)emit12)->y1 = 1;
 						((TeleportEffect*)emit12)->y2 = 5;
-						((TeleportEffect*)emit12)->SetPosBounds(vec3f(0, 0, -.5f), vec3f(0, 1, .5f));
+						((TeleportEffect*)emit12)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
 						((TeleportEffect*)emit12)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 						ParticleSystem::Instance()->AddEmitter(emit12);
 						emit12->FIRE();

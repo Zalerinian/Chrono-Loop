@@ -9,8 +9,7 @@
 namespace Epoch
 {
 
-	struct CCStartButton : public CodeComponent
-	{
+	struct CCStartButton : public CodeComponent {
 		int levels;
 		bool mBooped, mBooped2;
 		bool AudioToggle;
@@ -23,11 +22,14 @@ namespace Epoch
 		Interpolator<matrix4>* mExitButtonInterp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mExitStandInterp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mExitSignInterp = new Interpolator<matrix4>();
+		Interpolator<matrix4>* mTutButtonInterp = new Interpolator<matrix4>();
+		Interpolator<matrix4>* mTutStandInterp = new Interpolator<matrix4>();
+		Interpolator<matrix4>* mTutSignInterp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mCloseInterp = new Interpolator<matrix4>();
 
 		Listener* l;
 
-		BaseObject *mChamberObject, *mExitButton, *mStartStand, *mStartSign, *mExitStand, *mExitSign, *mClosePanel;
+		BaseObject *mChamberObject, *mExitButton, *mStartStand, *mStartSign, *mExitStand, *mExitSign, *mClosePanel, *mTutButton, *mTutSign, *mTutStand;
 		Level* cLevel = nullptr;
 
 		virtual void Start()
@@ -43,6 +45,9 @@ namespace Epoch
 			mExitButton = cLevel->FindObjectWithName("mmExitButton");
 			mStartStand = cLevel->FindObjectWithName("mmStartStand");
 			mExitStand = cLevel->FindObjectWithName("mmExitStand");
+			mTutSign = cLevel->FindObjectWithName("mmTutSign");
+			mTutButton = cLevel->FindObjectWithName("mmTutButton");
+			mTutStand = cLevel->FindObjectWithName("mmTutStand");
 			mClosePanel = cLevel->FindObjectWithName("mmClosingPanel");
 
 			l = new Listener();
@@ -86,6 +91,18 @@ namespace Epoch
 				mExitSignInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(0, -10, 0), mExitSign->GetTransform().GetMatrix());
 				mExitSignInterp->SetActive(true);
 
+				mat = mTutButton->GetTransform().GetMatrix();
+				mTutButtonInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(0, -10, 0), mTutButton->GetTransform().GetMatrix());
+				mTutButtonInterp->SetActive(true);
+
+				mat = mTutStand->GetTransform().GetMatrix();
+				mTutStandInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(0, -10, 0), mTutStand->GetTransform().GetMatrix());
+				mTutStandInterp->SetActive(true);
+
+				mat = mTutSign->GetTransform().GetMatrix();
+				mTutSignInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(0, -10, 0), mTutSign->GetTransform().GetMatrix());
+				mTutSignInterp->SetActive(true);
+
 				((SFXEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
 				((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::EventType::ePlay);
 				mBooped = true;
@@ -111,6 +128,9 @@ namespace Epoch
 				mExitButtonInterp->Update(TimeManager::Instance()->GetDeltaTime());
 				mExitStandInterp->Update(TimeManager::Instance()->GetDeltaTime());
 				mExitSignInterp->Update(TimeManager::Instance()->GetDeltaTime());
+				mTutButtonInterp->Update(TimeManager::Instance()->GetDeltaTime());
+				mTutStandInterp->Update(TimeManager::Instance()->GetDeltaTime());
+				mTutSignInterp->Update(TimeManager::Instance()->GetDeltaTime());
 
 				if (mChamberObject->GetTransform().GetMatrix().fourth.y < -3.64f)
 				{
@@ -133,6 +153,10 @@ namespace Epoch
 				((ButtonCollider*)mExitButton->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mExitButton->GetTransform().GetMatrix().fourth.y - .2f;
 				((ButtonCollider*)mExitButton->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mExitButton->GetTransform().GetMatrix().fourth.y - .2f;
 
+				((ButtonCollider*)mTutButton->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mTutButton->GetTransform().GetMatrix().fourth);
+				((ButtonCollider*)mTutButton->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mTutButton->GetTransform().GetMatrix().fourth.y - .2f;
+				((ButtonCollider*)mTutButton->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mTutButton->GetTransform().GetMatrix().fourth.y - .2f;
+
 				bool complete = mPlayerInterp->Update(TimeManager::Instance()->GetDeltaTime());
 				if (complete)
 				{
@@ -147,6 +171,16 @@ namespace Epoch
 			AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::STOP_TEST1);
 			delete mChamberInterp;
 			delete mPlayerInterp;
+			delete mStartStandInterp;
+			delete mStartButtonInterp;
+			delete mStartSignInterp;
+			delete mExitButtonInterp;
+			delete mExitStandInterp;
+			delete mExitSignInterp;
+			delete mTutButtonInterp;
+			delete mTutStandInterp;
+			delete mTutSignInterp;
+			delete mCloseInterp;
 		}
 	};
 
