@@ -85,7 +85,7 @@ namespace Hourglass
 
 		public Matrix GizmoWorld {
 			get {
-				return CreateMatrix();
+				return CreateGizmoMatrix();
 			}
 		}
 
@@ -94,7 +94,7 @@ namespace Hourglass
 		public string Name {
 			get { return mNameIsPlaceholder ? "" : mName.Text; }
 			set {
-				if (string.IsNullOrWhiteSpace(value) || mNameIsPlaceholder)
+				if (string.IsNullOrWhiteSpace(value))
 				{
 					mName.Font = PlaceholderFont;
 					mName.ForeColor = System.Drawing.SystemColors.ControlDark;
@@ -253,13 +253,21 @@ namespace Hourglass
 			// Matrix multiplication order is Rotation, Translation, then scaling. Always remember to play RTS!
 			// This is assuming you want it to rotate in place. To rotate around a point, you'd do TRS.
 			Matrix mat = Matrix.Identity;
+			mat *= Matrix.Scaling(GetScaleVector());
 			mat *= Matrix.RotationYawPitchRoll((float)mRotY.Value * D2R, (float)mRotX.Value * D2R, (float)mRotZ.Value * D2R);
 			mat *= Matrix.Translation(GetPositionVector());
-			mat *= Matrix.Scaling(GetScaleVector());
 			return mat;
 		}
 
-        public void SetPosition(Vector3 _p) {
+		public Matrix CreateGizmoMatrix() {
+			// Matrix multiplication order is Rotation, Translation, then scaling. Always remember to play RTS!
+			// This is assuming you want it to rotate in place. To rotate around a point, you'd do TRS.
+			Matrix mat = Matrix.Identity;
+			mat *= Matrix.Translation(GetPositionVector());
+			return mat;
+		}
+
+		public void SetPosition(Vector3 _p) {
             mPosX.Value = (decimal)_p.X;
             mPosY.Value = (decimal)_p.Y;
             mPosZ.Value = (decimal)_p.Z;
@@ -277,10 +285,21 @@ namespace Hourglass
             mScaleZ.Value = (decimal)_p.Z;
         }
 
-        public override void OnMenuClick_Reset(object sender, EventArgs e)
+		public void OnGizmoAttached() {
+			mGroupBox.BorderColor = System.Drawing.Color.Red;
+			mGroupBox.Invalidate();
+		}
+
+		public void OnGizmoDetached() {
+			mGroupBox.BorderColor = System.Drawing.SystemColors.ActiveBorder;
+			mGroupBox.Invalidate();
+		}
+
+		public override void OnMenuClick_Reset(object sender, EventArgs e)
 		{
 			mNameIsPlaceholder = true;
-			Name = "Object Name...";
+			Name = "";
+			mName.Text = "Object Name...";
 
 			mPosX.Value = 0;
 			mPosY.Value = 0;

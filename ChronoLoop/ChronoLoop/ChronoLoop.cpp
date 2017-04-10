@@ -368,7 +368,7 @@ void Update() {
 	Level* mainMenu = new Level();
 
 	//while (LevelManager::GetInstance().LoadLevelAsync("../Resources/mainMenu.xml", &mainMenu) != Epoch::LM::LevelStatus::Success) {}
-	mainMenu->BinaryLoadLevel("../Resources/cool.elf");
+	mainMenu->BinaryLoadLevel("../Resources/Main.elf");
 	mainMenu->AssignPlayerControls(headset, LeftController, RightController);
 	mainMenu->AddObject(RightController);
 	mainMenu->AddObject(headset);

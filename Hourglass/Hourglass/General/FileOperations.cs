@@ -301,11 +301,10 @@ namespace Hourglass {
 				XmlReader reader = XmlReader.Create(_file, settings);
 				reader.MoveToContent();
 				string element = string.Empty, mesh = string.Empty, texutre = string.Empty, name = string.Empty;
-				TreeNode node = new TreeNode();
+				TreeNode node = null;
 				TexturedMeshComponent tmc = null;
 				ColliderComponent col = null;
-				_tree.Nodes.Add(node);
-				BaseObject addition = new BaseObject(node);
+				BaseObject addition = null;
 				bool collider = false;
 				while (reader.Read()) {
 					string[] parts = { };
@@ -348,7 +347,7 @@ namespace Hourglass {
 									Settings.StartRot = rot;
 									break;
 								case "Name":
-									name = reader.Value;
+									addition.Name = reader.Value;
 									break;
 								case "Mesh":
 									tmc = new TexturedMeshComponent();

@@ -116,6 +116,9 @@
     <Compile Include="Components\Meshes\TexturedMeshComponent.cs" />
     <Compile Include="Components\SoundComponent.cs" />
     <Compile Include="Components\TransformComponent.cs" />
+    <Compile Include="Controls\FocusGroupBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\MenuButton.cs">
       <SubType>Component</SubType>
     </Compile>

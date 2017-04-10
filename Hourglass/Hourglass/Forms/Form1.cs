@@ -15,7 +15,7 @@ namespace Hourglass
 
 		public const float RADIANS_TO_DEGREES = ((180.0f / 3.14f));
 		public const float DEGREES_TO_RADIANS = (1 / 180.0f * 3.14f);
-		private float mRotationSpeed = 0.005f, mGizmoSpeed = 25.0f;
+		private float mRotationSpeed = 0.005f, mGizmoSpeed = 1.0f;
 		private Microsoft.DirectX.DirectInput.Device mKeyboard;
 		private Stopwatch mFPSTimer = new Stopwatch();
 		private List<long> advMillisecond = new List<long>();
@@ -93,6 +93,7 @@ namespace Hourglass
 			Renderer.Instance.Render();
 		}
 
+
 		private void graphicsPanel1_MouseLeave(object sender, EventArgs e)
 		{
 		}
@@ -105,6 +106,7 @@ namespace Hourglass
 
 		private void graphicsPanel1_MouseDown(object sender, MouseEventArgs e)
 		{
+			bool hadFocus = btnFocus.ContainsFocus;
 			btnFocus.Select();
 			if (e.Button == MouseButtons.Left)
 			{
@@ -131,7 +133,9 @@ namespace Hourglass
 				}
 				else
 				{
-					Tree.SelectedNode = null;
+					if(hadFocus) {
+						Tree.SelectedNode = null;
+					}
 					Gizmo.Instance.Attach(null);
 
 				}
@@ -200,13 +204,13 @@ namespace Hourglass
 					dev.Viewport,
 					dev.Transform.Projection,
 					dev.Transform.View,
-					gizmos[i].World
+					gizmos[i].World * Gizmo.Instance.Position
 				);
 				Vector3 end = Vector3.Unproject(new Vector3(mMouseState.X, mMouseState.Y, 1),
 					dev.Viewport,
 					dev.Transform.Projection,
 					dev.Transform.View,
-					gizmos[i].World
+					gizmos[i].World * Gizmo.Instance.Position
 				);
 				Vector3 dir = end - start;
 				dir.Normalize();
@@ -345,10 +349,7 @@ namespace Hourglass
                         Gizmo.Instance.Mode = Gizmo.GizmoMode.Scale;
                     }
                 }
-			}  // Ensure the Grapics Panel's focus textbox is selected.
-			else if (Tree.ContainsFocus)
-			{
-				// If the tree is focused and we press delete, destroy the current node and object.
+				// If we press delete, destroy the current node and object.
 				// Check the previous key state to ensure we don't delete more than one per press.
 				if (!mKeys.Contains(Key.LeftControl) && !mKeys.Contains(Key.RightControl))
 				{
@@ -358,11 +359,12 @@ namespace Hourglass
 						{
 							RemoveTreeNode(Tree.SelectedNode);
 							Tree_AfterSelect(null, null);
+							Gizmo.Instance.Attach(null);
 							btnFocus.Select();
 						}
 					}
 				}
-			}
+			}  // Ensure the Grapics Panel's focus textbox is selected.
 			mPreviousKeys = mKeys;
 		}
 
@@ -470,7 +472,8 @@ namespace Hourglass
 			o.Title = "Open a level...";
 			if(o.ShowDialog() == DialogResult.OK)
 			{
-				if(o.FileName.EndsWith(".xml")) {
+				newToolStripMenuItem_Click(null, null);
+				if (o.FileName.EndsWith(".xml")) {
 					FileIO.ReadXMLFile(o.FileName, Tree);
 				} else {
 					FileIO.openLevel(o.FileName, Tree);
@@ -541,7 +544,9 @@ namespace Hourglass
 				{
 					spWorldView.Panel2.Controls.Add(obj.GetComponents()[i].GetGroupbox());
 				}
+				Gizmo.Instance.Attach((IGizmoAttachment)obj.GetComponents()[0]);
 			}
+			btnFocus.Select();
 		}
 
 		private void mCreateMenuAddChild_Click(object sender, EventArgs e)
@@ -698,7 +703,26 @@ namespace Hourglass
         {
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+		private void newToolStripMenuItem_Click(object sender, EventArgs e) {
+			for(int i = Tree.Nodes.Count - 1; i >= 0; --i) {
+				DeleteNode(Tree.Nodes[i]);
+			}
+		}
+
+		private void DeleteNode(TreeNode n) {
+			for (int i = n.Nodes.Count - 1; i >= 0; --i) {
+				DeleteNode(n.Nodes[i]);
+			}
+			((BaseObject)n.Tag).Delete();
+			n.Tag = null;
+			if(n.Parent != null) {
+				n.Parent.Nodes.Remove(n);
+			} else {
+				n.TreeView.Nodes.Remove(n);
+			}
+		}
+
+		private void timer1_Tick(object sender, EventArgs e)
 		{
 			graphicsPanel1.Invalidate();
 			mFPSTimer.Stop();

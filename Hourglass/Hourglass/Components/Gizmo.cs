@@ -169,8 +169,13 @@ namespace Hourglass
 
 		public void Attach(IGizmoAttachment _attachable)
 		{
+			if(mAttached != null) {
+				mAttached.OnGizmoDetached();
+			}
 			mAttached = _attachable;
-			Reposition();
+			if(mAttached != null) {
+				mAttached.OnGizmoAttached();
+			}
 		}
 
 		public void Reposition()
@@ -304,7 +309,7 @@ namespace Hourglass
 				dev.Indices = components[i].IndexBuffer;
 				dev.SetStreamSource(0, components[i].VertexBuffer, 0);
 				dev.RenderState.FillMode = components[i].FillMode;
-				dev.Transform.World = components[i].World;
+				dev.Transform.World = components[i].World * mAttached.GizmoWorld;
 				dev.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, components[i].Indices.Length, 0, components[i].Indices.Length / 3);
 			}
 		}
