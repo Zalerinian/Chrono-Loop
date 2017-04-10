@@ -1,33 +1,9 @@
-<Level>
+﻿<Level>
   <Settings>
     <StartPos>0.46,0,-10.15</StartPos>
     <StartRot>0,0,0</StartRot>
     <MaxClones>2</MaxClones>
   </Settings>
-  <Object>
-    <Name>Floor</Name>
-    <Mesh>GenericFloorTile.obj</Mesh>
-    <Texture>floor.png</Texture>
-    <Position>0,0,0</Position>
-    <Rotation>0,0,0</Rotation>
-    <Scale>13,1,25</Scale>
-    <Components>
-      <Collider>
-        <Type>Plane</Type>
-        <Trigger>False</Trigger>
-        <Position>0,0,0</Position>
-        <Rotation>0,0,0</Rotation>
-        <Scale>13,1,25</Scale>
-        <Move>False</Move>
-        <Normal>0,1,0</Normal>
-        <Mass>200</Mass>
-        <Elasticity>0.01</Elasticity>
-        <StaticFriction>0.8</StaticFriction>
-        <KeneticFriction>0.7</KeneticFriction>
-        <Drag>0</Drag>
-      </Collider>
-    </Components>
-  </Object>
   <Object>
     <Name>TransparentDoor1</Name>
     <Mesh>Door1.obj</Mesh>
@@ -912,6 +888,48 @@
     <Position>6.720272,1.104371,14.66006</Position>
     <Rotation>0.785,-1.099347,0</Rotation>
     <Scale>0.3,0.6,0.3</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Floor</Name>
+    <Mesh>L1Floor.obj</Mesh>
+    <Texture>Floor.png</Texture>
+    <Position>0,1.5,0</Position>
+    <Rotation>0,3.14,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components>
+      <Collider>
+        <Type>Plane</Type>
+        <Trigger>False</Trigger>
+        <Position>0,-1.5,0</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>1,1,1</Scale>
+        <Move>False</Move>
+        <Normal>0,1,0</Normal>
+        <Mass>200</Mass>
+        <Elasticity>0.01</Elasticity>
+        <StaticFriction>0.8</StaticFriction>
+        <KeneticFriction>0.7</KeneticFriction>
+        <Drag>0</Drag>
+      </Collider>
+    </Components>
+  </Object>
+  <Object>
+    <Name>Cutout</Name>
+    <Mesh>L1Floor2.obj</Mesh>
+    <Texture>Floor.png</Texture>
+    <Position>0,1.5,0</Position>
+    <Rotation>0,3.14,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>TransparentWindow</Name>
+    <Mesh>TiledWall.obj</Mesh>
+    <Texture>wallTextureM.png</Texture>
+    <Position>1.591685,2.097077,1.808621</Position>
+    <Rotation>0,1.57,0</Rotation>
+    <Scale>1,0.6,1</Scale>
     <Components />
   </Object>
 </Level>

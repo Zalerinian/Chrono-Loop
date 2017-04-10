@@ -139,6 +139,17 @@ namespace Epoch {
 			mGeoShaders[eGS_PosNormTex_NDC].Attach(gs);
 			delete[] buffer;
 		}
+
+		if (!FileIO::LoadBytes("GSAnimatedQuad.cso", &buffer, byteSize)) {
+			SystemLogger::Error() << "An error has occurred when trying to read GSAnimatedQuad.cso. Chances are the file is missing or has been renamed. The shader will be null, and may result in a crash." << std::endl;
+			mGeoShaders[eGS_PosNormTex_AnimQuad] = nullptr;
+		} else {
+			Renderer::Instance()->GetDevice()->CreateGeometryShader(buffer, byteSize, nullptr, &gs);
+			SetD3DName(gs, "GSAnimatedQuad.cso");
+			mGeoShaders[eGS_PosNormTex_AnimQuad].Attach(gs);
+			delete[] buffer;
+		}
+
 	}
 
 	ShaderManager::~ShaderManager() {
