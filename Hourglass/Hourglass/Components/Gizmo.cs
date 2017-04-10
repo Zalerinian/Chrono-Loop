@@ -58,6 +58,8 @@ namespace Hourglass
 		private IGizmoAttachment mAttached = null;
 		private GizmoMode mMode = GizmoMode.Position;
 		private ColoredShape mGrabbed = null;
+		private float mGizmoScale = 1.0f;
+		private Matrix mScaleMatrix = Matrix.Identity;
 
 
 		private struct GizmoTag
@@ -106,12 +108,29 @@ namespace Hourglass
 			get {
 				if(Valid)
 				{
-					return mAttached.GizmoWorld;
+					return Scale * mAttached.GizmoWorld;
 				}
 				else
 				{
 					return Matrix.Identity;
 				}
+			}
+		}
+
+		public float ScaleFactor {
+			get {
+				return mGizmoScale;
+			}
+			set {
+				mGizmoScale = value;
+				mScaleMatrix = Matrix.Identity;
+				mScaleMatrix.Scale(new Vector3(value, value, value));
+			}
+		}
+
+		public Matrix Scale {
+			get {
+				return mScaleMatrix;
 			}
 		}
 
@@ -309,7 +328,7 @@ namespace Hourglass
 				dev.Indices = components[i].IndexBuffer;
 				dev.SetStreamSource(0, components[i].VertexBuffer, 0);
 				dev.RenderState.FillMode = components[i].FillMode;
-				dev.Transform.World = components[i].World * mAttached.GizmoWorld;
+				dev.Transform.World = components[i].World * mScaleMatrix * mAttached.GizmoWorld;
 				dev.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, components[i].Indices.Length, 0, components[i].Indices.Length / 3);
 			}
 		}

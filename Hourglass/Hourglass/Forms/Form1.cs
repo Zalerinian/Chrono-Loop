@@ -256,7 +256,8 @@ namespace Hourglass
 					break;
 				case MouseButtons.Right:
 					// Minus-equals because Right handed systems have positive X going out of the screen.
-					Renderer.Instance.CameraPosition -= Renderer.Instance.Forward * 0.1f * delta.X;
+					Renderer.Instance.CameraPosition -= Renderer.Instance.Forward * 0.05f * delta.X * Gizmo.Instance.ScaleFactor;
+					UpdateGizmoScale();
 
 					// TODO: When the cursor approaches the corners of the current monitor, wrap its position.
 					break;
@@ -278,12 +279,15 @@ namespace Hourglass
 						Vector3 pr = Renderer.Instance.RotateInto(prev, Gizmo.Instance.Grabbed.World);
 						Vector3 cr = Renderer.Instance.RotateInto(curr, Gizmo.Instance.Grabbed.World);
 						Vector3 deltaCast = Renderer.Instance.RotateInto(cr - pr, Renderer.Instance.View);
+
 						Vector3 gPos = new Vector3(Gizmo.Instance.Position.M41, Gizmo.Instance.Position.M42, Gizmo.Instance.Position.M43);
-						Vector3 cPos = new Vector3(Renderer.Instance.View.M41, Renderer.Instance.View.M42, Renderer.Instance.View.M43);
+						Matrix view = Renderer.Instance.View;
+						view.Invert();
+						Vector3 cPos = new Vector3(view.M41, view.M42, view.M43);
 						float gizmoScale = (cPos - gPos).LengthSq();
 						deltaCast.Multiply(mGizmoSpeed * gizmoScale);
-						Debug.Print("Delta Cast: (" + deltaCast.X + ", " + deltaCast.Y + ", " + deltaCast.Z + ")");
 						Gizmo.Instance.Apply(deltaCast);
+						UpdateGizmoScale();
 					}
 					break;
 			}
@@ -309,29 +313,39 @@ namespace Hourglass
 				// Lateral movement, only if no Control key is held down.
 				if (!mKeys.Contains(Key.LeftControl) && !mKeys.Contains(Key.RightControl))
 				{
+					bool CameraMoved = false;
 					if (mKeys.Contains(Key.W))
 					{
 						Renderer.Instance.CameraPosition -= Renderer.Instance.Forward * 0.1f;
+						CameraMoved = true;
 					}
 					if (mKeys.Contains(Key.S))
 					{
 						Renderer.Instance.CameraPosition += Renderer.Instance.Forward * 0.1f;
+						CameraMoved = true;
 					}
 					if (mKeys.Contains(Key.A))
 					{
 						Renderer.Instance.CameraPosition -= Renderer.Instance.Right * 0.1f;
+						CameraMoved = true;
 					}
 					if (mKeys.Contains(Key.D))
 					{
 						Renderer.Instance.CameraPosition += Renderer.Instance.Right * 0.1f;
+						CameraMoved = true;
 					}
 					if (mKeys.Contains(Key.Space))
 					{
 						Renderer.Instance.CameraPosition += Renderer.Instance.Up * 0.1f;
+						CameraMoved = true;
 					}
 					if (mKeys.Contains(Key.LeftShift )|| mKeys.Contains(Key.RightShift))
 					{
 						Renderer.Instance.CameraPosition -= Renderer.Instance.Up * 0.1f;
+						CameraMoved = true;
+					}
+					if(CameraMoved) {
+						UpdateGizmoScale();
 					}
 				} // END Not holding control
                 else
@@ -366,6 +380,14 @@ namespace Hourglass
 				}
 			}  // Ensure the Grapics Panel's focus textbox is selected.
 			mPreviousKeys = mKeys;
+		}
+
+		private void UpdateGizmoScale() {
+			Vector3 gPos = new Vector3(Gizmo.Instance.Position.M41, Gizmo.Instance.Position.M42, Gizmo.Instance.Position.M43);
+			Matrix view = Renderer.Instance.View;
+			view.Invert();
+			Vector3 cPos = new Vector3(view.M41, view.M42, view.M43);
+			Gizmo.Instance.ScaleFactor = (cPos - gPos).Length() * 0.1f;
 		}
 
 		private void RemoveTreeNode(TreeNode n)
