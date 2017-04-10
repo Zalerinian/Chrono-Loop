@@ -1,54 +1,117 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using Microsoft.DirectX;
 
 namespace Hourglass {
 
     class BoxCollider : ColliderComponent {
-        protected Panel mPosPanel, mRotPanel, mScalePanel;
+        protected Panel mPosPanel, mRotPanel, mScalePanel, mGravityPanel;
 
         protected Label mLbPosition, mLbPosX, mLbPosY, mLbPosZ;
         protected Label mLbRotation, mLbRotX, mLbRotY, mLbRotZ;
         protected Label mLbScale, mLbScaleX, mLbScaleY, mLbScaleZ;
+        protected Label mLbGravity, mLbGravX, mLbGravY, mLbGravZ;
 
         protected NumericUpDown mPosX, mPosY, mPosZ;
         protected NumericUpDown mRotX, mRotY, mRotZ;
         protected NumericUpDown mScaleX, mScaleY, mScaleZ;
+        protected NumericUpDown mGravX, mGravY, mGravZ;
 
+        public Vector3 Position {
+            get {
+                Vector3 v = new Vector3();
+                v.X = (float)mPosX.Value;
+                v.Y = (float)mPosY.Value;
+                v.Z = (float)mPosZ.Value;
+                return v;
+            }
+            set {
+                mPosX.Value = (decimal)value.X;
+                mPosY.Value = (decimal)value.Y;
+                mPosZ.Value = (decimal)value.Z;
+            }
+        }
 
-        public BoxCollider(int _yOffset = 0) : base(100 + _yOffset) {
+        public Vector3 Rotation {
+            get {
+                Vector3 v = new Vector3();
+                v.X = (float)mRotX.Value;
+                v.Y = (float)mRotY.Value;
+                v.Z = (float)mRotZ.Value;
+                return v;
+            }
+            set {
+                mRotX.Value = (decimal)value.X;
+                mRotY.Value = (decimal)value.Y;
+                mRotZ.Value = (decimal)value.Z;
+            }
+        }
+
+        public Vector3 Scale {
+            get {
+                Vector3 v = new Vector3();
+                v.X = (float)mScaleX.Value;
+                v.Y = (float)mScaleY.Value;
+                v.Z = (float)mScaleZ.Value;
+                return v;
+            }
+            set {
+                mScaleX.Value = (decimal)value.X;
+                mScaleY.Value = (decimal)value.Y;
+                mScaleZ.Value = (decimal)value.Z;
+            }
+        }
+
+        public Vector3 Gravity {
+            get {
+                Vector3 v = new Vector3();
+                v.X = (float)mGravX.Value;
+                v.Y = (float)mGravY.Value;
+                v.Z = (float)mGravZ.Value;
+                return v;
+            }
+            set {
+                mGravX.Value = (decimal)value.X;
+                mGravY.Value = (decimal)value.Y;
+                mGravZ.Value = (decimal)value.Z;
+            }
+        }
+
+        public BoxCollider(int _yOffset = 0) : base(140 + _yOffset) {
 			mType = ComponentType.BoxCollider;
 
 
             #region Component Creation
 
+
+            // Panels
             mPosPanel = new Panel();
             mRotPanel = new Panel();
             mScalePanel = new Panel();
+            mGravityPanel = new Panel();
 
+            // Labels
             mLbPosition = new Label();
             mLbPosX = new Label();
             mLbPosY = new Label();
             mLbPosZ = new Label();
-            mPosPanel.Controls.Add(mLbPosX);
-            mPosPanel.Controls.Add(mLbPosY);
-            mPosPanel.Controls.Add(mLbPosZ);
 
             mLbRotation = new Label();
             mLbRotX = new Label();
             mLbRotY = new Label();
             mLbRotZ = new Label();
-            mRotPanel.Controls.Add(mLbRotX);
-            mRotPanel.Controls.Add(mLbRotY);
-            mRotPanel.Controls.Add(mLbRotZ);
 
             mLbScale = new Label();
             mLbScaleX = new Label();
             mLbScaleY = new Label();
             mLbScaleZ = new Label();
-            mScalePanel.Controls.Add(mLbScaleX);
-            mScalePanel.Controls.Add(mLbScaleY);
-            mScalePanel.Controls.Add(mLbScaleZ);
+
+            mLbGravity = new Label();
+            mLbGravX = new Label();
+            mLbGravY = new Label();
+            mLbGravZ = new Label();
+
 
             mPosX = new NumericUpDown();
             mPosY = new NumericUpDown();
@@ -59,13 +122,18 @@ namespace Hourglass {
             mScaleX = new NumericUpDown();
             mScaleY = new NumericUpDown();
             mScaleZ = new NumericUpDown();
+            mGravX = new NumericUpDown();
+            mGravY = new NumericUpDown();
+            mGravZ = new NumericUpDown();
 
             mGroupBox.Controls.Add(mLbPosition);
             mGroupBox.Controls.Add(mLbRotation);
             mGroupBox.Controls.Add(mLbScale);
+            mGroupBox.Controls.Add(mLbGravity);
             mGroupBox.Controls.Add(mPosPanel);
             mGroupBox.Controls.Add(mRotPanel);
             mGroupBox.Controls.Add(mScalePanel);
+            mGroupBox.Controls.Add(mGravityPanel);
 
             #endregion
 
@@ -89,6 +157,13 @@ namespace Hourglass {
             mLbScale.Size = new System.Drawing.Size(34, 13);
             mLbScale.TabIndex = 17;
             mLbScale.Text = "Scale";
+
+            mLbGravity.AutoSize = true;
+            mLbGravity.Location = new System.Drawing.Point(6, 128 + _yOffset);
+            mLbGravity.Name = "mLbGravity";
+            mLbGravity.Size = new System.Drawing.Size(34, 13);
+            mLbGravity.TabIndex = 18;
+            mLbGravity.Text = "Gravity";
 
             mLbRotation.AutoSize = true;
             mLbRotation.Location = new System.Drawing.Point(6, 59 + _yOffset);
@@ -144,6 +219,7 @@ namespace Hourglass {
             SetupTransformPanel(mPosPanel, 90, 20 + _yOffset,   ContentWidth, mLbPosX, mLbPosY, mLbPosZ, mPosX, mPosY, mPosZ);
             SetupTransformPanel(mRotPanel, 90, 55 + _yOffset,   ContentWidth, mLbRotX, mLbRotY, mLbRotZ, mRotX, mRotY, mRotZ);
             SetupTransformPanel(mScalePanel, 90, 90 + _yOffset, ContentWidth, mLbScaleX, mLbScaleY, mLbScaleZ, mScaleX, mScaleY, mScaleZ);
+            SetupTransformPanel(mGravityPanel, 90, 125 + _yOffset, ContentWidth, mLbGravX, mLbGravY, mLbGravZ, mGravX, mGravY, mGravZ);
 
             #endregion
 
@@ -164,6 +240,10 @@ namespace Hourglass {
             mScaleX.Value = 0;
             mScaleY.Value = 0;
             mScaleZ.Value = 0;
+
+            mGravX.Value = 0;
+            mGravY.Value = (decimal)-9.81;
+            mGravZ.Value = 0;
         }
 
         private void OnTransformPanelResize(object sender, EventArgs e)
@@ -222,9 +302,9 @@ namespace Hourglass {
 			w.Write((float)mScaleZ.Value);
 		}
 
-		public override void ReadData(System.IO.BinaryReader r)
+		public override void ReadData(System.IO.BinaryReader r, int _version)
 		{
-			base.ReadData(r);
+			base.ReadData(r, _version);
 			mPosX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mPosY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mPosZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));

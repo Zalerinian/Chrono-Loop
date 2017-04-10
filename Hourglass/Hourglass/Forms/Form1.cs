@@ -64,6 +64,7 @@ namespace Hourglass
 
 			mFPSTimer.Start();
 			mMouseState = new MouseEventArgs(MouseButtons.None, 0, 0, 0, 0);
+			
 
 			spWorldView.Panel2.ControlAdded += ReorderComponents;
 			spWorldView.Panel2.ControlRemoved += ReorderComponents;
@@ -75,6 +76,7 @@ namespace Hourglass
 			btnComponentAdd.Size = new Size(spWorldView.Panel2.ClientRectangle.Width / 2, btnComponentAdd.Height);
 			btnComponentAdd.Location = new Point(spWorldView.Panel2.ClientRectangle.Width / 4, btnComponentAdd.Location.Y);
 			btnComponentAdd.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
+			btnComponentAdd.Margin = new Padding(0, 15, 0, 15);
 			spWorldView.Panel2.Controls.Add(btnComponentAdd);
 		}
 
@@ -463,12 +465,16 @@ namespace Hourglass
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			OpenFileDialog o = new OpenFileDialog();
-			o.Filter = "Epoch Level Files (*.elf)|*.elf";
+			o.Filter = "Epoch Level Files (*.elf)|*.elf|Legacy XML Level File (*.xml)|*.xml";
 			o.FilterIndex = 1;
 			o.Title = "Open a level...";
 			if(o.ShowDialog() == DialogResult.OK)
 			{
-				FileIO.openLevel(o.FileName, Tree);
+				if(o.FileName.EndsWith(".xml")) {
+					FileIO.ReadXMLFile(o.FileName, Tree);
+				} else {
+					FileIO.openLevel(o.FileName, Tree);
+				}
 				// Attach Object Handlers
 				for(int i = 0; i < Tree.Nodes.Count; ++i)
 				{
@@ -487,7 +493,7 @@ namespace Hourglass
 			{
 				SaveFileDialog file = new SaveFileDialog();
 				file.InitialDirectory = Application.StartupPath;
-				file.Filter = "XML Level Files (*.xml)|*.xml";
+				file.Filter = "Epoch Level Files (*.elf)|*.elf";
 				file.FilterIndex = 1;
 				file.RestoreDirectory = true;
 				if (file.ShowDialog() == DialogResult.OK)
@@ -501,7 +507,7 @@ namespace Hourglass
 		{
 			SaveFileDialog saveFile = new SaveFileDialog();
 			saveFile.InitialDirectory = Application.StartupPath;
-			saveFile.Filter = "XML files (*.xml)|*.xml";
+			saveFile.Filter = "Epoch files (*.elf)|*.elf";
 			saveFile.FilterIndex = 1;
 			saveFile.RestoreDirectory = true;
 			if (saveFile.ShowDialog() == DialogResult.OK)
@@ -685,6 +691,7 @@ namespace Hourglass
 			position.X = btnComponentAdd.Left;
 			btnComponentAdd.Location = position;
 			btnComponentAdd.Visible = true;
+			btnComponentAdd.Margin = new Padding(30);
 		}
 
         private void graphicsPanel1_Resize(object sender, EventArgs e)

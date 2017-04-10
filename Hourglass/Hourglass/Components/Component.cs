@@ -226,6 +226,6 @@ namespace Hourglass
 			w.Write((short)mType);
 		}
 
-		public abstract void ReadData(System.IO.BinaryReader r);
+		public abstract void ReadData(System.IO.BinaryReader r, int _version);
     }
 }

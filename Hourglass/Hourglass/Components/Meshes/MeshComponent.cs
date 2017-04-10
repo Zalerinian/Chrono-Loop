@@ -90,7 +90,7 @@ namespace Hourglass
 			w.Write(term);
 		}
 
-		public override void ReadData(BinaryReader r)
+		public override void ReadData(BinaryReader r, int _version)
 		{
 			string filename = new string(r.ReadChars(r.ReadInt32() - 1));
 			r.ReadByte(); // The null terminator breaks things in C#, but is necessary in C++, so we need to skip it in C#

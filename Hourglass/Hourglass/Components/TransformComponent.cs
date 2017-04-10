@@ -369,7 +369,7 @@ namespace Hourglass
 			w.Write((float)mScaleZ.Value);
 		}
 
-		public override void ReadData(System.IO.BinaryReader r)
+		public override void ReadData(System.IO.BinaryReader r, int _version)
 		{
 			mNameIsPlaceholder = false;
 			Name = new string(r.ReadChars(r.ReadInt32()));
