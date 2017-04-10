@@ -812,7 +812,7 @@ namespace Epoch
 	{
 		timer += TimeManager::Instance()->GetDeltaTime();
 
-		if ((int)timer % 4 != 0)
+		if ((int)timer % mTime != 0)
 			return;
 
 		for (int i = 0; i < mPerSec; i++)
