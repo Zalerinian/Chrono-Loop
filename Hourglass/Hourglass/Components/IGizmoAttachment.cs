@@ -18,10 +18,6 @@ namespace Hourglass
 		NumericUpDown SZ { get; }
 
 		Microsoft.DirectX.Matrix GizmoWorld { get; }
-
-		void OnGizmoAttached();
-
-		void OnGizmoDetached();
 	}
 }
 

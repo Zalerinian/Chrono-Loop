@@ -101,7 +101,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\BaseObject.cs" />
-    <Compile Include="Components\CodeComponent.cs" />
     <Compile Include="Components\Colliders\BoxCollider.cs" />
     <Compile Include="Components\Colliders\ButtonCollider.cs" />
     <Compile Include="Components\Colliders\Collider.cs" />
@@ -114,11 +113,7 @@
     <Compile Include="Components\Meshes\MeshComponent.cs" />
     <Compile Include="Components\Meshes\ColoredMeshComponent.cs" />
     <Compile Include="Components\Meshes\TexturedMeshComponent.cs" />
-    <Compile Include="Components\SoundComponent.cs" />
     <Compile Include="Components\TransformComponent.cs" />
-    <Compile Include="Controls\FocusGroupBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Controls\MenuButton.cs">
       <SubType>Component</SubType>
     </Compile>

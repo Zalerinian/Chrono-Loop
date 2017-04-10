@@ -263,7 +263,10 @@ namespace Hourglass
 						}
 					}
 				}
-                Gizmo.Instance.Reset();
+                for (int i = 0; i < Gizmo.Instance.GetVisibleComponents().Length; i++)
+                {
+                    Gizmo.Instance.GetVisibleComponents()[i].FillBuffers();
+                }
 			}
 		}
 

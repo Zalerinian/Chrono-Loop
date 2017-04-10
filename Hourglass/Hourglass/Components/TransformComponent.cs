@@ -23,8 +23,6 @@ namespace Hourglass
 		protected NumericUpDown mRotX, mRotY, mRotZ;
 		protected NumericUpDown mScaleX, mScaleY, mScaleZ;
 
-		protected CheckBox mRecord;
-
 		protected bool mNameIsPlaceholder = true;
 		protected string mLastText = "";
 
@@ -87,7 +85,7 @@ namespace Hourglass
 
 		public Matrix GizmoWorld {
 			get {
-				return CreateGizmoMatrix();
+				return CreateMatrix();
 			}
 		}
 
@@ -96,7 +94,7 @@ namespace Hourglass
 		public string Name {
 			get { return mNameIsPlaceholder ? "" : mName.Text; }
 			set {
-				if (string.IsNullOrWhiteSpace(value))
+				if (string.IsNullOrWhiteSpace(value) || mNameIsPlaceholder)
 				{
 					mName.Font = PlaceholderFont;
 					mName.ForeColor = System.Drawing.SystemColors.ControlDark;
@@ -153,8 +151,6 @@ namespace Hourglass
 			mScaleY = new NumericUpDown();
 			mScaleZ = new NumericUpDown();
 
-			mRecord = new CheckBox();
-
 			mGroupBox.Controls.Add(mLbName);
 			mGroupBox.Controls.Add(mLbPosition);
 			mGroupBox.Controls.Add(mLbRotation);
@@ -164,7 +160,6 @@ namespace Hourglass
 			mGroupBox.Controls.Add(mPosPanel);
 			mGroupBox.Controls.Add(mRotPanel);
 			mGroupBox.Controls.Add(mScalePanel);
-			mGroupBox.Controls.Add(mRecord);
 			#endregion
 
 			#region Component Setup
@@ -217,11 +212,6 @@ namespace Hourglass
 			SetupTransformPanel(mRotPanel, 90, 75 + _yOffset, ContentWidth, mLbRotX, mLbRotY, mLbRotZ, mRotX, mRotY, mRotZ);
 			SetupTransformPanel(mScalePanel, 90, 100 + _yOffset, ContentWidth, mLbScaleX, mLbScaleY, mLbScaleZ, mScaleX, mScaleY, mScaleZ);
 
-			// Checkboxes
-			mRecord.Text = "Record object on Timeline";
-			mRecord.AutoSize = true;
-			mRecord.Location = new System.Drawing.Point(10, 135);
-
 			// Events
 			mPosX.ValueChanged += OnMatrixUpdated;
 			mPosY.ValueChanged += OnMatrixUpdated;
@@ -263,53 +253,16 @@ namespace Hourglass
 			// Matrix multiplication order is Rotation, Translation, then scaling. Always remember to play RTS!
 			// This is assuming you want it to rotate in place. To rotate around a point, you'd do TRS.
 			Matrix mat = Matrix.Identity;
-			mat *= Matrix.Scaling(GetScaleVector());
 			mat *= Matrix.RotationYawPitchRoll((float)mRotY.Value * D2R, (float)mRotX.Value * D2R, (float)mRotZ.Value * D2R);
 			mat *= Matrix.Translation(GetPositionVector());
+			mat *= Matrix.Scaling(GetScaleVector());
 			return mat;
-		}
-
-		public Matrix CreateGizmoMatrix() {
-			// Matrix multiplication order is Rotation, Translation, then scaling. Always remember to play RTS!
-			// This is assuming you want it to rotate in place. To rotate around a point, you'd do TRS.
-			Matrix mat = Matrix.Identity;
-			mat *= Matrix.Translation(GetPositionVector());
-			return mat;
-		}
-
-		public void SetPosition(Vector3 _p) {
-            mPosX.Value = (decimal)_p.X;
-            mPosY.Value = (decimal)_p.Y;
-            mPosZ.Value = (decimal)_p.Z;
-        }
-
-        public void SetRotation(Vector3 _p) {
-            mRotX.Value = (decimal)_p.X;
-            mRotY.Value = (decimal)_p.Y;
-            mRotZ.Value = (decimal)_p.Z;
-        }
-
-        public void SetScale(Vector3 _p) {
-            mScaleX.Value = (decimal)_p.X;
-            mScaleY.Value = (decimal)_p.Y;
-            mScaleZ.Value = (decimal)_p.Z;
-        }
-
-		public void OnGizmoAttached() {
-			mGroupBox.BorderColor = System.Drawing.Color.Red;
-			mGroupBox.Invalidate();
-		}
-
-		public void OnGizmoDetached() {
-			mGroupBox.BorderColor = System.Drawing.SystemColors.ActiveBorder;
-			mGroupBox.Invalidate();
 		}
 
 		public override void OnMenuClick_Reset(object sender, EventArgs e)
 		{
 			mNameIsPlaceholder = true;
-			Name = "";
-			mName.Text = "Object Name...";
+			Name = "Object Name...";
 
 			mPosX.Value = 0;
 			mPosY.Value = 0;
@@ -396,11 +349,9 @@ namespace Hourglass
 			w.Write((float)mScaleX.Value);
 			w.Write((float)mScaleY.Value);
 			w.Write((float)mScaleZ.Value);
-
-			w.Write(mRecord.Checked);
 		}
 
-		public override void ReadData(System.IO.BinaryReader r, int _version)
+		public override void ReadData(System.IO.BinaryReader r)
 		{
 			mNameIsPlaceholder = false;
 			Name = new string(r.ReadChars(r.ReadInt32()));
@@ -416,10 +367,6 @@ namespace Hourglass
 			mScaleX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mScaleY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mScaleZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
-
-			if(_version >= 2) {
-				mRecord.Checked = r.ReadByte() == 1;
-			}
 		}
 
 

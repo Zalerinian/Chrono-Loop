@@ -15,7 +15,7 @@ namespace Hourglass
 
 		public const float RADIANS_TO_DEGREES = ((180.0f / 3.14f));
 		public const float DEGREES_TO_RADIANS = (1 / 180.0f * 3.14f);
-		private float mRotationSpeed = 0.005f, mGizmoSpeed = 1.0f;
+		private float mRotationSpeed = 0.005f, mGizmoSpeed = 25.0f;
 		private Microsoft.DirectX.DirectInput.Device mKeyboard;
 		private Stopwatch mFPSTimer = new Stopwatch();
 		private List<long> advMillisecond = new List<long>();
@@ -64,7 +64,6 @@ namespace Hourglass
 
 			mFPSTimer.Start();
 			mMouseState = new MouseEventArgs(MouseButtons.None, 0, 0, 0, 0);
-			
 
 			spWorldView.Panel2.ControlAdded += ReorderComponents;
 			spWorldView.Panel2.ControlRemoved += ReorderComponents;
@@ -76,7 +75,6 @@ namespace Hourglass
 			btnComponentAdd.Size = new Size(spWorldView.Panel2.ClientRectangle.Width / 2, btnComponentAdd.Height);
 			btnComponentAdd.Location = new Point(spWorldView.Panel2.ClientRectangle.Width / 4, btnComponentAdd.Location.Y);
 			btnComponentAdd.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
-			btnComponentAdd.Margin = new Padding(0, 15, 0, 15);
 			spWorldView.Panel2.Controls.Add(btnComponentAdd);
 		}
 
@@ -93,7 +91,6 @@ namespace Hourglass
 			Renderer.Instance.Render();
 		}
 
-
 		private void graphicsPanel1_MouseLeave(object sender, EventArgs e)
 		{
 		}
@@ -106,7 +103,6 @@ namespace Hourglass
 
 		private void graphicsPanel1_MouseDown(object sender, MouseEventArgs e)
 		{
-			bool hadFocus = btnFocus.ContainsFocus;
 			btnFocus.Select();
 			if (e.Button == MouseButtons.Left)
 			{
@@ -133,9 +129,7 @@ namespace Hourglass
 				}
 				else
 				{
-					if(hadFocus) {
-						Tree.SelectedNode = null;
-					}
+					Tree.SelectedNode = null;
 					Gizmo.Instance.Attach(null);
 
 				}
@@ -204,13 +198,13 @@ namespace Hourglass
 					dev.Viewport,
 					dev.Transform.Projection,
 					dev.Transform.View,
-					gizmos[i].World * Gizmo.Instance.Position
+					gizmos[i].World
 				);
 				Vector3 end = Vector3.Unproject(new Vector3(mMouseState.X, mMouseState.Y, 1),
 					dev.Viewport,
 					dev.Transform.Projection,
 					dev.Transform.View,
-					gizmos[i].World * Gizmo.Instance.Position
+					gizmos[i].World
 				);
 				Vector3 dir = end - start;
 				dir.Normalize();
@@ -255,9 +249,8 @@ namespace Hourglass
 					Renderer.Instance.RebuildViewMatrix();
 					break;
 				case MouseButtons.Right:
-					// Minus-equals because Right handed systems have positive Z going out of the screen.
-					Renderer.Instance.CameraPosition -= Renderer.Instance.Forward * 0.05f * delta.X * Gizmo.Instance.ScaleFactor;
-					UpdateGizmoScale();
+					// Minus-equals because Right handed systems have positive X going out of the screen.
+					Renderer.Instance.CameraPosition -= Renderer.Instance.Forward * 0.1f * delta.X;
 
 					// TODO: When the cursor approaches the corners of the current monitor, wrap its position.
 					break;
@@ -279,15 +272,12 @@ namespace Hourglass
 						Vector3 pr = Renderer.Instance.RotateInto(prev, Gizmo.Instance.Grabbed.World);
 						Vector3 cr = Renderer.Instance.RotateInto(curr, Gizmo.Instance.Grabbed.World);
 						Vector3 deltaCast = Renderer.Instance.RotateInto(cr - pr, Renderer.Instance.View);
-
 						Vector3 gPos = new Vector3(Gizmo.Instance.Position.M41, Gizmo.Instance.Position.M42, Gizmo.Instance.Position.M43);
-						Matrix view = Renderer.Instance.View;
-						view.Invert();
-						Vector3 cPos = new Vector3(view.M41, view.M42, view.M43);
+						Vector3 cPos = new Vector3(Renderer.Instance.View.M41, Renderer.Instance.View.M42, Renderer.Instance.View.M43);
 						float gizmoScale = (cPos - gPos).LengthSq();
 						deltaCast.Multiply(mGizmoSpeed * gizmoScale);
+						Debug.Print("Delta Cast: (" + deltaCast.X + ", " + deltaCast.Y + ", " + deltaCast.Z + ")");
 						Gizmo.Instance.Apply(deltaCast);
-						UpdateGizmoScale();
 					}
 					break;
 			}
@@ -313,57 +303,35 @@ namespace Hourglass
 				// Lateral movement, only if no Control key is held down.
 				if (!mKeys.Contains(Key.LeftControl) && !mKeys.Contains(Key.RightControl))
 				{
-					bool CameraMoved = false;
 					if (mKeys.Contains(Key.W))
 					{
 						Renderer.Instance.CameraPosition -= Renderer.Instance.Forward * 0.1f;
-						CameraMoved = true;
 					}
 					if (mKeys.Contains(Key.S))
 					{
 						Renderer.Instance.CameraPosition += Renderer.Instance.Forward * 0.1f;
-						CameraMoved = true;
 					}
 					if (mKeys.Contains(Key.A))
 					{
 						Renderer.Instance.CameraPosition -= Renderer.Instance.Right * 0.1f;
-						CameraMoved = true;
 					}
 					if (mKeys.Contains(Key.D))
 					{
 						Renderer.Instance.CameraPosition += Renderer.Instance.Right * 0.1f;
-						CameraMoved = true;
 					}
 					if (mKeys.Contains(Key.Space))
 					{
 						Renderer.Instance.CameraPosition += Renderer.Instance.Up * 0.1f;
-						CameraMoved = true;
 					}
 					if (mKeys.Contains(Key.LeftShift )|| mKeys.Contains(Key.RightShift))
 					{
 						Renderer.Instance.CameraPosition -= Renderer.Instance.Up * 0.1f;
-						CameraMoved = true;
-					}
-					if(CameraMoved) {
-						UpdateGizmoScale();
 					}
 				} // END Not holding control
-                else
-                {
-                    if (mKeys.Contains(Key.Q))
-                    {
-                        Gizmo.Instance.Mode = Gizmo.GizmoMode.Position;
-                    }
-                    if (mKeys.Contains(Key.W))
-                    {
-                        Gizmo.Instance.Mode = Gizmo.GizmoMode.Rotation;
-                    }
-                    if (mKeys.Contains(Key.E))
-                    {
-                        Gizmo.Instance.Mode = Gizmo.GizmoMode.Scale;
-                    }
-                }
-				// If we press delete, destroy the current node and object.
+			}  // Ensure the Grapics Panel's focus textbox is selected.
+			else if (Tree.ContainsFocus)
+			{
+				// If the tree is focused and we press delete, destroy the current node and object.
 				// Check the previous key state to ensure we don't delete more than one per press.
 				if (!mKeys.Contains(Key.LeftControl) && !mKeys.Contains(Key.RightControl))
 				{
@@ -373,21 +341,12 @@ namespace Hourglass
 						{
 							RemoveTreeNode(Tree.SelectedNode);
 							Tree_AfterSelect(null, null);
-							Gizmo.Instance.Attach(null);
 							btnFocus.Select();
 						}
 					}
 				}
-			}  // Ensure the Grapics Panel's focus textbox is selected.
+			}
 			mPreviousKeys = mKeys;
-		}
-
-		private void UpdateGizmoScale() {
-			Vector3 gPos = new Vector3(Gizmo.Instance.Position.M41, Gizmo.Instance.Position.M42, Gizmo.Instance.Position.M43);
-			Matrix view = Renderer.Instance.View;
-			view.Invert();
-			Vector3 cPos = new Vector3(view.M41, view.M42, view.M43);
-			Gizmo.Instance.ScaleFactor = (cPos - gPos).Length() * 0.1f;
 		}
 
 		private void RemoveTreeNode(TreeNode n)
@@ -470,18 +429,12 @@ namespace Hourglass
 					obj.AddComponent(new ColoredMeshComponent());
 					break;
 				case "Audio":
-                    SoundComponent sc = new SoundComponent();
-                    sc.Resize += ReorderComponents;
-                    sc.Parent = spWorldView.Panel2;
-                    obj.AddComponent(sc);
 					break;
 
-                // Code Components
-                case "CodeComp":
-                    obj.AddComponent(new CodeComponent());
-                    break;
+				// Code Components
 
-                default:
+
+				default:
 					break;
 			}
 		}
@@ -489,17 +442,12 @@ namespace Hourglass
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			OpenFileDialog o = new OpenFileDialog();
-			o.Filter = "Epoch Level Files (*.elf)|*.elf|Legacy XML Level File (*.xml)|*.xml";
+			o.Filter = "Epoch Level Files (*.elf)|*.elf";
 			o.FilterIndex = 1;
 			o.Title = "Open a level...";
 			if(o.ShowDialog() == DialogResult.OK)
 			{
-				newToolStripMenuItem_Click(null, null);
-				if (o.FileName.EndsWith(".xml")) {
-					FileIO.ReadXMLFile(o.FileName, Tree);
-				} else {
-					FileIO.openLevel(o.FileName, Tree);
-				}
+				FileIO.openLevel(o.FileName, Tree);
 				// Attach Object Handlers
 				for(int i = 0; i < Tree.Nodes.Count; ++i)
 				{
@@ -518,7 +466,7 @@ namespace Hourglass
 			{
 				SaveFileDialog file = new SaveFileDialog();
 				file.InitialDirectory = Application.StartupPath;
-				file.Filter = "Epoch Level Files (*.elf)|*.elf";
+				file.Filter = "XML Level Files (*.xml)|*.xml";
 				file.FilterIndex = 1;
 				file.RestoreDirectory = true;
 				if (file.ShowDialog() == DialogResult.OK)
@@ -532,7 +480,7 @@ namespace Hourglass
 		{
 			SaveFileDialog saveFile = new SaveFileDialog();
 			saveFile.InitialDirectory = Application.StartupPath;
-			saveFile.Filter = "Epoch files (*.elf)|*.elf";
+			saveFile.Filter = "XML files (*.xml)|*.xml";
 			saveFile.FilterIndex = 1;
 			saveFile.RestoreDirectory = true;
 			if (saveFile.ShowDialog() == DialogResult.OK)
@@ -566,9 +514,7 @@ namespace Hourglass
 				{
 					spWorldView.Panel2.Controls.Add(obj.GetComponents()[i].GetGroupbox());
 				}
-				Gizmo.Instance.Attach((IGizmoAttachment)obj.GetComponents()[0]);
 			}
-			btnFocus.Select();
 		}
 
 		private void mCreateMenuAddChild_Click(object sender, EventArgs e)
@@ -625,12 +571,10 @@ namespace Hourglass
 			Forms.LevelSettingsForm settings = new Forms.LevelSettingsForm();
 			settings.SetPosition(Settings.StartPos);
 			settings.SetRotation(Settings.StartRot);
-            settings.SetMaxClones(Settings.MaxClones);
 			if (settings.ShowDialog() == DialogResult.OK)
 			{
 				Settings.StartPos = settings.GetPosition();
 				Settings.StartRot = settings.GetRotation();
-                Settings.MaxClones = settings.GetMaxClones();
 			}
 		}
 
@@ -720,33 +664,13 @@ namespace Hourglass
 			position.X = btnComponentAdd.Left;
 			btnComponentAdd.Location = position;
 			btnComponentAdd.Visible = true;
-			btnComponentAdd.Margin = new Padding(30);
 		}
 
         private void graphicsPanel1_Resize(object sender, EventArgs e)
         {
         }
 
-		private void newToolStripMenuItem_Click(object sender, EventArgs e) {
-			for(int i = Tree.Nodes.Count - 1; i >= 0; --i) {
-				DeleteNode(Tree.Nodes[i]);
-			}
-		}
-
-		private void DeleteNode(TreeNode n) {
-			for (int i = n.Nodes.Count - 1; i >= 0; --i) {
-				DeleteNode(n.Nodes[i]);
-			}
-			((BaseObject)n.Tag).Delete();
-			n.Tag = null;
-			if(n.Parent != null) {
-				n.Parent.Nodes.Remove(n);
-			} else {
-				n.TreeView.Nodes.Remove(n);
-			}
-		}
-
-		private void timer1_Tick(object sender, EventArgs e)
+        private void timer1_Tick(object sender, EventArgs e)
 		{
 			graphicsPanel1.Invalidate();
 			mFPSTimer.Stop();

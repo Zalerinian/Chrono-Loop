@@ -193,7 +193,7 @@ namespace Hourglass
 			w.Write((float)mNZ.Value);
 		}
 
-		public override void ReadData(BinaryReader r, int _version)
+		public override void ReadData(BinaryReader r)
 		{
 			mMass.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mForce.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));

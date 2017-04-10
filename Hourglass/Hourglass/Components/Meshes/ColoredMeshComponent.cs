@@ -9,7 +9,8 @@ namespace Hourglass
 	{
 		private Button mColor = new Button();
 
-		public ColoredMeshComponent(int _yOffset = 0) : base(_yOffset) {
+		public ColoredMeshComponent(int _yOffset = 0) : base(_yOffset)
+		{
 			mType = ComponentType.ColoredMesh;
 
 			#region Component Creation
@@ -23,7 +24,7 @@ namespace Hourglass
 			int ContentWidth = (mGroupBox.Size - mGroupBox.Padding.Size - mGroupBox.Margin.Size).Width;
 
 			mColor.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
-			mColor.Location = new System.Drawing.Point(90, 84);
+			mColor.Location = new System.Drawing.Point(90, 51);
 			mColor.Size = new System.Drawing.Size(ContentWidth - mColor.Left, 24);
 			mColor.Font = new System.Drawing.Font("Microsoft Sans Serif", 10, System.Drawing.FontStyle.Bold);
 			mColor.Text = "Mesh Color";
@@ -31,7 +32,8 @@ namespace Hourglass
 
 			{
 				List<string>.Enumerator it = ResourceManager.Instance.Objects.GetEnumerator();
-				while (it.MoveNext()) {
+				while (it.MoveNext())
+				{
 					mMesh.Items.Add(it.Current);
 				}
 			}
@@ -39,9 +41,6 @@ namespace Hourglass
 			mMesh.SelectedIndexChanged += OnMeshSelectionChange;
 
 			#endregion
-
-			mGroupBox.Size = mGroupBox.PreferredSize;
-			OnMenuClick_Reset(null, null);
 		}
 
 		protected void OnMeshSelectionChange(object sender, EventArgs e)
@@ -74,8 +73,6 @@ namespace Hourglass
 		public override void OnMenuClick_Reset(object sender, EventArgs e)
 		{
 			base.OnMenuClick_Reset(sender, e);
-			mTransparency.Enabled = false;
-			mTransparency.Value = 1;
 		}
 
 		public override void WriteData(BinaryWriter w)
@@ -84,9 +81,9 @@ namespace Hourglass
 			w.Write(mColor.BackColor.ToArgb());
 		}
 
-		public override void ReadData(BinaryReader r, int _version)
+		public override void ReadData(BinaryReader r)
 		{
-			base.ReadData(r, _version);
+			base.ReadData(r);
 			mColor.BackColor = System.Drawing.Color.FromArgb(r.ReadInt32());
 			((ColoredShape)mShape).Color = mColor.BackColor;
 		}

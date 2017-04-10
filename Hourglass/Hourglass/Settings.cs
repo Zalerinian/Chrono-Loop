@@ -6,7 +6,6 @@ namespace Hourglass
 	public static class Settings
 	{
 		private static int mVersion = 1;
-        private static uint mMaxCloneCount = 0;
 		private static string mProjDir = string.Empty;
 		private static Color mColor = Color.Black;
 		private static Vector3 mLevelStartPosition = new Vector3();
@@ -53,12 +52,6 @@ namespace Hourglass
 				mLevelStartRotation = value;
 			}
 		}
-
-        public static uint MaxClones
-        {
-            get { return mMaxCloneCount; }
-            set { mMaxCloneCount = value; }
-        }
 
 	}
 }
