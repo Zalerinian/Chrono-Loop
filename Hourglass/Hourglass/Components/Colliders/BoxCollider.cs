@@ -293,9 +293,9 @@ namespace Hourglass {
 			w.Write((float)mPosY.Value);
 			w.Write((float)mPosZ.Value);
 
-			w.Write((float)mRotX.Value);
-			w.Write((float)mRotY.Value);
-			w.Write((float)mRotZ.Value);
+			w.Write((float)mRotX.Value * FileIO.DEGREES_TO_RADIANS);
+			w.Write((float)mRotY.Value * FileIO.DEGREES_TO_RADIANS);
+			w.Write((float)mRotZ.Value * FileIO.DEGREES_TO_RADIANS);
 
 			w.Write((float)mScaleX.Value);
 			w.Write((float)mScaleY.Value);

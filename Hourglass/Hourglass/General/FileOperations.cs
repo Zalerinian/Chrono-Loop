@@ -319,6 +319,7 @@ namespace Hourglass {
 									node.Tag = addition;
 									mesh = texutre = string.Empty;
 									collider = false;
+									tmc = null;
 									break;
 								case "Collider":
 									collider = true;
@@ -350,9 +351,11 @@ namespace Hourglass {
 									addition.Name = reader.Value;
 									break;
 								case "Mesh":
-									tmc = new TexturedMeshComponent();
+									if(tmc == null) {
+										tmc = new TexturedMeshComponent();
+										addition.AddComponent(tmc);
+									}
 									tmc.SelectMesh(tmc.CheckForMesh(reader.Value));
-									addition.AddComponent(tmc);
 									break;
 								case "Texture":
 									if (tmc == null) {
@@ -360,6 +363,13 @@ namespace Hourglass {
 										addition.AddComponent(tmc);
 									}
 									tmc.SelectTexture(tmc.CheckForTexture(reader.Value));
+									break;
+								case "Emissive":
+									if(tmc == null) {
+										tmc = new TexturedMeshComponent();
+										addition.AddComponent(tmc);
+									}
+									tmc.SelectEmissive(tmc.CheckForEmissive(reader.Value));
 									break;
 								case "Position":
 									parts = reader.Value.Split(',');
@@ -374,9 +384,9 @@ namespace Hourglass {
 									break;
 								case "Rotation":
 									parts = reader.Value.Split(',');
-									point.X = float.Parse(parts[0]);
-									point.Y = float.Parse(parts[1]);
-									point.Z = float.Parse(parts[2]);
+									point.X = float.Parse(parts[0]) * RADIANS_TO_DEGREES;
+									point.Y = float.Parse(parts[1]) * RADIANS_TO_DEGREES; 
+									point.Z = float.Parse(parts[2]) * RADIANS_TO_DEGREES;
 									if (collider) {
 										col.Shape.Rotation = point;
 									} else {
@@ -455,6 +465,7 @@ namespace Hourglass {
 									col.Drag = float.Parse(reader.Value);
 									break;
 								default:
+									Debug.Print(element + " | " + reader.Value);
 									break;
 							}
 							break;
@@ -493,11 +504,10 @@ namespace Hourglass {
 				Component com = null;
 				switch (compType) {
 					case (short)Component.ComponentType.Code:
-						// TODO: Code components
+						com = new CodeComponent();
 						break;
 					case (short)Component.ComponentType.Transform:
-						b.GetComponents()[0].ReadData(r, _version);
-						n.Text = ((TransformComponent)b.GetComponents()[0]).Name;
+						com = b.GetComponents()[0];
 						break;
 					case (short)Component.ComponentType.BoxCollider:
 						com = new BoxCollider();
@@ -521,7 +531,7 @@ namespace Hourglass {
 						com = new SoundComponent();
 						break;
 					default:
-						Debug.Print("An unexpected component type has bee found. This may indicate corruption: " + compType);
+						Debug.Print("An unexpected component type has been found. This may indicate corruption: " + compType);
 						break;
 				}
 				if(com != null) {

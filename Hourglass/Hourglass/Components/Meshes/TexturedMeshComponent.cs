@@ -155,10 +155,20 @@ namespace Hourglass
             return CheckForValue(mTexture, _object);
         }
 
+		public int CheckForEmissive(string _object) {
+			return CheckForValue(mEmissive, _object);
+		}
+
         public void SelectTexture(int _index) {
             if(_index > 0 && _index < mTexture.Items.Count) {
                 mTexture.SelectedIndex = _index;
             }
         }
-    }
+
+		public void SelectEmissive(int _index) {
+			if (_index > 0 && _index < mEmissive.Items.Count) {
+				mEmissive.SelectedIndex = _index;
+			}
+		}
+	}
 }
