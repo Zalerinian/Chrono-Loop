@@ -105,7 +105,10 @@ namespace Epoch {
 				if ((*it)->mComponents[eCOMPONENT_COLLIDER].size() > 0)
 				{
 					Physics::Instance()->mObjects.push_back((*it));
-					if (((Collider*)(*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mShouldMove || ((*it)->Flags & BaseObject_Flag_Record_In_Timeline) != 0)
+					if (((Collider*)(*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mShouldMove || ((*it)->Flags & BaseObject_Flag_Record_In_Timeline) != 0 ||
+						// Bootleg loading for the XML files
+						// TODO: remove this
+						(*it)->GetName() == "TransparentDoor1" || (*it)->GetName() == "TransparentDoor2")
 					{
 						TimeManager::Instance()->AddObjectToTimeline(*it);
 					}
