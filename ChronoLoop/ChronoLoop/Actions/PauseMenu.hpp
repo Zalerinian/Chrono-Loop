@@ -316,7 +316,7 @@ namespace Epoch
 					} else if (RaycastToMenu(&pHubworld, &mcHubworld, true)) {
 						mActiveMenu = HUBWORLD;
 						SwitchPanel(&mActiveMenu);
-					} else if (RaycastToMenu(&pRestartLevel, &mcRestartLevel, false)) {
+					} else if (RaycastToMenu(&pRestartLevel, &mcRestartLevel, true)) {
 						mActiveMenu = RESTART;
 						SwitchPanel(&mActiveMenu);
 					} else if (RaycastToMenu(&pAudio, &mcAudio, true)) {
