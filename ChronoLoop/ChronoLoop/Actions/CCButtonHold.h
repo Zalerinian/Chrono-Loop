@@ -14,6 +14,7 @@ namespace Epoch
 	struct CCButtonHold : public CodeComponent
 	{
 		bool colliding = false, mhitting = false, mCanDoorInterp = false, mDoorDoneInterpolating = false, mFlip = false, mSoundOnce = false;;
+		bool tempDoor = false;
 		BaseObject *Block = nullptr, *Exit = nullptr;
 		CubeCollider* blockCube, *exitCube;
 		matrix4 blockend, exitend , blockstart, exitstart;
@@ -55,18 +56,21 @@ namespace Epoch
 				if (butCol->mPushNormal * _other.mVelocity < .1f)
 					_col.mVelocity = vec3f(0, 0, 0);
 
-				blockInterp->SetActive(true);
-				blockInterp->Prepare(0.69f, blockCube->GetTransform().GetMatrix(), blockend, blockCube->GetTransform().GetMatrix());
+				if (!tempDoor) {
+					blockInterp->SetActive(true);
+					blockInterp->Prepare(0.69f, blockCube->GetTransform().GetMatrix(), blockend, blockCube->GetTransform().GetMatrix());
 
-				//exitCube->SetPos(exitend);
-				exitInterp->SetActive(true);
-				exitInterp->Prepare(0.69f, exitCube->GetTransform().GetMatrix(), exitend, exitCube->GetTransform().GetMatrix());
+					//exitCube->SetPos(exitend);
+					exitInterp->SetActive(true);
+					exitInterp->Prepare(0.69f, exitCube->GetTransform().GetMatrix(), exitend, exitCube->GetTransform().GetMatrix());
 
-				((Collider*)blockCube->GetBaseObject()->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(blockend.Position);
-				((Collider*)exitCube->GetBaseObject()->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(exitend.Position);
+					((Collider*)blockCube->GetBaseObject()->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(blockend.Position);
+					((Collider*)exitCube->GetBaseObject()->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(exitend.Position);
 
-				mCanDoorInterp = true;
-				mDoorDoneInterpolating = false;
+					mCanDoorInterp = true;
+					mDoorDoneInterpolating = false;
+					tempDoor = true;
+				}
 
 				// Sound 
 				if (!mSoundOnce) {
@@ -120,6 +124,7 @@ namespace Epoch
 				}
 				else
 				{
+					tempDoor = false;
 					//SystemLogger::GetLog() << "Not Colliding" << std::endl;
 					if(mFlip)
 					{

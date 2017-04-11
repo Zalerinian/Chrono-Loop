@@ -95,7 +95,7 @@ namespace Epoch {
 								for (unsigned int i = 0; i < mClones.size(); i++) {
 									if (mClones[i]->GetUniqueId() == temp->mNext->mData.mControllerId) {
 										if (DoesCloneExist(mClones[i]->GetUniqueId(), mLevelTime)) {
-											//SystemLogger::GetLog() << "Clone:" << "id " << temp->mData.mControllerId << " " << temp->mNext->mData.mButton << ':' << temp->mNext->mData.mButtonState << std::endl;
+											SystemLogger::GetLog() << "Clone:" << "id " << temp->mData.mControllerId << " " << temp->mNext->mData.mButton << ':' << temp->mNext->mData.mButtonState << std::endl;
 										} else {
 											//SystemLogger::GetLog() << "Found false" << std::endl;
 										}
@@ -551,9 +551,6 @@ namespace Epoch {
 			else {
 				mShouldPulse = false;
 			}
-
-		
-
 		}
 		void TimeManager::MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC) {
 			mTimeline->MoveAllObjectsToSnapExceptPlayer(_snaptime, _headset, _leftC, _rightC);

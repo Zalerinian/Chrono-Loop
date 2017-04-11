@@ -89,7 +89,6 @@ namespace Epoch
 					BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
 					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
-					rightRaycaster->SetAlpha(0.4f);
 					mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 					TeleportAction *ta = new TeleportAction(eControllerType_Primary);
 					TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
@@ -254,7 +253,6 @@ namespace Epoch
 					BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
-					leftRaycaster->SetAlpha(0.4f);
 					mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 					TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
 					LeftController->AddComponent(mc2);
