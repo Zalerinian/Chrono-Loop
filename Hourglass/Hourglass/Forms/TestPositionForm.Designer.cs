@@ -110,6 +110,7 @@
 			this.label18 = new System.Windows.Forms.Label();
 			this.label19 = new System.Windows.Forms.Label();
 			this.gbMeshComponent = new System.Windows.Forms.GroupBox();
+			this.numericUpDown10 = new System.Windows.Forms.NumericUpDown();
 			this.cbMeshTexture = new System.Windows.Forms.ComboBox();
 			this.cbMeshObject = new System.Windows.Forms.ComboBox();
 			this.label20 = new System.Windows.Forms.Label();
@@ -119,7 +120,6 @@
 			this.cbColoredMeshObject = new System.Windows.Forms.ComboBox();
 			this.label21 = new System.Windows.Forms.Label();
 			this.label22 = new System.Windows.Forms.Label();
-			this.numericUpDown10 = new System.Windows.Forms.NumericUpDown();
 			this.gbCollider.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.udKineticFriction)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.udStaticFriction)).BeginInit();
@@ -157,8 +157,8 @@
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown13)).BeginInit();
 			this.gbTransform.SuspendLayout();
 			this.gbMeshComponent.SuspendLayout();
-			this.groupBox1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown10)).BeginInit();
+			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// gbCollider
@@ -1202,6 +1202,13 @@
 			this.gbMeshComponent.Text = "[]Mesh Component";
 			this.gbMeshComponent.Visible = false;
 			// 
+			// numericUpDown10
+			// 
+			this.numericUpDown10.Location = new System.Drawing.Point(90, 39);
+			this.numericUpDown10.Name = "numericUpDown10";
+			this.numericUpDown10.Size = new System.Drawing.Size(120, 20);
+			this.numericUpDown10.TabIndex = 10;
+			// 
 			// cbMeshTexture
 			// 
 			this.cbMeshTexture.FormattingEnabled = true;
@@ -1287,13 +1294,6 @@
 			this.label22.TabIndex = 1;
 			this.label22.Text = "Color";
 			// 
-			// numericUpDown10
-			// 
-			this.numericUpDown10.Location = new System.Drawing.Point(90, 39);
-			this.numericUpDown10.Name = "numericUpDown10";
-			this.numericUpDown10.Size = new System.Drawing.Size(120, 20);
-			this.numericUpDown10.TabIndex = 10;
-			// 
 			// TestPositionForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1358,9 +1358,9 @@
 			this.gbTransform.PerformLayout();
 			this.gbMeshComponent.ResumeLayout(false);
 			this.gbMeshComponent.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDown10)).EndInit();
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDown10)).EndInit();
 			this.ResumeLayout(false);
 
         }

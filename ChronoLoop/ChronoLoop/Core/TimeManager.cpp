@@ -50,7 +50,7 @@ namespace Epoch {
 	void TimeManager::Update(float _delta) {
 	
 		mDeltaTime = _delta;
-
+		mTotalGameTime += _delta;
 		if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator() != nullptr) {
 
 			if (!LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->isTimePaused()) {

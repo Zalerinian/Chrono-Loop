@@ -17,7 +17,6 @@
 #include "../Actions/CCBoxSpin.h"
 #include "../Actions/CCExit.h"
 #include "../Actions/CCStartButton.h"
-#include "../Actions/TimelineIndicator.hpp"
 #include "../Objects/MeshComponent.h"
 #include "../tinyxml/tinyxml.h"
 #include "../tinyxml/tinystr.h"
@@ -332,7 +331,7 @@ namespace Epoch {
 					vec3f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity, particleRadius, startColor, endColor;
 					float mass, elasticity, staticF, kineticF, normF, drag, radius, startSize, endSize, startAlpha, endAlpha;
 					int totalParticles, maxParticles, PPS, lifeTime;
-					bool collider = false, trigger = false, canMove = false, physical = false, particle = false, sound = false, SFX = false, Loop = false;
+					bool collider = false, trigger = false, canMove = false, canPickUp = false, physical = false, particle = false, sound = false, SFX = false, Loop = false;
 					unsigned long sfxFile, playFile, pauseFile, stopFile, resumeFile;
 					pData = pObject->FirstChildElement();
 					while (pData)
@@ -419,6 +418,11 @@ namespace Epoch {
 							{
 								std::string temp(pData->Value());
 								canMove = temp.find("True") != std::string::npos;
+							}
+							else if(elementType == "PickUp")
+							{
+								std::string temp(pData->Value());
+								canPickUp = temp.find("True") != std::string::npos;
 							}
 							else if (elementType == "Type")
 								colliderType = pData->Value();
@@ -620,7 +624,7 @@ namespace Epoch {
 						CCBoxSpin* spin = new CCBoxSpin();
 						obj->AddComponent(spin);
 					}
-					else if (name == "cube.001" || name == "cube.002" || name == "cube.003" || name == "cube.004")
+					else if (name == "cube.001" || name == "cube.002" || name == "cube.003" || name == "cube.004" || name == "cube")
 					{
 						Emitter* e = new SFXEmitter();
 						((SFXEmitter*)e)->SetEvent(AK::EVENTS::SFX_BOUNCEEFFECTS);
@@ -758,6 +762,7 @@ namespace Epoch {
 						vec3f min = colliderPosition - offset;
 						vec3f max = colliderPosition + offset;
 						CubeCollider* col = new CubeCollider(obj, canMove, trigger, gravity, mass, elasticity, staticF, kineticF, drag, min, max);
+						col->mPickUpAble = canPickUp;
 						obj->AddComponent(col);
 					}
 					else if (colliderType == "Sphere")
@@ -765,6 +770,7 @@ namespace Epoch {
 						physical = true;
 
 						SphereCollider* col = new SphereCollider(obj, canMove, trigger, gravity, mass, elasticity, staticF, kineticF, drag, radius);
+						col->mPickUpAble = canPickUp;
 						obj->AddComponent(col);
 					}
 					else if (colliderType == "Button")

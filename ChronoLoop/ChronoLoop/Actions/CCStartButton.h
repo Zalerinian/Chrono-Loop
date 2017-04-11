@@ -48,6 +48,8 @@ namespace Epoch
 			l = new Listener();
 			mChamberObject->AddComponent(l);
 			AudioWrapper::GetInstance().AddListener(l, "shit");
+
+			((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 2))->CallEvent(Emitter::EventType::ePlay);
 		}
 
 		virtual void OnCollision(Collider& _col1, Collider& _col2, float _time)
@@ -96,11 +98,11 @@ namespace Epoch
 		virtual void Update()
 		{
 
-			if (!AudioToggle)
-			{
-				AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::PLAY_HUB0);
-				AudioToggle = true;
-			}
+			//if (!AudioToggle)
+			//{
+			//	//AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::PLAY_HUB0);
+			//	AudioToggle = true;
+			//}
 
 			if (mBooped)
 			{
@@ -133,6 +135,12 @@ namespace Epoch
 				((ButtonCollider*)mExitButton->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mExitButton->GetTransform().GetMatrix().fourth.y - .2f;
 				((ButtonCollider*)mExitButton->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mExitButton->GetTransform().GetMatrix().fourth.y - .2f;
 
+				if (!AudioToggle)
+				{
+					((SFXEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+					((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::EventType::ePlay);
+					AudioToggle = true;
+				}
 				bool complete = mPlayerInterp->Update(TimeManager::Instance()->GetDeltaTime());
 				if (complete)
 				{

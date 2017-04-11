@@ -12,7 +12,7 @@ namespace Epoch {
 		MeshComponent *mesh = nullptr;
 		float mErrorTimer = 3.0f, mFrameRate = 1.0f / 60.0f, mTweenTime = 0;
 
-		CCAnimationController(unsigned int _framesWide = 1, unsigned int _framesTall = 1, unsigned int _frameCount = 0, float _frameRate = 1.0f / 60.0f) {
+		CCAnimationController(unsigned int _framesWide = 1, unsigned int _framesTall = 1, unsigned int _frameCount = 1, float _frameRate = 1.0f / 60.0f) {
 			mData.currentFrame = 0;
 			mData.framesWide = _framesWide;
 			mData.framesTall = _framesTall;

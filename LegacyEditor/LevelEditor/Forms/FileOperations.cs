@@ -99,6 +99,7 @@ namespace LevelEditor {
                             writer.WriteElementString("Scale", tObj.Collider.Scale.X + "," + tObj.Collider.Scale.Y + "," + tObj.Collider.Scale.Z);
                         }
                         writer.WriteElementString("Move", tObj.Collider.CanMove ? "True" : "False");
+                        writer.WriteElementString("PickUp", tObj.Collider.PickUp ? "True" : "False");
                         if (tObj.ColliderType == "Sphere" || tObj.ColliderType == "OBB") {
                             writer.WriteElementString("Gravity", tObj.Collider.Gravity.X + "," + tObj.Collider.Gravity.Y + "," + tObj.Collider.Gravity.Z);
                             writer.WriteElementString("Mass", tObj.Collider.Mass.ToString());
@@ -325,6 +326,9 @@ namespace LevelEditor {
                                         case "Move":
                                             addition.Collider.CanMove = reader.Value == "True";
                                             break;
+                                        case "PickUp":
+                                            addition.Collider.PickUp = reader.Value == "True";
+                                        break;
                                         case "Mass":
                                             addition.Collider.Mass = float.Parse(reader.Value);
                                             break;

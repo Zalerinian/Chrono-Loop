@@ -8,7 +8,7 @@
 #include "..\Input\VRInputManager.h"
 #include "..\Core\LevelManager.h"
 
-#define DEBUG_LEVEL1 0
+#define DEBUG_LEVEL1 1
 #define DEBUG_LEVEL2 0
 
 namespace Epoch
@@ -1035,7 +1035,8 @@ namespace Epoch
 									otherCol = (Collider*)otherColliders[k];
 									if (otherCol->mIsEnabled)
 									{
-										if (otherCol->mShouldMove)
+										//if physics is being applied to an object, or if object is pick upable we still want to add it to mHitting of the controller
+										if (otherCol->mShouldMove || otherCol->mPickUpAble)
 										{
 											if (otherCol->mColliderType == Collider::eCOLLIDER_Cube)
 											{

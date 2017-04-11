@@ -37,11 +37,8 @@ namespace Epoch
 	
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip) && !Settings::GetInstance().GetBool("PauseMenuUp")) {
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
-			//bool paused = false;
-			//if (cLevel->GetPauseMenu() != nullptr) {
-			//	paused = cLevel->GetPauseMenu()->isPauseMenuOn();
-			//}
-			//if (!paused) {
+			
+			
 				if (mPauseTime) {
 					// Resume Time
 
@@ -103,16 +100,12 @@ namespace Epoch
 
 
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Touchpad)) {
-			bool paused = false;
+			
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
-			if (cLevel->GetTimeManipulator() != nullptr ) {
-				paused = cLevel->GetTimeManipulator()->isTimePaused();
-			}
-
 			// Accept timeline position
-			if (paused) {
-			
+			if (mPauseTime) {
+				mPauseTime = false;
 				vec2f finalRatios(0, 0);
 				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
 				mDesaturationInterpolator.SetActive(true);
@@ -209,28 +202,22 @@ namespace Epoch
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Trigger))
 		{
 			//toggle to have clone turn on or off
-			if (mPauseTime)
-			{
-				if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck() == false)
-				{
-				mIsBeingMade = !mIsBeingMade;	
-				}
+			if (mPauseTime) {
+				if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck() == false) {
+					mIsBeingMade = !mIsBeingMade;
 
-				if(mCurCloneController1 && mCurCloneController2 && mCurCloneHeadset)
-				{
-					if(mIsBeingMade)
-					{
-						((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
-						((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
-						((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
-						SystemLogger::GetLog() << "Opaque" << std::endl;
-					}
-					else
-					{
-						((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
-						((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
-						((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
-						SystemLogger::GetLog() << "Transparent" << std::endl;
+					if (mCurCloneController1 && mCurCloneController2 && mCurCloneHeadset) {
+						if (mIsBeingMade) {
+							((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+							((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+							((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+							SystemLogger::GetLog() << "Opaque" << std::endl;
+						} else {
+							((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
+							((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
+							((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
+							SystemLogger::GetLog() << "Transparent" << std::endl;
+						}
 					}
 				}
 			}
