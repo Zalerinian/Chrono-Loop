@@ -9,7 +9,7 @@ struct GSOutput
 };
 
 //TODO: VERY IMPORTANT-- ONLY SUPPORTS STRIPS OF SPRITES FOR ANIMATION
-cbuffer TextureData : register(b0)
+cbuffer TextureData : register(b1)
 {
     float4 offsetx;
     float4 offsety;
