@@ -149,6 +149,9 @@ namespace Epoch {
 										VRInputManager::GetInstance().GetPlayerPosition()[3][0] += fwd[0] * objMat.xAxis[0]; // x
 										VRInputManager::GetInstance().GetPlayerPosition()[3][2] += fwd[2] * objMat.zAxis[2]; // z
 
+										if (Settings::GetInstance().GetInt("tutStep") == 1)//Teleported
+											Settings::GetInstance().SetInt("tutStep", 2);//Pick up object
+
 										if (mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1) != nullptr && dynamic_cast<SFXEmitter*>(mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
 											((SFXEmitter*)mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
 									}

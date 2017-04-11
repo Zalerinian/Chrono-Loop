@@ -28,6 +28,4 @@ namespace Epoch {
 		virtual void ReleaseObject();
 	};
 
-	
-
 } // Epoch Namespace
