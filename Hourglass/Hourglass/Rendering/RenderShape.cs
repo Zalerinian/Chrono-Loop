@@ -13,7 +13,37 @@ namespace Hourglass
 		public enum ShapeType { Textured = 0, Colored };
 		protected ShapeType mType;
 		private object mTag;
+        protected Vector3 mPosition, mRotation, mScale;
 
+        public Vector3 Position {
+            get {
+                return mPosition;
+            }
+            set {
+                mPosition = value;
+                RebuildMatrix();
+            }
+        }
+
+        public Vector3 Rotation {
+            get {
+                return mRotation;
+            }
+            set {
+                mRotation = value;
+                RebuildMatrix();
+            }
+        }
+
+        public Vector3 Scale {
+            get {
+                return mScale;
+            }
+            set {
+                mScale = value;
+                RebuildMatrix();
+            }
+        }
 
 		public object Tag {
 			get {
@@ -86,6 +116,14 @@ namespace Hourglass
 		public abstract void Dispose();
 		public abstract bool CheckRaycast(Vector3 _start, Vector3 _dir, out float _time);
 
+        private void RebuildMatrix() {
+            mWorld = Matrix.Identity;
+            mWorld.RotateX(mRotation.X);
+            mWorld.RotateZ(mRotation.Z);
+            mWorld.RotateY(mRotation.Y);
+            mWorld.Translate(mPosition);
+            mWorld.Scale(mScale);
+        }
 
 		public bool RayToTriangle(Vector3 _v1, Vector3 _v2, Vector3 _v3, Vector3 _norm, Vector3 _start, Vector3 _dir, out float _time)
 		{
@@ -93,11 +131,13 @@ namespace Hourglass
 			Centroid.Multiply(1.0f / 3.0f);
 			Centroid -= _start;
 
-			if (Vector3.Dot(_norm, _dir) > 0 || Vector3.Dot(Centroid, _norm) > 0)
-			{
-				_time = 0;
-				return false;
-			}
+			// These early-outs are to ensure the triangle is facing toward the ray's start, but we want
+			// to raycast to objects no matter where they're facing for the editor (for things such as planes, with only one side).
+			//if (Vector3.Dot(_norm, _dir) > 0 || Vector3.Dot(Centroid, _norm) > 0)
+			//{
+			//	_time = 0;
+			//	return false;
+			//}
 
 			Vector3 sa = _v1 - _start,
 				sb = _v2 - _start,
