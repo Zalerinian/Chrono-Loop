@@ -37,11 +37,8 @@ namespace Epoch
 	
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip) && !Settings::GetInstance().GetBool("PauseMenuUp")) {
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
-			//bool paused = false;
-			//if (cLevel->GetPauseMenu() != nullptr) {
-			//	paused = cLevel->GetPauseMenu()->isPauseMenuOn();
-			//}
-			//if (!paused) {
+			
+			
 				if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 7)) //created clone
 				{
 					// Resume Time
@@ -109,15 +106,11 @@ namespace Epoch
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Touchpad) 
 			&& (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 5))//Created Clone 
 		{
-			bool paused = false;
+			
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
-			if (cLevel->GetTimeManipulator() != nullptr ) {
-				paused = cLevel->GetTimeManipulator()->isTimePaused();
-			}
-
 			// Accept timeline position
-			if (paused) {
+			if (mPauseTime) {
 				if (Settings::GetInstance().GetInt("tutStep") == 6)//accepted time
 					Settings::GetInstance().SetInt("tutStep", 7);//delete clone
 				vec2f finalRatios(0, 0);
@@ -234,13 +227,6 @@ namespace Epoch
 						((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
 						((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
 						SystemLogger::GetLog() << "Opaque" << std::endl;
-					}
-					else
-					{
-						((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
-						((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
-						((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
-						SystemLogger::GetLog() << "Transparent" << std::endl;
 					}
 				}
 			}

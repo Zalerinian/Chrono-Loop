@@ -95,7 +95,7 @@ namespace Epoch {
 		vr::VREvent_t tempEvent;
 		bool paused = false;
 		if (cLevel->GetTimeManipulator() != nullptr) {
-			bool paused= cLevel->GetTimeManipulator()->isTimePaused();
+			paused= cLevel->GetTimeManipulator()->isTimePaused();
 		}
 		//if there is a event avaliable and the game is focused
 		while (mVRSystem->PollNextEvent(&tempEvent, sizeof(tempEvent)) && !mVRSystem->IsInputFocusCapturedByAnotherProcess() && (!paused)) {
@@ -147,37 +147,35 @@ namespace Epoch {
 		while (temp) {
 			//Have reached the point we want to stop
 			if (temp->mData.mLastFrame < _frame) {
-				if ((temp->mData.mControllerId == _id1 || temp->mData.mControllerId == _id2) && temp->mData.mButtonState == -1)
-				{
+				if ((temp->mData.mControllerId == _id1 || temp->mData.mControllerId == _id2) && temp->mData.mButtonState == -1) {
 					temp->mData.mButtonState = 1;
-					if (temp->mPrev && (temp->mPrev->mData.mControllerId == _id1 || temp->mPrev->mData.mControllerId == _id2) && temp->mPrev->mData.mButtonState == -1)
-					{
+					if (temp->mPrev && (temp->mPrev->mData.mControllerId == _id1 || temp->mPrev->mData.mControllerId == _id2) && temp->mPrev->mData.mButtonState == -1) {
 						temp->mPrev->mData.mButtonState = 1;
 					}
 				}
-					
-
 				break;
 			}
-			//Delete old controller input
-			if (temp->mData.mControllerId == _id1 || temp->mData.mControllerId == _id2) {
-				InputTimeline::InputNode* del = temp;
-				if (temp->mPrev) {
-					temp = temp->mPrev;
-					temp->mNext = del->mNext;
-					if (del->mNext)
-						del->mNext->mPrev = temp;
-				} else {
-					temp = nullptr;
-				}
-				delete del;
-			} else if (temp->mPrev) {
-				temp = temp->mPrev;
-			} else
-				break;
 
+				//Delete old controller input
+				if (temp->mData.mControllerId == _id1 || temp->mData.mControllerId == _id2) {
+					InputTimeline::InputNode* del = temp;
+					if (temp->mPrev) {
+						temp = temp->mPrev;
+						temp->mNext = del->mNext;
+						if (del->mNext)
+							del->mNext->mPrev = temp;
+					} else {
+						temp = nullptr;
+					}
+					delete del;
+				} else if (temp->mPrev) {
+					temp = temp->mPrev;
+				} else
+					break;
+			
 			mInputTimeline->SetCurr(temp);
 		}
+		//mInputTimeline->DisplayTimeline();
 	}
 
 	void VIM::MoveInputTimeline(unsigned int _frame) {

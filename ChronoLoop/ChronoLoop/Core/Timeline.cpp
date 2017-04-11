@@ -375,7 +375,6 @@ namespace Epoch {
 		if (mObjectLifeTimes.find(_id1) != mObjectLifeTimes.end()) {
 			ObjectLifeTime* newObject = mObjectLifeTimes[_id1];
 			newObject->mDeath = mSnaptimes[mCurrentGameTimeIndx];
-			//TODO PAT: Record 1 more snap with this component in it and record death of its componets
 		}
 
 		if (mObjectLifeTimes.find(_id2) != mObjectLifeTimes.end()) {
@@ -676,15 +675,6 @@ namespace Epoch {
 		return _info;
 	}
 
-	//SnapInfoPlayer * Timeline::GenerateSnapInfoPlayer() {
-	//	SnapInfoPlayer* snapP = new SnapInfoPlayer(
-	//		*RenderEngine::Renderer::Instance()->GetPlayerWorldPos(),//Player World Matrix
-	//		Math::FromMatrix(VRInputManager::Instance().GetController(true).GetPose().mDeviceToAbsoluteTracking),//Left Controller World Matrix
-	//		Math::FromMatrix(VRInputManager::Instance().GetController(false).GetPose().mDeviceToAbsoluteTracking));//Right Controller World Matrix
-	//
-	//	return snapP;
-	//}
-
 
 	Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*> & _clones) {
 		Snapshot* snap;
@@ -704,7 +694,6 @@ namespace Epoch {
 		}
 
 		//If first snapshot taken
-
 		//TODO PAT: break up the logic loop here and 
 		if (mSnapshots.size() == 0) {
 			for (std::pair<unsigned short, BaseObject*> _b : mLiveObjects) {

@@ -36,7 +36,7 @@ namespace Epoch
 			struct
 			{
 				bool mWrap;
-				float mSpeed;
+				float mSpeed[2];
 			};
 			struct
 			{
@@ -133,7 +133,8 @@ namespace Epoch
 		Texture mTextures[3];
 		struct
 		{
-			float types[4];
+			float xoff[4];
+			float yoff[4];
 		} mPSData;
 
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mVBuffer, mPBuffer;
@@ -168,12 +169,13 @@ namespace Epoch
 		virtual ~ParticleEmitter();
 
 		ID3D11Buffer* GetVertexBuffer();
+		ID3D11Buffer* GetPixelBuffer();
 		ID3D11ShaderResourceView* GetTexture(int _index = 0);
 		int GetVertexCount();
 
 		void SetTexture(const char* _tex, int _index = 0);
-		void SetTexture(const char* _tex, bool _animate, float offset,int _frames, int _index = 0);
-		void SetTexture(const char* _tex, bool _wrap, float _speed, int _index = 0);
+		void SetTexture(const char* _tex, bool _animate, int _frames, float offset, int _index = 0);
+		void SetTexture(const char* _tex, bool _wrap, float _speedx, float _speedy, int _index = 0);
 		virtual void SetParticle(Particle* _p);
 		void SetPosBounds(vec3f _min, vec3f _max);
 		void SetVelBounds(vec3f _min, vec3f _max);

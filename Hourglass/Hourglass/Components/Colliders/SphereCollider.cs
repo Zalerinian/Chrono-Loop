@@ -97,6 +97,16 @@ namespace Hourglass
             OnMenuClick_Reset(null, null);
         }
 
+        public float Radius {
+            get {
+                return (float)mRadius.Value;
+            }
+            set {
+                mRadius.Value = (decimal)value;
+                mShape.Scale = new Microsoft.DirectX.Vector3(value, value, value);
+            }
+        }
+
         public override void OnMenuClick_Reset(object sender, EventArgs e)
         {
             base.OnMenuClick_Reset(sender, e);
@@ -115,9 +125,9 @@ namespace Hourglass
 			w.Write((float)mZ.Value);
 		}
 
-		public override void ReadData(BinaryReader r)
+		public override void ReadData(BinaryReader r, int _version)
 		{
-			base.ReadData(r);
+			base.ReadData(r, _version);
 			mRadius.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));

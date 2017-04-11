@@ -1,1 +1,3 @@
 *.suo
+/NthDimensionalSound/NthDimensional/.cache
+/NthDimensionalSound/NthDimensional/*.validationcache

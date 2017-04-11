@@ -1035,7 +1035,8 @@ namespace Epoch
 									otherCol = (Collider*)otherColliders[k];
 									if (otherCol->mIsEnabled)
 									{
-										if (otherCol->mShouldMove)
+										//if physics is being applied to an object, or if object is pick upable we still want to add it to mHitting of the controller
+										if (otherCol->mShouldMove || otherCol->mPickUpAble)
 										{
 											if (otherCol->mColliderType == Collider::eCOLLIDER_Cube)
 											{

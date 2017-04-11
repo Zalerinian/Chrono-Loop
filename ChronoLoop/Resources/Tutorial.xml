@@ -1,4 +1,4 @@
-<Level>
+﻿<Level>
   <Settings>
     <StartPos>3.5,0,0</StartPos>
     <StartRot>0,0,0</StartRot>
@@ -28,6 +28,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>1,1,1</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Normal>0,1,0</Normal>
         <Mass>100</Mass>
         <Elasticity>0.01</Elasticity>
@@ -49,6 +50,8 @@
       <ElasticPlane>Enabled</ElasticPlane>
       <AABBtoAABB>Enabled</AABBtoAABB>
       <ElasticPlane>Enabled</ElasticPlane>
+      <AABBtoAABB>Enabled</AABBtoAABB>
+      <ElasticPlane>Enabled</ElasticPlane>
       <Collider>
         <Type>OBB</Type>
         <Trigger>False</Trigger>
@@ -56,6 +59,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>1,1,1</Scale>
         <Move>True</Move>
+        <PickUp>True</PickUp>
         <Gravity>0,-9.810001,0</Gravity>
         <Mass>15</Mass>
         <Elasticity>0.3</Elasticity>
@@ -84,6 +88,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>1,1,1</Scale>
         <Move>True</Move>
+        <PickUp>True</PickUp>
         <Gravity>0,-9.810001,0</Gravity>
         <Mass>10</Mass>
         <Elasticity>0.4</Elasticity>
@@ -114,6 +119,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>1,1,1</Scale>
         <Move>True</Move>
+        <PickUp>True</PickUp>
         <Gravity>0,-9.810001,0</Gravity>
         <Mass>25</Mass>
         <Elasticity>0.1</Elasticity>
@@ -136,6 +142,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>1.9,3.6,10.9</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
         <Mass>100</Mass>
         <Elasticity>0.01</Elasticity>
@@ -158,6 +165,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>12.8,3.7,2.1</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
         <Mass>100</Mass>
         <Elasticity>0.01</Elasticity>
@@ -180,6 +188,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>11,3.8,2.2</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
         <Mass>100</Mass>
         <Elasticity>0.01</Elasticity>
@@ -202,6 +211,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>2.1,3.7,9.8</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
         <Mass>100</Mass>
         <Elasticity>0.01</Elasticity>
@@ -236,6 +246,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>0.3,2.9,2.7</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
         <Mass>0</Mass>
         <Elasticity>0</Elasticity>
@@ -269,6 +280,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>0.4,2.9,2.5</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
         <Mass>0</Mass>
         <Elasticity>0</Elasticity>
@@ -293,6 +305,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>0.4,1.8,0.4</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
         <Mass>50</Mass>
         <Elasticity>0.1</Elasticity>
@@ -318,6 +331,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>0.4,0.1,0.4</Scale>
         <Move>True</Move>
+        <PickUp>False</PickUp>
         <PushNormal>0,1,0</PushNormal>
         <Mass>2</Mass>
         <NormalForce>1</NormalForce>
@@ -366,6 +380,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>1,1,1</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
         <Mass>0</Mass>
         <Elasticity>0</Elasticity>
@@ -588,6 +603,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>2.1,1,1</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Normal>0,-1,0</Normal>
         <Mass>0</Mass>
         <Elasticity>0</Elasticity>
