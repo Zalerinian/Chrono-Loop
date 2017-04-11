@@ -277,9 +277,9 @@ namespace Hourglass {
 				startPos.Y = (float)reader.ReadInt32();
 				startPos.Z = (float)reader.ReadInt32();
 
-				startRot.X = (float)reader.ReadInt32();
-				startRot.Y = (float)reader.ReadInt32();
-				startRot.Z = (float)reader.ReadInt32();
+				startRot.X = (float)reader.ReadInt32() * RADIANS_TO_DEGREES;
+				startRot.Y = (float)reader.ReadInt32() * RADIANS_TO_DEGREES;
+				startRot.Z = (float)reader.ReadInt32() * RADIANS_TO_DEGREES;
 
 				Settings.StartPos = startPos;
 				Settings.StartRot = startRot;
