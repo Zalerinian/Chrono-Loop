@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using Microsoft.DirectX;
 
 namespace Hourglass
 {
@@ -107,7 +108,23 @@ namespace Hourglass
             }
         }
 
-        public override void OnMenuClick_Reset(object sender, EventArgs e)
+		public Vector3 Position {
+			get {
+				Vector3 v = new Vector3();
+				v.X = (float)mX.Value;
+				v.Y = (float)mY.Value;
+				v.Z = (float)mZ.Value;
+				return v;
+			}
+			set {
+				mX.Value = (decimal)value.X;
+				mY.Value = (decimal)value.Y;
+				mZ.Value = (decimal)value.Z;
+				Shape.Position = value;
+			}
+		}
+
+		public override void OnMenuClick_Reset(object sender, EventArgs e)
         {
             base.OnMenuClick_Reset(sender, e);
             mRadius.Value = 1;
