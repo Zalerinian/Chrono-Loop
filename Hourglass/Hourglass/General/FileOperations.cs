@@ -97,6 +97,7 @@ namespace Hourglass {
 				writer.Write(Settings.StartRot.Y * DEGREES_TO_RADIANS);
 				writer.Write(Settings.StartRot.Z * DEGREES_TO_RADIANS);
 
+                writer.Write(Settings.CloneMax);
 
 				// Level Objects
 				writer.Write((byte)0x4B);
@@ -280,7 +281,7 @@ namespace Hourglass {
 				startRot.X = (float)reader.ReadInt32();
 				startRot.Y = (float)reader.ReadInt32();
 				startRot.Z = (float)reader.ReadInt32();
-
+                Settings.CloneMax = (ushort)reader.ReadUInt16();
 				Settings.StartPos = startPos;
 				Settings.StartRot = startRot;
 
@@ -346,6 +347,9 @@ namespace Hourglass {
 									rot.Z = float.Parse(parts[2]) * RADIANS_TO_DEGREES;
 									Settings.StartRot = rot;
 									break;
+                                case "MaxClones":
+                                    Settings.CloneMax = ushort.Parse(reader.Value.Split(',')[0]);
+                                    break;
 								case "Name":
 									addition.Name = reader.Value;
 									break;

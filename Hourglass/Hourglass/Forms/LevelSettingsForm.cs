@@ -14,6 +14,7 @@ namespace Hourglass.Forms
     public partial class LevelSettingsForm : Form
     {
         private Vector3 mPos, mRot;
+        ushort mCloneMax;
 
         public LevelSettingsForm()
         {
@@ -26,6 +27,12 @@ namespace Hourglass.Forms
             mPos.Y = (float)nPY.Value;
             mPos.Z = (float)nPZ.Value;
             return mPos;
+        }
+
+        public ushort GetCloneMax()
+        {
+            mCloneMax = (ushort)nMaxClones.Value;
+            return mCloneMax;
         }
 
         public Vector3 GetRotation()
@@ -41,6 +48,11 @@ namespace Hourglass.Forms
             nPX.Value = (decimal)_pos.X;
             nPY.Value = (decimal)_pos.Y;
             nPZ.Value = (decimal)_pos.Z;
+        }
+
+        public void SetCloneMax(ushort _count)
+        {
+            nMaxClones.Value = _count;
         }
 
         public void SetRotation(Vector3 _rot)
