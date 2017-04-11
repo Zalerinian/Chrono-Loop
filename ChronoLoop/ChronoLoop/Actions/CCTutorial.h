@@ -15,9 +15,12 @@ namespace Epoch
 	{
 		std::vector<BaseObject*> boards;
 		BaseObject* button, *stand;
-
+		float scaleX, scaleY;
+		float tempScaleX, tempScaleY;
+		bool scalingDone;
 		virtual void Start()
 		{
+			scalingDone = false;
 			button = LevelManager::GetInstance().GetCurrentLevel()->FindObjectWithName("Button");
 			((ButtonCollider*)button->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->Disable();
 			((MeshComponent*)button->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
@@ -140,31 +143,113 @@ namespace Epoch
 				{
 					((MeshComponent*)boards[0]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
 
-					boards[0]->GetTransform().SetMatrix(matrix4::CreateZRotation(-1.5708f) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateTranslation(2, 1.5f, 0));
+					//boards[0]->GetTransform().SetMatrix(matrix4::CreateZRotation(-1.5708f) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateTranslation(2, 1.5f, 0));
+					scaleX = 0.05f;
+					scaleY = 0;
 				}
+				tempScaleX = scaleX;
+				tempScaleY = scaleY;
+				if (scaleY < 1.0f)
+					scaleY += 0.1f;
+				else if(scaleX < 1.0f)
+					scaleX += 0.05f;
+
+				if(tempScaleX != scaleX || tempScaleY != scaleY)
+					boards[0]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX,1, scaleY) * matrix4::CreateZRotation(-1.5708f) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateTranslation(2, 1.5f, 0));
+
 				break;
 			case 2://Pick Up
 				if (!((MeshComponent*)boards[1]->GetComponentIndexed(eCOMPONENT_MESH, 0))->IsVisible()) {
-					((MeshComponent*)boards[0]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 					((MeshComponent*)boards[1]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
-					
-					boards[1]->GetTransform().SetMatrix(matrix4::CreateZRotation(-1.5708f) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(0.785398f) * matrix4::CreateTranslation(-3.55f, 1.7f, 3.71f));
+					scalingDone = false;
+					scaleX = 1.0f;
+					scaleY = 1.0f;
+					boards[1]->GetTransform().SetMatrix(matrix4::CreateScale(0,0,1) * matrix4::CreateZRotation(-1.5708f) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(0.785398f) * matrix4::CreateTranslation(-3.55f, 1.7f, 3.71f));
 				}
+				tempScaleX = scaleX;
+				tempScaleY = scaleY;
+				if (!scalingDone) {
+					if (scaleX >= 0.05f)
+						scaleX -= 0.05f;
+					else if (scaleY >= 0.0f)
+						scaleY -= 0.1f;
+					boards[0]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY) * matrix4::CreateZRotation(-1.5708f) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateTranslation(2, 1.5f, 0));
+					if (scaleY <= 0.0f) {
+						((MeshComponent*)boards[0]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
+						scalingDone = true;
+					}
+				}
+				else
+				{
+					if (scaleY < 1.0f)
+						scaleY += 0.05f;
+					else if (scaleX < 1.0f)
+						scaleX += 0.05f;
+					if (tempScaleX != scaleX || tempScaleY != scaleY)
+						boards[1]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY)  * matrix4::CreateZRotation(-1.5708f) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(0.785398f) * matrix4::CreateTranslation(-3.55f, 1.7f, 3.71f));
+				}
+
+
+
 				break;
 			case 3://Pause Time
 				if (!((MeshComponent*)boards[2]->GetComponentIndexed(eCOMPONENT_MESH, 0))->IsVisible()) {
 					((MeshComponent*)boards[1]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 					((MeshComponent*)boards[2]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
-
-					boards[2]->GetTransform().SetMatrix(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
+					scalingDone = false;
+					scaleX = 1.0f;
+					scaleY = 1.0f;
+					boards[2]->GetTransform().SetMatrix(matrix4::CreateScale(0, 0, 1) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
+				}
+				tempScaleX = scaleX;
+				tempScaleY = scaleY;
+				if (!scalingDone) {
+					if (scaleX >= 0.05f)
+						scaleX -= 0.05f;
+					else if (scaleY >= 0.0f)
+						scaleY -= 0.1f;
+					boards[1]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY) * matrix4::CreateZRotation(-1.5708f) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(0.785398f) * matrix4::CreateTranslation(-3.55f, 1.7f, 3.71f));
+					if (scaleY <= 0.0f) {
+						((MeshComponent*)boards[1]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
+						scalingDone = true;
+					}
+				} else {
+					if (scaleY < 1.0f)
+						scaleY += 0.05f;
+					else if (scaleX < 1.0f)
+						scaleX += 0.05f;
+					if (tempScaleX != scaleX || tempScaleY != scaleY)
+						boards[2]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY)  * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
 				}
 				break;
 			case 4://Rewind
 				if (!((MeshComponent*)boards[3]->GetComponentIndexed(eCOMPONENT_MESH, 0))->IsVisible()) {
 					((MeshComponent*)boards[2]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 					((MeshComponent*)boards[3]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
-
-					boards[3]->GetTransform().SetMatrix(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
+					scalingDone = false;
+					scaleX = 1.0f;
+					scaleY = 1.0f;
+					boards[3]->GetTransform().SetMatrix(matrix4::CreateScale(0, 0, 1) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
+				}
+				tempScaleX = scaleX;
+				tempScaleY = scaleY;
+				if (!scalingDone) {
+					if (scaleX >= 0.05f)
+						scaleX -= 0.05f;
+					else if (scaleY >= 0.0f)
+						scaleY -= 0.1f;
+					boards[2]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
+					if (scaleY <= 0.0f) {
+						((MeshComponent*)boards[2]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
+						scalingDone = true;
+					}
+				} else {
+					if (scaleY < 1.0f)
+						scaleY += 0.05f;
+					else if (scaleX < 1.0f)
+						scaleX += 0.05f;
+					if (tempScaleX != scaleX || tempScaleY != scaleY)
+						boards[3]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY)  * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
 				}
 				break;
 			case 5://Creating Clone
@@ -172,9 +257,33 @@ namespace Epoch
 					((MeshComponent*)boards[3]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 					((MeshComponent*)boards[4]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
 					((MeshComponent*)boards[8]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
-
-					boards[4]->GetTransform().SetMatrix(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
-					boards[8]->GetTransform().SetMatrix(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 1.1f));
+					scalingDone = false;
+					scaleX = 1.0f;
+					scaleY = 1.0f;
+					boards[4]->GetTransform().SetMatrix(matrix4::CreateScale(0,0,1) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
+					boards[8]->GetTransform().SetMatrix(matrix4::CreateScale(0,0,1) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 1.1f));
+				}
+				tempScaleX = scaleX;
+				tempScaleY = scaleY;
+				if (!scalingDone) {
+					if (scaleX >= 0.05f)
+						scaleX -= 0.05f;
+					else if (scaleY >= 0.0f)
+						scaleY -= 0.1f;
+					boards[3]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
+					if (scaleY <= 0.0f) {
+						((MeshComponent*)boards[3]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
+						scalingDone = true;
+					}
+				} else {
+					if (scaleY < 1.0f)
+						scaleY += 0.05f;
+					else if (scaleX < 1.0f)
+						scaleX += 0.05f;
+					if (tempScaleX != scaleX || tempScaleY != scaleY) {
+						boards[4]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY)  * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
+						boards[8]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY)  * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 1.1f));
+					}
 				}
 				break;
 			case 6://Accepting Time / Canceling Time
@@ -183,9 +292,33 @@ namespace Epoch
 					((MeshComponent*)boards[8]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 					((MeshComponent*)boards[5]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
 					((MeshComponent*)boards[6]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
-
-					boards[5]->GetTransform().SetMatrix(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
-					boards[6]->GetTransform().SetMatrix(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 1.1f));
+					scalingDone = false;
+					scaleX = 1.0f;
+					scaleY = 1.0f;
+					boards[5]->GetTransform().SetMatrix(matrix4::CreateScale(0,0,1) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
+					boards[6]->GetTransform().SetMatrix(matrix4::CreateScale(0,0,1) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 1.1f));
+				}
+				if (!scalingDone) {
+					if (scaleX >= 0.05f)
+						scaleX -= 0.05f;
+					else if (scaleY >= 0.0f)
+						scaleY -= 0.1f;
+					boards[4]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY) * boards[4]->GetTransform().GetMatrix());
+					boards[8]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY) * boards[8]->GetTransform().GetMatrix());
+					if (scaleY <= 0.0f) {
+						((MeshComponent*)boards[4]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
+						((MeshComponent*)boards[8]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
+						scalingDone = true;
+					}
+				} else {
+					if (scaleY < 1.0f)
+						scaleY += 0.05f;
+					else if (scaleX < 1.0f)
+						scaleX += 0.05f;
+					if (tempScaleX != scaleX || tempScaleY != scaleY) {
+						boards[5]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY)  * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
+						boards[6]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY)  * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 1.1f));
+					}
 				}
 				break;
 			case 7://Delete Clone
@@ -193,8 +326,31 @@ namespace Epoch
 					((MeshComponent*)boards[5]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 					((MeshComponent*)boards[6]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 					((MeshComponent*)boards[7]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
-
-					boards[7]->GetTransform().SetMatrix(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
+					scalingDone = false;
+					scaleX = 1.0f;
+					scaleY = 1.0f;
+					boards[7]->GetTransform().SetMatrix(matrix4::CreateScale(0, 0, 1) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
+				}
+				if (!scalingDone) {
+					if (scaleX >= 0.05f)
+						scaleX -= 0.05f;
+					else if (scaleY >= 0.0f)
+						scaleY -= 0.1f;
+					boards[5]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY) * boards[5]->GetTransform().GetMatrix());
+					boards[6]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY) * boards[6]->GetTransform().GetMatrix());
+					if (scaleY <= 0.0f) {
+						((MeshComponent*)boards[5]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
+						((MeshComponent*)boards[6]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
+						scalingDone = true;
+					}
+				} else {
+					if (scaleY < 1.0f)
+						scaleY += 0.05f;
+					else if (scaleX < 1.0f)
+						scaleX += 0.05f;
+					if (tempScaleX != scaleX || tempScaleY != scaleY) {
+						boards[7]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY)  * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
+					}
 				}
 				break;
 			case 8://End
