@@ -220,6 +220,7 @@ namespace Epoch
 						85.33f, 0, 170.67f, 50.0f,
 						*mainFont, L"Main",
 						Draw::Instance().GetBitmap(texMainPanel.Get()));
+
 					//Settings Panel Rectangle
 					Draw::Instance().DrawRectangleToBitmap(
 						0, 0, 256.0f, 256.0f,

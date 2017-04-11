@@ -50,7 +50,7 @@ namespace Epoch {
 	void TimeManager::Update(float _delta) {
 	
 		mDeltaTime = _delta;
-
+		mTotalGameTime += _delta;
 		if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator() != nullptr) {
 
 			if (!LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->isTimePaused()) {
@@ -545,6 +545,9 @@ namespace Epoch {
 				mTimeline->PrepareAllObjectInterpolators(placeHolder, mtempCurSnapFrame);
 				mShouldUpdateInterpolators = true;
 				mShouldPulse = true;
+
+				if (Settings::GetInstance().GetInt("tutStep") == 4)//Rewind
+					Settings::GetInstance().SetInt("tutStep", 5);//Create Clone
 			}
 			else {
 				mShouldPulse = false;

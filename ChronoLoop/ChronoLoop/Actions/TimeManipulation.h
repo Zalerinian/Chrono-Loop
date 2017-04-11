@@ -22,7 +22,7 @@ namespace Epoch
 		Renderer::TimeManipulationEffectData mEffectData;
 		Interpolator<vec2f> mDesaturationInterpolator;
 		unsigned int HotfixButtonDown = 0;
-		unsigned int mCloneCount;
+		unsigned int mCloneCount = 0 ;
 		unsigned short mCurrTexture;
 		unsigned short mNumOfConfirmedClones = 0;
 		BaseObject* mCurCloneHeadset;

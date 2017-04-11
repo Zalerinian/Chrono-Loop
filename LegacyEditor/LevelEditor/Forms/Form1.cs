@@ -670,7 +670,7 @@ namespace LevelEditor
             }
         }
 
-    private void levelSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void levelSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Forms.LevelSettingsForm settings = new Forms.LevelSettingsForm();
             settings.SetPosition(mStartPos);
@@ -691,6 +691,7 @@ namespace LevelEditor
                 selectedCollider.IsSolid = !Trigger.Checked;
                 selectedCollider.CanMove = MoveCheck.Checked;
                 selectedCollider.Visible = visibleCheck.Checked;
+                selectedCollider.PickUp = PickUpCheck.Checked;
             }
         }
 
@@ -856,6 +857,7 @@ namespace LevelEditor
                 colorSelect.Visible = true;
                 Trigger.Visible = true;
                 MoveCheck.Visible = true;
+                PickUpCheck.Visible = true;
                 visibleCheck.Visible = true;
                 Physics.Visible = true;
                 ExtraVector.Visible = true;
@@ -881,6 +883,7 @@ namespace LevelEditor
 
                 MoveCheck.Checked = selectedCollider.CanMove;
                 visibleCheck.Checked = selectedCollider.Visible;
+                PickUpCheck.Checked = selectedCollider.PickUp;
                 colorSelect.BackColor = selectedCollider.ObjectColor;
 
                 if (colliderType == "Button")
@@ -933,6 +936,7 @@ namespace LevelEditor
                 Physics.Visible = false;
                 visibleCheck.Visible = false;
                 MoveCheck.Visible = false;
+                PickUpCheck.Visible = false;
                 nameBox.Text = selectedObject.Name;
                 posX.Value =    (decimal)selectedObject.Position.X;
                 posY.Value =    (decimal)selectedObject.Position.Y;
@@ -976,6 +980,7 @@ namespace LevelEditor
                 visibleCheck.Visible = false;
                 Physics.Visible = false;
                 MoveCheck.Visible = false;
+                PickUpCheck.Visible = false;
                 componetsCheck.ClearSelected();
                 for (int i = 0; i < 14; i++)
                     componetsCheck.SetItemChecked(i, false);

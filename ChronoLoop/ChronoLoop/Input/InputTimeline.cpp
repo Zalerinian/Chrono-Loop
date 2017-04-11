@@ -29,9 +29,10 @@ namespace Epoch {
 	}
 
 	void InputTimeline::Insert(InputNode * _data) {
-		//DisplayTimeline();
+		
 		if (!mCurrent) {
 			Push_back(_data);
+			//DisplayTimeline();
 			return;
 		}
 
@@ -43,6 +44,7 @@ namespace Epoch {
 			_data->mPrev = nullptr;
 			mCurrent = _data;
 			mHead = _data;
+			//DisplayTimeline();
 			return;
 		}
 
@@ -51,6 +53,7 @@ namespace Epoch {
 			//Move Current pointer if we don't have a next so we can continue to record.
 			if ((_data->mData.mLastFrame > temp->mData.mLastFrame || (_data->mData.mLastFrame == temp->mData.mLastFrame && _data->mData.mTime > temp->mData.mTime)) && !temp->mNext) {
 				Push_back(_data);
+				//DisplayTimeline();
 				return;
 			}
 			//if less than current but there is no next. This may happen if button spams quickly and steam vr event system gives you out of order event times
@@ -66,6 +69,7 @@ namespace Epoch {
 					_data->mPrev = temp->mPrev;
 					temp->mNext = nullptr;
 					mHead = _data;
+					//DisplayTimeline();
 					return;
 				}
 				if(temp->mPrev)
@@ -74,6 +78,7 @@ namespace Epoch {
 					_data->mNext = temp;
 					_data->mPrev = temp->mPrev;
 					temp->mNext = nullptr;
+					//DisplayTimeline();
 					return;
 				}
 			}
@@ -84,6 +89,7 @@ namespace Epoch {
 				_data->mNext = temp->mNext;
 				_data->mPrev = temp;
 				temp->mNext = _data;
+				//DisplayTimeline();
 				return;
 			}
 			//Increment further in the tree because 

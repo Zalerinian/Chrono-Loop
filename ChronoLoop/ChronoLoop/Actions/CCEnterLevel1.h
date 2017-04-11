@@ -12,6 +12,7 @@
 #include "..\Actions\UICreateToDeleteClone.h"
 #include "..\Actions\UIClonePlusToMinus.h"
 #include "..\Actions\UICloneText.h"
+
 #include "..\Actions\BoxSnapToControllerAction.hpp"
 #include "..\Actions\TeleportAction.hpp"
 #include "..\Actions\PauseMenu.hpp"
@@ -23,6 +24,7 @@
 #include "..\Rendering\TextureManager.h"
 #include <wrl\client.h>
 #include "../../Resources/Soundbanks/Wwise_IDs.h"
+#include "DirectXMath.h"
 
 
 namespace Epoch
@@ -86,7 +88,6 @@ namespace Epoch
 
 					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), false);
 					BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
-					((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
 					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
@@ -251,7 +252,6 @@ namespace Epoch
 					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), true);
 					BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
-					((BoxSnapToControllerAction*)pickup2)->mControllerRole = eControllerType_Secondary;
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
@@ -274,11 +274,19 @@ namespace Epoch
 					headset->AddComponent(ears);
 					PauseMenu* pauseComp = new PauseMenu();
 					headset->AddComponent(pauseComp);
-					//TODO PAT: UNcomment this when raymond gets sounds
+					
 					Emitter* sound = new SFXEmitter();
 					((SFXEmitter*)sound)->SetEvent(AK::EVENTS::SFX_TELEPORTSOUND);
 					AudioWrapper::GetInstance().AddEmitter(sound, headset->GetName().c_str());
 					headset->AddComponent(sound);
+
+					/*BaseObject* magicalCube = Pool::Instance()->iGetObject()->Reset("Magical Cube That Follows Me");
+					MeshComponent* mcmc = new MeshComponent("../Resources/UnitCube.obj");
+					mcmc->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
+					magicalCube->AddComponent(mcmc);
+					magicalCube->AddComponent(new CCSnapToPlayerPos);
+					next->AddObject(magicalCube);*/
+
 
 					LevelManager::GetInstance().RequestLevelChange(next);
 

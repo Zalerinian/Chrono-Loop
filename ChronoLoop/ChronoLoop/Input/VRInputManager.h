@@ -44,8 +44,7 @@ namespace Epoch {
 		inline matrix4 GetPlayerView() {
 			if (IsVREnabled()) {
 				return (matrix4)(mPoses[vr::k_unTrackedDeviceIndex_Hmd].mDeviceToAbsoluteTracking) * mPlayerPosition;
-			}
-			else {
+			} else {
 				return mPlayerPosition;
 			}
 		}

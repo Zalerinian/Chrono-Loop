@@ -33,16 +33,14 @@ namespace Epoch
 
 	void TimeManipulation::Update() {
 		Level* currentLevel = LevelManager::GetInstance().GetCurrentLevel();
-		
 
+	
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip) && !Settings::GetInstance().GetBool("PauseMenuUp")) {
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
-			//bool paused = false;
-			//if (cLevel->GetPauseMenu() != nullptr) {
-			//	paused = cLevel->GetPauseMenu()->isPauseMenuOn();
-			//}
-			//if (!paused) {
-				if (mPauseTime) {
+			
+			
+				if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 7)) //created clone
+				{
 					// Resume Time
 
 					//put the original controll and headset back in control
@@ -71,8 +69,11 @@ namespace Epoch
 
 					mIsBeingMade = false;
 
-				} else {
+				} else if (!mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 2)) {
 					// Stop time
+
+					if (Settings::GetInstance().GetInt("tutStep") == 3)//Paused time
+						Settings::GetInstance().SetInt("tutStep", 4);//Rewind
 
 					Transform identity;
 					memset(&identity.GetMatrix(), 0, sizeof(identity.GetMatrix()));
@@ -102,17 +103,16 @@ namespace Epoch
 		}
 
 
-		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Touchpad)) {
-			bool paused = false;
+		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Touchpad) 
+			&& (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 5))//Created Clone 
+		{
+			
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
-			if (cLevel->GetTimeManipulator() != nullptr ) {
-				paused = cLevel->GetTimeManipulator()->isTimePaused();
-			}
-
 			// Accept timeline position
-			if (paused) {
-			
+			if (mPauseTime) {
+				if (Settings::GetInstance().GetInt("tutStep") == 6)//accepted time
+					Settings::GetInstance().SetInt("tutStep", 7);//delete clone
 				vec2f finalRatios(0, 0);
 				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
 				mDesaturationInterpolator.SetActive(true);
@@ -142,20 +142,20 @@ namespace Epoch
 					Physics::Instance()->mObjects.push_back(mCurCloneController2);
 					++mNumOfConfirmedClones;
 
-					//TODO: MAKE CLONE PARTICLE
 					Particle* p = &Particle::Init();
-					p->SetColors(vec4f(0, .25, 1,1), vec4f(.2f, .55f, .8f,1));
+					p->SetColors(vec4f(0, .25, 1, 1), vec4f(.2f, .55f, .8f, 1));
 					p->SetLife(250);
 					p->SetSize(.25f, .15f);
 
-					vec3f EPos = vec3f(mCurCloneHeadset->GetTransform().GetPosition()->x,mCurCloneHeadset->GetTransform().GetPosition()->y, mCurCloneHeadset->GetTransform().GetPosition()->z);
+					vec3f EPos = vec3f(mCurCloneHeadset->GetTransform().GetPosition()->x, mCurCloneHeadset->GetTransform().GetPosition()->y, mCurCloneHeadset->GetTransform().GetPosition()->z);
 					ParticleEmitter* emit = new RadialEmitter(250, 250, 25, EPos);
 					emit->SetParticle(p);
 					emit->SetTexture("../Resources/BasicCircleP.png");
 					ParticleSystem::Instance()->AddEmitter(emit);
 					vec4f temp = EPos;
 					AudioWrapper::GetInstance().MakeEventAtLocation(AK::EVENTS::SFX_SHORTCIRUIT, &temp);
-					emit->FIRE();
+					emit->FIRE();;
+
 				}
 				else
 				{
@@ -209,7 +209,7 @@ namespace Epoch
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Trigger))
 		{
 			//toggle to have clone turn on or off
-			if (mPauseTime)
+			if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 4))//rewound time
 			{
 				if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck() == false)
 				{
@@ -220,17 +220,13 @@ namespace Epoch
 				{
 					if(mIsBeingMade)
 					{
+						if (Settings::GetInstance().GetInt("tutStep") == 5)
+							Settings::GetInstance().SetInt("tutStep", 6);
+
 						((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
 						((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
 						((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
 						SystemLogger::GetLog() << "Opaque" << std::endl;
-					}
-					else
-					{
-						((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
-						((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
-						((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
-						SystemLogger::GetLog() << "Transparent" << std::endl;
 					}
 				}
 			}
@@ -249,6 +245,7 @@ namespace Epoch
 		_data.ScanlineData.z = 0;
 		_data.ScanlineData.w = 0.8f;
 		MeshComponent *visibleMesh = new MeshComponent("../Resources/Clone.obj",.35f);
+		visibleMesh->SetPixelShader(ePS_TRANSPARENT);
 		visibleMesh->AddTexture(TimeManager::Instance()->GetNextTexture().c_str(), eTEX_DIFFUSE);
 		//visibleMesh->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
 		//visibleMesh->AddTexture("../Resources/Scanline.png", eTEX_CUSTOM2);
@@ -264,6 +261,7 @@ namespace Epoch
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
 		MeshComponent *mc = new MeshComponent("../Resources/Controller.obj",.35f);
 		ControllerCollider* CubeColider = new ControllerCollider(_controller1, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
+		mc->SetPixelShader(ePS_TRANSPARENT);
 		mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 		//mc->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
 		//mc->AddTexture("../Resources/Scanline.png", eTEX_CUSTOM2);
@@ -280,6 +278,7 @@ namespace Epoch
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be proble
 		MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj",.35f);
 		ControllerCollider* CubeColider2 = new ControllerCollider(_controller2, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
+		mc2->SetPixelShader(ePS_TRANSPARENT);
 		mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 		//mc2->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
 		//mc2->AddTexture("../Resources/Scanline.png", eTEX_CUSTOM2);
@@ -335,6 +334,10 @@ namespace Epoch
 					if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, fwd, hitTime)) { 
 							TimeManager::Instance()->DeleteClone(clones[i]->GetUniqueId(),true);
 							--mNumOfConfirmedClones;
+
+							if (Settings::GetInstance().GetInt("tutStep") == 7)//deleted clone
+								Settings::GetInstance().SetInt("tutStep", 8);//finished tutorial
+
 							return true;
 					}
 				}

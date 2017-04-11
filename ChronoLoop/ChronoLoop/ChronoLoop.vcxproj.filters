@@ -276,9 +276,6 @@
     <ClInclude Include="Objects\MeshComponent.h">
       <Filter>Objects\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\BoxSnapToControllerAction.hpp">
-      <Filter>Actions</Filter>
-    </ClInclude>
     <ClInclude Include="Actions\CodeComponent.hpp">
       <Filter>Actions</Filter>
     </ClInclude>
@@ -492,6 +489,21 @@
     </ClInclude>
     <ClInclude Include="BVH.h" />
     <ClInclude Include="Actions\PauseMenu.hpp">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCSnapToPlayerPos.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\BoxSnapToControllerAction.hpp">
+      <Filter>Actions\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCAnimationController.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCLoadTutorial.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCTutorial.h">
       <Filter>Actions</Filter>
     </ClInclude>
   </ItemGroup>
@@ -773,6 +785,9 @@
       <Filter>Pathing</Filter>
     </ClCompile>
     <ClCompile Include="BVH.cpp" />
+    <ClCompile Include="BoxSnapToControllerAction.cpp">
+      <Filter>Actions\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
@@ -850,6 +865,9 @@
     <FxCompile Include="Rendering\Shaders\ShadowVS.hlsl" />
     <FxCompile Include="Rendering\shaders\PSAnimatedMultiscan.hlsl">
       <Filter>Rendering\Shaders\Pixel shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Renderer\shaders\GSAnimatedQuad.hlsl">
+      <Filter>Rendering\Shaders\Geometry Shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
