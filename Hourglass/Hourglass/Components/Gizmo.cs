@@ -193,8 +193,17 @@ namespace Hourglass
 			}
 			mAttached = _attachable;
 			if(mAttached != null) {
+				UpdateScale();
 				mAttached.OnGizmoAttached();
 			}
+		}
+
+		private void UpdateScale() {
+			Vector3 gPos = new Vector3(Position.M41, Position.M42, Position.M43);
+			Matrix view = Renderer.Instance.View;
+			view.Invert();
+			Vector3 cPos = new Vector3(view.M41, view.M42, view.M43);
+			ScaleFactor = (cPos - gPos).Length() * 0.1f;
 		}
 
 		public void Reposition()

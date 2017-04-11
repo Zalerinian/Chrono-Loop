@@ -11,7 +11,7 @@ using System.Collections.Generic;
 namespace Hourglass {
 
 	public static class FileIO {
-		public static readonly uint WriterVersion = 2;
+		public static readonly uint WriterVersion = 3;
 		public static readonly float RADIANS_TO_DEGREES = ((180.0f / 3.14f));
 		public static readonly float DEGREES_TO_RADIANS = (1 / 180.0f * 3.14f);
 		private static Stack<BaseObject> ObjectStack = new Stack<BaseObject>();
@@ -266,7 +266,10 @@ namespace Hourglass {
 			using (BinaryReader reader = new BinaryReader(fs)) {
 				int vers = reader.ReadInt32();
 				if (WriterVersion != vers) {
-					MessageBox.Show("The selected file was written in a different version of Hourglass. We'll see how this goes...", "Tread Carefully...", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+					Debug.Print("The editor is at verion " + WriterVersion + ", but this file was written with " + vers + ".");
+				}
+				if(vers > WriterVersion) {
+					MessageBox.Show("Cannot open file, it was created in a newer version of Hourglass.", "Hourglass is out of date!", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
 				int settingsOffset = 0, objectsOffset = 0;
 				settingsOffset = reader.ReadInt32();
@@ -300,7 +303,7 @@ namespace Hourglass {
 				settings.DtdProcessing = DtdProcessing.Parse;
 				XmlReader reader = XmlReader.Create(_file, settings);
 				reader.MoveToContent();
-				string element = string.Empty, mesh = string.Empty, texutre = string.Empty, name = string.Empty;
+				string element = string.Empty, mesh = string.Empty, texutre = string.Empty, name = string.Empty, CodeComp = string.Empty;
 				TreeNode node = null;
 				TexturedMeshComponent tmc = null;
 				ColliderComponent col = null;
@@ -463,6 +466,30 @@ namespace Hourglass {
 									break;
 								case "Drag":
 									col.Drag = float.Parse(reader.Value);
+									break;
+
+
+								// Code components
+								case "BoxSnapToController":
+								case "ButtonHold":
+								case "ButtonPress":
+								case "AABBtoAABB":
+								case "AABBtoSphere":
+								case "ElasticPlane":
+								case "SpheretoSphere":
+								case "EnterLevel":
+								case "HeadsetFollow":
+									if(element == "EnterLevel") {
+										if (addition.Name == "mmDoor") {
+											element = "CCEnterLevel1";
+										} else if(addition.Name == "DoorEmitter2") {
+											element = "CCLoadHub";
+										}
+									}
+
+									CodeComponent c = new CodeComponent();
+									c.SelectCode(c.CheckForCode(element));
+									addition.AddComponent(c);
 									break;
 								default:
 									Debug.Print(element + " | " + reader.Value);

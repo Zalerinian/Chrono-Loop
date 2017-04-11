@@ -196,6 +196,7 @@ namespace Hourglass
 					mDevice.SetStreamSource(0, ((IRenderable)componentIterator.Current).Shape.VertexBuffer, 0);
 					mDevice.RenderState.FillMode = ((IRenderable)componentIterator.Current).Shape.FillMode;
 					mDevice.Transform.World = ((IRenderable)componentIterator.Current).Shape.World * objectIterator.Current.GetMatrix();
+					mDevice.RenderState.CullMode = Cull.Clockwise;
 					mDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, ((IRenderable)componentIterator.Current).Shape.Indices.Length, 0, ((IRenderable)componentIterator.Current).Shape.Indices.Length / 3);
 				}
 			}
