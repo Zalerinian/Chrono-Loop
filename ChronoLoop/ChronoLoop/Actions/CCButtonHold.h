@@ -84,7 +84,7 @@ namespace Epoch
 							((SFXEmitter*)Exit->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
 					}
 				}
-					mSoundOnce = true;
+				mSoundOnce = true;
 
 				vec3f norm = ((ButtonCollider*)&_col)->mPushNormal;
 				vec3f tForce = norm * (norm * _other.mTotalForce);
@@ -113,7 +113,6 @@ namespace Epoch
 					}
 					else
 					{
-						
 						mCanDoorInterp = false;
 						blockInterp->SetActive(false);
 						exitInterp->SetActive(false);
@@ -124,7 +123,6 @@ namespace Epoch
 					//SystemLogger::GetLog() << "Not Colliding" << std::endl;
 					if(mFlip)
 					{
-						
 						mFlip = false;
 						blockInterp->SetActive(true);
 						blockInterp->Prepare(0.69f, blockCube->GetTransform().GetMatrix(), blockstart, blockCube->GetTransform().GetMatrix());
@@ -149,7 +147,6 @@ namespace Epoch
 						exitInterp->SetActive(false);
 					}
 					mSoundOnce = false;
-
 				}
 			}
 			colliding = false;
