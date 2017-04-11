@@ -273,13 +273,13 @@ namespace Hourglass {
 				objectsOffset = reader.ReadInt32();
 				Vector3 startPos = new Vector3(), startRot = new Vector3();
 
-				startPos.X = (float)reader.ReadInt32();
-				startPos.Y = (float)reader.ReadInt32();
-				startPos.Z = (float)reader.ReadInt32();
+				startPos.X = (float)System.BitConverter.ToSingle(reader.ReadBytes(4), 0);
+				startPos.Y = (float)System.BitConverter.ToSingle(reader.ReadBytes(4), 0);
+				startPos.Z = (float)System.BitConverter.ToSingle(reader.ReadBytes(4), 0);
 
-				startRot.X = (float)reader.ReadInt32() * RADIANS_TO_DEGREES;
-				startRot.Y = (float)reader.ReadInt32() * RADIANS_TO_DEGREES;
-				startRot.Z = (float)reader.ReadInt32() * RADIANS_TO_DEGREES;
+				startRot.X = (float)System.BitConverter.ToSingle(reader.ReadBytes(4), 0) * RADIANS_TO_DEGREES;
+				startRot.Y = (float)System.BitConverter.ToSingle(reader.ReadBytes(4), 0) * RADIANS_TO_DEGREES;
+				startRot.Z = (float)System.BitConverter.ToSingle(reader.ReadBytes(4), 0) * RADIANS_TO_DEGREES;
 
 				Settings.StartPos = startPos;
 				Settings.StartRot = startRot;

@@ -1045,7 +1045,7 @@ namespace Epoch {
 					{
 						INT32 pathLength = 0;
 						std::string mesh, diffuse, emissive;
-						float transparency = 1.0;
+						float transparency = 1.0f;
 						file.read((char*)&transparency, sizeof(float));
 
 						// Mesh file
@@ -1071,7 +1071,7 @@ namespace Epoch {
 						delete[] temp;
 						if (obj)
 						{
-							MeshComponent* mc = new MeshComponent(mesh.c_str());
+							MeshComponent* mc = new MeshComponent(mesh.c_str(), transparency);
 							mc->AddTexture(diffuse.c_str(), eTEX_DIFFUSE);
 							if (emissive != "..\\Resources\\") {
 								mc->AddTexture(emissive.c_str(), eTEX_EMISSIVE);
