@@ -22,7 +22,6 @@
     <Scale>1,1.25,0.5</Scale>
     <Components>
       <EnterLevel>Enabled</EnterLevel>
-      <EnterLevel>Enabled</EnterLevel>
       <Collider>
         <Type>OBB</Type>
         <Trigger>True</Trigger>
@@ -74,7 +73,6 @@
     <Rotation>0,1.57,0</Rotation>
     <Scale>1,1.25,0.5</Scale>
     <Components>
-      <EnterLevel>Enabled</EnterLevel>
       <EnterLevel>Enabled</EnterLevel>
       <Collider>
         <Type>OBB</Type>
