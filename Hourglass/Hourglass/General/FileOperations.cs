@@ -433,20 +433,22 @@ namespace Hourglass {
 								bcol = null;
 								if (reader.Value == "Sphere") {
 									col = new SphereCollider();
-									((ColoredShape)col.Shape).Load("Assets\\Sphere.obj", Color.Red);
+									((ColoredShape)col.Shape).SetMesh("Assets\\Sphere.obj", Color.Red);
 								} else if (reader.Value == "OBB") {
 									col = new BoxCollider();
-									((ColoredShape)col.Shape).Load("Assets\\Cube.obj", Color.Red);
+									((ColoredShape)col.Shape).SetMesh("Assets\\Cube.obj", Color.Red);
 								} else if (reader.Value == "Button") {
 									bcol = new ButtonCollider();
-									((ColoredShape)bcol.Shape).Load("Assets\\Cube.obj", Color.Red);
+									((ColoredShape)bcol.Shape).SetMesh("Assets\\Cube.obj", Color.Red);
 								} else {
 									col = new PlaneCollider();
-									((ColoredShape)col.Shape).Load("Assets\\Plane.obj", Color.Red);
+									((ColoredShape)col.Shape).SetMesh("Assets\\Plane.obj", Color.Red);
 								}
 								if (col != null) {
+									col.Shape.FillMode = Microsoft.DirectX.Direct3D.FillMode.WireFrame;
 									addition.AddComponent(col);
 								} else if (bcol != null) {
+									bcol.Shape.FillMode = Microsoft.DirectX.Direct3D.FillMode.WireFrame;
 									addition.AddComponent(bcol);
 								}
 								break;
