@@ -7,7 +7,7 @@ namespace Hourglass
 {
 	public class TexturedMeshComponent : MeshComponent
 	{
-		protected ComboBox mTexture = new ComboBox();
+		protected ComboBox mTexture, mEmissive;
 		protected Label mLbDiffuse, mLbEmissive;
 
 		public TexturedMeshComponent(int _yOffset = 0) : base(_yOffset)
@@ -16,11 +16,17 @@ namespace Hourglass
 
 			#region Component Creation
 			mLbDiffuse = new Label();
+			mLbEmissive = new Label();
+
+			mTexture = new ComboBox();
+			mEmissive = new ComboBox();
 
 			mShape = new TexturedShape();
 
             mGroupBox.Controls.Add(mLbDiffuse);
+            mGroupBox.Controls.Add(mLbEmissive);
 			mGroupBox.Controls.Add(mTexture);
+			mGroupBox.Controls.Add(mEmissive);
 			#endregion
 
 			#region Component Setup
@@ -31,16 +37,28 @@ namespace Hourglass
 			mLbDiffuse.Name = "mLbDiffuse";
 			mLbDiffuse.Text = "Diffuse Texture";
 
+			mLbEmissive.AutoSize = true;
+			mLbEmissive.Location = new System.Drawing.Point(6, 111 + _yOffset);
+			mLbEmissive.Name = "mLbEmissive";
+			mLbEmissive.Text = "Emissive Texture";
+
 			mTexture.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
 			mTexture.Location = new System.Drawing.Point(90, 80 + _yOffset);
 			mTexture.Size = new System.Drawing.Size(ContentWidth - mTexture.Left, 24);
 			mTexture.DropDownStyle = ComboBoxStyle.DropDownList;
+
+			mEmissive.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
+			mEmissive.Location = new System.Drawing.Point(100, 106 + _yOffset);
+			mEmissive.Size = new System.Drawing.Size(ContentWidth - mEmissive.Left, 24);
+			mEmissive.DropDownStyle = ComboBoxStyle.DropDownList;
+
 
 			{
 				List<string>.Enumerator it = ResourceManager.Instance.Textures.GetEnumerator();
 				while (it.MoveNext())
 				{
 					mTexture.Items.Add(it.Current);
+					mEmissive.Items.Add(it.Current);
 				}
 			}
 
@@ -82,6 +100,7 @@ namespace Hourglass
 		{
 			base.OnMenuClick_Reset(sender, e);
 			mTexture.SelectedIndex = -1;
+			mEmissive.SelectedIndex = -1;
 			mTransparency.Value = 1;
 		}
 
@@ -92,6 +111,12 @@ namespace Hourglass
 			w.Write(s.Length + 1);
 			w.Write(s.ToCharArray());
 			byte term = 0;
+			w.Write(term);
+
+			// TODO: Add checks for no texture being selected.
+			s = (".." + ResourceManager.Instance.ResourceDirectory + mEmissive.Text);
+			w.Write(s.Length + 1);
+			w.Write(s.ToCharArray());
 			w.Write(term);
 		}
 
@@ -110,7 +135,19 @@ namespace Hourglass
 			{
 				((TexturedShape)mShape).Load("Assets\\Error.obj");
 				((TexturedShape)mShape).SetTexture(TexturedShape.TextureType.Diffuse, "Assets\\red.png");
-				mMesh.Text = "Error locating old mesh";
+				mTexture.Text = "Error locating diffuse texture.";
+			}
+
+			if(_version >= 2) {
+				filename = new string(r.ReadChars(r.ReadInt32() - 1));
+				r.ReadByte(); // The null terminator breaks things in C#, but is necessary in C++, so we need to skip it in C#
+				filename = filename.Substring(filename.LastIndexOf("\\") + 1);
+				index = mEmissive.Items.IndexOf(filename);
+				if (index >= 0) {
+					mEmissive.SelectedIndex = index;
+				} else {
+					mEmissive.Text = "Error locating emissive texture.";
+				}
 			}
 		}
 

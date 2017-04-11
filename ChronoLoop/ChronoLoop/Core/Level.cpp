@@ -25,6 +25,7 @@
 #include "../Particles/ParticleSystem.h"
 #include "../Input/CommandConsole.h"
 #include "../Actions/CCButtonHold.h"
+#include "../Core/Pool.h"
 
 namespace Epoch {
 
@@ -1015,6 +1016,9 @@ namespace Epoch {
 						INT32 pathLength = 0, argbColor = 0;
 						std::string mesh;
 
+						float transparency = 1.0;
+						file.read((char*)&transparency, sizeof(float));
+
 						file.read((char *)&pathLength, sizeof(INT32));
 						char* temp = new char[pathLength];
 						file.read(temp, pathLength);
@@ -1034,28 +1038,39 @@ namespace Epoch {
 					case 6: //TexturedMesh
 					{
 						INT32 pathLength = 0;
-						std::string mesh, texture;
+						std::string mesh, diffuse, emissive;
+						float transparency = 1.0;
+						file.read((char*)&transparency, sizeof(float));
 
+						// Mesh file
 						file.read((char *)&pathLength, sizeof(INT32));
 						char* temp = new char[pathLength];
 						file.read(temp, pathLength);
 						mesh = temp;
 						delete[] temp;
 
+						// Diffiuse
 						file.read((char *)&pathLength, sizeof(INT32));
 						temp = new char[pathLength];
 						file.read(temp, pathLength);
-						texture = temp;
+						diffuse = temp;
+						delete[] temp;
+
+						// Emissive
+						// Todo: Add a check for if there is no emissive texture.
+						file.read((char *)&pathLength, sizeof(INT32));
+						temp = new char[pathLength];
+						file.read(temp, pathLength);
+						emissive = temp;
 						delete[] temp;
 						if (obj)
 						{
-							std::string path = "../Resources/";
-							path.append(mesh);
-							MeshComponent* mesh = new MeshComponent(path.c_str());
-							path = "../Resources/";
-							path.append(texture);
-							mesh->AddTexture(path.c_str(), eTEX_DIFFUSE);
-							obj->AddComponent(mesh);
+							MeshComponent* mc = new MeshComponent(mesh.c_str());
+							mc->AddTexture(diffuse.c_str(), eTEX_DIFFUSE);
+							if (emissive != "..\\Resources\\") {
+								mc->AddTexture(emissive.c_str(), eTEX_EMISSIVE);
+							}
+							obj->AddComponent(mc);
 						}
 					}
 						break;
@@ -1083,6 +1098,15 @@ namespace Epoch {
 						file.read((char *)&scale.y, sizeof(float));
 						file.read((char *)&scale.z, sizeof(float));
 
+						INT8 recorded = 0;
+						unsigned int flags = 0;
+						if (version >= 2) {
+							file.read((char*)&recorded, sizeof(recorded));
+							if (recorded != 0) {
+								flags = BaseObject_Flag_Record_In_Timeline;
+							}
+						}
+
 						matrix4 mat = matrix4::CreateScale(scale.x, scale.y, scale.z) *
 							matrix4::CreateXRotation(rotation.x) *
 							matrix4::CreateYRotation(rotation.y) *
@@ -1090,7 +1114,8 @@ namespace Epoch {
 							matrix4::CreateTranslation(position.x, position.y, position.z);
 						Transform trans;
 						trans.SetMatrix(mat);
-						obj = new BaseObject(name, trans);
+						obj = Pool::Instance()->iGetObject()->Reset(name, trans, nullptr, flags);
+						//obj = new BaseObject(name, trans);
 					}
 						break;
 					case 8: //Code

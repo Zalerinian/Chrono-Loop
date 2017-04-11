@@ -363,22 +363,24 @@ namespace Hourglass
                         Gizmo.Instance.Mode = Gizmo.GizmoMode.Scale;
                     }
                 }
-				// If we press delete, destroy the current node and object.
-				// Check the previous key state to ensure we don't delete more than one per press.
-				if (!mKeys.Contains(Key.LeftControl) && !mKeys.Contains(Key.RightControl))
-				{
-					if (mKeys.Contains(Key.Delete) && !mPreviousKeys.Contains(Key.Delete))
-					{
-						if (Tree.SelectedNode != null)
-						{
+			}  // Ensure the Grapics Panel's focus textbox is selected.
+
+			// If we press delete, on the graphics panel or tree, destroy the current node and object.
+			// Check the previous key state to ensure we don't delete more than one per press.
+			if (btnFocus.ContainsFocus || Tree.ContainsFocus) {
+				if (!mKeys.Contains(Key.LeftControl) && !mKeys.Contains(Key.RightControl)) {
+					if (mKeys.Contains(Key.Delete) && !mPreviousKeys.Contains(Key.Delete)) {
+						if (Tree.SelectedNode != null) {
 							RemoveTreeNode(Tree.SelectedNode);
+							Tree.SelectedNode = null;
 							Tree_AfterSelect(null, null);
 							Gizmo.Instance.Attach(null);
 							btnFocus.Select();
 						}
 					}
 				}
-			}  // Ensure the Grapics Panel's focus textbox is selected.
+			}
+
 			mPreviousKeys = mKeys;
 		}
 
