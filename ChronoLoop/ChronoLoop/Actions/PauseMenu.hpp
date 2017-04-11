@@ -180,9 +180,9 @@ namespace Epoch
 				else if ((PauseMenuisUp && scaleX <= 20.0f))
 					OnEnable();
 			}
-			if(VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu) == true || 
+			if((VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu) == true || 
 				VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu) == true || 
-				(GetAsyncKeyState(Keys::M) & 0x1))
+				(GetAsyncKeyState(Keys::M) & 0x1)) && !LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->isTimePaused())
 			{
 				if (PauseMenuisUp) 
 					OnDisable();
@@ -410,7 +410,7 @@ namespace Epoch
 
 			tempT.SetMatrix(playerPos.CreateScale(0.4f, 1, 0.2f) * playerPos.CreateTranslation(0, 0.001f, 0));
 			pAudio->SetTransform(tempT);
-			tempT.SetMatrix(playerPos.CreateScale(0.3f, 1, 0.15f) * playerPos.CreateTranslation(0.015f, 0.001f, 0.0185f));
+			tempT.SetMatrix(playerPos.CreateScale(0.3f, 1, 0.3f) * playerPos.CreateTranslation(0.015f, 0.001f, 0.015f));
 			pMisc->SetTransform(tempT);
 		}
 		virtual void OnDisable()
@@ -458,6 +458,7 @@ namespace Epoch
 				break;
 			case RESTART:
 				{
+					OnDisable();
 					TimeManager::Instance()->HotfixResetTimeline();
 				}
 				break;
