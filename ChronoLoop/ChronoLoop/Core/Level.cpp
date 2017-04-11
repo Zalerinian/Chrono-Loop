@@ -1055,7 +1055,7 @@ namespace Epoch {
 						mesh = temp;
 						delete[] temp;
 
-						// Diffiuse
+						// Diffuse
 						file.read((char *)&pathLength, sizeof(INT32));
 						temp = new char[pathLength];
 						file.read(temp, pathLength);
