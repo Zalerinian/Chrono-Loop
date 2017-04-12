@@ -40,6 +40,11 @@ namespace Epoch
 		void CreateAlphaBuffer(float alpha = 1.0f);
 	public:
 		MeshComponent(const char *_path, float _alpha = 1.0f);
+		MeshComponent(const char *_path,
+					  float _alpha,
+					  PixelShaderFormat _psf,
+					  VertexShaderFormat _vsf,
+					  GeometryShaderFormat _gsf);
 		virtual void Update() override;
 		virtual void Destroy() override;
 		MeshComponent* SetVisible(bool _vis);
@@ -53,6 +58,7 @@ namespace Epoch
 		void SetVertexShader(VertexShaderFormat _vf);
 		void SetPixelShader(PixelShaderFormat _pf);
 		void SetGeometryShader(GeometryShaderFormat _gf);
+		void SetShaders(PixelShaderFormat _psf, VertexShaderFormat _vsf, GeometryShaderFormat _gsf);
 
 		
 		// ********************************************************************************

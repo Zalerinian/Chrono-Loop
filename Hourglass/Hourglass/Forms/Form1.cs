@@ -710,7 +710,7 @@ namespace Hourglass
 			{
 				GroupBox box = obj.GetComponents()[i].GetGroupbox();
 				box.Location = position;
-				position.Y += box.Size.Height + 3;
+				position.Y += box.Size.Height + 5;
 
 				dimensions.Height = box.Height;
 				box.Size = dimensions;

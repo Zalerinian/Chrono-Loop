@@ -1036,7 +1036,20 @@ namespace Epoch {
 						std::string mesh;
 
 						float transparency = 1.0;
-						file.read((char*)&transparency, sizeof(float));
+						if (version >= 2) {
+							file.read((char*)&transparency, sizeof(float));
+						}
+
+						PixelShaderFormat psf = ePS_TEXTURED;
+						VertexShaderFormat vsf = eVS_TEXTURED;
+						GeometryShaderFormat gsf = eGS_PosNormTex;
+
+						// Shaders - All stored as 1 byte.	
+						if (version >= 3) {
+							file.read((char*)&psf, 1);
+							file.read((char*)&vsf, 1);
+							file.read((char*)&gsf, 1);
+						}
 
 						file.read((char *)&pathLength, sizeof(INT32));
 						char* temp = new char[pathLength];
@@ -1059,7 +1072,22 @@ namespace Epoch {
 						INT32 pathLength = 0;
 						std::string mesh, diffuse, emissive;
 						float transparency = 1.0f;
-						file.read((char*)&transparency, sizeof(float));
+						if (version >= 2) {
+							file.read((char*)&transparency, sizeof(float));
+						}
+
+						PixelShaderFormat psf = ePS_TEXTURED;
+						VertexShaderFormat vsf = eVS_TEXTURED;
+						GeometryShaderFormat gsf = eGS_PosNormTex;
+
+						// Shaders - All stored as 1 byte.	
+						if (version >= 3) {
+							file.read((char*)&psf, 1);
+							file.read((char*)&vsf, 1);
+							file.read((char*)&gsf, 1);
+						}
+
+
 
 						// Mesh file
 						file.read((char *)&pathLength, sizeof(INT32));
@@ -1084,7 +1112,7 @@ namespace Epoch {
 						delete[] temp;
 						if (obj)
 						{
-							MeshComponent* mc = new MeshComponent(mesh.c_str(), transparency);
+							MeshComponent* mc = new MeshComponent(mesh.c_str(), transparency, psf, vsf, gsf);
 							mc->AddTexture(diffuse.c_str(), eTEX_DIFFUSE);
 							if (emissive != "..\\Resources\\") {
 								mc->AddTexture(emissive.c_str(), eTEX_EMISSIVE);

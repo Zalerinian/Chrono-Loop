@@ -629,7 +629,9 @@ namespace Hourglass {
 				}
 				if (com != null) {
 					com.ReadData(r, _version);
-					b.AddComponent(com);
+					if(!(com is TransformComponent)) {
+						b.AddComponent(com);
+					}
 				}
 			}
 			byte op = r.ReadByte();

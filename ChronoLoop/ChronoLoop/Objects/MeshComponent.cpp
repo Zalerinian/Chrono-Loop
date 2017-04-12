@@ -100,6 +100,43 @@ namespace Epoch {
 		CreateAlphaBuffer(_alpha);
 	}
 
+	MeshComponent::MeshComponent(const char * _path, float _alpha, PixelShaderFormat _psf, VertexShaderFormat _vsf, GeometryShaderFormat _gsf) {
+		mType = eCOMPONENT_MESH;
+		if (_psf == ePS_TEXTURED && _alpha < 1.0f) {
+			_psf = ePS_TRANSPARENT;
+		}
+		mShape = new RenderShape(
+			_path,
+			true,
+			_psf,
+			_vsf,
+			_gsf
+		);
+		mShape->GetContext().mRasterState = eRS_FILLED;
+		mBlended = _alpha < 1.0f;
+		if (CanCreateNode()) {
+			CreateNode();
+			mVisible = true;
+		} else {
+			mVisible = false;
+			mNode = nullptr;
+		}
+
+		for (int i = 0; i < eVB_MAX; ++i) {
+			mVertexBufferTypes[i] = eBufferDataType_Nullptr;
+		}
+
+		for (int i = 0; i < ePB_MAX; ++i) {
+			mPixelBufferTypes[i] = eBufferDataType_Nullptr;
+		}
+
+		for (int i = 0; i < eGB_MAX; ++i) {
+			mGeoBufferTypes[i] = eBufferDataType_Nullptr;
+		}
+
+		CreateAlphaBuffer(_alpha);
+	}
+
 	void MeshComponent::Update() {
 		if (mNode && mVisible) {
 			mNode->data = mObject->GetWorld();
@@ -211,6 +248,20 @@ namespace Epoch {
 		if (_gf != mShape->GetContext().mGeoShaderFormat) {
 			RemoveNode();
 			mShape->GetContext().mGeoShaderFormat = _gf;
+			if (mVisible) {
+				CreateNode();
+			}
+		}
+	}
+
+	void MeshComponent::SetShaders(PixelShaderFormat _psf, VertexShaderFormat _vsf, GeometryShaderFormat _gsf) {
+		if (_psf != mShape->GetContext().mPixelShaderFormat ||
+			_vsf != mShape->GetContext().mVertexShaderFormat ||
+			_gsf != mShape->GetContext().mGeoShaderFormat) {
+			RemoveNode();
+			mShape->GetContext().mPixelShaderFormat = _psf;
+			mShape->GetContext().mVertexShaderFormat = _vsf;
+			mShape->GetContext().mGeoShaderFormat = _gsf;
 			if (mVisible) {
 				CreateNode();
 			}

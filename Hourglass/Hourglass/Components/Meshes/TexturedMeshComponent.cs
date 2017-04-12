@@ -10,52 +10,7 @@ namespace Hourglass
 		protected ComboBox mTexture, mEmissive;
 		protected Label mLbDiffuse, mLbEmissive;
 
-		protected enum PixelShader {
-			Colored = 0,
-			Textured,
-			PostProcess,
-			PureTexture,
-			Transparent,
-			TransparentScanline,
-			MAX
-		}
-
-		protected enum VertexShader {
-			Basic = 0,
-			Textured,
-			NDC,
-			MAX
-		}
-
-		protected enum GeoShader {
-			PosNormTex = 0,
-			PosNormTex_NDC,
-			PosNormTex_AnimQuad,
-			MAX
-		}
-
-		protected string[] PixelShaderNames = {
-			"ePS_BASIC",
-			"ePS_TEXTURED",
-			"ePS_POSTPROCESS",
-			"ePS_PURETEXTURE",
-			"ePS_TRANSPARENT",
-			"ePS_TRANSPARENT_SCANLINE"
-		};
-
-		protected string[] VertexShaderNames = {
-			"eVS_BASIC",
-			"eVS_TEXTURED",
-			"eVS_NDC"
-		};
-
-		protected string[] GeoShaderNames = {
-			"eGS_PosNormTex",
-			"eGS_PosNormTex_NDC",
-			"eGS_PosNormTex_AnimQuad"
-		};
-
-		public TexturedMeshComponent(int _yOffset = 0) : base(_yOffset)
+		public TexturedMeshComponent(int _yOffset = 0) : base(65 + _yOffset)
 		{
 			mType = ComponentType.TexturedMesh;
 
@@ -78,22 +33,22 @@ namespace Hourglass
 			int ContentWidth = (mGroupBox.Size - mGroupBox.Padding.Size - mGroupBox.Margin.Size).Width;
 
 			mLbDiffuse.AutoSize = true;
-			mLbDiffuse.Location = new System.Drawing.Point(6, 84 + _yOffset);
+			mLbDiffuse.Location = new System.Drawing.Point(6, 21 + _yOffset);
 			mLbDiffuse.Name = "mLbDiffuse";
 			mLbDiffuse.Text = "Diffuse Texture";
 
 			mLbEmissive.AutoSize = true;
-			mLbEmissive.Location = new System.Drawing.Point(6, 111 + _yOffset);
+			mLbEmissive.Location = new System.Drawing.Point(6, 54 + _yOffset);
 			mLbEmissive.Name = "mLbEmissive";
 			mLbEmissive.Text = "Emissive Texture";
 
 			mTexture.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
-			mTexture.Location = new System.Drawing.Point(90, 80 + _yOffset);
+			mTexture.Location = new System.Drawing.Point(90, 19 + _yOffset);
 			mTexture.Size = new System.Drawing.Size(ContentWidth - mTexture.Left, 24);
 			mTexture.DropDownStyle = ComboBoxStyle.DropDownList;
 
 			mEmissive.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
-			mEmissive.Location = new System.Drawing.Point(100, 106 + _yOffset);
+			mEmissive.Location = new System.Drawing.Point(100, 52 + _yOffset);
 			mEmissive.Size = new System.Drawing.Size(ContentWidth - mEmissive.Left, 24);
 			mEmissive.DropDownStyle = ComboBoxStyle.DropDownList;
 
