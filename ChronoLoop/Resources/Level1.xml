@@ -1,4 +1,4 @@
-﻿<Level>
+<Level>
   <Settings>
     <StartPos>0.46,0,-10.15</StartPos>
     <StartRot>0,0,0</StartRot>
@@ -810,24 +810,6 @@
     <Texture>vr_controller_lowpoly_texture.png</Texture>
     <Position>4.291179,0.0692593,6.16082</Position>
     <Rotation>0.2198,5.582222,3.14</Rotation>
-    <Scale>1,1,1</Scale>
-    <Components />
-  </Object>
-  <Object>
-    <Name>GeneralControlPanel</Name>
-    <Mesh>PlaneCorrection.obj</Mesh>
-    <Texture>GeneralControlScheme.png</Texture>
-    <Position>-5.954962,1.320166,-6.538151</Position>
-    <Rotation>1.57,1.57,0</Rotation>
-    <Scale>1,1,1</Scale>
-    <Components />
-  </Object>
-  <Object>
-    <Name>TimeControlPanel</Name>
-    <Mesh>PlaneCorrection.obj</Mesh>
-    <Texture>TimeControlScheme.png</Texture>
-    <Position>-5.95,1.32,-7.699566</Position>
-    <Rotation>1.57,1.57,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components />
   </Object>
