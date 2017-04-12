@@ -258,9 +258,9 @@ namespace Hourglass
 					List<Component> comps = mRenderSet[i].GetComponents();
 					for (int j = 0; j < comps.Count; ++j)
 					{
-						if(comps[j] is MeshComponent)
+						if(comps[j] is IRenderable)
 						{
-							((MeshComponent)comps[j]).Shape.FillBuffers();
+							((IRenderable)comps[j]).Shape.FillBuffers();
 						}
 					}
 				}

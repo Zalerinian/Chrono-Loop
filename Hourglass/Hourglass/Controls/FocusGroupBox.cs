@@ -59,8 +59,7 @@ namespace Hourglass {
 				e.Graphics.DrawLine(borderPen, new Point(borderRect.X, ClientRectangle.Height), new Point(borderRect.X + borderRect.Width, ClientRectangle.Height));
 			}
 
-			
-			
+
 			if(textRect.Bottom > e.ClipRectangle.Top && textRect.Top < e.ClipRectangle.Bottom) {
 				e.Graphics.FillRectangle(new SolidBrush(this.BackColor), textRect);
 				e.Graphics.DrawString(this.Text, this.Font, new SolidBrush(this.ForeColor), textRect);

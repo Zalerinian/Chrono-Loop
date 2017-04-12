@@ -86,7 +86,7 @@ namespace Hourglass
 
 		protected int CheckForValue(ComboBox _box, string _value) {
 			for (int i = 0; i < _box.Items.Count; ++i) {
-				if (((string)_box.Items[i]).Contains(_value)) {
+				if (((string)_box.Items[i]).ToLower().Contains(_value.ToLower())) {
 					return i;
 				}
 			}

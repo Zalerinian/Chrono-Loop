@@ -180,30 +180,40 @@ namespace Hourglass {
 			mElasticity.Name = "mElasticity";
 			mElasticity.Size = new System.Drawing.Size(ContentWidth - mElasticity.Left, 20);
 			mElasticity.TabIndex = 6;
+			mElasticity.Minimum = 0;
+			mElasticity.Maximum = 999999;
 
 			mDrag.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
 			mDrag.Location = new System.Drawing.Point(90, 77 + _yOffset);
 			mDrag.Name = "mDrag";
 			mDrag.Size = new System.Drawing.Size(ContentWidth - mDrag.Left, 20);
 			mDrag.TabIndex = 7;
+			mDrag.Minimum = 0;
+			mDrag.Maximum = 999999;
 
 			mMass.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
 			mMass.Location = new System.Drawing.Point(90, 20 + _yOffset);
 			mMass.Name = "mMass";
 			mMass.Size = new System.Drawing.Size(ContentWidth - mMass.Left, 20);
 			mMass.TabIndex = 5;
+			mMass.Minimum = 0;
+			mMass.Maximum = 999999;
 
 			mStaticFriction.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
 			mStaticFriction.Location = new System.Drawing.Point(90, 103 + _yOffset);
 			mStaticFriction.Name = "mStaticFriction";
 			mStaticFriction.Size = new System.Drawing.Size(ContentWidth - mStaticFriction.Left, 20);
 			mStaticFriction.TabIndex = 8;
+			mStaticFriction.Minimum = 0;
+			mStaticFriction.Maximum = 999999;
 
 			mKineticFriction.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
 			mKineticFriction.Location = new System.Drawing.Point(90, 130 + _yOffset);
 			mKineticFriction.Name = "mKineticFriction";
 			mKineticFriction.Size = new System.Drawing.Size(ContentWidth - mKineticFriction.Left, 20);
 			mKineticFriction.TabIndex = 9;
+			mKineticFriction.Minimum = 0;
+			mKineticFriction.Maximum = 999999;
 
 
 			// Buttons
