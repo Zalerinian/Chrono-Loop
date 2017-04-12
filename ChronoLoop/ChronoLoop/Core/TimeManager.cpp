@@ -86,7 +86,6 @@ namespace Epoch {
 						}
 					}
 				}*/
-
 					//Update inputTimeLine
 					//This updates curr pointer of the input timeline along with the current time in the Timeline 
 					if (VRInputManager::GetInstance().IsVREnabled()) {
@@ -96,9 +95,9 @@ namespace Epoch {
 								for (unsigned int i = 0; i < mClones.size(); i++) {
 									if (mClones[i]->GetUniqueId() == temp->mNext->mData.mControllerId) {
 										if (DoesCloneExist(mClones[i]->GetUniqueId(), mLevelTime)) {
-											//	SystemLogger::GetLog() << "Clone:" << "id " << temp->mData.mControllerId << " " << temp->mNext->mData.mButton << ':' << temp->mNext->mData.mButtonState << std::endl;
+											SystemLogger::GetLog() << "Clone:" << "id " << temp->mData.mControllerId << " " << temp->mNext->mData.mButton << ':' << temp->mNext->mData.mButtonState << std::endl;
 										} else {
-											//	SystemLogger::GetLog() << "Found false" << std::endl;
+											//SystemLogger::GetLog() << "Found false" << std::endl;
 										}
 									}
 								}
@@ -303,7 +302,7 @@ namespace Epoch {
 							break;
 						}
 					}
-					//TODO COmment this back in sometime
+					//TODO Pat: COmment this back in sometime
 					/*for (auto j = mCloneColliderInterpolators.begin(); j != mCloneColliderInterpolators.end(); ++j) {
 						if (mClones[i]->GetComponentCount(eCOMPONENT_COLLIDER) > 0 && j->first == mClones[i]->GetComponentIndexed(eCOMPONENT_COLLIDER,0)->GetColliderId())
 						{
@@ -545,13 +544,13 @@ namespace Epoch {
 				mTimeline->PrepareAllObjectInterpolators(placeHolder, mtempCurSnapFrame);
 				mShouldUpdateInterpolators = true;
 				mShouldPulse = true;
+
+				if (Settings::GetInstance().GetInt("tutStep") == 4)//Rewind
+					Settings::GetInstance().SetInt("tutStep", 5);//Create Clone
 			}
 			else {
 				mShouldPulse = false;
 			}
-
-		
-
 		}
 		void TimeManager::MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC) {
 			mTimeline->MoveAllObjectsToSnapExceptPlayer(_snaptime, _headset, _leftC, _rightC);
