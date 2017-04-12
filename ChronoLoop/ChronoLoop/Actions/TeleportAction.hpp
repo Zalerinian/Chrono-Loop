@@ -16,8 +16,8 @@
 namespace Epoch {
 
 	struct TeleportAction : public CodeComponent {
-		MeshComponent *mPlaneMesh, *mWallsMesh, *mBlockMesh, *mExitMesh, *mServerMesh;
-		BaseObject *mPlaneObject, *mWallsObject, *mBlockObject, *mExitObject, *mServerObject, *mHeadset;
+		MeshComponent *mPlaneMesh, *mWallsMesh, *mBlockMesh, *mExitMesh, *mServerMesh, *mTWall1Mesh, *mTWall2Mesh, *mTWindowMesh;
+		BaseObject *mPlaneObject, *mWallsObject, *mBlockObject, *mExitObject, *mServerObject, *mHeadset, *mTWall1, *mTWall2, *mTWindow;
 		ControllerType mControllerRole = eControllerType_Primary;
 		Level* cLevel = nullptr;
 		TeleportAction(ControllerType _t) { mControllerRole = _t; };
@@ -28,14 +28,21 @@ namespace Epoch {
 			mWallsObject  = cLevel->FindObjectWithName("Walls");
 			mBlockObject  = cLevel->FindObjectWithName("TransparentDoor1");
 			mExitObject   = cLevel->FindObjectWithName("TransparentDoor2");
+			mTWall1		  = cLevel->FindObjectWithName("TransparentWall1");
+			mTWall2		  = cLevel->FindObjectWithName("TransparentWall2");
+			mTWindow	  = cLevel->FindObjectWithName("TransparentWindow");
 			mServerObject = cLevel->FindObjectWithName("Servers");
+
 			if(mPlaneObject)
 			{
 				mPlaneMesh    = (MeshComponent*)mPlaneObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				mWallsMesh    = (MeshComponent*)mWallsObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				mBlockMesh    = (MeshComponent*)mBlockObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				mExitMesh     = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-				mServerMesh = (MeshComponent*)mServerObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+				mServerMesh   = (MeshComponent*)mServerObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+				mTWall1Mesh   = (MeshComponent*)mTWall1->GetComponentIndexed(eCOMPONENT_MESH, 0);
+				mTWall2Mesh   = (MeshComponent*)mTWall2->GetComponentIndexed(eCOMPONENT_MESH, 0);
+				mTWindowMesh  = (MeshComponent*)mTWindow->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			}
 			mHeadset = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset();
 			
@@ -59,9 +66,9 @@ namespace Epoch {
 			if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && !Settings::GetInstance().GetBool("PauseMenuUp")) {
 				if (!paused) {
 					vec4f forward(0, 0, 1, 0);
-					MeshComponent* meshes[] = { mWallsMesh, mBlockMesh, mExitMesh, mServerMesh };
-					BaseObject* objects[] = { mWallsObject, mBlockObject, mExitObject, mServerObject };
-					float meshTime = 0, wallTime = FLT_MAX;
+					MeshComponent* meshes[] = { mWallsMesh, mBlockMesh, mExitMesh, mServerMesh, mTWall1Mesh, mTWall2Mesh, mTWindowMesh };
+					BaseObject* objects[] = { mWallsObject, mBlockObject, mExitObject, mServerObject, mTWall1, mTWall2, mTWindow };
+					float controllerTime = 0, wallTime = FLT_MAX;
 					for (int i = 0; i < ARRAYSIZE(meshes); ++i) {
 						forward.Set(0, 0, 1, 0);
 						matrix4 objMat = objects[i]->GetTransform().GetMatrix();
@@ -96,9 +103,9 @@ namespace Epoch {
 					forward *= inverse;
 					vec3f fwd = forward;
 					for (unsigned int i = 0; i < numTris; ++i) {
-						if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, fwd, meshTime)) {
-							if (meshTime < wallTime) {
-								fwd *= meshTime;
+						if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, fwd, controllerTime)) {
+							if (controllerTime < wallTime) {
+								fwd *= controllerTime;
 								point[0] += fwd[0] * objMat.xAxis[0]; // x
 								point[2] += fwd[2] * objMat.zAxis[2]; // z
 								//VRInputManager::Instance().iGetPlayerPosition()[3][3] += forward[3]; // w
@@ -112,7 +119,7 @@ namespace Epoch {
 								mat = DirectX::XMMatrixLookAtRH(mat.Position.vector, point.vector, up.vector);
 								mat = mat.Invert();
 								mat.Position = pos;
-								meshTime = 0, wallTime = FLT_MAX;
+								controllerTime = 0, wallTime = FLT_MAX;
 								for (int i = 0; i < ARRAYSIZE(meshes); ++i) {
 									forward.Set(0, 0, 1, 0);
 									matrix4 objMatInv = objects[i]->GetTransform().GetMatrix().Invert();
@@ -141,11 +148,11 @@ namespace Epoch {
 								position = inverse.Position;
 								forward.Set(0, 0, 1, 0);
 								forward *= inverse;
-								vec3f fwd = forward;
-								if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, fwd, meshTime))
+								vec3f agentFwd = forward;
+								float agentTime = 0;
+								if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, agentFwd, agentTime))
 								{
- 									if (meshTime < wallTime) {
-										fwd *= meshTime;
+ 									if (agentTime < wallTime) {
 										VRInputManager::GetInstance().GetPlayerPosition()[3][0] += fwd[0] * objMat.xAxis[0]; // x
 										VRInputManager::GetInstance().GetPlayerPosition()[3][2] += fwd[2] * objMat.zAxis[2]; // z
 
