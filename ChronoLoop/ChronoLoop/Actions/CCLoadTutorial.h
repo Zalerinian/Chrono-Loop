@@ -395,7 +395,7 @@ namespace Epoch
 					Light* l2 = new Light();
 					l2->Type = 2;
 					l2->Position = vec3f(0, 4, 0);
-					l2->Color = vec3f(1, 1, 1);
+					l2->Color = vec3f(.5f, .5f, 1);
 
 					Light* l3 = new Light();
 					l3->Type = 4;

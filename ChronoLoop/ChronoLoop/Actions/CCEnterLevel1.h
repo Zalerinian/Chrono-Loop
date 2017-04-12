@@ -420,10 +420,10 @@ namespace Epoch
 
 					Light* l3 = new Light();
 					l3->Type = 4;
-					l3->Color = vec3f(1, 1, 1);
-					l3->ConeDirection = vec3f(-.1f, -1, 0);
-					l3->Position = vec3f(-5.7f, 3.1f, -7.1f);
-					l3->ConeRatio = .8f;
+					l3->Color = vec3f(0, 0, 1);
+					l3->ConeDirection = vec3f(0, -1, 0);
+					l3->Position = vec3f(-4, 3, 6.5f);
+					l3->ConeRatio = .75f;
 
 					Renderer::Instance()->SetLight(l1, 0);
 					Renderer::Instance()->SetLight(l2, 1);
