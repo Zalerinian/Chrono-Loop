@@ -48,10 +48,6 @@
     <Components>
       <AABBtoAABB>Enabled</AABBtoAABB>
       <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <ElasticPlane>Enabled</ElasticPlane>
       <Collider>
         <Type>OBB</Type>
         <Trigger>False</Trigger>
@@ -79,8 +75,6 @@
     <Components>
       <AABBtoAABB>Enabled</AABBtoAABB>
       <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <ElasticPlane>Enabled</ElasticPlane>
       <Collider>
         <Type>OBB</Type>
         <Trigger>False</Trigger>
@@ -106,10 +100,6 @@
     <Rotation>0,0,0</Rotation>
     <Scale>0.6,0.6,0.6</Scale>
     <Components>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <ElasticPlane>Enabled</ElasticPlane>
       <AABBtoAABB>Enabled</AABBtoAABB>
       <ElasticPlane>Enabled</ElasticPlane>
       <Collider>
@@ -595,22 +585,22 @@
     <Name>Ceiling</Name>
     <Mesh>TutorialCeiling.obj</Mesh>
     <Texture>grey.png</Texture>
-    <Position>1.8,0,0</Position>
+    <Position>1.8,3,0</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>2.1,1,1</Scale>
     <Components>
       <Collider>
         <Type>Plane</Type>
         <Trigger>False</Trigger>
-        <Position>0,0,0</Position>
+        <Position>1,0,0</Position>
         <Rotation>0,0,0</Rotation>
-        <Scale>2.1,1,1</Scale>
+        <Scale>1,1,1</Scale>
         <Move>False</Move>
         <PickUp>False</PickUp>
         <Normal>0,-1,0</Normal>
-        <Mass>0</Mass>
-        <Elasticity>0</Elasticity>
-        <StaticFriction>0</StaticFriction>
+        <Mass>100</Mass>
+        <Elasticity>0.1</Elasticity>
+        <StaticFriction>0.6</StaticFriction>
         <KeneticFriction>0</KeneticFriction>
         <Drag>0</Drag>
       </Collider>
