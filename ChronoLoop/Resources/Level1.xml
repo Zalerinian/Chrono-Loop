@@ -688,7 +688,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>ComputerMonitor</Name>
+    <Name>PropComputerMonitor</Name>
     <Mesh>PlaceHolderMonitor.obj</Mesh>
     <Texture>RobotTexture.png</Texture>
     <Position>3.439844,0.1245345,16.74625</Position>
@@ -814,24 +814,6 @@
     <Components />
   </Object>
   <Object>
-    <Name>GeneralControlPanel</Name>
-    <Mesh>PlaneCorrection.obj</Mesh>
-    <Texture>GeneralControlScheme.png</Texture>
-    <Position>-5.954962,1.320166,-6.538151</Position>
-    <Rotation>1.57,1.57,0</Rotation>
-    <Scale>1,1,1</Scale>
-    <Components />
-  </Object>
-  <Object>
-    <Name>TimeControlPanel</Name>
-    <Mesh>PlaneCorrection.obj</Mesh>
-    <Texture>TimeControlScheme.png</Texture>
-    <Position>-5.95,1.32,-7.699566</Position>
-    <Rotation>1.57,1.57,0</Rotation>
-    <Scale>1,1,1</Scale>
-    <Components />
-  </Object>
-  <Object>
     <Name>DoorFrame1asdf</Name>
     <Mesh>DoorFrame1.obj</Mesh>
     <Texture>fieldGen.png</Texture>
@@ -850,7 +832,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Clone3</Name>
+    <Name>PropClone3</Name>
     <Mesh>Clone.obj</Mesh>
     <Texture>CloneTexture_Green.png</Texture>
     <Position>4.495092,2.363051,15.84898</Position>
@@ -886,7 +868,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Button</Name>
+    <Name>PtopButton</Name>
     <Mesh>Button.obj</Mesh>
     <Texture>red.png</Texture>
     <Position>-3.613762,2.908468,17.18809</Position>
@@ -895,7 +877,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Buttonstand</Name>
+    <Name>PropButtonstand</Name>
     <Mesh>Buttonstand.obj</Mesh>
     <Texture>white.png</Texture>
     <Position>6.472971,0,18.02397</Position>
@@ -904,7 +886,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Cube</Name>
+    <Name>PropCube</Name>
     <Mesh>mmChamber.obj</Mesh>
     <Texture>grey.png</Texture>
     <Position>-6.607128,0.1787705,16.08304</Position>
@@ -913,7 +895,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Table</Name>
+    <Name>PropTable</Name>
     <Mesh>PlaceHolderTable.obj</Mesh>
     <Texture>mmSkyboxDark.png</Texture>
     <Position>6.720272,1.104371,14.66006</Position>

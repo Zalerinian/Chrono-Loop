@@ -705,12 +705,18 @@ namespace Epoch {
 							mesh = new MeshComponent(path.c_str(), alpha);
 							mesh->SetPixelShader(ePS_TRANSPARENT);
 						}
+						else if (obj->GetName().find("Prop") != std::string::npos)
+						{
+							mesh = new MeshComponent(path.c_str());
+							mesh->SetPixelShader(ePS_PURETEXTURE);
+						}
 						else
 						{
 							mesh = new MeshComponent(path.c_str());
 						}
 
-						if (name == "Skybox")
+						if (name == "Skybox" || name == "mmDoor" || name == "mmDoor2" ||
+							name == "mmTutSign" || name == "mmExitSign" || name == "mmStartSign")
 							mesh->SetPixelShader(ePS_PURETEXTURE);
 
 							path = "../Resources/";

@@ -493,7 +493,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>cube.003</Name>
+    <Name>Propcube.003</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
     <Position>-14.07912,0.4321526,6.624924</Position>
@@ -502,7 +502,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>DoorEmitterprop</Name>
+    <Name>PropDoorEmitterprop</Name>
     <Mesh>DoorFrame1.obj</Mesh>
     <Texture>fieldGen.png</Texture>
     <Position>-14.83115,-0.60194,-9.624579</Position>
@@ -520,7 +520,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Buttonasfs</Name>
+    <Name>PropButtonasfs</Name>
     <Mesh>Button.obj</Mesh>
     <Texture>red.png</Texture>
     <Position>-11.95024,3.271827,-3.74</Position>
@@ -529,7 +529,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Buttonstandsdf</Name>
+    <Name>PropButtonstandsdf</Name>
     <Mesh>ButtonStand.obj</Mesh>
     <Texture>white.png</Texture>
     <Position>-13.30073,0,-3.744362</Position>
@@ -538,7 +538,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Chair</Name>
+    <Name>PropChair</Name>
     <Mesh>PlaceHolderChair.obj</Mesh>
     <Texture>Doors.png</Texture>
     <Position>-10.63478,1.412169,-8.292093</Position>
@@ -547,7 +547,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>DoorEmitter1asdf</Name>
+    <Name>PropDoorEmitter1asdf</Name>
     <Mesh>DoorEmiters1.obj</Mesh>
     <Texture>fieldGen.png</Texture>
     <Position>-8.674046,0.5729976,8.537929</Position>
@@ -556,7 +556,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>cube</Name>
+    <Name>Propcube</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
     <Position>-11.47379,2.04084,-3.914411</Position>
@@ -565,7 +565,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>cube</Name>
+    <Name>Propcube</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
     <Position>-7.393048,2.752134,-6.091001</Position>
@@ -574,7 +574,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Clone</Name>
+    <Name>PropClone</Name>
     <Mesh>Clone.obj</Mesh>
     <Texture>CloneTexture_Green.png</Texture>
     <Position>-13.22298,2.768052,7.108612</Position>
@@ -583,7 +583,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Clone</Name>
+    <Name>PropClone</Name>
     <Mesh>Clone.obj</Mesh>
     <Texture>CloneTexture_Red.png</Texture>
     <Position>-6.805736,0,7.383383</Position>

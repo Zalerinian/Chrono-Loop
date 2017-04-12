@@ -87,11 +87,11 @@
     </Components>
   </Object>
   <Object>
-    <Name>DoorFrame1</Name>
+    <Name>PropDoorFrame1</Name>
     <Mesh>DoorFrame1.obj</Mesh>
     <Texture>grey.png</Texture>
     <Position>-21.5733,-1.044846,2.796927</Position>
-    <Rotation>0.01744444,5.233334,0.785</Rotation>
+    <Rotation>0.01744444,-1.046667,0.785</Rotation>
     <Scale>1,1,1</Scale>
     <Components />
   </Object>
@@ -708,7 +708,7 @@
     </Components>
   </Object>
   <Object>
-    <Name>Chair1</Name>
+    <Name>PropChair1</Name>
     <Mesh>PlaceHolderChair.obj</Mesh>
     <Texture>Floorg.png</Texture>
     <Position>-16.90526,-0.1962248,6.346926</Position>
@@ -789,7 +789,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>DoorEmitter2</Name>
+    <Name>PropDoorEmitter2</Name>
     <Mesh>DoorEmiters2.obj</Mesh>
     <Texture>fieldGen.png</Texture>
     <Position>-21.039,-0.05824603,-10.37694</Position>
@@ -798,7 +798,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>asdf</Name>
+    <Name>Propasdf</Name>
     <Mesh>Clone.obj</Mesh>
     <Texture>CloneTexture_Orange.png</Texture>
     <Position>-19.71792,-0.6083169,-0.6517964</Position>
@@ -816,7 +816,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Servers</Name>
+    <Name>PropServers</Name>
     <Mesh>Servers.obj</Mesh>
     <Texture>SM_Floor_Two_SM_Floor_AlbedoTransparency.png</Texture>
     <Position>-24.69805,0,-4.364358</Position>
@@ -834,7 +834,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Button</Name>
+    <Name>PropButton</Name>
     <Mesh>Button.obj</Mesh>
     <Texture>red.png</Texture>
     <Position>-18.71062,0.530871,3.522284</Position>
@@ -843,7 +843,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Buttonstand</Name>
+    <Name>PropButtonstand</Name>
     <Mesh>Buttonstand.obj</Mesh>
     <Texture>white.png</Texture>
     <Position>-21.99042,0.8449958,-8.750456</Position>
