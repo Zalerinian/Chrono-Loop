@@ -81,7 +81,7 @@ namespace Epoch
 					rightRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
 					mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 					MainMenuBT *bt = new MainMenuBT(eControllerType_Primary);
-					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
+					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
 					RightController->AddComponent(mc);
 					RightController->AddComponent(rightRaycaster);
 					RightController->AddComponent(bt);
@@ -94,7 +94,7 @@ namespace Epoch
 					leftRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
 					mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 					MainMenuBT *bt2 = new MainMenuBT(eControllerType_Secondary);
-					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
+					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 					LeftController->AddComponent(leftConCol);
 					LeftController->AddComponent(leftRaycaster);
 					LeftController->AddComponent(mc2);
