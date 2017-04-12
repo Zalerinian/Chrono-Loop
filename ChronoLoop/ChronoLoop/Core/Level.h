@@ -28,6 +28,7 @@ namespace Epoch
 		~Level();
 		bool ChronoLoop = true;
 		bool mmflip = true;
+		Interpolator<matrix4>* playerInterp;
 
 		void AssignPlayerControls(BaseObject *_headset, BaseObject *_lController, BaseObject *_rController);
 

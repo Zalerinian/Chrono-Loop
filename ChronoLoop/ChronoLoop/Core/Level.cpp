@@ -35,6 +35,9 @@ namespace Epoch {
 	}
 
 	Level::~Level() {
+		if (playerInterp)
+			delete playerInterp;
+
 		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
 			delete *it;
 		}
@@ -45,6 +48,7 @@ namespace Epoch {
 		mHeadset = _headset;
 		mController1 = _lController;
 		mController2 = _rController;
+		playerInterp = new Interpolator<matrix4>();
 		CommandConsole::Instance().AddCommand(L"/WIREFRAME", ToggleEntireLevelsWireframe);
 		std::vector<Component*> codes1 = mController1->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
 		for (size_t x = 0; x < codes1.size(); ++x) {
