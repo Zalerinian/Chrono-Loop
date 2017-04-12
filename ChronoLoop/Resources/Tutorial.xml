@@ -294,7 +294,7 @@
     <Name>Buttonstand</Name>
     <Mesh>ButtonStand.obj</Mesh>
     <Texture>white.png</Texture>
-    <Position>-3.891072,0,-3.744362</Position>
+    <Position>-4.191072,0,-1.944362</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,0.8,1</Scale>
     <Components>
@@ -319,10 +319,13 @@
     <Name>Button</Name>
     <Mesh>Button.obj</Mesh>
     <Texture>red.png</Texture>
-    <Position>-3.89,1.080629,-3.74</Position>
+    <Position>-4.19,1.080629,-1.94</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components>
+      <ButtonPress>Enabled</ButtonPress>
+      <ButtonPress>Enabled</ButtonPress>
+      <ButtonPress>Enabled</ButtonPress>
       <ButtonPress>Enabled</ButtonPress>
       <Collider>
         <Type>Button</Type>
@@ -629,6 +632,15 @@
     <Position>0,50,0</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Exit</Name>
+    <Mesh>PlaneCorrection.obj</Mesh>
+    <Texture>exit.png</Texture>
+    <Position>-4.5794,1.417958,-1.94</Position>
+    <Rotation>1.57,1.57,0</Rotation>
+    <Scale>0.3,1,0.2</Scale>
     <Components />
   </Object>
 </Level>
