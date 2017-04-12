@@ -371,23 +371,22 @@ namespace Epoch
 
 					Light* l1 = new Light();
 					l1->Type = 4;
-					l1->Color = vec3f(1, 1, 1);
-					l1->ConeDirection = vec3f(0, -1, -.1f);
-					l1->Position = vec3f(3.75f, 3.8f, 2.2f);
-					l1->ConeRatio = .9f;
+					l1->Color = vec3f(0, 0, 1);
+					l1->ConeDirection = vec3f(0, -1, 0);
+					l1->Position = vec3f(8.5f, 3, 0);
+					l1->ConeRatio = .65f;
 
 					Light* l2 = new Light();
 					l2->Type = 2;
 					l2->Position = vec3f(0, 4, 0);
-					l2->Color = vec3f(.5f, .5f, 1);
-
+					l2->Color = vec3f(1, 1, 1);
 
 					Light* l3 = new Light();
 					l3->Type = 4;
 					l3->Color = vec3f(1, 1, 1);
-					l3->ConeDirection = vec3f(-.1f, -1, 0);
-					l3->Position = vec3f(-5.7f, 3.1f, -7.1f);
-					l3->ConeRatio = .8f;
+					l3->ConeDirection = vec3f(0, -1, 0);
+					l3->Position = vec3f(-3.5f, 3, 3.6f);
+					l3->ConeRatio = .87f;
 
 					Renderer::Instance()->SetLight(l1, 0);
 					Renderer::Instance()->SetLight(l2, 1);
