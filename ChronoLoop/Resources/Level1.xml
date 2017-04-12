@@ -964,4 +964,31 @@
     <Scale>1,0.6,1</Scale>
     <Components />
   </Object>
+  <Object>
+    <Name>Door1Wire</Name>
+    <Mesh>L1Wire2.obj</Mesh>
+    <Texture>black.png</Texture>
+    <Position>0,1.5,0</Position>
+    <Rotation>0,3.14,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Door2Wire2</Name>
+    <Mesh>L1Wire1.obj</Mesh>
+    <Texture>black.png</Texture>
+    <Position>0.1,1.5,0</Position>
+    <Rotation>0,3.14,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Door2Wire1</Name>
+    <Mesh>L1Wire2.obj</Mesh>
+    <Texture>black.png</Texture>
+    <Position>0,1.8,0</Position>
+    <Rotation>0,3.14,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
 </Level>
