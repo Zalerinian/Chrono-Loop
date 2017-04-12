@@ -45,10 +45,6 @@ namespace Epoch
 				if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane) {
 					colliding = true;
 
-					ButtonCollider* butCol = (ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
-					if (butCol->mPushNormal * _other.mVelocity < .1f)
-						_col.mVelocity = vec3f(0,0,0);
-
 					vec3f norm = ((ButtonCollider*)&_col)->mPushNormal;
 					vec3f tForce = norm * (norm * _other.mTotalForce);
 					vec3f vel = norm * (norm * _other.mVelocity);
