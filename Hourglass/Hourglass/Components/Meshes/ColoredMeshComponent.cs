@@ -9,7 +9,7 @@ namespace Hourglass
 	{
 		private Button mColor = new Button();
 
-		public ColoredMeshComponent(int _yOffset = 0) : base(_yOffset) {
+		public ColoredMeshComponent(int _yOffset = 0) : base(45 + _yOffset) {
 			mType = ComponentType.ColoredMesh;
 
 			#region Component Creation
@@ -23,7 +23,7 @@ namespace Hourglass
 			int ContentWidth = (mGroupBox.Size - mGroupBox.Padding.Size - mGroupBox.Margin.Size).Width;
 
 			mColor.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
-			mColor.Location = new System.Drawing.Point(90, 84);
+			mColor.Location = new System.Drawing.Point(6, 21);
 			mColor.Size = new System.Drawing.Size(ContentWidth - mColor.Left, 24);
 			mColor.Font = new System.Drawing.Font("Microsoft Sans Serif", 10, System.Drawing.FontStyle.Bold);
 			mColor.Text = "Mesh Color";

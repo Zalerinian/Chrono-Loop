@@ -260,8 +260,7 @@ namespace Hourglass
 
 		public Matrix CreateMatrix()
 		{
-			// Matrix multiplication order is Rotation, Translation, then scaling. Always remember to play RTS!
-			// This is assuming you want it to rotate in place. To rotate around a point, you'd do TRS.
+			// This is assuming you want it to rotate in place. To rotate around a point, you'd do STR.
 			Matrix mat = Matrix.Identity;
 			mat *= Matrix.Scaling(GetScaleVector());
 			mat *= Matrix.RotationYawPitchRoll((float)mRotY.Value * D2R, (float)mRotX.Value * D2R, (float)mRotZ.Value * D2R);

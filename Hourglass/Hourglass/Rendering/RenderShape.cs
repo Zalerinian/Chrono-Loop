@@ -118,11 +118,9 @@ namespace Hourglass
 
         private void RebuildMatrix() {
             mWorld = Matrix.Identity;
-            mWorld.RotateX(mRotation.X);
-            mWorld.RotateZ(mRotation.Z);
-            mWorld.RotateY(mRotation.Y);
-            mWorld.Translate(mPosition);
-            mWorld.Scale(mScale);
+			mWorld *= Matrix.Scaling(mScale);
+			mWorld *= Matrix.RotationYawPitchRoll(mRotation.Y, mRotation.Z, mRotation.X);
+            mWorld *= Matrix.Translation(mPosition);
         }
 
 		public bool RayToTriangle(Vector3 _v1, Vector3 _v2, Vector3 _v3, Vector3 _norm, Vector3 _start, Vector3 _dir, out float _time)
