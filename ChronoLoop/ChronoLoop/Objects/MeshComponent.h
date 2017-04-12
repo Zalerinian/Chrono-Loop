@@ -23,7 +23,7 @@ namespace Epoch
 		RenderShape* mShape = nullptr;
 		bool mVisible = true;
 		bool mBuffersCanUpdate = true;
-		bool mBlended = false;
+		bool mBlended = false, mTopmost = false;
 
 		BufferDataType mVertexBufferTypes[eVB_MAX];
 		BufferDataType mPixelBufferTypes[ePB_MAX];
@@ -31,9 +31,11 @@ namespace Epoch
 
 		virtual void CreateOpaqueNode();
 		virtual void CreateTransparentNode();
+		virtual void CreateTopmostNode();
 		virtual void CreateNode();
 		virtual void RemoveOpaqueNode();
 		virtual void RemoveTransparentNode();
+		virtual void RemoveTopmostNode();
 		virtual void RemoveNode();
 
 		virtual void UpdateBuffer(ConstantBufferType _t, unsigned char _index);
@@ -59,6 +61,7 @@ namespace Epoch
 		void SetPixelShader(PixelShaderFormat _pf);
 		void SetGeometryShader(GeometryShaderFormat _gf);
 		void SetShaders(PixelShaderFormat _psf, VertexShaderFormat _vsf, GeometryShaderFormat _gsf);
+		void SetTopmost(bool _topmost);
 
 		
 		// ********************************************************************************
@@ -76,6 +79,7 @@ namespace Epoch
 		void EnableBufferUpdates(bool _updateNow = false);
 		void DisableBufferUpdates();
 		bool GetBufferUpdates();
+		bool GetTopmost();
 
 		// ********************************************************************************
 		/// <summary>

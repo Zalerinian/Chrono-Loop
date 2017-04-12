@@ -15,8 +15,14 @@ namespace Epoch {
 		mNode = Renderer::Instance()->AddTransparentNode(*mShape);
 	}
 
+	void MeshComponent::CreateTopmostNode() {
+		mNode = Renderer::Instance()->AddTopmostNode(*mShape);
+	}
+
 	void MeshComponent::CreateNode() {
-		if (mBlended) {
+		if (GetTopmost()) {
+			CreateTopmostNode();
+		} else if (mBlended) {
 			CreateTransparentNode();
 		} else {
 			CreateOpaqueNode();
@@ -33,9 +39,16 @@ namespace Epoch {
 		Renderer::Instance()->RemoveTransparentNode(*mShape);
 	}
 
+	void MeshComponent::RemoveTopmostNode() {
+		DESTROY_NODE(mNode);
+		Renderer::Instance()->RemoveTopmostNode(*mShape);
+	}
+
 	void MeshComponent::RemoveNode() {
 		if (mNode) {
-			if (mBlended) {
+			if (GetTopmost()) {
+				RemoveTopmostNode();
+			} else if (mBlended) {
 				RemoveTransparentNode();
 			} else {
 				RemoveOpaqueNode();
@@ -44,7 +57,9 @@ namespace Epoch {
 	}
 
 	void MeshComponent::UpdateBuffer(ConstantBufferType _t, unsigned char _index) {
-		if (mBlended) {
+		if(GetTopmost()) {
+			Renderer::Instance()->UpdateTopmostNodeBuffer(*mShape, _t, _index);
+		} else if (mBlended) {
 			Renderer::Instance()->UpdateTransparentNodeBuffer(*mShape, _t, _index);
 		} else {
 			Renderer::Instance()->UpdateOpaqueNodeBuffer(*mShape, _t, _index);
@@ -268,6 +283,16 @@ namespace Epoch {
 		}
 	}
 
+	void MeshComponent::SetTopmost(bool _topmost) {
+		if (GetTopmost() != _topmost) {
+			RemoveNode();
+			mTopmost = _topmost;
+			if (IsVisible()) {
+				CreateNode();
+			}
+		}
+	}
+
 	void MeshComponent::SetBlended(bool _ButWillItBlend) {
 		if(mBlended) {
 			if (!_ButWillItBlend) {
@@ -320,6 +345,10 @@ namespace Epoch {
 
 	bool MeshComponent::GetBufferUpdates() {
 		return mBuffersCanUpdate;
+	}
+
+	bool MeshComponent::GetTopmost() {
+		return mTopmost;
 	}
 
 	void MeshComponent::SetData(ConstantBufferType _t, BufferDataType _bt, unsigned char _index, void * _data) {

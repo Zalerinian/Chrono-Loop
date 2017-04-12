@@ -56,8 +56,6 @@ namespace Hourglass
 
 			#region Component Setup
 
-			mShape.Load("Assets\\Plane.obj");
-			mShape.FillMode = Microsoft.DirectX.Direct3D.FillMode.WireFrame;
 
 			int ContentWidth = (mGroupBox.Size - mGroupBox.Padding.Size - mGroupBox.Margin.Size).Width;
 
