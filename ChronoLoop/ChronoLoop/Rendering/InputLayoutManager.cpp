@@ -14,7 +14,7 @@ namespace Epoch {
 	}
 
 	void InputLayoutManager::Initialize() {
-		ID3D11Device* DEVICE = Renderer::Instance()->GetDevice().Get();
+		Microsoft::WRL::ComPtr<ID3D11Device>& DEVICE = Renderer::Instance()->GetDevice();
 		char* buffer = nullptr;
 		int bufferSize = 0;
 		D3D11_INPUT_ELEMENT_DESC PosDesc[] =

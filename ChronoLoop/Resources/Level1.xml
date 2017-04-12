@@ -1,34 +1,11 @@
-<Level>
+﻿<Level>
   <Settings>
     <StartPos>0.46,0,-10.15</StartPos>
     <StartRot>0,0,0</StartRot>
+    <MaxClones>2</MaxClones>
   </Settings>
   <Object>
-    <Name>Floor</Name>
-    <Mesh>GenericFloorTile.obj</Mesh>
-    <Texture>floor.png</Texture>
-    <Position>0,0,0</Position>
-    <Rotation>0,0,0</Rotation>
-    <Scale>13,1,25</Scale>
-    <Components>
-      <Collider>
-        <Type>Plane</Type>
-        <Trigger>False</Trigger>
-        <Position>0,0,0</Position>
-        <Rotation>0,0,0</Rotation>
-        <Scale>13,1,25</Scale>
-        <Move>False</Move>
-        <Normal>0,1,0</Normal>
-        <Mass>200</Mass>
-        <Elasticity>0.01</Elasticity>
-        <StaticFriction>0.8</StaticFriction>
-        <KeneticFriction>0.7</KeneticFriction>
-        <Drag>0</Drag>
-      </Collider>
-    </Components>
-  </Object>
-  <Object>
-    <Name>Door1</Name>
+    <Name>TransparentDoor1</Name>
     <Mesh>Door1.obj</Mesh>
     <Texture>enrgyField.png</Texture>
     <Position>0,0,3.18917</Position>
@@ -42,6 +19,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>2.4,2.9,0.5</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
         <Mass>50</Mass>
         <Elasticity>0.02</Elasticity>
@@ -57,7 +35,7 @@
     <Texture>floor.png</Texture>
     <Position>0,2.982029,0</Position>
     <Rotation>3.14,0,0</Rotation>
-    <Scale>13,1,25</Scale>
+    <Scale>13,0.8370112,25</Scale>
     <Components>
       <Collider>
         <Type>Plane</Type>
@@ -66,6 +44,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>13,1,25</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Normal>0,-1,0</Normal>
         <Mass>100</Mass>
         <Elasticity>0.02</Elasticity>
@@ -76,15 +55,21 @@
     </Components>
   </Object>
   <Object>
-    <Name>cube</Name>
+    <Name>cube.001</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
-    <Position>-5.038424,0.3803102,0.5274404</Position>
+    <Position>5.57156,1.304958,-0.5387666</Position>
     <Rotation>0,0,0</Rotation>
-    <Scale>0.7,0.7,0.7</Scale>
+    <Scale>0.5,0.5,0.5</Scale>
     <Components>
       <AABBtoSphere>Enabled</AABBtoSphere>
       <AABBtoAABB>Enabled</AABBtoAABB>
+      <ElasticPlane>Enabled</ElasticPlane>
+      <AABBtoAABB>Enabled</AABBtoAABB>
+      <AABBtoSphere>Enabled</AABBtoSphere>
+      <ElasticPlane>Enabled</ElasticPlane>
+      <AABBtoAABB>Enabled</AABBtoAABB>
+      <AABBtoSphere>Enabled</AABBtoSphere>
       <ElasticPlane>Enabled</ElasticPlane>
       <Collider>
         <Type>OBB</Type>
@@ -93,6 +78,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>1,1,1</Scale>
         <Move>True</Move>
+        <PickUp>True</PickUp>
         <Gravity>0,-9.810001,0</Gravity>
         <Mass>25</Mass>
         <Elasticity>0.1</Elasticity>
@@ -117,6 +103,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>0.5,1.05,0.5</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
         <Mass>0</Mass>
         <Elasticity>0</Elasticity>
@@ -142,6 +129,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>0.4,0.1,0.4</Scale>
         <Move>True</Move>
+        <PickUp>False</PickUp>
         <PushNormal>0,1,0</PushNormal>
         <Mass>2</Mass>
         <NormalForce>1</NormalForce>
@@ -149,13 +137,16 @@
     </Components>
   </Object>
   <Object>
-    <Name>cube</Name>
+    <Name>cube.002</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
-    <Position>-4.794728,0.2764754,-0.2446756</Position>
+    <Position>5.687682,1.148723,-1.164733</Position>
     <Rotation>0,0,0</Rotation>
-    <Scale>0.5,0.5,0.5</Scale>
+    <Scale>0.2,0.2,0.2</Scale>
     <Components>
+      <AABBtoAABB>Enabled</AABBtoAABB>
+      <AABBtoSphere>Enabled</AABBtoSphere>
+      <ElasticPlane>Enabled</ElasticPlane>
       <AABBtoAABB>Enabled</AABBtoAABB>
       <AABBtoSphere>Enabled</AABBtoSphere>
       <ElasticPlane>Enabled</ElasticPlane>
@@ -166,12 +157,13 @@
         <Rotation>0,0,0</Rotation>
         <Scale>1,1,1</Scale>
         <Move>True</Move>
+        <PickUp>True</PickUp>
         <Gravity>0,-9.810001,0</Gravity>
         <Mass>10</Mass>
         <Elasticity>0.4</Elasticity>
         <StaticFriction>0.3</StaticFriction>
         <KeneticFriction>0.2</KeneticFriction>
-        <Drag>0.3</Drag>
+        <Drag>0.2</Drag>
       </Collider>
     </Components>
   </Object>
@@ -205,10 +197,11 @@
       <Collider>
         <Type>OBB</Type>
         <Trigger>True</Trigger>
-        <Position>0,1.4,1.9</Position>
+        <Position>0,1.4,2.5</Position>
         <Rotation>0,0,0</Rotation>
-        <Scale>11.5,2.9,1.6</Scale>
+        <Scale>2.7,3.3,1</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
         <Mass>0</Mass>
         <Elasticity>0</Elasticity>
@@ -229,10 +222,11 @@
       <Collider>
         <Type>OBB</Type>
         <Trigger>False</Trigger>
-        <Position>0,1.4,0.5</Position>
+        <Position>0,1.4,0.9</Position>
         <Rotation>0,0,0</Rotation>
-        <Scale>2.3,2.9,1.4</Scale>
+        <Scale>11.7,2.9,1.4</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
         <Mass>50</Mass>
         <Elasticity>0.02</Elasticity>
@@ -252,7 +246,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Door2</Name>
+    <Name>TransparentDoor2</Name>
     <Mesh>Door1.obj</Mesh>
     <Texture>enrgyField.png</Texture>
     <Position>0,2.6,10.12072</Position>
@@ -266,6 +260,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>2.5,2.5,0.3</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
         <Mass>50</Mass>
         <Elasticity>0.02</Elasticity>
@@ -276,12 +271,12 @@
     </Components>
   </Object>
   <Object>
-    <Name>cube</Name>
+    <Name>cube.003</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
-    <Position>-3.904167,0.5843749,0.6343668</Position>
+    <Position>5.654684,1.280929,0.08234796</Position>
     <Rotation>0,0,0</Rotation>
-    <Scale>0.5,0.5,0.5</Scale>
+    <Scale>0.3,0.3,0.3</Scale>
     <Components>
       <AABBtoAABB>Enabled</AABBtoAABB>
       <AABBtoSphere>Enabled</AABBtoSphere>
@@ -293,17 +288,18 @@
         <Rotation>0,0,0</Rotation>
         <Scale>1,1,1</Scale>
         <Move>True</Move>
+        <PickUp>True</PickUp>
         <Gravity>0,-9.810001,0</Gravity>
-        <Mass>50</Mass>
+        <Mass>30</Mass>
         <Elasticity>0.04</Elasticity>
         <StaticFriction>0.3</StaticFriction>
         <KeneticFriction>0.2</KeneticFriction>
-        <Drag>0.04</Drag>
+        <Drag>0.03</Drag>
       </Collider>
     </Components>
   </Object>
   <Object>
-    <Name>SKybox</Name>
+    <Name>Skybox</Name>
     <Mesh>mmSkybox.obj</Mesh>
     <Texture>mmSkyboxLight.png</Texture>
     <Position>0,0,0</Position>
@@ -333,6 +329,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>2,3,25</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
         <Mass>100</Mass>
         <Elasticity>0.02</Elasticity>
@@ -355,6 +352,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>2,1,1</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
         <Mass>100</Mass>
         <Elasticity>0.02</Elasticity>
@@ -377,6 +375,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>12.6,3,1.5</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
         <Mass>100</Mass>
         <Elasticity>0.02</Elasticity>
@@ -399,6 +398,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>5.1,3,0.5</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
         <Mass>100</Mass>
         <Elasticity>0.02</Elasticity>
@@ -421,6 +421,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>5.1,3,0.5</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
         <Mass>100</Mass>
         <Elasticity>0.02</Elasticity>
@@ -443,6 +444,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>5.1,3,0.5</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
         <Mass>100</Mass>
         <Elasticity>0.02</Elasticity>
@@ -465,6 +467,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>5.1,3,0.5</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
         <Mass>100</Mass>
         <Elasticity>0.02</Elasticity>
@@ -476,7 +479,7 @@
   </Object>
   <Object>
     <Name>Wall5</Name>
-    <Position>1.6,1.5,1.8</Position>
+    <Position>1.6,1.5,1.820865</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components>
@@ -487,6 +490,7 @@
         <Rotation>0,0,0</Rotation>
         <Scale>0.5,3,3</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
         <Mass>100</Mass>
         <Elasticity>0.02</Elasticity>
@@ -503,6 +507,461 @@
     <Position>7.325522,500,0</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Camera</Name>
+    <Mesh>PlaceHolderCamera.obj</Mesh>
+    <Texture>enrgyField.png</Texture>
+    <Position>-5.676158,2.982083,2.699861</Position>
+    <Rotation>0,2.442222,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Camera2</Name>
+    <Mesh>PlaceHolderCamera.obj</Mesh>
+    <Texture>enrgyField.png</Texture>
+    <Position>5.663882,2.982083,2.831557</Position>
+    <Rotation>0,4.001756,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Table</Name>
+    <Mesh>PlaceHolderTable.obj</Mesh>
+    <Texture>mmSkyboxDark.png</Texture>
+    <Position>5.526108,0,-0.5224512</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>0.3,0.6,0.2</Scale>
+    <Components>
+      <Collider>
+        <Type>OBB</Type>
+        <Trigger>False</Trigger>
+        <Position>0,0.4,0</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>1,1.6,1</Scale>
+        <Move>False</Move>
+        <PickUp>False</PickUp>
+        <Gravity>0,0,0</Gravity>
+        <Mass>0</Mass>
+        <Elasticity>0</Elasticity>
+        <StaticFriction>0</StaticFriction>
+        <KeneticFriction>0</KeneticFriction>
+        <Drag>0</Drag>
+      </Collider>
+    </Components>
+  </Object>
+  <Object>
+    <Name>TableCollider</Name>
+    <Position>5.521881,0.8269265,-0.52672</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>0.9,0.9,0.99</Scale>
+    <Components>
+      <Collider>
+        <Type>OBB</Type>
+        <Trigger>False</Trigger>
+        <Position>0,0.1,0</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>1,0.1,1.6</Scale>
+        <Move>False</Move>
+        <PickUp>False</PickUp>
+        <Gravity>0,0,0</Gravity>
+        <Mass>50</Mass>
+        <Elasticity>0.2</Elasticity>
+        <StaticFriction>0.2</StaticFriction>
+        <KeneticFriction>0.1</KeneticFriction>
+        <Drag>0.2</Drag>
+      </Collider>
+    </Components>
+  </Object>
+  <Object>
+    <Name>Chair</Name>
+    <Mesh>PlaceHolderChair.obj</Mesh>
+    <Texture>Floorg.png</Texture>
+    <Position>-4.585726,1.228842,18.43977</Position>
+    <Rotation>-2.250321,1.367699,0</Rotation>
+    <Scale>-0.0005902876,0.025,0.025</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Table</Name>
+    <Mesh>PlaceHolderTable.obj</Mesh>
+    <Texture>mmSkyboxDark.png</Texture>
+    <Position>-2.268869,0,6.507294</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>0.3,0.5,0.5</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Wall5</Name>
+    <Position>1.6,1.5,1.8</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Wall5</Name>
+    <Position>1.6,1.5,1.8</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Wall5</Name>
+    <Position>1.6,1.5,1.8</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>TransparentWall1</Name>
+    <Mesh>TiledWall.obj</Mesh>
+    <Texture>wallTextureM.png</Texture>
+    <Position>1.558138,1.516756,6.823612</Position>
+    <Rotation>0,1.57,0</Rotation>
+    <Scale>2.2,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>TransparentWall2</Name>
+    <Mesh>TiledWall.obj</Mesh>
+    <Texture>wallTextureM.png</Texture>
+    <Position>-1.566057,1.516756,6.705935</Position>
+    <Rotation>0,1.57,0</Rotation>
+    <Scale>2.2,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>TransWallCollider2</Name>
+    <Position>-1.57,1.52,6.732075</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>0.5,0.9,1</Scale>
+    <Components>
+      <Collider>
+        <Type>OBB</Type>
+        <Trigger>False</Trigger>
+        <Position>0,0,0</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>1,4.5,6.6</Scale>
+        <Move>False</Move>
+        <PickUp>False</PickUp>
+        <Gravity>0,0,0</Gravity>
+        <Mass>0</Mass>
+        <Elasticity>0</Elasticity>
+        <StaticFriction>0</StaticFriction>
+        <KeneticFriction>0</KeneticFriction>
+        <Drag>0</Drag>
+      </Collider>
+    </Components>
+  </Object>
+  <Object>
+    <Name>TransWallCollider1</Name>
+    <Position>1.56,1.52,6.787682</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>0.6,3,6.5</Scale>
+    <Components>
+      <Collider>
+        <Type>OBB</Type>
+        <Trigger>False</Trigger>
+        <Position>0,0,0</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>1,1,1</Scale>
+        <Move>False</Move>
+        <PickUp>False</PickUp>
+        <Gravity>0,0,0</Gravity>
+        <Mass>0</Mass>
+        <Elasticity>0</Elasticity>
+        <StaticFriction>0</StaticFriction>
+        <KeneticFriction>0</KeneticFriction>
+        <Drag>0</Drag>
+      </Collider>
+    </Components>
+  </Object>
+  <Object>
+    <Name>Chair2</Name>
+    <Mesh>PlaceHolderChair.obj</Mesh>
+    <Texture>Floorg.png</Texture>
+    <Position>-2.578483,0,7.507586</Position>
+    <Rotation>0,5.931111,0</Rotation>
+    <Scale>0.03,0.025,0.025</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>ComputerMonitor</Name>
+    <Mesh>PlaceHolderMonitor.obj</Mesh>
+    <Texture>RobotTexture.png</Texture>
+    <Position>3.439844,0.1245345,16.74625</Position>
+    <Rotation>0,-0.7012571,0</Rotation>
+    <Scale>0.2,0.2,0.2</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>ComputerMonitor2</Name>
+    <Mesh>PlaceHolderMonitor.obj</Mesh>
+    <Texture>RobotTexture.png</Texture>
+    <Position>-2.029978,0.8023034,7.448506</Position>
+    <Rotation>0,3.14,0</Rotation>
+    <Scale>0.2,0.2,0.2</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>ComputerTower2</Name>
+    <Mesh>PlaceHolderComputer.obj</Mesh>
+    <Texture>enrgyField.png</Texture>
+    <Position>-2.235327,-0.01475002,6.87541</Position>
+    <Rotation>0,3.14,0</Rotation>
+    <Scale>0.2,0.3,0.2</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>ComputerTower</Name>
+    <Mesh>PlaceHolderComputer.obj</Mesh>
+    <Texture>enrgyField.png</Texture>
+    <Position>-2.235327,-0.01475002,6.148144</Position>
+    <Rotation>0,3.14,0</Rotation>
+    <Scale>0.2,0.3,0.2</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Servers</Name>
+    <Mesh>Servers.obj</Mesh>
+    <Texture>SM_Floor_Two_SM_Floor_AlbedoTransparency.png</Texture>
+    <Position>0,0,6.75767</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>0.65,0.9,0.7</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Clone</Name>
+    <Mesh>Clone.obj</Mesh>
+    <Texture>CloneTexture_Grey.png</Texture>
+    <Position>4.122666,0.3932321,4.370924</Position>
+    <Rotation>6.018333,6.018333,0.0942</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Clone2</Name>
+    <Mesh>Clone.obj</Mesh>
+    <Texture>CloneTexture_Grey.png</Texture>
+    <Position>2.852715,0.3932321,5.882046</Position>
+    <Rotation>0.7169666,0.2058444,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Clone3</Name>
+    <Mesh>Clone.obj</Mesh>
+    <Texture>CloneTexture_Green.png</Texture>
+    <Position>3.623517,0.3932321,8.32376</Position>
+    <Rotation>1.221111,1.372878,5.931111</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>cloneController1</Name>
+    <Mesh>Controller.obj</Mesh>
+    <Texture>vr_controller_lowpoly_texture.png</Texture>
+    <Position>2.942702,0.0692593,8.909224</Position>
+    <Rotation>0.2860889,1.57,0.1657222</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>cloneController2</Name>
+    <Mesh>Controller.obj</Mesh>
+    <Texture>vr_controller_lowpoly_texture.png</Texture>
+    <Position>4.767314,2.684517,6.254246</Position>
+    <Rotation>0.003488889,0.9071111,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>cloneController3</Name>
+    <Mesh>Controller.obj</Mesh>
+    <Texture>vr_controller_lowpoly_texture.png</Texture>
+    <Position>4.291179,0.0692593,4.692642</Position>
+    <Rotation>0.2198,0.785,3.14</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>cloneController4</Name>
+    <Mesh>Controller.obj</Mesh>
+    <Texture>vr_controller_lowpoly_texture.png</Texture>
+    <Position>3.355388,0.0692593,4.14311</Position>
+    <Rotation>0.2860889,0.003488889,0.1657222</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>cloneController5</Name>
+    <Mesh>Controller.obj</Mesh>
+    <Texture>vr_controller_lowpoly_texture.png</Texture>
+    <Position>3.070417,0.0692593,7.800469</Position>
+    <Rotation>0.2860889,2.093333,0.1674667</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>cloneController6</Name>
+    <Mesh>Controller.obj</Mesh>
+    <Texture>vr_controller_lowpoly_texture.png</Texture>
+    <Position>4.291179,0.0692593,6.16082</Position>
+    <Rotation>0.2198,5.582222,3.14</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>GeneralControlPanel</Name>
+    <Mesh>PlaneCorrection.obj</Mesh>
+    <Texture>GeneralControlScheme.png</Texture>
+    <Position>-5.954962,1.320166,-6.538151</Position>
+    <Rotation>1.57,1.57,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>TimeControlPanel</Name>
+    <Mesh>PlaneCorrection.obj</Mesh>
+    <Texture>TimeControlScheme.png</Texture>
+    <Position>-5.95,1.32,-7.699566</Position>
+    <Rotation>1.57,1.57,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>DoorFrame1asdf</Name>
+    <Mesh>DoorFrame1.obj</Mesh>
+    <Texture>fieldGen.png</Texture>
+    <Position>0,0,12.12225</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Success</Name>
+    <Mesh>PlaneCorrection.obj</Mesh>
+    <Texture>Success.png</Texture>
+    <Position>0,2.894122,11.94945</Position>
+    <Rotation>1.57,3.14,0</Rotation>
+    <Scale>0.5,1,0.2</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Clone3</Name>
+    <Mesh>Clone.obj</Mesh>
+    <Texture>CloneTexture_Green.png</Texture>
+    <Position>4.495092,2.363051,15.84898</Position>
+    <Rotation>0.6070667,-1.178912,5.931111</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Camera</Name>
+    <Mesh>PlaceHolderCamera.obj</Mesh>
+    <Texture>enrgyField.png</Texture>
+    <Position>-5.676158,2.982083,10.7025</Position>
+    <Rotation>0,1.065856,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Chair</Name>
+    <Mesh>PlaceHolderChair.obj</Mesh>
+    <Texture>Floorg.png</Texture>
+    <Position>-2.956782,0,5.440462</Position>
+    <Rotation>0,0.1744445,0</Rotation>
+    <Scale>0.03,0.025,0.025</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>ComputerMonitor</Name>
+    <Mesh>PlaceHolderMonitor.obj</Mesh>
+    <Texture>RobotTexture.png</Texture>
+    <Position>-2.029978,0.8023034,5.255193</Position>
+    <Rotation>0,3.14,0</Rotation>
+    <Scale>0.2,0.2,0.2</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Button</Name>
+    <Mesh>Button.obj</Mesh>
+    <Texture>red.png</Texture>
+    <Position>-3.613762,2.908468,17.18809</Position>
+    <Rotation>-2.324289,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Buttonstand</Name>
+    <Mesh>Buttonstand.obj</Mesh>
+    <Texture>white.png</Texture>
+    <Position>6.472971,0,18.02397</Position>
+    <Rotation>-0.1568006,0.5555888,1.360667</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Cube</Name>
+    <Mesh>mmChamber.obj</Mesh>
+    <Texture>grey.png</Texture>
+    <Position>-6.607128,0.1787705,16.08304</Position>
+    <Rotation>-0.3856168,0.4117268,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Table</Name>
+    <Mesh>PlaceHolderTable.obj</Mesh>
+    <Texture>mmSkyboxDark.png</Texture>
+    <Position>6.720272,1.104371,14.66006</Position>
+    <Rotation>0.785,-1.099347,0</Rotation>
+    <Scale>0.3,0.6,0.3</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Floor</Name>
+    <Mesh>L1Floor.obj</Mesh>
+    <Texture>Floor.png</Texture>
+    <Position>0,1.5,0</Position>
+    <Rotation>0,3.14,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components>
+      <Collider>
+        <Type>Plane</Type>
+        <Trigger>False</Trigger>
+        <Position>0,-1.5,0</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>1,1,1</Scale>
+        <Move>False</Move>
+        <PickUp>False</PickUp>
+        <Normal>0,1,0</Normal>
+        <Mass>200</Mass>
+        <Elasticity>0.01</Elasticity>
+        <StaticFriction>0.8</StaticFriction>
+        <KeneticFriction>0.7</KeneticFriction>
+        <Drag>0</Drag>
+      </Collider>
+    </Components>
+  </Object>
+  <Object>
+    <Name>Cutout</Name>
+    <Mesh>L1Floor2.obj</Mesh>
+    <Texture>Floor.png</Texture>
+    <Position>0,1.5,0</Position>
+    <Rotation>0,3.14,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>TransparentWindow</Name>
+    <Mesh>TiledWall.obj</Mesh>
+    <Texture>wallTextureM.png</Texture>
+    <Position>1.591685,2.097077,1.808621</Position>
+    <Rotation>0,1.57,0</Rotation>
+    <Scale>1,0.6,1</Scale>
     <Components />
   </Object>
 </Level>

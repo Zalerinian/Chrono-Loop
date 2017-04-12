@@ -12,27 +12,22 @@
 #include "../Actions/CCButtonPress.h"
 #include "../Actions/CCEnterLevel.h"
 #include "../Actions/CCEnterLevel1.h"
+#include "../Actions/CCLoadTutorial.h"
 #include "../Actions/MainMenuBT.h"
 #include "../Actions/CCLoadHub.h"
 #include "../Actions/CCBoxSpin.h"
 #include "../Actions/CCExit.h"
 #include "../Actions/CCStartButton.h"
-#include "../Actions/GestureDetection.hpp"
-#include "../Actions/TimelineIndicator.hpp"
 #include "../Objects/MeshComponent.h"
-#include "../Objects/TransparentMeshComponent.h"
 #include "../tinyxml/tinyxml.h"
 #include "../tinyxml/tinystr.h"
 #include "../Common/Settings.h"
 #include "../Particles/ParticleSystem.h"
 #include "../Input/CommandConsole.h"
 #include "../Actions/CCButtonHold.h"
+#include "../Core/Pool.h"
 
 namespace Epoch {
-
-	CCEnterLevel* accessLevelTwo = nullptr;
-	CCEnterLevel1* accessLevelOne = nullptr;
-	CCLoadHub* accessHub = nullptr;
 
 	Level::Level() 
 	{
@@ -54,7 +49,7 @@ namespace Epoch {
 		std::vector<Component*> codes1 = mController1->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
 		for (size_t x = 0; x < codes1.size(); ++x) {
 			if (dynamic_cast<TimeManipulation*>(codes1[x])) {
-				mTMComponent1 = ((TimeManipulation*)codes1[x]);
+				mTMComponent = ((TimeManipulation*)codes1[x]);
 				break;
 			}
 		}
@@ -62,10 +57,18 @@ namespace Epoch {
 		std::vector<Component*> codes2 = mController2->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
 		for (size_t x = 0; x < codes2.size(); ++x) {
 			if (dynamic_cast<TimeManipulation*>(codes2[x])) {
-				mTMComponent2 = ((TimeManipulation*)codes2[x]);
-				break;
+				if (!mTMComponent) 
+					mTMComponent = ((TimeManipulation*)codes2[x]);
+					break;
 			}
 		}
+		//std::vector<Component*> codes3 = mHeadset->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+		//for (size_t x = 0; x < codes2.size(); ++x) {
+		//	if (dynamic_cast<PauseMenu*>(codes2[x])) {
+		//		mPauseMenu = ((PauseMenu*)codes2[x]);
+		//		break;
+		//	}
+		//}
 	}
 
 	BaseObject * Level::FindObjectWithName(std::string _name) {
@@ -297,6 +300,19 @@ namespace Epoch {
 								}
 								SystemLogger::Debug() << "Start rotation: " << mStartRotation << std::endl;
 							}
+							else if (nodeType == "MaxClones") {
+								size_t pos = 0;
+								int i = 0;
+								std::string s = std::string(pData->Value()) + ',';
+								while ((pos = s.find(",")) != std::string::npos)
+								{
+									std::string token = s.substr(0, pos);
+									mMaxNumofClones = std::strtol(token.c_str(), nullptr, 10);
+									i++;
+									s.erase(0, pos + 1);
+								}
+								SystemLogger::Debug() << "Max Clones: " << mMaxNumofClones << std::endl;
+							}
 							break;
 						default:
 							SystemLogger::Error() << "Wat" << std::endl;
@@ -312,11 +328,11 @@ namespace Epoch {
 				while (pObject)
 				{
 					std::vector<std::string> codeComs;
-					std::string elementType, name, meshFile, textureFile, colliderType, particleTexture, soundName;
+					std::string elementType, name, meshFile, textureFile, emissiveTexture, colliderType, particleTexture, soundName;
 					vec3f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity, particleRadius, startColor, endColor;
 					float mass, elasticity, staticF, kineticF, normF, drag, radius, startSize, endSize, startAlpha, endAlpha;
 					int totalParticles, maxParticles, PPS, lifeTime;
-					bool collider = false, trigger = false, canMove = false, physical = false, particle = false, sound = false, SFX = false, Loop = false;
+					bool collider = false, trigger = false, canMove = false, canPickUp = false, physical = false, particle = false, sound = false, SFX = false, Loop = false;
 					unsigned long sfxFile, playFile, pauseFile, stopFile, resumeFile;
 					pData = pObject->FirstChildElement();
 					while (pData)
@@ -340,6 +356,9 @@ namespace Epoch {
 								meshFile = pData->Value();
 							else if (elementType == "Texture")
 								textureFile = pData->Value();
+							else if (elementType == "Emissive") {
+								emissiveTexture = pData->Value();
+							}
 							else if (elementType == "Position")
 							{
 								size_t pos = 0;
@@ -400,6 +419,11 @@ namespace Epoch {
 							{
 								std::string temp(pData->Value());
 								canMove = temp.find("True") != std::string::npos;
+							}
+							else if(elementType == "PickUp")
+							{
+								std::string temp(pData->Value());
+								canPickUp = temp.find("True") != std::string::npos;
 							}
 							else if (elementType == "Type")
 								colliderType = pData->Value();
@@ -591,6 +615,11 @@ namespace Epoch {
 						CCStartButton* start = new CCStartButton();
 						obj->AddComponent(start);
 					}
+					else if(name == "mmTutButton")
+					{
+						CCLoadTutorial* tut = new CCLoadTutorial();
+						obj->AddComponent(tut);
+					}
 					else if (name == "mmExitButton")
 					{
 						CCExit* exit = new CCExit();
@@ -601,49 +630,98 @@ namespace Epoch {
 						CCBoxSpin* spin = new CCBoxSpin();
 						obj->AddComponent(spin);
 					}
-					else if (name == "cube.001" || name == "cube.002" || name == "cube.003" || name == "cube.004")
+					else if (name == "cube.001" || name == "cube.002" || name == "cube.003" || name == "cube.004" || name == "cube")
 					{
-						Emitter* e = new Emitter();
-						e->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::SFX_BOUNCEEFFECTS);
+						Emitter* e = new SFXEmitter();
+						((SFXEmitter*)e)->SetEvent(AK::EVENTS::SFX_BOUNCEEFFECTS);
 						obj->AddComponent(e);
+						AudioWrapper::GetInstance().AddEmitter(e, name.c_str());
+
 					}
-					else if (name == "Door" || name == "Door2")
+					else if (name == "TransparentDoor1" || name == "TransparentDoor2")
 					{
-						Emitter* e = new Emitter();
-						e->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::SFX_DOORSOUND);
+						//door sound
+						Emitter* e = new SFXEmitter();
+						((SFXEmitter*)e)->SetEvent(AK::EVENTS::SFX_DOORSOUND);
 						obj->AddComponent(e);
+						AudioWrapper::GetInstance().AddEmitter(e, name.c_str());
+
+						//boxzap
+						Emitter* z = new SFXEmitter();
+						((SFXEmitter*)z)->SetEvent(AK::EVENTS::SFX_BOXDOORZAP);
+						obj->AddComponent(z);
+						AudioWrapper::GetInstance().AddEmitter(z, name.c_str());
 					}
 					else if (name == "Button")
 					{
-						Emitter* e = new Emitter();
-						e->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::SFX_TOGGLE);
+						Emitter* e = new SFXEmitter();
+						((SFXEmitter*)e)->SetEvent(AK::EVENTS::SFX_TOGGLE);
 						obj->AddComponent(e);
+						AudioWrapper::GetInstance().AddEmitter(e, name.c_str());
 					}
 					else if (name == "mmChamber")
 					{
-						Emitter * e = new Emitter();
-						e->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, AK::EVENTS::SFX_METALLICSOUND);
-						e->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_FUTURETECHSOUND);
-						e->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_FUTURETECHSOUND);
-						e->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_FUTURETECHSOUND);
-						e->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_FUTURETECHSOUND);
-
-						e->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_CASUAL_LEVEL_LOOP);
-						e->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_CASUAL_LEVEL_LOOP);
-						e->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_CASUAL_LEVEL_LOOP);
-						e->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_CASUAL_LEVEL_LOOP);
+						Emitter* e = new SFXEmitter();
+						((SFXEmitter*)e)->SetEvent(AK::EVENTS::SFX_METALLICSOUND);
 						obj->AddComponent(e);
+						AudioWrapper::GetInstance().AddEmitter(e, name.c_str() + 0);
+
+						e = new AudioEmitter();
+						((AudioEmitter*)e)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_FUTURETECHSOUND);
+						((AudioEmitter*)e)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_FUTURETECHSOUND);
+						((AudioEmitter*)e)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_FUTURETECHSOUND);
+						((AudioEmitter*)e)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_FUTURETECHSOUND);
+						obj->AddComponent(e);
+						AudioWrapper::GetInstance().AddEmitter(e, name.c_str() + 1);
+
+
+						e = new AudioEmitter();
+						((AudioEmitter*)e)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_HUB0);
+						((AudioEmitter*)e)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_HUB0);
+						((AudioEmitter*)e)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_HUB0);
+						((AudioEmitter*)e)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_HUB0);
+						obj->AddComponent(e);
+						AudioWrapper::GetInstance().AddEmitter(e, name.c_str() + 2);
 					}
 
 					if (!meshFile.empty())
 					{
 						std::string path = "../Resources/";
 						path.append(meshFile);
-						MeshComponent* mesh = new MeshComponent(path.c_str());
-						path = "../Resources/";
-						path.append(textureFile);
-						mesh->AddTexture(path.c_str(), eTEX_DIFFUSE);
-						obj->AddComponent(mesh);
+						MeshComponent* mesh;
+						if(obj->GetName().find("Transparent") != std::string::npos)
+						{
+							float alpha = 1;
+							//TODO PAT: FIX ALL THIS 
+							if(obj->GetName().find("Door") != std::string::npos)
+							{
+								alpha = .6f;
+							}
+							else
+							{
+								alpha = .3f;
+							}
+							//mesh = new MeshComponent(path.c_str(), alpha);
+							mesh = new MeshComponent(path.c_str(), alpha);
+							mesh->SetPixelShader(ePS_TRANSPARENT);
+						}
+						else
+						{
+							mesh = new MeshComponent(path.c_str());
+						}
+
+						if (name == "Skybox")
+							mesh->SetPixelShader(ePS_PURETEXTURE);
+
+							path = "../Resources/";
+							path.append(textureFile);
+							mesh->AddTexture(path.c_str(), eTEX_DIFFUSE);
+							if (!emissiveTexture.empty()) {
+								path = "../Resources/";
+								path.append(emissiveTexture);
+								mesh->AddTexture(path.c_str(), eTEX_EMISSIVE);
+							}
+							obj->AddComponent(mesh);
 					
 					}
 
@@ -666,18 +744,18 @@ namespace Epoch {
 					{
 						if (SFX)
 						{
-							Emitter* sound = new Emitter();
-							sound->AddSoundEvent(Emitter::sfxTypes::ePlaySFX, sfxFile);
+							Emitter* sound = new SFXEmitter();
+							((SFXEmitter*)sound)->SetEvent(sfxFile);
 							AudioWrapper::GetInstance().AddEmitter(sound, soundName.c_str());
 							obj->AddComponent(sound);
 						}
 						if (Loop)
 						{
-							Emitter* sound = new Emitter();
-							sound->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, playFile);
-							sound->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, pauseFile);
-							sound->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, resumeFile);
-							sound->AddSoundEvent(Emitter::sfxTypes::eStopLoop, stopFile);
+							Emitter* sound = new AudioEmitter();
+							((AudioEmitter*)sound)->AddEvent(Emitter::EventType::ePlay, playFile);
+							((AudioEmitter*)sound)->AddEvent(Emitter::EventType::ePause, pauseFile);
+							((AudioEmitter*)sound)->AddEvent(Emitter::EventType::eResume, resumeFile);
+							((AudioEmitter*)sound)->AddEvent(Emitter::EventType::eStop, stopFile);
 							AudioWrapper::GetInstance().AddEmitter(sound, soundName.c_str());
 							obj->AddComponent(sound);
 						}
@@ -690,6 +768,7 @@ namespace Epoch {
 						vec3f min = colliderPosition - offset;
 						vec3f max = colliderPosition + offset;
 						CubeCollider* col = new CubeCollider(obj, canMove, trigger, gravity, mass, elasticity, staticF, kineticF, drag, min, max);
+						col->mPickUpAble = canPickUp;
 						obj->AddComponent(col);
 					}
 					else if (colliderType == "Sphere")
@@ -697,6 +776,7 @@ namespace Epoch {
 						physical = true;
 
 						SphereCollider* col = new SphereCollider(obj, canMove, trigger, gravity, mass, elasticity, staticF, kineticF, drag, radius);
+						col->mPickUpAble = canPickUp;
 						obj->AddComponent(col);
 					}
 					else if (colliderType == "Button")
@@ -766,9 +846,14 @@ namespace Epoch {
 								CCEnterLevel1* code = new CCEnterLevel1();
 								obj->AddComponent(code);
 							}
-							else
+							else if(name == "mmDoor2")
 							{
 								CCEnterLevel* code = new CCEnterLevel();
+								obj->AddComponent(code);
+							}
+							else if (name == "mmDoor3")
+							{
+								CCLoadTutorial* code = new CCLoadTutorial();
 								obj->AddComponent(code);
 							}
 						}
@@ -778,6 +863,8 @@ namespace Epoch {
 							obj->AddComponent(code);
 						}
 					}
+
+					
 					AddObject(obj);
 					pObject = pObject->NextSiblingElement("Object");
 				}
@@ -836,11 +923,14 @@ namespace Epoch {
 					case 1: //BoxCollider
 					{
 						float mass = 0, staticFriction = 0, kineticFriction = 0, elasticity = 0, drag = 0;
+						byte movable = 0, trigger = 0;
 						file.read((char *)&mass, sizeof(float));
 						file.read((char *)&staticFriction, sizeof(float));
 						file.read((char *)&kineticFriction, sizeof(float));
 						file.read((char *)&elasticity, sizeof(float));
 						file.read((char *)&drag, sizeof(float));
+						file.read((char *)&movable, sizeof(byte));
+						file.read((char *)&trigger, sizeof(byte));
 
 						vec3f position, rotation, scale;
 						file.read((char *)&position.x, sizeof(float));
@@ -859,7 +949,7 @@ namespace Epoch {
 							vec3f offset = vec3f(scale.x * scale.x, scale.y * scale.y, scale.z * scale.z) / 2;
 							vec3f min = position - offset;
 							vec3f max = position + offset;
-							CubeCollider* col = new CubeCollider(obj, false, false, vec3f(0, -1, 0), mass, elasticity, staticFriction, kineticFriction, drag, min, max);
+							CubeCollider* col = new CubeCollider(obj, movable == 1, trigger == 1, vec3f(0, -1, 0), mass, elasticity, staticFriction, kineticFriction, drag, min, max);
 							obj->AddComponent(col);
 						}
 					}
@@ -895,11 +985,14 @@ namespace Epoch {
 					case 3: //PlaneCollider
 					{
 						float mass = 0, staticFriction = 0, kineticFriction = 0, elasticity = 0, drag = 0, offset = 0;
+						byte movable = 0, trigger = 0;
 						file.read((char *)&mass, sizeof(float));
 						file.read((char *)&staticFriction, sizeof(float));
 						file.read((char *)&kineticFriction, sizeof(float));
 						file.read((char *)&elasticity, sizeof(float));
 						file.read((char *)&drag, sizeof(float));
+						file.read((char *)&movable, sizeof(byte)); // This is ignored, but it's written for Plane Colliders anyway.
+						file.read((char *)&trigger, sizeof(byte));
 						file.read((char *)&offset, sizeof(float));
 
 						vec3f normal;
@@ -908,7 +1001,7 @@ namespace Epoch {
 						file.read((char *)&normal.z, sizeof(float));
 						if (obj)
 						{
-							PlaneCollider* col = new PlaneCollider(obj, false, staticFriction, kineticFriction, offset, normal);//TODO: Fix offset
+							PlaneCollider* col = new PlaneCollider(obj, trigger == 1, staticFriction, kineticFriction, offset, normal);//TODO: Fix offset
 							obj->AddComponent(col);
 						}
 					}
@@ -916,11 +1009,14 @@ namespace Epoch {
 					case 4: //SphereCollider
 					{
 						float mass = 0, staticFriction = 0, kineticFriction = 0, elasticity = 0, drag = 0, radius = 0;
+						byte movable = 0, trigger = 0;
 						file.read((char *)&mass, sizeof(float));
 						file.read((char *)&staticFriction, sizeof(float));
 						file.read((char *)&kineticFriction, sizeof(float));
 						file.read((char *)&elasticity, sizeof(float));
 						file.read((char *)&drag, sizeof(float));
+						file.read((char *)&movable, sizeof(byte));
+						file.read((char *)&trigger, sizeof(byte));
 						file.read((char *)&radius, sizeof(float));
 
 						vec3f position;
@@ -929,7 +1025,7 @@ namespace Epoch {
 						file.read((char *)&position.z, sizeof(float));
 						if (obj)
 						{
-							SphereCollider* col = new SphereCollider(obj, false, false, vec3f(0, -1, 0), mass, elasticity, staticFriction, kineticFriction, drag, radius);
+							SphereCollider* col = new SphereCollider(obj, movable == 1, trigger == 1, vec3f(0, -1, 0), mass, elasticity, staticFriction, kineticFriction, drag, radius);
 							obj->AddComponent(col);
 						}
 					}
@@ -938,6 +1034,22 @@ namespace Epoch {
 					{
 						INT32 pathLength = 0, argbColor = 0;
 						std::string mesh;
+
+						float transparency = 1.0;
+						if (version >= 2) {
+							file.read((char*)&transparency, sizeof(float));
+						}
+
+						PixelShaderFormat psf = ePS_TEXTURED;
+						VertexShaderFormat vsf = eVS_TEXTURED;
+						GeometryShaderFormat gsf = eGS_PosNormTex;
+
+						// Shaders - All stored as 1 byte.	
+						if (version >= 3) {
+							file.read((char*)&psf, 1);
+							file.read((char*)&vsf, 1);
+							file.read((char*)&gsf, 1);
+						}
 
 						file.read((char *)&pathLength, sizeof(INT32));
 						char* temp = new char[pathLength];
@@ -958,28 +1070,54 @@ namespace Epoch {
 					case 6: //TexturedMesh
 					{
 						INT32 pathLength = 0;
-						std::string mesh, texture;
+						std::string mesh, diffuse, emissive;
+						float transparency = 1.0f;
+						if (version >= 2) {
+							file.read((char*)&transparency, sizeof(float));
+						}
 
+						PixelShaderFormat psf = ePS_TEXTURED;
+						VertexShaderFormat vsf = eVS_TEXTURED;
+						GeometryShaderFormat gsf = eGS_PosNormTex;
+
+						// Shaders - All stored as 1 byte.	
+						if (version >= 3) {
+							file.read((char*)&psf, 1);
+							file.read((char*)&vsf, 1);
+							file.read((char*)&gsf, 1);
+						}
+
+
+
+						// Mesh file
 						file.read((char *)&pathLength, sizeof(INT32));
 						char* temp = new char[pathLength];
 						file.read(temp, pathLength);
 						mesh = temp;
 						delete[] temp;
 
+						// Diffuse
 						file.read((char *)&pathLength, sizeof(INT32));
 						temp = new char[pathLength];
 						file.read(temp, pathLength);
-						texture = temp;
+						diffuse = temp;
+						delete[] temp;
+
+						// Emissive
+						// Todo: Add a check for if there is no emissive texture.
+						file.read((char *)&pathLength, sizeof(INT32));
+						temp = new char[pathLength];
+						file.read(temp, pathLength);
+						emissive = temp;
 						delete[] temp;
 						if (obj)
 						{
-							std::string path = "../Resources/";
-							path.append(mesh);
-							MeshComponent* mesh = new MeshComponent(path.c_str());
-							path = "../Resources/";
-							path.append(texture);
-							mesh->AddTexture(path.c_str(), eTEX_DIFFUSE);
-							obj->AddComponent(mesh);
+							MeshComponent* mc = new MeshComponent(mesh.c_str(), transparency, psf, vsf, gsf);
+							mc->AddTexture(diffuse.c_str(), eTEX_DIFFUSE);
+							if (emissive != "..\\Resources\\") {
+								mc->AddTexture(emissive.c_str(), eTEX_EMISSIVE);
+							}
+							obj->AddComponent(mc);
 						}
 					}
 						break;
@@ -1007,6 +1145,15 @@ namespace Epoch {
 						file.read((char *)&scale.y, sizeof(float));
 						file.read((char *)&scale.z, sizeof(float));
 
+						INT8 recorded = 0;
+						unsigned int flags = 0;
+						if (version >= 2) {
+							file.read((char*)&recorded, sizeof(recorded));
+							if (recorded != 0) {
+								flags = BaseObject_Flag_Record_In_Timeline;
+							}
+						}
+
 						matrix4 mat = matrix4::CreateScale(scale.x, scale.y, scale.z) *
 							matrix4::CreateXRotation(rotation.x) *
 							matrix4::CreateYRotation(rotation.y) *
@@ -1014,7 +1161,8 @@ namespace Epoch {
 							matrix4::CreateTranslation(position.x, position.y, position.z);
 						Transform trans;
 						trans.SetMatrix(mat);
-						obj = new BaseObject(name, trans);
+						obj = Pool::Instance()->iGetObject()->Reset(name, trans, nullptr, flags);
+						//obj = new BaseObject(name, trans);
 					}
 						break;
 					case 8: //Code
@@ -1066,8 +1214,6 @@ namespace Epoch {
 								codeCom = new CCTeleToPlay();
 							if (path == "CodeComponent.hpp")
 								codeCom = new CodeComponent();
-							if (path == "GestureDetection.hpp")
-								codeCom = new GestureDetection();
 							if (path == "HeadsetFollow.hpp")
 								codeCom = new HeadsetFollow();
 							if (path == "UIClonePlusToMinus.h")
@@ -1090,9 +1236,9 @@ namespace Epoch {
 					{
 						INT32 numSounds = 0;
 						file.read((char *)&numSounds, sizeof(INT32));
-						Emitter* sound = nullptr;
+						AudioEmitter* sound = nullptr;
 						if (obj)
-							sound = new Emitter();
+							sound = new AudioEmitter();
 						for (INT32 k = 0; k < numSounds; k++)
 						{
 							char playType = 0;
@@ -1100,7 +1246,7 @@ namespace Epoch {
 							file.read(&playType, sizeof(char));
 							file.read((char *)&id, sizeof(UINT64));
 							if (sound)
-								sound->AddSoundEvent((Emitter::sfxTypes)playType, id);
+								sound->AddEvent((AudioEmitter::EventType)playType, id);
 						}
 						if (sound)
 						{
@@ -1110,7 +1256,6 @@ namespace Epoch {
 					}
 						break;
 					default:
-						//someone kucked it in the file
 						break;
 					}
 				}
@@ -1156,92 +1301,126 @@ namespace Epoch {
 	void Level::LoadLevelCmnd(void* _commandConsole, std::wstring _Level)
 	{
 		CommandConsole* self = (CommandConsole*)_commandConsole;
+
+		CCEnterLevel* accessLevelTwo = nullptr;
+		CCEnterLevel1* accessLevelOne = nullptr;
+		CCLoadTutorial* accessTut = nullptr;
+		CCLoadHub* accessHub = nullptr;
+
 		std::list<BaseObject*> copyList = LevelManager::GetInstance().GetCurrentLevel()->GetLevelObjects();
-		if (accessLevelTwo == nullptr)
-		{
-			for (auto it = copyList.begin(); it != copyList.end(); ++it)
-			{
-				std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
-				if (CodeComps.size() > 0)
-				{
-					for (size_t x = 0; x < CodeComps.size(); ++x)
-					{
-						if (dynamic_cast<CCEnterLevel*>(CodeComps[x]))
-						{
-							accessLevelTwo = ((CCEnterLevel*)CodeComps[x]);
-							break;
-						}
-					}
-					if (accessLevelTwo != nullptr)
+		for (auto it = copyList.begin(); it != copyList.end(); ++it) {
+			std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+			if (CodeComps.size() > 0) {
+				for (size_t x = 0; x < CodeComps.size(); ++x) {
+					if (dynamic_cast<CCEnterLevel*>(CodeComps[x])) {
+						accessLevelTwo = ((CCEnterLevel*)CodeComps[x]);
 						break;
+					}
 				}
+				if (accessLevelTwo != nullptr)
+					break;
 			}
 		}
-		if (accessLevelOne == nullptr)
-		{
-			for (auto it = copyList.begin(); it != copyList.end(); ++it)
-			{
-				std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
-				if (CodeComps.size() > 0)
-				{
-					for (size_t x = 0; x < CodeComps.size(); ++x)
-					{
-						if (dynamic_cast<CCEnterLevel1*>(CodeComps[x]))
-						{
-							accessLevelOne = ((CCEnterLevel1*)CodeComps[x]);
-							break;
-						}
-					}
-					if (accessLevelOne != nullptr)
+		for (auto it = copyList.begin(); it != copyList.end(); ++it) {
+			std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+			if (CodeComps.size() > 0) {
+				for (size_t x = 0; x < CodeComps.size(); ++x) {
+					if (dynamic_cast<CCEnterLevel1*>(CodeComps[x])) {
+						accessLevelOne = ((CCEnterLevel1*)CodeComps[x]);
 						break;
+					}
 				}
+				if (accessLevelOne != nullptr)
+					break;
 			}
 		}
 
-		if (accessHub == nullptr)
-		{
-			for (auto it = copyList.begin(); it != copyList.end(); ++it)
-			{
-				std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
-				if (CodeComps.size() > 0)
-				{
-					for (size_t x = 0; x < CodeComps.size(); ++x)
-					{
-						if (dynamic_cast<CCLoadHub*>(CodeComps[x]))
-						{
-							accessHub = ((CCLoadHub*)CodeComps[x]);
-							break;
-						}
-					}
-					if (accessHub != nullptr)
+		for (auto it = copyList.begin(); it != copyList.end(); ++it) {
+			std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+			if (CodeComps.size() > 0) {
+				for (size_t x = 0; x < CodeComps.size(); ++x) {
+					if (dynamic_cast<CCLoadHub*>(CodeComps[x])) {
+						accessHub = ((CCLoadHub*)CodeComps[x]);
 						break;
+					}
 				}
+				if (accessHub != nullptr)
+					break;
 			}
 		}
 
-		//std::list<BaseObject*> objects = mObjectList;
-		if (accessLevelTwo == nullptr || accessLevelOne == nullptr || (accessHub == nullptr && (accessLevelTwo == nullptr && accessLevelOne == nullptr)))
-			CommandConsole::Instance().DisplaySet(L"FAILED TO LOAD LEVEL :(");
-		else if ((_Level == L"LEVELTWO" || _Level == L"LVLTWO") && accessLevelTwo->GetOnce() == true)
+		for (auto it = copyList.begin(); it != copyList.end(); ++it)
 		{
-			accessLevelTwo->SetOnce(false);
-			CommandConsole::Instance().Toggle();
+			std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+			if (CodeComps.size() > 0)
+			{
+				for (size_t x = 0; x < CodeComps.size(); ++x)
+				{
+					if (dynamic_cast<CCLoadTutorial*>(CodeComps[x]))
+					{
+						accessTut = ((CCLoadTutorial*)CodeComps[x]);
+						break;
+					}
+				}
+				if (accessTut != nullptr)
+					break;
+			}
 		}
-		else if ((_Level == L"LEVELONE" || _Level == L"LVLONE") && accessLevelOne->GetOnce() == true)
-		{
-			accessLevelOne->SetOnce(false);
-			CommandConsole::Instance().Toggle();
-		}
-		else if ((_Level == L"HUBWORLD" || _Level == L"HUB") && accessHub->GetOnce() == true)
-		{
-			accessHub->SetOnce(false);
-			CommandConsole::Instance().Toggle();
-		}
-		else if (accessLevelTwo->GetOnce() == false || accessLevelOne->GetOnce() == false || (accessHub != nullptr && accessHub->GetOnce() == false))
-			CommandConsole::Instance().DisplaySet(L"LEVEL IS ALREADY LOADED");
-		else if (accessLevelTwo->GetOnce() == true || accessLevelOne->GetOnce() == true)
-			CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _Level + L"\nCORRECT INPUT: /LOAD (LEVELNAME)");
 
+		if ((_Level == L"LEVELTWO" || _Level == L"LVLTWO"))
+		{
+			if (accessLevelTwo) {
+				accessLevelTwo->SetOnce(false);
+				CommandConsole::Instance().Toggle();
+			} else {
+				CommandConsole::Instance().DisplaySet(L"Failed to load level 2.");
+			}
+			accessLevelOne = nullptr;
+			accessLevelTwo = nullptr;
+			accessHub = nullptr;
+		}
+		else if ((_Level == L"LEVELONE" || _Level == L"LVLONE"))
+		{
+			if (accessLevelOne) {
+
+				accessLevelOne->SetOnce(false);
+				CommandConsole::Instance().Toggle();
+			} else {
+				CommandConsole::Instance().DisplaySet(L"Failed to load level 1.");
+			}
+			accessLevelOne = nullptr;
+			accessLevelTwo = nullptr;
+			accessHub = nullptr;
+		}
+		else if ((_Level == L"HUBWORLD" || _Level == L"HUB"))
+		{
+			if (accessHub) {
+
+				accessHub->SetOnce(false);
+				CommandConsole::Instance().Toggle();
+			} else {
+				CommandConsole::Instance().DisplaySet(L"Failed to load hub.");
+			}
+			accessLevelOne = nullptr;
+			accessLevelTwo = nullptr;
+			accessHub = nullptr;
+		}
+		else if ((_Level == L"TUTORIAL" || _Level == L"TUT"))
+		{
+			if (accessTut)
+			{
+				accessTut->SetOnce(false);
+				CommandConsole::Instance().Toggle();
+			}
+			else
+			{
+				CommandConsole::Instance().DisplaySet(L"Failed to load tutorial.");
+			}
+			accessLevelOne = nullptr;
+			accessLevelTwo = nullptr;
+			accessHub = nullptr;
+			accessTut = nullptr;
+		}
 
 	}
 

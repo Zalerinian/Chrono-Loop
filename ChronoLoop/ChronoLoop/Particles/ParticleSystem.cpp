@@ -15,10 +15,9 @@ namespace Epoch
 	}
 	ParticleSystem::~ParticleSystem()
 	{
-		//for (int i = 0; i < mPEmitters.size(); ++i)
-		//	delete mPEmitters[i];
+		Clear();
 
-		mPEmitters.clear();
+		//mPEmitters.clear();
 		mILayout->Release();
 		mVBuff->Release();
 		mVShader->Release();
@@ -81,10 +80,10 @@ namespace Epoch
 		float dt = TimeManager::Instance()->GetDeltaTime();
 		for (ParticleEmitter* emit : mPEmitters)
 		{
-				if (emit->mActive)
+			if (emit->mActive)
 				emit->Update(dt);
 		}
-		for (int i =0; i < mPEmitters.size(); i++)
+		for (int i = 0; i < mPEmitters.size(); i++)
 		{
 			if (mPEmitters[i]->mActive == false)
 			{
@@ -116,8 +115,10 @@ namespace Epoch
 			UINT offset = 0;
 			ID3D11Buffer* buffer = mPEmitters[i]->GetVertexBuffer();
 			cntxt->IASetVertexBuffers(0, 1, &buffer, &stride, &offset);
-			ID3D11ShaderResourceView* srv = mPEmitters[i]->GetTexture();
-			cntxt->PSSetShaderResources(0, 1, &srv);
+			buffer = mPEmitters[i]->GetPixelBuffer();
+			cntxt->PSSetConstantBuffers(1, 1, &buffer);
+			ID3D11ShaderResourceView* srv[] = { mPEmitters[i]->GetTexture(), mPEmitters[i]->GetTexture(1), mPEmitters[i]->GetTexture(2) };
+			cntxt->PSSetShaderResources(0, 3, srv);
 			//draw call
 			cntxt->Draw(mPEmitters[i]->GetVertexCount(), 0);
 			//Unset gbuffer
@@ -128,11 +129,12 @@ namespace Epoch
 		cntxt->VSSetShader(NULL, NULL, 0);
 		cntxt->PSSetShader(NULL, NULL, 0);
 		cntxt->VSSetConstantBuffers(0, 0, NULL);
+		cntxt->PSSetConstantBuffers(0, 0, NULL);
 	}
 
 	void ParticleSystem::AddEmitter(ParticleEmitter* _pemitter)
 	{
-				mPEmitters.push_back(_pemitter);
+		mPEmitters.push_back(_pemitter);
 	}
 
 	void ParticleSystem::RemoveEmitter(ParticleEmitter* _pemitter)

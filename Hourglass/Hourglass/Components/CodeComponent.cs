@@ -72,7 +72,7 @@ namespace Hourglass
             w.Write(term);
         }
 
-        public override void ReadData(BinaryReader r)
+        public override void ReadData(BinaryReader r, int _version)
         {
             string filename = new string(r.ReadChars(r.ReadInt32() - 1));
             r.ReadByte(); // The null terminator breaks things in C#, but is necessary in C++, so we need to skip it in C#
@@ -83,5 +83,27 @@ namespace Hourglass
                 mCode.SelectedIndex = index;
             }
         }
-    }
+
+		protected int CheckForValue(ComboBox _box, string _value) {
+			for (int i = 0; i < _box.Items.Count; ++i) {
+				if (((string)_box.Items[i]).ToLower().Contains(_value.ToLower())) {
+					return i;
+				}
+			}
+			System.Diagnostics.Debug.Print("Could not find " + _value);
+			return -1;
+		}
+
+		public int CheckForCode(string _object) {
+			return CheckForValue(mCode, _object);
+		}
+
+		public void SelectCode(int _index) {
+			if (_index > 0 && _index < mCode.Items.Count) {
+				mCode.SelectedIndex = _index;
+			} else {
+				System.Diagnostics.Debug.Print("Could not add code component");
+			}
+		}
+	}
 }

@@ -8,13 +8,16 @@
 #include "../Core/Level.h"
 #include "../Core/TimeManager.h"
 #include "../Core/LevelManager.h"
+#include "../Common/Settings.h"
 #include "../Actions/HeadsetFollow.hpp"
+#include "BoxSnapToControllerAction.hpp"
+#include <d3d11.h>
 
 namespace Epoch {
 
 	struct TeleportAction : public CodeComponent {
 		MeshComponent *mPlaneMesh, *mWallsMesh, *mBlockMesh, *mExitMesh, *mServerMesh;
-		BaseObject *mPlaneObject, *mWallsObject, *mBlockObject, *mExitObject, *mServerObject;
+		BaseObject *mPlaneObject, *mWallsObject, *mBlockObject, *mExitObject, *mServerObject, *mHeadset;
 		ControllerType mControllerRole = eControllerType_Primary;
 		Level* cLevel = nullptr;
 		TeleportAction(ControllerType _t) { mControllerRole = _t; };
@@ -23,8 +26,8 @@ namespace Epoch {
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			mPlaneObject  = cLevel->FindObjectWithName("Floor");
 			mWallsObject  = cLevel->FindObjectWithName("Walls");
-			mBlockObject  = cLevel->FindObjectWithName("Door1");
-			mExitObject   = cLevel->FindObjectWithName("Door2");
+			mBlockObject  = cLevel->FindObjectWithName("TransparentDoor1");
+			mExitObject   = cLevel->FindObjectWithName("TransparentDoor2");
 			mServerObject = cLevel->FindObjectWithName("Servers");
 			if(mPlaneObject)
 			{
@@ -34,6 +37,8 @@ namespace Epoch {
 				mExitMesh     = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				mServerMesh = (MeshComponent*)mServerObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			}
+			mHeadset = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset();
+			
 		}
 
 		virtual void Update() {
@@ -44,16 +49,15 @@ namespace Epoch {
 			// I'm lazy so, let's just set this thing's position to the controller's position.
 			matrix4 mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
 			mObject->GetTransform().SetMatrix(mat);
-			bool right = false;
-			bool left = false;
+			bool paused = false;
 
-			if (cLevel->GetRightTimeManipulator() != nullptr || cLevel->GetLeftTimeManipulator() != nullptr) {
-				right = cLevel->GetRightTimeManipulator()->isTimePaused();
-				left = cLevel->GetLeftTimeManipulator()->isTimePaused();
+			if (cLevel->GetTimeManipulator() != nullptr) {
+				paused = cLevel->GetTimeManipulator()->isTimePaused();
+				
 			}
 			
-			if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad)) {
-				if (!left && !right) {
+			if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && !Settings::GetInstance().GetBool("PauseMenuUp")) {
+				if (!paused) {
 					vec4f forward(0, 0, 1, 0);
 					MeshComponent* meshes[] = { mWallsMesh, mBlockMesh, mExitMesh, mServerMesh };
 					BaseObject* objects[] = { mWallsObject, mBlockObject, mExitObject, mServerObject };
@@ -70,7 +74,11 @@ namespace Epoch {
 						size_t numTris = meshes[i]->GetTriangleCount();
 						for (unsigned int i = 0; i < numTris; ++i) {
 							float hitTime = FLT_MAX;
-							if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, meshPos, fwd, hitTime)) {
+							if (Physics::Instance()->RayToTriangle(
+								(tris + i)->Vertex[0],
+								(tris + i)->Vertex[1], 
+								(tris + i)->Vertex[2],
+								(tris + i)->Normal, meshPos, fwd, hitTime)) {
 								if (hitTime < wallTime) {
 									wallTime = hitTime;
 								}
@@ -83,16 +91,71 @@ namespace Epoch {
 					matrix4 objMat = mPlaneObject->GetTransform().GetMatrix();
 					matrix4 inverse = (mat * objMat.Invert());
 					vec3f position = inverse.Position;
+					vec3f point = VRInputManager::GetInstance().GetPlayerPosition().fourth;
 					forward.Set(0, 0, 1, 0);
 					forward *= inverse;
 					vec3f fwd = forward;
 					for (unsigned int i = 0; i < numTris; ++i) {
 						if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, fwd, meshTime)) {
 							if (meshTime < wallTime) {
-								forward *= meshTime;
-								VRInputManager::GetInstance().GetPlayerPosition()[3][0] += fwd[0] * objMat.xAxis[0]; // x
-								VRInputManager::GetInstance().GetPlayerPosition()[3][2] += fwd[2] * objMat.zAxis[2]; // z
-																									   //VRInputManager::Instance().iGetPlayerPosition()[3][3] += forward[3]; // w
+								fwd *= meshTime;
+								point[0] += fwd[0] * objMat.xAxis[0]; // x
+								point[2] += fwd[2] * objMat.zAxis[2]; // z
+								//VRInputManager::Instance().iGetPlayerPosition()[3][3] += forward[3]; // w
+								//Move any held objects along with player 
+
+
+								mat = VRInputManager::GetInstance().GetPlayerPosition();
+								mat.Position.y = 1.5f;
+								vec3f pos = mat.Position;
+								vec3f up(0, 1, 0);
+								mat = DirectX::XMMatrixLookAtRH(mat.Position.vector, point.vector, up.vector);
+								mat = mat.Invert();
+								mat.Position = pos;
+								meshTime = 0, wallTime = FLT_MAX;
+								for (int i = 0; i < ARRAYSIZE(meshes); ++i) {
+									forward.Set(0, 0, 1, 0);
+									matrix4 objMatInv = objects[i]->GetTransform().GetMatrix().Invert();
+									matrix4 inverse = (mat * objMatInv);
+									vec3f meshPos = inverse.Position;
+									forward *= inverse;
+									vec3f fwd(forward);
+									Triangle *tris = meshes[i]->GetTriangles();
+									size_t numTris = meshes[i]->GetTriangleCount();
+									for (unsigned int i = 0; i < numTris; ++i) {
+										float hitTime = FLT_MAX;
+										if (Physics::Instance()->RayToTriangle(
+											(tris + i)->Vertex[0],
+											(tris + i)->Vertex[1],
+											(tris + i)->Vertex[2],
+											(tris + i)->Normal, meshPos, fwd, hitTime)) {
+											if (hitTime < wallTime) {
+												wallTime = hitTime;
+											}
+										}
+									}
+								}
+
+								
+								inverse = (mat * objMat.Invert());
+								position = inverse.Position;
+								forward.Set(0, 0, 1, 0);
+								forward *= inverse;
+								vec3f fwd = forward;
+								if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, fwd, meshTime))
+								{
+ 									if (meshTime < wallTime) {
+										fwd *= meshTime;
+										VRInputManager::GetInstance().GetPlayerPosition()[3][0] += fwd[0] * objMat.xAxis[0]; // x
+										VRInputManager::GetInstance().GetPlayerPosition()[3][2] += fwd[2] * objMat.zAxis[2]; // z
+
+										if (Settings::GetInstance().GetInt("tutStep") == 1)//Teleported
+											Settings::GetInstance().SetInt("tutStep", 2);//Pick up object
+
+										if (mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1) != nullptr && dynamic_cast<SFXEmitter*>(mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
+											((SFXEmitter*)mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
+									}
+								}
 							} else {
 								SystemLogger::GetLog() << "[DEBUG] Can't let you do that, Starfox." << std::endl;
 							}

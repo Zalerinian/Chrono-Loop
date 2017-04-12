@@ -25,13 +25,13 @@ namespace Epoch {
 			mTextures[i] = _copy.mTextures[i];
 		}
 
-		for (int i = eVB_BEGIN; i < eVB_MAX; ++i) {
+		for (int i = 0; i < eVB_MAX; ++i) {
 			mVertexCBuffers[i] = _copy.mVertexCBuffers[i];
 		}
-		for (int i = ePB_BEGIN; i < ePB_MAX; ++i) {
+		for (int i = 0; i < ePB_MAX; ++i) {
 			mPixelCBuffers[i] = _copy.mPixelCBuffers[i];
 		}
-		for (int i = eGB_BEGIN; i < eGB_MAX; ++i) {
+		for (int i = 0; i < eGB_MAX; ++i) {
 			mGeometryCBuffers[i] = _copy.mGeometryCBuffers[i];
 		}
 	}
@@ -57,21 +57,21 @@ namespace Epoch {
 		if (mGeoShaderFormat != eGS_MAX) {
 			ShaderManager::Instance()->ApplyGShader(mGeoShaderFormat);
 		}
+
+		ID3D11ShaderResourceView* textures[eTEX_MAX];
 		for (int i = eTEX_DIFFUSE; i < eTEX_MAX; ++i) {
-			if (mTextures[i].Get() != nullptr) {
-				Renderer::Instance()->GetContext()->PSSetShaderResources((UINT)i, 1, mTextures[i].GetAddressOf());
-				//(*Renderer::Instance()->GetContext())->PSSetSamplers((UINT)it->first, 1, nullptr); //TODO: Consider adding samplers to contexts. Curently a global sampler is applied in the renderer.
-			}
+			textures[i] = mTextures[i].Get();
 		}
+		Renderer::Instance()->GetContext()->PSSetShaderResources(0, eTEX_MAX, textures);
 
 		ID3D11Buffer *pixelBuffers[ePB_MAX], *vertexBuffers[eVB_MAX], *geoBuffers[eGB_MAX];
-		for (int i = eVB_BEGIN; i < eVB_MAX; ++i) {
+		for (int i = 0; i < eVB_MAX; ++i) {
 			vertexBuffers[i] = mVertexCBuffers[i].Get();
 		}
-		for (int i = ePB_BEGIN; i < ePB_MAX; ++i) {
+		for (int i = 0; i < ePB_MAX; ++i) {
 			pixelBuffers[i] = mPixelCBuffers[i].Get();
 		}
-		for (int i = eGB_BEGIN; i < eGB_MAX; ++i) {
+		for (int i = 0; i < eGB_MAX; ++i) {
 			geoBuffers[i] = mGeometryCBuffers[i].Get();
 		}
 		
@@ -99,20 +99,21 @@ namespace Epoch {
 		if (mGeoShaderFormat != eGS_MAX && mGeoShaderFormat != from.mGeoShaderFormat) {
 			ShaderManager::Instance()->ApplyGShader(mGeoShaderFormat);
 		}
+
+		ID3D11ShaderResourceView* textures[eTEX_MAX];
 		for (int i = eTEX_DIFFUSE; i < eTEX_MAX; ++i) {
-			if (mTextures[i].Get() != nullptr && from.mTextures[i].Get() != mTextures[i].Get()) {
-				Renderer::Instance()->GetContext()->PSSetShaderResources((UINT)i, 1, mTextures[i].GetAddressOf());
-			}
+			textures[i] = mTextures[i].Get();
 		}
+		Renderer::Instance()->GetContext()->PSSetShaderResources(0, eTEX_MAX, textures);
 
 		ID3D11Buffer *pixelBuffers[ePB_MAX], *vertexBuffers[eVB_MAX], *geoBuffers[eGB_MAX];
-		for (int i = eVB_BEGIN; i < eVB_MAX; ++i) {
+		for (int i = 0; i < eVB_MAX; ++i) {
 			vertexBuffers[i] = mVertexCBuffers[i].Get();
 		}
-		for (int i = ePB_BEGIN; i < ePB_MAX; ++i) {
+		for (int i = 0; i < ePB_MAX; ++i) {
 			pixelBuffers[i] = mPixelCBuffers[i].Get();
 		}
-		for (int i = eGB_BEGIN; i < eGB_MAX; ++i) {
+		for (int i = 0; i < eGB_MAX; ++i) {
 			geoBuffers[i] = mGeometryCBuffers[i].Get();
 		}
 		Renderer::Instance()->GetContext()->VSSetConstantBuffers(eVB_OFFSET, eVB_MAX, vertexBuffers);
@@ -122,7 +123,7 @@ namespace Epoch {
 
 	bool RenderContext::operator==(const RenderContext & other) const {
 		for (int i = eTEX_DIFFUSE; i < eTEX_MAX; ++i) {
-			if (other.mTextures[i].Get() == nullptr || other.mTextures[i].Get() == this->mTextures[i].Get()) {
+			if (/*other.mTextures[i].Get() == nullptr || */other.mTextures[i].Get() == this->mTextures[i].Get()) {
 				// If the textures aren't different, or aren't used, we can continue on.
 				continue;
 			}
@@ -151,15 +152,25 @@ namespace Epoch {
 			mTextures[i] = _other.mTextures[i];
 		}
 
-		for (int i = eVB_BEGIN; i < eVB_MAX; ++i) {
+		for (int i = 0; i < eVB_MAX; ++i) {
 			mVertexCBuffers[i] = _other.mVertexCBuffers[i];
 		}
-		for (int i = ePB_BEGIN; i < ePB_MAX; ++i) {
+		for (int i = 0; i < ePB_MAX; ++i) {
 			mPixelCBuffers[i] = _other.mPixelCBuffers[i];
 		}
-		for (int i = eGB_BEGIN; i < eGB_MAX; ++i) {
+		for (int i = 0; i < eGB_MAX; ++i) {
 			mGeometryCBuffers[i] = _other.mGeometryCBuffers[i];
 		}
+		return *this;
+	}
+
+	RenderContext & RenderContext::SimpleClone(const RenderContext & _other) {
+		mRasterState = _other.mRasterState;
+		mVertexFormat = _other.mVertexFormat;
+		mPixelShaderFormat = _other.mPixelShaderFormat;
+		mVertexShaderFormat = _other.mVertexShaderFormat;
+		mGeoShaderFormat = _other.mGeoShaderFormat;
+		mType = _other.mType;
 		return *this;
 	}
 

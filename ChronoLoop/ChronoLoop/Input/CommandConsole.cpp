@@ -44,22 +44,22 @@ namespace Epoch
 		{
 			Draw::Instance().DrawRectangleToBitmap(0.0f,
 				(*Draw::Instance().GetContext2D())->GetSize().height*(5.0f / 8.0f),
-																						 (*Draw::Instance().GetContext2D())->GetSize().width*(3.0f / 8.0f),
-																						 (*Draw::Instance().GetContext2D())->GetSize().height,
-																						 D2D1::ColorF(D2D1::ColorF::Black, 0.9f),
-																						 *(Draw::Instance().GetScreenBitmap().get())
+				(*Draw::Instance().GetContext2D())->GetSize().width*(3.0f / 8.0f),
+				(*Draw::Instance().GetContext2D())->GetSize().height,
+				D2D1::ColorF(D2D1::ColorF::Black, 0.9f),
+				*(Draw::Instance().GetScreenBitmap().get())
 			);
 			Draw::Instance().DrawRectangleToBitmap(0.0f,
 				(*Draw::Instance().GetContext2D())->GetSize().height*(31.0f / 32.0f),
-																						 (*Draw::Instance().GetContext2D())->GetSize().width*(48.1f / 128.0f),
-																						 (*Draw::Instance().GetContext2D())->GetSize().height,
-																						 D2D1::ColorF(D2D1::ColorF::Black, 9.6f),
-																						 *(Draw::Instance().GetScreenBitmap().get())
+				(*Draw::Instance().GetContext2D())->GetSize().width*(48.1f / 128.0f),
+				(*Draw::Instance().GetContext2D())->GetSize().height,
+				D2D1::ColorF(D2D1::ColorF::Black, 9.6f),
+				*(Draw::Instance().GetScreenBitmap().get())
 			);
-			Font* tempFont;
+			Font* tempFont;// = new Font(L"Calibri", 20, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 			if (!mIsVR)
 			{
-				tempFont = new Font(L"Times New Roman", 15, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+				tempFont = new Font(L"Times New Roman", 20, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 			}
 			else
 			{
@@ -67,7 +67,7 @@ namespace Epoch
 			}
 			Draw::Instance().DrawTextToBitmap(
 				0.0f,
-				(*Draw::Instance().GetContext2D())->GetSize().height*(31.0f / 32.0f),
+				(*Draw::Instance().GetContext2D())->GetSize().height*(31.3f / 32.0f),
 				(*Draw::Instance().GetContext2D())->GetSize().width*(3.0f / 8.0f),
 				(*Draw::Instance().GetContext2D())->GetSize().height,
 				*tempFont, mCurCommand,
@@ -110,12 +110,15 @@ namespace Epoch
 	}
 	void CommandConsole::Display()
 	{
-		Font* tempFont;
+		Font* tempFont;// = new Font(L"Calibri", 20, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 		if (!mIsVR)
-			tempFont = new Font(L"Times New Roman", 15, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+		{
+			tempFont = new Font(L"Times New Roman", 20, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+		}
 		else
+		{
 			tempFont = new Font(L"Calibri", 40, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
-
+		}
 		Draw::Instance().DrawTextToBitmap(
 			0.0f,
 			(*Draw::Instance().GetContext2D())->GetSize().height*(5.0f / 8.0f),
@@ -261,7 +264,7 @@ namespace Epoch
 			}
 			else
 			{
-				tempFont = new Font(L"Times New Roman", 40, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+				tempFont = new Font(L"Calibri", 40, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 			}
 
 			std::wstring FPS = L"FPS: " + std::to_wstring(sInstance->mFps);

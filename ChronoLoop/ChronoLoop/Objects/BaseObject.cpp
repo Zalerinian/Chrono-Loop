@@ -17,18 +17,18 @@ namespace Epoch {
 		mUniqueID = ++BaseObject::ObjectCount;
 	}
 
-	BaseObject::BaseObject() {
+	BaseObject::BaseObject() : Flags(mFlags) {
 		Construct("", Transform(), nullptr);
 	}
 
-	BaseObject::BaseObject(std::string _name) {
+	BaseObject::BaseObject(std::string _name) : Flags(mFlags) {
 		Construct(_name, Transform(), nullptr);
 	}
-	BaseObject::BaseObject(std::string _name, Transform _transform) {
+	BaseObject::BaseObject(std::string _name, Transform _transform) : Flags(mFlags) {
 		Construct(_name, _transform, nullptr);
 	}
 
-	BaseObject::BaseObject(std::string _name, Transform _transform, BaseObject * _parent) {
+	BaseObject::BaseObject(std::string _name, Transform _transform, BaseObject * _parent) : Flags(mFlags) {
 		Construct(_name, _transform, _parent);
 	}
 
@@ -115,6 +115,12 @@ namespace Epoch {
 		return this;
 	}
 
+	BaseObject * BaseObject::Reset(std::string _name, Transform _transform, BaseObject * _parent, unsigned int _flags) {
+		Reset(_name, _transform, _parent);
+		mFlags = _flags;
+		return this;
+	}
+
 	unsigned int BaseObject::GetTotalAmountofComponents()
 	{
 		int count = 0;
@@ -128,6 +134,14 @@ namespace Epoch {
 
 	void BaseObject::SetName(std::string _name) {
 		mName = _name;
+	}
+
+	matrix4 BaseObject::GetWorld() {
+		if (mParent) {
+			return mTransform.GetMatrix() * mParent->GetWorld();
+		} else {
+			return mTransform.GetMatrix();
+		}
 	}
 
 	BaseObject* BaseObject::AddComponent(Component * _comp) {

@@ -335,7 +335,7 @@ namespace Epoch {
 		{
 			Snapshot* _fromShot = mSnapshots[mSnaptimes[_fromSnapTime]];
 			Snapshot* _toShot = mSnapshots[mSnaptimes[_toSnapTime]];
-			unsigned int temp2 = LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->GetNumClones();
+			unsigned int temp2 = LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->GetNumClones();
 			for (std::pair<unsigned short, Epoch::BaseObject*> it : mLiveObjects) {
 				if (it.second->GetName().find("Controller1 - " + std::to_string(temp2)) == std::string::npos &&
 					it.second->GetName().find("Controller2 - " + std::to_string(temp2)) == std::string::npos) { //TODO RYAN: TEMPORARY FIX FOR INTERPOLATION
@@ -375,7 +375,6 @@ namespace Epoch {
 		if (mObjectLifeTimes.find(_id1) != mObjectLifeTimes.end()) {
 			ObjectLifeTime* newObject = mObjectLifeTimes[_id1];
 			newObject->mDeath = mSnaptimes[mCurrentGameTimeIndx];
-			//TODO PAT: Record 1 more snap with this component in it and record death of its componets
 		}
 
 		if (mObjectLifeTimes.find(_id2) != mObjectLifeTimes.end()) {
@@ -676,15 +675,6 @@ namespace Epoch {
 		return _info;
 	}
 
-	//SnapInfoPlayer * Timeline::GenerateSnapInfoPlayer() {
-	//	SnapInfoPlayer* snapP = new SnapInfoPlayer(
-	//		*RenderEngine::Renderer::Instance()->GetPlayerWorldPos(),//Player World Matrix
-	//		Math::FromMatrix(VRInputManager::Instance().GetController(true).GetPose().mDeviceToAbsoluteTracking),//Left Controller World Matrix
-	//		Math::FromMatrix(VRInputManager::Instance().GetController(false).GetPose().mDeviceToAbsoluteTracking));//Right Controller World Matrix
-	//
-	//	return snapP;
-	//}
-
 
 	Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*> & _clones) {
 		Snapshot* snap;
@@ -704,7 +694,6 @@ namespace Epoch {
 		}
 
 		//If first snapshot taken
-
 		//TODO PAT: break up the logic loop here and 
 		if (mSnapshots.size() == 0) {
 			for (std::pair<unsigned short, BaseObject*> _b : mLiveObjects) {
@@ -812,6 +801,13 @@ namespace Epoch {
 			}
 			default:
 			{
+				for (unsigned int j = 0; j < _object->GetComponentCount(comp->mCompType); j++) {
+					Component* currComp = _object->GetComponentIndexed(comp->mCompType, j);
+					if (currComp->GetColliderId() == comp->mId) {
+						if (info->mBitset[comp->mBitNum] != currComp->IsEnabled())
+							return false;
+					}
+				}
 				break;
 			}
 			}

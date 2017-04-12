@@ -19,6 +19,7 @@ namespace LevelEditor {
                 writer.WriteStartElement("Settings");
                 writer.WriteElementString("StartPos", mStartPos.X + "," + mStartPos.Y + "," + mStartPos.Z);
                 writer.WriteElementString("StartRot", (mStartRot.X * DEGREES_TO_RADIANS) + "," + (mStartRot.Y * DEGREES_TO_RADIANS) + "," + (mStartRot.Z * DEGREES_TO_RADIANS));
+                writer.WriteElementString("MaxClones", mMaxnumofclones.ToString());
                 writer.WriteEndElement();
                 //*** END Level Settings ***//
                 foreach (ToolObject tObj in higharchy) {
@@ -28,6 +29,9 @@ namespace LevelEditor {
                         writer.WriteElementString("Mesh", tObj.MeshFile.Split('\\').Last());
                     if (tObj.TextureFile != null)
                         writer.WriteElementString("Texture", tObj.TextureFile == null ? "" : tObj.TextureFile.Split('\\').Last());
+                    if(tObj.mEmissiveTexture != string.Empty) {
+                        writer.WriteElementString("Emissive", tObj.mEmissiveTexture.Split('\\').Last());
+                    }
                     writer.WriteElementString("Position", tObj.Position.X + "," + tObj.Position.Y + "," + tObj.Position.Z);
                     writer.WriteElementString("Rotation", tObj.Rotation.X + "," + tObj.Rotation.Y + "," + tObj.Rotation.Z);
                     writer.WriteElementString("Scale", tObj.Scale.X + "," + tObj.Scale.Y + "," + tObj.Scale.Z);
@@ -95,6 +99,7 @@ namespace LevelEditor {
                             writer.WriteElementString("Scale", tObj.Collider.Scale.X + "," + tObj.Collider.Scale.Y + "," + tObj.Collider.Scale.Z);
                         }
                         writer.WriteElementString("Move", tObj.Collider.CanMove ? "True" : "False");
+                        writer.WriteElementString("PickUp", tObj.Collider.PickUp ? "True" : "False");
                         if (tObj.ColliderType == "Sphere" || tObj.ColliderType == "OBB") {
                             writer.WriteElementString("Gravity", tObj.Collider.Gravity.X + "," + tObj.Collider.Gravity.Y + "," + tObj.Collider.Gravity.Z);
                             writer.WriteElementString("Mass", tObj.Collider.Mass.ToString());
@@ -204,6 +209,9 @@ namespace LevelEditor {
                                             mStartRot.Y = float.Parse(parts[1]) * RADIANS_TO_DEGREES;
                                             mStartRot.Z = float.Parse(parts[2]) * RADIANS_TO_DEGREES;
                                             break;
+                                        case "MaxClones":
+                                            mMaxnumofclones = uint.Parse(reader.Value);
+                                            break;
                                         case "Name":
                                             name = reader.Value;
                                             break;
@@ -241,6 +249,19 @@ namespace LevelEditor {
                                             if (!contained) {
                                                 objects.Add(new ToolObject(mesh, texutre, ref device));
                                                 Tree.Nodes[0].Nodes.Add(objects.Last().Name);
+                                            }
+                                            break;
+                                        case "Emissive":
+                                            if (File.Exists("Assets\\" + reader.Value))
+                                                addition.mEmissiveTexture = "Assets\\" + reader.Value;
+                                            else {
+                                                openFileDialog2.Title = "Please find \"" + reader.Value + "\"";
+                                                openFileDialog2.InitialDirectory = Application.StartupPath;
+                                                openFileDialog2.Filter = "Texture files (*.png)|*.png";
+                                                openFileDialog2.FilterIndex = 1;
+                                                openFileDialog2.RestoreDirectory = true;
+                                                if (openFileDialog2.ShowDialog() == DialogResult.OK)
+                                                    addition.mEmissiveTexture = openFileDialog2.FileName;
                                             }
                                             break;
                                         case "Position":
@@ -305,6 +326,9 @@ namespace LevelEditor {
                                         case "Move":
                                             addition.Collider.CanMove = reader.Value == "True";
                                             break;
+                                        case "PickUp":
+                                            addition.Collider.PickUp = reader.Value == "True";
+                                        break;
                                         case "Mass":
                                             addition.Collider.Mass = float.Parse(reader.Value);
                                             break;

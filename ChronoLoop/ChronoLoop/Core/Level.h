@@ -1,8 +1,4 @@
 #pragma once
-////////////////////
-//2/9/2017
-//Written by: Ryan Bronk & Drew Ritter
-///////////////////
 #include "../ChronoLoop/Objects/BaseObject.h"
 #include "../ChronoLoop/Rendering/renderer.h"
 #include "../Rendering/Draw2D.h"
@@ -20,11 +16,12 @@ namespace Epoch
 		BaseObject* mHeadset;
 		BaseObject* mController1;
 		BaseObject* mController2;
-		TimeManipulation* mTMComponent1 = nullptr, *mTMComponent2 = nullptr;
+		TimeManipulation* mTMComponent = nullptr;
+		//PauseMenu* mPauseMenu = nullptr;
 		std::list<BaseObject*> mObjectList;
 		unsigned short mId;
 		vec4f mStartPosition, mStartRotation;
-
+		unsigned int mMaxNumofClones = 0;
 
 	public:
 		Level();
@@ -44,10 +41,11 @@ namespace Epoch
 		inline BaseObject* GetHeadset() { return mHeadset; }
 		inline BaseObject* GetLeftController() { return mController1; }
 		inline BaseObject* GetRightController() { return mController2; }
-		inline vec4f GetStartPos() { return mStartPosition; }
+		inline unsigned int GetMaxClones() { return mMaxNumofClones; }
+		inline vec4f& GetStartPos() { return mStartPosition; }
 		inline vec4f GetStartRot() { return mStartRotation; }
-		TimeManipulation* GetLeftTimeManipulator() { return mTMComponent1; }
-		TimeManipulation* GetRightTimeManipulator() { return mTMComponent2; }
+		TimeManipulation* GetTimeManipulator() { return mTMComponent; }
+		//PauseMenu* GetPauseMenu() { return mPauseMenu; }
 
 
 		//**SETTERS**//
@@ -59,7 +57,7 @@ namespace Epoch
 		void SetupObjects();
 		void CallStart();
 		void LoadLevel(std::string _file);
-		void BinaryLoadLevel(std::string _file);
+		void Level::BinaryLoadLevel(std::string _file);
 		void Update();
 
 		//**CONSOLE COMMAND FUNCS**//

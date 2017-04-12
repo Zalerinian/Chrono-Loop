@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using Microsoft.DirectX;
 
 namespace Hourglass
 {
-    class ButtonCollider : Component
-    {
+    class ButtonCollider : Component, IRenderable {
         protected Label mLbPosition, mLbScale, mLbNormal, mLbMass, mLbForce;
         protected Label mLbPosX, mLbPosY, mLbPosZ;
         protected Label mLbScaleX, mLbScaleY, mLbScaleZ;
@@ -17,9 +17,86 @@ namespace Hourglass
         protected NumericUpDown mNX, mNY, mNZ;
         protected Panel mPosPanel, mScalePanel, mNormalPanel;
 
+		protected ColoredShape mShape;
+
+
+		public Vector3 PushNormal {
+			get {
+				Vector3 n = new Vector3();
+				n.X = (float)mNX.Value;
+				n.Y = (float)mNY.Value;
+				n.Z = (float)mNZ.Value;
+				return n;
+			}
+			set {
+				mNX.Value = (decimal)value.X;
+				mNY.Value = (decimal)value.Y;
+				mNZ.Value = (decimal)value.Z;
+				Shape.Position = value;
+			}
+		}
+
+		public float NormalForce{
+			get {
+				return (float)mForce.Value;
+			}
+			set {
+				mForce.Value = (decimal)value;
+			}
+		}
+
+		public float Mass {
+			get {
+				return (float)mMass.Value;
+			}
+			set {
+				mMass.Value = (decimal)value;
+			}
+		}
+
+		public Vector3 Position {
+			get {
+				Vector3 v = new Vector3();
+				v.X = (float)mPosX.Value;
+				v.Y = (float)mPosY.Value;
+				v.Z = (float)mPosZ.Value;
+				return v;
+			}
+			set {
+				mPosX.Value = (decimal)value.X;
+				mPosY.Value = (decimal)value.Y;
+				mPosZ.Value = (decimal)value.Z;
+				mShape.Position = value;
+			}
+		}
+
+		public Vector3 Scale {
+			get {
+				Vector3 v = new Vector3();
+				v.X = (float)mScaleX.Value;
+				v.Y = (float)mScaleY.Value;
+				v.Z = (float)mScaleZ.Value;
+				return v;
+			}
+			set {
+				mScaleX.Value = (decimal)value.X;
+				mScaleY.Value = (decimal)value.Y;
+				mScaleZ.Value = (decimal)value.Z;
+				mShape.Scale = value;
+			}
+		}
+
+		public RenderShape Shape {
+			get {
+				return mShape;
+			}
+		}
+
         public ButtonCollider(int _yOffset = 0) : base()
         {
 			mType = ComponentType.ButtonCollider;
+
+			mShape = new ColoredShape();
 
 			#region Component Creation
 
@@ -193,7 +270,7 @@ namespace Hourglass
 			w.Write((float)mNZ.Value);
 		}
 
-		public override void ReadData(BinaryReader r)
+		public override void ReadData(BinaryReader r, int _version)
 		{
 			mMass.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mForce.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));

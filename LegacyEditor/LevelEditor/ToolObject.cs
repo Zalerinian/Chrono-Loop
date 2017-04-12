@@ -30,7 +30,11 @@ namespace LevelEditor
         private string mName, mTextureFile, mMeshFile, mColliderType;
         private ToolObjectColor mCollider = null;
         private List<string> mComponents = new List<string>();
+
+
         public List<Component> mComponentList = new List<Component>(); // TODO: Make this not public.
+        public string mEmissiveTexture = string.Empty;
+
 
         #region Properties
         public CustomVertex.PositionNormalTextured[] Vertices
@@ -248,7 +252,7 @@ namespace LevelEditor
                         case "vt":
                             Vector2 uv = new Vector2();
                             uv.X = (float)Convert.ToDouble(parts[1]);
-                            uv.Y = 1 - (float)Convert.ToDouble(parts[2]);
+                            uv.Y = 1- (float)Convert.ToDouble(parts[2]);
                             UVs.Add(uv);
                             break;
                         case "f":

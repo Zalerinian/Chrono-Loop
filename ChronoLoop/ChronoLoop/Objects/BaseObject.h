@@ -11,6 +11,10 @@
 
 namespace Epoch {
 
+	enum BaseObject_Flag {
+		BaseObject_Flag_Record_In_Timeline = 1
+	};
+
 	class BaseObject {
 		// The number of objects that exist in the world.
 		static unsigned int ObjectCount;
@@ -21,8 +25,7 @@ namespace Epoch {
 		unsigned int mUniqueID;
 		std::list<BaseObject*> mChildren;
 		Transform mTransform;
-		bool mDestroyed = false;
-
+		unsigned int mFlags = 0;
 
 		void Construct(std::string _name, Transform _transform, BaseObject* _parent);
 
@@ -39,8 +42,11 @@ namespace Epoch {
 		BaseObject* Reset(std::string _name);
 		BaseObject* Reset(std::string _name, Transform _transform);
 		BaseObject* Reset(std::string _name, Transform _transform, BaseObject* _parent);
+		BaseObject* Reset(std::string _name, Transform _transform, BaseObject* _parent, unsigned int _flags);
 		unsigned int GetTotalAmountofComponents();
 		void RemoveAllComponents();
+
+		const unsigned int& Flags;
 
 		inline unsigned int GetUniqueId() {
 			return mUniqueID;
@@ -63,6 +69,8 @@ namespace Epoch {
 		inline Transform& GetTransform() {
 			return mTransform;
 		};
+
+		matrix4 GetWorld();
 
 		inline void SetTransform(Transform _transform) {
 			mTransform = _transform;
@@ -89,6 +97,8 @@ namespace Epoch {
 		}
 
 		inline Component* GetComponentIndexed(ComponentType _type, unsigned int _index) {
+			if (_index + 1 > mComponents[_type].size())
+				return nullptr;
 			return mComponents[_type][_index];
 		}
 

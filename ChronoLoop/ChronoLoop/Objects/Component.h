@@ -77,27 +77,44 @@ namespace Epoch
 
 	class Emitter :public Component
 	{
+	protected:
+		void SendEvent(uint64_t _event);
 	public:
-		enum sfxTypes { ePlayLoop, ePauseLoop, eResumeLoop, eStopLoop, ePlaySFX };
+		enum EventType { eNone = -1, ePlay, ePause, eResume, eStop };
 
 		Emitter() : Component(ComponentType::eCOMPONENT_AUDIOEMITTER)
 		{
 
 		}
 
-		void Play(int _id = 0);
-		void Pause(int _id = 0);
-		void Stop(int _id = 0);
-		void PlaySFX(int _id = 0);
-		void PlaySFX(int _id, const vec4f* _pos);
-		void AddSoundEvent(sfxTypes _type, int64_t _event);
+		virtual void CallEvent(EventType _et = eNone) = 0;
 
 		void Update();
 		void Destroy();
-	private:
-		std::vector<std::pair<bool, bool>> mIsSounds;
-		std::unordered_map<sfxTypes, std::vector<int64_t>> mSFX;
+	};
 
+	class AudioEmitter : public Emitter
+	{
+	private:
+		std::unordered_map<EventType, uint64_t> mEvents;
+		bool mPlaying, mPaused;
+
+	public:
+		inline bool isPlaying() const { return mPlaying; }
+		inline bool isPaused() const { return mPaused; }
+
+		void AddEvent(EventType _et, uint64_t _id);
+		void StopAllSound();
+		void CallEvent(EventType _et = eNone);
+	};
+
+	class SFXEmitter : public Emitter
+	{
+	private:
+		uint64_t mEvent;
+	public:
+		void SetEvent(uint64_t _event);
+		void CallEvent(EventType _et = eNone);
 	};
 
 	class Collider : public Component
@@ -115,7 +132,7 @@ namespace Epoch
 		};
 
 		ColliderType mColliderType;
-		bool mShouldMove, mIsTrigger;
+		bool mShouldMove, mIsTrigger, mPickUpAble = false;
 		vec3f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity, mWeight, mDragForce;
 		float mMass, mElasticity, mKineticFriction, mStaticFriction, mInvMass, mRHO, mDrag, mArea;
 

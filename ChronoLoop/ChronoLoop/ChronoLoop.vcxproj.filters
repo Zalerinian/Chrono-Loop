@@ -276,9 +276,6 @@
     <ClInclude Include="Objects\MeshComponent.h">
       <Filter>Objects\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\BoxSnapToControllerAction.hpp">
-      <Filter>Actions</Filter>
-    </ClInclude>
     <ClInclude Include="Actions\CodeComponent.hpp">
       <Filter>Actions</Filter>
     </ClInclude>
@@ -441,9 +438,6 @@
     <ClInclude Include="Actions\TimelineIndicator.hpp">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Objects\TransparentMeshComponent.h">
-      <Filter>Objects\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Actions\UIRewind.h">
       <Filter>Actions</Filter>
     </ClInclude>
@@ -465,6 +459,12 @@
     <ClInclude Include="Actions\UICloneText.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="PMResume.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="PMHubworld.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
     <ClInclude Include="Actions\CCLoadHub.h">
       <Filter>Actions</Filter>
     </ClInclude>
@@ -482,6 +482,28 @@
       <Filter>Actions</Filter>
     </ClInclude>
     <ClInclude Include="Actions\CCStartButton.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCTimeIndicator.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="BVH.h" />
+    <ClInclude Include="Actions\PauseMenu.hpp">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCSnapToPlayerPos.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\BoxSnapToControllerAction.hpp">
+      <Filter>Actions\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCAnimationController.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCLoadTutorial.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCTutorial.h">
       <Filter>Actions</Filter>
     </ClInclude>
   </ItemGroup>
@@ -762,8 +784,9 @@
     <ClCompile Include="PathPlanning.cpp">
       <Filter>Pathing</Filter>
     </ClCompile>
-    <ClCompile Include="Objects\TransparentMeshComponent.cpp">
-      <Filter>Objects\Source Files</Filter>
+    <ClCompile Include="BVH.cpp" />
+    <ClCompile Include="BoxSnapToControllerAction.cpp">
+      <Filter>Actions\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -840,6 +863,12 @@
       <Filter>Rendering\Shaders\Pixel shaders</Filter>
     </FxCompile>
     <FxCompile Include="Rendering\Shaders\ShadowVS.hlsl" />
+    <FxCompile Include="Rendering\shaders\PSAnimatedMultiscan.hlsl">
+      <Filter>Rendering\Shaders\Pixel shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Renderer\shaders\GSAnimatedQuad.hlsl">
+      <Filter>Rendering\Shaders\Geometry Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
@@ -882,6 +911,9 @@
     </None>
     <None Include="Rendering\RenderShaderDefines.hlsli">
       <Filter>Rendering\Header Files</Filter>
+    </None>
+    <None Include="Effects.hlsli">
+      <Filter>Particles</Filter>
     </None>
   </ItemGroup>
 </Project>

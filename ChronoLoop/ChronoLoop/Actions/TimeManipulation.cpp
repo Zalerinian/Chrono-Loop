@@ -9,29 +9,19 @@
 #include "../Core/Pool.h"
 #include "TimeManipulation.h"
 #include "BoxSnapToControllerAction.hpp"
-#include "../Objects/TransparentMeshComponent.h"
+#include "../Objects/MeshComponent.h"
 #include "../Common/Common.h"
 #include "../Particles/ParticleSystem.h"
 #include "../Sound/SoundEngine.h"
 
 namespace Epoch
 {
-	BaseObject* TimeManipulation::mCurCloneController1 = nullptr;
-	BaseObject* TimeManipulation::mCurCloneController2 = nullptr;
-	BaseObject* TimeManipulation::mCurCloneHeadset = nullptr;
-	bool TimeManipulation::mIsBeingMade = false;
-	unsigned short TimeManipulation::mNumOfConfirmedClones = 0;
 
 	TimeManipulation::TimeManipulation() {
 	}
 
 
 	TimeManipulation::~TimeManipulation() {}
-
-	
-
-	unsigned int TimeManipulation::mCloneCount = 0;
-	unsigned short TimeManipulation::mCurrTexture = 0;
 
 	void TimeManipulation::Start()
 	{
@@ -43,91 +33,92 @@ namespace Epoch
 
 	void TimeManipulation::Update() {
 		Level* currentLevel = LevelManager::GetInstance().GetCurrentLevel();
-		
 
-		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip)) {
-			
+	
+		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip) && !Settings::GetInstance().GetBool("PauseMenuUp")) {
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
-			if (mPauseTime) {
-				// Resume Time
-
-				//put the original controll and headset back in control
-				//Remove the clone created
-				if (mCurCloneHeadset && mCurCloneController1 && mCurCloneController2)
+			
+			
+				if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 7)) //created clone
 				{
-					currentLevel->SetHeadsetAndControllers(mCurCloneHeadset, mCurCloneController1, mCurCloneController2,false);
-					TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneHeadset);
-					TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController1);
-					TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController2);
-					TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueID(),false);
-					mCurCloneHeadset = nullptr;
-					mCurCloneController1 = nullptr;
-					mCurCloneController2 = nullptr;
-				}
+					// Resume Time
 
-				vec2f finalRatios(0, 0);
-				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
-				mDesaturationInterpolator.SetActive(true);
+					//put the original controll and headset back in control
+					//Remove the clone created
+					if (mCurCloneHeadset && mCurCloneController1 && mCurCloneController2) {
+						currentLevel->SetHeadsetAndControllers(mCurCloneHeadset, mCurCloneController1, mCurCloneController2, false);
+						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneHeadset);
+						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController1);
+						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController2);
+						TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueID(), false);
+						mCurCloneHeadset = nullptr;
+						mCurCloneController1 = nullptr;
+						mCurCloneController2 = nullptr;
+					}
 
-				mPauseTime = false;
-				TimeManager::Instance()->RewindTimeline(
-					TimeManager::Instance()->GetCurrentSnapFrame(),
-					cLevel->GetHeadset()->GetUniqueID(),
-					cLevel->GetRightController()->GetUniqueID(),
-					cLevel->GetLeftController()->GetUniqueID());
-					
-				mIsBeingMade = false;
-				
-			} else {
-				// Stop time
-				
-				Transform identity;
-				memset(&identity.GetMatrix(), 0, sizeof(identity.GetMatrix()));
-				mCloneCount++;
-				mCurCloneHeadset = Pool::Instance()->iGetObject()->Reset("Headset - " + std::to_string(mCloneCount), identity); //new BaseObject("headset" + std::to_string(rand), identity);
-				mCurCloneController1 = Pool::Instance()->iGetObject()->Reset("Controller1 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
-				mCurCloneController2 = Pool::Instance()->iGetObject()->Reset("Controller2 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
-				MakeCloneBaseObjects(mCurCloneHeadset, mCurCloneController1, mCurCloneController2);
+					vec2f finalRatios(0, 0);
+					mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
+					mDesaturationInterpolator.SetActive(true);
 
-				vec2f finalRatios(0.7f, 0.3f);
-				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
-				mDesaturationInterpolator.SetActive(true);
-				TimeManager::Instance()->SetTempCurSnap();
-				mPauseTime = true;
+					mPauseTime = false;
+					TimeManager::Instance()->RewindTimeline(
+						TimeManager::Instance()->GetCurrentSnapFrame(),
+						cLevel->GetHeadset()->GetUniqueID(),
+						cLevel->GetRightController()->GetUniqueID(),
+						cLevel->GetLeftController()->GetUniqueID());
+
+					mIsBeingMade = false;
+
+				} else if (!mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 2)) {
+					// Stop time
+
+					if (Settings::GetInstance().GetInt("tutStep") == 3)//Paused time
+						Settings::GetInstance().SetInt("tutStep", 4);//Rewind
+
+					Transform identity;
+					memset(&identity.GetMatrix(), 0, sizeof(identity.GetMatrix()));
+					mCloneCount++;
+					mCurCloneHeadset = Pool::Instance()->iGetObject()->Reset("Headset - " + std::to_string(mCloneCount), identity); //new BaseObject("headset" + std::to_string(rand), identity);
+					mCurCloneController1 = Pool::Instance()->iGetObject()->Reset("Controller1 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
+					mCurCloneController2 = Pool::Instance()->iGetObject()->Reset("Controller2 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
+					MakeCloneBaseObjects(mCurCloneHeadset, mCurCloneController1, mCurCloneController2);
+
+					vec2f finalRatios(0.7f, 0.3f);
+					mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
+					mDesaturationInterpolator.SetActive(true);
+					TimeManager::Instance()->SetTempCurSnap();
+					mPauseTime = true;
 			}
 		}
 
 		// Update effect interpolator
 		if (mDesaturationInterpolator.GetActive()) {
 			RenderShape* quad = Renderer::Instance()->GetSceneQuad();
-			Renderer::Instance()->GetContext()->UpdateSubresource(quad->GetContext().mPixelCBuffers[ePB_CUSTOM1].Get(), 0, NULL, &mEffectData, 0, 0);
+			Renderer::Instance()->GetContext()->UpdateSubresource(quad->GetContext().mPixelCBuffers[ePB_REGISTER1].Get(), 0, NULL, &mEffectData, 0, 0);
 		}
 		if (mDesaturationInterpolator.Update(TimeManager::Instance()->GetDeltaTime())) {
 			mDesaturationInterpolator.SetActive(false);
 			RenderShape* quad = Renderer::Instance()->GetSceneQuad();
-			Renderer::Instance()->GetContext()->UpdateSubresource(quad->GetContext().mPixelCBuffers[ePB_CUSTOM1].Get(), 0, NULL, &mEffectData, 0, 0);
+			Renderer::Instance()->GetContext()->UpdateSubresource(quad->GetContext().mPixelCBuffers[ePB_REGISTER1].Get(), 0, NULL, &mEffectData, 0, 0);
 		}
 
 
-		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Touchpad)) {
-			bool right = false;
-			bool left = false;
+		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Touchpad) 
+			&& (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 5))//Created Clone 
+		{
+			
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
-			if (cLevel->GetRightTimeManipulator() != nullptr || cLevel->GetLeftTimeManipulator() != nullptr) {
-				right = cLevel->GetRightTimeManipulator()->isTimePaused();
-				left = cLevel->GetLeftTimeManipulator()->isTimePaused();
-			}
-
 			// Accept timeline position
-			if (left || right) {
-			
+			if (mPauseTime) {
+				if (Settings::GetInstance().GetInt("tutStep") == 6)//accepted time
+					Settings::GetInstance().SetInt("tutStep", 7);//delete clone
 				vec2f finalRatios(0, 0);
 				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
 				mDesaturationInterpolator.SetActive(true);
 		
 
-				if (mIsBeingMade)
+				if (mIsBeingMade &&  mNumOfConfirmedClones < cLevel->GetMaxClones())
 				{
 					//rewind first then enable clone
 					TimeManager::Instance()->RewindTimeline(
@@ -151,20 +142,20 @@ namespace Epoch
 					Physics::Instance()->mObjects.push_back(mCurCloneController2);
 					++mNumOfConfirmedClones;
 
-					//TODO: MAKE CLONE PARTICLE
 					Particle* p = &Particle::Init();
-					p->SetColors(vec4f(0, .25, 1,1), vec4f(.2f, .55f, .8f,1));
+					p->SetColors(vec4f(0, .25, 1, 1), vec4f(.2f, .55f, .8f, 1));
 					p->SetLife(250);
 					p->SetSize(.25f, .15f);
 
-					vec3f EPos = vec3f(mCurCloneHeadset->GetTransform().GetPosition()->x,mCurCloneHeadset->GetTransform().GetPosition()->y, mCurCloneHeadset->GetTransform().GetPosition()->z);
+					vec3f EPos = vec3f(mCurCloneHeadset->GetTransform().GetPosition()->x, mCurCloneHeadset->GetTransform().GetPosition()->y, mCurCloneHeadset->GetTransform().GetPosition()->z);
 					ParticleEmitter* emit = new RadialEmitter(250, 250, 25, EPos);
 					emit->SetParticle(p);
 					emit->SetTexture("../Resources/BasicCircleP.png");
 					ParticleSystem::Instance()->AddEmitter(emit);
 					vec4f temp = EPos;
 					AudioWrapper::GetInstance().MakeEventAtLocation(AK::EVENTS::SFX_SHORTCIRUIT, &temp);
-					emit->FIRE();
+					emit->FIRE();;
+
 				}
 				else
 				{
@@ -197,15 +188,13 @@ namespace Epoch
 					cLevel->GetRightController()->GetUniqueID(),
 					cLevel->GetLeftController()->GetUniqueID());
 
-				cLevel->GetLeftTimeManipulator()->makeTimePaused(false);
-				cLevel->GetRightTimeManipulator()->makeTimePaused(false);
+				cLevel->GetTimeManipulator()->makeTimePaused(false);
 				mIsBeingMade = false;
 			}
 
 		
 			else
 			{
-				//SystemLogger::GetLog() << HotfixButtonDown << std::endl;
 				HotfixButtonDown++;
 				if (HotfixButtonDown > 100) {
 					HotfixButtonDown = 0;
@@ -220,10 +209,9 @@ namespace Epoch
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Trigger))
 		{
 			//toggle to have clone turn on or off
-			if (mPauseTime)
+			if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 4))//rewound time
 			{
-				if (LevelManager::GetInstance().GetCurrentLevel()->GetRightTimeManipulator()->RaycastCloneCheck() == false && 
-				LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->RaycastCloneCheck() == false)
+				if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck() == false)
 				{
 				mIsBeingMade = !mIsBeingMade;	
 				}
@@ -232,17 +220,13 @@ namespace Epoch
 				{
 					if(mIsBeingMade)
 					{
-						((TransparentMeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
-						((TransparentMeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
-						((TransparentMeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+						if (Settings::GetInstance().GetInt("tutStep") == 5)
+							Settings::GetInstance().SetInt("tutStep", 6);
+
+						((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+						((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+						((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
 						SystemLogger::GetLog() << "Opaque" << std::endl;
-					}
-					else
-					{
-						((TransparentMeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
-						((TransparentMeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
-						((TransparentMeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.35f);
-						SystemLogger::GetLog() << "Transparent" << std::endl;
 					}
 				}
 			}
@@ -260,7 +244,8 @@ namespace Epoch
 		_data.ScanlineData.y = 0.2f;
 		_data.ScanlineData.z = 0;
 		_data.ScanlineData.w = 0.8f;
-		TransparentMeshComponent *visibleMesh = new TransparentMeshComponent("../Resources/Clone.obj",.35f);
+		MeshComponent *visibleMesh = new MeshComponent("../Resources/Clone.obj",.35f);
+		visibleMesh->SetPixelShader(ePS_TRANSPARENT);
 		visibleMesh->AddTexture(TimeManager::Instance()->GetNextTexture().c_str(), eTEX_DIFFUSE);
 		//visibleMesh->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
 		//visibleMesh->AddTexture("../Resources/Scanline.png", eTEX_CUSTOM2);
@@ -274,8 +259,9 @@ namespace Epoch
 		_headset->AddComponent(visibleMesh);
 
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
-		TransparentMeshComponent *mc = new TransparentMeshComponent("../Resources/Controller.obj",.35f);
+		MeshComponent *mc = new MeshComponent("../Resources/Controller.obj",.35f);
 		ControllerCollider* CubeColider = new ControllerCollider(_controller1, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
+		mc->SetPixelShader(ePS_TRANSPARENT);
 		mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 		//mc->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
 		//mc->AddTexture("../Resources/Scanline.png", eTEX_CUSTOM2);
@@ -290,8 +276,9 @@ namespace Epoch
 		_controller1->AddComponent(SN1);
 
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be proble
-		TransparentMeshComponent *mc2 = new TransparentMeshComponent("../Resources/Controller.obj",.35f);
+		MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj",.35f);
 		ControllerCollider* CubeColider2 = new ControllerCollider(_controller2, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
+		mc2->SetPixelShader(ePS_TRANSPARENT);
 		mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 		//mc2->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
 		//mc2->AddTexture("../Resources/Scanline.png", eTEX_CUSTOM2);
@@ -347,6 +334,10 @@ namespace Epoch
 					if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, fwd, hitTime)) { 
 							TimeManager::Instance()->DeleteClone(clones[i]->GetUniqueId(),true);
 							--mNumOfConfirmedClones;
+
+							if (Settings::GetInstance().GetInt("tutStep") == 7)//deleted clone
+								Settings::GetInstance().SetInt("tutStep", 8);//finished tutorial
+
 							return true;
 					}
 				}
