@@ -87,11 +87,13 @@ namespace Epoch
 					headset->AddComponent(tut);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 
-					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), false);
+					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
 					BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
 					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+					rightRaycaster->SetPixelShader(ePS_PURETEXTURE);
 					mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+					mc->SetPixelShader(ePS_PURETEXTURE);
 					TeleportAction *ta = new TeleportAction(eControllerType_Primary);
 					TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
 					RightController->AddComponent(mc);
@@ -104,6 +106,7 @@ namespace Epoch
 					BaseObject *clonePanel = Pool::Instance()->iGetObject()->Reset("ClonePanel", identity);
 					MeshComponent* disp = new MeshComponent("../Resources/ClonePanel.obj");
 					disp->AddTexture("../Resources/ClonePanel.png", eTEX_DIFFUSE);
+					disp->SetPixelShader(ePS_PURETEXTURE);
 					clonePanel->AddComponent(disp);
 					clonePanel->SetParent(RightController);
 					RightController->AddChild(clonePanel);
@@ -112,6 +115,7 @@ namespace Epoch
 					BaseObject *timeDisplay = Pool::Instance()->iGetObject()->Reset("TimeIndicatorLine", t);
 					MeshComponent* tdisp = new MeshComponent("../Resources/TimeIndicatorLine.obj");
 					tdisp->AddTexture("../Resources/TimeIndicatorLine.png", eTEX_DIFFUSE);
+					tdisp->SetPixelShader(ePS_PURETEXTURE);
 					timeDisplay->AddComponent(tdisp);
 					timeDisplay->SetParent(RightController);
 					RightController->AddChild(timeDisplay);
@@ -121,6 +125,7 @@ namespace Epoch
 					CCTimeIndicator* time = new CCTimeIndicator();
 					timeDisplayNeedle->AddComponent(time);
 					tdispn->AddTexture("../Resources/TimeIndicator.png", eTEX_DIFFUSE);
+					tdispn->SetPixelShader(ePS_PURETEXTURE);
 					timeDisplayNeedle->AddComponent(tdispn);
 					timeDisplayNeedle->SetParent(RightController);
 					RightController->AddChild(timeDisplayNeedle);
@@ -129,6 +134,7 @@ namespace Epoch
 					BaseObject *rewindDisplay = Pool::Instance()->iGetObject()->Reset("RewindDisplay", t);
 					MeshComponent* rewind = new MeshComponent("../Resources/UIRewind.obj");
 					rewind->AddTexture("../Resources/rewind.png", eTEX_DIFFUSE);
+					rewind->SetPixelShader(ePS_PURETEXTURE);
 					UIRewind* spin = new UIRewind();
 					CCDisplayOnPause* rdop = new CCDisplayOnPause();
 					rewindDisplay->AddComponent(rdop);
@@ -141,6 +147,7 @@ namespace Epoch
 					BaseObject *cloneDisplayBack = Pool::Instance()->iGetObject()->Reset("cloneDisplayBack", t);
 					MeshComponent* cdispb = new MeshComponent("../Resources/UIClone.obj", 0.9f);
 					cdispb->AddTexture("../Resources/clearBlue.png", eTEX_DIFFUSE);
+					cdispb->SetPixelShader(ePS_PURETEXTURE);
 					cloneDisplayBack->AddComponent(cdispb);
 					cloneDisplayBack->SetParent(RightController);
 					RightController->AddChild(cloneDisplayBack);
@@ -158,6 +165,7 @@ namespace Epoch
 					{
 						std::string str("Clone Display");
 						cdisp->AddTexture(str.c_str(), eTEX_DIFFUSE);
+						cdisp->SetPixelShader(ePS_PURETEXTURE);
 						Font* font = new Font();
 						cdisp->GetContext().mTextures[eTEX_DIFFUSE] = srv;
 						UICloneText* ct = new UICloneText();
@@ -184,6 +192,7 @@ namespace Epoch
 						std::string str("Clone Display");
 						TextureManager::Instance()->iAddTexture2D(str, screenTex, &srv);
 						cdisp->AddTexture(str.c_str(), eTEX_DIFFUSE);
+						cdisp->SetPixelShader(ePS_PURETEXTURE);
 
 						Font* font = new Font();
 						cdisp->GetContext().mTextures[eTEX_DIFFUSE] = srv;
@@ -199,6 +208,7 @@ namespace Epoch
 					MeshComponent* rhdisp = new MeshComponent("../Resources/help.obj");
 					rhdisp->SetVisible(false);
 					rhdisp->AddTexture("../Resources/rewindHelp.png", eTEX_DIFFUSE);
+					rhdisp->SetPixelShader(ePS_PURETEXTURE);
 					CCDisplayOnPause* dop = new CCDisplayOnPause();
 					rewindHelp->AddComponent(dop);
 					rewindHelp->AddComponent(rhdisp);
@@ -209,6 +219,7 @@ namespace Epoch
 					BaseObject *teleportHelp = Pool::Instance()->iGetObject()->Reset("teleportHelp", t);
 					MeshComponent* thdisp = new MeshComponent("../Resources/help.obj");
 					thdisp->AddTexture("../Resources/teleport.png", eTEX_DIFFUSE);
+					thdisp->SetPixelShader(ePS_PURETEXTURE);
 					CCTeleToPlay* ttp = new CCTeleToPlay();
 					teleportHelp->AddComponent(ttp);
 					teleportHelp->AddComponent(thdisp);
@@ -219,6 +230,7 @@ namespace Epoch
 					BaseObject *pauseHelp = Pool::Instance()->iGetObject()->Reset("pauseHelp", t);
 					MeshComponent* phdisp = new MeshComponent("../Resources/help.obj");
 					phdisp->AddTexture("../Resources/pause.png", eTEX_DIFFUSE);
+					phdisp->SetPixelShader(ePS_PURETEXTURE);
 					CCPauseToCancel* ptc = new CCPauseToCancel();
 					pauseHelp->AddComponent(ptc);
 					pauseHelp->AddComponent(phdisp);
@@ -229,6 +241,7 @@ namespace Epoch
 					BaseObject *cloneHelp = Pool::Instance()->iGetObject()->Reset("cloneHelp", t);
 					MeshComponent* chdisp = new MeshComponent("../Resources/help.obj");
 					chdisp->AddTexture("../Resources/createClone.png", eTEX_DIFFUSE);
+					chdisp->SetPixelShader(ePS_PURETEXTURE);
 					CCDisplayOnPause* cdop = new CCDisplayOnPause();
 					UICreateToDeleteClone* cd = new UICreateToDeleteClone();
 					cloneHelp->AddComponent(cd);
@@ -240,7 +253,8 @@ namespace Epoch
 					t.SetMatrix(matrix4::CreateScale(.5f, .5f, .5f) * matrix4::CreateTranslation(0.042f, -0.03f, 0.047f));
 					BaseObject *clonePlus = Pool::Instance()->iGetObject()->Reset("clonePlus", t);
 					MeshComponent* cphdisp = new MeshComponent("../Resources/help.obj");
-					cphdisp->AddTexture("../Resources/createClone.png", eTEX_DIFFUSE);
+					cphdisp->AddTexture("../Resources/plus.png", eTEX_DIFFUSE);
+					cphdisp->SetPixelShader(ePS_PURETEXTURE);
 					CCDisplayOnPause* cpdop = new CCDisplayOnPause();
 					UIClonePlusToMinus* pm = new UIClonePlusToMinus();
 					clonePlus->AddComponent(pm);
@@ -251,11 +265,13 @@ namespace Epoch
 
 					//pat added
 					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
-					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), true);
+					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 					BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+					leftRaycaster->SetPixelShader(ePS_PURETEXTURE);
 					mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+					mc2->SetPixelShader(ePS_PURETEXTURE);
 					TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
 					LeftController->AddComponent(mc2);
 					LeftController->AddComponent(leftConCol);
@@ -371,23 +387,22 @@ namespace Epoch
 
 					Light* l1 = new Light();
 					l1->Type = 4;
-					l1->Color = vec3f(1, 1, 1);
-					l1->ConeDirection = vec3f(0, -1, -.1f);
-					l1->Position = vec3f(3.75f, 3.8f, 2.2f);
-					l1->ConeRatio = .9f;
+					l1->Color = vec3f(0, 0, 1);
+					l1->ConeDirection = vec3f(0, -1, 0);
+					l1->Position = vec3f(8.5f, 3, 0);
+					l1->ConeRatio = .65f;
 
 					Light* l2 = new Light();
 					l2->Type = 2;
 					l2->Position = vec3f(0, 4, 0);
 					l2->Color = vec3f(.5f, .5f, 1);
 
-
 					Light* l3 = new Light();
 					l3->Type = 4;
 					l3->Color = vec3f(1, 1, 1);
-					l3->ConeDirection = vec3f(-.1f, -1, 0);
-					l3->Position = vec3f(-5.7f, 3.1f, -7.1f);
-					l3->ConeRatio = .8f;
+					l3->ConeDirection = vec3f(0, -1, 0);
+					l3->Position = vec3f(-3.5f, 3, 3.6f);
+					l3->ConeRatio = .87f;
 
 					Renderer::Instance()->SetLight(l1, 0);
 					Renderer::Instance()->SetLight(l2, 1);

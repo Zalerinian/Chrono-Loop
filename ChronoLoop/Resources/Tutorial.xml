@@ -48,10 +48,6 @@
     <Components>
       <AABBtoAABB>Enabled</AABBtoAABB>
       <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <ElasticPlane>Enabled</ElasticPlane>
       <Collider>
         <Type>OBB</Type>
         <Trigger>False</Trigger>
@@ -79,8 +75,6 @@
     <Components>
       <AABBtoAABB>Enabled</AABBtoAABB>
       <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <ElasticPlane>Enabled</ElasticPlane>
       <Collider>
         <Type>OBB</Type>
         <Trigger>False</Trigger>
@@ -106,10 +100,6 @@
     <Rotation>0,0,0</Rotation>
     <Scale>0.6,0.6,0.6</Scale>
     <Components>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <ElasticPlane>Enabled</ElasticPlane>
-      <AABBtoAABB>Enabled</AABBtoAABB>
-      <ElasticPlane>Enabled</ElasticPlane>
       <AABBtoAABB>Enabled</AABBtoAABB>
       <ElasticPlane>Enabled</ElasticPlane>
       <Collider>
@@ -294,7 +284,7 @@
     <Name>Buttonstand</Name>
     <Mesh>ButtonStand.obj</Mesh>
     <Texture>white.png</Texture>
-    <Position>-3.891072,0,-3.744362</Position>
+    <Position>-4.191072,0,-1.944362</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,0.8,1</Scale>
     <Components>
@@ -319,10 +309,13 @@
     <Name>Button</Name>
     <Mesh>Button.obj</Mesh>
     <Texture>red.png</Texture>
-    <Position>-3.89,1.080629,-3.74</Position>
+    <Position>-4.19,1.080629,-1.94</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components>
+      <ButtonPress>Enabled</ButtonPress>
+      <ButtonPress>Enabled</ButtonPress>
+      <ButtonPress>Enabled</ButtonPress>
       <ButtonPress>Enabled</ButtonPress>
       <Collider>
         <Type>Button</Type>
@@ -391,7 +384,7 @@
     </Components>
   </Object>
   <Object>
-    <Name>TransparentWall</Name>
+    <Name>TransparentWall1</Name>
     <Mesh>TutorialBackWall.obj</Mesh>
     <Texture>wallTextureM.png</Texture>
     <Position>0,0,0</Position>
@@ -490,7 +483,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>cube.003</Name>
+    <Name>Propcube.003</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
     <Position>-14.07912,0.4321526,6.624924</Position>
@@ -499,7 +492,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>DoorEmitterprop</Name>
+    <Name>PropDoorEmitterprop</Name>
     <Mesh>DoorFrame1.obj</Mesh>
     <Texture>fieldGen.png</Texture>
     <Position>-14.83115,-0.60194,-9.624579</Position>
@@ -517,7 +510,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Buttonasfs</Name>
+    <Name>PropButtonasfs</Name>
     <Mesh>Button.obj</Mesh>
     <Texture>red.png</Texture>
     <Position>-11.95024,3.271827,-3.74</Position>
@@ -526,7 +519,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Buttonstandsdf</Name>
+    <Name>PropButtonstandsdf</Name>
     <Mesh>ButtonStand.obj</Mesh>
     <Texture>white.png</Texture>
     <Position>-13.30073,0,-3.744362</Position>
@@ -535,7 +528,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Chair</Name>
+    <Name>PropChair</Name>
     <Mesh>PlaceHolderChair.obj</Mesh>
     <Texture>Doors.png</Texture>
     <Position>-10.63478,1.412169,-8.292093</Position>
@@ -544,7 +537,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>DoorEmitter1asdf</Name>
+    <Name>PropDoorEmitter1asdf</Name>
     <Mesh>DoorEmiters1.obj</Mesh>
     <Texture>fieldGen.png</Texture>
     <Position>-8.674046,0.5729976,8.537929</Position>
@@ -553,7 +546,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>cube</Name>
+    <Name>Propcube</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
     <Position>-11.47379,2.04084,-3.914411</Position>
@@ -562,7 +555,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>cube</Name>
+    <Name>Propcube</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
     <Position>-7.393048,2.752134,-6.091001</Position>
@@ -571,7 +564,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Clone</Name>
+    <Name>PropClone</Name>
     <Mesh>Clone.obj</Mesh>
     <Texture>CloneTexture_Green.png</Texture>
     <Position>-13.22298,2.768052,7.108612</Position>
@@ -580,7 +573,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Clone</Name>
+    <Name>PropClone</Name>
     <Mesh>Clone.obj</Mesh>
     <Texture>CloneTexture_Red.png</Texture>
     <Position>-6.805736,0,7.383383</Position>
@@ -592,25 +585,52 @@
     <Name>Ceiling</Name>
     <Mesh>TutorialCeiling.obj</Mesh>
     <Texture>grey.png</Texture>
-    <Position>1.8,0,0</Position>
+    <Position>1.8,3,0</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>2.1,1,1</Scale>
     <Components>
       <Collider>
         <Type>Plane</Type>
         <Trigger>False</Trigger>
-        <Position>0,0,0</Position>
+        <Position>1,0,0</Position>
         <Rotation>0,0,0</Rotation>
-        <Scale>2.1,1,1</Scale>
+        <Scale>1,1,1</Scale>
         <Move>False</Move>
         <PickUp>False</PickUp>
         <Normal>0,-1,0</Normal>
-        <Mass>0</Mass>
-        <Elasticity>0</Elasticity>
-        <StaticFriction>0</StaticFriction>
+        <Mass>100</Mass>
+        <Elasticity>0.1</Elasticity>
+        <StaticFriction>0.6</StaticFriction>
         <KeneticFriction>0</KeneticFriction>
         <Drag>0</Drag>
       </Collider>
     </Components>
+  </Object>
+  <Object>
+    <Name>TransparentWall2</Name>
+    <Mesh>TutorialBackWall.obj</Mesh>
+    <Texture>wallTextureM.png</Texture>
+    <Position>0,50,0</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>TransparentWindow</Name>
+    <Mesh>TutorialBackWall.obj</Mesh>
+    <Texture>wallTextureM.png</Texture>
+    <Position>0,50,0</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Exit</Name>
+    <Mesh>PlaneCorrection.obj</Mesh>
+    <Texture>exit.png</Texture>
+    <Position>-4.5794,1.417958,-1.94</Position>
+    <Rotation>1.57,1.57,0</Rotation>
+    <Scale>0.3,1,0.2</Scale>
+    <Components />
   </Object>
 </Level>

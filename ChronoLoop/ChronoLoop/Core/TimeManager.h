@@ -73,6 +73,7 @@ namespace Epoch {
 		unsigned int GetCurrentSnapFrame();
 		//Retrieves delta time
 		float GetDeltaTime() { return mDeltaTime; }
+		bool GetInterpolatorsUpdating() { return mShouldUpdateInterpolators; }
 		Interpolator<matrix4>* GetCloneInterpolator(unsigned short _id);
 		Interpolator<matrix4>* GetCloneColliderInterpolator(unsigned short _id);
 		Interpolator<matrix4>* GetObjectInterpolator(unsigned short _id);

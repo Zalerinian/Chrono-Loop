@@ -68,39 +68,38 @@ namespace Epoch {
 						InitialPos = CurPos;
 						if ((powf((CurPos.x), 2) + powf((CurPos.y), 2)) > 0.16f) {
 							if (diff * line > 0) {
-								if (mIncreaseGestureSpeed != 1)
+								if (mIncreaseGestureSpeed != 1) {
 									mSpeedCW++;
+								}
 								if (mSpeedCCW != 0) {
 									mSpeedCCW = 0;
 									mSpeedCW = 1;
 									mIncreaseGestureSpeed = 5;
-									TimeManager::Instance()->SetTimelineObjectInterpTime(.2f);
+									TimeManager::Instance()->SetTimelineObjectInterpTime(0.2f);
 								}
-								if (mSpeedCW % 35 == 0 && mIncreaseGestureSpeed != 1)
+								if (mSpeedCW % 20 == 0 && mIncreaseGestureSpeed != 1)
 								{
-									TimeManager::Instance()->SetTimelineObjectInterpTime(TimeManager::Instance()->GetTimeLineObjectInterpTime() - 0.03f);
+									TimeManager::Instance()->SetTimelineObjectInterpTime(TimeManager::Instance()->GetTimeLineObjectInterpTime() - 0.04f);
 									mIncreaseGestureSpeed--;
 								}
-								if (TimeManager::Instance()->GetShouldPulse())
-									this->TriggerHapticPulse(300, vr::k_EButton_SteamVR_Touchpad);
+
 
 								return 1;
 							}
-							else if (diff * line < 0) {
-								if (mIncreaseGestureSpeed != 1)
+							if (diff * line < 0) {
+								if (mIncreaseGestureSpeed != 1) {
 									mSpeedCCW++;
+								}
 								if (mSpeedCW != 0) {
 									mSpeedCW = 0;
 									mSpeedCCW = 1;
 									mIncreaseGestureSpeed = 5;
 									TimeManager::Instance()->SetTimelineObjectInterpTime(0.20f);
 								}
-								if (mSpeedCCW % 35 == 0 && mIncreaseGestureSpeed != 1) {
-									TimeManager::Instance()->SetTimelineObjectInterpTime(TimeManager::Instance()->GetTimeLineObjectInterpTime() - 0.03f);
+								if (mSpeedCCW % 20 == 0 && mIncreaseGestureSpeed != 1) {
+									TimeManager::Instance()->SetTimelineObjectInterpTime(TimeManager::Instance()->GetTimeLineObjectInterpTime() - 0.04f);
 									mIncreaseGestureSpeed--;
 								}
-								if(TimeManager::Instance()->GetShouldPulse())
-									this->TriggerHapticPulse(300, vr::k_EButton_SteamVR_Touchpad);
 
 								return -1;
 							}
