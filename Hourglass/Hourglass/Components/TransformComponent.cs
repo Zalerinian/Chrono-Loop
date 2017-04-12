@@ -297,11 +297,13 @@ namespace Hourglass
 
 		public void OnGizmoAttached() {
 			mGroupBox.BorderColor = System.Drawing.Color.Red;
+			mGroupBox.BorderWidth = 2;
 			mGroupBox.Invalidate();
 		}
 
 		public void OnGizmoDetached() {
 			mGroupBox.BorderColor = System.Drawing.SystemColors.ActiveBorder;
+			mGroupBox.BorderWidth = 1;
 			mGroupBox.Invalidate();
 		}
 

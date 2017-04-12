@@ -106,7 +106,7 @@ namespace Hourglass
 			mDevice.RenderState.FillMode = FillMode.Solid;
 			mDevice.RenderState.ZBufferWriteEnable = true;
 			mDevice.RenderState.ZBufferEnable = true;
-			
+
 
 			RebuildProjectionMatrix();
 			RebuildViewMatrix();
