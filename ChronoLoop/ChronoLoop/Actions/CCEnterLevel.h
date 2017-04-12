@@ -85,7 +85,7 @@ namespace Epoch
 					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 
-					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), false);
+					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
 					BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
 					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
@@ -249,7 +249,7 @@ namespace Epoch
 
 					//pat added
 					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
-					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), true);
+					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 					BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
