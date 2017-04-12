@@ -16,6 +16,8 @@ namespace Epoch
 		bool colliding = false, mhitting = false, mCanDoorInterp = false, mDoorDoneInterpolating = false, mFlip = false, mSoundOnce = false;;
 		bool tempDoor = false;
 		BaseObject *Block = nullptr, *Exit = nullptr;
+		std::vector<BaseObject*> mD1Wires;
+		std::vector<BaseObject*> mD2Wires;
 		CubeCollider* blockCube, *exitCube;
 		matrix4 blockend, exitend , blockstart, exitstart;
 		Interpolator<matrix4>* blockInterp;
@@ -43,6 +45,19 @@ namespace Epoch
 			exitstart = exitCube->GetTransform().GetMatrix();
 			blockend = blockCube->GetTransform().GetMatrix() * blockCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 2.6f, 0, 1));
 			exitend = exitCube->GetTransform().GetMatrix() * exitCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, -2.6f, 0, 1));
+
+			mD1Wires = cLevel->FindAllObjectsByPattern("D1Wire");
+			mD2Wires = cLevel->FindAllObjectsByPattern("D2Wire");
+
+			//Turn on wires that need to be turned on
+			for (unsigned int i = 0; i < mD2Wires.size(); i++) {
+				MeshComponent* temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
+				if (temp)
+					temp->Disable();
+				temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
+				if (temp)
+					temp->Enable();
+			}
 		}
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time)
@@ -70,6 +85,24 @@ namespace Epoch
 					mCanDoorInterp = true;
 					mDoorDoneInterpolating = false;
 					tempDoor = true;
+
+					//Loop to change texture on wires
+					for (unsigned int i = 0; i < mD1Wires.size(); i++) {
+						MeshComponent* temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
+						if (temp)
+							temp->Disable();
+						temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
+						if (temp)
+							temp->Enable();
+					}
+					for (unsigned int i = 0; i < mD2Wires.size(); i++) {
+						MeshComponent* temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
+						if (temp)
+							temp->Enable();
+						temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
+						if (temp)
+							temp->Disable();
+					}
 				}
 
 				// Sound 
@@ -139,6 +172,24 @@ namespace Epoch
 
 						mCanDoorInterp = true;
 						mDoorDoneInterpolating = false;
+
+						//Loop to change texture on wires
+						for (unsigned int i = 0; i < mD1Wires.size(); i++) {
+							MeshComponent* temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
+							if (temp)
+								temp->Enable();
+							temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
+							if (temp)
+								temp->Disable();
+						}
+						for (unsigned int i = 0; i < mD2Wires.size(); i++) {
+							MeshComponent* temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
+							if (temp)
+								temp->Disable();
+							temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
+							if (temp)
+								temp->Enable();
+						}
 					}
 
 					if (mCanDoorInterp && !mDoorDoneInterpolating)

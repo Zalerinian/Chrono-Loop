@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using Microsoft.DirectX;
 
 namespace Hourglass
 {
@@ -10,6 +11,21 @@ namespace Hourglass
 		protected Label mLbOffset, mLbNormal, mLbNX, mLbNY, mLbNZ;
 		protected NumericUpDown mOffset, mNX, mNY, mNZ;
 		protected Panel mNormalPanel;
+
+		public Vector3 Normal {
+			get {
+				Vector3 n = new Vector3();
+				n.X = (float)mNX.Value;
+				n.Y = (float)mNY.Value;
+				n.Z = (float)mNZ.Value;
+				return n;
+			}
+			set {
+				mNX.Value = (decimal)value.X;
+				mNY.Value = (decimal)value.Y;
+				mNZ.Value = (decimal)value.Z;
+			}
+		}
 
 		public PlaneCollider(int _yOffset = 0) : base(64 + _yOffset)
 		{

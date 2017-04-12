@@ -131,13 +131,11 @@ namespace Hourglass
 			Centroid.Multiply(1.0f / 3.0f);
 			Centroid -= _start;
 
-			// These early-outs are to ensure the triangle is facing toward the ray's start, but we want
-			// to raycast to objects no matter where they're facing for the editor (for things such as planes, with only one side).
-			//if (Vector3.Dot(_norm, _dir) > 0 || Vector3.Dot(Centroid, _norm) > 0)
-			//{
-			//	_time = 0;
-			//	return false;
-			//}
+			if (Vector3.Dot(_norm, _dir) > 0 || Vector3.Dot(Centroid, _norm) > 0)
+			{
+				_time = 0;
+				return false;
+			}
 
 			Vector3 sa = _v1 - _start,
 				sb = _v2 - _start,

@@ -10,6 +10,51 @@ namespace Hourglass
 		protected ComboBox mTexture, mEmissive;
 		protected Label mLbDiffuse, mLbEmissive;
 
+		protected enum PixelShader {
+			Colored = 0,
+			Textured,
+			PostProcess,
+			PureTexture,
+			Transparent,
+			TransparentScanline,
+			MAX
+		}
+
+		protected enum VertexShader {
+			Basic = 0,
+			Textured,
+			NDC,
+			MAX
+		}
+
+		protected enum GeoShader {
+			PosNormTex = 0,
+			PosNormTex_NDC,
+			PosNormTex_AnimQuad,
+			MAX
+		}
+
+		protected string[] PixelShaderNames = {
+			"ePS_BASIC",
+			"ePS_TEXTURED",
+			"ePS_POSTPROCESS",
+			"ePS_PURETEXTURE",
+			"ePS_TRANSPARENT",
+			"ePS_TRANSPARENT_SCANLINE"
+		};
+
+		protected string[] VertexShaderNames = {
+			"eVS_BASIC",
+			"eVS_TEXTURED",
+			"eVS_NDC"
+		};
+
+		protected string[] GeoShaderNames = {
+			"eGS_PosNormTex",
+			"eGS_PosNormTex_NDC",
+			"eGS_PosNormTex_AnimQuad"
+		};
+
 		public TexturedMeshComponent(int _yOffset = 0) : base(_yOffset)
 		{
 			mType = ComponentType.TexturedMesh;
@@ -155,10 +200,20 @@ namespace Hourglass
             return CheckForValue(mTexture, _object);
         }
 
+		public int CheckForEmissive(string _object) {
+			return CheckForValue(mEmissive, _object);
+		}
+
         public void SelectTexture(int _index) {
             if(_index > 0 && _index < mTexture.Items.Count) {
                 mTexture.SelectedIndex = _index;
             }
         }
-    }
+
+		public void SelectEmissive(int _index) {
+			if (_index > 0 && _index < mEmissive.Items.Count) {
+				mEmissive.SelectedIndex = _index;
+			}
+		}
+	}
 }

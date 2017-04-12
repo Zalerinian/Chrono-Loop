@@ -11,7 +11,7 @@ using System.Collections.Generic;
 namespace Hourglass {
 
 	public static class FileIO {
-		public static readonly uint WriterVersion = 2;
+		public static readonly uint WriterVersion = 3;
 		public static readonly float RADIANS_TO_DEGREES = ((180.0f / 3.14f));
 		public static readonly float DEGREES_TO_RADIANS = (1 / 180.0f * 3.14f);
 		private static Stack<BaseObject> ObjectStack = new Stack<BaseObject>();
@@ -267,20 +267,23 @@ namespace Hourglass {
 			using (BinaryReader reader = new BinaryReader(fs)) {
 				int vers = reader.ReadInt32();
 				if (WriterVersion != vers) {
-					MessageBox.Show("The selected file was written in a different version of Hourglass. We'll see how this goes...", "Tread Carefully...", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+					Debug.Print("The editor is at verion " + WriterVersion + ", but this file was written with " + vers + ".");
+				}
+				if (vers > WriterVersion) {
+					MessageBox.Show("Cannot open file, it was created in a newer version of Hourglass.", "Hourglass is out of date!", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
 				int settingsOffset = 0, objectsOffset = 0;
 				settingsOffset = reader.ReadInt32();
 				objectsOffset = reader.ReadInt32();
 				Vector3 startPos = new Vector3(), startRot = new Vector3();
 
-				startPos.X = (float)reader.ReadInt32();
-				startPos.Y = (float)reader.ReadInt32();
-				startPos.Z = (float)reader.ReadInt32();
+				startPos.X = (float)System.BitConverter.ToSingle(reader.ReadBytes(4), 0);
+				startPos.Y = (float)System.BitConverter.ToSingle(reader.ReadBytes(4), 0);
+				startPos.Z = (float)System.BitConverter.ToSingle(reader.ReadBytes(4), 0);
 
-				startRot.X = (float)reader.ReadInt32();
-				startRot.Y = (float)reader.ReadInt32();
-				startRot.Z = (float)reader.ReadInt32();
+				startRot.X = (float)System.BitConverter.ToSingle(reader.ReadBytes(4), 0) * RADIANS_TO_DEGREES;
+				startRot.Y = (float)System.BitConverter.ToSingle(reader.ReadBytes(4), 0) * RADIANS_TO_DEGREES;
+				startRot.Z = (float)System.BitConverter.ToSingle(reader.ReadBytes(4), 0) * RADIANS_TO_DEGREES;
                 Settings.CloneMax = (ushort)reader.ReadUInt16();
 				Settings.StartPos = startPos;
 				Settings.StartRot = startRot;
@@ -296,182 +299,283 @@ namespace Hourglass {
 		}
 
 		public static void ReadXMLFile(string _file, TreeView _tree) {
-			try {
-				XmlReaderSettings settings = new XmlReaderSettings();
-				settings.DtdProcessing = DtdProcessing.Parse;
-				XmlReader reader = XmlReader.Create(_file, settings);
-				reader.MoveToContent();
-				string element = string.Empty, mesh = string.Empty, texutre = string.Empty, name = string.Empty;
-				TreeNode node = null;
-				TexturedMeshComponent tmc = null;
-				ColliderComponent col = null;
-				BaseObject addition = null;
-				bool collider = false;
-				while (reader.Read()) {
-					string[] parts = { };
-					Vector3 point = new Vector3();
-					switch (reader.NodeType) {
-						case XmlNodeType.Element:
-							switch (reader.Name) {
-								case "Object":
-									node = new TreeNode();
-									_tree.Nodes.Add(node);
-									addition = new BaseObject(node);
-									node.Tag = addition;
-									mesh = texutre = string.Empty;
-									collider = false;
-									break;
-								case "Collider":
-									collider = true;
-									break;
-								default:
-									element = reader.Name;
-									break;
-							}
-							break;
-						case XmlNodeType.Text:
-							switch (element) {
-								case "StartPos":
-									Vector3 pos = new Vector3();
-									parts = reader.Value.Split(',');
-									pos.X = float.Parse(parts[0]);
-									pos.Y = float.Parse(parts[1]);
-									pos.Z = float.Parse(parts[2]);
-									Settings.StartPos = pos;
-									break;
-								case "StartRot":
-									Vector3 rot = new Vector3();
-									parts = reader.Value.Split(',');
-									rot.X = float.Parse(parts[0]) * RADIANS_TO_DEGREES;
-									rot.Y = float.Parse(parts[1]) * RADIANS_TO_DEGREES;
-									rot.Z = float.Parse(parts[2]) * RADIANS_TO_DEGREES;
-									Settings.StartRot = rot;
-									break;
-                                case "MaxClones":
-                                    Settings.CloneMax = ushort.Parse(reader.Value.Split(',')[0]);
-                                    break;
-								case "Name":
-									addition.Name = reader.Value;
-									break;
-								case "Mesh":
+			//try {
+			XmlReaderSettings settings = new XmlReaderSettings();
+			settings.DtdProcessing = DtdProcessing.Parse;
+			XmlReader reader = XmlReader.Create(_file, settings);
+			reader.MoveToContent();
+			string element = string.Empty, mesh = string.Empty, texutre = string.Empty, name = string.Empty, CodeComp = string.Empty;
+			TreeNode node = null;
+			TexturedMeshComponent tmc = null;
+			ColliderComponent col = null;
+			ButtonCollider bcol = null;
+			BaseObject addition = null;
+			bool collider = false;
+			while (reader.Read()) {
+				string[] parts = { };
+				Vector3 point = new Vector3();
+				switch (reader.NodeType) {
+					case XmlNodeType.Element:
+						switch (reader.Name) {
+							case "Object":
+								node = new TreeNode();
+								_tree.Nodes.Add(node);
+								addition = new BaseObject(node);
+								node.Tag = addition;
+								mesh = texutre = string.Empty;
+								collider = false;
+								tmc = null;
+								break;
+							case "Collider":
+								collider = true;
+								break;
+							default:
+								element = reader.Name;
+								break;
+						}
+						break;
+					case XmlNodeType.Text:
+						switch (element) {
+							case "StartPos":
+								Vector3 pos = new Vector3();
+								parts = reader.Value.Split(',');
+								pos.X = float.Parse(parts[0]);
+								pos.Y = float.Parse(parts[1]);
+								pos.Z = float.Parse(parts[2]);
+								Settings.StartPos = pos;
+								break;
+							case "StartRot":
+								Vector3 rot = new Vector3();
+								parts = reader.Value.Split(',');
+								rot.X = float.Parse(parts[0]) * RADIANS_TO_DEGREES;
+								rot.Y = float.Parse(parts[1]) * RADIANS_TO_DEGREES;
+								rot.Z = float.Parse(parts[2]) * RADIANS_TO_DEGREES;
+								Settings.StartRot = rot;
+								break;
+							case "MaxClones":
+								Settings.CloneMax = ushort.Parse(reader.Value.Split(',')[0]);
+								break;
+							case "Name":
+								addition.Name = reader.Value;
+								break;
+							case "Mesh":
+								if (tmc == null) {
 									tmc = new TexturedMeshComponent();
-									tmc.SelectMesh(tmc.CheckForMesh(reader.Value));
 									addition.AddComponent(tmc);
-									break;
-								case "Texture":
-									if (tmc == null) {
-										tmc = new TexturedMeshComponent();
-										addition.AddComponent(tmc);
+								}
+								tmc.SelectMesh(tmc.CheckForMesh(reader.Value));
+								break;
+							case "Texture":
+								if (tmc == null) {
+									tmc = new TexturedMeshComponent();
+									addition.AddComponent(tmc);
+								}
+								tmc.SelectTexture(tmc.CheckForTexture(reader.Value));
+								break;
+							case "Emissive":
+								if (tmc == null) {
+									tmc = new TexturedMeshComponent();
+									addition.AddComponent(tmc);
+								}
+								tmc.SelectEmissive(tmc.CheckForEmissive(reader.Value));
+								break;
+							case "Position":
+								parts = reader.Value.Split(',');
+								point.X = float.Parse(parts[0]);
+								point.Y = float.Parse(parts[1]);
+								point.Z = float.Parse(parts[2]);
+								if (collider) {
+									if (bcol != null) {
+										bcol.Position = point;
+									} else if(col != null) {
+										if(col is PlaneCollider) {
+											col.Shape.Position = point;
+										} else if(col is BoxCollider) {
+											((BoxCollider)col).Position = point;
+										} else if(col is SphereCollider) {
+											((SphereCollider)col).Position = point;
+										}
 									}
-									tmc.SelectTexture(tmc.CheckForTexture(reader.Value));
-									break;
-								case "Position":
-									parts = reader.Value.Split(',');
-									point.X = float.Parse(parts[0]);
-									point.Y = float.Parse(parts[1]);
-									point.Z = float.Parse(parts[2]);
-									if (collider) {
-										col.Shape.Position = point;
-									} else {
-										((TransformComponent)addition.GetComponents()[0]).SetPosition(point);
+								} else {
+									((TransformComponent)addition.GetComponents()[0]).SetPosition(point);
+								}
+								break;
+							case "Rotation":
+								parts = reader.Value.Split(',');
+								point.X = float.Parse(parts[0]) * RADIANS_TO_DEGREES;
+								point.Y = float.Parse(parts[1]) * RADIANS_TO_DEGREES;
+								point.Z = float.Parse(parts[2]) * RADIANS_TO_DEGREES;
+								if (collider) {
+									//if (col != null) {
+									//	if (col is BoxCollider) {
+									//		((BoxCollider)col).Rotation = point;
+									//	}
+									//}
+								} else {
+									((TransformComponent)addition.GetComponents()[0]).SetRotation(point);
+								}
+								break;
+							case "Scale":
+								parts = reader.Value.Split(',');
+								point.X = float.Parse(parts[0]);
+								point.Y = float.Parse(parts[1]);
+								point.Z = float.Parse(parts[2]);
+								if (collider) {
+									if (bcol != null) {
+										bcol.Scale = point;
+									} else if (col != null) {
+										if (col is BoxCollider) {
+											((BoxCollider)col).Scale = point;
+										}
 									}
-									break;
-								case "Rotation":
-									parts = reader.Value.Split(',');
-									point.X = float.Parse(parts[0]);
-									point.Y = float.Parse(parts[1]);
-									point.Z = float.Parse(parts[2]);
-									if (collider) {
-										col.Shape.Rotation = point;
-									} else {
-										((TransformComponent)addition.GetComponents()[0]).SetRotation(point);
-									}
-									break;
-								case "Scale":
-									parts = reader.Value.Split(',');
-									point.X = float.Parse(parts[0]);
-									point.Y = float.Parse(parts[1]);
-									point.Z = float.Parse(parts[2]);
-									if (collider) {
-										col.Shape.Scale = point;
-									} else {
-										((TransformComponent)addition.GetComponents()[0]).SetScale(point);
-									}
-									break;
-								case "Type":
-									if (reader.Value == "Sphere") {
-										col = new SphereCollider();
-										((ColoredShape)col.Shape).Load("Assets\\Sphere.obj", Color.Red);
-									} else if (reader.Value == "OBB" || reader.Value == "Button") {
-										col = new BoxCollider();
-										((ColoredShape)col.Shape).Load("Assets\\Cube.obj", Color.Red);
-									} else {
-										col = new PlaneCollider();
-										((ColoredShape)col.Shape).Load("Assets\\Plane.obj", Color.Red);
-									}
-									break;
-								case "Trigger":
+								} else {
+									((TransformComponent)addition.GetComponents()[0]).SetScale(point);
+								}
+								break;
+							case "Type":
+								col = null;
+								bcol = null;
+								if (reader.Value == "Sphere") {
+									col = new SphereCollider();
+									((ColoredShape)col.Shape).SetMesh("Assets\\Sphere.obj", Color.Red);
+								} else if (reader.Value == "OBB") {
+									col = new BoxCollider();
+									((ColoredShape)col.Shape).SetMesh("Assets\\Cube.obj", Color.Red);
+								} else if (reader.Value == "Button") {
+									bcol = new ButtonCollider();
+									((ColoredShape)bcol.Shape).SetMesh("Assets\\Cube.obj", Color.Red);
+								} else {
+									col = new PlaneCollider();
+									((ColoredShape)col.Shape).SetMesh("Assets\\Plane.obj", Color.Red);
+								}
+								if (col != null) {
+									col.Shape.FillMode = Microsoft.DirectX.Direct3D.FillMode.WireFrame;
+									addition.AddComponent(col);
+								} else if (bcol != null) {
+									bcol.Shape.FillMode = Microsoft.DirectX.Direct3D.FillMode.WireFrame;
+									addition.AddComponent(bcol);
+								}
+								break;
+							case "Trigger":
+								if (col != null) {
 									col.Trigger = reader.Value == "True";
-									break;
-								case "Radius":
-									if (col is SphereCollider) {
-										float radius = float.Parse(reader.Value);
-										((SphereCollider)col).Radius = radius;
-									}
-									break;
-								case "PushNormal":
-									//
-									//
-									break;
-								case "Normal":
-									//
-									//
-									break;
-								case "Gravity":
-									if (col is BoxCollider) {
-										parts = reader.Value.Split(',');
-										point.X = float.Parse(parts[0]);
-										point.Y = float.Parse(parts[1]);
-										point.Z = float.Parse(parts[2]);
-										((BoxCollider)col).Gravity = point;
-									}
-									break;
-								case "Move":
+								}
+								break;
+							case "Radius":
+								if (col is SphereCollider) {
+									float radius = float.Parse(reader.Value);
+									((SphereCollider)col).Radius = radius;
+								}
+								break;
+							case "PushNormal":
+								// Button Collider
+								//
+								if (bcol != null) {
+									parts = reader.Value.Split(',');
+									point.X = float.Parse(parts[0]);
+									point.Y = float.Parse(parts[1]);
+									point.Z = float.Parse(parts[2]);
+									bcol.PushNormal = point;
+								}
+								break;
+							case "Normal":
+								// Plane Collider
+								//
+								if (col is PlaneCollider) {
+									parts = reader.Value.Split(',');
+									point.X = float.Parse(parts[0]);
+									point.Y = float.Parse(parts[1]);
+									point.Z = float.Parse(parts[2]);
+									((PlaneCollider)col).Normal = point;
+								}
+								break;
+							case "Gravity":
+								if (col is BoxCollider) {
+									parts = reader.Value.Split(',');
+									point.X = float.Parse(parts[0]);
+									point.Y = float.Parse(parts[1]);
+									point.Z = float.Parse(parts[2]);
+									((BoxCollider)col).Gravity = point;
+								}
+								break;
+							case "Move":
+								if(col != null) {
 									col.Movable = reader.Value == "True";
-									break;
-								case "Mass":
+								}
+								break;
+							case "Mass":
+								if(col != null) {
 									col.Mass = float.Parse(reader.Value);
-									break;
-								case "Elasticity":
+								} else if(bcol != null) {
+									bcol.Mass = float.Parse(reader.Value);
+								}
+								break;
+							case "Elasticity":
+								if(col != null) {
 									col.Elasticity = float.Parse(reader.Value);
-									break;
-								case "NormalForce":
-									//
-									//
-									break;
-								case "StaticFriction":
+								}
+								break;
+							case "NormalForce":
+								// Button Collider
+								//
+								if(bcol != null) {
+									bcol.NormalForce = float.Parse(reader.Value);
+								}
+								break;
+							case "StaticFriction":
+								if(col != null) {
 									col.StaticFriction = float.Parse(reader.Value);
-									break;
-								case "KeneticFriction":
+								}
+								break;
+							case "KeneticFriction":
+								if(col != null) {
 									col.KineticFriction = float.Parse(reader.Value);
-									break;
-								case "Drag":
+								}
+								break;
+							case "Drag":
+								if(col != null) {
 									col.Drag = float.Parse(reader.Value);
-									break;
-								default:
-									break;
-							}
-							break;
-						case XmlNodeType.EndElement:
-							break;
-						default:
-							break;
-					}
+								}
+								break;
+
+
+							// Code components
+							case "BoxSnapToController":
+							case "ButtonHold":
+							case "ButtonPress":
+							case "AABBtoAABB":
+							case "AABBtoSphere":
+							case "ElasticPlane":
+							case "SpheretoSphere":
+							case "EnterLevel":
+							case "HeadsetFollow":
+								if (element == "EnterLevel") {
+									if (addition.Name == "mmDoor") {
+										element = "CCEnterLevel1";
+									} else if (addition.Name == "DoorEmitter2") {
+										element = "CCLoadHub";
+									}
+								}
+
+								CodeComponent c = new CodeComponent();
+								c.SelectCode(c.CheckForCode(element));
+								addition.AddComponent(c);
+								break;
+							default:
+								Debug.Print(element + " | " + reader.Value);
+								break;
+						}
+						break;
+					case XmlNodeType.EndElement:
+						break;
+					default:
+						break;
 				}
-				reader.Close();
-			} catch (Exception ex) {
-				MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
 			}
+			reader.Close();
+			//} catch (Exception ex) {
+			//	MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+			//}
 		}
 
 		private static void ReadObject(BinaryReader r, TreeView tree, int _version) {
@@ -497,11 +601,10 @@ namespace Hourglass {
 				Component com = null;
 				switch (compType) {
 					case (short)Component.ComponentType.Code:
-						// TODO: Code components
+						com = new CodeComponent();
 						break;
 					case (short)Component.ComponentType.Transform:
-						b.GetComponents()[0].ReadData(r, _version);
-						n.Text = ((TransformComponent)b.GetComponents()[0]).Name;
+						com = b.GetComponents()[0];
 						break;
 					case (short)Component.ComponentType.BoxCollider:
 						com = new BoxCollider();
@@ -525,10 +628,10 @@ namespace Hourglass {
 						com = new SoundComponent();
 						break;
 					default:
-						Debug.Print("An unexpected component type has bee found. This may indicate corruption: " + compType);
+						Debug.Print("An unexpected component type has been found. This may indicate corruption: " + compType);
 						break;
 				}
-				if(com != null) {
+				if (com != null) {
 					com.ReadData(r, _version);
 					b.AddComponent(com);
 				}

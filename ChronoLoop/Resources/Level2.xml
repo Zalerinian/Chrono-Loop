@@ -855,7 +855,7 @@
     <Name>General Controls</Name>
     <Mesh>PlaneCorrection.obj</Mesh>
     <Texture>GeneralControlScheme.png</Texture>
-    <Position>0.6806924,1.730055,8.910416</Position>
+    <Position>0.7111974,1.730055,8.910416</Position>
     <Rotation>1.57,3.14,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components />
@@ -864,8 +864,26 @@
     <Name>Time Controlls</Name>
     <Mesh>PlaneCorrection.obj</Mesh>
     <Texture>TimeControlScheme.png</Texture>
-    <Position>-0.4240379,1.726474,8.91</Position>
+    <Position>-0.6513032,1.726474,8.91</Position>
     <Rotation>1.57,3.14,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>D2Wire</Name>
+    <Mesh>L2Wire2.obj</Mesh>
+    <Texture>Scanline.png</Texture>
+    <Position>0,0,0</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>D1Wire</Name>
+    <Mesh>L2Wire1.obj</Mesh>
+    <Texture>Scanline.png</Texture>
+    <Position>0,0,0</Position>
+    <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components />
   </Object>
