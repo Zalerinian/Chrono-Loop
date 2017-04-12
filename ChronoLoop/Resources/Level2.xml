@@ -642,7 +642,7 @@
     </Components>
   </Object>
   <Object>
-    <Name>TransparentWall</Name>
+    <Name>TransparentWall1</Name>
     <Mesh>TiledWall.obj</Mesh>
     <Texture>wallTextureM.png</Texture>
     <Position>-5.330216,1.5,4.80321</Position>
@@ -867,6 +867,24 @@
     <Position>-0.4240379,1.726474,8.91</Position>
     <Rotation>1.57,3.14,0</Rotation>
     <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>TransparentWall2</Name>
+    <Mesh>TiledWall.obj</Mesh>
+    <Texture>wallTextureM.png</Texture>
+    <Position>-5.330216,50,4.80321</Position>
+    <Rotation>0,1.57,0</Rotation>
+    <Scale>2.9,1,0.5</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>TransparentWindow</Name>
+    <Mesh>TiledWall.obj</Mesh>
+    <Texture>wallTextureM.png</Texture>
+    <Position>-5.330216,50,4.80321</Position>
+    <Rotation>0,1.57,0</Rotation>
+    <Scale>2.9,1,0.5</Scale>
     <Components />
   </Object>
 </Level>

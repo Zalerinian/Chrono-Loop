@@ -113,7 +113,7 @@ namespace Epoch {
 
 
 								mat = VRInputManager::GetInstance().GetPlayerPosition();
-								mat.Position.y = 1.5f;
+								mat.Position.y = 2;
 								vec3f pos = mat.Position;
 								vec3f up(0, 1, 0);
 								mat = DirectX::XMMatrixLookAtRH(mat.Position.vector, point.vector, up.vector);
