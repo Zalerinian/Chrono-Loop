@@ -26,8 +26,8 @@ namespace Epoch {
 		TeleportAction(ControllerType _t) { mControllerRole = _t; };
 
 		virtual void Start() {
-			interp = LevelManager::GetInstance().GetCurrentLevel()->playerInterp;
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
+			interp =cLevel->playerInterp;
 			mPlaneObject  = cLevel->FindObjectWithName("Floor");
 			mWallsObject  = cLevel->FindObjectWithName("Walls");
 			mBlockObject  = cLevel->FindObjectWithName("TransparentDoor1");

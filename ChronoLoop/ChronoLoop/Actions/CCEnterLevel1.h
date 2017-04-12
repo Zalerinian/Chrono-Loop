@@ -252,7 +252,7 @@ namespace Epoch
 					t.SetMatrix(matrix4::CreateScale(.5f, .5f, .5f) * matrix4::CreateTranslation(0.042f, -0.03f, 0.047f));
 					BaseObject *clonePlus = Pool::Instance()->iGetObject()->Reset("clonePlus", t);
 					MeshComponent* cphdisp = new MeshComponent("../Resources/help.obj");
-					cphdisp->AddTexture("../Resources/createClone.png", eTEX_DIFFUSE);
+					cphdisp->AddTexture("../Resources/plus.png", eTEX_DIFFUSE);
 					cphdisp->SetPixelShader(ePS_PURETEXTURE);
 					CCDisplayOnPause* cpdop = new CCDisplayOnPause();
 					UIClonePlusToMinus* pm = new UIClonePlusToMinus();
