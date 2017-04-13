@@ -59,11 +59,11 @@ namespace Epoch
 			for (unsigned int i = 0; i < mD2Wires.size(); i++) {
 				MeshComponent* temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				if (temp) {
-					temp->SetVisible(false);
+					temp->SetVisible(true);
 				}
 				temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
 				if (temp) {
-					temp->SetVisible(true);
+					temp->SetVisible(false);
 				}
 			}
 		}

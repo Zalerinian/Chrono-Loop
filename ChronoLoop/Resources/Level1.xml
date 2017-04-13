@@ -92,7 +92,7 @@
     <Name>Buttonstand</Name>
     <Mesh>Buttonstand.obj</Mesh>
     <Texture>white.png</Texture>
-    <Position>3.743129,0,2.523626</Position>
+    <Position>3.708344,0,2.523626</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,0.8,1</Scale>
     <Components>
@@ -117,10 +117,11 @@
     <Name>Button</Name>
     <Mesh>Button.obj</Mesh>
     <Texture>red.png</Texture>
-    <Position>3.739048,1.1,2.513872</Position>
+    <Position>3.713798,1.1,2.513872</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components>
+      <ButtonHold>Enabled</ButtonHold>
       <ButtonHold>Enabled</ButtonHold>
       <ButtonHold>Enabled</ButtonHold>
       <Collider>
@@ -966,10 +967,10 @@
     <Components />
   </Object>
   <Object>
-    <Name>D1Wire</Name>
+    <Name>D2Wire1</Name>
     <Mesh>L1Wire2.obj</Mesh>
     <Texture>Scanline.png</Texture>
-    <Position>0,1.5,0</Position>
+    <Position>0,1.553188,0</Position>
     <Rotation>0,3.14,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components />
@@ -978,13 +979,13 @@
     <Name>D2Wire2</Name>
     <Mesh>L1Wire1.obj</Mesh>
     <Texture>Scanline.png</Texture>
-    <Position>0.1,1.5,0</Position>
+    <Position>0.1,1.582354,0</Position>
     <Rotation>0,3.14,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components />
   </Object>
   <Object>
-    <Name>D2Wire1</Name>
+    <Name>D1Wire</Name>
     <Mesh>L1Wire2.obj</Mesh>
     <Texture>Scanline.png</Texture>
     <Position>0,1.8,0</Position>
