@@ -17,6 +17,10 @@ namespace Epoch {
 		vec3f mVel;
 		vec3f mAcc;
 	};
+	struct SnapComponent_Mesh : SnapComponent
+	{
+		bool misVisible = true;
+	};
 	//Add more componets when we need it
 #pragma endregion ComponetStructs
 
@@ -102,6 +106,7 @@ namespace Epoch {
 		void RemoveFromTimeline(unsigned short _id);
 		bool RewindMakeClone(unsigned int _snaptime);
 		bool RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
+		void MoveAllComponentsToSnapExceptPlayer(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void MoveObjectToSnap(unsigned int _snaptime, unsigned short _id, bool isClone);
 		void MoveAllObjectsToSnap(unsigned int _snaptime);
 		void MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);

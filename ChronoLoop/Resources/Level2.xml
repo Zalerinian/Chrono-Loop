@@ -851,4 +851,22 @@
     <Scale>1,1,1</Scale>
     <Components />
   </Object>
+  <Object>
+    <Name>D2Wire</Name>
+    <Mesh>L2Wire2.obj</Mesh>
+    <Texture>Scanline.png</Texture>
+    <Position>0,0,0</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>D1Wire</Name>
+    <Mesh>L2Wire1.obj</Mesh>
+    <Texture>Scanline.png</Texture>
+    <Position>0,0,0</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
 </Level>

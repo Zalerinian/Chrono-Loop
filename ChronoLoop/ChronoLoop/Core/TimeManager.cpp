@@ -515,13 +515,21 @@ namespace Epoch {
 			}
 		}
 		void TimeManager::BrowseTimeline(int _gesture, int _frameRewind) {
+			bool UpdateComponents = false;
 			
 			if (mShouldUpdateInterpolators) {
 				for (auto it : mObjectRewindInterpolators)
 				{
 					bool complete = it.second->Update(GetDeltaTime());
-					if (complete)
+					if (complete) {
 						mShouldUpdateInterpolators = false;
+						UpdateComponents = true;
+					}
+				}
+				if(UpdateComponents == true)
+				{
+					TimeManipulation* temp = LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator();
+					mTimeline->MoveAllComponentsToSnapExceptPlayer(mtempCurSnapFrame, temp->mCurCloneHeadset->GetUniqueID(), temp->mCurCloneController1->GetUniqueID(), temp->mCurCloneController2->GetUniqueID());
 				}
 				return;
 			}

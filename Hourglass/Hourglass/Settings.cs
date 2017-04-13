@@ -10,6 +10,7 @@ namespace Hourglass
 		private static Color mColor = Color.Black;
 		private static Vector3 mLevelStartPosition = new Vector3();
 		private static Vector3 mLevelStartRotation = new Vector3();
+        private static ushort mCloneMax = 0;
 
 		public static int SettingsVersion {
 			get {
@@ -52,6 +53,12 @@ namespace Hourglass
 				mLevelStartRotation = value;
 			}
 		}
+
+        public static ushort CloneMax
+        {
+            get { return mCloneMax; }
+            set { mCloneMax = value; }
+        }
 
 	}
 }
