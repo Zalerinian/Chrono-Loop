@@ -786,7 +786,8 @@ namespace Epoch {
 			}
 		}
 
-
+		mContext->OMSetDepthStencilState(mOpaqueState.Get(), 1);
+		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
 
 	}
 
