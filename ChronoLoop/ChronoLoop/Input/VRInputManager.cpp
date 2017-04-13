@@ -78,9 +78,10 @@ namespace Epoch {
 
 		vr::VRCompositor()->WaitGetPoses(mPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
 
-		GestureCheck = mRightController.CheckGesture();
-		TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
-		GestureCheck = mLeftController.CheckGesture();
+		if (!TimeManager::Instance()->GetInterpolatorsUpdating())
+			GestureCheck = mRightController.CheckGesture();
+		else
+			GestureCheck = 0;
 		TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
 
 		//Update InputSnap TweenTime 

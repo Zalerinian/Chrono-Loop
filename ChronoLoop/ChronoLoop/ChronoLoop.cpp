@@ -321,11 +321,12 @@ void Update() {
 	//Transform OneBack;
 	//OneBack.SetMatrix(matrix4::CreateTranslation(0, 1, -3));
 	//BaseObject *Forcefield = Pool::Instance()->iGetObject()->Reset("ForceField Quad", OneBack);
-	//MeshComponent *forcefieldMesh = new MeshComponent("../Resources/UIPlane.obj", 0.25f);
-	//forcefieldMesh->AddTexture("../Resources/Forcefield TextureSheet.png", eTEX_DIFFUSE);
+	//MeshComponent *forcefieldMesh = new MeshComponent("../Resources/AnimationPlane1x1.obj", 0.25f);
+	//forcefieldMesh->AddTexture("../Resources/ForcefieldHex gray.png", eTEX_DIFFUSE);
 	//forcefieldMesh->SetGeometryShader(eGS_PosNormTex_AnimQuad);
+	//forcefieldMesh->SetTopmost(true);
 	//Forcefield->AddComponent(forcefieldMesh);
-	//Forcefield->AddComponent(new CCAnimationController(8, 4, 32, 1.0f / 12.0f));
+	//Forcefield->AddComponent(new CCAnimationController(8, 6, 48, 1.0f / 24.0f));
 	//////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -368,7 +369,7 @@ void Update() {
 
 	while (LevelManager::GetInstance().LoadLevelAsync("../Resources/mainMenu.xml", &mainMenu) != Epoch::LM::LevelStatus::Success) {}
 
-	// Binary level loading
+	//// Binary level loading
 	//mainMenu = new Level();
 	//mainMenu->BinaryLoadLevel("../Resources/Main.elf");
 

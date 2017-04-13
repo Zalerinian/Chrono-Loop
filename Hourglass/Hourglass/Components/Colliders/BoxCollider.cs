@@ -224,10 +224,22 @@ namespace Hourglass {
 			SetupTransformPanel(mScalePanel, 90, 90 + _yOffset, ContentWidth, mLbScaleX, mLbScaleY, mLbScaleZ, mScaleX, mScaleY, mScaleZ);
 			SetupTransformPanel(mGravityPanel, 90, 125 + _yOffset, ContentWidth, mLbGravX, mLbGravY, mLbGravZ, mGravX, mGravY, mGravZ);
 
+			// Events
+			mPosX.ValueChanged += OnMatrixUpdated;
+			mPosY.ValueChanged += OnMatrixUpdated;
+			mPosZ.ValueChanged += OnMatrixUpdated;
+			mRotX.ValueChanged += OnMatrixUpdated;
+			mRotY.ValueChanged += OnMatrixUpdated;
+			mRotZ.ValueChanged += OnMatrixUpdated;
+			mScaleX.ValueChanged += OnMatrixUpdated;
+			mScaleY.ValueChanged += OnMatrixUpdated;
+			mScaleZ.ValueChanged += OnMatrixUpdated;
+
 			#endregion
 
 			mGroupBox.Text = "Box Collider";
 			mGroupBox.Size = mGroupBox.PreferredSize;
+			OnMenuClick_Reset(null, null);
 		}
 
 		public override void OnMenuClick_Reset(object sender, EventArgs e) {
@@ -247,6 +259,9 @@ namespace Hourglass {
 			mGravX.Value = 0;
 			mGravY.Value = (decimal)-9.81;
 			mGravZ.Value = 0;
+
+			mShape = new ColoredShape("Assets\\Colliders\\Cube.obj", System.Drawing.Color.Red);
+			mShape.FillMode = Microsoft.DirectX.Direct3D.FillMode.WireFrame;
 		}
 
 		private void OnTransformPanelResize(object sender, EventArgs e) {
@@ -287,6 +302,30 @@ namespace Hourglass {
 			// Z Numeric Up-Down
 			nz.Size = size;
 		}
+
+		protected void OnMatrixUpdated(object sender, EventArgs e) {
+			if(mShape != null) {
+				mShape.World = CreateMatrix();
+			}
+		}
+
+		protected Vector3 GetScaleVector() {
+			return new Vector3((float)mScaleX.Value, (float)mScaleY.Value, (float)mScaleZ.Value);
+		}
+
+		protected Vector3 GetPositionVector() {
+			return new Vector3((float)mPosX.Value, (float)mPosY.Value, (float)mPosZ.Value);
+		}
+
+		protected Matrix CreateMatrix() {
+			// This is assuming you want it to rotate in place. To rotate around a point, you'd do STR.
+			Matrix mat = Matrix.Identity;
+			mat *= Matrix.Scaling(GetScaleVector());
+			mat *= Matrix.RotationYawPitchRoll((float)mRotY.Value * FileIO.DEGREES_TO_RADIANS, (float)mRotX.Value * FileIO.DEGREES_TO_RADIANS, (float)mRotZ.Value * FileIO.DEGREES_TO_RADIANS);
+			mat *= Matrix.Translation(GetPositionVector());
+			return mat;
+		}
+
 
 		public override void WriteData(System.IO.BinaryWriter w) {
 			base.WriteData(w);

@@ -537,7 +537,7 @@ namespace Epoch {
 			unsigned int temp = instanceTimemanager->GetCurrentSnapFrame();
 			if (_gesture == 0)
 				return;
-			else if (_gesture == 1)
+			if (_gesture == 1)
 				_frameRewind *= -1;
 			else if (_gesture == 2) {
 				/*LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck();
@@ -552,7 +552,7 @@ namespace Epoch {
 				mTimeline->PrepareAllObjectInterpolators(placeHolder, mtempCurSnapFrame);
 				mShouldUpdateInterpolators = true;
 				mShouldPulse = true;
-
+				VRInputManager::GetInstance().GetController(eControllerType_Primary).TriggerHapticPulse(600, vr::k_EButton_SteamVR_Touchpad);
 				if (Settings::GetInstance().GetInt("tutStep") == 4)//Rewind
 					Settings::GetInstance().SetInt("tutStep", 5);//Create Clone
 			}

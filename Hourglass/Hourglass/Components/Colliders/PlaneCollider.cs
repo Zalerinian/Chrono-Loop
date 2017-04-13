@@ -56,8 +56,6 @@ namespace Hourglass
 
 			#region Component Setup
 
-			mShape.Load("Assets\\Plane.obj");
-			mShape.FillMode = Microsoft.DirectX.Direct3D.FillMode.WireFrame;
 
 			int ContentWidth = (mGroupBox.Size - mGroupBox.Padding.Size - mGroupBox.Margin.Size).Width;
 
@@ -111,6 +109,11 @@ namespace Hourglass
 
 			#endregion
 
+			mNX.ValueChanged += OnMatrixUpdate;
+			mNY.ValueChanged += OnMatrixUpdate;
+			mNZ.ValueChanged += OnMatrixUpdate;
+			mOffset.ValueChanged += OnMatrixUpdate;
+
 			mGroupBox.Text = "Plane Collider";
 			mGroupBox.Size = mGroupBox.PreferredSize;
 			OnMenuClick_Reset(null, null);
@@ -123,6 +126,28 @@ namespace Hourglass
 			mNX.Value = 0;
 			mNY.Value = 1;
 			mNZ.Value = 0;
+			mShape = new ColoredShape("Assets\\Colliders\\Plane.obj", System.Drawing.Color.Red);
+			mShape.FillMode = Microsoft.DirectX.Direct3D.FillMode.WireFrame;
+		}
+
+		protected void OnMatrixUpdate(object sender, EventArgs e) {
+			// Normalize the normal.
+			Vector3 n = new Vector3((float)mNX.Value, (float)mNY.Value, (float)mNZ.Value);
+			n.Normalize();
+			//mNX.Value = (decimal)n.X;
+			//mNY.Value = (decimal)n.Y;
+			//mNZ.Value = (decimal)n.Z;
+
+
+			// Calculate the rotation
+			Vector3 r = new Vector3();
+			r.X = (float)Math.PI * n.Y;
+			r.Y = (float)Math.PI * n.Z; // The plane object naturally points up on the Y axis, so we need to cut the value in half and subtract an extra half PI to account for it.
+			r.Z = (float)Math.PI * n.X;
+
+			mShape.Scale = new Vector3(1, 1, 1);
+			//mShape.Rotation = r;
+			mShape.Position = new Vector3(n.X * (float)mOffset.Value, n.Y * (float)mOffset.Value, n.Z * (float)mOffset.Value);
 		}
 
 		public override void WriteData(BinaryWriter w)

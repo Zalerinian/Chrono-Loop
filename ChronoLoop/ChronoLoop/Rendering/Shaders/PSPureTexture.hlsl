@@ -11,5 +11,7 @@ struct PSI {
 
 float4 main(PSI input) : SV_TARGET
 {
-	return tDiffuse.Sample(diffuseFilter, input.texCoord.xy);
+	float4 color = tDiffuse.Sample(diffuseFilter, input.texCoord.xy);
+	clip(color.a - 0.25);
+	return color;
 }

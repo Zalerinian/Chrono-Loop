@@ -229,9 +229,12 @@ namespace Hourglass
             SetupTransformPanel(mScalePanel, 90, 50, ContentWidth, mLbScaleX, mLbScaleY, mLbScaleZ, mScaleX, mScaleY, mScaleZ);
             SetupTransformPanel(mNormalPanel, 90, 80 + _yOffset, ContentWidth, mLbNX, mLbNY, mLbNZ, mNX, mNY, mNZ);
 
-            #endregion
+			#endregion
 
-            mGroupBox.Text = "Button Collider";
+			mShape = new ColoredShape("Assets\\Colliders\\Cube.obj", System.Drawing.Color.Red);
+
+
+			mGroupBox.Text = "Button Collider";
             mGroupBox.Size = mGroupBox.PreferredSize;
             OnMenuClick_Reset(null, null);
         }

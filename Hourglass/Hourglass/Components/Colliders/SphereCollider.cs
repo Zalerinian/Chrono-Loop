@@ -49,6 +49,10 @@ namespace Hourglass
             mRadius.Name = "radius";
             mRadius.Size = new System.Drawing.Size(ContentWidth - mRadius.Left, 20 + _yOffset);
             mRadius.TabIndex = 45;
+			mRadius.Minimum = 0;
+			mRadius.Maximum = 100;
+			mRadius.DecimalPlaces = 2;
+			mRadius.Increment = (decimal)0.1f;
 
 
             // These numeric up-downs are children of the panel, which is docked to the top, left, and right.
@@ -90,10 +94,15 @@ namespace Hourglass
 
             SetupTransformPanel(mPosPanel, 90, 50 + _yOffset, ContentWidth, mLbX, mLbY, mLbZ, mX, mY, mZ);
 
+			mX.ValueChanged += OnMatrixUpdated;
+			mY.ValueChanged += OnMatrixUpdated;
+			mZ.ValueChanged += OnMatrixUpdated;
+			mRadius.ValueChanged += OnMatrixUpdated;
 
-            #endregion
 
-            mGroupBox.Text = "Sphere Collider";
+			#endregion
+
+			mGroupBox.Text = "Sphere Collider";
             mGroupBox.Size = mGroupBox.PreferredSize;
             OnMenuClick_Reset(null, null);
         }
@@ -131,7 +140,14 @@ namespace Hourglass
             mX.Value = 0;
             mY.Value = 0;
             mZ.Value = 0;
-        }
+			mShape = new ColoredShape("Assets\\Colliders\\Sphere.obj", System.Drawing.Color.Red);
+			mShape.FillMode = Microsoft.DirectX.Direct3D.FillMode.WireFrame;
+		}
+
+		protected void OnMatrixUpdated(object sender, EventArgs e) {
+			Position = new Vector3((float)mX.Value, (float)mY.Value, (float)mZ.Value);
+			Radius = (float)mRadius.Value;
+		}
 
 		public override void WriteData(BinaryWriter w)
 		{
