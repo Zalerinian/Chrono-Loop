@@ -827,14 +827,14 @@
     <Texture>white.png</Texture>
     <Position>0.09999389,0,8.092588</Position>
     <Rotation>0,0,0</Rotation>
-    <Scale>1,0.9,1</Scale>
+    <Scale>1,0.8,1</Scale>
     <Components>
       <Collider>
         <Type>OBB</Type>
         <Trigger>False</Trigger>
-        <Position>0,0.65,0</Position>
+        <Position>0,0,0</Position>
         <Rotation>0,0,0</Rotation>
-        <Scale>0.4,1.3,0.4</Scale>
+        <Scale>0.4,2.6,0.4</Scale>
         <Move>False</Move>
         <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
@@ -850,21 +850,25 @@
     <Name>Button</Name>
     <Mesh>CubeButton.obj</Mesh>
     <Texture>Purple.png</Texture>
-    <Position>0.09571983,1.184457,8.09</Position>
+    <Position>0.09571983,1.06,8.09</Position>
     <Rotation>0,0,0</Rotation>
-    <Scale>1,0.5,1</Scale>
+    <Scale>1,0.7,1</Scale>
     <Components>
+      <ButtonPress>Enabled</ButtonPress>
+      <ButtonPress>Enabled</ButtonPress>
+      <ButtonPress>Enabled</ButtonPress>
+      <ButtonPress>Enabled</ButtonPress>
       <ButtonPress>Enabled</ButtonPress>
       <Collider>
         <Type>Button</Type>
         <Trigger>False</Trigger>
-        <Position>0,-0.03,0</Position>
+        <Position>0,0.03,0</Position>
         <Rotation>0,0,0</Rotation>
-        <Scale>0.35,0.2,0.35</Scale>
-        <Move>True</Move>
+        <Scale>0.35,0.1,0.35</Scale>
+        <Move>False</Move>
         <PickUp>False</PickUp>
         <PushNormal>0,1,0</PushNormal>
-        <Mass>0</Mass>
+        <Mass>2</Mass>
         <NormalForce>1</NormalForce>
       </Collider>
     </Components>
