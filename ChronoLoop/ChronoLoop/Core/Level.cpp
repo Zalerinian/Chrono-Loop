@@ -739,8 +739,7 @@ namespace Epoch {
 								path2.append(meshFile);
 								mesh2 = new MeshComponent(path2.c_str());
 								path2 = "../Resources/green.png";
-								mesh->AddTexture(path2.c_str(), eTEX_DIFFUSE);
-								mesh->Disable();
+								mesh2->AddTexture(path2.c_str(), eTEX_DIFFUSE);
 								obj->AddComponent(mesh2);
 							}
 					

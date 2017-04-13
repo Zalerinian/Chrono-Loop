@@ -29,7 +29,7 @@ namespace Epoch
 			scalingDone = false;
 			button = LevelManager::GetInstance().GetCurrentLevel()->FindObjectWithName("Button");
 			((ButtonCollider*)button->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->Disable();
-			((MeshComponent*)button->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
+			//((MeshComponent*)button->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 			((MeshComponent*)button->GetComponentIndexed(eCOMPONENT_MESH, 0))->Disable();
 
 			stand = LevelManager::GetInstance().GetCurrentLevel()->FindObjectWithName("Buttonstand");

@@ -17,6 +17,10 @@ namespace Epoch {
 		vec3f mVel;
 		vec3f mAcc;
 	};
+	struct SnapComponent_Mesh : SnapComponent
+	{
+		bool misVisible = true;
+	};
 	//Add more componets when we need it
 #pragma endregion ComponetStructs
 

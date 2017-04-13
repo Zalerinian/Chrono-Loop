@@ -45,13 +45,26 @@ namespace Epoch
 			mD2Wires = cLevel->FindAllObjectsByPattern("D2Wire");
 
 			//Turn on wires that need to be turned on
+
 			for (unsigned int i = 0; i < mD1Wires.size(); i++) {
 				MeshComponent* temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
-				if (temp)
-					temp->Disable();
+				if (temp) {
+					temp->SetVisible(false);
+				}
 				temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
-				if (temp)
-					temp->Enable();
+				if (temp) {
+					temp->SetVisible(true);
+				}
+			}
+			for (unsigned int i = 0; i < mD2Wires.size(); i++) {
+				MeshComponent* temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
+				if (temp) {
+					temp->SetVisible(false);
+				}
+				temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
+				if (temp) {
+					temp->SetVisible(true);
+				}
 			}
 		}
 
@@ -96,18 +109,18 @@ namespace Epoch
 							for (unsigned int i = 0; i < mD1Wires.size(); i++) {
 								MeshComponent* temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 								if (temp)
-									temp->Enable();
+									temp->SetVisible(true);
 								temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
 								if (temp)
-									temp->Disable();
+									temp->SetVisible(false);
 							}
 							for (unsigned int i = 0; i < mD2Wires.size(); i++) {
 								MeshComponent* temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 								if (temp)
-									temp->Disable();
+									temp->SetVisible(false);
 								temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
 								if (temp)
-									temp->Enable();
+									temp->SetVisible(true);
 							}
 							once = true;
 						}
