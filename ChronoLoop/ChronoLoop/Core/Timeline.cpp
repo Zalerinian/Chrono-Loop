@@ -562,6 +562,30 @@ namespace Epoch {
 			}
 		}
 	}
+	void Timeline::MoveAllComponentsToSnapExceptPlayer(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3) {
+		Snapshot* destination = mSnapshots[_snaptime];
+		for (auto object : mLiveObjects) {
+			unsigned short id = object.second->GetUniqueID();
+			if (id == _id1 || id == _id2 || id == _id3)
+				continue;
+			SnapInfo* destInfo;
+			//If the object doesnt have a info, then check against the list for the last snap it was updated
+			bool stored = destination->IsObjectStored(id);
+			if (stored) {
+				destInfo = destination->mSnapinfos[id];
+			} else if (!stored) {
+				if (destination->mUpdatedtimes.find(id) == destination->mUpdatedtimes.end())
+					continue;
+				destInfo = mSnapshots[destination->mUpdatedtimes[id]]->mSnapinfos[id];
+			}
+	
+			//Set all componets back to time recorded
+			for (unsigned int i = 0; i < destInfo->mComponents.size(); i++) {
+				SnapComponent* destComp = destInfo->mComponents[i];
+				SetComponent(destComp, object.second, destInfo);
+			}
+		}
+	}
 	void Timeline::SetObjectBirthTime(unsigned short _id)
 	{
 		if(mObjectLifeTimes.find(_id) != mObjectLifeTimes.end())
@@ -664,7 +688,7 @@ namespace Epoch {
 						newComp->misVisible = ((MeshComponent*)temp[i])->IsVisible();
 						newComp->mCompType = temp[i]->GetType();
 						newComp->mBitNum = temp[i]->GetComponentNum();
-						_info->mBitset[newComp->mBitNum] = temp[i]->IsEnabled();
+						_info->mBitset[newComp->mBitNum] = newComp->misVisible;
 						newComp->mId = temp[i]->GetColliderId();
 						_info->mComponents.push_back(newComp);
 					}

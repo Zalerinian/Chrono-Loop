@@ -25,9 +25,7 @@ namespace Epoch
 		unsigned int mCloneCount = 0 ;
 		unsigned short mCurrTexture;
 		unsigned short mNumOfConfirmedClones = 0;
-		BaseObject* mCurCloneHeadset;
-		BaseObject* mCurCloneController1;
-		BaseObject* mCurCloneController2;
+
 		std::string mTextures[10] = { "../Resources/CloneTexture.png",
 			"../Resources/CloneTexture_Green.png",
 			"../Resources/CloneTexture_Pink.png",
@@ -40,7 +38,9 @@ namespace Epoch
 			"../Resources/CloneTexture_Grey.png" };
 
 	public:
-		
+		BaseObject* mCurCloneHeadset;
+		BaseObject* mCurCloneController1;
+		BaseObject* mCurCloneController2;
 		TimeManipulation();
 		TimeManipulation(ControllerType _t) { mControllerRole = _t; };
 		~TimeManipulation();
