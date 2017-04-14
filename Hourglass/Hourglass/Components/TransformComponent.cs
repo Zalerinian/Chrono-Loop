@@ -258,6 +258,10 @@ namespace Hourglass
 			return new Vector3((float)mPosX.Value, (float)mPosY.Value, (float)mPosZ.Value);
 		}
 
+		public Vector3 GetRotationVector() {
+			return new Vector3((float)mRotX.Value, (float)mRotY.Value, (float)mRotZ.Value);
+		}
+
 		public Matrix CreateMatrix()
 		{
 			// This is assuming you want it to rotate in place. To rotate around a point, you'd do STR.
