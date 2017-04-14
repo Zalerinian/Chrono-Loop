@@ -36,52 +36,55 @@ namespace Epoch {
 			return;
 		}
 
-		InputNode* temp = mCurrent;
+		InputNode* temp = mHead;
 
-		//Add to the head 
-		if (temp == mHead && (_data->mData.mLastFrame <= mHead->mData.mLastFrame || (_data->mData.mLastFrame == mHead->mData.mLastFrame && _data->mData.mTime < mHead->mData.mTime))) {
-			_data->mNext = mHead;
-			_data->mPrev = nullptr;
-			mCurrent = _data;
-			mHead = _data;
-			//DisplayTimeline();
-			return;
-		}
+		
 
 		while (temp) {
-			//If greater than current but there is no next
+
+			//Add as head if its less than it.
+			if (temp == mHead && (_data->mData.mLastFrame <= mHead->mData.mLastFrame || (_data->mData.mLastFrame == mHead->mData.mLastFrame && _data->mData.mTime < mHead->mData.mTime))) {
+				_data->mNext = mHead;
+				_data->mPrev = nullptr;
+				mCurrent = _data;
+				mHead = _data;
+				//DisplayTimeline();
+				return;
+			}
+
+			//If greater than temp but there is no next
 			//Move Current pointer if we don't have a next so we can continue to record.
 			if ((_data->mData.mLastFrame > temp->mData.mLastFrame || (_data->mData.mLastFrame == temp->mData.mLastFrame && _data->mData.mTime > temp->mData.mTime)) && !temp->mNext) {
 				Push_back(_data);
 				//DisplayTimeline();
 				return;
 			}
-			//if less than current but there is no next. This may happen if button spams quickly and steam vr event system gives you out of order event times
-			if ((_data->mData.mLastFrame < temp->mData.mLastFrame || (_data->mData.mLastFrame == temp->mData.mLastFrame && _data->mData.mTime < temp->mData.mTime)) && !temp->mNext)
-			{
-				/*We are only going to swap 1 place behind us because 99.9% of the time that will be enough. This insert is designed for speed and looses accuracy if button
-				 is mashed too quickly.*/
-				//if prev is head
-				if(temp->mPrev && temp->mPrev == mHead)
-				{
-					temp->mPrev->mNext = _data;
-					_data->mNext = temp;
-					_data->mPrev = temp->mPrev;
-					temp->mNext = nullptr;
-					mHead = _data;
-					//DisplayTimeline();
-					return;
-				}
-				if(temp->mPrev)
-				{
-					temp->mPrev->mNext = _data;
-					_data->mNext = temp;
-					_data->mPrev = temp->mPrev;
-					temp->mNext = nullptr;
-					//DisplayTimeline();
-					return;
-				}
-			}
+			////if less than current but there is no next. This may happen if button spams quickly and steam vr event system gives you out of order event times
+			//if ((_data->mData.mLastFrame < temp->mData.mLastFrame || (_data->mData.mLastFrame == temp->mData.mLastFrame && _data->mData.mTime < temp->mData.mTime)) && !temp->mNext)
+			//{
+			//	/*We are only going to swap 1 place behind us because 99.9% of the time that will be enough. This insert is designed for speed and looses accuracy if button
+			//	 is mashed too quickly.*/
+			//	//if prev is head
+			//	if(temp->mPrev && temp->mPrev == mHead)
+			//	{
+			//		temp->mPrev->mNext = _data;
+			//		_data->mNext = temp;
+			//		_data->mPrev = temp->mPrev;
+			//		temp->mNext = nullptr;
+			//		mHead = _data;
+			//		//DisplayTimeline();
+			//		return;
+			//	}
+			//	if(temp->mPrev)
+			//	{
+			//		temp->mPrev->mNext = _data;
+			//		_data->mNext = temp;
+			//		_data->mPrev = temp->mPrev;
+			//		temp->mNext = nullptr;
+			//		//DisplayTimeline();
+			//		return;
+			//	}
+			//}
 			//if greatr than current but less then next
 			if ((_data->mData.mLastFrame > temp->mData.mLastFrame || (_data->mData.mLastFrame == temp->mData.mLastFrame && _data->mData.mTime > temp->mData.mTime)) && temp->mNext &&
 				(_data->mData.mLastFrame <= temp->mNext->mData.mLastFrame || (_data->mData.mLastFrame == temp->mNext->mData.mLastFrame && _data->mData.mTime < temp->mNext->mData.mTime))) {
@@ -109,9 +112,9 @@ namespace Epoch {
 		InputNode* temp2 = mHead;
 		while (temp2) {
 			if (temp2 == mCurrent) {
-				SystemLogger::GetLog() << temp2->mData.mControllerId << ":" << temp2->mData.mLastFrame << ":" << temp2->mData.mTime << "<-Curr" << std::endl;
+				SystemLogger::GetLog() << "id:" << temp2->mData.mControllerId << " LastFrane:" << temp2->mData.mLastFrame << " Time:" << temp2->mData.mTime << " :Button" << temp2->mData.mButton << ' ' <<  temp2->mData.mButtonState << "<-Curr" << std::endl;
 			} else {
-				SystemLogger::GetLog() << temp2->mData.mControllerId << ":" << temp2->mData.mLastFrame << ":" << temp2->mData.mTime << std::endl;
+				SystemLogger::GetLog() << "id:" << temp2->mData.mControllerId << " LastFrane:" << temp2->mData.mLastFrame << " Time:" << temp2->mData.mTime << " :Button" << temp2->mData.mButton << ' ' << temp2->mData.mButtonState << std::endl;
 			}
 			temp2 = temp2->mNext;
 		}

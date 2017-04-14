@@ -228,6 +228,13 @@ namespace Epoch
 						((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
 						SystemLogger::GetLog() << "Opaque" << std::endl;
 					}
+					else
+					{
+						((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.3f);
+						((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.3f);
+						((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.3f);
+						SystemLogger::GetLog() << "Transparent" << std::endl;
+					}
 				}
 			}
 		}

@@ -654,10 +654,12 @@ namespace Hourglass
 			Forms.LevelSettingsForm settings = new Forms.LevelSettingsForm();
 			settings.SetPosition(Settings.StartPos);
 			settings.SetRotation(Settings.StartRot);
+            settings.SetCloneMax(Settings.CloneMax);
 			if (settings.ShowDialog() == DialogResult.OK)
 			{
 				Settings.StartPos = settings.GetPosition();
 				Settings.StartRot = settings.GetRotation();
+                Settings.CloneMax = settings.GetCloneMax();
 			}
 		}
 

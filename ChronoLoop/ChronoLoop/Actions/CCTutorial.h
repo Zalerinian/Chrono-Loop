@@ -13,7 +13,7 @@ namespace Epoch
 	struct CCTutorial : public CodeComponent
 	{
 		std::vector<BaseObject*> boards;
-		BaseObject* button, *stand;
+		BaseObject* button, *stand, *exit;
 		float scaleX, scaleY;
 		float tempScaleX, tempScaleY;
 		bool scalingDone;
@@ -29,8 +29,11 @@ namespace Epoch
 			scalingDone = false;
 			button = LevelManager::GetInstance().GetCurrentLevel()->FindObjectWithName("Button");
 			((ButtonCollider*)button->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->Disable();
-			((MeshComponent*)button->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 			((MeshComponent*)button->GetComponentIndexed(eCOMPONENT_MESH, 0))->Disable();
+			((MeshComponent*)button->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
+
+			exit = LevelManager::GetInstance().GetCurrentLevel()->FindObjectWithName("Exit");
+			((MeshComponent*)exit->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 
 			stand = LevelManager::GetInstance().GetCurrentLevel()->FindObjectWithName("Buttonstand");
 			((CubeCollider*)stand->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->Disable();
@@ -457,6 +460,7 @@ namespace Epoch
 					((MeshComponent*)button->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
 					((CubeCollider*)stand->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->Enable();
 					((MeshComponent*)stand->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+					((MeshComponent*)exit->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
 				}
 				break;
 			}

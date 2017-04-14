@@ -562,6 +562,30 @@ namespace Epoch {
 			}
 		}
 	}
+	void Timeline::MoveAllComponentsToSnapExceptPlayer(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3) {
+		Snapshot* destination = mSnapshots[_snaptime];
+		for (auto object : mLiveObjects) {
+			unsigned short id = object.second->GetUniqueID();
+			if (id == _id1 || id == _id2 || id == _id3)
+				continue;
+			SnapInfo* destInfo;
+			//If the object doesnt have a info, then check against the list for the last snap it was updated
+			bool stored = destination->IsObjectStored(id);
+			if (stored) {
+				destInfo = destination->mSnapinfos[id];
+			} else if (!stored) {
+				if (destination->mUpdatedtimes.find(id) == destination->mUpdatedtimes.end())
+					continue;
+				destInfo = mSnapshots[destination->mUpdatedtimes[id]]->mSnapinfos[id];
+			}
+	
+			//Set all componets back to time recorded
+			for (unsigned int i = 0; i < destInfo->mComponents.size(); i++) {
+				SnapComponent* destComp = destInfo->mComponents[i];
+				SetComponent(destComp, object.second, destInfo);
+			}
+		}
+	}
 	void Timeline::SetObjectBirthTime(unsigned short _id)
 	{
 		if(mObjectLifeTimes.find(_id) != mObjectLifeTimes.end())
@@ -632,7 +656,7 @@ namespace Epoch {
 		}
 
 
-		//TODO PAT: ADD MORE COMPONETS WHEN WE NEED THEM.
+		//TODO PAT: Do this better
 		std::vector<Component*>temp;
 		for (int i = 1; i < ComponentType::eCOMPONENT_MAX; i++) {
 			{
@@ -655,7 +679,21 @@ namespace Epoch {
 						newComp->mId = temp[i]->GetColliderId();
 						_info->mComponents.push_back(newComp);
 					}
-				} else {
+				}
+				else if(i == ComponentType::eCOMPONENT_MESH)
+				{
+					temp = _object->GetComponents(ComponentType::eCOMPONENT_MESH);
+					for (unsigned int i = 0; i < temp.size(); i++) {
+						SnapComponent_Mesh* newComp = new SnapComponent_Mesh;
+						newComp->misVisible = ((MeshComponent*)temp[i])->IsVisible();
+						newComp->mCompType = temp[i]->GetType();
+						newComp->mBitNum = temp[i]->GetComponentNum();
+						_info->mBitset[newComp->mBitNum] = newComp->misVisible;
+						newComp->mId = temp[i]->GetColliderId();
+						_info->mComponents.push_back(newComp);
+					}
+				}
+				else {
 					temp = _object->GetComponents((ComponentType)i);
 					for (unsigned int i = 0; i < temp.size(); i++) {
 						SnapComponent* newComp = new SnapComponent;
@@ -664,9 +702,6 @@ namespace Epoch {
 						_info->mBitset[newComp->mBitNum] = temp[i]->IsEnabled();
 						newComp->mId = temp[i]->GetColliderId();
 						_info->mComponents.push_back(newComp);
-						////Dont waste cycles if component is not enabled
-						//if (!_info->mBitset[newComp->mBitNum])
-						//	continue;
 					}
 				}
 			}
@@ -799,6 +834,15 @@ namespace Epoch {
 				}
 				break;
 			}
+			case ComponentType::eCOMPONENT_MESH:
+				for (unsigned int j = 0; j < _object->GetComponentCount(comp->mCompType); j++) {
+					Component* currComp = _object->GetComponentIndexed(comp->mCompType, j);
+					if (currComp->GetColliderId() == comp->mId) {
+						if (((MeshComponent*)currComp)->IsVisible() != ((SnapComponent_Mesh*)comp)->misVisible)
+							return false;
+					}
+				}
+				break;
 			default:
 			{
 				for (unsigned int j = 0; j < _object->GetComponentCount(comp->mCompType); j++) {

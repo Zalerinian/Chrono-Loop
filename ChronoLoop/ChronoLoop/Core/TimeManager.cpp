@@ -97,7 +97,7 @@ namespace Epoch {
 										if (DoesCloneExist(mClones[i]->GetUniqueId(), mLevelTime)) {
 											SystemLogger::GetLog() << "Clone:" << "id " << temp->mData.mControllerId << " " << temp->mNext->mData.mButton << ':' << temp->mNext->mData.mButtonState << std::endl;
 										} else {
-											//SystemLogger::GetLog() << "Found false" << std::endl;
+											SystemLogger::GetLog() << "Found false" << std::endl;
 										}
 									}
 								}
@@ -228,6 +228,7 @@ namespace Epoch {
 				if (pair.second)
 					delete pair.second;
 			}
+			mClonePairs.clear();
 			mCloneInterpolators.clear();
 		}
 
@@ -515,13 +516,21 @@ namespace Epoch {
 			}
 		}
 		void TimeManager::BrowseTimeline(int _gesture, int _frameRewind) {
+			bool UpdateComponents = false;
 			
 			if (mShouldUpdateInterpolators) {
 				for (auto it : mObjectRewindInterpolators)
 				{
 					bool complete = it.second->Update(GetDeltaTime());
-					if (complete)
+					if (complete) {
 						mShouldUpdateInterpolators = false;
+						UpdateComponents = true;
+					}
+				}
+				if(UpdateComponents == true)
+				{
+					TimeManipulation* temp = LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator();
+					mTimeline->MoveAllComponentsToSnapExceptPlayer(mtempCurSnapFrame, temp->mCurCloneHeadset->GetUniqueID(), temp->mCurCloneController1->GetUniqueID(), temp->mCurCloneController2->GetUniqueID());
 				}
 				return;
 			}
@@ -564,6 +573,13 @@ namespace Epoch {
 			mTimeline->HotFixResetLevel();
 			for (int i = 0; i < mClones.size(); ++i) {
 				mClones[i]->RemoveAllComponents();
+
+				if(mObjectRewindInterpolators.find(mClones[i]->GetUniqueID()) != mObjectRewindInterpolators.end())
+				{
+					Interpolator<matrix4>* clone = mObjectRewindInterpolators[mClones[i]->GetUniqueID()];
+					mObjectRewindInterpolators.erase(mClones[i]->GetUniqueID());
+					delete clone;
+				}
 
 				for (int k = 0; k < Physics::Instance()->mObjects.size(); ++k) {
 					if (Physics::Instance()->mObjects[k]->GetUniqueID() == mClones[i]->GetUniqueID()) {

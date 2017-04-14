@@ -13,6 +13,8 @@ namespace Epoch
 	{
 		bool colliding = false, mCanDoorInterp = false, mDoorDoneInterpolating = false;
 		BaseObject *Block = nullptr, *Exit = nullptr;
+		std::vector<BaseObject*> mD1Wires;
+		std::vector<BaseObject*> mD2Wires;
 		CubeCollider* blockCube, *exitCube;
 		matrix4 blockend, exitend;
 		Interpolator<matrix4>* blockInterp;
@@ -38,11 +40,37 @@ namespace Epoch
 			//exitend = exitCube->GetPos() + vec3f(0, 2.6f, 0);
 			blockend = blockCube->GetTransform().GetMatrix() * blockCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, -2.6f, 0, 1));
 			exitend = exitCube->GetTransform().GetMatrix() * exitCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 2.6f, 0, 1));
+
+			mD1Wires = cLevel->FindAllObjectsByPattern("D1Wire");
+			mD2Wires = cLevel->FindAllObjectsByPattern("D2Wire");
+
+			//Turn on wires that need to be turned on
+
+			for (unsigned int i = 0; i < mD1Wires.size(); i++) {
+				MeshComponent* temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
+				if (temp) {
+					temp->SetVisible(false);
+				}
+				temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
+				if (temp) {
+					temp->SetVisible(true);
+				}
+			}
+			for (unsigned int i = 0; i < mD2Wires.size(); i++) {
+				MeshComponent* temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
+				if (temp) {
+					temp->SetVisible(true);
+				}
+				temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
+				if (temp) {
+					temp->SetVisible(false);
+				}
+			}
 		}
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time) {
 			if (!Settings::GetInstance().GetBool("PauseMenuUp")) {
-				if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane) {
+				if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName() != "Buttonstand") {
 					colliding = true;
 
 					vec3f norm = ((ButtonCollider*)&_col)->mPushNormal;
@@ -62,6 +90,7 @@ namespace Epoch
 						exitInterp->Prepare(0.69f, exitCube->GetTransform().GetMatrix(), exitend, exitCube->GetTransform().GetMatrix());
 
 						if (!once) {
+							//Playsound
 							if (_col.GetBaseObject()->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0) {
 								if (dynamic_cast<SFXEmitter*>(_col.GetBaseObject()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0)))
 									((SFXEmitter*)_col.GetBaseObject()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
@@ -74,6 +103,24 @@ namespace Epoch
 							if (Exit->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0) {
 								if (dynamic_cast<SFXEmitter*>(Exit->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0)))
 									((SFXEmitter*)Exit->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+							}
+
+							//Loop to change texture on wires
+							for (unsigned int i = 0; i < mD1Wires.size(); i++) {
+								MeshComponent* temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
+								if (temp)
+									temp->SetVisible(true);
+								temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
+								if (temp)
+									temp->SetVisible(false);
+							}
+							for (unsigned int i = 0; i < mD2Wires.size(); i++) {
+								MeshComponent* temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
+								if (temp)
+									temp->SetVisible(false);
+								temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
+								if (temp)
+									temp->SetVisible(true);
 							}
 							once = true;
 						}
@@ -98,9 +145,7 @@ namespace Epoch
 				}
 				else
 				{
-
 					once = false;
-
 					mCanDoorInterp = false;
 					blockInterp->SetActive(false);
 					exitInterp->SetActive(false);

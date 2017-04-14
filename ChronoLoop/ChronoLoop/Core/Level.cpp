@@ -94,6 +94,16 @@ namespace Epoch {
 		return objects;
 	}
 
+	std::vector<BaseObject*> Level::FindAllObjectsByPattern(std::string _name) {
+		std::vector<BaseObject*> objects;
+		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
+			if ((*it)->GetName().find(_name) != std::string::npos) {
+				objects.push_back(*it);
+			}
+		}
+		return objects;
+	}
+
 	void Level::AddObject(BaseObject * _obj) {
 		mObjectList.push_back(_obj);
 	}
@@ -732,6 +742,16 @@ namespace Epoch {
 								mesh->AddTexture(path.c_str(), eTEX_EMISSIVE);
 							}
 							obj->AddComponent(mesh);
+
+						 if (obj->GetName().find("Wire") != std::string::npos) {
+								MeshComponent* mesh2;
+								std::string path2 = "../Resources/";
+								path2.append(meshFile);
+								mesh2 = new MeshComponent(path2.c_str());
+								path2 = "../Resources/green.png";
+								mesh2->AddTexture(path2.c_str(), eTEX_DIFFUSE);
+								obj->AddComponent(mesh2);
+							}
 					
 					}
 

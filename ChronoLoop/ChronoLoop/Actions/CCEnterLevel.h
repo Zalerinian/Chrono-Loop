@@ -410,7 +410,7 @@ namespace Epoch
 					l3->Type = 4;
 					l3->Color = vec3f(0, 0, 1);
 					l3->ConeDirection = vec3f(0, -1, 0);
-					l3->Position = vec3f(-8.9f, 5, 5);
+					l3->Position = vec3f(-9.8f, 5, 5);
 					l3->ConeRatio = .8f;
 
 					Renderer::Instance()->SetLight(l1, 0);

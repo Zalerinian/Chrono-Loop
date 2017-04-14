@@ -1,4 +1,4 @@
-﻿<Level>
+<Level>
   <Settings>
     <StartPos>3.5,0,0</StartPos>
     <StartRot>0,0,0</StartRot>
@@ -277,57 +277,6 @@
         <StaticFriction>0</StaticFriction>
         <KeneticFriction>0</KeneticFriction>
         <Drag>0</Drag>
-      </Collider>
-    </Components>
-  </Object>
-  <Object>
-    <Name>Buttonstand</Name>
-    <Mesh>ButtonStand.obj</Mesh>
-    <Texture>white.png</Texture>
-    <Position>-4.191072,0,-1.944362</Position>
-    <Rotation>0,0,0</Rotation>
-    <Scale>1,0.8,1</Scale>
-    <Components>
-      <Collider>
-        <Type>OBB</Type>
-        <Trigger>False</Trigger>
-        <Position>0,0.3,0</Position>
-        <Rotation>0,0,0</Rotation>
-        <Scale>0.4,1.8,0.4</Scale>
-        <Move>False</Move>
-        <PickUp>False</PickUp>
-        <Gravity>0,0,0</Gravity>
-        <Mass>50</Mass>
-        <Elasticity>0.1</Elasticity>
-        <StaticFriction>0.2</StaticFriction>
-        <KeneticFriction>0.1</KeneticFriction>
-        <Drag>0</Drag>
-      </Collider>
-    </Components>
-  </Object>
-  <Object>
-    <Name>Button</Name>
-    <Mesh>Button.obj</Mesh>
-    <Texture>red.png</Texture>
-    <Position>-4.19,1.080629,-1.94</Position>
-    <Rotation>0,0,0</Rotation>
-    <Scale>1,1,1</Scale>
-    <Components>
-      <ButtonPress>Enabled</ButtonPress>
-      <ButtonPress>Enabled</ButtonPress>
-      <ButtonPress>Enabled</ButtonPress>
-      <ButtonPress>Enabled</ButtonPress>
-      <Collider>
-        <Type>Button</Type>
-        <Trigger>False</Trigger>
-        <Position>0,0.03,0</Position>
-        <Rotation>0,0,0</Rotation>
-        <Scale>0.4,0.1,0.4</Scale>
-        <Move>True</Move>
-        <PickUp>False</PickUp>
-        <PushNormal>0,1,0</PushNormal>
-        <Mass>2</Mass>
-        <NormalForce>1</NormalForce>
       </Collider>
     </Components>
   </Object>
@@ -632,5 +581,53 @@
     <Rotation>1.57,1.57,0</Rotation>
     <Scale>0.3,1,0.2</Scale>
     <Components />
+  </Object>
+  <Object>
+    <Name>Buttonstand</Name>
+    <Mesh>CubeButtonStand.obj</Mesh>
+    <Texture>white.png</Texture>
+    <Position>-4.300584,0,-1.94</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,0.8,1</Scale>
+    <Components>
+      <Collider>
+        <Type>OBB</Type>
+        <Trigger>False</Trigger>
+        <Position>0,0,0</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>0.4,2.6,0.4</Scale>
+        <Move>False</Move>
+        <PickUp>False</PickUp>
+        <Gravity>0,0,0</Gravity>
+        <Mass>0</Mass>
+        <Elasticity>0</Elasticity>
+        <StaticFriction>0</StaticFriction>
+        <KeneticFriction>0</KeneticFriction>
+        <Drag>0</Drag>
+      </Collider>
+    </Components>
+  </Object>
+  <Object>
+    <Name>Button</Name>
+    <Mesh>CubeButton.obj</Mesh>
+    <Texture>Purple.png</Texture>
+    <Position>-4.3,1.063295,-1.94</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,0.7,1</Scale>
+    <Components>
+      <ButtonPress>Enabled</ButtonPress>
+      <Collider>
+        <Type>Button</Type>
+        <Trigger>False</Trigger>
+        <Position>0,0.03,0</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>0.35,0.1,0.35</Scale>
+        <Move>False</Move>
+        <PickUp>False</PickUp>
+        <PushNormal>0,1,0</PushNormal>
+        <Mass>2</Mass>
+        <NormalForce>1</NormalForce>
+      </Collider>
+    </Components>
   </Object>
 </Level>
