@@ -65,7 +65,8 @@ namespace Hourglass
 			mOffset.Name = "offset";
 			mOffset.Size = new System.Drawing.Size(ContentWidth - mOffset.Left, 20);
 			mOffset.TabIndex = 45;
-
+            mOffset.Minimum = -100;
+            mOffset.DecimalPlaces = 3;
 
 			// These numeric up-downs are children of the panel, which is docked to the top, left, and right.
 			// These are not docked to the right, because their resizing is a special case.
