@@ -920,14 +920,21 @@ namespace Epoch {
 			file.read((char *)&objectOffest, sizeof(INT32));
 			//settings
 			file.seekg(settingOffest, std::ios_base::beg);
-			vec3f startPosition, startRotatioon;
+			vec3f startPosition, startRotation;
+			unsigned short MaxClones = 0;
 			file.read((char *)&startPosition.x, sizeof(float));
 			file.read((char *)&startPosition.y, sizeof(float));
 			file.read((char *)&startPosition.z, sizeof(float));
 
-			file.read((char *)&startRotatioon.x, sizeof(float));
-			file.read((char *)&startRotatioon.y, sizeof(float));
-			file.read((char *)&startRotatioon.z, sizeof(float));
+			file.read((char *)&startRotation.x, sizeof(float));
+			file.read((char *)&startRotation.y, sizeof(float));
+			file.read((char *)&startRotation.z, sizeof(float));
+			if (version >= 4) {
+				file.read((char *)&MaxClones, sizeof(unsigned short));;
+			}
+			mMaxNumofClones = MaxClones;
+			mStartPosition = startPosition;
+			mStartRotation = startRotation;
 			//Objects
 			file.seekg(objectOffest, std::ios_base::beg);
 			INT32 objectCount = 0;
@@ -953,7 +960,7 @@ namespace Epoch {
 					case 1: //BoxCollider
 					{
 						float mass = 0, staticFriction = 0, kineticFriction = 0, elasticity = 0, drag = 0;
-						byte movable = 0, trigger = 0;
+						byte movable = 0, trigger = 0, pickupable = false;
 						file.read((char *)&mass, sizeof(float));
 						file.read((char *)&staticFriction, sizeof(float));
 						file.read((char *)&kineticFriction, sizeof(float));
@@ -961,6 +968,9 @@ namespace Epoch {
 						file.read((char *)&drag, sizeof(float));
 						file.read((char *)&movable, sizeof(byte));
 						file.read((char *)&trigger, sizeof(byte));
+						if (version >= 4) {
+							file.read((char *)&pickupable, sizeof(byte));
+						}
 
 						vec3f position, rotation, scale;
 						file.read((char *)&position.x, sizeof(float));
@@ -976,10 +986,12 @@ namespace Epoch {
 						file.read((char *)&scale.z, sizeof(float));
 						if (obj)
 						{
+							std::string temp = obj->GetName();
 							vec3f offset = vec3f(scale.x * scale.x, scale.y * scale.y, scale.z * scale.z) / 2;
 							vec3f min = position - offset;
 							vec3f max = position + offset;
 							CubeCollider* col = new CubeCollider(obj, movable == 1, trigger == 1, vec3f(0, -1, 0), mass, elasticity, staticFriction, kineticFriction, drag, min, max);
+							col->mPickUpAble = pickupable;
 							obj->AddComponent(col);
 						}
 					}
@@ -1015,7 +1027,7 @@ namespace Epoch {
 					case 3: //PlaneCollider
 					{
 						float mass = 0, staticFriction = 0, kineticFriction = 0, elasticity = 0, drag = 0, offset = 0;
-						byte movable = 0, trigger = 0;
+						byte movable = 0, trigger = 0, pickupable = 0;
 						file.read((char *)&mass, sizeof(float));
 						file.read((char *)&staticFriction, sizeof(float));
 						file.read((char *)&kineticFriction, sizeof(float));
@@ -1023,6 +1035,9 @@ namespace Epoch {
 						file.read((char *)&drag, sizeof(float));
 						file.read((char *)&movable, sizeof(byte)); // This is ignored, but it's written for Plane Colliders anyway.
 						file.read((char *)&trigger, sizeof(byte));
+						if (version >= 4) {
+							file.read((char *)&pickupable, sizeof(byte));
+						}
 						file.read((char *)&offset, sizeof(float));
 
 						vec3f normal;
@@ -1039,7 +1054,7 @@ namespace Epoch {
 					case 4: //SphereCollider
 					{
 						float mass = 0, staticFriction = 0, kineticFriction = 0, elasticity = 0, drag = 0, radius = 0;
-						byte movable = 0, trigger = 0;
+						byte movable = 0, trigger = 0, pickupable = 0;
 						file.read((char *)&mass, sizeof(float));
 						file.read((char *)&staticFriction, sizeof(float));
 						file.read((char *)&kineticFriction, sizeof(float));
@@ -1047,6 +1062,9 @@ namespace Epoch {
 						file.read((char *)&drag, sizeof(float));
 						file.read((char *)&movable, sizeof(byte));
 						file.read((char *)&trigger, sizeof(byte));
+						if (version >= 4) {
+							file.read((char *)&pickupable, sizeof(byte));
+						}
 						file.read((char *)&radius, sizeof(float));
 
 						vec3f position;

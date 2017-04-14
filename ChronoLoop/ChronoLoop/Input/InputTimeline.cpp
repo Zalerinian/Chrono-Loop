@@ -36,8 +36,11 @@ namespace Epoch {
 			return;
 		}
 
-		InputNode* temp = mHead;
-
+		InputNode* temp;
+		if (mInsertStart)
+			temp = mInsertStart;
+		else
+			temp = mHead;
 		
 
 		while (temp) {
@@ -121,12 +124,16 @@ namespace Epoch {
 	}
 
 	void InputTimeline::SetCurr(InputNode * _set) {
-		//assume nothing is in the InputTimeline
-		if (!_set) {
-			mCurrent = nullptr;
-			mHead = nullptr;
-		} else
+		if (_set) {
 			mCurrent = _set;
+		}
+	}
+
+	void InputTimeline::SetInsertStart(InputNode* _set)
+	{
+		if (_set) {
+			mCurrent = _set;
+		}
 	}
 
 	void InputTimeline::Clear() {
