@@ -506,6 +506,9 @@
     <ClInclude Include="Actions\CCTutorial.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="CCProgressBar.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
