@@ -281,24 +281,6 @@
     </Components>
   </Object>
   <Object>
-    <Name>General</Name>
-    <Mesh>PlaneCorrection.obj</Mesh>
-    <Texture>GeneralControlScheme.png</Texture>
-    <Position>2.861584,1.678328,4.316809</Position>
-    <Rotation>1.57,3.14,0</Rotation>
-    <Scale>1.9,1,1.9</Scale>
-    <Components />
-  </Object>
-  <Object>
-    <Name>Time</Name>
-    <Mesh>PlaneCorrection.obj</Mesh>
-    <Texture>TimeControlScheme.png</Texture>
-    <Position>2.86,1.68,-4.311484</Position>
-    <Rotation>1.57,0,0</Rotation>
-    <Scale>1.9,1,1.9</Scale>
-    <Components />
-  </Object>
-  <Object>
     <Name>Skybox</Name>
     <Mesh>mmSkybox.obj</Mesh>
     <Texture>mmSkyboxLight.png</Texture>

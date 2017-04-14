@@ -67,7 +67,6 @@ namespace Epoch
 		//Mutators
 		void SetPauseMenuToOn(bool _set) { PauseMenuisUp = _set; }
 
-		//
 		virtual void Start()
 		{
 			Settings::GetInstance().SetBool("PauseMenuUp", PauseMenuisUp);
@@ -233,7 +232,6 @@ namespace Epoch
 						Draw::Instance().GetBitmap(texSettingsPanel.Get()));
 					
 					//Main Panel's Children
-
 						mainFont->mColor = D2D1::ColorF::WhiteSmoke;
 						mainFont->mFontSize = 75;
 						tempColor = { 0,0,0.9f,0.5f };
@@ -389,11 +387,11 @@ namespace Epoch
 				playerRot = vec4f(0, 0, 1.5f, 0) *  playerPos;
 			}
 			
-			//playerRot.x = 1;
-			//playerRot.y = 0;
+			
 
 			tempT.SetMatrix(playerPos.CreateXRotation(1.5708f) * playerPos.CreateScale(scaleX,scaleY,1) * (playerPos) * playerPos.CreateTranslation(playerRot));// * playerPos.CreateTranslation(0, 5.0f, 5.0f)));// *playerPos.CreateTranslation(playerRot));
 			pPauseMenuBase->SetTransform(tempT);
+
 			tempT.SetMatrix(playerPos.CreateScale(0.85f, 1, 0.85f) * playerPos.CreateTranslation(0, 0.001f, 0));
 			pMainPanel->SetTransform(tempT);
 			tempT.SetMatrix(playerPos.CreateScale(0.85f, 1, 0.85f) * playerPos.CreateTranslation(0, 0.001f, 0));
@@ -492,7 +490,7 @@ namespace Epoch
 			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
 			TextureManager::Instance()->iAddTexture2D(_name, temp, &srv);
 			(*_mc)->AddTexture(_name.c_str(), eTEX_DIFFUSE);
-			GetTexture(*_obj, _width, _height);
+			//GetTexture(*_obj, _width, _height);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(*_obj);
 		}
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> GetTexture(BaseObject* _obj,unsigned int _width,unsigned int _height)
