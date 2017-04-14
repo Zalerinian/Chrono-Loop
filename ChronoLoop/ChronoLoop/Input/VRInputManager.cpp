@@ -98,12 +98,14 @@ namespace Epoch {
 		if (cLevel->GetTimeManipulator() != nullptr) {
 			paused= cLevel->GetTimeManipulator()->isTimePaused();
 		}
+		mInputTimeline->SetInsertStart(mInputTimeline->GetCurr());
 		//if there is a event avaliable and the game is focused
 		while (mVRSystem->PollNextEvent(&tempEvent, sizeof(tempEvent)) && !mVRSystem->IsInputFocusCapturedByAnotherProcess() && (!paused)) {
 			if ((tempEvent.eventType == vr::EVREventType::VREvent_ButtonPress || tempEvent.eventType == vr::EVREventType::VREvent_ButtonUnpress) && tempEvent.data.controller.button != vr::k_EButton_Grip  && tempEvent.data.controller.button != vr::k_EButton_ApplicationMenu) {
 				AddInputNode(&tempEvent);
 			}
 		}
+		mInputTimeline->SetInsertStart(nullptr);
 
 	}
 
