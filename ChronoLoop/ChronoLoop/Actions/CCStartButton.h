@@ -59,6 +59,7 @@ namespace Epoch
 
 		virtual void OnCollision(Collider& _col1, Collider& _col2, float _time)
 		{
+
 			if (levels < 1)
 			{
 				matrix4 mat = mChamberObject->GetTransform().GetMatrix();

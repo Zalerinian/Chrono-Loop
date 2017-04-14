@@ -48,7 +48,7 @@ namespace Epoch {
 					return 0;
 				}
 				gestureCnt++;
-				if (gestureCnt == mIncreaseGestureSpeed) {
+				if (gestureCnt == 1) {
 					gestureCnt = 0;
 					//vec2f CurPos,line,diff;
 					vec2f CurPos = touch;
@@ -59,7 +59,7 @@ namespace Epoch {
 						if ((slope >= 3 || slope <= -3) &&
 							(CurPos.x < 0.3f && CurPos.x > -0.3f)) {
 							//SystemLogger::GetLog() << "Vertical Wrongness" << std::endl;
-							return 2;
+							return 0;
 						}
 						if ((slope <= 0.33f && slope >= -0.33f) &&
 							(CurPos.y < 0.3f && CurPos.y > -0.3f)) {
@@ -68,39 +68,9 @@ namespace Epoch {
 						InitialPos = CurPos;
 						if ((powf((CurPos.x), 2) + powf((CurPos.y), 2)) > 0.16f) {
 							if (diff * line > 0) {
-								if (mIncreaseGestureSpeed != 1) {
-									mSpeedCW++;
-								}
-								if (mSpeedCCW != 0) {
-									mSpeedCCW = 0;
-									mSpeedCW = 1;
-									mIncreaseGestureSpeed = 5;
-									TimeManager::Instance()->SetTimelineObjectInterpTime(0.2f);
-								}
-								if (mSpeedCW % 20 == 0 && mIncreaseGestureSpeed != 1)
-								{
-									TimeManager::Instance()->SetTimelineObjectInterpTime(TimeManager::Instance()->GetTimeLineObjectInterpTime() - 0.04f);
-									mIncreaseGestureSpeed--;
-								}
-
-
 								return 1;
 							}
 							if (diff * line < 0) {
-								if (mIncreaseGestureSpeed != 1) {
-									mSpeedCCW++;
-								}
-								if (mSpeedCW != 0) {
-									mSpeedCW = 0;
-									mSpeedCCW = 1;
-									mIncreaseGestureSpeed = 5;
-									TimeManager::Instance()->SetTimelineObjectInterpTime(0.20f);
-								}
-								if (mSpeedCCW % 20 == 0 && mIncreaseGestureSpeed != 1) {
-									TimeManager::Instance()->SetTimelineObjectInterpTime(TimeManager::Instance()->GetTimeLineObjectInterpTime() - 0.04f);
-									mIncreaseGestureSpeed--;
-								}
-
 								return -1;
 							}
 						}
