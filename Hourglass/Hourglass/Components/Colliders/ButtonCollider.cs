@@ -231,8 +231,12 @@ namespace Hourglass
 
 			#endregion
 
-			mShape = new ColoredShape("Assets\\Colliders\\Cube.obj", System.Drawing.Color.Red);
-
+			mPosX.ValueChanged += OnMatrixUpdated;
+			mPosY.ValueChanged += OnMatrixUpdated;
+			mPosZ.ValueChanged += OnMatrixUpdated;
+			mScaleX.ValueChanged += OnMatrixUpdated;
+			mScaleY.ValueChanged += OnMatrixUpdated;
+			mScaleZ.ValueChanged += OnMatrixUpdated;
 
 			mGroupBox.Text = "Button Collider";
             mGroupBox.Size = mGroupBox.PreferredSize;
@@ -255,7 +259,31 @@ namespace Hourglass
 
             mMass.Value = 0;
             mForce.Value = 0;
-        }
+			mShape = new ColoredShape("Assets\\Colliders\\Cube.obj", System.Drawing.Color.Red);
+			mShape.FillMode = Microsoft.DirectX.Direct3D.FillMode.WireFrame;
+		}
+
+		protected void OnMatrixUpdated(object sender, EventArgs e) {
+			if (mShape != null) {
+				mShape.World = CreateMatrix();
+			}
+		}
+
+		protected Vector3 GetScaleVector() {
+			return new Vector3((float)mScaleX.Value, (float)mScaleY.Value, (float)mScaleZ.Value);
+		}
+
+		protected Vector3 GetPositionVector() {
+			return new Vector3((float)mPosX.Value, (float)mPosY.Value, (float)mPosZ.Value);
+		}
+
+		protected Matrix CreateMatrix() {
+			// This is assuming you want it to rotate in place. To rotate around a point, you'd do STR.
+			Matrix mat = Matrix.Identity;
+			mat *= Matrix.Scaling(GetScaleVector());
+			mat *= Matrix.Translation(GetPositionVector());
+			return mat;
+		}
 
 		public override void WriteData(BinaryWriter w)
 		{

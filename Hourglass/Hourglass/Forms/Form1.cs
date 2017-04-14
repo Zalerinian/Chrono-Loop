@@ -810,12 +810,15 @@ namespace Hourglass
 				if(target != null) {
 					((BaseObject)dragged.Tag).Parent = ((BaseObject)target.Tag);
 					target.Nodes.Add(dragged);
-					target.Expand();
+					if(!target.IsExpanded) {
+						target.Expand();
+					}
 				} else {
 					((BaseObject)dragged.Tag).Parent = null;
 					t.Nodes.Add(dragged);
 				}
 				dragged.TreeView.SelectedNode = dragged;
+				Tree.SuspendLayout();
 			}
 		}
 
