@@ -11,7 +11,7 @@ using System.Collections.Generic;
 namespace Hourglass {
 
 	public static class FileIO {
-		public static readonly uint WriterVersion = 3;
+		public static readonly uint WriterVersion = 4;
 		public static readonly float RADIANS_TO_DEGREES = ((180.0f / 3.14f));
 		public static readonly float DEGREES_TO_RADIANS = (1 / 180.0f * 3.14f);
 		private static Stack<BaseObject> ObjectStack = new Stack<BaseObject>();
@@ -284,7 +284,9 @@ namespace Hourglass {
 				startRot.X = (float)System.BitConverter.ToSingle(reader.ReadBytes(4), 0) * RADIANS_TO_DEGREES;
 				startRot.Y = (float)System.BitConverter.ToSingle(reader.ReadBytes(4), 0) * RADIANS_TO_DEGREES;
 				startRot.Z = (float)System.BitConverter.ToSingle(reader.ReadBytes(4), 0) * RADIANS_TO_DEGREES;
-                Settings.CloneMax = (ushort)reader.ReadUInt16();
+				if(vers >= 4) {
+					Settings.CloneMax = (ushort)reader.ReadUInt16();
+				}
 				Settings.StartPos = startPos;
 				Settings.StartRot = startRot;
 
