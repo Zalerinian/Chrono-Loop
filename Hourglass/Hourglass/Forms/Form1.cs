@@ -774,7 +774,11 @@ namespace Hourglass
 		}
 
 		private void Tree_ItemDrag(object sender, ItemDragEventArgs e) {
-			DoDragDrop(e.Item, DragDropEffects.Move);
+			if(e.Button == MouseButtons.Left) {
+				DoDragDrop(e.Item, DragDropEffects.Move);
+			} else if(e.Button == MouseButtons.Right) {
+				DoDragDrop(e.Item, DragDropEffects.Link);
+			}
 		}
 
 		private void Tree_DragEnter(object sender, DragEventArgs e) {
@@ -782,8 +786,8 @@ namespace Hourglass
 		}
 
 		private void Tree_DragOver(object sender, DragEventArgs e) {
-			Point client = Tree.PointToClient(new Point(e.X, e.Y));
-			Tree.SelectedNode = Tree.GetNodeAt(client);
+			//Point client = Tree.PointToClient(new Point(e.X, e.Y));
+			//Tree.SelectedNode = Tree.GetNodeAt(client);
 		}
 
 		private void Tree_DragDrop(object sender, DragEventArgs e) {
@@ -792,7 +796,9 @@ namespace Hourglass
 			TreeNode dragged = (TreeNode)e.Data.GetData(typeof(TreeNode));
 			if(dragged != target && !ContainsNode(dragged, target)) {
 				// Check mouse button for wheter or not to update dragg object's transform?
-				ReparentObject(dragged, target);
+				if(e.AllowedEffect == DragDropEffects.Link) {
+					//ReparentObject(dragged, target);
+				}
 				TreeView t = dragged.TreeView;
 				if(dragged.Parent != null) {
 					dragged.Parent.Nodes.Remove(dragged);
@@ -802,10 +808,12 @@ namespace Hourglass
 				if(target != null) {
 					((BaseObject)dragged.Tag).Parent = ((BaseObject)target.Tag);
 					target.Nodes.Add(dragged);
+					target.Expand();
 				} else {
 					((BaseObject)dragged.Tag).Parent = null;
 					t.Nodes.Add(dragged);
 				}
+				dragged.TreeView.SelectedNode = dragged;
 			}
 		}
 
@@ -829,6 +837,8 @@ namespace Hourglass
 			BaseObject b = ((BaseObject)toMove.Tag);
 			TransformComponent trf = (TransformComponent)b.GetComponents()[0];
 			
+
+
 
 			trf.SetPosition(delta.Position);
 			trf.SetRotation(trf.GetRotationVector() + delta.Rotation);
