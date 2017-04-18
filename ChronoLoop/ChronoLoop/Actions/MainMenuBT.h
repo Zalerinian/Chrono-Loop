@@ -60,6 +60,10 @@ namespace Epoch
 
 			if (!interp->GetActive()) {
 				if (mChamberMesh->GetTransform().GetPosition()->y < -9.9f && VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad)) {
+					
+					if (!Settings::GetInstance().GetBool("mmStartAtBottom"))
+						Settings::GetInstance().SetBool("mmStartAtBottom", true);
+
 					vec4f forward(0, 0, 1, 0);
 					forward *= mObject->GetTransform().GetMatrix();
 					vec3f fwd = forward;

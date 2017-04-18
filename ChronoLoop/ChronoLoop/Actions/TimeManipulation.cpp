@@ -75,13 +75,16 @@ namespace Epoch
 					if (Settings::GetInstance().GetInt("tutStep") == 3)//Paused time
 						Settings::GetInstance().SetInt("tutStep", 4);//Rewind
 
-					Transform identity;
-					memset(&identity.GetMatrix(), 0, sizeof(identity.GetMatrix()));
-					mCloneCount++;
-					mCurCloneHeadset = Pool::Instance()->iGetObject()->Reset("Headset - " + std::to_string(mCloneCount), identity); //new BaseObject("headset" + std::to_string(rand), identity);
-					mCurCloneController1 = Pool::Instance()->iGetObject()->Reset("Controller1 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
-					mCurCloneController2 = Pool::Instance()->iGetObject()->Reset("Controller2 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
-					MakeCloneBaseObjects(mCurCloneHeadset, mCurCloneController1, mCurCloneController2);
+					//if(Settings::GetInstance().GetInt("CurrentLevel") != 1)
+					//{
+						Transform identity;
+						memset(&identity.GetMatrix(), 0, sizeof(identity.GetMatrix()));
+						mCloneCount++;
+						mCurCloneHeadset = Pool::Instance()->iGetObject()->Reset("Headset - " + std::to_string(mCloneCount), identity); //new BaseObject("headset" + std::to_string(rand), identity);
+						mCurCloneController1 = Pool::Instance()->iGetObject()->Reset("Controller1 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
+						mCurCloneController2 = Pool::Instance()->iGetObject()->Reset("Controller2 - " + std::to_string(mCloneCount), identity); //new BaseObject("Controller" + std::to_string(rand), identity);
+						MakeCloneBaseObjects(mCurCloneHeadset, mCurCloneController1, mCurCloneController2);
+					//}
 
 					vec2f finalRatios(0.7f, 0.3f);
 					mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);

@@ -102,14 +102,6 @@ namespace Epoch
 					RightController->AddComponent(ta);
 					RightController->AddComponent(tm);
 
-					BaseObject *clonePanel = Pool::Instance()->iGetObject()->Reset("ClonePanel", identity);
-					MeshComponent* disp = new MeshComponent("../Resources/ClonePanel.obj");
-					disp->AddTexture("../Resources/ClonePanel.png", eTEX_DIFFUSE);
-					disp->SetPixelShader(ePS_PURETEXTURE);
-					clonePanel->AddComponent(disp);
-					clonePanel->SetParent(RightController);
-					RightController->AddChild(clonePanel);
-
 					t.SetMatrix(matrix4::CreateScale(.1f, .1f, .1f));
 					BaseObject *timeDisplay = Pool::Instance()->iGetObject()->Reset("TimeIndicatorLine", t);
 					MeshComponent* tdisp = new MeshComponent("../Resources/TimeIndicatorLine.obj");
@@ -141,66 +133,6 @@ namespace Epoch
 					rewindDisplay->AddComponent(rewind);
 					rewindDisplay->SetParent(RightController);
 					RightController->AddChild(rewindDisplay);
-
-					t.SetMatrix(matrix4::CreateScale(.75f, 1, 1) * matrix4::CreateTranslation(0.073f, -0.018f, -0.043f));
-					BaseObject *cloneDisplayBack = Pool::Instance()->iGetObject()->Reset("cloneDisplayBack", t);
-					MeshComponent* cdispb = new MeshComponent("../Resources/UIClone.obj", 0.9f);
-					cdispb->AddTexture("../Resources/clearBlue.png", eTEX_DIFFUSE);
-					cdispb->SetPixelShader(ePS_PURETEXTURE);
-					cloneDisplayBack->AddComponent(cdispb);
-					cloneDisplayBack->SetParent(RightController);
-					RightController->AddChild(cloneDisplayBack);
-
-					t.SetMatrix(matrix4::CreateTranslation(0.073f, -0.016f, -0.043f));
-					BaseObject *cloneDisplay = Pool::Instance()->iGetObject()->Reset("cloneDisplay", t);
-					MeshComponent* cdisp = new MeshComponent("../Resources/UIClone.obj");
-					//cdisp->AddTexture("../Resources/clear.png", eTEX_DIFFUSE);
-
-					HRESULT hr;
-					Microsoft::WRL::ComPtr<ID3D11Texture2D> screenTex;
-					Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
-
-					if (TextureManager::Instance()->iGetTexture2D("memory:Clone Display", &srv, &screenTex) != TextureManager::TextureStatus::eError)
-					{
-						std::string str("Clone Display");
-						cdisp->AddTexture(str.c_str(), eTEX_DIFFUSE);
-						cdisp->SetPixelShader(ePS_PURETEXTURE);
-						Font* font = new Font();
-						cdisp->GetContext().mTextures[eTEX_DIFFUSE] = srv;
-						UICloneText* ct = new UICloneText();
-						cloneDisplay->AddComponent(ct);
-						cloneDisplay->AddComponent(cdisp);
-						cloneDisplay->SetParent(RightController);
-						RightController->AddChild(cloneDisplay);
-					}
-					else
-					{
-						D3D11_TEXTURE2D_DESC bitmapDesc;
-						bitmapDesc.Width = 256;
-						bitmapDesc.Height = 256;
-						bitmapDesc.MipLevels = 1;
-						bitmapDesc.ArraySize = 1;
-						bitmapDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-						bitmapDesc.SampleDesc.Count = 1;
-						bitmapDesc.SampleDesc.Quality = 0;
-						bitmapDesc.Usage = D3D11_USAGE_DEFAULT;
-						bitmapDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
-						bitmapDesc.CPUAccessFlags = 0;
-						bitmapDesc.MiscFlags = 0;
-						hr = Renderer::Instance()->GetDevice()->CreateTexture2D(&bitmapDesc, nullptr, screenTex.GetAddressOf());
-						std::string str("Clone Display");
-						TextureManager::Instance()->iAddTexture2D(str, screenTex, &srv);
-						cdisp->AddTexture(str.c_str(), eTEX_DIFFUSE);
-						cdisp->SetPixelShader(ePS_PURETEXTURE);
-
-						Font* font = new Font();
-						cdisp->GetContext().mTextures[eTEX_DIFFUSE] = srv;
-						UICloneText* ct = new UICloneText();
-						cloneDisplay->AddComponent(ct);
-						cloneDisplay->AddComponent(cdisp);
-						cloneDisplay->SetParent(RightController);
-						RightController->AddChild(cloneDisplay);
-					}
 
 					t.SetMatrix(matrix4::CreateTranslation(-0.039f, 0.015f, 0.054f));
 					BaseObject *rewindHelp = Pool::Instance()->iGetObject()->Reset("RewindHelp", t);
@@ -235,32 +167,6 @@ namespace Epoch
 					pauseHelp->AddComponent(phdisp);
 					pauseHelp->SetParent(RightController);
 					RightController->AddChild(pauseHelp);
-
-					t.SetMatrix(matrix4::CreateTranslation(0.032f, -0.03f, 0.047f));
-					BaseObject *cloneHelp = Pool::Instance()->iGetObject()->Reset("cloneHelp", t);
-					MeshComponent* chdisp = new MeshComponent("../Resources/help.obj");
-					chdisp->AddTexture("../Resources/createClone.png", eTEX_DIFFUSE);
-					chdisp->SetPixelShader(ePS_PURETEXTURE);
-					CCDisplayOnPause* cdop = new CCDisplayOnPause();
-					UICreateToDeleteClone* cd = new UICreateToDeleteClone();
-					cloneHelp->AddComponent(cd);
-					cloneHelp->AddComponent(cdop);
-					cloneHelp->AddComponent(chdisp);
-					cloneHelp->SetParent(RightController);
-					RightController->AddChild(cloneHelp);
-
-					t.SetMatrix(matrix4::CreateScale(.5f, .5f, .5f) * matrix4::CreateTranslation(0.042f, -0.03f, 0.047f));
-					BaseObject *clonePlus = Pool::Instance()->iGetObject()->Reset("clonePlus", t);
-					MeshComponent* cphdisp = new MeshComponent("../Resources/help.obj");
-					cphdisp->AddTexture("../Resources/plus.png", eTEX_DIFFUSE);
-					cphdisp->SetPixelShader(ePS_PURETEXTURE);
-					CCDisplayOnPause* cpdop = new CCDisplayOnPause();
-					UIClonePlusToMinus* pm = new UIClonePlusToMinus();
-					clonePlus->AddComponent(pm);
-					clonePlus->AddComponent(cpdop);
-					clonePlus->AddComponent(cphdisp);
-					clonePlus->SetParent(RightController);
-					RightController->AddChild(clonePlus);
 
 					//pat added
 					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
@@ -325,17 +231,12 @@ namespace Epoch
 					next->AddObject(headset);
 					next->AddObject(LeftController);
 					next->AddObject(RightController);
-					next->AddObject(cloneDisplay);
-					next->AddObject(cloneDisplayBack);
-					next->AddObject(clonePanel);
 					next->AddObject(timeDisplay);
 					next->AddObject(timeDisplayNeedle);
 					next->AddObject(rewindDisplay);
 					next->AddObject(rewindHelp);
 					next->AddObject(pauseHelp);
-					next->AddObject(cloneHelp);
 					next->AddObject(teleportHelp);
-					next->AddObject(clonePlus);
 
 					TimeManager::Instance()->AddObjectToTimeline(RightController);
 					TimeManager::Instance()->AddObjectToTimeline(LeftController);
@@ -432,7 +333,7 @@ namespace Epoch
 					SystemLogger::Debug() << "Loading complete" << std::endl;
 					Physics::Instance()->PhysicsLock.unlock();
 					Settings::GetInstance().SetBool("LevelIsLoading", false);
-					Settings::GetInstance().SetBool("PlayingLevel1", true);
+					Settings::GetInstance().SetInt("CurrentLevel", 1);
 				}
 				//once = true;
 			}
