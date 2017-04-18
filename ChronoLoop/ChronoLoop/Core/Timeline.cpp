@@ -562,11 +562,11 @@ namespace Epoch {
 			}
 		}
 	}
-	void Timeline::MoveAllComponentsToSnapExceptPlayer(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3) {
+	void Timeline::MoveAllComponentsToSnap(unsigned int _snaptime, bool _movePlayer, unsigned short _id1, unsigned short _id2, unsigned short _id3) {
 		Snapshot* destination = mSnapshots[_snaptime];
 		for (auto object : mLiveObjects) {
 			unsigned short id = object.second->GetUniqueID();
-			if (id == _id1 || id == _id2 || id == _id3)
+			if (_movePlayer && (id == _id1 || id == _id2 || id == _id3))
 				continue;
 			SnapInfo* destInfo;
 			//If the object doesnt have a info, then check against the list for the last snap it was updated
