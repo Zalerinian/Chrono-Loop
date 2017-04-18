@@ -530,13 +530,14 @@ namespace Epoch {
 				if(UpdateComponents == true)
 				{
 					TimeManipulation* temp = LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator();
+					Level* tempLevel = LevelManager::GetInstance().GetCurrentLevel();
 					if(temp->mCurCloneHeadset && temp->mCurCloneController1 && temp->mCurCloneController2)
 					{
 						mTimeline->MoveAllComponentsToSnap(mtempCurSnapFrame,true, temp->mCurCloneHeadset->GetUniqueID(), temp->mCurCloneController1->GetUniqueID(), temp->mCurCloneController2->GetUniqueID());	
 					}
-					else
+					else if(tempLevel->GetHeadset() && tempLevel->GetLeftController() && tempLevel->GetRightController())
 					{
-						mTimeline->MoveAllComponentsToSnap(mtempCurSnapFrame, false, 0, 0, 0);
+						mTimeline->MoveAllComponentsToSnap(mtempCurSnapFrame, true, tempLevel->GetHeadset()->GetUniqueId(), tempLevel->GetRightController()->GetUniqueId(), tempLevel->GetLeftController()->GetUniqueId());
 					}
 				}
 				return;
