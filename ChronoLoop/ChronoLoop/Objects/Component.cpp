@@ -315,6 +315,7 @@ namespace Epoch
 		mLowerBound.mOffset = (mMin * mPushNormal) - .1f;
 		mShouldMove = true;
 		mIsTrigger = false;
+		mPress = false;
 
 		mGravity = _pushNormal * _normForce;
 		mVelocity = vec3f(0.0f, 0.0f, 0.0f);

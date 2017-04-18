@@ -27,7 +27,7 @@ namespace Epoch
 		bool GetDoorInterpBool() { return mCanDoorInterp; };
 		virtual void Start()
 		{
-
+			((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mPress = true;
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			Block = cLevel->FindObjectWithName("TransparentDoor1");
 			Exit = cLevel->FindObjectWithName("TransparentDoor2");
@@ -70,7 +70,7 @@ namespace Epoch
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time) {
 			if (!Settings::GetInstance().GetBool("PauseMenuUp")) {
-				if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane) {
+				if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName() != "Buttonstand") {
 					colliding = true;
 
 					vec3f norm = ((ButtonCollider*)&_col)->mPushNormal;

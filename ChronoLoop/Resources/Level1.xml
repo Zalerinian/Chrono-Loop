@@ -1,8 +1,8 @@
-﻿<Level>
+<Level>
   <Settings>
     <StartPos>0.46,0,-10.15</StartPos>
     <StartRot>0,0,0</StartRot>
-    <MaxClones>2</MaxClones>
+    <MaxClones>0</MaxClones>
   </Settings>
   <Object>
     <Name>TransparentDoor1</Name>

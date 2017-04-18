@@ -10,7 +10,6 @@ namespace Epoch
 {
 
 	struct CCStartButton : public CodeComponent {
-		int levels;
 		bool mBooped, mBooped2;
 		bool AudioToggle;
 
@@ -36,7 +35,6 @@ namespace Epoch
 		{
 			AudioToggle = false;
 			mBooped = mBooped2 = false;
-			levels = 0;
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
 			mChamberObject = cLevel->FindObjectWithName("mmChamber");
@@ -59,7 +57,8 @@ namespace Epoch
 
 		virtual void OnCollision(Collider& _col1, Collider& _col2, float _time)
 		{
-			if (levels < 1)
+
+			if (Settings::GetInstance().GetInt("mmLevel") < 1)
 			{
 				matrix4 mat = mChamberObject->GetTransform().GetMatrix();
 				mChamberInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(0, -10, 0), mChamberObject->GetTransform().GetMatrix());
@@ -119,7 +118,7 @@ namespace Epoch
 				((SFXEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
 				((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::EventType::ePlay);
 				mBooped = true;
-				levels++;
+				Settings::GetInstance().SetInt("mmLevel", 1);
 			}
 		}
 
@@ -147,13 +146,13 @@ namespace Epoch
 
 				if (mChamberObject->GetTransform().GetMatrix().fourth.y < -3.64f)
 				{
-					if (mBooped2)
+					if (!mBooped2)
 					{
 						matrix4 mat;
 						mat = mClosePanel->GetTransform().GetMatrix();
-						mCloseInterp->Prepare(15, mat, mat * matrix4::CreateTranslation(2, 0, 0), mClosePanel->GetTransform().GetMatrix());
+						mCloseInterp->Prepare(5, mat, mat * matrix4::CreateTranslation(1.15f, 0, 0), mClosePanel->GetTransform().GetMatrix());
 						mCloseInterp->SetActive(true);
-						mBooped2 = false;
+						mBooped2 = true;
 					}
 					mCloseInterp->Update(TimeManager::Instance()->GetDeltaTime());
 				}

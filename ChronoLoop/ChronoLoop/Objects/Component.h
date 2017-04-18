@@ -210,6 +210,7 @@ namespace Epoch
 		ButtonCollider(BaseObject* _obj, vec3f _min, vec3f _max, float _mass, float normForce, vec3f _pushNormal);
 		vec3f mPushNormal;
 		PlaneCollider mUpperBound, mLowerBound;
+		bool mPress;
 	};
 
 	class ControllerCollider : public CubeCollider
