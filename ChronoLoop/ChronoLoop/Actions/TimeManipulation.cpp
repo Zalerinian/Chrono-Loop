@@ -132,44 +132,47 @@ namespace Epoch
 
 					//rewind their creation time of the headset. This way its begining of the timeline is right after the last clones birth
 					TimeManager::Instance()->SetCreationTimeofClone(cLevel->GetLeftController()->GetUniqueID(), cLevel->GetRightController()->GetUniqueID(), cLevel->GetHeadset()->GetUniqueID());
-					//Update the made time of the clone
-					TimeManager::Instance()->UpdateCloneMadeTime(mCurCloneHeadset->GetUniqueID(), mCurCloneController1->GetUniqueID(), mCurCloneController2->GetUniqueID());
-					//add Interpolators for the clones
-					TimeManager::Instance()->AddInterpolatorForClone(mCurCloneHeadset);
-					TimeManager::Instance()->AddInterpolatorForClone(mCurCloneController1);
-					TimeManager::Instance()->AddInterpolatorForClone(mCurCloneController2);
-					TimeManager::Instance()->AssignTextureToClone(mCurCloneHeadset->GetUniqueId());
-					//it is extreamly important that the objects are added after time rewinded because of the objectLifeTimeStruct and more..
-					Physics::Instance()->mObjects.push_back(mCurCloneHeadset);
-					Physics::Instance()->mObjects.push_back(mCurCloneController1);
-					Physics::Instance()->mObjects.push_back(mCurCloneController2);
-					++mNumOfConfirmedClones;
+					if (mCurCloneHeadset && mCurCloneController1 && mCurCloneController2) {
+						//Update the made time of the clone
+						TimeManager::Instance()->UpdateCloneMadeTime(mCurCloneHeadset->GetUniqueID(), mCurCloneController1->GetUniqueID(), mCurCloneController2->GetUniqueID());
+						//add Interpolators for the clones
+						TimeManager::Instance()->AddInterpolatorForClone(mCurCloneHeadset);
+						TimeManager::Instance()->AddInterpolatorForClone(mCurCloneController1);
+						TimeManager::Instance()->AddInterpolatorForClone(mCurCloneController2);
+						TimeManager::Instance()->AssignTextureToClone(mCurCloneHeadset->GetUniqueId());
+						//it is extreamly important that the objects are added after time rewinded because of the objectLifeTimeStruct and more..
+						Physics::Instance()->mObjects.push_back(mCurCloneHeadset);
+						Physics::Instance()->mObjects.push_back(mCurCloneController1);
+						Physics::Instance()->mObjects.push_back(mCurCloneController2);
+						++mNumOfConfirmedClones;
 
-					Particle* p = &Particle::Init();
-					p->SetColors(vec4f(0, .25, 1, 1), vec4f(.2f, .55f, .8f, 1));
-					p->SetLife(250);
-					p->SetSize(.25f, .15f);
 
-					vec3f EPos = vec3f(mCurCloneHeadset->GetTransform().GetPosition()->x, mCurCloneHeadset->GetTransform().GetPosition()->y, mCurCloneHeadset->GetTransform().GetPosition()->z);
-					ParticleEmitter* emit = new RadialEmitter(250, 250, 25, EPos);
-					emit->SetParticle(p);
-					emit->SetTexture("../Resources/BasicCircleP.png");
-					ParticleSystem::Instance()->AddEmitter(emit);
-					vec4f temp = EPos;
-					AudioWrapper::GetInstance().MakeEventAtLocation(AK::EVENTS::SFX_SHORTCIRUIT, &temp);
-					emit->FIRE();;
+						Particle* p = &Particle::Init();
+						p->SetColors(vec4f(0, .25, 1, 1), vec4f(.2f, .55f, .8f, 1));
+						p->SetLife(250);
+						p->SetSize(.25f, .15f);
+
+						vec3f EPos = vec3f(mCurCloneHeadset->GetTransform().GetPosition()->x, mCurCloneHeadset->GetTransform().GetPosition()->y, mCurCloneHeadset->GetTransform().GetPosition()->z);
+						ParticleEmitter* emit = new RadialEmitter(250, 250, 25, EPos);
+						emit->SetParticle(p);
+						emit->SetTexture("../Resources/BasicCircleP.png");
+						ParticleSystem::Instance()->AddEmitter(emit);
+						vec4f temp = EPos;
+						AudioWrapper::GetInstance().MakeEventAtLocation(AK::EVENTS::SFX_SHORTCIRUIT, &temp);
+						emit->FIRE();;
+					}
 
 				}
 				else
 				{
-					if (mCurCloneHeadset && mCurCloneController1 && mCurCloneController2)
-					{
+					if (mCurCloneHeadset && mCurCloneController1 && mCurCloneController2) {
 						//switch with the headset to get our old info back and delete temp clone
-						currentLevel->SetHeadsetAndControllers(mCurCloneHeadset, mCurCloneController1, mCurCloneController2,false);
+						currentLevel->SetHeadsetAndControllers(mCurCloneHeadset, mCurCloneController1, mCurCloneController2, false);
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneHeadset);
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController1);
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController2);
-						TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueId(),false);
+						TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueId(), false);
+					}
 
 						//set the player headset and controllers birth back
 						TimeManager::Instance()->SetCreationTimeofClone(cLevel->GetLeftController()->GetUniqueID(), cLevel->GetRightController()->GetUniqueID(), cLevel->GetHeadset()->GetUniqueID());
@@ -182,7 +185,7 @@ namespace Epoch
 							cLevel->GetHeadset()->GetUniqueID(),
 							cLevel->GetRightController()->GetUniqueID(),
 							cLevel->GetLeftController()->GetUniqueID());
-					}
+					
 				}
 
 				//rewind input timeline
