@@ -532,7 +532,7 @@ namespace Epoch {
 					TimeManipulation* temp = LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator();
 					if(temp->mCurCloneHeadset && temp->mCurCloneController1 && temp->mCurCloneController2)
 					{
-					mTimeline->MoveAllComponentsToSnap(mtempCurSnapFrame,true, temp->mCurCloneHeadset->GetUniqueID(), temp->mCurCloneController1->GetUniqueID(), temp->mCurCloneController2->GetUniqueID());	
+						mTimeline->MoveAllComponentsToSnap(mtempCurSnapFrame,true, temp->mCurCloneHeadset->GetUniqueID(), temp->mCurCloneController1->GetUniqueID(), temp->mCurCloneController2->GetUniqueID());	
 					}
 					else
 					{
@@ -561,12 +561,7 @@ namespace Epoch {
 				mShouldUpdateInterpolators = true;
 				mShouldPulse = true;
 				VRInputManager::GetInstance().GetController(eControllerType_Primary).TriggerHapticPulse(600, vr::k_EButton_SteamVR_Touchpad);
-				
-				if (_gesture == 1)
-					Settings::GetInstance().SetFloat("TutorialRewind - CurProgress", Settings::GetInstance().GetFloat("TutorialRewind - CurProgress") - 1);
-				if(_gesture == -1)
-					Settings::GetInstance().SetFloat("TutorialRewind - CurProgress", Settings::GetInstance().GetFloat("TutorialRewind - CurProgress") + 1);
-				if (Settings::GetInstance().GetInt("tutStep") == 4 && Settings::GetInstance().GetFloat("TutorialRewind - CurProgress") == Settings::GetInstance().GetFloat("TutorialRewind - FinalProgress"))//Rewind
+				if (Settings::GetInstance().GetInt("tutStep") == 4)//Rewind
 					Settings::GetInstance().SetInt("tutStep", 5);//Create Clone
 			}
 			else {
