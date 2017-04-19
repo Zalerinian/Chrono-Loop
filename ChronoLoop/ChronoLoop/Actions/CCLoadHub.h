@@ -176,7 +176,7 @@ namespace Epoch
 								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = ((BaseObject*)*it)->GetTransform().GetMatrix().fourth.y - .2f;
 							}
 						}
-						else if(temp == "mmClosingPanel")
+						else if(floorPos == -10 && temp == "mmClosingPanel")
 						{
 							Transform t;
 							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateTranslation(2, 0, 0));

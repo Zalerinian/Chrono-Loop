@@ -45,7 +45,7 @@ namespace Epoch
 			Transform identity;
 			//Teleport Initialize
 			BaseObject* mTeleportBoard = new BaseObject("mTeleportBoard", identity);
-			MeshComponent* tm = new MeshComponent("../Resources/PlaneCorrection.obj", .75f);
+			MeshComponent* tm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
 			tm->AddTexture("../Resources/tutTeleport.png", eTEX_DIFFUSE);
 			tm->AddTexture("../Resources/MultiscanUneven.png", eTEX_REGISTER4);
 			tm->AddTexture("../Resources/Scanline.png", eTEX_REGISTER5);
@@ -58,7 +58,7 @@ namespace Epoch
 
 			//Pick Up Initialize
 			BaseObject* mPickUpBoard = new BaseObject("mPickUpBoard", identity);
-			MeshComponent* pum = new MeshComponent("../Resources/PlaneCorrection.obj", .75f);
+			MeshComponent* pum = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
 			pum->AddTexture("../Resources/tutPickUp.png", eTEX_DIFFUSE);
 			pum->AddTexture("../Resources/MultiscanUneven.png", eTEX_REGISTER4);
 			pum->AddTexture("../Resources/Scanline.png", eTEX_REGISTER5);
@@ -71,7 +71,7 @@ namespace Epoch
 
 			//Pause Time Initialize
 			BaseObject* mPauseTimeBoard = new BaseObject("mPauseTimeBoard", identity);
-			MeshComponent* ptm = new MeshComponent("../Resources/PlaneCorrection.obj", .75f);
+			MeshComponent* ptm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
 			ptm->AddTexture("../Resources/tutPauseTime.png", eTEX_DIFFUSE);
 			ptm->AddTexture("../Resources/MultiscanUneven.png", eTEX_REGISTER4);
 			ptm->AddTexture("../Resources/Scanline.png", eTEX_REGISTER5);
@@ -84,7 +84,7 @@ namespace Epoch
 
 			//Rewind Initialize
 			BaseObject* mRewindBoard = new BaseObject("mRewindBoard", identity);
-			MeshComponent* rm = new MeshComponent("../Resources/PlaneCorrection.obj", .75f);
+			MeshComponent* rm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
 			rm->AddTexture("../Resources/tutRewind.png", eTEX_DIFFUSE);
 			rm->AddTexture("../Resources/MultiscanUneven.png", eTEX_REGISTER4);
 			rm->AddTexture("../Resources/Scanline.png", eTEX_REGISTER5);
@@ -104,7 +104,7 @@ namespace Epoch
 
 			//Create Clone Initialize
 			BaseObject* mCreateCloneBoard = new BaseObject("mCreateCloneBoard", identity);
-			MeshComponent* ccm = new MeshComponent("../Resources/PlaneCorrection.obj", .75f);
+			MeshComponent* ccm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
 			ccm->AddTexture("../Resources/tutClone.png", eTEX_DIFFUSE);
 			ccm->AddTexture("../Resources/MultiscanUneven.png", eTEX_REGISTER4);
 			ccm->AddTexture("../Resources/Scanline.png", eTEX_REGISTER5);
@@ -117,7 +117,7 @@ namespace Epoch
 
 			//Accept Time Initialize
 			BaseObject* mAcceptBoard = new BaseObject("mAcceptBoard", identity);
-			MeshComponent* am = new MeshComponent("../Resources/PlaneCorrection.obj", .75f);
+			MeshComponent* am = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
 			am->AddTexture("../Resources/tutAcceptTime.png", eTEX_DIFFUSE);
 			am->AddTexture("../Resources/MultiscanUneven.png", eTEX_REGISTER4);
 			am->AddTexture("../Resources/Scanline.png", eTEX_REGISTER5);
@@ -130,7 +130,7 @@ namespace Epoch
 
 			//Cancel Time Initialize
 			BaseObject* mCancelBoard = new BaseObject("mCancelBoard", identity);
-			MeshComponent* cm = new MeshComponent("../Resources/PlaneCorrection.obj", .75f);
+			MeshComponent* cm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
 			cm->AddTexture("../Resources/tutCancelTime.png", eTEX_DIFFUSE);
 			cm->AddTexture("../Resources/MultiscanUneven.png", eTEX_REGISTER4);
 			cm->AddTexture("../Resources/Scanline.png", eTEX_REGISTER5);
@@ -143,7 +143,7 @@ namespace Epoch
 
 			//Delete Clone Initialize
 			BaseObject* mDeleteCloneBoard = new BaseObject("mDeleteCloneBoard", identity);
-			MeshComponent* dcm = new MeshComponent("../Resources/PlaneCorrection.obj", .75f);
+			MeshComponent* dcm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
 			dcm->AddTexture("../Resources/tutDeleteClone.png", eTEX_DIFFUSE);
 			dcm->AddTexture("../Resources/MultiscanUneven.png", eTEX_REGISTER4);
 			dcm->AddTexture("../Resources/Scanline.png", eTEX_REGISTER5);
@@ -156,7 +156,7 @@ namespace Epoch
 
 			//UI Initialize
 			BaseObject* mUIBoard = new BaseObject("mUIBoard", identity);
-			MeshComponent* uim = new MeshComponent("../Resources/PlaneCorrection.obj", .75f);
+			MeshComponent* uim = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
 			uim->AddTexture("../Resources/tutUI.png", eTEX_DIFFUSE);
 			uim->AddTexture("../Resources/MultiscanUneven.png", eTEX_REGISTER4);
 			uim->AddTexture("../Resources/Scanline.png", eTEX_REGISTER5);
