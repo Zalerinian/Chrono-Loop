@@ -16,60 +16,7 @@
 
 namespace Epoch {
 
-	bool CheckMesh(MeshComponent* _plane, vec3f _start, vec3f _end, vec3f& _hit)
-	{
-		Triangle* tris = _plane->GetTriangles();
-		int count = _plane->GetTriangleCount();
-
-		for (int i = 0; i < count; i++)
-		{
-			bool hit = Physics::Instance()->Linecast((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, _start, _end, _hit);
-
-			if (hit)
-				return true;
-
-		}
-
-		return false;
-	}
-	vec3f ParabolicCurve(vec3f _p, vec3f _v, vec3f _a, float _t)
-	{
-		return _p + _v * _t + _a * .5f * _t * _t;
-	}
-	vec3f DerivedCurve(vec3f _v, vec3f _a, float _t)
-	{
-		return _v + _a * _t;
-	}
-
-	bool CalculateCurve(vec3f _p, vec3f _v, vec3f _a, MeshComponent* _plane, std::vector<vec3f>& _arc)
-	{
-		_arc.clear();
-
-		vec3f lastpos = _p;
-		float t = 0;
-
-		for (int i = 0; i < 10; i++)
-		{
-			t += .5f / DerivedCurve(_v, _a, t).Magnitude();
-
-			vec3f nextpos = ParabolicCurve(_p, _v, _a, t);
-
-			vec3f hit;
-			if (CheckMesh(_plane, lastpos, nextpos, hit))
-			{
-				//if it hits the plane
-				_arc.push_back(hit);
-
-				return true;
-			}
-			else
-				_arc.push_back(nextpos);
-
-			lastpos = nextpos;
-		}
-
-		return false;
-	}
+	
 
 	struct PTeleportAction : public CodeComponent {
 		MeshComponent *mPlaneMesh, *mWallsMesh, *mBlockMesh, *mExitMesh, *mServerMesh;
@@ -82,6 +29,61 @@ namespace Epoch {
 		std::vector<vec3f> mArc;
 		vec3f mVelocity, mAcceleration;
 		RenderShape* mShape;
+
+		bool CheckMesh(MeshComponent* _plane, vec3f _start, vec3f _end, vec3f& _hit)
+		{
+			Triangle* tris = _plane->GetTriangles();
+			int count = _plane->GetTriangleCount();
+
+			for (int i = 0; i < count; i++)
+			{
+				bool hit = Physics::Instance()->Linecast((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, _start, _end, _hit);
+
+				if (hit)
+					return true;
+
+			}
+
+			return false;
+		}
+		vec3f ParabolicCurve(vec3f _p, vec3f _v, vec3f _a, float _t)
+		{
+			return _p + _v * _t + _a * .5f * _t * _t;
+		}
+		vec3f DerivedCurve(vec3f _v, vec3f _a, float _t)
+		{
+			return _v + _a * _t;
+		}
+
+		bool CalculateCurve(vec3f _p, vec3f _v, vec3f _a, MeshComponent* _plane, std::vector<vec3f>& _arc)
+		{
+			_arc.clear();
+
+			vec3f lastpos = _p;
+			float t = 0;
+
+			for (int i = 0; i < 10; i++)
+			{
+				t += .5f / DerivedCurve(_v, _a, t).Magnitude();
+
+				vec3f nextpos = ParabolicCurve(_p, _v, _a, t);
+
+				vec3f hit;
+				if (CheckMesh(_plane, lastpos, nextpos, hit))
+				{
+					//if it hits the plane
+					_arc.push_back(hit);
+
+					return true;
+				}
+				else
+					_arc.push_back(nextpos);
+
+				lastpos = nextpos;
+			}
+
+			return false;
+		}
 
 		virtual void Start() {
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
