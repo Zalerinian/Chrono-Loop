@@ -410,9 +410,9 @@ namespace Hourglass
 			mPosY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mPosZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 
-			mRotX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
-			mRotY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
-			mRotZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mRotX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0) * FileIO.RADIANS_TO_DEGREES);
+			mRotY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0) * FileIO.RADIANS_TO_DEGREES);
+			mRotZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0) * FileIO.RADIANS_TO_DEGREES);
 
 			mScaleX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mScaleY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));

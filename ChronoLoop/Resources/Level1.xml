@@ -1,4 +1,4 @@
-<Level>
+﻿<Level>
   <Settings>
     <StartPos>0.46,0,-10.15</StartPos>
     <StartRot>0,0,0</StartRot>
@@ -170,7 +170,7 @@
     </Components>
   </Object>
   <Object>
-    <Name>DoorEmitter1</Name>
+    <Name>D1WireEmitter</Name>
     <Mesh>DoorEmiters1.obj</Mesh>
     <Texture>fieldGen.png</Texture>
     <Position>0,0,2.975856</Position>
@@ -188,13 +188,14 @@
     <Components />
   </Object>
   <Object>
-    <Name>DoorEmitter2</Name>
+    <Name>D2WireEmitter2</Name>
     <Mesh>DoorEmiters1.obj</Mesh>
     <Texture>fieldGen.png</Texture>
     <Position>0,0,9.869252</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components>
+      <EnterLevel>Enabled</EnterLevel>
       <EnterLevel>Enabled</EnterLevel>
       <Collider>
         <Type>OBB</Type>
@@ -970,7 +971,7 @@
     <Name>D1Wire</Name>
     <Mesh>L1Wire2.obj</Mesh>
     <Texture>Scanline.png</Texture>
-    <Position>0,1.8,0</Position>
+    <Position>0,1.79553,0</Position>
     <Rotation>0,3.14,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components />
