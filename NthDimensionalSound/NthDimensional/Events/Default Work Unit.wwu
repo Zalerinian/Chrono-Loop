@@ -1401,6 +1401,17 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="SFX_communication_channel" ID="{C15FB85E-22B0-44CF-A7B9-B09A95100A72}">
+					<ChildrenList>
+						<Action Name="Play" ID="{7643C83B-FB0D-4898-8650-3BED1CCCCCA0}" ShortID="813295185" Type="Play" Scope="One" Global="false">
+							<ElementList>
+								<Element ID="{BC3FF572-0EDF-4BA7-A3BC-37BDE418A098}" Global="false">
+									<ObjectRef Name="communication-channel" ID="{9018EDA9-62E8-44A1-8798-E9E0B7BE9F6F}" WorkUnitID="{1D0317B3-D19A-41DC-A2E7-CAA9DD27FE60}"/>
+								</Element>
+							</ElementList>
+						</Action>
+					</ChildrenList>
+				</Event>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>

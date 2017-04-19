@@ -63,6 +63,7 @@
 						<ObjectRef Name="Play_Hub0" ID="{8529F99B-84F4-4116-98A2-6EE57C24905C}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Resume_Hub0" ID="{4BE2CD57-70C8-41A5-9517-D05A7F8A1196}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Resume_Level2Ambient" ID="{F6C42B36-8E19-42C6-9962-B724F7E2EE83}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="SFX_communication_channel" ID="{C15FB85E-22B0-44CF-A7B9-B09A95100A72}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Stop_Level2Ambient" ID="{C713FAFD-74AF-454C-9E04-356EEA2E9A94}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="SFX_TeleportSound" ID="{835D7FFD-9A82-460A-812B-44C5ADCFE08A}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Pause_Level3Ambient" ID="{FDC51F4E-139C-4746-B559-D6D1DBF25476}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>

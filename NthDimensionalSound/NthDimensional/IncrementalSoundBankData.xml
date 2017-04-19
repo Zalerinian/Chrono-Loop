@@ -4,14 +4,14 @@
 		<Banks>
 			<Language ID="0">
 				<File Name="Chrono_Sound" Hash="2077783526" Timestamp="131353573467393890"/>
-				<File Name="Init" Hash="593700967" Timestamp="131310699036044935"/>
-				<File Name="SB_SoundPackage1" Hash="2585900399" Timestamp="131359090526334440"/>
+				<File Name="Init" Hash="593700967" Timestamp="131371080794995535"/>
+				<File Name="SB_SoundPackage1" Hash="1162937340" Timestamp="131371080794808944"/>
 				<File Name="Test_Soundbank" Hash="2361732544" Timestamp="131353612020520435"/>
 			</Language>
 		</Banks>
 		<XMLInfo>
 			<Language ID="-1">
-				<File Name="" Hash="2834168434" Timestamp="131359090526465000"/>
+				<File Name="" Hash="374388640" Timestamp="131371080795050299"/>
 			</Language>
 		</XMLInfo>
 	</Platform>

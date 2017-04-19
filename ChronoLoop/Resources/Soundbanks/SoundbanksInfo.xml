@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="11" SoundbankVersion="120">
 	<RootPaths>
-		<ProjectRoot>D:\College\NthDimensionalSound\NthDimensional\</ProjectRoot>
-		<SourceFilesRoot>D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\</SourceFilesRoot>
-		<SoundBanksRoot>D:\College\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</SoundBanksRoot>
+		<ProjectRoot>D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\</ProjectRoot>
+		<SourceFilesRoot>D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</SoundBanksRoot>
 		<ExternalSourcesInputFile></ExternalSourcesInputFile>
-		<ExternalSourcesOutputRoot>D:\College\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
+		<ExternalSourcesOutputRoot>D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
 	</RootPaths>
 	<DialogueEvents/>
 	<StreamedFiles/>
@@ -32,6 +32,7 @@
 				<Event Id="3649448405" Name="Resume_Level2Ambient" ObjectPath="\Events\Default Work Unit\Resume_Level2Ambient"/>
 				<Event Id="1927416214" Name="Resume_Level3Ambient" ObjectPath="\Events\Default Work Unit\Resume_Level3Ambient"/>
 				<Event Id="2189517885" Name="SFX_BoxDoorZap" ObjectPath="\Events\Default Work Unit\SFX_BoxDoorZap"/>
+				<Event Id="3124930127" Name="SFX_communication_channel" ObjectPath="\Events\Default Work Unit\SFX_communication_channel"/>
 				<Event Id="2693013165" Name="SFX_TeleportSound" ObjectPath="\Events\Default Work Unit\SFX_TeleportSound"/>
 				<Event Id="2587866055" Name="Stop_Hub0" ObjectPath="\Events\Default Work Unit\Stop_Hub0"/>
 				<Event Id="2587866054" Name="Stop_Hub1" ObjectPath="\Events\Default Work Unit\Stop_Hub1"/>
@@ -63,6 +64,10 @@
 				<File Id="771783799" Language="SFX">
 					<ShortName>Music-SFX\BoxDoorZap.wav</ShortName>
 					<Path>SFX\Music-SFX\BoxDoorZap_3AE5877C.wem</Path>
+				</File>
+				<File Id="894777268" Language="SFX">
+					<ShortName>communication-channel.wav</ShortName>
+					<Path>SFX\communication-channel_3AE5877C.wem</Path>
 				</File>
 				<File Id="900826185" Language="SFX">
 					<ShortName>Music-SFX\TeleportSound.wav</ShortName>
