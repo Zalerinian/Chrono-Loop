@@ -1,4 +1,4 @@
-<Level>
+﻿<Level>
   <Settings>
     <StartPos>3.5,0,0</StartPos>
     <StartRot>0,0,0</StartRot>
@@ -221,13 +221,15 @@
     <Components />
   </Object>
   <Object>
-    <Name>DoorEmitter2</Name>
+    <Name>ExitFrame</Name>
     <Mesh>DoorFrame1.obj</Mesh>
     <Texture>fieldGen.png</Texture>
     <Position>-8.242585,0,0</Position>
     <Rotation>0,1.57,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components>
+      <EnterLevel>Enabled</EnterLevel>
+      <EnterLevel>Enabled</EnterLevel>
       <EnterLevel>Enabled</EnterLevel>
       <Collider>
         <Type>OBB</Type>

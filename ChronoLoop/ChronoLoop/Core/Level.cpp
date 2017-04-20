@@ -866,7 +866,7 @@ namespace Epoch {
 						}
 						else if (codeComs[i] == "EnterLevel")
 						{
-							if (name == "DoorEmitter2")
+							if (name == "ExitFrame")
 							{
 								CCLoadHub* code = new CCLoadHub();
 								obj->AddComponent(code);
@@ -879,11 +879,6 @@ namespace Epoch {
 							else if(name == "mmDoor2")
 							{
 								CCEnterLevel* code = new CCEnterLevel();
-								obj->AddComponent(code);
-							}
-							else if (name == "mmDoor3")
-							{
-								CCLoadTutorial* code = new CCLoadTutorial();
 								obj->AddComponent(code);
 							}
 						}

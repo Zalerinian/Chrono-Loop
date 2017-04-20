@@ -53,6 +53,10 @@ namespace Epoch
 			tm->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
 			tm->SetVisible(false);
 			mTeleportBoard->AddComponent(tm);
+			Emitter* te = new SFXEmitter();
+			((SFXEmitter*)te)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			mTeleportBoard->AddComponent(te);
+			AudioWrapper::GetInstance().AddEmitter(te, "mTeleportBoard");
 			boards.push_back(mTeleportBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mTeleportBoard);
 
@@ -66,6 +70,10 @@ namespace Epoch
 			pum->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
 			pum->SetVisible(false);
 			mPickUpBoard->AddComponent(pum);
+			Emitter* pe = new SFXEmitter();
+			((SFXEmitter*)pe)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			mPickUpBoard->AddComponent(pe);
+			AudioWrapper::GetInstance().AddEmitter(pe, "mPickUpBoard");
 			boards.push_back(mPickUpBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mPickUpBoard);
 
@@ -79,6 +87,10 @@ namespace Epoch
 			ptm->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
 			ptm->SetVisible(false);
 			mPauseTimeBoard->AddComponent(ptm);
+			Emitter* pte = new SFXEmitter();
+			((SFXEmitter*)pte)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			mPauseTimeBoard->AddComponent(pte);
+			AudioWrapper::GetInstance().AddEmitter(pte, "mPauseTimeBoard");
 			boards.push_back(mPauseTimeBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mPauseTimeBoard);
 
@@ -91,16 +103,19 @@ namespace Epoch
 			rm->SetData(eCB_PIXEL, eBufferDataType_Scanline, ePB_REGISTER1, &mScanlineData);
 			rm->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
 			rm->SetVisible(false);
-			mRewindBoard->AddComponent(rm);
-			boards.push_back(mRewindBoard);
-			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mRewindBoard);
 			pb = new CCProgessBar();
 			Settings::GetInstance().SetFloat("TutorialRewind - CurProgress", 0);
 			Settings::GetInstance().SetFloat("TutorialRewind - FinalProgress", 50);
 			pb->SetFinalProgress(50);
 			pb->SetCurProgress(0);
 			mRewindBoard->AddComponent(pb);
-			
+			mRewindBoard->AddComponent(rm);
+			Emitter* re = new SFXEmitter();
+			((SFXEmitter*)re)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			mRewindBoard->AddComponent(re);
+			AudioWrapper::GetInstance().AddEmitter(re, "mRewindBoard");
+			boards.push_back(mRewindBoard);
+			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mRewindBoard);
 
 			//Create Clone Initialize
 			BaseObject* mCreateCloneBoard = new BaseObject("mCreateCloneBoard", identity);
@@ -112,6 +127,10 @@ namespace Epoch
 			ccm->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
 			ccm->SetVisible(false);
 			mCreateCloneBoard->AddComponent(ccm);
+			Emitter* cce = new SFXEmitter();
+			((SFXEmitter*)cce)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			mCreateCloneBoard->AddComponent(cce);
+			AudioWrapper::GetInstance().AddEmitter(cce, "mCreateCloneBoard");
 			boards.push_back(mCreateCloneBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mCreateCloneBoard);
 
@@ -125,6 +144,10 @@ namespace Epoch
 			am->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
 			am->SetVisible(false);
 			mAcceptBoard->AddComponent(am);
+			Emitter* ae = new SFXEmitter();
+			((SFXEmitter*)ae)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			mAcceptBoard->AddComponent(ae);
+			AudioWrapper::GetInstance().AddEmitter(ae, "mAcceptBoard");
 			boards.push_back(mAcceptBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mAcceptBoard);
 
@@ -138,6 +161,10 @@ namespace Epoch
 			cm->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
 			cm->SetVisible(false);
 			mCancelBoard->AddComponent(cm);
+			//Emitter* ce = new SFXEmitter();
+			//((SFXEmitter*)ce)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			//mCancelBoard->AddComponent(ce);
+			//AudioWrapper::GetInstance().AddEmitter(ce, "mCancelBoard");
 			boards.push_back(mCancelBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mCancelBoard);
 
@@ -151,6 +178,10 @@ namespace Epoch
 			dcm->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
 			dcm->SetVisible(false);
 			mDeleteCloneBoard->AddComponent(dcm);
+			Emitter* dce = new SFXEmitter();
+			((SFXEmitter*)dce)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			mDeleteCloneBoard->AddComponent(dce);
+			AudioWrapper::GetInstance().AddEmitter(dce, "mDeleteCloneBoard");
 			boards.push_back(mDeleteCloneBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mDeleteCloneBoard);
 
@@ -164,6 +195,10 @@ namespace Epoch
 			uim->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
 			uim->SetVisible(false);
 			mUIBoard->AddComponent(uim);
+			//Emitter* uie = new SFXEmitter();
+			//((SFXEmitter*)uie)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			//mUIBoard->AddComponent(uie);
+			//AudioWrapper::GetInstance().AddEmitter(uie, "mUIBoard");
 			boards.push_back(mUIBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mUIBoard);
 
@@ -196,6 +231,7 @@ namespace Epoch
 				if(!((MeshComponent*)boards[0]->GetComponentIndexed(eCOMPONENT_MESH, 0))->IsVisible())
 				{
 					((MeshComponent*)boards[0]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+					((SFXEmitter*)boards[0]->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
 
 					//boards[0]->GetTransform().SetMatrix(matrix4::CreateZRotation(-1.5708f) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateTranslation(2, 1.5f, 0));
 					scaleX = 0.05f;
@@ -222,6 +258,8 @@ namespace Epoch
 			case 2://Pick Up
 				if (!((MeshComponent*)boards[1]->GetComponentIndexed(eCOMPONENT_MESH, 0))->IsVisible()) {
 					((MeshComponent*)boards[1]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+					((SFXEmitter*)boards[1]->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+
 					scalingDone = false;
 					scaleX = 1.0f;
 					scaleY = 1.0f;
@@ -262,6 +300,8 @@ namespace Epoch
 				if (!((MeshComponent*)boards[2]->GetComponentIndexed(eCOMPONENT_MESH, 0))->IsVisible()) {
 					//((MeshComponent*)boards[1]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 					((MeshComponent*)boards[2]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+					((SFXEmitter*)boards[2]->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+
 					scalingDone = false;
 					scaleX = 1.0f;
 					scaleY = 1.0f;
@@ -302,6 +342,8 @@ namespace Epoch
 				if (!((MeshComponent*)boards[3]->GetComponentIndexed(eCOMPONENT_MESH, 0))->IsVisible()) {
 					//((MeshComponent*)boards[2]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 					((MeshComponent*)boards[3]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+					((SFXEmitter*)boards[3]->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+
 					scalingDone = false;
 					scaleX = 1.0f;
 					scaleY = 1.0f;
@@ -345,6 +387,8 @@ namespace Epoch
 					//((MeshComponent*)boards[3]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 					((MeshComponent*)boards[4]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
 					((MeshComponent*)boards[8]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+					((SFXEmitter*)boards[4]->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+
 					scalingDone = false;
 					scaleX = 1.0f;
 					scaleY = 1.0f;
@@ -390,6 +434,8 @@ namespace Epoch
 					//((MeshComponent*)boards[8]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 					((MeshComponent*)boards[5]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
 					((MeshComponent*)boards[6]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+					((SFXEmitter*)boards[5]->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+
 					scalingDone = false;
 					scaleX = 1.0f;
 					scaleY = 1.0f;
@@ -433,6 +479,8 @@ namespace Epoch
 					//((MeshComponent*)boards[5]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 					//((MeshComponent*)boards[6]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 					((MeshComponent*)boards[7]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+					((SFXEmitter*)boards[7]->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+
 					scalingDone = false;
 					scaleX = 1.0f;
 					scaleY = 1.0f;
