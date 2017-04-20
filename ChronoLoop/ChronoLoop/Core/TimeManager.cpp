@@ -377,13 +377,6 @@ namespace Epoch {
 			return mTimeline->GetTotalSnaps();
 		}
 
-		/*Timeline * TimeManager::GetTimeLine() {
-			if (!mTimeline) {
-				mTimeline = new Timeline();
-			};
-			return mTimeline;
-		}*/
-
 		void TimeManager::RewindTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2, unsigned short _id3) {
 			mTimeline->RewindNoClone(_frame, _id1, _id2, _id3);
 			//Tell the time manager what frame the timeline its on
@@ -420,36 +413,6 @@ namespace Epoch {
 			return false;
 
 		}
-
-		//void TimeManager::FindOtherClones(Clonepair & _pair)
-		//{
-		//	CloneLifeTime* curr = (CloneLifeTime*)mTimeline->GetObjectLifetime(_pair.mCur);
-		//	if (!curr)
-		//		return;
-		//	bool pair1 = false;
-
-		//	for (unsigned int i = 0; i < mClones.size(); i++) {
-		//		if (mClones[i]->GetUniqueId() == _pair.mCur)
-		//			continue;
-		//		CloneLifeTime* temp = (CloneLifeTime*)mTimeline->GetObjectLifetime(mClones[i]->GetUniqueId());
-		//		if(temp && temp->mBirth == curr->mBirth && (mClones[i]->GetName().find("Headset") != std::string::npos || mClones[i]->GetName().find("Controller") != std::string::npos))
-		//		{
-		//		
-		//			if(!pair1)
-		//			{
-		//				_pair.mOther1 = mClones[i]->GetUniqueId();
-		//				pair1 = true;
-		//			}
-		//			else
-		//			{
-		//				//found the last pair
-		//				_pair.mOther2 = mClones[i]->GetUniqueId();
-		//				return;
-		//			}
-
-		//		}
-		//	}
-		//}
 
 		void TimeManager::ToggleCloneCountDisplay(void * _command, std::wstring _ifOn) {
 			CommandConsole* cc = (CommandConsole*)_command;
@@ -533,11 +496,11 @@ namespace Epoch {
 					Level* tempLevel = LevelManager::GetInstance().GetCurrentLevel();
 					if(temp->mCurCloneHeadset && temp->mCurCloneController1 && temp->mCurCloneController2)
 					{
-						mTimeline->MoveAllComponentsToSnap(mtempCurSnapFrame,true, temp->mCurCloneHeadset->GetUniqueID(), temp->mCurCloneController1->GetUniqueID(), temp->mCurCloneController2->GetUniqueID());	
+						mTimeline->MoveAllComponentsToSnapExceptPlayer(mtempCurSnapFrame, temp->mCurCloneHeadset->GetUniqueID(), temp->mCurCloneController1->GetUniqueID(), temp->mCurCloneController2->GetUniqueID());	
 					}
 					else if(tempLevel->GetHeadset() && tempLevel->GetLeftController() && tempLevel->GetRightController())
 					{
-						mTimeline->MoveAllComponentsToSnap(mtempCurSnapFrame, true, tempLevel->GetHeadset()->GetUniqueId(), tempLevel->GetRightController()->GetUniqueId(), tempLevel->GetLeftController()->GetUniqueId());
+						mTimeline->MoveAllComponentsToSnapExceptPlayer(mtempCurSnapFrame, tempLevel->GetHeadset()->GetUniqueId(), tempLevel->GetRightController()->GetUniqueId(), tempLevel->GetLeftController()->GetUniqueId());
 					}
 				}
 				return;

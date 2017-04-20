@@ -562,11 +562,11 @@ namespace Epoch {
 			}
 		}
 	}
-	void Timeline::MoveAllComponentsToSnap(unsigned int _snaptime, bool _movePlayer, unsigned short _id1, unsigned short _id2, unsigned short _id3) {
+	void Timeline::MoveAllComponentsToSnapExceptPlayer(unsigned int _snaptime,  unsigned short _id1, unsigned short _id2, unsigned short _id3) {
 		Snapshot* destination = mSnapshots[_snaptime];
 		for (auto object : mLiveObjects) {
 			unsigned short id = object.second->GetUniqueID();
-			if (_movePlayer && (id == _id1 || id == _id2 || id == _id3))
+			if (id == _id1 || id == _id2 || id == _id3)
 				continue;
 			SnapInfo* destInfo;
 			//If the object doesnt have a info, then check against the list for the last snap it was updated
@@ -638,13 +638,20 @@ namespace Epoch {
 		_info->mId = _object->GetUniqueID();
 		_info->mTransform = _object->GetTransform();
 
-		
+		//Find if object doesn't have a life time
 		if (mObjectLifeTimes.find(_info->mId) == mObjectLifeTimes.end()) {
 			_info->mBitset[0] = false;
-		} else {
-			if(mObjectLifeTimes[_info->mId]->mBirth > mCurrentGameTimeIndx || mObjectLifeTimes[_info->mId]->mDeath < mCurrentGameTimeIndx)
+		}
+		//If object life time was made
+		else 
+			{
+				//If it was alive during this snap
+			if (mObjectLifeTimes[_info->mId]->mBirth > mCurrentGameTimeIndx || mObjectLifeTimes[_info->mId]->mDeath < mCurrentGameTimeIndx) {
 				_info->mBitset[0] = false;
+			}
 			Level* currlevel = LevelManager::GetInstance().GetCurrentLevel();
+				//If the object is the current headset and controller, then set as not alive so the ids are recorded as not alive until the player makes the it.
+				//Otherwise the clones would be recorded as always alive with their components alive.
 			if(_object->GetUniqueID() == currlevel->GetLeftController()->GetUniqueID() ||
 				_object->GetUniqueID() == currlevel->GetRightController()->GetUniqueID() || 
 				_object->GetUniqueID() == currlevel->GetHeadset()->GetUniqueID())
@@ -728,8 +735,9 @@ namespace Epoch {
 			OldSnap = true;
 		}
 
+		//TODO PAT: break up the big logic loop
+
 		//If first snapshot taken
-		//TODO PAT: break up the logic loop here and 
 		if (mSnapshots.size() == 0) {
 			for (std::pair<unsigned short, BaseObject*> _b : mLiveObjects) {
 				if (_b.second) {
