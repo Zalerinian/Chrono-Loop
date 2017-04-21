@@ -29,7 +29,7 @@ In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	393391159	Level3Ambient	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Level3Ambient_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Level3Ambient		8678662
 	589974881	Level1Ambient	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Level1Ambient_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Level1Ambient		7587285
 	648589336	Level2Ambient	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Level2Ambient_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Level2Ambient		8168453
-	771783799	BoxDoorZap	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\BoxDoorZap_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\BoxDoorZap		141619
+	771783799	BoxDoorZap	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\BoxDoorZap_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\BoxDoorZap		137992
 	894777268	communication-channel	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\communication-channel_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\communication-channel		38290
-	900826185	TeleportSound	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\TeleportSound_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\TeleportSound		38022
+	987973023	TeleportSound	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\TeleportSound_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\TeleportSound		25917
 

@@ -1175,7 +1175,7 @@
 						<Action Name="Play" ID="{95C20498-FAD6-4E8D-9985-1284B37ADF9B}" ShortID="757252160" Type="Play" Scope="One" Global="false">
 							<ElementList>
 								<Element ID="{55068C7C-A439-46C6-96C1-9A6673086343}" Global="false">
-									<ObjectRef Name="TeleportSound" ID="{D0F95498-FA71-4EFC-A6D4-92DA7ACF7F25}" WorkUnitID="{1D0317B3-D19A-41DC-A2E7-CAA9DD27FE60}"/>
+									<ObjectRef Name="TeleportSound" ID="{576631E9-462B-48BD-8206-5125667334A0}" WorkUnitID="{1D0317B3-D19A-41DC-A2E7-CAA9DD27FE60}"/>
 								</Element>
 							</ElementList>
 						</Action>

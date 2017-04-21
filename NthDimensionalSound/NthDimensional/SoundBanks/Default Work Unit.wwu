@@ -13,8 +13,6 @@
 					</PropertyList>
 					<ObjectInclusionList>
 						<ObjectRef Name="OTHER" ID="{F0253AE4-3CB5-4522-9D08-1F7F4A6A606C}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
-						<ObjectRef Name="Stop_All_Except_EMPTY" ID="{620A8329-5BA5-467E-BA81-961BF66A44BA}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
-						<ObjectRef Name="Stop_All" ID="{11B33D19-9D09-496C-ACE6-9DD073F428FF}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>

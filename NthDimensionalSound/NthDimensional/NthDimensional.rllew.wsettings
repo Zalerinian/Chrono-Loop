@@ -26,14 +26,14 @@
 				<Property Name="Mixing Desk\LastSession" Type="string" Value="{00000000-0000-0000-0000-000000000000}"/>
 				<Property Name="MonitoringManager\WatchMgr\WatchesVersion" Type="int32" Value="5"/>
 				<Property Name="MonitoringManager\WatchMgr\x64_GameSyncWatches" Type="string" Value=""/>
-				<Property Name="MonitoringManager\WatchMgr\x64_Watches" Type="string" Value="AAAAAAAAAAAAAAAAAAAAAAUAYWFiYlMAoILKFwAAAACArEIAAAAAAAAAAAAAAAAAgKxCAAAAAAAvZi0D/X8AAKCCyhcAAAAAuBgPA/1/AAACAAAAAAAAAAAABAEAAAAAwDkmDQAAAAAdppAAAAAAAAIAAAAAAAAAAgAAAAAAAADAOSYNAAAAAAAAAAAAAAAAEAAAAAAAAAABNcEAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAExpc3RlbmVyABcAAAAAgKxCAAAAAAAAAAAAAAAAAICsQgAAAAAAL2YtA/1/AACggsoXAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAQBAAAAAEBHJg0AAAAAHaaQAAAAAAACAAAAAAAAAAIAAAAAAAAAQEcmDQAAAAAAAAAAAAAAABAAAAAAAAAAATXBAAAAAAA="/>
+				<Property Name="MonitoringManager\WatchMgr\x64_Watches" Type="string" Value="AAAAAAAAAAAAAAAAAAAAAAUAYWFiYlMAkNm8FwAAAACAiUUAAAAAAAAAAAAAAAAAgIlFAAAAAAAvZoQA/X8AAJDZvBcAAAAAuBhmAP1/AAACAAAAAAAAAAAAKQEAAAAAsFBNDgAAAAAdprUAAAAAAAIAAAAAAAAAAgAAAAAAAACwUE0OAAAAAAAAAAAAAAAAEAAAAAAAAAABNeYAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAExpc3RlbmVyABcAAAAAgIlFAAAAAAAAAAAAAAAAAICJRQAAAAAAL2aEAP1/AACQ2bwXAAAAAAAAAAAAAAAAAgAAAAAAAAAAACkBAAAAAPBSTQ4AAAAAHaa1AAAAAAACAAAAAAAAAAIAAAAAAAAA8FJNDgAAAAAAAAAAAAAAABAAAAAAAAAAATXmAAAAAAA="/>
 				<Property Name="OverrideCacheFolder\Active" Type="bool" Value="False"/>
 				<Property Name="OverrideCacheFolder\Path" Type="string" Value=".cache"/>
 				<Property Name="OverrideOriginalFolder\Active" Type="bool" Value="False"/>
 				<Property Name="OverrideOriginalFolder\Path" Type="string" Value="Originals"/>
 				<Property Name="ProjectExplorer\FirstVisible_10_1" Type="string" Value="{4C96B38B-3DB4-40C7-91C9-665510E38993}"/>
 				<Property Name="ProjectExplorer\FirstVisible_11_1" Type="string" Value="{23EC2DE3-3ED8-4B82-AC99-92E25F2E4C6B}"/>
-				<Property Name="ProjectExplorer\FirstVisible_1_1" Type="string" Value="{2388DAEA-9775-46C6-A2ED-C5222A397756}"/>
+				<Property Name="ProjectExplorer\FirstVisible_1_1" Type="string" Value="{6C3DA7F6-6B88-4EBC-96C2-6BB76C0D671A}"/>
 				<Property Name="ProjectExplorer\FirstVisible_3_1" Type="string" Value="{9E832A23-28F7-4E45-A3C1-655EE41FBA46}"/>
 				<Property Name="ProjectExplorer\FirstVisible_4_1" Type="string" Value="{CB6175F1-6080-4A23-92EF-0807E304D0C1}"/>
 				<Property Name="ProjectExplorer\FirstVisible_6_1" Type="string" Value="{C98E673F-A24C-48A8-960F-10565FFE70A0}"/>
