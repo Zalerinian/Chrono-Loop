@@ -223,6 +223,9 @@ namespace Epoch
 
 		virtual void Update()
 		{
+			if (GetAsyncKeyState(VK_SHIFT) & 1)
+				Settings::GetInstance().SetInt("tutStep", Settings::GetInstance().GetInt("tutStep") + 1);
+
 			bool thing = ((MeshComponent*)boards[7]->GetComponentIndexed(eCOMPONENT_MESH, 0))->IsVisible();
 			int t = Settings::GetInstance().GetInt("tutStep");
 			switch (Settings::GetInstance().GetInt("tutStep"))
