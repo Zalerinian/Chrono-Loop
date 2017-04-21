@@ -1,6 +1,5 @@
 Event	ID	Name			Wwise Object Path	Notes
 	43066209	SFX_TOGGLE			\Default Work Unit\OTHER\SFX_TOGGLE	
-	452547817	Stop_All			\Default Work Unit\Stop_All	
 	650723447	SFX_PLING			\Default Work Unit\OTHER\SFX_PLING	
 	984516265	SFX_BEEP			\Default Work Unit\OTHER\SFX_BEEP	
 	1009907413	SFX_BUTTON_PRESS2			\Default Work Unit\OTHER\SFX_BUTTON_PRESS2	
@@ -18,21 +17,20 @@ Event	ID	Name			Wwise Object Path	Notes
 	3559876090	SFX_DOORSOUND			\Default Work Unit\OTHER\SFX_DOORSOUND	
 	3759155916	PLAY_Test2			\Default Work Unit\OTHER\PLAY_Test2	
 	3759155919	PLAY_Test1			\Default Work Unit\OTHER\PLAY_Test1	
-	4071198641	Stop_All_Except_EMPTY			\Default Work Unit\Stop_All_Except_EMPTY	
 	4195120820	SFX_SWOOSH			\Default Work Unit\OTHER\SFX_SWOOSH	
 
 In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
-	82772906	Button_Press_2-Marianne_Gagnon-1415267358	D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Button_Press_2-Marianne_Gagnon-1415267358_9E69E797.wem		\Actor-Mixer Hierarchy\Default Work Unit\Button_Press_2-Marianne_Gagnon-1415267358		44608
-	227580179	Fuzzy Beep-SoundBible_com-1580329899	D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Fuzzy Beep-SoundBible.com-1580329899_9E69E797.wem		\Actor-Mixer Hierarchy\Default Work Unit\Fuzzy Beep-SoundBible_com-1580329899		16046
-	290553790	Toggle-SoundBible_com-231290292	D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Toggle-SoundBible.com-231290292_9E69E797.wem		\Actor-Mixer Hierarchy\Default Work Unit\Toggle-SoundBible_com-231290292		83064
-	306683277	Bounce-SoundBible	D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Bounce-SoundBible_9E69E797.wem		\Actor-Mixer Hierarchy\Default Work Unit\Bounce-SoundBible		352864
-	333267623	Pling-KevanGC-1485374730	D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Pling-KevanGC-1485374730_9E69E797.wem		\Actor-Mixer Hierarchy\Default Work Unit\Pling-KevanGC-1485374730		86632
-	515445552	Metroid_Door-Brandino480-995195341	D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Metroid_Door-Brandino480-995195341_9E69E797.wem		\Actor-Mixer Hierarchy\Default Work Unit\Metroid_Door-Brandino480-995195341		188792
-	625422023	Swoosh 1-SoundBible_com-231145780	D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Swoosh 1-SoundBible.com-231145780_9E69E797.wem		\Actor-Mixer Hierarchy\Default Work Unit\Swoosh 1-SoundBible_com-231145780		332776
-	668283606	Tick-DeepFrozenApps-397275646	D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Tick-DeepFrozenApps-397275646_9E69E797.wem		\Actor-Mixer Hierarchy\Default Work Unit\Tick-DeepFrozenApps-397275646		20972
-	706655945	Button_Press-Marianne_Gagnon-779186363	D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Button_Press-Marianne_Gagnon-779186363_9E69E797.wem		\Actor-Mixer Hierarchy\Default Work Unit\Button_Press-Marianne_Gagnon-779186363		62860
-	731758138	Short Circuit-SoundBible_com-1450168875	D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Short Circuit-SoundBible.com-1450168875_9E69E797.wem		\Actor-Mixer Hierarchy\Default Work Unit\Short Circuit-SoundBible_com-1450168875		163188
-	868747748	Kevin_MacLeod_-_02_-_Impact_Andante	D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Kevin_MacLeod_-_02_-_Impact_Andante_4B8CC0C5.wem		\Actor-Mixer Hierarchy\Default Work Unit\Kevin_MacLeod_-_02_-_Impact_Andante		29786176
-	919470358	Kevin_MacLeod_-_Crossing_the_Divide	D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Kevin_MacLeod_-_Crossing_the_Divide_9E69E797.wem		\Actor-Mixer Hierarchy\Default Work Unit\Kevin_MacLeod_-_Crossing_the_Divide		34057792
-	937585891	Blop-Mark_DiAngelo-79054334	D:\College\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Blop-Mark_DiAngelo-79054334_9E69E797.wem		\Actor-Mixer Hierarchy\Default Work Unit\Blop-Mark_DiAngelo-79054334		42560
+	82772906	Button_Press_2-Marianne_Gagnon-1415267358	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Button_Press_2-Marianne_Gagnon-1415267358_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Button_Press_2-Marianne_Gagnon-1415267358		18572
+	227580179	Fuzzy Beep-SoundBible_com-1580329899	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Fuzzy Beep-SoundBible.com-1580329899_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Fuzzy Beep-SoundBible_com-1580329899		6287
+	290553790	Toggle-SoundBible_com-231290292	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Toggle-SoundBible.com-231290292_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Toggle-SoundBible_com-231290292		26890
+	306683277	Bounce-SoundBible	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Bounce-SoundBible_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Bounce-SoundBible		31305
+	333267623	Pling-KevanGC-1485374730	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Pling-KevanGC-1485374730_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Pling-KevanGC-1485374730		22169
+	515445552	Metroid_Door-Brandino480-995195341	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Metroid_Door-Brandino480-995195341_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Metroid_Door-Brandino480-995195341		52873
+	625422023	Swoosh 1-SoundBible_com-231145780	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Swoosh 1-SoundBible.com-231145780_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Swoosh 1-SoundBible_com-231145780		90696
+	668283606	Tick-DeepFrozenApps-397275646	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Tick-DeepFrozenApps-397275646_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Tick-DeepFrozenApps-397275646		6506
+	706655945	Button_Press-Marianne_Gagnon-779186363	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Button_Press-Marianne_Gagnon-779186363_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Button_Press-Marianne_Gagnon-779186363		18480
+	731758138	Short Circuit-SoundBible_com-1450168875	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Short Circuit-SoundBible.com-1450168875_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Short Circuit-SoundBible_com-1450168875		45973
+	868747748	Kevin_MacLeod_-_02_-_Impact_Andante	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Kevin_MacLeod_-_02_-_Impact_Andante_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Kevin_MacLeod_-_02_-_Impact_Andante		9923841
+	919470358	Kevin_MacLeod_-_Crossing_the_Divide	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Kevin_MacLeod_-_Crossing_the_Divide_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Kevin_MacLeod_-_Crossing_the_Divide		9219748
+	937585891	Blop-Mark_DiAngelo-79054334	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Blop-Mark_DiAngelo-79054334_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Blop-Mark_DiAngelo-79054334		4926
 

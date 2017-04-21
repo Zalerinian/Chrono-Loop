@@ -2805,58 +2805,8 @@
 								<ActiveSource Name="Level3Ambient" ID="{6231E23B-2E54-4E59-994A-B5AC30F0F689}" Platform="Linked"/>
 							</ActiveSourceList>
 						</Sound>
-						<Sound Name="TeleportSound" ID="{D0F95498-FA71-4EFC-A6D4-92DA7ACF7F25}" ShortID="970783595" Type="SoundFX">
-							<PropertyList>
-								<Property Name="PositioningType" Type="int16" Value="1"/>
-							</PropertyList>
+						<Sound Name="TeleportSound" ID="{576631E9-462B-48BD-8206-5125667334A0}" ShortID="140318181" Type="SoundFX">
 							<ReferenceList>
-								<Reference Name="Attenuation">
-									<Custom>
-										<Attenuation Name="Attenuation (Custom)" ID="{C6DCE8E2-B469-428A-B47B-C081418209D6}" ShortID="181221308">
-											<CurveUsageInfoList>
-												<VolumeDryUsage>
-													<CurveUsageInfo Platform="Linked" CurveToUse="Custom">
-														<Curve Name="VolumeDry" ID="{EA82536F-E1E5-4863-8CD4-73B0D2C5B2BE}">
-															<PropertyList>
-																<Property Name="Flags" Type="int32" Value="3"/>
-															</PropertyList>
-															<PointList>
-																<Point>
-																	<XPos>0</XPos>
-																	<YPos>0</YPos>
-																	<Flags>5</Flags>
-																</Point>
-																<Point>
-																	<XPos>100</XPos>
-																	<YPos>-200</YPos>
-																	<Flags>37</Flags>
-																</Point>
-															</PointList>
-														</Curve>
-													</CurveUsageInfo>
-												</VolumeDryUsage>
-												<VolumeWetGameUsage>
-													<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
-												</VolumeWetGameUsage>
-												<VolumeWetUserUsage>
-													<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
-												</VolumeWetUserUsage>
-												<LowPassFilterUsage>
-													<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
-												</LowPassFilterUsage>
-												<HighPassFilterUsage>
-													<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
-												</HighPassFilterUsage>
-												<SpreadUsage>
-													<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
-												</SpreadUsage>
-												<FocusUsage>
-													<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
-												</FocusUsage>
-											</CurveUsageInfoList>
-										</Attenuation>
-									</Custom>
-								</Reference>
 								<Reference Name="Conversion">
 									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64292A6E-1D3F-43D6-8BB7-2E730BF0BA1D}"/>
 								</Reference>
@@ -2865,13 +2815,13 @@
 								</Reference>
 							</ReferenceList>
 							<ChildrenList>
-								<AudioFileSource Name="TeleportSound" ID="{9DAB82B5-7B18-4F8A-8066-DEE58D6EC544}" ShortID="900826185">
+								<AudioFileSource Name="TeleportSound" ID="{F828F5D5-F5E1-4135-9D5D-E200CBEEA257}" ShortID="987973023">
 									<Language>SFX</Language>
-									<AudioFile>Music-SFX\TeleportSound.wav</AudioFile>
+									<AudioFile>TeleportSound.wav</AudioFile>
 								</AudioFileSource>
 							</ChildrenList>
 							<ActiveSourceList>
-								<ActiveSource Name="TeleportSound" ID="{9DAB82B5-7B18-4F8A-8066-DEE58D6EC544}" Platform="Linked"/>
+								<ActiveSource Name="TeleportSound" ID="{F828F5D5-F5E1-4135-9D5D-E200CBEEA257}" Platform="Linked"/>
 							</ActiveSourceList>
 						</Sound>
 					</ChildrenList>
