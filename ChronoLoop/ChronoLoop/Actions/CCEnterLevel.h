@@ -9,6 +9,7 @@
 #include "..\Actions\CCPauseToCancel.h"
 #include "..\Actions\CCTeleToPlay.h"
 #include "..\Actions\CCDisplayOnPause.h"
+#include "..\Actions\CCLevel2Tutorial.h"
 #include "..\Actions\UICreateToDeleteClone.h"
 #include "..\Actions\UIClonePlusToMinus.h"
 #include "..\Actions\UICloneText.h"
@@ -281,7 +282,8 @@ namespace Epoch
 					visibleMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 					visibleMesh2->SetVisible(false);
 					headset->AddComponent(visibleMesh2);
-
+					CCLevel2Tutorial* tut = new CCLevel2Tutorial();
+					headset->AddComponent(tut);
 					HeadsetFollow* hfollow = new HeadsetFollow();
 					headset->AddComponent(hfollow);
 					headset->AddComponent(ears);
