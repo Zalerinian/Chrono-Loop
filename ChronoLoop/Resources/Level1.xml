@@ -1,6 +1,6 @@
-﻿<Level>
+<Level>
   <Settings>
-    <StartPos>0.46,0,-10.15</StartPos>
+    <StartPos>-0.14,0,-10.15</StartPos>
     <StartRot>0,0,0</StartRot>
     <MaxClones>0</MaxClones>
   </Settings>
@@ -195,8 +195,6 @@
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
     <Components>
-      <EnterLevel>Enabled</EnterLevel>
-      <EnterLevel>Enabled</EnterLevel>
       <EnterLevel>Enabled</EnterLevel>
     </Components>
   </Object>

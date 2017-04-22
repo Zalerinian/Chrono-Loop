@@ -195,12 +195,20 @@ namespace Epoch
 			uim->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
 			uim->SetVisible(false);
 			mUIBoard->AddComponent(uim);
-			//Emitter* uie = new SFXEmitter();
-			//((SFXEmitter*)uie)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
-			//mUIBoard->AddComponent(uie);
-			//AudioWrapper::GetInstance().AddEmitter(uie, "mUIBoard");
 			boards.push_back(mUIBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mUIBoard);
+
+			BaseObject* mDeviceBoard = new BaseObject("mDeviceBoard", identity);
+			MeshComponent* dm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
+			dm->AddTexture("../Resources/tutDevice.png", eTEX_DIFFUSE);
+			dm->AddTexture("../Resources/MultiscanUneven.png", eTEX_REGISTER4);
+			dm->AddTexture("../Resources/Scanline.png", eTEX_REGISTER5);
+			dm->SetData(eCB_PIXEL, eBufferDataType_Scanline, ePB_REGISTER1, &mScanlineData);
+			dm->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
+			dm->SetVisible(false);
+			mDeviceBoard->AddComponent(dm);
+			boards.push_back(mDeviceBoard);
+			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mDeviceBoard);
 
 			//Pause Menu Initialize
 			//BaseObject* mPauseMenuBoard = new BaseObject("mPauseMenuBoard", identity);
@@ -266,7 +274,7 @@ namespace Epoch
 					scalingDone = false;
 					scaleX = 1.0f;
 					scaleY = 1.0f;
-					boards[1]->GetTransform().SetMatrix(matrix4::CreateScale(0,1,0) * matrix4::CreateZRotation(-1.5708f) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(0.785398f) * matrix4::CreateTranslation(-3.55f, 1.7f, 3.71f));
+					//boards[1]->GetTransform().SetMatrix(matrix4::CreateScale(0,1,0) * matrix4::CreateZRotation(-1.5708f) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(0.785398f) * matrix4::CreateTranslation(-3.55f, 1.7f, 3.71f));
 				}
 				tempScaleX = scaleX;
 				tempScaleY = scaleY;
@@ -288,7 +296,7 @@ namespace Epoch
 					else if (scaleX < 1.0f)
 						scaleX += 0.05f;
 					if (tempScaleX != scaleX || tempScaleY != scaleY)
-						boards[1]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY)  * matrix4::CreateZRotation(-1.5708f) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(0.785398f) * matrix4::CreateTranslation(-3.55f, 1.7f, 3.71f));
+						boards[1]->GetTransform().SetMatrix(matrix4::CreateScale(0, 1, 0) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(5.96f, 2.09f, -.57f));
 				}
 
 				mScanlineData.MultiscanVOffset += TimeManager::Instance()->GetDeltaTime() / 25.0f;
@@ -303,12 +311,15 @@ namespace Epoch
 				if (!((MeshComponent*)boards[2]->GetComponentIndexed(eCOMPONENT_MESH, 0))->IsVisible()) {
 					//((MeshComponent*)boards[1]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 					((MeshComponent*)boards[2]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+					((MeshComponent*)boards[9]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
 					((SFXEmitter*)boards[2]->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
 
 					scalingDone = false;
 					scaleX = 1.0f;
 					scaleY = 1.0f;
 					boards[2]->GetTransform().SetMatrix(matrix4::CreateScale(0, 1, 0) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
+					boards[9]->GetTransform().SetMatrix(matrix4::CreateScale(0, 1, 0) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
+
 				}
 				tempScaleX = scaleX;
 				tempScaleY = scaleY;
@@ -330,7 +341,10 @@ namespace Epoch
 					else if (scaleX < 1.0f)
 						scaleX += 0.05f;
 					if (tempScaleX != scaleX || tempScaleY != scaleY)
+					{
 						boards[2]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY)  * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
+						boards[9]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY)  * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 1.1f));
+					}
 				}
 
 				mScanlineData.MultiscanVOffset += TimeManager::Instance()->GetDeltaTime() / 25.0f;
@@ -339,6 +353,7 @@ namespace Epoch
 					mScanlineData.ScanlineVOffset = -0.5f;
 				}
 				((MeshComponent*)boards[2]->GetComponentIndexed(eCOMPONENT_MESH, 0))->UpdateData(eCB_PIXEL, ePB_REGISTER1, &mScanlineData);
+				((MeshComponent*)boards[9]->GetComponentIndexed(eCOMPONENT_MESH, 0))->UpdateData(eCB_PIXEL, ePB_REGISTER1, &mScanlineData);
 
 				break;
 			case 4://Rewind
@@ -362,8 +377,10 @@ namespace Epoch
 					else if (scaleY >= 0.0f)
 						scaleY -= 0.1f;
 					boards[2]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
+					boards[9]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 1.1f));
 					if (scaleY <= 0.0f) {
 						((MeshComponent*)boards[2]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
+						((MeshComponent*)boards[9]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 						scalingDone = true;
 					}
 				} else {

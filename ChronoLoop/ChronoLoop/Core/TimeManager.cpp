@@ -567,8 +567,16 @@ namespace Epoch {
 					Settings::GetInstance().SetFloat("TutorialRewind - CurProgress", Settings::GetInstance().GetFloat("TutorialRewind - CurProgress") - 1);
 				if (_gesture == -1)
 					Settings::GetInstance().SetFloat("TutorialRewind - CurProgress", Settings::GetInstance().GetFloat("TutorialRewind - CurProgress") + 1);
-				if (Settings::GetInstance().GetInt("tutStep") == 4 && Settings::GetInstance().GetFloat("TutorialRewind - CurProgress") == Settings::GetInstance().GetFloat("TutorialRewind - FinalProgress"))//Rewind
-					Settings::GetInstance().SetInt("tutStep", 5);//Create Clone
+				if(Settings::GetInstance().GetFloat("TutorialRewind - CurProgress") == Settings::GetInstance().GetFloat("TutorialRewind - FinalProgress"))//Rewind
+				{
+					if (Settings::GetInstance().GetInt("tutStep") == 4)
+					{
+						if (Settings::GetInstance().GetBool("Level1Tutorial"))
+							Settings::GetInstance().SetInt("tutStep", 6);//Accept time
+						else
+							Settings::GetInstance().SetInt("tutStep", 5);//Create Clone
+					}
+				}
 			}
 			else {
 				mShouldPulse = false;

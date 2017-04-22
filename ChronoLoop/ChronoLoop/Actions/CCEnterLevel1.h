@@ -9,6 +9,7 @@
 #include "..\Actions\CCPauseToCancel.h"
 #include "..\Actions\CCTeleToPlay.h"
 #include "..\Actions\CCDisplayOnPause.h"
+#include "..\Actions\CCLevel1Tutorial.h"
 #include "..\Actions\UICreateToDeleteClone.h"
 #include "..\Actions\UIClonePlusToMinus.h"
 #include "..\Actions\UICloneText.h"
@@ -187,6 +188,8 @@ namespace Epoch
 					MeshComponent *visibleMesh2 = new MeshComponent("../Resources/TinyCube.obj");
 					visibleMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 					visibleMesh2->SetVisible(false);
+					CCLevel1Tutorial *tut = new CCLevel1Tutorial();
+					headset->AddComponent(tut);
 					headset->AddComponent(ambient);
 					headset->AddComponent(visibleMesh2);
 					AudioWrapper::GetInstance().STOP();

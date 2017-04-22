@@ -115,7 +115,12 @@ namespace Epoch
 			// Accept timeline position
 			if (mPauseTime) {
 				if (Settings::GetInstance().GetInt("tutStep") == 6)//accepted time
-					Settings::GetInstance().SetInt("tutStep", 7);//delete clone
+				{
+					if (Settings::GetInstance().GetBool("Level1Tutorial"))
+						Settings::GetInstance().SetInt("tutStep", 8);//end
+					else
+						Settings::GetInstance().SetInt("tutStep", 7);//delete clone
+				}
 				vec2f finalRatios(0, 0);
 				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
 				mDesaturationInterpolator.SetActive(true);
