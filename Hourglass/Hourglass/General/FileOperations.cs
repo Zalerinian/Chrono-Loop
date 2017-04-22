@@ -96,6 +96,7 @@ namespace Hourglass {
 				writer.Write(Settings.StartRot.X * DEGREES_TO_RADIANS);
 				writer.Write(Settings.StartRot.Y * DEGREES_TO_RADIANS);
 				writer.Write(Settings.StartRot.Z * DEGREES_TO_RADIANS);
+
                 writer.Write(Settings.CloneMax);
 
 				// Level Objects
@@ -283,15 +284,14 @@ namespace Hourglass {
 				startRot.X = (float)System.BitConverter.ToSingle(reader.ReadBytes(4), 0) * RADIANS_TO_DEGREES;
 				startRot.Y = (float)System.BitConverter.ToSingle(reader.ReadBytes(4), 0) * RADIANS_TO_DEGREES;
 				startRot.Z = (float)System.BitConverter.ToSingle(reader.ReadBytes(4), 0) * RADIANS_TO_DEGREES;
+				if(vers >= 4) {
+					Settings.CloneMax = (ushort)reader.ReadUInt16();
+				}
 				Settings.StartPos = startPos;
 				Settings.StartRot = startRot;
-                if (vers >= 4)
-                {
-                    Settings.CloneMax = (ushort)reader.ReadUInt16();
-                }
 
-                // There are 4 padding bytes, for the giggles.
-                reader.ReadBytes(4);
+				// There are 4 padding bytes, for the giggles.
+				reader.ReadBytes(4);
 				int ObjectCount = reader.ReadInt32();
 
 				for (int i = 0; i < ObjectCount; ++i) {
@@ -504,13 +504,7 @@ namespace Hourglass {
 								if(col != null) {
 									col.Movable = reader.Value == "True";
 								}
-                                break;
-                            case "PickUp":
-                               if (col != null)
-                                {
-                                    col.PickUpAble = reader.Value == "True";
-                                }
-                                break;
+								break;
 							case "Mass":
 								if(col != null) {
 									col.Mass = float.Parse(reader.Value);
