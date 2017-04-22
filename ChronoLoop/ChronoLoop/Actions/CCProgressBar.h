@@ -8,7 +8,7 @@
 
 namespace Epoch
 {
-	struct CCProgessBar : public CodeComponent
+	struct CCProgressBar : public CodeComponent
 	{
 		BaseObject* pBackground, *pProgressBar;
 		MeshComponent* mcBackground, *mcProgressBar;
