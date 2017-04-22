@@ -143,6 +143,7 @@ namespace Epoch {
 			mDeviceBoard->AddComponent(dm);
 			boards.push_back(mDeviceBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mDeviceBoard);
+			pb->OnDisable();
 		}
 
 		virtual void Update() {

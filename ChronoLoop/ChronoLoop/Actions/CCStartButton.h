@@ -30,15 +30,17 @@ namespace Epoch
 		Listener* l;
 
 		BaseObject *mChamberObject, *mExitButton, *mStartStand, *mStartSign, *mExitStand, *mExitSign, *mClosePanel, *mTutButton, *mTutSign, *mTutStand;
-		
+		Transform identity;
+
 		Level* cLevel = nullptr;
-		BaseObject *mProgressBar;
+		//BaseObject *mProgressBar;
 		CCProgressBar* mPB;
 
 		virtual void Start()
 		{
 			AudioToggle = false;
 			mBooped = mBooped2 = isComplete = false;
+			mPB = new CCProgressBar();
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
 			mChamberObject = cLevel->FindObjectWithName("mmChamber");
@@ -51,14 +53,20 @@ namespace Epoch
 			mTutButton = cLevel->FindObjectWithName("mmTutButton");
 			mTutStand = cLevel->FindObjectWithName("mmTutStand");
 			mClosePanel = cLevel->FindObjectWithName("mmClosingPanel");
-			mProgressBar->AddComponent(mPB);
-			mPB->SetFinalProgress(180);
+			//mProgressBar = new BaseObject("mmStartProgressBar", identity);
 			mPB->SetCurProgress(0);
+			mPB->SetFinalProgress(300);
+			mStartSign->AddComponent(mPB);
+			mPB->GetProgressBar()->SetParent(mStartSign);
+			mStartSign->AddChild(mPB->GetProgressBar());
+
+
+
 			l = new Listener();
 			mChamberObject->AddComponent(l);
 			AudioWrapper::GetInstance().AddListener(l, "shit");
 
-			mPB->GetProgressBar()->GetTransform().SetMatrix(mPB->GetProgressBar()->GetTransform().GetMatrix());
+			mPB->GetProgressBar()->GetTransform().SetMatrix(matrix4::CreateScale(20,0,20) * matrix4::CreateTranslation(0, 0.0001f, -2));
 			((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 2))->CallEvent(Emitter::EventType::ePlay);
 			mPB->OnEnable();
 			//Settings::GetInstance().SetFloat("StartButton - CurProgress",0);
@@ -69,7 +77,7 @@ namespace Epoch
 		virtual void OnCollision(Collider& _col1, Collider& _col2, float _time)
 		{
 			if (mBooped == false && mPB->GetCurProgress() < mPB->GetFinalProgress())
-				mPB->SetCurProgress(mPB->GetCurProgress() + 1);
+				mPB->SetCurProgress(mPB->GetCurProgress() + 2);
 			if (Settings::GetInstance().GetInt("mmLevel") < 1 && mPB->GetCurProgress() >= mPB->GetFinalProgress())
 			{
 				matrix4 mat = mChamberObject->GetTransform().GetMatrix();
@@ -143,7 +151,8 @@ namespace Epoch
 			//	//AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::PLAY_HUB0);
 			//	AudioToggle = true;
 			//}
-
+			if(mPB->GetCurProgress() > 0)
+				mPB->SetCurProgress(mPB->GetCurProgress() - 1);
 			if (mBooped)
 			{
 				
