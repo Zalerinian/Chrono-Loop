@@ -1,12 +1,12 @@
 #pragma once
-#include "Actions/CodeComponent.hpp"
-#include "Common/Interpolator.h"
-#include "Core/LevelManager.h"
-#include "Common/Settings.h"
+#include "../Actions/CodeComponent.hpp"
+#include "../Common/Interpolator.h"
+#include "../Core/LevelManager.h"
+#include "../Common/Settings.h"
 
 namespace Epoch {
 
-	struct CCLevel3Elavator : public CodeComponent {
+	struct CCLevel3ElevatorButton : public CodeComponent {
 		bool colliding = false;
 		BaseObject* mChamberObject, *mButtonStand;
 		Interpolator<matrix4>* mChamberInterp = new Interpolator<matrix4>();

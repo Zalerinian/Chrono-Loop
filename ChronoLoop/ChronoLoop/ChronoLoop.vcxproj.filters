@@ -515,6 +515,12 @@
     <ClInclude Include="Actions\CCLevel2Tutorial.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="CCLevel3Elavator.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCLevel3ElevatorButton.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -794,7 +800,7 @@
       <Filter>Pathing</Filter>
     </ClCompile>
     <ClCompile Include="BVH.cpp" />
-    <ClCompile Include="BoxSnapToControllerAction.cpp">
+    <ClCompile Include="Actions\BoxSnapToControllerAction.cpp">
       <Filter>Actions\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -22,32 +22,32 @@
     <ProjectGuid>{D3511621-8C2B-4220-8970-84928FF7AA34}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ChronoLoop</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -217,6 +217,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Actions\CCExit.h" />
     <ClInclude Include="Actions\CCLevel1Tutorial.h" />
     <ClInclude Include="Actions\CCLevel2Tutorial.h" />
+    <ClInclude Include="Actions\CCLevel3ElevatorButton.h" />
     <ClInclude Include="Actions\CCLoadHub.h" />
     <ClInclude Include="Actions\CCLoadTutorial.h" />
     <ClInclude Include="Actions\CCPauseToCancel.h" />
@@ -240,6 +241,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Actions\UIRewind.h" />
     <ClInclude Include="Actions\WhatInHellAmIHitting.hpp" />
     <ClInclude Include="BVH.h" />
+    <ClInclude Include="CCLevel3Elavator.h" />
     <ClInclude Include="Common\Breakpoint.h" />
     <ClInclude Include="Common\Common.h" />
     <ClInclude Include="Common\EasingFunctions.h" />
@@ -400,8 +402,8 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Actions\BoxSnapToControllerAction.cpp" />
     <ClCompile Include="Actions\TimeManipulation.cpp" />
-    <ClCompile Include="BoxSnapToControllerAction.cpp" />
     <ClCompile Include="BVH.cpp" />
     <ClCompile Include="ChronoLoop.cpp" />
     <ClCompile Include="Common\Breakpoint.cpp" />
