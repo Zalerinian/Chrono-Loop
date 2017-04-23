@@ -17,7 +17,7 @@ namespace Epoch {
 		float scaleX, scaleY;
 		float tempScaleX, tempScaleY;
 		bool scalingDone;
-		CCProgessBar* pb;
+		CCProgressBar* pb;
 
 		PSAnimatedMultiscan_Data mScanlineData;
 

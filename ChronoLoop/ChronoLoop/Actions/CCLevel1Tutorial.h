@@ -15,7 +15,7 @@ namespace Epoch {
 		float scaleX, scaleY;
 		float tempScaleX, tempScaleY;
 		bool scalingDone;
-		CCProgessBar* pb;
+		CCProgressBar* pb;
 
 		PSAnimatedMultiscan_Data mScanlineData;
 
@@ -88,7 +88,7 @@ namespace Epoch {
 			rm->SetData(eCB_PIXEL, eBufferDataType_Scanline, ePB_REGISTER1, &mScanlineData);
 			rm->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
 			rm->SetVisible(false);
-			pb = new CCProgessBar();
+			pb = new CCProgressBar();
 			Settings::GetInstance().SetFloat("TutorialRewind - CurProgress", 0);
 			Settings::GetInstance().SetFloat("TutorialRewind - FinalProgress", 50);
 			pb->SetFinalProgress(50);
@@ -143,6 +143,7 @@ namespace Epoch {
 			mDeviceBoard->AddComponent(dm);
 			boards.push_back(mDeviceBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mDeviceBoard);
+			pb->OnDisable();
 		}
 
 		virtual void Update() {
