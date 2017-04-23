@@ -556,6 +556,7 @@ namespace Hourglass {
 							case "ElasticPlane":
 							case "SpheretoSphere":
 							case "EnterLevel":
+                            case "Level3ElevatorButton":
 							case "HeadsetFollow":
 								if (element == "EnterLevel") {
 									if (addition.Name == "mmDoor") {
