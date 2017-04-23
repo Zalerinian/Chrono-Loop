@@ -1,4 +1,4 @@
-<Level>
+﻿<Level>
   <Settings>
     <StartPos>0,0,0</StartPos>
     <StartRot>0,0,0</StartRot>
@@ -21,6 +21,7 @@
     <Rotation>0,0,0</Rotation>
     <Scale>1,1.25,0.5</Scale>
     <Components>
+      <EnterLevel>Enabled</EnterLevel>
       <EnterLevel>Enabled</EnterLevel>
       <Collider>
         <Type>OBB</Type>
@@ -571,37 +572,20 @@
     <Components />
   </Object>
   <Object>
-    <Name>mmTutSign</Name>
-    <Mesh>PlaneCorrection.obj</Mesh>
-    <Texture>Conditioning.png</Texture>
-    <Position>-0.8517685,0.97,0.8474129</Position>
-    <Rotation>1.57,2.355,0</Rotation>
-    <Scale>0.2,1,0.1</Scale>
-    <Components />
-  </Object>
-  <Object>
-    <Name>mmTutStand</Name>
-    <Mesh>ButtonStand.obj</Mesh>
-    <Texture>white.png</Texture>
-    <Position>-0.74,0.16,0.71</Position>
+    <Name>mmDoor3</Name>
+    <Mesh>mmDoor.obj</Mesh>
+    <Texture>fieldGen.png</Texture>
+    <Position>0,-10,-2.82</Position>
     <Rotation>0,0,0</Rotation>
-    <Scale>0.5,0.5,0.5</Scale>
-    <Components />
-  </Object>
-  <Object>
-    <Name>mmTutButton</Name>
-    <Mesh>Button.obj</Mesh>
-    <Texture>red.png</Texture>
-    <Position>-0.74,0.83,0.71</Position>
-    <Rotation>0,0,0</Rotation>
-    <Scale>0.5,0.5,0.5</Scale>
+    <Scale>1,1.25,0.5</Scale>
     <Components>
+      <EnterLevel>Enabled</EnterLevel>
       <Collider>
         <Type>OBB</Type>
         <Trigger>True</Trigger>
-        <Position>0,0,0</Position>
+        <Position>0,1,-0.2</Position>
         <Rotation>0,0,0</Rotation>
-        <Scale>0.4,0.1,0.4</Scale>
+        <Scale>1.1,1.8,0.9</Scale>
         <Move>False</Move>
         <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>

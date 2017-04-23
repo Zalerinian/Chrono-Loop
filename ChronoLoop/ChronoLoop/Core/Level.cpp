@@ -12,6 +12,7 @@
 #include "../Actions/CCButtonPress.h"
 #include "../Actions/CCEnterLevel.h"
 #include "../Actions/CCEnterLevel1.h"
+#include "../Actions/CCEnterLevel3.h"
 #include "../Actions/CCLoadTutorial.h"
 #include "../Actions/MainMenuBT.h"
 #include "../Actions/CCLoadHub.h"
@@ -879,6 +880,10 @@ namespace Epoch {
 							else if(name == "mmDoor2")
 							{
 								CCEnterLevel* code = new CCEnterLevel();
+								obj->AddComponent(code);
+							}
+							else if (name == "mmDoor3") {
+								CCEnterLevel3* code = new CCEnterLevel3();
 								obj->AddComponent(code);
 							}
 						}
