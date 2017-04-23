@@ -27,6 +27,7 @@
 #include "../Input/CommandConsole.h"
 #include "../Actions/CCButtonHold.h"
 #include "../Core/Pool.h"
+#include "../Actions/CCLevel3ElevatorButton.h"
 
 namespace Epoch {
 
@@ -845,6 +846,11 @@ namespace Epoch {
 							CCButtonPress* code = new CCButtonPress();
 							obj->AddComponent(code);
 						}
+						else if(codeComs[i] == "Level3ElavatorButton")
+						{
+							CCLevel3ElevatorButton* code = new CCLevel3ElevatorButton();
+							obj->AddComponent(code);
+						}
 						else if (codeComs[i] == "AABBtoAABB")
 						{
 							CCElasticAABBtoAABB* code = new CCElasticAABBtoAABB();
@@ -1252,6 +1258,8 @@ namespace Epoch {
 								codeCom = new CCEnterLevel1();
 							if (path == "CCExit.h")
 								codeCom = new CCExit();
+							if (path == "CCLevel3ElevatorButton.h")
+								codeCom = new CCLevel3ElevatorButton();
 							if (path == "CCLoadHub.h")
 								codeCom = new CCLoadHub();
 							if (path == "CCPauseToCancel.h")

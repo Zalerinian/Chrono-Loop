@@ -518,6 +518,12 @@
     <ClInclude Include="Actions\CCEnterLevel3.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\CCLevel3ElevatorButton.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\Level3TeleportAction.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -797,9 +803,7 @@
       <Filter>Pathing</Filter>
     </ClCompile>
     <ClCompile Include="BVH.cpp" />
-    <ClCompile Include="BoxSnapToControllerAction.cpp">
-      <Filter>Actions\Source Files</Filter>
-    </ClCompile>
+    <ClCompile Include="Actions\BoxSnapToControllerAction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">

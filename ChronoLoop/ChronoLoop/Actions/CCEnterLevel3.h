@@ -14,7 +14,7 @@
 #include "..\Actions\UIClonePlusToMinus.h"
 #include "..\Actions\UICloneText.h"
 #include "..\Actions\BoxSnapToControllerAction.hpp"
-#include "..\Actions\TeleportAction.hpp"
+#include "..\Actions\Level3TeleportAction.h"
 #include "..\Actions\PauseMenu.hpp"
 #include "..\Actions\CCTimeIndicator.h"
 #include "..\Rendering\Draw2D.h"
@@ -49,7 +49,7 @@ namespace Epoch {
 			if (!once) {
 				Settings::GetInstance().SetBool("LevelIsLoading", true);
 				Level* next = new Level;
-				next->BinaryLoadLevel("../Resources/Level3.elf");
+				next->LoadLevel("../Resources/Level3.xml");
 				// Todo: Un-hardcode this
 				// use a setting string for next level path?
 				//LM::LevelStatus status = LevelManager::GetInstance().LoadLevelAsync("../Resources/Level1_2_6.xml", &next);
@@ -88,7 +88,7 @@ namespace Epoch {
 					rightRaycaster->SetPixelShader(ePS_PURETEXTURE);
 					mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 					mc->SetPixelShader(ePS_PURETEXTURE);
-					TeleportAction *ta = new TeleportAction(eControllerType_Primary);
+					Level3TeleportAction *ta = new Level3TeleportAction(eControllerType_Primary);
 					TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
 					RightController->AddComponent(mc);
 					RightController->AddComponent(rightConCol);
@@ -263,7 +263,7 @@ namespace Epoch {
 					leftRaycaster->SetPixelShader(ePS_PURETEXTURE);
 					mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 					mc2->SetPixelShader(ePS_PURETEXTURE);
-					TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
+					Level3TeleportAction *ta2 = new Level3TeleportAction(eControllerType_Secondary);
 					LeftController->AddComponent(mc2);
 					LeftController->AddComponent(leftConCol);
 					LeftController->AddComponent(pickup2);
