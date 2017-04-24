@@ -295,12 +295,6 @@
     <Scale>0.8,1,0.9</Scale>
     <Components>
       <Level3ElevatorButton>Enabled</Level3ElevatorButton>
-      <Level3ElevatorButton>Enabled</Level3ElevatorButton>
-      <Level3ElevatorButton>Enabled</Level3ElevatorButton>
-      <Level3ElevatorButton>Enabled</Level3ElevatorButton>
-      <Level3ElevatorButton>Enabled</Level3ElevatorButton>
-      <Level3ElevatorButton>Enabled</Level3ElevatorButton>
-      <Level3ElevatorButton>Enabled</Level3ElevatorButton>
       <Collider>
         <Type>Button</Type>
         <Trigger>False</Trigger>

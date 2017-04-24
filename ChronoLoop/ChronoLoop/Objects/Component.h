@@ -187,6 +187,7 @@ namespace Epoch
 		vec3f mMin, mMax, mMinOffset, mMaxOffset;
 		RenderShape* mShape;
 		GhostList<matrix4>::GhostNode* mNode = nullptr;
+		bool visible = false;
 		virtual void Update();
 		virtual void Destroy();
 

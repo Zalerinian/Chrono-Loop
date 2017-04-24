@@ -34,11 +34,11 @@ namespace Epoch
 			pBackground->GetTransform().SetMatrix(matrix4::CreateScale(20, 1, 4) * identity.GetMatrix());
 			pProgressBar->GetTransform().SetMatrix(matrix4::CreateScale(0, 1, 0) * matrix4::CreateTranslation(0, 0.003f, 0));
 
+			Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texBackground.Get(), NULL, rtvBackground.GetAddressOf());
+			Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texProgressBar.Get(), NULL, rtvProgressBar.GetAddressOf());
 		}
 		virtual void Start()
 		{
-			Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texBackground.Get(), NULL, rtvBackground.GetAddressOf());
-			Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texProgressBar.Get(), NULL, rtvProgressBar.GetAddressOf());
 
 
 			//OnDisable();

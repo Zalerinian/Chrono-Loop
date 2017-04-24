@@ -1358,25 +1358,14 @@ namespace Epoch {
 	{
 		CommandConsole* self = (CommandConsole*)_commandConsole;
 
-		CCEnterLevel* accessLevelTwo = nullptr;
 		CCEnterLevel1* accessLevelOne = nullptr;
+		CCEnterLevel* accessLevelTwo = nullptr;
+		CCEnterLevel3* accessLevelThree = nullptr;
 		CCLoadTutorial* accessTut = nullptr;
 		CCLoadHub* accessHub = nullptr;
-
 		std::list<BaseObject*> copyList = LevelManager::GetInstance().GetCurrentLevel()->GetLevelObjects();
-		for (auto it = copyList.begin(); it != copyList.end(); ++it) {
-			std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
-			if (CodeComps.size() > 0) {
-				for (size_t x = 0; x < CodeComps.size(); ++x) {
-					if (dynamic_cast<CCEnterLevel*>(CodeComps[x])) {
-						accessLevelTwo = ((CCEnterLevel*)CodeComps[x]);
-						break;
-					}
-				}
-				if (accessLevelTwo != nullptr)
-					break;
-			}
-		}
+
+
 		for (auto it = copyList.begin(); it != copyList.end(); ++it) {
 			std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
 			if (CodeComps.size() > 0) {
@@ -1387,6 +1376,42 @@ namespace Epoch {
 					}
 				}
 				if (accessLevelOne != nullptr)
+					break;
+			}
+		}
+
+		for (auto it = copyList.begin(); it != copyList.end(); ++it)
+		{
+			std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+			if (CodeComps.size() > 0)
+			{
+				for (size_t x = 0; x < CodeComps.size(); ++x)
+				{
+					if (dynamic_cast<CCEnterLevel*>(CodeComps[x]))
+					{
+						accessLevelTwo = ((CCEnterLevel*)CodeComps[x]);
+						break;
+					}
+				}
+				if (accessLevelTwo != nullptr)
+					break;
+			}
+		}
+
+		for (auto it = copyList.begin(); it != copyList.end(); ++it)
+		{
+			std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+			if (CodeComps.size() > 0)
+			{
+				for (size_t x = 0; x < CodeComps.size(); ++x)
+				{
+					if (dynamic_cast<CCEnterLevel3*>(CodeComps[x]))
+					{
+						accessLevelThree = ((CCEnterLevel3*)CodeComps[x]);
+						break;
+					}
+				}
+				if (accessLevelThree != nullptr)
 					break;
 			}
 		}
@@ -1423,7 +1448,23 @@ namespace Epoch {
 			}
 		}
 
-		if ((_Level == L"LEVELTWO" || _Level == L"LVLTWO"))
+		if ((_Level == L"LEVELONE" || _Level == L"LVLONE"))
+		{
+			if (accessLevelOne)
+			{
+
+				accessLevelOne->SetOnce(false);
+				CommandConsole::Instance().Toggle();
+			}
+			else
+			{
+				CommandConsole::Instance().DisplaySet(L"Failed to load level 1.");
+			}
+			accessLevelOne = nullptr;
+			accessLevelTwo = nullptr;
+			accessHub = nullptr;
+		}
+		else if ((_Level == L"LEVELTWO" || _Level == L"LVLTWO"))
 		{
 			if (accessLevelTwo) {
 				accessLevelTwo->SetOnce(false);
@@ -1435,14 +1476,16 @@ namespace Epoch {
 			accessLevelTwo = nullptr;
 			accessHub = nullptr;
 		}
-		else if ((_Level == L"LEVELONE" || _Level == L"LVLONE"))
+		if ((_Level == L"LEVELTHREE" || _Level == L"LVLTHREE"))
 		{
-			if (accessLevelOne) {
-
-				accessLevelOne->SetOnce(false);
+			if (accessLevelThree)
+			{
+				accessLevelThree->SetOnce(false);
 				CommandConsole::Instance().Toggle();
-			} else {
-				CommandConsole::Instance().DisplaySet(L"Failed to load level 1.");
+			}
+			else
+			{
+				CommandConsole::Instance().DisplaySet(L"Failed to load level 3.");
 			}
 			accessLevelOne = nullptr;
 			accessLevelTwo = nullptr;

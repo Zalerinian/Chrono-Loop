@@ -20,6 +20,7 @@ namespace Epoch
 			sInstance->AddCommand(L"/FPS", sInstance->ToggleFPS);
 			sInstance->AddCommand(L"/ALL", sInstance->ToggleAll);
 			sInstance->AddCommand(L"/SNAP", sInstance->ToggleSnaping);
+			sInstance->AddCommand(L"/COL", sInstance->ToggleColliders);
 		}
 		return *sInstance;
 	}
@@ -196,6 +197,25 @@ namespace Epoch
 		else if (_ifOn == L"OFF")
 		{
 			Settings::GetInstance().SetBool("FPSCounter", false);
+			sInstance->DisplaySet(L"");
+		}
+		else
+		{
+			sInstance->DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /FPS (ON/OFF)");
+		}
+	}
+
+	void CommandConsole::ToggleColliders(void * _self, std::wstring _ifOn)
+	{
+		CommandConsole* self = (CommandConsole*)_self;
+		if (_ifOn == L"ON")
+		{
+			Settings::GetInstance().SetBool("ShowColliders", true);
+			sInstance->DisplaySet(L"");
+		}
+		else if (_ifOn == L"OFF")
+		{
+			Settings::GetInstance().SetBool("ShowColliders", false);
 			sInstance->DisplaySet(L"");
 		}
 		else
