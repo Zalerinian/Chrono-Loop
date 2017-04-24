@@ -67,6 +67,7 @@ namespace Epoch
 					}
 					SystemLogger::GetLog() << std::endl;
 				}
+				SystemLogger::GetLog() << std::endl;
 			}
 			else if (GetAsyncKeyState(VK_UP) & 0x1) {
 				MoveUp();
@@ -76,6 +77,7 @@ namespace Epoch
 					}
 					SystemLogger::GetLog() << std::endl;
 				}
+				SystemLogger::GetLog() << std::endl;
 			}
 			else if (GetAsyncKeyState(VK_LEFT) & 0x1) {
 				MoveLeft();
@@ -85,6 +87,7 @@ namespace Epoch
 					}
 					SystemLogger::GetLog() << std::endl;
 				}
+				SystemLogger::GetLog() << std::endl;
 			}
 			else if (GetAsyncKeyState(VK_RIGHT) & 0x1) {
 				MoveRight();
@@ -94,6 +97,7 @@ namespace Epoch
 					}
 					SystemLogger::GetLog() << std::endl;
 				}
+				SystemLogger::GetLog() << std::endl;
 			}
 
 		}
@@ -124,7 +128,7 @@ namespace Epoch
 			//Should be sorted now
 			int currCoord = 0;
 			for (int i = 0; i < 3; ++i) {
-				for (int k = orderedBoxes[i].mCol-1; k < -1; --k) {
+				for (int k = orderedBoxes[i].mCol-1; k > -1; --k) {
 					currCoord = mGrid[orderedBoxes[i].mRow][k];
 					if (currCoord == 0) {
 						mGrid[orderedBoxes[i].mRow][orderedBoxes[i].mCol] = 0;
@@ -177,7 +181,7 @@ namespace Epoch
 			//Should be sorted now
 			int currCoord = 0;
 			for (int i = 0; i < 3; ++i) {
-				for (int k = 0; k < orderedBoxes[i].mCol; ++k) {
+				for (int k = orderedBoxes[i].mCol + 1; k < 4; ++k) {
 					currCoord = mGrid[orderedBoxes[i].mRow][k];
 					if (currCoord == 0) {
 						mGrid[orderedBoxes[i].mRow][orderedBoxes[i].mCol] = 0;
@@ -228,7 +232,7 @@ namespace Epoch
 			//Should be sorted now
 			int currCoord = 0;
 			for (int i = 0; i < 3; ++i) {
-				for (int k = orderedBoxes[i].mRow - 1; k < -1; ++k) {
+				for (int k = orderedBoxes[i].mRow - 1; k > -1;--k) {
 					currCoord = mGrid[k][orderedBoxes[i].mCol];
 					if (currCoord == 0) {
 						mGrid[orderedBoxes[i].mRow][orderedBoxes[i].mCol] = 0;
@@ -279,11 +283,11 @@ namespace Epoch
 			//Should be sorted now
 			int currCoord = 0;
 			for (int i = 0; i < 3; ++i) {
-				for (int k = 0; k < orderedBoxes[i].mRow; ++k) {
-					currCoord = mGrid[k][orderedBoxes[i].mRow];
+				for (int k = orderedBoxes[i].mRow + 1; k < 4; ++k) {
+					currCoord = mGrid[k][orderedBoxes[i].mCol];
 					if (currCoord == 0) {
 						mGrid[orderedBoxes[i].mRow][orderedBoxes[i].mCol] = 0;
-						orderedBoxes[i].mCol = k;
+						orderedBoxes[i].mRow = k;
 						mGrid[orderedBoxes[i].mRow][orderedBoxes[i].mCol] = orderedBoxes[i].mId;
 					}
 					else

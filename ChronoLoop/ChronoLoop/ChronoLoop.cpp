@@ -28,6 +28,7 @@
 #include "Actions/HeadsetFollow.hpp"
 #include "Actions\CodeComponent.hpp"
 #include "Actions/CCButtonPress.h"
+#include "Actions/CCMazeHelper.h"
 #include "Actions\CCEnterLevel.h"
 #include "Actions/MainMenuBT.h"
 #include "Core/Level.h"
@@ -192,6 +193,10 @@ void Update() {
 	HeadsetFollow* hfollow = new HeadsetFollow();
 	headset->AddComponent(hfollow);
 	TimeManager::Instance()->AddObjectToTimeline(headset);
+
+	CCMazeHelper* fuk = new CCMazeHelper();
+	headset->AddComponent(fuk);
+
 
 	//Level 1 door////////////////////////////////////////////////////////////////////////
 	Particle* p1 = &Particle::Init();
