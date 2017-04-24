@@ -12,6 +12,7 @@
 #include "../Actions/CCButtonPress.h"
 #include "../Actions/CCEnterLevel.h"
 #include "../Actions/CCEnterLevel1.h"
+#include "../Actions/CCEnterLevel3.h"
 #include "../Actions/CCLoadTutorial.h"
 #include "../Actions/MainMenuBT.h"
 #include "../Actions/CCLoadHub.h"
@@ -26,6 +27,7 @@
 #include "../Input/CommandConsole.h"
 #include "../Actions/CCButtonHold.h"
 #include "../Core/Pool.h"
+#include "../Actions/CCLevel3ElevatorButton.h"
 
 namespace Epoch {
 
@@ -844,6 +846,11 @@ namespace Epoch {
 							CCButtonPress* code = new CCButtonPress();
 							obj->AddComponent(code);
 						}
+						else if(codeComs[i] == "Level3ElevatorButton")
+						{
+							CCLevel3ElevatorButton* code = new CCLevel3ElevatorButton();
+							obj->AddComponent(code);
+						}
 						else if (codeComs[i] == "AABBtoAABB")
 						{
 							CCElasticAABBtoAABB* code = new CCElasticAABBtoAABB();
@@ -866,7 +873,7 @@ namespace Epoch {
 						}
 						else if (codeComs[i] == "EnterLevel")
 						{
-							if (name == "DoorEmitter2")
+							if (name == "ExitFrame")
 							{
 								CCLoadHub* code = new CCLoadHub();
 								obj->AddComponent(code);
@@ -881,9 +888,8 @@ namespace Epoch {
 								CCEnterLevel* code = new CCEnterLevel();
 								obj->AddComponent(code);
 							}
-							else if (name == "mmDoor3")
-							{
-								CCLoadTutorial* code = new CCLoadTutorial();
+							else if (name == "mmDoor3") {
+								CCEnterLevel3* code = new CCEnterLevel3();
 								obj->AddComponent(code);
 							}
 						}
@@ -1252,6 +1258,8 @@ namespace Epoch {
 								codeCom = new CCEnterLevel1();
 							if (path == "CCExit.h")
 								codeCom = new CCExit();
+							if (path == "CCLevel3ElevatorButton.h")
+								codeCom = new CCLevel3ElevatorButton();
 							if (path == "CCLoadHub.h")
 								codeCom = new CCLoadHub();
 							if (path == "CCPauseToCancel.h")

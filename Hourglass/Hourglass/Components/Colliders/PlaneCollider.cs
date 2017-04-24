@@ -40,6 +40,7 @@ namespace Hourglass
 			mLbNZ = new Label();
 
 			mOffset = new NumericUpDown();
+            mOffset.Minimum = -9999;
 			mNX = new NumericUpDown();
 			mNY = new NumericUpDown();
 			mNZ = new NumericUpDown();

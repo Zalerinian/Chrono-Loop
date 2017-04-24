@@ -11,7 +11,7 @@ namespace Hourglass {
 		protected Label mLbMass, mLbStaticFriction, mLbElasticity, mLbKineticFriction, mLbDrag, mLbColor;
 		protected ColoredShape mShape = null;
 		protected Button mColor;
-		protected CheckBox mMovable, mTrigger;
+		protected CheckBox mMovable, mTrigger, mPickUpAble;
 
 		public RenderShape Shape {
 			get {
@@ -37,7 +37,19 @@ namespace Hourglass {
 			}
 		}
 
-		public float Mass {
+        public bool PickUpAble
+        {
+            get
+            {
+                return mPickUpAble.Checked;
+            }
+            set
+            {
+                mPickUpAble.Checked = value;
+            }
+        }
+
+        public float Mass {
 			get {
 				return (float)mMass.Value;
 			}
@@ -107,6 +119,7 @@ namespace Hourglass {
 			// Checkboxes
 			mMovable = new CheckBox();
 			mTrigger = new CheckBox();
+            mPickUpAble = new CheckBox();
 
 			mGroupBox.Controls.Add(mMass);
 			mGroupBox.Controls.Add(mStaticFriction);
@@ -116,6 +129,7 @@ namespace Hourglass {
 			mGroupBox.Controls.Add(mColor);
 			mGroupBox.Controls.Add(mMovable);
 			mGroupBox.Controls.Add(mTrigger);
+            mGroupBox.Controls.Add(mPickUpAble);
 
 			mGroupBox.Controls.Add(mLbMass);
 			mGroupBox.Controls.Add(mLbStaticFriction);
@@ -231,30 +245,38 @@ namespace Hourglass {
 			mMovable.Text = "Movable";
 			mMovable.AutoSize = true;
 			mMovable.Checked = true;
-			mMovable.Location = new System.Drawing.Point(ContentWidth / 3, 180 + _yOffset);
+			mMovable.Location = new System.Drawing.Point(ContentWidth / 4, 180 + _yOffset);
 			///mMovable.Size = new System.Drawing.Size(ContentWidth / 2, 25);
 			mMovable.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
 
 			mTrigger.Text = "Is Trigger";
 			mTrigger.AutoSize = true;
 			mTrigger.Checked = false;
-			mTrigger.Location = new System.Drawing.Point(ContentWidth / 3 * 2, 180 + _yOffset);
+			mTrigger.Location = new System.Drawing.Point(ContentWidth / 4 * 2, 180 + _yOffset);
 			//mTrigger.Size = new System.Drawing.Size(ContentWidth / 2, 25);
 			mTrigger.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
 
+            mPickUpAble.Text = "PickUpAble";
+            mPickUpAble.AutoSize = true;
+            mPickUpAble.Checked = false;
+            mPickUpAble.Location = new System.Drawing.Point(ContentWidth / 4, 180 + _yOffset);
+            ///mMovable.Size = new System.Drawing.Size(ContentWidth / 2, 25);
+            mPickUpAble.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
 
-			#endregion
 
-			mGroupBox.Text = "Collider Component";
+            #endregion
+
+            mGroupBox.Text = "Collider Component";
 			mGroupBox.Size = mGroupBox.PreferredSize;
 			mGroupBox.Resize += OnGroupboxResize;
 		}
 
 		public void OnGroupboxResize(object sender, EventArgs e) {
 			int ContentWidth = (mGroupBox.Size - mGroupBox.Padding.Size - mGroupBox.Margin.Size).Width;
-			mMovable.Location = new System.Drawing.Point(ContentWidth / 3 - (mMovable.Size.Width / 2), mMovable.Location.Y);
-			mTrigger.Location = new System.Drawing.Point(ContentWidth / 3 * 2 - (mTrigger.Size.Width / 2), mTrigger.Location.Y);
-		}
+			mMovable.Location = new System.Drawing.Point(ContentWidth / 4 - (mMovable.Size.Width / 2), mMovable.Location.Y);
+			mTrigger.Location = new System.Drawing.Point(ContentWidth / 4 * 2 - (mTrigger.Size.Width / 2), mTrigger.Location.Y);
+            mPickUpAble.Location = new System.Drawing.Point(ContentWidth / 4 * 3 - (mTrigger.Size.Width / 2), mTrigger.Location.Y);
+        }
 
 		public override void OnMenuClick_Reset(object sender, EventArgs e) {
 			mMass.Value = 0;
@@ -264,6 +286,7 @@ namespace Hourglass {
 			mKineticFriction.Value = 0;
 			mMovable.Checked = true;
 			mTrigger.Checked = false;
+            mPickUpAble.Checked = false;
 			if (mShape != null) {
 				mShape.Dispose();
 			}
@@ -278,7 +301,8 @@ namespace Hourglass {
 			w.Write((float)mDrag.Value);
 			w.Write(mMovable.Checked);  // Added in writer Version 2
 			w.Write(mTrigger.Checked);  // Added in writer Version 2
-		}
+            w.Write(mPickUpAble.Checked); // Added in writer Version 4
+        }
 
 		public override void ReadData(BinaryReader r, int _version) {
 			mMass.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
@@ -290,6 +314,10 @@ namespace Hourglass {
 				mMovable.Checked = r.ReadByte() == 1;
 				mTrigger.Checked = r.ReadByte() == 1;
 			}
+            if(_version >= 4)
+            {
+                mPickUpAble.Checked = r.ReadByte() == 1;
+            }
 
 		}
 

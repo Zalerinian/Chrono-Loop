@@ -25,7 +25,14 @@ namespace Epoch
 		virtual void OnTriggerEnter(Collider& _col1, Collider& _col2)
 		{
 			if(_col2.mColliderType == Collider::eCOLLIDER_Controller)
+			{
+				if(Settings::GetInstance().GetInt("CurrentLevel") == 1)
+					Settings::GetInstance().SetBool("CompleteLevel1", true);
+				else if (Settings::GetInstance().GetInt("CurrentLevel") == 2)
+					Settings::GetInstance().SetBool("CompleteLevel2", true);
+
 				once = false;
+			}
 		}
 		virtual void Start()
 		{
@@ -126,6 +133,10 @@ namespace Epoch
 					next->AddObject(LeftController);
 					next->AddObject(RightController);
 
+					bool boop = true;
+					int floorPos = 0;
+					if (Settings::GetInstance().GetInt("mmLevel") == 1)
+						floorPos = -10;
 					auto& levelObjects = next->GetLevelObjects();
 					for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it)
 					{
@@ -135,14 +146,18 @@ namespace Epoch
 							temp == "mmTutButton" || temp == "mmTutSign" || temp == "mmTutStand")
 						{
 							Transform t;
-							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateTranslation(0, -10, 0));
+							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateTranslation(0, floorPos, 0));
 							((BaseObject*)*it)->SetTransform(t);
-							next->GetStartPos() = vec4f(0, -10, 0, 1);
+
+							if(boop)
+							{
+								next->GetStartPos() = vec4f(0, floorPos, 0, 1);
+								boop = false;
+							}
 
 							if (temp == "mmStartButton")
 							{
 								matrix4 mat = mObject->GetTransform().GetMatrix();
-								((CCStartButton*)mObject->GetComponentIndexed(eCOMPONENT_CODE, 0))->levels = 1;
 								((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mat.fourth);
 								((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mat.fourth.y - .2f;
 								((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mat.fourth.y + .2f;
@@ -161,6 +176,12 @@ namespace Epoch
 								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = ((BaseObject*)*it)->GetTransform().GetMatrix().fourth.y - .2f;
 							}
 						}
+						else if(floorPos == -10 && temp == "mmClosingPanel")
+						{
+							Transform t;
+							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateTranslation(2, 0, 0));
+							((BaseObject*)*it)->SetTransform(t);
+						}
 
 						if ((*it)->mComponents[eCOMPONENT_COLLIDER].size() > 0)
 						{
@@ -170,7 +191,7 @@ namespace Epoch
 
 					ParticleSystem::Instance()->Clear();
 
-					if (Settings::GetInstance().GetBool("PlayingLevel1"))
+					if (Settings::GetInstance().GetBool("CompleteLevel1"))
 					{
 						Particle* p1 = &Particle::Init();
 						p1->SetPos(vec3f(0, 0, 0));
@@ -235,7 +256,7 @@ namespace Epoch
 						emit12->FIRE();
 					}
 					
-					if (Settings::GetInstance().GetBool("PlayingLevel2"))
+					if (Settings::GetInstance().GetBool("CompleteLevel2"))
 					{
 						Particle* p2 = &Particle::Init();
 						p2->SetPos(vec3f(0, 0, 0));
@@ -359,6 +380,7 @@ namespace Epoch
 					SystemLogger::Debug() << "Loading complete" << std::endl;
 					Physics::Instance()->PhysicsLock.unlock();
 					Settings::GetInstance().SetBool("LevelIsLoading", false);
+					Settings::GetInstance().SetInt("CurrentLevel", 0);
 				}
 			}
 		}

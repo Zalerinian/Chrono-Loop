@@ -27,7 +27,7 @@ namespace Epoch
 		bool GetDoorInterpBool() { return mCanDoorInterp; };
 		virtual void Start()
 		{
-
+			((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mPress = true;
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			Block = cLevel->FindObjectWithName("TransparentDoor1");
 			Exit = cLevel->FindObjectWithName("TransparentDoor2");

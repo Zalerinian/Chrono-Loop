@@ -38,9 +38,9 @@ namespace Epoch
 			"../Resources/CloneTexture_Grey.png" };
 
 	public:
-		BaseObject* mCurCloneHeadset;
-		BaseObject* mCurCloneController1;
-		BaseObject* mCurCloneController2;
+		BaseObject* mCurCloneHeadset = nullptr;
+		BaseObject* mCurCloneController1 = nullptr;
+		BaseObject* mCurCloneController2 = nullptr;
 		TimeManipulation();
 		TimeManipulation(ControllerType _t) { mControllerRole = _t; };
 		~TimeManipulation();

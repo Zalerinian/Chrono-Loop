@@ -1015,9 +1015,18 @@ namespace Epoch
 
 							if (AabbToPlane(((ButtonCollider*)collider)->mLowerBound, *aabb1) != 1)
 							{
-								collider->mVelocity = -collider->mVelocity;
-								collider->mAcceleration = -collider->mAcceleration;
-								collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
+								if(((ButtonCollider*)collider)->mPress)
+								{
+									collider->mVelocity = { 0,0,0 };
+									collider->mAcceleration = { 0,0,0 };
+									collider->mTotalForce = { 0,0,0 };
+								}
+								else
+								{
+									collider->mVelocity = -collider->mVelocity;
+									collider->mAcceleration = -collider->mAcceleration;
+									collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
+								}
 							}
 						}
 					}

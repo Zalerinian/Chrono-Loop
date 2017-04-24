@@ -209,14 +209,14 @@ namespace Epoch
 	}
 
 	void CubeCollider::Update() {
-		if (mNode == nullptr) {
-			mShape->AddTexture("../Resources/red.png", eTEX_DIFFUSE);
-			mNode = Renderer::Instance()->AddOpaqueNode(*mShape);
-		}
-		vec3f size = mMax - mMin;
-		matrix4 pos = matrix4::CreateScale(size.x, size.y, size.z);
-		pos.Position = (mMax - mMin) / 2 + mMin;
-		mNode->data = pos;
+		//if (mNode == nullptr) {
+		//	mShape->AddTexture("../Resources/red.png", eTEX_DIFFUSE);
+		//	mNode = Renderer::Instance()->AddOpaqueNode(*mShape);
+		//}
+		//vec3f size = mMax - mMin;
+		//matrix4 pos = matrix4::CreateScale(size.x, size.y, size.z);
+		//pos.Position = (mMax - mMin) / 2 + mMin;
+		//mNode->data = pos;
 	}
 
 	void CubeCollider::Destroy()
@@ -315,6 +315,7 @@ namespace Epoch
 		mLowerBound.mOffset = (mMin * mPushNormal) - .1f;
 		mShouldMove = true;
 		mIsTrigger = false;
+		mPress = false;
 
 		mGravity = _pushNormal * _normForce;
 		mVelocity = vec3f(0.0f, 0.0f, 0.0f);

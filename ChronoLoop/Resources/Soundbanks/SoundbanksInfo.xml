@@ -31,6 +31,9 @@
 				<Event Id="2619715208" Name="Resume_Level1Ambient" ObjectPath="\Events\Default Work Unit\Resume_Level1Ambient"/>
 				<Event Id="3649448405" Name="Resume_Level2Ambient" ObjectPath="\Events\Default Work Unit\Resume_Level2Ambient"/>
 				<Event Id="1927416214" Name="Resume_Level3Ambient" ObjectPath="\Events\Default Work Unit\Resume_Level3Ambient"/>
+				<Event Id="2189517885" Name="SFX_BoxDoorZap" ObjectPath="\Events\Default Work Unit\SFX_BoxDoorZap"/>
+				<Event Id="3124930127" Name="SFX_communication_channel" ObjectPath="\Events\Default Work Unit\SFX_communication_channel"/>
+				<Event Id="2693013165" Name="SFX_TeleportSound" ObjectPath="\Events\Default Work Unit\SFX_TeleportSound"/>
 				<Event Id="2587866055" Name="Stop_Hub0" ObjectPath="\Events\Default Work Unit\Stop_Hub0"/>
 				<Event Id="2587866054" Name="Stop_Hub1" ObjectPath="\Events\Default Work Unit\Stop_Hub1"/>
 				<Event Id="3157945905" Name="Stop_Level1Ambient" ObjectPath="\Events\Default Work Unit\Stop_Level1Ambient"/>
@@ -57,6 +60,18 @@
 				<File Id="648589336" Language="SFX">
 					<ShortName>Music-SFX\Level2Ambient.wav</ShortName>
 					<Path>SFX\Music-SFX\Level2Ambient_3BDAD486.wem</Path>
+				</File>
+				<File Id="771783799" Language="SFX">
+					<ShortName>Music-SFX\BoxDoorZap.wav</ShortName>
+					<Path>SFX\Music-SFX\BoxDoorZap_3AE5877C.wem</Path>
+				</File>
+				<File Id="894777268" Language="SFX">
+					<ShortName>communication-channel.wav</ShortName>
+					<Path>SFX\communication-channel_3AE5877C.wem</Path>
+				</File>
+				<File Id="987973023" Language="SFX">
+					<ShortName>TeleportSound.wav</ShortName>
+					<Path>SFX\TeleportSound_3AE5877C.wem</Path>
 				</File>
 			</IncludedMemoryFiles>
 		</SoundBank>
@@ -133,14 +148,12 @@
 				<Event Id="984516265" Name="SFX_BEEP" ObjectPath="\Events\Default Work Unit\OTHER\SFX_BEEP"/>
 				<Event Id="1623492746" Name="SFX_BLOP" ObjectPath="\Events\Default Work Unit\OTHER\SFX_BLOP"/>
 				<Event Id="1794490945" Name="SFX_BounceEffects" ObjectPath="\Events\Default Work Unit\OTHER\SFX_BounceEffects"/>
-				<Event Id="2189517885" Name="SFX_BoxDoorZAP" ObjectPath="\Events\Default Work Unit\OTHER\SFX_BoxDoorZAP"/>
 				<Event Id="1009907414" Name="SFX_BUTTON_PRESS1" ObjectPath="\Events\Default Work Unit\OTHER\SFX_BUTTON_PRESS1"/>
 				<Event Id="1009907413" Name="SFX_BUTTON_PRESS2" ObjectPath="\Events\Default Work Unit\OTHER\SFX_BUTTON_PRESS2"/>
 				<Event Id="3559876090" Name="SFX_DOORSOUND" ObjectPath="\Events\Default Work Unit\OTHER\SFX_DOORSOUND"/>
 				<Event Id="650723447" Name="SFX_PLING" ObjectPath="\Events\Default Work Unit\OTHER\SFX_PLING"/>
 				<Event Id="1687962553" Name="SFX_SHORTCIRUIT" ObjectPath="\Events\Default Work Unit\OTHER\SFX_SHORTCIRUIT"/>
 				<Event Id="4195120820" Name="SFX_SWOOSH" ObjectPath="\Events\Default Work Unit\OTHER\SFX_SWOOSH"/>
-				<Event Id="2693013165" Name="SFX_TeleportSound" ObjectPath="\Events\Default Work Unit\OTHER\SFX_TeleportSound"/>
 				<Event Id="2616479322" Name="SFX_TICK" ObjectPath="\Events\Default Work Unit\OTHER\SFX_TICK"/>
 				<Event Id="43066209" Name="SFX_TOGGLE" ObjectPath="\Events\Default Work Unit\OTHER\SFX_TOGGLE"/>
 				<Event Id="2011175805" Name="STOP_Test1" ObjectPath="\Events\Default Work Unit\OTHER\STOP_Test1"/>
@@ -187,17 +200,9 @@
 					<ShortName>Short Circuit-SoundBible.com-1450168875.wav</ShortName>
 					<Path>SFX\Short Circuit-SoundBible.com-1450168875_3AE5877C.wem</Path>
 				</File>
-				<File Id="771783799" Language="SFX">
-					<ShortName>Music-SFX\BoxDoorZap.wav</ShortName>
-					<Path>SFX\Music-SFX\BoxDoorZap_3AE5877C.wem</Path>
-				</File>
 				<File Id="868747748" Language="SFX">
 					<ShortName>Kevin_MacLeod_-_02_-_Impact_Andante.wav</ShortName>
 					<Path>SFX\Kevin_MacLeod_-_02_-_Impact_Andante_3BDAD486.wem</Path>
-				</File>
-				<File Id="900826185" Language="SFX">
-					<ShortName>Music-SFX\TeleportSound.wav</ShortName>
-					<Path>SFX\Music-SFX\TeleportSound_3AE5877C.wem</Path>
 				</File>
 				<File Id="919470358" Language="SFX">
 					<ShortName>Kevin_MacLeod_-_Crossing_the_Divide.wav</ShortName>
