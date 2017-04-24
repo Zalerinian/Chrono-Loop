@@ -105,5 +105,13 @@ namespace Hourglass
 				System.Diagnostics.Debug.Print("Could not add code component");
 			}
 		}
+
+		public override void CopyData(ref Component _other) {
+			if(!(_other is CodeComponent)) {
+				throw new InvalidDataException("Given component does not match the calling type.");
+			}
+			CodeComponent comp = _other as CodeComponent;
+			comp.mCode.SelectedIndex = mCode.SelectedIndex;
+		}
 	}
 }

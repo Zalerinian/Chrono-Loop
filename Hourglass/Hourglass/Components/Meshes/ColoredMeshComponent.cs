@@ -90,5 +90,15 @@ namespace Hourglass
 			mColor.BackColor = System.Drawing.Color.FromArgb(r.ReadInt32());
 			((ColoredShape)mShape).Color = mColor.BackColor;
 		}
+
+		public override void CopyData(ref Component _other) {
+			if (!(_other is TexturedMeshComponent)) {
+				throw new InvalidDataException("Given component does not match the calling type.");
+			}
+			base.CopyData(ref _other);
+			ColoredMeshComponent comp = _other as ColoredMeshComponent;
+			comp.mColor.BackColor = mColor.BackColor;
+			((ColoredShape)mShape).Color = mColor.BackColor;
+		}
 	}
 }

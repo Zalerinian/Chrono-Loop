@@ -377,6 +377,7 @@ namespace Hourglass
 				} // END Not holding control
                 else
                 {
+					// Controls when CTRL is held down.
                     if (mKeys.Contains(Key.Q))
                     {
                         Gizmo.Instance.Mode = Gizmo.GizmoMode.Position;
@@ -389,6 +390,9 @@ namespace Hourglass
                     {
                         Gizmo.Instance.Mode = Gizmo.GizmoMode.Scale;
                     }
+					if(mKeys.Contains(Key.D)) {
+						DuplicateObject();
+					}
                 }
 			}  // Ensure the Grapics Panel's focus textbox is selected.
 
@@ -409,6 +413,21 @@ namespace Hourglass
 			}
 
 			mPreviousKeys = mKeys;
+		}
+
+		private void DuplicateObject() {
+			if (Tree.SelectedNode != null) {
+				TreeNode n = new TreeNode();
+				n.Tag = ((BaseObject)Tree.SelectedNode.Tag).Clone();
+				((BaseObject)n.Tag).SetNode(n);
+				Renderer.Instance.AddObject((BaseObject)n.Tag);
+				if (Tree.SelectedNode.Parent != null) {
+					Tree.SelectedNode.Parent.Nodes.Add(n);
+				} else {
+					Tree.Nodes.Add(n);
+				}
+				Tree.SelectedNode = n;
+			}
 		}
 
 		private void UpdateGizmoScale() {

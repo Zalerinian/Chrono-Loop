@@ -319,5 +319,17 @@ namespace Hourglass
 			mNZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 		}
 
+
+		public override void CopyData(ref Component _other) {
+			if (!(_other is ButtonCollider)) {
+				throw new InvalidDataException("Given component does not match calling type!");
+			}
+			ButtonCollider comp = _other as ButtonCollider;
+			comp.PushNormal = PushNormal;
+			comp.Mass = Mass;
+			comp.Position = Position;
+			comp.Scale = Scale;
+			comp.NormalForce = NormalForce;
+		}
 	}
 }

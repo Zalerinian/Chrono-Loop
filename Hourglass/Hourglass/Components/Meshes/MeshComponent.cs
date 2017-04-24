@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 
 namespace Hourglass {
-	public class MeshComponent : Component, IRenderable {
+	public abstract class MeshComponent : Component, IRenderable {
 		protected System.Drawing.Font mPlaceholderFont, mActiveFont;
 
 		protected Label mLbMesh, mLbTransparency, mLbPixel, mLbVertex, mLbGeo;
@@ -227,6 +227,18 @@ namespace Hourglass {
 			if (_index > 0 && _index < mMesh.Items.Count) {
 				mMesh.SelectedIndex = _index;
 			}
+		}
+
+		public override void CopyData(ref Component _other) {
+			if (!(_other is MeshComponent)) {
+				throw new InvalidDataException("Given component does not match the calling type.");
+			}
+			MeshComponent comp = _other as MeshComponent;
+			comp.mMesh.SelectedIndex = mMesh.SelectedIndex;
+			comp.mTransparency.Value = mTransparency.Value;
+			comp.mPixel.SelectedIndex = mPixel.SelectedIndex;
+			comp.mVertex.SelectedIndex = mVertex.SelectedIndex;
+			comp.mGeo.SelectedIndex = mGeo.SelectedIndex;
 		}
 
 	}

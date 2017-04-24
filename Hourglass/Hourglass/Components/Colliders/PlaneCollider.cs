@@ -170,6 +170,17 @@ namespace Hourglass
 			mNZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 		}
 
+		public override void CopyData(ref Component _other) {
+			if (!(_other is PlaneCollider)) {
+				throw new InvalidDataException("Given component does not match calling type!");
+			}
+			PlaneCollider comp = _other as PlaneCollider;
+			comp.mOffset.Value = mOffset.Value;
+			comp.mNX.Value = mNX.Value;
+			comp.mNY.Value = mNY.Value;
+			comp.mNZ.Value = mNZ.Value;
+		}
+
 
 	}
 }

@@ -377,7 +377,7 @@ namespace Hourglass
 			}
 		}
 
-		protected void OnUpdateName()
+		public void OnUpdateName()
 		{
 			OnUpdateName(null, null);
 		}
@@ -425,6 +425,28 @@ namespace Hourglass
 			if(_version >= 2) {
 				mRecord.Checked = r.ReadByte() == 1;
 			}
+		}
+
+		public override void CopyData(ref Component _other) {
+			if(!(_other is TransformComponent)) {
+				throw new InvalidDataException("Given component does not match the calling type.");
+			}
+			TransformComponent comp = _other as TransformComponent;
+			comp.mPosX.Value = mPosX.Value;
+			comp.mPosY.Value = mPosY.Value;
+			comp.mPosZ.Value = mPosZ.Value;
+
+			comp.mRotX.Value = mRotX.Value;
+			comp.mRotY.Value = mRotY.Value;
+			comp.mRotZ.Value = mRotZ.Value;
+
+			comp.mScaleX.Value = mScaleX.Value;
+			comp.mScaleY.Value = mScaleY.Value;
+			comp.mScaleZ.Value = mScaleZ.Value;
+
+			comp.mRecord.Checked = mRecord.Checked;
+
+			comp.Name = Name;
 		}
 
 
