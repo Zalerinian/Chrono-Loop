@@ -846,7 +846,7 @@ namespace Epoch {
 							CCButtonPress* code = new CCButtonPress();
 							obj->AddComponent(code);
 						}
-						else if(codeComs[i] == "Level3ElavatorButton")
+						else if(codeComs[i] == "Level3ElevatorButton")
 						{
 							CCLevel3ElevatorButton* code = new CCLevel3ElevatorButton();
 							obj->AddComponent(code);
