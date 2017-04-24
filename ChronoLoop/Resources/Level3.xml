@@ -86,33 +86,6 @@
     <Components />
   </Object>
   <Object>
-    <Name>Box1</Name>
-    <Mesh>L3Cube.obj</Mesh>
-    <Texture>fieldGen.png</Texture>
-    <Position>0,0,0</Position>
-    <Rotation>0,0,0</Rotation>
-    <Scale>1,1,1</Scale>
-    <Components />
-  </Object>
-  <Object>
-    <Name>Box2</Name>
-    <Mesh>L3Cube.obj</Mesh>
-    <Texture>fieldGen.png</Texture>
-    <Position>0,0,4</Position>
-    <Rotation>0,0,0</Rotation>
-    <Scale>1,1,1</Scale>
-    <Components />
-  </Object>
-  <Object>
-    <Name>Box3</Name>
-    <Mesh>L3Cube.obj</Mesh>
-    <Texture>fieldGen.png</Texture>
-    <Position>12.1,0,4</Position>
-    <Rotation>0,0,0</Rotation>
-    <Scale>1,1,1</Scale>
-    <Components />
-  </Object>
-  <Object>
     <Name>Buttonstand</Name>
     <Mesh>ButtonStand.obj</Mesh>
     <Texture>clearWhite.png</Texture>
@@ -295,12 +268,6 @@
     <Scale>0.8,1,0.9</Scale>
     <Components>
       <Level3ElevatorButton>Enabled</Level3ElevatorButton>
-      <Level3ElevatorButton>Enabled</Level3ElevatorButton>
-      <Level3ElevatorButton>Enabled</Level3ElevatorButton>
-      <Level3ElevatorButton>Enabled</Level3ElevatorButton>
-      <Level3ElevatorButton>Enabled</Level3ElevatorButton>
-      <Level3ElevatorButton>Enabled</Level3ElevatorButton>
-      <Level3ElevatorButton>Enabled</Level3ElevatorButton>
       <Collider>
         <Type>Button</Type>
         <Trigger>False</Trigger>
@@ -402,7 +369,7 @@
     <Name>TransparentDoor1</Name>
     <Mesh>Door1.obj</Mesh>
     <Texture>enrgyField.png</Texture>
-    <Position>-8.278858,-3.282426,2.345101</Position>
+    <Position>-8.278858,-3.28,2.345101</Position>
     <Rotation>0,1.57,0</Rotation>
     <Scale>0.85,1,1</Scale>
     <Components>
@@ -434,7 +401,7 @@
     <Name>TransparentGlassFloor</Name>
     <Mesh>LVL3-Glass.obj</Mesh>
     <Texture>clearWhite.png</Texture>
-    <Position>0.04174346,0.28,4.994048</Position>
+    <Position>0.04174346,16.30972,4.994048</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1.01,1,1.01</Scale>
     <Components />
@@ -446,6 +413,33 @@
     <Position>-8.321217,-3.279138,2.349368</Position>
     <Rotation>0,1.57,0</Rotation>
     <Scale>0.9,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Box1</Name>
+    <Mesh>L3Cube.obj</Mesh>
+    <Texture>fieldGen.png</Texture>
+    <Position>6,-1.8,-1.8</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Box3</Name>
+    <Mesh>L3Cube.obj</Mesh>
+    <Texture>fieldGen.png</Texture>
+    <Position>-6.038412,-1.8,-5.8</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>Box2</Name>
+    <Mesh>L3Cube.obj</Mesh>
+    <Texture>fieldGen.png</Texture>
+    <Position>-6,-1.8,-1.8</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1,1</Scale>
     <Components />
   </Object>
 </Level>

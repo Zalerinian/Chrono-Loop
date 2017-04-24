@@ -39,7 +39,6 @@ namespace Epoch
 		}
 		virtual void Start()
 		{
-			
 
 
 			//OnDisable();
