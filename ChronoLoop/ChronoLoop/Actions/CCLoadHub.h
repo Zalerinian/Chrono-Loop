@@ -112,11 +112,15 @@ namespace Epoch
 					HeadsetFollow* hfollow = new HeadsetFollow();
 					headset->AddComponent(hfollow);
 					TimeManager::Instance()->AddObjectToTimeline(headset);
+
 					
 					Emitter* sound = new SFXEmitter();
 					((SFXEmitter*)sound)->SetEvent(AK::EVENTS::SFX_TELEPORTSOUND);
 					AudioWrapper::GetInstance().AddEmitter(sound, headset->GetName().c_str());
 					headset->AddComponent(sound);
+
+
+
 
 					Transform cubeScale;
 					cubeScale.SetMatrix(matrix4::CreateScale(0.01f, 0.01f, 0.01f));
@@ -168,6 +172,7 @@ namespace Epoch
 								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(((BaseObject*)*it)->GetTransform().GetMatrix().fourth);
 								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = ((BaseObject*)*it)->GetTransform().GetMatrix().fourth.y - .2f;
 								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = ((BaseObject*)*it)->GetTransform().GetMatrix().fourth.y - .2f;
+
 							}
 							else if (temp == "mmTutButton") {
 								matrix4 mat = ((BaseObject*)*it)->GetTransform().GetMatrix();

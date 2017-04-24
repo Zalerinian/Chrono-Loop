@@ -2,6 +2,8 @@
 #include "../Objects/BaseObject.h"
 #include "../Common/Logger.h"
 #include "CodeComponent.hpp"
+#include "CCMazeHelper.h"
+
 #include "../Objects/MeshComponent.h"
 #include "../Physics/Physics.h"
 #include "../Input/VRInputManager.h"

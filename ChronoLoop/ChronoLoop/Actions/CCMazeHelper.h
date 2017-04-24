@@ -1,0 +1,359 @@
+#pragma once
+#include "..\Objects\BaseObject.h"
+#include "CodeComponent.hpp"
+#include "..\Input\KeyboardInput.h"
+#include "..\Common\Logger.h"
+
+namespace Epoch
+{
+	struct MoveableBox
+	{
+		BaseObject* mBox;
+		int mId = 0;
+		int mRow = 0;
+		int mCol = 0;
+
+		void SetUp(int _id,int _h, int _v)
+		{
+			mId = _id;
+			mRow = _h;
+			mCol = _v;
+		}
+		bool operator==(MoveableBox& _other)
+		{
+			if (mId == _other.mId &&
+				mRow == _other.mRow &&
+				mCol == _other.mCol &&
+				mBox == _other.mBox)
+				return true;
+			return false;
+		}
+		void operator=(MoveableBox& _other)
+		{
+			mId = _other.mId;
+			mRow = _other.mRow;
+			mCol = _other.mCol;
+			mBox = _other.mBox;
+		}
+	};
+	struct CCMazeHelper : public CodeComponent
+	{
+		MoveableBox mazeBoxes[3];
+		int mGrid[4][4] = {
+			{ 0, 0,-1,-1 },
+			{ 0,-1, 0, 3 },
+			{ 1, 0,-1, 2 },
+			{ 0, 0, 0, 0 }
+		};
+		virtual void Start()
+		{
+			mazeBoxes[0].SetUp(1, 2, 0);
+			mazeBoxes[1].SetUp(2, 2, 3);
+			mazeBoxes[2].SetUp(3, 1, 3);
+			for (int x = 0; x < 4; ++x) {
+				for (int y = 0; y < 4; ++y) {
+					SystemLogger::GetLog() << mGrid[x][y] << ",";
+				}
+				SystemLogger::GetLog() << std::endl;
+			}
+		}
+		virtual void Update()
+		{
+			if (GetAsyncKeyState(VK_DOWN) & 0x1) {
+				MoveDown();
+				for (int x = 0; x < 4; ++x) {
+					for (int y = 0; y < 4; ++y) {
+						SystemLogger::GetLog() << mGrid[x][y] << ",";
+					}
+					SystemLogger::GetLog() << std::endl;
+				}
+			}
+			else if (GetAsyncKeyState(VK_UP) & 0x1) {
+				MoveUp();
+				for (int x = 0; x < 4; ++x) {
+					for (int y = 0; y < 4; ++y) {
+						SystemLogger::GetLog() << mGrid[x][y] << ",";
+					}
+					SystemLogger::GetLog() << std::endl;
+				}
+			}
+			else if (GetAsyncKeyState(VK_LEFT) & 0x1) {
+				MoveLeft();
+				for (int x = 0; x < 4; ++x) {
+					for (int y = 0; y < 4; ++y) {
+						SystemLogger::GetLog() << mGrid[x][y] << ",";
+					}
+					SystemLogger::GetLog() << std::endl;
+				}
+			}
+			else if (GetAsyncKeyState(VK_RIGHT) & 0x1) {
+				MoveRight();
+				for (int x = 0; x < 4; ++x) {
+					for (int y = 0; y < 4; ++y) {
+						SystemLogger::GetLog() << mGrid[x][y] << ",";
+					}
+					SystemLogger::GetLog() << std::endl;
+				}
+			}
+
+		}
+		virtual void OnDestroy()
+		{
+
+		}
+		void MoveLeft() 
+		{
+			MoveableBox orderedBoxes[3];
+			orderedBoxes[0] = mazeBoxes[0];
+			orderedBoxes[1] = mazeBoxes[1];
+			orderedBoxes[2] = mazeBoxes[2];
+			int i, j, flag = 1;
+			MoveableBox tempBox;
+			for (int i = 1; i <= 3 && flag; ++i){//bubble sort for array of 3
+				flag = 0;
+				for (int j = 0; j < 2; ++j){ 
+					if (orderedBoxes[j + 1].mCol < orderedBoxes[j].mCol)
+					{
+						tempBox = orderedBoxes[j];
+						orderedBoxes[j] = orderedBoxes[j + 1];
+						orderedBoxes[j + 1] = tempBox;
+						flag = 1;
+					}
+				}
+			}
+			//Should be sorted now
+			int currCoord = 0;
+			for (int i = 0; i < 3; ++i) {
+				for (int k = orderedBoxes[i].mCol-1; k < -1; --k) {
+					currCoord = mGrid[orderedBoxes[i].mRow][k];
+					if (currCoord == 0) {
+						mGrid[orderedBoxes[i].mRow][orderedBoxes[i].mCol] = 0;
+						orderedBoxes[i].mCol = k;
+						mGrid[orderedBoxes[i].mRow][orderedBoxes[i].mCol] = orderedBoxes[i].mId;
+					}
+					else
+						break;
+				}
+			}
+			//Boxes have been set to their respective positions
+			for (int i = 0; i < 3; ++i)
+			{
+				switch (orderedBoxes[i].mId)
+				{
+				case 1:
+					mazeBoxes[0] = orderedBoxes[i];
+					break;
+				case 2:
+					mazeBoxes[1] = orderedBoxes[i];
+					break;
+				case 3:
+					mazeBoxes[2] = orderedBoxes[i];
+					break;
+				}
+			}
+
+
+		}
+		void MoveRight()
+		{
+			MoveableBox orderedBoxes[3];
+			orderedBoxes[0] = mazeBoxes[0];
+			orderedBoxes[1] = mazeBoxes[1];
+			orderedBoxes[2] = mazeBoxes[2];
+			int i, j, flag = 1;
+			MoveableBox tempBox;
+			for (int i = 1; i <= 3 && flag; ++i) {//bubble sort for array of 3
+				flag = 0;
+				for (int j = 0; j < 2; ++j) {
+					if (orderedBoxes[j + 1].mCol > orderedBoxes[j].mCol)
+					{
+						tempBox = orderedBoxes[j];
+						orderedBoxes[j] = orderedBoxes[j + 1];
+						orderedBoxes[j + 1] = tempBox;
+						flag = 1;
+					}
+				}
+			}
+			//Should be sorted now
+			int currCoord = 0;
+			for (int i = 0; i < 3; ++i) {
+				for (int k = 0; k < orderedBoxes[i].mCol; ++k) {
+					currCoord = mGrid[orderedBoxes[i].mRow][k];
+					if (currCoord == 0) {
+						mGrid[orderedBoxes[i].mRow][orderedBoxes[i].mCol] = 0;
+						orderedBoxes[i].mCol = k;
+						mGrid[orderedBoxes[i].mRow][orderedBoxes[i].mCol] = orderedBoxes[i].mId;
+					}
+					else
+						break;
+				}
+			}
+			//Boxes have been set to their respective positions
+			for (int i = 0; i < 3; ++i)
+			{
+				switch (orderedBoxes[i].mId)
+				{
+				case 1:
+					mazeBoxes[0] = orderedBoxes[i];
+					break;
+				case 2:
+					mazeBoxes[1] = orderedBoxes[i];
+					break;
+				case 3:
+					mazeBoxes[2] = orderedBoxes[i];
+					break;
+				}
+			}
+		}
+		void MoveUp()
+		{
+			MoveableBox orderedBoxes[3];
+			orderedBoxes[0] = mazeBoxes[0];
+			orderedBoxes[1] = mazeBoxes[1];
+			orderedBoxes[2] = mazeBoxes[2];
+			int i, j, flag = 1;
+			MoveableBox tempBox;
+			for (int i = 1; i <= 3 && flag; ++i) {//bubble sort for array of 3
+				flag = 0;
+				for (int j = 0; j < 2; ++j) {
+					if (orderedBoxes[j + 1].mRow < orderedBoxes[j].mRow)
+					{
+						tempBox = orderedBoxes[j];
+						orderedBoxes[j] = orderedBoxes[j + 1];
+						orderedBoxes[j + 1] = tempBox;
+						flag = 1;
+					}
+				}
+			}
+			//Should be sorted now
+			int currCoord = 0;
+			for (int i = 0; i < 3; ++i) {
+				for (int k = orderedBoxes[i].mRow - 1; k < -1; ++k) {
+					currCoord = mGrid[k][orderedBoxes[i].mCol];
+					if (currCoord == 0) {
+						mGrid[orderedBoxes[i].mRow][orderedBoxes[i].mCol] = 0;
+						orderedBoxes[i].mRow = k;
+						mGrid[orderedBoxes[i].mRow][orderedBoxes[i].mCol] = orderedBoxes[i].mId;
+					}
+					else
+						break;
+				}
+			}
+			//Boxes have been set to their respective positions
+			for (int i = 0; i < 3; ++i)
+			{
+				switch (orderedBoxes[i].mId)
+				{
+				case 1:
+					mazeBoxes[0] = orderedBoxes[i];
+					break;
+				case 2:
+					mazeBoxes[1] = orderedBoxes[i];
+					break;
+				case 3:
+					mazeBoxes[2] = orderedBoxes[i];
+					break;
+				}
+			}
+		}
+		void MoveDown()
+		{
+			MoveableBox orderedBoxes[3];
+			orderedBoxes[0] = mazeBoxes[0];
+			orderedBoxes[1] = mazeBoxes[1];
+			orderedBoxes[2] = mazeBoxes[2];
+			int i, j, flag = 1;
+			MoveableBox tempBox;
+			for (int i = 1; i <= 3 && flag; ++i) {//bubble sort for array of 3
+				flag = 0;
+				for (int j = 0; j < 2; ++j) {
+					if (orderedBoxes[j + 1].mRow > orderedBoxes[j].mRow)
+					{
+						tempBox = orderedBoxes[j];
+						orderedBoxes[j] = orderedBoxes[j + 1];
+						orderedBoxes[j + 1] = tempBox;
+						flag = 1;
+					}
+				}
+			}
+			//Should be sorted now
+			int currCoord = 0;
+			for (int i = 0; i < 3; ++i) {
+				for (int k = 0; k < orderedBoxes[i].mRow; ++k) {
+					currCoord = mGrid[k][orderedBoxes[i].mRow];
+					if (currCoord == 0) {
+						mGrid[orderedBoxes[i].mRow][orderedBoxes[i].mCol] = 0;
+						orderedBoxes[i].mCol = k;
+						mGrid[orderedBoxes[i].mRow][orderedBoxes[i].mCol] = orderedBoxes[i].mId;
+					}
+					else
+						break;
+				}
+			}
+			//Boxes have been set to their respective positions
+			for (int i = 0; i < 3; ++i)
+			{
+				switch (orderedBoxes[i].mId)
+				{
+				case 1:
+					mazeBoxes[0] = orderedBoxes[i];
+					break;
+				case 2:
+					mazeBoxes[1] = orderedBoxes[i];
+					break;
+				case 3:
+					mazeBoxes[2] = orderedBoxes[i];
+					break;
+				}
+			}
+		}
+		void SetBoxesPosition()
+		{
+			for (int i = 0; i < 3; ++i)
+			{
+				int X = mazeBoxes[i].mRow;
+				int Y = mazeBoxes[i].mCol;
+				//Row 0
+				if (X == 0 && Y == 0) {
+					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+				}
+				else if (X == 0 && Y == 1) {
+					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+				}
+				//Row 1
+				else if (X == 1 && Y == 0) {
+					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+				}
+				else if (X == 1 && Y == 2) {
+					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+				}
+				else if (X == 1 && Y == 3) {
+					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+				}
+				//Row 2
+				else if (X == 2 && Y == 0) {
+					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+				}
+				else if (X == 2 && Y == 1) {
+					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+				}
+				else if (X == 2 && Y == 3) {
+					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+				}
+				//Row 3
+				else if (X == 3 && Y == 0) {
+					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+				}
+				else if (X == 3 && Y == 1) {
+					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+				}
+				else if (X == 3 && Y == 2) {
+					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+				}
+				else if (X == 3 && Y == 3) {
+					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+				}
+			}
+		}
+	};
+}

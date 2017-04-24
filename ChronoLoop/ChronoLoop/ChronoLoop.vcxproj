@@ -240,6 +240,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Actions\UIRewind.h" />
     <ClInclude Include="Actions\WhatInHellAmIHitting.hpp" />
     <ClInclude Include="BVH.h" />
+    <ClInclude Include="CCMazeHelper.h" />
     <ClInclude Include="Common\Breakpoint.h" />
     <ClInclude Include="Common\Common.h" />
     <ClInclude Include="Common\EasingFunctions.h" />

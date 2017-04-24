@@ -60,8 +60,6 @@ namespace Epoch
 			mPB->GetProgressBar()->SetParent(mStartSign);
 			mStartSign->AddChild(mPB->GetProgressBar());
 
-
-
 			l = new Listener();
 			mChamberObject->AddComponent(l);
 			AudioWrapper::GetInstance().AddListener(l, "shit");
