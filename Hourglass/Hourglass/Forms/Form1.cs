@@ -747,6 +747,7 @@ namespace Hourglass
 			}
 			position.Y += 15;
 			position.X = btnComponentAdd.Left;
+			btnComponentAdd.Size = new Size(spWorldView.Panel2.ClientRectangle.Width / 2, btnComponentAdd.Height);
 			btnComponentAdd.Location = position;
 			btnComponentAdd.Visible = true;
 			btnComponentAdd.Margin = new Padding(30);
