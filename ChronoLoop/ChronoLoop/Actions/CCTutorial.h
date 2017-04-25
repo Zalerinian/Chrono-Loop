@@ -256,7 +256,7 @@ namespace Epoch
 					scaleX += 0.05f;
 
 				if(tempScaleX != scaleX || tempScaleY != scaleY)
-					boards[0]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX,1, scaleY) * matrix4::CreateZRotation(-1.5708f) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateTranslation(2, 1.5f, 0));
+					boards[0]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX,1, scaleY) * matrix4::CreateZRotation(-2.1293f) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateTranslation(2, 1.5f, .96f));
 
 				mScanlineData.MultiscanVOffset += TimeManager::Instance()->GetDeltaTime() / 25.0f;
 				mScanlineData.ScanlineVOffset += TimeManager::Instance()->GetDeltaTime();
@@ -274,7 +274,7 @@ namespace Epoch
 					scalingDone = false;
 					scaleX = 1.0f;
 					scaleY = 1.0f;
-					//boards[1]->GetTransform().SetMatrix(matrix4::CreateScale(0,1,0) * matrix4::CreateZRotation(-1.5708f) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(0.785398f) * matrix4::CreateTranslation(-3.55f, 1.7f, 3.71f));
+					boards[1]->GetTransform().SetMatrix(matrix4::CreateScale(0,1,0) * matrix4::CreateZRotation(-1.5708f) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(0.785398f) * matrix4::CreateTranslation(-3.55f, 1.7f, 3.71f));
 				}
 				tempScaleX = scaleX;
 				tempScaleY = scaleY;
@@ -296,7 +296,7 @@ namespace Epoch
 					else if (scaleX < 1.0f)
 						scaleX += 0.05f;
 					if (tempScaleX != scaleX || tempScaleY != scaleY)
-						boards[1]->GetTransform().SetMatrix(matrix4::CreateScale(0, 1, 0) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(5.96f, 2.09f, -.57f));
+						boards[1]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY) * matrix4::CreateZRotation(-1.5708f) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(0.785398f) * matrix4::CreateTranslation(-3.55f, 1.7f, 3.71f));
 				}
 
 				mScanlineData.MultiscanVOffset += TimeManager::Instance()->GetDeltaTime() / 25.0f;

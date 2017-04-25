@@ -15,7 +15,6 @@ namespace Hourglass
     {
 
         private TransformComponent mTransformTest;
-        private MeshComponent mMeshTest;
         private ColliderComponent mColliderTest;
         private BoxCollider mBoxTest;
         private PlaneCollider mPlaneTest;
@@ -29,14 +28,12 @@ namespace Hourglass
             mObject = new BaseObject(new TreeNode());
             
             mTransformTest = new TransformComponent();
-            mMeshTest = new MeshComponent();
             mColliderTest = new ColliderComponent();
             mBoxTest = new BoxCollider();
             mPlaneTest = new PlaneCollider();
             mSphereTest = new SphereCollider();
             mButtonTest = new ButtonCollider();
             Controls.Add(mTransformTest.GetGroupbox());
-            Controls.Add(mMeshTest.GetGroupbox());
             Controls.Add(mColliderTest.GetGroupbox());
             Controls.Add(mBoxTest.GetGroupbox());
             Controls.Add(mPlaneTest.GetGroupbox());

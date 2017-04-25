@@ -113,5 +113,58 @@ namespace Hourglass
 				mComponents[i].OnMenuClick_Delete(null, null);
 			}
 		}
+
+		public BaseObject Clone() {
+			BaseObject b = new BaseObject(null);
+
+			for(int i = 0; i < this.mComponents.Count; ++i) {
+				Component c = null;
+				switch (mComponents[i].Type) {
+					case Component.ComponentType.Audio:
+						c = new SoundComponent();
+						break;
+					case Component.ComponentType.BoxCollider:
+						c = new BoxCollider();
+						break;
+					case Component.ComponentType.ButtonCollider:
+						c = new ButtonCollider();
+						break;
+					case Component.ComponentType.Code:
+						c = new CodeComponent();
+						break;
+					case Component.ComponentType.ColoredMesh:
+						c = new ColoredMeshComponent();
+						break;
+					case Component.ComponentType.PlaneCollider:
+						c = new PlaneCollider();
+						break;
+					case Component.ComponentType.SphereCollider:
+						c = new SphereCollider();
+						break;
+					case Component.ComponentType.TexturedMesh:
+						c = new TexturedMeshComponent();
+						break;
+					case Component.ComponentType.Transform:
+						c = b.mComponents[0];
+						break;
+					default:
+						break;
+				}
+				if(c != null) {
+					mComponents[i].CopyData(ref c);
+					if(!(c is TransformComponent)) {
+						b.AddComponent(c);
+					}
+				}
+			}
+
+			return b;
+		}
+
+		public void SetNode(TreeNode n) {
+			mNode = n;
+			((TransformComponent)mComponents[0]).OnUpdateName();
+		}
+
     }
 }

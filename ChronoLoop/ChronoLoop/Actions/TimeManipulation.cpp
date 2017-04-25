@@ -35,7 +35,7 @@ namespace Epoch
 		Level* currentLevel = LevelManager::GetInstance().GetCurrentLevel();
 
 	
-		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip) && !Settings::GetInstance().GetBool("PauseMenuUp")) {
+		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip) && !Settings::GetInstance().GetBool("PauseMenuUp") && !Settings::GetInstance().GetBool("CantPauseTime")) {
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			
 			

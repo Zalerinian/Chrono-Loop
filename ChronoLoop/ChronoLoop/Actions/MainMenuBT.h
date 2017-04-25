@@ -61,7 +61,7 @@ namespace Epoch
 			mObject->GetTransform().SetMatrix(mat);
 
 			if (!interp->GetActive()) {
-				if (mChamberMesh->GetTransform().GetPosition()->y < -9.9f && VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad)) {
+				if (mChamberMesh->GetTransform().GetPosition()->y < -9.9999f && VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad)) {
 					
 					if (!Settings::GetInstance().GetBool("mmStartAtBottom"))
 						Settings::GetInstance().SetBool("mmStartAtBottom", true);
@@ -76,9 +76,9 @@ namespace Epoch
 						vec3f meshPos = (mat * objects[i]->GetTransform().GetMatrix().Invert()).Position;
 						Triangle *tris = meshes[i]->GetTriangles();
 						size_t numTris = meshes[i]->GetTriangleCount();
-						for (unsigned int i = 0; i < numTris; ++i) {
+						for (unsigned int j = 0; j < numTris; ++j) {
 							float hitTime = FLT_MAX;
-							Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, meshPos, fwd, hitTime);
+							Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, fwd, hitTime);
 							if (hitTime < wallTime) {
 								wallTime = hitTime;
 							}

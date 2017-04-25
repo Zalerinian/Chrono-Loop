@@ -318,7 +318,24 @@ namespace Hourglass {
             {
                 mPickUpAble.Checked = r.ReadByte() == 1;
             }
+		}
 
+		public override void CopyData(ref Component _other) {
+			if (!(_other is ColliderComponent)) {
+				throw new InvalidDataException("Given component does not match calling type!");
+			}
+			ColliderComponent comp = _other as ColliderComponent;
+			comp.mColor.BackColor = mColor.BackColor;
+			comp.mDrag.Value = mDrag.Value;
+			comp.mElasticity.Value = mElasticity.Value;
+			comp.mKineticFriction.Value = mKineticFriction.Value;
+			comp.mMass.Value = mMass.Value;
+			comp.mMovable.Checked = mMovable.Checked;
+			comp.mPickUpAble.Checked = mPickUpAble.Checked;
+			comp.mStaticFriction.Value = mStaticFriction.Value;
+			comp.mTrigger.Checked = mTrigger.Checked;
+
+			mShape.Color = mColor.BackColor;
 		}
 
 	}

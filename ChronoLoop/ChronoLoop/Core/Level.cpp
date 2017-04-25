@@ -12,6 +12,7 @@
 #include "../Actions/CCButtonPress.h"
 #include "../Actions/CCEnterLevel.h"
 #include "../Actions/CCEnterLevel1.h"
+#include "../Actions/CCEnterLevel3.h"
 #include "../Actions/CCLoadTutorial.h"
 #include "../Actions/MainMenuBT.h"
 #include "../Actions/CCLoadHub.h"
@@ -26,6 +27,7 @@
 #include "../Input/CommandConsole.h"
 #include "../Actions/CCButtonHold.h"
 #include "../Core/Pool.h"
+#include "../Actions/CCLevel3ElevatorButton.h"
 
 namespace Epoch {
 
@@ -844,6 +846,11 @@ namespace Epoch {
 							CCButtonPress* code = new CCButtonPress();
 							obj->AddComponent(code);
 						}
+						else if(codeComs[i] == "Level3ElevatorButton")
+						{
+							CCLevel3ElevatorButton* code = new CCLevel3ElevatorButton();
+							obj->AddComponent(code);
+						}
 						else if (codeComs[i] == "AABBtoAABB")
 						{
 							CCElasticAABBtoAABB* code = new CCElasticAABBtoAABB();
@@ -879,6 +886,10 @@ namespace Epoch {
 							else if(name == "mmDoor2")
 							{
 								CCEnterLevel* code = new CCEnterLevel();
+								obj->AddComponent(code);
+							}
+							else if (name == "mmDoor3") {
+								CCEnterLevel3* code = new CCEnterLevel3();
 								obj->AddComponent(code);
 							}
 						}
@@ -1247,6 +1258,8 @@ namespace Epoch {
 								codeCom = new CCEnterLevel1();
 							if (path == "CCExit.h")
 								codeCom = new CCExit();
+							if (path == "CCLevel3ElevatorButton.h")
+								codeCom = new CCLevel3ElevatorButton();
 							if (path == "CCLoadHub.h")
 								codeCom = new CCLoadHub();
 							if (path == "CCPauseToCancel.h")
@@ -1345,25 +1358,14 @@ namespace Epoch {
 	{
 		CommandConsole* self = (CommandConsole*)_commandConsole;
 
-		CCEnterLevel* accessLevelTwo = nullptr;
 		CCEnterLevel1* accessLevelOne = nullptr;
+		CCEnterLevel* accessLevelTwo = nullptr;
+		CCEnterLevel3* accessLevelThree = nullptr;
 		CCLoadTutorial* accessTut = nullptr;
 		CCLoadHub* accessHub = nullptr;
-
 		std::list<BaseObject*> copyList = LevelManager::GetInstance().GetCurrentLevel()->GetLevelObjects();
-		for (auto it = copyList.begin(); it != copyList.end(); ++it) {
-			std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
-			if (CodeComps.size() > 0) {
-				for (size_t x = 0; x < CodeComps.size(); ++x) {
-					if (dynamic_cast<CCEnterLevel*>(CodeComps[x])) {
-						accessLevelTwo = ((CCEnterLevel*)CodeComps[x]);
-						break;
-					}
-				}
-				if (accessLevelTwo != nullptr)
-					break;
-			}
-		}
+
+
 		for (auto it = copyList.begin(); it != copyList.end(); ++it) {
 			std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
 			if (CodeComps.size() > 0) {
@@ -1374,6 +1376,42 @@ namespace Epoch {
 					}
 				}
 				if (accessLevelOne != nullptr)
+					break;
+			}
+		}
+
+		for (auto it = copyList.begin(); it != copyList.end(); ++it)
+		{
+			std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+			if (CodeComps.size() > 0)
+			{
+				for (size_t x = 0; x < CodeComps.size(); ++x)
+				{
+					if (dynamic_cast<CCEnterLevel*>(CodeComps[x]))
+					{
+						accessLevelTwo = ((CCEnterLevel*)CodeComps[x]);
+						break;
+					}
+				}
+				if (accessLevelTwo != nullptr)
+					break;
+			}
+		}
+
+		for (auto it = copyList.begin(); it != copyList.end(); ++it)
+		{
+			std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+			if (CodeComps.size() > 0)
+			{
+				for (size_t x = 0; x < CodeComps.size(); ++x)
+				{
+					if (dynamic_cast<CCEnterLevel3*>(CodeComps[x]))
+					{
+						accessLevelThree = ((CCEnterLevel3*)CodeComps[x]);
+						break;
+					}
+				}
+				if (accessLevelThree != nullptr)
 					break;
 			}
 		}
@@ -1410,7 +1448,23 @@ namespace Epoch {
 			}
 		}
 
-		if ((_Level == L"LEVELTWO" || _Level == L"LVLTWO"))
+		if ((_Level == L"LEVELONE" || _Level == L"LVLONE"))
+		{
+			if (accessLevelOne)
+			{
+
+				accessLevelOne->SetOnce(false);
+				CommandConsole::Instance().Toggle();
+			}
+			else
+			{
+				CommandConsole::Instance().DisplaySet(L"Failed to load level 1.");
+			}
+			accessLevelOne = nullptr;
+			accessLevelTwo = nullptr;
+			accessHub = nullptr;
+		}
+		else if ((_Level == L"LEVELTWO" || _Level == L"LVLTWO"))
 		{
 			if (accessLevelTwo) {
 				accessLevelTwo->SetOnce(false);
@@ -1422,14 +1476,16 @@ namespace Epoch {
 			accessLevelTwo = nullptr;
 			accessHub = nullptr;
 		}
-		else if ((_Level == L"LEVELONE" || _Level == L"LVLONE"))
+		if ((_Level == L"LEVELTHREE" || _Level == L"LVLTHREE"))
 		{
-			if (accessLevelOne) {
-
-				accessLevelOne->SetOnce(false);
+			if (accessLevelThree)
+			{
+				accessLevelThree->SetOnce(false);
 				CommandConsole::Instance().Toggle();
-			} else {
-				CommandConsole::Instance().DisplaySet(L"Failed to load level 1.");
+			}
+			else
+			{
+				CommandConsole::Instance().DisplaySet(L"Failed to load level 3.");
 			}
 			accessLevelOne = nullptr;
 			accessLevelTwo = nullptr;
