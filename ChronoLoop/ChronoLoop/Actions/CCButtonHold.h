@@ -132,8 +132,8 @@ namespace Epoch
 						if (dynamic_cast<SFXEmitter*>(Exit->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0)))
 							((SFXEmitter*)Exit->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
 					}
-				}
 				mSoundOnce = true;
+				}
 
 				vec3f norm = ((ButtonCollider*)&_col)->mPushNormal;
 				vec3f tForce = norm * (norm * _other.mTotalForce);

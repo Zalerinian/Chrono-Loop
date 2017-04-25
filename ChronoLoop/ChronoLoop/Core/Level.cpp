@@ -709,9 +709,13 @@ namespace Epoch {
 						{
 							float alpha = 1;
 							//TODO PAT: FIX ALL THIS 
-							if(obj->GetName().find("Door") != std::string::npos)
+							if(obj->GetName().find("Door1") != std::string::npos)
 							{
 								alpha = .6f;
+							}
+							else if(obj->GetName().find("Door2") != std::string::npos)
+							{
+								alpha = .8f;
 							}
 							else
 							{
