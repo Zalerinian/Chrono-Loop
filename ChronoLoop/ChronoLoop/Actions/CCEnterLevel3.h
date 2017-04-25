@@ -16,6 +16,7 @@
 #include "..\Actions\BoxSnapToControllerAction.hpp"
 #include "..\Actions\Level3TeleportAction.h"
 #include "..\Actions\PauseMenu.hpp"
+#include "..\Actions\CCMazeHelper.h"
 #include "..\Actions\CCTimeIndicator.h"
 #include "..\Rendering\Draw2D.h"
 #include "..\Rendering\Renderer.h"
@@ -80,6 +81,8 @@ namespace Epoch {
 					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity);
 					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
+					CCMazeHelper* fuk = new CCMazeHelper();
+					headset->AddComponent(fuk);
 
 					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
 					BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();

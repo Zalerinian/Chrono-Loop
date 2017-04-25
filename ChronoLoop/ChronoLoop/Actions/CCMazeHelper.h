@@ -90,12 +90,18 @@ namespace Epoch
 			}
 			if (!mBox1Done) {
 				mBox1Done = mazeBoxes[0].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
+				if (mBox1Done)
+					mazeBoxes[0].mInterp->SetActive(false);
 			}
 			if (!mBox2Done) {
-				mBox2Done = mazeBoxes[1].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
+				mBox2Done = mazeBoxes[1].mInterp->Update(TimeManager::Instance()->GetDeltaTime());				
+				if (mBox2Done)
+					mazeBoxes[1].mInterp->SetActive(false);
 			}
 			if (!mBox3Done) {
-				mBox3Done = mazeBoxes[2].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
+				mBox3Done = mazeBoxes[2].mInterp->Update(TimeManager::Instance()->GetDeltaTime());				
+				if (mBox3Done)
+					mazeBoxes[2].mInterp->SetActive(false);
 			}
 		}
 		virtual void OnDestroy()
@@ -169,12 +175,7 @@ namespace Epoch
 					break;
 				}
 			}
-			SetBoxesPosition();
-
-			mazeBoxes[0].mInterp->Prepare(0.3f, *tempMatrix0, mazeBoxes[0].mBox->GetTransform().GetMatrix(), mazeBoxes[0].mBox->GetTransform().GetMatrix());
-			mazeBoxes[1].mInterp->Prepare(0.3f, *tempMatrix1, mazeBoxes[1].mBox->GetTransform().GetMatrix(), mazeBoxes[1].mBox->GetTransform().GetMatrix());
-			mazeBoxes[2].mInterp->Prepare(0.3f, *tempMatrix2, mazeBoxes[2].mBox->GetTransform().GetMatrix(), mazeBoxes[2].mBox->GetTransform().GetMatrix());
-			mBox1Done = mBox2Done = mBox3Done = false;
+			SetBoxesPosition(&tempMatrix0, &tempMatrix1, &tempMatrix2);
 		}
 		void MoveRight()
 		{
@@ -230,13 +231,7 @@ namespace Epoch
 					break;
 				}
 			}
-
-			SetBoxesPosition();
-
-			mazeBoxes[0].mInterp->Prepare(0.3f, *tempMatrix0, mazeBoxes[0].mBox->GetTransform().GetMatrix(), mazeBoxes[0].mBox->GetTransform().GetMatrix());
-			mazeBoxes[1].mInterp->Prepare(0.3f, *tempMatrix1, mazeBoxes[1].mBox->GetTransform().GetMatrix(), mazeBoxes[1].mBox->GetTransform().GetMatrix());
-			mazeBoxes[2].mInterp->Prepare(0.3f, *tempMatrix2, mazeBoxes[2].mBox->GetTransform().GetMatrix(), mazeBoxes[2].mBox->GetTransform().GetMatrix());
-			mBox1Done = mBox2Done = mBox3Done = false;
+			SetBoxesPosition(&tempMatrix0, &tempMatrix1, &tempMatrix2);
 		}
 		void MoveUp()
 		{
@@ -292,11 +287,8 @@ namespace Epoch
 					break;
 				}
 			}
-			SetBoxesPosition();
-			mazeBoxes[0].mInterp->Prepare(0.3f, *tempMatrix0, mazeBoxes[0].mBox->GetTransform().GetMatrix(), mazeBoxes[0].mBox->GetTransform().GetMatrix());
-			mazeBoxes[1].mInterp->Prepare(0.3f, *tempMatrix1, mazeBoxes[1].mBox->GetTransform().GetMatrix(), mazeBoxes[1].mBox->GetTransform().GetMatrix());
-			mazeBoxes[2].mInterp->Prepare(0.3f, *tempMatrix2, mazeBoxes[2].mBox->GetTransform().GetMatrix(), mazeBoxes[2].mBox->GetTransform().GetMatrix());
-			mBox1Done = mBox2Done = mBox3Done = false;
+			SetBoxesPosition(&tempMatrix0, &tempMatrix1, &tempMatrix2);
+
 		}
 		void MoveDown()
 		{
@@ -352,59 +344,73 @@ namespace Epoch
 					break;
 				}
 			}
-			SetBoxesPosition();
-			mazeBoxes[0].mInterp->Prepare(0.3f, *tempMatrix0, mazeBoxes[0].mBox->GetTransform().GetMatrix(), mazeBoxes[0].mBox->GetTransform().GetMatrix());
-			mazeBoxes[1].mInterp->Prepare(0.3f, *tempMatrix1, mazeBoxes[1].mBox->GetTransform().GetMatrix(), mazeBoxes[1].mBox->GetTransform().GetMatrix());
-			mazeBoxes[2].mInterp->Prepare(0.3f, *tempMatrix2, mazeBoxes[2].mBox->GetTransform().GetMatrix(), mazeBoxes[2].mBox->GetTransform().GetMatrix());
-			mBox1Done = mBox2Done = mBox3Done = false;
+			SetBoxesPosition(&tempMatrix0,&tempMatrix1,&tempMatrix2);
+			
 		}
-		void SetBoxesPosition()
+		void SetBoxesPosition(matrix4** matrix0, matrix4** matrix1, matrix4** matrix2)
 		{
+			matrix4* curMatrix = nullptr;
+			matrix4 finalDest;
 			for (int i = 0; i < 3; ++i)
 			{
+				switch (i)
+				{
+				case 0:
+					curMatrix = *matrix0;
+					break;
+				case 1:
+					curMatrix = *matrix1;
+					break;
+				case 2:
+					curMatrix = *matrix2;
+					break;
+				}
 				int X = mazeBoxes[i].mRow;
 				int Y = mazeBoxes[i].mCol;
 				//Row 0
 				if (X == 0 && Y == 0) {
-					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(6,-1.80f,6.2f));
+					finalDest = matrix4::CreateTranslation(6, -1.80f, 6.2f);
 				}
 				else if (X == 0 && Y == 1) {
-					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(2,-1.80f,6.2f));
+					finalDest = matrix4::CreateTranslation(2, -1.80f, 6.2f);
 				}
 				//Row 1
 				else if (X == 1 && Y == 0) {
-					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(6,-1.80f,2.2f));
+					finalDest = matrix4::CreateTranslation(6, -1.80f, 2.2f);
 				}
 				else if (X == 1 && Y == 2) {
-					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(-2,-1.80f,2.2f));
+					finalDest = matrix4::CreateTranslation(-2, -1.80f, 2.2f);
 				}
 				else if (X == 1 && Y == 3) {
-					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(-6, -1.80f, 2.2f));
+					finalDest = matrix4::CreateTranslation(-6, -1.80f, 2.2f);
 				}
 				//Row 2
 				else if (X == 2 && Y == 0) {
-					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(6, -1.80f, -1.80f));
+					finalDest = matrix4::CreateTranslation(6, -1.80f, -1.80f);
 				}
 				else if (X == 2 && Y == 1) {
-					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(2, -1.80f, -1.80f));
+					finalDest = matrix4::CreateTranslation(2, -1.80f, -1.80f);
 				}
 				else if (X == 2 && Y == 3) {
-					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(-2, -1.80f, -1.80f));
+					finalDest = matrix4::CreateTranslation(-6, -1.80f, -1.80f);
 				}
 				//Row 3
 				else if (X == 3 && Y == 0) {
-					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(6, -1.80f, -5.80f));
+					finalDest = matrix4::CreateTranslation(6, -1.80f, -5.80f);
 				}
 				else if (X == 3 && Y == 1) {
-					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(2, -1.80f, -5.80f));
+					finalDest = matrix4::CreateTranslation(2, -1.80f, -5.80f);
 				}
 				else if (X == 3 && Y == 2) {
-					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(-2, -1.80f, -5.80f));
+					finalDest = matrix4::CreateTranslation(-2, -1.80f, -5.80f);
 				}
 				else if (X == 3 && Y == 3) {
-					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(-6, -1.80f, -5.80f));
+					finalDest = matrix4::CreateTranslation(-6, -1.80f, -5.80f);
 				}
+				mazeBoxes[i].mInterp->Prepare(0.1f, *curMatrix, finalDest, mazeBoxes[i].mBox->GetTransform().GetMatrix());
+				mazeBoxes[i].mInterp->SetActive(true);
 			}
+			mBox1Done = mBox2Done = mBox3Done = false;
 		}
 	};
 }
