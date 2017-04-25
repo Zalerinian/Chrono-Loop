@@ -48,7 +48,8 @@ namespace Epoch
 			Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvProgressBar.Get(), transparentColor);
 
 			Draw::Instance().DrawRectangleToBitmap(
-				0, 0, 256.0f, 256.0f, (D2D1::ColorF::Black, 1.0f),
+				0, 0, 256.0f, 256.0f, 
+				(D2D1::ColorF::Black, (UINT32)1.0f),
 				Draw::Instance().GetBitmap(texBackground.Get()));
 			if (curProgress < finalProgress - (finalProgress/20)) {
 				if (curProgress != tempProgress) {

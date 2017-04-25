@@ -60,9 +60,9 @@ namespace Epoch
 			mazeBoxes[0].SetUp(1, 3, 3);
 			mazeBoxes[1].SetUp(2, 2, 3);
 			mazeBoxes[2].SetUp(3, 2, 0);
-			//mazeBoxes[0].mBox = cLevel->FindObjectWithName("Box1");
-			//mazeBoxes[1].mBox = cLevel->FindObjectWithName("Box2");
-			//mazeBoxes[2].mBox = cLevel->FindObjectWithName("Box3");
+			mazeBoxes[0].mBox = cLevel->FindObjectWithName("Box1");
+			mazeBoxes[1].mBox = cLevel->FindObjectWithName("Box2");
+			mazeBoxes[2].mBox = cLevel->FindObjectWithName("Box3");
 			//mLButton = cLevel->FindObjectWithName("Button Left");
 			//mRButton = cLevel->FindObjectWithName("Button Right");
 			//mUButton = cLevel->FindObjectWithName("Button Up");
@@ -89,13 +89,13 @@ namespace Epoch
 				PrintGrid();
 			}
 			if (!mBox1Done) {
-				mazeBoxes[0].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
+				mBox1Done = mazeBoxes[0].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
 			}
 			if (!mBox2Done) {
-				mazeBoxes[1].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
+				mBox2Done = mazeBoxes[1].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
 			}
 			if (!mBox3Done) {
-				mazeBoxes[2].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
+				mBox3Done = mazeBoxes[2].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
 			}
 		}
 		virtual void OnDestroy()
@@ -122,9 +122,9 @@ namespace Epoch
 			orderedBoxes[2] = mazeBoxes[2];
 			int i, j, flag = 1;
 			MoveableBox tempBox;
-			for (int i = 1; i <= 3 && flag; ++i){//bubble sort for array of 3
+			for (i = 1; i <= 3 && flag; ++i){//bubble sort for array of 3
 				flag = 0;
-				for (int j = 0; j < 2; ++j){ 
+				for (j = 0; j < 2; ++j){ 
 					if (orderedBoxes[j + 1].mCol < orderedBoxes[j].mCol)
 					{
 						tempBox = orderedBoxes[j];
@@ -136,7 +136,7 @@ namespace Epoch
 			}
 			//Should be sorted now
 			int currCoord = 0;
-			for (int i = 0; i < 3; ++i) {
+			for (i = 0; i < 3; ++i) {
 				for (int k = orderedBoxes[i].mCol-1; k > -1; --k) {
 					currCoord = mGrid[orderedBoxes[i].mRow][k];
 					if (currCoord == 0) {
@@ -150,25 +150,27 @@ namespace Epoch
 			}
 
 			matrix4* tempMatrix0, *tempMatrix1, *tempMatrix2;
+			tempMatrix0 = &mazeBoxes[0].mBox->GetTransform().GetMatrix();
+			tempMatrix1 = &mazeBoxes[1].mBox->GetTransform().GetMatrix();
+			tempMatrix2 = &mazeBoxes[2].mBox->GetTransform().GetMatrix();
 			//Boxes have been set to their respective positions
-			for (int i = 0; i < 3; ++i)
+			for (i = 0; i < 3; ++i)
 			{
 				switch (orderedBoxes[i].mId)
 				{
 				case 1:
-					tempMatrix0 = &mazeBoxes[0].mBox->GetTransform().GetMatrix();
 					mazeBoxes[0] = orderedBoxes[i];
 					break;
 				case 2:
-					tempMatrix1 = &mazeBoxes[1].mBox->GetTransform().GetMatrix();
 					mazeBoxes[1] = orderedBoxes[i];
 					break;
 				case 3:
-					tempMatrix2 = &mazeBoxes[2].mBox->GetTransform().GetMatrix();
 					mazeBoxes[2] = orderedBoxes[i];
 					break;
 				}
 			}
+			SetBoxesPosition();
+
 			mazeBoxes[0].mInterp->Prepare(0.3f, *tempMatrix0, mazeBoxes[0].mBox->GetTransform().GetMatrix(), mazeBoxes[0].mBox->GetTransform().GetMatrix());
 			mazeBoxes[1].mInterp->Prepare(0.3f, *tempMatrix1, mazeBoxes[1].mBox->GetTransform().GetMatrix(), mazeBoxes[1].mBox->GetTransform().GetMatrix());
 			mazeBoxes[2].mInterp->Prepare(0.3f, *tempMatrix2, mazeBoxes[2].mBox->GetTransform().GetMatrix(), mazeBoxes[2].mBox->GetTransform().GetMatrix());
@@ -182,9 +184,9 @@ namespace Epoch
 			orderedBoxes[2] = mazeBoxes[2];
 			int i, j, flag = 1;
 			MoveableBox tempBox;
-			for (int i = 1; i <= 3 && flag; ++i) {//bubble sort for array of 3
+			for (i = 1; i <= 3 && flag; ++i) {//bubble sort for array of 3
 				flag = 0;
-				for (int j = 0; j < 2; ++j) {
+				for (j = 0; j < 2; ++j) {
 					if (orderedBoxes[j + 1].mCol > orderedBoxes[j].mCol)
 					{
 						tempBox = orderedBoxes[j];
@@ -196,7 +198,7 @@ namespace Epoch
 			}
 			//Should be sorted now
 			int currCoord = 0;
-			for (int i = 0; i < 3; ++i) {
+			for (i = 0; i < 3; ++i) {
 				for (int k = orderedBoxes[i].mCol + 1; k < 4; ++k) {
 					currCoord = mGrid[orderedBoxes[i].mRow][k];
 					if (currCoord == 0) {
@@ -209,25 +211,28 @@ namespace Epoch
 				}
 			}
 			matrix4* tempMatrix0, *tempMatrix1, *tempMatrix2;
+			tempMatrix0 = &mazeBoxes[0].mBox->GetTransform().GetMatrix();
+			tempMatrix1 = &mazeBoxes[1].mBox->GetTransform().GetMatrix();
+			tempMatrix2 = &mazeBoxes[2].mBox->GetTransform().GetMatrix();
 			//Boxes have been set to their respective positions
-			for (int i = 0; i < 3; ++i)
+			for (i = 0; i < 3; ++i)
 			{
 				switch (orderedBoxes[i].mId)
 				{
 				case 1:
-					tempMatrix0 = &mazeBoxes[0].mBox->GetTransform().GetMatrix();
 					mazeBoxes[0] = orderedBoxes[i];
 					break;
 				case 2:
-					tempMatrix1 = &mazeBoxes[1].mBox->GetTransform().GetMatrix();
 					mazeBoxes[1] = orderedBoxes[i];
 					break;
 				case 3:
-					tempMatrix2 = &mazeBoxes[2].mBox->GetTransform().GetMatrix();
 					mazeBoxes[2] = orderedBoxes[i];
 					break;
 				}
 			}
+
+			SetBoxesPosition();
+
 			mazeBoxes[0].mInterp->Prepare(0.3f, *tempMatrix0, mazeBoxes[0].mBox->GetTransform().GetMatrix(), mazeBoxes[0].mBox->GetTransform().GetMatrix());
 			mazeBoxes[1].mInterp->Prepare(0.3f, *tempMatrix1, mazeBoxes[1].mBox->GetTransform().GetMatrix(), mazeBoxes[1].mBox->GetTransform().GetMatrix());
 			mazeBoxes[2].mInterp->Prepare(0.3f, *tempMatrix2, mazeBoxes[2].mBox->GetTransform().GetMatrix(), mazeBoxes[2].mBox->GetTransform().GetMatrix());
@@ -241,9 +246,9 @@ namespace Epoch
 			orderedBoxes[2] = mazeBoxes[2];
 			int i, j, flag = 1;
 			MoveableBox tempBox;
-			for (int i = 1; i <= 3 && flag; ++i) {//bubble sort for array of 3
+			for (i = 1; i <= 3 && flag; ++i) {//bubble sort for array of 3
 				flag = 0;
-				for (int j = 0; j < 2; ++j) {
+				for (j = 0; j < 2; ++j) {
 					if (orderedBoxes[j + 1].mRow < orderedBoxes[j].mRow)
 					{
 						tempBox = orderedBoxes[j];
@@ -255,7 +260,7 @@ namespace Epoch
 			}
 			//Should be sorted now
 			int currCoord = 0;
-			for (int i = 0; i < 3; ++i) {
+			for (i = 0; i < 3; ++i) {
 				for (int k = orderedBoxes[i].mRow - 1; k > -1;--k) {
 					currCoord = mGrid[k][orderedBoxes[i].mCol];
 					if (currCoord == 0) {
@@ -268,25 +273,26 @@ namespace Epoch
 				}
 			}
 			matrix4* tempMatrix0, *tempMatrix1, *tempMatrix2;
+			tempMatrix0 = &mazeBoxes[0].mBox->GetTransform().GetMatrix();
+			tempMatrix1 = &mazeBoxes[1].mBox->GetTransform().GetMatrix();
+			tempMatrix2 = &mazeBoxes[2].mBox->GetTransform().GetMatrix();
 			//Boxes have been set to their respective positions
-			for (int i = 0; i < 3; ++i)
+			for (i = 0; i < 3; ++i)
 			{
 				switch (orderedBoxes[i].mId)
 				{
 				case 1:
-					tempMatrix0 = &mazeBoxes[0].mBox->GetTransform().GetMatrix();
 					mazeBoxes[0] = orderedBoxes[i];
 					break;
 				case 2:
-					tempMatrix1 = &mazeBoxes[1].mBox->GetTransform().GetMatrix();
 					mazeBoxes[1] = orderedBoxes[i];
 					break;
 				case 3:
-					tempMatrix2 = &mazeBoxes[2].mBox->GetTransform().GetMatrix();
 					mazeBoxes[2] = orderedBoxes[i];
 					break;
 				}
 			}
+			SetBoxesPosition();
 			mazeBoxes[0].mInterp->Prepare(0.3f, *tempMatrix0, mazeBoxes[0].mBox->GetTransform().GetMatrix(), mazeBoxes[0].mBox->GetTransform().GetMatrix());
 			mazeBoxes[1].mInterp->Prepare(0.3f, *tempMatrix1, mazeBoxes[1].mBox->GetTransform().GetMatrix(), mazeBoxes[1].mBox->GetTransform().GetMatrix());
 			mazeBoxes[2].mInterp->Prepare(0.3f, *tempMatrix2, mazeBoxes[2].mBox->GetTransform().GetMatrix(), mazeBoxes[2].mBox->GetTransform().GetMatrix());
@@ -300,9 +306,9 @@ namespace Epoch
 			orderedBoxes[2] = mazeBoxes[2];
 			int i, j, flag = 1;
 			MoveableBox tempBox;
-			for (int i = 1; i <= 3 && flag; ++i) {//bubble sort for array of 3
+			for (i = 1; i <= 3 && flag; ++i) {//bubble sort for array of 3
 				flag = 0;
-				for (int j = 0; j < 2; ++j) {
+				for (j = 0; j < 2; ++j) {
 					if (orderedBoxes[j + 1].mRow > orderedBoxes[j].mRow)
 					{
 						tempBox = orderedBoxes[j];
@@ -314,7 +320,7 @@ namespace Epoch
 			}
 			//Should be sorted now
 			int currCoord = 0;
-			for (int i = 0; i < 3; ++i) {
+			for (i = 0; i < 3; ++i) {
 				for (int k = orderedBoxes[i].mRow + 1; k < 4; ++k) {
 					currCoord = mGrid[k][orderedBoxes[i].mCol];
 					if (currCoord == 0) {
@@ -327,25 +333,26 @@ namespace Epoch
 				}
 			}
 			matrix4* tempMatrix0, *tempMatrix1, *tempMatrix2;
+			tempMatrix0 = &mazeBoxes[0].mBox->GetTransform().GetMatrix();
+			tempMatrix1 = &mazeBoxes[1].mBox->GetTransform().GetMatrix();
+			tempMatrix2 = &mazeBoxes[2].mBox->GetTransform().GetMatrix();
 			//Boxes have been set to their respective positions
-			for (int i = 0; i < 3; ++i)
+			for (i = 0; i < 3; ++i)
 			{
-				switch (orderedBoxes[i].mId)
+				switch(orderedBoxes[i].mId)
 				{
 				case 1:
-					tempMatrix0 = &mazeBoxes[0].mBox->GetTransform().GetMatrix();
 					mazeBoxes[0] = orderedBoxes[i];
 					break;
 				case 2:
-					tempMatrix1 = &mazeBoxes[1].mBox->GetTransform().GetMatrix();
 					mazeBoxes[1] = orderedBoxes[i];
 					break;
 				case 3:
-					tempMatrix2 = &mazeBoxes[2].mBox->GetTransform().GetMatrix();
 					mazeBoxes[2] = orderedBoxes[i];
 					break;
 				}
 			}
+			SetBoxesPosition();
 			mazeBoxes[0].mInterp->Prepare(0.3f, *tempMatrix0, mazeBoxes[0].mBox->GetTransform().GetMatrix(), mazeBoxes[0].mBox->GetTransform().GetMatrix());
 			mazeBoxes[1].mInterp->Prepare(0.3f, *tempMatrix1, mazeBoxes[1].mBox->GetTransform().GetMatrix(), mazeBoxes[1].mBox->GetTransform().GetMatrix());
 			mazeBoxes[2].mInterp->Prepare(0.3f, *tempMatrix2, mazeBoxes[2].mBox->GetTransform().GetMatrix(), mazeBoxes[2].mBox->GetTransform().GetMatrix());
@@ -359,43 +366,43 @@ namespace Epoch
 				int Y = mazeBoxes[i].mCol;
 				//Row 0
 				if (X == 0 && Y == 0) {
-					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(6,-1.80f,6.2f));
 				}
 				else if (X == 0 && Y == 1) {
-					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(2,-1.80f,6.2f));
 				}
 				//Row 1
 				else if (X == 1 && Y == 0) {
-					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(6,-1.80f,2.2f));
 				}
 				else if (X == 1 && Y == 2) {
-					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(-2,-1.80f,2.2f));
 				}
 				else if (X == 1 && Y == 3) {
-					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(-6, -1.80f, 2.2f));
 				}
 				//Row 2
 				else if (X == 2 && Y == 0) {
-					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(6, -1.80f, -1.80f));
 				}
 				else if (X == 2 && Y == 1) {
-					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(2, -1.80f, -1.80f));
 				}
 				else if (X == 2 && Y == 3) {
-					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(-2, -1.80f, -1.80f));
 				}
 				//Row 3
 				else if (X == 3 && Y == 0) {
-					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(6, -1.80f, -5.80f));
 				}
 				else if (X == 3 && Y == 1) {
-					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(2, -1.80f, -5.80f));
 				}
 				else if (X == 3 && Y == 2) {
-					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(-2, -1.80f, -5.80f));
 				}
 				else if (X == 3 && Y == 3) {
-					//mazeBoxes[i].mBox->GetTransform().SetMatrix();
+					mazeBoxes[i].mBox->GetTransform().SetMatrix(matrix4::CreateTranslation(-6, -1.80f, -5.80f));
 				}
 			}
 		}

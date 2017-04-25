@@ -210,7 +210,7 @@ namespace Epoch
 					//Main Panel Rectangle
 					Draw::Instance().DrawRectangleToBitmap(
 						0, 0, 256.0f, 256.0f,
-						(D2D1::ColorF::Black, 1.0f),
+						(D2D1::ColorF::Black, (UINT32)1.0f),
 						Draw::Instance().GetBitmap(texMainPanel.Get()));
 					//Main Panel Text
 					mainFont->mColor = D2D1::ColorF::WhiteSmoke;
@@ -223,7 +223,7 @@ namespace Epoch
 					//Settings Panel Rectangle
 					Draw::Instance().DrawRectangleToBitmap(
 						0, 0, 256.0f, 256.0f,
-						(D2D1::ColorF::Black, 0.8f),
+						(D2D1::ColorF::Black, (UINT32)0.8f),
 						Draw::Instance().GetBitmap(texSettingsPanel.Get()));
 					//Settings Panel Text
 					Draw::Instance().DrawTextToBitmap(
