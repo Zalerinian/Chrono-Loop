@@ -50,7 +50,7 @@ namespace Epoch {
 	void TimeManager::Update(float _delta) {
 	
 		mDeltaTime = _delta;
-
+		mTotalGameTime += _delta;
 		if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator() != nullptr) {
 
 			if (!LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->isTimePaused()) {
@@ -86,7 +86,6 @@ namespace Epoch {
 						}
 					}
 				}*/
-
 					//Update inputTimeLine
 					//This updates curr pointer of the input timeline along with the current time in the Timeline 
 					if (VRInputManager::GetInstance().IsVREnabled()) {
@@ -96,9 +95,9 @@ namespace Epoch {
 								for (unsigned int i = 0; i < mClones.size(); i++) {
 									if (mClones[i]->GetUniqueId() == temp->mNext->mData.mControllerId) {
 										if (DoesCloneExist(mClones[i]->GetUniqueId(), mLevelTime)) {
-											//	SystemLogger::GetLog() << "Clone:" << "id " << temp->mData.mControllerId << " " << temp->mNext->mData.mButton << ':' << temp->mNext->mData.mButtonState << std::endl;
+											SystemLogger::GetLog() << "Clone:" << "id " << temp->mData.mControllerId << " " << temp->mNext->mData.mButton << ':' << temp->mNext->mData.mButtonState << std::endl;
 										} else {
-											//	SystemLogger::GetLog() << "Found false" << std::endl;
+											SystemLogger::GetLog() << "Found false" << std::endl;
 										}
 									}
 								}
@@ -229,6 +228,7 @@ namespace Epoch {
 				if (pair.second)
 					delete pair.second;
 			}
+			mClonePairs.clear();
 			mCloneInterpolators.clear();
 		}
 
@@ -303,7 +303,7 @@ namespace Epoch {
 							break;
 						}
 					}
-					//TODO COmment this back in sometime
+					//TODO Pat: COmment this back in sometime
 					/*for (auto j = mCloneColliderInterpolators.begin(); j != mCloneColliderInterpolators.end(); ++j) {
 						if (mClones[i]->GetComponentCount(eCOMPONENT_COLLIDER) > 0 && j->first == mClones[i]->GetComponentIndexed(eCOMPONENT_COLLIDER,0)->GetColliderId())
 						{
@@ -516,13 +516,29 @@ namespace Epoch {
 			}
 		}
 		void TimeManager::BrowseTimeline(int _gesture, int _frameRewind) {
+			bool UpdateComponents = false;
 			
 			if (mShouldUpdateInterpolators) {
 				for (auto it : mObjectRewindInterpolators)
 				{
 					bool complete = it.second->Update(GetDeltaTime());
-					if (complete)
+					if (complete) {
 						mShouldUpdateInterpolators = false;
+						UpdateComponents = true;
+					}
+				}
+				if(UpdateComponents == true)
+				{
+					TimeManipulation* temp = LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator();
+					Level* tempLevel = LevelManager::GetInstance().GetCurrentLevel();
+					if(temp->mCurCloneHeadset && temp->mCurCloneController1 && temp->mCurCloneController2)
+					{
+						mTimeline->MoveAllComponentsToSnap(mtempCurSnapFrame,true, temp->mCurCloneHeadset->GetUniqueID(), temp->mCurCloneController1->GetUniqueID(), temp->mCurCloneController2->GetUniqueID());	
+					}
+					else if(tempLevel->GetHeadset() && tempLevel->GetLeftController() && tempLevel->GetRightController())
+					{
+						mTimeline->MoveAllComponentsToSnap(mtempCurSnapFrame, true, tempLevel->GetHeadset()->GetUniqueId(), tempLevel->GetRightController()->GetUniqueId(), tempLevel->GetLeftController()->GetUniqueId());
+					}
 				}
 				return;
 			}
@@ -530,7 +546,7 @@ namespace Epoch {
 			unsigned int temp = instanceTimemanager->GetCurrentSnapFrame();
 			if (_gesture == 0)
 				return;
-			else if (_gesture == 1)
+			if (_gesture == 1)
 				_frameRewind *= -1;
 			else if (_gesture == 2) {
 				/*LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck();
@@ -545,13 +561,26 @@ namespace Epoch {
 				mTimeline->PrepareAllObjectInterpolators(placeHolder, mtempCurSnapFrame);
 				mShouldUpdateInterpolators = true;
 				mShouldPulse = true;
+				VRInputManager::GetInstance().GetController(eControllerType_Primary).TriggerHapticPulse(600, vr::k_EButton_SteamVR_Touchpad);
+
+				if (_gesture == 1)
+					Settings::GetInstance().SetFloat("TutorialRewind - CurProgress", Settings::GetInstance().GetFloat("TutorialRewind - CurProgress") - 1);
+				if (_gesture == -1)
+					Settings::GetInstance().SetFloat("TutorialRewind - CurProgress", Settings::GetInstance().GetFloat("TutorialRewind - CurProgress") + 1);
+				if(Settings::GetInstance().GetFloat("TutorialRewind - CurProgress") == Settings::GetInstance().GetFloat("TutorialRewind - FinalProgress"))//Rewind
+				{
+					if (Settings::GetInstance().GetInt("tutStep") == 4)
+					{
+						if (Settings::GetInstance().GetBool("Level1Tutorial"))
+							Settings::GetInstance().SetInt("tutStep", 6);//Accept time
+						else
+							Settings::GetInstance().SetInt("tutStep", 5);//Create Clone
+					}
+				}
 			}
 			else {
 				mShouldPulse = false;
 			}
-
-		
-
 		}
 		void TimeManager::MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC) {
 			mTimeline->MoveAllObjectsToSnapExceptPlayer(_snaptime, _headset, _leftC, _rightC);
@@ -565,6 +594,13 @@ namespace Epoch {
 			mTimeline->HotFixResetLevel();
 			for (int i = 0; i < mClones.size(); ++i) {
 				mClones[i]->RemoveAllComponents();
+
+				if(mObjectRewindInterpolators.find(mClones[i]->GetUniqueID()) != mObjectRewindInterpolators.end())
+				{
+					Interpolator<matrix4>* clone = mObjectRewindInterpolators[mClones[i]->GetUniqueID()];
+					mObjectRewindInterpolators.erase(mClones[i]->GetUniqueID());
+					delete clone;
+				}
 
 				for (int k = 0; k < Physics::Instance()->mObjects.size(); ++k) {
 					if (Physics::Instance()->mObjects[k]->GetUniqueID() == mClones[i]->GetUniqueID()) {

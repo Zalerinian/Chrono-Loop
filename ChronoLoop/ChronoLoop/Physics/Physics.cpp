@@ -1032,9 +1032,18 @@ namespace Epoch
 
 							if (AabbToPlane(((ButtonCollider*)collider)->mLowerBound, *aabb1) != 1)
 							{
-								collider->mVelocity = -collider->mVelocity;
-								collider->mAcceleration = -collider->mAcceleration;
-								collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
+								if(((ButtonCollider*)collider)->mPress)
+								{
+									collider->mVelocity = { 0,0,0 };
+									collider->mAcceleration = { 0,0,0 };
+									collider->mTotalForce = { 0,0,0 };
+								}
+								else
+								{
+									collider->mVelocity = -collider->mVelocity;
+									collider->mAcceleration = -collider->mAcceleration;
+									collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
+								}
 							}
 						}
 					}
@@ -1052,7 +1061,8 @@ namespace Epoch
 									otherCol = (Collider*)otherColliders[k];
 									if (otherCol->mIsEnabled)
 									{
-										if (otherCol->mShouldMove)
+										//if physics is being applied to an object, or if object is pick upable we still want to add it to mHitting of the controller
+										if (otherCol->mShouldMove || otherCol->mPickUpAble)
 										{
 											if (otherCol->mColliderType == Collider::eCOLLIDER_Cube)
 											{

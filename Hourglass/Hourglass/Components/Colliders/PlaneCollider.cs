@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using Microsoft.DirectX;
 
 namespace Hourglass
 {
@@ -10,6 +11,21 @@ namespace Hourglass
 		protected Label mLbOffset, mLbNormal, mLbNX, mLbNY, mLbNZ;
 		protected NumericUpDown mOffset, mNX, mNY, mNZ;
 		protected Panel mNormalPanel;
+
+		public Vector3 Normal {
+			get {
+				Vector3 n = new Vector3();
+				n.X = (float)mNX.Value;
+				n.Y = (float)mNY.Value;
+				n.Z = (float)mNZ.Value;
+				return n;
+			}
+			set {
+				mNX.Value = (decimal)value.X;
+				mNY.Value = (decimal)value.Y;
+				mNZ.Value = (decimal)value.Z;
+			}
+		}
 
 		public PlaneCollider(int _yOffset = 0) : base(64 + _yOffset)
 		{
@@ -24,6 +40,7 @@ namespace Hourglass
 			mLbNZ = new Label();
 
 			mOffset = new NumericUpDown();
+            mOffset.Minimum = -9999;
 			mNX = new NumericUpDown();
 			mNY = new NumericUpDown();
 			mNZ = new NumericUpDown();
@@ -40,8 +57,6 @@ namespace Hourglass
 
 			#region Component Setup
 
-			mShape.Load("Assets\\Plane.obj");
-			mShape.FillMode = Microsoft.DirectX.Direct3D.FillMode.WireFrame;
 
 			int ContentWidth = (mGroupBox.Size - mGroupBox.Padding.Size - mGroupBox.Margin.Size).Width;
 
@@ -51,7 +66,8 @@ namespace Hourglass
 			mOffset.Name = "offset";
 			mOffset.Size = new System.Drawing.Size(ContentWidth - mOffset.Left, 20);
 			mOffset.TabIndex = 45;
-
+            mOffset.Minimum = -100;
+            mOffset.DecimalPlaces = 3;
 
 			// These numeric up-downs are children of the panel, which is docked to the top, left, and right.
 			// These are not docked to the right, because their resizing is a special case.
@@ -95,6 +111,11 @@ namespace Hourglass
 
 			#endregion
 
+			mNX.ValueChanged += OnMatrixUpdate;
+			mNY.ValueChanged += OnMatrixUpdate;
+			mNZ.ValueChanged += OnMatrixUpdate;
+			mOffset.ValueChanged += OnMatrixUpdate;
+
 			mGroupBox.Text = "Plane Collider";
 			mGroupBox.Size = mGroupBox.PreferredSize;
 			OnMenuClick_Reset(null, null);
@@ -107,6 +128,28 @@ namespace Hourglass
 			mNX.Value = 0;
 			mNY.Value = 1;
 			mNZ.Value = 0;
+			mShape = new ColoredShape("Assets\\Colliders\\Plane.obj", System.Drawing.Color.Red);
+			mShape.FillMode = Microsoft.DirectX.Direct3D.FillMode.WireFrame;
+		}
+
+		protected void OnMatrixUpdate(object sender, EventArgs e) {
+			// Normalize the normal.
+			Vector3 n = new Vector3((float)mNX.Value, (float)mNY.Value, (float)mNZ.Value);
+			n.Normalize();
+			//mNX.Value = (decimal)n.X;
+			//mNY.Value = (decimal)n.Y;
+			//mNZ.Value = (decimal)n.Z;
+
+
+			// Calculate the rotation
+			Vector3 r = new Vector3();
+			r.X = (float)Math.PI * n.Y;
+			r.Y = (float)Math.PI * n.Z; // The plane object naturally points up on the Y axis, so we need to cut the value in half and subtract an extra half PI to account for it.
+			r.Z = (float)Math.PI * n.X;
+
+			mShape.Scale = new Vector3(1, 1, 1);
+			//mShape.Rotation = r;
+			mShape.Position = new Vector3(n.X * (float)mOffset.Value, n.Y * (float)mOffset.Value, n.Z * (float)mOffset.Value);
 		}
 
 		public override void WriteData(BinaryWriter w)
@@ -118,13 +161,24 @@ namespace Hourglass
 			w.Write((float)mNZ.Value);
 		}
 
-		public override void ReadData(BinaryReader r)
+		public override void ReadData(BinaryReader r, int _version)
 		{
-			base.ReadData(r);
+			base.ReadData(r, _version);
 			mOffset.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mNX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mNY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mNZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+		}
+
+		public override void CopyData(ref Component _other) {
+			if (!(_other is PlaneCollider)) {
+				throw new InvalidDataException("Given component does not match calling type!");
+			}
+			PlaneCollider comp = _other as PlaneCollider;
+			comp.mOffset.Value = mOffset.Value;
+			comp.mNX.Value = mNX.Value;
+			comp.mNY.Value = mNY.Value;
+			comp.mNZ.Value = mNZ.Value;
 		}
 
 

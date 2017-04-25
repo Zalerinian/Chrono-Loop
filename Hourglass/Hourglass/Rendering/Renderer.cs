@@ -106,7 +106,7 @@ namespace Hourglass
 			mDevice.RenderState.FillMode = FillMode.Solid;
 			mDevice.RenderState.ZBufferWriteEnable = true;
 			mDevice.RenderState.ZBufferEnable = true;
-			
+
 
 			RebuildProjectionMatrix();
 			RebuildViewMatrix();
@@ -196,6 +196,7 @@ namespace Hourglass
 					mDevice.SetStreamSource(0, ((IRenderable)componentIterator.Current).Shape.VertexBuffer, 0);
 					mDevice.RenderState.FillMode = ((IRenderable)componentIterator.Current).Shape.FillMode;
 					mDevice.Transform.World = ((IRenderable)componentIterator.Current).Shape.World * objectIterator.Current.GetMatrix();
+					mDevice.RenderState.CullMode = Cull.Clockwise;
 					mDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, ((IRenderable)componentIterator.Current).Shape.Indices.Length, 0, ((IRenderable)componentIterator.Current).Shape.Indices.Length / 3);
 				}
 			}
@@ -257,16 +258,13 @@ namespace Hourglass
 					List<Component> comps = mRenderSet[i].GetComponents();
 					for (int j = 0; j < comps.Count; ++j)
 					{
-						if(comps[j] is MeshComponent)
+						if(comps[j] is IRenderable)
 						{
-							((MeshComponent)comps[j]).Shape.FillBuffers();
+							((IRenderable)comps[j]).Shape.FillBuffers();
 						}
 					}
 				}
-                for (int i = 0; i < Gizmo.Instance.GetVisibleComponents().Length; i++)
-                {
-                    Gizmo.Instance.GetVisibleComponents()[i].FillBuffers();
-                }
+                Gizmo.Instance.Reset();
 			}
 		}
 

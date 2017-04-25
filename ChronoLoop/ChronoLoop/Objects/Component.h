@@ -132,7 +132,7 @@ namespace Epoch
 		};
 
 		ColliderType mColliderType;
-		bool mShouldMove, mIsTrigger;
+		bool mShouldMove, mIsTrigger, mPickUpAble = false;
 		vec3f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity, mWeight, mDragForce;
 		float mMass, mElasticity, mKineticFriction, mStaticFriction, mInvMass, mRHO, mDrag, mArea;
 
@@ -187,6 +187,7 @@ namespace Epoch
 		vec3f mMin, mMax, mMinOffset, mMaxOffset;
 		RenderShape* mShape;
 		GhostList<matrix4>::GhostNode* mNode = nullptr;
+		bool visible = false;
 		virtual void Update();
 		virtual void Destroy();
 
@@ -210,6 +211,7 @@ namespace Epoch
 		ButtonCollider(BaseObject* _obj, vec3f _min, vec3f _max, float _mass, float normForce, vec3f _pushNormal);
 		vec3f mPushNormal;
 		PlaneCollider mUpperBound, mLowerBound;
+		bool mPress;
 	};
 
 	class ControllerCollider : public CubeCollider

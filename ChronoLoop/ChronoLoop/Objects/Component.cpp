@@ -3,6 +3,7 @@
 #include "BaseObject.h"
 #include "../Rendering/renderer.h"
 #include "../Sound/SoundEngine.h"
+#include "../Common/Settings.h"
 
 namespace Epoch
 {
@@ -208,15 +209,27 @@ namespace Epoch
 		mShape->GetContext().mRasterState = eRS_WIREFRAME;
 	}
 
-	void CubeCollider::Update() {
-		//if (mNode == nullptr) {
-		//	mShape->AddTexture("../Resources/red.png", eTEX_DIFFUSE);
-		//	mNode = Renderer::Instance()->AddOpaqueNode(*mShape);
-		//}
-		//vec3f size = mMax - mMin;
-		//matrix4 pos = matrix4::CreateScale(size.x, size.y, size.z);
-		//pos.Position = (mMax - mMin) / 2 + mMin;
-		//mNode->data = pos;
+	void CubeCollider::Update()
+	{
+		if (Settings::GetInstance().GetBool("ShowColliders"))
+		{
+			visible = true;
+			if (mNode == nullptr)
+			{
+				mShape->AddTexture("../Resources/red.png", eTEX_DIFFUSE);
+				mNode = Renderer::Instance()->AddOpaqueNode(*mShape);
+			}
+			vec3f size = mMax - mMin;
+			matrix4 pos = matrix4::CreateScale(size.x, size.y, size.z);
+			pos.Position = (mMax - mMin) / 2 + mMin;
+			mNode->data = pos;
+		}
+		else if (visible)
+		{
+			visible = false;
+			memset(&mNode->data, 0, sizeof(matrix4));
+		}
+			
 	}
 
 	void CubeCollider::Destroy()
@@ -315,6 +328,7 @@ namespace Epoch
 		mLowerBound.mOffset = (mMin * mPushNormal) - .1f;
 		mShouldMove = true;
 		mIsTrigger = false;
+		mPress = false;
 
 		mGravity = _pushNormal * _normForce;
 		mVelocity = vec3f(0.0f, 0.0f, 0.0f);

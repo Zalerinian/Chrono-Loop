@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using Microsoft.DirectX;
 
 namespace Hourglass
 {
@@ -48,6 +49,10 @@ namespace Hourglass
             mRadius.Name = "radius";
             mRadius.Size = new System.Drawing.Size(ContentWidth - mRadius.Left, 20 + _yOffset);
             mRadius.TabIndex = 45;
+			mRadius.Minimum = 0;
+			mRadius.Maximum = 100;
+			mRadius.DecimalPlaces = 2;
+			mRadius.Increment = (decimal)0.1f;
 
 
             // These numeric up-downs are children of the panel, which is docked to the top, left, and right.
@@ -89,22 +94,60 @@ namespace Hourglass
 
             SetupTransformPanel(mPosPanel, 90, 50 + _yOffset, ContentWidth, mLbX, mLbY, mLbZ, mX, mY, mZ);
 
+			mX.ValueChanged += OnMatrixUpdated;
+			mY.ValueChanged += OnMatrixUpdated;
+			mZ.ValueChanged += OnMatrixUpdated;
+			mRadius.ValueChanged += OnMatrixUpdated;
 
-            #endregion
 
-            mGroupBox.Text = "Sphere Collider";
+			#endregion
+
+			mGroupBox.Text = "Sphere Collider";
             mGroupBox.Size = mGroupBox.PreferredSize;
             OnMenuClick_Reset(null, null);
         }
 
-        public override void OnMenuClick_Reset(object sender, EventArgs e)
+        public float Radius {
+            get {
+                return (float)mRadius.Value;
+            }
+            set {
+                mRadius.Value = (decimal)value;
+                mShape.Scale = new Microsoft.DirectX.Vector3(value, value, value);
+            }
+        }
+
+		public Vector3 Position {
+			get {
+				Vector3 v = new Vector3();
+				v.X = (float)mX.Value;
+				v.Y = (float)mY.Value;
+				v.Z = (float)mZ.Value;
+				return v;
+			}
+			set {
+				mX.Value = (decimal)value.X;
+				mY.Value = (decimal)value.Y;
+				mZ.Value = (decimal)value.Z;
+				Shape.Position = value;
+			}
+		}
+
+		public override void OnMenuClick_Reset(object sender, EventArgs e)
         {
             base.OnMenuClick_Reset(sender, e);
             mRadius.Value = 1;
             mX.Value = 0;
             mY.Value = 0;
             mZ.Value = 0;
-        }
+			mShape = new ColoredShape("Assets\\Colliders\\Sphere.obj", System.Drawing.Color.Red);
+			mShape.FillMode = Microsoft.DirectX.Direct3D.FillMode.WireFrame;
+		}
+
+		protected void OnMatrixUpdated(object sender, EventArgs e) {
+			Position = new Vector3((float)mX.Value, (float)mY.Value, (float)mZ.Value);
+			Radius = (float)mRadius.Value;
+		}
 
 		public override void WriteData(BinaryWriter w)
 		{
@@ -115,13 +158,24 @@ namespace Hourglass
 			w.Write((float)mZ.Value);
 		}
 
-		public override void ReadData(BinaryReader r)
+		public override void ReadData(BinaryReader r, int _version)
 		{
-			base.ReadData(r);
+			base.ReadData(r, _version);
 			mRadius.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+		}
+
+		public override void CopyData(ref Component _other) {
+			if(!(_other is SphereCollider)) {
+				throw new InvalidDataException("Given component does not match calling type!");
+			}
+			SphereCollider comp = _other as SphereCollider;
+			comp.mRadius.Value = mRadius.Value;
+			comp.mX.Value = mX.Value;
+			comp.mY.Value = mY.Value;
+			comp.mZ.Value = mZ.Value;
 		}
 
 	}

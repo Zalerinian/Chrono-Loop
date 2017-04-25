@@ -28,11 +28,13 @@ namespace Epoch
 		~Level();
 		bool ChronoLoop = true;
 		bool mmflip = true;
+		Interpolator<matrix4>* playerInterp;
 
 		void AssignPlayerControls(BaseObject *_headset, BaseObject *_lController, BaseObject *_rController);
 
 		//**GETTERS**//
 		BaseObject* FindObjectWithName(std::string _name);
+		std::vector<BaseObject*> FindAllObjectsByPattern(std::string _name);
 		std::vector<BaseObject*> FindAllObjectsWithName(std::string _name);
 		std::list<BaseObject*>& GetLevelObjects() { return mObjectList; };
 		void AddObject(BaseObject* _obj);
@@ -57,6 +59,7 @@ namespace Epoch
 		void SetupObjects();
 		void CallStart();
 		void LoadLevel(std::string _file);
+		void Level::BinaryLoadLevel(std::string _file);
 		void Update();
 
 		//**CONSOLE COMMAND FUNCS**//

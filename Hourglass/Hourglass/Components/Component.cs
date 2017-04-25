@@ -6,7 +6,7 @@ namespace Hourglass
 {
     public abstract class Component
     {
-		public enum ComponentType { None = 0, BoxCollider, ButtonCollider, PlaneCollider, SphereCollider, ColoredMesh, TexturedMesh, Transform, Code, MAX }
+		public enum ComponentType { None = 0, BoxCollider, ButtonCollider, PlaneCollider, SphereCollider, ColoredMesh, TexturedMesh, Transform, Code, Audio, MAX }
 
 
 
@@ -14,7 +14,7 @@ namespace Hourglass
 		public event GenericEventHandler OwnerChanged;
 		public event GenericEventHandler RemoveControl;
 
-        protected GroupBox mGroupBox;
+        protected FocusGroupBox mGroupBox;
         protected ContextMenuStrip mMenuStrip;
         protected ToolStripMenuItem mMenuItemDelete, mMenuItemReset;
         protected BaseObject mOwner = null;
@@ -82,7 +82,7 @@ namespace Hourglass
         public Component(bool _destructible = true)
         {
 
-            mGroupBox = new GroupBox();
+            mGroupBox = new FocusGroupBox();
             mGroupBox.AutoSize = false;
             mMenuStrip = new ContextMenuStrip();
             mMenuItemReset = new ToolStripMenuItem("Reset", null, OnMenuClick_Reset);
@@ -226,6 +226,8 @@ namespace Hourglass
 			w.Write((short)mType);
 		}
 
-		public abstract void ReadData(System.IO.BinaryReader r);
+		public abstract void ReadData(System.IO.BinaryReader r, int _version);
+
+		public abstract void CopyData(ref Component _other);
     }
 }

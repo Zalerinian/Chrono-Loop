@@ -31,8 +31,8 @@ namespace LevelEditor
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Editor));
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Objects");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Hierarchy");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Objects");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Hierarchy");
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -71,6 +71,7 @@ namespace LevelEditor
             this.graphicsPanel1 = new LevelEditor.GraphicsPanel();
             this.LeftToggle = new LevelEditor.NoFocusButton();
             this.RightToggle = new LevelEditor.NoFocusButton();
+            this.PickUpCheck = new System.Windows.Forms.CheckBox();
             this.visibleCheck = new System.Windows.Forms.CheckBox();
             this.MoveCheck = new System.Windows.Forms.CheckBox();
             this.Trigger = new System.Windows.Forms.CheckBox();
@@ -117,6 +118,9 @@ namespace LevelEditor
             this.posY = new System.Windows.Forms.NumericUpDown();
             this.posX = new System.Windows.Forms.NumericUpDown();
             this.TextureBox = new System.Windows.Forms.GroupBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.btnEmissiveSelect = new System.Windows.Forms.Button();
+            this.tbEmissive = new System.Windows.Forms.TextBox();
             this.changeTexture = new System.Windows.Forms.Button();
             this.textureFileBox = new System.Windows.Forms.TextBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
@@ -125,9 +129,6 @@ namespace LevelEditor
             this.nameBox = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tbEmissive = new System.Windows.Forms.TextBox();
-            this.btnEmissiveSelect = new System.Windows.Forms.Button();
-            this.label13 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spHierarchyPanel)).BeginInit();
             this.spHierarchyPanel.Panel1.SuspendLayout();
@@ -176,7 +177,7 @@ namespace LevelEditor
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1011, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1089, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -439,7 +440,7 @@ namespace LevelEditor
             // spHierarchyPanel.Panel2
             // 
             this.spHierarchyPanel.Panel2.Controls.Add(this.splitContainer2);
-            this.spHierarchyPanel.Size = new System.Drawing.Size(1011, 628);
+            this.spHierarchyPanel.Size = new System.Drawing.Size(1089, 678);
             this.spHierarchyPanel.SplitterDistance = 150;
             this.spHierarchyPanel.SplitterWidth = 1;
             this.spHierarchyPanel.TabIndex = 3;
@@ -457,16 +458,16 @@ namespace LevelEditor
             this.Tree.Indent = 10;
             this.Tree.Location = new System.Drawing.Point(0, 0);
             this.Tree.Name = "Tree";
-            treeNode3.Name = "Objects";
-            treeNode3.Text = "Objects";
-            treeNode4.Name = "Hierarchy";
-            treeNode4.Text = "Hierarchy";
+            treeNode1.Name = "Objects";
+            treeNode1.Text = "Objects";
+            treeNode2.Name = "Hierarchy";
+            treeNode2.Text = "Hierarchy";
             this.Tree.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode3,
-            treeNode4});
+            treeNode1,
+            treeNode2});
             this.Tree.PathSeparator = "/";
             this.Tree.ShowLines = false;
-            this.Tree.Size = new System.Drawing.Size(150, 628);
+            this.Tree.Size = new System.Drawing.Size(150, 678);
             this.Tree.TabIndex = 0;
             this.Tree.TabStop = false;
             this.Tree.Click += new System.EventHandler(this.Tree_Click);
@@ -488,6 +489,7 @@ namespace LevelEditor
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.AutoScroll = true;
+            this.splitContainer2.Panel2.Controls.Add(this.PickUpCheck);
             this.splitContainer2.Panel2.Controls.Add(this.visibleCheck);
             this.splitContainer2.Panel2.Controls.Add(this.MoveCheck);
             this.splitContainer2.Panel2.Controls.Add(this.Trigger);
@@ -502,8 +504,8 @@ namespace LevelEditor
             this.splitContainer2.Panel2.Controls.Add(this.groupBox5);
             this.splitContainer2.Panel2.Controls.Add(this.groupBox4);
             this.splitContainer2.Panel2MinSize = 300;
-            this.splitContainer2.Size = new System.Drawing.Size(860, 628);
-            this.splitContainer2.SplitterDistance = 514;
+            this.splitContainer2.Size = new System.Drawing.Size(938, 678);
+            this.splitContainer2.SplitterDistance = 580;
             this.splitContainer2.SplitterWidth = 10;
             this.splitContainer2.TabIndex = 3;
             // 
@@ -514,7 +516,7 @@ namespace LevelEditor
             this.graphicsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.graphicsPanel1.Location = new System.Drawing.Point(0, 0);
             this.graphicsPanel1.Name = "graphicsPanel1";
-            this.graphicsPanel1.Size = new System.Drawing.Size(514, 628);
+            this.graphicsPanel1.Size = new System.Drawing.Size(580, 678);
             this.graphicsPanel1.TabIndex = 2;
             this.graphicsPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.Paint);
             this.graphicsPanel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseClick);
@@ -539,7 +541,7 @@ namespace LevelEditor
             // 
             this.RightToggle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.RightToggle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.RightToggle.Location = new System.Drawing.Point(488, 3);
+            this.RightToggle.Location = new System.Drawing.Point(554, 3);
             this.RightToggle.MinimumSize = new System.Drawing.Size(1, 1);
             this.RightToggle.Name = "RightToggle";
             this.RightToggle.Size = new System.Drawing.Size(23, 23);
@@ -548,13 +550,26 @@ namespace LevelEditor
             this.RightToggle.UseVisualStyleBackColor = true;
             this.RightToggle.Click += new System.EventHandler(this.RightToggle_Click);
             // 
+            // PickUpCheck
+            // 
+            this.PickUpCheck.AutoSize = true;
+            this.PickUpCheck.Dock = System.Windows.Forms.DockStyle.Top;
+            this.PickUpCheck.Location = new System.Drawing.Point(0, 824);
+            this.PickUpCheck.Name = "PickUpCheck";
+            this.PickUpCheck.Size = new System.Drawing.Size(331, 17);
+            this.PickUpCheck.TabIndex = 22;
+            this.PickUpCheck.Text = "Can Pick Up";
+            this.PickUpCheck.UseVisualStyleBackColor = true;
+            this.PickUpCheck.Visible = false;
+            this.PickUpCheck.CheckedChanged += new System.EventHandler(this.Trigger_CheckedChanged);
+            // 
             // visibleCheck
             // 
             this.visibleCheck.AutoSize = true;
             this.visibleCheck.Dock = System.Windows.Forms.DockStyle.Top;
             this.visibleCheck.Location = new System.Drawing.Point(0, 807);
             this.visibleCheck.Name = "visibleCheck";
-            this.visibleCheck.Size = new System.Drawing.Size(319, 17);
+            this.visibleCheck.Size = new System.Drawing.Size(331, 17);
             this.visibleCheck.TabIndex = 21;
             this.visibleCheck.Text = "Visible";
             this.visibleCheck.UseVisualStyleBackColor = true;
@@ -567,7 +582,7 @@ namespace LevelEditor
             this.MoveCheck.Dock = System.Windows.Forms.DockStyle.Top;
             this.MoveCheck.Location = new System.Drawing.Point(0, 790);
             this.MoveCheck.Name = "MoveCheck";
-            this.MoveCheck.Size = new System.Drawing.Size(319, 17);
+            this.MoveCheck.Size = new System.Drawing.Size(331, 17);
             this.MoveCheck.TabIndex = 13;
             this.MoveCheck.Text = "Can Move";
             this.MoveCheck.UseVisualStyleBackColor = true;
@@ -580,7 +595,7 @@ namespace LevelEditor
             this.Trigger.Dock = System.Windows.Forms.DockStyle.Top;
             this.Trigger.Location = new System.Drawing.Point(0, 773);
             this.Trigger.Name = "Trigger";
-            this.Trigger.Size = new System.Drawing.Size(319, 17);
+            this.Trigger.Size = new System.Drawing.Size(331, 17);
             this.Trigger.TabIndex = 12;
             this.Trigger.Text = "Trigger";
             this.Trigger.UseVisualStyleBackColor = true;
@@ -596,7 +611,7 @@ namespace LevelEditor
             this.colorSelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.colorSelect.Location = new System.Drawing.Point(0, 748);
             this.colorSelect.Name = "colorSelect";
-            this.colorSelect.Size = new System.Drawing.Size(319, 25);
+            this.colorSelect.Size = new System.Drawing.Size(331, 25);
             this.colorSelect.TabIndex = 8;
             this.colorSelect.Text = "Color";
             this.colorSelect.UseVisualStyleBackColor = false;
@@ -619,7 +634,7 @@ namespace LevelEditor
             this.Physics.Dock = System.Windows.Forms.DockStyle.Top;
             this.Physics.Location = new System.Drawing.Point(0, 589);
             this.Physics.Name = "Physics";
-            this.Physics.Size = new System.Drawing.Size(319, 159);
+            this.Physics.Size = new System.Drawing.Size(331, 159);
             this.Physics.TabIndex = 1;
             this.Physics.TabStop = false;
             this.Physics.Text = "Pysics";
@@ -812,7 +827,7 @@ namespace LevelEditor
             this.ExtraVector.Dock = System.Windows.Forms.DockStyle.Top;
             this.ExtraVector.Location = new System.Drawing.Point(0, 515);
             this.ExtraVector.Name = "ExtraVector";
-            this.ExtraVector.Size = new System.Drawing.Size(319, 74);
+            this.ExtraVector.Size = new System.Drawing.Size(331, 74);
             this.ExtraVector.TabIndex = 20;
             this.ExtraVector.TabStop = false;
             this.ExtraVector.Text = "ExtraVector";
@@ -933,7 +948,7 @@ namespace LevelEditor
             this.groupBox2.Location = new System.Drawing.Point(0, 443);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBox2.Size = new System.Drawing.Size(319, 72);
+            this.groupBox2.Size = new System.Drawing.Size(331, 72);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Rotation";
@@ -1056,7 +1071,7 @@ namespace LevelEditor
             this.groupBox1.Location = new System.Drawing.Point(0, 371);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBox1.Size = new System.Drawing.Size(319, 72);
+            this.groupBox1.Size = new System.Drawing.Size(331, 72);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Scale";
@@ -1172,7 +1187,7 @@ namespace LevelEditor
             this.groupBox6.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox6.Location = new System.Drawing.Point(0, 331);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(319, 40);
+            this.groupBox6.Size = new System.Drawing.Size(331, 40);
             this.groupBox6.TabIndex = 11;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Radius";
@@ -1200,7 +1215,7 @@ namespace LevelEditor
             0,
             -2147483648});
             this.Radius.Name = "Radius";
-            this.Radius.Size = new System.Drawing.Size(313, 20);
+            this.Radius.Size = new System.Drawing.Size(325, 20);
             this.Radius.TabIndex = 8;
             this.Radius.ValueChanged += new System.EventHandler(this.transform_ValueChanged);
             // 
@@ -1217,7 +1232,7 @@ namespace LevelEditor
             this.groupBox3.Location = new System.Drawing.Point(0, 259);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBox3.Size = new System.Drawing.Size(319, 72);
+            this.groupBox3.Size = new System.Drawing.Size(331, 72);
             this.groupBox3.TabIndex = 5;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Position";
@@ -1339,10 +1354,42 @@ namespace LevelEditor
             this.TextureBox.Location = new System.Drawing.Point(0, 177);
             this.TextureBox.Name = "TextureBox";
             this.TextureBox.Padding = new System.Windows.Forms.Padding(0);
-            this.TextureBox.Size = new System.Drawing.Size(319, 82);
+            this.TextureBox.Size = new System.Drawing.Size(331, 82);
             this.TextureBox.TabIndex = 4;
             this.TextureBox.TabStop = false;
             this.TextureBox.Text = "Texture";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(217, 56);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(99, 13);
+            this.label13.TabIndex = 4;
+            this.label13.Text = "<- Emissive Texture";
+            // 
+            // btnEmissiveSelect
+            // 
+            this.btnEmissiveSelect.FlatAppearance.BorderSize = 0;
+            this.btnEmissiveSelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEmissiveSelect.Location = new System.Drawing.Point(188, 49);
+            this.btnEmissiveSelect.Margin = new System.Windows.Forms.Padding(0);
+            this.btnEmissiveSelect.Name = "btnEmissiveSelect";
+            this.btnEmissiveSelect.Size = new System.Drawing.Size(25, 20);
+            this.btnEmissiveSelect.TabIndex = 3;
+            this.btnEmissiveSelect.Text = "...";
+            this.btnEmissiveSelect.UseVisualStyleBackColor = true;
+            this.btnEmissiveSelect.Click += new System.EventHandler(this.btnEmissiveSelect_Click);
+            // 
+            // tbEmissive
+            // 
+            this.tbEmissive.Location = new System.Drawing.Point(3, 49);
+            this.tbEmissive.Margin = new System.Windows.Forms.Padding(0);
+            this.tbEmissive.Name = "tbEmissive";
+            this.tbEmissive.ReadOnly = true;
+            this.tbEmissive.Size = new System.Drawing.Size(181, 20);
+            this.tbEmissive.TabIndex = 2;
+            this.tbEmissive.Text = "None";
             // 
             // changeTexture
             // 
@@ -1373,7 +1420,7 @@ namespace LevelEditor
             this.groupBox5.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox5.Location = new System.Drawing.Point(0, 39);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(319, 138);
+            this.groupBox5.Size = new System.Drawing.Size(331, 138);
             this.groupBox5.TabIndex = 10;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Components";
@@ -1394,6 +1441,7 @@ namespace LevelEditor
             "Box Snap",
             "Button Hold",
             "Button Press",
+            "Level3ElevatorButton",
             "AABB to AABB",
             "AABB to Sphere",
             "Elastic Plane",
@@ -1406,7 +1454,7 @@ namespace LevelEditor
             this.componetsCheck.Location = new System.Drawing.Point(3, 16);
             this.componetsCheck.Margin = new System.Windows.Forms.Padding(0);
             this.componetsCheck.Name = "componetsCheck";
-            this.componetsCheck.Size = new System.Drawing.Size(313, 119);
+            this.componetsCheck.Size = new System.Drawing.Size(325, 119);
             this.componetsCheck.TabIndex = 1;
             this.componetsCheck.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.componetsCheck_ItemCheck);
             // 
@@ -1417,7 +1465,7 @@ namespace LevelEditor
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox4.Location = new System.Drawing.Point(0, 0);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(319, 39);
+            this.groupBox4.Size = new System.Drawing.Size(331, 39);
             this.groupBox4.TabIndex = 0;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Name";
@@ -1428,7 +1476,7 @@ namespace LevelEditor
             this.nameBox.Location = new System.Drawing.Point(3, 16);
             this.nameBox.Margin = new System.Windows.Forms.Padding(0);
             this.nameBox.Name = "nameBox";
-            this.nameBox.Size = new System.Drawing.Size(313, 20);
+            this.nameBox.Size = new System.Drawing.Size(325, 20);
             this.nameBox.TabIndex = 0;
             this.nameBox.TextChanged += new System.EventHandler(this.transform_ValueChanged);
             this.nameBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.nameBox_KeyDown);
@@ -1444,43 +1492,11 @@ namespace LevelEditor
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
-            // tbEmissive
-            // 
-            this.tbEmissive.Location = new System.Drawing.Point(3, 49);
-            this.tbEmissive.Margin = new System.Windows.Forms.Padding(0);
-            this.tbEmissive.Name = "tbEmissive";
-            this.tbEmissive.ReadOnly = true;
-            this.tbEmissive.Size = new System.Drawing.Size(181, 20);
-            this.tbEmissive.TabIndex = 2;
-            this.tbEmissive.Text = "None";
-            // 
-            // btnEmissiveSelect
-            // 
-            this.btnEmissiveSelect.FlatAppearance.BorderSize = 0;
-            this.btnEmissiveSelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEmissiveSelect.Location = new System.Drawing.Point(188, 49);
-            this.btnEmissiveSelect.Margin = new System.Windows.Forms.Padding(0);
-            this.btnEmissiveSelect.Name = "btnEmissiveSelect";
-            this.btnEmissiveSelect.Size = new System.Drawing.Size(25, 20);
-            this.btnEmissiveSelect.TabIndex = 3;
-            this.btnEmissiveSelect.Text = "...";
-            this.btnEmissiveSelect.UseVisualStyleBackColor = true;
-            this.btnEmissiveSelect.Click += new System.EventHandler(this.btnEmissiveSelect_Click);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(217, 56);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(99, 13);
-            this.label13.TabIndex = 4;
-            this.label13.Text = "<- Emissive Texture";
-            // 
             // Editor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1011, 652);
+            this.ClientSize = new System.Drawing.Size(1089, 702);
             this.Controls.Add(this.spHierarchyPanel);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1636,6 +1652,7 @@ namespace LevelEditor
     private System.Windows.Forms.Button btnEmissiveSelect;
     private System.Windows.Forms.TextBox tbEmissive;
     private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-  }
+        private System.Windows.Forms.CheckBox PickUpCheck;
+    }
 }
 

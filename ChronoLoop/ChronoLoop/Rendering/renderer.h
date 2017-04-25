@@ -38,14 +38,14 @@ namespace Epoch {
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDSView;
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> mDepthBuffer, mSceneTexture;
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> mSamplerState;
-		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> mTransparentState, mOpaqueState;
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> mTransparentState, mOpaqueState, mTopmostState;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mSceneSRV;
 		Microsoft::WRL::ComPtr<ID3D11BlendState> mOpaqueBlendState, mTransparentBlendState;
 		D3D11_VIEWPORT mLeftViewport, mRightViewport, mFullViewport;
 		HWND mWindow;
 
 		vr::IVRSystem* mVrSystem;
-		RenderSet mOpaqueSet, mTransparentSet;
+		RenderSet mOpaqueSet, mTransparentSet, mTopmostSet;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mVPBuffer, mPositionBuffer, mSimInstanceBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mLBuffer;
 		bool mUseVsync = false;
@@ -120,10 +120,13 @@ namespace Epoch {
 		void ThrowIfFailed(HRESULT hr);
 		GhostList<matrix4>::GhostNode* AddOpaqueNode(RenderShape& _node);
 		GhostList<matrix4>::GhostNode* AddTransparentNode(RenderShape& _node);
+		GhostList<matrix4>::GhostNode* AddTopmostNode(RenderShape& _node);
 		void RemoveOpaqueNode(RenderShape& _node);
 		void RemoveTransparentNode(RenderShape& _node);
+		void RemoveTopmostNode(RenderShape& _node);
 		void UpdateOpaqueNodeBuffer(RenderShape& _node, ConstantBufferType _t, unsigned int _index);
 		void UpdateTransparentNodeBuffer(RenderShape& _node, ConstantBufferType _t, unsigned int _index);
+		void UpdateTopmostNodeBuffer(RenderShape& _node, ConstantBufferType _t, unsigned int _index);
 		void Render(float _deltaTime);
 
 		void ClearRenderSet();

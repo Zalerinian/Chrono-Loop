@@ -47,6 +47,9 @@ namespace LevelEditor {
                             case "Button Press":
                                 writer.WriteElementString("ButtonPress", "Enabled");
                                 break;
+                            case "Level3ElevatorButton":
+                                writer.WriteElementString("Level3ElevatorButton", "Enabled");
+                                break;
                             case "AABB to AABB":
                                 writer.WriteElementString("AABBtoAABB", "Enabled");
                                 break;
@@ -99,6 +102,7 @@ namespace LevelEditor {
                             writer.WriteElementString("Scale", tObj.Collider.Scale.X + "," + tObj.Collider.Scale.Y + "," + tObj.Collider.Scale.Z);
                         }
                         writer.WriteElementString("Move", tObj.Collider.CanMove ? "True" : "False");
+                        writer.WriteElementString("PickUp", tObj.Collider.PickUp ? "True" : "False");
                         if (tObj.ColliderType == "Sphere" || tObj.ColliderType == "OBB") {
                             writer.WriteElementString("Gravity", tObj.Collider.Gravity.X + "," + tObj.Collider.Gravity.Y + "," + tObj.Collider.Gravity.Z);
                             writer.WriteElementString("Mass", tObj.Collider.Mass.ToString());
@@ -325,6 +329,9 @@ namespace LevelEditor {
                                         case "Move":
                                             addition.Collider.CanMove = reader.Value == "True";
                                             break;
+                                        case "PickUp":
+                                            addition.Collider.PickUp = reader.Value == "True";
+                                        break;
                                         case "Mass":
                                             addition.Collider.Mass = float.Parse(reader.Value);
                                             break;
@@ -351,6 +358,9 @@ namespace LevelEditor {
                                                     break;
                                                 case "ButtonPress":
                                                     addition.Components.Add("Button Press");
+                                                    break;
+                                                case "Level3ElevatorButton":
+                                                    addition.Components.Add("Level3ElevatorButton");
                                                     break;
                                                 case "AABBtoAABB":
                                                     addition.Components.Add("AABB to AABB");

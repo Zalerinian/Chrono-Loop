@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 
-namespace Hourglass
-{
+namespace Hourglass {
 
-	public class ColliderComponent : Component, IRenderable
-	{
+	public class ColliderComponent : Component, IRenderable {
 
 		protected NumericUpDown mMass, mStaticFriction, mElasticity, mKineticFriction, mDrag;
 		protected Label mLbMass, mLbStaticFriction, mLbElasticity, mLbKineticFriction, mLbDrag, mLbColor;
 		protected ColoredShape mShape = null;
 		protected Button mColor;
+		protected CheckBox mMovable, mTrigger, mPickUpAble;
 
 		public RenderShape Shape {
 			get {
@@ -20,9 +19,83 @@ namespace Hourglass
 			}
 		}
 
+		public bool Movable {
+			get {
+				return mMovable.Checked;
+			}
+			set {
+				mMovable.Checked = value;
+			}
+		}
 
-		public ColliderComponent(int _yOffset = 0) : base()
-		{
+		public bool Trigger {
+			get {
+				return mTrigger.Checked;
+			}
+			set {
+				mTrigger.Checked = value;
+			}
+		}
+
+        public bool PickUpAble
+        {
+            get
+            {
+                return mPickUpAble.Checked;
+            }
+            set
+            {
+                mPickUpAble.Checked = value;
+            }
+        }
+
+        public float Mass {
+			get {
+				return (float)mMass.Value;
+			}
+			set {
+				mMass.Value = (decimal)value;
+			}
+		}
+
+		public float StaticFriction {
+			get {
+				return (float)mStaticFriction.Value;
+			}
+			set {
+				mStaticFriction.Value = (decimal)value;
+			}
+		}
+
+		public float KineticFriction {
+			get {
+				return (float)mKineticFriction.Value;
+			}
+			set {
+				mKineticFriction.Value = (decimal)value;
+			}
+		}
+
+		public float Elasticity {
+			get {
+				return (float)mElasticity.Value;
+			}
+			set {
+				mElasticity.Value = (decimal)value;
+			}
+		}
+
+		public float Drag {
+			get {
+				return (float)mDrag.Value;
+			}
+			set {
+				mDrag.Value = (decimal)value;
+			}
+		}
+
+
+		public ColliderComponent(int _yOffset = 0) : base() {
 			#region Control Creation
 
 			// Numeric Up-Down controls:
@@ -43,12 +116,20 @@ namespace Hourglass
 			// Buttons
 			mColor = new Button();
 
+			// Checkboxes
+			mMovable = new CheckBox();
+			mTrigger = new CheckBox();
+            mPickUpAble = new CheckBox();
+
 			mGroupBox.Controls.Add(mMass);
 			mGroupBox.Controls.Add(mStaticFriction);
 			mGroupBox.Controls.Add(mElasticity);
 			mGroupBox.Controls.Add(mKineticFriction);
 			mGroupBox.Controls.Add(mDrag);
 			mGroupBox.Controls.Add(mColor);
+			mGroupBox.Controls.Add(mMovable);
+			mGroupBox.Controls.Add(mTrigger);
+            mGroupBox.Controls.Add(mPickUpAble);
 
 			mGroupBox.Controls.Add(mLbMass);
 			mGroupBox.Controls.Add(mLbStaticFriction);
@@ -113,30 +194,40 @@ namespace Hourglass
 			mElasticity.Name = "mElasticity";
 			mElasticity.Size = new System.Drawing.Size(ContentWidth - mElasticity.Left, 20);
 			mElasticity.TabIndex = 6;
+			mElasticity.Minimum = 0;
+			mElasticity.Maximum = 999999;
 
 			mDrag.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
 			mDrag.Location = new System.Drawing.Point(90, 77 + _yOffset);
 			mDrag.Name = "mDrag";
 			mDrag.Size = new System.Drawing.Size(ContentWidth - mDrag.Left, 20);
 			mDrag.TabIndex = 7;
+			mDrag.Minimum = 0;
+			mDrag.Maximum = 999999;
 
 			mMass.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
 			mMass.Location = new System.Drawing.Point(90, 20 + _yOffset);
 			mMass.Name = "mMass";
 			mMass.Size = new System.Drawing.Size(ContentWidth - mMass.Left, 20);
 			mMass.TabIndex = 5;
+			mMass.Minimum = 0;
+			mMass.Maximum = 999999;
 
 			mStaticFriction.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
 			mStaticFriction.Location = new System.Drawing.Point(90, 103 + _yOffset);
 			mStaticFriction.Name = "mStaticFriction";
 			mStaticFriction.Size = new System.Drawing.Size(ContentWidth - mStaticFriction.Left, 20);
 			mStaticFriction.TabIndex = 8;
+			mStaticFriction.Minimum = 0;
+			mStaticFriction.Maximum = 999999;
 
 			mKineticFriction.Anchor = (AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
 			mKineticFriction.Location = new System.Drawing.Point(90, 130 + _yOffset);
 			mKineticFriction.Name = "mKineticFriction";
 			mKineticFriction.Size = new System.Drawing.Size(ContentWidth - mKineticFriction.Left, 20);
 			mKineticFriction.TabIndex = 9;
+			mKineticFriction.Minimum = 0;
+			mKineticFriction.Maximum = 999999;
 
 
 			// Buttons
@@ -145,43 +236,106 @@ namespace Hourglass
 			mColor.Size = new System.Drawing.Size(ContentWidth - mColor.Left, 20);
 			mColor.Text = "Collider Color";
 
-
-			#endregion
-
-			mGroupBox.Text = "Collider Component";
+			// Recalculate content width.
 			mGroupBox.Size = mGroupBox.PreferredSize;
+			ContentWidth = (mGroupBox.Size - mGroupBox.Padding.Size - mGroupBox.Margin.Size).Width;
+
+
+			// Checkboxes
+			mMovable.Text = "Movable";
+			mMovable.AutoSize = true;
+			mMovable.Checked = true;
+			mMovable.Location = new System.Drawing.Point(ContentWidth / 4, 180 + _yOffset);
+			///mMovable.Size = new System.Drawing.Size(ContentWidth / 2, 25);
+			mMovable.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
+
+			mTrigger.Text = "Is Trigger";
+			mTrigger.AutoSize = true;
+			mTrigger.Checked = false;
+			mTrigger.Location = new System.Drawing.Point(ContentWidth / 4 * 2, 180 + _yOffset);
+			//mTrigger.Size = new System.Drawing.Size(ContentWidth / 2, 25);
+			mTrigger.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
+
+            mPickUpAble.Text = "PickUpAble";
+            mPickUpAble.AutoSize = true;
+            mPickUpAble.Checked = false;
+            mPickUpAble.Location = new System.Drawing.Point(ContentWidth / 4, 180 + _yOffset);
+            ///mMovable.Size = new System.Drawing.Size(ContentWidth / 2, 25);
+            mPickUpAble.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
+
+
+            #endregion
+
+            mGroupBox.Text = "Collider Component";
+			mGroupBox.Size = mGroupBox.PreferredSize;
+			mGroupBox.Resize += OnGroupboxResize;
 		}
 
-		public override void OnMenuClick_Reset(object sender, EventArgs e)
-		{
+		public void OnGroupboxResize(object sender, EventArgs e) {
+			int ContentWidth = (mGroupBox.Size - mGroupBox.Padding.Size - mGroupBox.Margin.Size).Width;
+			mMovable.Location = new System.Drawing.Point(ContentWidth / 4 - (mMovable.Size.Width / 2), mMovable.Location.Y);
+			mTrigger.Location = new System.Drawing.Point(ContentWidth / 4 * 2 - (mTrigger.Size.Width / 2), mTrigger.Location.Y);
+            mPickUpAble.Location = new System.Drawing.Point(ContentWidth / 4 * 3 - (mTrigger.Size.Width / 2), mTrigger.Location.Y);
+        }
+
+		public override void OnMenuClick_Reset(object sender, EventArgs e) {
 			mMass.Value = 0;
 			mElasticity.Value = 0;
 			mDrag.Value = 0;
 			mStaticFriction.Value = 0;
 			mKineticFriction.Value = 0;
-			if(mShape != null)
-			{
+			mMovable.Checked = true;
+			mTrigger.Checked = false;
+            mPickUpAble.Checked = false;
+			if (mShape != null) {
 				mShape.Dispose();
 			}
 		}
 
-		public override void WriteData(System.IO.BinaryWriter w)
-		{
+		public override void WriteData(System.IO.BinaryWriter w) {
 			base.WriteData(w);
 			w.Write((float)mMass.Value);
 			w.Write((float)mStaticFriction.Value);
 			w.Write((float)mKineticFriction.Value);
 			w.Write((float)mElasticity.Value);
 			w.Write((float)mDrag.Value);
+			w.Write(mMovable.Checked);  // Added in writer Version 2
+			w.Write(mTrigger.Checked);  // Added in writer Version 2
+            w.Write(mPickUpAble.Checked); // Added in writer Version 4
+        }
+
+		public override void ReadData(BinaryReader r, int _version) {
+			mMass.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mStaticFriction.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mKineticFriction.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mElasticity.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			mDrag.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+			if (_version >= 2) {
+				mMovable.Checked = r.ReadByte() == 1;
+				mTrigger.Checked = r.ReadByte() == 1;
+			}
+            if(_version >= 4)
+            {
+                mPickUpAble.Checked = r.ReadByte() == 1;
+            }
 		}
 
-		public override void ReadData(BinaryReader r)
-		{
-			mMass.Value            = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
-			mStaticFriction.Value  = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
-			mKineticFriction.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
-			mElasticity.Value      = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
-			mDrag.Value            = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+		public override void CopyData(ref Component _other) {
+			if (!(_other is ColliderComponent)) {
+				throw new InvalidDataException("Given component does not match calling type!");
+			}
+			ColliderComponent comp = _other as ColliderComponent;
+			comp.mColor.BackColor = mColor.BackColor;
+			comp.mDrag.Value = mDrag.Value;
+			comp.mElasticity.Value = mElasticity.Value;
+			comp.mKineticFriction.Value = mKineticFriction.Value;
+			comp.mMass.Value = mMass.Value;
+			comp.mMovable.Checked = mMovable.Checked;
+			comp.mPickUpAble.Checked = mPickUpAble.Checked;
+			comp.mStaticFriction.Value = mStaticFriction.Value;
+			comp.mTrigger.Checked = mTrigger.Checked;
+
+			mShape.Color = mColor.BackColor;
 		}
 
 	}

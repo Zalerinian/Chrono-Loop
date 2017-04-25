@@ -7,6 +7,8 @@
 #include "../Core/Pool.h"
 #include "../Rendering/Draw2D.h"
 #include "../Input/VRInputManager.h"
+#include "../Input/KeyboardInput.h"
+#include "../Core/TimeManager.h"
 #include <list>
 
 
@@ -22,6 +24,7 @@ namespace Epoch
 		RESUME,
 		SETTINGS,
 		HUBWORLD,
+		RESTART,
 		AUDIO,
 		MISC,
 		MAX
@@ -42,8 +45,8 @@ namespace Epoch
 		BaseObject *pMainPanel = nullptr, *pSettingsPanel = nullptr; //Children of the Entire Pause Menu
 		MeshComponent *mcMainPanel = nullptr, *mcSettingsPanel = nullptr;
 
-		BaseObject *pResume = nullptr, *pSettings = nullptr, *pHubworld = nullptr, *pAudio = nullptr, *pMisc = nullptr;//Children of Panels
-		MeshComponent *mcResume = nullptr, *mcSettings = nullptr, *mcHubworld = nullptr, *mcAudio = nullptr, *mcMisc = nullptr;
+		BaseObject *pResume = nullptr, *pSettings = nullptr, *pHubworld = nullptr,*pRestartLevel = nullptr, *pAudio = nullptr, *pMisc = nullptr;//Children of Panels
+		MeshComponent *mcResume = nullptr, *mcSettings = nullptr, *mcHubworld = nullptr, *mcRestartLevel = nullptr,*mcAudio = nullptr, *mcMisc = nullptr;
 
 
 		D2D1::ColorF wut = { 1,1,1,1 };
@@ -51,8 +54,12 @@ namespace Epoch
 
 		float transparentColor[4] = { 0,0,0,0 };
 
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> texPauseMenuBase, texMainPanel,texSettingsPanel, texResume,texSettings,texHubworld,texAudio,texMisc;
-		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> rtvPauseMenuBase, rtvMainPanel, rtvSettingsPanel, rtvResume, rtvSettings, rtvHubworld, rtvAudio, rtvMisc;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> texPauseMenuBase, texMainPanel,texSettingsPanel, texResume,texSettings,texHubworld, texRestartLevel,texAudio,texMisc;
+		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> rtvPauseMenuBase, rtvMainPanel, rtvSettingsPanel, rtvResume, rtvSettings, rtvHubworld, rtvRestartLevel, rtvAudio, rtvMisc;
+
+		matrix4 playerPos;
+		vec4f playerRot;
+		float scaleX = 0.0f, scaleY = 0.0f;
 	public:
 		//Accessors
 		bool isPauseMenuOn() { return PauseMenuisUp; }
@@ -60,7 +67,6 @@ namespace Epoch
 		//Mutators
 		void SetPauseMenuToOn(bool _set) { PauseMenuisUp = _set; }
 
-		//
 		virtual void Start()
 		{
 			Settings::GetInstance().SetBool("PauseMenuUp", PauseMenuisUp);
@@ -112,12 +118,18 @@ namespace Epoch
 
 					pHubworld->AddComponent(mcHubworld);
 					pHubworld->SetParent(pMainPanel);
+					//Restart Level Option Initialize
+					SetUpThisObjectForMe(&pRestartLevel, &mcRestartLevel, std::string("PauseMenu - Restart Level Option"), identity);
+					TextureManager::Instance()->iGetTexture2D("memory:PauseMenu - Restart Level Option", nullptr, &texRestartLevel);
 
+					pRestartLevel->AddComponent(mcRestartLevel);
+					pRestartLevel->SetParent(pMainPanel);
 
 					//Setting Children for Main Panel
 					pMainPanel->AddChild(pResume);
 					pMainPanel->AddChild(pSettings);
 					pMainPanel->AddChild(pHubworld);
+					pMainPanel->AddChild(pRestartLevel);
 				//Settings Panel Options
 					//Audio Option Initialize
 					//identity.SetMatrix(matrix4::CreateTranslation(0, 0, 0.8f));
@@ -126,7 +138,6 @@ namespace Epoch
 
 					pAudio->AddComponent(mcAudio);
 					pAudio->SetParent(pSettingsPanel);
-
 
 					//Misc Option Initialize
 					//identity.SetMatrix(matrix4::CreateTranslation(0, 0, 0.8f));
@@ -147,6 +158,7 @@ namespace Epoch
 					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texResume.Get(), NULL, rtvResume.GetAddressOf());
 					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texSettings.Get(), NULL, rtvSettings.GetAddressOf());
 					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texHubworld.Get(), NULL, rtvHubworld.GetAddressOf());
+					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texRestartLevel.Get(), NULL, rtvRestartLevel.GetAddressOf());
 					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texAudio.Get(), NULL, rtvAudio.GetAddressOf());
 					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texMisc.Get(), NULL, rtvMisc.GetAddressOf());
 			//Active Panel Start Up
@@ -159,12 +171,21 @@ namespace Epoch
 		}
 		virtual void Update()
 		{
-			if(VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu) == true || 
-				VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu) == true)
+			if ((!PauseMenuisUp && scaleY > 0.0f) || (PauseMenuisUp && scaleX <= 20.0f)) {
+				if ((!PauseMenuisUp && scaleY > 0.0f)) {
+					OnEnable();
+					PauseMenuisUp = false;
+				}
+				else if ((PauseMenuisUp && scaleX <= 20.0f))
+					OnEnable();
+			}
+			if((VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu) == true || 
+				VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu) == true || 
+				(GetAsyncKeyState(Keys::M) & 0x1)) && !LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->isTimePaused())
 			{
 				if (PauseMenuisUp) 
 					OnDisable();
-				else
+				else if (!PauseMenuisUp)
 					OnEnable();
 			}
 			if (PauseMenuisUp) {
@@ -174,6 +195,7 @@ namespace Epoch
 				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvResume.Get(), transparentColor);
 				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvSettings.Get(), transparentColor);
 				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvHubworld.Get(), transparentColor);
+				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvRestartLevel.Get(), transparentColor);
 				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvAudio.Get(), transparentColor);
 				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvMisc.Get(), transparentColor);
 
@@ -185,7 +207,6 @@ namespace Epoch
 					Draw::Instance().GetBitmap(texPauseMenuBase.Get()));
 				
 				//Pause Base's Children
-
 					//Main Panel Rectangle
 					Draw::Instance().DrawRectangleToBitmap(
 						0, 0, 256.0f, 256.0f,
@@ -211,7 +232,6 @@ namespace Epoch
 						Draw::Instance().GetBitmap(texSettingsPanel.Get()));
 					
 					//Main Panel's Children
-
 						mainFont->mColor = D2D1::ColorF::WhiteSmoke;
 						mainFont->mFontSize = 75;
 						tempColor = { 0,0,0.9f,0.5f };
@@ -249,6 +269,16 @@ namespace Epoch
 							*mainFont, L"Hubworld",
 							Draw::Instance().GetBitmap(texHubworld.Get()));
 
+						//Restart Level Option Rectangle 
+						Draw::Instance().DrawRectangleToBitmap(
+							0, 0, 256.0f, 256.0f,
+							tempColor,
+							Draw::Instance().GetBitmap(texRestartLevel.Get()));
+						//Restart Level Option Text
+						Draw::Instance().DrawTextToBitmap(
+							0, 0, 256.0f, 256.0f,
+							*mainFont, L"Restart Level",
+							Draw::Instance().GetBitmap(texRestartLevel.Get()));
 					//Setting Panel's Children
 
 						//Audio Option Rectangle 
@@ -284,6 +314,9 @@ namespace Epoch
 					} else if (RaycastToMenu(&pHubworld, &mcHubworld, true)) {
 						mActiveMenu = HUBWORLD;
 						SwitchPanel(&mActiveMenu);
+					} else if (RaycastToMenu(&pRestartLevel, &mcRestartLevel, true)) {
+						mActiveMenu = RESTART;
+						SwitchPanel(&mActiveMenu);
 					} else if (RaycastToMenu(&pAudio, &mcAudio, true)) {
 
 					} else if (RaycastToMenu(&pMisc, &mcMisc, true)) {
@@ -299,8 +332,12 @@ namespace Epoch
 					} else if (RaycastToMenu(&pSettings, &mcSettings, false)) {
 						mActiveMenu = SETTINGS;
 						SwitchPanel(&mActiveMenu);
-					} else if (RaycastToMenu(&pHubworld, &mcHubworld, false)) {
+					}
+					else if (RaycastToMenu(&pHubworld, &mcHubworld, false)) {
 						mActiveMenu = HUBWORLD;
+						SwitchPanel(&mActiveMenu);
+					} else if (RaycastToMenu(&pRestartLevel, &mcRestartLevel, false)) {
+						mActiveMenu = RESTART;
 						SwitchPanel(&mActiveMenu);
 					} else if (RaycastToMenu(&pAudio, &mcAudio, false)) {
 
@@ -309,6 +346,30 @@ namespace Epoch
 						SwitchPanel(&mActiveMenu);
 					}
 				}
+				if (scaleY < 18.0f) {
+					scaleX = 0.1f;
+					scaleY += 2.0f;
+				}
+				else if (scaleX < 20.0f)
+					scaleX += 1.0f;
+			}
+			else
+			{
+				if (scaleX > 0.1f){
+					scaleX -= 1.0f;
+					if (scaleX < 0.1f)
+						scaleX = 0.1f;
+				}
+				else if (scaleY > 0.0f) {
+					scaleY -= 2.0f;
+				}
+				else if (scaleY <= 0.0f) {
+					scaleX = 0.0f;
+					//scaleY = 0.0f;
+ 					OnDisable();
+				}
+				
+
 			}
 		}
 		virtual void OnEnable()
@@ -318,34 +379,48 @@ namespace Epoch
 			PauseMenuisUp = true;
 			Settings::GetInstance().SetBool("PauseMenuUp", PauseMenuisUp);
 			Transform tempT;
-			matrix4 playerPos = VRInputManager::GetInstance().GetPlayerView();
-			vec4f playerRot = vec4f(0, 0, 1.5f, 0) *  playerPos;
-			//playerRot.x = 1;
-			//playerRot.y = 0;
+			if (scaleY <= 0.0f)
+			{
+				scaleY = 0.0f;
+				scaleX = 0.0f;
+				playerPos = VRInputManager::GetInstance().GetPlayerView();
+				playerRot = vec4f(0, 0, 1.5f, 0) *  playerPos;
+			}
+			
+			
 
-			tempT.SetMatrix(playerPos.CreateXRotation(1.5708f) * playerPos.CreateScale(20,20,20) * (playerPos) * playerPos.CreateTranslation(playerRot));// * playerPos.CreateTranslation(0, 5.0f, 5.0f)));// *playerPos.CreateTranslation(playerRot));
+			tempT.SetMatrix(playerPos.CreateXRotation(1.5708f) * playerPos.CreateScale(scaleX,scaleY,1) * (playerPos) * playerPos.CreateTranslation(playerRot));// * playerPos.CreateTranslation(0, 5.0f, 5.0f)));// *playerPos.CreateTranslation(playerRot));
 			pPauseMenuBase->SetTransform(tempT);
+
 			tempT.SetMatrix(playerPos.CreateScale(0.85f, 1, 0.85f) * playerPos.CreateTranslation(0, 0.001f, 0));
 			pMainPanel->SetTransform(tempT);
 			tempT.SetMatrix(playerPos.CreateScale(0.85f, 1, 0.85f) * playerPos.CreateTranslation(0, 0.001f, 0));
 			pSettingsPanel->SetTransform(tempT);
-			tempT.SetMatrix(playerPos.CreateScale(0.4f, 1, 0.2f) * playerPos.CreateTranslation(0, 0.001f, -0.01f));
+
+			tempT.SetMatrix(playerPos.CreateScale(0.3f, 1, 0.3f) * playerPos.CreateTranslation(-0.0075f, 0.001f, -0.0075f));
 			pResume->SetTransform(tempT);
-			tempT.SetMatrix(playerPos.CreateScale(0.4f, 1, 0.2f) * playerPos.CreateTranslation(0, 0.001f, 0));
+			tempT.SetMatrix(playerPos.CreateScale(0.3f, 1, 0.3f) * playerPos.CreateTranslation(0.0075f, 0.001f, -0.0075f));
 			pSettings->SetTransform(tempT);
-			tempT.SetMatrix(playerPos.CreateScale(0.4f, 1, 0.2f) * playerPos.CreateTranslation(0, 0.001f, 0.01f));
-			pHubworld->SetTransform(tempT);
+			tempT.SetMatrix(playerPos.CreateScale(0.3f, 1, 0.3f) * playerPos.CreateTranslation(-0.0075f, 0.001f, 0.0075f));
+			pHubworld->SetTransform(tempT);			
+			tempT.SetMatrix(playerPos.CreateScale(0.3f, 1, 0.3f) * playerPos.CreateTranslation(0.0075f, 0.001f, 0.0075f));
+			pRestartLevel->SetTransform(tempT);
+
 			tempT.SetMatrix(playerPos.CreateScale(0.4f, 1, 0.2f) * playerPos.CreateTranslation(0, 0.001f, 0));
 			pAudio->SetTransform(tempT);
-			tempT.SetMatrix(playerPos.CreateScale(0.3f, 1, 0.15f) * playerPos.CreateTranslation(0.015f, 0.001f, 0.0185f));
+			tempT.SetMatrix(playerPos.CreateScale(0.3f, 1, 0.3f) * playerPos.CreateTranslation(0.015f, 0.001f, 0.015f));
 			pMisc->SetTransform(tempT);
 		}
 		virtual void OnDisable()
 		{
-			mActiveMenu = PAUSEMENU_OFF;
-			SwitchPanel(&mActiveMenu);
+			if (scaleY <= 0.0f)
+			{
+				mActiveMenu = PAUSEMENU_OFF;
+				SwitchPanel(&mActiveMenu);
+			}
 			PauseMenuisUp = false;
 			Settings::GetInstance().SetBool("PauseMenuUp", PauseMenuisUp);
+			
 		}
 		void SwitchPanel(MENU_NAME* _activemenu)
 		{
@@ -379,9 +454,15 @@ namespace Epoch
 					CommandConsole::Instance().Toggle();
 				}
 				break;
+			case RESTART:
+				{
+					OnDisable();
+					TimeManager::Instance()->HotfixResetTimeline();
+				}
+				break;
 			case AUDIO:
 				{
-
+					
 				}
 				break;
 			//case MISC:
@@ -409,7 +490,7 @@ namespace Epoch
 			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
 			TextureManager::Instance()->iAddTexture2D(_name, temp, &srv);
 			(*_mc)->AddTexture(_name.c_str(), eTEX_DIFFUSE);
-			GetTexture(*_obj, _width, _height);
+			//GetTexture(*_obj, _width, _height);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(*_obj);
 		}
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> GetTexture(BaseObject* _obj,unsigned int _width,unsigned int _height)

@@ -22,12 +22,10 @@ namespace Epoch
 		Renderer::TimeManipulationEffectData mEffectData;
 		Interpolator<vec2f> mDesaturationInterpolator;
 		unsigned int HotfixButtonDown = 0;
-		unsigned int mCloneCount;
+		unsigned int mCloneCount = 0 ;
 		unsigned short mCurrTexture;
 		unsigned short mNumOfConfirmedClones = 0;
-		BaseObject* mCurCloneHeadset;
-		BaseObject* mCurCloneController1;
-		BaseObject* mCurCloneController2;
+
 		std::string mTextures[10] = { "../Resources/CloneTexture.png",
 			"../Resources/CloneTexture_Green.png",
 			"../Resources/CloneTexture_Pink.png",
@@ -40,7 +38,9 @@ namespace Epoch
 			"../Resources/CloneTexture_Grey.png" };
 
 	public:
-		
+		BaseObject* mCurCloneHeadset = nullptr;
+		BaseObject* mCurCloneController1 = nullptr;
+		BaseObject* mCurCloneController2 = nullptr;
 		TimeManipulation();
 		TimeManipulation(ControllerType _t) { mControllerRole = _t; };
 		~TimeManipulation();

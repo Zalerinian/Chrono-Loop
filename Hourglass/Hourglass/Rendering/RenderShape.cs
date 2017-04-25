@@ -13,7 +13,37 @@ namespace Hourglass
 		public enum ShapeType { Textured = 0, Colored };
 		protected ShapeType mType;
 		private object mTag;
+        protected Vector3 mPosition, mRotation, mScale;
 
+        public Vector3 Position {
+            get {
+                return mPosition;
+            }
+            set {
+                mPosition = value;
+                RebuildMatrix();
+            }
+        }
+
+        public Vector3 Rotation {
+            get {
+                return mRotation;
+            }
+            set {
+                mRotation = value;
+                RebuildMatrix();
+            }
+        }
+
+        public Vector3 Scale {
+            get {
+                return mScale;
+            }
+            set {
+                mScale = value;
+                RebuildMatrix();
+            }
+        }
 
 		public object Tag {
 			get {
@@ -86,6 +116,12 @@ namespace Hourglass
 		public abstract void Dispose();
 		public abstract bool CheckRaycast(Vector3 _start, Vector3 _dir, out float _time);
 
+        private void RebuildMatrix() {
+            mWorld = Matrix.Identity;
+			mWorld *= Matrix.Scaling(mScale);
+			mWorld *= Matrix.RotationYawPitchRoll(mRotation.Y, mRotation.Z, mRotation.X);
+            mWorld *= Matrix.Translation(mPosition);
+        }
 
 		public bool RayToTriangle(Vector3 _v1, Vector3 _v2, Vector3 _v3, Vector3 _norm, Vector3 _start, Vector3 _dir, out float _time)
 		{

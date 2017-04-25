@@ -168,7 +168,7 @@ void Update() {
 	rightRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
 	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 	MainMenuBT *bt = new MainMenuBT(eControllerType_Primary);
-	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
+	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
 	RightController->AddComponent(mc);
 	RightController->AddComponent(rightRaycaster);
 	RightController->AddComponent(bt);
@@ -181,7 +181,7 @@ void Update() {
 	leftRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
 	mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 	MainMenuBT *bt2 = new MainMenuBT(eControllerType_Secondary);
-	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
+	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 	LeftController->AddComponent(leftConCol);
 	LeftController->AddComponent(leftRaycaster);
 	LeftController->AddComponent(mc2);
@@ -199,7 +199,7 @@ void Update() {
 	p1->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
 	p1->SetLife(550);
 	p1->SetSize(.35f, .15f);
-	ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.611548f, 1));
+	ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054, 1));
 	emit11->SetParticle(p1);
 	emit11->SetTexture("../Resources/BasicRectP.png");
 	((TeleportEffect*)emit11)->y1 = 8;
@@ -214,7 +214,7 @@ void Update() {
 	p1->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
 	p1->SetLife(550);
 	p1->SetSize(.15f, .05f);
-	ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.611548f, 1));
+	ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054, 1));
 	emit12->SetTexture("../Resources/BasicCircleP.png");
 	emit12->SetParticle(p1);
 	((TeleportEffect*)emit12)->y1 = 1;
@@ -231,7 +231,7 @@ void Update() {
 	p2->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
 	p2->SetLife(500);
 	p2->SetSize(.35f, .15f);
-	ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(-2.61f, -10, 0, 1));
+	ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(-2.82f, -10, 0, 1));
 	emit21->SetParticle(p2);
 	emit21->SetTexture("../Resources/BasicRectP.png");
 	((TeleportEffect*)emit21)->y1 = 8;
@@ -246,7 +246,7 @@ void Update() {
 	p2->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
 	p2->SetLife(500);
 	p2->SetSize(.15f, .05f);
-	ParticleEmitter* emit22 = new TeleportEffect(-1, 150, 2, vec4f(-2.61f, -10, 0, 1));
+	ParticleEmitter* emit22 = new TeleportEffect(-1, 150, 2, vec4f(-2.82f, -10, 0, 1));
 	emit22->SetTexture("../Resources/BasicCircleP.png");
 	emit22->SetParticle(p2);
 	((TeleportEffect*)emit22)->y1 = 1;
@@ -318,14 +318,15 @@ void Update() {
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	//Test Animate Quad///////////////////////////////////////////////////////////////////
-	/*Transform OneBack;
-	OneBack.SetMatrix(matrix4::CreateTranslation(0, 1, -3));
-	BaseObject *Forcefield = Pool::Instance()->iGetObject()->Reset("ForceField Quad", OneBack);
-	MeshComponent *forcefieldMesh = new MeshComponent("../Resources/UIPlane.obj", 0.25f);
-	forcefieldMesh->AddTexture("../Resources/Forcefield TextureSheet.png", eTEX_DIFFUSE);
-	forcefieldMesh->SetGeometryShader(eGS_PosNormTex_AnimQuad);
-	Forcefield->AddComponent(forcefieldMesh);
-	Forcefield->AddComponent(new CCAnimationController(8, 4, 32, 1.0f / 12.0f));*/
+	//Transform OneBack;
+	//OneBack.SetMatrix(matrix4::CreateTranslation(0, 1, -3));
+	//BaseObject *Forcefield = Pool::Instance()->iGetObject()->Reset("ForceField Quad", OneBack);
+	//MeshComponent *forcefieldMesh = new MeshComponent("../Resources/AnimationPlane1x1.obj", 0.25f);
+	//forcefieldMesh->AddTexture("../Resources/ForcefieldHex gray.png", eTEX_DIFFUSE);
+	//forcefieldMesh->SetGeometryShader(eGS_PosNormTex_AnimQuad);
+	//forcefieldMesh->SetTopmost(true);
+	//Forcefield->AddComponent(forcefieldMesh);
+	//Forcefield->AddComponent(new CCAnimationController(8, 6, 48, 1.0f / 24.0f));
 	//////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -367,6 +368,11 @@ void Update() {
 	Level* mainMenu;
 
 	while (LevelManager::GetInstance().LoadLevelAsync("../Resources/mainMenu.xml", &mainMenu) != Epoch::LM::LevelStatus::Success) {}
+
+	//// Binary level loading
+	//mainMenu = new Level();
+	//mainMenu->BinaryLoadLevel("../Resources/Main.elf");
+
 	mainMenu->AssignPlayerControls(headset, LeftController, RightController);
 	mainMenu->AddObject(RightController);
 	mainMenu->AddObject(headset);

@@ -338,7 +338,7 @@ namespace Epoch {
 			unsigned int temp2 = LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->GetNumClones();
 			for (std::pair<unsigned short, Epoch::BaseObject*> it : mLiveObjects) {
 				if (it.second->GetName().find("Controller1 - " + std::to_string(temp2)) == std::string::npos &&
-					it.second->GetName().find("Controller2 - " + std::to_string(temp2)) == std::string::npos) { //TODO RYAN: TEMPORARY FIX FOR INTERPOLATION
+					it.second->GetName().find("Controller2 - " + std::to_string(temp2)) == std::string::npos) {
 					objInterp = TimeManager::Instance()->GetObjectInterpolator(it.first);
 					if (_fromShot->mSnapinfos.find(it.first) != _fromShot->mSnapinfos.end() && _toShot->mSnapinfos.find(it.first) != _toShot->mSnapinfos.end()) {
 						SnapInfo* _fromSnap = _fromShot->mSnapinfos[it.first];
@@ -375,7 +375,6 @@ namespace Epoch {
 		if (mObjectLifeTimes.find(_id1) != mObjectLifeTimes.end()) {
 			ObjectLifeTime* newObject = mObjectLifeTimes[_id1];
 			newObject->mDeath = mSnaptimes[mCurrentGameTimeIndx];
-			//TODO PAT: Record 1 more snap with this component in it and record death of its componets
 		}
 
 		if (mObjectLifeTimes.find(_id2) != mObjectLifeTimes.end()) {
@@ -563,6 +562,30 @@ namespace Epoch {
 			}
 		}
 	}
+	void Timeline::MoveAllComponentsToSnap(unsigned int _snaptime, bool _movePlayer, unsigned short _id1, unsigned short _id2, unsigned short _id3) {
+		Snapshot* destination = mSnapshots[_snaptime];
+		for (auto object : mLiveObjects) {
+			unsigned short id = object.second->GetUniqueID();
+			if (_movePlayer && (id == _id1 || id == _id2 || id == _id3))
+				continue;
+			SnapInfo* destInfo;
+			//If the object doesnt have a info, then check against the list for the last snap it was updated
+			bool stored = destination->IsObjectStored(id);
+			if (stored) {
+				destInfo = destination->mSnapinfos[id];
+			} else if (!stored) {
+				if (destination->mUpdatedtimes.find(id) == destination->mUpdatedtimes.end())
+					continue;
+				destInfo = mSnapshots[destination->mUpdatedtimes[id]]->mSnapinfos[id];
+			}
+	
+			//Set all componets back to time recorded
+			for (unsigned int i = 0; i < destInfo->mComponents.size(); i++) {
+				SnapComponent* destComp = destInfo->mComponents[i];
+				SetComponent(destComp, object.second, destInfo);
+			}
+		}
+	}
 	void Timeline::SetObjectBirthTime(unsigned short _id)
 	{
 		if(mObjectLifeTimes.find(_id) != mObjectLifeTimes.end())
@@ -633,7 +656,7 @@ namespace Epoch {
 		}
 
 
-		//TODO PAT: ADD MORE COMPONETS WHEN WE NEED THEM.
+		//TODO PAT: Do this better
 		std::vector<Component*>temp;
 		for (int i = 1; i < ComponentType::eCOMPONENT_MAX; i++) {
 			{
@@ -656,7 +679,21 @@ namespace Epoch {
 						newComp->mId = temp[i]->GetColliderId();
 						_info->mComponents.push_back(newComp);
 					}
-				} else {
+				}
+				else if(i == ComponentType::eCOMPONENT_MESH)
+				{
+					temp = _object->GetComponents(ComponentType::eCOMPONENT_MESH);
+					for (unsigned int i = 0; i < temp.size(); i++) {
+						SnapComponent_Mesh* newComp = new SnapComponent_Mesh;
+						newComp->misVisible = ((MeshComponent*)temp[i])->IsVisible();
+						newComp->mCompType = temp[i]->GetType();
+						newComp->mBitNum = temp[i]->GetComponentNum();
+						_info->mBitset[newComp->mBitNum] = newComp->misVisible;
+						newComp->mId = temp[i]->GetColliderId();
+						_info->mComponents.push_back(newComp);
+					}
+				}
+				else {
 					temp = _object->GetComponents((ComponentType)i);
 					for (unsigned int i = 0; i < temp.size(); i++) {
 						SnapComponent* newComp = new SnapComponent;
@@ -665,9 +702,6 @@ namespace Epoch {
 						_info->mBitset[newComp->mBitNum] = temp[i]->IsEnabled();
 						newComp->mId = temp[i]->GetColliderId();
 						_info->mComponents.push_back(newComp);
-						////Dont waste cycles if component is not enabled
-						//if (!_info->mBitset[newComp->mBitNum])
-						//	continue;
 					}
 				}
 			}
@@ -675,15 +709,6 @@ namespace Epoch {
 
 		return _info;
 	}
-
-	//SnapInfoPlayer * Timeline::GenerateSnapInfoPlayer() {
-	//	SnapInfoPlayer* snapP = new SnapInfoPlayer(
-	//		*RenderEngine::Renderer::Instance()->GetPlayerWorldPos(),//Player World Matrix
-	//		Math::FromMatrix(VRInputManager::Instance().GetController(true).GetPose().mDeviceToAbsoluteTracking),//Left Controller World Matrix
-	//		Math::FromMatrix(VRInputManager::Instance().GetController(false).GetPose().mDeviceToAbsoluteTracking));//Right Controller World Matrix
-	//
-	//	return snapP;
-	//}
 
 
 	Snapshot* Timeline::GenerateSnapShot(unsigned int _time, std::vector<BaseObject*> & _clones) {
@@ -704,7 +729,6 @@ namespace Epoch {
 		}
 
 		//If first snapshot taken
-
 		//TODO PAT: break up the logic loop here and 
 		if (mSnapshots.size() == 0) {
 			for (std::pair<unsigned short, BaseObject*> _b : mLiveObjects) {
@@ -810,8 +834,24 @@ namespace Epoch {
 				}
 				break;
 			}
+			case ComponentType::eCOMPONENT_MESH:
+				for (unsigned int j = 0; j < _object->GetComponentCount(comp->mCompType); j++) {
+					Component* currComp = _object->GetComponentIndexed(comp->mCompType, j);
+					if (currComp->GetColliderId() == comp->mId) {
+						if (((MeshComponent*)currComp)->IsVisible() != ((SnapComponent_Mesh*)comp)->misVisible)
+							return false;
+					}
+				}
+				break;
 			default:
 			{
+				for (unsigned int j = 0; j < _object->GetComponentCount(comp->mCompType); j++) {
+					Component* currComp = _object->GetComponentIndexed(comp->mCompType, j);
+					if (currComp->GetColliderId() == comp->mId) {
+						if (info->mBitset[comp->mBitNum] != currComp->IsEnabled())
+							return false;
+					}
+				}
 				break;
 			}
 			}

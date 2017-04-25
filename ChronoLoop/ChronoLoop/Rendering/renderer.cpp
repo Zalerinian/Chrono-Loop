@@ -121,7 +121,7 @@ namespace Epoch {
 		mPLVPB.view = mPLVPB.view.Invert();
 		mPLVPB.projection = DirectX::XMMatrixPerspectiveFovRH(360, (float)1366.0f / (float)720.0f, 0.1f, 1000);
 		//6 dir, cube map or parabolic for performance
-		mContext->UpdateSubresource(mPLBufferS.Get(), 0, nullptr, &mPLVPB, 0, 0);
+		//mContext->UpdateSubresource(mPLBufferS.Get(), 0, nullptr, &mPLVPB, 0, 0);
 	}
 	Renderer::Renderer() {}
 
@@ -449,15 +449,20 @@ namespace Epoch {
 	void Renderer::InitializeStates()
 	{
 		ID3D11DepthStencilState *opaqueState, *transparentState;
-		D3D11_DEPTH_STENCIL_DESC opaqueDepth, transparentDepth;
+		D3D11_DEPTH_STENCIL_DESC opaqueDepth, transparentDepth, topmostDepth;
 		memset(&opaqueDepth, 0, sizeof(opaqueDepth));
 		opaqueDepth.DepthEnable = true;
 		opaqueDepth.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 		opaqueDepth.DepthFunc = D3D11_COMPARISON_LESS;
+
 		transparentDepth = opaqueDepth;
 		transparentDepth.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+
+		topmostDepth = transparentDepth;
+		topmostDepth.DepthEnable = false;
 		ThrowIfFailed(mDevice->CreateDepthStencilState(&opaqueDepth, &opaqueState));
 		ThrowIfFailed(mDevice->CreateDepthStencilState(&transparentDepth, &transparentState));
+		ThrowIfFailed(mDevice->CreateDepthStencilState(&topmostDepth, mTopmostState.GetAddressOf()));
 		mOpaqueState.Attach(opaqueState);
 		mTransparentState.Attach(transparentState);
 
@@ -635,6 +640,7 @@ namespace Epoch {
 		// Remove empty lists
 		mOpaqueSet.Prune();
 		mTransparentSet.Prune();
+		mTopmostSet.Prune();
 
 		// Go through opaque objects first
 		mContext->OMSetDepthStencilState(mOpaqueState.Get(), 1);
@@ -729,6 +735,60 @@ namespace Epoch {
 #endif
 			}
 		}
+
+
+		// Draw the topmost objects. These don't use the depth buffer at all, 
+		mContext->OMSetDepthStencilState(mTopmostState.Get(), 1);
+		//No blend state is set, because top-most objects also support alpha blending, and that state was set in the block above.
+		for (auto it = mTopmostSet.Begin(); it != mTopmostSet.End(); ++it) {
+			(*it)->mPositions.GetData(positions);
+			if (positions.size() > 0) {
+#if ENABLE_INSTANCING
+				unsigned int offset = 0;
+				positions.reserve((positions.size() / 256 + 1) * 256);
+				while (positions.size() - offset <= positions.size()) {
+					(*it)->mShape.GetContext().Apply(mCurrentContext);
+					mCurrentContext.SimpleClone((*it)->mShape.GetContext());
+
+					D3D11_MAPPED_SUBRESOURCE map;
+					memset(&map, 0, sizeof(map));
+					HRESULT MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+					memcpy(map.pData, positions.data() + offset, sizeof(matrix4) * min(positions.size() - offset, 256));
+					mContext->Unmap(mPositionBuffer.Get(), 0);
+					//mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
+
+					(*it)->mShape.Render((UINT)positions.size() - offset);
+					offset += 256;
+				}
+#else
+				(*it)->mShape.GetContext().Apply(mCurrentContext);
+				mCurrentContext.SimpleClone((*it)->mShape.GetContext());
+				vec4i SimInstanceID(0, 0, 0, 0);
+				for (unsigned int i = 0; i < positions.size(); ++i) {
+					SimInstanceID.x = i;
+
+					D3D11_MAPPED_SUBRESOURCE map;
+					memset(&map, 0, sizeof(map));
+					HRESULT MHR = mContext->Map(mSimInstanceBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+					memcpy(map.pData, &SimInstanceID, sizeof(vec4i));
+					mContext->Unmap(mSimInstanceBuffer.Get(), 0);
+
+					//mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimInstanceID, 0, 0);
+
+					memset(&map, 0, sizeof(map));
+					MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+					memcpy(map.pData, &positions[i], sizeof(matrix4));
+					mContext->Unmap(mPositionBuffer.Get(), 0);
+					//mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
+					(*it)->mShape.Render(1); // Without instancing, the instance count doesn't matter, but we're only drawing one :)
+				}
+#endif
+			}
+		}
+
+		mContext->OMSetDepthStencilState(mOpaqueState.Get(), 1);
+		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
+
 	}
 
 	void Renderer::RenderScreenQuad()
@@ -754,6 +814,10 @@ namespace Epoch {
 		return mTransparentSet.AddShape(_node);
 	}
 
+	GhostList<matrix4>::GhostNode * Renderer::AddTopmostNode(RenderShape & _node) {
+		return mTopmostSet.AddShape(_node);
+	}
+
 	void Renderer::RemoveOpaqueNode(RenderShape & _node)
 	{
 		mOpaqueSet.RemoveShape(_node);
@@ -762,6 +826,10 @@ namespace Epoch {
 	void Renderer::RemoveTransparentNode(RenderShape & _node)
 	{
 		mTransparentSet.RemoveShape(_node);
+	}
+
+	void Renderer::RemoveTopmostNode(RenderShape & _node) {
+		mTopmostSet.RemoveShape(_node);
 	}
 
 	void Renderer::UpdateOpaqueNodeBuffer(RenderShape & _node, ConstantBufferType _t, unsigned int _index) {
@@ -789,6 +857,27 @@ namespace Epoch {
 		RenderList* list = mTransparentSet.GetListForShape(_node);
 		if (list == nullptr) {
 			SystemLogger::Error() << "Could not update transparent node: The given shape had no associated render list." << std::endl;
+			return;
+		}
+		switch (_t) {
+			case eCB_VERTEX:
+				list->UpdateBuffer(_t, _node.GetContext().mVertexCBuffers[_index], _index, _node.mVBIndex);
+				break;
+			case eCB_PIXEL:
+				list->UpdateBuffer(_t, _node.GetContext().mPixelCBuffers[_index], _index, _node.mPBIndex);
+				break;
+			case eCB_GEO:
+				list->UpdateBuffer(_t, _node.GetContext().mGeometryCBuffers[_index], _index, _node.mGBIndex);
+				break;
+			default:
+				break;
+		}
+	}
+
+	void Renderer::UpdateTopmostNodeBuffer(RenderShape & _node, ConstantBufferType _t, unsigned int _index) {
+		RenderList* list = mTopmostSet.GetListForShape(_node);
+		if (list == nullptr) {
+			SystemLogger::Error() << "Could not update topmost node: The given shape had no associated render list." << std::endl;
 			return;
 		}
 		switch (_t) {

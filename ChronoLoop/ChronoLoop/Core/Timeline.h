@@ -17,6 +17,10 @@ namespace Epoch {
 		vec3f mVel;
 		vec3f mAcc;
 	};
+	struct SnapComponent_Mesh : SnapComponent
+	{
+		bool misVisible = true;
+	};
 	//Add more componets when we need it
 #pragma endregion ComponetStructs
 
@@ -69,7 +73,7 @@ namespace Epoch {
 	class Timeline {
 		//Where we are at in the timeline
 		unsigned int mCurrentGameTimeIndx = 0;
-		float mObjectInterpolationTime = 0.40f;
+		float mObjectInterpolationTime = 0.04f;
 		std::vector<unsigned int> mSnaptimes;
 		std::unordered_map<unsigned int, Snapshot*> mSnapshots;		//The key will be the time they were taken (mSnapTimes)
 		std::unordered_map<unsigned short, BaseObject*> mLiveObjects;
@@ -102,6 +106,7 @@ namespace Epoch {
 		void RemoveFromTimeline(unsigned short _id);
 		bool RewindMakeClone(unsigned int _snaptime);
 		bool RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
+		void MoveAllComponentsToSnap(unsigned int _snaptime, bool _movePlayer, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void MoveObjectToSnap(unsigned int _snaptime, unsigned short _id, bool isClone);
 		void MoveAllObjectsToSnap(unsigned int _snaptime);
 		void MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);

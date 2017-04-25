@@ -12,6 +12,8 @@
 #include "../Actions/CCButtonPress.h"
 #include "../Actions/CCEnterLevel.h"
 #include "../Actions/CCEnterLevel1.h"
+#include "../Actions/CCEnterLevel3.h"
+#include "../Actions/CCLoadTutorial.h"
 #include "../Actions/MainMenuBT.h"
 #include "../Actions/CCLoadHub.h"
 #include "../Actions/CCBoxSpin.h"
@@ -24,6 +26,8 @@
 #include "../Particles/ParticleSystem.h"
 #include "../Input/CommandConsole.h"
 #include "../Actions/CCButtonHold.h"
+#include "../Core/Pool.h"
+#include "../Actions/CCLevel3ElevatorButton.h"
 
 namespace Epoch {
 
@@ -33,6 +37,9 @@ namespace Epoch {
 	}
 
 	Level::~Level() {
+		if (playerInterp)
+			delete playerInterp;
+
 		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
 			delete *it;
 		}
@@ -43,6 +50,7 @@ namespace Epoch {
 		mHeadset = _headset;
 		mController1 = _lController;
 		mController2 = _rController;
+		playerInterp = new Interpolator<matrix4>();
 		CommandConsole::Instance().AddCommand(L"/WIREFRAME", ToggleEntireLevelsWireframe);
 		std::vector<Component*> codes1 = mController1->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
 		for (size_t x = 0; x < codes1.size(); ++x) {
@@ -82,6 +90,16 @@ namespace Epoch {
 		std::vector<BaseObject*> objects;
 		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
 			if ((*it)->GetName() == _name) {
+				objects.push_back(*it);
+			}
+		}
+		return objects;
+	}
+
+	std::vector<BaseObject*> Level::FindAllObjectsByPattern(std::string _name) {
+		std::vector<BaseObject*> objects;
+		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
+			if ((*it)->GetName().find(_name) != std::string::npos) {
 				objects.push_back(*it);
 			}
 		}
@@ -330,7 +348,7 @@ namespace Epoch {
 					vec3f position, rotation, scale, colliderPosition, colliderScale, normal, pushNorm, gravity, particleRadius, startColor, endColor;
 					float mass, elasticity, staticF, kineticF, normF, drag, radius, startSize, endSize, startAlpha, endAlpha;
 					int totalParticles, maxParticles, PPS, lifeTime;
-					bool collider = false, trigger = false, canMove = false, physical = false, particle = false, sound = false, SFX = false, Loop = false;
+					bool collider = false, trigger = false, canMove = false, canPickUp = false, physical = false, particle = false, sound = false, SFX = false, Loop = false;
 					unsigned long sfxFile, playFile, pauseFile, stopFile, resumeFile;
 					pData = pObject->FirstChildElement();
 					while (pData)
@@ -417,6 +435,11 @@ namespace Epoch {
 							{
 								std::string temp(pData->Value());
 								canMove = temp.find("True") != std::string::npos;
+							}
+							else if(elementType == "PickUp")
+							{
+								std::string temp(pData->Value());
+								canPickUp = temp.find("True") != std::string::npos;
 							}
 							else if (elementType == "Type")
 								colliderType = pData->Value();
@@ -608,6 +631,11 @@ namespace Epoch {
 						CCStartButton* start = new CCStartButton();
 						obj->AddComponent(start);
 					}
+					else if(name == "mmTutButton")
+					{
+						CCLoadTutorial* tut = new CCLoadTutorial();
+						obj->AddComponent(tut);
+					}
 					else if (name == "mmExitButton")
 					{
 						CCExit* exit = new CCExit();
@@ -618,7 +646,7 @@ namespace Epoch {
 						CCBoxSpin* spin = new CCBoxSpin();
 						obj->AddComponent(spin);
 					}
-					else if (name == "cube.001" || name == "cube.002" || name == "cube.003" || name == "cube.004")
+					else if (name == "cube.001" || name == "cube.002" || name == "cube.003" || name == "cube.004" || name == "cube")
 					{
 						Emitter* e = new SFXEmitter();
 						((SFXEmitter*)e)->SetEvent(AK::EVENTS::SFX_BOUNCEEFFECTS);
@@ -693,12 +721,18 @@ namespace Epoch {
 							mesh = new MeshComponent(path.c_str(), alpha);
 							mesh->SetPixelShader(ePS_TRANSPARENT);
 						}
+						else if (obj->GetName().find("Prop") != std::string::npos)
+						{
+							mesh = new MeshComponent(path.c_str());
+							mesh->SetPixelShader(ePS_PURETEXTURE);
+						}
 						else
 						{
 							mesh = new MeshComponent(path.c_str());
 						}
 
-						if (name == "Skybox")
+						if (name == "Skybox" || name == "mmDoor" || name == "mmDoor2" ||
+							name == "mmTutSign" || name == "mmExitSign" || name == "mmStartSign")
 							mesh->SetPixelShader(ePS_PURETEXTURE);
 
 							path = "../Resources/";
@@ -710,6 +744,16 @@ namespace Epoch {
 								mesh->AddTexture(path.c_str(), eTEX_EMISSIVE);
 							}
 							obj->AddComponent(mesh);
+
+						 if (obj->GetName().find("Wire") != std::string::npos) {
+								MeshComponent* mesh2;
+								std::string path2 = "../Resources/";
+								path2.append(meshFile);
+								mesh2 = new MeshComponent(path2.c_str());
+								path2 = "../Resources/green.png";
+								mesh2->AddTexture(path2.c_str(), eTEX_DIFFUSE);
+								obj->AddComponent(mesh2);
+							}
 					
 					}
 
@@ -756,6 +800,7 @@ namespace Epoch {
 						vec3f min = colliderPosition - offset;
 						vec3f max = colliderPosition + offset;
 						CubeCollider* col = new CubeCollider(obj, canMove, trigger, gravity, mass, elasticity, staticF, kineticF, drag, min, max);
+						col->mPickUpAble = canPickUp;
 						obj->AddComponent(col);
 					}
 					else if (colliderType == "Sphere")
@@ -763,6 +808,7 @@ namespace Epoch {
 						physical = true;
 
 						SphereCollider* col = new SphereCollider(obj, canMove, trigger, gravity, mass, elasticity, staticF, kineticF, drag, radius);
+						col->mPickUpAble = canPickUp;
 						obj->AddComponent(col);
 					}
 					else if (colliderType == "Button")
@@ -800,6 +846,11 @@ namespace Epoch {
 							CCButtonPress* code = new CCButtonPress();
 							obj->AddComponent(code);
 						}
+						else if(codeComs[i] == "Level3ElevatorButton")
+						{
+							CCLevel3ElevatorButton* code = new CCLevel3ElevatorButton();
+							obj->AddComponent(code);
+						}
 						else if (codeComs[i] == "AABBtoAABB")
 						{
 							CCElasticAABBtoAABB* code = new CCElasticAABBtoAABB();
@@ -822,7 +873,7 @@ namespace Epoch {
 						}
 						else if (codeComs[i] == "EnterLevel")
 						{
-							if (name == "DoorEmitter2")
+							if (name == "ExitFrame")
 							{
 								CCLoadHub* code = new CCLoadHub();
 								obj->AddComponent(code);
@@ -832,9 +883,13 @@ namespace Epoch {
 								CCEnterLevel1* code = new CCEnterLevel1();
 								obj->AddComponent(code);
 							}
-							else
+							else if(name == "mmDoor2")
 							{
 								CCEnterLevel* code = new CCEnterLevel();
+								obj->AddComponent(code);
+							}
+							else if (name == "mmDoor3") {
+								CCEnterLevel3* code = new CCEnterLevel3();
 								obj->AddComponent(code);
 							}
 						}
@@ -844,6 +899,8 @@ namespace Epoch {
 							obj->AddComponent(code);
 						}
 					}
+
+					
 					AddObject(obj);
 					pObject = pObject->NextSiblingElement("Object");
 				}
@@ -854,6 +911,423 @@ namespace Epoch {
 			{
 				SystemLogger::GetLog() << "Cannot find 'Root' node" << std::endl;
 			}
+		}
+	}
+
+	void Level::BinaryLoadLevel(std::string _file)
+	{
+		std::ifstream file(_file, std::ios::in | std::ios::binary);
+		if (file.is_open())
+		{
+			UINT32 version = 0;
+			INT32 settingOffest = 0, objectOffest = 0;
+			file.read((char *)&version, sizeof(UINT32));
+			file.read((char *)&settingOffest, sizeof(INT32));
+			file.read((char *)&objectOffest, sizeof(INT32));
+			//settings
+			file.seekg(settingOffest, std::ios_base::beg);
+			vec3f startPosition, startRotation;
+			unsigned short MaxClones = 0;
+			file.read((char *)&startPosition.x, sizeof(float));
+			file.read((char *)&startPosition.y, sizeof(float));
+			file.read((char *)&startPosition.z, sizeof(float));
+
+			file.read((char *)&startRotation.x, sizeof(float));
+			file.read((char *)&startRotation.y, sizeof(float));
+			file.read((char *)&startRotation.z, sizeof(float));
+			if (version >= 4) {
+				file.read((char *)&MaxClones, sizeof(unsigned short));;
+			}
+			mMaxNumofClones = MaxClones;
+			mStartPosition = startPosition;
+			mStartRotation = startRotation;
+			//Objects
+			file.seekg(objectOffest, std::ios_base::beg);
+			INT32 objectCount = 0;
+			file.read((char *)&objectCount, sizeof(INT32));
+
+			BaseObject* parent = nullptr;
+			INT8 objOperation = 0;
+
+			for (INT32 i = 0; i < objectCount; i++)
+			{
+				BaseObject* obj = nullptr;
+				//Components
+				INT32 componentCount = 0;
+				file.read((char *)&componentCount, sizeof(INT32));
+				for (INT32 j = 0; j < componentCount; j++)
+				{
+					INT16 type = 0;
+					file.read((char *)&type, sizeof(INT16));
+					switch (type)
+					{
+					case 0: //None
+						break;
+					case 1: //BoxCollider
+					{
+						float mass = 0, staticFriction = 0, kineticFriction = 0, elasticity = 0, drag = 0;
+						byte movable = 0, trigger = 0, pickupable = false;
+						file.read((char *)&mass, sizeof(float));
+						file.read((char *)&staticFriction, sizeof(float));
+						file.read((char *)&kineticFriction, sizeof(float));
+						file.read((char *)&elasticity, sizeof(float));
+						file.read((char *)&drag, sizeof(float));
+						file.read((char *)&movable, sizeof(byte));
+						file.read((char *)&trigger, sizeof(byte));
+						if (version >= 4) {
+							file.read((char *)&pickupable, sizeof(byte));
+						}
+
+						vec3f position, rotation, scale;
+						file.read((char *)&position.x, sizeof(float));
+						file.read((char *)&position.y, sizeof(float));
+						file.read((char *)&position.z, sizeof(float));
+
+						file.read((char *)&rotation.x, sizeof(float));
+						file.read((char *)&rotation.y, sizeof(float));
+						file.read((char *)&rotation.z, sizeof(float));
+
+						file.read((char *)&scale.x, sizeof(float));
+						file.read((char *)&scale.y, sizeof(float));
+						file.read((char *)&scale.z, sizeof(float));
+						if (obj)
+						{
+							std::string temp = obj->GetName();
+							vec3f offset = vec3f(scale.x * scale.x, scale.y * scale.y, scale.z * scale.z) / 2;
+							vec3f min = position - offset;
+							vec3f max = position + offset;
+							CubeCollider* col = new CubeCollider(obj, movable == 1, trigger == 1, vec3f(0, -1, 0), mass, elasticity, staticFriction, kineticFriction, drag, min, max);
+							col->mPickUpAble = pickupable;
+							obj->AddComponent(col);
+						}
+					}
+						break;
+					case 2: //ButtonCollider
+					{
+						float mass = 0, force = 0;
+						file.read((char *)&mass, sizeof(float));
+						file.read((char *)&force, sizeof(float));
+
+						vec3f position, scale, normal;
+						file.read((char *)&position.x, sizeof(float));
+						file.read((char *)&position.y, sizeof(float));
+						file.read((char *)&position.z, sizeof(float));
+
+						file.read((char *)&scale.x, sizeof(float));
+						file.read((char *)&scale.y, sizeof(float));
+						file.read((char *)&scale.z, sizeof(float));
+
+						file.read((char *)&normal.x, sizeof(float));
+						file.read((char *)&normal.y, sizeof(float));
+						file.read((char *)&normal.z, sizeof(float));
+						if (obj)
+						{
+							vec3f offset = vec3f(scale.x * scale.x, scale.y * scale.y, scale.z * scale.z) / 2;
+							vec3f min = position - offset;
+							vec3f max = position + offset;
+							ButtonCollider* col = new ButtonCollider(obj, min, max, mass, force, normal);
+							obj->AddComponent(col);
+						}
+					}
+						break;
+					case 3: //PlaneCollider
+					{
+						float mass = 0, staticFriction = 0, kineticFriction = 0, elasticity = 0, drag = 0, offset = 0;
+						byte movable = 0, trigger = 0, pickupable = 0;
+						file.read((char *)&mass, sizeof(float));
+						file.read((char *)&staticFriction, sizeof(float));
+						file.read((char *)&kineticFriction, sizeof(float));
+						file.read((char *)&elasticity, sizeof(float));
+						file.read((char *)&drag, sizeof(float));
+						file.read((char *)&movable, sizeof(byte)); // This is ignored, but it's written for Plane Colliders anyway.
+						file.read((char *)&trigger, sizeof(byte));
+						if (version >= 4) {
+							file.read((char *)&pickupable, sizeof(byte));
+						}
+						file.read((char *)&offset, sizeof(float));
+
+						vec3f normal;
+						file.read((char *)&normal.x, sizeof(float));
+						file.read((char *)&normal.y, sizeof(float));
+						file.read((char *)&normal.z, sizeof(float));
+						if (obj)
+						{
+							PlaneCollider* col = new PlaneCollider(obj, trigger == 1, staticFriction, kineticFriction, offset, normal);//TODO: Fix offset
+							obj->AddComponent(col);
+						}
+					}
+						break;
+					case 4: //SphereCollider
+					{
+						float mass = 0, staticFriction = 0, kineticFriction = 0, elasticity = 0, drag = 0, radius = 0;
+						byte movable = 0, trigger = 0, pickupable = 0;
+						file.read((char *)&mass, sizeof(float));
+						file.read((char *)&staticFriction, sizeof(float));
+						file.read((char *)&kineticFriction, sizeof(float));
+						file.read((char *)&elasticity, sizeof(float));
+						file.read((char *)&drag, sizeof(float));
+						file.read((char *)&movable, sizeof(byte));
+						file.read((char *)&trigger, sizeof(byte));
+						if (version >= 4) {
+							file.read((char *)&pickupable, sizeof(byte));
+						}
+						file.read((char *)&radius, sizeof(float));
+
+						vec3f position;
+						file.read((char *)&position.x, sizeof(float));
+						file.read((char *)&position.y, sizeof(float));
+						file.read((char *)&position.z, sizeof(float));
+						if (obj)
+						{
+							SphereCollider* col = new SphereCollider(obj, movable == 1, trigger == 1, vec3f(0, -1, 0), mass, elasticity, staticFriction, kineticFriction, drag, radius);
+							obj->AddComponent(col);
+						}
+					}
+						break;
+					case 5: //ColoredMesh
+					{
+						INT32 pathLength = 0, argbColor = 0;
+						std::string mesh;
+
+						float transparency = 1.0;
+						if (version >= 2) {
+							file.read((char*)&transparency, sizeof(float));
+						}
+
+						PixelShaderFormat psf = ePS_TEXTURED;
+						VertexShaderFormat vsf = eVS_TEXTURED;
+						GeometryShaderFormat gsf = eGS_PosNormTex;
+
+						// Shaders - All stored as 1 byte.	
+						if (version >= 3) {
+							file.read((char*)&psf, 1);
+							file.read((char*)&vsf, 1);
+							file.read((char*)&gsf, 1);
+						}
+
+						file.read((char *)&pathLength, sizeof(INT32));
+						char* temp = new char[pathLength];
+						file.read(temp, pathLength);
+						mesh = temp;
+						delete[] temp;
+						file.read((char *)&argbColor, sizeof(INT32));
+						//Was informed to ignore it
+						//if (obj)
+						//{
+						//	std::string path = "../Resources/";
+						//	path.append(mesh);
+						//	MeshComponent* mesh = new MeshComponent(path.c_str());
+						//	obj->AddComponent(mesh);
+						//}
+					}
+						break;
+					case 6: //TexturedMesh
+					{
+						INT32 pathLength = 0;
+						std::string mesh, diffuse, emissive;
+						float transparency = 1.0f;
+						if (version >= 2) {
+							file.read((char*)&transparency, sizeof(float));
+						}
+
+						PixelShaderFormat psf = ePS_TEXTURED;
+						VertexShaderFormat vsf = eVS_TEXTURED;
+						GeometryShaderFormat gsf = eGS_PosNormTex;
+
+						// Shaders - All stored as 1 byte.	
+						if (version >= 3) {
+							file.read((char*)&psf, 1);
+							file.read((char*)&vsf, 1);
+							file.read((char*)&gsf, 1);
+						}
+
+
+
+						// Mesh file
+						file.read((char *)&pathLength, sizeof(INT32));
+						char* temp = new char[pathLength];
+						file.read(temp, pathLength);
+						mesh = temp;
+						delete[] temp;
+
+						// Diffuse
+						file.read((char *)&pathLength, sizeof(INT32));
+						temp = new char[pathLength];
+						file.read(temp, pathLength);
+						diffuse = temp;
+						delete[] temp;
+
+						// Emissive
+						// Todo: Add a check for if there is no emissive texture.
+						file.read((char *)&pathLength, sizeof(INT32));
+						temp = new char[pathLength];
+						file.read(temp, pathLength);
+						emissive = temp;
+						delete[] temp;
+						if (obj)
+						{
+							MeshComponent* mc = new MeshComponent(mesh.c_str(), transparency, psf, vsf, gsf);
+							mc->AddTexture(diffuse.c_str(), eTEX_DIFFUSE);
+							if (emissive != "..\\Resources\\") {
+								mc->AddTexture(emissive.c_str(), eTEX_EMISSIVE);
+							}
+							obj->AddComponent(mc);
+						}
+					}
+						break;
+					case 7: //Transform
+					{
+						INT32 len = 0;
+						std::string name;
+						vec3f position, rotation, scale;
+
+						file.read((char *)&len, sizeof(INT32));
+						char* temp = new char[len];
+						file.read(temp, len);
+						name = temp;
+						delete[] temp;
+
+						file.read((char *)&position.x, sizeof(float));
+						file.read((char *)&position.y, sizeof(float));
+						file.read((char *)&position.z, sizeof(float));
+
+						file.read((char *)&rotation.x, sizeof(float));
+						file.read((char *)&rotation.y, sizeof(float));
+						file.read((char *)&rotation.z, sizeof(float));
+
+						file.read((char *)&scale.x, sizeof(float));
+						file.read((char *)&scale.y, sizeof(float));
+						file.read((char *)&scale.z, sizeof(float));
+
+						INT8 recorded = 0;
+						unsigned int flags = 0;
+						if (version >= 2) {
+							file.read((char*)&recorded, sizeof(recorded));
+							if (recorded != 0) {
+								flags = BaseObject_Flag_Record_In_Timeline;
+							}
+						}
+
+						matrix4 mat = matrix4::CreateScale(scale.x, scale.y, scale.z) *
+							matrix4::CreateXRotation(rotation.x) *
+							matrix4::CreateYRotation(rotation.y) *
+							matrix4::CreateZRotation(rotation.z) *
+							matrix4::CreateTranslation(position.x, position.y, position.z);
+						Transform trans;
+						trans.SetMatrix(mat);
+						obj = Pool::Instance()->iGetObject()->Reset(name, trans, nullptr, flags);
+						//obj = new BaseObject(name, trans);
+					}
+						break;
+					case 8: //Code
+					{
+						INT32 len = 0;
+						std::string path;
+
+						file.read((char *)&len, sizeof(INT32));
+						char* temp = new char[len];
+						file.read(temp, len);
+						path = temp;
+						delete[] temp;
+						if (obj)
+						{
+							CodeComponent* codeCom = nullptr;
+							if (path == "TimeManipulation.h")
+								codeCom = new TimeManipulation();
+							if (path == "BoxSnapControllerAction.hpp")
+								codeCom = new BoxSnapToControllerAction();
+							if (path == "CCBoxSpin.h")
+								codeCom = new CCBoxSpin();
+							if (path == "CCButtonHold.h")
+								codeCom = new CCButtonHold();
+							if (path == "CCButtonPress.h")
+								codeCom = new CCButtonPress();
+							if (path == "CCDisplayOnPause.h")
+								codeCom = new CCDisplayOnPause();
+							if (path == "CCElasticAABBtoAABB.h")
+								codeCom = new CCElasticAABBtoAABB();
+							if (path == "CCElasticAABBtoSphere.h")
+								codeCom = new CCElasticAABBToSphere();
+							if (path == "CCElasticReactionWithPlane.h")
+								codeCom = new CCElasticReactionWithPlane();
+							if (path == "CCElasticSphereToSphere.h")
+								codeCom = new CCElasticSphereToSphere();
+							if (path == "CCEnterLevel.h")
+								codeCom = new CCEnterLevel();
+							if (path == "CCEnterLevel1.h")
+								codeCom = new CCEnterLevel1();
+							if (path == "CCExit.h")
+								codeCom = new CCExit();
+							if (path == "CCLevel3ElevatorButton.h")
+								codeCom = new CCLevel3ElevatorButton();
+							if (path == "CCLoadHub.h")
+								codeCom = new CCLoadHub();
+							if (path == "CCPauseToCancel.h")
+								codeCom = new CCPauseToCancel();
+							if (path == "CCStartButton.h")
+								codeCom = new CCStartButton();
+							if (path == "CCTeleToPlay.h")
+								codeCom = new CCTeleToPlay();
+							if (path == "CodeComponent.hpp")
+								codeCom = new CodeComponent();
+							if (path == "HeadsetFollow.hpp")
+								codeCom = new HeadsetFollow();
+							if (path == "UIClonePlusToMinus.h")
+								codeCom = new UIClonePlusToMinus();
+							if (path == "UICloneText.h")
+								codeCom = new UICloneText();
+							if (path == "UICreateToDeleteClone.h")
+								codeCom = new UICreateToDeleteClone();
+							if (path == "UIRewind.h")
+								codeCom = new UIRewind();
+
+							if (codeCom)
+							{
+								obj->AddComponent(codeCom);
+							}
+						}
+					}
+						break;
+					case 9: //Audio
+					{
+						INT32 numSounds = 0;
+						file.read((char *)&numSounds, sizeof(INT32));
+						AudioEmitter* sound = nullptr;
+						if (obj)
+							sound = new AudioEmitter();
+						for (INT32 k = 0; k < numSounds; k++)
+						{
+							char playType = 0;
+							UINT64 id = 0;
+							file.read(&playType, sizeof(char));
+							file.read((char *)&id, sizeof(UINT64));
+							if (sound)
+								sound->AddEvent((AudioEmitter::EventType)playType, id);
+						}
+						if (sound)
+						{
+							AudioWrapper::GetInstance().AddEmitter(sound, (obj->GetName() + "_SOUND").c_str());
+							obj->AddComponent(sound);
+						}
+					}
+						break;
+					default:
+						break;
+					}
+				}
+				file.read((char *)&objOperation, sizeof(INT8));
+				if (objOperation == 0 && parent)
+				{
+					parent->AddChild(obj);
+					obj->SetParent(parent);
+				}
+				if (objOperation == 1)
+					parent = obj;
+				if (objOperation == 2 && parent)
+					parent = parent->GetParent();
+				AddObject(obj);
+			}
+			file.close();
 		}
 	}
 
@@ -884,24 +1358,14 @@ namespace Epoch {
 	{
 		CommandConsole* self = (CommandConsole*)_commandConsole;
 
-		CCEnterLevel* accessLevelTwo = nullptr;
 		CCEnterLevel1* accessLevelOne = nullptr;
+		CCEnterLevel* accessLevelTwo = nullptr;
+		CCEnterLevel3* accessLevelThree = nullptr;
+		CCLoadTutorial* accessTut = nullptr;
 		CCLoadHub* accessHub = nullptr;
-
 		std::list<BaseObject*> copyList = LevelManager::GetInstance().GetCurrentLevel()->GetLevelObjects();
-		for (auto it = copyList.begin(); it != copyList.end(); ++it) {
-			std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
-			if (CodeComps.size() > 0) {
-				for (size_t x = 0; x < CodeComps.size(); ++x) {
-					if (dynamic_cast<CCEnterLevel*>(CodeComps[x])) {
-						accessLevelTwo = ((CCEnterLevel*)CodeComps[x]);
-						break;
-					}
-				}
-				if (accessLevelTwo != nullptr)
-					break;
-			}
-		}
+
+
 		for (auto it = copyList.begin(); it != copyList.end(); ++it) {
 			std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
 			if (CodeComps.size() > 0) {
@@ -912,6 +1376,42 @@ namespace Epoch {
 					}
 				}
 				if (accessLevelOne != nullptr)
+					break;
+			}
+		}
+
+		for (auto it = copyList.begin(); it != copyList.end(); ++it)
+		{
+			std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+			if (CodeComps.size() > 0)
+			{
+				for (size_t x = 0; x < CodeComps.size(); ++x)
+				{
+					if (dynamic_cast<CCEnterLevel*>(CodeComps[x]))
+					{
+						accessLevelTwo = ((CCEnterLevel*)CodeComps[x]);
+						break;
+					}
+				}
+				if (accessLevelTwo != nullptr)
+					break;
+			}
+		}
+
+		for (auto it = copyList.begin(); it != copyList.end(); ++it)
+		{
+			std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+			if (CodeComps.size() > 0)
+			{
+				for (size_t x = 0; x < CodeComps.size(); ++x)
+				{
+					if (dynamic_cast<CCEnterLevel3*>(CodeComps[x]))
+					{
+						accessLevelThree = ((CCEnterLevel3*)CodeComps[x]);
+						break;
+					}
+				}
+				if (accessLevelThree != nullptr)
 					break;
 			}
 		}
@@ -930,7 +1430,41 @@ namespace Epoch {
 			}
 		}
 
-		if ((_Level == L"LEVELTWO" || _Level == L"LVLTWO"))
+		for (auto it = copyList.begin(); it != copyList.end(); ++it)
+		{
+			std::vector<Component*> CodeComps = (*it)->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+			if (CodeComps.size() > 0)
+			{
+				for (size_t x = 0; x < CodeComps.size(); ++x)
+				{
+					if (dynamic_cast<CCLoadTutorial*>(CodeComps[x]))
+					{
+						accessTut = ((CCLoadTutorial*)CodeComps[x]);
+						break;
+					}
+				}
+				if (accessTut != nullptr)
+					break;
+			}
+		}
+
+		if ((_Level == L"LEVELONE" || _Level == L"LVLONE"))
+		{
+			if (accessLevelOne)
+			{
+
+				accessLevelOne->SetOnce(false);
+				CommandConsole::Instance().Toggle();
+			}
+			else
+			{
+				CommandConsole::Instance().DisplaySet(L"Failed to load level 1.");
+			}
+			accessLevelOne = nullptr;
+			accessLevelTwo = nullptr;
+			accessHub = nullptr;
+		}
+		else if ((_Level == L"LEVELTWO" || _Level == L"LVLTWO"))
 		{
 			if (accessLevelTwo) {
 				accessLevelTwo->SetOnce(false);
@@ -942,14 +1476,16 @@ namespace Epoch {
 			accessLevelTwo = nullptr;
 			accessHub = nullptr;
 		}
-		else if ((_Level == L"LEVELONE" || _Level == L"LVLONE"))
+		if ((_Level == L"LEVELTHREE" || _Level == L"LVLTHREE"))
 		{
-			if (accessLevelOne) {
-
-				accessLevelOne->SetOnce(false);
+			if (accessLevelThree)
+			{
+				accessLevelThree->SetOnce(false);
 				CommandConsole::Instance().Toggle();
-			} else {
-				CommandConsole::Instance().DisplaySet(L"Failed to load level 1.");
+			}
+			else
+			{
+				CommandConsole::Instance().DisplaySet(L"Failed to load level 3.");
 			}
 			accessLevelOne = nullptr;
 			accessLevelTwo = nullptr;
@@ -968,7 +1504,22 @@ namespace Epoch {
 			accessLevelTwo = nullptr;
 			accessHub = nullptr;
 		}
-
+		else if ((_Level == L"TUTORIAL" || _Level == L"TUT"))
+		{
+			if (accessTut)
+			{
+				accessTut->SetOnce(false);
+				CommandConsole::Instance().Toggle();
+			}
+			else
+			{
+				CommandConsole::Instance().DisplaySet(L"Failed to load tutorial.");
+			}
+			accessLevelOne = nullptr;
+			accessLevelTwo = nullptr;
+			accessHub = nullptr;
+			accessTut = nullptr;
+		}
 
 	}
 

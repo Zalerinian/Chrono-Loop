@@ -9,6 +9,7 @@
 #include "..\Actions\CCPauseToCancel.h"
 #include "..\Actions\CCTeleToPlay.h"
 #include "..\Actions\CCDisplayOnPause.h"
+#include "..\Actions\CCLevel2Tutorial.h"
 #include "..\Actions\UICreateToDeleteClone.h"
 #include "..\Actions\UIClonePlusToMinus.h"
 #include "..\Actions\UICloneText.h"
@@ -23,6 +24,7 @@
 #include "..\Objects\MeshComponent.h"
 #include <wrl\client.h>
 #include "../Sound/SoundEngine.h"
+#include "DirectXMath.h"
 
 
 namespace Epoch 
@@ -78,19 +80,19 @@ namespace Epoch
 
 					//new stuff
 					Transform identity, t;
-					t.SetMatrix(matrix4::CreateXRotation(DirectX::XM_PI / 2) * matrix4::CreateTranslation(8.8f, 1.3f, -4.75f));
+					t.SetMatrix(matrix4::CreateXRotation(DirectX::XM_PI / 2) * matrix4::CreateTranslation(0, 1.3f, 0));
 					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", t);
-					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity); 
+					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity);
 					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 
-					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), false);
+					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
 					BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
-					((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
 					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
-					rightRaycaster->SetAlpha(0.4f);
+					rightRaycaster->SetPixelShader(ePS_PURETEXTURE);
 					mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+					mc->SetPixelShader(ePS_PURETEXTURE);
 					TeleportAction *ta = new TeleportAction(eControllerType_Primary);
 					TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
 					RightController->AddComponent(mc);
@@ -103,6 +105,7 @@ namespace Epoch
 					BaseObject *clonePanel = Pool::Instance()->iGetObject()->Reset("ClonePanel", identity);
 					MeshComponent* disp = new MeshComponent("../Resources/ClonePanel.obj");
 					disp->AddTexture("../Resources/ClonePanel.png", eTEX_DIFFUSE);
+					disp->SetPixelShader(ePS_PURETEXTURE);
 					clonePanel->AddComponent(disp);
 					clonePanel->SetParent(RightController);
 					RightController->AddChild(clonePanel);
@@ -111,6 +114,7 @@ namespace Epoch
 					BaseObject *timeDisplay = Pool::Instance()->iGetObject()->Reset("TimeIndicatorLine", t);
 					MeshComponent* tdisp = new MeshComponent("../Resources/TimeIndicatorLine.obj");
 					tdisp->AddTexture("../Resources/TimeIndicatorLine.png", eTEX_DIFFUSE);
+					tdisp->SetPixelShader(ePS_PURETEXTURE);
 					timeDisplay->AddComponent(tdisp);
 					timeDisplay->SetParent(RightController);
 					RightController->AddChild(timeDisplay);
@@ -120,6 +124,7 @@ namespace Epoch
 					CCTimeIndicator* time = new CCTimeIndicator();
 					timeDisplayNeedle->AddComponent(time);
 					tdispn->AddTexture("../Resources/TimeIndicator.png", eTEX_DIFFUSE);
+					tdispn->SetPixelShader(ePS_PURETEXTURE);
 					timeDisplayNeedle->AddComponent(tdispn);
 					timeDisplayNeedle->SetParent(RightController);
 					RightController->AddChild(timeDisplayNeedle);
@@ -128,6 +133,7 @@ namespace Epoch
 					BaseObject *rewindDisplay = Pool::Instance()->iGetObject()->Reset("RewindDisplay", t);
 					MeshComponent* rewind = new MeshComponent("../Resources/UIRewind.obj");
 					rewind->AddTexture("../Resources/rewind.png", eTEX_DIFFUSE);
+					rewind->SetPixelShader(ePS_PURETEXTURE);
 					UIRewind* spin = new UIRewind();
 					CCDisplayOnPause* rdop = new CCDisplayOnPause();
 					rewindDisplay->AddComponent(rdop);
@@ -140,6 +146,7 @@ namespace Epoch
 					BaseObject *cloneDisplayBack = Pool::Instance()->iGetObject()->Reset("cloneDisplayBack", t);
 					MeshComponent* cdispb = new MeshComponent("../Resources/UIClone.obj", 0.9f);
 					cdispb->AddTexture("../Resources/clearBlue.png", eTEX_DIFFUSE);
+					cdispb->SetPixelShader(ePS_PURETEXTURE);
 					cloneDisplayBack->AddComponent(cdispb);
 					cloneDisplayBack->SetParent(RightController);
 					RightController->AddChild(cloneDisplayBack);
@@ -157,6 +164,7 @@ namespace Epoch
 					{
 						std::string str("Clone Display");
 						cdisp->AddTexture(str.c_str(), eTEX_DIFFUSE);
+						cdisp->SetPixelShader(ePS_PURETEXTURE);
 						Font* font = new Font();
 						cdisp->GetContext().mTextures[eTEX_DIFFUSE] = srv;
 						UICloneText* ct = new UICloneText();
@@ -183,6 +191,7 @@ namespace Epoch
 						std::string str("Clone Display");
 						TextureManager::Instance()->iAddTexture2D(str, screenTex, &srv);
 						cdisp->AddTexture(str.c_str(), eTEX_DIFFUSE);
+						cdisp->SetPixelShader(ePS_PURETEXTURE);
 
 						Font* font = new Font();
 						cdisp->GetContext().mTextures[eTEX_DIFFUSE] = srv;
@@ -198,6 +207,7 @@ namespace Epoch
 					MeshComponent* rhdisp = new MeshComponent("../Resources/help.obj");
 					rhdisp->SetVisible(false);
 					rhdisp->AddTexture("../Resources/rewindHelp.png", eTEX_DIFFUSE);
+					rhdisp->SetPixelShader(ePS_PURETEXTURE);
 					CCDisplayOnPause* dop = new CCDisplayOnPause();
 					rewindHelp->AddComponent(dop);
 					rewindHelp->AddComponent(rhdisp);
@@ -208,6 +218,7 @@ namespace Epoch
 					BaseObject *teleportHelp = Pool::Instance()->iGetObject()->Reset("teleportHelp", t);
 					MeshComponent* thdisp = new MeshComponent("../Resources/help.obj");
 					thdisp->AddTexture("../Resources/teleport.png", eTEX_DIFFUSE);
+					thdisp->SetPixelShader(ePS_PURETEXTURE);
 					CCTeleToPlay* ttp = new CCTeleToPlay();
 					teleportHelp->AddComponent(ttp);
 					teleportHelp->AddComponent(thdisp);
@@ -218,16 +229,18 @@ namespace Epoch
 					BaseObject *pauseHelp = Pool::Instance()->iGetObject()->Reset("pauseHelp", t);
 					MeshComponent* phdisp = new MeshComponent("../Resources/help.obj");
 					phdisp->AddTexture("../Resources/pause.png", eTEX_DIFFUSE);
+					phdisp->SetPixelShader(ePS_PURETEXTURE);
 					CCPauseToCancel* ptc = new CCPauseToCancel();
 					pauseHelp->AddComponent(ptc);
 					pauseHelp->AddComponent(phdisp);
 					pauseHelp->SetParent(RightController);
 					RightController->AddChild(pauseHelp);
-					
+
 					t.SetMatrix(matrix4::CreateTranslation(0.032f, -0.03f, 0.047f));
 					BaseObject *cloneHelp = Pool::Instance()->iGetObject()->Reset("cloneHelp", t);
 					MeshComponent* chdisp = new MeshComponent("../Resources/help.obj");
 					chdisp->AddTexture("../Resources/createClone.png", eTEX_DIFFUSE);
+					chdisp->SetPixelShader(ePS_PURETEXTURE);
 					CCDisplayOnPause* cdop = new CCDisplayOnPause();
 					UICreateToDeleteClone* cd = new UICreateToDeleteClone();
 					cloneHelp->AddComponent(cd);
@@ -239,7 +252,8 @@ namespace Epoch
 					t.SetMatrix(matrix4::CreateScale(.5f, .5f, .5f) * matrix4::CreateTranslation(0.042f, -0.03f, 0.047f));
 					BaseObject *clonePlus = Pool::Instance()->iGetObject()->Reset("clonePlus", t);
 					MeshComponent* cphdisp = new MeshComponent("../Resources/help.obj");
-					cphdisp->AddTexture("../Resources/createClone.png", eTEX_DIFFUSE);
+					cphdisp->AddTexture("../Resources/plus.png", eTEX_DIFFUSE);
+					cphdisp->SetPixelShader(ePS_PURETEXTURE);
 					CCDisplayOnPause* cpdop = new CCDisplayOnPause();
 					UIClonePlusToMinus* pm = new UIClonePlusToMinus();
 					clonePlus->AddComponent(pm);
@@ -250,13 +264,13 @@ namespace Epoch
 
 					//pat added
 					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
-					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.15f, -0.15f, -0.15f), vec3f(0.15f, 0.15f, 0.15f), true);
+					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 					BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
-					((BoxSnapToControllerAction*)pickup2)->mControllerRole = eControllerType_Secondary;
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
-					leftRaycaster->SetAlpha(0.4f);
+					leftRaycaster->SetPixelShader(ePS_PURETEXTURE);
 					mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+					mc2->SetPixelShader(ePS_PURETEXTURE);
 					TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
 					LeftController->AddComponent(mc2);
 					LeftController->AddComponent(leftConCol);
@@ -268,7 +282,8 @@ namespace Epoch
 					visibleMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 					visibleMesh2->SetVisible(false);
 					headset->AddComponent(visibleMesh2);
-
+					CCLevel2Tutorial* tut = new CCLevel2Tutorial();
+					headset->AddComponent(tut);
 					HeadsetFollow* hfollow = new HeadsetFollow();
 					headset->AddComponent(hfollow);
 					headset->AddComponent(ears);
@@ -286,6 +301,17 @@ namespace Epoch
 
 
 					ParticleSystem::Instance()->Clear();
+
+					/*BaseObject* magicalCube = Pool::Instance()->iGetObject()->Reset("Magical Cube That Follows Me");
+					MeshComponent* mcmc = new MeshComponent("../Resources/UnitCube.obj");
+					mcmc->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
+					magicalCube->AddComponent(mcmc);
+					magicalCube->AddComponent(new CCSnapToPlayerPos);
+					next->AddObject(magicalCube);*/
+
+
+
+
 					LevelManager::GetInstance().RequestLevelChange(next);
 
 
@@ -386,7 +412,7 @@ namespace Epoch
 					l3->Type = 4;
 					l3->Color = vec3f(0, 0, 1);
 					l3->ConeDirection = vec3f(0, -1, 0);
-					l3->Position = vec3f(-8.9f, 5, 5);
+					l3->Position = vec3f(-9.8f, 5, 5);
 					l3->ConeRatio = .8f;
 
 					Renderer::Instance()->SetLight(l1, 0);
@@ -396,7 +422,7 @@ namespace Epoch
 					SystemLogger::Debug() << "Loading complete" << std::endl;
 					Physics::Instance()->PhysicsLock.unlock();
 					Settings::GetInstance().SetBool("LevelIsLoading", false);
-					Settings::GetInstance().SetBool("PlayingLevel2", true);
+					Settings::GetInstance().SetInt("CurrentLevel", 2);
 				}
 			}
 		}
