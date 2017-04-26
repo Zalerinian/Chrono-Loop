@@ -60,9 +60,9 @@ namespace Epoch
 			mazeBoxes[0].SetUp(1, 3, 3);
 			mazeBoxes[1].SetUp(2, 2, 3);
 			mazeBoxes[2].SetUp(3, 2, 0);
-			mazeBoxes[0].mBox = cLevel->FindObjectWithName("Box1");
+			mazeBoxes[0].mBox = cLevel->FindObjectWithName("Box3");
 			mazeBoxes[1].mBox = cLevel->FindObjectWithName("Box2");
-			mazeBoxes[2].mBox = cLevel->FindObjectWithName("Box3");
+			mazeBoxes[2].mBox = cLevel->FindObjectWithName("Box1");
 			//mLButton = cLevel->FindObjectWithName("Button Left");
 			//mRButton = cLevel->FindObjectWithName("Button Right");
 			//mUButton = cLevel->FindObjectWithName("Button Up");
@@ -90,18 +90,21 @@ namespace Epoch
 			}
 			if (!mBox1Done) {
 				mBox1Done = mazeBoxes[0].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
-				if (mBox1Done)
+				if (mBox1Done) {
 					mazeBoxes[0].mInterp->SetActive(false);
+				}
 			}
 			if (!mBox2Done) {
 				mBox2Done = mazeBoxes[1].mInterp->Update(TimeManager::Instance()->GetDeltaTime());				
-				if (mBox2Done)
+				if (mBox2Done) {
 					mazeBoxes[1].mInterp->SetActive(false);
+				}
 			}
 			if (!mBox3Done) {
 				mBox3Done = mazeBoxes[2].mInterp->Update(TimeManager::Instance()->GetDeltaTime());				
-				if (mBox3Done)
+				if (mBox3Done) {
 					mazeBoxes[2].mInterp->SetActive(false);
+				}
 			}
 		}
 		virtual void OnDestroy()

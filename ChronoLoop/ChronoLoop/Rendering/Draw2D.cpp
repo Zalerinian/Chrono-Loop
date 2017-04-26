@@ -182,7 +182,6 @@ namespace Epoch
 	void Draw::DrawTextToBitmap(float _left, float _top, float _right, float _bottom,
 															Font _font, std::wstring _text, ID2D1Bitmap* _bitmap)
 	{
-
 		(*mContext2D)->SetTarget(_bitmap);
 
 		// Retrieve the size of the render target.

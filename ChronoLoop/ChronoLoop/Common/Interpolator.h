@@ -71,10 +71,12 @@ namespace  Epoch {
 		}
 		if (_overrideRatio < 0.0f)
 			mTweenTime += _deltaTime;
-		else if (mTweenTime + _deltaTime > mDuration)
-			mTweenTime = mDuration;
 		else
 			mTweenTime = mDuration * _overrideRatio;
+
+		if (mTweenTime >= mDuration)
+			mTweenTime = mDuration;
+
 		Interpolate();
 		return mTweenTime >= mDuration;
 	}
