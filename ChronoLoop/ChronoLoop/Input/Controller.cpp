@@ -47,8 +47,8 @@ namespace Epoch {
 					InitialPos = touch;
 					return 0;
 				}
-				gestureCnt++;
-				if (gestureCnt == 1) {
+				gestureCnt += TimeManager::Instance()->GetDeltaTime();
+				if (gestureCnt > 0.1f) {
 					gestureCnt = 0;
 					//vec2f CurPos,line,diff;
 					vec2f CurPos = touch;

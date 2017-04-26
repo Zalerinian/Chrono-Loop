@@ -78,7 +78,12 @@ namespace Epoch
 		{
 			mcBackground->SetVisible(false);
 			mcProgressBar->SetVisible(false);
-
+		}
+		virtual void OnDestroy()
+		{
+			rtvBackground.Reset();
+			rtvProgressBar.Reset();
+			(rtvBackground)->Release();
 		}
 		void SetCurProgress(float _set) { curProgress = _set; }
 		float GetCurProgress() { return curProgress; }

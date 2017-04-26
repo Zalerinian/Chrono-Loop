@@ -50,19 +50,19 @@ namespace Epoch
 		int mGrid[4][4] = {
 			{ 0, 0,-1,-1 },
 			{ 0,-1, 0, 0 },
-			{ 3, 0,-1, 2 },
-			{ 0, 0, 0, 1 }
+			{ 1, 0,-1, 2 },
+			{ 0, 0, 0, 3 }
 		};
 		virtual void Start()
 		{
 			mBox1Done = mBox2Done = mBox3Done = true;
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
-			mazeBoxes[0].SetUp(1, 3, 3);
+			mazeBoxes[0].SetUp(1, 2, 0);
 			mazeBoxes[1].SetUp(2, 2, 3);
-			mazeBoxes[2].SetUp(3, 2, 0);
-			mazeBoxes[0].mBox = cLevel->FindObjectWithName("Box3");
+			mazeBoxes[2].SetUp(3, 3, 3);
+			mazeBoxes[0].mBox = cLevel->FindObjectWithName("Box1");
 			mazeBoxes[1].mBox = cLevel->FindObjectWithName("Box2");
-			mazeBoxes[2].mBox = cLevel->FindObjectWithName("Box1");
+			mazeBoxes[2].mBox = cLevel->FindObjectWithName("Box3");
 			//mLButton = cLevel->FindObjectWithName("Button Left");
 			//mRButton = cLevel->FindObjectWithName("Button Right");
 			//mUButton = cLevel->FindObjectWithName("Button Up");
@@ -74,19 +74,19 @@ namespace Epoch
 		{
 			if (GetAsyncKeyState(VK_DOWN) & 0x1) {
 				MoveDown();
-				PrintGrid();
+				//PrintGrid();
 			}
 			else if (GetAsyncKeyState(VK_UP) & 0x1) {
 				MoveUp();
-				PrintGrid();
+				//PrintGrid();
 			}
 			else if (GetAsyncKeyState(VK_LEFT) & 0x1) {
 				MoveLeft();
-				PrintGrid();
+				//PrintGrid();
 			}
 			else if (GetAsyncKeyState(VK_RIGHT) & 0x1) {
 				MoveRight();
-				PrintGrid();
+				//PrintGrid();
 			}
 			if (!mBox1Done) {
 				mBox1Done = mazeBoxes[0].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
