@@ -45,46 +45,30 @@ namespace Epoch {
 							}
 							matrix4 mat = mChamberObject->GetTransform().GetMatrix();
 							float tempY = mChamberObject->GetTransform().GetMatrix().Position.y;
-							if (tempY > -3.2f && tempY < -3.0f) {
-								mChamberInterp->Prepare(7, mat, mat * matrix4::CreateTranslation(0, -3.1f, 0), mChamberObject->GetTransform().GetMatrix());
-								mChamberInterp->SetEasingFunction(Easing::QuadInOut);
-								mChamberInterp->SetActive(true);
+							if (tempY < -1.0) 
+								tempY = 1;
+							else
+								tempY = -1;
 
-								mat = VRInputManager::GetInstance().GetPlayerPosition();
-								mPlayerInterp->Prepare(7, mat, mat * matrix4::CreateTranslation(0, -3.1f, 0), VRInputManager::GetInstance().GetPlayerPosition());
-								mPlayerInterp->SetEasingFunction(Easing::QuadInOut);
-								mPlayerInterp->SetActive(true);
+							mChamberInterp->Prepare(7, mat, mat * matrix4::CreateTranslation(0, 3.2f * tempY, 0), mChamberObject->GetTransform().GetMatrix());
+							mChamberInterp->SetEasingFunction(Easing::QuadInOut);
+							mChamberInterp->SetActive(true);
 
-								mat = mObject->GetTransform().GetMatrix();
-								mStartButtonInterp->Prepare(7, mat, mat * matrix4::CreateTranslation(0, -3.1f, 0), mObject->GetTransform().GetMatrix());
-								mStartButtonInterp->SetEasingFunction(Easing::QuadInOut);
-								mStartButtonInterp->SetActive(true);
+							mat = VRInputManager::GetInstance().GetPlayerPosition();
+							mPlayerInterp->Prepare(7, mat, mat * matrix4::CreateTranslation(0, 3.2f * tempY, 0), VRInputManager::GetInstance().GetPlayerPosition());
+							mPlayerInterp->SetEasingFunction(Easing::QuadInOut);
+							mPlayerInterp->SetActive(true);
 
-								mat = mButtonStand->GetTransform().GetMatrix();
-								mStartStandInterp->Prepare(7, mat, mat * matrix4::CreateTranslation(0, -3.1f, 0), mButtonStand->GetTransform().GetMatrix());
-								mStartStandInterp->SetEasingFunction(Easing::QuadInOut);
-								mStartStandInterp->SetActive(true);
-							} else {
-								mChamberInterp->Prepare(7, mat, mat * matrix4::CreateTranslation(0, -0.12f, 0), mChamberObject->GetTransform().GetMatrix());
-								mChamberInterp->SetEasingFunction(Easing::QuadInOut);
-								mChamberInterp->SetActive(true);
+							mat = mObject->GetTransform().GetMatrix();
+							mStartButtonInterp->Prepare(7, mat, mat * matrix4::CreateTranslation(0, 3.2f * tempY, 0), mObject->GetTransform().GetMatrix());
+							mStartButtonInterp->SetEasingFunction(Easing::QuadInOut);
+							mStartButtonInterp->SetActive(true);
 
-								mat = VRInputManager::GetInstance().GetPlayerPosition();
-								mPlayerInterp->Prepare(7, mat, mat * matrix4::CreateTranslation(0, -0.12f, 0), VRInputManager::GetInstance().GetPlayerPosition());
-								mPlayerInterp->SetEasingFunction(Easing::QuadInOut);
-								mPlayerInterp->SetActive(true);
-
-								mat = mObject->GetTransform().GetMatrix();
-								mStartButtonInterp->Prepare(7, mat, mat * matrix4::CreateTranslation(0, -0.12f, 0), mObject->GetTransform().GetMatrix());
-								mStartButtonInterp->SetEasingFunction(Easing::QuadInOut);
-								mStartButtonInterp->SetActive(true);
-
-								mat = mButtonStand->GetTransform().GetMatrix();
-								mStartStandInterp->Prepare(7, mat, mat * matrix4::CreateTranslation(0, -0.12f, 0), mButtonStand->GetTransform().GetMatrix());
-								mStartStandInterp->SetEasingFunction(Easing::QuadInOut);
-								mStartStandInterp->SetActive(true);
-							}
-							mInterpDone = true;
+							mat = mButtonStand->GetTransform().GetMatrix();
+							mStartStandInterp->Prepare(7, mat, mat * matrix4::CreateTranslation(0, 3.2f * tempY, 0), mButtonStand->GetTransform().GetMatrix());
+							mStartStandInterp->SetEasingFunction(Easing::QuadInOut);
+							mStartStandInterp->SetActive(true);
+							mInterpDone = false;
 							Settings::GetInstance().SetBool("CantPauseTime", true);
 						}
 					}
