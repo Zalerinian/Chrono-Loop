@@ -83,7 +83,7 @@ namespace Epoch
 		{
 			rtvBackground.Reset();
 			rtvProgressBar.Reset();
-			(rtvBackground)->Release();
+			//(rtvBackground)->Release();
 		}
 		void SetCurProgress(float _set) { curProgress = _set; }
 		float GetCurProgress() { return curProgress; }

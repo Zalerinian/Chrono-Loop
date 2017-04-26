@@ -72,19 +72,19 @@ namespace Epoch
 		}
 		virtual void Update()
 		{
-			if (GetAsyncKeyState(VK_DOWN) & 0x1) {
+			if (GetAsyncKeyState(VK_DOWN) & 0x1 && mBox1Done && mBox2Done && mBox3Done) {
 				MoveDown();
 				//PrintGrid();
 			}
-			else if (GetAsyncKeyState(VK_UP) & 0x1) {
+			else if (GetAsyncKeyState(VK_UP) & 0x1 && mBox1Done && mBox2Done && mBox3Done) {
 				MoveUp();
 				//PrintGrid();
 			}
-			else if (GetAsyncKeyState(VK_LEFT) & 0x1) {
+			else if (GetAsyncKeyState(VK_LEFT) & 0x1 && mBox1Done && mBox2Done && mBox3Done) {
 				MoveLeft();
 				//PrintGrid();
 			}
-			else if (GetAsyncKeyState(VK_RIGHT) & 0x1) {
+			else if (GetAsyncKeyState(VK_RIGHT) & 0x1 && mBox1Done && mBox2Done && mBox3Done) {
 				MoveRight();
 				//PrintGrid();
 			}
@@ -410,7 +410,7 @@ namespace Epoch
 				else if (X == 3 && Y == 3) {
 					finalDest = matrix4::CreateTranslation(-6, -1.80f, -5.80f);
 				}
-				mazeBoxes[i].mInterp->Prepare(0.1f, *curMatrix, finalDest, mazeBoxes[i].mBox->GetTransform().GetMatrix());
+				mazeBoxes[i].mInterp->Prepare(0.2f, *curMatrix, finalDest, mazeBoxes[i].mBox->GetTransform().GetMatrix());
 				mazeBoxes[i].mInterp->SetActive(true);
 			}
 			mBox1Done = mBox2Done = mBox3Done = false;
