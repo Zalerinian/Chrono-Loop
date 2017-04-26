@@ -47,6 +47,9 @@ namespace LevelEditor {
                             case "Button Press":
                                 writer.WriteElementString("ButtonPress", "Enabled");
                                 break;
+                            case "Level3ElevatorButton":
+                                writer.WriteElementString("Level3ElevatorButton", "Enabled");
+                                break;
                             case "AABB to AABB":
                                 writer.WriteElementString("AABBtoAABB", "Enabled");
                                 break;
@@ -355,6 +358,9 @@ namespace LevelEditor {
                                                     break;
                                                 case "ButtonPress":
                                                     addition.Components.Add("Button Press");
+                                                    break;
+                                                case "Level3ElevatorButton":
+                                                    addition.Components.Add("Level3ElevatorButton");
                                                     break;
                                                 case "AABBtoAABB":
                                                     addition.Components.Add("AABB to AABB");

@@ -8,7 +8,7 @@
 
 namespace Epoch
 {
-	struct CCProgessBar : public CodeComponent
+	struct CCProgressBar : public CodeComponent
 	{
 		BaseObject* pBackground, *pProgressBar;
 		MeshComponent* mcBackground, *mcProgressBar;
@@ -18,7 +18,7 @@ namespace Epoch
 		Transform identity;
 		float transparentColor[4] = { 0,0,0,0 };
 
-		virtual void Start()
+		CCProgressBar()
 		{
 			SetUpThisObjectForMe(&pBackground, (MeshComponent**)&mcBackground, std::string("Progress Bar - Base"), identity);
 			TextureManager::Instance()->iGetTexture2D("memory:Progress Bar - Base", nullptr, &texBackground);
@@ -32,14 +32,16 @@ namespace Epoch
 			pProgressBar->SetParent(pBackground);
 
 			pBackground->GetTransform().SetMatrix(matrix4::CreateScale(20, 1, 4) * identity.GetMatrix());
-			pProgressBar->GetTransform().SetMatrix(matrix4::CreateScale(0, 1, 0) * matrix4::CreateTranslation(0,0.001f,0));
-			
-			
+			pProgressBar->GetTransform().SetMatrix(matrix4::CreateScale(0, 1, 0) * matrix4::CreateTranslation(0, 0.003f, 0));
+
 			Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texBackground.Get(), NULL, rtvBackground.GetAddressOf());
 			Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texProgressBar.Get(), NULL, rtvProgressBar.GetAddressOf());
+		}
+		virtual void Start()
+		{
 
 
-			OnDisable();
+			//OnDisable();
 
 		}
 		virtual void Update()
@@ -51,7 +53,7 @@ namespace Epoch
 			Draw::Instance().DrawRectangleToBitmap(
 				0, 0, 256.0f, 256.0f, (D2D1::ColorF::Black, 1.0f),
 				Draw::Instance().GetBitmap(texBackground.Get()));
-			if (curProgress < finalProgress - 2) {
+			if (curProgress < finalProgress - (finalProgress/20)) {
 				if (curProgress != tempProgress) {
 					pProgressBar->GetTransform().SetMatrix(matrix4::CreateScale((curProgress / finalProgress) * 0.85f, 1, 0.85f) * matrix4::CreateTranslation(0, 0.001f, 0));
 					tempProgress = curProgress;

@@ -30,6 +30,33 @@ namespace Hourglass
 		private List<Key> mKeys = null, mPreviousKeys = null;
 		private BaseObject mGrid = null;
 
+		public class WorldTransformations {
+			public Vector3 Position, Rotation, Scale;
+
+			public WorldTransformations() {
+				Position = new Vector3(0, 0, 0);
+				Rotation = new Vector3(0, 0, 0);
+				Scale = new Vector3(1, 1, 1);
+			}
+
+			public static WorldTransformations operator +(WorldTransformations left, WorldTransformations right) {
+				WorldTransformations r = new WorldTransformations();
+				r.Position = left.Position + right.Position;
+				r.Rotation = left.Rotation + right.Rotation;
+				r.Scale = new Vector3(left.Scale.X * right.Scale.X, left.Scale.Y * right.Scale.Y, left.Scale.Z * right.Scale.Z);
+				return r;
+			}
+
+			public static WorldTransformations operator -(WorldTransformations left, WorldTransformations right) {
+				WorldTransformations r = new WorldTransformations();
+				r.Position = left.Position - right.Position;
+				r.Rotation = left.Rotation - right.Rotation;
+				r.Scale = left.Scale - right.Scale;
+				r.Scale = new Vector3(left.Scale.X * right.Scale.X, left.Scale.Y * right.Scale.Y, left.Scale.Z * right.Scale.Z);
+				return r;
+			}
+		}
+
 		string Filename {
 			get {
 				return mCurrentFilename;
@@ -350,6 +377,7 @@ namespace Hourglass
 				} // END Not holding control
                 else
                 {
+					// Controls when CTRL is held down.
                     if (mKeys.Contains(Key.Q))
                     {
                         Gizmo.Instance.Mode = Gizmo.GizmoMode.Position;
@@ -362,6 +390,9 @@ namespace Hourglass
                     {
                         Gizmo.Instance.Mode = Gizmo.GizmoMode.Scale;
                     }
+					if(mKeys.Contains(Key.D)) {
+						DuplicateObject();
+					}
                 }
 			}  // Ensure the Grapics Panel's focus textbox is selected.
 
@@ -382,6 +413,21 @@ namespace Hourglass
 			}
 
 			mPreviousKeys = mKeys;
+		}
+
+		private void DuplicateObject() {
+			if (Tree.SelectedNode != null) {
+				TreeNode n = new TreeNode();
+				n.Tag = ((BaseObject)Tree.SelectedNode.Tag).Clone();
+				((BaseObject)n.Tag).SetNode(n);
+				Renderer.Instance.AddObject((BaseObject)n.Tag);
+				if (Tree.SelectedNode.Parent != null) {
+					Tree.SelectedNode.Parent.Nodes.Add(n);
+				} else {
+					Tree.Nodes.Add(n);
+				}
+				Tree.SelectedNode = n;
+			}
 		}
 
 		private void UpdateGizmoScale() {
@@ -675,9 +721,12 @@ namespace Hourglass
 
 		private void Editor_ClientSizeChanged(object sender, EventArgs e)
 		{
-			// Ensure the graphics panel can't get too small.
-			spHierarchyPanel.Panel2MinSize = ClientRectangle.Width - 210;
-			spWorldView.Panel1MinSize = ClientRectangle.Width - 210 - 260;
+            // Ensure the graphics panel can't get too small.
+            if (ClientRectangle.Width >= 210)
+            {
+                spHierarchyPanel.Panel2MinSize = ClientRectangle.Width - 210;
+                spWorldView.Panel1MinSize = ClientRectangle.Width - 210 - 260;
+            }
 			spHierarchyPanel.PerformLayout();
 			spWorldView.PerformLayout();
 		}
@@ -720,6 +769,7 @@ namespace Hourglass
 			}
 			position.Y += 15;
 			position.X = btnComponentAdd.Left;
+			btnComponentAdd.Size = new Size(spWorldView.Panel2.ClientRectangle.Width / 2, btnComponentAdd.Height);
 			btnComponentAdd.Location = position;
 			btnComponentAdd.Visible = true;
 			btnComponentAdd.Margin = new Padding(30);
@@ -746,6 +796,94 @@ namespace Hourglass
 			} else {
 				n.TreeView.Nodes.Remove(n);
 			}
+		}
+
+		private void Tree_ItemDrag(object sender, ItemDragEventArgs e) {
+			if(e.Button == MouseButtons.Left) {
+				DoDragDrop(e.Item, DragDropEffects.Move);
+			} else if(e.Button == MouseButtons.Right) {
+				DoDragDrop(e.Item, DragDropEffects.Link);
+			}
+		}
+
+		private void Tree_DragEnter(object sender, DragEventArgs e) {
+			e.Effect = e.AllowedEffect;
+		}
+
+		private void Tree_DragOver(object sender, DragEventArgs e) {
+			//Point client = Tree.PointToClient(new Point(e.X, e.Y));
+			//Tree.SelectedNode = Tree.GetNodeAt(client);
+		}
+
+		private void Tree_DragDrop(object sender, DragEventArgs e) {
+			Point client = Tree.PointToClient(new Point(e.X, e.Y));
+			TreeNode target = Tree.GetNodeAt(client);
+			TreeNode dragged = (TreeNode)e.Data.GetData(typeof(TreeNode));
+			if(dragged != target && !ContainsNode(dragged, target)) {
+				// Check mouse button for wheter or not to update dragg object's transform?
+				if(e.AllowedEffect == DragDropEffects.Link) {
+					//ReparentObject(dragged, target);
+				}
+				TreeView t = dragged.TreeView;
+				if(dragged.Parent != null) {
+					dragged.Parent.Nodes.Remove(dragged);
+				} else {
+					dragged.TreeView.Nodes.Remove(dragged);
+				}
+				if(target != null) {
+					((BaseObject)dragged.Tag).Parent = ((BaseObject)target.Tag);
+					target.Nodes.Add(dragged);
+					if(!target.IsExpanded) {
+						target.Expand();
+					}
+				} else {
+					((BaseObject)dragged.Tag).Parent = null;
+					t.Nodes.Add(dragged);
+				}
+				dragged.TreeView.SelectedNode = dragged;
+				Tree.SuspendLayout();
+			}
+		}
+
+		private bool ContainsNode(TreeNode check, TreeNode parent) {
+			if(check.Parent == null || parent == null) {
+				return false;
+			}
+			if(check.Parent == parent) {
+				return true;
+			}
+			return ContainsNode(check, parent.Parent);
+		}
+
+		private void ReparentObject(TreeNode toMove, TreeNode parent) {
+			WorldTransformations moved = new WorldTransformations(), parentTransform = new WorldTransformations(), delta;
+			moved = CollapseObject(toMove);
+			if(parent != null) {
+				parentTransform = CollapseObject(parent);
+			}
+			delta = moved - parentTransform;
+			BaseObject b = ((BaseObject)toMove.Tag);
+			TransformComponent trf = (TransformComponent)b.GetComponents()[0];
+			
+
+
+
+			trf.SetPosition(delta.Position);
+			trf.SetRotation(trf.GetRotationVector() + delta.Rotation);
+			trf.SetScale(delta.Scale);
+		}
+
+		private WorldTransformations CollapseObject(TreeNode Object) {
+			WorldTransformations transform = new WorldTransformations();
+			transform.Position = ((TransformComponent)((BaseObject)Object.Tag).GetComponents()[0]).GetPositionVector();
+			transform.Rotation = ((TransformComponent)((BaseObject)Object.Tag).GetComponents()[0]).GetRotationVector();
+			transform.Scale    = ((TransformComponent)((BaseObject)Object.Tag).GetComponents()[0]).GetScaleVector();
+			if(Object.Parent != null) {
+				return transform + CollapseObject(Object.Parent);
+			} else {
+				return transform;
+			}
+			
 		}
 
 		private void timer1_Tick(object sender, EventArgs e)

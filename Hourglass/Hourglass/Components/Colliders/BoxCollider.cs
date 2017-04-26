@@ -356,6 +356,17 @@ namespace Hourglass {
 			mScaleY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mScaleZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 		}
+
+		public override void CopyData(ref Component _other) {
+			if (!(_other is BoxCollider)) {
+				throw new System.IO.InvalidDataException("Given component does not match calling type!");
+			}
+			BoxCollider comp = _other as BoxCollider;
+			comp.Position = Position;
+			comp.Rotation = Rotation;
+			comp.Scale = Scale;
+			comp.Gravity = Gravity;
+		}
 	}
 
 }

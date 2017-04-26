@@ -25,7 +25,6 @@ namespace Hourglass {
 			}
 		}
 
-
 		public SplitterPanel Parent {
 			get {
 				return mParent;
@@ -290,5 +289,20 @@ namespace Hourglass {
 				Resize.Invoke(mParent, e);
 			}
 		}
+
+		public override void CopyData(ref Component _other) {
+			if (!(_other is TransformComponent)) {
+				throw new InvalidDataException("Given component does not match the calling type.");
+			}
+			SoundComponent comp = _other as SoundComponent;
+			for(int i = 0; i < mEvent.Count; ++i) {
+				if(i > 0) {
+					comp.AddEvent(null, new EventArgs());
+				}
+				comp.mEvent[i].Text = mEvent[i].Text;
+				comp.mSound[i].SelectedIndex = mSound[i].SelectedIndex;
+			}
+		}
+
 	}
 }

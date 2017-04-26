@@ -214,7 +214,11 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Actions\CCElasticSphereToSphere.h" />
     <ClInclude Include="Actions\CCEnterLevel.h" />
     <ClInclude Include="Actions\CCEnterLevel1.h" />
+    <ClInclude Include="Actions\CCEnterLevel3.h" />
     <ClInclude Include="Actions\CCExit.h" />
+    <ClInclude Include="Actions\CCLevel1Tutorial.h" />
+    <ClInclude Include="Actions\CCLevel2Tutorial.h" />
+    <ClInclude Include="Actions\CCLevel3ElevatorButton.h" />
     <ClInclude Include="Actions\CCLoadHub.h" />
     <ClInclude Include="Actions\CCLoadTutorial.h" />
     <ClInclude Include="Actions\CCPauseToCancel.h" />
@@ -227,6 +231,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Actions\CodeComponent.hpp" />
     <ClInclude Include="Actions\GestureDetection.hpp" />
     <ClInclude Include="Actions\HeadsetFollow.hpp" />
+    <ClInclude Include="Actions\Level3TeleportAction.h" />
     <ClInclude Include="Actions\MainMenuBT.h" />
     <ClInclude Include="Actions\PauseMenu.hpp" />
     <ClInclude Include="Actions\TeleportAction.hpp" />
@@ -398,8 +403,8 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Actions\BoxSnapToControllerAction.cpp" />
     <ClCompile Include="Actions\TimeManipulation.cpp" />
-    <ClCompile Include="BoxSnapToControllerAction.cpp" />
     <ClCompile Include="BVH.cpp" />
     <ClCompile Include="ChronoLoop.cpp" />
     <ClCompile Include="Common\Breakpoint.cpp" />

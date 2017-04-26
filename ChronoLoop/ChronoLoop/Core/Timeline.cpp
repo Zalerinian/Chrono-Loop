@@ -593,7 +593,8 @@ namespace Epoch {
 			mObjectLifeTimes[_id]->mBirth = mCurrentGameTimeIndx;
 		}
 	}
-	void Timeline::ClearTimeLine() {
+	void Timeline::
+	ClearTimeLine() {
 		for (auto snapshot : mSnapshots) {
 			for (auto snapInfo : snapshot.second->mSnapinfos) {
 				if (snapInfo.second)

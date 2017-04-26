@@ -71,6 +71,7 @@ namespace Epoch
 		//Function Pointer / Console Commands
 		static void Help(void* _self, std::wstring _nothing);
 		static void ToggleFPS(void* _self, std::wstring _ifOn);
+		static void ToggleColliders(void * _self, std::wstring _ifOn);
 		static void ToggleAll(void* _self, std::wstring _ifOn);
 		static void ToggleSnaping(void* _self, std::wstring _ifOn);
 		void DisplayFPS();

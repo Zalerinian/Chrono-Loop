@@ -525,8 +525,21 @@ namespace Epoch {
 				mShouldUpdateInterpolators = true;
 				mShouldPulse = true;
 				VRInputManager::GetInstance().GetController(eControllerType_Primary).TriggerHapticPulse(600, vr::k_EButton_SteamVR_Touchpad);
-				if (Settings::GetInstance().GetInt("tutStep") == 4)//Rewind
-					Settings::GetInstance().SetInt("tutStep", 5);//Create Clone
+
+				if (_gesture == 1)
+					Settings::GetInstance().SetFloat("TutorialRewind - CurProgress", Settings::GetInstance().GetFloat("TutorialRewind - CurProgress") - 1);
+				if (_gesture == -1)
+					Settings::GetInstance().SetFloat("TutorialRewind - CurProgress", Settings::GetInstance().GetFloat("TutorialRewind - CurProgress") + 1);
+				if(Settings::GetInstance().GetFloat("TutorialRewind - CurProgress") == Settings::GetInstance().GetFloat("TutorialRewind - FinalProgress"))//Rewind
+				{
+					if (Settings::GetInstance().GetInt("tutStep") == 4)
+					{
+						if (Settings::GetInstance().GetBool("Level1Tutorial"))
+							Settings::GetInstance().SetInt("tutStep", 6);//Accept time
+						else
+							Settings::GetInstance().SetInt("tutStep", 5);//Create Clone
+					}
+				}
 			}
 			else {
 				mShouldPulse = false;

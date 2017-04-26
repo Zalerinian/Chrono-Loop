@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="11" SoundbankVersion="120">
+	<RootPaths>
+		<ProjectRoot>D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\</ProjectRoot>
+		<SourceFilesRoot>D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</SoundBanksRoot>
+		<ExternalSourcesInputFile></ExternalSourcesInputFile>
+		<ExternalSourcesOutputRoot>D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
+	</RootPaths>
+	<DialogueEvents/>
+	<StreamedFiles/>
+	<MediaFilesNotInAnyBank/>
+	<SoundBanks>
+		<SoundBank Id="1178267519" Language="SFX">
+			<ObjectPath>\SoundBanks\Default Work Unit\SB_SoundPackage1</ObjectPath>
+			<ShortName>SB_SoundPackage1</ShortName>
+			<Path>SB_SoundPackage1.bnk</Path>
+			<IncludedEvents>
+				<Event Id="2873887263" Name="Pause_Hub0" ObjectPath="\Events\Default Work Unit\Pause_Hub0"/>
+				<Event Id="2873887262" Name="Pause_Hub1" ObjectPath="\Events\Default Work Unit\Pause_Hub1"/>
+				<Event Id="1773552409" Name="Pause_Level1Ambient" ObjectPath="\Events\Default Work Unit\Pause_Level1Ambient"/>
+				<Event Id="3040040780" Name="Pause_Level2Ambient" ObjectPath="\Events\Default Work Unit\Pause_Level2Ambient"/>
+				<Event Id="4257110323" Name="Pause_Level3Ambient" ObjectPath="\Events\Default Work Unit\Pause_Level3Ambient"/>
+				<Event Id="3223701533" Name="Play_Hub0" ObjectPath="\Events\Default Work Unit\Play_Hub0"/>
+				<Event Id="3223701532" Name="Play_Hub1" ObjectPath="\Events\Default Work Unit\Play_Hub1"/>
+				<Event Id="2333167699" Name="Play_Level1Ambient" ObjectPath="\Events\Default Work Unit\Play_Level1Ambient"/>
+				<Event Id="2962453674" Name="Play_Level2Ambient" ObjectPath="\Events\Default Work Unit\Play_Level2Ambient"/>
+				<Event Id="549593657" Name="Play_Level3Ambient" ObjectPath="\Events\Default Work Unit\Play_Level3Ambient"/>
+				<Event Id="3395730328" Name="Resume_Hub0" ObjectPath="\Events\Default Work Unit\Resume_Hub0"/>
+				<Event Id="3395730329" Name="Resume_Hub1" ObjectPath="\Events\Default Work Unit\Resume_Hub1"/>
+				<Event Id="2619715208" Name="Resume_Level1Ambient" ObjectPath="\Events\Default Work Unit\Resume_Level1Ambient"/>
+				<Event Id="3649448405" Name="Resume_Level2Ambient" ObjectPath="\Events\Default Work Unit\Resume_Level2Ambient"/>
+				<Event Id="1927416214" Name="Resume_Level3Ambient" ObjectPath="\Events\Default Work Unit\Resume_Level3Ambient"/>
+				<Event Id="2189517885" Name="SFX_BoxDoorZap" ObjectPath="\Events\Default Work Unit\SFX_BoxDoorZap"/>
+				<Event Id="3124930127" Name="SFX_communication_channel" ObjectPath="\Events\Default Work Unit\SFX_communication_channel"/>
+				<Event Id="2693013165" Name="SFX_TeleportSound" ObjectPath="\Events\Default Work Unit\SFX_TeleportSound"/>
+				<Event Id="2587866055" Name="Stop_Hub0" ObjectPath="\Events\Default Work Unit\Stop_Hub0"/>
+				<Event Id="2587866054" Name="Stop_Hub1" ObjectPath="\Events\Default Work Unit\Stop_Hub1"/>
+				<Event Id="3157945905" Name="Stop_Level1Ambient" ObjectPath="\Events\Default Work Unit\Stop_Level1Ambient"/>
+				<Event Id="3323973828" Name="Stop_Level2Ambient" ObjectPath="\Events\Default Work Unit\Stop_Level2Ambient"/>
+				<Event Id="1664409707" Name="Stop_Level3Ambient" ObjectPath="\Events\Default Work Unit\Stop_Level3Ambient"/>
+			</IncludedEvents>
+			<IncludedMemoryFiles>
+				<File Id="54674957" Language="SFX">
+					<ShortName>Music-SFX\Hub0.wav</ShortName>
+					<Path>SFX\Music-SFX\Hub0_3BDAD486.wem</Path>
+				</File>
+				<File Id="152781705" Language="SFX">
+					<ShortName>Music-SFX\Hub1.wav</ShortName>
+					<Path>SFX\Music-SFX\Hub1_3BDAD486.wem</Path>
+				</File>
+				<File Id="393391159" Language="SFX">
+					<ShortName>Music-SFX\Level3Ambient.wav</ShortName>
+					<Path>SFX\Music-SFX\Level3Ambient_3BDAD486.wem</Path>
+				</File>
+				<File Id="589974881" Language="SFX">
+					<ShortName>Music-SFX\Level1Ambient.wav</ShortName>
+					<Path>SFX\Music-SFX\Level1Ambient_3BDAD486.wem</Path>
+				</File>
+				<File Id="648589336" Language="SFX">
+					<ShortName>Music-SFX\Level2Ambient.wav</ShortName>
+					<Path>SFX\Music-SFX\Level2Ambient_3BDAD486.wem</Path>
+				</File>
+				<File Id="771783799" Language="SFX">
+					<ShortName>Music-SFX\BoxDoorZap.wav</ShortName>
+					<Path>SFX\Music-SFX\BoxDoorZap_3AE5877C.wem</Path>
+				</File>
+				<File Id="894777268" Language="SFX">
+					<ShortName>communication-channel.wav</ShortName>
+					<Path>SFX\communication-channel_3AE5877C.wem</Path>
+				</File>
+				<File Id="987973023" Language="SFX">
+					<ShortName>TeleportSound.wav</ShortName>
+					<Path>SFX\TeleportSound_3AE5877C.wem</Path>
+				</File>
+			</IncludedMemoryFiles>
+		</SoundBank>
+		<SoundBank Id="1355168291" Language="SFX">
+			<ObjectPath>Init</ObjectPath>
+			<ShortName>Init</ShortName>
+			<Path>Init.bnk</Path>
+		</SoundBank>
+		<SoundBank Id="3592913328" Language="SFX">
+			<ObjectPath>\SoundBanks\Default Work Unit\Chrono_Sound</ObjectPath>
+			<ShortName>Chrono_Sound</ShortName>
+			<Path>Chrono_Sound.bnk</Path>
+			<IncludedEvents>
+				<Event Id="1185437150" Name="Pause_A_Timelapse" ObjectPath="\Events\Default Work Unit\Pause_A_Timelapse"/>
+				<Event Id="3707190201" Name="Pause_Casual_Level_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Pause_Casual_Level_LOOP"/>
+				<Event Id="3600779026" Name="Pause_FutureTechSound" ObjectPath="\Events\Default Work Unit\SFX_EVENTS\Pause_FutureTechSound"/>
+				<Event Id="1196397114" Name="Pause_Hangar_Escape_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Pause_Hangar_Escape_LOOP"/>
+				<Event Id="3445986553" Name="Pause_Orbit_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Pause_Orbit_LOOP"/>
+				<Event Id="2042848668" Name="Play_A_Timelapse" ObjectPath="\Events\Default Work Unit\Play_A_Timelapse"/>
+				<Event Id="3005238139" Name="Play_Casual_Level_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Play_Casual_Level_LOOP"/>
+				<Event Id="1604770128" Name="Play_FutureTechSound" ObjectPath="\Events\Default Work Unit\SFX_EVENTS\Play_FutureTechSound"/>
+				<Event Id="996404944" Name="Play_Hangar_Escape_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Play_Hangar_Escape_LOOP"/>
+				<Event Id="3699510579" Name="Play_Orbit_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Play_Orbit_LOOP"/>
+				<Event Id="1121098459" Name="Resume_A_Timelapse" ObjectPath="\Events\Default Work Unit\Resume_A_Timelapse"/>
+				<Event Id="3851757052" Name="Resume_Casual_Level_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Resume_Casual_Level_LOOP"/>
+				<Event Id="3760069047" Name="Resume_FutureTechSound" ObjectPath="\Events\Default Work Unit\SFX_EVENTS\Resume_FutureTechSound"/>
+				<Event Id="595909313" Name="Resume_Hangar_Escape_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Resume_Hangar_Escape_LOOP"/>
+				<Event Id="1208877918" Name="Resume_Orbit_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Resume_Orbit_LOOP"/>
+				<Event Id="715006247" Name="SFX_MetallicSound" ObjectPath="\Events\Default Work Unit\SFX_EVENTS\SFX_MetallicSound"/>
+				<Event Id="2745027494" Name="Stop_A_Timelapse" ObjectPath="\Events\Default Work Unit\Stop_A_Timelapse"/>
+				<Event Id="831993537" Name="Stop_Casual_Level_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Stop_Casual_Level_LOOP"/>
+				<Event Id="4276321770" Name="Stop_FutureTechSound" ObjectPath="\Events\Default Work Unit\SFX_EVENTS\Stop_FutureTechSound"/>
+				<Event Id="458173698" Name="Stop_Hangar_Escape_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Stop_Hangar_Escape_LOOP"/>
+				<Event Id="4280461585" Name="Stop_Orbit_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Stop_Orbit_LOOP"/>
+			</IncludedEvents>
+			<IncludedMemoryFiles>
+				<File Id="145064967" Language="SFX">
+					<ShortName>Sci Fi - Starship Sub Amb.wav</ShortName>
+					<Path>SFX\Sci Fi - Starship Sub Amb_3BDAD486.wem</Path>
+				</File>
+				<File Id="312620889" Language="SFX">
+					<ShortName>Puzzles\Casual Level LOOP.wav</ShortName>
+					<Path>SFX\Puzzles\Casual Level LOOP_3BDAD486.wem</Path>
+				</File>
+				<File Id="596824733" Language="SFX">
+					<ShortName>Metallic Noise 004.wav</ShortName>
+					<Path>SFX\Metallic Noise 004_3AE5877C.wem</Path>
+				</File>
+				<File Id="753352436" Language="SFX">
+					<ShortName>Orbit LOOP.wav</ShortName>
+					<Path>SFX\Orbit LOOP_3BDAD486.wem</Path>
+				</File>
+				<File Id="859612369" Language="SFX">
+					<ShortName>A_Timelapse.wav</ShortName>
+					<Path>SFX\A_Timelapse_3BDAD486.wem</Path>
+				</File>
+				<File Id="883031343" Language="SFX">
+					<ShortName>Hangar Escape LOOP.wav</ShortName>
+					<Path>SFX\Hangar Escape LOOP_3BDAD486.wem</Path>
+				</File>
+			</IncludedMemoryFiles>
+		</SoundBank>
+		<SoundBank Id="4154996803" Language="SFX">
+			<ObjectPath>\SoundBanks\Default Work Unit\Test_Soundbank</ObjectPath>
+			<ShortName>Test_Soundbank</ShortName>
+			<Path>Test_Soundbank.bnk</Path>
+			<IncludedEvents>
+				<Event Id="1888362325" Name="PAUSE_Test1" ObjectPath="\Events\Default Work Unit\OTHER\PAUSE_Test1"/>
+				<Event Id="1888362326" Name="PAUSE_Test2" ObjectPath="\Events\Default Work Unit\OTHER\PAUSE_Test2"/>
+				<Event Id="3759155919" Name="PLAY_Test1" ObjectPath="\Events\Default Work Unit\OTHER\PLAY_Test1"/>
+				<Event Id="3759155916" Name="PLAY_Test2" ObjectPath="\Events\Default Work Unit\OTHER\PLAY_Test2"/>
+				<Event Id="1235130312" Name="RESUME_Test1" ObjectPath="\Events\Default Work Unit\OTHER\RESUME_Test1"/>
+				<Event Id="1235130315" Name="RESUME_Test2" ObjectPath="\Events\Default Work Unit\OTHER\RESUME_Test2"/>
+				<Event Id="984516265" Name="SFX_BEEP" ObjectPath="\Events\Default Work Unit\OTHER\SFX_BEEP"/>
+				<Event Id="1623492746" Name="SFX_BLOP" ObjectPath="\Events\Default Work Unit\OTHER\SFX_BLOP"/>
+				<Event Id="1794490945" Name="SFX_BounceEffects" ObjectPath="\Events\Default Work Unit\OTHER\SFX_BounceEffects"/>
+				<Event Id="1009907414" Name="SFX_BUTTON_PRESS1" ObjectPath="\Events\Default Work Unit\OTHER\SFX_BUTTON_PRESS1"/>
+				<Event Id="1009907413" Name="SFX_BUTTON_PRESS2" ObjectPath="\Events\Default Work Unit\OTHER\SFX_BUTTON_PRESS2"/>
+				<Event Id="3559876090" Name="SFX_DOORSOUND" ObjectPath="\Events\Default Work Unit\OTHER\SFX_DOORSOUND"/>
+				<Event Id="650723447" Name="SFX_PLING" ObjectPath="\Events\Default Work Unit\OTHER\SFX_PLING"/>
+				<Event Id="1687962553" Name="SFX_SHORTCIRUIT" ObjectPath="\Events\Default Work Unit\OTHER\SFX_SHORTCIRUIT"/>
+				<Event Id="4195120820" Name="SFX_SWOOSH" ObjectPath="\Events\Default Work Unit\OTHER\SFX_SWOOSH"/>
+				<Event Id="2616479322" Name="SFX_TICK" ObjectPath="\Events\Default Work Unit\OTHER\SFX_TICK"/>
+				<Event Id="43066209" Name="SFX_TOGGLE" ObjectPath="\Events\Default Work Unit\OTHER\SFX_TOGGLE"/>
+				<Event Id="2011175805" Name="STOP_Test1" ObjectPath="\Events\Default Work Unit\OTHER\STOP_Test1"/>
+				<Event Id="2011175806" Name="STOP_Test2" ObjectPath="\Events\Default Work Unit\OTHER\STOP_Test2"/>
+			</IncludedEvents>
+			<IncludedMemoryFiles>
+				<File Id="82772906" Language="SFX">
+					<ShortName>Button_Press_2-Marianne_Gagnon-1415267358.wav</ShortName>
+					<Path>SFX\Button_Press_2-Marianne_Gagnon-1415267358_3AE5877C.wem</Path>
+				</File>
+				<File Id="227580179" Language="SFX">
+					<ShortName>Fuzzy Beep-SoundBible.com-1580329899.wav</ShortName>
+					<Path>SFX\Fuzzy Beep-SoundBible.com-1580329899_3AE5877C.wem</Path>
+				</File>
+				<File Id="290553790" Language="SFX">
+					<ShortName>Toggle-SoundBible.com-231290292.wav</ShortName>
+					<Path>SFX\Toggle-SoundBible.com-231290292_3AE5877C.wem</Path>
+				</File>
+				<File Id="306683277" Language="SFX">
+					<ShortName>Bounce-SoundBible.wav</ShortName>
+					<Path>SFX\Bounce-SoundBible_3AE5877C.wem</Path>
+				</File>
+				<File Id="333267623" Language="SFX">
+					<ShortName>Pling-KevanGC-1485374730.wav</ShortName>
+					<Path>SFX\Pling-KevanGC-1485374730_3AE5877C.wem</Path>
+				</File>
+				<File Id="515445552" Language="SFX">
+					<ShortName>Metroid_Door-Brandino480-995195341.wav</ShortName>
+					<Path>SFX\Metroid_Door-Brandino480-995195341_3AE5877C.wem</Path>
+				</File>
+				<File Id="625422023" Language="SFX">
+					<ShortName>Swoosh 1-SoundBible.com-231145780.wav</ShortName>
+					<Path>SFX\Swoosh 1-SoundBible.com-231145780_3AE5877C.wem</Path>
+				</File>
+				<File Id="668283606" Language="SFX">
+					<ShortName>Tick-DeepFrozenApps-397275646.wav</ShortName>
+					<Path>SFX\Tick-DeepFrozenApps-397275646_3AE5877C.wem</Path>
+				</File>
+				<File Id="706655945" Language="SFX">
+					<ShortName>Button_Press-Marianne_Gagnon-779186363.wav</ShortName>
+					<Path>SFX\Button_Press-Marianne_Gagnon-779186363_3AE5877C.wem</Path>
+				</File>
+				<File Id="731758138" Language="SFX">
+					<ShortName>Short Circuit-SoundBible.com-1450168875.wav</ShortName>
+					<Path>SFX\Short Circuit-SoundBible.com-1450168875_3AE5877C.wem</Path>
+				</File>
+				<File Id="868747748" Language="SFX">
+					<ShortName>Kevin_MacLeod_-_02_-_Impact_Andante.wav</ShortName>
+					<Path>SFX\Kevin_MacLeod_-_02_-_Impact_Andante_3BDAD486.wem</Path>
+				</File>
+				<File Id="919470358" Language="SFX">
+					<ShortName>Kevin_MacLeod_-_Crossing_the_Divide.wav</ShortName>
+					<Path>SFX\Kevin_MacLeod_-_Crossing_the_Divide_3AE5877C.wem</Path>
+				</File>
+				<File Id="937585891" Language="SFX">
+					<ShortName>Blop-Mark_DiAngelo-79054334.wav</ShortName>
+					<Path>SFX\Blop-Mark_DiAngelo-79054334_3AE5877C.wem</Path>
+				</File>
+			</IncludedMemoryFiles>
+		</SoundBank>
+	</SoundBanks>
+</SoundBanksInfo>

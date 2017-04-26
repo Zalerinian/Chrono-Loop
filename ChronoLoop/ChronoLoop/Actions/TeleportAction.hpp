@@ -54,6 +54,8 @@ namespace Epoch {
 
 		virtual void Update() {
 			if (!VRInputManager::GetInstance().IsVREnabled()) {
+				if ((GetAsyncKeyState(VK_SHIFT) & 1) && dynamic_cast<SFXEmitter*>(mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
+					((SFXEmitter*)mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
 				return;
 			}
 
@@ -170,7 +172,7 @@ namespace Epoch {
 												if (Settings::GetInstance().GetInt("tutStep") == 1)//Teleported
 													Settings::GetInstance().SetInt("tutStep", 2);//Pick up object
 
-												if (mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1) != nullptr && dynamic_cast<SFXEmitter*>(mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
+												if (dynamic_cast<SFXEmitter*>(mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
 													((SFXEmitter*)mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
 											} else {
 												SystemLogger::GetLog() << "[DEBUG] Can't let you do that, Starfox." << std::endl;

@@ -40,6 +40,7 @@ namespace Hourglass
 			mLbNZ = new Label();
 
 			mOffset = new NumericUpDown();
+            mOffset.Minimum = -9999;
 			mNX = new NumericUpDown();
 			mNY = new NumericUpDown();
 			mNZ = new NumericUpDown();
@@ -65,7 +66,8 @@ namespace Hourglass
 			mOffset.Name = "offset";
 			mOffset.Size = new System.Drawing.Size(ContentWidth - mOffset.Left, 20);
 			mOffset.TabIndex = 45;
-
+            mOffset.Minimum = -100;
+            mOffset.DecimalPlaces = 3;
 
 			// These numeric up-downs are children of the panel, which is docked to the top, left, and right.
 			// These are not docked to the right, because their resizing is a special case.
@@ -166,6 +168,17 @@ namespace Hourglass
 			mNX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mNY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mNZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+		}
+
+		public override void CopyData(ref Component _other) {
+			if (!(_other is PlaneCollider)) {
+				throw new InvalidDataException("Given component does not match calling type!");
+			}
+			PlaneCollider comp = _other as PlaneCollider;
+			comp.mOffset.Value = mOffset.Value;
+			comp.mNX.Value = mNX.Value;
+			comp.mNY.Value = mNY.Value;
+			comp.mNZ.Value = mNZ.Value;
 		}
 
 

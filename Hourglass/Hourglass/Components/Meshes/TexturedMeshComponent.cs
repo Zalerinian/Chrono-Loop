@@ -170,5 +170,15 @@ namespace Hourglass
 				mEmissive.SelectedIndex = _index;
 			}
 		}
+
+		public override void CopyData(ref Component _other) {
+			if (!(_other is TexturedMeshComponent)) {
+				throw new InvalidDataException("Given component does not match the calling type.");
+			}
+			base.CopyData(ref _other);
+			TexturedMeshComponent comp = _other as TexturedMeshComponent;
+			comp.mTexture.SelectedIndex = mTexture.SelectedIndex;
+			comp.mEmissive.SelectedIndex = mEmissive.SelectedIndex;
+		}
 	}
 }

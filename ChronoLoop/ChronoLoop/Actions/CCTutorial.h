@@ -18,7 +18,7 @@ namespace Epoch
 		float scaleX, scaleY;
 		float tempScaleX, tempScaleY;
 		bool scalingDone;
-		CCProgessBar* pb;
+		CCProgressBar* pb;
 
 		PSAnimatedMultiscan_Data mScanlineData;
 		
@@ -45,7 +45,7 @@ namespace Epoch
 			Transform identity;
 			//Teleport Initialize
 			BaseObject* mTeleportBoard = new BaseObject("mTeleportBoard", identity);
-			MeshComponent* tm = new MeshComponent("../Resources/PlaneCorrection.obj", .75f);
+			MeshComponent* tm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
 			tm->AddTexture("../Resources/tutTeleport.png", eTEX_DIFFUSE);
 			tm->AddTexture("../Resources/MultiscanUneven.png", eTEX_REGISTER4);
 			tm->AddTexture("../Resources/Scanline.png", eTEX_REGISTER5);
@@ -53,12 +53,16 @@ namespace Epoch
 			tm->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
 			tm->SetVisible(false);
 			mTeleportBoard->AddComponent(tm);
+			Emitter* te = new SFXEmitter();
+			((SFXEmitter*)te)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			mTeleportBoard->AddComponent(te);
+			AudioWrapper::GetInstance().AddEmitter(te, "mTeleportBoard");
 			boards.push_back(mTeleportBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mTeleportBoard);
 
 			//Pick Up Initialize
 			BaseObject* mPickUpBoard = new BaseObject("mPickUpBoard", identity);
-			MeshComponent* pum = new MeshComponent("../Resources/PlaneCorrection.obj", .75f);
+			MeshComponent* pum = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
 			pum->AddTexture("../Resources/tutPickUp.png", eTEX_DIFFUSE);
 			pum->AddTexture("../Resources/MultiscanUneven.png", eTEX_REGISTER4);
 			pum->AddTexture("../Resources/Scanline.png", eTEX_REGISTER5);
@@ -66,12 +70,16 @@ namespace Epoch
 			pum->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
 			pum->SetVisible(false);
 			mPickUpBoard->AddComponent(pum);
+			Emitter* pe = new SFXEmitter();
+			((SFXEmitter*)pe)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			mPickUpBoard->AddComponent(pe);
+			AudioWrapper::GetInstance().AddEmitter(pe, "mPickUpBoard");
 			boards.push_back(mPickUpBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mPickUpBoard);
 
 			//Pause Time Initialize
 			BaseObject* mPauseTimeBoard = new BaseObject("mPauseTimeBoard", identity);
-			MeshComponent* ptm = new MeshComponent("../Resources/PlaneCorrection.obj", .75f);
+			MeshComponent* ptm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
 			ptm->AddTexture("../Resources/tutPauseTime.png", eTEX_DIFFUSE);
 			ptm->AddTexture("../Resources/MultiscanUneven.png", eTEX_REGISTER4);
 			ptm->AddTexture("../Resources/Scanline.png", eTEX_REGISTER5);
@@ -79,32 +87,39 @@ namespace Epoch
 			ptm->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
 			ptm->SetVisible(false);
 			mPauseTimeBoard->AddComponent(ptm);
+			Emitter* pte = new SFXEmitter();
+			((SFXEmitter*)pte)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			mPauseTimeBoard->AddComponent(pte);
+			AudioWrapper::GetInstance().AddEmitter(pte, "mPauseTimeBoard");
 			boards.push_back(mPauseTimeBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mPauseTimeBoard);
 
 			//Rewind Initialize
 			BaseObject* mRewindBoard = new BaseObject("mRewindBoard", identity);
-			MeshComponent* rm = new MeshComponent("../Resources/PlaneCorrection.obj", .75f);
+			MeshComponent* rm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
 			rm->AddTexture("../Resources/tutRewind.png", eTEX_DIFFUSE);
 			rm->AddTexture("../Resources/MultiscanUneven.png", eTEX_REGISTER4);
 			rm->AddTexture("../Resources/Scanline.png", eTEX_REGISTER5);
 			rm->SetData(eCB_PIXEL, eBufferDataType_Scanline, ePB_REGISTER1, &mScanlineData);
 			rm->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
 			rm->SetVisible(false);
-			mRewindBoard->AddComponent(rm);
-			boards.push_back(mRewindBoard);
-			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mRewindBoard);
-			pb = new CCProgessBar();
+			pb = new CCProgressBar();
 			Settings::GetInstance().SetFloat("TutorialRewind - CurProgress", 0);
 			Settings::GetInstance().SetFloat("TutorialRewind - FinalProgress", 50);
 			pb->SetFinalProgress(50);
 			pb->SetCurProgress(0);
 			mRewindBoard->AddComponent(pb);
-			
+			mRewindBoard->AddComponent(rm);
+			Emitter* re = new SFXEmitter();
+			((SFXEmitter*)re)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			mRewindBoard->AddComponent(re);
+			AudioWrapper::GetInstance().AddEmitter(re, "mRewindBoard");
+			boards.push_back(mRewindBoard);
+			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mRewindBoard);
 
 			//Create Clone Initialize
 			BaseObject* mCreateCloneBoard = new BaseObject("mCreateCloneBoard", identity);
-			MeshComponent* ccm = new MeshComponent("../Resources/PlaneCorrection.obj", .75f);
+			MeshComponent* ccm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
 			ccm->AddTexture("../Resources/tutClone.png", eTEX_DIFFUSE);
 			ccm->AddTexture("../Resources/MultiscanUneven.png", eTEX_REGISTER4);
 			ccm->AddTexture("../Resources/Scanline.png", eTEX_REGISTER5);
@@ -112,12 +127,16 @@ namespace Epoch
 			ccm->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
 			ccm->SetVisible(false);
 			mCreateCloneBoard->AddComponent(ccm);
+			Emitter* cce = new SFXEmitter();
+			((SFXEmitter*)cce)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			mCreateCloneBoard->AddComponent(cce);
+			AudioWrapper::GetInstance().AddEmitter(cce, "mCreateCloneBoard");
 			boards.push_back(mCreateCloneBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mCreateCloneBoard);
 
 			//Accept Time Initialize
 			BaseObject* mAcceptBoard = new BaseObject("mAcceptBoard", identity);
-			MeshComponent* am = new MeshComponent("../Resources/PlaneCorrection.obj", .75f);
+			MeshComponent* am = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
 			am->AddTexture("../Resources/tutAcceptTime.png", eTEX_DIFFUSE);
 			am->AddTexture("../Resources/MultiscanUneven.png", eTEX_REGISTER4);
 			am->AddTexture("../Resources/Scanline.png", eTEX_REGISTER5);
@@ -125,12 +144,16 @@ namespace Epoch
 			am->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
 			am->SetVisible(false);
 			mAcceptBoard->AddComponent(am);
+			Emitter* ae = new SFXEmitter();
+			((SFXEmitter*)ae)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			mAcceptBoard->AddComponent(ae);
+			AudioWrapper::GetInstance().AddEmitter(ae, "mAcceptBoard");
 			boards.push_back(mAcceptBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mAcceptBoard);
 
 			//Cancel Time Initialize
 			BaseObject* mCancelBoard = new BaseObject("mCancelBoard", identity);
-			MeshComponent* cm = new MeshComponent("../Resources/PlaneCorrection.obj", .75f);
+			MeshComponent* cm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
 			cm->AddTexture("../Resources/tutCancelTime.png", eTEX_DIFFUSE);
 			cm->AddTexture("../Resources/MultiscanUneven.png", eTEX_REGISTER4);
 			cm->AddTexture("../Resources/Scanline.png", eTEX_REGISTER5);
@@ -138,12 +161,16 @@ namespace Epoch
 			cm->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
 			cm->SetVisible(false);
 			mCancelBoard->AddComponent(cm);
+			//Emitter* ce = new SFXEmitter();
+			//((SFXEmitter*)ce)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			//mCancelBoard->AddComponent(ce);
+			//AudioWrapper::GetInstance().AddEmitter(ce, "mCancelBoard");
 			boards.push_back(mCancelBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mCancelBoard);
 
 			//Delete Clone Initialize
 			BaseObject* mDeleteCloneBoard = new BaseObject("mDeleteCloneBoard", identity);
-			MeshComponent* dcm = new MeshComponent("../Resources/PlaneCorrection.obj", .75f);
+			MeshComponent* dcm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
 			dcm->AddTexture("../Resources/tutDeleteClone.png", eTEX_DIFFUSE);
 			dcm->AddTexture("../Resources/MultiscanUneven.png", eTEX_REGISTER4);
 			dcm->AddTexture("../Resources/Scanline.png", eTEX_REGISTER5);
@@ -151,12 +178,16 @@ namespace Epoch
 			dcm->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
 			dcm->SetVisible(false);
 			mDeleteCloneBoard->AddComponent(dcm);
+			Emitter* dce = new SFXEmitter();
+			((SFXEmitter*)dce)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			mDeleteCloneBoard->AddComponent(dce);
+			AudioWrapper::GetInstance().AddEmitter(dce, "mDeleteCloneBoard");
 			boards.push_back(mDeleteCloneBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mDeleteCloneBoard);
 
 			//UI Initialize
 			BaseObject* mUIBoard = new BaseObject("mUIBoard", identity);
-			MeshComponent* uim = new MeshComponent("../Resources/PlaneCorrection.obj", .75f);
+			MeshComponent* uim = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
 			uim->AddTexture("../Resources/tutUI.png", eTEX_DIFFUSE);
 			uim->AddTexture("../Resources/MultiscanUneven.png", eTEX_REGISTER4);
 			uim->AddTexture("../Resources/Scanline.png", eTEX_REGISTER5);
@@ -166,6 +197,18 @@ namespace Epoch
 			mUIBoard->AddComponent(uim);
 			boards.push_back(mUIBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mUIBoard);
+
+			BaseObject* mDeviceBoard = new BaseObject("mDeviceBoard", identity);
+			MeshComponent* dm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
+			dm->AddTexture("../Resources/tutDevice.png", eTEX_DIFFUSE);
+			dm->AddTexture("../Resources/MultiscanUneven.png", eTEX_REGISTER4);
+			dm->AddTexture("../Resources/Scanline.png", eTEX_REGISTER5);
+			dm->SetData(eCB_PIXEL, eBufferDataType_Scanline, ePB_REGISTER1, &mScanlineData);
+			dm->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
+			dm->SetVisible(false);
+			mDeviceBoard->AddComponent(dm);
+			boards.push_back(mDeviceBoard);
+			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mDeviceBoard);
 
 			//Pause Menu Initialize
 			//BaseObject* mPauseMenuBoard = new BaseObject("mPauseMenuBoard", identity);
@@ -188,6 +231,9 @@ namespace Epoch
 
 		virtual void Update()
 		{
+			if (GetAsyncKeyState(VK_SHIFT) & 1)
+				Settings::GetInstance().SetInt("tutStep", Settings::GetInstance().GetInt("tutStep") + 1);
+
 			bool thing = ((MeshComponent*)boards[7]->GetComponentIndexed(eCOMPONENT_MESH, 0))->IsVisible();
 			int t = Settings::GetInstance().GetInt("tutStep");
 			switch (Settings::GetInstance().GetInt("tutStep"))
@@ -196,6 +242,7 @@ namespace Epoch
 				if(!((MeshComponent*)boards[0]->GetComponentIndexed(eCOMPONENT_MESH, 0))->IsVisible())
 				{
 					((MeshComponent*)boards[0]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+					((SFXEmitter*)boards[0]->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
 
 					//boards[0]->GetTransform().SetMatrix(matrix4::CreateZRotation(-1.5708f) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateTranslation(2, 1.5f, 0));
 					scaleX = 0.05f;
@@ -209,7 +256,7 @@ namespace Epoch
 					scaleX += 0.05f;
 
 				if(tempScaleX != scaleX || tempScaleY != scaleY)
-					boards[0]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX,1, scaleY) * matrix4::CreateZRotation(-1.5708f) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateTranslation(2, 1.5f, 0));
+					boards[0]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX,1, scaleY) * matrix4::CreateZRotation(-2.1293f) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateTranslation(2, 1.5f, .96f));
 
 				mScanlineData.MultiscanVOffset += TimeManager::Instance()->GetDeltaTime() / 25.0f;
 				mScanlineData.ScanlineVOffset += TimeManager::Instance()->GetDeltaTime();
@@ -222,6 +269,8 @@ namespace Epoch
 			case 2://Pick Up
 				if (!((MeshComponent*)boards[1]->GetComponentIndexed(eCOMPONENT_MESH, 0))->IsVisible()) {
 					((MeshComponent*)boards[1]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+					((SFXEmitter*)boards[1]->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+
 					scalingDone = false;
 					scaleX = 1.0f;
 					scaleY = 1.0f;
@@ -247,7 +296,7 @@ namespace Epoch
 					else if (scaleX < 1.0f)
 						scaleX += 0.05f;
 					if (tempScaleX != scaleX || tempScaleY != scaleY)
-						boards[1]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY)  * matrix4::CreateZRotation(-1.5708f) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(0.785398f) * matrix4::CreateTranslation(-3.55f, 1.7f, 3.71f));
+						boards[1]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY) * matrix4::CreateZRotation(-1.5708f) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(0.785398f) * matrix4::CreateTranslation(-3.55f, 1.7f, 3.71f));
 				}
 
 				mScanlineData.MultiscanVOffset += TimeManager::Instance()->GetDeltaTime() / 25.0f;
@@ -262,10 +311,15 @@ namespace Epoch
 				if (!((MeshComponent*)boards[2]->GetComponentIndexed(eCOMPONENT_MESH, 0))->IsVisible()) {
 					//((MeshComponent*)boards[1]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 					((MeshComponent*)boards[2]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+					((MeshComponent*)boards[9]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+					((SFXEmitter*)boards[2]->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+
 					scalingDone = false;
 					scaleX = 1.0f;
 					scaleY = 1.0f;
 					boards[2]->GetTransform().SetMatrix(matrix4::CreateScale(0, 1, 0) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
+					boards[9]->GetTransform().SetMatrix(matrix4::CreateScale(0, 1, 0) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
+
 				}
 				tempScaleX = scaleX;
 				tempScaleY = scaleY;
@@ -287,7 +341,10 @@ namespace Epoch
 					else if (scaleX < 1.0f)
 						scaleX += 0.05f;
 					if (tempScaleX != scaleX || tempScaleY != scaleY)
+					{
 						boards[2]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY)  * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
+						boards[9]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY)  * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 1.1f));
+					}
 				}
 
 				mScanlineData.MultiscanVOffset += TimeManager::Instance()->GetDeltaTime() / 25.0f;
@@ -296,12 +353,15 @@ namespace Epoch
 					mScanlineData.ScanlineVOffset = -0.5f;
 				}
 				((MeshComponent*)boards[2]->GetComponentIndexed(eCOMPONENT_MESH, 0))->UpdateData(eCB_PIXEL, ePB_REGISTER1, &mScanlineData);
+				((MeshComponent*)boards[9]->GetComponentIndexed(eCOMPONENT_MESH, 0))->UpdateData(eCB_PIXEL, ePB_REGISTER1, &mScanlineData);
 
 				break;
 			case 4://Rewind
 				if (!((MeshComponent*)boards[3]->GetComponentIndexed(eCOMPONENT_MESH, 0))->IsVisible()) {
 					//((MeshComponent*)boards[2]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 					((MeshComponent*)boards[3]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+					((SFXEmitter*)boards[3]->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+
 					scalingDone = false;
 					scaleX = 1.0f;
 					scaleY = 1.0f;
@@ -317,8 +377,10 @@ namespace Epoch
 					else if (scaleY >= 0.0f)
 						scaleY -= 0.1f;
 					boards[2]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
+					boards[9]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 1.1f));
 					if (scaleY <= 0.0f) {
 						((MeshComponent*)boards[2]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
+						((MeshComponent*)boards[9]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 						scalingDone = true;
 					}
 				} else {
@@ -345,6 +407,8 @@ namespace Epoch
 					//((MeshComponent*)boards[3]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 					((MeshComponent*)boards[4]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
 					((MeshComponent*)boards[8]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+					((SFXEmitter*)boards[4]->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+
 					scalingDone = false;
 					scaleX = 1.0f;
 					scaleY = 1.0f;
@@ -390,6 +454,8 @@ namespace Epoch
 					//((MeshComponent*)boards[8]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 					((MeshComponent*)boards[5]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
 					((MeshComponent*)boards[6]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+					((SFXEmitter*)boards[5]->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+
 					scalingDone = false;
 					scaleX = 1.0f;
 					scaleY = 1.0f;
@@ -433,6 +499,8 @@ namespace Epoch
 					//((MeshComponent*)boards[5]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 					//((MeshComponent*)boards[6]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 					((MeshComponent*)boards[7]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+					((SFXEmitter*)boards[7]->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+
 					scalingDone = false;
 					scaleX = 1.0f;
 					scaleY = 1.0f;

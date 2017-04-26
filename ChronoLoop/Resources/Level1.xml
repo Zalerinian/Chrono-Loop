@@ -1,6 +1,6 @@
-﻿<Level>
+<Level>
   <Settings>
-    <StartPos>0.46,0,-10.15</StartPos>
+    <StartPos>-0.14,0,-10.15</StartPos>
     <StartRot>0,0,0</StartRot>
     <MaxClones>0</MaxClones>
   </Settings>
@@ -196,22 +196,6 @@
     <Scale>1,1,1</Scale>
     <Components>
       <EnterLevel>Enabled</EnterLevel>
-      <EnterLevel>Enabled</EnterLevel>
-      <Collider>
-        <Type>OBB</Type>
-        <Trigger>True</Trigger>
-        <Position>0,1.4,2.5</Position>
-        <Rotation>0,0,0</Rotation>
-        <Scale>2.7,3.3,1</Scale>
-        <Move>False</Move>
-        <PickUp>False</PickUp>
-        <Gravity>0,0,0</Gravity>
-        <Mass>0</Mass>
-        <Elasticity>0</Elasticity>
-        <StaticFriction>0</StaticFriction>
-        <KeneticFriction>0</KeneticFriction>
-        <Drag>0</Drag>
-      </Collider>
     </Components>
   </Object>
   <Object>
@@ -817,13 +801,30 @@
     <Components />
   </Object>
   <Object>
-    <Name>DoorFrame1asdf</Name>
+    <Name>ExitFrame</Name>
     <Mesh>DoorFrame1.obj</Mesh>
     <Texture>fieldGen.png</Texture>
     <Position>0,0,12.12225</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1,1</Scale>
-    <Components />
+    <Components>
+      <EnterLevel>Enabled</EnterLevel>
+      <Collider>
+        <Type>OBB</Type>
+        <Trigger>True</Trigger>
+        <Position>0,1.5,0.4</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>2.7,3,1</Scale>
+        <Move>False</Move>
+        <PickUp>False</PickUp>
+        <Gravity>0,0,0</Gravity>
+        <Mass>0</Mass>
+        <Elasticity>0</Elasticity>
+        <StaticFriction>0</StaticFriction>
+        <KeneticFriction>0</KeneticFriction>
+        <Drag>0</Drag>
+      </Collider>
+    </Components>
   </Object>
   <Object>
     <Name>Success</Name>

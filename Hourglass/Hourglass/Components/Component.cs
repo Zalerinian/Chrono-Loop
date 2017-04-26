@@ -227,5 +227,7 @@ namespace Hourglass
 		}
 
 		public abstract void ReadData(System.IO.BinaryReader r, int _version);
+
+		public abstract void CopyData(ref Component _other);
     }
 }

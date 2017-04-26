@@ -399,6 +399,7 @@ namespace Hourglass
 			// 
 			// Tree
 			// 
+			this.Tree.AllowDrop = true;
 			this.Tree.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -416,7 +417,11 @@ namespace Hourglass
 			this.Tree.Size = new System.Drawing.Size(150, 606);
 			this.Tree.TabIndex = 0;
 			this.Tree.TabStop = false;
+			this.Tree.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.Tree_ItemDrag);
 			this.Tree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.Tree_AfterSelect);
+			this.Tree.DragDrop += new System.Windows.Forms.DragEventHandler(this.Tree_DragDrop);
+			this.Tree.DragEnter += new System.Windows.Forms.DragEventHandler(this.Tree_DragEnter);
+			this.Tree.DragOver += new System.Windows.Forms.DragEventHandler(this.Tree_DragOver);
 			// 
 			// spWorldView
 			// 

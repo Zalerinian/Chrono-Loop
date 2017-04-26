@@ -167,5 +167,16 @@ namespace Hourglass
 			mZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 		}
 
+		public override void CopyData(ref Component _other) {
+			if(!(_other is SphereCollider)) {
+				throw new InvalidDataException("Given component does not match calling type!");
+			}
+			SphereCollider comp = _other as SphereCollider;
+			comp.mRadius.Value = mRadius.Value;
+			comp.mX.Value = mX.Value;
+			comp.mY.Value = mY.Value;
+			comp.mZ.Value = mZ.Value;
+		}
+
 	}
 }
