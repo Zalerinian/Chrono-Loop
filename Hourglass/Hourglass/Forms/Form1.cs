@@ -721,9 +721,12 @@ namespace Hourglass
 
 		private void Editor_ClientSizeChanged(object sender, EventArgs e)
 		{
-			// Ensure the graphics panel can't get too small.
-			spHierarchyPanel.Panel2MinSize = ClientRectangle.Width - 210;
-			spWorldView.Panel1MinSize = ClientRectangle.Width - 210 - 260;
+            // Ensure the graphics panel can't get too small.
+            if (ClientRectangle.Width >= 210)
+            {
+                spHierarchyPanel.Panel2MinSize = ClientRectangle.Width - 210;
+                spWorldView.Panel1MinSize = ClientRectangle.Width - 210 - 260;
+            }
 			spHierarchyPanel.PerformLayout();
 			spWorldView.PerformLayout();
 		}

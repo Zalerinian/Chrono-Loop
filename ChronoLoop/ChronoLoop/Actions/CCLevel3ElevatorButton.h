@@ -7,14 +7,13 @@
 namespace Epoch {
 
 	struct CCLevel3ElevatorButton : public CodeComponent {
-		bool colliding = false, InterpDone = false;
+		bool colliding = false, mInterpDone = true, mFlip = false;
 		BaseObject* mChamberObject, *mButtonStand;
 		Interpolator<matrix4>* mChamberInterp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mPlayerInterp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mStartStandInterp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mStartButtonInterp = new Interpolator<matrix4>();
 		//vec3f blockend, exitend;
-		bool once = false;
 
 		Level* cLevel;
 
@@ -38,35 +37,39 @@ namespace Epoch {
 						_col.mVelocity = vel;
 						_col.mAcceleration = vel / _time;
 
-						if (!once) {
+						if (mInterpDone) {
 							//Playsound
 							if (_col.GetBaseObject()->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0) {
 								if (dynamic_cast<SFXEmitter*>(_col.GetBaseObject()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0)))
 									((SFXEmitter*)_col.GetBaseObject()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
-
-
 							}
 							matrix4 mat = mChamberObject->GetTransform().GetMatrix();
-							mChamberInterp->Prepare(7, mat, mat * matrix4::CreateTranslation(0, -3.1f, 0), mChamberObject->GetTransform().GetMatrix());
+							float tempY = mChamberObject->GetTransform().GetMatrix().Position.y;
+							if (tempY < -1.0) 
+								tempY = 1;
+							else
+								tempY = -1;
+
+							mChamberInterp->Prepare(7, mat, mat * matrix4::CreateTranslation(0, 3.2f * tempY, 0), mChamberObject->GetTransform().GetMatrix());
 							mChamberInterp->SetEasingFunction(Easing::QuadInOut);
 							mChamberInterp->SetActive(true);
 
 							mat = VRInputManager::GetInstance().GetPlayerPosition();
-							mPlayerInterp->Prepare(7, mat, mat * matrix4::CreateTranslation(0, -3.1f, 0), VRInputManager::GetInstance().GetPlayerPosition());
+							mPlayerInterp->Prepare(7, mat, mat * matrix4::CreateTranslation(0, 3.2f * tempY, 0), VRInputManager::GetInstance().GetPlayerPosition());
 							mPlayerInterp->SetEasingFunction(Easing::QuadInOut);
 							mPlayerInterp->SetActive(true);
 
 							mat = mObject->GetTransform().GetMatrix();
-							mStartButtonInterp->Prepare(7, mat, mat * matrix4::CreateTranslation(0, -3.1f, 0), mObject->GetTransform().GetMatrix());
+							mStartButtonInterp->Prepare(7, mat, mat * matrix4::CreateTranslation(0, 3.2f * tempY, 0), mObject->GetTransform().GetMatrix());
 							mStartButtonInterp->SetEasingFunction(Easing::QuadInOut);
 							mStartButtonInterp->SetActive(true);
 
 							mat = mButtonStand->GetTransform().GetMatrix();
-							mStartStandInterp->Prepare(7, mat, mat * matrix4::CreateTranslation(0, -3.1f, 0), mButtonStand->GetTransform().GetMatrix());
+							mStartStandInterp->Prepare(7, mat, mat * matrix4::CreateTranslation(0, 3.2f * tempY, 0), mButtonStand->GetTransform().GetMatrix());
 							mStartStandInterp->SetEasingFunction(Easing::QuadInOut);
 							mStartStandInterp->SetActive(true);
+							mInterpDone = false;
 							Settings::GetInstance().SetBool("CantPauseTime", true);
-							once = true;
 						}
 					}
 
@@ -79,20 +82,19 @@ namespace Epoch {
 
 		virtual void Update() {
 			if (!LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->isTimePaused()) {
-				if (once && !InterpDone) {
-					if (mChamberInterp->Update(TimeManager::Instance()->GetDeltaTime()))
-					{
-						InterpDone = true;
+				if (!mInterpDone) {
+					if (mChamberInterp->Update(TimeManager::Instance()->GetDeltaTime())) {
+						mInterpDone = true;
 						Settings::GetInstance().SetBool("CantPauseTime", false);
 					}
 					mPlayerInterp->Update(TimeManager::Instance()->GetDeltaTime());
 					mStartButtonInterp->Update(TimeManager::Instance()->GetDeltaTime());
 					mStartStandInterp->Update(TimeManager::Instance()->GetDeltaTime());
-				}
 
-				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mObject->GetTransform().GetMatrix().fourth);
-				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y - .2f;
-				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y - .2f;
+					((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mObject->GetTransform().GetMatrix().fourth);
+					((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y - .2f;
+					((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y - .2f;
+				}
 			}
 		}
 	};

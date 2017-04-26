@@ -165,8 +165,20 @@ namespace Epoch {
 		return XMMatrixRotationZ(_rads);
 	}
 
+	matrix4 matrix4::CreateYawPitchRollRotation(vec3f & _xyz) {
+		return XMMatrixRotationRollPitchYawFromVector(_xyz.vector);
+	}
+
+	matrix4 matrix4::CreateYawPitchRollRotation(float _x, float _y, float _z) {
+		return XMMatrixRotationRollPitchYaw(_x, _y, _z);
+	}
+
 	matrix4 matrix4::CreateScale(float _x, float _y, float _z) {
 		return XMMatrixScaling(_x, _y, _z);
+	}
+
+	matrix4 matrix4::CreateScale(vec3f & _scale) {
+		return XMMatrixScalingFromVector(_scale.vector);
 	}
 
 	matrix4 matrix4::CreateTranslation(float _x, float _y, float _z) {
