@@ -236,10 +236,7 @@ namespace Epoch
 				}
 			}
 		}
-		if(GetAsyncKeyState(VK_TAB) & 1)
-		{
-			TimeManager::Instance()->HotfixResetTimeline();
-		}
+		
 	}
 	void TimeManipulation::MakeCloneBaseObjects(BaseObject * _headset, BaseObject * _controller1, BaseObject * _controller2)
 	{
