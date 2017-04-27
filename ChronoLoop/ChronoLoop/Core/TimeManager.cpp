@@ -544,14 +544,14 @@ namespace Epoch {
 			}
 
 			unsigned int temp = instanceTimemanager->GetCurrentSnapFrame();
+			
 			if (_gesture == 0) {
 				return;
 			}
 			if (_gesture == 1)
 				_frameRewind *= -1;
 			else if (_gesture == 2) {
-				mRewindGettingFaster = 1;
-				mRewindShouldGetFaster = 0;
+
 				/*LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck();
 				LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->RaycastCloneCheck();*/
 				return;

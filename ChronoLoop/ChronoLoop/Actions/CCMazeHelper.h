@@ -72,19 +72,19 @@ namespace Epoch
 		}
 		virtual void Update()
 		{
-			if (GetAsyncKeyState(VK_DOWN) & 0x1 && mBox1Done && mBox2Done && mBox3Done) {
+			if ((GetAsyncKeyState(VK_DOWN) & 0x1 )&& mBox1Done && mBox2Done && mBox3Done) {
 				MoveDown();
 				//PrintGrid();
 			}
-			else if (GetAsyncKeyState(VK_UP) & 0x1 && mBox1Done && mBox2Done && mBox3Done) {
+			else if ((GetAsyncKeyState(VK_UP) & 0x1) && mBox1Done && mBox2Done && mBox3Done) {
 				MoveUp();
 				//PrintGrid();
 			}
-			else if (GetAsyncKeyState(VK_LEFT) & 0x1 && mBox1Done && mBox2Done && mBox3Done) {
+			else if ((GetAsyncKeyState(VK_LEFT) & 0x1) && mBox1Done && mBox2Done && mBox3Done) {
 				MoveLeft();
 				//PrintGrid();
 			}
-			else if (GetAsyncKeyState(VK_RIGHT) & 0x1 && mBox1Done && mBox2Done && mBox3Done) {
+			else if ((GetAsyncKeyState(VK_RIGHT) & 0x1) && mBox1Done && mBox2Done && mBox3Done) {
 				MoveRight();
 				//PrintGrid();
 			}
