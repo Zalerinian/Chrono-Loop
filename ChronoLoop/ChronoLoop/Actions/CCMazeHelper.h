@@ -5,6 +5,7 @@
 #include "..\Common\Logger.h"
 #include "..\Core\LevelManager.h"
 #include "..\Common\Interpolator.h"
+#include "..\Actions\CCLevel3BoxMovementButton.h"
 
 
 namespace Epoch
@@ -46,6 +47,7 @@ namespace Epoch
 		MoveableBox mazeBoxes[3];
 		Level* cLevel;
 		BaseObject* mLButton, *mRButton, *mUButton, *mDButton;
+		CCLevel3BoxMovementButton* mLBCC, *mRBCC, *mUBCC, *mDBCC;
 		bool mBox1Done, mBox2Done, mBox3Done;
 		int mGrid[4][4] = {
 			{ 0, 0,-1,-1 },
@@ -63,30 +65,47 @@ namespace Epoch
 			mazeBoxes[0].mBox = cLevel->FindObjectWithName("Box1");
 			mazeBoxes[1].mBox = cLevel->FindObjectWithName("Box2");
 			mazeBoxes[2].mBox = cLevel->FindObjectWithName("Box3");
-			//mLButton = cLevel->FindObjectWithName("Button Left");
-			//mRButton = cLevel->FindObjectWithName("Button Right");
-			//mUButton = cLevel->FindObjectWithName("Button Up");
-			//mDButton = cLevel->FindObjectWithName("Button Down");
+			mLButton = cLevel->FindObjectWithName("Button1");
+			mRButton = cLevel->FindObjectWithName("Button3");
+			mUButton = cLevel->FindObjectWithName("Button2");
+			mDButton = cLevel->FindObjectWithName("Button4");
+			mLBCC = new CCLevel3BoxMovementButton();
+			mRBCC = new CCLevel3BoxMovementButton();
+			mUBCC = new CCLevel3BoxMovementButton(); 
+			mDBCC = new CCLevel3BoxMovementButton();
+			mLButton->AddComponent(mLBCC);
+			mRButton->AddComponent(mRBCC);
+			mUButton->AddComponent(mUBCC);
+			mDButton->AddComponent(mDBCC);
 
-			PrintGrid();
+			//PrintGrid();
 		}
 		virtual void Update()
 		{
-			if ((GetAsyncKeyState(VK_DOWN) & 0x1 )&& mBox1Done && mBox2Done && mBox3Done) {
+			if ((GetAsyncKeyState(VK_DOWN) & 0x1 || mDBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveDown();
+				mDBCC->SetisColliding(false);
 				//PrintGrid();
 			}
-			else if ((GetAsyncKeyState(VK_UP) & 0x1) && mBox1Done && mBox2Done && mBox3Done) {
+			else if (((GetAsyncKeyState(VK_UP) & 0x1) || mUBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveUp();
+				mUBCC->SetisColliding(false);
 				//PrintGrid();
 			}
-			else if ((GetAsyncKeyState(VK_LEFT) & 0x1) && mBox1Done && mBox2Done && mBox3Done) {
+			else if ((GetAsyncKeyState(VK_LEFT) & 0x1 || mLBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveLeft();
+				mLBCC->SetisColliding(false);
 				//PrintGrid();
 			}
-			else if ((GetAsyncKeyState(VK_RIGHT) & 0x1) && mBox1Done && mBox2Done && mBox3Done) {
+			else if ((GetAsyncKeyState(VK_RIGHT) & 0x1 || mRBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveRight();
+				mRBCC->SetisColliding(false);
 				//PrintGrid();
+			}
+			else if(GetAsyncKeyState(Epoch::Keys::R) & 0x1)
+			{
+				ResetBoxes();
+				PrintGrid();
 			}
 			if (!mBox1Done) {
 				mBox1Done = mazeBoxes[0].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
@@ -178,7 +197,7 @@ namespace Epoch
 					break;
 				}
 			}
-			SetBoxesPosition(&tempMatrix0, &tempMatrix1, &tempMatrix2);
+			SetBoxesPosition(tempMatrix0, tempMatrix1, tempMatrix2);
 		}
 		void MoveRight()
 		{
@@ -234,7 +253,7 @@ namespace Epoch
 					break;
 				}
 			}
-			SetBoxesPosition(&tempMatrix0, &tempMatrix1, &tempMatrix2);
+			SetBoxesPosition(tempMatrix0, tempMatrix1, tempMatrix2);
 		}
 		void MoveUp()
 		{
@@ -290,7 +309,7 @@ namespace Epoch
 					break;
 				}
 			}
-			SetBoxesPosition(&tempMatrix0, &tempMatrix1, &tempMatrix2);
+			SetBoxesPosition(tempMatrix0, tempMatrix1, tempMatrix2);
 
 		}
 		void MoveDown()
@@ -347,10 +366,29 @@ namespace Epoch
 					break;
 				}
 			}
-			SetBoxesPosition(&tempMatrix0,&tempMatrix1,&tempMatrix2);
+			SetBoxesPosition(tempMatrix0,tempMatrix1,tempMatrix2);
 			
 		}
-		void SetBoxesPosition(matrix4** matrix0, matrix4** matrix1, matrix4** matrix2)
+		void ResetBoxes()
+		{
+			matrix4 temp0, temp1, temp2;
+			temp0 = mazeBoxes[0].mBox->GetTransform().GetMatrix();
+			temp1 = mazeBoxes[1].mBox->GetTransform().GetMatrix();
+			temp2 = mazeBoxes[2].mBox->GetTransform().GetMatrix();
+			mGrid[mazeBoxes[0].mRow][mazeBoxes[0].mCol] = 0;
+			mGrid[mazeBoxes[1].mRow][mazeBoxes[1].mCol] = 0;
+			mGrid[mazeBoxes[2].mRow][mazeBoxes[2].mCol] = 0;
+			mazeBoxes[0].SetUp(1, 2, 0);
+			mazeBoxes[1].SetUp(2, 2, 3);
+			mazeBoxes[2].SetUp(3, 3, 3);
+			mGrid[mazeBoxes[0].mRow][mazeBoxes[0].mCol] = 1;
+			mGrid[mazeBoxes[1].mRow][mazeBoxes[1].mCol] = 2;
+			mGrid[mazeBoxes[2].mRow][mazeBoxes[2].mCol] = 3;
+
+			SetBoxesPosition(&temp0, &temp1, &temp2);
+
+		}
+		void SetBoxesPosition(matrix4* matrix0, matrix4* matrix1, matrix4* matrix2)
 		{
 			matrix4* curMatrix = nullptr;
 			matrix4 finalDest;
@@ -359,13 +397,13 @@ namespace Epoch
 				switch (i)
 				{
 				case 0:
-					curMatrix = *matrix0;
+					curMatrix = matrix0;
 					break;
 				case 1:
-					curMatrix = *matrix1;
+					curMatrix = matrix1;
 					break;
 				case 2:
-					curMatrix = *matrix2;
+					curMatrix = matrix2;
 					break;
 				}
 				int X = mazeBoxes[i].mRow;

@@ -25,7 +25,7 @@ namespace Epoch {
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time) {
 			if (!Settings::GetInstance().GetBool("PauseMenuUp")) {
-				if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName() != "Buttonstand") {
+				if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName() != "L3Buttonstand") {
 					colliding = true;
 
 					vec3f norm = ((ButtonCollider*)&_col)->mPushNormal;
