@@ -7,6 +7,7 @@
 #include "../Common/Logger.h"
 #include "Pool.h"
 #include "LevelManager.h"
+#include "../Common/Settings.h"
 
 namespace Epoch {
 	bool Snapshot::IsObjectStored(unsigned short _id) {
@@ -585,6 +586,17 @@ namespace Epoch {
 				SetComponent(destComp, object.second, destInfo);
 			}
 		}
+	}
+	
+	void Timeline::SetSavedSettings() {
+		for (auto key : mSettings.mLevelInts)
+		{
+			Settings::GetInstance().SetInt(key.first, key.second);
+		}
+		for (auto key : mSettings.mLevelBools) {
+			Settings::GetInstance().SetBool(key.first, key.second);
+		}
+
 	}
 	void Timeline::SetObjectBirthTime(unsigned short _id)
 	{

@@ -43,6 +43,13 @@ namespace Epoch {
 		bool IsObjectStored(unsigned short _id);
 	};
 
+	struct SnapLevelSettings
+	{
+		//tutorial step
+		std::unordered_map<std::string, int> mLevelInts;
+		std::unordered_map<std::string, bool> mLevelBools;
+	};
+
 	struct ObjectLifeTime {
 		unsigned int mBirth = 0;
 		unsigned int mDeath = INT32_MAX;
@@ -63,6 +70,8 @@ namespace Epoch {
 		std::unordered_map<unsigned short, ObjectLifeTime*> mObjectLifeTimes;
 
 	public:
+		SnapLevelSettings mSettings;
+
 		Timeline();
 		~Timeline();
 		//this will turn the bitset[0] to 1 so he acts as a normal game object in the timeline
@@ -103,6 +112,7 @@ namespace Epoch {
 		void SetCloneDeathTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void SetComponent(SnapComponent* _destComp, BaseObject* _obj, SnapInfo* _destInfo);
 		void SetCurrentGameTimeIndx(int _time) { mCurrentGameTimeIndx = _time; };
+		void SetSavedSettings();
 		void UpdateCloneInterpolators(unsigned short _cloneid, SnapInfo* _currSnap, unsigned int _currTime);
 		void PrepareAllObjectInterpolators(unsigned int _fromSnapTime, unsigned int _toSnapTime);
 	};

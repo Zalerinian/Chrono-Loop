@@ -203,19 +203,6 @@ namespace Epoch
 				mIsBeingMade = false;
 			}
 
-		
-			else
-			{
-				HotfixButtonDown++;
-				if (HotfixButtonDown > 100) {
-					HotfixButtonDown = 0;
-					TimeManager::Instance()->HotfixResetTimeline();
-				}
-			}
-		}
-		else
-		{
-			HotfixButtonDown = 0;
 		}
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Trigger))
 		{
@@ -248,6 +235,10 @@ namespace Epoch
 					}
 				}
 			}
+		}
+		if(GetAsyncKeyState(VK_TAB) & 1)
+		{
+			TimeManager::Instance()->HotfixResetTimeline();
 		}
 	}
 	void TimeManipulation::MakeCloneBaseObjects(BaseObject * _headset, BaseObject * _controller1, BaseObject * _controller2)

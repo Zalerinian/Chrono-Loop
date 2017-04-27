@@ -90,13 +90,14 @@ namespace Epoch {
 		void RewindTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		//Go back into time and make clone. Send in dest frame and send in player headset and conrollers baseObjects
 		void RewindMakeClone(unsigned int _frame, BaseObject*& _ob1, BaseObject*& _ob2, BaseObject*& _ob3);
+		void SaveSettingIntToTimeline(std::string _str, int _val);
+		void SaveSettingBoolToTimeline(std::string _str, bool _val);
 		void SetCreationTimeofClone(unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void SetClonePair(unsigned short _id, Clonepair* _pair) { mClonePairs[_id] = _pair; };
 		void SetTempCurSnap() { mtempCurSnapFrame = GetCurrentSnapFrame(); };
 		void SetTimelineObjectInterpTime(float _time);
 		void SetupClonePairs(unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void Update(float _delta);
-
 		//Function Pointer / Command Console
 		static void ToggleCloneCountDisplay(void* _command, std::wstring _ifOn);
 		static void ToggleSnapshotCountDisplay(void* _command, std::wstring _ifOn);

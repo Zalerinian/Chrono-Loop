@@ -413,7 +413,14 @@ namespace Epoch {
 			return false;
 
 		}
+		void TimeManager::SaveSettingIntToTimeline(std::string _str, int _val) {
+			mTimeline->mSettings.mLevelInts[_str] = _val;
+		}
+		void TimeManager::SaveSettingBoolToTimeline(std::string _str, bool _val) {
+			mTimeline->mSettings.mLevelBools[_str] = _val;
+		}
 
+		//I Take no credit in this func for it is Ryan Bronk's from Nth Dimensional
 		void TimeManager::ToggleCloneCountDisplay(void * _command, std::wstring _ifOn) {
 			CommandConsole* cc = (CommandConsole*)_command;
 			if (_ifOn == L"ON") {
@@ -427,6 +434,7 @@ namespace Epoch {
 				CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /CLONECOUNT (ON/OFF)");
 			}
 		}
+		//I Take no credit in this func for it is Ryan Bronk's from Nth Dimensional
 		void TimeManager::ToggleSnapshotCountDisplay(void * _command, std::wstring _ifOn) {
 			CommandConsole* cc = (CommandConsole*)_command;
 			if (_ifOn == L"ON") {
@@ -440,6 +448,7 @@ namespace Epoch {
 				CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /SNAPCOUNT (ON/OFF)");
 			}
 		}
+		//I Take no credit in this func for it is Ryan Bronk's from Nth Dimensional
 		void TimeManager::DisplayCloneCount() {
 			if (Settings::GetInstance().GetBool("CloneCounter")) {
 				std::wstring CloneCount = L"Clone(s): " + std::to_wstring(mClones.size());
@@ -458,6 +467,7 @@ namespace Epoch {
 					CloneCount, *(Draw::Instance().GetScreenBitmap()).get());
 			}
 		}
+		//I Take no credit in this func for it is Ryan Bronk's from Nth Dimensional
 		void TimeManager::DisplaySnapshotCount() {
 			if (Settings::GetInstance().GetBool("SnapCounter")) {
 				std::wstring CloneCount = L"Snapshots: " + std::to_wstring(mTimeline->GetCurrentGameTimeIndx());
@@ -477,6 +487,8 @@ namespace Epoch {
 
 
 			}
+
+			//I Take no credit in this func for it is Ryan Bronk's from Nth Dimensional
 		}
 		void TimeManager::BrowseTimeline(int _gesture, int _frameRewind) {
 			bool UpdateComponents = false;
@@ -579,8 +591,11 @@ namespace Epoch {
 			}
 			ClearClones();
 			AddAllTexturesToQueue();
-			VRInputManager::GetInstance().GetInputTimeline()->Clear();
-			vec4f start = LevelManager::GetInstance().GetCurrentLevel()->GetStartPos();
-			VRInputManager::GetInstance().GetPlayerPosition()[3].Set(start.x, start.y, start.z, start.w);
+			mTimeline->SetSavedSettings();
+			if (VRInputManager::GetInstance().IsVREnabled()) {
+				VRInputManager::GetInstance().GetInputTimeline()->Clear();
+				vec4f start = LevelManager::GetInstance().GetCurrentLevel()->GetStartPos();
+				VRInputManager::GetInstance().GetPlayerPosition()[3].Set(start.x, start.y, start.z, start.w);
+			}
 		}
 	}
