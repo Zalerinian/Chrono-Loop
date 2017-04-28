@@ -709,9 +709,13 @@ namespace Epoch {
 						{
 							float alpha = 1;
 							//TODO PAT: FIX ALL THIS 
-							if(obj->GetName().find("Door") != std::string::npos)
+							if(obj->GetName().find("Door1") != std::string::npos)
 							{
 								alpha = .6f;
+							}
+							else if(obj->GetName().find("Door2") != std::string::npos)
+							{
+								alpha = .8f;
 							}
 							else
 							{
@@ -926,7 +930,7 @@ namespace Epoch {
 			file.read((char *)&objectOffest, sizeof(INT32));
 			//settings
 			file.seekg(settingOffest, std::ios_base::beg);
-			vec3f startPosition, startRotation;
+			vec3f startPosition, startRotation, objectScale;
 			unsigned short MaxClones = 0;
 			file.read((char *)&startPosition.x, sizeof(float));
 			file.read((char *)&startPosition.y, sizeof(float));
@@ -993,7 +997,7 @@ namespace Epoch {
 						if (obj)
 						{
 							std::string temp = obj->GetName();
-							vec3f offset = vec3f(scale.x * scale.x, scale.y * scale.y, scale.z * scale.z) / 2;
+							vec3f offset = vec3f(objectScale.x * scale.x, objectScale.y * scale.y, objectScale.z * scale.z) / 2;
 							vec3f min = position - offset;
 							vec3f max = position + offset;
 							CubeCollider* col = new CubeCollider(obj, movable == 1, trigger == 1, vec3f(0, -1, 0), mass, elasticity, staticFriction, kineticFriction, drag, min, max);
@@ -1022,7 +1026,7 @@ namespace Epoch {
 						file.read((char *)&normal.z, sizeof(float));
 						if (obj)
 						{
-							vec3f offset = vec3f(scale.x * scale.x, scale.y * scale.y, scale.z * scale.z) / 2;
+							vec3f offset = vec3f(objectScale.x * scale.x, objectScale.y * scale.y, objectScale.z * scale.z) / 2;
 							vec3f min = position - offset;
 							vec3f max = position + offset;
 							ButtonCollider* col = new ButtonCollider(obj, min, max, mass, force, normal);
@@ -1179,7 +1183,7 @@ namespace Epoch {
 					{
 						INT32 len = 0;
 						std::string name;
-						vec3f position, rotation, scale;
+						vec3f position, rotation;
 
 						file.read((char *)&len, sizeof(INT32));
 						char* temp = new char[len];
@@ -1195,9 +1199,9 @@ namespace Epoch {
 						file.read((char *)&rotation.y, sizeof(float));
 						file.read((char *)&rotation.z, sizeof(float));
 
-						file.read((char *)&scale.x, sizeof(float));
-						file.read((char *)&scale.y, sizeof(float));
-						file.read((char *)&scale.z, sizeof(float));
+						file.read((char *)&objectScale.x, sizeof(float));
+						file.read((char *)&objectScale.y, sizeof(float));
+						file.read((char *)&objectScale.z, sizeof(float));
 
 						INT8 recorded = 0;
 						unsigned int flags = 0;
@@ -1208,10 +1212,8 @@ namespace Epoch {
 							}
 						}
 
-						matrix4 mat = matrix4::CreateScale(scale.x, scale.y, scale.z) *
-							matrix4::CreateXRotation(rotation.x) *
-							matrix4::CreateYRotation(rotation.y) *
-							matrix4::CreateZRotation(rotation.z) *
+						matrix4 mat = matrix4::CreateScale(objectScale.x, objectScale.y, objectScale.z) *
+							matrix4::CreateYawPitchRollRotation(rotation) *
 							matrix4::CreateTranslation(position.x, position.y, position.z);
 						Transform trans;
 						trans.SetMatrix(mat);
@@ -1494,7 +1496,6 @@ namespace Epoch {
 		else if ((_Level == L"HUBWORLD" || _Level == L"HUB"))
 		{
 			if (accessHub) {
-
 				accessHub->SetOnce(false);
 				CommandConsole::Instance().Toggle();
 			} else {

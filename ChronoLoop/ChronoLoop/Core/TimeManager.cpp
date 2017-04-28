@@ -544,11 +544,14 @@ namespace Epoch {
 			}
 
 			unsigned int temp = instanceTimemanager->GetCurrentSnapFrame();
-			if (_gesture == 0)
+			
+			if (_gesture == 0) {
 				return;
+			}
 			if (_gesture == 1)
 				_frameRewind *= -1;
 			else if (_gesture == 2) {
+
 				/*LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck();
 				LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->RaycastCloneCheck();*/
 				return;
@@ -556,13 +559,17 @@ namespace Epoch {
 
 			if ((mtempCurSnapFrame != 0 && _gesture == -1) || (mtempCurSnapFrame != temp && _gesture == 1)) {
 				int placeHolder = mtempCurSnapFrame;
-				mtempCurSnapFrame -= _frameRewind;
-				//SystemLogger::GetLog() << "mTempCurSnapFrame: " << mtempCurSnapFrame << std::endl;
+				if (mtempCurSnapFrame - (_frameRewind * mRewindGettingFaster) > 0 && (mtempCurSnapFrame - (_frameRewind * mRewindGettingFaster) < temp))
+					mtempCurSnapFrame -= (_frameRewind) * mRewindGettingFaster;
 				mTimeline->PrepareAllObjectInterpolators(placeHolder, mtempCurSnapFrame);
 				mShouldUpdateInterpolators = true;
 				mShouldPulse = true;
 				VRInputManager::GetInstance().GetController(eControllerType_Primary).TriggerHapticPulse(600, vr::k_EButton_SteamVR_Touchpad);
-
+				mRewindShouldGetFaster++;
+				if (mRewindShouldGetFaster % 15 == 0)
+					mRewindGettingFaster++;
+				//SystemLogger::GetLog() << "mRewindGettingFaster: " << mRewindGettingFaster << std::endl;
+				//SystemLogger::GetLog() << "mRewindShouldGetFaster: " << mRewindShouldGetFaster << std::endl;
 				if (_gesture == 1)
 					Settings::GetInstance().SetFloat("TutorialRewind - CurProgress", Settings::GetInstance().GetFloat("TutorialRewind - CurProgress") - 1);
 				if (_gesture == -1)
