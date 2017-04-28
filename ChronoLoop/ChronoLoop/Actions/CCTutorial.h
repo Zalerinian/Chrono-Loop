@@ -366,7 +366,7 @@ namespace Epoch
 					scaleX = 1.0f;
 					scaleY = 1.0f;
 					boards[3]->GetTransform().SetMatrix(matrix4::CreateScale(0, 1, 0) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
-					pb->GetProgressBar()->GetTransform().SetMatrix(pb->GetProgressBar()->GetTransform().GetMatrix() * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 0.6f, 0));
+					pb->GetBackground()->GetTransform().SetMatrix(pb->GetBackground()->GetTransform().GetMatrix() * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 0.6f, 0));
 					pb->OnEnable();
 				}
 				tempScaleX = scaleX;
@@ -389,7 +389,7 @@ namespace Epoch
 					else if (scaleX < 1.0f)
 						scaleX += 0.05f;
 					if (tempScaleX != scaleX || tempScaleY != scaleY) {
-						//pb->GetProgressBar()->GetTransform().SetMatrix(pb->GetProgressBar()->GetTransform().GetMatrix() * matrix4::CreateScale(scaleX, 1, scaleY)); 
+						//pb->GetBackground()->GetTransform().SetMatrix(pb->GetBackground()->GetTransform().GetMatrix() * matrix4::CreateScale(scaleX, 1, scaleY)); 
 						boards[3]->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY)  * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(4.5f, 1.7f, 0));
 					}
 				}

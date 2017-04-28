@@ -83,14 +83,15 @@ namespace Epoch
 		{
 			rtvBackground.Reset();
 			rtvProgressBar.Reset();
-			(rtvBackground)->Release();
+			//(rtvBackground)->Release();
 		}
 		void SetCurProgress(float _set) { curProgress = _set; }
 		float GetCurProgress() { return curProgress; }
 		void SetFinalProgress(float _set) { finalProgress = _set; }
 		float GetFinalProgress() { return finalProgress; }
 
-		BaseObject* GetProgressBar() { return pBackground; }
+		BaseObject* GetBackground() { return pBackground; }
+		BaseObject* GetProgressBar() { return pProgressBar; }
 		
 		//Just a helper fucntion, plz don't use 
 		void SetUpThisObjectForMe(BaseObject** _obj, MeshComponent** _mc, std::string _name, Transform _t, unsigned int _width = 256, unsigned int _height = 256)
