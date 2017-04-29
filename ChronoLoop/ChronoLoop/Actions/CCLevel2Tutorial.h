@@ -109,16 +109,16 @@ namespace Epoch {
 				case 7:
 					boardchange = true;
 					mPrevBoards = mCurrentBoards;
+					mPrevBoards.pop_back();
 					mCurrentBoards.clear();
 					mCurrentBoards.push_back(1);
+					mCurrentBoards.push_back(2);
 					break;
 				case 8:
 					boardchange = true;
 					mPrevBoards = mCurrentBoards;
 					mCurrentBoards.clear();
-					SetAllBoardsInvisable();
 					break;
-
 				}
 			}
 
