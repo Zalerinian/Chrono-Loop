@@ -312,6 +312,7 @@ namespace Epoch {
 							break;
 						}
 					}*/
+					
 					SystemLogger::GetLog() << "Clone id:" << mClones[i]->GetUniqueID() << " has been deleted" << std::endl;
 					//Remove it from being tracked by timeline
 					mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueId());

@@ -145,7 +145,7 @@ namespace Epoch {
 		for (unsigned int i = 0; i < othersComponents.size(); i++)
 		{
 			for (int j = 0; j < components.size(); ++j) {
-				if (dynamic_cast<BoxSnapToControllerAction*>(othersComponents[i]) && dynamic_cast<BoxSnapToControllerAction*>(components[j]))
+				if (othersComponents[i] && components[j] && dynamic_cast<BoxSnapToControllerAction*>(othersComponents[i]) && dynamic_cast<BoxSnapToControllerAction*>(components[j]))
 				{
 					unsigned int FirstCompId = components[j]->GetColliderId();
 					components[j]->SetComponentId(othersComponents[i]->GetColliderId());
@@ -251,6 +251,8 @@ namespace Epoch {
 	{
 		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
 			auto& meshes = (*it)->GetComponents(eCOMPONENT_MESH);
+			auto b = meshes.begin();
+			auto e = meshes.end();
 			for (auto cit = meshes.begin(); cit != meshes.end(); ++cit) {
 				((MeshComponent*)(*cit))->SetVisible(false);
 				((MeshComponent*)(*cit))->SetVisible(true);

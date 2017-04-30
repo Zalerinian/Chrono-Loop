@@ -332,11 +332,12 @@ namespace Epoch {
 	}
 	void Timeline::PrepareAllObjectInterpolators(unsigned int _fromSnapTime, unsigned int _toSnapTime) {
 		Interpolator<matrix4> * objInterp;
-		if (_toSnapTime <= mSnaptimes.size() - 1 || _toSnapTime >= 0)
+		if (_toSnapTime <= mSnaptimes.size() - 1 && _toSnapTime >= 0)
 		{
 			Snapshot* _fromShot = mSnapshots[mSnaptimes[_fromSnapTime]];
 			Snapshot* _toShot = mSnapshots[mSnaptimes[_toSnapTime]];
 			unsigned int temp2 = LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->GetNumClones();
+			
 			for (std::pair<unsigned short, Epoch::BaseObject*> it : mLiveObjects) {
 				if (it.second->GetName().find("Controller1 - " + std::to_string(temp2)) == std::string::npos &&
 					it.second->GetName().find("Controller2 - " + std::to_string(temp2)) == std::string::npos) {

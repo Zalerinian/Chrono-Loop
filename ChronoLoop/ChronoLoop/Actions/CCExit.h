@@ -19,7 +19,7 @@ namespace Epoch
 			mPB->SetCurProgress(0);
 			mPB->SetFinalProgress(300);
 			mExitSign->AddComponent(mPB);
-			mPB->GetProgressBar()->GetTransform().SetMatrix(matrix4::CreateScale(20, 0, 20) * matrix4::CreateTranslation(0, 0.0001f, -2));
+			mPB->GetProgressBar()->GetTransform().SetMatrix(matrix4::CreateScale(20, 1, 20) * matrix4::CreateTranslation(0, 0.0001f, -2));
 			mPB->GetProgressBar()->SetParent(mExitSign);
 			mExitSign->AddChild(mPB->GetProgressBar());
 			mPB->OnEnable();
