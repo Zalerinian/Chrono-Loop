@@ -216,7 +216,7 @@ namespace Epoch {
 					boardchange = true;
 					mPrevBoards = mCurrentBoards;
 					mCurrentBoards.clear();
-					SetAllBoardsInvisable();
+					//SetAllBoardsInvisable();
 					break;
 
 				}

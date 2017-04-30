@@ -25,7 +25,7 @@ namespace Epoch {
 		mLoadingLevel = new Level;
 
 		// Actually load the level here
-		mLoadingLevel->LoadLevel(_path);
+		mLoadingLevel->BinaryLoadLevel(_path);
 
 
 		// Assuming everything went dandy
