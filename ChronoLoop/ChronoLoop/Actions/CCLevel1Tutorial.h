@@ -223,6 +223,10 @@ namespace Epoch {
 					((MeshComponent*)boards[6]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
 					((SFXEmitter*)boards[2]->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
 
+					if (TimeManager::Instance()->GetCurrentSnapFrame() < 60)
+						Settings::GetInstance().SetFloat("TutorialRewind - FinalProgress", TimeManager::Instance()->GetCurrentSnapFrame());
+					else
+						Settings::GetInstance().SetFloat("TutorialRewind - FinalProgress", 60);
 					scalingDone = false;
 					scaleX = 1.0f;
 					scaleY = 1.0f;

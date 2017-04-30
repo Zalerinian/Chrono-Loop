@@ -105,7 +105,8 @@ namespace Epoch
 			rm->SetVisible(false);
 			pb = new CCProgressBar();
 			Settings::GetInstance().SetFloat("TutorialRewind - CurProgress", 0);
-			Settings::GetInstance().SetFloat("TutorialRewind - FinalProgress", 50);
+
+
 			pb->SetFinalProgress(50);
 			pb->SetCurProgress(0);
 			mRewindBoard->AddComponent(pb);
