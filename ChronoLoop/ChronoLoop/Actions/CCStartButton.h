@@ -60,7 +60,7 @@ namespace Epoch
 			mChamberObject->AddComponent(l);
 			AudioWrapper::GetInstance().AddListener(l, "shit");
 
-			mPB->GetProgressBar()->GetTransform().SetMatrix(matrix4::CreateScale(20,0,20) * matrix4::CreateTranslation(0, 0.0001f, -2));
+			mPB->GetProgressBar()->GetTransform().SetMatrix(matrix4::CreateScale(20,1,20) * matrix4::CreateTranslation(0, 0.0001f, -2));
 			((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 2))->CallEvent(Emitter::EventType::ePlay);
 			mPB->OnEnable();
 			//Settings::GetInstance().SetFloat("StartButton - CurProgress",0);

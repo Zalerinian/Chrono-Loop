@@ -15,6 +15,9 @@ namespace Epoch {
 		mTransform = _transform;
 		mParent = _parent;
 		mUniqueID = ++BaseObject::ObjectCount;
+
+		if (mComponents.size() > 0)
+			RemoveAllComponents();
 	}
 
 	BaseObject::BaseObject() : Flags(mFlags) {
@@ -185,35 +188,52 @@ namespace Epoch {
 		return false;
 	}
 	void BaseObject::RemoveAllComponents() {
+
+		for (auto it = mComponents.begin(); it != mComponents.end(); ++it) {
+			for (int i = (int)it->second.size() - 1; i >= 0; --i) {
+				it->second[i]->Destroy();
+				delete it->second[i];
+			}
+			it->second.clear();
+		}
+
+		return;
 		std::vector<Component*> components = this->GetComponents(eCOMPONENT_COLLIDER);
 		for (int j = 0; j < components.size(); ++j) {
 			components[j]->Destroy();
 			delete components[j];
 		}
+		components.clear();
+
 
 		components = this->GetComponents(eCOMPONENT_AUDIOEMITTER);
 		for (int j = 0; j < components.size(); ++j) {
 			components[j]->Destroy();
 			delete components[j];
 		}
+		components.clear();
 
 		components = this->GetComponents(eCOMPONENT_AUDIOLISTENER);
 		for (int j = 0; j < components.size(); ++j) {
 			components[j]->Destroy();
 			delete components[j];
 		}
+		components.clear();
 
 		components = this->GetComponents(eCOMPONENT_CODE);
 		for (int j = 0; j < components.size(); ++j) {
 			components[j]->Destroy();
 			delete components[j];
 		}
+		components.clear();
+
 
 		components = this->GetComponents(eCOMPONENT_MESH);
 		for (int j = 0; j < components.size(); ++j) {
 			components[j]->Destroy();
 			delete components[j];
 		}
+		components.clear();
 
 		components = this->GetComponents(eCOMPONENT_UI);
 		for (int j = 0; j < components.size(); ++j) {
@@ -221,14 +241,16 @@ namespace Epoch {
 			delete components[j];
 		}
 
+		components.clear();
+
 		components = this->GetComponents(eCOMPONENT_UNKNOWN);
 		for (int j = 0; j < components.size(); ++j) {
 			components[j]->Destroy();
 			delete components[j];
 		}
 
+		components.clear();
 
-		mComponents.clear();
 	}
 
 	

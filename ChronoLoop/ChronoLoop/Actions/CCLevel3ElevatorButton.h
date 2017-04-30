@@ -21,6 +21,7 @@ namespace Epoch {
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			mChamberObject = cLevel->FindObjectWithName("L3Elevator");
 			mButtonStand = cLevel->FindObjectWithName("L3Buttonstand");
+			TimeManager::Instance()->SaveSettingBoolToTimeline("CantPauseTime", false);
 		}
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time) {
