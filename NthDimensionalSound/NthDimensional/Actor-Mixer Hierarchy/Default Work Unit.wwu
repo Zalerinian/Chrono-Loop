@@ -2845,6 +2845,63 @@
 						<ActiveSource Name="communication-channel" ID="{D8196C44-8C0B-40DD-9331-EA9E6E0896C1}" Platform="Linked"/>
 					</ActiveSourceList>
 				</Sound>
+				<Sound Name="sci-fi-door-open" ID="{90F1A380-E71B-4BAD-ADC6-BF177A2B3B41}" ShortID="368602955" Type="SoundFX">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64292A6E-1D3F-43D6-8BB7-2E730BF0BA1D}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{74976F84-18B2-4A50-BEB6-3859D4B170B7}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="sci-fi-door-open" ID="{A2365A1E-223D-4938-BD78-C0F5B86EA166}" ShortID="446015996">
+							<Language>SFX</Language>
+							<AudioFile>sci-fi-door-open.wav</AudioFile>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="sci-fi-door-open" ID="{A2365A1E-223D-4938-BD78-C0F5B86EA166}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="sci-fi-door-close" ID="{BF816DA8-E64C-49AC-A8C9-179D7563E182}" ShortID="851138235" Type="SoundFX">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64292A6E-1D3F-43D6-8BB7-2E730BF0BA1D}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{74976F84-18B2-4A50-BEB6-3859D4B170B7}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="sci-fi-door-close" ID="{7155991C-A616-459E-9654-A0B5F09A8959}" ShortID="778650627">
+							<Language>SFX</Language>
+							<AudioFile>sci-fi-door-close.wav</AudioFile>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="sci-fi-door-close" ID="{7155991C-A616-459E-9654-A0B5F09A8959}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="gentle-alarm" ID="{F98CA819-7AFA-4021-AE9E-DC1B8900C2AF}" ShortID="952182708" Type="SoundFX">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64292A6E-1D3F-43D6-8BB7-2E730BF0BA1D}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{74976F84-18B2-4A50-BEB6-3859D4B170B7}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="gentle-alarm" ID="{9588FA83-024D-4018-B413-2446933A645A}" ShortID="998751072">
+							<Language>SFX</Language>
+							<AudioFile>gentle-alarm.wav</AudioFile>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="gentle-alarm" ID="{9588FA83-024D-4018-B413-2446933A645A}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
 			</ChildrenList>
 		</WorkUnit>
 	</AudioObjects>
