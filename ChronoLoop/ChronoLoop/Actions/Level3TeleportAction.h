@@ -80,7 +80,7 @@ namespace Epoch {
 
 			}
 
-			if (!interp->GetActive()) {
+			if (!interp->GetActive() && !Settings::GetInstance().GetBool("CantTeleport")) {
 				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && !Settings::GetInstance().GetBool("PauseMenuUp")) {
 					if (!paused) {
 						//SystemLogger::Debug() << "Touchpad Pressed" << std::endl;

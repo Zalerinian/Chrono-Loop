@@ -146,7 +146,11 @@ namespace Epoch {
 
 	void VIM::RewindInputTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2) {
 
-		InputTimeline::InputNode* temp = mInputTimeline->GetCurr();
+		InputTimeline::InputNode* temp = mInputTimeline->GetInsertStart();
+		if(!temp)
+		{
+			temp = mInputTimeline->GetCurr();
+		}
 		while (temp) {
 			//Have reached the point we want to stop
 			if (temp->mData.mLastFrame < _frame) {

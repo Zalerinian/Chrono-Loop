@@ -148,7 +148,7 @@ namespace Epoch {
 				instanceTimemanager = new TimeManager();
 
 
-				instanceTimemanager->AddAllTexturesToQueue();
+				instanceTimemanager->ActivateAllTexturesToBitset();
 			}
 			return instanceTimemanager;
 		}
@@ -188,7 +188,7 @@ namespace Epoch {
 			Interpolator<matrix4>* temp = new Interpolator<matrix4>();
 			mObjectRewindInterpolators[_obj->GetUniqueID()] = temp;
 		}
-		void TimeManager::AddAllTexturesToQueue()
+		void TimeManager::ActivateAllTexturesToBitset()
 	{
 			for (unsigned int i = 0; i < mCloneTextureBitset.size(); i++) {
 				mCloneTextureBitset[i] = false;
@@ -206,7 +206,7 @@ namespace Epoch {
 				}
 				if (mCloneTextureBitset[i] == false && mCloneTextureBitset.size() - 1)
 				{
-					AddAllTexturesToQueue();	
+					ActivateAllTexturesToBitset();	
 				}
 			}
 	}
@@ -218,7 +218,7 @@ namespace Epoch {
 
 		void TimeManager::ClearClones() {
 			mClones.clear();
-			AddAllTexturesToQueue();
+			ActivateAllTexturesToBitset();
 			//Clean up the interpolators
 			for (auto Interp : mCloneInterpolators) {
 				if (Interp.second)
@@ -366,7 +366,7 @@ namespace Epoch {
 					}
 				}
 				if (mCloneTextureBitset[i] == 1 && i == mCloneTextureBitset.size() - 1) {
-					AddAllTexturesToQueue();
+					ActivateAllTexturesToBitset();
 					 return GetNextTexture();
 				}
 			}
@@ -562,12 +562,12 @@ namespace Epoch {
 			mTimeline->MoveAllObjectsToSnapExceptPlayer(_snaptime, _headset, _leftC, _rightC);
 		}
 
-		void TimeManager::HotfixResetTimeline() {
+		void TimeManager::ResetTimeLineandLevel() {
 			RewindTimeline(0, LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueID(), LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueID(), LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetUniqueID());
 			mTimeline->SetObjectBirthTime(LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueID());
 			mTimeline->SetObjectBirthTime(LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueID());
 			mTimeline->SetObjectBirthTime(LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetUniqueID());
-			mTimeline->HotFixResetLevel();
+			mTimeline->ResetTimelineAndLevel();
 			for (int i = 0; i < mClones.size(); ++i) {
 				mClones[i]->RemoveAllComponents();
 
@@ -591,7 +591,7 @@ namespace Epoch {
 				mCloneTextures.erase(mClones[i]->GetUniqueId());
 			}
 			ClearClones();
-			AddAllTexturesToQueue();
+			ActivateAllTexturesToBitset();
 			mTimeline->SetSavedSettings();
 			if (VRInputManager::GetInstance().IsVREnabled()) {
 				VRInputManager::GetInstance().GetInputTimeline()->Clear();
