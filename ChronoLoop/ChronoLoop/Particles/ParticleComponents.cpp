@@ -8,6 +8,7 @@ namespace Epoch
 
 #pragma region Particles
 
+	//Broken i guess???
 	Particle& Particle::Init(const Particle& _p)
 	{
 		Particle* p = new Particle();
@@ -465,7 +466,9 @@ namespace Epoch
 			}
 			if (mParticles.size() < mMaxParticles && (total < mTotalParticles || mTotalParticles == -1))
 			{
-				Particle* p = &Particle::Init(*mBase);
+				//Particle* p = &Particle::Init(*mBase);
+				Particle* p = new Particle();
+				(*p) = (*mBase);
 				float x, y, z;
 				x = (mMinPX + mPos.x) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPX + mPos.x) - (mMinPX + mPos.x))));
 				y = (mMinPY + mPos.y) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPY + mPos.y) - (mMinPY + mPos.y))));
@@ -716,7 +719,9 @@ namespace Epoch
 			}
 			if (mParticles.size() < mMaxParticles && (total < mTotalParticles || mTotalParticles == -1))
 			{
-				Particle* p = &Particle::Init(*mBase);
+				//Particle* p = &Particle::Init(*mBase);
+				Particle* p = new Particle();
+				(*p) = (*mBase);
 				float x, y, z;
 				x = (mMinPX + mPos.x) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPX + mPos.x) - (mMinPX + mPos.x))));
 				y = (mMinPY + mPos.y) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPY + mPos.y) - (mMinPY + mPos.y))));
@@ -769,7 +774,9 @@ namespace Epoch
 			}
 			if (mParticles.size() < mMaxParticles && (total < mTotalParticles || mTotalParticles == -1))
 			{
-				Particle* p = &Particle::Init(*mBase);
+				//Particle* p = &Particle::Init(*mBase);
+				Particle* p = new Particle();
+				(*p) = (*mBase);
 				float x, y, z;
 				x = (mMinPX + mPos.x) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPX + mPos.x) - (mMinPX + mPos.x))));
 				y = (mMinPY + mPos.y) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPY + mPos.y) - (mMinPY + mPos.y))));
@@ -833,7 +840,9 @@ namespace Epoch
 			}
 			if (mParticles.size() < mMaxParticles && (total < mTotalParticles || mTotalParticles == -1))
 			{
-				Particle* p = &Particle::Init(*mBase);
+				//Particle* p = &Particle::Init(*mBase);
+				Particle* p = new Particle();
+				(*p) = (*mBase);
 				float x, y, z;
 				x = (mMinPX + mPos.x) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPX + mPos.x) - (mMinPX + mPos.x))));
 				y = (mMinPY + mPos.y) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPY + mPos.y) - (mMinPY + mPos.y))));
