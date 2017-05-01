@@ -52,13 +52,14 @@ namespace Epoch {
 		TimeManager();
 		~TimeManager();
 	public:
-
 		//Add only headset and controllers to this
 		void UpdatePlayerObjectInTimeline(BaseObject* _obj);
+		//Add an BaseObject to be recorded by the timeline
 		void AddObjectToTimeline(BaseObject* _obj);
 		void AddInterpolatorForClone(BaseObject* _obj);
 		void AddInterpolatorToObject(BaseObject* _obj);
-		void AddAllTexturesToQueue();
+		//Turn all bits off for clone colors 
+		void ActivateAllTexturesToBitset();
 		void AssignTextureToClone(unsigned short _id);
 		//Clears the list of BaseObject* the Timemanager has refrence to.
 		void ClearClones();
@@ -80,19 +81,25 @@ namespace Epoch {
 		Clonepair* GetClonePair(unsigned short _id);
 		std::vector<BaseObject*>& GetClonesVec() { return mClones; };
 		std::string GetNextTexture();
+		//the temporary frame that time paused is on
 		unsigned int GetTempCurSnap() { return mtempCurSnapFrame; };
 		bool GetShouldPulse() { return mShouldPulse; };
 		float GetTimeLineObjectInterpTime();
 		static TimeManager* Instance();
+		//The time that has passed in overallgame
 		float GetTotalGameTime() { return mTotalGameTime; };
 		unsigned int GetTotalSnapsmade();
 		//Go back into time. Send in dest frame and send in player headset and conrollers id
 		void RewindTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		//Go back into time and make clone. Send in dest frame and send in player headset and conrollers baseObjects
 		void RewindMakeClone(unsigned int _frame, BaseObject*& _ob1, BaseObject*& _ob2, BaseObject*& _ob3);
+		//Save Settings to be set back on restart level 
 		void SaveSettingIntToTimeline(std::string _str, int _val);
+		//Save Settings to be set back on restart level 
 		void SaveSettingBoolToTimeline(std::string _str, bool _val);
+		//Set the frame the clone has been made
 		void SetCreationTimeofClone(unsigned short _id1, unsigned short _id2, unsigned short _id3);
+		//Add a clone pair to unordered map to find other two base objects
 		void SetClonePair(unsigned short _id, Clonepair* _pair) { mClonePairs[_id] = _pair; };
 		void SetTempCurSnap() { mtempCurSnapFrame = GetCurrentSnapFrame(); };
 		void SetTimelineObjectInterpTime(float _time);
@@ -107,6 +114,6 @@ namespace Epoch {
 		void BrowseTimeline(int _gesture, int _frameRewind);
 		void MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC);
 
-		void HotfixResetTimeline();
+		void ResetTimeLineandLevel();
 	};
 }

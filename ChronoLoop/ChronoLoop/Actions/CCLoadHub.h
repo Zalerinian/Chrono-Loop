@@ -44,7 +44,7 @@ namespace Epoch
 			{
 				Settings::GetInstance().SetBool("LevelIsLoading", true);
 				Level* next = new Level;
-				next->LoadLevel("../Resources/mainMenu.xml");
+				next->BinaryLoadLevel("../Resources/MainMenu.elf");
 				// Todo: Un-hardcode this
 				// use a setting string for next level path?
 				//LM::LevelStatus status = LevelManager::GetInstance().LoadLevelAsync("../Resources/Level1_2_6.xml", &next);
@@ -62,12 +62,10 @@ namespace Epoch
 					AudioWrapper::GetInstance().RemoveEmitter(e);
 
 					Physics::Instance()->PhysicsLock.lock();
-					TimeManager::Instance()->Destroy();
 					Physics::Instance()->mObjects.clear();
 					LevelManager::GetInstance().RequestLevelChange(next);
 					
 
-					TimeManager::Instance();
 
 					//Sound Initializing---------------------------------------------------
 					//Listener* ears = new Listener();
@@ -82,7 +80,7 @@ namespace Epoch
 
 					//new stuff
 					Transform identity, transform;
-					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", identity);
+					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					rightRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
@@ -93,9 +91,8 @@ namespace Epoch
 					RightController->AddComponent(rightRaycaster);
 					RightController->AddComponent(bt);
 					RightController->AddComponent(rightConCol);
-					TimeManager::Instance()->AddObjectToTimeline(RightController);
 
-					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity); //new BaseObject("Controller2", identity);
+					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity,nullptr, BaseObject_Flag_Record_In_Timeline); //new BaseObject("Controller2", identity);
 					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					leftRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
@@ -106,12 +103,11 @@ namespace Epoch
 					LeftController->AddComponent(leftRaycaster);
 					LeftController->AddComponent(mc2);
 					LeftController->AddComponent(bt2);
-					TimeManager::Instance()->AddObjectToTimeline(LeftController);
 
-					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", identity); //new BaseObject("headset", transform);
+					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", identity, nullptr, BaseObject_Flag_Record_In_Timeline); //new BaseObject("headset", transform);
 					HeadsetFollow* hfollow = new HeadsetFollow();
 					headset->AddComponent(hfollow);
-					TimeManager::Instance()->AddObjectToTimeline(headset);
+
 					
 					Emitter* sound = new SFXEmitter();
 					((SFXEmitter*)sound)->SetEvent(AK::EVENTS::SFX_TELEPORTSOUND);
@@ -158,9 +154,9 @@ namespace Epoch
 							if (temp == "mmStartButton")
 							{
 								matrix4 mat = mObject->GetTransform().GetMatrix();
-								((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mat.fourth);
-								((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mat.fourth.y - .2f;
-								((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mat.fourth.y + .2f;
+								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mat.fourth);
+								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mat.fourth.y - .2f;
+								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mat.fourth.y + .2f;
 							}
 							else if(temp == "mmExitButton")
 							{

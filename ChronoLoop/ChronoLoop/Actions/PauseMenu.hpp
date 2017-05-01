@@ -161,6 +161,16 @@ namespace Epoch
 					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texRestartLevel.Get(), NULL, rtvRestartLevel.GetAddressOf());
 					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texAudio.Get(), NULL, rtvAudio.GetAddressOf());
 					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texMisc.Get(), NULL, rtvMisc.GetAddressOf());
+			//Lighting Stuff
+					mcPauseMenuBase->SetPixelShader(ePS_PURETEXTURE);
+					mcMainPanel->SetPixelShader(ePS_PURETEXTURE);
+					mcSettingsPanel->SetPixelShader(ePS_PURETEXTURE);
+					mcResume->SetPixelShader(ePS_PURETEXTURE);
+					mcSettings->SetPixelShader(ePS_PURETEXTURE);
+					mcHubworld->SetPixelShader(ePS_PURETEXTURE);
+					mcRestartLevel->SetPixelShader(ePS_PURETEXTURE);
+					mcAudio->SetPixelShader(ePS_PURETEXTURE);
+					mcMisc->SetPixelShader(ePS_PURETEXTURE);
 			//Active Panel Start Up
 				mActiveMenu = PAUSEMENU_ON;
 			//Panel Start Up
@@ -457,7 +467,7 @@ namespace Epoch
 			case RESTART:
 				{
 					OnDisable();
-					TimeManager::Instance()->HotfixResetTimeline();
+					TimeManager::Instance()->ResetTimeLineandLevel();
 				}
 				break;
 			case AUDIO:

@@ -207,16 +207,15 @@ namespace Hourglass {
 				}
 				w.Write(mID[mEvent[i].Text.ToLower()][mSound[i].SelectedIndex]);
 			}
-			byte term = 0;
-			w.Write(term);
 		}
 
 		public override void ReadData(BinaryReader r, int _version) {
 			int count = r.ReadInt32();
+            for(int i = 0; i < count - 1; ++i)
+            {
+				AddEvent(null, null);
+            }
 			for (int i = 0; i < count; i++) {
-				if (mEvent.Count < i) {
-					AddEvent(null, null);
-				}
 				byte b = r.ReadByte();
 				UInt64 id = r.ReadUInt64();
 				switch (b) {
@@ -271,7 +270,10 @@ namespace Hourglass {
 			foreach (var kvp in mCombos) {
 				mEvent[mEvent.Count - 1].Items.Add(kvp.Key);
 			}
-			Resize.Invoke(mParent, e);
+            if(Resize != null)
+            {
+			    Resize.Invoke(Parent, e);
+            }
 		}
 
 		public void RemoveEvent(object sender, EventArgs e) {
