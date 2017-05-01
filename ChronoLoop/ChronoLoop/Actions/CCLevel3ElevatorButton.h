@@ -4,6 +4,7 @@
 #include "../Core/LevelManager.h"
 #include "../Common/Settings.h"
 
+
 namespace Epoch {
 
 	struct CCLevel3ElevatorButton : public CodeComponent {
@@ -13,6 +14,7 @@ namespace Epoch {
 		Interpolator<matrix4>* mPlayerInterp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mStartStandInterp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mStartButtonInterp = new Interpolator<matrix4>();
+		
 		//vec3f blockend, exitend;
 
 		Level* cLevel;
@@ -48,10 +50,12 @@ namespace Epoch {
 							}
 							matrix4 mat = mChamberObject->GetTransform().GetMatrix();
 							float tempY = mChamberObject->GetTransform().GetMatrix().Position.y;
-							if (tempY < -1.0) 
+							if (tempY < -1.0) {
 								tempY = 1;
-							else
+							}
+							else {
 								tempY = -1;
+							}
 
 							mChamberInterp->Prepare(4, mat, mat * matrix4::CreateTranslation(0, 3.2f * tempY, 0), mChamberObject->GetTransform().GetMatrix());
 							mChamberInterp->SetEasingFunction(Easing::QuadInOut);
