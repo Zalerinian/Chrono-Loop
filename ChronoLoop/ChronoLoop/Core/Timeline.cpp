@@ -249,6 +249,7 @@ namespace Epoch {
 					//((Collider*)currComp)->mShouldMove = false;
 					((Collider*)currComp)->mAcceleration = ((SnapComponent_Physics*)_destComp)->mAcc;
 					((Collider*)currComp)->mVelocity = ((SnapComponent_Physics*)_destComp)->mVel;
+					((Collider*)currComp)->mTotalForce = ((SnapComponent_Physics*)_destComp)->mTotforce;
 					((Collider*)currComp)->AddForce(((SnapComponent_Physics*)_destComp)->mForces);
 					((Collider*)currComp)->SetPos(*_destInfo->mTransform.GetPosition());
 
@@ -695,7 +696,7 @@ namespace Epoch {
 						newComp->mForces = ((Collider*)temp[i])->mForces;
 						newComp->mAcc = ((Collider*)temp[i])->mAcceleration;
 						newComp->mVel = ((Collider*)temp[i])->mVelocity;
-
+						newComp->mTotforce = ((Collider*)temp[i])->mTotalForce;
 						//Set the bitset
 						newComp->mId = temp[i]->GetColliderId();
 						_info->mComponents.push_back(newComp);
