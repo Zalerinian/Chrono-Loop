@@ -467,7 +467,7 @@ namespace Epoch
 			case RESTART:
 				{
 					OnDisable();
-					TimeManager::Instance()->HotfixResetTimeline();
+					TimeManager::Instance()->ResetTimeLineandLevel();
 				}
 				break;
 			case AUDIO:

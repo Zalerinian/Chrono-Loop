@@ -151,7 +151,7 @@ namespace Epoch
 					{
 						matrix4 mat;
 						mat = mClosePanel->GetTransform().GetMatrix();
-						mCloseInterp->Prepare(5, mat, mat * matrix4::CreateTranslation(1.15f, 0, 0), mClosePanel->GetTransform().GetMatrix());
+						mCloseInterp->Prepare(5, mat, mat * matrix4::CreateTranslation(2, 0, 0), mClosePanel->GetTransform().GetMatrix());
 						mCloseInterp->SetActive(true);
 						mBooped2 = true;
 					}

@@ -28,6 +28,7 @@
 #include "../Actions/CCButtonHold.h"
 #include "../Core/Pool.h"
 #include "../Actions/CCLevel3ElevatorButton.h"
+#include "../Actions/CCBoxSpinRandom.h"
 
 namespace Epoch {
 
@@ -145,7 +146,7 @@ namespace Epoch {
 		for (unsigned int i = 0; i < othersComponents.size(); i++)
 		{
 			for (int j = 0; j < components.size(); ++j) {
-				if (dynamic_cast<BoxSnapToControllerAction*>(othersComponents[i]) && dynamic_cast<BoxSnapToControllerAction*>(components[j]))
+				if (othersComponents[i] && components[j] && dynamic_cast<BoxSnapToControllerAction*>(othersComponents[i]) && dynamic_cast<BoxSnapToControllerAction*>(components[j]))
 				{
 					unsigned int FirstCompId = components[j]->GetColliderId();
 					components[j]->SetComponentId(othersComponents[i]->GetColliderId());
@@ -251,6 +252,8 @@ namespace Epoch {
 	{
 		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
 			auto& meshes = (*it)->GetComponents(eCOMPONENT_MESH);
+			auto b = meshes.begin();
+			auto e = meshes.end();
 			for (auto cit = meshes.begin(); cit != meshes.end(); ++cit) {
 				((MeshComponent*)(*cit))->SetVisible(false);
 				((MeshComponent*)(*cit))->SetVisible(true);
@@ -982,7 +985,7 @@ namespace Epoch {
 							file.read((char *)&pickupable, sizeof(byte));
 						}
 
-						vec3f position, rotation, scale;
+						vec3f position, rotation, scale, gravity(0, -9.81, 0);
 						file.read((char *)&position.x, sizeof(float));
 						file.read((char *)&position.y, sizeof(float));
 						file.read((char *)&position.z, sizeof(float));
@@ -994,13 +997,20 @@ namespace Epoch {
 						file.read((char *)&scale.x, sizeof(float));
 						file.read((char *)&scale.y, sizeof(float));
 						file.read((char *)&scale.z, sizeof(float));
+
+						if(version >= 5)
+						{
+							file.read((char *)&gravity.x, sizeof(float));
+							file.read((char *)&gravity.y, sizeof(float));
+							file.read((char *)&gravity.z, sizeof(float));
+						}
 						if (obj)
 						{
 							std::string temp = obj->GetName();
 							vec3f offset = vec3f(objectScale.x * scale.x, objectScale.y * scale.y, objectScale.z * scale.z) / 2;
 							vec3f min = position - offset;
 							vec3f max = position + offset;
-							CubeCollider* col = new CubeCollider(obj, movable == 1, trigger == 1, vec3f(0, -1, 0), mass, elasticity, staticFriction, kineticFriction, drag, min, max);
+							CubeCollider* col = new CubeCollider(obj, movable == 1, trigger == 1, gravity, mass, elasticity, staticFriction, kineticFriction, drag, min, max);
 							col->mPickUpAble = pickupable;
 							obj->AddComponent(col);
 						}
@@ -1219,6 +1229,7 @@ namespace Epoch {
 						trans.SetMatrix(mat);
 						obj = Pool::Instance()->iGetObject()->Reset(name, trans, nullptr, flags);
 						//obj = new BaseObject(name, trans);
+						int i = 0;
 					}
 						break;
 					case 8: //Code
@@ -1240,6 +1251,8 @@ namespace Epoch {
 								codeCom = new BoxSnapToControllerAction();
 							if (path == "CCBoxSpin.h")
 								codeCom = new CCBoxSpin();
+							if (path == "CCBoxSpinRandom.h")
+								codeCom = new CCBoxSpinRandom();
 							if (path == "CCButtonHold.h")
 								codeCom = new CCButtonHold();
 							if (path == "CCButtonPress.h")
@@ -1258,6 +1271,8 @@ namespace Epoch {
 								codeCom = new CCEnterLevel();
 							if (path == "CCEnterLevel1.h")
 								codeCom = new CCEnterLevel1();
+							if (path == "CCEnterLevel3.h")
+								codeCom = new CCEnterLevel3();
 							if (path == "CCExit.h")
 								codeCom = new CCExit();
 							if (path == "CCLevel3ElevatorButton.h")

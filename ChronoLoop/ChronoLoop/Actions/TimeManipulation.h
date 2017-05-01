@@ -21,7 +21,6 @@ namespace Epoch
 		bool mIsBeingMade;
 		Renderer::TimeManipulationEffectData mEffectData;
 		Interpolator<vec2f> mDesaturationInterpolator;
-		unsigned int HotfixButtonDown = 0;
 		unsigned int mCloneCount = 0 ;
 		unsigned short mCurrTexture;
 		unsigned short mNumOfConfirmedClones = 0;

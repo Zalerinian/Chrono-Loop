@@ -664,6 +664,17 @@ namespace Hourglass
 			((BaseObject)n.Tag).ComponentAdded += ObjectAddComponent;
 			((BaseObject)n.Tag).ComponentRemoved += ObjectRemoveComponent;
 
+            List<Component> comps = ((BaseObject)n.Tag).GetComponents();
+            for(int i = 0; i < comps.Count; ++i)
+            {
+                if(comps[i].Type == Component.ComponentType.Audio)
+                {
+                    ((SoundComponent)comps[i]).Parent = spWorldView.Panel2;
+                    ((SoundComponent)comps[i]).Resize += ReorderComponents;
+
+                }
+            }
+
 			// Add the loaded objects into the renderer so we can see them.
 			Renderer.Instance.AddObject((BaseObject)n.Tag);
 		}

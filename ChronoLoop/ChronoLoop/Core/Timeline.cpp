@@ -7,6 +7,7 @@
 #include "../Common/Logger.h"
 #include "Pool.h"
 #include "LevelManager.h"
+#include "../Common/Settings.h"
 
 namespace Epoch {
 	bool Snapshot::IsObjectStored(unsigned short _id) {
@@ -115,7 +116,7 @@ namespace Epoch {
 			Interpolator<matrix4>* temp = TimeManager::Instance()->GetCloneInterpolator(clones[i]->GetUniqueID());
 			Interpolator<matrix4>* tempCol = nullptr;
 		//	if(clones[i]->GetComponentCount(eCOMPONENT_COLLIDER) > 0)
-//			tempCol= TimeManager::Instance()->GetCloneColliderInterpolator(clones[i]->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)->GetColliderId());
+			//tempCol= TimeManager::Instance()->GetCloneColliderInterpolator(clones[i]->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)->GetColliderId());
 			if (temp)
 				temp->SetActive(false);
 			//if (tempCol)
@@ -126,7 +127,7 @@ namespace Epoch {
 		return true;
 	}
 
-	void Timeline::HotFixResetLevel() {
+	void Timeline::ResetTimelineAndLevel() {
 		std::vector<BaseObject*>clones = TimeManager::Instance()->GetClonesVec();
 		for (auto lifespan : mObjectLifeTimes) {
 			//Delete the creation of the clones
@@ -248,6 +249,7 @@ namespace Epoch {
 					//((Collider*)currComp)->mShouldMove = false;
 					((Collider*)currComp)->mAcceleration = ((SnapComponent_Physics*)_destComp)->mAcc;
 					((Collider*)currComp)->mVelocity = ((SnapComponent_Physics*)_destComp)->mVel;
+					((Collider*)currComp)->mTotalForce = ((SnapComponent_Physics*)_destComp)->mTotforce;
 					((Collider*)currComp)->AddForce(((SnapComponent_Physics*)_destComp)->mForces);
 					((Collider*)currComp)->SetPos(*_destInfo->mTransform.GetPosition());
 
@@ -331,11 +333,12 @@ namespace Epoch {
 	}
 	void Timeline::PrepareAllObjectInterpolators(unsigned int _fromSnapTime, unsigned int _toSnapTime) {
 		Interpolator<matrix4> * objInterp;
-		if (_toSnapTime <= mSnaptimes.size() - 1 || _toSnapTime >= 0)
+		if (_toSnapTime <= mSnaptimes.size() - 1 && _toSnapTime >= 0)
 		{
 			Snapshot* _fromShot = mSnapshots[mSnaptimes[_fromSnapTime]];
 			Snapshot* _toShot = mSnapshots[mSnaptimes[_toSnapTime]];
 			unsigned int temp2 = LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->GetNumClones();
+			
 			for (std::pair<unsigned short, Epoch::BaseObject*> it : mLiveObjects) {
 				if (it.second->GetName().find("Controller1 - " + std::to_string(temp2)) == std::string::npos &&
 					it.second->GetName().find("Controller2 - " + std::to_string(temp2)) == std::string::npos) {
@@ -562,11 +565,11 @@ namespace Epoch {
 			}
 		}
 	}
-	void Timeline::MoveAllComponentsToSnap(unsigned int _snaptime, bool _movePlayer, unsigned short _id1, unsigned short _id2, unsigned short _id3) {
+	void Timeline::MoveAllComponentsToSnapExceptPlayer(unsigned int _snaptime,  unsigned short _id1, unsigned short _id2, unsigned short _id3) {
 		Snapshot* destination = mSnapshots[_snaptime];
 		for (auto object : mLiveObjects) {
 			unsigned short id = object.second->GetUniqueID();
-			if (_movePlayer && (id == _id1 || id == _id2 || id == _id3))
+			if (id == _id1 || id == _id2 || id == _id3)
 				continue;
 			SnapInfo* destInfo;
 			//If the object doesnt have a info, then check against the list for the last snap it was updated
@@ -585,6 +588,17 @@ namespace Epoch {
 				SetComponent(destComp, object.second, destInfo);
 			}
 		}
+	}
+	
+	void Timeline::SetSavedSettings() {
+		for (auto key : mSettings.mLevelInts)
+		{
+			Settings::GetInstance().SetInt(key.first, key.second);
+		}
+		for (auto key : mSettings.mLevelBools) {
+			Settings::GetInstance().SetBool(key.first, key.second);
+		}
+
 	}
 	void Timeline::SetObjectBirthTime(unsigned short _id)
 	{
@@ -639,13 +653,20 @@ namespace Epoch {
 		_info->mId = _object->GetUniqueID();
 		_info->mTransform = _object->GetTransform();
 
-		
+		//Find if object doesn't have a life time
 		if (mObjectLifeTimes.find(_info->mId) == mObjectLifeTimes.end()) {
 			_info->mBitset[0] = false;
-		} else {
-			if(mObjectLifeTimes[_info->mId]->mBirth > mCurrentGameTimeIndx || mObjectLifeTimes[_info->mId]->mDeath < mCurrentGameTimeIndx)
+		}
+		//If object life time was made
+		else 
+			{
+				//If it was alive during this snap
+			if (mObjectLifeTimes[_info->mId]->mBirth > mCurrentGameTimeIndx || mObjectLifeTimes[_info->mId]->mDeath < mCurrentGameTimeIndx) {
 				_info->mBitset[0] = false;
+			}
 			Level* currlevel = LevelManager::GetInstance().GetCurrentLevel();
+				//If the object is the current headset and controller, then set as not alive so the ids are recorded as not alive until the player makes the it.
+				//Otherwise the clones would be recorded as always alive with their components alive.
 			if(_object->GetUniqueID() == currlevel->GetLeftController()->GetUniqueID() ||
 				_object->GetUniqueID() == currlevel->GetRightController()->GetUniqueID() || 
 				_object->GetUniqueID() == currlevel->GetHeadset()->GetUniqueID())
@@ -675,7 +696,7 @@ namespace Epoch {
 						newComp->mForces = ((Collider*)temp[i])->mForces;
 						newComp->mAcc = ((Collider*)temp[i])->mAcceleration;
 						newComp->mVel = ((Collider*)temp[i])->mVelocity;
-
+						newComp->mTotforce = ((Collider*)temp[i])->mTotalForce;
 						//Set the bitset
 						newComp->mId = temp[i]->GetColliderId();
 						_info->mComponents.push_back(newComp);
@@ -729,8 +750,9 @@ namespace Epoch {
 			OldSnap = true;
 		}
 
+		//TODO PAT: break up the big logic loop
+
 		//If first snapshot taken
-		//TODO PAT: break up the logic loop here and 
 		if (mSnapshots.size() == 0) {
 			for (std::pair<unsigned short, BaseObject*> _b : mLiveObjects) {
 				if (_b.second) {
@@ -829,7 +851,8 @@ namespace Epoch {
 					if (currComp->GetColliderId() == comp->mId) {
 						if (((Collider*)currComp)->mAcceleration != ((SnapComponent_Physics*)comp)->mAcc ||
 							((Collider*)currComp)->mVelocity != ((SnapComponent_Physics*)comp)->mVel ||
-							((Collider*)currComp)->mForces != ((SnapComponent_Physics*)comp)->mForces)
+							((Collider*)currComp)->mForces != ((SnapComponent_Physics*)comp)->mForces ||
+							((Collider*)currComp)->mTotalForce != ((SnapComponent_Physics*)comp)->mTotforce)
 							return false;
 					}
 				}

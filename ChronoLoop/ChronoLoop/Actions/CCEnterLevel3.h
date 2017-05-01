@@ -50,7 +50,7 @@ namespace Epoch {
 			if (!once) {
 				Settings::GetInstance().SetBool("LevelIsLoading", true);
 				Level* next = new Level;
-				next->BinaryLoadLevel("../Resources/l3.elf");
+				next->BinaryLoadLevel("../Resources/Level3.elf");
 				Renderer::Instance()->ClearLights();
 				// Todo: Un-hardcode this
 				// use a setting string for next level path?
@@ -58,12 +58,10 @@ namespace Epoch {
 				if (/*status == LM::LevelStatus::Success*/ true) {
 					// Clean up the current level and request the new one be used next time.
 					Physics::Instance()->PhysicsLock.lock();
-					TimeManager::Instance()->Destroy();
 					Physics::Instance()->mObjects.clear();
 					LevelManager::GetInstance().RequestLevelChange(next);
 
-					//Sound Initializing---------------------------------------------------
-					TimeManager::Instance();
+					//Sound Initializing--------------------------------------------------
 
 					Listener* ears = new Listener();
 					Emitter* ambient = new AudioEmitter();
@@ -78,9 +76,9 @@ namespace Epoch {
 					//new stuff
 					Transform identity, t;
 					t.SetMatrix(matrix4::CreateXRotation(DirectX::XM_PI / 2) * matrix4::CreateTranslation(0, 1.3f, 0));
-					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", t);
-					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity);
-					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity);
+					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", t, nullptr, BaseObject_Flag_Record_In_Timeline);
+					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
+					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 					CCMazeHelper* fuk = new CCMazeHelper();
 					headset->AddComponent(fuk);
@@ -386,9 +384,6 @@ namespace Epoch {
 					next->AddObject(teleportHelp);
 					next->AddObject(clonePlus);
 
-					TimeManager::Instance()->AddObjectToTimeline(RightController);
-					TimeManager::Instance()->AddObjectToTimeline(LeftController);
-					TimeManager::Instance()->AddObjectToTimeline(headset);
 
 					Light* l1 = new Light();
 					l1->Type = 4;

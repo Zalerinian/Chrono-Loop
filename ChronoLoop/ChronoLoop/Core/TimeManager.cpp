@@ -148,7 +148,7 @@ namespace Epoch {
 				instanceTimemanager = new TimeManager();
 
 
-				instanceTimemanager->AddAllTexturesToQueue();
+				instanceTimemanager->ActivateAllTexturesToBitset();
 			}
 			return instanceTimemanager;
 		}
@@ -188,7 +188,7 @@ namespace Epoch {
 			Interpolator<matrix4>* temp = new Interpolator<matrix4>();
 			mObjectRewindInterpolators[_obj->GetUniqueID()] = temp;
 		}
-		void TimeManager::AddAllTexturesToQueue()
+		void TimeManager::ActivateAllTexturesToBitset()
 	{
 			for (unsigned int i = 0; i < mCloneTextureBitset.size(); i++) {
 				mCloneTextureBitset[i] = false;
@@ -206,7 +206,7 @@ namespace Epoch {
 				}
 				if (mCloneTextureBitset[i] == false && mCloneTextureBitset.size() - 1)
 				{
-					AddAllTexturesToQueue();	
+					ActivateAllTexturesToBitset();	
 				}
 			}
 	}
@@ -218,7 +218,7 @@ namespace Epoch {
 
 		void TimeManager::ClearClones() {
 			mClones.clear();
-			AddAllTexturesToQueue();
+			ActivateAllTexturesToBitset();
 			//Clean up the interpolators
 			for (auto Interp : mCloneInterpolators) {
 				if (Interp.second)
@@ -312,6 +312,7 @@ namespace Epoch {
 							break;
 						}
 					}*/
+					
 					SystemLogger::GetLog() << "Clone id:" << mClones[i]->GetUniqueID() << " has been deleted" << std::endl;
 					//Remove it from being tracked by timeline
 					mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueId());
@@ -365,7 +366,7 @@ namespace Epoch {
 					}
 				}
 				if (mCloneTextureBitset[i] == 1 && i == mCloneTextureBitset.size() - 1) {
-					AddAllTexturesToQueue();
+					ActivateAllTexturesToBitset();
 					 return GetNextTexture();
 				}
 			}
@@ -376,13 +377,6 @@ namespace Epoch {
 		unsigned int TimeManager::GetTotalSnapsmade() {
 			return mTimeline->GetTotalSnaps();
 		}
-
-		/*Timeline * TimeManager::GetTimeLine() {
-			if (!mTimeline) {
-				mTimeline = new Timeline();
-			};
-			return mTimeline;
-		}*/
 
 		void TimeManager::RewindTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2, unsigned short _id3) {
 			mTimeline->RewindNoClone(_frame, _id1, _id2, _id3);
@@ -420,37 +414,14 @@ namespace Epoch {
 			return false;
 
 		}
+		void TimeManager::SaveSettingIntToTimeline(std::string _str, int _val) {
+			mTimeline->mSettings.mLevelInts[_str] = _val;
+		}
+		void TimeManager::SaveSettingBoolToTimeline(std::string _str, bool _val) {
+			mTimeline->mSettings.mLevelBools[_str] = _val;
+		}
 
-		//void TimeManager::FindOtherClones(Clonepair & _pair)
-		//{
-		//	CloneLifeTime* curr = (CloneLifeTime*)mTimeline->GetObjectLifetime(_pair.mCur);
-		//	if (!curr)
-		//		return;
-		//	bool pair1 = false;
-
-		//	for (unsigned int i = 0; i < mClones.size(); i++) {
-		//		if (mClones[i]->GetUniqueId() == _pair.mCur)
-		//			continue;
-		//		CloneLifeTime* temp = (CloneLifeTime*)mTimeline->GetObjectLifetime(mClones[i]->GetUniqueId());
-		//		if(temp && temp->mBirth == curr->mBirth && (mClones[i]->GetName().find("Headset") != std::string::npos || mClones[i]->GetName().find("Controller") != std::string::npos))
-		//		{
-		//		
-		//			if(!pair1)
-		//			{
-		//				_pair.mOther1 = mClones[i]->GetUniqueId();
-		//				pair1 = true;
-		//			}
-		//			else
-		//			{
-		//				//found the last pair
-		//				_pair.mOther2 = mClones[i]->GetUniqueId();
-		//				return;
-		//			}
-
-		//		}
-		//	}
-		//}
-
+		//I Take no credit in this func for it is Ryan Bronk's from Nth Dimensional
 		void TimeManager::ToggleCloneCountDisplay(void * _command, std::wstring _ifOn) {
 			CommandConsole* cc = (CommandConsole*)_command;
 			if (_ifOn == L"ON") {
@@ -464,6 +435,7 @@ namespace Epoch {
 				CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /CLONECOUNT (ON/OFF)");
 			}
 		}
+		//I Take no credit in this func for it is Ryan Bronk's from Nth Dimensional
 		void TimeManager::ToggleSnapshotCountDisplay(void * _command, std::wstring _ifOn) {
 			CommandConsole* cc = (CommandConsole*)_command;
 			if (_ifOn == L"ON") {
@@ -477,6 +449,7 @@ namespace Epoch {
 				CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /SNAPCOUNT (ON/OFF)");
 			}
 		}
+		//I Take no credit in this func for it is Ryan Bronk's from Nth Dimensional
 		void TimeManager::DisplayCloneCount() {
 			if (Settings::GetInstance().GetBool("CloneCounter")) {
 				std::wstring CloneCount = L"Clone(s): " + std::to_wstring(mClones.size());
@@ -495,6 +468,7 @@ namespace Epoch {
 					CloneCount, *(Draw::Instance().GetScreenBitmap()).get());
 			}
 		}
+		//I Take no credit in this func for it is Ryan Bronk's from Nth Dimensional
 		void TimeManager::DisplaySnapshotCount() {
 			if (Settings::GetInstance().GetBool("SnapCounter")) {
 				std::wstring CloneCount = L"Snapshots: " + std::to_wstring(mTimeline->GetCurrentGameTimeIndx());
@@ -514,6 +488,8 @@ namespace Epoch {
 
 
 			}
+
+			//I Take no credit in this func for it is Ryan Bronk's from Nth Dimensional
 		}
 		void TimeManager::BrowseTimeline(int _gesture, int _frameRewind) {
 			bool UpdateComponents = false;
@@ -533,11 +509,11 @@ namespace Epoch {
 					Level* tempLevel = LevelManager::GetInstance().GetCurrentLevel();
 					if(temp->mCurCloneHeadset && temp->mCurCloneController1 && temp->mCurCloneController2)
 					{
-						mTimeline->MoveAllComponentsToSnap(mtempCurSnapFrame,true, temp->mCurCloneHeadset->GetUniqueID(), temp->mCurCloneController1->GetUniqueID(), temp->mCurCloneController2->GetUniqueID());	
+						mTimeline->MoveAllComponentsToSnapExceptPlayer(mtempCurSnapFrame, temp->mCurCloneHeadset->GetUniqueID(), temp->mCurCloneController1->GetUniqueID(), temp->mCurCloneController2->GetUniqueID());	
 					}
 					else if(tempLevel->GetHeadset() && tempLevel->GetLeftController() && tempLevel->GetRightController())
 					{
-						mTimeline->MoveAllComponentsToSnap(mtempCurSnapFrame, true, tempLevel->GetHeadset()->GetUniqueId(), tempLevel->GetRightController()->GetUniqueId(), tempLevel->GetLeftController()->GetUniqueId());
+						mTimeline->MoveAllComponentsToSnapExceptPlayer(mtempCurSnapFrame, tempLevel->GetHeadset()->GetUniqueId(), tempLevel->GetRightController()->GetUniqueId(), tempLevel->GetLeftController()->GetUniqueId());
 					}
 				}
 				return;
@@ -593,12 +569,12 @@ namespace Epoch {
 			mTimeline->MoveAllObjectsToSnapExceptPlayer(_snaptime, _headset, _leftC, _rightC);
 		}
 
-		void TimeManager::HotfixResetTimeline() {
+		void TimeManager::ResetTimeLineandLevel() {
 			RewindTimeline(0, LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueID(), LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueID(), LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetUniqueID());
 			mTimeline->SetObjectBirthTime(LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueID());
 			mTimeline->SetObjectBirthTime(LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueID());
 			mTimeline->SetObjectBirthTime(LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetUniqueID());
-			mTimeline->HotFixResetLevel();
+			mTimeline->ResetTimelineAndLevel();
 			for (int i = 0; i < mClones.size(); ++i) {
 				mClones[i]->RemoveAllComponents();
 
@@ -622,9 +598,12 @@ namespace Epoch {
 				mCloneTextures.erase(mClones[i]->GetUniqueId());
 			}
 			ClearClones();
-			AddAllTexturesToQueue();
-			VRInputManager::GetInstance().GetInputTimeline()->Clear();
-			vec4f start = LevelManager::GetInstance().GetCurrentLevel()->GetStartPos();
-			VRInputManager::GetInstance().GetPlayerPosition()[3].Set(start.x, start.y, start.z, start.w);
+			ActivateAllTexturesToBitset();
+			mTimeline->SetSavedSettings();
+			if (VRInputManager::GetInstance().IsVREnabled()) {
+				VRInputManager::GetInstance().GetInputTimeline()->Clear();
+				vec4f start = LevelManager::GetInstance().GetCurrentLevel()->GetStartPos();
+				VRInputManager::GetInstance().GetPlayerPosition()[3].Set(start.x, start.y, start.z, start.w);
+			}
 		}
 	}
