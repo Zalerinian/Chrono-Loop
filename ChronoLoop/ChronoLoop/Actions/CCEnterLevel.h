@@ -61,12 +61,10 @@ namespace Epoch
 				{
 					// Clean up the current level and request the new one be used next time.
 					Physics::Instance()->PhysicsLock.lock();
-					TimeManager::Instance()->Destroy();
 					Physics::Instance()->mObjects.clear();
 					LevelManager::GetInstance().RequestLevelChange(next);
 
 					//Sound Initializing---------------------------------------------------
-					TimeManager::Instance();
 
 					Listener* ears = new Listener();
 					Emitter* ambient = new AudioEmitter();
@@ -81,9 +79,9 @@ namespace Epoch
 					//new stuff
 					Transform identity, t;
 					t.SetMatrix(matrix4::CreateXRotation(DirectX::XM_PI / 2) * matrix4::CreateTranslation(0, 1.3f, 0));
-					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", t);
-					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity);
-					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity);
+					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", t, nullptr, BaseObject_Flag_Record_In_Timeline);
+					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
+					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 
 					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
@@ -392,9 +390,6 @@ namespace Epoch
 					next->AddObject(teleportHelp);
 					next->AddObject(clonePlus);
 					
-					TimeManager::Instance()->AddObjectToTimeline(RightController);
-					TimeManager::Instance()->AddObjectToTimeline(LeftController);
-					TimeManager::Instance()->AddObjectToTimeline(headset);
 
 					Light* l1 = new Light();
 					l1->Type = 4;

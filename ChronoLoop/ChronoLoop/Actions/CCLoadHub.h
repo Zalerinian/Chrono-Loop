@@ -62,12 +62,10 @@ namespace Epoch
 					AudioWrapper::GetInstance().RemoveEmitter(e);
 
 					Physics::Instance()->PhysicsLock.lock();
-					TimeManager::Instance()->Destroy();
 					Physics::Instance()->mObjects.clear();
 					LevelManager::GetInstance().RequestLevelChange(next);
 					
 
-					TimeManager::Instance();
 
 					//Sound Initializing---------------------------------------------------
 					//Listener* ears = new Listener();
@@ -82,7 +80,7 @@ namespace Epoch
 
 					//new stuff
 					Transform identity, transform;
-					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", identity);
+					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					rightRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
@@ -93,9 +91,8 @@ namespace Epoch
 					RightController->AddComponent(rightRaycaster);
 					RightController->AddComponent(bt);
 					RightController->AddComponent(rightConCol);
-					TimeManager::Instance()->AddObjectToTimeline(RightController);
 
-					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity); //new BaseObject("Controller2", identity);
+					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity,nullptr, BaseObject_Flag_Record_In_Timeline); //new BaseObject("Controller2", identity);
 					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					leftRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
@@ -106,12 +103,11 @@ namespace Epoch
 					LeftController->AddComponent(leftRaycaster);
 					LeftController->AddComponent(mc2);
 					LeftController->AddComponent(bt2);
-					TimeManager::Instance()->AddObjectToTimeline(LeftController);
 
-					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", identity); //new BaseObject("headset", transform);
+					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", identity, nullptr, BaseObject_Flag_Record_In_Timeline); //new BaseObject("headset", transform);
 					HeadsetFollow* hfollow = new HeadsetFollow();
 					headset->AddComponent(hfollow);
-					TimeManager::Instance()->AddObjectToTimeline(headset);
+
 					
 					Emitter* sound = new SFXEmitter();
 					((SFXEmitter*)sound)->SetEvent(AK::EVENTS::SFX_TELEPORTSOUND);
