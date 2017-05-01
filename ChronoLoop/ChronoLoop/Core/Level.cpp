@@ -28,6 +28,7 @@
 #include "../Actions/CCButtonHold.h"
 #include "../Core/Pool.h"
 #include "../Actions/CCLevel3ElevatorButton.h"
+#include "../Actions/CCBoxSpinRandom.h"
 
 namespace Epoch {
 
@@ -1250,6 +1251,8 @@ namespace Epoch {
 								codeCom = new BoxSnapToControllerAction();
 							if (path == "CCBoxSpin.h")
 								codeCom = new CCBoxSpin();
+							if (path == "CCBoxSpinRandom.h")
+								codeCom = new CCBoxSpinRandom();
 							if (path == "CCButtonHold.h")
 								codeCom = new CCButtonHold();
 							if (path == "CCButtonPress.h")
