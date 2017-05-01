@@ -158,9 +158,9 @@ namespace Epoch
 							if (temp == "mmStartButton")
 							{
 								matrix4 mat = mObject->GetTransform().GetMatrix();
-								((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mat.fourth);
-								((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mat.fourth.y - .2f;
-								((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mat.fourth.y + .2f;
+								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mat.fourth);
+								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mat.fourth.y - .2f;
+								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mat.fourth.y + .2f;
 							}
 							else if(temp == "mmExitButton")
 							{
