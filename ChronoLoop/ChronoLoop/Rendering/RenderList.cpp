@@ -46,7 +46,7 @@ namespace Epoch {
 		// Copy in the data we wanted to add.
 		ctx->CopySubresourceRegion(newBuffer, 0, desc.ByteWidth - sizeof(BufferWidth), 0, 0, _copy.Get(), 0, 0);
 
-		_toGrow = newBuffer;
+		_toGrow.Attach(newBuffer);
 		Renderer::Instance()->GetRendererLock().unlock();
 		mIdMap[mMasterId] = OldCount;
 		return mMasterId++;
@@ -87,7 +87,7 @@ namespace Epoch {
 
 		delete[] InitialData.pSysMem;
 
-		_toGrow = newBuffer;
+		_toGrow.Attach(newBuffer);
 		Renderer::Instance()->GetRendererLock().unlock();
 		mIdMap[mMasterId] = OldCount;
 		return mMasterId++;
@@ -174,7 +174,7 @@ namespace Epoch {
 			ctx->CopySubresourceRegion(newBuffer, 0, (index) * sizeof(BufferWidth), 0, 0, _toCut.Get(), 0, &rightBoundary);
 
 		}
-		_toCut = newBuffer;
+		_toCut.Attach(newBuffer);
 
 		// Go through the ID Map and decrement any id higher than the given one
 		if (idsNeedUpdating) {
@@ -228,6 +228,10 @@ namespace Epoch {
 		for (int i = 0; i < eGB_MAX; ++i) {
 			mShape.mContext.mGeometryCBuffers[i] = nullptr;
 		}
+	}
+
+	RenderList::~RenderList() {
+		int i = 0;
 	}
 
 	GhostList<matrix4>::GhostNode* RenderList::Push(RenderShape& _shape) {
