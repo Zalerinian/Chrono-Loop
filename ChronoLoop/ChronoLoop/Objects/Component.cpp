@@ -325,7 +325,7 @@ namespace Epoch
 		mUpperBound.mNormal = mPushNormal;
 		mUpperBound.mOffset = mMax * mPushNormal;
 		mLowerBound.mNormal = mPushNormal;
-		mLowerBound.mOffset = (mMin * mPushNormal) - .1f;
+		mLowerBound.mOffset = (mMin * mPushNormal) - .07f;
 		mShouldMove = true;
 		mIsTrigger = false;
 		mPress = false;
@@ -359,12 +359,12 @@ namespace Epoch
 		mIsTrigger = false;
 
 		mMass = 2;
-		mForces = vec3f(0, -1, 0);
-		mGravity = vec3f(0, -2.0f, 0);
+		mForces = vec3f(0, 0, 0);
+		mGravity = vec3f(0, -9.8f, 0);
 		mType = eCOMPONENT_COLLIDER;
 		mColliderType = eCOLLIDER_Controller;
-		mTotalForce = { 0, -2, 0 };
-		mAcceleration = { 0, -2, 0 };
+		mTotalForce = { 0, 0, 0 };
+		mAcceleration = { 0, 0, 0 };
 		mShape = new RenderShape("../Resources/UnitCube.obj", true, ePS_TEXTURED, eVS_TEXTURED, eGS_PosNormTex);
 		mShape->GetContext().mRasterState = eRS_WIREFRAME;
 	}
