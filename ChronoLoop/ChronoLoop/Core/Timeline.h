@@ -16,6 +16,7 @@ namespace Epoch {
 		vec3f mForces;
 		vec3f mVel;
 		vec3f mAcc;
+		vec3f mTotforce;
 	};
 	struct SnapComponent_Mesh : SnapComponent
 	{

@@ -35,7 +35,7 @@ namespace Epoch {
 
 			//Create Clone Initialize
 			Transform transformCreateBoard;
-			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.14159f) * matrix4::CreateTranslation(1.43f, 1.5f, 8.9f));
+			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.14159f) * matrix4::CreateTranslation(1.15f, 1.5f, 8.9f));
 			transformCreateBoard.SetMatrix(mBoardMatrixs.back());
 			BaseObject* mCreateCloneBoard = new BaseObject("mCreateCloneBoard", transformCreateBoard);
 			MeshComponent* ccm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
@@ -55,7 +55,7 @@ namespace Epoch {
 
 			//Delete Clone Initialize
 			Transform transformDeleteBoard;
-			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.14159f) * matrix4::CreateTranslation(1.43f, 1.5f, 8.9f));
+			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.14159f) * matrix4::CreateTranslation(1.15f, 1.5f, 8.9f));
 			transformDeleteBoard.SetMatrix(mBoardMatrixs.back());
 			BaseObject* mDeleteCloneBoard = new BaseObject("mDeleteCloneBoard", transformDeleteBoard);
 			MeshComponent* dcm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
@@ -75,7 +75,7 @@ namespace Epoch {
 
 			//UI Initialize
 			Transform transformUIBoard;
-			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.14159f) * matrix4::CreateTranslation(2.52f, 1.5f, 8.9f));
+			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.14159f) * matrix4::CreateTranslation(-0.94f, 1.5f, 8.9f));
 			transformUIBoard.SetMatrix(mBoardMatrixs.back());
 			BaseObject* mUIBoard = new BaseObject("mUIBoard", transformUIBoard);
 			MeshComponent* uim = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
@@ -88,6 +88,22 @@ namespace Epoch {
 			mUIBoard->AddComponent(uim);
 			boards.push_back(mUIBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mUIBoard);
+
+			//UI Initialize
+			Transform transformCloneVisualBoard;
+			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.14159f) * matrix4::CreateTranslation(2.26f, 1.5f, 8.9f));
+			transformCloneVisualBoard.SetMatrix(mBoardMatrixs.back());
+			BaseObject* mCloneVisualBoard = new BaseObject("mCloneVisualBoard", transformCloneVisualBoard);
+			MeshComponent* cvm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
+			cvm->AddTexture("../Resources/tutCloneCreation.png", eTEX_DIFFUSE);
+			cvm->AddTexture("../Resources/MultiscanUneven.png", eTEX_REGISTER4);
+			cvm->AddTexture("../Resources/Scanline.png", eTEX_REGISTER5);
+			cvm->SetData(eCB_PIXEL, eBufferDataType_Scanline, ePB_REGISTER1, &mScanlineData);
+			cvm->SetPixelShader(ePS_TRANSPARENT_SCANLINE);
+			cvm->SetVisible(false);
+			mCloneVisualBoard->AddComponent(cvm);
+			boards.push_back(mCloneVisualBoard);
+			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mCloneVisualBoard);
 		}
 
 		virtual void Update() {
@@ -104,21 +120,22 @@ namespace Epoch {
 					mPrevBoards = mCurrentBoards;
 					mCurrentBoards.clear();
 					mCurrentBoards.push_back(0);
+					mCurrentBoards.push_back(3);
 					mCurrentBoards.push_back(2);
 					break;
 				case 7:
 					boardchange = true;
 					mPrevBoards = mCurrentBoards;
+					mPrevBoards.pop_back();
 					mCurrentBoards.clear();
 					mCurrentBoards.push_back(1);
+					mCurrentBoards.push_back(2);
 					break;
 				case 8:
 					boardchange = true;
 					mPrevBoards = mCurrentBoards;
 					mCurrentBoards.clear();
-					SetAllBoardsInvisable();
 					break;
-
 				}
 			}
 

@@ -984,7 +984,7 @@ namespace Epoch {
 							file.read((char *)&pickupable, sizeof(byte));
 						}
 
-						vec3f position, rotation, scale;
+						vec3f position, rotation, scale, gravity(0, -9.81, 0);
 						file.read((char *)&position.x, sizeof(float));
 						file.read((char *)&position.y, sizeof(float));
 						file.read((char *)&position.z, sizeof(float));
@@ -996,13 +996,20 @@ namespace Epoch {
 						file.read((char *)&scale.x, sizeof(float));
 						file.read((char *)&scale.y, sizeof(float));
 						file.read((char *)&scale.z, sizeof(float));
+
+						if(version >= 5)
+						{
+							file.read((char *)&gravity.x, sizeof(float));
+							file.read((char *)&gravity.y, sizeof(float));
+							file.read((char *)&gravity.z, sizeof(float));
+						}
 						if (obj)
 						{
 							std::string temp = obj->GetName();
 							vec3f offset = vec3f(objectScale.x * scale.x, objectScale.y * scale.y, objectScale.z * scale.z) / 2;
 							vec3f min = position - offset;
 							vec3f max = position + offset;
-							CubeCollider* col = new CubeCollider(obj, movable == 1, trigger == 1, vec3f(0, -1, 0), mass, elasticity, staticFriction, kineticFriction, drag, min, max);
+							CubeCollider* col = new CubeCollider(obj, movable == 1, trigger == 1, gravity, mass, elasticity, staticFriction, kineticFriction, drag, min, max);
 							col->mPickUpAble = pickupable;
 							obj->AddComponent(col);
 						}
@@ -1221,6 +1228,7 @@ namespace Epoch {
 						trans.SetMatrix(mat);
 						obj = Pool::Instance()->iGetObject()->Reset(name, trans, nullptr, flags);
 						//obj = new BaseObject(name, trans);
+						int i = 0;
 					}
 						break;
 					case 8: //Code

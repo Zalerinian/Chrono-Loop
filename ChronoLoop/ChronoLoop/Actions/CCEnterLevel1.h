@@ -55,7 +55,7 @@ namespace Epoch
 			{
 				Settings::GetInstance().SetBool("LevelIsLoading", true);
 				Level* next = new Level;
-				next->LoadLevel("../Resources/Level1.xml");
+				next->BinaryLoadLevel("../Resources/Level1.elf");
 				// Todo: Un-hardcode this
 				// use a setting string for next level path?
 				//LM::LevelStatus status = LevelManager::GetInstance().LoadLevelAsync("../Resources/Level1_2_6.xml", &next);
@@ -223,7 +223,7 @@ namespace Epoch
 					sp->SetColors(vec3f(.6f, .6f, 1), vec3f(.2f, .2f, 1));
 					sp->SetLife(100);
 					sp->SetSize(.05f, .03f);
-					ParticleEmitter* emits = new Sparks(-1, 250, 2, vec3f(3.623517f, 0.75f, 8.32376f));
+					ParticleEmitter* emits = new Sparks(-1, 250, 2, vec3f(3.55f, 0.45f, 8.31f));
 					emits->SetParticle(sp);
 					emits->SetTexture("../Resources/BasicCircleP.png");
 					ParticleSystem::Instance()->AddEmitter(emits);

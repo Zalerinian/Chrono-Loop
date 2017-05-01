@@ -340,7 +340,11 @@ namespace Hourglass {
 			w.Write((float)mScaleX.Value);
 			w.Write((float)mScaleY.Value);
 			w.Write((float)mScaleZ.Value);
-		}
+
+            w.Write((float)mGravX.Value);
+            w.Write((float)mGravY.Value);
+            w.Write((float)mGravZ.Value);
+        }
 
 		public override void ReadData(System.IO.BinaryReader r, int _version) {
 			base.ReadData(r, _version);
@@ -355,6 +359,14 @@ namespace Hourglass {
 			mScaleX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mScaleY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mScaleZ.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
+            
+
+            if(_version >= 5)
+            {
+                mGravX.Value = (decimal)(BitConverter.ToSingle(r.ReadBytes(4), 0));
+                mGravY.Value = (decimal)(BitConverter.ToSingle(r.ReadBytes(4), 0));
+                mGravZ.Value = (decimal)(BitConverter.ToSingle(r.ReadBytes(4), 0));
+            }
 		}
 
 		public override void CopyData(ref Component _other) {

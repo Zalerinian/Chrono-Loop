@@ -31,7 +31,7 @@ namespace Epoch {
 
 			Settings::GetInstance().SetInt("tutStep", 1);
 			TimeManager::Instance()->SaveSettingIntToTimeline("tutStep", 1);
-
+			Settings::GetInstance().SetBool("Level1Tutorial", true);
 			//Teleport Initialize
 			Transform Transform1;
 			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.78736f) * matrix4::CreateTranslation(1.08f, 1.5f, -8.48f));
@@ -175,7 +175,7 @@ namespace Epoch {
 			if (GetAsyncKeyState(VK_SHIFT) & 1)
 				Settings::GetInstance().SetInt("tutStep", Settings::GetInstance().GetInt("tutStep") + 1);
 
-
+			
 			int tut = Settings::GetInstance().GetInt("tutStep");
 			if (tut != currentTut) {
 				currentTut = tut;
@@ -204,6 +204,8 @@ namespace Epoch {
 					mPrevBoards = mCurrentBoards;
 					mCurrentBoards.clear();
 					mCurrentBoards.push_back(3);
+					pb->GetProgressBar()->GetTransform().SetMatrix(pb->GetProgressBar()->GetTransform().GetMatrix() * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.14159f) * matrix4::CreateTranslation(3.71f, 1.46f, 3));
+					pb->OnEnable();
 					break;
 				case 6:
 					boardchange = true;
@@ -211,15 +213,21 @@ namespace Epoch {
 					mCurrentBoards.clear();
 					mCurrentBoards.push_back(4);
 					mCurrentBoards.push_back(5);
+					pb->OnDisable();
+
 					break;
 				case 8:
 					boardchange = true;
 					mPrevBoards = mCurrentBoards;
 					mCurrentBoards.clear();
-					SetAllBoardsInvisable();
+					//SetAllBoardsInvisable();
 					break;
 
 				}
+			}
+			if(tut == 4)
+			{
+				pb->SetCurProgress(Settings::GetInstance().GetFloat("TutorialRewind - CurProgress"));
 			}
 			ScaleUpCurrentBoards();
 			ScaleDownPrevBoards();
