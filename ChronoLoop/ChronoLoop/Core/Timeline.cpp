@@ -851,7 +851,8 @@ namespace Epoch {
 					if (currComp->GetColliderId() == comp->mId) {
 						if (((Collider*)currComp)->mAcceleration != ((SnapComponent_Physics*)comp)->mAcc ||
 							((Collider*)currComp)->mVelocity != ((SnapComponent_Physics*)comp)->mVel ||
-							((Collider*)currComp)->mForces != ((SnapComponent_Physics*)comp)->mForces)
+							((Collider*)currComp)->mForces != ((SnapComponent_Physics*)comp)->mForces ||
+							((Collider*)currComp)->mTotalForce != ((SnapComponent_Physics*)comp)->mTotforce)
 							return false;
 					}
 				}
