@@ -141,7 +141,7 @@ namespace Epoch {
 				mParabola = new RenderShape(*mArcMesh);
 				mParabola->SetShaders(PixelShaderFormat::ePS_PURETEXTURE, VertexShaderFormat::eVS_TEXTURED);
 				mParabola->SetGeometryShader(GeometryShaderFormat::eGS_PosNormTex);
-				mParabola->AddTexture(L"../Resources/cube_texture.png", TextureType::eTEX_DIFFUSE);
+				mParabola->AddTexture(L"../Resources/ARC.png", TextureType::eTEX_DIFFUSE);
 				mPGhost = Renderer::Instance()->AddOpaqueNode(*mParabola);
 				mInitial = true;
 			}
@@ -227,6 +227,10 @@ namespace Epoch {
 			mCSLoc = new BaseObject("ArcStart");
 
 			//TODO : Make mesh and load them here as well as textures
+			mCSMesh = new MeshComponent("../Resources/ControllerTP.obj");
+			mCSMesh->AddTexture("../Resources/cube_texture.png", TextureType::eTEX_DIFFUSE);
+			mTPMesh = new MeshComponent("../Resources/TeleportMarker.obj");
+			mTPMesh->AddTexture("../Resources/cube_texture.png", TextureType::eTEX_DIFFUSE);
 
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mTPLoc);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mCSLoc);
