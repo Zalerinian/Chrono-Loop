@@ -5,6 +5,7 @@
 #include "../Common/Settings.h"
 
 
+
 namespace Epoch {
 
 	struct CCLevel3ElevatorButton : public CodeComponent {
@@ -53,10 +54,18 @@ namespace Epoch {
 							if (tempY < -1.0) {
 								std::vector<Component*>& comps = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetComponents(eCOMPONENT_CODE);
 								for (unsigned int  i = 0; i < comps.size(); i++) {
-									/*if(dynamic_cast<>comps[i])
+									if(dynamic_cast<CCMazeHelper*>(comps[i]))
 									{
-										comps[i]
-									}*/
+										((CCMazeHelper*)comps[i])->ResetBoxes();
+										break;
+									}
+								}
+								std::vector<Component*>& comps2 = LevelManager::GetInstance().GetCurrentLevel()->FindObjectWithName("WallButton")->GetComponents(eCOMPONENT_CODE);
+								for (unsigned int i = 0; i < comps2.size(); i++) {
+									if (dynamic_cast<CCButtonPress*>(comps2[i])) {
+										((CCButtonPress*)comps2[i])->ResetDoors();
+										break;
+									}
 								}
 								tempY = 1;
 							}
@@ -64,22 +73,22 @@ namespace Epoch {
 								tempY = -1;
 							}
 
-							mChamberInterp->Prepare(4, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), mChamberObject->GetTransform().GetMatrix());
+							mChamberInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), mChamberObject->GetTransform().GetMatrix());
 							mChamberInterp->SetEasingFunction(Easing::QuadInOut);
 							mChamberInterp->SetActive(true);
 
 							mat = VRInputManager::GetInstance().GetPlayerPosition();
-							mPlayerInterp->Prepare(4, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), VRInputManager::GetInstance().GetPlayerPosition());
+							mPlayerInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), VRInputManager::GetInstance().GetPlayerPosition());
 							mPlayerInterp->SetEasingFunction(Easing::QuadInOut);
 							mPlayerInterp->SetActive(true);
 
 							mat = mObject->GetTransform().GetMatrix();
-							mStartButtonInterp->Prepare(4, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), mObject->GetTransform().GetMatrix());
+							mStartButtonInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), mObject->GetTransform().GetMatrix());
 							mStartButtonInterp->SetEasingFunction(Easing::QuadInOut);
 							mStartButtonInterp->SetActive(true);
 
 							mat = mButtonStand->GetTransform().GetMatrix();
-							mStartStandInterp->Prepare(4, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), mButtonStand->GetTransform().GetMatrix());
+							mStartStandInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), mButtonStand->GetTransform().GetMatrix());
 							mStartStandInterp->SetEasingFunction(Easing::QuadInOut);
 							mStartStandInterp->SetActive(true);
 							mInterpDone = false;
