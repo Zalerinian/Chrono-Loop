@@ -81,6 +81,9 @@ namespace Epoch
 				//Interp stuff
 				ButtonCollider* butCol = (ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
 
+				if (_other.mVelocity * butCol->mPushNormal < .1f);
+					butCol->mVelocity = vec3f(0, 0, 0);
+
 				if (!tempDoor) {
 					blockInterp->SetActive(true);
 					blockInterp->Prepare(0.69f, blockCube->GetTransform().GetMatrix(), blockend, blockCube->GetTransform().GetMatrix());

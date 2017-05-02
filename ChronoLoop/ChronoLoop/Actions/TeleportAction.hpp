@@ -34,7 +34,7 @@ namespace Epoch {
 			mExitObject = cLevel->FindObjectWithName("TransparentDoor2");
 			mTWall1 = cLevel->FindObjectWithName("TransparentWall1");
 			mTWall2 = cLevel->FindObjectWithName("TransparentWall2");
-			mTWall3 = cLevel->FindObjectWithName("TransparentWall2");
+			mTWall3 = cLevel->FindObjectWithName("TransparentWall3");
 			mTWindow = cLevel->FindObjectWithName("TransparentWindow");
 			mServerObject = cLevel->FindObjectWithName("Servers");
 
@@ -46,6 +46,7 @@ namespace Epoch {
 				mServerMesh = (MeshComponent*)mServerObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				mTWall1Mesh = (MeshComponent*)mTWall1->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				mTWall2Mesh = (MeshComponent*)mTWall2->GetComponentIndexed(eCOMPONENT_MESH, 0);
+				mTWall3Mesh = (MeshComponent*)mTWall2->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				mTWindowMesh = (MeshComponent*)mTWindow->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			}
 			mHeadset = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset();
