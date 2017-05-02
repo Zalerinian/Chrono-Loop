@@ -84,12 +84,6 @@ namespace Epoch {
 			GestureCheck = 0;
 		TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
 
-		//Update InputSnap TweenTime 
-		mTweenTimestamp += TimeManager::Instance()->GetDeltaTime();
-		if (mTweenTimestamp >= RecordingRate) {
-			mTweenTimestamp -= RecordingRate;
-		}
-		mSnapTweenTime = mTweenTimestamp / RecordingRate;
 
 		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 		//Pull vr events to find button press or up
@@ -120,9 +114,17 @@ namespace Epoch {
 	void VIM::AddInputNode(vr::VREvent_t* _event) {
 		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 		InputTimeline::InputNode* node = new InputTimeline::InputNode();
-		node->mData.mLastFrame = TimeManager::Instance()->GetCurrentSnapFrame();
+
+		
 		node->mData.mButton = (vr::EVRButtonId)_event->data.controller.button;
-		node->mData.mTime = mSnapTweenTime;
+		node->mData.mLastFrame = TimeManager::Instance()->GetCurrentSnapFrame();
+		float time = TimeManager::Instance()->GetSnapTweenTime() - (_event->eventAgeSeconds / RecordingRate);
+		if(time < 0.0f)
+		{
+			time += 1;
+			node->mData.mLastFrame -= 1;
+		}
+		node->mData.mTime = time;
 
 		if (_event->eventType == vr::EVREventType::VREvent_ButtonPress) {
 			node->mData.mButtonState = -1;
@@ -146,10 +148,10 @@ namespace Epoch {
 
 	void VIM::RewindInputTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2) {
 
-		InputTimeline::InputNode* temp = mInputTimeline->GetInsertStart();
+		InputTimeline::InputNode* temp = mInputTimeline->GetCurr();
 		if(!temp)
 		{
-			temp = mInputTimeline->GetCurr();
+			temp = mInputTimeline->GetHead();
 		}
 		while (temp) {
 			//Have reached the point we want to stop
@@ -173,6 +175,12 @@ namespace Epoch {
 							del->mNext->mPrev = temp;
 					} else {
 						temp = nullptr;
+					}
+					if(del == mInputTimeline->GetHead())
+					{
+						if (del == mInputTimeline->GetCurr())
+							mInputTimeline->SetCurr(nullptr);
+						mInputTimeline->SetHead(nullptr);
 					}
 					delete del;
 				} else if (temp->mPrev) {
