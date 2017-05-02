@@ -200,4 +200,39 @@ namespace Epoch {
 			mContext == _other.mContext;
 	}
 
+	void RenderShape::UpdateBufferData(Mesh* _mesh)
+	{
+		ID3D11Buffer * ibuffer = IndexBufferManager::GetBuffer().Get();
+		ID3D11Buffer * vbuffer = VertexBufferManager::GetBuffer(VertFormat::eVERT_POSNORMTEX).Get();
+		int ioff = sizeof(unsigned int) * mIndexOffset, voff = sizeof(VertexPosNormTex) * mVertexOffset;
+
+		ID3D11Buffer* i, *v;
+		D3D11_BUFFER_DESC desc;
+		D3D11_SUBRESOURCE_DATA data;
+
+		//Make buffer with new vert data
+		desc.Usage = D3D11_USAGE_DEFAULT;
+		desc.ByteWidth = sizeof(VertexPosNormTex) * _mesh->VertSize();
+		desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		desc.CPUAccessFlags = 0;
+		desc.MiscFlags = 0;
+		desc.StructureByteStride = 0;
+
+		data.pSysMem = _mesh->GetVerts();
+		Renderer::Instance()->GetDevice()->CreateBuffer(&desc, &data, &v);
+
+		desc.Usage = D3D11_USAGE_DEFAULT;
+		desc.ByteWidth = sizeof(unsigned int) * _mesh->IndicieSize();
+		desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+		desc.CPUAccessFlags = 0;
+		desc.MiscFlags = 0;
+		desc.StructureByteStride = 0;
+
+		data.pSysMem = _mesh->GetIndicies();
+		Renderer::Instance()->GetDevice()->CreateBuffer(&desc, &data, &i);
+
+		//Calc off... x off num bytes to beginning dest subr = 0 , y & z = 0
+		Renderer::Instance()->GetContext()->CopySubresourceRegion(ibuffer, 0, ioff, 0, 0, i, 0, 0);
+		Renderer::Instance()->GetContext()->CopySubresourceRegion(vbuffer, 0, voff, 0, 0, v, 0, 0);
+	}
 }

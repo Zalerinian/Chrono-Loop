@@ -172,17 +172,20 @@ namespace Epoch
 	{
 		float time;
 		vec3f dir = _end - _start;
-		RayToTriangle(_vert0, _vert1, _vert2, _normal, _start, dir, time);
+		if (RayToTriangle(_vert0, _vert1, _vert2, _normal, _start, dir, time))
+		{
 
-		vec3f proj = _start + (dir) * time;
-		_hit = proj;
-		proj = proj - _end;
-		float d = proj.Dot(dir);
+			vec3f proj = _start + (dir)* time;
+			_hit = proj;
+			proj = proj - _end;
+			float d = proj.Dot(dir);
 
-		if (d == -1)
-			return true;
-		else
-			return false;
+			if (d < 0)
+				return true;
+			else
+				return false;
+		}
+		return false;
 
 	}
 #pragma endregion

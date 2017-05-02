@@ -524,9 +524,6 @@
     <ClInclude Include="Actions\Level3TeleportAction.h">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\ParabolicTeleport.hpp">
-      <Filter>Actions</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
