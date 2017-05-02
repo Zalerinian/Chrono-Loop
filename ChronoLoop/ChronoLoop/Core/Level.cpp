@@ -1091,9 +1091,17 @@ namespace Epoch {
 						file.read((char *)&position.x, sizeof(float));
 						file.read((char *)&position.y, sizeof(float));
 						file.read((char *)&position.z, sizeof(float));
+
+						vec3f gravity;
+						if (version >= 5) {
+							file.read((char *)&gravity.x, sizeof(float));
+							file.read((char *)&gravity.y, sizeof(float));
+							file.read((char *)&gravity.z, sizeof(float));
+						}
+
 						if (obj)
 						{
-							SphereCollider* col = new SphereCollider(obj, movable == 1, trigger == 1, vec3f(0, -1, 0), mass, elasticity, staticFriction, kineticFriction, drag, radius);
+							SphereCollider* col = new SphereCollider(obj, movable == 1, trigger == 1, gravity, mass, elasticity, staticFriction, kineticFriction, drag, radius);
 							obj->AddComponent(col);
 						}
 					}
@@ -1511,7 +1519,6 @@ namespace Epoch {
 		else if ((_Level == L"HUBWORLD" || _Level == L"HUB"))
 		{
 			if (accessHub) {
-
 				accessHub->SetOnce(false);
 				CommandConsole::Instance().Toggle();
 			} else {
