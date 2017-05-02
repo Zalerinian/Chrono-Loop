@@ -8,7 +8,7 @@ namespace Epoch
 
 #pragma region Particles
 
-	Particle& Particle::Init(const Particle& _p)
+	Particle& Particle::Init(Particle& _p)
 	{
 		Particle* p = new Particle();
 		*p = _p;
@@ -270,8 +270,6 @@ namespace Epoch
 	{
 		return mPBuffer.Get();
 	}
-
-
 	ID3D11ShaderResourceView* ParticleEmitter::GetTexture(int _index)
 	{
 		return mTextures[_index].tv.Get();
@@ -769,7 +767,9 @@ namespace Epoch
 			}
 			if (mParticles.size() < mMaxParticles && (total < mTotalParticles || mTotalParticles == -1))
 			{
-				Particle* p = &Particle::Init(*mBase);
+				//Particle* p = &Particle::Init(*mBase);
+				Particle* p = new Particle();
+				(*p) = (*mBase);
 				float x, y, z;
 				x = (mMinPX + mPos.x) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPX + mPos.x) - (mMinPX + mPos.x))));
 				y = (mMinPY + mPos.y) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPY + mPos.y) - (mMinPY + mPos.y))));
@@ -803,7 +803,7 @@ namespace Epoch
 	{
 		//TODO: Special update
 		// x = x, y = sin(t), z = z // t -> yradial
-		_p->SetVelocity(vec3f(_p->GetVelocity().x, cos(_p->mYRadial) * 2.25, _p->GetVelocity().z));
+		_p->SetVelocity(vec3f(_p->GetVelocity().x, cos(_p->mYRadial) * 2.25f, _p->GetVelocity().z));
 		_p->mYRadial += static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / .3));
 		ParticleEmitter::UpdateParticle(_p, _delta );
 	}

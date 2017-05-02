@@ -56,6 +56,8 @@ namespace Epoch
 				Settings::GetInstance().SetBool("LevelIsLoading", true);
 				Level* next = new Level;
 				next->BinaryLoadLevel("../Resources/Level1.elf");
+				Renderer::Instance()->ClearLights();
+
 				// Todo: Un-hardcode this
 				// use a setting string for next level path?
 				//LM::LevelStatus status = LevelManager::GetInstance().LoadLevelAsync("../Resources/Level1_2_6.xml", &next);

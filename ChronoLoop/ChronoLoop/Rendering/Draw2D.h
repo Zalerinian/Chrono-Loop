@@ -40,7 +40,10 @@ namespace Epoch
 			mTextAlignment = _TextAlignment;
 			mParagraphAlignment = _ParagraphAlignment;
 		}
-		~Font(){}
+		~Font()
+		{
+			
+		}
 		bool operator==(Font _equals)
 		{
 			if (this->mFontName == _equals.mFontName &&

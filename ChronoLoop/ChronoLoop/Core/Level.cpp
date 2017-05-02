@@ -1511,7 +1511,6 @@ namespace Epoch {
 		else if ((_Level == L"HUBWORLD" || _Level == L"HUB"))
 		{
 			if (accessHub) {
-
 				accessHub->SetOnce(false);
 				CommandConsole::Instance().Toggle();
 			} else {
