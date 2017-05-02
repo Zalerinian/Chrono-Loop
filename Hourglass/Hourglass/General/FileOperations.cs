@@ -305,7 +305,7 @@ namespace Hourglass {
 				for (int i = 0; i < ObjectCount; ++i) {
 					ReadObject(reader, nodeCollection, vers);
 					if(i % 10 == 0 && i > 0) {
-						System.Threading.Thread.Sleep(100);
+						System.Threading.Thread.Sleep(0);
 					}
 				}
 			}

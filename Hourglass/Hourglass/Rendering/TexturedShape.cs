@@ -77,19 +77,11 @@ namespace Hourglass
 
 		public void SetTexture(TextureType location, BaseTexture t)
 		{
-			if(mTextures[(int)location] != null)
-			{
-				mTextures[(int)location].Dispose();
-			}
 			mTextures[(int)location] = t;
 		}
 
 		public void SetTexture(TextureType location, string file)
 		{
-			if (mTextures[(int)location] != null)
-			{
-				mTextures[(int)location].Dispose();
-			}
 			SetTexture(location, TextureCache.Instance.GetTexture(file));
 		}
 
@@ -104,24 +96,7 @@ namespace Hourglass
 
 		public override void Dispose()
 		{
-			if(mIndexBuffer != null)
-			{
-				mIndexBuffer.Dispose();
-				mIndexBuffer = null;
-			}
-			if (mVertexBuffer != null)
-			{
-				mVertexBuffer.Dispose();
-				mVertexBuffer = null;
-			}
-			// Textures are stored in the texture cache now.
-			//for(TextureType t = TextureType.Diffuse; t < TextureType.Max; ++t)
-			//{
-			//	if(mTextures[(int)t] != null)
-			//	{
-			//		mTextures[(int)t].Dispose();
-			//	}
-			//}
+			
 		}
 
 		public override bool CheckRaycast(Vector3 _start, Vector3 _dir, out float _time)

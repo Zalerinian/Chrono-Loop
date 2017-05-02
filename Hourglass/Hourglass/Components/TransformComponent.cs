@@ -352,7 +352,6 @@ namespace Hourglass
 			}
 		}
 
-			static int count = 0;
 		protected void OnUpdateName(object sender, EventArgs e)
 		{
 			if (mOwner != null && mOwner.Node != null)
@@ -364,10 +363,8 @@ namespace Hourglass
 				}
 				else
 				{
-					count++;
 					mOwner.Node.NodeFont = ActiveFont;
 					mOwner.Node.Text = mName.Text;
-					mOwner.Node.Text = "Some other text";
 				}
 			}
 		}
