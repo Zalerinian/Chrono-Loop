@@ -11,6 +11,31 @@ namespace Hourglass
 		public enum TextureType { Diffuse = 0, Normal, Specular, Emissive, Max };
 		public BaseTexture[] mTextures = new BaseTexture[4];
 		public CustomVertex.PositionNormalTextured[] mVertices;
+		public string mResourceName = "";
+		public string[] mTexturePaths = new string[4];
+
+		public override IndexBuffer IndexBuffer {
+			get {
+				return MeshCache.Instance.GetMesh(mResourceName).iBuffer;
+			}
+		}
+
+		public override VertexBuffer VertexBuffer {
+			get {
+				return MeshCache.Instance.GetMesh(mResourceName).vBuffer;
+			}
+		}
+
+		public override bool Valid {
+			get {
+				if (!string.IsNullOrWhiteSpace(mResourceName)) {
+					MeshData m = MeshCache.Instance.GetMesh(mResourceName);
+					return m.iBuffer != null && m.vBuffer != null;
+				} else {
+					return false;
+				}
+			}
+		}
 
 		public BaseTexture[] Textures {
 			get {
@@ -36,69 +61,18 @@ namespace Hourglass
 
 		public void Load(string _File)
 		{
-			List<Vector3> Verts = new List<Vector3>();
-			List<Vector3> Norms = new List<Vector3>();
-			List<Vector2> UVs = new List<Vector2>();
-			List<CustomVertex.PositionNormalTextured> vertices = new List<CustomVertex.PositionNormalTextured>();
-			List<int> Ind = new List<int>();
-			StreamReader sr = new StreamReader(_File);
-			string line = string.Empty;
-			while ((line = sr.ReadLine()) != null)
-			{
-				string[] parts = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-				if (parts.Length > 0)
-				{
-					Vector3 vec = new Vector3();
-					switch (parts[0])
-					{
-						case "o":
-							//mName = parts[1];
-							break;
-						case "v":
-							vec.X = (float)Convert.ToDouble(parts[1]);
-							vec.Y = (float)Convert.ToDouble(parts[2]);
-							vec.Z = (float)Convert.ToDouble(parts[3]);
-							Verts.Add(vec);
-							break;
-						case "vn":
-							vec.X = (float)Convert.ToDouble(parts[1]);
-							vec.Y = (float)Convert.ToDouble(parts[2]);
-							vec.Z = (float)Convert.ToDouble(parts[3]);
-							Norms.Add(vec);
-							break;
-						case "vt":
-							Vector2 uv = new Vector2();
-							uv.X = (float)Convert.ToDouble(parts[1]);
-							uv.Y = 1 - (float)Convert.ToDouble(parts[2]);
-							UVs.Add(uv);
-							break;
-						case "f":
-							for (int i = 1; i < 4; i++)
-							{
-								string[] points = parts[i].Split(new char[] { '/' }, StringSplitOptions.None);
-								Ind.Add(vertices.Count);
-								vertices.Add(new CustomVertex.PositionNormalTextured(Verts[Convert.ToInt32(points[0]) - 1],
-									Norms[Convert.ToInt32(points[2]) - 1],
-									UVs[Convert.ToInt32(points[1]) - 1].X,
-									UVs[Convert.ToInt32(points[1]) - 1].Y));
-							}
-							break;
-						default:
-							break;
-					}
-				}
-			}
-			mVertices = vertices.ToArray();
-			Indices = Ind.ToArray();
+			mResourceName = _File;
+			MeshData m = MeshCache.Instance.GetMesh(_File);
+			Indices = m.indices;
+			mVertices = m.vertices;
 		}
 
 		public void SetMesh(string file)
 		{
-			mVertices = null;
-			mIndices = null;
-			Load(file);
-			FillBuffers();
+			mResourceName = file;
+			MeshData m = MeshCache.Instance.GetMesh(file); // Ensure the file is loaded.
+			Indices = m.indices;
+			mVertices = m.vertices;
 		}
 
 		public void SetTexture(TextureType location, BaseTexture t)
@@ -116,36 +90,16 @@ namespace Hourglass
 			{
 				mTextures[(int)location].Dispose();
 			}
-			SetTexture(location, Renderer.Instance.LoadTexture(file));
+			SetTexture(location, TextureCache.Instance.GetTexture(file));
 		}
 
 		public override void FillBuffers()
 		{
-			if(mIndexBuffer != null)
-			{
-				mIndexBuffer.Dispose();
+			if(!string.IsNullOrWhiteSpace(mResourceName)) {
+				MeshData m = MeshCache.Instance.ReloadMesh(mResourceName);
+				Indices = m.indices;
+				mVertices = m.vertices;
 			}
-			mIndexBuffer = new IndexBuffer(typeof(int),
-				mIndices.Length * sizeof(int),
-				Renderer.Instance.Device,
-				Usage.WriteOnly,
-				Pool.Default
-			);
-
-			if (mVertexBuffer != null)
-			{
-				mVertexBuffer.Dispose();
-			}
-			mVertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionNormalTextured),
-				mVertices.Length,
-				Renderer.Instance.Device,
-				Usage.Dynamic | Usage.WriteOnly,
-				CustomVertex.PositionNormalTextured.Format,
-				Pool.Default
-			);
-
-			mIndexBuffer.SetData(mIndices, 0, LockFlags.None);
-			mVertexBuffer.SetData(mVertices, 0, LockFlags.None);
 		}
 
 		public override void Dispose()
@@ -160,13 +114,14 @@ namespace Hourglass
 				mVertexBuffer.Dispose();
 				mVertexBuffer = null;
 			}
-			for(TextureType t = TextureType.Diffuse; t < TextureType.Max; ++t)
-			{
-				if(mTextures[(int)t] != null)
-				{
-					mTextures[(int)t].Dispose();
-				}
-			}
+			// Textures are stored in the texture cache now.
+			//for(TextureType t = TextureType.Diffuse; t < TextureType.Max; ++t)
+			//{
+			//	if(mTextures[(int)t] != null)
+			//	{
+			//		mTextures[(int)t].Dispose();
+			//	}
+			//}
 		}
 
 		public override bool CheckRaycast(Vector3 _start, Vector3 _dir, out float _time)
