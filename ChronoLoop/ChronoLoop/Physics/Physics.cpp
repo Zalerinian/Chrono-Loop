@@ -9,7 +9,7 @@
 #include "..\Core\LevelManager.h"
 
 #define DEBUG_LEVEL1 0
-#define DEBUG_LEVEL2 0
+#define DEBUG_LEVEL2 1
 
 namespace Epoch
 {
@@ -1077,20 +1077,23 @@ namespace Epoch
 						Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 						if (((ControllerCollider*)collider)->mLeft &&
 							(collider->mObject->GetUniqueID() == cLevel->GetLeftController()->GetUniqueID() ||
-								collider->mObject->GetUniqueID() == cLevel->GetRightController()->GetUniqueID()))
+							 collider->mObject->GetUniqueID() == cLevel->GetRightController()->GetUniqueID()))
 						{
-							collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
-							collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
 							collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetVelocity();
+							collider->mAcceleration = collider->mVelocity / TimeManager::Instance()->GetDeltaTime();
+							collider->mForces = collider->mAcceleration * collider->mMass;
+							collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
 							collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPosition().Position);
 						}
 						else if ((!(((ControllerCollider*)collider)->mLeft) &&
 							(collider->mObject->GetUniqueID() == cLevel->GetLeftController()->GetUniqueID() ||
-								collider->mObject->GetUniqueID() == cLevel->GetRightController()->GetUniqueID())))
+							 collider->mObject->GetUniqueID() == cLevel->GetRightController()->GetUniqueID())))
 						{
-							collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
-							collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
+
 							collider->mVelocity = VRInputManager::GetInstance().GetController(eControllerType_Primary).GetVelocity();
+							collider->mAcceleration = collider->mVelocity / TimeManager::Instance()->GetDeltaTime();
+							collider->mForces = collider->mAcceleration * collider->mMass;
+							collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
 							collider->SetPos(VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPosition().Position);
 						}
 					}

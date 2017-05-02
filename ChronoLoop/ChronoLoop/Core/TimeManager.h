@@ -30,6 +30,7 @@ namespace Epoch {
 		float mDeltaTime = 0;
 		float mTotalGameTime = 0;
 		unsigned int mLevelTime = 0;
+		unsigned int mRewindGettingFaster = 1, mRewindShouldGetFaster = 0;
 		bool mRewindMakeClone = false;
 		bool mShouldUpdateInterpolators = false;
 		bool mShouldPulse = false;
