@@ -13,17 +13,17 @@ namespace Epoch {
 		matrix4 m1, m2, rot;
 		float angle = 0, mIncrease = 0;
 		unsigned int mRandDur = 0;
-		int mRandDown = 0, mRandUp = 0;
+		float mRandDown = 0.0f, mRandUp = 0.0f;
 		bool flip;
 		TimeManipulation * mManip;
 
 		virtual void Start() {
 			flip = true;
 			angle = rand() % 360;
-			mIncrease = (.001f) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((1) - (.001f))));
+			mIncrease = (.001f) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((1.0f) - (.001f))));
 			mRandDur = (rand() % 7) + 1;
-			mRandDown = (((rand() % 74) + 1) /100 )* -1;
-			mRandUp = ((rand() % 99) + 1 / 100);
+			mRandDown = (.2f) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((1.0f) - (.2f))));
+			mRandUp = (.5f) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((1.0f) - (.5f))));
 			float rad = DirectX::XM_PI / 2;
 			float pi = DirectX::XM_PI;
 			rot = (matrix4::CreateXRotation(angle) * matrix4::CreateYRotation(angle) * matrix4::CreateZRotation(angle));

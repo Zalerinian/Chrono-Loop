@@ -22,7 +22,7 @@ namespace Epoch {
 			angle = rand() % 360;
 			mIncrease = (0) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((1) - (0))));
 			mRandDur = (rand() % 30) + 1;
-			mRandDown = ((rand() % 5) + 1) * -1;
+			mRandDown = ((rand() % 5) + 1);
 			mRandUp = (rand() %5) + 1;
 			float rad = DirectX::XM_PI / 2;
 			float pi = DirectX::XM_PI;
