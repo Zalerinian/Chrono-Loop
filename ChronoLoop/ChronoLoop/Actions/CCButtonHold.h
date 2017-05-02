@@ -80,8 +80,6 @@ namespace Epoch
 				//SystemLogger::GetLog() << "Colliding" << std::endl;
 				//Interp stuff
 				ButtonCollider* butCol = (ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
-				if (butCol->mPushNormal * _other.mVelocity < .1f)
-					_col.mVelocity = vec3f(0, 0, 0);
 
 				if (!tempDoor) {
 					blockInterp->SetActive(true);

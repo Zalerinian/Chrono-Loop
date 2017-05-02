@@ -76,7 +76,7 @@ namespace Hourglass
 			if(!string.IsNullOrWhiteSpace(mMesh.Text))
 			{
 				((TexturedShape)mShape).Load(Settings.ProjectPath + ResourceManager.Instance.ResourceDirectory + mMesh.Text);
-				mShape.FillBuffers();
+				//mShape.FillBuffers();
 			}
 			ReleaseControl();
 		}

@@ -352,6 +352,7 @@ namespace Hourglass
 			}
 		}
 
+			static int count = 0;
 		protected void OnUpdateName(object sender, EventArgs e)
 		{
 			if (mOwner != null && mOwner.Node != null)
@@ -363,8 +364,10 @@ namespace Hourglass
 				}
 				else
 				{
+					count++;
 					mOwner.Node.NodeFont = ActiveFont;
 					mOwner.Node.Text = mName.Text;
+					mOwner.Node.Text = "Some other text";
 				}
 			}
 		}
@@ -409,6 +412,7 @@ namespace Hourglass
 		{
 			mNameIsPlaceholder = false;
 			Name = new string(r.ReadChars(r.ReadInt32()));
+			//r.ReadByte(); // Skip null terminator, because C# is weird.
 			Owner.Node.Text = Name;
 			mPosX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mPosY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));

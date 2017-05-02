@@ -54,12 +54,6 @@ namespace Hourglass
 			}
 		}
 
-		public bool Valid {
-			get {
-				return mVertexBuffer != null && mIndexBuffer != null;
-			}
-		}
-
 		public ShapeType Type {
 			get {
 				return mType;
@@ -84,23 +78,16 @@ namespace Hourglass
 				mWorld = value;
 			}
 		}
-
-		public IndexBuffer IndexBuffer {
-			get {
-				return mIndexBuffer;
-			}
-			set {
-				mIndexBuffer = value;
-			}
+		public abstract bool Valid {
+			get;
 		}
 
-		public VertexBuffer VertexBuffer {
-			get {
-				return mVertexBuffer;
-			}
-			set {
-				mVertexBuffer = value;
-			}
+		public abstract IndexBuffer IndexBuffer {
+			get;
+		}
+
+		public abstract VertexBuffer VertexBuffer {
+			get;
 		}
 
 		public int[] Indices {
