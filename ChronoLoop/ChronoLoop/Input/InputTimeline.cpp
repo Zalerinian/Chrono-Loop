@@ -63,7 +63,7 @@ namespace Epoch {
 				return;
 			}
 			
-			//if greatr than current but less then next
+			//if greatr than temp but less then next
 			if ((_data->mData.mLastFrame > temp->mData.mLastFrame || (_data->mData.mLastFrame == temp->mData.mLastFrame && _data->mData.mTime > temp->mData.mTime)) && temp->mNext &&
 				(_data->mData.mLastFrame <= temp->mNext->mData.mLastFrame || (_data->mData.mLastFrame == temp->mNext->mData.mLastFrame && _data->mData.mTime < temp->mNext->mData.mTime))) {
 				temp->mNext->mPrev = _data;
@@ -98,18 +98,6 @@ namespace Epoch {
 		}
 	}
 
-	void InputTimeline::SetCurr(InputNode * _set) {
-		if (_set) {
-			mCurrent = _set;
-		}
-	}
-
-	void InputTimeline::SetInsertStart(InputNode* _set)
-	{
-		if (_set) {
-			mCurrent = _set;
-		}
-	}
 
 	void InputTimeline::Clear() {
 		InputNode* temp = mHead;
