@@ -239,6 +239,7 @@ namespace Epoch
 	}
 	void TimeManipulation::MakeCloneBaseObjects(BaseObject * _headset, BaseObject * _controller1, BaseObject * _controller2)
 	{
+		mIsBeingMade = false;
 		Level* currentLevel = LevelManager::GetInstance().GetCurrentLevel();
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
 		SystemLogger::GetLog() << "[Debug] A clone is being made, please hold: " << mCloneCount << " | Is left: " << mControllerRole << std::endl;
