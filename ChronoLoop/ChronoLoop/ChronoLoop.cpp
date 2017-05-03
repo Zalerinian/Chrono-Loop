@@ -319,6 +319,38 @@ void Update() {
 	startEmit2->FIRE();
 	//////////////////////////////////////////////////////////////////////////////////////
 
+	//Level 3 door////////////////////////////////////////////////////////////////////////
+	Particle* lvl3 = &Particle::Init();
+	lvl3->SetPos(vec3f(0, 0, 0));
+	lvl3->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
+	lvl3->SetLife(500);
+	lvl3->SetSize(.35f, .15f);
+	ParticleEmitter* emitlvl3 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, -2.82f, 1));
+	emitlvl3->SetParticle(lvl3);
+	emitlvl3->SetTexture("../Resources/BasicRectP.png");
+	((TeleportEffect*)emitlvl3)->y1 = 8;
+	((TeleportEffect*)emitlvl3)->y2 = 12;
+	((TeleportEffect*)emitlvl3)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
+	((TeleportEffect*)emitlvl3)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+	ParticleSystem::Instance()->AddEmitter(emitlvl3);
+	emitlvl3->FIRE();
+
+	lvl3 = &Particle::Init();
+	lvl3->SetPos(vec3f(0, 0, 0));
+	lvl3->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
+	lvl3->SetLife(500);
+	lvl3->SetSize(.15f, .05f);
+	ParticleEmitter* emit2lvl3 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, -2.82f, 1));
+	emit2lvl3->SetTexture("../Resources/BasicCircleP.png");
+	emit2lvl3->SetParticle(lvl3);
+	((TeleportEffect*)emit2lvl3)->y1 = 1;
+	((TeleportEffect*)emit2lvl3)->y2 = 5;
+	((TeleportEffect*)emit2lvl3)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
+	((TeleportEffect*)emit2lvl3)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+	ParticleSystem::Instance()->AddEmitter(emit2lvl3);
+	emit2lvl3->FIRE();
+	//////////////////////////////////////////////////////////////////////////////////////
+
 	//Test Animate Quad///////////////////////////////////////////////////////////////////
 	//Transform OneBack;
 	//OneBack.SetMatrix(matrix4::CreateTranslation(0, 1, -3));

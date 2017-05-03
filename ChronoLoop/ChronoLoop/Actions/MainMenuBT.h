@@ -85,7 +85,7 @@ namespace Epoch
 			mObject->GetTransform().SetMatrix(mat);
 
 			if (!interp->GetActive()) {
-				if (mChamberMesh->GetTransform().GetPosition()->y < -9.9999f) {
+				if (mChamberMesh->GetTransform().GetPosition()->y < -9.99f) {
 
 					if (!((MeshComponent*)mTeleportBoard->GetComponentIndexed(eCOMPONENT_MESH, 0))->IsVisible()) {
 						((MeshComponent*)mTeleportBoard->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
