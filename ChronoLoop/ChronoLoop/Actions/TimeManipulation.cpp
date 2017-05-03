@@ -209,13 +209,12 @@ namespace Epoch
 			//toggle to have clone turn on or off
 			if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 4))//rewound time
 			{
-				if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck() == false)
-				{
-				mIsBeingMade = !mIsBeingMade;	
-				}
-
 				if(mCurCloneController1 && mCurCloneController2 && mCurCloneHeadset)
 				{
+					if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck() == false) {
+						mIsBeingMade = !mIsBeingMade;
+					}
+
 					if(mIsBeingMade)
 					{
 						if (Settings::GetInstance().GetInt("tutStep") == 5)

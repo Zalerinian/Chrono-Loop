@@ -88,6 +88,9 @@ namespace Epoch {
 								mPlayerInterp->SetEasingFunction(Easing::QuadInOut);
 								mPlayerInterp->SetActive(true);
 								mIsPlayer = true;
+
+								Settings::GetInstance().SetBool("CantPauseTime", true);
+								Settings::GetInstance().SetBool("CantTeleport", true);
 							}
 							else
 							{
@@ -121,8 +124,6 @@ namespace Epoch {
 							mStartStandInterp->SetEasingFunction(Easing::QuadInOut);
 							mStartStandInterp->SetActive(true);
 							mInterpDone = false;
-							Settings::GetInstance().SetBool("CantPauseTime", true);
-							Settings::GetInstance().SetBool("CantTeleport", true);
 						}
 					}
 
