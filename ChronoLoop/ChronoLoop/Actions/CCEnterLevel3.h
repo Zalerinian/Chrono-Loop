@@ -411,7 +411,7 @@ namespace Epoch {
 					SystemLogger::Debug() << "Loading complete" << std::endl;
 					Physics::Instance()->PhysicsLock.unlock();
 					Settings::GetInstance().SetBool("LevelIsLoading", false);
-					Settings::GetInstance().SetInt("CurrentLevel", 2);
+					Settings::GetInstance().SetInt("CurrentLevel", 3);
 				}
 			}
 		}
