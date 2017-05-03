@@ -135,6 +135,7 @@ namespace Epoch {
 		ePS_PURETEXTURE,
 		ePS_TRANSPARENT,
 		ePS_TRANSPARENT_SCANLINE,
+		ePS_BLUR,
 		ePS_MAX
 	};
 
@@ -142,6 +143,7 @@ namespace Epoch {
 		eVS_BASIC = 0,
 		eVS_TEXTURED,
 		eVS_NDC,
+		eVS_BLUR,
 		eVS_MAX
 	};
 
