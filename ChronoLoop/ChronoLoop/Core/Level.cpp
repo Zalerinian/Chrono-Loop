@@ -88,6 +88,15 @@ namespace Epoch {
 		return nullptr;
 	}
 
+	BaseObject * Level::FindObjectWithID(unsigned short _id) {
+		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
+			if ((*it)->GetUniqueID() == _id) {
+				return *it;
+			}
+		}
+		return nullptr;
+	}
+
 	std::vector<BaseObject*> Level::FindAllObjectsWithName(std::string _name) {
 		std::vector<BaseObject*> objects;
 		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {

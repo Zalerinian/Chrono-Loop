@@ -49,7 +49,7 @@ namespace Epoch {
 				matrix4 m = mObject->GetTransform().GetMatrix();
 				mPickUp->SetPos(m.Position);
 				if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == 1 && mHeld || (paused)) {
-					SystemLogger::GetLog() << "Id: " << mCollider->GetBaseObject()->GetUniqueId() << " Released object" << std::endl;
+					SystemLogger::GetLog() << "Id: " << mCollider->GetBaseObject()->GetUniqueID() << " Released object" << std::endl;
 					ReleaseObject();
 				}
 			} else if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == -1 && !mCollider->mHitting.empty() && ((!paused) || !Settings::GetInstance().GetBool("PauseMenuUp"))) {
@@ -73,8 +73,8 @@ namespace Epoch {
 				//If my mPickup is the same as the other code component, make it release theirs so new code component can pick it up
 				if (temp->mHeld == true && temp->mPickUp == mPickUp) {
 					//TODO PAT: Have a time out system for non player hands to where they cant pick up an object after a certain amount of time
-					if (temp->mObject->GetUniqueID() != LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueId() &&
-						temp->mObject->GetUniqueID() != LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueId())
+					if (temp->mObject->GetUniqueID() != LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueID() &&
+						temp->mObject->GetUniqueID() != LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueID())
 					{
 					temp->mIsGrabOnCooldown = true;
 					temp->mGrabTimestamp = TimeManager::Instance()->GetTotalGameTime();
@@ -148,8 +148,8 @@ namespace Epoch {
 			mPickUp->mVelocity = { 0,0,0 };
 			mPickUp->mAcceleration = { 0,0,0 };
 
-			if (mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueId()
-				|| mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueId()) {
+			if (mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueID()
+				|| mInput->mData.mControllerId == LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueID()) {
 				VRInputManager::GetInstance().GetController((mInput->mData.mPrimary) ? eControllerType_Primary : eControllerType_Secondary).TriggerHapticPulse(1000);
 			}
 		}

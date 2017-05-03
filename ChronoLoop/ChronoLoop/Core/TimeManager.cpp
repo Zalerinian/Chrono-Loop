@@ -92,8 +92,8 @@ namespace Epoch {
 					while (temp && temp->mNext && temp->mNext->mData.mLastFrame < mLevelTime) {
 						if (temp->mData.mLastFrame < temp->mNext->mData.mLastFrame || (temp->mData.mLastFrame == temp->mNext->mData.mLastFrame && (temp->mNext->mData.mTime < (mTimestamp / RecordingRate)))) {
 							for (unsigned int i = 0; i < mClones.size(); i++) {
-								if (mClones[i]->GetUniqueId() == temp->mNext->mData.mControllerId) {
-									if (DoesCloneExist(mClones[i]->GetUniqueId(), mLevelTime)) {
+								if (mClones[i]->GetUniqueID() == temp->mNext->mData.mControllerId) {
+									if (DoesCloneExist(mClones[i]->GetUniqueID(), mLevelTime)) {
 										SystemLogger::GetLog() << "Clone:" << "id " << temp->mData.mControllerId << " " << temp->mNext->mData.mButton << ':' << temp->mNext->mData.mButtonState << std::endl;
 									} else {
 										SystemLogger::GetLog() << "Found false" << std::endl;
@@ -238,7 +238,7 @@ namespace Epoch {
 		bool del = false;
 		for (int i = 0; i < mClones.size(); ) {
 			del = false;
-			if (mClones[i]->GetUniqueId() == _id1 || mClones[i]->GetUniqueId() == pair.mOther1 || mClones[i]->GetUniqueId() == pair.mOther2) {
+			if (mClones[i]->GetUniqueID() == _id1 || mClones[i]->GetUniqueID() == pair.mOther1 || mClones[i]->GetUniqueID() == pair.mOther2) {
 
 				if (mClones[i]->GetUniqueID() == pair.mCur && _useParticleEffect) {
 					Particle * p = &Particle::Init();
@@ -266,10 +266,10 @@ namespace Epoch {
 					}
 				}
 				//This doesnt delete the input left of the clone. We may not want to do that to minimize delete calls
-				std::unordered_map<unsigned short, unsigned int>::iterator textureIterator = mCloneTextures.find(mClones[i]->GetUniqueId());
+				std::unordered_map<unsigned short, unsigned int>::iterator textureIterator = mCloneTextures.find(mClones[i]->GetUniqueID());
 				if (textureIterator != mCloneTextures.end()) {
 					mCloneTextureBitset[textureIterator->second] = false;
-					mCloneTextures.erase(mClones[i]->GetUniqueId());
+					mCloneTextures.erase(mClones[i]->GetUniqueID());
 				}
 
 				//Find the clone interpolator and delete it
@@ -301,7 +301,7 @@ namespace Epoch {
 
 				SystemLogger::GetLog() << "Clone id:" << mClones[i]->GetUniqueID() << " has been deleted" << std::endl;
 				//Remove it from being tracked by timeline
-				mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueId());
+				mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueID());
 				LevelManager::GetInstance().GetCurrentLevel()->RemoveObject(mClones[i]);
 				Pool::Instance()->iAddObject(mClones[i]);
 				mClones.erase(mClones.begin() + i);
@@ -492,7 +492,7 @@ namespace Epoch {
 				if (temp->mCurCloneHeadset && temp->mCurCloneController1 && temp->mCurCloneController2) {
 					mTimeline->MoveAllComponentsToSnapExceptPlayer(mtempCurSnapFrame, temp->mCurCloneHeadset->GetUniqueID(), temp->mCurCloneController1->GetUniqueID(), temp->mCurCloneController2->GetUniqueID());
 				} else if (tempLevel->GetHeadset() && tempLevel->GetLeftController() && tempLevel->GetRightController()) {
-					mTimeline->MoveAllComponentsToSnapExceptPlayer(mtempCurSnapFrame, tempLevel->GetHeadset()->GetUniqueId(), tempLevel->GetRightController()->GetUniqueId(), tempLevel->GetLeftController()->GetUniqueId());
+					mTimeline->MoveAllComponentsToSnapExceptPlayer(mtempCurSnapFrame, tempLevel->GetHeadset()->GetUniqueID(), tempLevel->GetRightController()->GetUniqueID(), tempLevel->GetLeftController()->GetUniqueID());
 				}
 			}
 			return;
@@ -566,10 +566,10 @@ namespace Epoch {
 			}
 
 			//Remove it from being tracked by timeline
-			mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueId());
+			mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueID());
 
 			Pool::Instance()->iRemoveObject(mClones[i]->GetUniqueID());
-			mCloneTextures.erase(mClones[i]->GetUniqueId());
+			mCloneTextures.erase(mClones[i]->GetUniqueID());
 		}
 		ClearClones();
 		ActivateAllTexturesToBitset();
