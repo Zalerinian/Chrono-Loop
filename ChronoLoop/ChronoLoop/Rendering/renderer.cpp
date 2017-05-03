@@ -135,72 +135,47 @@ namespace Epoch {
 		}
 	}
 
-	void Renderer::SetupBlurRTVs(BlurPingPong _pingpong, bool _setSRVs) {
-		ID3D11ShaderResourceView *srvs[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
-		ID3D11RenderTargetView *rtvs[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
-		unsigned int offset = _pingpong == BlurPingPong_Pong ? D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT : 0;
-		unsigned int srvOff = offset == 0 ? D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT : 0;
-		for (unsigned int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i) {
-			rtvs[i] = mBlurRTVs[i + offset].Get();
-			srvs[i] = mBlurSRVs[i + srvOff].Get();
-		}
-		if (_setSRVs) {
-			ID3D11ShaderResourceView *none[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
-			for (unsigned int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i) {
-				none[i] = nullptr;
-			}
-			mContext->PSSetShaderResources(0, D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, none);
-		}
-		mContext->OMSetRenderTargets(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, rtvs, nullptr);
-		if (_setSRVs) {
-			mContext->PSSetShaderResources(0, D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, srvs);
-		}
-	}
-
-	void Renderer::SetupBlurRTVs(unsigned int _count, ID3D11ShaderResourceView **_srvs, ID3D11RenderTargetView **_rtvs) {
-		ID3D11RenderTargetView *NullTargets = nullptr;
-		mContext->OMSetRenderTargets(1, &NullTargets, nullptr); // Clear render targets so they're not bound as output
-		mContext->PSSetShaderResources(0, _count, _srvs);
-		mContext->OMSetRenderTargets(_count, _rtvs, nullptr);
-	}
-
-	void Renderer::SetupBlurResources(ID3D11Buffer ** _blurBuffer, vec4i & _blurData, unsigned int _kernelSize, unsigned int _viewWidth, unsigned int _viewHeight,
-									  unsigned int _count, ID3D11Texture2D **_textures, ID3D11ShaderResourceView ***_srvs, ID3D11RenderTargetView ***_rtvs) {
-		mBlurViewport.TopLeftX = 0;
-		mBlurViewport.TopLeftY = 0;
-		mBlurViewport.Width = _viewWidth;
-		mBlurViewport.Height = _viewHeight;
-		mBlurViewport.MinDepth = 0;
-		mBlurViewport.MaxDepth = 1;
-
-		CD3D11_BUFFER_DESC blurDesc(sizeof(vec4i), D3D11_BIND_CONSTANT_BUFFER);
-		mDevice->CreateBuffer(&blurDesc, nullptr, _blurBuffer);
-		_blurData.x = 0; // Blur Stage
-		_blurData.y = _kernelSize; // KernelWidth
-		_blurData.z = _kernelSize; // KernelHeight
-		mContext->UpdateSubresource(*_blurBuffer, 0, nullptr, &_blurData, 0, 0);
-		mContext->PSSetConstantBuffers(ePB_REGISTER1 + ePB_OFFSET, 1, _blurBuffer);
-
-		//mContext->RSSetViewports(1, &mBlurViewport);
-
-		ShaderManager::Instance()->ApplyPShader(ePS_BLUR);
-		ShaderManager::Instance()->ApplyVShader(eVS_BLUR);
-
-		(*_srvs) = new ID3D11ShaderResourceView*[_count];
-		(*_rtvs) = new ID3D11RenderTargetView*[_count];
-		for (unsigned int i = 0; i < _count; ++i) {
-			ThrowIfFailed(mDevice->CreateShaderResourceView(_textures[i], nullptr, _srvs[i]));
-			ThrowIfFailed(mDevice->CreateRenderTargetView(_textures[i], nullptr, _rtvs[i]));
-		}
-		ID3D11RenderTargetView *none = nullptr;
-		mContext->OMSetRenderTargets(1, &none, nullptr);
-		mContext->PSSetShaderResources(0, _count, *_srvs);
-	}
-
-	void Renderer::RenderBlurStage(ID3D11Buffer *_blurBuffer, vec4i & _blurData, BlurStage _stage) {
-		_blurData.x = _stage;
-		mContext->UpdateSubresource(_blurBuffer, 0, nullptr, &_blurData, 0, 0);
+	void Renderer::RenderBlurStage(BlurStage _s) {
+		mBlurData.stage = _s;
+		mContext->UpdateSubresource(mBlurStageBuffer.Get(), 0, nullptr, &mBlurData, 0, 0);
 		mScenePPQuad->Render(1);
+	}
+
+	void Renderer::ToggleBlurTextureSet(unsigned int _texturesPerSet, ID3D11RenderTargetView ** _rtvs, ID3D11ShaderResourceView ** _srvs) {
+		ID3D11RenderTargetView *noRTV = nullptr;
+		mContext->OMSetRenderTargets(1, &noRTV, nullptr); // Clear render targets so they're no longer bound to the pipeline.
+		ID3D11ShaderResourceView **noSRV = new ID3D11ShaderResourceView*[_texturesPerSet];
+		memset(noSRV, 0, sizeof(int*) * _texturesPerSet);
+		mContext->PSSetShaderResources(0, _texturesPerSet, noSRV); // Unbind shader resource views from the pipeline.
+
+		if (mBlurTextureSet == BlurTextureSet_Ping) {
+			mBlurTextureSet = BlurTextureSet_Pong;
+			mContext->OMSetRenderTargets(_texturesPerSet, _rtvs + _texturesPerSet, nullptr); // Render to the Pong set
+			mContext->PSSetShaderResources(0, _texturesPerSet, _srvs); // Sample from the Ping set
+		} else {
+			mBlurTextureSet = BlurTextureSet_Ping;
+			mContext->OMSetRenderTargets(_texturesPerSet, _rtvs, nullptr); // Render to the Ping set
+			mContext->PSSetShaderResources(0, _texturesPerSet, _srvs + _texturesPerSet); // Sameple from the Pong set
+		}
+		delete[] noSRV;
+	}
+
+	void Renderer::SetBlurTexturesDrawback(unsigned int _texturesPerSet, ID3D11RenderTargetView ** _drawbacks, ID3D11ShaderResourceView ** _srvs) {
+		ID3D11RenderTargetView *noRTV = nullptr;
+		mContext->OMSetRenderTargets(1, &noRTV, nullptr); // Clear render targets so they're no longer bound to the pipeline.
+		ID3D11ShaderResourceView **noSRV = new ID3D11ShaderResourceView*[_texturesPerSet];
+		memset(noSRV, 0, sizeof(int*) * _texturesPerSet);
+		mContext->PSSetShaderResources(0, _texturesPerSet, noSRV); // Unbind shader resource views from the pipeline.
+		mContext->OMSetRenderTargets(_texturesPerSet, _drawbacks, nullptr); // Render to the RTVs created for the textures we're blurring.
+
+		if (mBlurTextureSet == BlurTextureSet_Ping) {
+			mBlurTextureSet = BlurTextureSet_Pong;
+			mContext->PSSetShaderResources(0, _texturesPerSet, _srvs); // Sample from the Ping set
+		} else {
+			mBlurTextureSet = BlurTextureSet_Ping;
+			mContext->PSSetShaderResources(0, _texturesPerSet, _srvs + _texturesPerSet); // Sameple from the Pong set
+		}
+		delete[] noSRV;
 	}
 
 	void Renderer::InitializeD3DDevice() {
@@ -432,6 +407,10 @@ namespace Epoch {
 		mLData[2]->Position = vec3f(3, 4, 0);
 		mLData[2]->ConeRatio = .5;
 
+
+		// Blur data buffer
+		CD3D11_BUFFER_DESC blurBuffer(sizeof(BlurData), D3D11_BIND_CONSTANT_BUFFER);
+		mDevice->CreateBuffer(&blurBuffer, nullptr, mBlurStageBuffer.GetAddressOf());
 	}
 
 	void Renderer::InitializeSamplerState() {
@@ -874,7 +853,7 @@ namespace Epoch {
 
 	void Renderer::RenderScreenQuad()
 	{
-		BlurTextures(mSceneTexture.GetAddressOf(), 1, 640, 480, 3);
+		BlurTextures(mSceneTexture.GetAddressOf(), 1, 1.0f, 0);
 
 		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
 		mContext->OMSetRenderTargets(1, mMainView.GetAddressOf(), mDSView.Get());
@@ -1016,7 +995,6 @@ namespace Epoch {
 		InitializeObjectNames();
 #endif
 		InitializeSamplerState();
-		SetBlurTextureMaxSize(2048, 2048);
 		SetStaticBuffers();
 		// TODO Eventually: Give each shape a topology enum, perhaps?
 		mContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -1043,111 +1021,84 @@ namespace Epoch {
 		mTransparentSet.ClearSet();
 	}
 
-	void Renderer::SetBlurTextureMaxSize(unsigned int _width, unsigned int _height) {
-		unsigned int targetCount = sizeof(mBlurTextures) / sizeof(mBlurTextures[0]);
-		D3D11_TEXTURE2D_DESC desc;
-		memset(&desc, 0, sizeof(desc));
-		desc.Width = _width;
-		desc.Height = _height;
-		desc.MipLevels = 1;
-		desc.ArraySize = 1;
-		desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-		desc.SampleDesc.Count = 1;
-		desc.SampleDesc.Quality = 0;
-		desc.Usage = D3D11_USAGE_DEFAULT;
-		desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-		desc.CPUAccessFlags = 0;
-		desc.MiscFlags = 0;
-
-		for (unsigned int i = 0; i < targetCount; ++i) {
-			// Clear the ComPtr's reference, if there is one.
-			mBlurTextures[i] = nullptr;
-			mBlurRTVs[i] = nullptr;
-
-			mDevice->CreateTexture2D(&desc, nullptr, mBlurTextures[i].GetAddressOf());
-			mDevice->CreateRenderTargetView(mBlurTextures[i].Get(), nullptr, mBlurRTVs[i].GetAddressOf());
-			mDevice->CreateShaderResourceView(mBlurTextures[i].Get(), nullptr, mBlurSRVs[i].GetAddressOf());
-		}
-	}
-
-	bool Renderer::BlurTextures(ID3D11Texture2D **_textures, unsigned int _numTextures, unsigned int _sampleWidth, unsigned int _sampleHeight, unsigned int _kernelSize) {
-		if (mBlurTextures[0].Get() == nullptr || _numTextures < 1) {
+	bool Renderer::BlurTextures(ID3D11Texture2D **_textures, unsigned int _numTextures, float _downsample, unsigned int _kernelSize) {
+		if (_numTextures < 1) {
 			return false;
 		}
 
 		D3D11_TEXTURE2D_DESC texDesc, downDesc;
-		_textures[0]->GetDesc(&texDesc);
-		downDesc = texDesc;
-		downDesc.Width = _sampleWidth;
-		downDesc.Height = _sampleHeight;
+		ID3D11Texture2D **downTex = new ID3D11Texture2D*[_numTextures * 2];
+		ID3D11ShaderResourceView **downSRV = new ID3D11ShaderResourceView*[_numTextures * 2];
+		ID3D11ShaderResourceView **upSRV = new ID3D11ShaderResourceView*[_numTextures * 2];
+		ID3D11RenderTargetView **downRTV = new ID3D11RenderTargetView*[_numTextures * 2];
+		ID3D11RenderTargetView **upRTV = new ID3D11RenderTargetView*[_numTextures * 2];
+		for (unsigned int i = 0; i < _numTextures; ++i) {
+			_textures[i]->GetDesc(&texDesc);
+			for (unsigned int j = 0; j < 2; ++j) {
+				downDesc = texDesc;
+				downDesc.Width = texDesc.Width * _downsample;
+				downDesc.Height = texDesc.Height * _downsample;
 
-		vec4i blurData;
-		ID3D11Buffer *blurBuffer;
+				mDevice->CreateTexture2D(&downDesc, nullptr, &downTex[i + _numTextures * j]);
+				mDevice->CreateRenderTargetView(downTex[i + _numTextures * j], nullptr, &downRTV[i + _numTextures * j]);
+				mDevice->CreateShaderResourceView(downTex[i + _numTextures * j], nullptr, &downSRV[i + _numTextures * j]);
+			}
 
-		ID3D11Texture2D *downTex = nullptr;
-		ID3D11ShaderResourceView *downSRV = nullptr;
-		ID3D11RenderTargetView *downRTV = nullptr;
-		mDevice->CreateTexture2D(&downDesc, nullptr, &downTex);
-		mDevice->CreateRenderTargetView(downTex, nullptr, &downRTV);
-		mDevice->CreateShaderResourceView(downTex, nullptr, &downSRV);
+				// SRVs and RTVs for the original textures.
+				mDevice->CreateRenderTargetView(_textures[i], nullptr, &upRTV[i]);
+				mDevice->CreateShaderResourceView(_textures[i], nullptr, &upSRV[i]);
+				upRTV[i + _numTextures] = upRTV[i];
+				upSRV[i + _numTextures] = upSRV[i];
+		}
+
+		// Prepare the pipeline
 		mContext->RSSetViewports(1, &mFullViewport);
+		ShaderManager::Instance()->ApplyPShader(ePS_BLUR);
+		ShaderManager::Instance()->ApplyVShader(eVS_BLUR);
+		mContext->PSSetConstantBuffers(ePB_REGISTER1 + ePB_OFFSET, 1, mBlurStageBuffer.GetAddressOf());
+		mBlurData.kernelHeight = _kernelSize;
+		mBlurData.kernelWidth = _kernelSize;
+
 
 		for (unsigned int pass = 0; pass < _numTextures; pass += D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT) {
 			unsigned int passTextureCount = min(_numTextures - pass, D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
 
-			ID3D11ShaderResourceView ***srvs = new ID3D11ShaderResourceView**;
-			ID3D11RenderTargetView ***rtvs = new ID3D11RenderTargetView**;
-			SetupBlurResources(&blurBuffer, blurData, _kernelSize, _sampleWidth, _sampleHeight, passTextureCount, _textures + pass, srvs, rtvs);
-
-			D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-			(*srvs)[0]->GetDesc(&srvDesc);
-
-			SetupBlurRTVs(BlurPingPong_Ping, false);
-			mContext->OMSetRenderTargets(1, &downRTV, nullptr);
 			// Downsample
-			RenderBlurStage(blurBuffer, blurData, BLUR_STAGE_SAMPLE);
-            //
+			ToggleBlurTextureSet(passTextureCount, downRTV, upSRV); // ping
+			RenderBlurStage(BLUR_STAGE_SAMPLE);
+
 			//// horz blur
-			SetupBlurRTVs(BlurPingPong_Pong, true);
-			mContext->PSSetShaderResources(0, 1, &downSRV);
-			RenderBlurStage(blurBuffer, blurData, BLUR_STAGE_HORZ);
+			ToggleBlurTextureSet(passTextureCount, downRTV, downSRV); // pong
+			RenderBlurStage(BLUR_STAGE_HORZ);
 
 			//vert blur
-			SetupBlurRTVs(BlurPingPong_Ping, true);
-			//mBlurViewport.Width = texDesc.Width;
-			//mBlurViewport.Height = texDesc.Height * 4;
-			//mContext->RSSetViewports(1, &mBlurViewport);
-			ID3D11ShaderResourceView *blurSRVs[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
-			for (unsigned int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i) {
-				blurSRVs[i] = mBlurSRVs[i].Get();
-			}
-			//SetupBlurRTVs(passTextureCount, blurSRVs, *rtvs);
-			RenderBlurStage(blurBuffer, blurData, BLUR_STAGE_VERT);
+			ToggleBlurTextureSet(passTextureCount, downRTV, downSRV); // ping
+			RenderBlurStage(BLUR_STAGE_VERT);
 
-
-            //
 			//// upsample
-			SetupBlurRTVs(passTextureCount, blurSRVs, *rtvs);
-			//mContext->OMSetRenderTargets(1, &downRTV, nullptr);
-			RenderBlurStage(blurBuffer, blurData, BLUR_STAGE_SAMPLE);
-
-			for (unsigned int srvIndex = 0; srvIndex < passTextureCount; ++srvIndex) {
-				(*srvs)[srvIndex]->Release();
-				(*rtvs)[srvIndex]->Release();
-			}
-
+			ToggleBlurTextureSet(passTextureCount, upRTV, downSRV); // pong
+			RenderBlurStage(BLUR_STAGE_SAMPLE);
 		}
 
-		downRTV->Release();
-		downSRV->Release();
-		downTex->Release();
+		for (unsigned int i = 0; i < _numTextures; ++i) {
+			for (unsigned int j = 0; j < 2; ++j) {
+				downTex[i + _numTextures * j]->Release();
+				downSRV[i + _numTextures * j]->Release();
+				downRTV[i + _numTextures * j]->Release();
+			}
+
+			upSRV[i]->Release();
+			upRTV[i]->Release();
+		}
+		delete[] downTex;
+		delete[] downSRV;
+		delete[] downRTV;
+		delete[] upSRV;
+		delete[] upRTV;
 
 		AttachPrimaryViewports();
 		AttachPrimaryRTVs();
 		mCurrentContext.Apply(); // Reapply the current pipeline
-
-		blurBuffer->Release();
-
 		return true;
 	}
 

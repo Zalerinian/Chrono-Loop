@@ -35,12 +35,6 @@ void CalculatePascalRow(uint KernelSize, out uint elementCount, out float weight
 
 float4 main(PSI input) : SV_TARGET {
 	float4 color = float4(0.647f, 0.239f, 0.0509f, 1);
-	float asdfX = 0, asdfY = 0;
-	tDiffuse.GetDimensions(asdfX, asdfY);
-	float tX = asdfX * input.texCoord.x, tY = asdfY * input.texCoord.y;
-	//return tDiffuse.Load(int3(asdfX * input.texCoord.x, asdfY * input.texCoord.y, 0));
-
-	//return tDiffuse.Sample(sFilter, input.texCoord.xy, 0);
 
 	// Sample stage - Just shrink/grow the texture based on the size of the quad. Nothing fancy here.
 	if (stage == 0) {
@@ -57,8 +51,8 @@ float4 main(PSI input) : SV_TARGET {
 		color = tDiffuse.Sample(sFilter, input.texCoord.xy) * 0;
 		// This loop cannot be unrolled because it is based on a constant buffer value, not a compile-time constant.
 		for (uint x = 1; x < count; ++x) {
-			color += tDiffuse.Sample(sFilter, input.texCoord.xy + float2(float(x) / tWidth, 0)) * (1.0f / float(kernelWidth));
-			color += tDiffuse.Sample(sFilter, input.texCoord.xy - float2(float(x) / tWidth, 0)) * (1.0f / float(kernelWidth));
+			color += tDiffuse.Sample(sFilter, input.texCoord.xy + float2(float(x) / tWidth, 0)) * (1.0f / float(kernelWidth) / 2);
+			color += tDiffuse.Sample(sFilter, input.texCoord.xy - float2(float(x) / tWidth, 0)) * (1.0f / float(kernelWidth) / 2);
 		}
 	} else if (stage == 2) {
 		// Vertical blur stage.
@@ -72,8 +66,8 @@ float4 main(PSI input) : SV_TARGET {
 		color = tDiffuse.Sample(sFilter, input.texCoord.xy) * 0;
 		// This loop cannot be unrolled because it is based on a constant buffer value, not a compile-time constant.
 		for (uint y = 1; y < count; ++y) {
-			color += tDiffuse.Sample(sFilter, input.texCoord.xy + float2(0, float(y) / tHeight)) * (1.0f / float(kernelHeight));
-			color += tDiffuse.Sample(sFilter, input.texCoord.xy - float2(0, float(y) / tHeight)) * (1.0f / float(kernelHeight));
+			color += tDiffuse.Sample(sFilter, input.texCoord.xy + float2(0, float(y) / tHeight)) * (1.0f / float(kernelHeight) / 2);
+			color += tDiffuse.Sample(sFilter, input.texCoord.xy - float2(0, float(y) / tHeight)) * (1.0f / float(kernelHeight) / 2);
 		}
 	} else {
 		color = float4(1, 0, 0, 1);

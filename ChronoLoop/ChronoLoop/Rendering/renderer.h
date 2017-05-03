@@ -71,16 +71,29 @@ namespace Epoch {
 			BLUR_STAGE_HORZ,
 			BLUR_STAGE_VERT
 		};
-		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mBlurRTVs[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT * 2];
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mBlurSRVs[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT * 2];
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> mBlurTextures[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT * 2];
-		D3D11_VIEWPORT mBlurViewport;
-		void SetupBlurRTVs(BlurPingPong _pingpong, bool _setSRVs);
-		void SetupBlurRTVs(unsigned int _count, ID3D11ShaderResourceView **_srvs, ID3D11RenderTargetView **_rtvs);
-		void SetupBlurResources(ID3D11Buffer **_blurBuffer, vec4i &_blurData, unsigned int _kernelSize, unsigned int _viewWidth, unsigned int _viewHeight,
-								unsigned int _count, ID3D11Texture2D **_textures, ID3D11ShaderResourceView ***_srvs, ID3D11RenderTargetView ***_rtvs);
-		void RenderBlurStage(ID3D11Buffer *_blurBuffer, vec4i &_blurData, BlurStage _stage);
-		
+		struct BlurData {
+			union {
+				struct {
+					unsigned int stage;
+					unsigned int kernelWidth;
+					unsigned int kernelHeight;
+				};
+				vec4i padding;
+			};
+			BlurData() {
+				stage = 0;
+				kernelWidth = 9;
+				kernelHeight = 9;
+			}
+		} mBlurData;
+		enum BlurTextureSet {
+			BlurTextureSet_Ping = 0,
+			BlurTextureSet_Pong
+		} mBlurTextureSet = BlurTextureSet_Pong; // Default to pong so that the first call to toggle sets it to render to the Ping set.
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mBlurStageBuffer;
+		void RenderBlurStage(BlurStage _s);
+		void ToggleBlurTextureSet(unsigned int _texturesPerSet, ID3D11RenderTargetView **_rtvs, ID3D11ShaderResourceView **_srvs);
+		void SetBlurTexturesDrawback(unsigned int _texturesPerSet, ID3D11RenderTargetView **_drawbacks, ID3D11ShaderResourceView **_srvs);
 
 		RenderShape* mScenePPQuad = nullptr, *mSceneScreenQuad = nullptr;
 		RenderContext mCurrentContext;
@@ -157,8 +170,7 @@ namespace Epoch {
 
 		void ClearRenderSet();
 
-		void SetBlurTextureMaxSize(unsigned int _width, unsigned int _height);
-		bool BlurTextures(ID3D11Texture2D **_textures, unsigned int _numTextures, unsigned int _sampleWidth, unsigned int _sampleHeight, unsigned int _kernelSize = 9);
+		bool BlurTextures(ID3D11Texture2D **_textures, unsigned int _numTextures, float _downsample = 0.5f, unsigned int _kernelSize = 9);
 
 		inline Microsoft::WRL::ComPtr<ID3D11Device>& GetDevice() { return mDevice; }
 		inline Microsoft::WRL::ComPtr<ID3D11DeviceContext>& GetContext() { return mContext; }
