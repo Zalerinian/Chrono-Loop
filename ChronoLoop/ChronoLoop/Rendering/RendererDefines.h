@@ -151,6 +151,7 @@ namespace Epoch {
 		eGS_PosNormTex = 0,
 		eGS_PosNormTex_NDC,
 		eGS_PosNormTex_AnimQuad,
+		eGS_None,
 		eGS_MAX
 	};
 

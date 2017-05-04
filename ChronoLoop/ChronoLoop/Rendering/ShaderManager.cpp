@@ -137,6 +137,8 @@ namespace Epoch {
 
 
 		// Create geometry shaders
+		mGeoShaders[eGS_None] = nullptr;
+
 		ID3D11GeometryShader *gs;
 		if (!FileIO::LoadBytes("GSDuplicateMesh.cso", &buffer, byteSize)) {
 			SystemLogger::Error() << "An error has occurred when trying to read GSDuplucateMesh.cso. Chances are the file is missing or has been renamed. The shader will be null, and may result in a crash." << std::endl;

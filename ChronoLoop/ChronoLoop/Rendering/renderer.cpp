@@ -587,8 +587,8 @@ namespace Epoch {
 		UpdateCamera(2, 2, _delta);
 		UpdateGSBuffers();
 		UpdateLBuffers();
-		ProcessRenderSet();
 		ParticleSystem::Instance()->Render();
+		ProcessRenderSet();
 		RenderScreenQuad();
 
 		CommandConsole::Instance().SetVRBool(false);
@@ -977,6 +977,7 @@ namespace Epoch {
 		// Prepare the pipeline
 		ShaderManager::Instance()->ApplyPShader(ePS_BLUR);
 		ShaderManager::Instance()->ApplyVShader(eVS_BLUR);
+		ShaderManager::Instance()->ApplyGShader(eGS_None);
 		mContext->PSSetConstantBuffers(ePB_REGISTER1 + ePB_OFFSET, 1, mBlurStageBuffer.GetAddressOf());
 		mBlurData.sigma = _sigma;
 
