@@ -204,7 +204,7 @@ namespace Epoch {
 					mPrevBoards = mCurrentBoards;
 					mCurrentBoards.clear();
 					mCurrentBoards.push_back(3);
-					pb->GetProgressBar()->GetTransform().SetMatrix(pb->GetProgressBar()->GetTransform().GetMatrix() * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.14159f) * matrix4::CreateTranslation(3.71f, 1.46f, 3));
+					pb->GetBackground()->GetTransform().SetMatrix(pb->GetBackground()->GetTransform().GetMatrix() * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.14159f) * matrix4::CreateTranslation(3.71f, 1.46f, 3));
 					pb->OnEnable();
 					break;
 				case 6:
