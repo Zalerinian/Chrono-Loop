@@ -176,7 +176,7 @@ namespace Epoch {
 				Settings::GetInstance().SetInt("tutStep", Settings::GetInstance().GetInt("tutStep") + 1);
 
 			
-			int tut = Settings::GetInstance().GetInt("tutStep");
+			int tut = 4;// Settings::GetInstance().GetInt("tutStep");
 			if (tut != currentTut) {
 				currentTut = tut;
 				switch (tut) {
@@ -204,7 +204,7 @@ namespace Epoch {
 					mPrevBoards = mCurrentBoards;
 					mCurrentBoards.clear();
 					mCurrentBoards.push_back(3);
-					pb->GetProgressBar()->GetTransform().SetMatrix(pb->GetProgressBar()->GetTransform().GetMatrix() * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.14159f) * matrix4::CreateTranslation(3.71f, 1.46f, 3));
+					pb->GetBackground()->GetTransform().SetMatrix(pb->GetProgressBar()->GetTransform().GetMatrix() * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.14159f) * matrix4::CreateTranslation(3.71f, 1.46f, 3));
 					pb->OnEnable();
 					break;
 				case 6:

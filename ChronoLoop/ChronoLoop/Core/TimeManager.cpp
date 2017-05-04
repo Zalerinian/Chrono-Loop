@@ -491,48 +491,6 @@ namespace Epoch {
 
 			//I Take no credit in this func for it is Ryan Bronk's from Nth Dimensional
 		}
-		void TimeManager::BrowseTimeline(int _gesture, int _frameRewind) {
-			bool UpdateComponents = false;
-			
-			if (mShouldUpdateInterpolators) {
-				for (auto it : mObjectRewindInterpolators)
-				{
-					bool complete = it.second->Update(GetDeltaTime());
-					if (complete) {
-						mShouldUpdateInterpolators = false;
-						UpdateComponents = true;
-					}
-				}
-				if(UpdateComponents == true)
-				{
-					TimeManipulation* temp = LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator();
-					Level* tempLevel = LevelManager::GetInstance().GetCurrentLevel();
-					if(temp->mCurCloneHeadset && temp->mCurCloneController1 && temp->mCurCloneController2)
-					{
-						mTimeline->MoveAllComponentsToSnapExceptPlayer(mtempCurSnapFrame, temp->mCurCloneHeadset->GetUniqueID(), temp->mCurCloneController1->GetUniqueID(), temp->mCurCloneController2->GetUniqueID());	
-					}
-					else if(tempLevel->GetHeadset() && tempLevel->GetLeftController() && tempLevel->GetRightController())
-					{
-						mTimeline->MoveAllComponentsToSnapExceptPlayer(mtempCurSnapFrame, tempLevel->GetHeadset()->GetUniqueId(), tempLevel->GetRightController()->GetUniqueId(), tempLevel->GetLeftController()->GetUniqueId());
-					}
-				}
-				return;
-			}
-
-			unsigned int temp = instanceTimemanager->GetCurrentSnapFrame();
-			
-			if (_gesture == 0) {
-				return;
-			}
-			if (_gesture == 1)
-				_frameRewind *= -1;
-			else if (_gesture == 2) {
-
-				/*LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck();
-				LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->RaycastCloneCheck();*/
-				return;
-			}
-
 			if ((mtempCurSnapFrame != 0 && _gesture == -1) || (mtempCurSnapFrame != temp && _gesture == 1)) {
 				int placeHolder = mtempCurSnapFrame;
 				if (mtempCurSnapFrame - (_frameRewind * mRewindGettingFaster) > 0 && (mtempCurSnapFrame - (_frameRewind * mRewindGettingFaster) < temp))
@@ -560,11 +518,9 @@ namespace Epoch {
 							Settings::GetInstance().SetInt("tutStep", 5);//Create Clone
 					}
 				}
-			}
-			else {
+			} else {
 				mShouldPulse = false;
 			}
-		}
 		void TimeManager::MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC) {
 			mTimeline->MoveAllObjectsToSnapExceptPlayer(_snaptime, _headset, _leftC, _rightC);
 		}
