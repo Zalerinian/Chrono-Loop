@@ -1309,7 +1309,7 @@ namespace Epoch {
 								codeCom = new UICreateToDeleteClone();
 							if (path == "UIRewind.h")
 								codeCom = new UIRewind();
-							if (path == "CCLevel1TutorialButton")
+							if (path == "CCLevel1TutorialButton.h")
 								codeCom = new CCLevel1TutorialButton();
 
 							if (codeCom)

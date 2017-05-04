@@ -19,7 +19,7 @@ namespace Epoch
 		float scaleUpX, scaleUpY, scaleDownX, scaleDownY;
 		float tempScaleX, tempScaleY;
 		bool scalingDone, boardchange = false;
-		int currentTut = -1, timeToRewind = 0;
+		int currentTut = -1, timeToRewind = 0, tStart = 0, tEnd = 0;
 		PSAnimatedMultiscan_Data mScanlineData;
 		CCProgressBar* pb;
 
@@ -193,6 +193,13 @@ namespace Epoch
 					mCurrentBoards.clear();
 					mCurrentBoards.push_back(2);
 					mCurrentBoards.push_back(6);
+					tStart = Settings::GetInstance().GetInt("tut1ButtonPress");
+					tEnd = Settings::GetInstance().GetInt("tut1ChamberClose");
+					timeToRewind = Settings::GetInstance().GetInt("tut1ChamberClose") - Settings::GetInstance().GetInt("tut1ButtonPress");
+					Settings::GetInstance().SetFloat("TutorialRewind - FinalProgress", timeToRewind);
+					pb->SetFinalProgress(timeToRewind);
+					pb->GetBackground()->GetTransform().SetMatrix(pb->GetProgressBar()->GetTransform().GetMatrix() * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.68f, 1.46f, -2.83f));
+					pb->OnEnable();
 					break;
 				case 3:
 					boardchange = true;
@@ -201,11 +208,7 @@ namespace Epoch
 					mCurrentBoards.clear();
 					mCurrentBoards.push_back(3);
 					mCurrentBoards.push_back(6);
-					timeToRewind = Settings::GetInstance().GetInt("tut1ChamberClose") - Settings::GetInstance().GetInt("tut1ButtonPress");
-					Settings::GetInstance().SetFloat("TutorialRewind - FinalProgress", timeToRewind);
-					pb->SetFinalProgress(timeToRewind);
-					pb->GetProgressBar()->GetTransform().SetMatrix(pb->GetProgressBar()->GetTransform().GetMatrix() * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.68f, 1.46f, -2.83f));
-					pb->OnEnable();
+					pb->OnDisable();
 					break;
 				case 4:
 					boardchange = true;
@@ -213,7 +216,6 @@ namespace Epoch
 					mCurrentBoards.clear();
 					mCurrentBoards.push_back(4);
 					mCurrentBoards.push_back(5);
-					pb->OnDisable();
 					break;
 				case 6:
 					boardchange = true;
