@@ -527,12 +527,12 @@ namespace Epoch {
 					Settings::GetInstance().SetFloat("TutorialRewind - CurProgress", Settings::GetInstance().GetFloat("TutorialRewind - CurProgress") + 1);
 				if(Settings::GetInstance().GetFloat("TutorialRewind - CurProgress") == Settings::GetInstance().GetFloat("TutorialRewind - FinalProgress"))//Rewind
 				{
-					if (Settings::GetInstance().GetInt("tutStep") == 4)
+					if (Settings::GetInstance().GetInt("tutStep") == 3)
 					{
 						if (Settings::GetInstance().GetBool("Level1Tutorial"))
-							Settings::GetInstance().SetInt("tutStep", 6);//Accept time
+							Settings::GetInstance().SetInt("tutStep", 4);//Accept time (tut 1)
 						else
-							Settings::GetInstance().SetInt("tutStep", 5);//Create Clone
+							Settings::GetInstance().SetInt("tutStep", 5);//Create Clone (tut 2)
 					}
 				}
 			}

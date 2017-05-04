@@ -39,7 +39,7 @@ namespace Epoch
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			
 			
-				if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 7)) //created clone
+				if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 7)) //created clone (tut 2)
 				{
 					// Resume Time
 
@@ -69,11 +69,11 @@ namespace Epoch
 
 					mIsBeingMade = false;
 
-				} else if (!mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 2)) {
+				} else if (!mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") == 2)) {
 					// Stop time
 
-					if (Settings::GetInstance().GetInt("tutStep") == 3)//Paused time
-						Settings::GetInstance().SetInt("tutStep", 4);//Rewind
+					if (Settings::GetInstance().GetInt("tutStep") == 2)//Paused time (tut 1)
+						Settings::GetInstance().SetInt("tutStep", 3);//Rewind (tut 1)
 
 					if(Settings::GetInstance().GetInt("CurrentLevel") != 1)
 					{
@@ -107,14 +107,14 @@ namespace Epoch
 
 
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Touchpad) 
-			&& (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 5))//Created Clone 
+			&& (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 5))//Created Clone (tut 2)
 		{
 			
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
 			// Accept timeline position
 			if (mPauseTime) {
-				if (Settings::GetInstance().GetInt("tutStep") == 6)//accepted time
+				if (Settings::GetInstance().GetInt("tutStep") == 6)//accepted time (
 				{
 					if (Settings::GetInstance().GetBool("Level1Tutorial"))
 						Settings::GetInstance().SetInt("tutStep", 8);//end
@@ -207,7 +207,7 @@ namespace Epoch
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Trigger))
 		{
 			//toggle to have clone turn on or off
-			if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 4))//rewound time
+			if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") == 4))//rewound time (tut 1)
 			{
 				if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck() == false)
 				{
@@ -218,8 +218,8 @@ namespace Epoch
 				{
 					if(mIsBeingMade)
 					{
-						if (Settings::GetInstance().GetInt("tutStep") == 5)
-							Settings::GetInstance().SetInt("tutStep", 6);
+						if (Settings::GetInstance().GetInt("tutStep") == 4)//rewound time (tut 1)
+							Settings::GetInstance().SetInt("tutStep", 6);//pick up box (tut 1)
 
 						((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
 						((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
@@ -341,8 +341,8 @@ namespace Epoch
 							TimeManager::Instance()->DeleteClone(clones[i]->GetUniqueId(),true);
 							--mNumOfConfirmedClones;
 
-							if (Settings::GetInstance().GetInt("tutStep") == 7)//deleted clone
-								Settings::GetInstance().SetInt("tutStep", 8);//finished tutorial
+							if (Settings::GetInstance().GetInt("tutStep") == 7)//deleted clone (tut 2)
+								Settings::GetInstance().SetInt("tutStep", 8);//finished level 2 tutorial
 
 							return true;
 					}
