@@ -33,13 +33,12 @@ namespace Epoch {
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> mContext;
 		Microsoft::WRL::ComPtr<IDXGISwapChain> mChain;
 		Microsoft::WRL::ComPtr<IDXGIFactory1> mFactory;
-		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mMainView, mSceneView;
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> mMainViewTexture;
+		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mMainView, mSceneView, mBloomRTV;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDSView;
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> mDepthBuffer, mSceneTexture;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> mMainViewTexture, mDepthBuffer, mSceneTexture, mBloomTexture;
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> mSamplerState;
-		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> mTransparentState, mOpaqueState, mTopmostState;
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mSceneSRV;
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> mTransparentState, mOpaqueState;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mSceneSRV, mBloomSRV;
 		Microsoft::WRL::ComPtr<ID3D11BlendState> mOpaqueBlendState, mTransparentBlendState;
 		D3D11_VIEWPORT mLeftViewport, mRightViewport, mFullViewport;
 		HWND mWindow;
@@ -49,16 +48,6 @@ namespace Epoch {
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mVPBuffer, mPositionBuffer, mSimInstanceBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mLBuffer;
 		bool mUseVsync = false;
-		//ShadowMap 1 - Directional, 2 - Point, 3 - Spot
-		Microsoft::WRL::ComPtr<ID3D11VertexShader> mShadowVS, mShadowVS2;
-		Microsoft::WRL::ComPtr<ID3D11PixelShader> mPSST;
-		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mSDSView[2];
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> mShadowTextures[2];
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mShadowSRV[2];
-		Microsoft::WRL::ComPtr<ID3D11SamplerState> mSSamplerState;
-		Microsoft::WRL::ComPtr<ID3D11Buffer> mPLBufferS, mPLBSDir;
-		ViewProjectionBuffer mPLVPB;
-		D3D11_VIEWPORT mShadowVP;
 
 
 		// Blurring variables & Functions
@@ -134,7 +123,6 @@ namespace Epoch {
 		void UpdateViewProjection();
 		void UpdateGSBuffers();
 		void UpdateLBuffers();
-		void RenderShadowMaps(float _delta);
 		
 		void RenderVR(float _delta);
 		void UpdateCamera(float const moveSpd, float const rotSpd, float delta);
@@ -185,6 +173,6 @@ namespace Epoch {
 		inline HWND GetWindow() { return mWindow; }
 		inline RenderShape* GetSceneQuad() { return mScenePPQuad; }
 		inline std::mutex& GetRendererLock() { return mRendererLock; }
-		inline void SetLight(Light* _light, int _i) { mLData[_i] = _light; }
+		void SetLight(Light* _light, int _i);
 	};
 }
