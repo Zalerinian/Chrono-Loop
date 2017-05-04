@@ -18,6 +18,7 @@
 #include "../Particles/ParticleSystem.h"
 #include "RasterizerStateManager.h"
 #include "RenderShaderDefines.hlsli"
+#include "ShaderManager.h"
 
 #define ENABLE_TEXT 1
 
@@ -112,18 +113,10 @@ namespace Epoch {
 		HRESULT MHR = mContext->Map(mLBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
 		memcpy(map.pData, buffs, sizeof(Light) * 3);
 		mContext->Unmap(mLBuffer.Get(), 0);
-		//mContext->UpdateSubresource(mLBuffer.Get(), 0, nullptr, buffs, 0, 0);
-
-		//mContext->UpdateSubresource(mDLBufferS.Get(), 0, nullptr, &mDLVPB, 0, 0);
-		//mContext->UpdateSubresource(mSLBufferS.Get(), 0, nullptr, &mSLVPB, 0, 0);
-		mPLVPB.view = matrix4();
-		mPLVPB.view.fourth = mLData[0]->Position;
-		mPLVPB.view = mPLVPB.view.Invert();
-		mPLVPB.projection = DirectX::XMMatrixPerspectiveFovRH(360, (float)1366.0f / (float)720.0f, 0.1f, 1000);
-		//6 dir, cube map or parabolic for performance
-		//mContext->UpdateSubresource(mPLBufferS.Get(), 0, nullptr, &mPLVPB, 0, 0);
 	}
-	Renderer::Renderer() {}
+	Renderer::Renderer() {
+		memset(mLData, 0, sizeof(mLData));
+	}
 
 	Renderer::Renderer::~Renderer() {
 		ClearLights();
@@ -133,7 +126,51 @@ namespace Epoch {
 		if (mSceneScreenQuad) {
 			delete mSceneScreenQuad;
 		}
+	}
 
+	void Renderer::RenderBlurStage(BlurStage _s, float _dx, float _dy) {
+		mBlurData.stage = _s;
+		mBlurData.dx = _dx;
+		mBlurData.dy = _dy;
+		mContext->UpdateSubresource(mBlurStageBuffer.Get(), 0, nullptr, &mBlurData, 0, 0);
+		mScenePPQuad->Render(1);
+	}
+
+	void Renderer::ToggleBlurTextureSet(unsigned int _texturesPerSet, ID3D11RenderTargetView ** _rtvs, ID3D11ShaderResourceView ** _srvs) {
+		ID3D11RenderTargetView *noRTV = nullptr;
+		mContext->OMSetRenderTargets(1, &noRTV, nullptr); // Clear render targets so they're no longer bound to the pipeline.
+		ID3D11ShaderResourceView **noSRV = new ID3D11ShaderResourceView*[_texturesPerSet];
+		memset(noSRV, 0, sizeof(int*) * _texturesPerSet);
+		mContext->PSSetShaderResources(0, _texturesPerSet, noSRV); // Unbind shader resource views from the pipeline.
+
+		if (mBlurTextureSet == BlurTextureSet_Ping) {
+			mBlurTextureSet = BlurTextureSet_Pong;
+			mContext->OMSetRenderTargets(_texturesPerSet, _rtvs + _texturesPerSet, nullptr); // Render to the Pong set
+			mContext->PSSetShaderResources(0, _texturesPerSet, _srvs); // Sample from the Ping set
+		} else {
+			mBlurTextureSet = BlurTextureSet_Ping;
+			mContext->OMSetRenderTargets(_texturesPerSet, _rtvs, nullptr); // Render to the Ping set
+			mContext->PSSetShaderResources(0, _texturesPerSet, _srvs + _texturesPerSet); // Sameple from the Pong set
+		}
+		delete[] noSRV;
+	}
+
+	void Renderer::SetBlurTexturesDrawback(unsigned int _texturesPerSet, ID3D11RenderTargetView ** _drawbacks, ID3D11ShaderResourceView ** _srvs) {
+		ID3D11RenderTargetView *noRTV = nullptr;
+		mContext->OMSetRenderTargets(1, &noRTV, nullptr); // Clear render targets so they're no longer bound to the pipeline.
+		ID3D11ShaderResourceView **noSRV = new ID3D11ShaderResourceView*[_texturesPerSet];
+		memset(noSRV, 0, sizeof(int*) * _texturesPerSet);
+		mContext->PSSetShaderResources(0, _texturesPerSet, noSRV); // Unbind shader resource views from the pipeline.
+		mContext->OMSetRenderTargets(_texturesPerSet, _drawbacks, nullptr); // Render to the RTVs created for the textures we're blurring.
+
+		if (mBlurTextureSet == BlurTextureSet_Ping) {
+			mBlurTextureSet = BlurTextureSet_Pong;
+			mContext->PSSetShaderResources(0, _texturesPerSet, _srvs); // Sample from the Ping set
+		} else {
+			mBlurTextureSet = BlurTextureSet_Ping;
+			mContext->PSSetShaderResources(0, _texturesPerSet, _srvs + _texturesPerSet); // Sameple from the Pong set
+		}
+		delete[] noSRV;
 	}
 
 	void Renderer::InitializeD3DDevice() {
@@ -194,7 +231,7 @@ namespace Epoch {
 		scDesc.SampleDesc.Count = 1;
 		scDesc.Windowed = !_fullscreen;
 		scDesc.OutputWindow = _win;
-		scDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		scDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_SHADER_INPUT;
 		scDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
 		IDXGISwapChain *chain;
@@ -239,7 +276,7 @@ namespace Epoch {
 		mDSView.Attach(depthView);
 
 		ID3D11Texture2D *postTex;
-		CD3D11_TEXTURE2D_DESC t2d(DXGI_FORMAT_R16G16B16A16_FLOAT, _width, _height, 1, 0, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
+		CD3D11_TEXTURE2D_DESC t2d(DXGI_FORMAT_R16G16B16A16_FLOAT, _width, _height, 1, 1, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
 		mDevice->CreateTexture2D(&t2d, nullptr, &postTex);
 		mSceneTexture.Attach(postTex);
 
@@ -248,7 +285,6 @@ namespace Epoch {
 		HRESULT hr = mDevice->CreateRenderTargetView((ID3D11Resource*)postTex, NULL, &sceneRTV);
 		ThrowIfFailed(hr);
 		mSceneView.Attach(sceneRTV);
-		mContext->OMSetRenderTargets(1, &sceneRTV, depthView);
 
 		// Shader resource view for using the texture to draw the post quad.
 		ID3D11ShaderResourceView *sceneSRV;
@@ -271,33 +307,8 @@ namespace Epoch {
 		mFullViewport = mLeftViewport;
 		mFullViewport.Width = (FLOAT)scd.BufferDesc.Width;
 
-		D3D11_VIEWPORT viewports[] = { mLeftViewport, mRightViewport, mFullViewport };
-		mContext->RSSetViewports(ARRAYSIZE(viewports), viewports);
-
-		//Shadows
-		depthStencilDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
-		depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
-
-		D3D11_DEPTH_STENCIL_VIEW_DESC dvsDesc;
-		dvsDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-		dvsDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-		dvsDesc.Texture2D.MipSlice = 0;
-		dvsDesc.Flags = 0;
-
-		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-		srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
-		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-		srvDesc.Texture2D.MipLevels = depthStencilDesc.MipLevels;
-		srvDesc.Texture2D.MostDetailedMip = 0;
-
-		//Point light
-		for (int i = 0; i < 2; i++)
-		{
-			mDevice->CreateTexture2D(&depthStencilDesc, NULL, mShadowTextures[i].GetAddressOf());
-			mDevice->CreateDepthStencilView(mShadowTextures[i].Get(), &dvsDesc, mSDSView[i].GetAddressOf());
-			mDevice->CreateShaderResourceView(mShadowTextures[i].Get(), &srvDesc, mShadowSRV[i].GetAddressOf());
-		}
-
+		AttachPrimaryViewports();
+		AttachPrimaryRTVs();
 	}
 
 	void Renderer::InitializeBuffers() {
@@ -336,37 +347,10 @@ namespace Epoch {
 		buffRes = mDevice->CreateBuffer(&desc, nullptr, &pBuff);
 		mLBuffer.Attach(pBuff);
 
-		desc.ByteWidth = sizeof(ViewProjectionBuffer);
-		buffRes = mDevice->CreateBuffer(&desc, nullptr, &pBuff);
-		mPLBufferS.Attach(pBuff);
 
-		desc.ByteWidth = sizeof(float) * 4;
-		buffRes = mDevice->CreateBuffer(&desc, nullptr, &pBuff);
-		mPLBSDir.Attach(pBuff);
-
-		//for (int i = 0; i < 3; i++)
-		//	mLData[i] = new Light();
-
-		////TODO: GET RID OF THIS
-
-		////Directional
-		//mLData[1]->Type = 1;
-		//mLData[1]->Color = vec3f(.5, .5, .5);
-		//mLData[1]->Direction = vec3f(0, -1, 0);
-
-		////Point
-		//mLData[0]->Type = 2;
-		//mLData[0]->Position = vec3f(5, 1, 2);
-		//mLData[0]->Color = vec3f(1, 1, 1);
-
-		////Spot
-		//mLData[2]->Type = 4;
-		//mLData[2]->Color = vec3f(0, .25, .25);
-		//mLData[2]->ConeDirection = vec3f(0, -1, 0);
-		//mLData[2]->Position = vec3f(3, 4, 0);
-		//mLData[2]->ConeRatio = .5;
-
-
+		// Blur data buffer
+		CD3D11_BUFFER_DESC blurBuffer(sizeof(BlurData), D3D11_BIND_CONSTANT_BUFFER);
+		mDevice->CreateBuffer(&blurBuffer, nullptr, mBlurStageBuffer.GetAddressOf());
 	}
 
 	void Renderer::InitializeSamplerState() {
@@ -379,22 +363,13 @@ namespace Epoch {
 		sDesc.MaxAnisotropy = 16;
 		sDesc.MinLOD = 0;
 		sDesc.MaxLOD = D3D11_FLOAT32_MAX;
+		sDesc.BorderColor[0] = 1;
+		sDesc.BorderColor[1] = 1;
+		sDesc.BorderColor[2] = 1;
+		sDesc.BorderColor[3] = 1;
 
-		ID3D11SamplerState *ss;
-		ThrowIfFailed(mDevice->CreateSamplerState(&sDesc, &ss));
-		mSamplerState.Attach(ss);
-		mContext->PSSetSamplers(0, 1, &ss);
-
-		sDesc.Filter = D3D11_FILTER::D3D11_FILTER_COMPARISON_MIN_LINEAR_MAG_MIP_POINT;
-		sDesc.ComparisonFunc = D3D11_COMPARISON_LESS;
-
-		mDevice->CreateSamplerState(&sDesc, mSSamplerState.GetAddressOf());
-
-		char * buffer;
-		int bytes;
-		FileIO::LoadBytes("ShadowVS.cso", &buffer, bytes);
-		mDevice->CreateVertexShader(buffer, bytes, NULL, mShadowVS.GetAddressOf());
-		delete buffer;
+		ThrowIfFailed(mDevice->CreateSamplerState(&sDesc, mSamplerState.GetAddressOf()));
+		mContext->PSSetSamplers(0, 1, mSamplerState.GetAddressOf());
 	}
 
 	void Renderer::InitializeObjectNames() {
@@ -404,15 +379,26 @@ namespace Epoch {
 		SetD3DName(mChain.Get(), "Swapchain");
 		SetD3DName(mFactory.Get(), "DXGI Factory");
 		SetD3DName(mMainView.Get(), "Window Render Target");
-		SetD3DName(mMainViewTexture.Get(), "Window Render Texture");
+		SetD3DName(mSceneView.Get(), "Post Processing Render Target");
+		//SetD3DName(mBloomRTV.Get(), "Bloom Render Target");
 		SetD3DName(mDSView.Get(), "Main Depth-Stencil View");
+		SetD3DName(mMainViewTexture.Get(), "Window Render Texture");
 		SetD3DName(mDepthBuffer.Get(), "Main Depth Buffer");
+		SetD3DName(mSceneTexture.Get(), "Post Processing Texture");
+		//SetD3DName(mBloomTexture.Get(), "Bloom Blur Texture");
+		SetD3DName(mSamplerState.Get(), "Wrapping Sampler State");
+		SetD3DName(mTransparentState.Get(), "Transparent Depth-Stencil State");
+		SetD3DName(mOpaqueState.Get(), "Opaque Depth-Stencil State");
+		SetD3DName(mSceneSRV.Get(), "Scene Texture SRV");
+		//SetD3DName(mBloomSRV.Get(), "Bloom Shader Resource View");
+		SetD3DName(mOpaqueBlendState.Get(), "Opaque Blend State");
+		SetD3DName(mTransparentBlendState.Get(), "Transparent Blend State");
+
 		SetD3DName(mVPBuffer.Get(), "View-Projection Constant Buffer");
 		SetD3DName(mPositionBuffer.Get(), "Model Constant Buffer");
 		SetD3DName(mSimInstanceBuffer.Get(), "Simulated Instance ID Constant Buffer");
-
-		SetD3DName(mSceneTexture.Get(), "Post Processing Texture");
-		SetD3DName(mSceneSRV.Get(), "Scene Texture SRV");
+		SetD3DName(mLBuffer.Get(), "Light Data Buffer");
+		SetD3DName(mBlurStageBuffer.Get(), "Blur Data Buffer");
 
 #endif
 	}
@@ -465,7 +451,6 @@ namespace Epoch {
 		topmostDepth.DepthEnable = false;
 		ThrowIfFailed(mDevice->CreateDepthStencilState(&opaqueDepth, &opaqueState));
 		ThrowIfFailed(mDevice->CreateDepthStencilState(&transparentDepth, &transparentState));
-		ThrowIfFailed(mDevice->CreateDepthStencilState(&topmostDepth, mTopmostState.GetAddressOf()));
 		mOpaqueState.Attach(opaqueState);
 		mTransparentState.Attach(transparentState);
 
@@ -489,6 +474,15 @@ namespace Epoch {
 		ThrowIfFailed(mDevice->CreateBlendState(&transparentBlend, &transparentBS));
 		mOpaqueBlendState.Attach(opaqueBS);
 		mTransparentBlendState.Attach(transparentBS);
+	}
+
+	void Renderer::AttachPrimaryViewports() {
+		D3D11_VIEWPORT viewports[] = { mLeftViewport, mRightViewport, mFullViewport };
+		mContext->RSSetViewports(ARRAYSIZE(viewports), viewports);
+	}
+
+	void Renderer::AttachPrimaryRTVs() {
+		mContext->OMSetRenderTargets(1, mSceneView.GetAddressOf(), mDSView.Get());
 	}
 	
 	void Renderer::UpdateCamera(float const _moveSpd, float const _rotSpd, float _delta) {
@@ -558,37 +552,6 @@ namespace Epoch {
 		mVPRightData = mVPLeftData;
 	}
 
-	void Renderer::RenderShadowMaps(float _delta)
-	{
-		//TODO: Rasterstate set back face culling to NO
-		RasterizerStateManager::Instance()->ApplyState(RasterState::eRS_NO_CULL);
-		//Directional TODO: IGNORE
-		//TODO: TO-Drew fix buffer thing
-		mContext->OMSetRenderTargets(0, 0, mSDSView[0].Get());
-		mContext->ClearDepthStencilView(mSDSView[0].Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-		//Set VS & PS & GS and light buffer
-		//TODO: Need stages, this shit gets over-written
-		mContext->GSSetShader(NULL, NULL, NULL);
-		mContext->VSSetShader(mShadowVS.Get(), 0, 0);
-		mContext->PSSetShader(mPSST.Get(), 0, 0);
-
-		mContext->VSSetConstantBuffers(1, 1, mPLBufferS.GetAddressOf());
-		mContext->VSSetConstantBuffers(2, 1, mPLBSDir.GetAddressOf());
-
-		ProcessRenderSet();
-
-		mContext->VSSetShader(mShadowVS2.Get(), 0, 0);
-
-		mContext->OMSetRenderTargets(0, 0, mSDSView[1].Get());
-		mContext->ClearDepthStencilView(mSDSView[1].Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-		ProcessRenderSet();
-
-		RasterizerStateManager::Instance()->ApplyState(RasterState::eRS_FILLED);
-		SetStaticBuffers();
-		mContext->OMSetRenderTargets(1, mMainView.GetAddressOf(), mDSView.Get());
-	}
-
 	void Renderer::RenderVR(float _delta) {
 		vr::VRCompositor()->CompositorBringToFront();
 		UpdateViewProjection();
@@ -624,8 +587,8 @@ namespace Epoch {
 		UpdateCamera(2, 2, _delta);
 		UpdateGSBuffers();
 		UpdateLBuffers();
-		ProcessRenderSet();
 		ParticleSystem::Instance()->Render();
+		ProcessRenderSet();
 		RenderScreenQuad();
 
 		CommandConsole::Instance().SetVRBool(false);
@@ -741,7 +704,9 @@ namespace Epoch {
 
 
 		// Draw the topmost objects. These don't use the depth buffer at all, 
-		mContext->OMSetDepthStencilState(mTopmostState.Get(), 1);
+		mContext->OMSetDepthStencilState(mOpaqueState.Get(), 1);
+		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
+		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 		//No blend state is set, because top-most objects also support alpha blending, and that state was set in the block above.
 		for (auto it = mTopmostSet.Begin(); it != mTopmostSet.End(); ++it) {
 			(*it)->mPositions.GetData(positions);
@@ -796,6 +761,10 @@ namespace Epoch {
 
 	void Renderer::RenderScreenQuad()
 	{
+		if (bootlegBlurEnabled) {
+			BlurTextures(mSceneTexture.GetAddressOf(), 1, bootlegSigma, bootlegDownsample);
+		}
+
 		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
 		mContext->OMSetRenderTargets(1, mMainView.GetAddressOf(), mDSView.Get());
 		mScenePPQuad->GetContext().Apply(mCurrentContext);
@@ -909,8 +878,6 @@ namespace Epoch {
 			uint32_t texWidth, texHeight;
 			mVrSystem->GetRecommendedRenderTargetSize(&texWidth, &texHeight);
 			SystemLogger::GetLog() << "According to VR, the view of our headset is " << texWidth << "x" << texHeight << std::endl;
-			SystemLogger::GetLog() << "The screen will probably look bad. We're just using one render target view currently, and it gets set to the VR headset's recommended resolution when it's plugged in.\n" <<
-				"We should account for that later." << std::endl;
 			rtvWidth = (int)texWidth;
 			rtvHeight = (int)texHeight;
 
@@ -932,9 +899,6 @@ namespace Epoch {
 		InitializeSceneQuad();
 		InitializeStates();
 
-#if _DEBUG
-		InitializeObjectNames();
-#endif
 		InitializeSamplerState();
 		SetStaticBuffers();
 		// TODO Eventually: Give each shape a topology enum, perhaps?
@@ -953,6 +917,9 @@ namespace Epoch {
 		}
 
 		UpdateGSBuffers();
+#if _DEBUG
+		InitializeObjectNames();
+#endif
 		return true;
 	}
 
@@ -960,24 +927,150 @@ namespace Epoch {
 	{
 		mOpaqueSet.ClearSet();
 		mTransparentSet.ClearSet();
+		mTopmostSet.ClearSet();
+	}
+
+	bool Renderer::BlurTextures(ID3D11Texture2D **_textures, unsigned int _numTextures, float _sigma, float _downsample) {
+		if (_numTextures < 1) {
+			return false;
+		}
+
+		D3D11_TEXTURE2D_DESC texDesc, downDesc;
+		ID3D11Texture2D **downTex = new ID3D11Texture2D*[_numTextures * 2];
+		ID3D11ShaderResourceView **downSRV = new ID3D11ShaderResourceView*[_numTextures * 2];
+		ID3D11RenderTargetView **downRTV = new ID3D11RenderTargetView*[_numTextures * 2];
+		ID3D11ShaderResourceView **upSRV = new ID3D11ShaderResourceView*[_numTextures * 2];
+		ID3D11RenderTargetView **upRTV = new ID3D11RenderTargetView*[_numTextures * 2];
+		for (unsigned int i = 0; i < _numTextures; ++i) {
+			_textures[i]->GetDesc(&texDesc);
+			for (unsigned int j = 0; j < 2; ++j) {
+				downDesc = texDesc;
+				downDesc.Width = texDesc.Width * _downsample;
+				downDesc.Height = texDesc.Height * _downsample;
+
+				mDevice->CreateTexture2D(&downDesc, nullptr, &downTex[i + _numTextures * j]);
+				mDevice->CreateRenderTargetView(downTex[i + _numTextures * j], nullptr, &downRTV[i + _numTextures * j]);
+				mDevice->CreateShaderResourceView(downTex[i + _numTextures * j], nullptr, &downSRV[i + _numTextures * j]);
+
+				SetD3DName(downTex[i], (std::string("Blur Downsample Texture ") + std::to_string(i + _numTextures * j)).c_str());
+				SetD3DName(downSRV[i], (std::string("Blur Downsample SRV ") + std::to_string(i + _numTextures * j)).c_str());
+				SetD3DName(downRTV[i], (std::string("Blur Downsample RTV ") + std::to_string(i + _numTextures * j)).c_str());
+			}
+
+			// SRVs and RTVs for the original textures.
+			mDevice->CreateRenderTargetView(_textures[i], nullptr, &upRTV[i]);
+			mDevice->CreateShaderResourceView(_textures[i], nullptr, &upSRV[i]);
+			upRTV[i + _numTextures] = upRTV[i];
+			upSRV[i + _numTextures] = upSRV[i];
+			SetD3DName(upSRV[i], (std::string("Blur Upsample SRV ") + std::to_string(i)).c_str());
+			SetD3DName(upRTV[i], (std::string("Blur Upsample RTV ") + std::to_string(i)).c_str());
+			D3D11_VIEWPORT blurport;
+			blurport.MinDepth = 0;
+			blurport.MaxDepth = 1;
+			blurport.TopLeftX = 0;
+			blurport.TopLeftY = 0;
+			blurport.Width = downDesc.Width;
+			blurport.Height = downDesc.Height;
+			mContext->RSSetViewports(1, &blurport);
+		}
+
+		// Prepare the pipeline
+		ShaderManager::Instance()->ApplyPShader(ePS_BLUR);
+		ShaderManager::Instance()->ApplyVShader(eVS_BLUR);
+		ShaderManager::Instance()->ApplyGShader(eGS_None);
+		mContext->PSSetConstantBuffers(ePB_REGISTER1 + ePB_OFFSET, 1, mBlurStageBuffer.GetAddressOf());
+		mBlurData.sigma = _sigma;
+
+
+		for (unsigned int pass = 0; pass < _numTextures; pass += D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT) {
+			unsigned int passTextureCount = min(_numTextures - pass, D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT);
+
+			// Downsample
+			ToggleBlurTextureSet(passTextureCount, downRTV, upSRV); // ping
+			RenderBlurStage(BLUR_STAGE_SAMPLE, 0, 0);
+
+			//// horz blur
+			ToggleBlurTextureSet(passTextureCount, downRTV, downSRV); // pong
+			RenderBlurStage(BLUR_STAGE_BLUR, 1, 0);
+
+			//vert blur
+			ToggleBlurTextureSet(passTextureCount, downRTV, downSRV); // ping
+			RenderBlurStage(BLUR_STAGE_BLUR, 0, 1);
+
+			//// upsample
+			mContext->RSSetViewports(1, &mFullViewport);
+			ToggleBlurTextureSet(passTextureCount, upRTV, downSRV); // pong
+			RenderBlurStage(BLUR_STAGE_SAMPLE, 0, 0);
+		}
+
+		for (unsigned int i = 0; i < _numTextures; ++i) {
+			for (unsigned int j = 0; j < 2; ++j) {
+				downTex[i + _numTextures * j]->Release();
+				downSRV[i + _numTextures * j]->Release();
+				downRTV[i + _numTextures * j]->Release();
+			}
+
+			upSRV[i]->Release();
+			upRTV[i]->Release();
+		}
+		delete[] downTex;
+		delete[] downSRV;
+		delete[] downRTV;
+		delete[] upSRV;
+		delete[] upRTV;
+
+		AttachPrimaryViewports();
+		AttachPrimaryRTVs();
+		mCurrentContext.Apply(); // Reapply the current pipeline
+		return true;
+	}
+
+	void Renderer::SetLight(Light * _light, int _i) {
+		if (mLData[_i] != nullptr) {
+			delete mLData[_i];
+		}
+		mLData[_i] = _light;
 	}
 
 
 	void Renderer::Render(float _deltaTime) {
 
 		float color[4] = { 0.251f, 0.709f, 0.541f, 1 };
+		
+		if (bootlegBlurEnabled) {
+			if (GetAsyncKeyState(VK_SHIFT)) {
+				float downsample = bootlegDownsample;
+				if (GetAsyncKeyState(VK_SUBTRACT)) {
+					bootlegDownsample -= 0.25f * _deltaTime;
+				} else if (GetAsyncKeyState(VK_ADD)) {
+					bootlegDownsample += 0.25f * _deltaTime;
+				}
+				bootlegDownsample = min(max(0.1f, bootlegDownsample), 1.0f);
+				if (downsample != bootlegDownsample) {
+					SystemLogger::Debug() << "Blur downsample: " << bootlegDownsample << std::endl;
+				}
+			} else {
+				float sigma = bootlegSigma;
+				if (GetAsyncKeyState(VK_SUBTRACT)) {
+					bootlegSigma -= 1.0f * _deltaTime;
+				} else if (GetAsyncKeyState(VK_ADD)) {
+					bootlegSigma += 1.0f * _deltaTime;
+				}
+				bootlegSigma = min(max(0.1f, bootlegSigma), 20.0f);
+				if (sigma != bootlegSigma) {
+					SystemLogger::Debug() << "Blur sigma: " << bootlegSigma << std::endl;
+				}
+			}
+		}
+		if (GetAsyncKeyState(VK_DIVIDE) & 1) {
+			bootlegBlurEnabled = !bootlegBlurEnabled;
+		}
 
 		// Setup the Scene Render Target 
 		mRendererLock.lock();
-		//RenderShadowMaps(_deltaTime);
 		mContext->OMSetRenderTargets(1, mSceneView.GetAddressOf(), mDSView.Get());
 		mContext->ClearRenderTargetView(mSceneView.Get(), color);
 		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-		//mContext->PSSetConstantBuffers(0, 1, mLBuffer.GetAddressOf());
-		//mContext->PSSetShaderResources(3, 1, mShadowSRV[0].GetAddressOf());
-		//mContext->PSSetShaderResources(4, 1, mShadowSRV[1].GetAddressOf());
-		//mContext->PSSetSamplers(3, 1, mSSamplerState.GetAddressOf());
-		//mContext->VSSetConstantBuffers(1, 1, mPLBufferS.GetAddressOf());
 
 		if (nullptr == mVrSystem) {
 			RenderNoVR(_deltaTime);
@@ -993,7 +1086,7 @@ namespace Epoch {
 		//mSceneScreenQuad->Render();
 
 		// Remove the Scene Shader Resource View from the input pipeline, as once the next render
-		// call happens, it will be bound to the output pipeline, as wel as the input pipeline,
+		// call happens, it will be bound to the output pipeline, as well as the input pipeline,
 		// which will result in DirectX not setting it as an output.
 		ID3D11ShaderResourceView *nullSRV = nullptr;
 		mContext->PSSetShaderResources(eTEX_DIFFUSE, 1, &nullSRV);

@@ -99,23 +99,33 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	}
 
 	Microsoft::WRL::ComPtr<ID3D11Device> renderingDevice = Renderer::Instance()->GetDevice();
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> renderingContext = Renderer::Instance()->GetContext();
 
 	// Update everything
 	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count());
 	srand(time(NULL));
 	Update();
 
+	// Close the window so we can clean up.
+	DestroyWindow(Renderer::Instance()->GetWindow());
 
 
 	// Cleanup
 	ShutdownSystems();
 	vr::VR_Shutdown();
+	vrsys = nullptr;
+	renderingContext->Flush();
+	renderingContext = nullptr;
 
 	for (int i = 0; i < 40; ++i) {
 		SystemLogger::Warn() << "THE CONSOLE HAS BEEN DETATCHED, AND IS NOW OWNED BY THE STEAMVR SERVER. DO NOT CLOSE IT." << std::endl;
 	}
 	SystemLogger::DestroyInstance();
-	vrsys = nullptr;
+#if _DEBUG || CONSOLE_OVERRIDE
+	FreeConsole();
+#endif
+
+
 
 #if _DEBUG
 	// In debug mode, dump any remaining live DirectX objects. This list should be hopefully small at this point.
@@ -128,10 +138,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 		OutputDebugStringA("\n\n\n");
 	}
 #endif
-
-#if _DEBUG || CONSOLE_OVERRIDE
-	FreeConsole();
-#endif
+	renderingDevice.Get()->Release();
 
 	return 0;
 }

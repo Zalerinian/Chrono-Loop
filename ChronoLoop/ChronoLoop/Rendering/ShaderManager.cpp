@@ -78,6 +78,16 @@ namespace Epoch {
 			delete[] buffer;
 		}
 
+		if (!FileIO::LoadBytes("PSBlur.cso", &buffer, byteSize)) {
+			SystemLogger::GetError() << "[Error] An error has occurred when trying to read PSBlur.cso. Chances are the file is missing or has been renamed. The shader will be null, and may result in a crash." << std::endl;
+			mPixelShaders[ePS_BLUR] = std::make_shared<ID3D11PixelShader*>(nullptr);
+		} else {
+			Renderer::Instance()->GetDevice()->CreatePixelShader(buffer, byteSize, nullptr, &ps);
+			SetD3DName(ps, "PSBlur.cso");
+			mPixelShaders[ePS_BLUR] = std::make_shared<ID3D11PixelShader*>(ps);
+			delete[] buffer;
+		}
+
 
 
 
@@ -113,12 +123,22 @@ namespace Epoch {
 			delete[] buffer;
 		}
 
-
+		if (!FileIO::LoadBytes("VSBlur.cso", &buffer, byteSize)) {
+			SystemLogger::GetError() << "[Error] An error has occurred when trying to read VSBlur.cso. Chances are the file is missing or has been renamed. The shader will be null, and may result in a crash." << std::endl;
+			mVertexShaders[eVS_BLUR] = std::make_shared<ID3D11VertexShader*>(nullptr);
+		} else {
+			Renderer::Instance()->GetDevice()->CreateVertexShader(buffer, byteSize, nullptr, &vs);
+			SetD3DName(vs, "VSBlur.cso");
+			mVertexShaders[eVS_BLUR] = std::make_shared<ID3D11VertexShader*>(vs);
+			delete[] buffer;
+		}
 
 
 
 
 		// Create geometry shaders
+		mGeoShaders[eGS_None] = nullptr;
+
 		ID3D11GeometryShader *gs;
 		if (!FileIO::LoadBytes("GSDuplicateMesh.cso", &buffer, byteSize)) {
 			SystemLogger::Error() << "An error has occurred when trying to read GSDuplucateMesh.cso. Chances are the file is missing or has been renamed. The shader will be null, and may result in a crash." << std::endl;
