@@ -135,8 +135,10 @@ namespace Epoch {
 		}
 	}
 
-	void Renderer::RenderBlurStage(BlurStage _s) {
+	void Renderer::RenderBlurStage(BlurStage _s, float _dx, float _dy) {
 		mBlurData.stage = _s;
+		mBlurData.dx = _dx;
+		mBlurData.dy = _dy;
 		mContext->UpdateSubresource(mBlurStageBuffer.Get(), 0, nullptr, &mBlurData, 0, 0);
 		mScenePPQuad->Render(1);
 	}
@@ -853,7 +855,9 @@ namespace Epoch {
 
 	void Renderer::RenderScreenQuad()
 	{
-		BlurTextures(mSceneTexture.GetAddressOf(), 1, 1.0f, 0);
+		if (bootlegBlurEnabled) {
+			BlurTextures(mSceneTexture.GetAddressOf(), 1, bootlegSigma, bootlegDownsample);
+		}
 
 		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
 		mContext->OMSetRenderTargets(1, mMainView.GetAddressOf(), mDSView.Get());
@@ -1021,7 +1025,7 @@ namespace Epoch {
 		mTransparentSet.ClearSet();
 	}
 
-	bool Renderer::BlurTextures(ID3D11Texture2D **_textures, unsigned int _numTextures, float _downsample, unsigned int _kernelSize) {
+	bool Renderer::BlurTextures(ID3D11Texture2D **_textures, unsigned int _numTextures, float _sigma, float _downsample) {
 		if (_numTextures < 1) {
 			return false;
 		}
@@ -1044,20 +1048,26 @@ namespace Epoch {
 				mDevice->CreateShaderResourceView(downTex[i + _numTextures * j], nullptr, &downSRV[i + _numTextures * j]);
 			}
 
-				// SRVs and RTVs for the original textures.
-				mDevice->CreateRenderTargetView(_textures[i], nullptr, &upRTV[i]);
-				mDevice->CreateShaderResourceView(_textures[i], nullptr, &upSRV[i]);
-				upRTV[i + _numTextures] = upRTV[i];
-				upSRV[i + _numTextures] = upSRV[i];
+			// SRVs and RTVs for the original textures.
+			mDevice->CreateRenderTargetView(_textures[i], nullptr, &upRTV[i]);
+			mDevice->CreateShaderResourceView(_textures[i], nullptr, &upSRV[i]);
+			upRTV[i + _numTextures] = upRTV[i];
+			upSRV[i + _numTextures] = upSRV[i];
+			D3D11_VIEWPORT blurport;
+			blurport.MinDepth = 0;
+			blurport.MaxDepth = 1;
+			blurport.TopLeftX = 0;
+			blurport.TopLeftY = 0;
+			blurport.Width = downDesc.Width;
+			blurport.Height = downDesc.Height;
+			mContext->RSSetViewports(1, &blurport);
 		}
 
 		// Prepare the pipeline
-		mContext->RSSetViewports(1, &mFullViewport);
 		ShaderManager::Instance()->ApplyPShader(ePS_BLUR);
 		ShaderManager::Instance()->ApplyVShader(eVS_BLUR);
 		mContext->PSSetConstantBuffers(ePB_REGISTER1 + ePB_OFFSET, 1, mBlurStageBuffer.GetAddressOf());
-		mBlurData.kernelHeight = _kernelSize;
-		mBlurData.kernelWidth = _kernelSize;
+		mBlurData.sigma = _sigma;
 
 
 		for (unsigned int pass = 0; pass < _numTextures; pass += D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT) {
@@ -1065,19 +1075,20 @@ namespace Epoch {
 
 			// Downsample
 			ToggleBlurTextureSet(passTextureCount, downRTV, upSRV); // ping
-			RenderBlurStage(BLUR_STAGE_SAMPLE);
+			RenderBlurStage(BLUR_STAGE_SAMPLE, 0, 0);
 
 			//// horz blur
 			ToggleBlurTextureSet(passTextureCount, downRTV, downSRV); // pong
-			RenderBlurStage(BLUR_STAGE_HORZ);
+			RenderBlurStage(BLUR_STAGE_BLUR, 1, 0);
 
 			//vert blur
 			ToggleBlurTextureSet(passTextureCount, downRTV, downSRV); // ping
-			RenderBlurStage(BLUR_STAGE_VERT);
+			RenderBlurStage(BLUR_STAGE_BLUR, 0, 1);
 
 			//// upsample
+			mContext->RSSetViewports(1, &mFullViewport);
 			ToggleBlurTextureSet(passTextureCount, upRTV, downSRV); // pong
-			RenderBlurStage(BLUR_STAGE_SAMPLE);
+			RenderBlurStage(BLUR_STAGE_SAMPLE, 0, 0);
 		}
 
 		for (unsigned int i = 0; i < _numTextures; ++i) {
@@ -1106,6 +1117,35 @@ namespace Epoch {
 	void Renderer::Render(float _deltaTime) {
 
 		float color[4] = { 0.251f, 0.709f, 0.541f, 1 };
+		
+		if (bootlegBlurEnabled) {
+			if (GetAsyncKeyState(VK_SHIFT)) {
+				float downsample = bootlegDownsample;
+				if (GetAsyncKeyState(VK_SUBTRACT)) {
+					bootlegDownsample -= 0.25f * _deltaTime;
+				} else if (GetAsyncKeyState(VK_ADD)) {
+					bootlegDownsample += 0.25f * _deltaTime;
+				}
+				bootlegDownsample = min(max(0.1f, bootlegDownsample), 1.0f);
+				if (downsample != bootlegDownsample) {
+					SystemLogger::Debug() << "Blur downsample: " << bootlegDownsample << std::endl;
+				}
+			} else {
+				float sigma = bootlegSigma;
+				if (GetAsyncKeyState(VK_SUBTRACT)) {
+					bootlegSigma -= 1.0f * _deltaTime;
+				} else if (GetAsyncKeyState(VK_ADD)) {
+					bootlegSigma += 1.0f * _deltaTime;
+				}
+				bootlegSigma = min(max(0.1f, bootlegSigma), 20.0f);
+				if (sigma != bootlegSigma) {
+					SystemLogger::Debug() << "Blur sigma: " << bootlegSigma << std::endl;
+				}
+			}
+		}
+		if (GetAsyncKeyState(VK_DIVIDE) & 1) {
+			bootlegBlurEnabled = !bootlegBlurEnabled;
+		}
 
 		// Setup the Scene Render Target 
 		mRendererLock.lock();

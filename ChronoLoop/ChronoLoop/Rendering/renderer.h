@@ -68,22 +68,22 @@ namespace Epoch {
 		};
 		enum BlurStage {
 			BLUR_STAGE_SAMPLE = 0,
-			BLUR_STAGE_HORZ,
-			BLUR_STAGE_VERT
+			BLUR_STAGE_BLUR
 		};
 		struct BlurData {
 			union {
 				struct {
 					unsigned int stage;
-					unsigned int kernelWidth;
-					unsigned int kernelHeight;
+					float sigma;
+					float dx;
+					float dy;
 				};
 				vec4i padding;
 			};
 			BlurData() {
 				stage = 0;
-				kernelWidth = 9;
-				kernelHeight = 9;
+				sigma = 1.0f;
+				dx = dy = 0;
 			}
 		} mBlurData;
 		enum BlurTextureSet {
@@ -91,9 +91,12 @@ namespace Epoch {
 			BlurTextureSet_Pong
 		} mBlurTextureSet = BlurTextureSet_Pong; // Default to pong so that the first call to toggle sets it to render to the Ping set.
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mBlurStageBuffer;
-		void RenderBlurStage(BlurStage _s);
+		void RenderBlurStage(BlurStage _s, float _dx, float _dy);
 		void ToggleBlurTextureSet(unsigned int _texturesPerSet, ID3D11RenderTargetView **_rtvs, ID3D11ShaderResourceView **_srvs);
 		void SetBlurTexturesDrawback(unsigned int _texturesPerSet, ID3D11RenderTargetView **_drawbacks, ID3D11ShaderResourceView **_srvs);
+		float bootlegSigma = 1.0f;
+		float bootlegDownsample = 0.5f;
+		bool bootlegBlurEnabled = false;
 
 		RenderShape* mScenePPQuad = nullptr, *mSceneScreenQuad = nullptr;
 		RenderContext mCurrentContext;
@@ -170,7 +173,7 @@ namespace Epoch {
 
 		void ClearRenderSet();
 
-		bool BlurTextures(ID3D11Texture2D **_textures, unsigned int _numTextures, float _downsample = 0.5f, unsigned int _kernelSize = 9);
+		bool BlurTextures(ID3D11Texture2D **_textures, unsigned int _numTextures, float _sigma, float _downsample = 0.5f);
 
 		inline Microsoft::WRL::ComPtr<ID3D11Device>& GetDevice() { return mDevice; }
 		inline Microsoft::WRL::ComPtr<ID3D11DeviceContext>& GetContext() { return mContext; }
