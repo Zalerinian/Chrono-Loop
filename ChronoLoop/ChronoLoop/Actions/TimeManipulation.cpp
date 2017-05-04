@@ -144,7 +144,7 @@ namespace Epoch
 						TimeManager::Instance()->AddInterpolatorForClone(mCurCloneHeadset);
 						TimeManager::Instance()->AddInterpolatorForClone(mCurCloneController1);
 						TimeManager::Instance()->AddInterpolatorForClone(mCurCloneController2);
-						TimeManager::Instance()->AssignTextureToClone(mCurCloneHeadset->GetUniqueId());
+						TimeManager::Instance()->AssignTextureToClone(mCurCloneHeadset->GetUniqueID());
 						//it is extreamly important that the objects are added after time rewinded because of the objectLifeTimeStruct and more..
 						Physics::Instance()->mObjects.push_back(mCurCloneHeadset);
 						Physics::Instance()->mObjects.push_back(mCurCloneController1);
@@ -176,7 +176,7 @@ namespace Epoch
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneHeadset);
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController1);
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController2);
-						TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueId(), false);
+						TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueID(), false);
 					}
 
 						//set the player headset and controllers birth back
@@ -209,13 +209,12 @@ namespace Epoch
 			//toggle to have clone turn on or off
 			if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 4))//rewound time
 			{
-				if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck() == false)
-				{
-				mIsBeingMade = !mIsBeingMade;	
-				}
-
 				if(mCurCloneController1 && mCurCloneController2 && mCurCloneHeadset)
 				{
+					if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck() == false) {
+						mIsBeingMade = !mIsBeingMade;
+					}
+
 					if(mIsBeingMade)
 					{
 						if (Settings::GetInstance().GetInt("tutStep") == 5)
@@ -240,6 +239,7 @@ namespace Epoch
 	}
 	void TimeManipulation::MakeCloneBaseObjects(BaseObject * _headset, BaseObject * _controller1, BaseObject * _controller2)
 	{
+		mIsBeingMade = false;
 		Level* currentLevel = LevelManager::GetInstance().GetCurrentLevel();
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
 		SystemLogger::GetLog() << "[Debug] A clone is being made, please hold: " << mCloneCount << " | Is left: " << mControllerRole << std::endl;
@@ -338,7 +338,7 @@ namespace Epoch
 				for (unsigned int j = 0; j < numTris; ++j) {
 					float hitTime;
 					if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, fwd, hitTime)) { 
-							TimeManager::Instance()->DeleteClone(clones[i]->GetUniqueId(),true);
+							TimeManager::Instance()->DeleteClone(clones[i]->GetUniqueID(),true);
 							--mNumOfConfirmedClones;
 
 							if (Settings::GetInstance().GetInt("tutStep") == 7)//deleted clone

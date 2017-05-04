@@ -2,6 +2,8 @@
 #include "../Objects/BaseObject.h"
 #include "../Common/Logger.h"
 #include "CodeComponent.hpp"
+#include "CCMazeHelper.h"
+
 #include "../Objects/MeshComponent.h"
 #include "../Physics/Physics.h"
 #include "../Input/VRInputManager.h"
@@ -83,7 +85,7 @@ namespace Epoch
 			mObject->GetTransform().SetMatrix(mat);
 
 			if (!interp->GetActive()) {
-				if (mChamberMesh->GetTransform().GetPosition()->y < -9.9999f) {
+				if (mChamberMesh->GetTransform().GetPosition()->y < -9.99f) {
 
 					if (!((MeshComponent*)mTeleportBoard->GetComponentIndexed(eCOMPONENT_MESH, 0))->IsVisible()) {
 						((MeshComponent*)mTeleportBoard->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);

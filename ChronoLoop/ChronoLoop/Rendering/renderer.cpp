@@ -114,9 +114,12 @@ namespace Epoch {
 		memcpy(map.pData, buffs, sizeof(Light) * 3);
 		mContext->Unmap(mLBuffer.Get(), 0);
 	}
-	Renderer::Renderer() {}
+	Renderer::Renderer() {
+		memset(mLData, 0, sizeof(mLData));
+	}
 
 	Renderer::Renderer::~Renderer() {
+		ClearLights();
 		if (mScenePPQuad) {
 			delete mScenePPQuad;
 		}
@@ -343,28 +346,6 @@ namespace Epoch {
 		desc.ByteWidth = sizeof(Light) * 3;
 		buffRes = mDevice->CreateBuffer(&desc, nullptr, &pBuff);
 		mLBuffer.Attach(pBuff);
-
-		for (int i = 0; i < 3; i++)
-			mLData[i] = new Light();
-
-		//TODO: GET RID OF THIS
-
-		//Directional
-		mLData[1]->Type = 1;
-		mLData[1]->Color = vec3f(.5, .5, .5);
-		mLData[1]->Direction = vec3f(0, -1, 0);
-
-		//Point
-		mLData[0]->Type = 2;
-		mLData[0]->Position = vec3f(5, 1, 2);
-		mLData[0]->Color = vec3f(1, 1, 1);
-
-		//Spot
-		mLData[2]->Type = 4;
-		mLData[2]->Color = vec3f(0, .25, .25);
-		mLData[2]->ConeDirection = vec3f(0, -1, 0);
-		mLData[2]->Position = vec3f(3, 4, 0);
-		mLData[2]->ConeRatio = .5;
 
 
 		// Blur data buffer
@@ -724,6 +705,7 @@ namespace Epoch {
 
 		// Draw the topmost objects. These don't use the depth buffer at all, 
 		mContext->OMSetDepthStencilState(mOpaqueState.Get(), 1);
+		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
 		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 		//No blend state is set, because top-most objects also support alpha blending, and that state was set in the block above.
 		for (auto it = mTopmostSet.Begin(); it != mTopmostSet.End(); ++it) {
@@ -896,8 +878,6 @@ namespace Epoch {
 			uint32_t texWidth, texHeight;
 			mVrSystem->GetRecommendedRenderTargetSize(&texWidth, &texHeight);
 			SystemLogger::GetLog() << "According to VR, the view of our headset is " << texWidth << "x" << texHeight << std::endl;
-			SystemLogger::GetLog() << "The screen will probably look bad. We're just using one render target view currently, and it gets set to the VR headset's recommended resolution when it's plugged in.\n" <<
-				"We should account for that later." << std::endl;
 			rtvWidth = (int)texWidth;
 			rtvHeight = (int)texHeight;
 
@@ -947,6 +927,7 @@ namespace Epoch {
 	{
 		mOpaqueSet.ClearSet();
 		mTransparentSet.ClearSet();
+		mTopmostSet.ClearSet();
 	}
 
 	bool Renderer::BlurTextures(ID3D11Texture2D **_textures, unsigned int _numTextures, float _sigma, float _downsample) {
@@ -1104,7 +1085,7 @@ namespace Epoch {
 		//mSceneScreenQuad->Render();
 
 		// Remove the Scene Shader Resource View from the input pipeline, as once the next render
-		// call happens, it will be bound to the output pipeline, as wel as the input pipeline,
+		// call happens, it will be bound to the output pipeline, as well as the input pipeline,
 		// which will result in DirectX not setting it as an output.
 		ID3D11ShaderResourceView *nullSRV = nullptr;
 		mContext->PSSetShaderResources(eTEX_DIFFUSE, 1, &nullSRV);

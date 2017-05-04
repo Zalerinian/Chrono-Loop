@@ -524,6 +524,19 @@
     <ClInclude Include="Actions\Level3TeleportAction.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\CCMazeHelper.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCLevel3BoxMovementButton.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="CCBoxSpinRandom.h" />
+    <ClInclude Include="Actions\CCBoxSpinRandom.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCBoxSpinRandomSmall.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">

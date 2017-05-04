@@ -26,9 +26,11 @@ namespace Epoch {
 
 		//Time variables
 		float mTimestamp = 0;
+		float mSnapTweenTime = 0;
 		float mDeltaTime = 0;
 		float mTotalGameTime = 0;
 		unsigned int mLevelTime = 0;
+		unsigned int mRewindGettingFaster = 1, mRewindShouldGetFaster = 0;
 		bool mRewindMakeClone = false;
 		bool mShouldUpdateInterpolators = false;
 		bool mShouldPulse = false;
@@ -84,6 +86,7 @@ namespace Epoch {
 		//the temporary frame that time paused is on
 		unsigned int GetTempCurSnap() { return mtempCurSnapFrame; };
 		bool GetShouldPulse() { return mShouldPulse; };
+		float GetSnapTweenTime() { return mSnapTweenTime; }
 		float GetTimeLineObjectInterpTime();
 		static TimeManager* Instance();
 		//The time that has passed in overallgame
@@ -105,6 +108,7 @@ namespace Epoch {
 		void SetTimelineObjectInterpTime(float _time);
 		void SetupClonePairs(unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void Update(float _delta);
+
 		//Function Pointer / Command Console
 		static void ToggleCloneCountDisplay(void* _command, std::wstring _ifOn);
 		static void ToggleSnapshotCountDisplay(void* _command, std::wstring _ifOn);

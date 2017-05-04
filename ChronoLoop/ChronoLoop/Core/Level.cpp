@@ -28,6 +28,8 @@
 #include "../Actions/CCButtonHold.h"
 #include "../Core/Pool.h"
 #include "../Actions/CCLevel3ElevatorButton.h"
+#include "../Actions/CCBoxSpinRandom.h"
+#include "../Actions/CCBoxSpinRandomSmall.h"
 
 namespace Epoch {
 
@@ -80,6 +82,15 @@ namespace Epoch {
 	BaseObject * Level::FindObjectWithName(std::string _name) {
 		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
 			if ((*it)->GetName() == _name) {
+				return *it;
+			}
+		}
+		return nullptr;
+	}
+
+	BaseObject * Level::FindObjectWithID(unsigned short _id) {
+		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
+			if ((*it)->GetUniqueID() == _id) {
 				return *it;
 			}
 		}
@@ -1090,9 +1101,17 @@ namespace Epoch {
 						file.read((char *)&position.x, sizeof(float));
 						file.read((char *)&position.y, sizeof(float));
 						file.read((char *)&position.z, sizeof(float));
+
+						vec3f gravity;
+						if (version >= 5) {
+							file.read((char *)&gravity.x, sizeof(float));
+							file.read((char *)&gravity.y, sizeof(float));
+							file.read((char *)&gravity.z, sizeof(float));
+						}
+
 						if (obj)
 						{
-							SphereCollider* col = new SphereCollider(obj, movable == 1, trigger == 1, vec3f(0, -1, 0), mass, elasticity, staticFriction, kineticFriction, drag, radius);
+							SphereCollider* col = new SphereCollider(obj, movable == 1, trigger == 1, gravity, mass, elasticity, staticFriction, kineticFriction, drag, radius);
 							obj->AddComponent(col);
 						}
 					}
@@ -1250,6 +1269,10 @@ namespace Epoch {
 								codeCom = new BoxSnapToControllerAction();
 							if (path == "CCBoxSpin.h")
 								codeCom = new CCBoxSpin();
+							if (path == "CCBoxSpinRandom.h")
+								codeCom = new CCBoxSpinRandom();
+							if (path == "CCBoxSpinRandomSmall.h")
+								codeCom = new CCBoxSpinRandomSmall();
 							if (path == "CCButtonHold.h")
 								codeCom = new CCButtonHold();
 							if (path == "CCButtonPress.h")
@@ -1508,7 +1531,6 @@ namespace Epoch {
 		else if ((_Level == L"HUBWORLD" || _Level == L"HUB"))
 		{
 			if (accessHub) {
-
 				accessHub->SetOnce(false);
 				CommandConsole::Instance().Toggle();
 			} else {

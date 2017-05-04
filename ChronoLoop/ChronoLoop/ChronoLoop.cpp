@@ -76,7 +76,7 @@ void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftControl
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(133054);
+	//_CrtSetBreakAlloc(115136);
 	if (!InitializeWindow(hInstance, nCmdShow, 1366, 720, true)) {
 		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
 		return 2;
@@ -103,6 +103,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 
 	// Update everything
 	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count());
+	srand(time(NULL));
 	Update();
 
 	// Close the window so we can clean up.
@@ -200,13 +201,14 @@ void Update() {
 	headset->AddComponent(hfollow);
 	TimeManager::Instance()->AddObjectToTimeline(headset);
 
+
 	//Level 1 door////////////////////////////////////////////////////////////////////////
 	Particle* p1 = &Particle::Init();
 	p1->SetPos(vec3f(0, 0, 0));
 	p1->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
 	p1->SetLife(550);
 	p1->SetSize(.35f, .15f);
-	ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054, 1));
+	ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054f, 1));
 	emit11->SetParticle(p1);
 	emit11->SetTexture("../Resources/BasicRectP.png");
 	((TeleportEffect*)emit11)->y1 = 8;
@@ -221,7 +223,7 @@ void Update() {
 	p1->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
 	p1->SetLife(550);
 	p1->SetSize(.15f, .05f);
-	ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054, 1));
+	ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054f, 1));
 	emit12->SetTexture("../Resources/BasicCircleP.png");
 	emit12->SetParticle(p1);
 	((TeleportEffect*)emit12)->y1 = 1;
@@ -322,6 +324,38 @@ void Update() {
 	((TeleportEffect*)startEmit2)->SetVelBounds(vec3f(.5f, 1, .5f), vec3f(.5f, 5, .5f));
 	ParticleSystem::Instance()->AddEmitter(startEmit2);
 	startEmit2->FIRE();
+	//////////////////////////////////////////////////////////////////////////////////////
+
+	//Level 3 door////////////////////////////////////////////////////////////////////////
+	Particle* lvl3 = &Particle::Init();
+	lvl3->SetPos(vec3f(0, 0, 0));
+	lvl3->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
+	lvl3->SetLife(500);
+	lvl3->SetSize(.35f, .15f);
+	ParticleEmitter* emitlvl3 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, -2.82f, 1));
+	emitlvl3->SetParticle(lvl3);
+	emitlvl3->SetTexture("../Resources/BasicRectP.png");
+	((TeleportEffect*)emitlvl3)->y1 = 8;
+	((TeleportEffect*)emitlvl3)->y2 = 12;
+	((TeleportEffect*)emitlvl3)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
+	((TeleportEffect*)emitlvl3)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+	ParticleSystem::Instance()->AddEmitter(emitlvl3);
+	emitlvl3->FIRE();
+
+	lvl3 = &Particle::Init();
+	lvl3->SetPos(vec3f(0, 0, 0));
+	lvl3->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
+	lvl3->SetLife(500);
+	lvl3->SetSize(.15f, .05f);
+	ParticleEmitter* emit2lvl3 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, -2.82f, 1));
+	emit2lvl3->SetTexture("../Resources/BasicCircleP.png");
+	emit2lvl3->SetParticle(lvl3);
+	((TeleportEffect*)emit2lvl3)->y1 = 1;
+	((TeleportEffect*)emit2lvl3)->y2 = 5;
+	((TeleportEffect*)emit2lvl3)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
+	((TeleportEffect*)emit2lvl3)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+	ParticleSystem::Instance()->AddEmitter(emit2lvl3);
+	emit2lvl3->FIRE();
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	//Test Animate Quad///////////////////////////////////////////////////////////////////

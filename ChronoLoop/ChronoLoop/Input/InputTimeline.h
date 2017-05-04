@@ -39,8 +39,9 @@ namespace Epoch {
 		InputNode* GetInsertStart() { return mInsertStart; }
 		void DisplayTimeline();
 		//This func is for an external source that will keep the input timeline in check as it moves
-		void SetCurr(InputNode* _set);
-		void SetInsertStart(InputNode* _set);
+		void SetHead(InputNode* _set) { mHead = _set; };
+		void SetCurr(InputNode* _set) { mCurrent = _set; };
+		void SetInsertStart(InputNode* _set) { mInsertStart = _set; };
 		void Clear();
 
 	};

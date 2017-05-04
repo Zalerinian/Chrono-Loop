@@ -359,7 +359,7 @@ namespace Epoch
 					p1->SetColors(vec3f(0, 0, 1), vec3f(.5f, 0, .5f));
 					p1->SetLife(550);
 					p1->SetSize(.35f, .15f);
-					ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(-8.242585, 0, 0, 1));
+					ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(-8.242585f, 0, 0, 1));
 					emit11->SetParticle(p1);
 					emit11->SetTexture("../Resources/BasicRectP.png");
 					((TeleportEffect*)emit11)->y1 = 8;
@@ -374,7 +374,7 @@ namespace Epoch
 					p1->SetColors(vec3f(.5f, 0, .5f), vec3f(0, 0, 1));
 					p1->SetLife(550);
 					p1->SetSize(.15f, .05f);
-					ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(-8.242585, 0, 0, 1));
+					ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(-8.242585f, 0, 0, 1));
 					emit12->SetTexture("../Resources/BasicCircleP.png");
 					emit12->SetParticle(p1);
 					((TeleportEffect*)emit12)->y1 = 1;

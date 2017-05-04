@@ -43,7 +43,8 @@ namespace Epoch
 		bool GetOnce() { return once; };
 		virtual void OnTriggerEnter(Collider& _col1, Collider& _col2) 
 		{
-			once = false;
+			if(Settings::GetInstance().GetBool("CompleteLevel1"))
+				once = false;
 		}
 		virtual void Start()
 		{
@@ -54,6 +55,7 @@ namespace Epoch
 				Settings::GetInstance().SetBool("LevelIsLoading", true);
 				Level* next = new Level;
 				next->BinaryLoadLevel("../Resources/Level2.elf");
+				Renderer::Instance()->ClearLights();
 				// Todo: Un-hardcode this
 				// use a setting string for next level path?
 				//LM::LevelStatus status = LevelManager::GetInstance().LoadLevelAsync("../Resources/Level1_2_6.xml", &next);

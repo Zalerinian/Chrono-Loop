@@ -66,7 +66,7 @@ namespace Epoch
 
 
 		//Initialize functions
-		static Particle& Init(const Particle& _other);
+		static Particle& Init(Particle& _other);
 
 		/// <summary>Initializes a particle</summary>
 		///<returns>The new particle</returns>

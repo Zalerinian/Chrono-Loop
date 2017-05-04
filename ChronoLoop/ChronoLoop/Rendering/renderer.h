@@ -174,5 +174,6 @@ namespace Epoch {
 		inline RenderShape* GetSceneQuad() { return mScenePPQuad; }
 		inline std::mutex& GetRendererLock() { return mRendererLock; }
 		void SetLight(Light* _light, int _i);
+		inline void ClearLights() { for (int x = 0; x < 3; ++x) { delete mLData[x]; } }
 	};
 }
