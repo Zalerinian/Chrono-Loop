@@ -1299,6 +1299,8 @@ namespace Epoch {
 								codeCom = new CCLevel3ElevatorButton();
 							if (path == "CCLoadHub.h")
 								codeCom = new CCLoadHub();
+							if (path == "CCMazeHelper.h")
+								codeCom = new CCMazeHelper();
 							if (path == "CCPauseToCancel.h")
 								codeCom = new CCPauseToCancel();
 							if (path == "CCStartButton.h")

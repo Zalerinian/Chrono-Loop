@@ -8,6 +8,7 @@
 #include "../Core/Pool.h"
 #include "../Core/Level.h"
 #include "../Input/VRInputManager.h"
+#include "../Actions/CCMazeHelper.h"
 #include "../Common/Breakpoint.h"
 #include "LevelManager.h"
 #include "../Common/Settings.h"
@@ -516,9 +517,9 @@ namespace Epoch {
 				mShouldUpdateInterpolators = true;
 				mShouldPulse = true;
 				VRInputManager::GetInstance().GetController(eControllerType_Primary).TriggerHapticPulse(600, vr::k_EButton_SteamVR_Touchpad);
-				mRewindShouldGetFaster++;
-				if (mRewindShouldGetFaster % 15 == 0)
-					mRewindGettingFaster++;
+ 				//mRewindShouldGetFaster++;
+				//if (mRewindShouldGetFaster % 15 == 0)
+				//	mRewindGettingFaster++;
 				//SystemLogger::GetLog() << "mRewindGettingFaster: " << mRewindGettingFaster << std::endl;
 				//SystemLogger::GetLog() << "mRewindShouldGetFaster: " << mRewindShouldGetFaster << std::endl;
 				if (_gesture == 1)
@@ -579,5 +580,16 @@ namespace Epoch {
 			vec4f start = LevelManager::GetInstance().GetCurrentLevel()->GetStartPos();
 			VRInputManager::GetInstance().GetPlayerPosition()[3].Set(start.x, start.y, start.z, start.w);
 		}
+		if(Settings::GetInstance().GetInt("CurrentLevel") == 3)
+		{
+			std::vector<Component*>& comps = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetComponents(eCOMPONENT_CODE);
+			for (unsigned int i = 0; i < comps.size(); i++) {
+				if (dynamic_cast<CCMazeHelper*>(comps[i])) {
+					((CCMazeHelper*)comps[i])->ResetBoxes();
+					break;
+				}
+			}
+		}
+			
 	}
 }

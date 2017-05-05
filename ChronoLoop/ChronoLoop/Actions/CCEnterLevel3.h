@@ -81,8 +81,7 @@ namespace Epoch {
 					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
-					CCMazeHelper* fuk = new CCMazeHelper();
-					headset->AddComponent(fuk);
+					
 
 					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
 					BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();

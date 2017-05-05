@@ -57,7 +57,7 @@ namespace Epoch {
 							matrix4 mat = mChamberObject->GetTransform().GetMatrix();
 							float tempY = mChamberObject->GetTransform().GetMatrix().Position.y;
 							if (tempY < -1.0) {
-								std::vector<Component*>& comps = cLevel->GetHeadset()->GetComponents(eCOMPONENT_CODE);
+								std::vector<Component*>& comps = mObject->GetComponents(eCOMPONENT_CODE);
 								for (unsigned int  i = 0; i < comps.size(); i++) {
 									if(dynamic_cast<CCMazeHelper*>(comps[i]))
 									{

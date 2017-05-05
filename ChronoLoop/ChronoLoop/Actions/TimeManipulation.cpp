@@ -61,6 +61,7 @@ namespace Epoch
 					mDesaturationInterpolator.SetActive(true);
 
 					mPauseTime = false;
+					Settings::GetInstance().SetBool("IsTimePaused", false);
 					TimeManager::Instance()->RewindTimeline(
 						TimeManager::Instance()->GetCurrentSnapFrame(),
 						cLevel->GetHeadset()->GetUniqueID(),
@@ -91,6 +92,7 @@ namespace Epoch
 					mDesaturationInterpolator.SetActive(true);
 					TimeManager::Instance()->SetTempCurSnap();
 					mPauseTime = true;
+					Settings::GetInstance().SetBool("IsTimePaused", true);
 			}
 		}
 
@@ -199,7 +201,8 @@ namespace Epoch
 					cLevel->GetRightController()->GetUniqueID(),
 					cLevel->GetLeftController()->GetUniqueID());
 
-				cLevel->GetTimeManipulator()->makeTimePaused(false);
+				mPauseTime = false;
+				Settings::GetInstance().SetBool("IsTimePaused", false);
 				mIsBeingMade = false;
 			}
 
