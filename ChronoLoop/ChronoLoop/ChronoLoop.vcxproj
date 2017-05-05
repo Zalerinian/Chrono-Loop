@@ -34,7 +34,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -222,6 +222,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Actions\CCLevel1TutorialButton.h" />
     <ClInclude Include="Actions\CCLevel2Tutorial.h" />
     <ClInclude Include="Actions\CCLevel3BoxMovementButton.h" />
+    <ClInclude Include="Actions\CCLevel3BoxSmash.h" />
     <ClInclude Include="Actions\CCLevel3ElevatorButton.h" />
     <ClInclude Include="Actions\CCLoadHub.h" />
     <ClInclude Include="Actions\CCLoadTutorial.h" />
