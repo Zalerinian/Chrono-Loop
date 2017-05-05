@@ -83,9 +83,6 @@ namespace Epoch {
 		void RenderBlurStage(BlurStage _s, float _dx, float _dy);
 		void ToggleBlurTextureSet(unsigned int _texturesPerSet, ID3D11RenderTargetView **_rtvs, ID3D11ShaderResourceView **_srvs);
 		void SetBlurTexturesDrawback(unsigned int _texturesPerSet, ID3D11RenderTargetView **_drawbacks, ID3D11ShaderResourceView **_srvs);
-		float bootlegSigma = 1.0f;
-		float bootlegDownsample = 0.5f;
-		bool bootlegBlurEnabled = false;
 
 		RenderShape* mScenePPQuad = nullptr, *mSceneScreenQuad = nullptr;
 		RenderContext mCurrentContext;
@@ -129,6 +126,8 @@ namespace Epoch {
 		void RenderNoVR(float _delta);
 		void ProcessRenderSet();
 		void RenderScreenQuad();
+
+		void RenderForBloom();
 
 
 		Renderer();

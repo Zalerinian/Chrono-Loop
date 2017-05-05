@@ -136,6 +136,7 @@ namespace Epoch {
 		ePS_TRANSPARENT,
 		ePS_TRANSPARENT_SCANLINE,
 		ePS_BLUR,
+		ePS_BLOOM,
 		ePS_MAX
 	};
 
