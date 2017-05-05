@@ -497,10 +497,12 @@ namespace Epoch {
 			}
 			return;
 		}
-
-		unsigned int temp = instanceTimemanager->GetCurrentSnapFrame();
-		if (_gesture == 0)
+		SystemLogger::GetLog() << "Gesture ID: " << _gesture << std::endl;
+		if (_gesture == 0) {
+			mRewindShouldGetFaster = 0;
+			mRewindGettingFaster = 1;
 			return;
+		}
 		if (_gesture == 1)
 			_frameRewind *= -1;
 		else if (_gesture == 2) {
@@ -508,6 +510,7 @@ namespace Epoch {
 			LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->RaycastCloneCheck();*/
 			return;
 		}
+		unsigned int temp = instanceTimemanager->GetCurrentSnapFrame();
 			if ((mtempCurSnapFrame != 0 && _gesture == -1) || (mtempCurSnapFrame != temp && _gesture == 1)) {
 				int placeHolder = mtempCurSnapFrame;
 				if (mtempCurSnapFrame - (_frameRewind * mRewindGettingFaster) > 0 && (mtempCurSnapFrame - (_frameRewind * mRewindGettingFaster) < temp))

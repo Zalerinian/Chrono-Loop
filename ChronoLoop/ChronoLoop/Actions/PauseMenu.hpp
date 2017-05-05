@@ -172,15 +172,15 @@ namespace Epoch
 					mcAudio->SetPixelShader(ePS_PURETEXTURE);
 					mcMisc->SetPixelShader(ePS_PURETEXTURE);
 			//Draw in front
-					//mcPauseMenuBase->SetTopmost(true);
-					//mcMainPanel->SetTopmost(true);
-					//mcSettingsPanel->SetTopmost(true);
-					//mcResume->SetTopmost(true);
-					//mcSettings->SetTopmost(true);
-					//mcHubworld->SetTopmost(true);
-					//mcRestartLevel->SetTopmost(true);
-					//mcAudio->SetTopmost(true);
-					//mcMisc->SetTopmost(true);
+					mcPauseMenuBase->SetTopmost(true);
+					mcMainPanel->SetTopmost(true);
+					mcSettingsPanel->SetTopmost(true);
+					mcResume->SetTopmost(true);
+					mcSettings->SetTopmost(true);
+					mcHubworld->SetTopmost(true);
+					mcRestartLevel->SetTopmost(true);
+					mcAudio->SetTopmost(true);
+					mcMisc->SetTopmost(true);
 			//Active Panel Start Up
 				mActiveMenu = PAUSEMENU_ON;
 			//Panel Start Up
