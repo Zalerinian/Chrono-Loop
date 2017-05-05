@@ -18,6 +18,7 @@
 #include "../Actions/CCLoadHub.h"
 #include "../Actions/CCBoxSpin.h"
 #include "../Actions/CCExit.h"
+#include "../Actions/CCLevel1TutorialButton.h"
 #include "../Actions/CCStartButton.h"
 #include "../Objects/MeshComponent.h"
 #include "../tinyxml/tinyxml.h"
@@ -1319,6 +1320,8 @@ namespace Epoch {
 								codeCom = new UICreateToDeleteClone();
 							if (path == "UIRewind.h")
 								codeCom = new UIRewind();
+							if (path == "CCLevel1TutorialButton.h")
+								codeCom = new CCLevel1TutorialButton();
 
 							if (codeCom)
 							{

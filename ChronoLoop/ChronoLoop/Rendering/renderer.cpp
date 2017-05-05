@@ -557,8 +557,8 @@ namespace Epoch {
 		UpdateViewProjection();
 		UpdateGSBuffers();
 		UpdateLBuffers();
-		ProcessRenderSet();
 		ParticleSystem::Instance()->Render();
+		ProcessRenderSet();
 
 		RenderScreenQuad();
 

@@ -494,9 +494,6 @@
     <ClInclude Include="Actions\CCSnapToPlayerPos.h">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\BoxSnapToControllerAction.hpp">
-      <Filter>Actions\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Actions\CCAnimationController.h">
       <Filter>Actions</Filter>
     </ClInclude>
@@ -536,6 +533,12 @@
     </ClInclude>
     <ClInclude Include="Actions\CCBoxSpinRandomSmall.h">
       <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCLevel1TutorialButton.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\BoxSnapToControllerAction.hpp">
+      <Filter>Actions\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

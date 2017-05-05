@@ -309,7 +309,7 @@ namespace Hourglass {
 		}
 
 		public override void CopyData(ref Component _other) {
-			if (!(_other is TransformComponent)) {
+			if (!(_other is SoundComponent)) {
 				throw new InvalidDataException("Given component does not match the calling type.");
 			}
 			SoundComponent comp = _other as SoundComponent;
