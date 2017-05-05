@@ -28,6 +28,7 @@ namespace Epoch {
 		GhostList<matrix4> mPositions;
 
 		RenderList(RenderShape& _reference);
+		~RenderList();
 
 		GhostList<matrix4>::GhostNode* Push(RenderShape& _shape);
 		void Pop(RenderShape& _shape);

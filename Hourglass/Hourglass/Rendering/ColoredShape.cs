@@ -13,6 +13,25 @@ namespace Hourglass
 		protected Color mColor = Color.White;
 		protected CustomVertex.PositionNormalColored[] mVertices;
 
+		public override bool Valid {
+			get {
+				return mVertexBuffer != null && mIndexBuffer != null;
+			}
+		}
+
+
+		public override IndexBuffer IndexBuffer {
+			get {
+				return mIndexBuffer;
+			}
+		}
+
+		public override VertexBuffer VertexBuffer {
+			get {
+				return mVertexBuffer;
+			}
+		}
+
 		public Color Color {
 			get {
 				return mColor;

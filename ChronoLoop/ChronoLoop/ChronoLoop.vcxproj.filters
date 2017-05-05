@@ -16,9 +16,6 @@
     <Filter Include="Sound">
       <UniqueIdentifier>{eae951e6-7e90-499b-9be0-96789c656790}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core">
-      <UniqueIdentifier>{bf92f6b6-ef33-4343-b556-a2be8e0f0bce}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{c5141bd8-8c74-4bee-9186-a68cdc829d07}</UniqueIdentifier>
     </Filter>
@@ -27,12 +24,6 @@
     </Filter>
     <Filter Include="Input\Source Files">
       <UniqueIdentifier>{1b0c1cc2-8905-40e6-9615-423009dcb165}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Header Files">
-      <UniqueIdentifier>{4a4608d5-c13c-4309-8d3d-2898cc3b1219}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Source Files">
-      <UniqueIdentifier>{72f9a024-3f4f-4db5-a6de-460380b3b4f0}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\Header Files">
       <UniqueIdentifier>{264e0f99-edf8-4b4a-bd07-a7c4ac29f8e4}</UniqueIdentifier>
@@ -147,6 +138,15 @@
     </Filter>
     <Filter Include="Rendering\Shaders\Geometry Shaders">
       <UniqueIdentifier>{ebfe2c81-866c-421b-aac0-bd789cbb4a1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{bf92f6b6-ef33-4343-b556-a2be8e0f0bce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Header Files">
+      <UniqueIdentifier>{4a4608d5-c13c-4309-8d3d-2898cc3b1219}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Source Files">
+      <UniqueIdentifier>{72f9a024-3f4f-4db5-a6de-460380b3b4f0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -534,6 +534,12 @@
     <ClInclude Include="Actions\CCBoxSpinRandom.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\CCBoxSpinRandomSmall.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCLevel3BoxSmash.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -894,6 +900,12 @@
     </FxCompile>
     <FxCompile Include="Renderer\shaders\GSAnimatedQuad.hlsl">
       <Filter>Rendering\Shaders\Geometry Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\PSBlur.hlsl">
+      <Filter>Rendering\Shaders\Pixel shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VSBlur.hlsl">
+      <Filter>Rendering\Shaders\Vertex Shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

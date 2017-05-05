@@ -34,7 +34,7 @@ namespace Epoch {
 			Settings::GetInstance().SetBool("Level1Tutorial", true);
 			//Teleport Initialize
 			Transform Transform1;
-			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.78736f) * matrix4::CreateTranslation(1.08f, 1.5f, -8.48f));
+			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.78736f) * matrix4::CreateTranslation(1.08f, 1.5f, -1.48f));
 			Transform1.SetMatrix(mBoardMatrixs.back());
 			BaseObject* mTeleportBoard = new BaseObject("mTeleportBoard", Transform1);
 			MeshComponent* tm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
@@ -204,7 +204,7 @@ namespace Epoch {
 					mPrevBoards = mCurrentBoards;
 					mCurrentBoards.clear();
 					mCurrentBoards.push_back(3);
-					pb->GetBackground()->GetTransform().SetMatrix(pb->GetProgressBar()->GetTransform().GetMatrix() * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.14159f) * matrix4::CreateTranslation(3.71f, 1.46f, 3));
+					pb->GetBackground()->GetTransform().SetMatrix(pb->GetBackground()->GetTransform().GetMatrix() * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.14159f) * matrix4::CreateTranslation(3.71f, 1.46f, 3));
 					pb->OnEnable();
 					break;
 				case 6:

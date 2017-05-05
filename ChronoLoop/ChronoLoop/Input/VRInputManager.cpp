@@ -92,14 +92,13 @@ namespace Epoch {
 		if (cLevel->GetTimeManipulator() != nullptr) {
 			paused= cLevel->GetTimeManipulator()->isTimePaused();
 		}
-		mInputTimeline->SetInsertStart(mInputTimeline->GetCurr());
+		
 		//if there is a event avaliable and the game is focused
 		while (mVRSystem->PollNextEvent(&tempEvent, sizeof(tempEvent)) && !mVRSystem->IsInputFocusCapturedByAnotherProcess() && (!paused)) {
 			if ((tempEvent.eventType == vr::EVREventType::VREvent_ButtonPress || tempEvent.eventType == vr::EVREventType::VREvent_ButtonUnpress) && tempEvent.data.controller.button != vr::k_EButton_Grip  && tempEvent.data.controller.button != vr::k_EButton_ApplicationMenu) {
 				AddInputNode(&tempEvent);
 			}
 		}
-		mInputTimeline->SetInsertStart(nullptr);
 
 	}
 
@@ -133,11 +132,11 @@ namespace Epoch {
 		}
 
 		if (_event->trackedDeviceIndex == mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand)) {
-			node->mData.mControllerId = cLevel->GetLeftController()->GetUniqueId();
+			node->mData.mControllerId = cLevel->GetLeftController()->GetUniqueID();
 			node->mData.mVelocity = mLeftController.GetVelocity();
 			node->mData.mPrimary = mIsLeftPrimary;
 		} else {
-			node->mData.mControllerId = cLevel->GetRightController()->GetUniqueId();
+			node->mData.mControllerId = cLevel->GetRightController()->GetUniqueID();
 			node->mData.mVelocity = mRightController.GetVelocity();
 			node->mData.mPrimary = !mIsLeftPrimary;
 		}

@@ -16,7 +16,7 @@ namespace Epoch
 		std::vector<BaseObject*> mD1Wires;
 		std::vector<BaseObject*> mD2Wires;
 		CubeCollider* blockCube, *exitCube;
-		matrix4 blockend, exitend;
+		matrix4 blockend, exitend, blockstart, exitstart;
 		Interpolator<matrix4>* blockInterp;
 		Interpolator<matrix4>* exitInterp;
 		//vec3f blockend, exitend;
@@ -40,6 +40,8 @@ namespace Epoch
 			//exitend = exitCube->GetPos() + vec3f(0, 2.6f, 0);
 			blockend = blockCube->GetTransform().GetMatrix() * blockCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, -2.6f, 0, 1));
 			exitend = exitCube->GetTransform().GetMatrix() * exitCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 2.6f, 0, 1));
+			blockstart = blockCube->GetTransform().GetMatrix();
+			exitstart = exitCube->GetTransform().GetMatrix();
 
 			mD1Wires = cLevel->FindAllObjectsByPattern("D1Wire");
 			mD2Wires = cLevel->FindAllObjectsByPattern("D2Wire");
@@ -70,7 +72,7 @@ namespace Epoch
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time) {
 			if (!Settings::GetInstance().GetBool("PauseMenuUp")) {
-				if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName() != "Buttonstand") {
+				if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName().find("Buttonstand")) {
 					colliding = true;
 
 					vec3f norm = ((ButtonCollider*)&_col)->mPushNormal;
@@ -151,6 +153,41 @@ namespace Epoch
 					exitInterp->SetActive(false);
 					exitCube->mShouldMove = false;
 					blockCube->mShouldMove = false;
+				}
+			}
+		}
+		void ResetDoors()
+		{
+
+			mDoorDoneInterpolating = false;
+			mCanDoorInterp = true;
+
+			blockInterp->SetActive(true);
+			blockInterp->Prepare(0.69f, blockCube->GetTransform().GetMatrix(), blockstart, blockCube->GetTransform().GetMatrix());
+
+			//exitCube->SetPos(exitend);
+			exitInterp->SetActive(true);
+			exitInterp->Prepare(0.69f, exitCube->GetTransform().GetMatrix(), exitstart, exitCube->GetTransform().GetMatrix());
+
+			//Turn on wires that need to be turned on
+			for (unsigned int i = 0; i < mD1Wires.size(); i++) {
+				MeshComponent* temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
+				if (temp) {
+					temp->SetVisible(false);
+				}
+				temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
+				if (temp) {
+					temp->SetVisible(true);
+				}
+			}
+			for (unsigned int i = 0; i < mD2Wires.size(); i++) {
+				MeshComponent* temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
+				if (temp) {
+					temp->SetVisible(true);
+				}
+				temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
+				if (temp) {
+					temp->SetVisible(false);
 				}
 			}
 		}
