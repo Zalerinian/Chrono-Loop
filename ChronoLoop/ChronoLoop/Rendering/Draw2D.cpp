@@ -6,6 +6,25 @@ namespace Epoch
 {
 
 	Draw* Draw::sInstance = nullptr;
+	Draw & Draw::Instance()
+	{
+		if (!sInstance)
+		{
+			sInstance = new Draw();
+			sInstance->InitializeDirect2D();
+			sInstance->InitializeScreenBitmap();
+		}
+		return *sInstance;
+	}
+
+	void Draw::DestroyInstance()
+	{
+		if (sInstance != nullptr)
+		{
+			delete sInstance;
+		}
+		sInstance = nullptr;
+	}
 	Draw::Draw()
 	{
 		mFontIDs = 0;
@@ -34,9 +53,8 @@ namespace Epoch
 
 		for (std::pair<unsigned int, std::pair<Font, IDWriteTextFormat*>> x : mFonts)
 		{
+			//delete &x.second.first;
 			x.second.second->Release();
-			delete &x.second.first;
-			
 		}
 		for (std::pair<unsigned int, std::pair<D2D1::ColorF, ID2D1SolidColorBrush*>> x : mColorBrushes)
 		{
@@ -51,25 +69,6 @@ namespace Epoch
 
 	}
 
-	Draw & Draw::Instance()
-	{
-		if (!sInstance)
-		{
-			sInstance = new Draw();
-			sInstance->InitializeDirect2D();
-			sInstance->InitializeScreenBitmap();
-		}
-		return *sInstance;
-	}
-
-	void Draw::DestroyInstance()
-	{
-		if (sInstance != nullptr)
-		{
-			delete sInstance;
-		}
-		sInstance = nullptr;
-	}
 	void Draw::InitializeDirect2D()
 	{
 
@@ -182,7 +181,6 @@ namespace Epoch
 	void Draw::DrawTextToBitmap(float _left, float _top, float _right, float _bottom,
 															Font _font, std::wstring _text, ID2D1Bitmap* _bitmap)
 	{
-
 		(*mContext2D)->SetTarget(_bitmap);
 
 		// Retrieve the size of the render target.

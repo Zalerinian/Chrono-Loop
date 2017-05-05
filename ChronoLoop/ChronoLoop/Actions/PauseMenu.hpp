@@ -220,7 +220,7 @@ namespace Epoch
 					//Main Panel Rectangle
 					Draw::Instance().DrawRectangleToBitmap(
 						0, 0, 256.0f, 256.0f,
-						(D2D1::ColorF::Black, 1.0f),
+						(D2D1::ColorF::Black, (UINT32)1.0f),
 						Draw::Instance().GetBitmap(texMainPanel.Get()));
 					//Main Panel Text
 					mainFont->mColor = D2D1::ColorF::WhiteSmoke;
@@ -233,7 +233,7 @@ namespace Epoch
 					//Settings Panel Rectangle
 					Draw::Instance().DrawRectangleToBitmap(
 						0, 0, 256.0f, 256.0f,
-						(D2D1::ColorF::Black, 0.8f),
+						(D2D1::ColorF::Black, (UINT32)0.8f),
 						Draw::Instance().GetBitmap(texSettingsPanel.Get()));
 					//Settings Panel Text
 					Draw::Instance().DrawTextToBitmap(
@@ -467,7 +467,7 @@ namespace Epoch
 			case RESTART:
 				{
 					OnDisable();
-					TimeManager::Instance()->HotfixResetTimeline();
+					TimeManager::Instance()->ResetTimeLineandLevel();
 				}
 				break;
 			case AUDIO:
@@ -532,6 +532,7 @@ namespace Epoch
 			{
 				BaseObject* temp = (&*it);
 				SetVisiblity(&temp, _isVisible);
+				//delete temp;
 			}
 			std::vector<Component*> CodeComps = (*_obj)->GetComponents(Epoch::ComponentType::eCOMPONENT_MESH);
 			if (CodeComps.size() > 0) {
@@ -543,6 +544,7 @@ namespace Epoch
 					}
 				}
 			}
+			CodeComps.clear();
 		}
 
 		bool RaycastToMenu(BaseObject** _obj, MeshComponent** _mc, bool _isLeft) {

@@ -28,6 +28,7 @@
 #include "../Actions/CCButtonHold.h"
 #include "../Core/Pool.h"
 #include "../Actions/CCLevel3ElevatorButton.h"
+#include "../Actions/CCBoxSpinRandom.h"
 
 namespace Epoch {
 
@@ -1250,6 +1251,8 @@ namespace Epoch {
 								codeCom = new BoxSnapToControllerAction();
 							if (path == "CCBoxSpin.h")
 								codeCom = new CCBoxSpin();
+							if (path == "CCBoxSpinRandom.h")
+								codeCom = new CCBoxSpinRandom();
 							if (path == "CCButtonHold.h")
 								codeCom = new CCButtonHold();
 							if (path == "CCButtonPress.h")
@@ -1268,6 +1271,8 @@ namespace Epoch {
 								codeCom = new CCEnterLevel();
 							if (path == "CCEnterLevel1.h")
 								codeCom = new CCEnterLevel1();
+							if (path == "CCEnterLevel3.h")
+								codeCom = new CCEnterLevel3();
 							if (path == "CCExit.h")
 								codeCom = new CCExit();
 							if (path == "CCLevel3ElevatorButton.h")
@@ -1506,7 +1511,6 @@ namespace Epoch {
 		else if ((_Level == L"HUBWORLD" || _Level == L"HUB"))
 		{
 			if (accessHub) {
-
 				accessHub->SetOnce(false);
 				CommandConsole::Instance().Toggle();
 			} else {

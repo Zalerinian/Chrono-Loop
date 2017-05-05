@@ -46,7 +46,7 @@ namespace Epoch {
 			tm->SetVisible(false);
 			mTeleportBoard->AddComponent(tm);
 			Emitter* te = new SFXEmitter();
-			((SFXEmitter*)te)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			((SFXEmitter*)te)->SetEvent(AK::EVENTS::SFX_GENTLE_ALARM);
 			mTeleportBoard->AddComponent(te);
 			AudioWrapper::GetInstance().AddEmitter(te, "mTeleportBoard");
 			boards.push_back(mTeleportBoard);
@@ -66,7 +66,7 @@ namespace Epoch {
 			pum->SetVisible(false);
 			mPickUpBoard->AddComponent(pum);
 			Emitter* pe = new SFXEmitter();
-			((SFXEmitter*)pe)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			((SFXEmitter*)pe)->SetEvent(AK::EVENTS::SFX_GENTLE_ALARM);
 			mPickUpBoard->AddComponent(pe);
 			AudioWrapper::GetInstance().AddEmitter(pe, "mPickUpBoard");
 			boards.push_back(mPickUpBoard);
@@ -86,7 +86,7 @@ namespace Epoch {
 			ptm->SetVisible(false);
 			mPauseTimeBoard->AddComponent(ptm);
 			Emitter* pte = new SFXEmitter();
-			((SFXEmitter*)pte)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			((SFXEmitter*)pte)->SetEvent(AK::EVENTS::SFX_GENTLE_ALARM);
 			mPauseTimeBoard->AddComponent(pte);
 			AudioWrapper::GetInstance().AddEmitter(pte, "mPauseTimeBoard");
 			boards.push_back(mPauseTimeBoard);
@@ -112,7 +112,7 @@ namespace Epoch {
 			mRewindBoard->AddComponent(pb);
 			mRewindBoard->AddComponent(rm);
 			Emitter* re = new SFXEmitter();
-			((SFXEmitter*)re)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			((SFXEmitter*)re)->SetEvent(AK::EVENTS::SFX_GENTLE_ALARM);
 			mRewindBoard->AddComponent(re);
 			AudioWrapper::GetInstance().AddEmitter(re, "mRewindBoard");
 			boards.push_back(mRewindBoard);
@@ -132,7 +132,7 @@ namespace Epoch {
 			am->SetVisible(false);
 			mAcceptBoard->AddComponent(am);
 			Emitter* ae = new SFXEmitter();
-			((SFXEmitter*)ae)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			((SFXEmitter*)ae)->SetEvent(AK::EVENTS::SFX_GENTLE_ALARM);
 			mAcceptBoard->AddComponent(ae);
 			AudioWrapper::GetInstance().AddEmitter(ae, "mAcceptBoard");
 			boards.push_back(mAcceptBoard);

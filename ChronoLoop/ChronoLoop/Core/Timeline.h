@@ -94,15 +94,21 @@ namespace Epoch {
 		ObjectLifeTime* GetObjectLifetime(unsigned short _id);
 		SnapInfo* GenerateSnapInfo(BaseObject* _object, SnapInfo* _info);
 		Snapshot* GenerateSnapShot(unsigned int _time, std::vector<BaseObject*> & _clones);
+		//retreive what frame/snap the game is recording on
 		const unsigned int& GetCurrentGameTimeIndx() { return mCurrentGameTimeIndx; }
+		//total number of snaps recorded
 		unsigned int GetTotalSnaps() { return (unsigned int)mSnapshots.size(); };
 		float GetObjectInterpolationTime() { return mObjectInterpolationTime; };
 		void SetObjectInterpolationTime(float _set) { mObjectInterpolationTime = _set; };
-		void HotFixResetLevel();
+		void ResetTimelineAndLevel();
 		void RemoveFromTimeline(unsigned short _id);
+		//Rewind time to snap and make a clone created at that point 
 		bool RewindMakeClone(unsigned int _snaptime);
+		//Rewind time to snap execpt player baseobjects
 		bool RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
+		//rewind only component data to snap of baseobjects
 		void MoveAllComponentsToSnapExceptPlayer(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
+		//rewind a object to a particular snap 
 		void MoveObjectToSnap(unsigned int _snaptime, unsigned short _id, bool isClone);
 		void MoveAllObjectsToSnap(unsigned int _snaptime);
 		void MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);

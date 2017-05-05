@@ -47,7 +47,7 @@ namespace Epoch {
 			ccm->SetVisible(false);
 			mCreateCloneBoard->AddComponent(ccm);
 			Emitter* cce = new SFXEmitter();
-			((SFXEmitter*)cce)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			((SFXEmitter*)cce)->SetEvent(AK::EVENTS::SFX_GENTLE_ALARM);
 			mCreateCloneBoard->AddComponent(cce);
 			AudioWrapper::GetInstance().AddEmitter(cce, "mCreateCloneBoard");
 			boards.push_back(mCreateCloneBoard);
@@ -67,7 +67,7 @@ namespace Epoch {
 			dcm->SetVisible(false);
 			mDeleteCloneBoard->AddComponent(dcm);
 			Emitter* dce = new SFXEmitter();
-			((SFXEmitter*)dce)->SetEvent(AK::EVENTS::SFX_COMMUNICATION_CHANNEL);
+			((SFXEmitter*)dce)->SetEvent(AK::EVENTS::SFX_GENTLE_ALARM);
 			mDeleteCloneBoard->AddComponent(dce);
 			AudioWrapper::GetInstance().AddEmitter(dce, "mDeleteCloneBoard");
 			boards.push_back(mDeleteCloneBoard);

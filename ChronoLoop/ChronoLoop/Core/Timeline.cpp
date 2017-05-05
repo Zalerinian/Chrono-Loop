@@ -116,7 +116,7 @@ namespace Epoch {
 			Interpolator<matrix4>* temp = TimeManager::Instance()->GetCloneInterpolator(clones[i]->GetUniqueID());
 			Interpolator<matrix4>* tempCol = nullptr;
 		//	if(clones[i]->GetComponentCount(eCOMPONENT_COLLIDER) > 0)
-//			tempCol= TimeManager::Instance()->GetCloneColliderInterpolator(clones[i]->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)->GetColliderId());
+			//tempCol= TimeManager::Instance()->GetCloneColliderInterpolator(clones[i]->GetComponentIndexed(eCOMPONENT_COLLIDER, 0)->GetColliderId());
 			if (temp)
 				temp->SetActive(false);
 			//if (tempCol)
@@ -127,7 +127,7 @@ namespace Epoch {
 		return true;
 	}
 
-	void Timeline::HotFixResetLevel() {
+	void Timeline::ResetTimelineAndLevel() {
 		std::vector<BaseObject*>clones = TimeManager::Instance()->GetClonesVec();
 		for (auto lifespan : mObjectLifeTimes) {
 			//Delete the creation of the clones
@@ -851,7 +851,8 @@ namespace Epoch {
 					if (currComp->GetColliderId() == comp->mId) {
 						if (((Collider*)currComp)->mAcceleration != ((SnapComponent_Physics*)comp)->mAcc ||
 							((Collider*)currComp)->mVelocity != ((SnapComponent_Physics*)comp)->mVel ||
-							((Collider*)currComp)->mForces != ((SnapComponent_Physics*)comp)->mForces)
+							((Collider*)currComp)->mForces != ((SnapComponent_Physics*)comp)->mForces ||
+							((Collider*)currComp)->mTotalForce != ((SnapComponent_Physics*)comp)->mTotforce)
 							return false;
 					}
 				}

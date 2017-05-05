@@ -45,6 +45,7 @@ namespace Epoch
 				Settings::GetInstance().SetBool("LevelIsLoading", true);
 				Level* next = new Level;
 				next->BinaryLoadLevel("../Resources/MainMenu.elf");
+				Renderer::Instance()->ClearLights();
 				// Todo: Un-hardcode this
 				// use a setting string for next level path?
 				//LM::LevelStatus status = LevelManager::GetInstance().LoadLevelAsync("../Resources/Level1_2_6.xml", &next);
@@ -62,12 +63,10 @@ namespace Epoch
 					AudioWrapper::GetInstance().RemoveEmitter(e);
 
 					Physics::Instance()->PhysicsLock.lock();
-					TimeManager::Instance()->Destroy();
 					Physics::Instance()->mObjects.clear();
 					LevelManager::GetInstance().RequestLevelChange(next);
 					
 
-					TimeManager::Instance();
 
 					//Sound Initializing---------------------------------------------------
 					//Listener* ears = new Listener();
@@ -82,7 +81,7 @@ namespace Epoch
 
 					//new stuff
 					Transform identity, transform;
-					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", identity);
+					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					rightRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
@@ -93,9 +92,8 @@ namespace Epoch
 					RightController->AddComponent(rightRaycaster);
 					RightController->AddComponent(bt);
 					RightController->AddComponent(rightConCol);
-					TimeManager::Instance()->AddObjectToTimeline(RightController);
 
-					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity); //new BaseObject("Controller2", identity);
+					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity,nullptr, BaseObject_Flag_Record_In_Timeline); //new BaseObject("Controller2", identity);
 					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					leftRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
@@ -106,17 +104,20 @@ namespace Epoch
 					LeftController->AddComponent(leftRaycaster);
 					LeftController->AddComponent(mc2);
 					LeftController->AddComponent(bt2);
-					TimeManager::Instance()->AddObjectToTimeline(LeftController);
 
-					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", identity); //new BaseObject("headset", transform);
+					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", identity, nullptr, BaseObject_Flag_Record_In_Timeline); //new BaseObject("headset", transform);
 					HeadsetFollow* hfollow = new HeadsetFollow();
 					headset->AddComponent(hfollow);
-					TimeManager::Instance()->AddObjectToTimeline(headset);
+
+
 					
 					Emitter* sound = new SFXEmitter();
 					((SFXEmitter*)sound)->SetEvent(AK::EVENTS::SFX_TELEPORTSOUND);
 					AudioWrapper::GetInstance().AddEmitter(sound, headset->GetName().c_str());
 					headset->AddComponent(sound);
+
+
+
 
 					Transform cubeScale;
 					cubeScale.SetMatrix(matrix4::CreateScale(0.01f, 0.01f, 0.01f));
@@ -146,12 +147,12 @@ namespace Epoch
 							temp == "mmTutButton" || temp == "mmTutSign" || temp == "mmTutStand")
 						{
 							Transform t;
-							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateTranslation(0, floorPos, 0));
+							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateTranslation(0, (float)floorPos, 0));
 							((BaseObject*)*it)->SetTransform(t);
 
 							if(boop)
 							{
-								next->GetStartPos() = vec4f(0, floorPos, 0, 1);
+								next->GetStartPos() = vec4f(0, (float)floorPos, 0, 1);
 								boop = false;
 							}
 
@@ -161,6 +162,7 @@ namespace Epoch
 								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mat.fourth);
 								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mat.fourth.y - .2f;
 								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mat.fourth.y + .2f;
+							
 							}
 							else if(temp == "mmExitButton")
 							{
@@ -168,6 +170,7 @@ namespace Epoch
 								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(((BaseObject*)*it)->GetTransform().GetMatrix().fourth);
 								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = ((BaseObject*)*it)->GetTransform().GetMatrix().fourth.y - .2f;
 								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = ((BaseObject*)*it)->GetTransform().GetMatrix().fourth.y - .2f;
+
 							}
 							else if (temp == "mmTutButton") {
 								matrix4 mat = ((BaseObject*)*it)->GetTransform().GetMatrix();
@@ -198,7 +201,7 @@ namespace Epoch
 						p1->SetColors(vec3f(0, 1, 0), vec3f(0, .5f, .5f));
 						p1->SetLife(550);
 						p1->SetSize(.35f, .15f);
-						ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054, 1));
+						ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054f, 1));
 						emit11->SetParticle(p1);
 						emit11->SetTexture("../Resources/BasicRectP.png");
 						((TeleportEffect*)emit11)->y1 = 8;
@@ -213,7 +216,7 @@ namespace Epoch
 						p1->SetColors(vec3f(0, .5f, .5f), vec3f(0, 1, 0));
 						p1->SetLife(550);
 						p1->SetSize(.15f, .05f);
-						ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054, 1));
+						ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054f, 1));
 						emit12->SetTexture("../Resources/BasicCircleP.png");
 						emit12->SetParticle(p1);
 						((TeleportEffect*)emit12)->y1 = 1;
@@ -230,7 +233,7 @@ namespace Epoch
 						p1->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
 						p1->SetLife(550);
 						p1->SetSize(.35f, .15f);
-						ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054, 1));
+						ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054f, 1));
 						emit11->SetParticle(p1);
 						emit11->SetTexture("../Resources/BasicRectP.png");
 						((TeleportEffect*)emit11)->y1 = 8;
@@ -245,7 +248,7 @@ namespace Epoch
 						p1->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
 						p1->SetLife(550);
 						p1->SetSize(.15f, .05f);
-						ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054, 1));
+						ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054f, 1));
 						emit12->SetTexture("../Resources/BasicCircleP.png");
 						emit12->SetParticle(p1);
 						((TeleportEffect*)emit12)->y1 = 1;
@@ -263,7 +266,7 @@ namespace Epoch
 						p2->SetColors(vec3f(0, 1, 0), vec3f(0, .5f, .5f));
 						p2->SetLife(500);
 						p2->SetSize(.35f, .15f);
-						ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(-2.82, -10, 0, 1));
+						ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(-2.82f, -10, 0, 1));
 						emit21->SetParticle(p2);
 						emit21->SetTexture("../Resources/BasicRectP.png");
 						((TeleportEffect*)emit21)->y1 = 8;
@@ -278,7 +281,7 @@ namespace Epoch
 						p2->SetColors(vec3f(0, .5f, .5f), vec3f(0, 1, 0));
 						p2->SetLife(500);
 						p2->SetSize(.15f, .05f);
-						ParticleEmitter* emit22 = new TeleportEffect(-1, 150, 2, vec4f(-2.82, -10, 0, 1));
+						ParticleEmitter* emit22 = new TeleportEffect(-1, 150, 2, vec4f(-2.82f, -10, 0, 1));
 						emit22->SetTexture("../Resources/BasicCircleP.png");
 						emit22->SetParticle(p2);
 						((TeleportEffect*)emit22)->y1 = 1;
@@ -295,7 +298,7 @@ namespace Epoch
 						p2->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
 						p2->SetLife(500);
 						p2->SetSize(.35f, .15f);
-						ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(-2.82, -10, 0, 1));
+						ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(-2.82f, -10, 0, 1));
 						emit21->SetParticle(p2);
 						emit21->SetTexture("../Resources/BasicRectP.png");
 						((TeleportEffect*)emit21)->y1 = 8;

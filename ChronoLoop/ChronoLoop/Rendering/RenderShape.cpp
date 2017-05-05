@@ -210,6 +210,7 @@ namespace Epoch {
 		D3D11_BUFFER_DESC desc;
 		D3D11_SUBRESOURCE_DATA data;
 
+		Renderer::Instance()->GetRendererLock().lock();
 		//Make buffer with new vert data
 		desc.Usage = D3D11_USAGE_DEFAULT;
 		desc.ByteWidth = sizeof(VertexPosNormTex) * _mesh->VertSize();
@@ -234,5 +235,7 @@ namespace Epoch {
 		//Calc off... x off num bytes to beginning dest subr = 0 , y & z = 0
 		Renderer::Instance()->GetContext()->CopySubresourceRegion(ibuffer, 0, ioff, 0, 0, i, 0, 0);
 		Renderer::Instance()->GetContext()->CopySubresourceRegion(vbuffer, 0, voff, 0, 0, v, 0, 0);
+
+		Renderer::Instance()->GetRendererLock().unlock();
 	}
 }

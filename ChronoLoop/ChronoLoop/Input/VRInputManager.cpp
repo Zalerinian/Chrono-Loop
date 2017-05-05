@@ -84,12 +84,6 @@ namespace Epoch {
 			GestureCheck = 0;
 		TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
 
-		//Update InputSnap TweenTime 
-		mTweenTimestamp += TimeManager::Instance()->GetDeltaTime();
-		if (mTweenTimestamp >= RecordingRate) {
-			mTweenTimestamp -= RecordingRate;
-		}
-		mSnapTweenTime = mTweenTimestamp / RecordingRate;
 
 		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 		//Pull vr events to find button press or up
@@ -98,14 +92,13 @@ namespace Epoch {
 		if (cLevel->GetTimeManipulator() != nullptr) {
 			paused= cLevel->GetTimeManipulator()->isTimePaused();
 		}
-		mInputTimeline->SetInsertStart(mInputTimeline->GetCurr());
+		
 		//if there is a event avaliable and the game is focused
 		while (mVRSystem->PollNextEvent(&tempEvent, sizeof(tempEvent)) && !mVRSystem->IsInputFocusCapturedByAnotherProcess() && (!paused)) {
 			if ((tempEvent.eventType == vr::EVREventType::VREvent_ButtonPress || tempEvent.eventType == vr::EVREventType::VREvent_ButtonUnpress) && tempEvent.data.controller.button != vr::k_EButton_Grip  && tempEvent.data.controller.button != vr::k_EButton_ApplicationMenu) {
 				AddInputNode(&tempEvent);
 			}
 		}
-		mInputTimeline->SetInsertStart(nullptr);
 
 	}
 
@@ -120,9 +113,17 @@ namespace Epoch {
 	void VIM::AddInputNode(vr::VREvent_t* _event) {
 		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 		InputTimeline::InputNode* node = new InputTimeline::InputNode();
-		node->mData.mLastFrame = TimeManager::Instance()->GetCurrentSnapFrame();
+
+		
 		node->mData.mButton = (vr::EVRButtonId)_event->data.controller.button;
-		node->mData.mTime = mSnapTweenTime;
+		node->mData.mLastFrame = TimeManager::Instance()->GetCurrentSnapFrame();
+		float time = TimeManager::Instance()->GetSnapTweenTime() - (_event->eventAgeSeconds / RecordingRate);
+		if(time < 0.0f)
+		{
+			time += 1;
+			node->mData.mLastFrame -= 1;
+		}
+		node->mData.mTime = time;
 
 		if (_event->eventType == vr::EVREventType::VREvent_ButtonPress) {
 			node->mData.mButtonState = -1;
@@ -147,6 +148,10 @@ namespace Epoch {
 	void VIM::RewindInputTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2) {
 
 		InputTimeline::InputNode* temp = mInputTimeline->GetCurr();
+		if(!temp)
+		{
+			temp = mInputTimeline->GetHead();
+		}
 		while (temp) {
 			//Have reached the point we want to stop
 			if (temp->mData.mLastFrame < _frame) {
@@ -169,6 +174,12 @@ namespace Epoch {
 							del->mNext->mPrev = temp;
 					} else {
 						temp = nullptr;
+					}
+					if(del == mInputTimeline->GetHead())
+					{
+						if (del == mInputTimeline->GetCurr())
+							mInputTimeline->SetCurr(nullptr);
+						mInputTimeline->SetHead(nullptr);
 					}
 					delete del;
 				} else if (temp->mPrev) {

@@ -18,6 +18,7 @@
 namespace Epoch {
 
 	struct TeleportAction : public CodeComponent {
+		
 		matrix4 endPos;
 		Interpolator<matrix4>* interp;
 		MeshComponent *mPlaneMesh, *mWallsMesh, *mBlockMesh, *mExitMesh, *mServerMesh, *mTWall1Mesh, *mTWall2Mesh, *mTWindowMesh;
@@ -27,12 +28,12 @@ namespace Epoch {
 		TeleportAction(ControllerType _t) { mControllerRole = _t; };
 
 		bool mCanTeleport = false, mInitial = false;
-		std::vector<vec3f> mArc; 
+		std::vector<vec3f> mArc;
 		vec3f mVelocity, mAcceleration;
-		BaseObject* mTPLoc, *mCSLoc;
-		MeshComponent* mTPMesh, *mCSMesh;
+		BaseObject* mTPLoc, *mCSLoc, *mMSLoc;
+		MeshComponent* mTPMesh, *mCSMesh, *mMidMesh;
 
-		RenderShape* mParabola;
+		RenderShape* mParabola; 
 		GhostList<matrix4>::GhostNode* mPGhost;
 		Mesh* mArcMesh;
 
@@ -60,6 +61,7 @@ namespace Epoch {
 			std::vector<unsigned int> mIndices;
 
 			vec3f right = _vel.Cross(vec3f(0, 1, 0)).Normalize();
+			//Maybe over extend, may be some index issue
 			mVerts.reserve(50);
 			mVerts.resize(50);
 			int ind = 0, numrv = 0;
@@ -73,9 +75,6 @@ namespace Epoch {
 					t1.Position.w = 1;
 					t2.Position.w = 1;
 
-					/*t1.Position *= _m;
-					t2.Position *= _m;
-					*/
 					//Figure out uv offset
 					float uvoff = fmodf((std::chrono::steady_clock::now().time_since_epoch().count()) / 1000.0f / 1000.0f / 1000.0f, 1);
 					if (i == mArc.size() - 1 && i > 1)
@@ -98,23 +97,9 @@ namespace Epoch {
 			mIndices.reserve((mVerts.size() / 2 - 1) * 12);
 			mIndices.resize((mVerts.size() / 2 - 1) * 12);
 			ind = 0;
-			for (int i = 0; i < numrv / 2 - 1; i++)
+			for (int i = 0; i < mVerts.size() / 2 - 1; i++)
 			{
 				int p1 = 2 * i, p2 = 2 * i + 1, p3 = 2 * i + 2, p4 = 2 * i + 3;
-
-				/*mIndices.push_back(p1);
-				mIndices.push_back(p2);
-				mIndices.push_back(p3);
-				mIndices.push_back(p3);
-				mIndices.push_back(p2);
-				mIndices.push_back(p4);
-
-				mIndices.push_back(p3);
-				mIndices.push_back(p2);
-				mIndices.push_back(p1);
-				mIndices.push_back(p4);
-				mIndices.push_back(p2);
-				mIndices.push_back(p3);*/
 
 				mIndices[ind] = (p1);
 				mIndices[ind + 1] = (p2);
@@ -130,6 +115,7 @@ namespace Epoch {
 				mIndices[ind + 10] = (p2);
 				mIndices[ind + 11] = (p3);
 				ind += 12;
+				
 			}
 
 			if (!mInitial)
@@ -141,7 +127,7 @@ namespace Epoch {
 				mParabola = new RenderShape(*mArcMesh);
 				mParabola->SetShaders(PixelShaderFormat::ePS_PURETEXTURE, VertexShaderFormat::eVS_TEXTURED);
 				mParabola->SetGeometryShader(GeometryShaderFormat::eGS_PosNormTex);
-				mParabola->AddTexture(L"../Resources/ARC.png", TextureType::eTEX_DIFFUSE);
+				mParabola->AddTexture(L"../Resources/cube_texture.png", TextureType::eTEX_DIFFUSE);
 				mPGhost = Renderer::Instance()->AddOpaqueNode(*mParabola);
 				mInitial = true;
 			}
@@ -161,7 +147,7 @@ namespace Epoch {
 			return _v + _a * _t;
 		}
 
-		bool CalculateCurve(vec3f _p, vec3f _v, vec3f _a, MeshComponent* _plane, std::vector<vec3f>& _arc)
+		bool CalculateCurve(vec3f _p, vec3f _v, vec3f _a, MeshComponent* _plane, MeshComponent* _walls, std::vector<vec3f>& _arc)
 		{
 			_arc.clear();
 
@@ -176,6 +162,12 @@ namespace Epoch {
 				vec3f nextpos = ParabolicCurve(_p, _v, _a, t);
 
 				vec3f hit;
+				if (CheckMesh(_walls, lastpos, nextpos, hit))
+				{
+					_arc.push_back(hit);
+
+					return true;
+				}
 				if (CheckMesh(_plane, lastpos, nextpos, hit))
 				{
 					//if it hits the plane
@@ -191,7 +183,7 @@ namespace Epoch {
 
 			return false;
 		}
-
+		
 
 		virtual void Start() {
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
@@ -223,17 +215,44 @@ namespace Epoch {
 			mAcceleration = vec3f(0, -9.81f, 0);
 			mInitial = false;
 
+			matrix4 scaleM;
+			scaleM.first = vec4f(.05f, 0, 0, 0);
+			scaleM.second = vec4f(0, .05f, 0, 0);
+			scaleM.third = vec4f(0, 0, .05f, 0);
+			scaleM.fourth = vec4f(0, 0, 0, 1);
+
 			mTPLoc = new BaseObject("TeleportSpot");
 			mCSLoc = new BaseObject("ArcStart");
+			mMSLoc = new BaseObject("ArcMid");
 
 			//TODO : Make mesh and load them here as well as textures
 			mCSMesh = new MeshComponent("../Resources/ControllerTP.obj");
 			mCSMesh->AddTexture("../Resources/cube_texture.png", TextureType::eTEX_DIFFUSE);
+			mCSLoc->AddComponent(mCSMesh);
+			mMidMesh = new MeshComponent("../Resources/ControllerTP.obj");
+			mMidMesh->AddTexture("../Resources/cube_texture.png", TextureType::eTEX_DIFFUSE);
+			mMSLoc->AddComponent(mMidMesh);
 			mTPMesh = new MeshComponent("../Resources/TeleportMarker.obj");
 			mTPMesh->AddTexture("../Resources/cube_texture.png", TextureType::eTEX_DIFFUSE);
+			mTPLoc->AddComponent(mTPMesh);
+
+			matrix4 temp;
+			temp = mCSMesh->GetTransform().GetMatrix() * scaleM;
+			mCSMesh->GetTransform().SetMatrix(temp);
+
+			temp = mMidMesh->GetTransform().GetMatrix() * scaleM;
+			mMidMesh->GetTransform().SetMatrix(temp);
+			
+			temp = mTPMesh->GetTransform().GetMatrix();
+			mTPMesh->GetTransform().SetMatrix(temp);
 
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mTPLoc);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mCSLoc);
+			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mMSLoc);
+
+			mTPMesh->SetVisible(false);
+			mCSMesh->SetVisible(false);
+			mMidMesh->SetVisible(false);
 		}
 
 		virtual void Update() {
@@ -253,14 +272,19 @@ namespace Epoch {
 
 			}
 
+			matrix4 tmp = mat;
 			vec3f fwdvel, right;
 			vec4f t = mVelocity;
 			t.w = 1;
-			t *= mat;
+
+			tmp.first.w = 0;
+			tmp.second.w = 0;
+			tmp.third.w = 0;
+			tmp.fourth = vec4f();
+
+			t *= tmp;
 
 			vec4f up = vec3f(0, 1, 0);
-			up *= mat;
-			up.Normalize();
 			fwdvel = t * ((up.Dot(t)) / t.SquaredMagnitude());
 			float angle = acos(fwdvel.Dot(t));
 			right = up.Cross(fwdvel);
@@ -277,33 +301,45 @@ namespace Epoch {
 				angle = 45;
 			}
 
-			mCanTeleport = CalculateCurve(mat.Position, t, mAcceleration, mPlaneMesh, mArc);
+			mCanTeleport = CalculateCurve(mat.Position, t, mAcceleration, mPlaneMesh, mWallsMesh, mArc);
 
 			if (mCanTeleport)
 			{
-				GenerateMesh(vec3f(t.x, t.y, t.z), mat);
-				mPGhost->data.Position = vec4f();
+				//GenerateMesh(vec3f(t.x, t.y, t.z), mat);
+				//mPGhost->data.Position = vec4f();
+
+				matrix4 scaleM;
+				scaleM.first = vec4f(.15f, 0, 0, 0);
+				scaleM.second = vec4f(0, .15f, 0, 0);
+				scaleM.third = vec4f(0, 0, .15f, 0);
+				scaleM.fourth = vec4f(0, 0, 0, 1);
 
 				mTPMesh->SetVisible(true);
 				mCSMesh->SetVisible(true);
+				mMidMesh->SetVisible(true);
 
 				matrix4 m;
 				m = mTPMesh->GetTransform().GetMatrix();
 				m.fourth = mArc[mArc.size() - 1];
 				mTPMesh->GetTransform().SetMatrix(m);
 
-				m = mCSMesh->GetTransform().GetMatrix();
+				m = mat * scaleM;
 				m.fourth = mat.fourth;
 				mCSMesh->GetTransform().SetMatrix(m);
+
+				m = mat * scaleM;
+				m.fourth = mArc[(mArc.size() / 2 - 1) < 0 ? 0 : (mArc.size() / 2 - 1)];
+				mMidMesh->GetTransform().SetMatrix(m);
 			}
 			else
 			{
 				mTPMesh->SetVisible(false);
 				mCSMesh->SetVisible(false);
+				mMidMesh->SetVisible(false);
 			}
 
 			if (!interp->GetActive()) {
-				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && !Settings::GetInstance().GetBool("PauseMenuUp")) {
+				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && mCanTeleport && !Settings::GetInstance().GetBool("PauseMenuUp")) {
 					if (!paused) {
 						
 						vec3f raydir = mArc[mArc.size() - 1] - mArc[0];
@@ -425,5 +461,7 @@ namespace Epoch {
 			} else if (interp->Update(TimeManager::Instance()->GetDeltaTime()))
 				interp->SetActive(false);
 		}
+		
+
 	};
 }

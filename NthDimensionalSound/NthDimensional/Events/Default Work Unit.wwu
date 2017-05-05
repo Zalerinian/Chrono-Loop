@@ -1412,6 +1412,39 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="SFX_gentle_alarm" ID="{185EEFAF-A1AC-40BD-B8F4-356F32760632}">
+					<ChildrenList>
+						<Action Name="Play" ID="{15A662B0-9539-46B5-9CEF-D95D04C1E115}" ShortID="483208056" Type="Play" Scope="One" Global="false">
+							<ElementList>
+								<Element ID="{C55EA3C9-D6F4-474E-AFB2-8925590D02AD}" Global="false">
+									<ObjectRef Name="gentle-alarm" ID="{F98CA819-7AFA-4021-AE9E-DC1B8900C2AF}" WorkUnitID="{1D0317B3-D19A-41DC-A2E7-CAA9DD27FE60}"/>
+								</Element>
+							</ElementList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="SFX_sci_fi_door_close" ID="{8703D4C1-BB8B-44CB-8512-9BDAC39512B7}">
+					<ChildrenList>
+						<Action Name="Play" ID="{2B3F6736-3B24-4258-9465-077070D7C0A3}" ShortID="126660482" Type="Play" Scope="One" Global="false">
+							<ElementList>
+								<Element ID="{F62FB10B-391C-471E-8D22-BE7ACDF96BAB}" Global="false">
+									<ObjectRef Name="sci-fi-door-close" ID="{BF816DA8-E64C-49AC-A8C9-179D7563E182}" WorkUnitID="{1D0317B3-D19A-41DC-A2E7-CAA9DD27FE60}"/>
+								</Element>
+							</ElementList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="SFX_sci_fi_door_open" ID="{B0BCBD4C-0461-40E2-A786-7DD232F70030}">
+					<ChildrenList>
+						<Action Name="Play" ID="{7619F6B9-4798-4738-BB8F-BB3677E4171B}" ShortID="703534953" Type="Play" Scope="One" Global="false">
+							<ElementList>
+								<Element ID="{745B11A0-87C6-4C41-83A6-24857A3FF19A}" Global="false">
+									<ObjectRef Name="sci-fi-door-open" ID="{90F1A380-E71B-4BAD-ADC6-BF177A2B3B41}" WorkUnitID="{1D0317B3-D19A-41DC-A2E7-CAA9DD27FE60}"/>
+								</Element>
+							</ElementList>
+						</Action>
+					</ChildrenList>
+				</Event>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>
