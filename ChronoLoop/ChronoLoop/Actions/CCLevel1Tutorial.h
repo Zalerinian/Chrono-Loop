@@ -17,9 +17,9 @@ namespace Epoch
 		std::vector<int>mPrevBoards, mCurrentBoards;
 		std::vector<matrix4>mBoardMatrixs;
 		float scaleUpX, scaleUpY, scaleDownX, scaleDownY;
-		float tempScaleX, tempScaleY;
-		bool scalingDone, boardchange = false;
-		int currentTut = -1, timeToRewind = 0, tStart = 0, tEnd = 0;
+		float tempScaleX, tempScaleY, tStart, tEnd;
+		bool scalingDone, boardchange = false, once = true;
+		int currentTut = -1, timeToRewind = 0;
 		PSAnimatedMultiscan_Data mScanlineData;
 		CCProgressBar* pb;
 
@@ -193,13 +193,6 @@ namespace Epoch
 					mCurrentBoards.clear();
 					mCurrentBoards.push_back(2);
 					mCurrentBoards.push_back(6);
-					tStart = Settings::GetInstance().GetInt("tut1ButtonPress");
-					tEnd = Settings::GetInstance().GetInt("tut1ChamberClose");
-					timeToRewind = Settings::GetInstance().GetInt("tut1ChamberClose") - Settings::GetInstance().GetInt("tut1ButtonPress");
-					Settings::GetInstance().SetFloat("TutorialRewind - FinalProgress", timeToRewind);
-					pb->SetFinalProgress(timeToRewind);
-					pb->GetBackground()->GetTransform().SetMatrix(pb->GetProgressBar()->GetTransform().GetMatrix() * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.68f, 1.46f, -2.83f));
-					pb->OnEnable();
 					break;
 				case 3:
 					boardchange = true;
@@ -208,7 +201,18 @@ namespace Epoch
 					mCurrentBoards.clear();
 					mCurrentBoards.push_back(3);
 					mCurrentBoards.push_back(6);
-					pb->OnDisable();
+
+					if(once)
+					{
+						tStart = Settings::GetInstance().GetUInt("tut1ButtonPress");
+						tEnd = Settings::GetInstance().GetUInt("tut1FirstPause");
+						timeToRewind = Settings::GetInstance().GetUInt("tut1FirstPause") - Settings::GetInstance().GetUInt("tut1ButtonPress");
+						Settings::GetInstance().SetUInt("TutorialRewind - FinalProgress", timeToRewind);
+						pb->SetFinalProgress(timeToRewind);
+						pb->GetBackground()->GetTransform().SetMatrix(pb->GetBackground()->GetTransform().GetMatrix() * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.68f, 2.2f, -2.86f));
+						pb->OnEnable();
+						once = false;
+					}
 					break;
 				case 4:
 					boardchange = true;
@@ -216,6 +220,7 @@ namespace Epoch
 					mCurrentBoards.clear();
 					mCurrentBoards.push_back(4);
 					mCurrentBoards.push_back(5);
+					pb->OnDisable();
 					break;
 				case 6:
 					boardchange = true;
@@ -233,7 +238,7 @@ namespace Epoch
 
 			if (tut == 3)
 			{
-				pb->SetCurProgress(Settings::GetInstance().GetFloat("TutorialRewind - CurProgress"));
+				pb->SetCurProgress(Settings::GetInstance().GetUInt("TutorialRewind - CurProgress"));
 			}
 
 			ScaleUpCurrentBoards();

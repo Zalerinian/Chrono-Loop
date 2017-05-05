@@ -55,7 +55,8 @@ namespace Epoch
 
 						if (!interp && Settings::GetInstance().GetInt("tutStep") == 1)//Teleported
 						{
-							Settings::GetInstance().SetInt("tut1ButtonPress", TimeManager::Instance()->GetDeltaTime());
+							Settings::GetInstance().SetUInt("tut1ButtonPress", TimeManager::Instance()->GetCurrentSnapFrame());
+							float t = Settings::GetInstance().GetUInt("tut1ButtonPress");
 							doorInterp->SetActive(true);
 							doorInterp->Prepare(0.69f, tutDoor->GetTransform().GetMatrix(), doorEnd, tutDoor->GetTransform().GetMatrix());
 							chamberInterp->SetActive(true);
@@ -78,7 +79,7 @@ namespace Epoch
 			if (!interp && Settings::GetInstance().GetInt("tutStep") == 6)
 			{
 				doorInterp->SetActive(true);
-				doorInterp->Prepare(0.69f, tutDoor->GetTransform().GetMatrix(), doorStart, tutDoor->GetTransform().GetMatrix());
+				doorInterp->Prepare(0.69f, tutDoor->GetTransform().GetMatrix(), doorStart * tutDoor->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 2.6f, 0, 1)), tutDoor->GetTransform().GetMatrix());
 				interp = true;
 
 				if (tutDoor->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0)
@@ -90,12 +91,10 @@ namespace Epoch
 
 			if (interp && !LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->isTimePaused())
 			{
-				if (doorInterp->Update(TimeManager::Instance()->GetDeltaTime()) || chamberInterp->Update(TimeManager::Instance()->GetDeltaTime()))
-				{
+				if (doorInterp->Update(TimeManager::Instance()->GetDeltaTime()))
 					interp = false;
-					Settings::GetInstance().SetInt("tut1ChamberClose", TimeManager::Instance()->GetDeltaTime());
+				if(chamberInterp->Update(TimeManager::Instance()->GetDeltaTime()))
 					Settings::GetInstance().SetInt("tutStep", 2);//Pause Time
-				}
 			}
 		}
 	};

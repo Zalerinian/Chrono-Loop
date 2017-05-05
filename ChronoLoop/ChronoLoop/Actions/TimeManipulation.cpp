@@ -73,7 +73,10 @@ namespace Epoch
 					// Stop time
 
 					if (Settings::GetInstance().GetInt("tutStep") == 2)//Paused time (tut 1)
+					{
+						Settings::GetInstance().SetUInt("tut1FirstPause", TimeManager::Instance()->GetCurrentSnapFrame());
 						Settings::GetInstance().SetInt("tutStep", 3);//Rewind (tut 1)
+					}
 
 					if(Settings::GetInstance().GetInt("CurrentLevel") != 1)
 					{
@@ -107,17 +110,17 @@ namespace Epoch
 
 
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Touchpad) 
-			&& (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 5))//Created Clone (tut 2)
+			&& (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 3))//Created Clone (tut 2)
 		{
 			
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
 			// Accept timeline position
 			if (mPauseTime) {
-				if (Settings::GetInstance().GetInt("tutStep") == 6)//accepted time (
+				if (Settings::GetInstance().GetInt("tutStep") == 4)//accepted time (
 				{
 					if (Settings::GetInstance().GetBool("Level1Tutorial"))
-						Settings::GetInstance().SetInt("tutStep", 8);//end
+						Settings::GetInstance().SetInt("tutStep", 6);//end
 					else
 						Settings::GetInstance().SetInt("tutStep", 7);//delete clone
 				}
