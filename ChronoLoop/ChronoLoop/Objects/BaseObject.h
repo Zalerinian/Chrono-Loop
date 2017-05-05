@@ -48,9 +48,6 @@ namespace Epoch {
 
 		const unsigned int& Flags;
 
-		inline unsigned int GetUniqueId() {
-			return mUniqueID;
-		}
 
 		void SetName(std::string _name);
 		inline std::string GetName() {

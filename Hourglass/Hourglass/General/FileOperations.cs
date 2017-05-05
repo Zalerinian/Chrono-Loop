@@ -10,6 +10,11 @@ using System.Collections.Generic;
 
 namespace Hourglass {
 
+	public struct FileOpenData {
+		public string file;
+		public List<TreeNode> nodeCollection;
+	}
+
 	public static class FileIO {
 		public static readonly uint WriterVersion = 5;
 		public static readonly float RADIANS_TO_DEGREES = ((180.0f / 3.14f));
@@ -256,7 +261,10 @@ namespace Hourglass {
 			}
 		}
 
-		public static void openLevel(string _file, TreeView _tree) {
+		public static void openLevel(object loadData) {
+			string _file = ((FileOpenData)loadData).file;
+			List<TreeNode> nodeCollection = ((FileOpenData)loadData).nodeCollection;
+
 			FileStream fs = null;
 			try {
 				fs = new FileStream(_file, FileMode.Open);
@@ -295,12 +303,17 @@ namespace Hourglass {
 				int ObjectCount = reader.ReadInt32();
 
 				for (int i = 0; i < ObjectCount; ++i) {
-					ReadObject(reader, _tree, vers);
+					ReadObject(reader, nodeCollection, vers);
+					if(i % 10 == 0 && i > 0) {
+						System.Threading.Thread.Sleep(0);
+					}
 				}
 			}
 		}
 
-		public static void ReadXMLFile(string _file, TreeView _tree) {
+		public static void ReadXMLFile(object loadData) {
+			string _file = ((FileOpenData)loadData).file;
+			List<TreeNode> nodeCollection = ((FileOpenData)loadData).nodeCollection;
 			//try {
 			XmlReaderSettings settings = new XmlReaderSettings();
 			settings.DtdProcessing = DtdProcessing.Parse;
@@ -321,7 +334,7 @@ namespace Hourglass {
 						switch (reader.Name) {
 							case "Object":
 								node = new TreeNode();
-								_tree.Nodes.Add(node);
+								nodeCollection.Add(node);
 								addition = new BaseObject(node);
 								node.Tag = addition;
 								mesh = texutre = string.Empty;
@@ -581,7 +594,7 @@ namespace Hourglass {
 			//}
 		}
 
-		private static void ReadObject(BinaryReader r, TreeView tree, int _version) {
+		private static void ReadObject(BinaryReader r, List<TreeNode> nodeCollection, int _version) {
 			// Format:
 			// Number of components
 			// all the components
@@ -594,7 +607,7 @@ namespace Hourglass {
 				b.Parent = ObjectStack.Peek();
 				b.Parent.Node.Nodes.Add(n);
 			} else {
-				tree.Nodes.Add(n);
+				nodeCollection.Add(n);
 			}
 
 

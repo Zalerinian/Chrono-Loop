@@ -113,7 +113,7 @@ namespace Epoch {
 			vf = eVS_MAX;
 		}
 		if (_gf < eGS_PosNormTex || _gf >= eGS_MAX) {
-			SystemLogger::Error() << "Invalid Geometry Shader enumation at RenderShape::SetShaders: " << _gf << ". Forcing to eVS_MAX!" << std::endl;
+			SystemLogger::Error() << "Invalid Geometry Shader enumation at RenderShape::SetShaders: " << _gf << ". Forcing to eGS_MAX!" << std::endl;
 			_gf = eGS_MAX;
 		}
 		mContext.mVertexShaderFormat = vf;

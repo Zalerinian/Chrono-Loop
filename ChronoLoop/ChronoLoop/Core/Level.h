@@ -34,6 +34,7 @@ namespace Epoch
 
 		//**GETTERS**//
 		BaseObject* FindObjectWithName(std::string _name);
+		BaseObject* FindObjectWithID(unsigned short _id);
 		std::vector<BaseObject*> FindAllObjectsByPattern(std::string _name);
 		std::vector<BaseObject*> FindAllObjectsWithName(std::string _name);
 		std::list<BaseObject*>& GetLevelObjects() { return mObjectList; };

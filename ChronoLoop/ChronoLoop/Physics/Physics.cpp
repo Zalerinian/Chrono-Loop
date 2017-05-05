@@ -1010,7 +1010,8 @@ namespace Epoch
 										otherCol = (Collider*)otherColliders[k];
 										if (otherCol->mIsEnabled)
 										{
-											if (otherCol->mColliderType == Collider::eCOLLIDER_Cube || otherCol->mColliderType == Collider::eCOLLIDER_Controller)
+											if (otherCol->mColliderType == Collider::eCOLLIDER_Cube || otherCol->mColliderType == Collider::eCOLLIDER_Controller &&
+												otherCol->mVelocity * ((ButtonCollider*)collider)->mPushNormal < 0)
 											{
 												CubeCollider* aabb2 = (CubeCollider*)otherCol;
 												if ((AabbToPlane(((ButtonCollider*)collider)->mLowerBound, *aabb1) == 1) && AABBtoAABB(*aabb1, *aabb2))
@@ -1019,7 +1020,7 @@ namespace Epoch
 														((CodeComponent*)codeComponents[f])->OnCollision(*collider, *otherCol, _time);
 												}
 											}
-											else if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere)
+											else if (otherCol->mColliderType == Collider::eCOLLIDER_Sphere && otherCol->mVelocity * ((ButtonCollider*)collider)->mPushNormal < 0)
 											{
 												SphereCollider* s1 = (SphereCollider*)otherCol;
 												if ((AabbToPlane(((ButtonCollider*)collider)->mLowerBound, *aabb1) == 1) && SphereToAABB(*s1, *aabb1))
@@ -1043,9 +1044,9 @@ namespace Epoch
 								}
 								else
 								{
-									collider->mVelocity = -collider->mVelocity;
-									collider->mAcceleration = -collider->mAcceleration;
 									collider->mTotalForce = collider->mForces + (collider->mGravity * collider->mMass);
+									collider->mVelocity = collider->mTotalForce / collider->mMass;
+									collider->mAcceleration = collider->mVelocity / _time;
 								}
 							}
 						}

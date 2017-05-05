@@ -63,5 +63,5 @@ void main(triangle GSInput input[3], inout TriangleStream<GSOutput> TriStream)
 		output.shadowPos = input[j].shadowPos;
 		TriStream.Append(output);
 	}
-	TriStream.RestartStrip();
+	//TriStream.RestartStrip();
 }

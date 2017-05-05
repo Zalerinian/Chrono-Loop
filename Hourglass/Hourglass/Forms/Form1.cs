@@ -6,6 +6,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Diagnostics;
+using System.Threading;
 
 
 namespace Hourglass
@@ -542,15 +543,25 @@ namespace Hourglass
 			o.Title = "Open a level...";
 			if(o.ShowDialog() == DialogResult.OK)
 			{
+				Thread loader = null;
 				newToolStripMenuItem_Click(null, null);
+				FileOpenData fod;
+				fod.file = o.FileName;
+				fod.nodeCollection = new List<TreeNode>();
 				if (o.FileName.EndsWith(".xml")) {
-					FileIO.ReadXMLFile(o.FileName, Tree);
+					loader = new Thread(new ParameterizedThreadStart(FileIO.ReadXMLFile));
+					//FileIO.ReadXMLFile(o.FileName, Tree);
 				} else {
-					FileIO.openLevel(o.FileName, Tree);
+					loader = new Thread(new ParameterizedThreadStart(FileIO.openLevel));
+					//FileIO.openLevel(fod);
 				}
+
+				loader.Start(fod);
+				loader.Join();
 				// Attach Object Handlers
-				for(int i = 0; i < Tree.Nodes.Count; ++i)
+				for(int i = 0; i < fod.nodeCollection.Count; ++i)
 				{
+					Tree.Nodes.Add(fod.nodeCollection[i]);
 					PostLoadSetup(Tree.Nodes[i]);
 				}
 			}

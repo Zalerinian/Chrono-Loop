@@ -1,5 +1,6 @@
 #pragma once
 #pragma once
+#pragma once
 #include "CodeComponent.hpp"
 #include "..\Common\Interpolator.h"
 #include "..\Objects\BaseObject.h"
@@ -7,23 +8,22 @@
 #include "../Core/LevelManager.h"
 
 namespace Epoch {
-
-	struct CCBoxSpinRandom : public CodeComponent {
+	struct CCBoxSpinRandomSmall : public CodeComponent {
 		Interpolator<matrix4> interp;
 		matrix4 m1, m2, rot;
 		float angle = 0, mIncrease = 0;
 		unsigned int mRandDur = 0;
-		int mRandDown =0, mRandUp =0;
+		float mRandDown = 0.0f, mRandUp = 0.0f;
 		bool flip;
 		TimeManipulation * mManip;
 
 		virtual void Start() {
 			flip = true;
 			angle = rand() % 360;
-			mIncrease = (0) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((1) - (0))));
-			mRandDur = (rand() % 20) + 6;
-			mRandDown = ((rand() % 5) + 1);
-			mRandUp = (rand() %5) + 1;
+			mIncrease = (.001f) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((1.0f) - (.001f))));
+			mRandDur = (rand() % 7) + 1;
+			mRandDown = (.2f) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((1.0f) - (.2f))));
+			mRandUp = (.5f) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((1.0f) - (.5f))));
 			float rad = DirectX::XM_PI / 2;
 			float pi = DirectX::XM_PI;
 			rot = (matrix4::CreateXRotation(angle) * matrix4::CreateYRotation(angle) * matrix4::CreateZRotation(angle));

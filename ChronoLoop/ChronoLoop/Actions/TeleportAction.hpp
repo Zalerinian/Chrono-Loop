@@ -21,8 +21,8 @@ namespace Epoch {
 		
 		matrix4 endPos;
 		Interpolator<matrix4>* interp;
-		MeshComponent *mPlaneMesh, *mWallsMesh, *mBlockMesh, *mExitMesh, *mServerMesh, *mTWall1Mesh, *mTWall2Mesh, *mTWindowMesh;
-		BaseObject *mPlaneObject, *mWallsObject, *mBlockObject, *mExitObject, *mServerObject, *mHeadset, *mTWall1, *mTWall2, *mTWindow;
+		MeshComponent *mPlaneMesh, *mWallsMesh, *mBlockMesh, *mExitMesh, *mServerMesh, *mTWall1Mesh, *mTWall2Mesh, *mTWall3Mesh, *mTWindowMesh;
+		BaseObject *mPlaneObject, *mWallsObject, *mBlockObject, *mExitObject, *mServerObject, *mHeadset, *mTWall1, *mTWall2, *mTWall3, *mTWindow;
 		ControllerType mControllerRole = eControllerType_Primary;
 		Level* cLevel = nullptr;
 		TeleportAction(ControllerType _t) { mControllerRole = _t; };
@@ -194,6 +194,7 @@ namespace Epoch {
 			mExitObject = cLevel->FindObjectWithName("TransparentDoor2");
 			mTWall1 = cLevel->FindObjectWithName("TransparentWall1");
 			mTWall2 = cLevel->FindObjectWithName("TransparentWall2");
+			mTWall3 = cLevel->FindObjectWithName("TransparentWall3");
 			mTWindow = cLevel->FindObjectWithName("TransparentWindow");
 			mServerObject = cLevel->FindObjectWithName("Servers");
 
@@ -205,6 +206,7 @@ namespace Epoch {
 				mServerMesh = (MeshComponent*)mServerObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				mTWall1Mesh = (MeshComponent*)mTWall1->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				mTWall2Mesh = (MeshComponent*)mTWall2->GetComponentIndexed(eCOMPONENT_MESH, 0);
+				mTWall3Mesh = (MeshComponent*)mTWall2->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				mTWindowMesh = (MeshComponent*)mTWindow->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			}
 			mHeadset = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset();
@@ -346,8 +348,8 @@ namespace Epoch {
 
 						SystemLogger::Debug() << "Touchpad Pressed" << std::endl;
 						vec4f forward(0, 0, 1, 0);
-						MeshComponent* meshes[] = { mWallsMesh, mBlockMesh, mExitMesh, mServerMesh, mTWall1Mesh, mTWall2Mesh, mTWindowMesh };
-						BaseObject* objects[] = { mWallsObject, mBlockObject, mExitObject, mServerObject, mTWall1, mTWall2, mTWindow };
+						MeshComponent* meshes[] = { mWallsMesh, mBlockMesh, mExitMesh, mServerMesh, mTWall1Mesh, mTWall2Mesh, mTWall3Mesh, mTWindowMesh };
+						BaseObject* objects[] = { mWallsObject, mBlockObject, mExitObject, mServerObject, mTWall1, mTWall2, mTWall3, mTWindow };
 						float controllerTime = 0, wallTime = FLT_MAX;
 						for (int i = 0; i < ARRAYSIZE(meshes); ++i) {
 							forward.Set(0, 0, 1, 0);

@@ -43,7 +43,8 @@ namespace Epoch
 		bool GetOnce() { return once; };
 		virtual void OnTriggerEnter(Collider& _col1, Collider& _col2) 
 		{
-			once = false;
+			if(Settings::GetInstance().GetBool("CompleteLevel1"))
+				once = false;
 		}
 		virtual void Start()
 		{

@@ -5,15 +5,19 @@
 #include "../Common/Settings.h"
 
 
+
 namespace Epoch {
 
 	struct CCLevel3ElevatorButton : public CodeComponent {
-		bool colliding = false, mInterpDone = true, mFlip = false;
+		bool colliding = false, mInterpDone = true, mFlip = false, mIsPlayer = false;
 		BaseObject* mChamberObject, *mButtonStand;
 		Interpolator<matrix4>* mChamberInterp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mPlayerInterp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mStartStandInterp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mStartButtonInterp = new Interpolator<matrix4>();
+		Interpolator<matrix4>* mClone1Interp = new Interpolator<matrix4>();
+		Interpolator<matrix4>* mClone2Interp = new Interpolator<matrix4>();
+		Interpolator<matrix4>* mClone3Interp = new Interpolator<matrix4>();
 		
 		//vec3f blockend, exitend;
 
@@ -33,6 +37,8 @@ namespace Epoch {
 				if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName() != "L3Buttonstand") {
 					colliding = true;
 
+					Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
+
 					vec3f norm = ((ButtonCollider*)&_col)->mPushNormal;
 					vec3f tForce = norm * (norm * _other.mTotalForce);
 					vec3f vel = norm * (norm * _other.mVelocity);
@@ -51,12 +57,20 @@ namespace Epoch {
 							matrix4 mat = mChamberObject->GetTransform().GetMatrix();
 							float tempY = mChamberObject->GetTransform().GetMatrix().Position.y;
 							if (tempY < -1.0) {
-								std::vector<Component*>& comps = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetComponents(eCOMPONENT_CODE);
+								std::vector<Component*>& comps = mObject->GetComponents(eCOMPONENT_CODE);
 								for (unsigned int  i = 0; i < comps.size(); i++) {
-									/*if(dynamic_cast<>comps[i])
+									if(dynamic_cast<CCMazeHelper*>(comps[i]))
 									{
-										comps[i]
-									}*/
+										((CCMazeHelper*)comps[i])->ResetBoxes();
+										break;
+									}
+								}
+								std::vector<Component*>& comps2 = cLevel->FindObjectWithName("WallButton")->GetComponents(eCOMPONENT_CODE);
+								for (unsigned int i = 0; i < comps2.size(); i++) {
+									if (dynamic_cast<CCButtonPress*>(comps2[i])) {
+										((CCButtonPress*)comps2[i])->ResetDoors();
+										break;
+									}
 								}
 								tempY = 1;
 							}
@@ -64,27 +78,52 @@ namespace Epoch {
 								tempY = -1;
 							}
 
-							mChamberInterp->Prepare(4, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), mChamberObject->GetTransform().GetMatrix());
+							mChamberInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), mChamberObject->GetTransform().GetMatrix());
 							mChamberInterp->SetEasingFunction(Easing::QuadInOut);
 							mChamberInterp->SetActive(true);
 
-							mat = VRInputManager::GetInstance().GetPlayerPosition();
-							mPlayerInterp->Prepare(4, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), VRInputManager::GetInstance().GetPlayerPosition());
-							mPlayerInterp->SetEasingFunction(Easing::QuadInOut);
-							mPlayerInterp->SetActive(true);
+							if (_other.GetBaseObject()->GetUniqueID() == cLevel->GetLeftController()->GetUniqueID() || _other.GetBaseObject()->GetUniqueID() == cLevel->GetRightController()->GetUniqueID()) {
+								mat = VRInputManager::GetInstance().GetPlayerPosition();
+								mPlayerInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), VRInputManager::GetInstance().GetPlayerPosition());
+								mPlayerInterp->SetEasingFunction(Easing::QuadInOut);
+								mPlayerInterp->SetActive(true);
+								mIsPlayer = true;
+
+								Settings::GetInstance().SetBool("CantPauseTime", true);
+								Settings::GetInstance().SetBool("CantTeleport", true);
+							}
+							else
+							{
+								Clonepair* pair = TimeManager::Instance()->GetClonePair(_other.GetBaseObject()->GetUniqueID());
+								mat = _other.GetBaseObject()->GetTransform().GetMatrix();
+								mClone1Interp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), _other.GetBaseObject()->GetTransform().GetMatrix());
+								mClone1Interp->SetEasingFunction(Easing::QuadInOut);
+								mClone1Interp->SetActive(true);
+
+								BaseObject* other2 = cLevel->FindObjectWithID(pair->mOther1);
+								mat = other2->GetTransform().GetMatrix();
+								mClone2Interp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), other2->GetTransform().GetMatrix());
+								mClone2Interp->SetEasingFunction(Easing::QuadInOut);
+								mClone2Interp->SetActive(true);
+
+								BaseObject* other3 = cLevel->FindObjectWithID(pair->mOther1);
+								mat = other3->GetTransform().GetMatrix();
+								mClone3Interp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), other3->GetTransform().GetMatrix());
+								mClone3Interp->SetEasingFunction(Easing::QuadInOut);
+								mClone3Interp->SetActive(true);
+								mIsPlayer = false;
+							}
 
 							mat = mObject->GetTransform().GetMatrix();
-							mStartButtonInterp->Prepare(4, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), mObject->GetTransform().GetMatrix());
+							mStartButtonInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), mObject->GetTransform().GetMatrix());
 							mStartButtonInterp->SetEasingFunction(Easing::QuadInOut);
 							mStartButtonInterp->SetActive(true);
 
 							mat = mButtonStand->GetTransform().GetMatrix();
-							mStartStandInterp->Prepare(4, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), mButtonStand->GetTransform().GetMatrix());
+							mStartStandInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), mButtonStand->GetTransform().GetMatrix());
 							mStartStandInterp->SetEasingFunction(Easing::QuadInOut);
 							mStartStandInterp->SetActive(true);
 							mInterpDone = false;
-							Settings::GetInstance().SetBool("CantPauseTime", true);
-							Settings::GetInstance().SetBool("CantTeleport", true);
 						}
 					}
 
@@ -98,18 +137,32 @@ namespace Epoch {
 		virtual void Update() {
 			if (!LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->isTimePaused()) {
 				if (!mInterpDone) {
-					if (mChamberInterp->Update(TimeManager::Instance()->GetDeltaTime())) {
+					float dt = TimeManager::Instance()->GetDeltaTime();
+					if (mChamberInterp->Update(dt)) {
 						mInterpDone = true;
 						Settings::GetInstance().SetBool("CantPauseTime", false);
 						Settings::GetInstance().SetBool("CantTeleport", false);
 					}
-					mPlayerInterp->Update(TimeManager::Instance()->GetDeltaTime());
-					mStartButtonInterp->Update(TimeManager::Instance()->GetDeltaTime());
-					mStartStandInterp->Update(TimeManager::Instance()->GetDeltaTime());
+					if(mIsPlayer)
+					{
+						mPlayerInterp->Update(dt);	
+					}
+					else
+					{
+						mClone1Interp->Update(dt);
+						mClone2Interp->Update(dt);
+						mClone3Interp->Update(dt);
+					}
+					mStartButtonInterp->Update(dt);
+					mStartStandInterp->Update(dt);
 
 					((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mObject->GetTransform().GetMatrix().fourth);
 					((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y - .2f;
 					((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y - .2f;
+				}
+				else
+				{
+					mIsPlayer = false;
 				}
 			}
 		}
