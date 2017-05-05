@@ -49,15 +49,17 @@ namespace Epoch
 		{
 			if (!Settings::GetInstance().GetBool("IsTimePaused")) {
 				if (_col2.GetBaseObject()->GetUniqueID() == mLevel->GetLeftController()->GetUniqueID() ||
-					_col2.GetBaseObject()->GetUniqueID() == mLevel->GetRightController()->GetUniqueID())
+					_col2.GetBaseObject()->GetUniqueID() == mLevel->GetRightController()->GetUniqueID() ||
+					_col2.GetBaseObject()->GetUniqueID() == mLevel->GetHeadset()->GetUniqueID())
 					if (!Settings::GetInstance().GetBool("PlayerHit") && !mBoxDone) {
 						Settings::GetInstance().SetBool("PlayerHit", true);
 						//cause player screen to change color
-						vec2f finalRatios(0.7f, 0.3f);
+						vec2f finalRatios(0.9f, 0.8f);
 						mDesaturationInterpolator.Prepare(0.2f, mEffectData.ratios, finalRatios, mEffectData.ratios);
 						mDesaturationInterpolator.SetActive(true);
 						//Disable Player
-						Settings::GetInstance().SetBool("PauseMenuUp", true);
+						Settings::GetInstance().SetBool("CantPauseTime", true);
+						Settings::GetInstance().SetBool("CantTeleport", true);
 						//Invoke Reset level
 						mRestartLevel = true;
 					}
@@ -85,6 +87,8 @@ namespace Epoch
 					mRestartLevel = false;
 					TimeManager::Instance()->ResetTimeLineandLevel();
 					vec2f finalRatios(0, 0);
+					Settings::GetInstance().SetBool("CantPauseTime", false);
+					Settings::GetInstance().SetBool("CantTeleport", false);
 					mDesaturationInterpolator.Prepare(0.2f, mEffectData.ratios, finalRatios, mEffectData.ratios);
 					mDesaturationInterpolator.SetActive(true);
 					mTimer = 0;
@@ -100,19 +104,19 @@ namespace Epoch
 				Renderer::Instance()->GetContext()->UpdateSubresource(quad->GetContext().mPixelCBuffers[ePB_REGISTER1].Get(), 0, NULL, &mEffectData, 0, 0);
 			}
 
-			if (GetAsyncKeyState(VK_F2) & 1) {
-				 {
-					Settings::GetInstance().SetBool("PlayerHit", true);
-					//cause player screen to change color
-					vec2f finalRatios(0.9f, 0.8f);
-					mDesaturationInterpolator.Prepare(0.2f, mEffectData.ratios, finalRatios, mEffectData.ratios);
-					mDesaturationInterpolator.SetActive(true);
-					//Disable Player
-					Settings::GetInstance().SetBool("PauseMenuUp", true);
-					//Invoke Reset level
-					mRestartLevel = true;
-				}
-			}
+			//if (GetAsyncKeyState(VK_F2) & 1) {
+			//	 {
+			//		Settings::GetInstance().SetBool("PlayerHit", true);
+			//		//cause player screen to change color
+			//		vec2f finalRatios(0.9f, 0.8f);
+			//		mDesaturationInterpolator.Prepare(0.2f, mEffectData.ratios, finalRatios, mEffectData.ratios);
+			//		mDesaturationInterpolator.SetActive(true);
+			//		//Disable Player
+			//		Settings::GetInstance().SetBool("PauseMenuUp", true);
+			//		//Invoke Reset level
+			//		mRestartLevel = true;
+			//	}
+			//}
 		}
 	};
 }
