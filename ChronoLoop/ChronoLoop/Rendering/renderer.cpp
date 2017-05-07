@@ -279,14 +279,17 @@ namespace Epoch {
 		CD3D11_TEXTURE2D_DESC t2d(DXGI_FORMAT_R16G16B16A16_FLOAT, _width, _height, 1, 1, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
 		mDevice->CreateTexture2D(&t2d, nullptr, &postTex);
 		ThrowIfFailed(mDevice->CreateTexture2D(&t2d, nullptr, mBloomTexture.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateTexture2D(&t2d, nullptr, mGlowTexture.GetAddressOf()));
 		mSceneTexture.Attach(postTex);
-		std::string bloomInternalName = "Bloom texture";
+		std::string bloomInternalName = "Bloom texture", glowInternalName = "Glow Texture";
 		TextureManager::Instance()->iAddTexture2D(bloomInternalName, mBloomTexture, &mBloomSRV); // This will create and assign the SRV for the texture.
+		TextureManager::Instance()->iAddTexture2D(glowInternalName, mGlowTexture, &mGlowSRV);
 
 		// Render target view in order to draw to the texture.
 		ID3D11RenderTargetView *sceneRTV;
 		HRESULT hr = mDevice->CreateRenderTargetView((ID3D11Resource*)postTex, NULL, &sceneRTV);
 		ThrowIfFailed(mDevice->CreateRenderTargetView(mBloomTexture.Get(), nullptr, mBloomRTV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateRenderTargetView(mGlowTexture.Get(), nullptr, mGlowRTV.GetAddressOf()));
 		ThrowIfFailed(hr);
 		mSceneView.Attach(sceneRTV);
 
@@ -411,6 +414,7 @@ namespace Epoch {
 		mScenePPQuad = new RenderShape("../Resources/VerticalPlane.obj", true, ePS_POSTPROCESS, eVS_NDC, eGS_PosNormTex_NDC);
 		mScenePPQuad->GetContext().mTextures[eTEX_DIFFUSE] = mSceneSRV;
 		mScenePPQuad->GetContext().mTextures[eTEX_REGISTER4] = mBloomSRV;
+		mScenePPQuad->GetContext().mTextures[eTEX_REGISTER5] = mGlowSRV;
 		mScenePPQuad->GetContext().mRasterState = eRS_FILLED;
 
 		ID3D11Buffer *ColorRatioBuffer;
@@ -487,7 +491,7 @@ namespace Epoch {
 	}
 
 	void Renderer::AttachPrimaryRTVs() {
-		ID3D11RenderTargetView *RTVS[] = { mSceneView.Get(), mBloomRTV.Get() };
+		ID3D11RenderTargetView *RTVS[] = { mSceneView.Get(), mGlowRTV.Get() };
 		mContext->OMSetRenderTargets(sizeof(RTVS) / sizeof(RTVS[0]), RTVS, mDSView.Get());
 	}
 	
@@ -766,10 +770,8 @@ namespace Epoch {
 	void Renderer::RenderScreenQuad()
 	{
 		// Blur the bloom texture so that it actually bleeds on the screen
-		if (mUseVsync) {
-			RenderForBloom();
-			BlurTextures(mBloomTexture.GetAddressOf(), 1, 5.0f, 0.4f);
-		}
+		RenderForBloom();
+		BlurTextures(mBloomTexture.GetAddressOf(), 1, 5.0f, 0.4f);
 
 		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
 		mContext->OMSetRenderTargets(1, mMainView.GetAddressOf(), mDSView.Get());
@@ -779,15 +781,16 @@ namespace Epoch {
 	}
 
 	void Renderer::RenderForBloom() {
-		ID3D11ShaderResourceView *null = nullptr;
-		mContext->PSSetShaderResources(eTEX_REGISTER4, 1, &null);
+		ID3D11ShaderResourceView *null[] = { nullptr, nullptr };
+		mContext->PSSetShaderResources(eTEX_REGISTER4, 2, null); // Remove Glow and Bloom textures
 		mContext->OMSetRenderTargets(1, mBloomRTV.GetAddressOf(), nullptr);
 		mContext->RSSetViewports(1, &mFullViewport);
 
 		ShaderManager::Instance()->ApplyPShader(ePS_BLOOM);
 		ShaderManager::Instance()->ApplyVShader(eVS_BLUR);
 		ShaderManager::Instance()->ApplyGShader(eGS_None);
-		mContext->PSSetShaderResources(0, 1, mSceneSRV.GetAddressOf());
+		ID3D11ShaderResourceView *srvs[] = { mSceneSRV.Get(), mGlowSRV.Get() };
+		mContext->PSSetShaderResources(0, 2, srvs);
 		mScenePPQuad->Render(1);
 
 		AttachPrimaryRTVs();

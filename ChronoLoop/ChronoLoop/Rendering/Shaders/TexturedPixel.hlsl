@@ -13,10 +13,6 @@ SamplerState specularFilter : register(s2);
 
 texture2D tEmissive : register(t3);
 
-texture2D Shadow : register(t30);
-texture2D Shadow2 : register(t40);
-SamplerComparisonState ShadowFilter : register(s30);
-
 struct Light {
 	int type;
 	float3 p1;

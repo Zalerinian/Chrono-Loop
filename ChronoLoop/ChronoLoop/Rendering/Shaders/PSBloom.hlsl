@@ -1,4 +1,5 @@
 texture2D tDiffuse : register(t0);
+texture2D tGlow : register(t1);
 SamplerState diffuseFilter : register(s0);
 
 struct PSI {
@@ -11,7 +12,7 @@ float4 main(PSI input) : SV_Target {
 	float4 diffuse = tDiffuse.Sample(diffuseFilter, input.texCoord.xy);
 
 	float brightness = dot(diffuse.rgb, float3(0.2126, 0.7152, 0.0722));
-	printf("Pixel Brightness: %d", brightness);
 	output += diffuse * saturate(brightness - 1); // Faster than an if statement, as brightness is a dynamic value.
+	output += tGlow.Sample(diffuseFilter, input.texCoord.xy);
 	return output;
 }
