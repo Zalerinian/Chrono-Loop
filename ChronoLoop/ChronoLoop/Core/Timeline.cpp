@@ -617,6 +617,7 @@ namespace Epoch {
 		}
 
 	}
+	
 	void Timeline::SetObjectBirthTime(unsigned short _id) {
 		if (mObjectLifeTimes.find(_id) != mObjectLifeTimes.end()) {
 			mObjectLifeTimes[_id]->mBirth = mCurrentGameTimeIndx;
