@@ -18,6 +18,7 @@
 #include "../Actions/CCLoadHub.h"
 #include "../Actions/CCBoxSpin.h"
 #include "../Actions/CCExit.h"
+#include "../Actions/CCLevel1TutorialButton.h"
 #include "../Actions/CCStartButton.h"
 #include "../Objects/MeshComponent.h"
 #include "../tinyxml/tinyxml.h"
@@ -30,6 +31,7 @@
 #include "../Actions/CCLevel3ElevatorButton.h"
 #include "../Actions/CCBoxSpinRandom.h"
 #include "../Actions/CCBoxSpinRandomSmall.h"
+#include "../Actions/CCLevel3BoxSmash.h"
 
 namespace Epoch {
 
@@ -1295,6 +1297,8 @@ namespace Epoch {
 								codeCom = new CCEnterLevel3();
 							if (path == "CCExit.h")
 								codeCom = new CCExit();
+							if (path == "CCLevel3BoxSmash.h")
+								codeCom = new CCLevel3BoxSmash();
 							if (path == "CCLevel3ElevatorButton.h")
 								codeCom = new CCLevel3ElevatorButton();
 							if (path == "CCLoadHub.h")
@@ -1319,6 +1323,8 @@ namespace Epoch {
 								codeCom = new UICreateToDeleteClone();
 							if (path == "UIRewind.h")
 								codeCom = new UIRewind();
+							if (path == "CCLevel1TutorialButton.h")
+								codeCom = new CCLevel1TutorialButton();
 
 							if (codeCom)
 							{

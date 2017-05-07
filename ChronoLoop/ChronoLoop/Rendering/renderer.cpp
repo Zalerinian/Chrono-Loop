@@ -568,6 +568,7 @@ namespace Epoch {
 		UpdateLBuffers();
 		ParticleSystem::Instance()->Render();
 		ProcessRenderSet();
+
 		RenderScreenQuad();
 
 

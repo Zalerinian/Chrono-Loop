@@ -19,8 +19,8 @@ namespace Epoch {
 	struct TeleportAction : public CodeComponent {
 		matrix4 endPos;
 		Interpolator<matrix4>* interp;
-		MeshComponent *mPlaneMesh, *mWallsMesh, *mBlockMesh, *mExitMesh, *mServerMesh, *mTWall1Mesh, *mTWall2Mesh, *mTWall3Mesh, *mTWindowMesh;
-		BaseObject *mPlaneObject, *mWallsObject, *mBlockObject, *mExitObject, *mServerObject, *mHeadset, *mTWall1, *mTWall2, *mTWall3, *mTWindow;
+		MeshComponent *mPlaneMesh, *mWallsMesh, *mBlockMesh, *mExitMesh, *mDoor3Mesh, *mServerMesh, *mTWall1Mesh, *mTWall2Mesh, *mTWall3Mesh, *mTWindowMesh;
+		BaseObject *mPlaneObject, *mWallsObject, *mBlockObject, *mExitObject, *mDoor3Object, *mServerObject, *mHeadset, *mTWall1, *mTWall2, *mTWall3, *mTWindow;
 		ControllerType mControllerRole = eControllerType_Primary;
 		Level* cLevel = nullptr;
 		TeleportAction(ControllerType _t) { mControllerRole = _t; };
@@ -32,6 +32,7 @@ namespace Epoch {
 			mWallsObject = cLevel->FindObjectWithName("Walls");
 			mBlockObject = cLevel->FindObjectWithName("TransparentDoor1");
 			mExitObject = cLevel->FindObjectWithName("TransparentDoor2");
+			mDoor3Object = cLevel->FindObjectWithName("TransparentDoor3");
 			mTWall1 = cLevel->FindObjectWithName("TransparentWall1");
 			mTWall2 = cLevel->FindObjectWithName("TransparentWall2");
 			mTWall3 = cLevel->FindObjectWithName("TransparentWall3");
@@ -43,6 +44,7 @@ namespace Epoch {
 				mWallsMesh = (MeshComponent*)mWallsObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				mBlockMesh = (MeshComponent*)mBlockObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				mExitMesh = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+				mDoor3Mesh = (MeshComponent*)mDoor3Object->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				mServerMesh = (MeshComponent*)mServerObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				mTWall1Mesh = (MeshComponent*)mTWall1->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				mTWall2Mesh = (MeshComponent*)mTWall2->GetComponentIndexed(eCOMPONENT_MESH, 0);
@@ -76,8 +78,8 @@ namespace Epoch {
 					if (!paused) {
 						SystemLogger::Debug() << "Touchpad Pressed" << std::endl;
 						vec4f forward(0, 0, 1, 0);
-						MeshComponent* meshes[] = { mWallsMesh, mBlockMesh, mExitMesh, mServerMesh, mTWall1Mesh, mTWall2Mesh, mTWall3Mesh, mTWindowMesh };
-						BaseObject* objects[] = { mWallsObject, mBlockObject, mExitObject, mServerObject, mTWall1, mTWall2, mTWall3, mTWindow };
+						MeshComponent* meshes[] = { mWallsMesh, mBlockMesh, mExitMesh, mDoor3Mesh, mServerMesh, mTWall1Mesh, mTWall2Mesh, mTWall3Mesh, mTWindowMesh };
+						BaseObject* objects[] = { mWallsObject, mBlockObject, mExitObject, mDoor3Object, mServerObject, mTWall1, mTWall2, mTWall3, mTWindow };
 						float controllerTime = 0, wallTime = FLT_MAX;
 						for (int i = 0; i < ARRAYSIZE(meshes); ++i) {
 							forward.Set(0, 0, 1, 0);
@@ -170,9 +172,6 @@ namespace Epoch {
 												interp->Prepare(.1f, VRInputManager::GetInstance().GetPlayerPosition(), endPos, VRInputManager::GetInstance().GetPlayerPosition());
 												interp->SetActive(true);
 												SystemLogger::Debug() << "Successful raycast" << std::endl;
-
-												if (Settings::GetInstance().GetInt("tutStep") == 1)//Teleported
-													Settings::GetInstance().SetInt("tutStep", 2);//Pick up object
 
 												if (dynamic_cast<SFXEmitter*>(mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
 													((SFXEmitter*)mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
