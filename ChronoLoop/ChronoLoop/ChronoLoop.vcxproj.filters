@@ -964,10 +964,10 @@
     <None Include="Rendering\RenderShaderDefines.hlsli">
       <Filter>Rendering\Header Files</Filter>
     </None>
-    <None Include="Effects.hlsli">
-      <Filter>Particles</Filter>
-    </None>
     <None Include="Rendering\Shaders\Structs.hlsli">
+      <Filter>Rendering\Shaders\Includes</Filter>
+    </None>
+    <None Include="Rendering\Shaders\LightFunctions.hlsli">
       <Filter>Rendering\Shaders\Includes</Filter>
     </None>
   </ItemGroup>

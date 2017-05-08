@@ -816,7 +816,6 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
   </ItemGroup>
   <ItemGroup>
     <None Include="..\DXTK\DirectXTex.inl" />
-    <None Include="Effects.hlsli" />
     <None Include="Rendering\RenderShaderDefines.hlsli" />
     <FxCompile Include="Rendering\Shaders\PSBloom.hlsl">
       <FileType>Document</FileType>
@@ -829,6 +828,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
     </FxCompile>
+    <None Include="Rendering\Shaders\LightFunctions.hlsli" />
     <None Include="Rendering\Shaders\Structs.hlsli" />
     <None Include="Rendering\Shaders\VertexLayouts.hlsli" />
   </ItemGroup>

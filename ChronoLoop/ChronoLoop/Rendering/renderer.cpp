@@ -778,6 +778,10 @@ namespace Epoch {
 		mContext->OMSetRenderTargets(1, mMainView.GetAddressOf(), mDSView.Get());
 		mScenePPQuad->GetContext().Apply(mCurrentContext);
 		mScenePPQuad->Render();
+
+		ID3D11ShaderResourceView *noGlow = nullptr;
+		mContext->PSSetShaderResources(eTEX_REGISTER5, 1, &noGlow);
+
 		mCurrentContext.SimpleClone(mScenePPQuad->GetContext());
 	}
 
@@ -793,6 +797,8 @@ namespace Epoch {
 		ID3D11ShaderResourceView *srvs[] = { mSceneSRV.Get(), mGlowSRV.Get() };
 		mContext->PSSetShaderResources(0, 2, srvs);
 		mScenePPQuad->Render(1);
+		mContext->PSSetShaderResources(0, 2, null); // Remove scene and glow textures
+
 
 		AttachPrimaryRTVs();
 		AttachPrimaryViewports();
