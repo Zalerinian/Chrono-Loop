@@ -209,7 +209,7 @@ namespace Epoch
 						timeToRewind = Settings::GetInstance().GetUInt("tut1FirstPause") - Settings::GetInstance().GetUInt("tut1ButtonPress");
 						Settings::GetInstance().SetUInt("TutorialRewind - FinalProgress", timeToRewind);
 						pb->SetFinalProgress(timeToRewind);
-						pb->GetBackground()->GetTransform().SetMatrix(pb->GetBackground()->GetTransform().GetMatrix() * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.68f, 2.2f, -2.86f));
+						pb->GetBackground()->GetTransform().SetMatrix(pb->GetBackground()->GetTransform().GetMatrix() * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.95f, 2.2f, -2.86f));
 						pb->OnEnable();
 						once = false;
 					}
