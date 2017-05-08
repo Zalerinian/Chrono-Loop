@@ -90,7 +90,8 @@ namespace Hourglass
 			Renderer.Instance.AddObject(mGrid);
 
 			mMouseState = new MouseEventArgs(MouseButtons.None, 0, 0, 0, 0);
-			
+			RenderTimer.Start();
+			RenderTimer.Tick += RenderTimer_Tick;
 
 			spWorldView.Panel2.ControlAdded += ReorderComponents;
 			spWorldView.Panel2.ControlRemoved += ReorderComponents;
@@ -104,6 +105,10 @@ namespace Hourglass
 			btnComponentAdd.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
 			btnComponentAdd.Margin = new Padding(0, 15, 0, 15);
 			spWorldView.Panel2.Controls.Add(btnComponentAdd);
+		}
+
+		private void RenderTimer_Tick(object sender, EventArgs e) {
+			OnPaint(null, null); // Render the scene.
 		}
 
 		public void InitializeKeyboard()
@@ -903,10 +908,12 @@ namespace Hourglass
 		public void SetFilepath(string _filepath)
 		{
 			mCurrentFilename = _filepath;
-			if (_filepath.Length > 45)
-			{
-				_filepath = "..." + _filepath.Substring(_filepath.Length - 45);
-			}
+
+
+			//if (_filepath.Length > 45)
+			//{
+			//	_filepath = "..." + _filepath.Substring(_filepath.Length - 45);
+			//}
 			_filepath = "Level Editor - " + _filepath;
 			Text = _filepath;
 		}

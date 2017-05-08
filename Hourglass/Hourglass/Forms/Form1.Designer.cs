@@ -88,6 +88,7 @@ namespace Hourglass
 			this.coloredMeshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.audioComponentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mObjectStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.RenderTimer = new System.Windows.Forms.Timer(this.components);
 			this.menuStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.spHierarchyPanel)).BeginInit();
 			this.spHierarchyPanel.Panel1.SuspendLayout();
@@ -277,7 +278,7 @@ namespace Hourglass
 			// levelSettingsToolStripMenuItem
 			// 
 			this.levelSettingsToolStripMenuItem.Name = "levelSettingsToolStripMenuItem";
-			this.levelSettingsToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+			this.levelSettingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.levelSettingsToolStripMenuItem.Text = "Level Settings";
 			this.levelSettingsToolStripMenuItem.Click += new System.EventHandler(this.levelSettingsToolStripMenuItem_Click);
 			// 
@@ -285,14 +286,14 @@ namespace Hourglass
 			// 
 			this.customizeToolStripMenuItem.Enabled = false;
 			this.customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-			this.customizeToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+			this.customizeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.customizeToolStripMenuItem.Text = "&Customize";
 			// 
 			// optionsToolStripMenuItem
 			// 
 			this.optionsToolStripMenuItem.Enabled = false;
 			this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.optionsToolStripMenuItem.Text = "&Options";
 			// 
 			// helpToolStripMenuItem
@@ -659,6 +660,11 @@ namespace Hourglass
 			this.mObjectStrip.Name = "mObjectStrip";
 			this.mObjectStrip.Size = new System.Drawing.Size(61, 4);
 			// 
+			// RenderTimer
+			// 
+			this.RenderTimer.Enabled = true;
+			this.RenderTimer.Interval = 16;
+			// 
 			// Editor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -751,6 +757,7 @@ namespace Hourglass
 		private System.Windows.Forms.ToolStripMenuItem texturedMeshToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem coloredMeshToolStripMenuItem;
 		public System.Windows.Forms.Button btnFocus;
+		private System.Windows.Forms.Timer RenderTimer;
 	}
 }
 
