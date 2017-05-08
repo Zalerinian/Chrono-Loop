@@ -47,14 +47,14 @@ namespace Epoch
 				(*Draw::Instance().GetContext2D())->GetSize().height*(5.0f / 8.0f),
 				(*Draw::Instance().GetContext2D())->GetSize().width*(3.0f / 8.0f),
 				(*Draw::Instance().GetContext2D())->GetSize().height,
-				D2D1::ColorF(D2D1::ColorF::Black, 0.9f),
+				D2D1::ColorF(D2D1::ColorF::Black, 0.0f),
 				*(Draw::Instance().GetScreenBitmap().get())
 			);
 			Draw::Instance().DrawRectangleToBitmap(0.0f,
 				(*Draw::Instance().GetContext2D())->GetSize().height*(31.0f / 32.0f),
 				(*Draw::Instance().GetContext2D())->GetSize().width*(48.1f / 128.0f),
 				(*Draw::Instance().GetContext2D())->GetSize().height,
-				D2D1::ColorF(D2D1::ColorF::Black, 9.6f),
+				D2D1::ColorF(D2D1::ColorF::Black, 1.0f),
 				*(Draw::Instance().GetScreenBitmap().get())
 			);
 			Font* tempFont;// = new Font(L"Calibri", 20, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);

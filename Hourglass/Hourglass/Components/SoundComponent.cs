@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using System.Collections;
+using System.Diagnostics;
 
 namespace Hourglass {
 	class SoundComponent : Component {
@@ -207,16 +208,15 @@ namespace Hourglass {
 				}
 				w.Write(mID[mEvent[i].Text.ToLower()][mSound[i].SelectedIndex]);
 			}
-			byte term = 0;
-			w.Write(term);
 		}
 
 		public override void ReadData(BinaryReader r, int _version) {
 			int count = r.ReadInt32();
+            for(int i = 0; i < count - 1; ++i)
+            {
+				AddEvent(null, null);
+            }
 			for (int i = 0; i < count; i++) {
-				if (mEvent.Count < i) {
-					AddEvent(null, null);
-				}
 				byte b = r.ReadByte();
 				UInt64 id = r.ReadUInt64();
 				switch (b) {
@@ -224,22 +224,37 @@ namespace Hourglass {
 						if (mID["play"].Contains(id)) {
 							mEvent[i].SelectedIndex = mEvent[i].Items.IndexOf("play");
 							mSound[i].SelectedIndex = mID["play"].IndexOf(id);
+							if (mSound[i].SelectedIndex < 0) {
+								Debug.Print("Could not find play event " + id);
+							}
 						} else {
 							mEvent[i].SelectedIndex = mEvent[i].Items.IndexOf("sfx");
 							mSound[i].SelectedIndex = mID["sfx"].IndexOf(id);
+							if(mSound[i].SelectedIndex < 0) {
+								Debug.Print("Could not find sfx event " + id);
+							}
 						}
 						break;
 					case 1:
 						mEvent[i].SelectedIndex = mEvent[i].Items.IndexOf("pause");
 						mSound[i].SelectedIndex = mID["pause"].IndexOf(id);
+						if (mSound[i].SelectedIndex < 0) {
+							Debug.Print("Could not find pause event " + id);
+						}
 						break;
 					case 2:
 						mEvent[i].SelectedIndex = mEvent[i].Items.IndexOf("resume");
 						mSound[i].SelectedIndex = mID["resume"].IndexOf(id);
+						if (mSound[i].SelectedIndex < 0) {
+							Debug.Print("Could not find resume event " + id);
+						}
 						break;
 					case 3:
 						mEvent[i].SelectedIndex = mEvent[i].Items.IndexOf("stop");
 						mSound[i].SelectedIndex = mID["stop"].IndexOf(id);
+						if (mSound[i].SelectedIndex < 0) {
+							Debug.Print("Could not find stop event " + id);
+						}
 						break;
 					default:
 						break;
@@ -271,7 +286,10 @@ namespace Hourglass {
 			foreach (var kvp in mCombos) {
 				mEvent[mEvent.Count - 1].Items.Add(kvp.Key);
 			}
-			Resize.Invoke(mParent, e);
+            if(Resize != null)
+            {
+			    Resize.Invoke(Parent, e);
+            }
 		}
 
 		public void RemoveEvent(object sender, EventArgs e) {

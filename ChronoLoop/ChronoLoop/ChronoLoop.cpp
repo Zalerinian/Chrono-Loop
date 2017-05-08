@@ -76,7 +76,7 @@ void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftControl
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(133054);
+	//_CrtSetBreakAlloc(115136);
 	if (!InitializeWindow(hInstance, nCmdShow, 1366, 720, true)) {
 		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
 		return 2;
@@ -99,22 +99,33 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	}
 
 	Microsoft::WRL::ComPtr<ID3D11Device> renderingDevice = Renderer::Instance()->GetDevice();
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> renderingContext = Renderer::Instance()->GetContext();
 
 	// Update everything
 	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count());
+	srand(time(NULL));
 	Update();
 
+	// Close the window so we can clean up.
+	DestroyWindow(Renderer::Instance()->GetWindow());
 
 
 	// Cleanup
 	ShutdownSystems();
 	vr::VR_Shutdown();
+	vrsys = nullptr;
+	renderingContext->Flush();
+	renderingContext = nullptr;
 
 	for (int i = 0; i < 40; ++i) {
 		SystemLogger::Warn() << "THE CONSOLE HAS BEEN DETATCHED, AND IS NOW OWNED BY THE STEAMVR SERVER. DO NOT CLOSE IT." << std::endl;
 	}
 	SystemLogger::DestroyInstance();
-	vrsys = nullptr;
+#if _DEBUG || CONSOLE_OVERRIDE
+	FreeConsole();
+#endif
+
+
 
 #if _DEBUG
 	// In debug mode, dump any remaining live DirectX objects. This list should be hopefully small at this point.
@@ -127,10 +138,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 		OutputDebugStringA("\n\n\n");
 	}
 #endif
-
-#if _DEBUG || CONSOLE_OVERRIDE
-	FreeConsole();
-#endif
+	renderingDevice.Get()->Release();
 
 	return 0;
 }
@@ -318,6 +326,38 @@ void Update() {
 	startEmit2->FIRE();
 	//////////////////////////////////////////////////////////////////////////////////////
 
+	//Level 3 door////////////////////////////////////////////////////////////////////////
+	Particle* lvl3 = &Particle::Init();
+	lvl3->SetPos(vec3f(0, 0, 0));
+	lvl3->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
+	lvl3->SetLife(500);
+	lvl3->SetSize(.35f, .15f);
+	ParticleEmitter* emitlvl3 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, -2.82f, 1));
+	emitlvl3->SetParticle(lvl3);
+	emitlvl3->SetTexture("../Resources/BasicRectP.png");
+	((TeleportEffect*)emitlvl3)->y1 = 8;
+	((TeleportEffect*)emitlvl3)->y2 = 12;
+	((TeleportEffect*)emitlvl3)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
+	((TeleportEffect*)emitlvl3)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+	ParticleSystem::Instance()->AddEmitter(emitlvl3);
+	emitlvl3->FIRE();
+
+	lvl3 = &Particle::Init();
+	lvl3->SetPos(vec3f(0, 0, 0));
+	lvl3->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
+	lvl3->SetLife(500);
+	lvl3->SetSize(.15f, .05f);
+	ParticleEmitter* emit2lvl3 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, -2.82f, 1));
+	emit2lvl3->SetTexture("../Resources/BasicCircleP.png");
+	emit2lvl3->SetParticle(lvl3);
+	((TeleportEffect*)emit2lvl3)->y1 = 1;
+	((TeleportEffect*)emit2lvl3)->y2 = 5;
+	((TeleportEffect*)emit2lvl3)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
+	((TeleportEffect*)emit2lvl3)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+	ParticleSystem::Instance()->AddEmitter(emit2lvl3);
+	emit2lvl3->FIRE();
+	//////////////////////////////////////////////////////////////////////////////////////
+
 	//Test Animate Quad///////////////////////////////////////////////////////////////////
 	//Transform OneBack;
 	//OneBack.SetMatrix(matrix4::CreateTranslation(0, 1, -3));
@@ -368,7 +408,7 @@ void Update() {
 
 	Level* mainMenu;
 
-	while (LevelManager::GetInstance().LoadLevelAsync("../Resources/mainMenu.xml", &mainMenu) != Epoch::LM::LevelStatus::Success) {}
+	while (LevelManager::GetInstance().LoadLevelAsync("../Resources/MainMenu.elf", &mainMenu) != Epoch::LM::LevelStatus::Success) {}
 
 	//// Binary level loading
 	//mainMenu = new Level();

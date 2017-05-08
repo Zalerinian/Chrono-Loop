@@ -16,10 +16,14 @@ namespace Epoch {
 		vec3f mForces;
 		vec3f mVel;
 		vec3f mAcc;
+		vec3f mTotforce;
 	};
 	struct SnapComponent_Mesh : SnapComponent
 	{
 		bool misVisible = true;
+	};
+	struct SnapComponent_Code_MazeHelp : SnapComponent {
+		int mMazeGrid[4][4];
 	};
 	//Add more componets when we need it
 #pragma endregion ComponetStructs
@@ -34,30 +38,20 @@ namespace Epoch {
 	};
 
 
-	//struct SnapInfoPlayer : SnapInfo {
-
-	//	matrix4 mPlayerWorldPos;
-	//	//Left Controller World Pos
-	//	matrix4 mLCWorldPos;
-	//	//Right Controller World Pos
-	//	matrix4 mRCWorldPos;
-
-	//	SnapInfoPlayer() {};
-	//	SnapInfoPlayer(matrix4 _playerWorldPos, matrix4 _leftController, matrix4 _rightController) {
-	//		mPlayerWorldPos = _playerWorldPos;
-	//		mLCWorldPos = _leftController;
-	//		mRCWorldPos = _rightController;
-	//	}
-
-	//};
-
 	//If you rewind time and there is no snapshot for your object that means nothing changed from the last 
 	struct Snapshot {
-		unsigned int mTime = -1;									//This is the time in the world the snapshot was taken. If was not assigned mTime= -1;
+		unsigned int mTime = 0;									//Snapshot number this was taken at. Currently the game takes a snap every 1/10th of a second;
 		std::unordered_map<unsigned short, SnapInfo*> mSnapinfos;
 		std::unordered_map<unsigned short, unsigned int> mUpdatedtimes;		//Map of int times of last updated times. Use the float retreaved to access a different snapshot 
 
 		bool IsObjectStored(unsigned short _id);
+	};
+
+	struct SnapLevelSettings
+	{
+		//tutorial step
+		std::unordered_map<std::string, int> mLevelInts;
+		std::unordered_map<std::string, bool> mLevelBools;
 	};
 
 	struct ObjectLifeTime {
@@ -80,13 +74,19 @@ namespace Epoch {
 		std::unordered_map<unsigned short, ObjectLifeTime*> mObjectLifeTimes;
 
 	public:
+		SnapLevelSettings mSettings;
+
 		Timeline();
 		~Timeline();
 		//this will turn the bitset[0] to 1 so he acts as a normal game object in the timeline
 		void ActivateCloneBitset(unsigned short _ids[3]);
-		void AddBaseObject(BaseObject* _object, unsigned short _id);						//add to the list of recorded objects.
-		void UpdatePlayerBaseObject(BaseObject* _object, unsigned short _id);						//add to the player of recorded objects and .
+		//add to the list of recorded objects
+		void AddBaseObject(BaseObject* _object, unsigned short _id); 
+		//Update the Player baseobject pointer in the recorded objects
+		void UpdatePlayerBaseObject(BaseObject* _object, unsigned short _id);
+		//Add a snapshot to unordered map of all snapshots
 		void AddSnapshot(unsigned int _snaptime, Snapshot* _snapshot);
+		//Remove all snapshots, snapinfos, objectLifeTimes, recorded objects from list
 		void ClearTimeLine();
 		void ChangeBitsetToSnap(SnapInfo* _destinfo, Component* _curComp);
 		void ChangePlayerBitsetToSnap(SnapInfo * _destinfo, Component* _curComp);
@@ -95,18 +95,23 @@ namespace Epoch {
 		void CheckforLostObjects(std::vector<BaseObject*>&mClones);
 		void CopySnapInfo(SnapInfo* _src, SnapInfo* _dst);
 		ObjectLifeTime* GetObjectLifetime(unsigned short _id);
-		SnapInfo* GenerateSnapInfo(BaseObject* _object, SnapInfo* _info);							//Error check agianst the BaseObject* if it is null or not
+		SnapInfo* GenerateSnapInfo(BaseObject* _object, SnapInfo* _info);
 		Snapshot* GenerateSnapShot(unsigned int _time, std::vector<BaseObject*> & _clones);
-		//SnapInfoPlayer * GenerateSnapInfoPlayer();
+		//retreive what frame/snap the game is recording on
 		const unsigned int& GetCurrentGameTimeIndx() { return mCurrentGameTimeIndx; }
+		//total number of snaps recorded
 		unsigned int GetTotalSnaps() { return (unsigned int)mSnapshots.size(); };
 		float GetObjectInterpolationTime() { return mObjectInterpolationTime; };
 		void SetObjectInterpolationTime(float _set) { mObjectInterpolationTime = _set; };
-		void HotFixResetLevel();
+		void ResetTimelineAndLevel();
 		void RemoveFromTimeline(unsigned short _id);
+		//Rewind time to snap and make a clone created at that point 
 		bool RewindMakeClone(unsigned int _snaptime);
+		//Rewind time to snap execpt player baseobjects
 		bool RewindNoClone(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
-		void MoveAllComponentsToSnap(unsigned int _snaptime, bool _movePlayer, unsigned short _id1, unsigned short _id2, unsigned short _id3);
+		//rewind only component data to snap of baseobjects
+		void MoveAllComponentsToSnapExceptPlayer(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
+		//rewind a object to a particular snap 
 		void MoveObjectToSnap(unsigned int _snaptime, unsigned short _id, bool isClone);
 		void MoveAllObjectsToSnap(unsigned int _snaptime);
 		void MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
@@ -117,6 +122,7 @@ namespace Epoch {
 		void SetCloneDeathTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void SetComponent(SnapComponent* _destComp, BaseObject* _obj, SnapInfo* _destInfo);
 		void SetCurrentGameTimeIndx(int _time) { mCurrentGameTimeIndx = _time; };
+		void SetSavedSettings();
 		void UpdateCloneInterpolators(unsigned short _cloneid, SnapInfo* _currSnap, unsigned int _currTime);
 		void PrepareAllObjectInterpolators(unsigned int _fromSnapTime, unsigned int _toSnapTime);
 	};

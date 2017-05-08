@@ -33,6 +33,9 @@
 				<Event Id="1927416214" Name="Resume_Level3Ambient" ObjectPath="\Events\Default Work Unit\Resume_Level3Ambient"/>
 				<Event Id="2189517885" Name="SFX_BoxDoorZap" ObjectPath="\Events\Default Work Unit\SFX_BoxDoorZap"/>
 				<Event Id="3124930127" Name="SFX_communication_channel" ObjectPath="\Events\Default Work Unit\SFX_communication_channel"/>
+				<Event Id="3901374612" Name="SFX_gentle_alarm" ObjectPath="\Events\Default Work Unit\SFX_gentle_alarm"/>
+				<Event Id="1503523398" Name="SFX_sci_fi_door_close" ObjectPath="\Events\Default Work Unit\SFX_sci_fi_door_close"/>
+				<Event Id="2920536594" Name="SFX_sci_fi_door_open" ObjectPath="\Events\Default Work Unit\SFX_sci_fi_door_open"/>
 				<Event Id="2693013165" Name="SFX_TeleportSound" ObjectPath="\Events\Default Work Unit\SFX_TeleportSound"/>
 				<Event Id="2587866055" Name="Stop_Hub0" ObjectPath="\Events\Default Work Unit\Stop_Hub0"/>
 				<Event Id="2587866054" Name="Stop_Hub1" ObjectPath="\Events\Default Work Unit\Stop_Hub1"/>
@@ -53,6 +56,10 @@
 					<ShortName>Music-SFX\Level3Ambient.wav</ShortName>
 					<Path>SFX\Music-SFX\Level3Ambient_3BDAD486.wem</Path>
 				</File>
+				<File Id="446015996" Language="SFX">
+					<ShortName>sci-fi-door-open.wav</ShortName>
+					<Path>SFX\sci-fi-door-open_3AE5877C.wem</Path>
+				</File>
 				<File Id="589974881" Language="SFX">
 					<ShortName>Music-SFX\Level1Ambient.wav</ShortName>
 					<Path>SFX\Music-SFX\Level1Ambient_3BDAD486.wem</Path>
@@ -65,6 +72,10 @@
 					<ShortName>Music-SFX\BoxDoorZap.wav</ShortName>
 					<Path>SFX\Music-SFX\BoxDoorZap_3AE5877C.wem</Path>
 				</File>
+				<File Id="778650627" Language="SFX">
+					<ShortName>sci-fi-door-close.wav</ShortName>
+					<Path>SFX\sci-fi-door-close_3AE5877C.wem</Path>
+				</File>
 				<File Id="894777268" Language="SFX">
 					<ShortName>communication-channel.wav</ShortName>
 					<Path>SFX\communication-channel_3AE5877C.wem</Path>
@@ -72,6 +83,10 @@
 				<File Id="987973023" Language="SFX">
 					<ShortName>TeleportSound.wav</ShortName>
 					<Path>SFX\TeleportSound_3AE5877C.wem</Path>
+				</File>
+				<File Id="998751072" Language="SFX">
+					<ShortName>gentle-alarm.wav</ShortName>
+					<Path>SFX\gentle-alarm_3AE5877C.wem</Path>
 				</File>
 			</IncludedMemoryFiles>
 		</SoundBank>

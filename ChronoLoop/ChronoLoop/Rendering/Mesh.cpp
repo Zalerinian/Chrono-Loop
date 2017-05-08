@@ -560,4 +560,57 @@ namespace Epoch
 		return true;
 	}
 
+	template<>
+	bool MeshFormat<VertexPosNormTex>::Load(std::vector<VertexPosNormTex>& _verts, std::vector<unsigned int>& _indices)
+	{
+		mName = "Parabola";
+		mUniqueVerts = _verts;
+		mIndicies = _indices;
+		CheckFormat();
+
+		//Make triangles
+		mTriangles.clear();
+		for (int i = 0; i < _indices.size(); i += 3)
+		{
+			Triangle t;
+			t.Vertex[0] = _verts[_indices[i]].Position;
+			t.Vertex[1] = _verts[_indices[i + 1]].Position;
+			t.Vertex[2] = _verts[_indices[i + 2]].Position;
+			vec3f x = t.Vertex[0] - t.Vertex[1],
+				y = t.Vertex[1] - t.Vertex[2];
+			t.Normal = x.Cross(y).Normalize();
+			t.Centeroid += t.Vertex[0];
+			t.Centeroid += t.Vertex[1];
+			t.Centeroid += t.Vertex[2];
+			t.Centeroid /= 3;
+			mTriangles.push_back(t);
+		}
+
+		return true;
+	}
+
+	template<>
+	void MeshFormat<VertexPosNormTex>::Update(std::vector<VertexPosNormTex>& _verts, std::vector<unsigned int>& _indices)
+	{
+		mUniqueVerts = _verts;
+		mIndicies = _indices;
+
+		//Make triangles
+		mTriangles.clear();
+		for (int i = 0; i < _indices.size(); i += 3)
+		{
+			Triangle t;
+			t.Vertex[0] = _verts[_indices[i]].Position;
+			t.Vertex[1] = _verts[_indices[i + 1]].Position;
+			t.Vertex[2] = _verts[_indices[i + 2]].Position;
+			vec3f x = t.Vertex[0] - t.Vertex[1],
+				y = t.Vertex[1] - t.Vertex[2];
+			t.Normal = x.Cross(y).Normalize();
+			t.Centeroid += t.Vertex[0];
+			t.Centeroid += t.Vertex[1];
+			t.Centeroid += t.Vertex[2];
+			t.Centeroid /= 3;
+			mTriangles.push_back(t);
+		}
+	}
 }

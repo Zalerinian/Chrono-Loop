@@ -55,7 +55,9 @@ namespace Epoch
 			{
 				Settings::GetInstance().SetBool("LevelIsLoading", true);
 				Level* next = new Level;
-				next->LoadLevel("../Resources/Level1.xml");
+				next->BinaryLoadLevel("../Resources/Level1.elf");
+				Renderer::Instance()->ClearLights();
+
 				// Todo: Un-hardcode this
 				// use a setting string for next level path?
 				//LM::LevelStatus status = LevelManager::GetInstance().LoadLevelAsync("../Resources/Level1_2_6.xml", &next);
@@ -63,12 +65,10 @@ namespace Epoch
 				{
 					// Clean up the current level and request the new one be used next time.
 					Physics::Instance()->PhysicsLock.lock();
-					TimeManager::Instance()->Destroy();
 					Physics::Instance()->mObjects.clear();
 					LevelManager::GetInstance().RequestLevelChange(next);
 
 					//Sound Initializing---------------------------------------------------
-					TimeManager::Instance();
 
 					Listener* ears = new Listener();
 					Emitter* ambient = new AudioEmitter();
@@ -82,9 +82,9 @@ namespace Epoch
 					//new stuff
 					Transform identity, t;
 					t.SetMatrix(matrix4::CreateXRotation(DirectX::XM_PI / 2) * matrix4::CreateTranslation(0, 1.3f, 0));
-					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", t);
-					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity);
-					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity);
+					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", t, nullptr, BaseObject_Flag_Record_In_Timeline);
+					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
+					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 
 					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
@@ -223,7 +223,7 @@ namespace Epoch
 					sp->SetColors(vec3f(.6f, .6f, 1), vec3f(.2f, .2f, 1));
 					sp->SetLife(100);
 					sp->SetSize(.05f, .03f);
-					ParticleEmitter* emits = new Sparks(-1, 250, 2, vec3f(3.623517f, 0.75f, 8.32376f));
+					ParticleEmitter* emits = new Sparks(-1, 250, 2, vec3f(3.55f, 0.45f, 8.31f));
 					emits->SetParticle(sp);
 					emits->SetTexture("../Resources/BasicCircleP.png");
 					ParticleSystem::Instance()->AddEmitter(emits);
@@ -241,9 +241,7 @@ namespace Epoch
 					next->AddObject(pauseHelp);
 					next->AddObject(teleportHelp);
 
-					TimeManager::Instance()->AddObjectToTimeline(RightController);
-					TimeManager::Instance()->AddObjectToTimeline(LeftController);
-					TimeManager::Instance()->AddObjectToTimeline(headset);
+			
 
 					//Enter///////////////////////////////////////////////////////////////////////////////////
 					Particle* start = &Particle::Init();
@@ -251,7 +249,7 @@ namespace Epoch
 					start->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));
 					start->SetLife(500);
 					start->SetSize(.35f, .15f);
-					ParticleEmitter* startEmit = new TeleportEffect(400, 250, 2, vec4f(0.46f, 0, -10.15f, 1));
+					ParticleEmitter* startEmit = new TeleportEffect(400, 250, 2, vec4f(0, 0, -3.24f, 1));
 					startEmit->SetParticle(start);
 					startEmit->SetTexture("../Resources/BasicRectP.png");
 					((TeleportEffect*)startEmit)->y1 = 8;
@@ -266,7 +264,7 @@ namespace Epoch
 					start->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
 					start->SetLife(500);
 					start->SetSize(.15f, .05f);
-					ParticleEmitter* startEmit2 = new TeleportEffect(400, 150, 1, vec4f(0.46f, 0, -10.15f, 1));
+					ParticleEmitter* startEmit2 = new TeleportEffect(400, 150, 1, vec4f(0, 0, -3.24f, 1));
 					startEmit2->SetTexture("../Resources/BasicCircleP.png");
 					startEmit2->SetParticle(start);
 					((TeleportEffect*)startEmit2)->y1 = 1;

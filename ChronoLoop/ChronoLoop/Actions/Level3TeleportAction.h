@@ -80,7 +80,7 @@ namespace Epoch {
 
 			}
 
-			if (!interp->GetActive()) {
+			if (!interp->GetActive() && !Settings::GetInstance().GetBool("CantTeleport")) {
 				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && !Settings::GetInstance().GetBool("PauseMenuUp")) {
 					if (!paused) {
 						//SystemLogger::Debug() << "Touchpad Pressed" << std::endl;
@@ -128,7 +128,6 @@ namespace Epoch {
 						MeshComponent* TeleMeshes[] = { FloorMesh, mUpperPlaneMesh, mElevatorMesh };
 						BaseObject* TeleObjects[] = { FloorObject, mUpperPlaneObject, mElevatorObject };
 						vec3f point = VRInputManager::GetInstance().GetPlayerPosition().fourth;
-						float controllerTime = FLT_MAX;
 						for (int i = 0; i < ARRAYSIZE(TeleMeshes); ++i) {
 							forward.Set(0, 0, 1, 0);
 							matrix4 objMat = TeleObjects[i]->GetTransform().GetMatrix();
@@ -139,6 +138,7 @@ namespace Epoch {
 							vec3f fwd(forward);
 							Triangle *tris = TeleMeshes[i]->GetTriangles();
 							size_t numTris = TeleMeshes[i]->GetTriangleCount();
+							float controllerTime = FLT_MAX;
 							for (unsigned int j = 0; j < numTris; ++j) {
 								float hitTime = FLT_MAX;
 								if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, fwd, hitTime)) {

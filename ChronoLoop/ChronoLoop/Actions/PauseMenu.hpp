@@ -161,6 +161,26 @@ namespace Epoch
 					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texRestartLevel.Get(), NULL, rtvRestartLevel.GetAddressOf());
 					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texAudio.Get(), NULL, rtvAudio.GetAddressOf());
 					Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texMisc.Get(), NULL, rtvMisc.GetAddressOf());
+			//Lighting Stuff
+					mcPauseMenuBase->SetPixelShader(ePS_PURETEXTURE);
+					mcMainPanel->SetPixelShader(ePS_PURETEXTURE);
+					mcSettingsPanel->SetPixelShader(ePS_PURETEXTURE);
+					mcResume->SetPixelShader(ePS_PURETEXTURE);
+					mcSettings->SetPixelShader(ePS_PURETEXTURE);
+					mcHubworld->SetPixelShader(ePS_PURETEXTURE);
+					mcRestartLevel->SetPixelShader(ePS_PURETEXTURE);
+					mcAudio->SetPixelShader(ePS_PURETEXTURE);
+					mcMisc->SetPixelShader(ePS_PURETEXTURE);
+			//Draw in front
+					mcPauseMenuBase->SetTopmost(true);
+					mcMainPanel->SetTopmost(true);
+					mcSettingsPanel->SetTopmost(true);
+					mcResume->SetTopmost(true);
+					mcSettings->SetTopmost(true);
+					mcHubworld->SetTopmost(true);
+					mcRestartLevel->SetTopmost(true);
+					mcAudio->SetTopmost(true);
+					mcMisc->SetTopmost(true);
 			//Active Panel Start Up
 				mActiveMenu = PAUSEMENU_ON;
 			//Panel Start Up
@@ -457,7 +477,7 @@ namespace Epoch
 			case RESTART:
 				{
 					OnDisable();
-					TimeManager::Instance()->HotfixResetTimeline();
+					TimeManager::Instance()->ResetTimeLineandLevel();
 				}
 				break;
 			case AUDIO:
@@ -522,6 +542,7 @@ namespace Epoch
 			{
 				BaseObject* temp = (&*it);
 				SetVisiblity(&temp, _isVisible);
+				//delete temp;
 			}
 			std::vector<Component*> CodeComps = (*_obj)->GetComponents(Epoch::ComponentType::eCOMPONENT_MESH);
 			if (CodeComps.size() > 0) {
@@ -533,6 +554,7 @@ namespace Epoch
 					}
 				}
 			}
+			CodeComps.clear();
 		}
 
 		bool RaycastToMenu(BaseObject** _obj, MeshComponent** _mc, bool _isLeft) {
