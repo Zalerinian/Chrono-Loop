@@ -1,4 +1,4 @@
-#include "../RenderShaderDefines.hlsli"
+//#include "../RenderShaderDefines.hlsli"
 
 struct EyeData
 {
@@ -11,6 +11,10 @@ cbuffer ViewData : register(b0)
 	EyeData eyes[2];
 }
 
+cbuffer EyePosition : register(b1) {
+	float4 EyePos;
+}
+
 struct GSOutput
 {
 	float4 position : SV_POSITION;
@@ -18,6 +22,7 @@ struct GSOutput
 	float4 texCoord : COLOR;
 	float4 wpos : WORLDPOS;
 	float4 shadowPos : SHADOW;
+	float4 eyePos : HEADPOS;
 	uint IID : CL_IID;
 	uint viewport : SV_ViewportArrayIndex;
 };
@@ -46,6 +51,7 @@ void main(triangle GSInput input[3], inout TriangleStream<GSOutput> TriStream)
 		output.IID = input[i].IID;
 		output.viewport = 0;
 		output.shadowPos = input[i].shadowPos;
+		output.eyePos = EyePos;
 		TriStream.Append(output);
 	}
 
@@ -61,6 +67,7 @@ void main(triangle GSInput input[3], inout TriangleStream<GSOutput> TriStream)
 		output.IID = input[j].IID;
 		output.viewport = 1;
 		output.shadowPos = input[j].shadowPos;
+		output.eyePos = EyePos;
 		TriStream.Append(output);
 	}
 	//TriStream.RestartStrip();

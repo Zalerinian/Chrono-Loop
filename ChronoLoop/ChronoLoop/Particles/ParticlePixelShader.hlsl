@@ -20,8 +20,13 @@ texture2D text2D1 : register(t1);
 texture2D text2D2 : register(t2);
 SamplerState samp : register(s0);
 
-float4 main(GSOutput input) : SV_TARGET
-{
+struct MRTOutput {
+	float4 diffuse : SV_TARGET0;
+	float4 glow : SV_TARGET1;
+};
+
+MRTOutput main(GSOutput input) {
+	MRTOutput output;
     float4 col = text2D0.Sample(samp, float2(input.uv.x + offsetx.x, input.uv.y + offsety.x));
     clip(col.a - .25);
     //col += text2D1.Sample(samp, float2(input.uv.x + offsetx.y, input.uv.y + offsety.y));
@@ -35,5 +40,8 @@ float4 main(GSOutput input) : SV_TARGET
 	
     col *= (input.col.a == 0) ? 1 : input.col;
 
-	return saturate(col);
+	output.diffuse = saturate(col);
+	output.glow = saturate(col);
+
+	return output;
 }

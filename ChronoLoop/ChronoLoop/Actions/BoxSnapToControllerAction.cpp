@@ -61,6 +61,7 @@ namespace Epoch {
 				}
 			}
 		}
+		CheckIfBoxAlreadyHeld();
 	}
 	bool BoxSnapToControllerAction::CheckIfBoxAlreadyHeld()
 	{

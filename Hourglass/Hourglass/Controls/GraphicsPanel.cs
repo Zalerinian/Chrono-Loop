@@ -17,7 +17,6 @@ namespace Hourglass
         {
             InitializeComponent();
             this.SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.Opaque, true);
-            //this.DoubleBuffered = true;
         }
 
         protected override void OnPaint(PaintEventArgs pe)
