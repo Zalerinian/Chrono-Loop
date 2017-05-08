@@ -70,7 +70,7 @@ namespace Epoch
 
 					mIsBeingMade = false;
 
-				} else if (!mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") == 2)) {
+				} else if (!mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") >= 2)) {
 					// Stop time
 
 					if (Settings::GetInstance().GetInt("tutStep") == 2)//Paused time (tut 1)
@@ -96,6 +96,11 @@ namespace Epoch
 					TimeManager::Instance()->SetTempCurSnap();
 					mPauseTime = true;
 					Settings::GetInstance().SetBool("IsTimePaused", true);
+
+					VRInputManager::GetInstance().RewindInputTimeline(
+						TimeManager::Instance()->GetCurrentSnapFrame(),
+						cLevel->GetRightController()->GetUniqueID(),
+						cLevel->GetLeftController()->GetUniqueID());
 			}
 		}
 
@@ -119,7 +124,7 @@ namespace Epoch
 
 			// Accept timeline position
 			if (mPauseTime) {
-				if (Settings::GetInstance().GetInt("tutStep") == 4)//accepted time (
+				if (Settings::GetInstance().GetInt("tutStep") >= 4)//accepted time (
 				{
 					if (Settings::GetInstance().GetBool("Level1Tutorial"))
 						Settings::GetInstance().SetInt("tutStep", 6);//end
@@ -213,14 +218,14 @@ namespace Epoch
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Trigger))
 		{
 			//toggle to have clone turn on or off
-			if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") == 4))//rewound time (tut 1)
+			if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") >= 4))//rewound time (tut 1)
 			{
-				if(mCurCloneController1 && mCurCloneController2 && mCurCloneHeadset)
+				if(mCurCloneController1 && mCurCloneController2 && mCurCloneHeadset && TimeManager::Instance()->GetCurrentSnapFrame() != TimeManager::Instance()->GetTempCurSnap())
 				{
 					if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck() == false) {
 						mIsBeingMade = !mIsBeingMade;
 					}
-
+					
 					if(mIsBeingMade)
 					{
 						if (Settings::GetInstance().GetInt("tutStep") == 4)//rewound time (tut 1)
@@ -235,7 +240,7 @@ namespace Epoch
 					{
 						((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.3f);
 						((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.3f);
-						((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.3f);
+						((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.3f);	
 						SystemLogger::GetLog() << "Transparent" << std::endl;
 					}
 				}

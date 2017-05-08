@@ -1,5 +1,6 @@
 #include "TextureManager.h"
 #include "../Common/FileIO/FileIO_Textures.h"
+#include "../Common/Common.h"
 #include "Renderer.h"
 #include <d3d11.h>
 #include <memory>
@@ -43,6 +44,9 @@ namespace Epoch {
 		if(mTextureMap2D[typedName].first.Get() != nullptr)
 		{
 			_name = typedName;
+			if (_srv) {
+				(*_srv) = mTextureMap2D[_name].first;
+			}
 			return TextureStatus::eSuccess;
 		}
 		D3D11_TEXTURE2D_DESC texDesc;
@@ -51,6 +55,7 @@ namespace Epoch {
 		ID3D11ShaderResourceView* srv;
 		Renderer::Instance()->GetDevice()->CreateShaderResourceView(_tex.Get(), &srvDesc, &srv);
 		_name = typedName;
+		SetD3DName(srv, (std::string("Internal SRV for ") + _name).c_str());
 		mTextureMap2D[_name] = std::make_pair<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>, Microsoft::WRL::ComPtr<ID3D11Texture2D>>(
 				std::forward<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>(srv),
 				std::forward<Microsoft::WRL::ComPtr<ID3D11Texture2D>>(_tex)
