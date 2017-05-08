@@ -103,6 +103,12 @@ namespace Epoch {
 		HRESULT MHR = mContext->Map(mVPBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
 		memcpy(map.pData, buffers, sizeof(ViewProjectionBuffer) * 2);
 		mContext->Unmap(mVPBuffer.Get(), 0);
+
+		memset(&map, 0, sizeof(map));
+		MHR = mContext->Map(mHeadPosBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+		vec4f& PlayerHeadPos = VRInputManager::GetInstance().GetPlayerView().Position;
+		memcpy(map.pData, &PlayerHeadPos, sizeof(vec4f));
+		mContext->Unmap(mHeadPosBuffer.Get(), 0);
 	}
 
 	void Renderer::UpdateLBuffers()
@@ -329,6 +335,9 @@ namespace Epoch {
 		buffRes = mDevice->CreateBuffer(&desc, nullptr, &pBuff);
 		mVPBuffer.Attach(pBuff);
 
+		desc.ByteWidth = sizeof(vec4f);
+		mDevice->CreateBuffer(&desc, nullptr, mHeadPosBuffer.GetAddressOf());
+
 
 		// Model position buffer
 #if ENABLE_INSTANCING
@@ -437,6 +446,7 @@ namespace Epoch {
 		mContext->VSSetConstantBuffers(0, 1, mPositionBuffer.GetAddressOf());
 		mContext->VSSetConstantBuffers(1, 1, mSimInstanceBuffer.GetAddressOf());
 		mContext->GSSetConstantBuffers(0, 1, mVPBuffer.GetAddressOf());
+		mContext->GSSetConstantBuffers(1, 1, mHeadPosBuffer.GetAddressOf());
 		mContext->PSSetConstantBuffers(0, 1, mLBuffer.GetAddressOf());
 		//(*mContext)->VSSetConstantBuffers(2, 1, nullptr); // This will crash. - Instance Buffer
 		//(*mContext)->VSSetConstantBuffers(3, 1, nullptr); // This will crash. - Animation Data Buffer

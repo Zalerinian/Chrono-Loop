@@ -45,7 +45,7 @@ namespace Epoch {
 
 		vr::IVRSystem* mVrSystem;
 		RenderSet mOpaqueSet, mTransparentSet, mTopmostSet;
-		Microsoft::WRL::ComPtr<ID3D11Buffer> mVPBuffer, mPositionBuffer, mSimInstanceBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mVPBuffer, mPositionBuffer, mSimInstanceBuffer, mHeadPosBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mLBuffer;
 		bool mUseVsync = false;
 
