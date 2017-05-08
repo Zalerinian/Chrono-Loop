@@ -62,6 +62,8 @@ namespace Epoch
 						Settings::GetInstance().SetBool("CantTeleport", true);
 						//Invoke Reset level
 						mRestartLevel = true;
+						//Play sounds
+						((SFXEmitter*)mLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
 					}
 			}
 		}

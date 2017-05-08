@@ -394,6 +394,21 @@ namespace Epoch
 
 			SetBoxesPosition(&temp0, &temp1, &temp2);
 
+			//Shoot Particles
+			Particle* start = &Particle::Init();
+			start->SetPos(vec3f(0, -4.0f, 0));
+			start->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));
+			start->SetLife(300);
+			start->SetSize(5, 5);
+			ParticleEmitter* startEmit = new TeleportEffect(500, 250, 2, vec4f(0, -4,0, 1));
+			startEmit->SetParticle(start);
+			startEmit->SetTexture("../Resources/BasicRectP.png");
+			((TeleportEffect*)startEmit)->SetPosBounds(vec3f(-4, 0, -4), vec3f(4, 1, 4));
+			((TeleportEffect*)startEmit)->SetVelBounds(vec3f(.5f, 1, .5f), vec3f(.5f, 5, .5f));
+			ParticleSystem::Instance()->AddEmitter(startEmit);
+			startEmit->FIRE();
+			((SFXEmitter*)mObject->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent(Emitter::ePlay);
+
 		}
 		void SetBoxesPosition(matrix4* matrix0, matrix4* matrix1, matrix4* matrix2)
 		{
