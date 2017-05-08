@@ -126,7 +126,6 @@ namespace Epoch {
 				case 7:
 					boardchange = true;
 					mPrevBoards = mCurrentBoards;
-					mPrevBoards.pop_back();
 					mCurrentBoards.clear();
 					mCurrentBoards.push_back(1);
 					mCurrentBoards.push_back(2);
@@ -135,6 +134,7 @@ namespace Epoch {
 					boardchange = true;
 					mPrevBoards = mCurrentBoards;
 					mCurrentBoards.clear();
+					Settings::GetInstance().SetInt("tutStep", 0);
 					break;
 				}
 			}
