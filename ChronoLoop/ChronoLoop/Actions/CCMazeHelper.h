@@ -48,7 +48,7 @@ namespace Epoch
 		Level* cLevel;
 		BaseObject* mLButton, *mRButton, *mUButton, *mDButton, *mResetButton;
 		CCLevel3BoxMovementButton* mLBCC, *mRBCC, *mUBCC, *mDBCC, *mResetBCC;
-		bool mBox1Done, mBox2Done, mBox3Done;
+		bool mBox1Done, mBox2Done, mBox3Done, mOnce = false;
 		int mGrid[4][4] = {
 			{ 0, 0,-1,-1 },
 			{ 0,-1, 0, 0 },
@@ -108,9 +108,18 @@ namespace Epoch
 			}
 			else if(GetAsyncKeyState(Epoch::Keys::R) & 0x1 || mResetBCC->GetisColliding())
 			{
+				if(!mOnce)
+				{ 
 				ResetBoxes();
-				//PrintGrid();
+				mOnce = true;
 				mResetBCC->SetisColliding(false);
+				//PrintGrid();
+				}
+
+			}
+			else
+			{
+				mOnce = false;
 			}
 			if (!Settings::GetInstance().GetBool("IsTimePaused")) {
 				if (!mBox1Done) {
@@ -396,14 +405,14 @@ namespace Epoch
 
 			//Shoot Particles
 			Particle* start = &Particle::Init();
-			start->SetPos(vec3f(0, -4.0f, 0));
+			start->SetPos(vec3f(0, -3.0f, 0));
 			start->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));
-			start->SetLife(300);
-			start->SetSize(5, 5);
-			ParticleEmitter* startEmit = new TeleportEffect(500, 250, 2, vec4f(0, -4,0, 1));
+			start->SetLife(400);
+			start->SetSize(1, .7f);
+			ParticleEmitter* startEmit = new TeleportEffect(800, 250, 2, vec4f(0, -4,0, 1));
 			startEmit->SetParticle(start);
 			startEmit->SetTexture("../Resources/BasicRectP.png");
-			((TeleportEffect*)startEmit)->SetPosBounds(vec3f(-4, 0, -4), vec3f(4, 1, 4));
+			((TeleportEffect*)startEmit)->SetPosBounds(vec3f(-6, -3, -6), vec3f(6, 0, 6));
 			((TeleportEffect*)startEmit)->SetVelBounds(vec3f(.5f, 1, .5f), vec3f(.5f, 5, .5f));
 			ParticleSystem::Instance()->AddEmitter(startEmit);
 			startEmit->FIRE();
