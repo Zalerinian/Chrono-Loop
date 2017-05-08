@@ -157,19 +157,6 @@ namespace Epoch {
 			mTimeline->AddBaseObject(_obj, _obj->GetUniqueID());
 			//Level* templvl = LevelManager::GetInstance().GetCurrentLevel();
 			instanceTimemanager->AddInterpolatorToObject(_obj);
-			//if (LevelManager::GetInstance().GetCurrentLevel() == nullptr)
-			//{
-			//	if (_obj->GetName().find("Controller1 - 0") == std::string::npos &&
-			//		_obj->GetName().find("Controller2 - 0") == std::string::npos) { //TODO RYAN: TEMPORARY FIX FOR INTERPOLATION
-			//		instanceTimemanager->AddInterpolatorToObject(_obj);
-			//	}
-			//}7
-			//else {
-			//	if (_obj->GetName().find("Controller1 - " + std::to_string(LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->GetNumClones())) == std::string::npos &&
-			//		_obj->GetName().find("Controller2 - " + std::to_string(LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->GetNumClones())) == std::string::npos) { //TODO RYAN: TEMPORARY FIX FOR INTERPOLATION
-			//		instanceTimemanager->AddInterpolatorToObject(_obj);
-			//	}
-			//}
 		}
 	}
 
