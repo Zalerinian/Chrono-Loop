@@ -127,7 +127,6 @@ namespace Epoch
 
 		virtual void Update()
 		{
-
 			//if (!AudioToggle)
 			//{
 			//	//AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::PLAY_HUB0);

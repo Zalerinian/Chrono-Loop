@@ -103,8 +103,8 @@ namespace Epoch {
 	void BoxSnapToControllerAction::SomethingtoController()
 	{
 		mHeld = true;
-		if (Settings::GetInstance().GetInt("tutStep") == 2)//Picked up object
-			Settings::GetInstance().SetInt("tutStep", 3);//Pause Time
+		if (Settings::GetInstance().GetInt("tutStep") == 6)//Picked up object (tut 1)
+			Settings::GetInstance().SetInt("tutStep", 8);//End level 1 tutorial
 
 		//matrix4 m = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
 		matrix4 m = mObject->GetTransform().GetMatrix();
