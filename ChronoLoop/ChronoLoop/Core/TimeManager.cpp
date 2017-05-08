@@ -140,6 +140,7 @@ namespace Epoch {
 		SetClonePair(_id3, p3);
 	}
 
+
 	TimeManager * TimeManager::Instance() {
 		if (!instanceTimemanager) {
 			instanceTimemanager = new TimeManager();

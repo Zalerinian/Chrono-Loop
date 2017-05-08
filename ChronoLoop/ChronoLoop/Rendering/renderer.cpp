@@ -19,6 +19,8 @@
 #include "RasterizerStateManager.h"
 #include "RenderShaderDefines.hlsli"
 #include "ShaderManager.h"
+#include "../Common/Settings.h"
+#include "../Core/LevelManager.h"
 
 #define ENABLE_TEXT 1
 
@@ -777,6 +779,7 @@ namespace Epoch {
 		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
 
 	}
+
 
 	void Renderer::RenderScreenQuad()
 	{
