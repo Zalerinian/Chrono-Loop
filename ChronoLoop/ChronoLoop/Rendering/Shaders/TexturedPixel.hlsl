@@ -47,19 +47,24 @@ MRTOutput main(PSI input) {
 	clip(diffuseColor.a - 0.25);
 	float4 emissiveColor = tEmissive.Sample(diffuseFilter, input.texCoord.xy);
     
-	l1 = ApplyDirectionalLight(One.dir, input.normal.xyz, One.color, diffuseColor) * saturate(One.type & 1);
-	l1 += ApplyPointLight(One.pos, input.wpos, input.normal.xyz, One.color, diffuseColor) * saturate(One.type & 2);
-	l1 += ApplySpotLight(input.normal.xyz, One.pos, input.wpos, One.cdir, One.ratio, One.color, diffuseColor) * saturate(One.type & 4);
+	Light lights[3] = { One, Two, Three };
+	float3 lighting = float3(0, 0, 0);
+	[unroll]
+	for (uint lightIndex = 0; lightIndex < 3; ++lightIndex) {
+		Light l = lights[lightIndex];
+		if (l.type == 1) {
+			// Directional Light
+			lighting += ApplyDirectionalLight(l.dir, input.normal.xyz, l.color, diffuseColor);
+		} else if (l.type == 2) {
+			// Point light
+			lighting += ApplyPointLight(l.pos, input.wpos, input.normal.xyz, l.color, diffuseColor);
+		} else if (l.type == 4) {
+			//Spot light
+			lighting += ApplySpotLight(input.normal.xyz, l.pos, input.wpos, l.cdir, l.ratio, l.color, diffuseColor);
+		}
+	}
 
-	l2 = ApplyDirectionalLight(Two.dir, input.normal.xyz, Two.color, diffuseColor) * saturate(Two.type & 1);
-	l2 += ApplyPointLight(Two.pos, input.wpos, input.normal.xyz, Two.color, diffuseColor) * saturate(Two.type & 2);
-	l2 += ApplySpotLight(input.normal.xyz, Two.pos, input.wpos, Two.cdir, Two.ratio, Two.color, diffuseColor) * saturate(Two.type & 4);
-
-	l3 = ApplyDirectionalLight(Three.dir, input.normal.xyz, Three.color, diffuseColor) * saturate(Three.type & 1);
-	l3 += ApplyPointLight(Three.pos, input.wpos, input.normal.xyz, Three.color, diffuseColor) * saturate(Three.type & 2);
-	l3 += ApplySpotLight(input.normal.xyz, Three.pos, input.wpos, Three.cdir, Three.ratio, Three.color, diffuseColor) * saturate(Three.type & 4);
-
-	output.diffuse = (((l1 + l2 + l3) + float4(.05, .05, .05, 0)) * diffuseColor);
+	output.diffuse = ((float4(lighting.xyz, 1) + float4(.05, .05, .05, 0)) * diffuseColor);
 	output.bloom = emissiveColor;
 	return output;
 }
