@@ -155,15 +155,53 @@ namespace Epoch {
 					}
 					mStartButtonInterp->Update(dt);
 					mStartStandInterp->Update(dt);
-
-					((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mObject->GetTransform().GetMatrix().fourth);
-					((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y - .2f;
-					((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y - .2f;
 				}
 				else
 				{
 					mIsPlayer = false;
 				}
+
+				float tempY = mChamberObject->GetTransform().GetMatrix().Position.y;
+				//if elevator is mostly down
+				if (mInterpDone && tempY > -3.27f && tempY < -1.64f) {
+					matrix4 mat = mChamberObject->GetTransform().GetMatrix();
+					mChamberInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -3.28f + (tempY *-1), 0), mChamberObject->GetTransform().GetMatrix());
+					mChamberInterp->SetEasingFunction(Easing::QuadInOut);
+					mChamberInterp->SetActive(true);
+
+					mat = mObject->GetTransform().GetMatrix();
+					mStartButtonInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -3.28f + (tempY *-1), 0), mObject->GetTransform().GetMatrix());
+					mStartButtonInterp->SetEasingFunction(Easing::QuadInOut);
+					mStartButtonInterp->SetActive(true);
+
+					mat = mButtonStand->GetTransform().GetMatrix();
+					mStartStandInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -3.28f + (tempY *-1), 0), mButtonStand->GetTransform().GetMatrix());
+					mStartStandInterp->SetEasingFunction(Easing::QuadInOut);
+					mStartStandInterp->SetActive(true);
+					mInterpDone = false;
+				}
+				else if(mInterpDone && tempY > -1.64 && tempY < -0.116f)
+				{
+					matrix4 mat = mChamberObject->GetTransform().GetMatrix();
+					mChamberInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -0.116f + (tempY *-1), 0), mChamberObject->GetTransform().GetMatrix());
+					mChamberInterp->SetEasingFunction(Easing::QuadInOut);
+					mChamberInterp->SetActive(true);
+
+					mat = mObject->GetTransform().GetMatrix();
+					mStartButtonInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -0.116f + (tempY *-1), 0), mObject->GetTransform().GetMatrix());
+					mStartButtonInterp->SetEasingFunction(Easing::QuadInOut);
+					mStartButtonInterp->SetActive(true);
+
+					mat = mButtonStand->GetTransform().GetMatrix();
+					mStartStandInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -0.116f + (tempY *-1), 0), mButtonStand->GetTransform().GetMatrix());
+					mStartStandInterp->SetEasingFunction(Easing::QuadInOut);
+					mStartStandInterp->SetActive(true);
+					mInterpDone = false;
+				}
+
+				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mObject->GetTransform().GetMatrix().fourth);
+				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y - .2f;
+				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y - .2f;
 			}
 		}
 	};

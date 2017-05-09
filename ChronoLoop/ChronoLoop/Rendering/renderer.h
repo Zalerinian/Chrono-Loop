@@ -33,19 +33,19 @@ namespace Epoch {
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> mContext;
 		Microsoft::WRL::ComPtr<IDXGISwapChain> mChain;
 		Microsoft::WRL::ComPtr<IDXGIFactory1> mFactory;
-		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mMainView, mSceneView, mBloomRTV;
+		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mMainView, mSceneView, mBloomRTV, mGlowRTV;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDSView;
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> mMainViewTexture, mDepthBuffer, mSceneTexture, mBloomTexture;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> mMainViewTexture, mDepthBuffer, mSceneTexture, mBloomTexture, mGlowTexture;
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> mSamplerState;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> mTransparentState, mOpaqueState;
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mSceneSRV, mBloomSRV;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mSceneSRV, mBloomSRV, mGlowSRV;
 		Microsoft::WRL::ComPtr<ID3D11BlendState> mOpaqueBlendState, mTransparentBlendState;
 		D3D11_VIEWPORT mLeftViewport, mRightViewport, mFullViewport;
 		HWND mWindow;
 
 		vr::IVRSystem* mVrSystem;
 		RenderSet mOpaqueSet, mTransparentSet, mTopmostSet;
-		Microsoft::WRL::ComPtr<ID3D11Buffer> mVPBuffer, mPositionBuffer, mSimInstanceBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mVPBuffer, mPositionBuffer, mSimInstanceBuffer, mHeadPosBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mLBuffer;
 		bool mUseVsync = false;
 
@@ -83,9 +83,6 @@ namespace Epoch {
 		void RenderBlurStage(BlurStage _s, float _dx, float _dy);
 		void ToggleBlurTextureSet(unsigned int _texturesPerSet, ID3D11RenderTargetView **_rtvs, ID3D11ShaderResourceView **_srvs);
 		void SetBlurTexturesDrawback(unsigned int _texturesPerSet, ID3D11RenderTargetView **_drawbacks, ID3D11ShaderResourceView **_srvs);
-		float bootlegSigma = 1.0f;
-		float bootlegDownsample = 0.5f;
-		bool bootlegBlurEnabled = false;
 
 		RenderShape* mScenePPQuad = nullptr, *mSceneScreenQuad = nullptr;
 		RenderContext mCurrentContext;
@@ -129,6 +126,8 @@ namespace Epoch {
 		void RenderNoVR(float _delta);
 		void ProcessRenderSet();
 		void RenderScreenQuad();
+
+		void RenderForBloom();
 
 
 		Renderer();

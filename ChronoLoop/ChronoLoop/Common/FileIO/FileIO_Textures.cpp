@@ -45,7 +45,7 @@ namespace Epoch
 				}
 				SystemLogger::GetError() << "[Warning] Requested texture \"" << _path << "\" could not be loaded as a DDS file: 0x" << hex << hr << dec << ". Attempting as WIC file..." << endl;
 				TexMetadata tMeta;
-				hr = LoadFromWICFile(buffer, 0, &tMeta, scratch);
+				hr = LoadFromWICFile(buffer, WIC_FLAGS_IGNORE_SRGB, &tMeta, scratch);
 				delete[] buffer;
 				if (FAILED(hr))
 				{
@@ -70,6 +70,9 @@ namespace Epoch
 					// We don't return false because the shader resource view is technically unnecessary, a texture2D might have been the goal all along.
 				}
 				hr = CreateTexture(Renderer::Instance()->GetDevice().Get(), scratch.GetImage(0, 0, 0), 1, tMeta, &texture);
+				if (tMeta.format == DXGI_FORMAT_B8G8R8A8_UNORM_SRGB || tMeta.format == DXGI_FORMAT_R8G8B8A8_UNORM_SRGB) {
+					SystemLogger::Warn() << "\"" << _path << "\" is stored in sRGB!" << std::endl;
+				}
 				Renderer::Instance()->GetRendererLock().unlock();
 				if (FAILED(hr))
 				{
@@ -86,8 +89,8 @@ namespace Epoch
 				}
 
 #if _DEBUG
-				string textureName = "Texture loaded from " + string(_path);
-				string viewName = "Texture view for " + string(_path);
+				string textureName = "Texture2D for " + string(_path);
+				string viewName = "SRV for " + string(_path);
 				if (texture != nullptr)
 				{
 					texture->SetPrivateData(WKPDID_D3DDebugObjectName, (UINT)textureName.size(), textureName.c_str());

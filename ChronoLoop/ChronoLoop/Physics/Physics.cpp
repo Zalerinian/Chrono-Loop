@@ -10,7 +10,7 @@
 #include "..\Core\LevelManager.h"
 
 #define DEBUG_LEVEL1 0
-#define DEBUG_LEVEL2 0
+#define DEBUG_LEVEL2 1
 
 namespace Epoch
 {

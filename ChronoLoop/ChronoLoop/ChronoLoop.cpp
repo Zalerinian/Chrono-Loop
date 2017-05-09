@@ -103,7 +103,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 
 	// Update everything
 	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count());
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 	Update();
 
 	// Close the window so we can clean up.
@@ -370,6 +370,16 @@ void Update() {
 	//Forcefield->AddComponent(new CCAnimationController(8, 6, 48, 1.0f / 24.0f));
 	//////////////////////////////////////////////////////////////////////////////////////
 
+	// Test Gamma Correction /////////////////////////////////////////////////////////////
+	/*Transform gammaform;
+	gammaform.SetMatrix(matrix4::CreateTranslation(0, 1, 0));
+	BaseObject *GammaObject = Pool::Instance()->iGetObject()->Reset("ForceField Quad", gammaform);
+	MeshComponent *GammaMesh = new MeshComponent("../Resources/AnimationPlane1x1.obj", 0.25f);
+	GammaMesh->AddTexture("../Resources/grey.png", eTEX_DIFFUSE);
+	GammaMesh->SetPixelShader(ePS_PURETEXTURE);
+	GammaObject->AddComponent(GammaMesh);*/
+	//////////////////////////////////////////////////////////////////////////////////////
+
 
 	/// Raycast debug cube
 	//Transform cubeScale;
@@ -418,7 +428,7 @@ void Update() {
 	mainMenu->AddObject(RightController);
 	mainMenu->AddObject(headset);
 	mainMenu->AddObject(LeftController);
-	//mainMenu->AddObject(Forcefield);
+	//mainMenu->AddObject(GammaObject);
 	auto& levelObjects = mainMenu->GetLevelObjects();
 	for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it)
 	{
