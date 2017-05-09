@@ -18,7 +18,7 @@
 namespace Epoch {
 
 	struct TeleportAction : public CodeComponent {
-		
+
 		matrix4 endPos;
 		Interpolator<matrix4>* interp;
 		MeshComponent *mPlaneMesh, *mWallsMesh, *mBlockMesh, *mExitMesh, *mServerMesh, *mTWall1Mesh, *mTWall2Mesh, *mTWall3Mesh, *mTWindowMesh;
@@ -33,7 +33,7 @@ namespace Epoch {
 		BaseObject* mTPLoc, *mCSLoc, *mMSLoc;
 		MeshComponent* mTPMesh, *mCSMesh, *mMidMesh;
 
-		RenderShape* mParabola; 
+		RenderShape* mParabola;
 		GhostList<matrix4>::GhostNode* mPGhost;
 		Mesh* mArcMesh;
 
@@ -53,7 +53,26 @@ namespace Epoch {
 
 			return false;
 		}
+		bool ChecktoFloor(MeshComponent* _plane, vec3f _start, vec3f _ray, vec3f& _hit)
+		{
+			Triangle* tris = _plane->GetTriangles();
+			int count = _plane->GetTriangleCount();
 
+			float t;
+			for (int i = 0; i < count; i++)
+			{
+				bool hit = Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, _start, _ray, t);
+
+				if (hit)
+				{
+					_hit = _start + (_ray * t);
+					return true;
+				}
+
+			}
+
+			return false;
+		}
 		void GenerateMesh(vec3f& _vel, matrix4 _m)
 		{
 			//verts and uvs
@@ -115,7 +134,7 @@ namespace Epoch {
 				mIndices[ind + 10] = (p2);
 				mIndices[ind + 11] = (p3);
 				ind += 12;
-				
+
 			}
 
 			if (!mInitial)
@@ -162,9 +181,68 @@ namespace Epoch {
 				vec3f nextpos = ParabolicCurve(_p, _v, _a, t);
 
 				vec3f hit;
-				if (CheckMesh(_walls, lastpos, nextpos, hit))
+				if (CheckMesh(mWallsMesh, lastpos, nextpos, hit))
 				{
-					_arc.push_back(hit);
+					vec3f floorhit;
+
+					if (ChecktoFloor(_plane, hit, vec3f(0, -1, 0), floorhit))
+					{
+						_arc.push_back(floorhit);
+					}
+					else
+						_arc.push_back(hit);
+
+					return true;
+				}
+				if (CheckMesh(mTWall1Mesh, lastpos, nextpos, hit))
+				{
+					vec3f floorhit;
+
+					if (ChecktoFloor(_plane, hit, vec3f(0, -1, 0), floorhit))
+					{
+						_arc.push_back(floorhit);
+					}
+					else
+						_arc.push_back(hit);
+
+					return true;
+				}
+				if (CheckMesh(mTWall2Mesh, lastpos, nextpos, hit))
+				{
+					vec3f floorhit;
+
+					if (ChecktoFloor(_plane, hit, vec3f(0, -1, 0), floorhit))
+					{
+						_arc.push_back(floorhit);
+					}
+					else
+						_arc.push_back(hit);
+
+					return true;
+				}
+				if (CheckMesh(mTWall3Mesh, lastpos, nextpos, hit))
+				{
+					vec3f floorhit;
+
+					if (ChecktoFloor(_plane, hit, vec3f(0, -1, 0), floorhit))
+					{
+						_arc.push_back(floorhit);
+					}
+					else
+						_arc.push_back(hit);
+
+					return true;
+				}
+				if (CheckMesh(mTWindowMesh, lastpos, nextpos, hit))
+				{
+					vec3f floorhit;
+
+					if (ChecktoFloor(_plane, hit, vec3f(0, -1, 0), floorhit))
+					{
+						_arc.push_back(floorhit);
+					}
+					else
+						_arc.push_back(hit);
 
 					return true;
 				}
@@ -183,7 +261,7 @@ namespace Epoch {
 
 			return false;
 		}
-		
+
 
 		virtual void Start() {
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
@@ -244,7 +322,7 @@ namespace Epoch {
 
 			temp = mMidMesh->GetTransform().GetMatrix() * scaleM;
 			mMidMesh->GetTransform().SetMatrix(temp);
-			
+
 			temp = mTPMesh->GetTransform().GetMatrix();
 			mTPMesh->GetTransform().SetMatrix(temp);
 
@@ -343,9 +421,11 @@ namespace Epoch {
 			if (!interp->GetActive()) {
 				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && mCanTeleport && !Settings::GetInstance().GetBool("PauseMenuUp")) {
 					if (!paused) {
-						
-						vec3f raydir = mArc[mArc.size() - 1] - mArc[0];
 
+						vec4f raydir = (mArc[mArc.size() - 1] - mArc[0]);
+						raydir.w = 0;
+						raydir = raydir.Normalize();
+						
 						SystemLogger::Debug() << "Touchpad Pressed" << std::endl;
 						vec4f forward(0, 0, 1, 0);
 						MeshComponent* meshes[] = { mWallsMesh, mBlockMesh, mExitMesh, mServerMesh, mTWall1Mesh, mTWall2Mesh, mTWall3Mesh, mTWindowMesh };
@@ -353,11 +433,12 @@ namespace Epoch {
 						float controllerTime = 0, wallTime = FLT_MAX;
 						for (int i = 0; i < ARRAYSIZE(meshes); ++i) {
 							forward.Set(0, 0, 1, 0);
+							forward = raydir;
 							matrix4 objMat = objects[i]->GetTransform().GetMatrix();
 							matrix4 objMatInv = objects[i]->GetTransform().GetMatrix().Invert();
 							matrix4 inverse = (mat * objMatInv);
 							vec3f meshPos = inverse.Position;
-							forward *= inverse;
+							forward *= objMatInv;
 							vec3f fwd(forward);
 							Triangle *tris = meshes[i]->GetTriangles();
 							size_t numTris = meshes[i]->GetTriangleCount();
@@ -382,10 +463,11 @@ namespace Epoch {
 						vec3f position = inverse.Position;
 						vec3f point = VRInputManager::GetInstance().GetPlayerPosition().fourth;
 						forward.Set(0, 0, 1, 0);
-						forward *= inverse;
+						forward = raydir;
+						forward *= objMat.Invert();
 						vec3f fwd = forward;
 						for (unsigned int i = 0; i < numTris; ++i) {
-							if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, mArc[0], raydir, controllerTime)) {
+							if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, fwd, controllerTime)) {
 								if (controllerTime < wallTime) {
 									fwd *= controllerTime;
 									point[0] += fwd[0] * objMat.xAxis[0]; // x
@@ -404,10 +486,11 @@ namespace Epoch {
 									controllerTime = 0, wallTime = FLT_MAX;
 									for (int j = 0; j < ARRAYSIZE(meshes); ++j) {
 										forward.Set(0, 0, 1, 0);
+										forward = raydir;
 										matrix4 objMatInv = objects[j]->GetTransform().GetMatrix().Invert();
 										matrix4 inverse = (mat * objMatInv);
 										vec3f meshPos = inverse.Position;
-										forward *= inverse;
+										forward *= objMatInv;
 										vec3f fwd(forward);
 										Triangle *tris = meshes[j]->GetTriangles();
 										size_t numTris = meshes[j]->GetTriangleCount();
@@ -417,7 +500,7 @@ namespace Epoch {
 												(tris + k)->Vertex[0],
 												(tris + k)->Vertex[1],
 												(tris + k)->Vertex[2],
-												(tris + k)->Normal, mArc[0], raydir, hitTime)) {
+												(tris + k)->Normal, position, fwd, hitTime)) {
 												if (hitTime < wallTime) {
 													wallTime = hitTime;
 												}
@@ -429,7 +512,8 @@ namespace Epoch {
 									inverse = (mat * objMat.Invert());
 									position = inverse.Position;
 									forward.Set(0, 0, 1, 0);
-									forward *= inverse;
+									forward = raydir;
+									forward *= objMat.Invert();
 									vec3f agentFwd = forward;
 									float agentTime = 0;
 									numTris = mPlaneMesh->GetTriangleCount();
@@ -437,8 +521,8 @@ namespace Epoch {
 										if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, agentFwd, agentTime)) {
 											if (agentTime < wallTime) {
 												endPos = VRInputManager::GetInstance().GetPlayerPosition();
-												endPos[3][0] += raydir[0] * objMat.xAxis[0]; // x
-												endPos[3][2] += raydir[2] * objMat.zAxis[2]; // z
+												endPos[3][0] += fwd[0] * objMat.xAxis[0]; // x
+												endPos[3][2] += fwd[2] * objMat.zAxis[2]; // z
 												interp->Prepare(.1f, VRInputManager::GetInstance().GetPlayerPosition(), endPos, VRInputManager::GetInstance().GetPlayerPosition());
 												interp->SetActive(true);
 												SystemLogger::Debug() << "Successful raycast" << std::endl;
@@ -448,22 +532,25 @@ namespace Epoch {
 
 												if (dynamic_cast<SFXEmitter*>(mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
 													((SFXEmitter*)mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
-											} else {
+											}
+											else {
 												SystemLogger::GetLog() << "[DEBUG] Can't let you do that, Starfox." << std::endl;
 											}
 										}
 									}
-								} else {
+								}
+								else {
 									SystemLogger::GetLog() << "[DEBUG] Can't let you do that, Starfox." << std::endl;
 								}
 							}
 						}
 					}
 				}
-			} else if (interp->Update(TimeManager::Instance()->GetDeltaTime()))
+			}
+			else if (interp->Update(TimeManager::Instance()->GetDeltaTime()))
 				interp->SetActive(false);
 		}
-		
+
 
 	};
 }
