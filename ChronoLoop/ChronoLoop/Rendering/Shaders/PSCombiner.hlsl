@@ -41,6 +41,8 @@ cbuffer _Light : register(b1) {
 float4 main(PSI input) : SV_TARGET
 {
 	float4 cAlbedo = tAlbedo.Sample(fFilter, input.texCoord.xy);
+	float4 worldPos = tPosition.Sample(fFilter, input.texCoord.xy);
+	float4 pixelNormal = normalize(tNormal.Sample(fFilter, input.texCoord.xy));
 	float4 cSpecular = tSpecular.Sample(fFilter, input.texCoord.xy);
 
 	Light lights[3] = { One, Two, Three };
@@ -51,16 +53,16 @@ float4 main(PSI input) : SV_TARGET
 		Light l = lights[lightIndex];
 		if (l.type == 1) {
 			// Directional Light
-			lighting += ApplyDirectionalLight(l.dir, input.normal.xyz, l.color, cAlbedo);
-			specIntensity += GetSpecularIntensity(l.pos, EyePos, input.wpos.xyz, normalize(input.normal.xyz));
+			lighting += ApplyDirectionalLight(l.dir, pixelNormal.xyz, l.color, cAlbedo);
+			specIntensity += GetSpecularIntensity(l.pos, EyePos, worldPos.xyz, pixelNormal.xyz);
 		} else if (l.type == 2) {
 			// Point light
-			lighting += ApplyPointLight(l.pos, input.wpos, input.normal.xyz, l.color, cAlbedo);
-			specIntensity += GetSpecularIntensity(l.pos, EyePos, input.wpos.xyz, normalize(input.normal.xyz));
+			lighting += ApplyPointLight(l.pos, worldPos, pixelNormal.xyz, l.color, cAlbedo);
+			specIntensity += GetSpecularIntensity(l.pos, EyePos, worldPos.xyz, pixelNormal.xyz);
 		} else if (l.type == 4) {
 			//Spot light
-			lighting += ApplySpotLight(input.normal.xyz, l.pos, input.wpos, l.cdir, l.ratio, l.color, cAlbedo);
-			specIntensity += GetSpotlightSpecularIntensity(l.pos, l.ratio, l.cdir, EyePos, input.wpos.xyz, normalize(input.normal.xyz));
+			lighting += ApplySpotLight(pixelNormal.xyz, l.pos, worldPos, l.cdir, l.ratio, l.color, cAlbedo);
+			specIntensity += GetSpotlightSpecularIntensity(l.pos, l.ratio, l.cdir, EyePos, worldPos.xyz, pixelNormal.xyz);
 		}
 	}
 

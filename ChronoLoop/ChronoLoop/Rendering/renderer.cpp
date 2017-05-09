@@ -484,6 +484,7 @@ namespace Epoch {
 		mDeferredCombiner->mContext.mTextures[1] = mPositionSRV;
 		mDeferredCombiner->mContext.mTextures[2] = mNormalSRV;
 		mDeferredCombiner->mContext.mTextures[3] = mSpecularSRV;
+		mDeferredCombiner->mContext.mPixelCBuffers[0] = mLBuffer;
 	}
 
 	void Renderer::SetStaticBuffers() {
@@ -491,7 +492,6 @@ namespace Epoch {
 		mContext->VSSetConstantBuffers(1, 1, mSimInstanceBuffer.GetAddressOf());
 		mContext->GSSetConstantBuffers(0, 1, mVPBuffer.GetAddressOf());
 		mContext->GSSetConstantBuffers(1, 1, mHeadPosBuffer.GetAddressOf());
-		mContext->PSSetConstantBuffers(0, 1, mLBuffer.GetAddressOf());
 		//(*mContext)->VSSetConstantBuffers(2, 1, nullptr); // This will crash. - Instance Buffer
 		//(*mContext)->VSSetConstantBuffers(3, 1, nullptr); // This will crash. - Animation Data Buffer
 
@@ -826,9 +826,9 @@ namespace Epoch {
 	void Renderer::RenderScreenQuad()
 	{
 		// Blur the bloom texture so that it actually bleeds on the screen
-		BlurTextures(mSuperGlowTexture.GetAddressOf(), 1, 1.0f, 0.4f);
+		//BlurTextures(mSuperGlowTexture.GetAddressOf(), 1, 1.0f, 0.4f);
 		RenderForBloom();
-		BlurTextures(mBloomTexture.GetAddressOf(), 1, 2.0f, 0.4f);
+		//BlurTextures(mBloomTexture.GetAddressOf(), 1, 2.0f, 0.4f);
 
 		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
 		mContext->OMSetRenderTargets(1, mPostProcessRTV.GetAddressOf(), nullptr);
@@ -994,8 +994,8 @@ namespace Epoch {
 		InitializeDXGIFactory();
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, rtvWidth, rtvHeight);
 		InitializeViews(rtvWidth, rtvHeight);
-		InitializeSceneQuad(); // Must be initilized after all the views, as it assigns some.
 		InitializeBuffers();
+		InitializeSceneQuad(); // Must be initilized after all the views and buffers, as it assigns some.
 		InitializeStates();
 
 		InitializeSamplerState();
