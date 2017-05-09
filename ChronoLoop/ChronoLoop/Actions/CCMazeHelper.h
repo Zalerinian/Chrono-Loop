@@ -404,20 +404,32 @@ namespace Epoch
 			SetBoxesPosition(&temp0, &temp1, &temp2);
 
 			//Shoot Particles
-			Particle* start = &Particle::Init();
+			/*Particle* start = &Particle::Init();
 			start->SetPos(vec3f(0, -3.0f, 0));
 			start->SetColors(vec3f(.6f, .6f, .8f), vec3f(.3f, 0, .3f));
-			start->SetLife(1200);
-			start->SetSize(.5f, .3f);
-			ParticleEmitter* startEmit = new VolumeEmitter(1400, 500, 2, vec4f(0, -3,0, 1));
+			start->SetLife(200);
+			start->SetSize(.1f, .1f);
+			ParticleEmitter* startEmit = new ParticleEmitter(600, 500, 2, vec4f(0, -3,0, 1));
 			startEmit->SetParticle(start);
 			startEmit->SetTexture("../Resources/BasicCircleP.png");
-			((VolumeEmitter*)startEmit)->SetBoundingVolume(3.14f);
-			((VolumeEmitter*)startEmit)->SetPosBounds(vec3f(-7, 0, -7), vec3f(7, 4, 7));
-			((VolumeEmitter*)startEmit)->SetVelBounds(vec3f(1, 5, .5f), vec3f(2, 10, 1));
+			startEmit->SetPosBounds(vec3f(-7, 0, -7), vec3f(7, 4, 7));
+			startEmit->SetVelBounds(vec3f(1, 5, .5f), vec3f(2, 10, 1));
 			ParticleSystem::Instance()->AddEmitter(startEmit);
 			startEmit->FIRE();
-			((SFXEmitter*)mObject->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent(Emitter::ePlay);
+			((SFXEmitter*)mObject->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent(Emitter::ePlay);*/
+
+			Particle * p = &Particle::Init();
+			p->SetColors(vec4f(.8f, 0, .8f, 1), vec4f());
+			p->SetLife(600);
+			p->SetSize(.25f, .15f);
+			vec3f EPos = vec4f(0, -3, 0, 1);
+			ParticleEmitter *emit = new ParticleEmitter(400, 200, 20, EPos);
+			emit->SetPosBounds(vec3f(-7, 0, -7), vec3f(7, 1.5f, 7));
+			emit->SetVelBounds(vec3f(1, 1, .5f), vec3f(2, 3, 1));
+			emit->SetParticle(p);
+			emit->SetTexture("../Resources/BasicCircleP.png");
+			ParticleSystem::Instance()->AddEmitter(emit);
+			emit->FIRE();
 
 		}
 		void SetBoxesPosition(matrix4* matrix0, matrix4* matrix1, matrix4* matrix2)

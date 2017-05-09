@@ -18,6 +18,7 @@ namespace Epoch {
 		Interpolator<matrix4>* mClone1Interp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mClone2Interp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mClone3Interp = new Interpolator<matrix4>();
+		matrix4 mButStart, mStandStart, mEleStart;
 		
 		//vec3f blockend, exitend;
 
@@ -27,6 +28,10 @@ namespace Epoch {
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			mChamberObject = cLevel->FindObjectWithName("L3Elevator");
 			mButtonStand = cLevel->FindObjectWithName("L3Buttonstand");
+			mEleStart = mChamberObject->GetTransform().GetMatrix();
+			mButStart = mObject->GetTransform().GetMatrix();
+			mStandStart = mButtonStand->GetTransform().GetMatrix();
+
 			TimeManager::Instance()->SaveSettingBoolToTimeline("CantPauseTime", false);
 			Settings::GetInstance().SetBool("CantTeleport", false);
 			TimeManager::Instance()->SaveSettingBoolToTimeline("CantTeleport", false);
@@ -201,6 +206,15 @@ namespace Epoch {
 				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mObject->GetTransform().GetMatrix().fourth);
 				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y - .2f;
 				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y - .2f;
+			}
+
+			if(Settings::GetInstance().GetBool("ResetElevator"))
+			{
+				mChamberObject->GetTransform().SetMatrix(mEleStart);
+				mButtonStand->GetTransform().SetMatrix(mStandStart);
+				mObject->GetTransform().SetMatrix(mButStart);
+
+				Settings::GetInstance().SetBool("ResetElevator", false);
 			}
 		}
 	};

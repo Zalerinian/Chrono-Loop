@@ -583,6 +583,7 @@ namespace Epoch {
 		}
 		if(Settings::GetInstance().GetInt("CurrentLevel") == 3)
 		{
+			Settings::GetInstance().SetBool("ResetElevator", true);
 			std::vector<Component*>& comps = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetComponents(eCOMPONENT_CODE);
 			for (unsigned int i = 0; i < comps.size(); i++) {
 				if (dynamic_cast<CCMazeHelper*>(comps[i])) {
