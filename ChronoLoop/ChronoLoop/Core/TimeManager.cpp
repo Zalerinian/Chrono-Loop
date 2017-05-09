@@ -140,6 +140,7 @@ namespace Epoch {
 		SetClonePair(_id3, p3);
 	}
 
+
 	TimeManager * TimeManager::Instance() {
 		if (!instanceTimemanager) {
 			instanceTimemanager = new TimeManager();
@@ -157,19 +158,6 @@ namespace Epoch {
 			mTimeline->AddBaseObject(_obj, _obj->GetUniqueID());
 			//Level* templvl = LevelManager::GetInstance().GetCurrentLevel();
 			instanceTimemanager->AddInterpolatorToObject(_obj);
-			//if (LevelManager::GetInstance().GetCurrentLevel() == nullptr)
-			//{
-			//	if (_obj->GetName().find("Controller1 - 0") == std::string::npos &&
-			//		_obj->GetName().find("Controller2 - 0") == std::string::npos) { //TODO RYAN: TEMPORARY FIX FOR INTERPOLATION
-			//		instanceTimemanager->AddInterpolatorToObject(_obj);
-			//	}
-			//}7
-			//else {
-			//	if (_obj->GetName().find("Controller1 - " + std::to_string(LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->GetNumClones())) == std::string::npos &&
-			//		_obj->GetName().find("Controller2 - " + std::to_string(LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->GetNumClones())) == std::string::npos) { //TODO RYAN: TEMPORARY FIX FOR INTERPOLATION
-			//		instanceTimemanager->AddInterpolatorToObject(_obj);
-			//	}
-			//}
 		}
 	}
 
@@ -498,10 +486,17 @@ namespace Epoch {
 			}
 			return;
 		}
-
-		unsigned int temp = instanceTimemanager->GetCurrentSnapFrame();
-		if (_gesture == 0)
+		//SystemLogger::GetLog() << "Gesture ID: " << _gesture << std::endl;
+		if (_gesture == 0) {
+			if(noMovementCnt < 15)
+				noMovementCnt++;
+			if(noMovementCnt == 15)
+			{
+				mRewindShouldGetFaster = 0;
+				mRewindGettingFaster = 1;
+			}
 			return;
+		}
 		if (_gesture == 1)
 			_frameRewind *= -1;
 		else if (_gesture == 2) {
@@ -509,6 +504,8 @@ namespace Epoch {
 			LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->RaycastCloneCheck();*/
 			return;
 		}
+
+		unsigned int temp = instanceTimemanager->GetCurrentSnapFrame();
 			if ((mtempCurSnapFrame != 0 && _gesture == -1) || (mtempCurSnapFrame != temp && _gesture == 1)) {
 				int placeHolder = mtempCurSnapFrame;
 				if (mtempCurSnapFrame - (_frameRewind * mRewindGettingFaster) > 0 && (mtempCurSnapFrame - (_frameRewind * mRewindGettingFaster) < temp))
@@ -516,30 +513,30 @@ namespace Epoch {
 				mTimeline->PrepareAllObjectInterpolators(placeHolder, mtempCurSnapFrame);
 				mShouldUpdateInterpolators = true;
 				mShouldPulse = true;
+				noMovementCnt = 0;
 				VRInputManager::GetInstance().GetController(eControllerType_Primary).TriggerHapticPulse(600, vr::k_EButton_SteamVR_Touchpad);
- 				//mRewindShouldGetFaster++;
-				//if (mRewindShouldGetFaster % 15 == 0)
-				//	mRewindGettingFaster++;
+ 				mRewindShouldGetFaster++;
+				if (mRewindShouldGetFaster % 20 == 0)
+					mRewindGettingFaster++;
 				//SystemLogger::GetLog() << "mRewindGettingFaster: " << mRewindGettingFaster << std::endl;
 				//SystemLogger::GetLog() << "mRewindShouldGetFaster: " << mRewindShouldGetFaster << std::endl;
 				if (_gesture == 1)
-					Settings::GetInstance().SetFloat("TutorialRewind - CurProgress", Settings::GetInstance().GetFloat("TutorialRewind - CurProgress") - 1);
+					Settings::GetInstance().SetUInt("TutorialRewind - CurProgress", Settings::GetInstance().GetUInt("TutorialRewind - CurProgress") - 1);
 				if (_gesture == -1)
-					Settings::GetInstance().SetFloat("TutorialRewind - CurProgress", Settings::GetInstance().GetFloat("TutorialRewind - CurProgress") + 1);
-				if(Settings::GetInstance().GetFloat("TutorialRewind - CurProgress") == Settings::GetInstance().GetFloat("TutorialRewind - FinalProgress"))//Rewind
+					Settings::GetInstance().SetUInt("TutorialRewind - CurProgress", Settings::GetInstance().GetUInt("TutorialRewind - CurProgress") + 1);
+				if(Settings::GetInstance().GetUInt("TutorialRewind - CurProgress") == Settings::GetInstance().GetUInt("TutorialRewind - FinalProgress"))//Rewind
 				{
-					if (Settings::GetInstance().GetInt("tutStep") == 4)
+					if (Settings::GetInstance().GetInt("tutStep") == 3)
 					{
 						if (Settings::GetInstance().GetBool("Level1Tutorial"))
-							Settings::GetInstance().SetInt("tutStep", 6);//Accept time
+							Settings::GetInstance().SetInt("tutStep", 4);//Accept time (tut 1)
 						else
-							Settings::GetInstance().SetInt("tutStep", 5);//Create Clone
+							Settings::GetInstance().SetInt("tutStep", 5);//Create Clone (tut 2)
 					}
 				}
-			}
-			else {
+			} else {
 				mShouldPulse = false;
-		}
+			}
 	}
 	void TimeManager::MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC) {
 		mTimeline->MoveAllObjectsToSnapExceptPlayer(_snaptime, _headset, _leftC, _rightC);

@@ -25,6 +25,249 @@ namespace Epoch {
 		Level* cLevel = nullptr;
 		Level3TeleportAction(ControllerType _t) { mControllerRole = _t; };
 
+		bool mCanTeleport = false, mInitial = false;
+		std::vector<vec3f> mArc;
+		vec3f mVelocity, mAcceleration;
+		BaseObject* mTPLoc, *mCSLoc, *mMSLoc;
+		MeshComponent* mTPMesh, *mCSMesh, *mMidMesh;
+
+		RenderShape* mParabola;
+		GhostList<matrix4>::GhostNode* mPGhost;
+		Mesh* mArcMesh;
+
+		bool CheckMesh(MeshComponent* _plane, vec3f _start, vec3f _end, vec3f& _hit)
+		{
+			Triangle* tris = _plane->GetTriangles();
+			int count = _plane->GetTriangleCount();
+
+			for (int i = 0; i < count; i++)
+			{
+				bool hit = Physics::Instance()->Linecast((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, _start, _end, _hit);
+
+				if (hit)
+					return true;
+
+			}
+
+			return false;
+		}
+		bool ChecktoFloor(MeshComponent* _plane, vec3f _start, vec3f _ray, vec3f& _hit)
+		{
+			Triangle* tris = _plane->GetTriangles();
+			int count = _plane->GetTriangleCount();
+
+			float t;
+			for (int i = 0; i < count; i++)
+			{
+				bool hit = Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, _start, _ray, t);
+
+				if (hit)
+				{
+					_hit = _start + (_ray * t);
+					return true;
+				}
+
+			}
+
+			return false;
+		}
+		void GenerateMesh(vec3f& _vel, matrix4 _m)
+		{
+			//verts and uvs
+			std::vector<VertexPosNormTex> mVerts;
+			std::vector<unsigned int> mIndices;
+
+			vec3f right = _vel.Cross(vec3f(0, 1, 0)).Normalize();
+			//Maybe over extend, may be some index issue
+			mVerts.reserve(50);
+			mVerts.resize(50);
+			int ind = 0, numrv = 0;
+			for (int i = 0; i < 25; i++)
+			{
+				VertexPosNormTex t1, t2;
+				if (i < mArc.size())
+				{
+					t1.Position = mArc[i] - right * (.2f / 2);
+					t2.Position = mArc[i] + right * (.2f / 2);
+					t1.Position.w = 1;
+					t2.Position.w = 1;
+
+					//Figure out uv offset
+					float uvoff = fmodf((std::chrono::steady_clock::now().time_since_epoch().count()) / 1000.0f / 1000.0f / 1000.0f, 1);
+					if (i == mArc.size() - 1 && i > 1)
+					{
+						float dlast, dcur;
+						dlast = (mArc[i - 2] - mArc[i - 1]).Magnitude();
+						dcur = (mArc[i] - mArc[i - 1]).Magnitude();
+						uvoff += 1 - dcur / dlast;
+					}
+					t1.UV = vec3f(0, i - uvoff, 0);
+					t2.UV = vec3f(1, i - uvoff, 0);
+					mVerts[ind] = t1;
+					mVerts[ind + 1] = t2;
+					ind += 2;
+					numrv += 2;
+				}
+			}
+
+			//indexs
+			mIndices.reserve((mVerts.size() / 2 - 1) * 12);
+			mIndices.resize((mVerts.size() / 2 - 1) * 12);
+			ind = 0;
+			for (int i = 0; i < mVerts.size() / 2 - 1; i++)
+			{
+				int p1 = 2 * i, p2 = 2 * i + 1, p3 = 2 * i + 2, p4 = 2 * i + 3;
+
+				mIndices[ind] = (p1);
+				mIndices[ind + 1] = (p2);
+				mIndices[ind + 2] = (p3);
+				mIndices[ind + 3] = (p3);
+				mIndices[ind + 4] = (p2);
+				mIndices[ind + 5] = (p4);
+
+				mIndices[ind + 6] = (p3);
+				mIndices[ind + 7] = (p2);
+				mIndices[ind + 8] = (p1);
+				mIndices[ind + 9] = (p4);
+				mIndices[ind + 10] = (p2);
+				mIndices[ind + 11] = (p3);
+				ind += 12;
+
+			}
+
+			if (!mInitial)
+			{
+				//Make the mesh
+				mArcMesh = new Mesh();
+				mArcMesh->Load(mVerts, mIndices);
+				//Make and push in rendershape, save the ghost node
+				mParabola = new RenderShape(*mArcMesh);
+				mParabola->SetShaders(PixelShaderFormat::ePS_PURETEXTURE, VertexShaderFormat::eVS_TEXTURED);
+				mParabola->SetGeometryShader(GeometryShaderFormat::eGS_PosNormTex);
+				mParabola->AddTexture(L"../Resources/cube_texture.png", TextureType::eTEX_DIFFUSE);
+				mPGhost = Renderer::Instance()->AddOpaqueNode(*mParabola);
+				mInitial = true;
+			}
+			else
+			{
+				mArcMesh->Update(mVerts, mIndices);
+				mParabola->UpdateBufferData(mArcMesh);
+			}
+		}
+
+		vec3f ParabolicCurve(vec3f _p, vec3f _v, vec3f _a, float _t)
+		{
+			return _p + _v * _t + _a * .5f * _t * _t;
+		}
+		vec3f DerivedCurve(vec3f _v, vec3f _a, float _t)
+		{
+			return _v + _a * _t;
+		}
+
+		bool CalculateCurve(vec3f _p, vec3f _v, vec3f _a, MeshComponent* _plane, MeshComponent* _walls, std::vector<vec3f>& _arc)
+		{
+			_arc.clear();
+
+			vec3f lastpos = _p;
+			_arc.push_back(_p);
+			float t = 0;
+
+			for (int i = 0; i < 25; i++)
+			{
+				t += .5f / DerivedCurve(_v, _a, t).Magnitude();
+
+				vec3f nextpos = ParabolicCurve(_p, _v, _a, t);
+
+				vec3f hit;
+
+				if (CheckMesh(_walls, lastpos, nextpos, hit))
+				{
+					vec3f floorhit;
+
+					if (ChecktoFloor(_plane, hit, vec3f(0, -1, 0), floorhit))
+					{
+						_arc.push_back(floorhit);
+					}
+					else
+						_arc.push_back(hit);
+
+					return true;
+				}
+				if (CheckMesh(mPillar1Mesh, lastpos, nextpos, hit))
+				{
+					vec3f floorhit;
+
+					if (ChecktoFloor(_plane, hit, vec3f(0, -1, 0), floorhit))
+					{
+						_arc.push_back(floorhit);
+					}
+					else
+						_arc.push_back(hit);
+
+					return true;
+				}
+				if (CheckMesh(mPillar2Mesh, lastpos, nextpos, hit))
+				{
+					vec3f floorhit;
+
+					if (ChecktoFloor(_plane, hit, vec3f(0, -1, 0), floorhit))
+					{
+						_arc.push_back(floorhit);
+					}
+					else
+						_arc.push_back(hit);
+
+					return true;
+				}
+				if (CheckMesh(mPillar3Mesh, lastpos, nextpos, hit))
+				{
+					vec3f floorhit;
+
+					if (ChecktoFloor(_plane, hit, vec3f(0, -1, 0), floorhit))
+					{
+						_arc.push_back(floorhit);
+					}
+					else
+						_arc.push_back(hit);
+
+					return true;
+				}
+				if (CheckMesh(mPillar4Mesh, lastpos, nextpos, hit))
+				{
+					vec3f floorhit;
+
+					if (ChecktoFloor(_plane, hit, vec3f(0, -1, 0), floorhit))
+					{
+						_arc.push_back(floorhit);
+					}
+					else
+						_arc.push_back(hit);
+
+					return true;
+				}
+
+				if (CheckMesh(_plane, lastpos, nextpos, hit))
+				{
+					//if it hits the plane
+					_arc.push_back(hit);
+
+					return true;
+				}
+				if (CheckMesh(mUpperPlaneMesh, lastpos, nextpos, hit))
+				{
+					_arc.push_back(hit);
+
+					return true;
+				}
+				else
+					_arc.push_back(nextpos);
+
+				lastpos = nextpos;
+			}
+
+			return false;
+		}
+
 		virtual void Start() {
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			interp = cLevel->playerInterp;
@@ -61,6 +304,49 @@ namespace Epoch {
 			mHeadset = cLevel->GetHeadset();
 			endPos = VRInputManager::GetInstance().GetPlayerPosition();
 			interp->SetActive(false);
+
+			mVelocity = vec3f(0, 0, 20);
+			mAcceleration = vec3f(0, -9.81f, 0);
+			mInitial = false;
+
+			matrix4 scaleM;
+			scaleM.first = vec4f(.05f, 0, 0, 0);
+			scaleM.second = vec4f(0, .05f, 0, 0);
+			scaleM.third = vec4f(0, 0, .05f, 0);
+			scaleM.fourth = vec4f(0, 0, 0, 1);
+
+			mTPLoc = new BaseObject("TeleportSpot");
+			mCSLoc = new BaseObject("ArcStart");
+			mMSLoc = new BaseObject("ArcMid");
+
+			//TODO : Make mesh and load them here as well as textures
+			mCSMesh = new MeshComponent("../Resources/ControllerTP.obj");
+			mCSMesh->AddTexture("../Resources/cube_texture.png", TextureType::eTEX_DIFFUSE);
+			mCSLoc->AddComponent(mCSMesh);
+			mMidMesh = new MeshComponent("../Resources/ControllerTP.obj");
+			mMidMesh->AddTexture("../Resources/cube_texture.png", TextureType::eTEX_DIFFUSE);
+			mMSLoc->AddComponent(mMidMesh);
+			mTPMesh = new MeshComponent("../Resources/TeleportMarker.obj");
+			mTPMesh->AddTexture("../Resources/cube_texture.png", TextureType::eTEX_DIFFUSE);
+			mTPLoc->AddComponent(mTPMesh);
+
+			matrix4 temp;
+			temp = mCSMesh->GetTransform().GetMatrix() * scaleM;
+			mCSMesh->GetTransform().SetMatrix(temp);
+
+			temp = mMidMesh->GetTransform().GetMatrix() * scaleM;
+			mMidMesh->GetTransform().SetMatrix(temp);
+
+			temp = mTPMesh->GetTransform().GetMatrix();
+			mTPMesh->GetTransform().SetMatrix(temp);
+
+			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mTPLoc);
+			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mCSLoc);
+			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mMSLoc);
+
+			mTPMesh->SetVisible(false);
+			mCSMesh->SetVisible(false);
+			mMidMesh->SetVisible(false);
 		}
 
 		virtual void Update() {
@@ -80,9 +366,84 @@ namespace Epoch {
 
 			}
 
+			matrix4 tmp = mat;
+			vec3f fwdvel, right;
+			vec4f t = mVelocity;
+			t.w = 1;
+
+			tmp.first.w = 0;
+			tmp.second.w = 0;
+			tmp.third.w = 0;
+			tmp.fourth = vec4f();
+
+			t *= tmp;
+
+			vec4f up = vec3f(0, 1, 0);
+			fwdvel = t * ((up.Dot(t)) / t.SquaredMagnitude());
+			float angle = acos(fwdvel.Dot(t));
+			right = up.Cross(fwdvel);
+
+			if (right.Dot(fwdvel.Cross(t)) > 0)
+				angle *= -1;
+
+			if (angle > 45)
+			{
+				float ag = acos(fwdvel.Dot(t));
+				t = fwdvel * (sin((1 - (45.0f / angle)) * ag) / sin(ag)) + t * (sin((45.0f / angle) * ag) / sin(ag));
+				t /= t.Magnitude();
+				t *= mVelocity.Magnitude();
+				angle = 45;
+			}
+
+			if (mHeadset->GetTransform().GetMatrix().Position.y > 0)
+				mCanTeleport = CalculateCurve(mat.Position, t, mAcceleration, mGlassPlaneMesh, mUpperWallMesh, mArc);
+			else
+				mCanTeleport = CalculateCurve(mat.Position, t, mAcceleration, mLowerPlaneMesh, mLowerWallMesh, mArc);
+
+
+			if (mCanTeleport)
+			{
+				//GenerateMesh(vec3f(t.x, t.y, t.z), mat);
+				//mPGhost->data.Position = vec4f();
+
+				matrix4 scaleM;
+				scaleM.first = vec4f(.15f, 0, 0, 0);
+				scaleM.second = vec4f(0, .15f, 0, 0);
+				scaleM.third = vec4f(0, 0, .15f, 0);
+				scaleM.fourth = vec4f(0, 0, 0, 1);
+
+				mTPMesh->SetVisible(true);
+				mCSMesh->SetVisible(true);
+				mMidMesh->SetVisible(true);
+
+				matrix4 m;
+				m = mTPMesh->GetTransform().GetMatrix();
+				m.fourth = mArc[mArc.size() - 1];
+				m.fourth.y += .35;
+				mTPMesh->GetTransform().SetMatrix(m);
+
+				m = mat * scaleM;
+				m.fourth = mat.fourth;
+				mCSMesh->GetTransform().SetMatrix(m);
+
+				m = mat * scaleM;
+				m.fourth = mArc[(mArc.size() / 2 - 1) < 0 ? 0 : (mArc.size() / 2 - 1)];
+				mMidMesh->GetTransform().SetMatrix(m);
+			}
+			else
+			{
+				mTPMesh->SetVisible(false);
+				mCSMesh->SetVisible(false);
+				mMidMesh->SetVisible(false);
+			}
+
 			if (!interp->GetActive() && !Settings::GetInstance().GetBool("CantTeleport")) {
-				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && !Settings::GetInstance().GetBool("PauseMenuUp")) {
+				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && mCanTeleport && !Settings::GetInstance().GetBool("PauseMenuUp")) {
 					if (!paused) {
+
+						vec4f raydir = (mArc[mArc.size() - 1] - mArc[0]);
+						raydir.w = 0;
+
 						//SystemLogger::Debug() << "Touchpad Pressed" << std::endl;
 						vec4f forward(0, 0, 1, 0);
 						MeshComponent* meshes[] = { mDoorMesh, mBox1Mesh, mBox2Mesh, mBox3Mesh, mPillar1Mesh, mPillar2Mesh, mPillar3Mesh, mPillar4Mesh, mUpperWallMesh, mLowerWallMesh };
@@ -90,11 +451,12 @@ namespace Epoch {
 						float wallTime = FLT_MAX;
 						for (int i = 0; i < ARRAYSIZE(meshes); ++i) {
 							forward.Set(0, 0, 1, 0);
+							forward = raydir;
 							matrix4 objMat = objects[i]->GetTransform().GetMatrix();
 							matrix4 objMatInv = objects[i]->GetTransform().GetMatrix().Invert();
 							matrix4 inverse = (mat * objMatInv);
 							vec3f meshPos = inverse.Position;
-							forward *= inverse;
+							//forward *= inverse;
 							vec3f fwd(forward);
 							Triangle *tris = meshes[i]->GetTriangles();
 							size_t numTris = meshes[i]->GetTriangleCount();
@@ -114,7 +476,7 @@ namespace Epoch {
 
 						MeshComponent* FloorMesh;
 						BaseObject* FloorObject;
-						if(mHeadset->GetTransform().GetMatrix().Position.y > 0)
+						if (mHeadset->GetTransform().GetMatrix().Position.y > 0)
 						{
 							FloorMesh = mGlassPlaneMesh;
 							FloorObject = mGlassPlaneObject;
@@ -130,11 +492,12 @@ namespace Epoch {
 						vec3f point = VRInputManager::GetInstance().GetPlayerPosition().fourth;
 						for (int i = 0; i < ARRAYSIZE(TeleMeshes); ++i) {
 							forward.Set(0, 0, 1, 0);
+							forward = raydir;
 							matrix4 objMat = TeleObjects[i]->GetTransform().GetMatrix();
 							matrix4 objMatInv = TeleObjects[i]->GetTransform().GetMatrix().Invert();
 							matrix4 inverse = (mat * objMatInv);
 							vec3f meshPos = inverse.Position;
-							forward *= inverse;
+							//forward *= inverse;
 							vec3f fwd(forward);
 							Triangle *tris = TeleMeshes[i]->GetTriangles();
 							size_t numTris = TeleMeshes[i]->GetTriangleCount();
@@ -208,16 +571,18 @@ namespace Epoch {
 											if (dynamic_cast<SFXEmitter*>(mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
 												((SFXEmitter*)mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
 											break;
-										} else {
+										}
+										else {
 											SystemLogger::GetLog() << "[DEBUG] Can't let you do that, Starfox." << std::endl;
 										}
 									}
 								}
-							} 
+							}
 						}
 					}
 				}
-			} else if (interp->Update(TimeManager::Instance()->GetDeltaTime()))
+			}
+			else if (interp->Update(TimeManager::Instance()->GetDeltaTime()))
 				interp->SetActive(false);
 		}
 	};

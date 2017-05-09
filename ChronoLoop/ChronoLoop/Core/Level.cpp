@@ -18,6 +18,7 @@
 #include "../Actions/CCLoadHub.h"
 #include "../Actions/CCBoxSpin.h"
 #include "../Actions/CCExit.h"
+#include "../Actions/CCLevel1TutorialButton.h"
 #include "../Actions/CCStartButton.h"
 #include "../Objects/MeshComponent.h"
 #include "../tinyxml/tinyxml.h"
@@ -1157,7 +1158,7 @@ namespace Epoch {
 					case 6: //TexturedMesh
 					{
 						INT32 pathLength = 0;
-						std::string mesh, diffuse, emissive;
+						std::string mesh, diffuse, emissive, specular;
 						float transparency = 1.0f;
 						if (version >= 2) {
 							file.read((char*)&transparency, sizeof(float));
@@ -1192,17 +1193,31 @@ namespace Epoch {
 
 						// Emissive
 						// Todo: Add a check for if there is no emissive texture.
-						file.read((char *)&pathLength, sizeof(INT32));
-						temp = new char[pathLength];
-						file.read(temp, pathLength);
-						emissive = temp;
-						delete[] temp;
+						if (version >= 2) {
+							file.read((char *)&pathLength, sizeof(INT32));
+							temp = new char[pathLength];
+							file.read(temp, pathLength);
+							emissive = temp;
+							delete[] temp;
+						}
+
+						if (version >= 6) {
+							file.read((char*)&pathLength, sizeof(INT32));
+							temp = new char[pathLength];
+							file.read(temp, pathLength);
+							specular = temp;
+							delete[] temp;
+						}
+
 						if (obj)
 						{
 							MeshComponent* mc = new MeshComponent(mesh.c_str(), transparency, psf, vsf, gsf);
 							mc->AddTexture(diffuse.c_str(), eTEX_DIFFUSE);
-							if (emissive != "..\\Resources\\") {
+							if (version >= 2 && emissive != "..\\Resources\\") {
 								mc->AddTexture(emissive.c_str(), eTEX_EMISSIVE);
+							}
+							if (version >= 6 && specular != "..\\Resources\\") {
+								mc->AddTexture(specular.c_str(), eTEX_SPECULAR);
 							}
 							obj->AddComponent(mc);
 						}
@@ -1322,6 +1337,8 @@ namespace Epoch {
 								codeCom = new UICreateToDeleteClone();
 							if (path == "UIRewind.h")
 								codeCom = new UIRewind();
+							if (path == "CCLevel1TutorialButton.h")
+								codeCom = new CCLevel1TutorialButton();
 
 							if (codeCom)
 							{

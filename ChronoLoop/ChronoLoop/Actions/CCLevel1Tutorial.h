@@ -8,33 +8,34 @@
 #include "../Actions/CCProgressBar.h"
 #include "../Input/VRInputManager.h"
 
-namespace Epoch {
+namespace Epoch
+{
 
-	struct CCLevel1Tutorial : public CodeComponent {
+	struct CCLevel1Tutorial : public CodeComponent
+	{
 		std::vector<BaseObject*> boards;
 		std::vector<int>mPrevBoards, mCurrentBoards;
 		std::vector<matrix4>mBoardMatrixs;
 		float scaleUpX, scaleUpY, scaleDownX, scaleDownY;
-		float tempScaleX, tempScaleY;
-		bool scalingDone, boardchange = false;
-		int currentTut = -1;
+		float tempScaleX, tempScaleY, tStart, tEnd;
+		bool scalingDone, boardchange = false, once = true;
+		int currentTut = -1, timeToRewind = 0;
+		PSAnimatedMultiscan_Data mScanlineData;
 		CCProgressBar* pb;
 
-		PSAnimatedMultiscan_Data mScanlineData;
-
-		virtual void Start() {
+		virtual void Start()
+		{
 			mScanlineData.DiffuseAlpha = 0.9f;
 			mScanlineData.MultiscanAlpha = 0.9f;
 			mScanlineData.ScanlineAlpha = 0.9f;
-
 			scalingDone = false;
 
 			Settings::GetInstance().SetInt("tutStep", 1);
 			TimeManager::Instance()->SaveSettingIntToTimeline("tutStep", 1);
 			Settings::GetInstance().SetBool("Level1Tutorial", true);
-			//Teleport Initialize
+			//Teleport Initialize 0
 			Transform Transform1;
-			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.78736f) * matrix4::CreateTranslation(1.08f, 1.5f, -1.48f));
+			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-14.3f, 1.5f, -2.83f));
 			Transform1.SetMatrix(mBoardMatrixs.back());
 			BaseObject* mTeleportBoard = new BaseObject("mTeleportBoard", Transform1);
 			MeshComponent* tm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
@@ -52,7 +53,7 @@ namespace Epoch {
 			boards.push_back(mTeleportBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mTeleportBoard);
 
-			//Pick Up Initialize
+			//Pick Up Initialize 1
 			Transform transformPickup;
 			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(5.97f, 2.09f, -.57f));
 			transformPickup.SetMatrix(mBoardMatrixs.back());
@@ -72,9 +73,9 @@ namespace Epoch {
 			boards.push_back(mPickUpBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mPickUpBoard);
 
-			//Pause Time Initialize
+			//Pause Time Initialize 2
 			Transform transformPauseBoard;
-			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.14159f) * matrix4::CreateTranslation(4.26f, 1.95f, 3));
+			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.68f, 1.5f, -3.39f));
 			transformPauseBoard.SetMatrix(mBoardMatrixs.back());
 			BaseObject* mPauseTimeBoard = new BaseObject("mPauseTimeBoard", transformPauseBoard);
 			MeshComponent* ptm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
@@ -92,9 +93,9 @@ namespace Epoch {
 			boards.push_back(mPauseTimeBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mPauseTimeBoard);
 
-			//Rewind Initialize
+			//Rewind Initialize 3
 			Transform transformRewind;
-			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.14159f) * matrix4::CreateTranslation(3.71f, 2.18f, 3));
+			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.68f, 1.5f, -3.39f));
 			transformRewind.SetMatrix(mBoardMatrixs.back());
 			BaseObject* mRewindBoard = new BaseObject("mRewindBoard", transformRewind);
 			MeshComponent* rm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
@@ -106,8 +107,6 @@ namespace Epoch {
 			rm->SetVisible(false);
 			pb = new CCProgressBar();
 			Settings::GetInstance().SetFloat("TutorialRewind - CurProgress", 0);
-			Settings::GetInstance().SetFloat("TutorialRewind - FinalProgress", 50);
-			pb->SetFinalProgress(50);
 			pb->SetCurProgress(0);
 			mRewindBoard->AddComponent(pb);
 			mRewindBoard->AddComponent(rm);
@@ -118,9 +117,9 @@ namespace Epoch {
 			boards.push_back(mRewindBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mRewindBoard);
 
-			//Accept Time Initialize
+			//Accept Time Initialize 4
 			Transform transformAcceptTime;
-			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.14159f) * matrix4::CreateTranslation(4.26f, 1.95f, 3));
+			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.68f, 1.5f, -3.39f));
 			transformAcceptTime.SetMatrix(mBoardMatrixs.back());
 			BaseObject* mAcceptBoard = new BaseObject("mAcceptBoard", transformAcceptTime);
 			MeshComponent* am = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
@@ -138,9 +137,9 @@ namespace Epoch {
 			boards.push_back(mAcceptBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mAcceptBoard);
 
-			//Cancel Time Initialize
+			//Cancel Time Initialize 5
 			Transform transformCancelTime;
-			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.14159f) * matrix4::CreateTranslation(3.2f, 1.95f, 3));
+			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.68f, 1.5f, -2.24f));
 			transformCancelTime.SetMatrix(mBoardMatrixs.back());
 			BaseObject* mCancelBoard = new BaseObject("mCancelBoard", transformCancelTime);
 			MeshComponent* cm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
@@ -154,8 +153,9 @@ namespace Epoch {
 			boards.push_back(mCancelBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mCancelBoard);
 
+			//Device Board 6
 			Transform transformDeviceboard;
-			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.14159f) * matrix4::CreateTranslation(3.2f, 1.95f, 3));
+			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.68f, 1.5f, -2.24f));
 			transformDeviceboard.SetMatrix(mBoardMatrixs.back());
 			BaseObject* mDeviceBoard = new BaseObject("mDeviceBoard", transformDeviceboard);
 			MeshComponent* dm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
@@ -168,86 +168,104 @@ namespace Epoch {
 			mDeviceBoard->AddComponent(dm);
 			boards.push_back(mDeviceBoard);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mDeviceBoard);
+
 			pb->OnDisable();
 		}
 
-		virtual void Update() {
+		virtual void Update()
+		{
 			if (GetAsyncKeyState(VK_SHIFT) & 1)
 				Settings::GetInstance().SetInt("tutStep", Settings::GetInstance().GetInt("tutStep") + 1);
 
-			
 			int tut = Settings::GetInstance().GetInt("tutStep");
-			if (tut != currentTut) {
+			if (tut != currentTut)
+			{
 				currentTut = tut;
-				switch (tut) {
+				switch (tut)
+				{
 				case 1:
 					boardchange = true;
-					mPrevBoards = mCurrentBoards;
-					mCurrentBoards.clear();
 					mCurrentBoards.push_back(0);
 					break;
 				case 2:
 					boardchange = true;
 					mPrevBoards = mCurrentBoards;
 					mCurrentBoards.clear();
-					mCurrentBoards.push_back(1);
+					mCurrentBoards.push_back(2);
+					mCurrentBoards.push_back(6);
 					break;
 				case 3:
 					boardchange = true;
 					mPrevBoards = mCurrentBoards;
-					mCurrentBoards.clear();
-					mCurrentBoards.push_back(2);
-					mCurrentBoards.push_back(6);
-					break;
-				case 4:
-					boardchange = true;
-					mPrevBoards = mCurrentBoards;
+					mPrevBoards.pop_back();
 					mCurrentBoards.clear();
 					mCurrentBoards.push_back(3);
-					pb->GetBackground()->GetTransform().SetMatrix(pb->GetBackground()->GetTransform().GetMatrix() * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.14159f) * matrix4::CreateTranslation(3.71f, 1.46f, 3));
-					pb->OnEnable();
+					mCurrentBoards.push_back(6);
+
+					if(once)
+					{
+						tStart = Settings::GetInstance().GetUInt("tut1ButtonPress");
+						tEnd = Settings::GetInstance().GetUInt("tut1FirstPause");
+						timeToRewind = Settings::GetInstance().GetUInt("tut1FirstPause") - Settings::GetInstance().GetUInt("tut1ButtonPress");
+						Settings::GetInstance().SetUInt("TutorialRewind - FinalProgress", timeToRewind);
+						pb->SetFinalProgress((float)timeToRewind);
+						pb->GetBackground()->GetTransform().SetMatrix(pb->GetBackground()->GetTransform().GetMatrix() * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.95f, 2.2f, -2.86f));
+						pb->OnEnable();
+						once = false;
+					}
 					break;
-				case 6:
+				case 4:
 					boardchange = true;
 					mPrevBoards = mCurrentBoards;
 					mCurrentBoards.clear();
 					mCurrentBoards.push_back(4);
 					mCurrentBoards.push_back(5);
 					pb->OnDisable();
-
+					break;
+				case 6:
+					boardchange = true;
+					mPrevBoards = mCurrentBoards;
+					mCurrentBoards.clear();
+					mCurrentBoards.push_back(1);
 					break;
 				case 8:
 					boardchange = true;
 					mPrevBoards = mCurrentBoards;
+					Settings::GetInstance().SetInt("tutStep", 0);
 					mCurrentBoards.clear();
-					//SetAllBoardsInvisable();
 					break;
-
 				}
 			}
-			if(tut == 4)
+
+			if (tut == 3)
 			{
-				pb->SetCurProgress(Settings::GetInstance().GetFloat("TutorialRewind - CurProgress"));
+				pb->SetCurProgress(Settings::GetInstance().GetUInt("TutorialRewind - CurProgress"));
 			}
+
 			ScaleUpCurrentBoards();
 			ScaleDownPrevBoards();
-
 		}
 
-		virtual void OnDestroy() {
+		virtual void OnDestroy()
+		{
 			Settings::GetInstance().SetBool("Level1Tutorial", false);
 			Settings::GetInstance().SetInt("tutStep", 0);
 		}
-		void SetAllBoardsInvisable() {
-			for (unsigned int i = 0; i < boards.size(); i++) {
+		void SetAllBoardsInvisable()
+		{
+			for (unsigned int i = 0; i < boards.size(); i++)
+			{
 				((MeshComponent*)boards[i]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 			}
 		}
 
-		void ScaleUpCurrentBoards() {
+		void ScaleUpCurrentBoards()
+		{
 
-			for (unsigned int i = 0; i < mCurrentBoards.size(); i++) {
-				if (!((MeshComponent*)boards[mCurrentBoards[i]]->GetComponentIndexed(eCOMPONENT_MESH, 0))->IsVisible()) {
+			for (unsigned int i = 0; i < mCurrentBoards.size(); i++)
+			{
+				if (!((MeshComponent*)boards[mCurrentBoards[i]]->GetComponentIndexed(eCOMPONENT_MESH, 0))->IsVisible())
+				{
 					((MeshComponent*)boards[mCurrentBoards[i]]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
 					if (boards[mCurrentBoards[i]]->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))
 						((SFXEmitter*)boards[mCurrentBoards[i]]->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
@@ -261,8 +279,10 @@ namespace Epoch {
 			else if (scaleUpX < 1.0f)
 				scaleUpX += 0.05f;
 
-			for (unsigned int i = 0; i < mCurrentBoards.size(); i++) {
-				if (scaleUpX < 1 || scaleUpY < 1) {
+			for (unsigned int i = 0; i < mCurrentBoards.size(); i++)
+			{
+				if (scaleUpX < 1 || scaleUpY < 1)
+				{
 					vec4f pos = *boards[mCurrentBoards[i]]->GetTransform().GetPosition();
 					boards[mCurrentBoards[i]]->GetTransform().SetMatrix(matrix4::CreateScale(scaleUpX, 1, scaleUpY) * mBoardMatrixs[mCurrentBoards[i]]);
 				}
@@ -270,32 +290,40 @@ namespace Epoch {
 
 			mScanlineData.MultiscanVOffset += TimeManager::Instance()->GetDeltaTime() / 25.0f;
 			mScanlineData.ScanlineVOffset += TimeManager::Instance()->GetDeltaTime();
-			if (mScanlineData.ScanlineVOffset > 2.5f) {
+			if (mScanlineData.ScanlineVOffset > 2.5f)
+			{
 				mScanlineData.ScanlineVOffset = -0.5f;
 			}
-			for (unsigned int i = 0; i < mCurrentBoards.size(); i++) {
+			for (unsigned int i = 0; i < mCurrentBoards.size(); i++)
+			{
 				((MeshComponent*)boards[mCurrentBoards[i]]->GetComponentIndexed(eCOMPONENT_MESH, 0))->UpdateData(eCB_PIXEL, ePB_REGISTER1, &mScanlineData);
 			}
 		}
 
 
-		void ScaleDownPrevBoards() {
+		void ScaleDownPrevBoards()
+		{
 
-			if (mPrevBoards.size() > 0) {
-				if (boardchange) {
+			if (mPrevBoards.size() > 0)
+			{
+				if (boardchange)
+				{
 					scaleDownX = 1.0f;
 					scaleDownY = 1.0f;
 					scalingDone = false;
 					boardchange = false;
 				}
-				if (!scalingDone) {
+				if (!scalingDone)
+				{
 					if (scaleDownX >= 0.05f)
 						scaleDownX -= 0.05f;
 					else if (scaleDownY >= 0.0f)
 						scaleDownY -= 0.1f;
-					for (size_t i = 0; i < mPrevBoards.size(); i++) {
+					for (size_t i = 0; i < mPrevBoards.size(); i++)
+					{
 						boards[mPrevBoards[i]]->GetTransform().SetMatrix(matrix4::CreateScale(scaleDownX, 1, scaleDownY) * boards[mPrevBoards[i]]->GetTransform().GetMatrix());
-						if (scaleDownY <= 0.0f) {
+						if (scaleDownY <= 0.0f)
+						{
 							((MeshComponent*)boards[mPrevBoards[i]]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
 							scalingDone = true;
 						}

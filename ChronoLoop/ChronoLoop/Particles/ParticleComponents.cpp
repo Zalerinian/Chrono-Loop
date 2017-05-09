@@ -810,7 +810,7 @@ namespace Epoch
 	{
 		//TODO: Special update
 		// x = x, y = sin(t), z = z // t -> yradial
-		_p->SetVelocity(vec3f(_p->GetVelocity().x, cos(_p->mYRadial) * 2.25, _p->GetVelocity().z));
+		_p->SetVelocity(vec3f(_p->GetVelocity().x, cos(_p->mYRadial) * 2.25f, _p->GetVelocity().z));
 		_p->mYRadial += static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / .3));
 		ParticleEmitter::UpdateParticle(_p, _delta );
 	}
