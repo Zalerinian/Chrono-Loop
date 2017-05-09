@@ -21,7 +21,6 @@ namespace Hourglass
 		private List<long> advMillisecond = new List<long>();
 		private Vector3 cameraPos = new Vector3(0, 0, 0);
 		private Vector2 prevMouse, curMouse;
-		private string currentFile = string.Empty;
 
 		// Variables added by Drew
 		private string mCurrentFilename = string.Empty;
@@ -577,7 +576,7 @@ namespace Hourglass
 		{
 			if (OpenFilename != string.Empty)
 			{
-				FileIO.saveLevel(currentFile, Tree);
+				FileIO.saveLevel(OpenFilename, Tree);
 			}
 			else
 			{
