@@ -33,12 +33,12 @@ namespace Epoch {
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> mContext;
 		Microsoft::WRL::ComPtr<IDXGISwapChain> mChain;
 		Microsoft::WRL::ComPtr<IDXGIFactory1> mFactory;
-		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mMainView, mSceneView, mBloomRTV, mGlowRTV;
+		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mMainView, mPostProcessRTV, mBloomRTV, mGlowRTV, mSuperGlowRTV;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDSView;
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> mMainViewTexture, mDepthBuffer, mSceneTexture, mBloomTexture, mGlowTexture;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> mMainViewTexture, mDepthBuffer, mPostProcessTexture, mBloomTexture, mGlowTexture, mSuperGlowTexture;
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> mSamplerState;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> mTransparentState, mOpaqueState;
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mSceneSRV, mBloomSRV, mGlowSRV;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mPostProcessSRV, mBloomSRV, mGlowSRV, mSuperGlowSRV;
 		Microsoft::WRL::ComPtr<ID3D11BlendState> mOpaqueBlendState, mTransparentBlendState;
 		D3D11_VIEWPORT mLeftViewport, mRightViewport, mFullViewport;
 		HWND mWindow;
@@ -49,6 +49,10 @@ namespace Epoch {
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mLBuffer;
 		bool mUseVsync = false;
 
+		// The G-Buffer
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> mAlbedoTexture, mPositionTexture, mNormalTexture, mSpecularTexture;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mAlbedoSRV, mPositionSRV, mNormalSRV, mSpecularSRV;
+		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mAlbedoRTV, mPositionRTV, mNormalRTV, mSpecularRTV;
 
 		// Blurring variables & Functions
 		enum BlurPingPong {
@@ -84,7 +88,7 @@ namespace Epoch {
 		void ToggleBlurTextureSet(unsigned int _texturesPerSet, ID3D11RenderTargetView **_rtvs, ID3D11ShaderResourceView **_srvs);
 		void SetBlurTexturesDrawback(unsigned int _texturesPerSet, ID3D11RenderTargetView **_drawbacks, ID3D11ShaderResourceView **_srvs);
 
-		RenderShape* mScenePPQuad = nullptr, *mSceneScreenQuad = nullptr;
+		RenderShape* mScenePPQuad = nullptr, *mSceneScreenQuad = nullptr, *mDeferredCombiner = nullptr;
 		RenderContext mCurrentContext;
 
 		std::mutex mRendererLock;

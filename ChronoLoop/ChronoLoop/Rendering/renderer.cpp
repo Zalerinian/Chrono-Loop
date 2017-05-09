@@ -283,28 +283,46 @@ namespace Epoch {
 		mDepthBuffer.Attach(depthTexture);
 		mDSView.Attach(depthView);
 
-		ID3D11Texture2D *postTex;
 		CD3D11_TEXTURE2D_DESC t2d(DXGI_FORMAT_R16G16B16A16_FLOAT, _width, _height, 1, 1, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
-		mDevice->CreateTexture2D(&t2d, nullptr, &postTex);
+		ThrowIfFailed(mDevice->CreateTexture2D(&t2d, nullptr, mAlbedoTexture.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateTexture2D(&t2d, nullptr, mPositionTexture.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateTexture2D(&t2d, nullptr, mNormalTexture.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateTexture2D(&t2d, nullptr, mSpecularTexture.GetAddressOf()));
 		ThrowIfFailed(mDevice->CreateTexture2D(&t2d, nullptr, mBloomTexture.GetAddressOf()));
 		ThrowIfFailed(mDevice->CreateTexture2D(&t2d, nullptr, mGlowTexture.GetAddressOf()));
-		mSceneTexture.Attach(postTex);
-		std::string bloomInternalName = "Bloom texture", glowInternalName = "Glow Texture";
-		TextureManager::Instance()->iAddTexture2D(bloomInternalName, mBloomTexture, &mBloomSRV); // This will create and assign the SRV for the texture.
-		TextureManager::Instance()->iAddTexture2D(glowInternalName, mGlowTexture, &mGlowSRV);
+		ThrowIfFailed(mDevice->CreateTexture2D(&t2d, nullptr, mPostProcessTexture.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateTexture2D(&t2d, nullptr, mSuperGlowTexture.GetAddressOf()));
+
+		//// Add these textures to the TextureManager so we can attach them to objects
+		//std::string bloomInternalName = "Bloom texture", glowInternalName = "Glow Texture", AlbedoInternal = "Albedo Texture",
+		//	PositionInternal = "Position Texture", NormalInternal = "Normal Texture", SpecularInternal = "Specular Texture";
+		//TextureManager::Instance()->iAddTexture2D(bloomInternalName, mBloomTexture,    &mBloomSRV); // This will create and assign the SRV for the texture.
+		//TextureManager::Instance()->iAddTexture2D(glowInternalName,  mGlowTexture,     &mGlowSRV);
+		//TextureManager::Instance()->iAddTexture2D(AlbedoInternal,    mAlbedoTexture,   &mAlbedoSRV);
+		//TextureManager::Instance()->iAddTexture2D(PositionInternal,  mPositionTexture, &mPositionSRV);
+		//TextureManager::Instance()->iAddTexture2D(NormalInternal,    mNormalTexture,   &mNormalSRV);
+		//TextureManager::Instance()->iAddTexture2D(SpecularInternal,  mSpecularTexture, &mSpecularSRV);
 
 		// Render target view in order to draw to the texture.
-		ID3D11RenderTargetView *sceneRTV;
-		HRESULT hr = mDevice->CreateRenderTargetView((ID3D11Resource*)postTex, NULL, &sceneRTV);
-		ThrowIfFailed(mDevice->CreateRenderTargetView(mBloomTexture.Get(), nullptr, mBloomRTV.GetAddressOf()));
-		ThrowIfFailed(mDevice->CreateRenderTargetView(mGlowTexture.Get(), nullptr, mGlowRTV.GetAddressOf()));
-		ThrowIfFailed(hr);
-		mSceneView.Attach(sceneRTV);
+		HRESULT hr = mDevice->CreateRenderTargetView(mPostProcessTexture.Get(), nullptr, mPostProcessRTV.GetAddressOf());
+		ThrowIfFailed(mDevice->CreateRenderTargetView(mBloomTexture.Get(),      nullptr, mBloomRTV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateRenderTargetView(mGlowTexture.Get(),       nullptr, mGlowRTV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateRenderTargetView(mSuperGlowTexture.Get(),  nullptr, mSuperGlowRTV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateRenderTargetView(mAlbedoTexture.Get(),     nullptr, mAlbedoRTV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateRenderTargetView(mPositionTexture.Get(),   nullptr, mPositionRTV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateRenderTargetView(mNormalTexture.Get(),     nullptr, mNormalRTV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateRenderTargetView(mSpecularTexture.Get(),   nullptr, mSpecularRTV.GetAddressOf()));
+
 
 		// Shader resource view for using the texture to draw the post quad.
-		ID3D11ShaderResourceView *sceneSRV;
-		ThrowIfFailed(mDevice->CreateShaderResourceView((ID3D11Resource*)postTex, NULL, &sceneSRV));
-		mSceneSRV.Attach(sceneSRV);
+		ThrowIfFailed(mDevice->CreateShaderResourceView(mPostProcessTexture.Get(), NULL, mPostProcessSRV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateShaderResourceView(mBloomTexture.Get(),       NULL, mBloomSRV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateShaderResourceView(mGlowTexture.Get(),        NULL, mGlowSRV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateShaderResourceView(mSuperGlowTexture.Get(),   NULL, mSuperGlowSRV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateShaderResourceView(mAlbedoTexture.Get(),      NULL, mAlbedoSRV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateShaderResourceView(mPositionTexture.Get(),    NULL, mPositionSRV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateShaderResourceView(mNormalTexture.Get(),      NULL, mNormalSRV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateShaderResourceView(mSpecularTexture.Get(),    NULL, mSpecularSRV.GetAddressOf()));
 
 		// Viewport
 		DXGI_SWAP_CHAIN_DESC scd;
@@ -397,17 +415,17 @@ namespace Epoch {
 		SetD3DName(mChain.Get(), "Swapchain");
 		SetD3DName(mFactory.Get(), "DXGI Factory");
 		SetD3DName(mMainView.Get(), "Window Render Target");
-		SetD3DName(mSceneView.Get(), "Post Processing Render Target");
+		SetD3DName(mPostProcessRTV.Get(), "Post Processing Render Target");
 		SetD3DName(mBloomRTV.Get(), "Bloom Render Target");
 		SetD3DName(mDSView.Get(), "Main Depth-Stencil View");
 		SetD3DName(mMainViewTexture.Get(), "Window Render Texture");
 		SetD3DName(mDepthBuffer.Get(), "Main Depth Buffer");
-		SetD3DName(mSceneTexture.Get(), "Post Processing Texture");
+		SetD3DName(mPostProcessTexture.Get(), "Post Processing Texture");
 		SetD3DName(mBloomTexture.Get(), "Bloom Blur Texture");
 		SetD3DName(mSamplerState.Get(), "Wrapping Sampler State");
 		SetD3DName(mTransparentState.Get(), "Transparent Depth-Stencil State");
 		SetD3DName(mOpaqueState.Get(), "Opaque Depth-Stencil State");
-		SetD3DName(mSceneSRV.Get(), "Scene Texture SRV");
+		SetD3DName(mPostProcessSRV.Get(), "Scene Texture SRV");
 		SetD3DName(mBloomSRV.Get(), "Bloom Shader Resource View");
 		SetD3DName(mOpaqueBlendState.Get(), "Opaque Blend State");
 		SetD3DName(mTransparentBlendState.Get(), "Transparent Blend State");
@@ -418,14 +436,32 @@ namespace Epoch {
 		SetD3DName(mLBuffer.Get(), "Light Data Buffer");
 		SetD3DName(mBlurStageBuffer.Get(), "Blur Data Buffer");
 
+
+		// The G-Buffer
+		SetD3DName(mAlbedoTexture.Get(),   "GBuffer Albedo Texture");
+		SetD3DName(mPositionTexture.Get(), "GBuffer Position Texture");
+		SetD3DName(mNormalTexture.Get(),   "GBuffer Normal Texture");
+		SetD3DName(mSpecularTexture.Get(), "GBuffer Specular");
+		SetD3DName(mAlbedoSRV.Get(),       "Albedo SRV");
+		SetD3DName(mPositionSRV.Get(),     "Position SRV");
+		SetD3DName(mNormalSRV.Get(),       "Normal SRV");
+		SetD3DName(mSpecularSRV.Get(),     "Specular SRV");
+		SetD3DName(mAlbedoRTV.Get(),       "Albedo RTV");
+		SetD3DName(mPositionRTV.Get(),     "Position RTV");
+		SetD3DName(mNormalRTV.Get(),       "Normal RTV");
+		SetD3DName(mSpecularRTV.Get(),     "Specular RTV");
+
+
+		//SetD3DName(.Get(), "");
 #endif
 	}
 
 	void Renderer::InitializeSceneQuad() {
 		mScenePPQuad = new RenderShape("../Resources/VerticalPlane.obj", true, ePS_POSTPROCESS, eVS_NDC, eGS_PosNormTex_NDC);
-		mScenePPQuad->GetContext().mTextures[eTEX_DIFFUSE] = mSceneSRV;
+		mScenePPQuad->GetContext().mTextures[eTEX_DIFFUSE] = mPostProcessSRV;
 		mScenePPQuad->GetContext().mTextures[eTEX_REGISTER4] = mBloomSRV;
 		mScenePPQuad->GetContext().mTextures[eTEX_REGISTER5] = mGlowSRV;
+		mScenePPQuad->GetContext().mTextures[eTEX_REGISTER6] = mSuperGlowSRV;
 		mScenePPQuad->GetContext().mRasterState = eRS_FILLED;
 
 		ID3D11Buffer *ColorRatioBuffer;
@@ -441,7 +477,13 @@ namespace Epoch {
 		mScenePPQuad->GetContext().mPixelCBuffers[ePB_REGISTER1].Attach(ColorRatioBuffer);
 
 		mSceneScreenQuad = new RenderShape("../Resources/VerticalPlaneHalfU.obj", true, ePS_PURETEXTURE, eVS_NDC, eGS_PosNormTex_NDC);
-		mSceneScreenQuad->GetContext().mTextures[eTEX_DIFFUSE] = mSceneSRV;
+		mSceneScreenQuad->GetContext().mTextures[eTEX_DIFFUSE] = mPostProcessSRV;
+
+		mDeferredCombiner = new RenderShape("../Resources/VerticalPlane.obj", true, ePS_DEFERRED, eVS_NDC, eGS_PosNormTex_NDC);
+		mDeferredCombiner->mContext.mTextures[0] = mAlbedoSRV;
+		mDeferredCombiner->mContext.mTextures[1] = mPositionSRV;
+		mDeferredCombiner->mContext.mTextures[2] = mNormalSRV;
+		mDeferredCombiner->mContext.mTextures[3] = mSpecularSRV;
 	}
 
 	void Renderer::SetStaticBuffers() {
@@ -503,7 +545,7 @@ namespace Epoch {
 	}
 
 	void Renderer::AttachPrimaryRTVs() {
-		ID3D11RenderTargetView *RTVS[] = { mSceneView.Get(), mGlowRTV.Get() };
+		ID3D11RenderTargetView *RTVS[] = { mAlbedoRTV.Get(), mPositionRTV.Get(), mNormalRTV.Get(), mSpecularRTV.Get(), mGlowRTV.Get(), mSuperGlowRTV.Get() };
 		mContext->OMSetRenderTargets(sizeof(RTVS) / sizeof(RTVS[0]), RTVS, mDSView.Get());
 	}
 	
@@ -784,22 +826,34 @@ namespace Epoch {
 	void Renderer::RenderScreenQuad()
 	{
 		// Blur the bloom texture so that it actually bleeds on the screen
+		BlurTextures(mSuperGlowTexture.GetAddressOf(), 1, 1.0f, 0.4f);
 		RenderForBloom();
-		BlurTextures(mBloomTexture.GetAddressOf(), 1, 5.0f, 0.4f);
+		BlurTextures(mBloomTexture.GetAddressOf(), 1, 2.0f, 0.4f);
 
 		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
-		mContext->OMSetRenderTargets(1, mMainView.GetAddressOf(), mDSView.Get());
+		mContext->OMSetRenderTargets(1, mPostProcessRTV.GetAddressOf(), nullptr);
+
+		mDeferredCombiner->GetContext().Apply(mCurrentContext);
+		mDeferredCombiner->Render(1);
+		mCurrentContext.SimpleClone(mDeferredCombiner->GetContext());
+
+		ID3D11ShaderResourceView *unbind[] = { nullptr, nullptr, nullptr, nullptr };
+		mContext->OMSetRenderTargets(1, mMainView.GetAddressOf(), nullptr);
+		mContext->PSSetShaderResources(0, 4, unbind);
+
 		mScenePPQuad->GetContext().Apply(mCurrentContext);
 		mScenePPQuad->Render();
 
 		ID3D11ShaderResourceView *noGlow = nullptr;
 		mContext->PSSetShaderResources(eTEX_REGISTER5, 1, &noGlow);
+		mContext->PSSetShaderResources(eTEX_REGISTER6, 1, &noGlow);
 
 		mCurrentContext.SimpleClone(mScenePPQuad->GetContext());
+		AttachPrimaryViewports();
 	}
 
 	void Renderer::RenderForBloom() {
-		ID3D11ShaderResourceView *null[] = { nullptr, nullptr };
+		ID3D11ShaderResourceView *null[] = { nullptr, nullptr, nullptr };
 		mContext->PSSetShaderResources(eTEX_REGISTER4, 2, null); // Remove Glow and Bloom textures
 		mContext->OMSetRenderTargets(1, mBloomRTV.GetAddressOf(), nullptr);
 		mContext->RSSetViewports(1, &mFullViewport);
@@ -807,10 +861,10 @@ namespace Epoch {
 		ShaderManager::Instance()->ApplyPShader(ePS_BLOOM);
 		ShaderManager::Instance()->ApplyVShader(eVS_BLUR);
 		ShaderManager::Instance()->ApplyGShader(eGS_None);
-		ID3D11ShaderResourceView *srvs[] = { mSceneSRV.Get(), mGlowSRV.Get() };
-		mContext->PSSetShaderResources(0, 2, srvs);
+		ID3D11ShaderResourceView *srvs[] = { mPostProcessSRV.Get(), mGlowSRV.Get(), mSuperGlowSRV.Get() };
+		mContext->PSSetShaderResources(0, 3, srvs);
 		mScenePPQuad->Render(1);
-		mContext->PSSetShaderResources(0, 2, null); // Remove scene and glow textures
+		mContext->PSSetShaderResources(0, 3, null); // Remove scene and glow textures
 
 
 		AttachPrimaryRTVs();
@@ -1086,14 +1140,14 @@ namespace Epoch {
 		// Setup the Scene Render Target
 		mRendererLock.lock();
 		AttachPrimaryRTVs();
-		mContext->ClearRenderTargetView(mSceneView.Get(), color);
+		mContext->ClearRenderTargetView(mPostProcessRTV.Get(), color);
 		mContext->ClearRenderTargetView(mBloomRTV.Get(), black);
+		mContext->ClearRenderTargetView(mAlbedoRTV.Get(), black);
+		mContext->ClearRenderTargetView(mPositionRTV.Get(), black);
+		mContext->ClearRenderTargetView(mNormalRTV.Get(), black);
+		mContext->ClearRenderTargetView(mSpecularRTV.Get(), black);
+		mContext->ClearRenderTargetView(mSuperGlowRTV.Get(), black);
 		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-		if (GetAsyncKeyState(VK_DIVIDE) & 1) {
-			mUseVsync = !mUseVsync;
-			SystemLogger::Debug() << "Bloom is now " << (mUseVsync ? "en" : "dis") << "abled" << std::endl;
-		}
 
 		if (nullptr == mVrSystem) {
 			RenderNoVR(_deltaTime);
