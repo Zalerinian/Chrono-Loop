@@ -1,5 +1,6 @@
 //#include "stdafx.h"
 #include "Physics.h"
+#include "..\Common\Settings.h"
 #include "..\Objects\BaseObject.h"
 #include "..\Rendering\Mesh.h"
 #include "..\Common\Logger.h"
@@ -721,7 +722,7 @@ namespace Epoch
 		{
 			paused = cLevel->GetTimeManipulator()->isTimePaused();
 		}
-		if (!paused)
+		if (!paused && !Settings::GetInstance().GetBool("PauseMenuUp"))
 		{
 			//SystemLogger::GetLog() << _time << std::endl;
 			Collider* collider = nullptr;
