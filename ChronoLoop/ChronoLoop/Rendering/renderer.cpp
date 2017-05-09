@@ -785,7 +785,7 @@ namespace Epoch {
 	{
 		// Blur the bloom texture so that it actually bleeds on the screen
 		RenderForBloom();
-		BlurTextures(mBloomTexture.GetAddressOf(), 1, 5.0f, 0.4f);
+		BlurTextures(mBloomTexture.GetAddressOf(), 1, 2.0f, 0.4f);
 
 		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
 		mContext->OMSetRenderTargets(1, mMainView.GetAddressOf(), mDSView.Get());
