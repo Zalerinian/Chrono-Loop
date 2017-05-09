@@ -207,6 +207,7 @@ namespace Epoch
 						tStart = Settings::GetInstance().GetUInt("tut1ButtonPress");
 						tEnd = Settings::GetInstance().GetUInt("tut1FirstPause");
 						timeToRewind = Settings::GetInstance().GetUInt("tut1FirstPause") - Settings::GetInstance().GetUInt("tut1ButtonPress");
+						//SystemLogger::GetLog() << "pb End Progress: " << timeToRewind << std::endl;
 						Settings::GetInstance().SetUInt("TutorialRewind - FinalProgress", timeToRewind);
 						pb->SetFinalProgress((float)timeToRewind);
 						pb->GetBackground()->GetTransform().SetMatrix(pb->GetBackground()->GetTransform().GetMatrix() * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.95f, 2.2f, -2.86f));
@@ -239,6 +240,7 @@ namespace Epoch
 
 			if (tut == 3)
 			{
+				//SystemLogger::GetLog() << "pb Current Progress: " << Settings::GetInstance().GetUInt("TutorialRewind - CurProgress") << std::endl;
 				pb->SetCurProgress(Settings::GetInstance().GetUInt("TutorialRewind - CurProgress"));
 			}
 
