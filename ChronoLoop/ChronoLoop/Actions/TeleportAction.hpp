@@ -181,7 +181,8 @@ namespace Epoch {
 				vec3f nextpos = ParabolicCurve(_p, _v, _a, t);
 
 				vec3f hit;
-				if (CheckMesh(mWallsMesh, lastpos, nextpos, hit))
+
+				/*if (CheckMesh(mWallsMesh, lastpos, nextpos, hit))
 				{
 					vec3f floorhit;
 
@@ -194,6 +195,7 @@ namespace Epoch {
 
 					return true;
 				}
+
 				if (CheckMesh(mTWall1Mesh, lastpos, nextpos, hit))
 				{
 					vec3f floorhit;
@@ -207,6 +209,7 @@ namespace Epoch {
 
 					return true;
 				}
+
 				if (CheckMesh(mTWall2Mesh, lastpos, nextpos, hit))
 				{
 					vec3f floorhit;
@@ -220,6 +223,7 @@ namespace Epoch {
 
 					return true;
 				}
+
 				if (CheckMesh(mTWall3Mesh, lastpos, nextpos, hit))
 				{
 					vec3f floorhit;
@@ -233,6 +237,7 @@ namespace Epoch {
 
 					return true;
 				}
+
 				if (CheckMesh(mTWindowMesh, lastpos, nextpos, hit))
 				{
 					vec3f floorhit;
@@ -246,6 +251,49 @@ namespace Epoch {
 
 					return true;
 				}
+
+				if (CheckMesh(mServerMesh, lastpos, nextpos, hit))
+				{
+					vec3f floorhit;
+
+					if (ChecktoFloor(_plane, hit, vec3f(0, -1, 0), floorhit))
+					{
+						_arc.push_back(floorhit);
+					}
+					else
+						_arc.push_back(hit);
+
+					return true;
+				}
+
+				if (CheckMesh(mExitMesh, lastpos, nextpos, hit))
+				{
+					vec3f floorhit;
+
+					if (ChecktoFloor(_plane, hit, vec3f(0, -1, 0), floorhit))
+					{
+						_arc.push_back(floorhit);
+					}
+					else
+						_arc.push_back(hit);
+
+					return true;
+				}
+
+				if (CheckMesh(mBlockMesh, lastpos, nextpos, hit))
+				{
+					vec3f floorhit;
+
+					if (ChecktoFloor(_plane, hit, vec3f(0, -1, 0), floorhit))
+					{
+						_arc.push_back(floorhit);
+					}
+					else
+						_arc.push_back(hit);
+
+					return true;
+				}*/
+
 				if (CheckMesh(_plane, lastpos, nextpos, hit))
 				{
 					//if it hits the plane
@@ -424,7 +472,7 @@ namespace Epoch {
 
 						vec4f raydir = (mArc[mArc.size() - 1] - mArc[0]);
 						raydir.w = 0;
-						raydir = raydir.Normalize();
+						//raydir = raydir.Normalize();
 						
 						SystemLogger::Debug() << "Touchpad Pressed" << std::endl;
 						vec4f forward(0, 0, 1, 0);
@@ -438,7 +486,7 @@ namespace Epoch {
 							matrix4 objMatInv = objects[i]->GetTransform().GetMatrix().Invert();
 							matrix4 inverse = (mat * objMatInv);
 							vec3f meshPos = inverse.Position;
-							forward *= objMatInv;
+							//forward *= objMatInv;
 							vec3f fwd(forward);
 							Triangle *tris = meshes[i]->GetTriangles();
 							size_t numTris = meshes[i]->GetTriangleCount();
@@ -464,7 +512,7 @@ namespace Epoch {
 						vec3f point = VRInputManager::GetInstance().GetPlayerPosition().fourth;
 						forward.Set(0, 0, 1, 0);
 						forward = raydir;
-						forward *= objMat.Invert();
+						//forward *= objMat.Invert();
 						vec3f fwd = forward;
 						for (unsigned int i = 0; i < numTris; ++i) {
 							if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, fwd, controllerTime)) {
@@ -486,11 +534,11 @@ namespace Epoch {
 									controllerTime = 0, wallTime = FLT_MAX;
 									for (int j = 0; j < ARRAYSIZE(meshes); ++j) {
 										forward.Set(0, 0, 1, 0);
-										forward = raydir;
+									//	forward = raydir;
 										matrix4 objMatInv = objects[j]->GetTransform().GetMatrix().Invert();
 										matrix4 inverse = (mat * objMatInv);
 										vec3f meshPos = inverse.Position;
-										forward *= objMatInv;
+										forward *= inverse;
 										vec3f fwd(forward);
 										Triangle *tris = meshes[j]->GetTriangles();
 										size_t numTris = meshes[j]->GetTriangleCount();
@@ -512,8 +560,8 @@ namespace Epoch {
 									inverse = (mat * objMat.Invert());
 									position = inverse.Position;
 									forward.Set(0, 0, 1, 0);
-									forward = raydir;
-									forward *= objMat.Invert();
+									//forward = raydir;
+									forward *= inverse;
 									vec3f agentFwd = forward;
 									float agentTime = 0;
 									numTris = mPlaneMesh->GetTriangleCount();
