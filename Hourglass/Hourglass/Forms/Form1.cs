@@ -18,7 +18,6 @@ namespace Hourglass
 		public const float DEGREES_TO_RADIANS = (1 / 180.0f * 3.14f);
 		private float mRotationSpeed = 0.005f, mGizmoSpeed = 1.0f;
 		private Microsoft.DirectX.DirectInput.Device mKeyboard;
-		private Stopwatch mFPSTimer = new Stopwatch();
 		private List<long> advMillisecond = new List<long>();
 		private Vector3 cameraPos = new Vector3(0, 0, 0);
 		private Vector2 prevMouse, curMouse;
@@ -58,7 +57,7 @@ namespace Hourglass
 			}
 		}
 
-		string Filename {
+		string OpenFilename {
 			get {
 				return mCurrentFilename;
 			}
@@ -90,9 +89,9 @@ namespace Hourglass
 			mGrid.AddComponent(Grid);
 			Renderer.Instance.AddObject(mGrid);
 
-			mFPSTimer.Start();
 			mMouseState = new MouseEventArgs(MouseButtons.None, 0, 0, 0, 0);
-			
+			RenderTimer.Start();
+			RenderTimer.Tick += RenderTimer_Tick;
 
 			spWorldView.Panel2.ControlAdded += ReorderComponents;
 			spWorldView.Panel2.ControlRemoved += ReorderComponents;
@@ -106,6 +105,10 @@ namespace Hourglass
 			btnComponentAdd.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
 			btnComponentAdd.Margin = new Padding(0, 15, 0, 15);
 			spWorldView.Panel2.Controls.Add(btnComponentAdd);
+		}
+
+		private void RenderTimer_Tick(object sender, EventArgs e) {
+			OnPaint(null, null); // Render the scene.
 		}
 
 		public void InitializeKeyboard()
@@ -541,12 +544,15 @@ namespace Hourglass
 			o.Filter = "Epoch Level Files (*.elf)|*.elf|Legacy XML Level File (*.xml)|*.xml";
 			o.FilterIndex = 1;
 			o.Title = "Open a level...";
+			o.InitialDirectory = Settings.ProjectPath + ResourceManager.Instance.ResourceDirectory;
 			if(o.ShowDialog() == DialogResult.OK)
 			{
 				Thread loader = null;
 				newToolStripMenuItem_Click(null, null);
 				FileOpenData fod;
+				
 				fod.file = o.FileName;
+				OpenFilename = o.FileName;
 				fod.nodeCollection = new List<TreeNode>();
 				if (o.FileName.EndsWith(".xml")) {
 					loader = new Thread(new ParameterizedThreadStart(FileIO.ReadXMLFile));
@@ -569,35 +575,26 @@ namespace Hourglass
 
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (currentFile != string.Empty)
+			if (OpenFilename != string.Empty)
 			{
 				FileIO.saveLevel(currentFile, Tree);
 			}
 			else
 			{
-				SaveFileDialog file = new SaveFileDialog();
-				file.InitialDirectory = Application.StartupPath;
-				file.Filter = "Epoch Level Files (*.elf)|*.elf";
-				file.FilterIndex = 1;
-				file.RestoreDirectory = true;
-				if (file.ShowDialog() == DialogResult.OK)
-				{
-					FileIO.saveLevel(file.FileName, Tree);
-				}
+				saveAsToolStripMenuItem_Click(saveAsToolStripMenuItem, new EventArgs());
 			}
 		}
 
 		private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			SaveFileDialog saveFile = new SaveFileDialog();
-			saveFile.InitialDirectory = Application.StartupPath;
-			saveFile.Filter = "Epoch files (*.elf)|*.elf";
-			saveFile.FilterIndex = 1;
-			saveFile.RestoreDirectory = true;
-			if (saveFile.ShowDialog() == DialogResult.OK)
-			{
-				currentFile = saveFile.FileName;
-				FileIO.saveLevel(saveFile.FileName, Tree);
+			SaveFileDialog file = new SaveFileDialog();
+			file.InitialDirectory = Settings.ProjectPath + ResourceManager.Instance.ResourceDirectory;
+			file.Filter = "Epoch Level Files (*.elf)|*.elf";
+			file.FilterIndex = 1;
+			file.RestoreDirectory = true;
+			if (file.ShowDialog() == DialogResult.OK) {
+				FileIO.saveLevel(file.FileName, Tree);
+				OpenFilename = file.FileName;
 			}
 		}
 
@@ -908,32 +905,15 @@ namespace Hourglass
 			
 		}
 
-		private void timer1_Tick(object sender, EventArgs e)
-		{
-			graphicsPanel1.Invalidate();
-			mFPSTimer.Stop();
-			advMillisecond.Add(mFPSTimer.ElapsedMilliseconds);
-			if (advMillisecond.Count >= 5)
-			{
-				long adv = 0;
-				foreach (long l in advMillisecond)
-					adv += l;
-				adv /= advMillisecond.Count;
-				//FpsCount.Text = "FPS: " + (1000 / adv);
-				//Debug.Print("FPS: " + (1000 / adv));
-				advMillisecond.Clear();
-			}
-			mFPSTimer.Reset();
-			mFPSTimer.Start();
-		}
-
 		public void SetFilepath(string _filepath)
 		{
 			mCurrentFilename = _filepath;
-			if (_filepath.Length > 45)
-			{
-				_filepath = "..." + _filepath.Substring(_filepath.Length - 45);
-			}
+
+
+			//if (_filepath.Length > 45)
+			//{
+			//	_filepath = "..." + _filepath.Substring(_filepath.Length - 45);
+			//}
 			_filepath = "Level Editor - " + _filepath;
 			Text = _filepath;
 		}

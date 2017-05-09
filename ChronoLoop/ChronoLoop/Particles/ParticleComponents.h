@@ -66,7 +66,7 @@ namespace Epoch
 
 
 		//Initialize functions
-		static Particle& Init(Particle& _other);
+		static Particle& Init(const Particle& _other);
 
 		/// <summary>Initializes a particle</summary>
 		///<returns>The new particle</returns>
@@ -253,9 +253,9 @@ namespace Epoch
 	{
 	public:
 		Sparks(int _totalp, int _maxp, int _persec, vec3f _pos);
-
-		float timer = 0;
+		int mTime = 4;
 	private:
+		float timer = 0;
 		void UpdateParticle(Particle* _p, float _delta);
 		void EmitParticles();
 	};

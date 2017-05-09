@@ -42,10 +42,10 @@ namespace Epoch {
 			if (!mManip || (mManip && !mManip->isTimePaused())) {
 				if (interp.Update(TimeManager::Instance()->GetDeltaTime())) {
 					if (flip) {
-						interp.Prepare(mRandDur, m2, m1, mObject->GetTransform().GetMatrix());
+						interp.Prepare((float)mRandDur, m2, m1, mObject->GetTransform().GetMatrix());
 						flip = false;
 					} else {
-						interp.Prepare(mRandDur, m1, m2, mObject->GetTransform().GetMatrix());
+						interp.Prepare((float)mRandDur, m1, m2, mObject->GetTransform().GetMatrix());
 						flip = true;
 					}
 				}

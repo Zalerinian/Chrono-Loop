@@ -105,6 +105,12 @@ namespace Epoch {
 		HRESULT MHR = mContext->Map(mVPBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
 		memcpy(map.pData, buffers, sizeof(ViewProjectionBuffer) * 2);
 		mContext->Unmap(mVPBuffer.Get(), 0);
+
+		memset(&map, 0, sizeof(map));
+		MHR = mContext->Map(mHeadPosBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+		vec4f& PlayerHeadPos = VRInputManager::GetInstance().GetPlayerView().Position;
+		memcpy(map.pData, &PlayerHeadPos, sizeof(vec4f));
+		mContext->Unmap(mHeadPosBuffer.Get(), 0);
 	}
 
 	void Renderer::UpdateLBuffers()
@@ -280,11 +286,18 @@ namespace Epoch {
 		ID3D11Texture2D *postTex;
 		CD3D11_TEXTURE2D_DESC t2d(DXGI_FORMAT_R16G16B16A16_FLOAT, _width, _height, 1, 1, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
 		mDevice->CreateTexture2D(&t2d, nullptr, &postTex);
+		ThrowIfFailed(mDevice->CreateTexture2D(&t2d, nullptr, mBloomTexture.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateTexture2D(&t2d, nullptr, mGlowTexture.GetAddressOf()));
 		mSceneTexture.Attach(postTex);
+		std::string bloomInternalName = "Bloom texture", glowInternalName = "Glow Texture";
+		TextureManager::Instance()->iAddTexture2D(bloomInternalName, mBloomTexture, &mBloomSRV); // This will create and assign the SRV for the texture.
+		TextureManager::Instance()->iAddTexture2D(glowInternalName, mGlowTexture, &mGlowSRV);
 
 		// Render target view in order to draw to the texture.
 		ID3D11RenderTargetView *sceneRTV;
 		HRESULT hr = mDevice->CreateRenderTargetView((ID3D11Resource*)postTex, NULL, &sceneRTV);
+		ThrowIfFailed(mDevice->CreateRenderTargetView(mBloomTexture.Get(), nullptr, mBloomRTV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateRenderTargetView(mGlowTexture.Get(), nullptr, mGlowRTV.GetAddressOf()));
 		ThrowIfFailed(hr);
 		mSceneView.Attach(sceneRTV);
 
@@ -323,6 +336,9 @@ namespace Epoch {
 		CD3D11_BUFFER_DESC desc(sizeof(ViewProjectionBuffer) * 2, D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
 		buffRes = mDevice->CreateBuffer(&desc, nullptr, &pBuff);
 		mVPBuffer.Attach(pBuff);
+
+		desc.ByteWidth = sizeof(vec4f);
+		mDevice->CreateBuffer(&desc, nullptr, mHeadPosBuffer.GetAddressOf());
 
 
 		// Model position buffer
@@ -382,17 +398,17 @@ namespace Epoch {
 		SetD3DName(mFactory.Get(), "DXGI Factory");
 		SetD3DName(mMainView.Get(), "Window Render Target");
 		SetD3DName(mSceneView.Get(), "Post Processing Render Target");
-		//SetD3DName(mBloomRTV.Get(), "Bloom Render Target");
+		SetD3DName(mBloomRTV.Get(), "Bloom Render Target");
 		SetD3DName(mDSView.Get(), "Main Depth-Stencil View");
 		SetD3DName(mMainViewTexture.Get(), "Window Render Texture");
 		SetD3DName(mDepthBuffer.Get(), "Main Depth Buffer");
 		SetD3DName(mSceneTexture.Get(), "Post Processing Texture");
-		//SetD3DName(mBloomTexture.Get(), "Bloom Blur Texture");
+		SetD3DName(mBloomTexture.Get(), "Bloom Blur Texture");
 		SetD3DName(mSamplerState.Get(), "Wrapping Sampler State");
 		SetD3DName(mTransparentState.Get(), "Transparent Depth-Stencil State");
 		SetD3DName(mOpaqueState.Get(), "Opaque Depth-Stencil State");
 		SetD3DName(mSceneSRV.Get(), "Scene Texture SRV");
-		//SetD3DName(mBloomSRV.Get(), "Bloom Shader Resource View");
+		SetD3DName(mBloomSRV.Get(), "Bloom Shader Resource View");
 		SetD3DName(mOpaqueBlendState.Get(), "Opaque Blend State");
 		SetD3DName(mTransparentBlendState.Get(), "Transparent Blend State");
 
@@ -408,6 +424,8 @@ namespace Epoch {
 	void Renderer::InitializeSceneQuad() {
 		mScenePPQuad = new RenderShape("../Resources/VerticalPlane.obj", true, ePS_POSTPROCESS, eVS_NDC, eGS_PosNormTex_NDC);
 		mScenePPQuad->GetContext().mTextures[eTEX_DIFFUSE] = mSceneSRV;
+		mScenePPQuad->GetContext().mTextures[eTEX_REGISTER4] = mBloomSRV;
+		mScenePPQuad->GetContext().mTextures[eTEX_REGISTER5] = mGlowSRV;
 		mScenePPQuad->GetContext().mRasterState = eRS_FILLED;
 
 		ID3D11Buffer *ColorRatioBuffer;
@@ -430,6 +448,7 @@ namespace Epoch {
 		mContext->VSSetConstantBuffers(0, 1, mPositionBuffer.GetAddressOf());
 		mContext->VSSetConstantBuffers(1, 1, mSimInstanceBuffer.GetAddressOf());
 		mContext->GSSetConstantBuffers(0, 1, mVPBuffer.GetAddressOf());
+		mContext->GSSetConstantBuffers(1, 1, mHeadPosBuffer.GetAddressOf());
 		mContext->PSSetConstantBuffers(0, 1, mLBuffer.GetAddressOf());
 		//(*mContext)->VSSetConstantBuffers(2, 1, nullptr); // This will crash. - Instance Buffer
 		//(*mContext)->VSSetConstantBuffers(3, 1, nullptr); // This will crash. - Animation Data Buffer
@@ -484,7 +503,8 @@ namespace Epoch {
 	}
 
 	void Renderer::AttachPrimaryRTVs() {
-		mContext->OMSetRenderTargets(1, mSceneView.GetAddressOf(), mDSView.Get());
+		ID3D11RenderTargetView *RTVS[] = { mSceneView.Get(), mGlowRTV.Get() };
+		mContext->OMSetRenderTargets(sizeof(RTVS) / sizeof(RTVS[0]), RTVS, mDSView.Get());
 	}
 	
 	void Renderer::UpdateCamera(float const _moveSpd, float const _rotSpd, float _delta) {
@@ -555,7 +575,6 @@ namespace Epoch {
 	}
 
 	void Renderer::RenderVR(float _delta) {
-		vr::VRCompositor()->CompositorBringToFront();
 		UpdateViewProjection();
 		UpdateGSBuffers();
 		UpdateLBuffers();
@@ -764,17 +783,40 @@ namespace Epoch {
 
 	void Renderer::RenderScreenQuad()
 	{
-		if (bootlegBlurEnabled) {
-			BlurTextures(mSceneTexture.GetAddressOf(), 1, bootlegSigma, bootlegDownsample);
-		}
+		// Blur the bloom texture so that it actually bleeds on the screen
+		RenderForBloom();
+		BlurTextures(mBloomTexture.GetAddressOf(), 1, 5.0f, 0.4f);
 
 		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
 		mContext->OMSetRenderTargets(1, mMainView.GetAddressOf(), mDSView.Get());
 		mScenePPQuad->GetContext().Apply(mCurrentContext);
 		mScenePPQuad->Render();
+
+		ID3D11ShaderResourceView *noGlow = nullptr;
+		mContext->PSSetShaderResources(eTEX_REGISTER5, 1, &noGlow);
+
 		mCurrentContext.SimpleClone(mScenePPQuad->GetContext());
 	}
 
+	void Renderer::RenderForBloom() {
+		ID3D11ShaderResourceView *null[] = { nullptr, nullptr };
+		mContext->PSSetShaderResources(eTEX_REGISTER4, 2, null); // Remove Glow and Bloom textures
+		mContext->OMSetRenderTargets(1, mBloomRTV.GetAddressOf(), nullptr);
+		mContext->RSSetViewports(1, &mFullViewport);
+
+		ShaderManager::Instance()->ApplyPShader(ePS_BLOOM);
+		ShaderManager::Instance()->ApplyVShader(eVS_BLUR);
+		ShaderManager::Instance()->ApplyGShader(eGS_None);
+		ID3D11ShaderResourceView *srvs[] = { mSceneSRV.Get(), mGlowSRV.Get() };
+		mContext->PSSetShaderResources(0, 2, srvs);
+		mScenePPQuad->Render(1);
+		mContext->PSSetShaderResources(0, 2, null); // Remove scene and glow textures
+
+
+		AttachPrimaryRTVs();
+		AttachPrimaryViewports();
+		mCurrentContext.Apply();
+	}
 	 
 #pragma endregion Private Functions
 
@@ -898,8 +940,8 @@ namespace Epoch {
 		InitializeDXGIFactory();
 		InitializeDXGISwapChain(_Window, _fullscreen, _fps, rtvWidth, rtvHeight);
 		InitializeViews(rtvWidth, rtvHeight);
+		InitializeSceneQuad(); // Must be initilized after all the views, as it assigns some.
 		InitializeBuffers();
-		InitializeSceneQuad();
 		InitializeStates();
 
 		InitializeSamplerState();
@@ -948,8 +990,8 @@ namespace Epoch {
 			_textures[i]->GetDesc(&texDesc);
 			for (unsigned int j = 0; j < 2; ++j) {
 				downDesc = texDesc;
-				downDesc.Width = texDesc.Width * _downsample;
-				downDesc.Height = texDesc.Height * _downsample;
+				downDesc.Width = (UINT)(texDesc.Width * _downsample);
+				downDesc.Height = (UINT)(texDesc.Height * _downsample);
 
 				mDevice->CreateTexture2D(&downDesc, nullptr, &downTex[i + _numTextures * j]);
 				mDevice->CreateRenderTargetView(downTex[i + _numTextures * j], nullptr, &downRTV[i + _numTextures * j]);
@@ -972,8 +1014,8 @@ namespace Epoch {
 			blurport.MaxDepth = 1;
 			blurport.TopLeftX = 0;
 			blurport.TopLeftY = 0;
-			blurport.Width = downDesc.Width;
-			blurport.Height = downDesc.Height;
+			blurport.Width = downDesc.Width * 1.0f;
+			blurport.Height = downDesc.Height * 1.0f;
 			mContext->RSSetViewports(1, &blurport);
 		}
 
@@ -1039,41 +1081,19 @@ namespace Epoch {
 	void Renderer::Render(float _deltaTime) {
 
 		float color[4] = { 0.251f, 0.709f, 0.541f, 1 };
-		
-		if (bootlegBlurEnabled) {
-			if (GetAsyncKeyState(VK_SHIFT)) {
-				float downsample = bootlegDownsample;
-				if (GetAsyncKeyState(VK_SUBTRACT)) {
-					bootlegDownsample -= 0.25f * _deltaTime;
-				} else if (GetAsyncKeyState(VK_ADD)) {
-					bootlegDownsample += 0.25f * _deltaTime;
-				}
-				bootlegDownsample = min(max(0.1f, bootlegDownsample), 1.0f);
-				if (downsample != bootlegDownsample) {
-					SystemLogger::Debug() << "Blur downsample: " << bootlegDownsample << std::endl;
-				}
-			} else {
-				float sigma = bootlegSigma;
-				if (GetAsyncKeyState(VK_SUBTRACT)) {
-					bootlegSigma -= 1.0f * _deltaTime;
-				} else if (GetAsyncKeyState(VK_ADD)) {
-					bootlegSigma += 1.0f * _deltaTime;
-				}
-				bootlegSigma = min(max(0.1f, bootlegSigma), 20.0f);
-				if (sigma != bootlegSigma) {
-					SystemLogger::Debug() << "Blur sigma: " << bootlegSigma << std::endl;
-				}
-			}
-		}
-		if (GetAsyncKeyState(VK_DIVIDE) & 1) {
-			bootlegBlurEnabled = !bootlegBlurEnabled;
-		}
+		float black[4] = { 0, 0, 0, 0 };
 
-		// Setup the Scene Render Target 
+		// Setup the Scene Render Target
 		mRendererLock.lock();
-		mContext->OMSetRenderTargets(1, mSceneView.GetAddressOf(), mDSView.Get());
+		AttachPrimaryRTVs();
 		mContext->ClearRenderTargetView(mSceneView.Get(), color);
+		mContext->ClearRenderTargetView(mBloomRTV.Get(), black);
 		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+		if (GetAsyncKeyState(VK_DIVIDE) & 1) {
+			mUseVsync = !mUseVsync;
+			SystemLogger::Debug() << "Bloom is now " << (mUseVsync ? "en" : "dis") << "abled" << std::endl;
+		}
 
 		if (nullptr == mVrSystem) {
 			RenderNoVR(_deltaTime);

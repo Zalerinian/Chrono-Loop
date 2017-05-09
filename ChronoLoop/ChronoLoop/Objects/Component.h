@@ -249,7 +249,9 @@ namespace Epoch
 		}
 		void Destroy()
 		{
+			Light* temp = mLight;
 			delete mLight;
+			mLight = nullptr;
 		}
 	};
 

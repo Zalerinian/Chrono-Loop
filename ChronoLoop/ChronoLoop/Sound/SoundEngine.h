@@ -70,10 +70,10 @@ namespace Epoch
 		bool MakeEventAtLocation(AudioEvent _id, const vec4f* _pos);
 		bool MakeEvent(AudioEvent _id, const Emitter * _emitter);
 		bool MakeEventAtListener(AudioEvent _id, unsigned int _listenerID = 0);
-		bool MakeEvent(AudioEvent _id, const BaseObject* _obj);
 		void STOP() { AK::SoundEngine::StopAll(); }
 		void StopEmitter(Emitter* _emitter) { AK::SoundEngine::StopAll((AkGameObjectID)_emitter); }
 
+		bool SetRTCP(AudioEvent _id, float _val, const Emitter* _pemitter);
 		//Set soundbank path(s)
 		void SetBasePath(const wchar_t* _strPath);
 		bool LoadSoundBank(const wchar_t* _BankName);
