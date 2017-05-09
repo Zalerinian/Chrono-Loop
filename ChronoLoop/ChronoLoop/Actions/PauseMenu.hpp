@@ -171,7 +171,7 @@ namespace Epoch
 					mcRestartLevel->SetPixelShader(ePS_PURETEXTURE);
 					mcAudio->SetPixelShader(ePS_PURETEXTURE);
 					mcMisc->SetPixelShader(ePS_PURETEXTURE);
-					//Draw in front
+			//Draw in front
 					mcPauseMenuBase->SetTopmost(true);
 					mcMainPanel->SetTopmost(true);
 					mcSettingsPanel->SetTopmost(true);

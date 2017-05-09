@@ -81,7 +81,7 @@ namespace Epoch
 				//Interp stuff
 				ButtonCollider* butCol = (ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
 
-				if (_other.mVelocity * butCol->mPushNormal < .1f);
+				if (_other.mVelocity * butCol->mPushNormal < .1f)
 					butCol->mVelocity = vec3f(0, 0, 0);
 
 				if (!tempDoor) {

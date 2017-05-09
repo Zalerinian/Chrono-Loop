@@ -13,7 +13,7 @@ namespace Epoch
 
 	struct CCLevel1TutorialButton : public CodeComponent
 	{
-		bool colliding = false, interp = false;
+		bool colliding = false, interp = false, once = false;
 		BaseObject *tutButton, *tutChamber, *tutDoor;
 		Interpolator<matrix4>* doorInterp;
 		Interpolator<matrix4>* chamberInterp;
@@ -75,11 +75,12 @@ namespace Epoch
 
 		virtual void Update()
 		{
-			if (!interp && Settings::GetInstance().GetInt("tutStep") == 6)
+			if (!once && Settings::GetInstance().GetInt("tutStep") == 6)
 			{
 				doorInterp->SetActive(true);
 				doorInterp->Prepare(0.69f, tutDoor->GetTransform().GetMatrix(), doorStart * tutDoor->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 2.6f, 0, 1)), tutDoor->GetTransform().GetMatrix());
 				interp = true;
+				once = true;
 
 				if (tutDoor->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0)
 				{

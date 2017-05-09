@@ -158,19 +158,6 @@ namespace Epoch {
 			mTimeline->AddBaseObject(_obj, _obj->GetUniqueID());
 			//Level* templvl = LevelManager::GetInstance().GetCurrentLevel();
 			instanceTimemanager->AddInterpolatorToObject(_obj);
-			//if (LevelManager::GetInstance().GetCurrentLevel() == nullptr)
-			//{
-			//	if (_obj->GetName().find("Controller1 - 0") == std::string::npos &&
-			//		_obj->GetName().find("Controller2 - 0") == std::string::npos) { //TODO RYAN: TEMPORARY FIX FOR INTERPOLATION
-			//		instanceTimemanager->AddInterpolatorToObject(_obj);
-			//	}
-			//}7
-			//else {
-			//	if (_obj->GetName().find("Controller1 - " + std::to_string(LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->GetNumClones())) == std::string::npos &&
-			//		_obj->GetName().find("Controller2 - " + std::to_string(LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->GetNumClones())) == std::string::npos) { //TODO RYAN: TEMPORARY FIX FOR INTERPOLATION
-			//		instanceTimemanager->AddInterpolatorToObject(_obj);
-			//	}
-			//}
 		}
 	}
 
@@ -499,10 +486,17 @@ namespace Epoch {
 			}
 			return;
 		}
-
-		unsigned int temp = instanceTimemanager->GetCurrentSnapFrame();
-		if (_gesture == 0)
+		//SystemLogger::GetLog() << "Gesture ID: " << _gesture << std::endl;
+		if (_gesture == 0) {
+			if(noMovementCnt < 15)
+				noMovementCnt++;
+			if(noMovementCnt == 15)
+			{
+				mRewindShouldGetFaster = 0;
+				mRewindGettingFaster = 1;
+			}
 			return;
+		}
 		if (_gesture == 1)
 			_frameRewind *= -1;
 		else if (_gesture == 2) {
@@ -510,6 +504,8 @@ namespace Epoch {
 			LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->RaycastCloneCheck();*/
 			return;
 		}
+
+		unsigned int temp = instanceTimemanager->GetCurrentSnapFrame();
 			if ((mtempCurSnapFrame != 0 && _gesture == -1) || (mtempCurSnapFrame != temp && _gesture == 1)) {
 				int placeHolder = mtempCurSnapFrame;
 				if (mtempCurSnapFrame - (_frameRewind * mRewindGettingFaster) > 0 && (mtempCurSnapFrame - (_frameRewind * mRewindGettingFaster) < temp))
@@ -517,17 +513,18 @@ namespace Epoch {
 				mTimeline->PrepareAllObjectInterpolators(placeHolder, mtempCurSnapFrame);
 				mShouldUpdateInterpolators = true;
 				mShouldPulse = true;
+				noMovementCnt = 0;
 				VRInputManager::GetInstance().GetController(eControllerType_Primary).TriggerHapticPulse(600, vr::k_EButton_SteamVR_Touchpad);
- 				//mRewindShouldGetFaster++;
-				//if (mRewindShouldGetFaster % 15 == 0)
-				//	mRewindGettingFaster++;
+ 				mRewindShouldGetFaster++;
+				if (mRewindShouldGetFaster % 20 == 0)
+					mRewindGettingFaster++;
 				//SystemLogger::GetLog() << "mRewindGettingFaster: " << mRewindGettingFaster << std::endl;
 				//SystemLogger::GetLog() << "mRewindShouldGetFaster: " << mRewindShouldGetFaster << std::endl;
 				if (_gesture == 1)
-					Settings::GetInstance().SetUInt("TutorialRewind - CurProgress", Settings::GetInstance().GetFloat("TutorialRewind - CurProgress") - 1);
+					Settings::GetInstance().SetUInt("TutorialRewind - CurProgress", Settings::GetInstance().GetUInt("TutorialRewind - CurProgress") - mRewindGettingFaster);
 				if (_gesture == -1)
-					Settings::GetInstance().SetUInt("TutorialRewind - CurProgress", Settings::GetInstance().GetUInt("TutorialRewind - CurProgress") + 1);
-				if(Settings::GetInstance().GetUInt("TutorialRewind - CurProgress") == Settings::GetInstance().GetUInt("TutorialRewind - FinalProgress"))//Rewind
+					Settings::GetInstance().SetUInt("TutorialRewind - CurProgress", Settings::GetInstance().GetUInt("TutorialRewind - CurProgress") + mRewindGettingFaster);
+				if(Settings::GetInstance().GetUInt("TutorialRewind - CurProgress") >= Settings::GetInstance().GetUInt("TutorialRewind - FinalProgress"))//Rewind
 				{
 					if (Settings::GetInstance().GetInt("tutStep") == 3)
 					{
@@ -537,10 +534,9 @@ namespace Epoch {
 							Settings::GetInstance().SetInt("tutStep", 5);//Create Clone (tut 2)
 					}
 				}
-			}
-			else {
+			} else {
 				mShouldPulse = false;
-		}
+			}
 	}
 	void TimeManager::MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC) {
 		mTimeline->MoveAllObjectsToSnapExceptPlayer(_snaptime, _headset, _leftC, _rightC);
@@ -583,6 +579,7 @@ namespace Epoch {
 		}
 		if(Settings::GetInstance().GetInt("CurrentLevel") == 3)
 		{
+			Settings::GetInstance().SetBool("ResetElevator", true);
 			std::vector<Component*>& comps = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetComponents(eCOMPONENT_CODE);
 			for (unsigned int i = 0; i < comps.size(); i++) {
 				if (dynamic_cast<CCMazeHelper*>(comps[i])) {

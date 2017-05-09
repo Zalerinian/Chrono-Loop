@@ -168,6 +168,26 @@ namespace Epoch
 		return bReturn;
 	}
 
+	bool Physics::Linecast(vec3f& _vert0, vec3f& _vert1, vec3f& _vert2, vec3f& _normal, vec3f& _start, vec3f& _end, vec3f& _hit)
+	{
+		float time;
+		vec3f dir = _end - _start;
+		if (RayToTriangle(_vert0, _vert1, _vert2, _normal, _start, dir, time))
+		{
+
+			vec3f proj = _start + (dir)* time;
+			_hit = proj;
+			proj = proj - _end;
+			float d = proj.Dot(dir);
+
+			if (d < 0)
+				return true;
+			else
+				return false;
+		}
+		return false;
+
+	}
 #pragma endregion
 
 

@@ -112,7 +112,7 @@ namespace Epoch
 				mExitStandInterp->SetActive(true);
 
 				mat = mExitSign->GetTransform().GetMatrix();
-				mExitSignInterp->Prepare(1, mat, mat * matrix4::CreateTranslation(0, -.05, 0), mExitSign->GetTransform().GetMatrix());
+				mExitSignInterp->Prepare(1, mat, mat * matrix4::CreateTranslation(0, -.05f, 0), mExitSign->GetTransform().GetMatrix());
 				mExitSignInterp->SetEasingFunction(Easing::ElasticOut);
 				mExitSignInterp->SetActive(true);
 
