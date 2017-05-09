@@ -406,14 +406,15 @@ namespace Epoch
 			//Shoot Particles
 			Particle* start = &Particle::Init();
 			start->SetPos(vec3f(0, -3.0f, 0));
-			start->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));
-			start->SetLife(400);
-			start->SetSize(1, .7f);
-			ParticleEmitter* startEmit = new TeleportEffect(800, 250, 2, vec4f(0, -4,0, 1));
+			start->SetColors(vec3f(.6f, .6f, .8f), vec3f(.3f, 0, .3f));
+			start->SetLife(1200);
+			start->SetSize(.5f, .3f);
+			ParticleEmitter* startEmit = new VolumeEmitter(1400, 500, 2, vec4f(0, -3,0, 1));
 			startEmit->SetParticle(start);
-			startEmit->SetTexture("../Resources/BasicRectP.png");
-			((TeleportEffect*)startEmit)->SetPosBounds(vec3f(-6, -3, -6), vec3f(6, 0, 6));
-			((TeleportEffect*)startEmit)->SetVelBounds(vec3f(.5f, 1, .5f), vec3f(.5f, 5, .5f));
+			startEmit->SetTexture("../Resources/BasicCircleP.png");
+			((VolumeEmitter*)startEmit)->SetBoundingVolume(3.14f);
+			((VolumeEmitter*)startEmit)->SetPosBounds(vec3f(-7, 0, -7), vec3f(7, 4, 7));
+			((VolumeEmitter*)startEmit)->SetVelBounds(vec3f(1, 5, .5f), vec3f(2, 10, 1));
 			ParticleSystem::Instance()->AddEmitter(startEmit);
 			startEmit->FIRE();
 			((SFXEmitter*)mObject->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent(Emitter::ePlay);
