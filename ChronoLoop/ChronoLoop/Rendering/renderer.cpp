@@ -21,6 +21,7 @@
 #include "ShaderManager.h"
 #include "../Common/Settings.h"
 #include "../Core/LevelManager.h"
+#include <regex>
 
 #define ENABLE_TEXT 1
 
@@ -58,7 +59,7 @@ namespace Epoch {
 
 	void Renderer::ThrowIfFailed(HRESULT hr) {
 		if (FAILED(hr)) {
-			throw "Something has gone catastrophically wrong!";
+throw "Something has gone catastrophically wrong!";
 		}
 	}
 
@@ -113,8 +114,7 @@ namespace Epoch {
 		mContext->Unmap(mHeadPosBuffer.Get(), 0);
 	}
 
-	void Renderer::UpdateLBuffers()
-	{
+	void Renderer::UpdateLBuffers() {
 		Light buffs[] = { (*mLData[0]), (*mLData[1]), (*mLData[2]) };
 		D3D11_MAPPED_SUBRESOURCE map;
 		memset(&map, 0, sizeof(map));
@@ -153,6 +153,16 @@ namespace Epoch {
 				Instance()->mEnabledFeatures[eRendererFeature_SuperGlow].flip();
 			} else if (args == L"BLOOM") {
 				Instance()->mEnabledFeatures[eRendererFeature_Bloom].flip();
+			}
+		} else if (subcommand == L"SET") {
+			wregex valueFinder(L"(\\w)+\\s+(\\d+(\\.\\d+)?)", regex::ECMAScript | regex::icase);
+			match_results<const wchar_t*> finds;
+			regex_match(args.c_str(), finds, valueFinder);
+			if (finds.size() > 2) {
+				// A float value has 3 matches: the property name, the whole float value, and the decimal portion (with the '.' preceeding)
+				if (finds[1] == L"GLOWSIGMA") {
+					float glowSigma = stof(finds[2]);
+				}
 			}
 		}
 	}
