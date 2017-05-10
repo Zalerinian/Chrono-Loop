@@ -19,8 +19,10 @@ namespace Epoch {
 	struct TeleportAction : public CodeComponent {
 		matrix4 endPos;
 		Interpolator<matrix4>* interp;
-		MeshComponent *mPlaneMesh, *mWallsMesh, *mBlockMesh, *mExitMesh, *mDoor3Mesh, *mServerMesh, *mTWall1Mesh, *mTWall2Mesh, *mTWall3Mesh, *mTWindowMesh;
-		BaseObject *mPlaneObject, *mWallsObject, *mBlockObject, *mExitObject, *mDoor3Object, *mServerObject, *mHeadset, *mTWall1, *mTWall2, *mTWall3, *mTWindow;
+		std::vector<BaseObject*> mPlaneObjects;
+		std::vector<MeshComponent*> mPlaneMeshes;
+		MeshComponent *mWallsMesh, *mBlockMesh, *mExitMesh, *mDoor3Mesh, *mServerMesh, *mTWall1Mesh, *mTWall2Mesh, *mTWall3Mesh, *mTWindowMesh;
+		BaseObject *mWallsObject, *mBlockObject, *mExitObject, *mDoor3Object, *mServerObject, *mHeadset, *mTWall1, *mTWall2, *mTWall3, *mTWindow;
 		ControllerType mControllerRole = eControllerType_Primary;
 		Level* cLevel = nullptr;
 		TeleportAction(ControllerType _t) { mControllerRole = _t; };
@@ -28,7 +30,7 @@ namespace Epoch {
 		virtual void Start() {
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			interp = cLevel->playerInterp;
-			mPlaneObject = cLevel->FindObjectWithName("Floor");
+			mPlaneObjects = cLevel->FindAllObjectsWithName("Floor");
 			mWallsObject = cLevel->FindObjectWithName("Walls");
 			mBlockObject = cLevel->FindObjectWithName("TransparentDoor1");
 			mExitObject = cLevel->FindObjectWithName("TransparentDoor2");
@@ -39,18 +41,22 @@ namespace Epoch {
 			mTWindow = cLevel->FindObjectWithName("TransparentWindow");
 			mServerObject = cLevel->FindObjectWithName("Servers");
 
-			if (mPlaneObject) {
-				mPlaneMesh = (MeshComponent*)mPlaneObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-				mWallsMesh = (MeshComponent*)mWallsObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-				mBlockMesh = (MeshComponent*)mBlockObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-				mExitMesh = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-				mDoor3Mesh = (MeshComponent*)mDoor3Object->GetComponentIndexed(eCOMPONENT_MESH, 0);
-				mServerMesh = (MeshComponent*)mServerObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-				mTWall1Mesh = (MeshComponent*)mTWall1->GetComponentIndexed(eCOMPONENT_MESH, 0);
-				mTWall2Mesh = (MeshComponent*)mTWall2->GetComponentIndexed(eCOMPONENT_MESH, 0);
-				mTWall3Mesh = (MeshComponent*)mTWall2->GetComponentIndexed(eCOMPONENT_MESH, 0);
-				mTWindowMesh = (MeshComponent*)mTWindow->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			int size = mPlaneObjects.size();
+			for (int i = 0; i < size; ++i)
+			{
+				mPlaneMeshes.push_back((MeshComponent*)mPlaneObjects[i]->GetComponentIndexed(eCOMPONENT_MESH, 0));
 			}
+
+			mWallsMesh = (MeshComponent*)mWallsObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			mBlockMesh = (MeshComponent*)mBlockObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			mExitMesh = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			mDoor3Mesh = (MeshComponent*)mDoor3Object->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			mServerMesh = (MeshComponent*)mServerObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			mTWall1Mesh = (MeshComponent*)mTWall1->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			mTWall2Mesh = (MeshComponent*)mTWall2->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			mTWall3Mesh = (MeshComponent*)mTWall2->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			mTWindowMesh = (MeshComponent*)mTWindow->GetComponentIndexed(eCOMPONENT_MESH, 0);
+
 			mHeadset = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset();
 			endPos = VRInputManager::GetInstance().GetPlayerPosition();
 			interp->SetActive(false);
@@ -105,83 +111,103 @@ namespace Epoch {
 							}
 						}
 
-						Triangle *tris = mPlaneMesh->GetTriangles();
-						size_t numTris = mPlaneMesh->GetTriangleCount();
-						matrix4 objMat = mPlaneObject->GetTransform().GetMatrix();
-						matrix4 inverse = (mat * objMat.Invert());
-						vec3f position = inverse.Position;
-						vec3f point = VRInputManager::GetInstance().GetPlayerPosition().fourth;
-						forward.Set(0, 0, 1, 0);
-						forward *= inverse;
-						vec3f fwd = forward;
-						for (unsigned int i = 0; i < numTris; ++i) {
-							if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, fwd, controllerTime)) {
-								if (controllerTime < wallTime) {
-									fwd *= controllerTime;
-									point[0] += fwd[0] * objMat.xAxis[0]; // x
-									point[2] += fwd[2] * objMat.zAxis[2]; // z
-									//VRInputManager::Instance().iGetPlayerPosition()[3][3] += forward[3]; // w
-									//Move any held objects along with player 
+						int size = mPlaneObjects.size();
+						for (int m = 0; m < size; ++m)
+						{
+							Triangle *tris = mPlaneMeshes[m]->GetTriangles();
+							size_t numTris = mPlaneMeshes[m]->GetTriangleCount();
+							matrix4 objMat = mPlaneObjects[m]->GetTransform().GetMatrix();
+							matrix4 inverse = (mat * objMat.Invert());
+							vec3f position = inverse.Position;
+							vec3f point = VRInputManager::GetInstance().GetPlayerPosition().fourth;
+							forward.Set(0, 0, 1, 0);
+							forward *= inverse;
+							vec3f fwd = forward;
+						
+							for (unsigned int i = 0; i < numTris; ++i)
+							{
+								if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, fwd, controllerTime))
+								{
+									if (controllerTime < wallTime)
+									{
+										fwd *= controllerTime;
+										point[0] += fwd[0] * objMat.xAxis[0]; // x
+										point[2] += fwd[2] * objMat.zAxis[2]; // z
+										//VRInputManager::Instance().iGetPlayerPosition()[3][3] += forward[3]; // w
+										//Move any held objects along with player 
 
 
-									mat = VRInputManager::GetInstance().GetPlayerPosition();
-									mat.Position.y = 2;
-									vec3f pos = mat.Position;
-									vec3f up(0, 1, 0);
-									mat = DirectX::XMMatrixLookAtRH(mat.Position.vector, point.vector, up.vector);
-									mat = mat.Invert();
-									mat.Position = pos;
-									controllerTime = 0, wallTime = FLT_MAX;
-									for (int j = 0; j < ARRAYSIZE(meshes); ++j) {
+										mat = VRInputManager::GetInstance().GetPlayerPosition();
+										mat.Position.y = 2;
+										vec3f pos = mat.Position;
+										vec3f up(0, 1, 0);
+										mat = DirectX::XMMatrixLookAtRH(mat.Position.vector, point.vector, up.vector);
+										mat = mat.Invert();
+										mat.Position = pos;
+										controllerTime = 0, wallTime = FLT_MAX;
+										for (int j = 0; j < ARRAYSIZE(meshes); ++j)
+										{
+											forward.Set(0, 0, 1, 0);
+											matrix4 objMatInv = objects[j]->GetTransform().GetMatrix().Invert();
+											matrix4 inverse = (mat * objMatInv);
+											vec3f meshPos = inverse.Position;
+											forward *= inverse;
+											vec3f fwd(forward);
+											Triangle *tris = meshes[j]->GetTriangles();
+											size_t numTris = meshes[j]->GetTriangleCount();
+											for (unsigned int k = 0; k < numTris; ++k)
+											{
+												float hitTime = FLT_MAX;
+												if (Physics::Instance()->RayToTriangle(
+													(tris + k)->Vertex[0],
+													(tris + k)->Vertex[1],
+													(tris + k)->Vertex[2],
+													(tris + k)->Normal, meshPos, fwd, hitTime))
+												{
+													if (hitTime < wallTime)
+													{
+														wallTime = hitTime;
+													}
+												}
+											}
+										}
+
+
+										inverse = (mat * objMat.Invert());
+										position = inverse.Position;
 										forward.Set(0, 0, 1, 0);
-										matrix4 objMatInv = objects[j]->GetTransform().GetMatrix().Invert();
-										matrix4 inverse = (mat * objMatInv);
-										vec3f meshPos = inverse.Position;
 										forward *= inverse;
-										vec3f fwd(forward);
-										Triangle *tris = meshes[j]->GetTriangles();
-										size_t numTris = meshes[j]->GetTriangleCount();
-										for (unsigned int k = 0; k < numTris; ++k) {
-											float hitTime = FLT_MAX;
-											if (Physics::Instance()->RayToTriangle(
-												(tris + k)->Vertex[0],
-												(tris + k)->Vertex[1],
-												(tris + k)->Vertex[2],
-												(tris + k)->Normal, meshPos, fwd, hitTime)) {
-												if (hitTime < wallTime) {
-													wallTime = hitTime;
+										vec3f agentFwd = forward;
+										float agentTime = 0;
+										numTris = mPlaneMeshes[m]->GetTriangleCount();
+										for (unsigned int x = 0; x < numTris; ++x)
+										{
+											if (Physics::Instance()->RayToTriangle((tris + x)->Vertex[0], (tris + x)->Vertex[1], (tris + x)->Vertex[2], (tris + x)->Normal, position, agentFwd, agentTime))
+											{
+												if (agentTime < wallTime)
+												{
+													endPos = VRInputManager::GetInstance().GetPlayerPosition();
+													endPos[3][0] += fwd[0] * objMat.xAxis[0]; // x
+													endPos[3][2] += fwd[2] * objMat.zAxis[2]; // z
+													interp->Prepare(.1f, VRInputManager::GetInstance().GetPlayerPosition(), endPos, VRInputManager::GetInstance().GetPlayerPosition());
+													interp->SetActive(true);
+													SystemLogger::Debug() << "Successful raycast" << std::endl;
+
+													if (dynamic_cast<SFXEmitter*>(mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
+														((SFXEmitter*)mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
+													return;
+												}
+												else
+												{
+													SystemLogger::GetLog() << "[DEBUG] Can't let you do that, Starfox." << std::endl;
 												}
 											}
 										}
 									}
-
-
-									inverse = (mat * objMat.Invert());
-									position = inverse.Position;
-									forward.Set(0, 0, 1, 0);
-									forward *= inverse;
-									vec3f agentFwd = forward;
-									float agentTime = 0;
-									numTris = mPlaneMesh->GetTriangleCount();
-									for (unsigned int i = 0; i < numTris; ++i) {
-										if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, agentFwd, agentTime)) {
-											if (agentTime < wallTime) {
-												endPos = VRInputManager::GetInstance().GetPlayerPosition();
-												endPos[3][0] += fwd[0] * objMat.xAxis[0]; // x
-												endPos[3][2] += fwd[2] * objMat.zAxis[2]; // z
-												interp->Prepare(.1f, VRInputManager::GetInstance().GetPlayerPosition(), endPos, VRInputManager::GetInstance().GetPlayerPosition());
-												interp->SetActive(true);
-												SystemLogger::Debug() << "Successful raycast" << std::endl;
-
-												if (dynamic_cast<SFXEmitter*>(mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
-													((SFXEmitter*)mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
-											} else {
-												SystemLogger::GetLog() << "[DEBUG] Can't let you do that, Starfox." << std::endl;
-											}
-										}
+									else
+									{
+										SystemLogger::GetLog() << "[DEBUG] Can't let you do that, Starfox." << std::endl;
 									}
-								} else {
-									SystemLogger::GetLog() << "[DEBUG] Can't let you do that, Starfox." << std::endl;
 								}
 							}
 						}
