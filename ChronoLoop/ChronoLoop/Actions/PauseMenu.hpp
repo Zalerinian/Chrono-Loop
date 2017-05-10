@@ -51,6 +51,7 @@ namespace Epoch
 
 		D2D1::ColorF wut = { 1,1,1,1 };
 		Font* mainFont = new Font(L"Agency FB", 75, wut);
+		
 
 		float transparentColor[4] = { 0,0,0,0 };
 
@@ -66,6 +67,11 @@ namespace Epoch
 
 		//Mutators
 		void SetPauseMenuToOn(bool _set) { PauseMenuisUp = _set; }
+
+		PauseMenu() {}
+		~PauseMenu() {
+			delete mainFont;
+		}
 
 		virtual void Start()
 		{
