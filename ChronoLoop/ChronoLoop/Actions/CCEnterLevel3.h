@@ -162,7 +162,7 @@ namespace Epoch {
 						std::string str("Clone Display");
 						cdisp->AddTexture(str.c_str(), eTEX_DIFFUSE);
 						cdisp->SetPixelShader(ePS_PURETEXTURE);
-						Font* font = new Font();
+						//Font* font = new Font();
 						cdisp->GetContext().mTextures[eTEX_DIFFUSE] = srv;
 						UICloneText* ct = new UICloneText();
 						cloneDisplay->AddComponent(ct);
@@ -188,7 +188,7 @@ namespace Epoch {
 						cdisp->AddTexture(str.c_str(), eTEX_DIFFUSE);
 						cdisp->SetPixelShader(ePS_PURETEXTURE);
 
-						Font* font = new Font();
+						//Font* font = new Font();
 						cdisp->GetContext().mTextures[eTEX_DIFFUSE] = srv;
 						UICloneText* ct = new UICloneText();
 						cloneDisplay->AddComponent(ct);

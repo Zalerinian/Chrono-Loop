@@ -77,8 +77,11 @@ namespace Epoch {
 			}
 
 			if (!interp->GetActive() && !Settings::GetInstance().GetBool("CantTeleport")) {
-				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && !Settings::GetInstance().GetBool("PauseMenuUp")) {
+				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad)) {
 					if (!paused) {
+						if (Settings::GetInstance().GetBool("PauseMenuUp"))
+							Settings::GetInstance().SetBool("DidRealStuffInPauseMenu", true);
+
 						SystemLogger::Debug() << "Touchpad Pressed" << std::endl;
 						vec4f forward(0, 0, 1, 0);
 						MeshComponent* meshes[] = { mWallsMesh, mBlockMesh, mExitMesh, mDoor3Mesh, mServerMesh, mTWall1Mesh, mTWall2Mesh, mTWall3Mesh, mTWindowMesh, mTutTrapFrame, mTutTrapWindows };
