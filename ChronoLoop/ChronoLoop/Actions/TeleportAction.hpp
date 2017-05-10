@@ -33,26 +33,9 @@ namespace Epoch {
 		virtual void Start() {
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			interp = cLevel->playerInterp;
+
 			mPlaneObjects = cLevel->FindAllObjectsByPattern("Floor");
-
-			mEnvironmentObjects = cLevel->FindAllObjectsByPattern("Walls");
-			mEnvironmentObjects.push_back(cLevel->FindObjectWithName("TransparentDoor1"));
-			mEnvironmentObjects.push_back(cLevel->FindObjectWithName("TransparentDoor2"));
-			mEnvironmentObjects.push_back(cLevel->FindObjectWithName("TransparentDoor3"));
-			mEnvironmentObjects.push_back(cLevel->FindObjectWithName("TransparentWall1"));
-			mEnvironmentObjects.push_back(cLevel->FindObjectWithName("TransparentWall2"));
-			mEnvironmentObjects.push_back(cLevel->FindObjectWithName("TransparentWall3"));
-			mEnvironmentObjects.push_back(cLevel->FindObjectWithName("TransparentWindow"));
-			mEnvironmentObjects.push_back(cLevel->FindObjectWithName("Servers"));
-
-			//mBlockObject = cLevel->FindObjectWithName("TransparentDoor1");
-			//mExitObject = cLevel->FindObjectWithName("TransparentDoor2");
-			//mDoor3Object = cLevel->FindObjectWithName("TransparentDoor3");
-			//mTWall1 = cLevel->FindObjectWithName("TransparentWall1");
-			//mTWall2 = cLevel->FindObjectWithName("TransparentWall2");
-			//mTWall3 = cLevel->FindObjectWithName("TransparentWall3");
-			//mTWindow = cLevel->FindObjectWithName("TransparentWindow");
-			//mServerObject = cLevel->FindObjectWithName("Servers");
+			mEnvironmentObjects = cLevel->FindAllObjectsByPattern("Env");
 
 			int size = mPlaneObjects.size();
 			for (int i = 0; i < size; ++i)
@@ -71,17 +54,6 @@ namespace Epoch {
 			Esize = mEnvironmentObjects.size();
 			mEnvironmentMeshes.push_back((MeshComponent*)mEnvironmentObjects[Esize - 1]->GetComponentIndexed(eCOMPONENT_MESH, 0));
 			mEnvironmentMeshes.push_back((MeshComponent*)mEnvironmentObjects[Esize - 1]->GetComponentIndexed(eCOMPONENT_MESH, 1));
-
-
-			//mWallsMesh = (MeshComponent*)mWallsObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			//mBlockMesh = (MeshComponent*)mBlockObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			//mExitMesh = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			//mDoor3Mesh = (MeshComponent*)mDoor3Object->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			//mServerMesh = (MeshComponent*)mServerObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			//mTWall1Mesh = (MeshComponent*)mTWall1->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			//mTWall2Mesh = (MeshComponent*)mTWall2->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			//mTWall3Mesh = (MeshComponent*)mTWall2->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			//mTWindowMesh = (MeshComponent*)mTWindow->GetComponentIndexed(eCOMPONENT_MESH, 0);
 
 			mHeadset = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset();
 			endPos = VRInputManager::GetInstance().GetPlayerPosition();
