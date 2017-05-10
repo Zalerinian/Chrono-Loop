@@ -12,6 +12,7 @@
 #include "RenderShape.h"
 #include <wrl/client.h>
 #include <mutex>
+#include <bitset>
 
 #define num_lights 3
 
@@ -26,6 +27,19 @@ namespace Epoch {
 		static Renderer* sInstance;
 		//TODO: Light buffers
 		Light * mLData[num_lights];
+
+		std::bitset<32> mEnabledFeatures;
+
+		enum RendererFeature {
+			eRendererFeature_Glow = 0,
+			eRendererFeature_SuperGlow,
+			eRendererFeature_Bloom,
+			eRendererFeature_MAX
+		};
+
+
+		static void ProcessCommand(void* _console, std::wstring _arguments);
+
 
 		// Instance members
 		// D3D11 Variables

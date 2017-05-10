@@ -136,6 +136,24 @@ namespace Epoch {
 		}
 	}
 
+	void Renderer::ProcessCommand(void * _console, std::wstring _arguments) {
+		size_t argIndex = _arguments.find(L" ");
+		if (argIndex < 0) {
+			((CommandConsole*)_console)->DisplaySet(L"The GSET command requires arguments.");
+		}
+		wstring subcommand = _arguments.substr(0, argIndex);
+		wstring args = _arguments.substr(argIndex + 1);
+		if (subcommand == L"TOGGLE") {
+			if (args == L"GLOW") {
+				Instance()->mEnabledFeatures[eRendererFeature_Glow].flip();
+			} else if (args == L"SUPERGLOW") {
+				Instance()->mEnabledFeatures[eRendererFeature_SuperGlow].flip();
+			} else if (args == L"BLOOM") {
+				Instance()->mEnabledFeatures[eRendererFeature_Bloom].flip();
+			}
+		}
+	}
+
 	void Renderer::RenderBlurStage(BlurStage _s, float _dx, float _dy) {
 		mBlurData.stage = _s;
 		mBlurData.dx = _dx;
@@ -826,9 +844,15 @@ namespace Epoch {
 	void Renderer::RenderScreenQuad()
 	{
 		// Blur the bloom texture so that it actually bleeds on the screen
-		BlurTextures(mSuperGlowTexture.GetAddressOf(), 1, 1.0f, 0.4f);
-		RenderForBloom();
-		BlurTextures(mBloomTexture.GetAddressOf(), 1, 2.0f, 0.4f);
+		if (mEnabledFeatures[eRendererFeature_SuperGlow]) {
+			BlurTextures(mSuperGlowTexture.GetAddressOf(), 1, 2.0f, 0.4f);
+		}
+		if (mEnabledFeatures[eRendererFeature_Bloom]) {
+			RenderForBloom();
+		}
+		if (mEnabledFeatures[eRendererFeature_Glow]) {
+			BlurTextures(mBloomTexture.GetAddressOf(), 1, 2.0f, 0.4f);
+		}
 
 		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
 		mContext->OMSetRenderTargets(1, mPostProcessRTV.GetAddressOf(), nullptr);
@@ -997,6 +1021,11 @@ namespace Epoch {
 		InitializeBuffers();
 		InitializeSceneQuad(); // Must be initilized after all the views and buffers, as it assigns some.
 		InitializeStates();
+
+		mEnabledFeatures.set(eRendererFeature_Bloom);
+		mEnabledFeatures.set(eRendererFeature_Glow);
+		mEnabledFeatures.set(eRendererFeature_SuperGlow);
+		CommandConsole::Instance().AddCommand(L"GSET", &Renderer::ProcessCommand);
 
 		InitializeSamplerState();
 		SetStaticBuffers();
