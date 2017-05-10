@@ -134,6 +134,9 @@ namespace Epoch {
 		if (mSceneScreenQuad) {
 			delete mSceneScreenQuad;
 		}
+		if (mDeferredCombiner) {
+			delete mDeferredCombiner;
+		}
 	}
 
 	void Renderer::ProcessCommand(void * _console, std::wstring _arguments) {

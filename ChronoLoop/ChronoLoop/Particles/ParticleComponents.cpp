@@ -192,13 +192,9 @@ namespace Epoch
 		delete mBase;
 		mTName[0] = mTName[1] = mTName[2] = nullptr;
 		mBase = nullptr;
-		for (auto i = mParticles.begin(); i != mParticles.end(); i++)
+		for (auto i = mParticles.begin(); i != mParticles.end(); ++i)
 		{
-			Particle* t = *i;
-			i = mParticles.erase(i);
-			if (i == mParticles.end())
-				break;
-			delete t;
+			delete *i;
 		}
 		mParticles.clear();
 		mTotalParticles = mMaxParticles = 0;
@@ -488,9 +484,9 @@ namespace Epoch
 
 	void ParticleEmitter::Clear()
 	{
-		for (Particle *p : mParticles)
-			delete p;
-
+		for (auto it = mParticles.begin(); it != mParticles.end(); ++it) {
+			delete *it;
+		}
 		mParticles.clear();
 	}
 
