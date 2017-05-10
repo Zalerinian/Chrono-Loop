@@ -20,9 +20,12 @@ namespace Epoch {
 		matrix4 endPos;
 		Interpolator<matrix4>* interp;
 		std::vector<BaseObject*> mPlaneObjects;
+		std::vector<BaseObject*> mEnvironmentObjects;
 		std::vector<MeshComponent*> mPlaneMeshes;
-		MeshComponent *mWallsMesh, *mBlockMesh, *mExitMesh, *mDoor3Mesh, *mServerMesh, *mTWall1Mesh, *mTWall2Mesh, *mTWall3Mesh, *mTWindowMesh;
-		BaseObject *mWallsObject, *mBlockObject, *mExitObject, *mDoor3Object, *mServerObject, *mHeadset, *mTWall1, *mTWall2, *mTWall3, *mTWindow;
+		std::vector<MeshComponent*> mEnvironmentMeshes;
+		//MeshComponent *mBlockMesh, *mExitMesh, *mDoor3Mesh, *mServerMesh, *mTWall1Mesh, *mTWall2Mesh, *mTWall3Mesh, *mTWindowMesh;
+		//BaseObject *mBlockObject, *mExitObject, *mDoor3Object, *mServerObject, *mHeadset, *mTWall1, *mTWall2, *mTWall3, *mTWindow;
+		BaseObject *mHeadset;
 		ControllerType mControllerRole = eControllerType_Primary;
 		Level* cLevel = nullptr;
 		TeleportAction(ControllerType _t) { mControllerRole = _t; };
@@ -30,16 +33,26 @@ namespace Epoch {
 		virtual void Start() {
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			interp = cLevel->playerInterp;
-			mPlaneObjects = cLevel->FindAllObjectsWithName("Floor");
-			mWallsObject = cLevel->FindObjectWithName("Walls");
-			mBlockObject = cLevel->FindObjectWithName("TransparentDoor1");
-			mExitObject = cLevel->FindObjectWithName("TransparentDoor2");
-			mDoor3Object = cLevel->FindObjectWithName("TransparentDoor3");
-			mTWall1 = cLevel->FindObjectWithName("TransparentWall1");
-			mTWall2 = cLevel->FindObjectWithName("TransparentWall2");
-			mTWall3 = cLevel->FindObjectWithName("TransparentWall3");
-			mTWindow = cLevel->FindObjectWithName("TransparentWindow");
-			mServerObject = cLevel->FindObjectWithName("Servers");
+			mPlaneObjects = cLevel->FindAllObjectsByPattern("Floor");
+
+			mEnvironmentObjects = cLevel->FindAllObjectsByPattern("Walls");
+			mEnvironmentObjects.push_back(cLevel->FindObjectWithName("TransparentDoor1"));
+			mEnvironmentObjects.push_back(cLevel->FindObjectWithName("TransparentDoor2"));
+			mEnvironmentObjects.push_back(cLevel->FindObjectWithName("TransparentDoor3"));
+			mEnvironmentObjects.push_back(cLevel->FindObjectWithName("TransparentWall1"));
+			mEnvironmentObjects.push_back(cLevel->FindObjectWithName("TransparentWall2"));
+			mEnvironmentObjects.push_back(cLevel->FindObjectWithName("TransparentWall3"));
+			mEnvironmentObjects.push_back(cLevel->FindObjectWithName("TransparentWindow"));
+			mEnvironmentObjects.push_back(cLevel->FindObjectWithName("Servers"));
+
+			//mBlockObject = cLevel->FindObjectWithName("TransparentDoor1");
+			//mExitObject = cLevel->FindObjectWithName("TransparentDoor2");
+			//mDoor3Object = cLevel->FindObjectWithName("TransparentDoor3");
+			//mTWall1 = cLevel->FindObjectWithName("TransparentWall1");
+			//mTWall2 = cLevel->FindObjectWithName("TransparentWall2");
+			//mTWall3 = cLevel->FindObjectWithName("TransparentWall3");
+			//mTWindow = cLevel->FindObjectWithName("TransparentWindow");
+			//mServerObject = cLevel->FindObjectWithName("Servers");
 
 			int size = mPlaneObjects.size();
 			for (int i = 0; i < size; ++i)
@@ -47,15 +60,28 @@ namespace Epoch {
 				mPlaneMeshes.push_back((MeshComponent*)mPlaneObjects[i]->GetComponentIndexed(eCOMPONENT_MESH, 0));
 			}
 
-			mWallsMesh = (MeshComponent*)mWallsObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mBlockMesh = (MeshComponent*)mBlockObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mExitMesh = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mDoor3Mesh = (MeshComponent*)mDoor3Object->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mServerMesh = (MeshComponent*)mServerObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mTWall1Mesh = (MeshComponent*)mTWall1->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mTWall2Mesh = (MeshComponent*)mTWall2->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mTWall3Mesh = (MeshComponent*)mTWall2->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mTWindowMesh = (MeshComponent*)mTWindow->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			int Esize = mEnvironmentObjects.size();
+			for (int i = 0; i < Esize; ++i) 
+			{
+				mEnvironmentMeshes.push_back((MeshComponent*)mEnvironmentObjects[i]->GetComponentIndexed(eCOMPONENT_MESH, 0));
+			}
+
+			mEnvironmentObjects.push_back(cLevel->FindObjectWithName("tutChamber"));
+			mEnvironmentObjects.push_back(cLevel->FindObjectWithName("tutChamber"));
+			Esize = mEnvironmentObjects.size();
+			mEnvironmentMeshes.push_back((MeshComponent*)mEnvironmentObjects[Esize - 1]->GetComponentIndexed(eCOMPONENT_MESH, 0));
+			mEnvironmentMeshes.push_back((MeshComponent*)mEnvironmentObjects[Esize - 1]->GetComponentIndexed(eCOMPONENT_MESH, 1));
+
+
+			//mWallsMesh = (MeshComponent*)mWallsObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			//mBlockMesh = (MeshComponent*)mBlockObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			//mExitMesh = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			//mDoor3Mesh = (MeshComponent*)mDoor3Object->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			//mServerMesh = (MeshComponent*)mServerObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			//mTWall1Mesh = (MeshComponent*)mTWall1->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			//mTWall2Mesh = (MeshComponent*)mTWall2->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			//mTWall3Mesh = (MeshComponent*)mTWall2->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			//mTWindowMesh = (MeshComponent*)mTWindow->GetComponentIndexed(eCOMPONENT_MESH, 0);
 
 			mHeadset = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset();
 			endPos = VRInputManager::GetInstance().GetPlayerPosition();
@@ -84,19 +110,18 @@ namespace Epoch {
 					if (!paused) {
 						SystemLogger::Debug() << "Touchpad Pressed" << std::endl;
 						vec4f forward(0, 0, 1, 0);
-						MeshComponent* meshes[] = { mWallsMesh, mBlockMesh, mExitMesh, mDoor3Mesh, mServerMesh, mTWall1Mesh, mTWall2Mesh, mTWall3Mesh, mTWindowMesh };
-						BaseObject* objects[] = { mWallsObject, mBlockObject, mExitObject, mDoor3Object, mServerObject, mTWall1, mTWall2, mTWall3, mTWindow };
 						float controllerTime = 0, wallTime = FLT_MAX;
-						for (int i = 0; i < ARRAYSIZE(meshes); ++i) {
+						int Esize = mEnvironmentMeshes.size();
+						for (int i = 0; i < Esize; ++i) {
 							forward.Set(0, 0, 1, 0);
-							matrix4 objMat = objects[i]->GetTransform().GetMatrix();
-							matrix4 objMatInv = objects[i]->GetTransform().GetMatrix().Invert();
+							matrix4 objMat = mEnvironmentObjects[i]->GetTransform().GetMatrix();
+							matrix4 objMatInv = mEnvironmentObjects[i]->GetTransform().GetMatrix().Invert();
 							matrix4 inverse = (mat * objMatInv);
 							vec3f meshPos = inverse.Position;
 							forward *= inverse;
 							vec3f fwd(forward);
-							Triangle *tris = meshes[i]->GetTriangles();
-							size_t numTris = meshes[i]->GetTriangleCount();
+							Triangle *tris = mEnvironmentMeshes[i]->GetTriangles();
+							size_t numTris = mEnvironmentMeshes[i]->GetTriangleCount();
 							for (unsigned int j = 0; j < numTris; ++j) {
 								float hitTime = FLT_MAX;
 								if (Physics::Instance()->RayToTriangle(
@@ -145,16 +170,17 @@ namespace Epoch {
 										mat = mat.Invert();
 										mat.Position = pos;
 										controllerTime = 0, wallTime = FLT_MAX;
-										for (int j = 0; j < ARRAYSIZE(meshes); ++j)
+										int Esize = mEnvironmentMeshes.size();
+										for (int j = 0; j < Esize; ++j)
 										{
 											forward.Set(0, 0, 1, 0);
-											matrix4 objMatInv = objects[j]->GetTransform().GetMatrix().Invert();
+											matrix4 objMatInv = mEnvironmentObjects[j]->GetTransform().GetMatrix().Invert();
 											matrix4 inverse = (mat * objMatInv);
 											vec3f meshPos = inverse.Position;
 											forward *= inverse;
 											vec3f fwd(forward);
-											Triangle *tris = meshes[j]->GetTriangles();
-											size_t numTris = meshes[j]->GetTriangleCount();
+											Triangle *tris = mEnvironmentMeshes[j]->GetTriangles();
+											size_t numTris = mEnvironmentMeshes[j]->GetTriangleCount();
 											for (unsigned int k = 0; k < numTris; ++k)
 											{
 												float hitTime = FLT_MAX;
