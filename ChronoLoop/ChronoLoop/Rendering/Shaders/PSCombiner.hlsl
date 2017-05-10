@@ -42,7 +42,7 @@ float4 main(PSI input) : SV_TARGET
 {
 	float4 cAlbedo = tAlbedo.Sample(fFilter, input.texCoord.xy);
 	float4 worldPos = tPosition.Sample(fFilter, input.texCoord.xy);
-	float4 pixelNormal = normalize(tNormal.Sample(fFilter, input.texCoord.xy));
+	float4 pixelNormal = tNormal.Sample(fFilter, input.texCoord.xy);
 	float4 cSpecular = tSpecular.Sample(fFilter, input.texCoord.xy);
 
 	Light lights[3] = { One, Two, Three };
@@ -64,6 +64,14 @@ float4 main(PSI input) : SV_TARGET
 			lighting += ApplySpotLight(pixelNormal.xyz, l.pos, worldPos, l.cdir, l.ratio, l.color, cAlbedo);
 			specIntensity += GetSpotlightSpecularIntensity(l.pos, l.ratio, l.cdir, EyePos, worldPos.xyz, pixelNormal.xyz);
 		}
+	}
+
+	if (pixelNormal.w < 1.0f) {
+		// In order to fit the data in the same 4 images, the W component
+		// of the normal indicates if a pixel is affected by lighting. A
+		// value of 0 means the pixel will not be lit, and to just take
+		// the full diffuse color.
+		lighting.xyz = float3(0.95, 0.95, 0.95);
 	}
 
 	return ((float4(lighting.xyz, 1) + float4(.05, .05, .05, 0)) * cAlbedo) + float4((cSpecular).xyz * specIntensity, 0);

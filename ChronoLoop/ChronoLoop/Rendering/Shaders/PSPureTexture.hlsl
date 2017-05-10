@@ -19,5 +19,8 @@ MRTOutput main(PSI input) {
 	MRTOutput output = GetMRTOutput();
 	output.diffuse = tDiffuse.Sample(diffuseFilter, input.texCoord.xy);
 	clip(output.diffuse.a - 0.25);
+
+	output.normal = float4(normalize(input.normal.xyz), 0);
+	output.position = input.wpos;
 	return output;
 }

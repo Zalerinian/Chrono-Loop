@@ -35,7 +35,7 @@ MRTOutput main(PSI input) {
 
 	output.diffuse = diffuseColor;
 	output.position = input.wpos;
-	output.normal = input.normal;
+	output.normal = float4(normalize(input.normal.xyz), 1);
 	output.specular = specularColor;
 	output.glow = emissiveColor;
 	return output;
