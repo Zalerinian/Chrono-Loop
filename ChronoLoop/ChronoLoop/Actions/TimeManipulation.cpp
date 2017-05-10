@@ -35,7 +35,7 @@ namespace Epoch
 		Level* currentLevel = LevelManager::GetInstance().GetCurrentLevel();
 
 	
-		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip) && !Settings::GetInstance().GetBool("PauseMenuUp") && !Settings::GetInstance().GetBool("CantPauseTime")) {
+		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip) && !Settings::GetInstance().GetBool("PauseMenuUp") && !Settings::GetInstance().GetBool("CantPauseTime") ) {
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			
 			
@@ -69,6 +69,7 @@ namespace Epoch
 						cLevel->GetLeftController()->GetUniqueID());
 
 					mIsBeingMade = false;
+					TimeManager::Instance()->ShowTimelineColliders(false);
 
 				} else if (!mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") >= 2)) {
 					// Stop time
@@ -101,7 +102,17 @@ namespace Epoch
 						TimeManager::Instance()->GetCurrentSnapFrame(),
 						cLevel->GetRightController()->GetUniqueID(),
 						cLevel->GetLeftController()->GetUniqueID());
+
+					TimeManager::Instance()->ShowTimelineColliders(true);
 			}
+		}
+		if(GetAsyncKeyState(VK_F2))
+		{
+			TimeManager::Instance()->ShowTimelineColliders(true);
+		}
+		else if(GetAsyncKeyState(VK_F3))
+		{
+			TimeManager::Instance()->ShowTimelineColliders(false);
 		}
 
 		// Update effect interpolator

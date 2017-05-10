@@ -140,6 +140,11 @@ namespace Epoch {
 		SetClonePair(_id3, p3);
 	}
 
+	void TimeManager::ShowTimelineColliders(bool _show)
+	{
+		mTimeline->ShowLiveObjectsColliders(_show);
+	}
+
 
 	TimeManager * TimeManager::Instance() {
 		if (!instanceTimemanager) {

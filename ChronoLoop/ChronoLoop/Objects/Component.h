@@ -132,7 +132,7 @@ namespace Epoch
 		};
 
 		ColliderType mColliderType;
-		bool mShouldMove, mIsTrigger, mPickUpAble = false;
+		bool mShouldMove, mIsTrigger, mPickUpAble = false, mShowCol = false;
 		vec3f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity, mWeight, mDragForce;
 		float mMass, mElasticity, mKineticFriction, mStaticFriction, mInvMass, mRHO, mDrag, mArea;
 

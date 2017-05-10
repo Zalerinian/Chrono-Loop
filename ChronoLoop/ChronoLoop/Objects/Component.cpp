@@ -211,13 +211,16 @@ namespace Epoch
 
 	void CubeCollider::Update()
 	{
-		if (Settings::GetInstance().GetBool("ShowColliders"))
+		if (Settings::GetInstance().GetBool("ShowColliders") || mShowCol)
 		{
 			visible = true;
 			if (mNode == nullptr)
 			{
 				mShape->AddTexture("../Resources/red.png", eTEX_DIFFUSE);
+				if(!mShowCol)
 				mNode = Renderer::Instance()->AddOpaqueNode(*mShape);
+				else
+				mNode = Renderer::Instance()->AddTopmostNode(*mShape);
 			}
 			vec3f size = mMax - mMin;
 			matrix4 pos = matrix4::CreateScale(size.x, size.y, size.z);
