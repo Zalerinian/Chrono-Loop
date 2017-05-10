@@ -70,7 +70,7 @@ namespace Epoch {
 	}
 
 	void RenderShape::Load(const char * _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs) {
-		mName = std::string("Shape: ") + _path;
+		mName = std::string("Shape: ") + (_path + strlen("../Resources/"));
 		mMesh = MeshCache::GetInstance().GetMesh(_path);
 		if (_invert) {
 			mMesh->Invert();
@@ -80,7 +80,7 @@ namespace Epoch {
 	}
 
 	void RenderShape::Load(const char * _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs, GeometryShaderFormat _gs) {
-		mName = std::string("Shape: ") + _path;
+		mName = std::string("Shape: ") + (_path + strlen("../Resources/"));
 		mMesh = MeshCache::GetInstance().GetMesh(_path);
 		if (_invert) {
 			mMesh->Invert();
