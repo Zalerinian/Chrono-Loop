@@ -622,6 +622,12 @@ namespace Epoch {
 	{
 		for(auto obj : mLiveObjects)
 		{
+			Level* clevel = LevelManager::GetInstance().GetCurrentLevel();
+			if (obj.second->GetUniqueID() == clevel->GetHeadset()->GetUniqueID() ||
+				obj.second->GetUniqueID() == clevel->GetRightController()->GetUniqueID() ||
+				obj.second->GetUniqueID() == clevel->GetLeftController()->GetUniqueID())
+				continue;
+
 			Collider* col = (Collider*)obj.second->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
 			if(col)
 			{
