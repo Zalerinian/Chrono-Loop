@@ -144,8 +144,8 @@ namespace Epoch {
 												int asize = mEnvironmentObjects[j]->GetComponentCount(eCOMPONENT_MESH);
 												for (int a = 0; a < asize; ++a)
 												{
-													Triangle *tris = ((MeshComponent*)mEnvironmentObjects[i]->GetComponentIndexed(eCOMPONENT_MESH, a))->GetTriangles();
-													size_t numTris = ((MeshComponent*)mEnvironmentObjects[i]->GetComponentIndexed(eCOMPONENT_MESH, a))->GetTriangleCount();
+													Triangle *tris = ((MeshComponent*)mEnvironmentObjects[j]->GetComponentIndexed(eCOMPONENT_MESH, a))->GetTriangles();
+													size_t numTris = ((MeshComponent*)mEnvironmentObjects[j]->GetComponentIndexed(eCOMPONENT_MESH, a))->GetTriangleCount();
 													for (unsigned int k = 0; k < numTris; ++k)
 													{
 														float hitTime = FLT_MAX;

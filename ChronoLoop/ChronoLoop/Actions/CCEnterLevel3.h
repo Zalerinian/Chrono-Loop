@@ -91,7 +91,7 @@ namespace Epoch {
 					rightRaycaster->SetPixelShader(ePS_PURETEXTURE);
 					mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 					mc->SetPixelShader(ePS_PURETEXTURE);
-					Level3TeleportAction *ta = new Level3TeleportAction(eControllerType_Primary);
+					TeleportAction *ta = new TeleportAction(eControllerType_Primary);
 					TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
 					RightController->AddComponent(mc);
 					RightController->AddComponent(rightConCol);
@@ -266,7 +266,7 @@ namespace Epoch {
 					leftRaycaster->SetPixelShader(ePS_PURETEXTURE);
 					mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 					mc2->SetPixelShader(ePS_PURETEXTURE);
-					Level3TeleportAction *ta2 = new Level3TeleportAction(eControllerType_Secondary);
+					TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
 					LeftController->AddComponent(mc2);
 					LeftController->AddComponent(leftConCol);
 					LeftController->AddComponent(pickup2);

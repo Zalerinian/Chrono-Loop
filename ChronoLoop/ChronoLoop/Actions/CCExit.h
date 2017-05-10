@@ -15,8 +15,7 @@ namespace Epoch
 		{
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			mPB = new CCProgressBar();
-			mExitSign = cLevel->
-				("mmExitSign");
+			mExitSign = cLevel->FindObjectWithName("mmExitSign");
 			mPB->SetCurProgress(0);
 			mPB->SetFinalProgress(300);
 			mExitSign->AddComponent(mPB);
