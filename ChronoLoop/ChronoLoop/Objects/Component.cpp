@@ -224,7 +224,7 @@ namespace Epoch
 			}
 			vec3f size = mMax - mMin;
 			matrix4 pos = matrix4::CreateScale(size.x, size.y, size.z);
-			pos.Position = (mMax - mMin) / 2 + mMin;
+			pos.Position = (mMax - mMin) / 2.0f + mMin;
 			mNode->data = pos;
 		}
 		else if (visible)

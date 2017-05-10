@@ -106,39 +106,15 @@ namespace Epoch
 					{
 						CubeCollider* col = (CubeCollider*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
 						if (col) {
-							col->visible = true;
-							if (col->mNode == nullptr) {
-								col->mShape->AddTexture("../Resources/red.png", eTEX_DIFFUSE);
-								col->mNode = Renderer::Instance()->AddTopmostNode(*col->mShape);
-							}
-							vec3f size = col->mMax - col->mMin;
-							matrix4 pos = matrix4::CreateScale(size.x, size.y, size.z);
-							pos.Position = (col->mMax - col->mMin) / 2 + col->mMin;
-							col->mNode->data = pos;
+							col->mShowCol = true;
 						}
 						col = (CubeCollider*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
 						if (col) {
-							col->visible = true;
-							if (col->mNode == nullptr) {
-								col->mShape->AddTexture("../Resources/red.png", eTEX_DIFFUSE);
-								col->mNode = Renderer::Instance()->AddTopmostNode(*col->mShape);
-							}
-							vec3f size = col->mMax - col->mMin;
-							matrix4 pos = matrix4::CreateScale(size.x, size.y, size.z);
-							pos.Position = (col->mMax - col->mMin) / 2 + col->mMin;
-							col->mNode->data = pos;
+							col->mShowCol = true;
 						}
 						col = (CubeCollider*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
 						if (col) {
-							col->visible = true;
-							if (col->mNode == nullptr) {
-								col->mShape->AddTexture("../Resources/red.png", eTEX_DIFFUSE);
-								col->mNode = Renderer::Instance()->AddTopmostNode(*col->mShape);
-							}
-							vec3f size = col->mMax - col->mMin;
-							matrix4 pos = matrix4::CreateScale(size.x, size.y, size.z);
-							pos.Position = (col->mMax - col->mMin) / 2 + col->mMin;
-							col->mNode->data = pos;
+							col->mShowCol = true;
 						}
 					}
 					TimeManager::Instance()->ShowTimelineColliders(true);
@@ -367,6 +343,7 @@ namespace Epoch
 		TimeManager::Instance()->UpdatePlayerObjectInTimeline(_headset);
 		TimeManager::Instance()->UpdatePlayerObjectInTimeline(_controller1);
 		TimeManager::Instance()->UpdatePlayerObjectInTimeline(_controller2);
+
 		
 		TimeManager::Instance()->SetupClonePairs(_headset->GetUniqueID(),_controller1->GetUniqueID(), _controller2->GetUniqueID());
 	}
