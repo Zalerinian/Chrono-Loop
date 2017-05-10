@@ -430,13 +430,10 @@ namespace Epoch
 		{
 			if ((*iter)->IsActive() == false)
 			{
-				(*i).pos = vec4f(0, 0, 0, 0);
-				(*i).size = 0;
-				Particle* temp = (*iter);
+				delete (*iter);
 				iter = mParticles.erase(iter);
 				if (iter == mParticles.end())
 					break;
-				delete temp;
 			}
 		}
 	}
@@ -464,6 +461,7 @@ namespace Epoch
 			{
 				//Particle* p = &Particle::Init(*mBase);
 				Particle* p = new Particle();
+				p->emitterType = 0xFFEEDDCC;
 				(*p) = (*mBase);
 				float x, y, z;
 				x = (mMinPX + mPos.x) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPX + mPos.x) - (mMinPX + mPos.x))));
@@ -717,6 +715,7 @@ namespace Epoch
 			{
 				//Particle* p = &Particle::Init(*mBase);
 				Particle* p = new Particle();
+				p->emitterType = 0x000000FF;
 				(*p) = (*mBase);
 				float x, y, z;
 				x = (mMinPX + mPos.x) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPX + mPos.x) - (mMinPX + mPos.x))));
@@ -772,6 +771,7 @@ namespace Epoch
 			{
 				//Particle* p = &Particle::Init(*mBase);
 				Particle* p = new Particle();
+				p->emitterType = 0x0000FF00;
 				(*p) = (*mBase);
 				float x, y, z;
 				x = (mMinPX + mPos.x) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPX + mPos.x) - (mMinPX + mPos.x))));
@@ -838,6 +838,7 @@ namespace Epoch
 			{
 				//Particle* p = &Particle::Init(*mBase);
 				Particle* p = new Particle();
+				p->emitterType = 0x10FF0002;
 				(*p) = (*mBase);
 				float x, y, z;
 				x = (mMinPX + mPos.x) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPX + mPos.x) - (mMinPX + mPos.x))));
