@@ -76,6 +76,7 @@ namespace Epoch
 		{
 			if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName() != "Buttonstand")
 			{
+
 				colliding = true;
 				//SystemLogger::GetLog() << "Colliding" << std::endl;
 				//Interp stuff

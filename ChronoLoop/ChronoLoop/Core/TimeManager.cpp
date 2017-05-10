@@ -521,10 +521,10 @@ namespace Epoch {
 				//SystemLogger::GetLog() << "mRewindGettingFaster: " << mRewindGettingFaster << std::endl;
 				//SystemLogger::GetLog() << "mRewindShouldGetFaster: " << mRewindShouldGetFaster << std::endl;
 				if (_gesture == 1)
-					Settings::GetInstance().SetUInt("TutorialRewind - CurProgress", Settings::GetInstance().GetUInt("TutorialRewind - CurProgress") - 1);
+					Settings::GetInstance().SetUInt("TutorialRewind - CurProgress", Settings::GetInstance().GetUInt("TutorialRewind - CurProgress") - mRewindGettingFaster);
 				if (_gesture == -1)
-					Settings::GetInstance().SetUInt("TutorialRewind - CurProgress", Settings::GetInstance().GetUInt("TutorialRewind - CurProgress") + 1);
-				if(Settings::GetInstance().GetUInt("TutorialRewind - CurProgress") == Settings::GetInstance().GetUInt("TutorialRewind - FinalProgress"))//Rewind
+					Settings::GetInstance().SetUInt("TutorialRewind - CurProgress", Settings::GetInstance().GetUInt("TutorialRewind - CurProgress") + mRewindGettingFaster);
+				if(Settings::GetInstance().GetUInt("TutorialRewind - CurProgress") >= Settings::GetInstance().GetUInt("TutorialRewind - FinalProgress"))//Rewind
 				{
 					if (Settings::GetInstance().GetInt("tutStep") == 3)
 					{
@@ -579,6 +579,7 @@ namespace Epoch {
 		}
 		if(Settings::GetInstance().GetInt("CurrentLevel") == 3)
 		{
+			Settings::GetInstance().SetBool("ResetElevator", true);
 			std::vector<Component*>& comps = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetComponents(eCOMPONENT_CODE);
 			for (unsigned int i = 0; i < comps.size(); i++) {
 				if (dynamic_cast<CCMazeHelper*>(comps[i])) {
