@@ -25,7 +25,8 @@ namespace Epoch
 			mLevel = LevelManager::GetInstance().GetCurrentLevel();
 			Settings::GetInstance().SetBool("PlayerHit", false);
 			mCol = (Collider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
-			std::vector<Component*>&comps = LevelManager::GetInstance().GetCurrentLevel()->FindObjectWithName("L3Button")->GetComponents(eCOMPONENT_CODE);
+			std::vector<Component*>&comps = LevelManager::GetInstance().GetCurrentLevel()->
+				("L3Button")->GetComponents(eCOMPONENT_CODE);
 			for (unsigned int i = 0; i < comps.size(); i++) {
 				if(dynamic_cast<CCMazeHelper*>(comps[i]))
 				{

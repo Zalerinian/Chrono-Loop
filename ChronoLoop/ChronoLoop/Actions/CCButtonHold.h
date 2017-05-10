@@ -32,8 +32,8 @@ namespace Epoch
 		{
 
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
-			Block = cLevel->FindObjectWithName("TransparentDoor1");
-			Exit = cLevel->FindObjectWithName("TransparentDoor2");
+			Block = cLevel->FindObjectWithName("EnvTransparentDoor1");
+			Exit = cLevel->FindObjectWithName("EnvTransparentDoor2");
 			blockInterp = TimeManager::Instance()->GetObjectInterpolator(Block->GetUniqueID());
 			exitInterp = TimeManager::Instance()->GetObjectInterpolator(Exit->GetUniqueID());
 

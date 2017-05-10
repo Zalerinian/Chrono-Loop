@@ -24,8 +24,8 @@ namespace Epoch
 			((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mPress = true;
 			Level* clevel = LevelManager::GetInstance().GetCurrentLevel();
 			tutButton = clevel->FindObjectWithName("tutButton");
-			tutChamber = clevel->FindObjectWithName("tutChamber");
-			tutDoor = clevel->FindObjectWithName("TransparentDoor3");
+			tutChamber = clevel->FindObjectWithName("EnvtutChamber");
+			tutDoor = clevel->FindObjectWithName("EnvTransparentDoor3");
 
 			doorInterp = TimeManager::Instance()->GetObjectInterpolator(tutDoor->GetUniqueID());
 			chamberInterp = TimeManager::Instance()->GetObjectInterpolator(tutChamber->GetUniqueID());

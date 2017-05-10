@@ -26,8 +26,8 @@ namespace Epoch {
 
 		virtual void Start() {
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
-			mChamberObject = cLevel->FindObjectWithName("L3Elevator");
-			mButtonStand = cLevel->FindObjectWithName("L3Buttonstand");
+			mChamberObject = cLevel->FindObjectWithName("L3ElevatorFloor");
+			mButtonStand = cLevel->FindObjectWithName("EnvL3Buttonstand");
 			mEleStart = mChamberObject->GetTransform().GetMatrix();
 			mButStart = mObject->GetTransform().GetMatrix();
 			mStandStart = mButtonStand->GetTransform().GetMatrix();
