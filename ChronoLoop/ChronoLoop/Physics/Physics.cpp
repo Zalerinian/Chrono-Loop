@@ -7,6 +7,7 @@
 #include "..\Actions\CodeComponent.hpp"
 #include "..\Input\VRInputManager.h"
 #include "..\Core\LevelManager.h"
+#include "../Common/Settings.h"
 
 #define DEBUG_LEVEL1 0
 #define DEBUG_LEVEL2 0

@@ -191,6 +191,11 @@ namespace Epoch
 		}
 		virtual void Update()
 		{
+			if(Settings::GetInstance().GetBool("DidRealStuffInPauseMenu"))
+			{
+				Settings::GetInstance().SetBool("DidRealStuffInPauseMenu", false);
+				OnDisable();
+			}
 			if ((!PauseMenuisUp && scaleY > 0.0f) || (PauseMenuisUp && scaleX <= 20.0f)) {
 				if ((!PauseMenuisUp && scaleY > 0.0f)) {
 					OnEnable();

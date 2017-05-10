@@ -52,7 +52,9 @@ namespace Epoch {
 					SystemLogger::GetLog() << "Id: " << mCollider->GetBaseObject()->GetUniqueID() << " Released object" << std::endl;
 					ReleaseObject();
 				}
-			} else if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == -1 && !mCollider->mHitting.empty() && ((!paused) || !Settings::GetInstance().GetBool("PauseMenuUp"))) {
+			} else if (mInput->mData.mButton == vr::k_EButton_SteamVR_Trigger && mInput->mData.mButtonState == -1 && !mCollider->mHitting.empty() && (!paused)) {
+				if (Settings::GetInstance().GetBool("PauseMenuUp"))
+					Settings::GetInstance().SetBool("DidRealStuffInPauseMenu", true);
 				if (mIsGrabOnCooldown) {
 					(mGrabTimeout + mGrabTimestamp < TimeManager::Instance()->GetTotalGameTime()) ? mIsGrabOnCooldown = false : mIsGrabOnCooldown = true;
 				}
