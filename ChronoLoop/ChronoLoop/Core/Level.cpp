@@ -997,7 +997,7 @@ namespace Epoch {
 							file.read((char *)&pickupable, sizeof(byte));
 						}
 
-						vec3f position, rotation, scale, gravity(0, -9.81, 0);
+						vec3f position, rotation, scale, gravity(0, -9.81f, 0);
 						file.read((char *)&position.x, sizeof(float));
 						file.read((char *)&position.y, sizeof(float));
 						file.read((char *)&position.z, sizeof(float));

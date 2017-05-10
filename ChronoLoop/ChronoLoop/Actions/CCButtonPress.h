@@ -134,7 +134,6 @@ namespace Epoch
 					colliding = false;
 				}
 			}
-		}
 		virtual void Update()
 		{
 			if (!LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->isTimePaused()) {
