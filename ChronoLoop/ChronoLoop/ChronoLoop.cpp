@@ -28,7 +28,6 @@
 #include "Actions/HeadsetFollow.hpp"
 #include "Actions\CodeComponent.hpp"
 #include "Actions/CCButtonPress.h"
-#include "Actions\CCEnterLevel.h"
 #include "Actions/MainMenuBT.h"
 #include "Core/Level.h"
 #include "Common/Logger.h"

@@ -61,7 +61,7 @@ namespace Epoch {
 						//SystemLogger::Debug() << "Touchpad Pressed" << std::endl;
 						vec4f forward(0, 0, 1, 0);
 						float controllerTime = 0, wallTime = FLT_MAX;
-						int Esize = mEnvironmentObjects.size();
+						size_t Esize = mEnvironmentObjects.size();
 						for (int i = 0; i < Esize; ++i) {
 							forward.Set(0, 0, 1, 0);
 							matrix4 objMat = mEnvironmentObjects[i]->GetTransform().GetMatrix();
@@ -93,7 +93,7 @@ namespace Epoch {
 							}
 						}
 
-						int size = mPlaneObjects.size();
+						size_t size = mPlaneObjects.size();
 						for (int m = 0; m < size; ++m)
 						{
 							int mmsize = mPlaneObjects[m]->GetComponentCount(eCOMPONENT_MESH);
@@ -131,7 +131,7 @@ namespace Epoch {
 											mat = mat.Invert();
 											mat.Position = pos;
 											controllerTime = 0, wallTime = FLT_MAX;
-											int Esize = mEnvironmentObjects.size();
+											size_t Esize = mEnvironmentObjects.size();
 											for (int j = 0; j < Esize; ++j)
 											{
 												forward.Set(0, 0, 1, 0);

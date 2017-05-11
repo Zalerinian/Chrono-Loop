@@ -58,7 +58,6 @@ namespace Epoch
 
 						if (Settings::GetInstance().GetInt("tutStep") == 1) {
 							Settings::GetInstance().SetUInt("tut1ButtonPress", TimeManager::Instance()->GetCurrentSnapFrame());
-							float t = Settings::GetInstance().GetUInt("tut1ButtonPress");
 							chamberInterp->SetActive(true);
 							chamberInterp->Prepare(0.2f, tutChamber->GetTransform().GetMatrix(), chamberEnd, tutChamber->GetTransform().GetMatrix());
 						}

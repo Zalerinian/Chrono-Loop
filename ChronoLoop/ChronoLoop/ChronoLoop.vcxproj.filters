@@ -366,9 +366,6 @@
     <ClInclude Include="Rendering\RenderList.h">
       <Filter>Rendering\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\CCEnterLevel.h">
-      <Filter>Actions</Filter>
-    </ClInclude>
     <ClInclude Include="Actions\MainMenuBT.h">
       <Filter>Actions</Filter>
     </ClInclude>
@@ -549,6 +546,12 @@
     </ClInclude>
     <ClInclude Include="Actions\BoxSnapToControllerAction.hpp">
       <Filter>Actions\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCEnterLevel2.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCEnterLevel4.h">
+      <Filter>Actions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
