@@ -74,12 +74,13 @@ namespace Epoch
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time)
 		{
-			if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName() != "Buttonstand")
+			if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName() != "EnvButtonstand")
 			{
 
 				colliding = true;
 				//SystemLogger::GetLog() << "Colliding" << std::endl;
 				//Interp stuff
+				
 
 				if (!tempDoor) {
 					blockInterp->SetActive(true);
@@ -133,20 +134,23 @@ namespace Epoch
 				mSoundOnce = true;
 				}
 
-				vec3f norm = ((ButtonCollider*)&_col)->mPushNormal;
-				vec3f tForce = norm * (norm * _other.mTotalForce);
-				vec3f vel = norm * (norm * _other.mVelocity);
-				vec3f accel = norm * (norm * _other.mAcceleration);
-				if (tForce * norm < 0 && vel * norm < 0 && accel * norm < 0)
-				{
-					_col.mTotalForce = tForce;
-					_col.mVelocity = vel;
-					_col.mAcceleration = vel / _time;
-					//blockCube->SetPos(blockend);
-				}
 				ButtonCollider* butCol = (ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
-				if (_other.mVelocity * butCol->mPushNormal < .1f)
+
+				if (fabsf(_other.mVelocity * butCol->mPushNormal) < .1f)
 					butCol->mVelocity = vec3f(0, 0, 0);
+				else
+				{
+					vec3f norm = ((ButtonCollider*)&_col)->mPushNormal;
+					vec3f tForce = norm * (norm * _other.mTotalForce);
+					vec3f vel = norm * (norm * _other.mVelocity);
+					vec3f accel = norm * (norm * _other.mAcceleration);
+					if (tForce * norm < 0 && vel * norm < 0 && accel * norm < 0) {
+						_col.mTotalForce = tForce;
+						_col.mVelocity = vel;
+						_col.mAcceleration = vel / _time;
+						//blockCube->SetPos(blockend);
+					}
+				}
 			}
 			
 		}

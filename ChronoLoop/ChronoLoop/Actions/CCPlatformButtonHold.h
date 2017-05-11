@@ -23,6 +23,7 @@ namespace Epoch
 		{
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			platform = cLevel->FindObjectWithName("Platform");
+			platInterp = TimeManager::Instance()->GetObjectInterpolator(platform->GetUniqueID());
 			start = platform->GetTransform().GetMatrix();
 			end = start * matrix4::CreateTranslation(-4, 0, 0);
 		}
@@ -84,12 +85,9 @@ namespace Epoch
 						doneInterp = false;
 					}
 
-					if (canInterp && !doneInterp)
-					{
+					if (canInterp && !doneInterp) {
 						doneInterp = (platInterp->Update(TimeManager::Instance()->GetDeltaTime()));
-					}
-					else
-					{
+					} else {
 						canInterp = false;
 						platInterp->SetActive(false);
 					}
