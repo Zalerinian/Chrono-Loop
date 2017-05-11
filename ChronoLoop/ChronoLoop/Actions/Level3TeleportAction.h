@@ -246,15 +246,15 @@ namespace Epoch {
 					return true;
 				}
 
-				if (CheckMesh(_plane, lastpos, nextpos, hit))
+				if (CheckMesh(mUpperPlaneMesh, lastpos, nextpos, hit))
 				{
-					//if it hits the plane
 					_arc.push_back(hit);
 
 					return true;
 				}
-				if (CheckMesh(mUpperPlaneMesh, lastpos, nextpos, hit))
+				if (CheckMesh(_plane, lastpos, nextpos, hit))
 				{
+					//if it hits the plane
 					_arc.push_back(hit);
 
 					return true;

@@ -250,35 +250,7 @@ namespace Epoch {
 					return true;
 				}
 
-				if (CheckMesh(mServerMesh, lastpos, nextpos, hit))
-				{
-					vec3f floorhit;
-
-					if (ChecktoFloor(_plane, hit, vec3f(0, -1, 0), floorhit))
-					{
-						_arc.push_back(floorhit);
-					}
-					else
-						_arc.push_back(hit);
-
-					return true;
-				}
-
 				if (CheckMesh(mExitMesh, lastpos, nextpos, hit))
-				{
-					vec3f floorhit;
-
-					if (ChecktoFloor(_plane, hit, vec3f(0, -1, 0), floorhit))
-					{
-						_arc.push_back(floorhit);
-					}
-					else
-						_arc.push_back(hit);
-
-					return true;
-				}
-
-				if (CheckMesh(mBlockMesh, lastpos, nextpos, hit))
 				{
 					vec3f floorhit;
 
