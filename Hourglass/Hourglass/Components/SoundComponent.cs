@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using System.Collections;
+using System.Diagnostics;
 
 namespace Hourglass {
 	class SoundComponent : Component {
@@ -223,22 +224,37 @@ namespace Hourglass {
 						if (mID["play"].Contains(id)) {
 							mEvent[i].SelectedIndex = mEvent[i].Items.IndexOf("play");
 							mSound[i].SelectedIndex = mID["play"].IndexOf(id);
+							if (mSound[i].SelectedIndex < 0) {
+								Debug.Print("Could not find play event " + id);
+							}
 						} else {
 							mEvent[i].SelectedIndex = mEvent[i].Items.IndexOf("sfx");
 							mSound[i].SelectedIndex = mID["sfx"].IndexOf(id);
+							if(mSound[i].SelectedIndex < 0) {
+								Debug.Print("Could not find sfx event " + id);
+							}
 						}
 						break;
 					case 1:
 						mEvent[i].SelectedIndex = mEvent[i].Items.IndexOf("pause");
 						mSound[i].SelectedIndex = mID["pause"].IndexOf(id);
+						if (mSound[i].SelectedIndex < 0) {
+							Debug.Print("Could not find pause event " + id);
+						}
 						break;
 					case 2:
 						mEvent[i].SelectedIndex = mEvent[i].Items.IndexOf("resume");
 						mSound[i].SelectedIndex = mID["resume"].IndexOf(id);
+						if (mSound[i].SelectedIndex < 0) {
+							Debug.Print("Could not find resume event " + id);
+						}
 						break;
 					case 3:
 						mEvent[i].SelectedIndex = mEvent[i].Items.IndexOf("stop");
 						mSound[i].SelectedIndex = mID["stop"].IndexOf(id);
+						if (mSound[i].SelectedIndex < 0) {
+							Debug.Print("Could not find stop event " + id);
+						}
 						break;
 					default:
 						break;
@@ -293,7 +309,7 @@ namespace Hourglass {
 		}
 
 		public override void CopyData(ref Component _other) {
-			if (!(_other is TransformComponent)) {
+			if (!(_other is SoundComponent)) {
 				throw new InvalidDataException("Given component does not match the calling type.");
 			}
 			SoundComponent comp = _other as SoundComponent;

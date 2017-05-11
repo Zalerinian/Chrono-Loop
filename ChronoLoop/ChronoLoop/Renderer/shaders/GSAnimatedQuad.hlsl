@@ -18,7 +18,7 @@ cbuffer ViewData : register(b0) {
 	EyeData eyes[2];
 }
 
-cbuffer _AnimationData {
+cbuffer _AnimationData : register(b2) {
 	AnimationData animationData[64];
 };
 

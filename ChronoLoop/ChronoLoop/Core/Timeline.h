@@ -22,6 +22,9 @@ namespace Epoch {
 	{
 		bool misVisible = true;
 	};
+	struct SnapComponent_Code_MazeHelp : SnapComponent {
+		int mMazeGrid[4][4];
+	};
 	//Add more componets when we need it
 #pragma endregion ComponetStructs
 

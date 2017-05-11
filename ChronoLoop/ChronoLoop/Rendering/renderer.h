@@ -12,6 +12,7 @@
 #include "RenderShape.h"
 #include <wrl/client.h>
 #include <mutex>
+#include <bitset>
 
 #define num_lights 3
 
@@ -27,40 +28,81 @@ namespace Epoch {
 		//TODO: Light buffers
 		Light * mLData[num_lights];
 
+		std::bitset<32> mEnabledFeatures;
+
+		enum RendererFeature {
+			eRendererFeature_Glow = 0,
+			eRendererFeature_SuperGlow,
+			eRendererFeature_Bloom,
+			eRendererFeature_MAX
+		};
+
+
+		static void ProcessCommand(void* _console, std::wstring _arguments);
+
+
 		// Instance members
 		// D3D11 Variables
 		Microsoft::WRL::ComPtr<ID3D11Device> mDevice;
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> mContext;
 		Microsoft::WRL::ComPtr<IDXGISwapChain> mChain;
 		Microsoft::WRL::ComPtr<IDXGIFactory1> mFactory;
-		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mMainView, mSceneView;
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> mMainViewTexture;
+		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mMainView, mPostProcessRTV, mBloomRTV, mGlowRTV, mSuperGlowRTV;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDSView;
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> mDepthBuffer, mSceneTexture;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> mMainViewTexture, mDepthBuffer, mPostProcessTexture, mBloomTexture, mGlowTexture, mSuperGlowTexture;
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> mSamplerState;
-		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> mTransparentState, mOpaqueState, mTopmostState;
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mSceneSRV;
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> mTransparentState, mOpaqueState;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mPostProcessSRV, mBloomSRV, mGlowSRV, mSuperGlowSRV;
 		Microsoft::WRL::ComPtr<ID3D11BlendState> mOpaqueBlendState, mTransparentBlendState;
 		D3D11_VIEWPORT mLeftViewport, mRightViewport, mFullViewport;
 		HWND mWindow;
 
 		vr::IVRSystem* mVrSystem;
 		RenderSet mOpaqueSet, mTransparentSet, mTopmostSet;
-		Microsoft::WRL::ComPtr<ID3D11Buffer> mVPBuffer, mPositionBuffer, mSimInstanceBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mVPBuffer, mPositionBuffer, mSimInstanceBuffer, mHeadPosBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mLBuffer;
 		bool mUseVsync = false;
-		//ShadowMap 1 - Directional, 2 - Point, 3 - Spot
-		Microsoft::WRL::ComPtr<ID3D11VertexShader> mShadowVS, mShadowVS2;
-		Microsoft::WRL::ComPtr<ID3D11PixelShader> mPSST;
-		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mSDSView[2];
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> mShadowTextures[2];
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mShadowSRV[2];
-		Microsoft::WRL::ComPtr<ID3D11SamplerState> mSSamplerState;
-		Microsoft::WRL::ComPtr<ID3D11Buffer> mPLBufferS, mPLBSDir;
-		ViewProjectionBuffer mPLVPB;
-		D3D11_VIEWPORT mShadowVP;
 
-		RenderShape* mScenePPQuad = nullptr, *mSceneScreenQuad = nullptr;
+		// The G-Buffer
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> mAlbedoTexture, mPositionTexture, mNormalTexture, mSpecularTexture;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mAlbedoSRV, mPositionSRV, mNormalSRV, mSpecularSRV;
+		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mAlbedoRTV, mPositionRTV, mNormalRTV, mSpecularRTV;
+
+		// Blurring variables & Functions
+		enum BlurPingPong {
+			BlurPingPong_Ping = 0,
+			BlurPingPong_Pong
+		};
+		enum BlurStage {
+			BLUR_STAGE_SAMPLE = 0,
+			BLUR_STAGE_BLUR
+		};
+		struct BlurData {
+			union {
+				struct {
+					unsigned int stage;
+					float sigma;
+					float dx;
+					float dy;
+				};
+				vec4i padding;
+			};
+			BlurData() {
+				stage = 0;
+				sigma = 1.0f;
+				dx = dy = 0;
+			}
+		} mBlurData;
+		enum BlurTextureSet {
+			BlurTextureSet_Ping = 0,
+			BlurTextureSet_Pong
+		} mBlurTextureSet = BlurTextureSet_Pong; // Default to pong so that the first call to toggle sets it to render to the Ping set.
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mBlurStageBuffer;
+		void RenderBlurStage(BlurStage _s, float _dx, float _dy);
+		void ToggleBlurTextureSet(unsigned int _texturesPerSet, ID3D11RenderTargetView **_rtvs, ID3D11ShaderResourceView **_srvs);
+		void SetBlurTexturesDrawback(unsigned int _texturesPerSet, ID3D11RenderTargetView **_drawbacks, ID3D11ShaderResourceView **_srvs);
+
+		RenderShape* mScenePPQuad = nullptr, *mSceneScreenQuad = nullptr, *mDeferredCombiner = nullptr;
 		RenderContext mCurrentContext;
 
 		std::mutex mRendererLock;
@@ -83,6 +125,9 @@ namespace Epoch {
 		void SetStaticBuffers();
 		void InitializeStates();
 
+		void AttachPrimaryViewports();
+		void AttachPrimaryRTVs();
+
 		matrix4 mEyePosLeft, mEyePosRight, mEyeProjLeft, mEyeProjRight, mHMDPos;
 
 		POINT mMouseOrigin;
@@ -93,13 +138,15 @@ namespace Epoch {
 		void UpdateViewProjection();
 		void UpdateGSBuffers();
 		void UpdateLBuffers();
-		void RenderShadowMaps(float _delta);
 		
 		void RenderVR(float _delta);
 		void UpdateCamera(float const moveSpd, float const rotSpd, float delta);
 		void RenderNoVR(float _delta);
 		void ProcessRenderSet();
 		void RenderScreenQuad();
+
+		void RenderForBloom();
+
 
 		Renderer();
 		~Renderer();
@@ -131,6 +178,7 @@ namespace Epoch {
 
 		void ClearRenderSet();
 
+		bool BlurTextures(ID3D11Texture2D **_textures, unsigned int _numTextures, float _sigma, float _downsample = 0.5f);
 
 		inline Microsoft::WRL::ComPtr<ID3D11Device>& GetDevice() { return mDevice; }
 		inline Microsoft::WRL::ComPtr<ID3D11DeviceContext>& GetContext() { return mContext; }
@@ -142,7 +190,7 @@ namespace Epoch {
 		inline HWND GetWindow() { return mWindow; }
 		inline RenderShape* GetSceneQuad() { return mScenePPQuad; }
 		inline std::mutex& GetRendererLock() { return mRendererLock; }
-		inline void SetLight(Light* _light, int _i) { mLData[_i] = _light; }
-		inline void ClearLights() { for (int x = 0; x < 3; ++x) { delete mLData[x]; } }
+		void SetLight(Light* _light, int _i);
+		inline void ClearLights() { for (int x = 0; x < 3; ++x) { delete mLData[x]; mLData[x] = nullptr; } }
 	};
 }

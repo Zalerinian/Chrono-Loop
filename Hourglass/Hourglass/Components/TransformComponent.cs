@@ -409,6 +409,7 @@ namespace Hourglass
 		{
 			mNameIsPlaceholder = false;
 			Name = new string(r.ReadChars(r.ReadInt32()));
+			//r.ReadByte(); // Skip null terminator, because C# is weird.
 			Owner.Node.Text = Name;
 			mPosX.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			mPosY.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));

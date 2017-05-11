@@ -110,7 +110,7 @@ namespace Epoch
 
 	void Pool::iAddObject(BaseObject * _obj)
 	{
-
+		_obj->Destroy();
 		Node* n = new Node;
 		n->data = _obj;
 		n->mNext = mHead;

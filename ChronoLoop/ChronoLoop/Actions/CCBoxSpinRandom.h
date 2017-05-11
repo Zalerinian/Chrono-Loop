@@ -21,8 +21,8 @@ namespace Epoch {
 			flip = true;
 			angle = rand() % 360;
 			mIncrease = (0) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((1) - (0))));
-			mRandDur = (rand() % 30) + 1;
-			mRandDown = ((rand() % 5) + 1) * -1;
+			mRandDur = (rand() % 20) + 6;
+			mRandDown = ((rand() % 5) + 1);
 			mRandUp = (rand() %5) + 1;
 			float rad = DirectX::XM_PI / 2;
 			float pi = DirectX::XM_PI;
@@ -42,10 +42,10 @@ namespace Epoch {
 			if (!mManip || (mManip && !mManip->isTimePaused())) {
 				if (interp.Update(TimeManager::Instance()->GetDeltaTime())) {
 					if (flip) {
-						interp.Prepare(mRandDur, m2, m1, mObject->GetTransform().GetMatrix());
+						interp.Prepare((float)mRandDur, m2, m1, mObject->GetTransform().GetMatrix());
 						flip = false;
 					} else {
-						interp.Prepare(mRandDur, m1, m2, mObject->GetTransform().GetMatrix());
+						interp.Prepare((float)mRandDur, m1, m2, mObject->GetTransform().GetMatrix());
 						flip = true;
 					}
 				}

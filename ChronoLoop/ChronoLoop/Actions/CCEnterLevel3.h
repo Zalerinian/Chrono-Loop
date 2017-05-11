@@ -41,7 +41,8 @@ namespace Epoch {
 		void SetOnce(bool _set) { once = _set; };
 		bool GetOnce() { return once; };
 		virtual void OnTriggerEnter(Collider& _col1, Collider& _col2) {
-			once = false;
+			if (Settings::GetInstance().GetBool("CompleteLevel2"))
+				once = false;
 		}
 		virtual void Start() {
 			once = true;
@@ -80,8 +81,8 @@ namespace Epoch {
 					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
-					CCMazeHelper* fuk = new CCMazeHelper();
-					headset->AddComponent(fuk);
+					CubeCollider* col = new CubeCollider(headset, false, false, vec3f(), 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f));
+					headset->AddComponent(col);
 
 					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
 					BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
@@ -161,7 +162,7 @@ namespace Epoch {
 						std::string str("Clone Display");
 						cdisp->AddTexture(str.c_str(), eTEX_DIFFUSE);
 						cdisp->SetPixelShader(ePS_PURETEXTURE);
-						Font* font = new Font();
+						//Font* font = new Font();
 						cdisp->GetContext().mTextures[eTEX_DIFFUSE] = srv;
 						UICloneText* ct = new UICloneText();
 						cloneDisplay->AddComponent(ct);
@@ -187,7 +188,7 @@ namespace Epoch {
 						cdisp->AddTexture(str.c_str(), eTEX_DIFFUSE);
 						cdisp->SetPixelShader(ePS_PURETEXTURE);
 
-						Font* font = new Font();
+						//Font* font = new Font();
 						cdisp->GetContext().mTextures[eTEX_DIFFUSE] = srv;
 						UICloneText* ct = new UICloneText();
 						cloneDisplay->AddComponent(ct);
@@ -286,6 +287,10 @@ namespace Epoch {
 					((SFXEmitter*)sound)->SetEvent(AK::EVENTS::SFX_TELEPORTSOUND);
 					AudioWrapper::GetInstance().AddEmitter(sound, headset->GetName().c_str());
 					headset->AddComponent(sound);
+					Emitter* sound1 = new SFXEmitter();
+					((SFXEmitter*)sound1)->SetEvent(AK::EVENTS::SFX_PLAYERDEATH);
+					AudioWrapper::GetInstance().AddEmitter(sound1, headset->GetName().c_str());
+					headset->AddComponent(sound1);
 
 					AudioWrapper::GetInstance().STOP();
 
@@ -389,8 +394,8 @@ namespace Epoch {
 					l1->Type = 4;
 					l1->Color = vec3f(1, 1, 1);
 					l1->ConeDirection = vec3f(0, -1, 0);
-					l1->Position = vec3f(0.07529334f, 4, 8.11148f);
-					l1->ConeRatio = .9f;
+					l1->Position = vec3f(7.7f, 0, 6.4f);
+					l1->ConeRatio = .85f;
 
 					Light* l2 = new Light();
 					l2->Type = 2;
@@ -399,9 +404,9 @@ namespace Epoch {
 
 					Light* l3 = new Light();
 					l3->Type = 4;
-					l3->Color = vec3f(0, 0, 1);
+					l3->Color = vec3f(1, 1, 1);
 					l3->ConeDirection = vec3f(0, -1, 0);
-					l3->Position = vec3f(-9.8f, 5, 5);
+					l3->Position = vec3f(-7.5f, 0, 2.35f);
 					l3->ConeRatio = .8f;
 
 					Renderer::Instance()->SetLight(l1, 0);
@@ -411,7 +416,7 @@ namespace Epoch {
 					SystemLogger::Debug() << "Loading complete" << std::endl;
 					Physics::Instance()->PhysicsLock.unlock();
 					Settings::GetInstance().SetBool("LevelIsLoading", false);
-					Settings::GetInstance().SetInt("CurrentLevel", 2);
+					Settings::GetInstance().SetInt("CurrentLevel", 3);
 				}
 			}
 		}

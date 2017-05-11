@@ -18,6 +18,7 @@
 #include "../Actions/CCLoadHub.h"
 #include "../Actions/CCBoxSpin.h"
 #include "../Actions/CCExit.h"
+#include "../Actions/CCLevel1TutorialButton.h"
 #include "../Actions/CCStartButton.h"
 #include "../Objects/MeshComponent.h"
 #include "../tinyxml/tinyxml.h"
@@ -29,6 +30,8 @@
 #include "../Core/Pool.h"
 #include "../Actions/CCLevel3ElevatorButton.h"
 #include "../Actions/CCBoxSpinRandom.h"
+#include "../Actions/CCBoxSpinRandomSmall.h"
+#include "../Actions/CCLevel3BoxSmash.h"
 
 namespace Epoch {
 
@@ -81,6 +84,15 @@ namespace Epoch {
 	BaseObject * Level::FindObjectWithName(std::string _name) {
 		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
 			if ((*it)->GetName() == _name) {
+				return *it;
+			}
+		}
+		return nullptr;
+	}
+
+	BaseObject * Level::FindObjectWithID(unsigned short _id) {
+		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
+			if ((*it)->GetUniqueID() == _id) {
 				return *it;
 			}
 		}
@@ -985,7 +997,7 @@ namespace Epoch {
 							file.read((char *)&pickupable, sizeof(byte));
 						}
 
-						vec3f position, rotation, scale, gravity(0, -9.81, 0);
+						vec3f position, rotation, scale, gravity(0, -9.81f, 0);
 						file.read((char *)&position.x, sizeof(float));
 						file.read((char *)&position.y, sizeof(float));
 						file.read((char *)&position.z, sizeof(float));
@@ -1091,9 +1103,17 @@ namespace Epoch {
 						file.read((char *)&position.x, sizeof(float));
 						file.read((char *)&position.y, sizeof(float));
 						file.read((char *)&position.z, sizeof(float));
+
+						vec3f gravity;
+						if (version >= 5) {
+							file.read((char *)&gravity.x, sizeof(float));
+							file.read((char *)&gravity.y, sizeof(float));
+							file.read((char *)&gravity.z, sizeof(float));
+						}
+
 						if (obj)
 						{
-							SphereCollider* col = new SphereCollider(obj, movable == 1, trigger == 1, vec3f(0, -1, 0), mass, elasticity, staticFriction, kineticFriction, drag, radius);
+							SphereCollider* col = new SphereCollider(obj, movable == 1, trigger == 1, gravity, mass, elasticity, staticFriction, kineticFriction, drag, radius);
 							obj->AddComponent(col);
 						}
 					}
@@ -1138,7 +1158,7 @@ namespace Epoch {
 					case 6: //TexturedMesh
 					{
 						INT32 pathLength = 0;
-						std::string mesh, diffuse, emissive;
+						std::string mesh, diffuse, emissive, specular;
 						float transparency = 1.0f;
 						if (version >= 2) {
 							file.read((char*)&transparency, sizeof(float));
@@ -1173,17 +1193,31 @@ namespace Epoch {
 
 						// Emissive
 						// Todo: Add a check for if there is no emissive texture.
-						file.read((char *)&pathLength, sizeof(INT32));
-						temp = new char[pathLength];
-						file.read(temp, pathLength);
-						emissive = temp;
-						delete[] temp;
+						if (version >= 2) {
+							file.read((char *)&pathLength, sizeof(INT32));
+							temp = new char[pathLength];
+							file.read(temp, pathLength);
+							emissive = temp;
+							delete[] temp;
+						}
+
+						if (version >= 6) {
+							file.read((char*)&pathLength, sizeof(INT32));
+							temp = new char[pathLength];
+							file.read(temp, pathLength);
+							specular = temp;
+							delete[] temp;
+						}
+
 						if (obj)
 						{
 							MeshComponent* mc = new MeshComponent(mesh.c_str(), transparency, psf, vsf, gsf);
 							mc->AddTexture(diffuse.c_str(), eTEX_DIFFUSE);
-							if (emissive != "..\\Resources\\") {
+							if (version >= 2 && emissive != "..\\Resources\\") {
 								mc->AddTexture(emissive.c_str(), eTEX_EMISSIVE);
+							}
+							if (version >= 6 && specular != "..\\Resources\\") {
+								mc->AddTexture(specular.c_str(), eTEX_SPECULAR);
 							}
 							obj->AddComponent(mc);
 						}
@@ -1253,6 +1287,8 @@ namespace Epoch {
 								codeCom = new CCBoxSpin();
 							if (path == "CCBoxSpinRandom.h")
 								codeCom = new CCBoxSpinRandom();
+							if (path == "CCBoxSpinRandomSmall.h")
+								codeCom = new CCBoxSpinRandomSmall();
 							if (path == "CCButtonHold.h")
 								codeCom = new CCButtonHold();
 							if (path == "CCButtonPress.h")
@@ -1275,10 +1311,14 @@ namespace Epoch {
 								codeCom = new CCEnterLevel3();
 							if (path == "CCExit.h")
 								codeCom = new CCExit();
+							if (path == "CCLevel3BoxSmash.h")
+								codeCom = new CCLevel3BoxSmash();
 							if (path == "CCLevel3ElevatorButton.h")
 								codeCom = new CCLevel3ElevatorButton();
 							if (path == "CCLoadHub.h")
 								codeCom = new CCLoadHub();
+							if (path == "CCMazeHelper.h")
+								codeCom = new CCMazeHelper();
 							if (path == "CCPauseToCancel.h")
 								codeCom = new CCPauseToCancel();
 							if (path == "CCStartButton.h")
@@ -1297,6 +1337,8 @@ namespace Epoch {
 								codeCom = new UICreateToDeleteClone();
 							if (path == "UIRewind.h")
 								codeCom = new UIRewind();
+							if (path == "CCLevel1TutorialButton.h")
+								codeCom = new CCLevel1TutorialButton();
 
 							if (codeCom)
 							{

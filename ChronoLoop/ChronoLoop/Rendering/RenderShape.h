@@ -50,6 +50,7 @@ namespace Epoch {
 
 		bool operator==(const RenderShape& _other) const;
 
+		void UpdateBufferData(Mesh* _mesh);
 	protected:
 		RenderContext mContext;
 		Mesh* mMesh;
