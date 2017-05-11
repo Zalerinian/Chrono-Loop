@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ValidationCache Version="1" SchemaVersion="75">
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Actor-Mixer Hierarchy\Default Work Unit.wwu" DateLow="2361268014" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Actor-Mixer Hierarchy\Factory SoundSeed Air Objects.wwu" DateLow="2361580539" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Actor-Mixer Hierarchy\Factory Synth One.wwu" DateLow="2362518019" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Attenuations\Default Work Unit.wwu" DateLow="2362518019" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Audio Devices\Default Work Unit.wwu" DateLow="2362674274" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Control Surface Sessions\Default Work Unit.wwu" DateLow="2362674274" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Conversion Settings\Default Work Unit.wwu" DateLow="2362674274" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Conversion Settings\Factory Conversion Settings.wwu" DateLow="2362674274" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Dynamic Dialogue\Default Work Unit.wwu" DateLow="2362830384" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Effects\Default Work Unit.wwu" DateLow="2362830384" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Effects\Factory Auro Headphone.wwu" DateLow="2362830384" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Effects\Factory Effects.wwu" DateLow="2362986634" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Effects\Factory iZotope Box Modeler.wwu" DateLow="2362986634" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Effects\Factory iZotope Delay.wwu" DateLow="2362986634" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Effects\Factory iZotope Dynamics.wwu" DateLow="2363142897" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Effects\Factory iZotope Filters.wwu" DateLow="2363142897" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Effects\Factory iZotope Hybrid Reverb Effects.wwu" DateLow="2363142897" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Effects\Factory iZotope Multiband Distortion.wwu" DateLow="2363299278" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Effects\Factory iZotope Singleband Distortion.wwu" DateLow="2363299278" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Effects\Factory McDSP Effects.wwu" DateLow="2362986634" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Events\Default Work Unit.wwu" DateLow="2363455389" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Game Parameters\Default Work Unit.wwu" DateLow="2363455389" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Game Parameters\Factory SoundSeed Air Game Syncs.wwu" DateLow="2363455389" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Interactive Music Hierarchy\Default Work Unit.wwu" DateLow="2385312389" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Master-Mixer Hierarchy\Default Work Unit.wwu" DateLow="2385312389" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Mixing Sessions\Default Work Unit.wwu" DateLow="2385312389" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Modulators\Default Work Unit.wwu" DateLow="2385468787" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\NthDimensional.Patrick.wsettings" DateLow="2385781156" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\NthDimensional.wproj" DateLow="2385937546" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Presets\Default Work Unit.wwu" DateLow="2614358441" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Queries\Default Work Unit.wwu" DateLow="2633123035" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Queries\Factory Queries.wwu" DateLow="2633123035" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\SoundBanks\Default Work Unit.wwu" DateLow="2633123035" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Soundcaster Sessions\Default Work Unit.wwu" DateLow="2633279281" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\States\Default Work Unit.wwu" DateLow="2633279281" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Switches\Default Work Unit.wwu" DateLow="2633279281" DateHigh="30587415"/>
-	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Triggers\Default Work Unit.wwu" DateLow="2633279281" DateHigh="30587415"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Actor-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1929468731" DateHigh="30589797"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Actor-Mixer Hierarchy\Factory SoundSeed Air Objects.wwu" DateLow="4097511291" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Actor-Mixer Hierarchy\Factory Synth One.wwu" DateLow="4097711285" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Attenuations\Default Work Unit.wwu" DateLow="4097761343" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Audio Devices\Default Work Unit.wwu" DateLow="4097801494" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Control Surface Sessions\Default Work Unit.wwu" DateLow="4097841379" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Conversion Settings\Default Work Unit.wwu" DateLow="4097881559" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Conversion Settings\Factory Conversion Settings.wwu" DateLow="4097921452" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Dynamic Dialogue\Default Work Unit.wwu" DateLow="4097961464" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Effects\Default Work Unit.wwu" DateLow="4098001640" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Effects\Factory Auro Headphone.wwu" DateLow="4098051674" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Effects\Factory Effects.wwu" DateLow="4098141592" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Effects\Factory iZotope Box Modeler.wwu" DateLow="4098281695" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Effects\Factory iZotope Delay.wwu" DateLow="4098321867" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Effects\Factory iZotope Dynamics.wwu" DateLow="4098361744" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Effects\Factory iZotope Filters.wwu" DateLow="4098401924" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Effects\Factory iZotope Hybrid Reverb Effects.wwu" DateLow="4098451957" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Effects\Factory iZotope Multiband Distortion.wwu" DateLow="4098491842" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Effects\Factory iZotope Singleband Distortion.wwu" DateLow="4098532014" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Effects\Factory McDSP Effects.wwu" DateLow="4098241663" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Events\Default Work Unit.wwu" DateLow="1929558801" DateHigh="30589797"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Game Parameters\Default Work Unit.wwu" DateLow="4098652120" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Game Parameters\Factory SoundSeed Air Game Syncs.wwu" DateLow="4098742017" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Interactive Music Hierarchy\Default Work Unit.wwu" DateLow="4112083265" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Master-Mixer Hierarchy\Default Work Unit.wwu" DateLow="4112123297" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Mixing Sessions\Default Work Unit.wwu" DateLow="4112183360" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Modulators\Default Work Unit.wwu" DateLow="4112233381" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\NthDimensional.Patrick.wsettings" DateLow="2377616283" DateHigh="30591044"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\NthDimensional.wproj" DateLow="4113013926" DateHigh="30588569"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Presets\Default Work Unit.wwu" DateLow="57830937" DateHigh="30588570"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Queries\Default Work Unit.wwu" DateLow="75565565" DateHigh="30588570"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Queries\Factory Queries.wwu" DateLow="75615599" DateHigh="30588570"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\SoundBanks\Default Work Unit.wwu" DateLow="1939595911" DateHigh="30589797"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Soundcaster Sessions\Default Work Unit.wwu" DateLow="75775589" DateHigh="30588570"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\States\Default Work Unit.wwu" DateLow="75815597" DateHigh="30588570"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Switches\Default Work Unit.wwu" DateLow="75855646" DateHigh="30588570"/>
+	<ValidationCacheItem File="D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\Triggers\Default Work Unit.wwu" DateLow="75885788" DateHigh="30588570"/>
 </ValidationCache>

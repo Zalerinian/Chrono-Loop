@@ -18,15 +18,30 @@ namespace Epoch {
 		Interpolator<matrix4>* mClone1Interp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mClone2Interp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mClone3Interp = new Interpolator<matrix4>();
+		matrix4 mButStart, mStandStart, mEleStart;
 		
 		//vec3f blockend, exitend;
 
 		Level* cLevel;
 
+		~CCLevel3ElevatorButton() {
+			delete mChamberInterp;
+			delete mPlayerInterp;
+			delete mStartStandInterp;
+			delete mStartButtonInterp;
+			delete mClone1Interp;
+			delete mClone2Interp;
+			delete mClone3Interp;
+		}
+
 		virtual void Start() {
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			mChamberObject = cLevel->FindObjectWithName("L3Elevator");
 			mButtonStand = cLevel->FindObjectWithName("L3Buttonstand");
+			mEleStart = mChamberObject->GetTransform().GetMatrix();
+			mButStart = mObject->GetTransform().GetMatrix();
+			mStandStart = mButtonStand->GetTransform().GetMatrix();
+
 			TimeManager::Instance()->SaveSettingBoolToTimeline("CantPauseTime", false);
 			Settings::GetInstance().SetBool("CantTeleport", false);
 			TimeManager::Instance()->SaveSettingBoolToTimeline("CantTeleport", false);
@@ -34,10 +49,9 @@ namespace Epoch {
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time) {
 			if (!Settings::GetInstance().GetBool("PauseMenuUp")) {
-				if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName() != "L3Buttonstand") {
+				if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && (_other.GetBaseObject()->GetUniqueID() == cLevel->GetLeftController()->GetUniqueID() || _other.GetBaseObject()->GetUniqueID() == cLevel->GetRightController()->GetUniqueID())) {
 					colliding = true;
 
-					Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
 					vec3f norm = ((ButtonCollider*)&_col)->mPushNormal;
 					vec3f tForce = norm * (norm * _other.mTotalForce);
@@ -92,7 +106,7 @@ namespace Epoch {
 								Settings::GetInstance().SetBool("CantPauseTime", true);
 								Settings::GetInstance().SetBool("CantTeleport", true);
 							}
-							else
+							/*else
 							{
 								Clonepair* pair = TimeManager::Instance()->GetClonePair(_other.GetBaseObject()->GetUniqueID());
 								mat = _other.GetBaseObject()->GetTransform().GetMatrix();
@@ -112,7 +126,7 @@ namespace Epoch {
 								mClone3Interp->SetEasingFunction(Easing::QuadInOut);
 								mClone3Interp->SetActive(true);
 								mIsPlayer = false;
-							}
+							}*/
 
 							mat = mObject->GetTransform().GetMatrix();
 							mStartButtonInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), mObject->GetTransform().GetMatrix());
@@ -143,65 +157,74 @@ namespace Epoch {
 						Settings::GetInstance().SetBool("CantPauseTime", false);
 						Settings::GetInstance().SetBool("CantTeleport", false);
 					}
-					if(mIsPlayer)
+				//	if(mIsPlayer)
 					{
 						mPlayerInterp->Update(dt);	
 					}
-					else
+					/*else
 					{
 						mClone1Interp->Update(dt);
 						mClone2Interp->Update(dt);
 						mClone3Interp->Update(dt);
-					}
+					}*/
 					mStartButtonInterp->Update(dt);
 					mStartStandInterp->Update(dt);
 				}
-				else
+		/*		else
 				{
 					mIsPlayer = false;
-				}
+				}*/
 
-				float tempY = mChamberObject->GetTransform().GetMatrix().Position.y;
-				//if elevator is mostly down
-				if (mInterpDone && tempY > -3.27f && tempY < -1.64f) {
-					matrix4 mat = mChamberObject->GetTransform().GetMatrix();
-					mChamberInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -3.28f + (tempY *-1), 0), mChamberObject->GetTransform().GetMatrix());
-					mChamberInterp->SetEasingFunction(Easing::QuadInOut);
-					mChamberInterp->SetActive(true);
+				//float tempY = mChamberObject->GetTransform().GetMatrix().Position.y;
+				////if elevator is mostly down
+				//if (mInterpDone && tempY > -3.27f && tempY < -1.64f) {
+				//	matrix4 mat = mChamberObject->GetTransform().GetMatrix();
+				//	mChamberInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -3.28f + (tempY *-1), 0), mChamberObject->GetTransform().GetMatrix());
+				//	mChamberInterp->SetEasingFunction(Easing::QuadInOut);
+				//	mChamberInterp->SetActive(true);
 
-					mat = mObject->GetTransform().GetMatrix();
-					mStartButtonInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -3.28f + (tempY *-1), 0), mObject->GetTransform().GetMatrix());
-					mStartButtonInterp->SetEasingFunction(Easing::QuadInOut);
-					mStartButtonInterp->SetActive(true);
+				//	mat = mObject->GetTransform().GetMatrix();
+				//	mStartButtonInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -3.28f + (tempY *-1), 0), mObject->GetTransform().GetMatrix());
+				//	mStartButtonInterp->SetEasingFunction(Easing::QuadInOut);
+				//	mStartButtonInterp->SetActive(true);
 
-					mat = mButtonStand->GetTransform().GetMatrix();
-					mStartStandInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -3.28f + (tempY *-1), 0), mButtonStand->GetTransform().GetMatrix());
-					mStartStandInterp->SetEasingFunction(Easing::QuadInOut);
-					mStartStandInterp->SetActive(true);
-					mInterpDone = false;
-				}
-				else if(mInterpDone && tempY > -1.64 && tempY < -0.116f)
-				{
-					matrix4 mat = mChamberObject->GetTransform().GetMatrix();
-					mChamberInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -0.116f + (tempY *-1), 0), mChamberObject->GetTransform().GetMatrix());
-					mChamberInterp->SetEasingFunction(Easing::QuadInOut);
-					mChamberInterp->SetActive(true);
+				//	mat = mButtonStand->GetTransform().GetMatrix();
+				//	mStartStandInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -3.28f + (tempY *-1), 0), mButtonStand->GetTransform().GetMatrix());
+				//	mStartStandInterp->SetEasingFunction(Easing::QuadInOut);
+				//	mStartStandInterp->SetActive(true);
+				//	mInterpDone = false;
+				//}
+				//else if(mInterpDone && tempY > -1.64 && tempY < -0.116f)
+				//{
+				//	matrix4 mat = mChamberObject->GetTransform().GetMatrix();
+				//	mChamberInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -0.116f + (tempY *-1), 0), mChamberObject->GetTransform().GetMatrix());
+				//	mChamberInterp->SetEasingFunction(Easing::QuadInOut);
+				//	mChamberInterp->SetActive(true);
 
-					mat = mObject->GetTransform().GetMatrix();
-					mStartButtonInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -0.116f + (tempY *-1), 0), mObject->GetTransform().GetMatrix());
-					mStartButtonInterp->SetEasingFunction(Easing::QuadInOut);
-					mStartButtonInterp->SetActive(true);
+				//	mat = mObject->GetTransform().GetMatrix();
+				//	mStartButtonInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -0.116f + (tempY *-1), 0), mObject->GetTransform().GetMatrix());
+				//	mStartButtonInterp->SetEasingFunction(Easing::QuadInOut);
+				//	mStartButtonInterp->SetActive(true);
 
-					mat = mButtonStand->GetTransform().GetMatrix();
-					mStartStandInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -0.116f + (tempY *-1), 0), mButtonStand->GetTransform().GetMatrix());
-					mStartStandInterp->SetEasingFunction(Easing::QuadInOut);
-					mStartStandInterp->SetActive(true);
-					mInterpDone = false;
-				}
+				//	mat = mButtonStand->GetTransform().GetMatrix();
+				//	mStartStandInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -0.116f + (tempY *-1), 0), mButtonStand->GetTransform().GetMatrix());
+				//	mStartStandInterp->SetEasingFunction(Easing::QuadInOut);
+				//	mStartStandInterp->SetActive(true);
+				//	mInterpDone = false;
+				//}
 
 				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mObject->GetTransform().GetMatrix().fourth);
 				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y - .2f;
 				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y - .2f;
+			}
+
+			if(Settings::GetInstance().GetBool("ResetElevator"))
+			{
+				mChamberObject->GetTransform().SetMatrix(mEleStart);
+				mButtonStand->GetTransform().SetMatrix(mStandStart);
+				mObject->GetTransform().SetMatrix(mButStart);
+
+				Settings::GetInstance().SetBool("ResetElevator", false);
 			}
 		}
 	};

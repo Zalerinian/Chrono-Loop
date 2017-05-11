@@ -1,4 +1,4 @@
-#include "../RenderShaderDefines.hlsli"
+//#include "../RenderShaderDefines.hlsli"
 
 texture2D tDiffuse : register(t0);
 SamplerState diffuseFilter : register(s0);
