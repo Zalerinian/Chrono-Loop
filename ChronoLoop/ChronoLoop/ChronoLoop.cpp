@@ -71,11 +71,10 @@ static float deltaTime, fixedTime;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void Update();
 void UpdateTime();
-void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftController, BaseObject* RightController);
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(115136);
+	//_CrtSetBreakAlloc(48272); // 
 	if (!InitializeWindow(hInstance, nCmdShow, 1366, 720, true)) {
 		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
 		return 2;
@@ -419,10 +418,6 @@ void Update() {
 
 	while (LevelManager::GetInstance().LoadLevelAsync("../Resources/MainMenu.elf", &mainMenu) != Epoch::LM::LevelStatus::Success) {}
 
-	//// Binary level loading
-	//mainMenu = new Level();
-	//mainMenu->BinaryLoadLevel("../Resources/Main.elf");
-
 	mainMenu->AssignPlayerControls(headset, LeftController, RightController);
 	mainMenu->AddObject(RightController);
 	mainMenu->AddObject(headset);
@@ -439,6 +434,7 @@ void Update() {
 
 	LevelManager::GetInstance().RequestLevelChange(mainMenu);
 	mainMenu->CallStart();
+
 
 	if (VREnabled) {
 		VRInputManager::GetInstance().Update();

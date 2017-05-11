@@ -427,17 +427,17 @@ namespace Epoch {
 		if (Settings::GetInstance().GetBool("CloneCounter")) {
 			std::wstring CloneCount = L"Clone(s): " + std::to_wstring(mClones.size());
 
-			Font* tempFont;
+			Font tempFont;
 			if (!CommandConsole::Instance().isVRon()) {
-				tempFont = new Font(L"Times New Roman", 25, (D2D1::ColorF(D2D1::ColorF::Purple, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+				tempFont = Font(L"Times New Roman", 25, (D2D1::ColorF(D2D1::ColorF::Purple, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 			} else {
-				tempFont = new Font(L"Calibri", 40, (D2D1::ColorF(D2D1::ColorF::Purple, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+				tempFont = Font(L"Calibri", 40, (D2D1::ColorF(D2D1::ColorF::Purple, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 			}
 			Draw::Instance().DrawTextToBitmap(
 				(*Draw::Instance().GetContext2D())->GetSize().width*(25.0f / 32.0f),
 				(*Draw::Instance().GetContext2D())->GetSize().height*(29.0f / 32.0f),
 				(*Draw::Instance().GetContext2D())->GetSize().width,
-				(*Draw::Instance().GetContext2D())->GetSize().height*(30.5f / 32.0f), *tempFont,
+				(*Draw::Instance().GetContext2D())->GetSize().height*(30.5f / 32.0f), tempFont,
 				CloneCount, *(Draw::Instance().GetScreenBitmap()).get());
 		}
 	}
@@ -446,17 +446,17 @@ namespace Epoch {
 		if (Settings::GetInstance().GetBool("SnapCounter")) {
 			std::wstring CloneCount = L"Snapshots: " + std::to_wstring(mTimeline->GetCurrentGameTimeIndx());
 
-			Font* tempFont;
+			Font tempFont;
 			if (!CommandConsole::Instance().isVRon()) {
-				tempFont = new Font(L"Times New Roman", 25, (D2D1::ColorF(D2D1::ColorF::Blue, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+				tempFont = Font(L"Times New Roman", 25, (D2D1::ColorF(D2D1::ColorF::Blue, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 			} else {
-				tempFont = new Font(L"Calibri", 40, (D2D1::ColorF(D2D1::ColorF::Blue, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+				tempFont = Font(L"Calibri", 40, (D2D1::ColorF(D2D1::ColorF::Blue, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 			}
 			Draw::Instance().DrawTextToBitmap(
 				(*Draw::Instance().GetContext2D())->GetSize().width*(25.0f / 32.0f),
 				(*Draw::Instance().GetContext2D())->GetSize().height*(26.0f / 32.0f),
 				(*Draw::Instance().GetContext2D())->GetSize().width,
-				(*Draw::Instance().GetContext2D())->GetSize().height*(29.0f / 32.0f), *tempFont,
+				(*Draw::Instance().GetContext2D())->GetSize().height*(29.0f / 32.0f), tempFont,
 				CloneCount, *(Draw::Instance().GetScreenBitmap()).get());
 
 

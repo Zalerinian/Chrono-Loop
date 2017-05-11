@@ -547,10 +547,7 @@
     <ClInclude Include="Actions\BoxSnapToControllerAction.hpp">
       <Filter>Actions\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\CCEnterLevel2.h">
-      <Filter>Actions</Filter>
-    </ClInclude>
-    <ClInclude Include="Actions\CCEnterLevel4.h">
+    <ClInclude Include="Actions\CCPlatformButtonHold.h">
       <Filter>Actions</Filter>
     </ClInclude>
   </ItemGroup>
@@ -922,6 +919,9 @@
       <Filter>Rendering\Shaders\Vertex Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Rendering\Shaders\PSBloom.hlsl">
+      <Filter>Rendering\Shaders\Pixel shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\PSCombiner.hlsl">
       <Filter>Rendering\Shaders\Pixel shaders</Filter>
     </FxCompile>
   </ItemGroup>

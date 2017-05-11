@@ -71,10 +71,10 @@ namespace Epoch
 		}
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time) {
-			if (!Settings::GetInstance().GetBool("PauseMenuUp")) {
 				if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName().find("Buttonstand")) {
 					colliding = true;
-
+					if (Settings::GetInstance().GetBool("PauseMenuUp"))
+						Settings::GetInstance().SetBool("DidRealStuffInPauseMenu", true);
 					vec3f norm = ((ButtonCollider*)&_col)->mPushNormal;
 					vec3f tForce = norm * (norm * _other.mTotalForce);
 					vec3f vel = norm * (norm * _other.mVelocity);
@@ -135,7 +135,6 @@ namespace Epoch
 					colliding = false;
 				}
 			}
-		}
 		virtual void Update()
 		{
 			if (!LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->isTimePaused()) {

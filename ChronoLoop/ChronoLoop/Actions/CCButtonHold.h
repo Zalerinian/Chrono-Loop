@@ -74,15 +74,12 @@ namespace Epoch
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time)
 		{
-			if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName() != "Buttonstand" && !Settings::GetInstance().GetBool("PauseMenuUp"))
+			if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName() != "Buttonstand")
 			{
+
 				colliding = true;
 				//SystemLogger::GetLog() << "Colliding" << std::endl;
 				//Interp stuff
-				ButtonCollider* butCol = (ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
-
-				if (_other.mVelocity * butCol->mPushNormal < .1f)
-					butCol->mVelocity = vec3f(0, 0, 0);
 
 				if (!tempDoor) {
 					blockInterp->SetActive(true);
@@ -147,6 +144,9 @@ namespace Epoch
 					_col.mAcceleration = vel / _time;
 					//blockCube->SetPos(blockend);
 				}
+				ButtonCollider* butCol = (ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
+				if (_other.mVelocity * butCol->mPushNormal < .1f)
+					butCol->mVelocity = vec3f(0, 0, 0);
 			}
 			
 		}
