@@ -61,6 +61,11 @@ namespace Epoch {
 				}
 			}
 		}
+		Collider* col = (Collider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
+		if(col)
+		{
+			col->SetPos(mObject->GetTransform().GetMatrix().Position);
+		}
 		CheckIfBoxAlreadyHeld();
 	}
 	bool BoxSnapToControllerAction::CheckIfBoxAlreadyHeld()

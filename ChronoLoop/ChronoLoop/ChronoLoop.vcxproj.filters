@@ -550,6 +550,9 @@
     <ClInclude Include="Actions\BoxSnapToControllerAction.hpp">
       <Filter>Actions\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\CCCloneHeadCollider.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">

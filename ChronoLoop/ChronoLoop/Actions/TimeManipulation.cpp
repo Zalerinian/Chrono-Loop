@@ -13,6 +13,7 @@
 #include "../Common/Common.h"
 #include "../Particles/ParticleSystem.h"
 #include "../Sound/SoundEngine.h"
+#include "CCCloneHeadCollider.h"
 
 namespace Epoch
 {
@@ -287,6 +288,8 @@ namespace Epoch
 		MeshComponent *visibleMesh = new MeshComponent("../Resources/Clone.obj",.35f);
 		visibleMesh->SetPixelShader(ePS_TRANSPARENT);
 		visibleMesh->AddTexture(TimeManager::Instance()->GetNextTexture().c_str(), eTEX_DIFFUSE);
+		SphereCollider* col = new SphereCollider(_headset, false, false, vec3f(), 100.0f, .02f, .2f, .2f, 0, 1, "../Resources/Clone.obj");
+		CCCloneHeadCollider* headCol = new CCCloneHeadCollider();
 		//visibleMesh->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
 		//visibleMesh->AddTexture("../Resources/Scanline.png", eTEX_CUSTOM2);
 
@@ -297,6 +300,8 @@ namespace Epoch
 		//Renderer::Instance()->GetDevice()->CreateBuffer(&bufferDesc, &initialData, visibleMesh->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].GetAddressOf());
 		//SetD3DName(visibleMesh->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].Get(), "Headset scanline buffer");
 		_headset->AddComponent(visibleMesh);
+		_headset->AddComponent(col);
+		_headset->AddComponent(headCol);
 
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
 		MeshComponent *mc = new MeshComponent("../Resources/Controller.obj",.35f);
