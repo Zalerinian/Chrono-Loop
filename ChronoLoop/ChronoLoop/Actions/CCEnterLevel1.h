@@ -211,7 +211,7 @@ namespace Epoch
 					headset->AddComponent(timepause);
 
 					Emitter* timeresume = new SFXEmitter();
-					((SFXEmitter*)timeresume)->SetEvent(AK::EVENTS::SFX_TIMERESUME);
+					////((SFXEmitter*)timeresume)->SetEvent(AK::EVENTS::SFX_TIMERESUME);
 					AudioWrapper::GetInstance().AddEmitter(timeresume, headset->GetName().c_str());
 					headset->AddComponent(timeresume);
 
