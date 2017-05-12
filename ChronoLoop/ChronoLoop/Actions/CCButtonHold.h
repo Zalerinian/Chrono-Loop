@@ -50,6 +50,7 @@ namespace Epoch
 			mD2Wires = cLevel->FindAllObjectsByPattern("D2Wire");
 
 			//Turn on wires that need to be turned on
+			//D1 wires meshes are grey then green
 			for (unsigned int i = 0; i < mD1Wires.size(); i++) {
 				MeshComponent* temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				if (temp) {
@@ -60,14 +61,15 @@ namespace Epoch
 					temp->SetVisible(false);
 				}
 			}
+			//D2 wires meshes are green then grey
 			for (unsigned int i = 0; i < mD2Wires.size(); i++) {
 				MeshComponent* temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				if (temp) {
-					temp->SetVisible(false);
+					temp->SetVisible(true);
 				}
 				temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
 				if (temp) {
-					temp->SetVisible(true);
+					temp->SetVisible(false);
 				}
 			}
 		}
@@ -98,6 +100,7 @@ namespace Epoch
 					tempDoor = true;
 
 					//Loop to change texture on wires
+					//D1 wires meshes are green then grey
 					for (unsigned int i = 0; i < mD1Wires.size(); i++) {
 						MeshComponent* temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 						if (temp)
@@ -106,13 +109,14 @@ namespace Epoch
 						if (temp)
 							temp->SetVisible(true);
 					}
+					//D2 wires meshes are grey then green
 					for (unsigned int i = 0; i < mD2Wires.size(); i++) {
 						MeshComponent* temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 						if (temp)
-							temp->SetVisible(true);
+							temp->SetVisible(false);
 						temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
 						if (temp)
-							temp->SetVisible(false);
+							temp->SetVisible(true);
 					}
 				}
 
@@ -202,10 +206,10 @@ namespace Epoch
 						for (unsigned int i = 0; i < mD2Wires.size(); i++) {
 							MeshComponent* temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 							if (temp)
-								temp->SetVisible(false);
+								temp->SetVisible(true);
 							temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
 							if (temp)
-								temp->SetVisible(true);
+								temp->SetVisible(false);
 						}
 					}
 

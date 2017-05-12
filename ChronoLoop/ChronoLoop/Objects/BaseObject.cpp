@@ -197,16 +197,6 @@ namespace Epoch {
 			}
 			it->second.clear();
 		}
-
-		return;
-		
-		
-
-		
-	
-		
-		
-		return;
 	}
 
 	

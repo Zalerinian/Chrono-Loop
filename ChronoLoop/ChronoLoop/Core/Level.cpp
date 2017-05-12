@@ -771,11 +771,11 @@ namespace Epoch {
 		CommandConsole* cc = (CommandConsole*)_command;
 		if (_ifOn == L"ON") {
 			Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_WIREFRAME);
-			CommandConsole::Instance().DisplaySet(L"");
+			CommandConsole::Instance().DisplaySet(L"Wireframe ON");
 		}
 		else if (_ifOn == L"OFF") {
 			Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_MAX);
-			CommandConsole::Instance().DisplaySet(L"");
+			CommandConsole::Instance().DisplaySet(L"Wireframe OFF");
 		}
 		else {
 			CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /WIREFRAME (ON/OFF)");

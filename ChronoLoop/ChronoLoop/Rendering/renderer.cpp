@@ -515,6 +515,7 @@ throw "Something has gone catastrophically wrong!";
 
 		mSceneScreenQuad = new RenderShape("../Resources/VerticalPlaneHalfU.obj", true, ePS_PURETEXTURE, eVS_NDC, eGS_PosNormTex_NDC);
 		mSceneScreenQuad->GetContext().mTextures[eTEX_DIFFUSE] = mPostProcessSRV;
+		mSceneScreenQuad->mContext.mRasterState = eRS_FILLED;
 
 		mDeferredCombiner = new RenderShape("../Resources/VerticalPlane.obj", true, ePS_DEFERRED, eVS_NDC, eGS_PosNormTex_NDC);
 		mDeferredCombiner->mContext.mTextures[0] = mAlbedoSRV;
@@ -522,6 +523,7 @@ throw "Something has gone catastrophically wrong!";
 		mDeferredCombiner->mContext.mTextures[2] = mNormalSRV;
 		mDeferredCombiner->mContext.mTextures[3] = mSpecularSRV;
 		mDeferredCombiner->mContext.mPixelCBuffers[0] = mLBuffer;
+		mDeferredCombiner->mContext.mRasterState = eRS_FILLED;
 	}
 
 	void Renderer::SetStaticBuffers() {

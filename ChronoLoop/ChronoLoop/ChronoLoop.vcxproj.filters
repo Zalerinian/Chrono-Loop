@@ -369,9 +369,6 @@
     <ClInclude Include="Actions\MainMenuBT.h">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\CCEnterLevel.h">
-      <Filter>Actions</Filter>
-    </ClInclude>
     <ClInclude Include="Common\Easing\Back.h">
       <Filter>Common\Easing\Header Files</Filter>
     </ClInclude>
@@ -551,6 +548,15 @@
       <Filter>Actions</Filter>
     </ClInclude>
     <ClInclude Include="Actions\CCPlatform.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCCloneHeadCollider.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCEnterLevel2.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCEnterLevel4.h">
       <Filter>Actions</Filter>
     </ClInclude>
   </ItemGroup>
