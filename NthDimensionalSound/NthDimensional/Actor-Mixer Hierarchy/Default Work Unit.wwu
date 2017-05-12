@@ -3109,6 +3109,44 @@
 						<ActiveSource Name="TimePause" ID="{D692F826-A3DD-4B84-944C-0FCA1B2A9A66}" Platform="Linked"/>
 					</ActiveSourceList>
 				</Sound>
+				<Sound Name="ResetBoxes" ID="{EDB9D34D-5195-4432-BFAE-1BA0FE9E2771}" ShortID="231891468" Type="SoundFX">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64292A6E-1D3F-43D6-8BB7-2E730BF0BA1D}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{74976F84-18B2-4A50-BEB6-3859D4B170B7}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="ResetBoxes" ID="{BB9E522D-79EF-4269-9C32-6BE56434C82E}" ShortID="14324766">
+							<Language>SFX</Language>
+							<AudioFile>ResetBoxes.wav</AudioFile>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="ResetBoxes" ID="{BB9E522D-79EF-4269-9C32-6BE56434C82E}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="PlayerDeath" ID="{F2724692-A982-4B6A-BB5D-BDACB9074FD8}" ShortID="89883279" Type="SoundFX">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64292A6E-1D3F-43D6-8BB7-2E730BF0BA1D}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{74976F84-18B2-4A50-BEB6-3859D4B170B7}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="PlayerDeath" ID="{8A8AAF0B-21BE-416C-B213-A15D7B7936F0}" ShortID="220881736">
+							<Language>SFX</Language>
+							<AudioFile>PlayerDeath.wav</AudioFile>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="PlayerDeath" ID="{8A8AAF0B-21BE-416C-B213-A15D7B7936F0}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
 			</ChildrenList>
 		</WorkUnit>
 	</AudioObjects>

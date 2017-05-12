@@ -1,6 +1,7 @@
 Event	ID	Name			Wwise Object Path	Notes
 	549593657	Play_Level3Ambient			\Default Work Unit\Play_Level3Ambient	
 	752092787	SFX_BoxWallCollideLevel3			\Default Work Unit\SFX_BoxWallCollideLevel3	
+	1000127844	SFX_PlayerDeath			\Default Work Unit\SFX_PlayerDeath	
 	1503523398	SFX_sci_fi_door_close			\Default Work Unit\SFX_sci_fi_door_close	
 	1664409707	Stop_Level3Ambient			\Default Work Unit\Stop_Level3Ambient	
 	1773552409	Pause_Level1Ambient			\Default Work Unit\Pause_Level1Ambient	
@@ -22,6 +23,7 @@ Event	ID	Name			Wwise Object Path	Notes
 	3157945905	Stop_Level1Ambient			\Default Work Unit\Stop_Level1Ambient	
 	3223701532	Play_Hub1			\Default Work Unit\Play_Hub1	
 	3223701533	Play_Hub0			\Default Work Unit\Play_Hub0	
+	3299920505	SFX_ResetBoxes			\Default Work Unit\SFX_ResetBoxes	
 	3323973828	Stop_Level2Ambient			\Default Work Unit\Stop_Level2Ambient	
 	3395730328	Resume_Hub0			\Default Work Unit\Resume_Hub0	
 	3395730329	Resume_Hub1			\Default Work Unit\Resume_Hub1	
@@ -30,9 +32,11 @@ Event	ID	Name			Wwise Object Path	Notes
 	4257110323	Pause_Level3Ambient			\Default Work Unit\Pause_Level3Ambient	
 
 In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
+	14324766	ResetBoxes	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\ResetBoxes_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\ResetBoxes		54533
 	54674957	Hub0	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Hub0_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Hub0		9131072
 	152781705	Hub1	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Hub1_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Hub1		22600721
-	202696624	BoxWallCollideLevel3	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\BoxWallCollideLevel3_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\BoxWallCollideLevel3		17882
+	202696624	BoxWallCollideLevel3	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\BoxWallCollideLevel3_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\BoxWallCollideLevel3		18761
+	220881736	PlayerDeath	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\PlayerDeath_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\PlayerDeath		121441
 	223646369	TimeResume	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\TimeResume_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\TimeResume		24041
 	387473037	TimePause	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\TimePause_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\TimePause		23977
 	393391159	Level3Ambient	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Level3Ambient_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Level3Ambient		8678662

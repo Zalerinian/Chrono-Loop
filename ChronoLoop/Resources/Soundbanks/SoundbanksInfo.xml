@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="11" SoundbankVersion="120">
 	<RootPaths>
-		<ProjectRoot>D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\</ProjectRoot>
-		<SourceFilesRoot>D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\</SourceFilesRoot>
-		<SoundBanksRoot>D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</SoundBanksRoot>
+		<ProjectRoot>D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\</ProjectRoot>
+		<SourceFilesRoot>D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</SoundBanksRoot>
 		<ExternalSourcesInputFile></ExternalSourcesInputFile>
-		<ExternalSourcesOutputRoot>D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
+		<ExternalSourcesOutputRoot>D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
 	</RootPaths>
 	<DialogueEvents/>
 	<StreamedFiles/>
@@ -35,6 +35,8 @@
 				<Event Id="752092787" Name="SFX_BoxWallCollideLevel3" ObjectPath="\Events\Default Work Unit\SFX_BoxWallCollideLevel3"/>
 				<Event Id="3124930127" Name="SFX_communication_channel" ObjectPath="\Events\Default Work Unit\SFX_communication_channel"/>
 				<Event Id="3901374612" Name="SFX_gentle_alarm" ObjectPath="\Events\Default Work Unit\SFX_gentle_alarm"/>
+				<Event Id="1000127844" Name="SFX_PlayerDeath" ObjectPath="\Events\Default Work Unit\SFX_PlayerDeath"/>
+				<Event Id="3299920505" Name="SFX_ResetBoxes" ObjectPath="\Events\Default Work Unit\SFX_ResetBoxes"/>
 				<Event Id="1503523398" Name="SFX_sci_fi_door_close" ObjectPath="\Events\Default Work Unit\SFX_sci_fi_door_close"/>
 				<Event Id="2920536594" Name="SFX_sci_fi_door_open" ObjectPath="\Events\Default Work Unit\SFX_sci_fi_door_open"/>
 				<Event Id="2693013165" Name="SFX_TeleportSound" ObjectPath="\Events\Default Work Unit\SFX_TeleportSound"/>
@@ -47,6 +49,10 @@
 				<Event Id="1664409707" Name="Stop_Level3Ambient" ObjectPath="\Events\Default Work Unit\Stop_Level3Ambient"/>
 			</IncludedEvents>
 			<IncludedMemoryFiles>
+				<File Id="14324766" Language="SFX">
+					<ShortName>ResetBoxes.wav</ShortName>
+					<Path>SFX\ResetBoxes_3AE5877C.wem</Path>
+				</File>
 				<File Id="54674957" Language="SFX">
 					<ShortName>Music-SFX\Hub0.wav</ShortName>
 					<Path>SFX\Music-SFX\Hub0_3BDAD486.wem</Path>
@@ -58,6 +64,10 @@
 				<File Id="202696624" Language="SFX">
 					<ShortName>BoxWallCollideLevel3.wav</ShortName>
 					<Path>SFX\BoxWallCollideLevel3_3AE5877C.wem</Path>
+				</File>
+				<File Id="220881736" Language="SFX">
+					<ShortName>PlayerDeath.wav</ShortName>
+					<Path>SFX\PlayerDeath_3AE5877C.wem</Path>
 				</File>
 				<File Id="223646369" Language="SFX">
 					<ShortName>TimeResume.wav</ShortName>
@@ -131,8 +141,6 @@
 				<Event Id="595909313" Name="Resume_Hangar_Escape_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Resume_Hangar_Escape_LOOP"/>
 				<Event Id="1208877918" Name="Resume_Orbit_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Resume_Orbit_LOOP"/>
 				<Event Id="715006247" Name="SFX_MetallicSound" ObjectPath="\Events\Default Work Unit\SFX_EVENTS\SFX_MetallicSound"/>
-				<Event Id="1000127844" Name="SFX_PlayerDeath" ObjectPath="\Events\Default Work Unit\SFX_PlayerDeath"/>
-				<Event Id="3299920505" Name="SFX_ResetBoxes" ObjectPath="\Events\Default Work Unit\SFX_ResetBoxes"/>
 				<Event Id="2745027494" Name="Stop_A_Timelapse" ObjectPath="\Events\Default Work Unit\Stop_A_Timelapse"/>
 				<Event Id="831993537" Name="Stop_Casual_Level_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Stop_Casual_Level_LOOP"/>
 				<Event Id="4276321770" Name="Stop_FutureTechSound" ObjectPath="\Events\Default Work Unit\SFX_EVENTS\Stop_FutureTechSound"/>
@@ -152,10 +160,6 @@
 					<ShortName>Metallic Noise 004.wav</ShortName>
 					<Path>SFX\Metallic Noise 004_3AE5877C.wem</Path>
 				</File>
-				<File Id="750689059" Language="SFX">
-					<ShortName>ResetBoxes.wav</ShortName>
-					<Path>SFX\ResetBoxes_3AE5877C.wem</Path>
-				</File>
 				<File Id="753352436" Language="SFX">
 					<ShortName>Orbit LOOP.wav</ShortName>
 					<Path>SFX\Orbit LOOP_3BDAD486.wem</Path>
@@ -167,10 +171,6 @@
 				<File Id="883031343" Language="SFX">
 					<ShortName>Hangar Escape LOOP.wav</ShortName>
 					<Path>SFX\Hangar Escape LOOP_3BDAD486.wem</Path>
-				</File>
-				<File Id="1015579217" Language="SFX">
-					<ShortName>PlayerDeath.wav</ShortName>
-					<Path>SFX\PlayerDeath_3AE5877C.wem</Path>
 				</File>
 			</IncludedMemoryFiles>
 		</SoundBank>
