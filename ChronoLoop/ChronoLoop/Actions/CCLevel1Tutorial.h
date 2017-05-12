@@ -7,6 +7,8 @@
 #include "../Objects/Component.h"
 #include "../Actions/CCProgressBar.h"
 #include "../Input/VRInputManager.h"
+#include "../Sound/SoundEngine.h"
+
 
 namespace Epoch
 {
@@ -17,9 +19,10 @@ namespace Epoch
 		std::vector<int>mPrevBoards, mCurrentBoards;
 		std::vector<matrix4>mBoardMatrixs;
 		float scaleUpX, scaleUpY, scaleDownX, scaleDownY;
-		float tempScaleX, tempScaleY, tStart, tEnd;
+		float tempScaleX, tempScaleY;
 		bool scalingDone, boardchange = false, once = true;
 		int currentTut = -1, timeToRewind = 0;
+		unsigned int tStart, tEnd;
 		PSAnimatedMultiscan_Data mScanlineData;
 		CCProgressBar* pb;
 
@@ -241,7 +244,7 @@ namespace Epoch
 			if (tut == 3)
 			{
 				//SystemLogger::GetLog() << "pb Current Progress: " << Settings::GetInstance().GetUInt("TutorialRewind - CurProgress") << std::endl;
-				pb->SetCurProgress(Settings::GetInstance().GetUInt("TutorialRewind - CurProgress"));
+				pb->SetCurProgress((float)Settings::GetInstance().GetUInt("TutorialRewind - CurProgress"));
 			}
 
 			ScaleUpCurrentBoards();

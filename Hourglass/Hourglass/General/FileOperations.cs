@@ -117,7 +117,7 @@ namespace Hourglass {
 				}
 
 				writer.Seek(sizeof(Int32), SeekOrigin.Begin);
-				writer.Write(SettingsOffset);
+				writer.Write(SettingsOffset);   
 				writer.Write(ObjectsOffset);
 				writer.Seek(ObjectsOffset, SeekOrigin.Begin);
 				writer.Write(ObjectCount);
