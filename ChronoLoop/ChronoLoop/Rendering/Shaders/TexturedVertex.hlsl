@@ -15,6 +15,7 @@ struct PSI {
 	float4 texCoord :	COLOR;
 	float4 wpos : WORLDPOS;
 	float4 shadowPos : SHADOW;
+	float4 tangent : TANGENT;
 	uint IID : CL_IID;
 };
 
@@ -24,7 +25,7 @@ struct PSI {
 #if ENABLE_INSTANCING
 PSI main(VERTEX_POSNORMTEX input, uint id : SV_InstanceID) {
 #else
-PSI main(VERTEX_POSNORMTEX input) {
+PSI main(VERTEX_POSNORMTANTEX input) {
 #endif
 	PSI output;
 	//matrix light = view / determinant(view);
@@ -41,8 +42,8 @@ PSI main(VERTEX_POSNORMTEX input) {
 	output.normal = mul(input.normal, model[0]);
 	output.IID = SimIID;
 #endif
+	output.tangent = input.tangent;
 	output.texCoord = input.texCoord;
-
 	//output.shadowPos = mul(output.wpos, view);
 	output.shadowPos = float4(0, 0, 0, 0);
 	return output;

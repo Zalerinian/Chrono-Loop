@@ -10,7 +10,7 @@ struct PSI {
 };
 
 
-PSI main(VERTEX_POSNORMTEX input) {
+PSI main(VERTEX_POSNORMTANTEX input) {
 	PSI output;
 	output.position = input.position;
 	output.normal = input.normal;

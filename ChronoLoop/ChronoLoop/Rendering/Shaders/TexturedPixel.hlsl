@@ -20,6 +20,7 @@ struct PSI {
 	float4 wpos : WORLDPOS;
 	float4 shadowPos : SHADOW;
 	float4 eyePos : HEADPOS;
+	float3x3 TBN : TBN;
 	uint IID : CL_IID;
 	uint viewport : SV_ViewportArrayIndex;
 };
@@ -33,9 +34,18 @@ MRTOutput main(PSI input) {
 	float4 emissiveColor = tEmissive.Sample(diffuseFilter, input.texCoord.xy);
 	float4 specularColor = tSpecular.Sample(diffuseFilter, input.texCoord.xy);
 
+	float3 norm = tNormal.Sample(diffuseFilter, input.texCoord.xy);
+	if (length(norm) < 1) {
+		norm = normalize(input.normal.xyz);
+	} else {
+		norm = normalize(norm * 2 - 1);
+		norm = normalize(mul(input.TBN, norm));
+	}
+
+
 	output.diffuse = diffuseColor;
 	output.position = input.wpos;
-	output.normal = float4(normalize(input.normal.xyz), 1);
+	output.normal = float4(norm, 1);
 	output.specular = specularColor;
 	output.glow = emissiveColor;
 	return output;

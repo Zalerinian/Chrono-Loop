@@ -1219,6 +1219,7 @@ namespace Epoch {
 							if (version >= 6 && specular != "..\\Resources\\") {
 								mc->AddTexture(specular.c_str(), eTEX_SPECULAR);
 							}
+							//mc->AddTexture("../Resources/SM_Floor_Two_SM_Floor_Normal.png", eTEX_NORMAL);
 							obj->AddComponent(mc);
 						}
 					}

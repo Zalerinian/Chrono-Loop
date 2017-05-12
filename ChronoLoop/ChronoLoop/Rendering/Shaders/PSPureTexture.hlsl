@@ -11,6 +11,7 @@ struct PSI {
 	float4 wpos : WORLDPOS;
 	float4 shadowPos : SHADOW;
 	float4 eyePos : HEADPOS;
+	float3x3 TBN : TBN;
 	uint IID : CL_IID;
 	uint viewport : SV_ViewportArrayIndex;
 };
