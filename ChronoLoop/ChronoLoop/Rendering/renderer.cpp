@@ -522,7 +522,7 @@ throw "Something has gone catastrophically wrong!";
 		mContext->VSSetConstantBuffers(0, 1, mPositionBuffer.GetAddressOf());
 		mContext->VSSetConstantBuffers(1, 1, mSimInstanceBuffer.GetAddressOf());
 		mContext->GSSetConstantBuffers(0, 1, mVPBuffer.GetAddressOf());
-		mContext->GSSetConstantBuffers(1, 1, mHeadPosBuffer.GetAddressOf());
+		mContext->PSSetConstantBuffers(0, 1, mHeadPosBuffer.GetAddressOf());
 		//(*mContext)->VSSetConstantBuffers(2, 1, nullptr); // This will crash. - Instance Buffer
 		//(*mContext)->VSSetConstantBuffers(3, 1, nullptr); // This will crash. - Animation Data Buffer
 
