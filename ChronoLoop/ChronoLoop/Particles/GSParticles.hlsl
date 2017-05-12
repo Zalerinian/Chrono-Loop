@@ -46,6 +46,7 @@ void main(
 	tpos = mul(mul(tpos, eyes[0].view), eyes[0].proj);
 	matrix vpos = eyes[0].view / determinant(eyes[0].view);
 	vpos[3].w = 0; // Mark particles as not being affected by light
+	vpos[3] = normalize(vpos[3]);
 	element.normal = vpos[3];
 
 
@@ -78,6 +79,8 @@ void main(
 
 	tpos2 = mul(mul(tpos2, eyes[1].view), eyes[1].proj);
 	vpos = eyes[1].view / determinant(eyes[1].view);
+	vpos[3].w = 0;
+	vpos[3] = normalize(vpos[3]);
 	element.normal = vpos[3];
 
 
