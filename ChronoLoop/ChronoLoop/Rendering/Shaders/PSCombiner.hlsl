@@ -54,15 +54,15 @@ float4 main(PSI input) : SV_TARGET
 		if (l.type == 1) {
 			// Directional Light
 			lighting += ApplyDirectionalLight(l.dir, pixelNormal.xyz, l.color, cAlbedo);
-			appliedSpecular.rgb += GetSpecularIntensity(l.pos, EyePos, worldPos.xyz, pixelNormal.xyz) * l.color;
+			appliedSpecular.rgb += GetSpecularIntensity(l.pos, EyePos, worldPos.xyz, pixelNormal.xyz) * l.color * cSpecular.rgb * cSpecular.a;
 		} else if (l.type == 2) {
 			// Point light
 			lighting += ApplyPointLight(l.pos, worldPos, pixelNormal.xyz, l.color, cAlbedo);
-			appliedSpecular.rgb += GetSpecularIntensity(l.pos, EyePos, worldPos.xyz, pixelNormal.xyz) * l.color;
+			appliedSpecular.rgb += GetSpecularIntensity(l.pos, EyePos, worldPos.xyz, pixelNormal.xyz) * l.color * cSpecular.rgb * cSpecular.a;
 		} else if (l.type == 4) {
 			//Spot light
 			lighting += ApplySpotLight(pixelNormal.xyz, l.pos, worldPos, l.cdir, l.ratio, l.color, cAlbedo);
-			appliedSpecular.rgb += GetSpotlightSpecularIntensity(l.pos, l.ratio, l.cdir, EyePos, worldPos.xyz, pixelNormal.xyz) * l.color;
+			appliedSpecular.rgb += GetSpotlightSpecularIntensity(l.pos, l.ratio, l.cdir, EyePos, worldPos.xyz, pixelNormal.xyz) * l.color * cSpecular.rgb * cSpecular.a;
 		}
 	}
 	// Add in ambient light.

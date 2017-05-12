@@ -467,6 +467,12 @@ throw "Something has gone catastrophically wrong!";
 		SetD3DName(mLBuffer.Get(), "Light Data Buffer");
 		SetD3DName(mBlurStageBuffer.Get(), "Blur Data Buffer");
 
+		SetD3DName(mGlowTexture.Get(), "Glow Texture");
+		SetD3DName(mGlowRTV.Get(), "Glow RTV");
+		SetD3DName(mGlowSRV.Get(), "Glow SRV");
+		SetD3DName(mSuperGlowTexture.Get(), "SuperGlow Texture");
+		SetD3DName(mSuperGlowSRV.Get(), "SuperGlow RTV");
+		SetD3DName(mSuperGlowRTV.Get(), "SuperGlow SRV");
 
 		// The G-Buffer
 		SetD3DName(mAlbedoTexture.Get(),   "GBuffer Albedo Texture");
@@ -856,10 +862,10 @@ throw "Something has gone catastrophically wrong!";
 		if (mEnabledFeatures[eRendererFeature_SuperGlow]) {
 			BlurTextures(mSuperGlowTexture.GetAddressOf(), 1, 2.0f, 0.4f);
 		}
-		if (mEnabledFeatures[eRendererFeature_Bloom]) {
-			RenderForBloom();
-		}
 		if (mEnabledFeatures[eRendererFeature_Glow]) {
+			if (mEnabledFeatures[eRendererFeature_Bloom]) {
+				RenderForBloom();
+			}
 			BlurTextures(mBloomTexture.GetAddressOf(), 1, 2.0f, 0.4f);
 		}
 
@@ -1184,6 +1190,7 @@ throw "Something has gone catastrophically wrong!";
 		mContext->ClearRenderTargetView(mPositionRTV.Get(), black);
 		mContext->ClearRenderTargetView(mNormalRTV.Get(), black);
 		mContext->ClearRenderTargetView(mSpecularRTV.Get(), black);
+		mContext->ClearRenderTargetView(mGlowRTV.Get(), black);
 		mContext->ClearRenderTargetView(mSuperGlowRTV.Get(), black);
 		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 
