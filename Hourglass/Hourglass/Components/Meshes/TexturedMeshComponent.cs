@@ -7,10 +7,10 @@ namespace Hourglass
 {
 	public class TexturedMeshComponent : MeshComponent
 	{
-		protected ComboBox mTexture, mEmissive, mSpecular;
-		protected Label mLbDiffuse, mLbEmissive, mLbSpecular;
+		protected ComboBox mTexture, mEmissive, mSpecular, mNormal;
+		protected Label mLbDiffuse, mLbEmissive, mLbSpecular, mLbNormal;
 
-		public TexturedMeshComponent(int _yOffset = 0) : base(98 + _yOffset)
+		public TexturedMeshComponent(int _yOffset = 0) : base(131 + _yOffset)
 		{
 			mType = ComponentType.TexturedMesh;
 
@@ -18,19 +18,23 @@ namespace Hourglass
 			mLbDiffuse = new Label();
 			mLbEmissive = new Label();
 			mLbSpecular = new Label();
+			mLbNormal = new Label();
 
 			mTexture = new ComboBox();
 			mEmissive = new ComboBox();
 			mSpecular = new ComboBox();
+			mNormal = new ComboBox();
 
 			mShape = new TexturedShape();
 
             mGroupBox.Controls.Add(mLbDiffuse);
             mGroupBox.Controls.Add(mLbEmissive);
 			mGroupBox.Controls.Add(mLbSpecular);
+			mGroupBox.Controls.Add(mLbNormal);
 			mGroupBox.Controls.Add(mTexture);
 			mGroupBox.Controls.Add(mEmissive);
 			mGroupBox.Controls.Add(mSpecular);
+			mGroupBox.Controls.Add(mNormal);
 			#endregion
 
 			#region Component Setup
@@ -51,8 +55,13 @@ namespace Hourglass
 			mLbSpecular.Name = "mLbSpecular";
 			mLbSpecular.Text = "Specular Texture";
 
+			mLbNormal.AutoSize = true;
+			mLbNormal.Location = new System.Drawing.Point(6, 120 + _yOffset);
+			mLbNormal.Name = "mLbNormal";
+			mLbNormal.Text = "Normal Texture";
+
 			mTexture.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
-			mTexture.Location = new System.Drawing.Point(90, 19 + _yOffset);
+			mTexture.Location = new System.Drawing.Point(100, 19 + _yOffset);
 			mTexture.Size = new System.Drawing.Size(ContentWidth - mTexture.Left, 24);
 			mTexture.DropDownStyle = ComboBoxStyle.DropDownList;
 
@@ -63,8 +72,13 @@ namespace Hourglass
 
 			mSpecular.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
 			mSpecular.Location = new System.Drawing.Point(100, 84 + _yOffset);
-			mSpecular.Size = new System.Drawing.Size(ContentWidth - mTexture.Left, 24);
+			mSpecular.Size = new System.Drawing.Size(ContentWidth - mSpecular.Left, 24);
 			mSpecular.DropDownStyle = ComboBoxStyle.DropDownList;
+
+			mNormal.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
+			mNormal.Location = new System.Drawing.Point(100, 117 + _yOffset);
+			mNormal.Size = new System.Drawing.Size(ContentWidth - mNormal.Left, 24);
+			mNormal.DropDownStyle = ComboBoxStyle.DropDownList;
 
 
 			{
@@ -74,6 +88,7 @@ namespace Hourglass
 					mTexture.Items.Add(it.Current);
 					mEmissive.Items.Add(it.Current);
 					mSpecular.Items.Add(it.Current);
+					mNormal.Items.Add(it.Current);
 				}
 			}
 
@@ -137,6 +152,11 @@ namespace Hourglass
 			w.Write(s.Length + 1);
 			w.Write(s.ToCharArray());
 			w.Write(term);
+
+			s = ".." + ResourceManager.Instance.ResourceDirectory + mNormal.Text;
+			w.Write(s.Length + 1);
+			w.Write(s.ToCharArray());
+			w.Write(term);
 		}
 
 		public override void ReadData(BinaryReader r, int _version)
@@ -177,6 +197,17 @@ namespace Hourglass
 					mSpecular.SelectedIndex = index;
 				} else {
 					mSpecular.Text = "Couldn't find " + filename;
+				}
+			}
+			if (_version >= 7) {
+				filename = new string(r.ReadChars(r.ReadInt32() - 1));
+				r.ReadByte(); // Ignore null terminator.
+				filename = filename.Substring(filename.LastIndexOf("\\") + 1);
+				index = mNormal.Items.IndexOf(filename);
+				if (index >= 0) {
+					mNormal.SelectedIndex = index;
+				} else {
+					mNormal.Text = "Couldn't find " + filename;
 				}
 			}
 		}
