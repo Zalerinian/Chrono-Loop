@@ -366,9 +366,6 @@
     <ClInclude Include="Rendering\RenderList.h">
       <Filter>Rendering\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\CCEnterLevel.h">
-      <Filter>Actions</Filter>
-    </ClInclude>
     <ClInclude Include="Actions\MainMenuBT.h">
       <Filter>Actions</Filter>
     </ClInclude>
@@ -551,6 +548,9 @@
       <Filter>Actions\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Actions\CCCloneHeadCollider.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCPlatformButtonHold.h">
       <Filter>Actions</Filter>
     </ClInclude>
   </ItemGroup>

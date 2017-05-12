@@ -1013,7 +1013,7 @@ namespace Epoch
 										if (otherCol->mIsEnabled)
 										{
 											if (otherCol->mColliderType == Collider::eCOLLIDER_Cube || otherCol->mColliderType == Collider::eCOLLIDER_Controller &&
-												otherCol->mVelocity * ((ButtonCollider*)collider)->mPushNormal < 0)
+												otherCol->mVelocity * ((ButtonCollider*)collider)->mPushNormal < .1f)
 											{
 												CubeCollider* aabb2 = (CubeCollider*)otherCol;
 												if ((AabbToPlane(((ButtonCollider*)collider)->mLowerBound, *aabb1) == 1) && AABBtoAABB(*aabb1, *aabb2))
