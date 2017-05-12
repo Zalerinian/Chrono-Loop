@@ -35,6 +35,8 @@
 				<Event Id="752092787" Name="SFX_BoxWallCollideLevel3" ObjectPath="\Events\Default Work Unit\SFX_BoxWallCollideLevel3"/>
 				<Event Id="3124930127" Name="SFX_communication_channel" ObjectPath="\Events\Default Work Unit\SFX_communication_channel"/>
 				<Event Id="3901374612" Name="SFX_gentle_alarm" ObjectPath="\Events\Default Work Unit\SFX_gentle_alarm"/>
+				<Event Id="1000127844" Name="SFX_PlayerDeath" ObjectPath="\Events\Default Work Unit\SFX_PlayerDeath"/>
+				<Event Id="3299920505" Name="SFX_ResetBoxes" ObjectPath="\Events\Default Work Unit\SFX_ResetBoxes"/>
 				<Event Id="1503523398" Name="SFX_sci_fi_door_close" ObjectPath="\Events\Default Work Unit\SFX_sci_fi_door_close"/>
 				<Event Id="2920536594" Name="SFX_sci_fi_door_open" ObjectPath="\Events\Default Work Unit\SFX_sci_fi_door_open"/>
 				<Event Id="2693013165" Name="SFX_TeleportSound" ObjectPath="\Events\Default Work Unit\SFX_TeleportSound"/>
@@ -47,6 +49,10 @@
 				<Event Id="1664409707" Name="Stop_Level3Ambient" ObjectPath="\Events\Default Work Unit\Stop_Level3Ambient"/>
 			</IncludedEvents>
 			<IncludedMemoryFiles>
+				<File Id="14324766" Language="SFX">
+					<ShortName>ResetBoxes.wav</ShortName>
+					<Path>SFX\ResetBoxes_3AE5877C.wem</Path>
+				</File>
 				<File Id="54674957" Language="SFX">
 					<ShortName>Music-SFX\Hub0.wav</ShortName>
 					<Path>SFX\Music-SFX\Hub0_3BDAD486.wem</Path>
@@ -58,6 +64,10 @@
 				<File Id="202696624" Language="SFX">
 					<ShortName>BoxWallCollideLevel3.wav</ShortName>
 					<Path>SFX\BoxWallCollideLevel3_3AE5877C.wem</Path>
+				</File>
+				<File Id="220881736" Language="SFX">
+					<ShortName>PlayerDeath.wav</ShortName>
+					<Path>SFX\PlayerDeath_3AE5877C.wem</Path>
 				</File>
 				<File Id="223646369" Language="SFX">
 					<ShortName>TimeResume.wav</ShortName>

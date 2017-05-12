@@ -1478,6 +1478,28 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="SFX_PlayerDeath" ID="{CBF77A25-2738-4C42-9A29-510A3FCD7305}">
+					<ChildrenList>
+						<Action Name="Play" ID="{D38997A5-6210-4BD5-89F7-B8850C91D75D}" ShortID="137809505" Type="Play" Scope="One" Global="false">
+							<ElementList>
+								<Element ID="{477438A6-CA75-4EAC-9194-86571C705163}" Global="false">
+									<ObjectRef Name="PlayerDeath" ID="{F2724692-A982-4B6A-BB5D-BDACB9074FD8}" WorkUnitID="{1D0317B3-D19A-41DC-A2E7-CAA9DD27FE60}"/>
+								</Element>
+							</ElementList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="SFX_ResetBoxes" ID="{4723DE88-5369-4A2B-BBFB-F4D8E5A133B2}">
+					<ChildrenList>
+						<Action Name="Play" ID="{E020D17D-4DEC-49C4-906F-54FE9FE4A3F5}" ShortID="450661880" Type="Play" Scope="One" Global="false">
+							<ElementList>
+								<Element ID="{93900AB1-7D1C-40D6-ACF0-F0DF34C443CE}" Global="false">
+									<ObjectRef Name="ResetBoxes" ID="{EDB9D34D-5195-4432-BFAE-1BA0FE9E2771}" WorkUnitID="{1D0317B3-D19A-41DC-A2E7-CAA9DD27FE60}"/>
+								</Element>
+							</ElementList>
+						</Action>
+					</ChildrenList>
+				</Event>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>
