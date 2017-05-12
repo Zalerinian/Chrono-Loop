@@ -11,10 +11,6 @@ cbuffer ViewData : register(b0)
 	EyeData eyes[2];
 }
 
-cbuffer EyePosition : register(b1) {
-	float4 EyePos;
-}
-
 struct GSOutput
 {
 	float4 position : SV_POSITION;
@@ -22,7 +18,7 @@ struct GSOutput
 	float4 texCoord : COLOR;
 	float4 wpos : WORLDPOS;
 	float4 shadowPos : SHADOW;
-	float4 eyePos : HEADPOS;
+	float3x3 TBN : TBN;
 	uint IID : CL_IID;
 	uint viewport : SV_ViewportArrayIndex;
 };
@@ -34,6 +30,7 @@ struct GSInput
 	float4 texCoord : COLOR;
 	float4 wpos : WORLDPOS;
 	float4 shadowPos : SHADOW;
+	float4 tangent : TANGENT;
 	uint IID : CL_IID;
 };
 
@@ -41,6 +38,8 @@ struct GSInput
 void main(triangle GSInput input[3], inout TriangleStream<GSOutput> TriStream)
 {
 	GSOutput output;
+	float3 bitangent = cross(input[0].tangent.xyz, input[0].normal.xyz);
+	float3x3 tbn = float3x3(input[0].tangent.x, bitangent.x, input[0].normal.x, input[0].tangent.y, bitangent.y, input[0].normal.y, input[0].tangent.z, bitangent.z, input[0].normal.z);
 	[unroll]
 	for (uint i = 0; i < 3; ++i)
 	{
@@ -51,7 +50,7 @@ void main(triangle GSInput input[3], inout TriangleStream<GSOutput> TriStream)
 		output.IID = input[i].IID;
 		output.viewport = 0;
 		output.shadowPos = input[i].shadowPos;
-		output.eyePos = EyePos;
+		output.TBN = tbn;
 		TriStream.Append(output);
 	}
 
@@ -67,7 +66,7 @@ void main(triangle GSInput input[3], inout TriangleStream<GSOutput> TriStream)
 		output.IID = input[j].IID;
 		output.viewport = 1;
 		output.shadowPos = input[j].shadowPos;
-		output.eyePos = EyePos;
+		output.TBN = tbn;
 		TriStream.Append(output);
 	}
 	//TriStream.RestartStrip();

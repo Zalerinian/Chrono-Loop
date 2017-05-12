@@ -510,7 +510,7 @@ namespace Epoch {
 					case 6: //TexturedMesh
 					{
 						INT32 pathLength = 0;
-						std::string mesh, diffuse, emissive, specular;
+						std::string mesh, diffuse, emissive, specular, normal;
 						float transparency = 1.0f;
 						if (version >= 2) {
 							file.read((char*)&transparency, sizeof(float));
@@ -561,6 +561,14 @@ namespace Epoch {
 							delete[] temp;
 						}
 
+						if (version >= 7) {
+							file.read((char*)&pathLength, sizeof(INT32));
+							temp = new char[pathLength];
+							file.read(temp, pathLength);
+							normal = temp;
+							delete[] temp;
+						}
+
 						if (obj)
 						{
 							MeshComponent* mc = new MeshComponent(mesh.c_str(), transparency, psf, vsf, gsf);
@@ -570,6 +578,9 @@ namespace Epoch {
 							}
 							if (version >= 6 && specular != "..\\Resources\\") {
 								mc->AddTexture(specular.c_str(), eTEX_SPECULAR);
+							}
+							if (version >= 7 && normal != "..\\Resources\\") {
+								mc->AddTexture(normal.c_str(), eTEX_NORMAL);
 							}
 							obj->AddComponent(mc);
 						}

@@ -314,7 +314,7 @@ throw "Something has gone catastrophically wrong!";
 		mDepthBuffer.Attach(depthTexture);
 		mDSView.Attach(depthView);
 
-		CD3D11_TEXTURE2D_DESC t2d(DXGI_FORMAT_R16G16B16A16_FLOAT, _width, _height, 1, 1, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
+		CD3D11_TEXTURE2D_DESC t2d(DXGI_FORMAT_R32G32B32A32_FLOAT, _width, _height, 1, 1, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
 		ThrowIfFailed(mDevice->CreateTexture2D(&t2d, nullptr, mAlbedoTexture.GetAddressOf()));
 		ThrowIfFailed(mDevice->CreateTexture2D(&t2d, nullptr, mPositionTexture.GetAddressOf()));
 		ThrowIfFailed(mDevice->CreateTexture2D(&t2d, nullptr, mNormalTexture.GetAddressOf()));
@@ -467,6 +467,12 @@ throw "Something has gone catastrophically wrong!";
 		SetD3DName(mLBuffer.Get(), "Light Data Buffer");
 		SetD3DName(mBlurStageBuffer.Get(), "Blur Data Buffer");
 
+		SetD3DName(mGlowTexture.Get(), "Glow Texture");
+		SetD3DName(mGlowRTV.Get(), "Glow RTV");
+		SetD3DName(mGlowSRV.Get(), "Glow SRV");
+		SetD3DName(mSuperGlowTexture.Get(), "SuperGlow Texture");
+		SetD3DName(mSuperGlowSRV.Get(), "SuperGlow RTV");
+		SetD3DName(mSuperGlowRTV.Get(), "SuperGlow SRV");
 
 		// The G-Buffer
 		SetD3DName(mAlbedoTexture.Get(),   "GBuffer Albedo Texture");
@@ -522,11 +528,7 @@ throw "Something has gone catastrophically wrong!";
 		mContext->VSSetConstantBuffers(0, 1, mPositionBuffer.GetAddressOf());
 		mContext->VSSetConstantBuffers(1, 1, mSimInstanceBuffer.GetAddressOf());
 		mContext->GSSetConstantBuffers(0, 1, mVPBuffer.GetAddressOf());
-		mContext->GSSetConstantBuffers(1, 1, mHeadPosBuffer.GetAddressOf());
-		//(*mContext)->VSSetConstantBuffers(2, 1, nullptr); // This will crash. - Instance Buffer
-		//(*mContext)->VSSetConstantBuffers(3, 1, nullptr); // This will crash. - Animation Data Buffer
-
-		//(*mContext)->PSSetConstantBuffers(0, 1, nullptr); // This will crash. - Light Buffer
+		mContext->PSSetConstantBuffers(0, 1, mHeadPosBuffer.GetAddressOf());
 	}
 
 	void Renderer::InitializeStates()
@@ -860,10 +862,10 @@ throw "Something has gone catastrophically wrong!";
 		if (mEnabledFeatures[eRendererFeature_SuperGlow]) {
 			BlurTextures(mSuperGlowTexture.GetAddressOf(), 1, 2.0f, 0.4f);
 		}
-		if (mEnabledFeatures[eRendererFeature_Bloom]) {
-			RenderForBloom();
-		}
 		if (mEnabledFeatures[eRendererFeature_Glow]) {
+			if (mEnabledFeatures[eRendererFeature_Bloom]) {
+				RenderForBloom();
+			}
 			BlurTextures(mBloomTexture.GetAddressOf(), 1, 2.0f, 0.4f);
 		}
 
@@ -1045,7 +1047,7 @@ throw "Something has gone catastrophically wrong!";
 		// TODO Eventually: Give each shape a topology enum, perhaps?
 		mContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		// TODO Eventually: Actually assign input layouts for each render shape.
-		InputLayoutManager::Instance().ApplyLayout(eVERT_POSNORMTEX);
+		InputLayoutManager::Instance().ApplyLayout(eVERT_POSNORMTANTEX);
 
 		mUseVsync = _vsync;
 
@@ -1188,6 +1190,7 @@ throw "Something has gone catastrophically wrong!";
 		mContext->ClearRenderTargetView(mPositionRTV.Get(), black);
 		mContext->ClearRenderTargetView(mNormalRTV.Get(), black);
 		mContext->ClearRenderTargetView(mSpecularRTV.Get(), black);
+		mContext->ClearRenderTargetView(mGlowRTV.Get(), black);
 		mContext->ClearRenderTargetView(mSuperGlowRTV.Get(), black);
 		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 

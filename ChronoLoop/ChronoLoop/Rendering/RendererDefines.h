@@ -212,7 +212,6 @@ namespace Epoch {
 
 	enum GeometryBufferType {
 		eGB_Eyes = 0,
-		eGB_Head,
 		eGB_OFFSET,
 		eGB_REGISTER2 = 0,
 		eGB_REGISTER3,

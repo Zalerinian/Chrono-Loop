@@ -18,7 +18,7 @@ struct PSI {
 	float4 texCoord : COLOR;
 };
 
-PSI main(VERTEX_POSNORMTEX input) {
+PSI main(VERTEX_POSNORMTANTEX input) {
 	PSI r;
 	r.position = input.position;
 	r.normal = input.normal;

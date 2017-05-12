@@ -38,6 +38,7 @@ struct GSInput {
 	float4 texCoord : COLOR;
 	float4 wpos : WORLDPOS;
 	float4 shadowPos : SHADOW;
+	float4 tangent : TANGENT;
 	uint IID : CL_IID;
 };
 
