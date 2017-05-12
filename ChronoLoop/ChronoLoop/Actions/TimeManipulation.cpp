@@ -13,6 +13,7 @@
 #include "../Common/Common.h"
 #include "../Particles/ParticleSystem.h"
 #include "../Sound/SoundEngine.h"
+#include "CCCloneHeadCollider.h"
 
 namespace Epoch
 {
@@ -35,13 +36,13 @@ namespace Epoch
 		Level* currentLevel = LevelManager::GetInstance().GetCurrentLevel();
 
 	
-		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip) && !Settings::GetInstance().GetBool("PauseMenuUp") && !Settings::GetInstance().GetBool("CantPauseTime")) {
+		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip) && !Settings::GetInstance().GetBool("PauseMenuUp") && !Settings::GetInstance().GetBool("CantPauseTime") ) {
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			
 			
-				if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 7)) //created clone
+				if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") >= 7)) //created clone (tut 2)
 				{
-					// Resume Time
+					// Cancel Time
 
 					//put the original controll and headset back in control
 					//Remove the clone created
@@ -61,6 +62,7 @@ namespace Epoch
 					mDesaturationInterpolator.SetActive(true);
 
 					mPauseTime = false;
+					Settings::GetInstance().SetBool("IsTimePaused", false);
 					TimeManager::Instance()->RewindTimeline(
 						TimeManager::Instance()->GetCurrentSnapFrame(),
 						cLevel->GetHeadset()->GetUniqueID(),
@@ -68,12 +70,16 @@ namespace Epoch
 						cLevel->GetLeftController()->GetUniqueID());
 
 					mIsBeingMade = false;
+					TimeManager::Instance()->ShowTimelineColliders(false);
 
-				} else if (!mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 2)) {
+				} else if (!mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") >= 2)) {
 					// Stop time
 
-					if (Settings::GetInstance().GetInt("tutStep") == 3)//Paused time
-						Settings::GetInstance().SetInt("tutStep", 4);//Rewind
+					if (Settings::GetInstance().GetInt("tutStep") == 2)//Paused time (tut 1)
+					{
+						Settings::GetInstance().SetUInt("tut1FirstPause", TimeManager::Instance()->GetCurrentSnapFrame());
+						Settings::GetInstance().SetInt("tutStep", 3);//Rewind (tut 1)
+					}
 
 					if(Settings::GetInstance().GetInt("CurrentLevel") != 1)
 					{
@@ -91,6 +97,29 @@ namespace Epoch
 					mDesaturationInterpolator.SetActive(true);
 					TimeManager::Instance()->SetTempCurSnap();
 					mPauseTime = true;
+					Settings::GetInstance().SetBool("IsTimePaused", true);
+
+					VRInputManager::GetInstance().RewindInputTimeline(
+						TimeManager::Instance()->GetCurrentSnapFrame(),
+						cLevel->GetRightController()->GetUniqueID(),
+						cLevel->GetLeftController()->GetUniqueID());
+					if(mCurCloneController1 && mCurCloneController2 && mCurCloneHeadset)
+					{
+						CubeCollider* col = (CubeCollider*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
+						if (col) {
+							col->mShowCol = true;
+						}
+						col = (CubeCollider*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
+						if (col) {
+							col->mShowCol = true;
+						}
+						col = (CubeCollider*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
+						if (col) {
+							col->mShowCol = true;
+						}
+					}
+					TimeManager::Instance()->ShowTimelineColliders(true);
+				
 			}
 		}
 
@@ -107,17 +136,17 @@ namespace Epoch
 
 
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Touchpad) 
-			&& (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 5))//Created Clone 
+			&& (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 3))//Created Clone (tut 2)
 		{
 			
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
 			// Accept timeline position
 			if (mPauseTime) {
-				if (Settings::GetInstance().GetInt("tutStep") == 6)//accepted time
+				if (Settings::GetInstance().GetInt("tutStep") >= 4)//accepted time (
 				{
 					if (Settings::GetInstance().GetBool("Level1Tutorial"))
-						Settings::GetInstance().SetInt("tutStep", 8);//end
+						Settings::GetInstance().SetInt("tutStep", 6);//end
 					else
 						Settings::GetInstance().SetInt("tutStep", 7);//delete clone
 				}
@@ -144,7 +173,7 @@ namespace Epoch
 						TimeManager::Instance()->AddInterpolatorForClone(mCurCloneHeadset);
 						TimeManager::Instance()->AddInterpolatorForClone(mCurCloneController1);
 						TimeManager::Instance()->AddInterpolatorForClone(mCurCloneController2);
-						TimeManager::Instance()->AssignTextureToClone(mCurCloneHeadset->GetUniqueId());
+						TimeManager::Instance()->AssignTextureToClone(mCurCloneHeadset->GetUniqueID());
 						//it is extreamly important that the objects are added after time rewinded because of the objectLifeTimeStruct and more..
 						Physics::Instance()->mObjects.push_back(mCurCloneHeadset);
 						Physics::Instance()->mObjects.push_back(mCurCloneController1);
@@ -176,7 +205,7 @@ namespace Epoch
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneHeadset);
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController1);
 						TimeManager::Instance()->UpdatePlayerObjectInTimeline(mCurCloneController2);
-						TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueId(), false);
+						TimeManager::Instance()->DeleteClone(mCurCloneHeadset->GetUniqueID(), false);
 					}
 
 						//set the player headset and controllers birth back
@@ -199,39 +228,44 @@ namespace Epoch
 					cLevel->GetRightController()->GetUniqueID(),
 					cLevel->GetLeftController()->GetUniqueID());
 
-				cLevel->GetTimeManipulator()->makeTimePaused(false);
+				mPauseTime = false;
+				Settings::GetInstance().SetBool("IsTimePaused", false);
 				mIsBeingMade = false;
+				TimeManager::Instance()->ShowTimelineColliders(false);
 			}
 
 		}
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Trigger))
 		{
 			//toggle to have clone turn on or off
-			if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 4))//rewound time
+			if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") >= 4))//rewound time (tut 1)
 			{
-				if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck() == false)
-				{
-				mIsBeingMade = !mIsBeingMade;	
-				}
-
 				if(mCurCloneController1 && mCurCloneController2 && mCurCloneHeadset)
 				{
-					if(mIsBeingMade)
-					{
-						if (Settings::GetInstance().GetInt("tutStep") == 5)
-							Settings::GetInstance().SetInt("tutStep", 6);
+					bool FirstFrame = TimeManager::Instance()->GetCurrentSnapFrame() != TimeManager::Instance()->GetTempCurSnap();
+					if (FirstFrame) {
+						if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck() == false) {
+							mIsBeingMade = !mIsBeingMade;
+						}
 
-						((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
-						((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
-						((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
-						SystemLogger::GetLog() << "Opaque" << std::endl;
+						if (mIsBeingMade) {
+							if (Settings::GetInstance().GetInt("tutStep") == 4)//rewound time (tut 1)
+								Settings::GetInstance().SetInt("tutStep", 6);//pick up box (tut 1)
+
+							((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+							((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+							((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+							SystemLogger::GetLog() << "Opaque" << std::endl;
+						} else {
+							((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.3f);
+							((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.3f);
+							((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.3f);
+							SystemLogger::GetLog() << "Transparent" << std::endl;
+						}
 					}
 					else
 					{
-						((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.3f);
-						((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.3f);
-						((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.3f);
-						SystemLogger::GetLog() << "Transparent" << std::endl;
+						LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck();
 					}
 				}
 			}
@@ -240,6 +274,7 @@ namespace Epoch
 	}
 	void TimeManipulation::MakeCloneBaseObjects(BaseObject * _headset, BaseObject * _controller1, BaseObject * _controller2)
 	{
+		mIsBeingMade = false;
 		Level* currentLevel = LevelManager::GetInstance().GetCurrentLevel();
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
 		SystemLogger::GetLog() << "[Debug] A clone is being made, please hold: " << mCloneCount << " | Is left: " << mControllerRole << std::endl;
@@ -253,6 +288,8 @@ namespace Epoch
 		MeshComponent *visibleMesh = new MeshComponent("../Resources/Clone.obj",.35f);
 		visibleMesh->SetPixelShader(ePS_TRANSPARENT);
 		visibleMesh->AddTexture(TimeManager::Instance()->GetNextTexture().c_str(), eTEX_DIFFUSE);
+		SphereCollider* col = new SphereCollider(_headset, false, false, vec3f(), 100.0f, .02f, .2f, .2f, 0, 1, "../Resources/Clone.obj");
+		CCCloneHeadCollider* headCol = new CCCloneHeadCollider();
 		//visibleMesh->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
 		//visibleMesh->AddTexture("../Resources/Scanline.png", eTEX_CUSTOM2);
 
@@ -263,6 +300,8 @@ namespace Epoch
 		//Renderer::Instance()->GetDevice()->CreateBuffer(&bufferDesc, &initialData, visibleMesh->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].GetAddressOf());
 		//SetD3DName(visibleMesh->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].Get(), "Headset scanline buffer");
 		_headset->AddComponent(visibleMesh);
+		_headset->AddComponent(col);
+		_headset->AddComponent(headCol);
 
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
 		MeshComponent *mc = new MeshComponent("../Resources/Controller.obj",.35f);
@@ -309,6 +348,7 @@ namespace Epoch
 		TimeManager::Instance()->UpdatePlayerObjectInTimeline(_headset);
 		TimeManager::Instance()->UpdatePlayerObjectInTimeline(_controller1);
 		TimeManager::Instance()->UpdatePlayerObjectInTimeline(_controller2);
+
 		
 		TimeManager::Instance()->SetupClonePairs(_headset->GetUniqueID(),_controller1->GetUniqueID(), _controller2->GetUniqueID());
 	}
@@ -338,11 +378,11 @@ namespace Epoch
 				for (unsigned int j = 0; j < numTris; ++j) {
 					float hitTime;
 					if (Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, fwd, hitTime)) { 
-							TimeManager::Instance()->DeleteClone(clones[i]->GetUniqueId(),true);
+							TimeManager::Instance()->DeleteClone(clones[i]->GetUniqueID(),true);
 							--mNumOfConfirmedClones;
 
-							if (Settings::GetInstance().GetInt("tutStep") == 7)//deleted clone
-								Settings::GetInstance().SetInt("tutStep", 8);//finished tutorial
+							if (Settings::GetInstance().GetInt("tutStep") == 7)//deleted clone (tut 2)
+								Settings::GetInstance().SetInt("tutStep", 8);//finished level 2 tutorial
 
 							return true;
 					}

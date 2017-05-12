@@ -7,26 +7,30 @@ namespace Hourglass
 {
 	public class TexturedMeshComponent : MeshComponent
 	{
-		protected ComboBox mTexture, mEmissive;
-		protected Label mLbDiffuse, mLbEmissive;
+		protected ComboBox mTexture, mEmissive, mSpecular;
+		protected Label mLbDiffuse, mLbEmissive, mLbSpecular;
 
-		public TexturedMeshComponent(int _yOffset = 0) : base(65 + _yOffset)
+		public TexturedMeshComponent(int _yOffset = 0) : base(98 + _yOffset)
 		{
 			mType = ComponentType.TexturedMesh;
 
 			#region Component Creation
 			mLbDiffuse = new Label();
 			mLbEmissive = new Label();
+			mLbSpecular = new Label();
 
 			mTexture = new ComboBox();
 			mEmissive = new ComboBox();
+			mSpecular = new ComboBox();
 
 			mShape = new TexturedShape();
 
             mGroupBox.Controls.Add(mLbDiffuse);
             mGroupBox.Controls.Add(mLbEmissive);
+			mGroupBox.Controls.Add(mLbSpecular);
 			mGroupBox.Controls.Add(mTexture);
 			mGroupBox.Controls.Add(mEmissive);
+			mGroupBox.Controls.Add(mSpecular);
 			#endregion
 
 			#region Component Setup
@@ -42,6 +46,11 @@ namespace Hourglass
 			mLbEmissive.Name = "mLbEmissive";
 			mLbEmissive.Text = "Emissive Texture";
 
+			mLbSpecular.AutoSize = true;
+			mLbSpecular.Location = new System.Drawing.Point(6, 87 + _yOffset);
+			mLbSpecular.Name = "mLbSpecular";
+			mLbSpecular.Text = "Specular Texture";
+
 			mTexture.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
 			mTexture.Location = new System.Drawing.Point(90, 19 + _yOffset);
 			mTexture.Size = new System.Drawing.Size(ContentWidth - mTexture.Left, 24);
@@ -52,6 +61,11 @@ namespace Hourglass
 			mEmissive.Size = new System.Drawing.Size(ContentWidth - mEmissive.Left, 24);
 			mEmissive.DropDownStyle = ComboBoxStyle.DropDownList;
 
+			mSpecular.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
+			mSpecular.Location = new System.Drawing.Point(100, 84 + _yOffset);
+			mSpecular.Size = new System.Drawing.Size(ContentWidth - mTexture.Left, 24);
+			mSpecular.DropDownStyle = ComboBoxStyle.DropDownList;
+
 
 			{
 				List<string>.Enumerator it = ResourceManager.Instance.Textures.GetEnumerator();
@@ -59,6 +73,7 @@ namespace Hourglass
 				{
 					mTexture.Items.Add(it.Current);
 					mEmissive.Items.Add(it.Current);
+					mSpecular.Items.Add(it.Current);
 				}
 			}
 
@@ -113,8 +128,12 @@ namespace Hourglass
 			byte term = 0;
 			w.Write(term);
 
-			// TODO: Add checks for no texture being selected.
 			s = (".." + ResourceManager.Instance.ResourceDirectory + mEmissive.Text);
+			w.Write(s.Length + 1);
+			w.Write(s.ToCharArray());
+			w.Write(term);
+
+			s = ".." + ResourceManager.Instance.ResourceDirectory + mSpecular.Text;
 			w.Write(s.Length + 1);
 			w.Write(s.ToCharArray());
 			w.Write(term);
@@ -149,6 +168,17 @@ namespace Hourglass
 					mEmissive.Text = "Error locating emissive texture.";
 				}
 			}
+			if(_version >= 6) {
+				filename = new string(r.ReadChars(r.ReadInt32() - 1));
+				r.ReadByte(); // Ignore null terminator.
+				filename = filename.Substring(filename.LastIndexOf("\\") + 1);
+				index = mSpecular.Items.IndexOf(filename);
+				if(index >= 0) {
+					mSpecular.SelectedIndex = index;
+				} else {
+					mSpecular.Text = "Couldn't find " + filename;
+				}
+			}
 		}
 
         public int CheckForTexture(string _object) {
@@ -179,6 +209,7 @@ namespace Hourglass
 			TexturedMeshComponent comp = _other as TexturedMeshComponent;
 			comp.mTexture.SelectedIndex = mTexture.SelectedIndex;
 			comp.mEmissive.SelectedIndex = mEmissive.SelectedIndex;
+			comp.mSpecular.SelectedIndex = mSpecular.SelectedIndex;
 		}
 	}
 }

@@ -8,7 +8,8 @@ namespace Epoch
 
 #pragma region Particles
 
-	Particle& Particle::Init(Particle& _p)
+	//Broken i guess???
+	Particle& Particle::Init(const Particle& _p)
 	{
 		Particle* p = new Particle();
 		*p = _p;
@@ -191,13 +192,9 @@ namespace Epoch
 		delete mBase;
 		mTName[0] = mTName[1] = mTName[2] = nullptr;
 		mBase = nullptr;
-		for (auto i = mParticles.begin(); i != mParticles.end(); i++)
+		for (auto i = mParticles.begin(); i != mParticles.end(); ++i)
 		{
-			Particle* t = *i;
-			i = mParticles.erase(i);
-			if (i == mParticles.end())
-				break;
-			delete t;
+			delete *i;
 		}
 		mParticles.clear();
 		mTotalParticles = mMaxParticles = 0;
@@ -270,6 +267,8 @@ namespace Epoch
 	{
 		return mPBuffer.Get();
 	}
+
+
 	ID3D11ShaderResourceView* ParticleEmitter::GetTexture(int _index)
 	{
 		return mTextures[_index].tv.Get();
@@ -431,13 +430,10 @@ namespace Epoch
 		{
 			if ((*iter)->IsActive() == false)
 			{
-				(*i).pos = vec4f(0, 0, 0, 0);
-				(*i).size = 0;
-				Particle* temp = (*iter);
+				delete (*iter);
 				iter = mParticles.erase(iter);
 				if (iter == mParticles.end())
 					break;
-				delete temp;
 			}
 		}
 	}
@@ -463,7 +459,10 @@ namespace Epoch
 			}
 			if (mParticles.size() < mMaxParticles && (total < mTotalParticles || mTotalParticles == -1))
 			{
-				Particle* p = &Particle::Init(*mBase);
+				//Particle* p = &Particle::Init(*mBase);
+				Particle* p = new Particle();
+				p->emitterType = 0xFFEEDDCC;
+				(*p) = (*mBase);
 				float x, y, z;
 				x = (mMinPX + mPos.x) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPX + mPos.x) - (mMinPX + mPos.x))));
 				y = (mMinPY + mPos.y) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPY + mPos.y) - (mMinPY + mPos.y))));
@@ -483,9 +482,9 @@ namespace Epoch
 
 	void ParticleEmitter::Clear()
 	{
-		for (Particle *p : mParticles)
-			delete p;
-
+		for (auto it = mParticles.begin(); it != mParticles.end(); ++it) {
+			delete *it;
+		}
 		mParticles.clear();
 	}
 
@@ -714,7 +713,10 @@ namespace Epoch
 			}
 			if (mParticles.size() < mMaxParticles && (total < mTotalParticles || mTotalParticles == -1))
 			{
-				Particle* p = &Particle::Init(*mBase);
+				//Particle* p = &Particle::Init(*mBase);
+				Particle* p = new Particle();
+				p->emitterType = 0x000000FF;
+				(*p) = (*mBase);
 				float x, y, z;
 				x = (mMinPX + mPos.x) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPX + mPos.x) - (mMinPX + mPos.x))));
 				y = (mMinPY + mPos.y) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPY + mPos.y) - (mMinPY + mPos.y))));
@@ -769,6 +771,7 @@ namespace Epoch
 			{
 				//Particle* p = &Particle::Init(*mBase);
 				Particle* p = new Particle();
+				p->emitterType = 0x0000FF00;
 				(*p) = (*mBase);
 				float x, y, z;
 				x = (mMinPX + mPos.x) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPX + mPos.x) - (mMinPX + mPos.x))));
@@ -812,7 +815,7 @@ namespace Epoch
 	{
 		timer += TimeManager::Instance()->GetDeltaTime();
 
-		if ((int)timer % 4 != 0)
+		if ((int)timer % mTime != 0)
 			return;
 
 		for (int i = 0; i < mPerSec; i++)
@@ -833,7 +836,10 @@ namespace Epoch
 			}
 			if (mParticles.size() < mMaxParticles && (total < mTotalParticles || mTotalParticles == -1))
 			{
-				Particle* p = &Particle::Init(*mBase);
+				//Particle* p = &Particle::Init(*mBase);
+				Particle* p = new Particle();
+				p->emitterType = 0x10FF0002;
+				(*p) = (*mBase);
 				float x, y, z;
 				x = (mMinPX + mPos.x) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPX + mPos.x) - (mMinPX + mPos.x))));
 				y = (mMinPY + mPos.y) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((mMaxPY + mPos.y) - (mMinPY + mPos.y))));

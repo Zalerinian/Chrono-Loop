@@ -6,6 +6,7 @@
 #include "../Core/Level.h"
 #include "../Core/LevelManager.h"
 #include "../Common/Settings.h"
+#include "../Core/Pool.h"
 
 namespace Epoch {
 	unsigned int BaseObject::ObjectCount = 0;
@@ -76,7 +77,7 @@ namespace Epoch {
 		mParent = nullptr;
 		for (auto it = mChildren.begin(); it != mChildren.end(); ++it) {
 			LevelManager::GetInstance().GetCurrentLevel()->RemoveObject(*it);
-			delete (*it);
+			Pool::Instance()->iAddObject(*it);
 		}
 		mChildren.clear();
 		for (auto iter = mComponents.begin(); iter != mComponents.end(); ++iter) {
@@ -196,16 +197,6 @@ namespace Epoch {
 			}
 			it->second.clear();
 		}
-
-		return;
-		
-		
-
-		
-	
-		
-		
-		return;
 	}
 
 	

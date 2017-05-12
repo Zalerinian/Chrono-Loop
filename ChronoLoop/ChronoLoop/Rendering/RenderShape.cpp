@@ -70,7 +70,7 @@ namespace Epoch {
 	}
 
 	void RenderShape::Load(const char * _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs) {
-		mName = std::string("Shape: ") + _path;
+		mName = std::string("Shape: ") + (_path + strlen("../Resources/"));
 		mMesh = MeshCache::GetInstance().GetMesh(_path);
 		if (_invert) {
 			mMesh->Invert();
@@ -80,7 +80,7 @@ namespace Epoch {
 	}
 
 	void RenderShape::Load(const char * _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs, GeometryShaderFormat _gs) {
-		mName = std::string("Shape: ") + _path;
+		mName = std::string("Shape: ") + (_path + strlen("../Resources/"));
 		mMesh = MeshCache::GetInstance().GetMesh(_path);
 		if (_invert) {
 			mMesh->Invert();
@@ -113,7 +113,7 @@ namespace Epoch {
 			vf = eVS_MAX;
 		}
 		if (_gf < eGS_PosNormTex || _gf >= eGS_MAX) {
-			SystemLogger::Error() << "Invalid Geometry Shader enumation at RenderShape::SetShaders: " << _gf << ". Forcing to eVS_MAX!" << std::endl;
+			SystemLogger::Error() << "Invalid Geometry Shader enumation at RenderShape::SetShaders: " << _gf << ". Forcing to eGS_MAX!" << std::endl;
 			_gf = eGS_MAX;
 		}
 		mContext.mVertexShaderFormat = vf;
@@ -200,4 +200,42 @@ namespace Epoch {
 			mContext == _other.mContext;
 	}
 
+	void RenderShape::UpdateBufferData(Mesh* _mesh)
+	{
+		ID3D11Buffer * ibuffer = IndexBufferManager::GetBuffer().Get();
+		ID3D11Buffer * vbuffer = VertexBufferManager::GetBuffer(VertFormat::eVERT_POSNORMTEX).Get();
+		int ioff = sizeof(unsigned int) * mIndexOffset, voff = sizeof(VertexPosNormTex) * mVertexOffset;
+
+		ID3D11Buffer* i, *v;
+		D3D11_BUFFER_DESC desc;
+		D3D11_SUBRESOURCE_DATA data;
+
+		Renderer::Instance()->GetRendererLock().lock();
+		//Make buffer with new vert data
+		desc.Usage = D3D11_USAGE_DEFAULT;
+		desc.ByteWidth = sizeof(VertexPosNormTex) * _mesh->VertSize();
+		desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		desc.CPUAccessFlags = 0;
+		desc.MiscFlags = 0;
+		desc.StructureByteStride = 0;
+
+		data.pSysMem = _mesh->GetVerts();
+		Renderer::Instance()->GetDevice()->CreateBuffer(&desc, &data, &v);
+
+		desc.Usage = D3D11_USAGE_DEFAULT;
+		desc.ByteWidth = sizeof(unsigned int) * _mesh->IndicieSize();
+		desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+		desc.CPUAccessFlags = 0;
+		desc.MiscFlags = 0;
+		desc.StructureByteStride = 0;
+
+		data.pSysMem = _mesh->GetIndicies();
+		Renderer::Instance()->GetDevice()->CreateBuffer(&desc, &data, &i);
+
+		//Calc off... x off num bytes to beginning dest subr = 0 , y & z = 0
+		Renderer::Instance()->GetContext()->CopySubresourceRegion(ibuffer, 0, ioff, 0, 0, i, 0, 0);
+		Renderer::Instance()->GetContext()->CopySubresourceRegion(vbuffer, 0, voff, 0, 0, v, 0, 0);
+
+		Renderer::Instance()->GetRendererLock().unlock();
+	}
 }

@@ -3,6 +3,7 @@ Event	ID	Name			Wwise Object Path	Notes
 	595909313	Resume_Hangar_Escape_LOOP			\Default Work Unit\AMBIENCE_EVENTS\Resume_Hangar_Escape_LOOP	
 	715006247	SFX_MetallicSound			\Default Work Unit\SFX_EVENTS\SFX_MetallicSound	
 	831993537	Stop_Casual_Level_LOOP			\Default Work Unit\AMBIENCE_EVENTS\Stop_Casual_Level_LOOP	
+	966775589	SFX_BoxReset			\Default Work Unit\SFX_BoxReset	
 	996404944	Play_Hangar_Escape_LOOP			\Default Work Unit\AMBIENCE_EVENTS\Play_Hangar_Escape_LOOP	
 	1000127844	SFX_PlayerDeath			\Default Work Unit\SFX_PlayerDeath	
 	1121098459	Resume_A_Timelapse			\Default Work Unit\Resume_A_Timelapse	
@@ -13,7 +14,6 @@ Event	ID	Name			Wwise Object Path	Notes
 	2042848668	Play_A_Timelapse			\Default Work Unit\Play_A_Timelapse	
 	2745027494	Stop_A_Timelapse			\Default Work Unit\Stop_A_Timelapse	
 	3005238139	Play_Casual_Level_LOOP			\Default Work Unit\AMBIENCE_EVENTS\Play_Casual_Level_LOOP	
-	3299920505	SFX_ResetBoxes			\Default Work Unit\SFX_ResetBoxes	
 	3445986553	Pause_Orbit_LOOP			\Default Work Unit\AMBIENCE_EVENTS\Pause_Orbit_LOOP	
 	3600779026	Pause_FutureTechSound			\Default Work Unit\SFX_EVENTS\Pause_FutureTechSound	
 	3699510579	Play_Orbit_LOOP			\Default Work Unit\AMBIENCE_EVENTS\Play_Orbit_LOOP	
@@ -24,12 +24,12 @@ Event	ID	Name			Wwise Object Path	Notes
 	4280461585	Stop_Orbit_LOOP			\Default Work Unit\AMBIENCE_EVENTS\Stop_Orbit_LOOP	
 
 In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
+	82104428	ResetBoxes	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\ResetBoxes_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\ResetBoxes		54533
 	145064967	FutureTechSound	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Sci Fi - Starship Sub Amb_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\SFX\FutureTechSound		757759
 	312620889	Casual Level LOOP	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Puzzles\Casual Level LOOP_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\AMBIENCE\Puzzles\Casual Level LOOP		4774836
+	432367509	PlayerDeath	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\PlayerDeath_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\PlayerDeath		121441
 	596824733	MetallicSound	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Metallic Noise 004_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\SFX\MetallicSound		385779
-	750689059	ResetBoxes	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\ResetBoxes_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\ResetBoxes		54533
 	753352436	Orbit LOOP	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Orbit LOOP_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\AMBIENCE\Orbit LOOP		3962370
 	859612369	A_Timelapse	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\A_Timelapse_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\A_Timelapse		13308692
 	883031343	Hangar Escape LOOP	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Hangar Escape LOOP_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\AMBIENCE\Hangar Escape LOOP		2247716
-	1015579217	PlayerDeath	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\PlayerDeath_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\PlayerDeath		121441
 

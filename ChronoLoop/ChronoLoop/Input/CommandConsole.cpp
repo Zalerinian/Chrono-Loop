@@ -57,21 +57,21 @@ namespace Epoch
 				D2D1::ColorF(D2D1::ColorF::Black, 1.0f),
 				*(Draw::Instance().GetScreenBitmap().get())
 			);
-			Font* tempFont;// = new Font(L"Calibri", 20, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+			Font tempFont;// = new Font(L"Calibri", 20, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 			if (!mIsVR)
 			{
-				tempFont = new Font(L"Times New Roman", 20, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+				tempFont = Font(L"Times New Roman", 20, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 			}
 			else
 			{
-				tempFont = new Font(L"Calibri", 40, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+				tempFont = Font(L"Calibri", 40, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 			}
 			Draw::Instance().DrawTextToBitmap(
 				0.0f,
 				(*Draw::Instance().GetContext2D())->GetSize().height*(31.3f / 32.0f),
 				(*Draw::Instance().GetContext2D())->GetSize().width*(3.0f / 8.0f),
 				(*Draw::Instance().GetContext2D())->GetSize().height,
-				*tempFont, mCurCommand,
+				tempFont, mCurCommand,
 				*(Draw::Instance().GetScreenBitmap()).get()
 			);
 
@@ -111,21 +111,21 @@ namespace Epoch
 	}
 	void CommandConsole::Display()
 	{
-		Font* tempFont;// = new Font(L"Calibri", 20, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+		Font tempFont;// = new Font(L"Calibri", 20, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 		if (!mIsVR)
 		{
-			tempFont = new Font(L"Times New Roman", 20, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+			tempFont = Font(L"Times New Roman", 20, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 		}
 		else
 		{
-			tempFont = new Font(L"Calibri", 40, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+			tempFont = Font(L"Calibri", 40, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 		}
 		Draw::Instance().DrawTextToBitmap(
 			0.0f,
 			(*Draw::Instance().GetContext2D())->GetSize().height*(5.0f / 8.0f),
 			(*Draw::Instance().GetContext2D())->GetSize().width*(3.0f / 8.0f),
 			(*Draw::Instance().GetContext2D())->GetSize().height*(31.0f / 32.0f),
-			*tempFont, mCurDisplay,
+			tempFont, mCurDisplay,
 			*(Draw::Instance().GetScreenBitmap()).get()
 		);
 	}
@@ -277,14 +277,14 @@ namespace Epoch
 					sInstance->tempFps = 0;
 				}
 			}
-			Font* tempFont;
+			Font tempFont;
 			if (!mIsVR)
 			{
-				tempFont = new Font(L"Times New Roman", 25, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+				tempFont = Font(L"Times New Roman", 25, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 			}
 			else
 			{
-				tempFont = new Font(L"Calibri", 40, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+				tempFont = Font(L"Calibri", 40, (D2D1::ColorF(D2D1::ColorF::Red, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 			}
 
 			std::wstring FPS = L"FPS: " + std::to_wstring(sInstance->mFps);
@@ -292,7 +292,7 @@ namespace Epoch
 				(*Draw::Instance().GetContext2D())->GetSize().width*(25.0f / 32.0f),
 				(*Draw::Instance().GetContext2D())->GetSize().height*(30.5f / 32.0f),
 				(*Draw::Instance().GetContext2D())->GetSize().width,
-				(*Draw::Instance().GetContext2D())->GetSize().height, *tempFont,
+				(*Draw::Instance().GetContext2D())->GetSize().height, tempFont,
 				FPS, *(Draw::Instance().GetScreenBitmap()).get());
 		}
 	}

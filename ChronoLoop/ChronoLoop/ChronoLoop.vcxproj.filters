@@ -16,9 +16,6 @@
     <Filter Include="Sound">
       <UniqueIdentifier>{eae951e6-7e90-499b-9be0-96789c656790}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core">
-      <UniqueIdentifier>{bf92f6b6-ef33-4343-b556-a2be8e0f0bce}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{c5141bd8-8c74-4bee-9186-a68cdc829d07}</UniqueIdentifier>
     </Filter>
@@ -27,12 +24,6 @@
     </Filter>
     <Filter Include="Input\Source Files">
       <UniqueIdentifier>{1b0c1cc2-8905-40e6-9615-423009dcb165}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Header Files">
-      <UniqueIdentifier>{4a4608d5-c13c-4309-8d3d-2898cc3b1219}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Source Files">
-      <UniqueIdentifier>{72f9a024-3f4f-4db5-a6de-460380b3b4f0}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\Header Files">
       <UniqueIdentifier>{264e0f99-edf8-4b4a-bd07-a7c4ac29f8e4}</UniqueIdentifier>
@@ -147,6 +138,18 @@
     </Filter>
     <Filter Include="Rendering\Shaders\Geometry Shaders">
       <UniqueIdentifier>{ebfe2c81-866c-421b-aac0-bd789cbb4a1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{bf92f6b6-ef33-4343-b556-a2be8e0f0bce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Header Files">
+      <UniqueIdentifier>{4a4608d5-c13c-4309-8d3d-2898cc3b1219}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Source Files">
+      <UniqueIdentifier>{72f9a024-3f4f-4db5-a6de-460380b3b4f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Shaders\Includes">
+      <UniqueIdentifier>{1f507585-5bb4-4806-b776-3a52d6fbd191}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -471,7 +474,6 @@
     <ClInclude Include="Actions\CCEnterLevel1.h">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="..\Resources\Soundbanks\Wwise_IDs.h" />
     <ClInclude Include="Actions\CCButtonHold.h">
       <Filter>Actions</Filter>
     </ClInclude>
@@ -493,9 +495,6 @@
     </ClInclude>
     <ClInclude Include="Actions\CCSnapToPlayerPos.h">
       <Filter>Actions</Filter>
-    </ClInclude>
-    <ClInclude Include="Actions\BoxSnapToControllerAction.hpp">
-      <Filter>Actions\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Actions\CCAnimationController.h">
       <Filter>Actions</Filter>
@@ -530,11 +529,28 @@
     <ClInclude Include="Actions\CCLevel3BoxMovementButton.h">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="CCBoxSpinRandom.h" />
     <ClInclude Include="Actions\CCBoxSpinRandom.h">
       <Filter>Actions</Filter>
     </ClInclude>
     <ClInclude Include="Actions\CCBoxSpinRandomSmall.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="CCBoxSpinRandom.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resources\Soundbanks\Wwise_IDs.h">
+      <Filter>Sound\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCLevel3BoxSmash.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCLevel1TutorialButton.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\BoxSnapToControllerAction.hpp">
+      <Filter>Actions\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCCloneHeadCollider.h">
       <Filter>Actions</Filter>
     </ClInclude>
   </ItemGroup>
@@ -816,7 +832,9 @@
       <Filter>Pathing</Filter>
     </ClCompile>
     <ClCompile Include="BVH.cpp" />
-    <ClCompile Include="Actions\BoxSnapToControllerAction.cpp" />
+    <ClCompile Include="Actions\BoxSnapToControllerAction.cpp">
+      <Filter>Actions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
@@ -891,12 +909,23 @@
     <FxCompile Include="Rendering\Shaders\PSTransparentScanline.hlsl">
       <Filter>Rendering\Shaders\Pixel shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Rendering\Shaders\ShadowVS.hlsl" />
     <FxCompile Include="Rendering\shaders\PSAnimatedMultiscan.hlsl">
       <Filter>Rendering\Shaders\Pixel shaders</Filter>
     </FxCompile>
     <FxCompile Include="Renderer\shaders\GSAnimatedQuad.hlsl">
       <Filter>Rendering\Shaders\Geometry Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\PSBlur.hlsl">
+      <Filter>Rendering\Shaders\Pixel shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\VSBlur.hlsl">
+      <Filter>Rendering\Shaders\Vertex Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\PSBloom.hlsl">
+      <Filter>Rendering\Shaders\Pixel shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\PSCombiner.hlsl">
+      <Filter>Rendering\Shaders\Pixel shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -941,8 +970,11 @@
     <None Include="Rendering\RenderShaderDefines.hlsli">
       <Filter>Rendering\Header Files</Filter>
     </None>
-    <None Include="Effects.hlsli">
-      <Filter>Particles</Filter>
+    <None Include="Rendering\Shaders\Structs.hlsli">
+      <Filter>Rendering\Shaders\Includes</Filter>
+    </None>
+    <None Include="Rendering\Shaders\LightFunctions.hlsli">
+      <Filter>Rendering\Shaders\Includes</Filter>
     </None>
   </ItemGroup>
 </Project>

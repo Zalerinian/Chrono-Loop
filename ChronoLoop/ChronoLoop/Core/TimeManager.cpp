@@ -8,6 +8,7 @@
 #include "../Core/Pool.h"
 #include "../Core/Level.h"
 #include "../Input/VRInputManager.h"
+#include "../Actions/CCMazeHelper.h"
 #include "../Common/Breakpoint.h"
 #include "LevelManager.h"
 #include "../Common/Settings.h"
@@ -92,8 +93,8 @@ namespace Epoch {
 					while (temp && temp->mNext && temp->mNext->mData.mLastFrame < mLevelTime) {
 						if (temp->mData.mLastFrame < temp->mNext->mData.mLastFrame || (temp->mData.mLastFrame == temp->mNext->mData.mLastFrame && (temp->mNext->mData.mTime < (mTimestamp / RecordingRate)))) {
 							for (unsigned int i = 0; i < mClones.size(); i++) {
-								if (mClones[i]->GetUniqueId() == temp->mNext->mData.mControllerId) {
-									if (DoesCloneExist(mClones[i]->GetUniqueId(), mLevelTime)) {
+								if (mClones[i]->GetUniqueID() == temp->mNext->mData.mControllerId) {
+									if (DoesCloneExist(mClones[i]->GetUniqueID(), mLevelTime)) {
 										SystemLogger::GetLog() << "Clone:" << "id " << temp->mData.mControllerId << " " << temp->mNext->mData.mButton << ':' << temp->mNext->mData.mButtonState << std::endl;
 									} else {
 										SystemLogger::GetLog() << "Found false" << std::endl;
@@ -139,6 +140,12 @@ namespace Epoch {
 		SetClonePair(_id3, p3);
 	}
 
+	void TimeManager::ShowTimelineColliders(bool _show)
+	{
+		mTimeline->ShowLiveObjectsColliders(_show);
+	}
+
+
 	TimeManager * TimeManager::Instance() {
 		if (!instanceTimemanager) {
 			instanceTimemanager = new TimeManager();
@@ -156,19 +163,6 @@ namespace Epoch {
 			mTimeline->AddBaseObject(_obj, _obj->GetUniqueID());
 			//Level* templvl = LevelManager::GetInstance().GetCurrentLevel();
 			instanceTimemanager->AddInterpolatorToObject(_obj);
-			//if (LevelManager::GetInstance().GetCurrentLevel() == nullptr)
-			//{
-			//	if (_obj->GetName().find("Controller1 - 0") == std::string::npos &&
-			//		_obj->GetName().find("Controller2 - 0") == std::string::npos) { //TODO RYAN: TEMPORARY FIX FOR INTERPOLATION
-			//		instanceTimemanager->AddInterpolatorToObject(_obj);
-			//	}
-			//}7
-			//else {
-			//	if (_obj->GetName().find("Controller1 - " + std::to_string(LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->GetNumClones())) == std::string::npos &&
-			//		_obj->GetName().find("Controller2 - " + std::to_string(LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->GetNumClones())) == std::string::npos) { //TODO RYAN: TEMPORARY FIX FOR INTERPOLATION
-			//		instanceTimemanager->AddInterpolatorToObject(_obj);
-			//	}
-			//}
 		}
 	}
 
@@ -238,7 +232,7 @@ namespace Epoch {
 		bool del = false;
 		for (int i = 0; i < mClones.size(); ) {
 			del = false;
-			if (mClones[i]->GetUniqueId() == _id1 || mClones[i]->GetUniqueId() == pair.mOther1 || mClones[i]->GetUniqueId() == pair.mOther2) {
+			if (mClones[i]->GetUniqueID() == _id1 || mClones[i]->GetUniqueID() == pair.mOther1 || mClones[i]->GetUniqueID() == pair.mOther2) {
 
 				if (mClones[i]->GetUniqueID() == pair.mCur && _useParticleEffect) {
 					Particle * p = &Particle::Init();
@@ -266,10 +260,10 @@ namespace Epoch {
 					}
 				}
 				//This doesnt delete the input left of the clone. We may not want to do that to minimize delete calls
-				std::unordered_map<unsigned short, unsigned int>::iterator textureIterator = mCloneTextures.find(mClones[i]->GetUniqueId());
+				std::unordered_map<unsigned short, unsigned int>::iterator textureIterator = mCloneTextures.find(mClones[i]->GetUniqueID());
 				if (textureIterator != mCloneTextures.end()) {
 					mCloneTextureBitset[textureIterator->second] = false;
-					mCloneTextures.erase(mClones[i]->GetUniqueId());
+					mCloneTextures.erase(mClones[i]->GetUniqueID());
 				}
 
 				//Find the clone interpolator and delete it
@@ -301,7 +295,7 @@ namespace Epoch {
 
 				SystemLogger::GetLog() << "Clone id:" << mClones[i]->GetUniqueID() << " has been deleted" << std::endl;
 				//Remove it from being tracked by timeline
-				mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueId());
+				mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueID());
 				LevelManager::GetInstance().GetCurrentLevel()->RemoveObject(mClones[i]);
 				Pool::Instance()->iAddObject(mClones[i]);
 				mClones.erase(mClones.begin() + i);
@@ -438,17 +432,17 @@ namespace Epoch {
 		if (Settings::GetInstance().GetBool("CloneCounter")) {
 			std::wstring CloneCount = L"Clone(s): " + std::to_wstring(mClones.size());
 
-			Font* tempFont;
+			Font tempFont;
 			if (!CommandConsole::Instance().isVRon()) {
-				tempFont = new Font(L"Times New Roman", 25, (D2D1::ColorF(D2D1::ColorF::Purple, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+				tempFont = Font(L"Times New Roman", 25, (D2D1::ColorF(D2D1::ColorF::Purple, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 			} else {
-				tempFont = new Font(L"Calibri", 40, (D2D1::ColorF(D2D1::ColorF::Purple, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+				tempFont = Font(L"Calibri", 40, (D2D1::ColorF(D2D1::ColorF::Purple, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 			}
 			Draw::Instance().DrawTextToBitmap(
 				(*Draw::Instance().GetContext2D())->GetSize().width*(25.0f / 32.0f),
 				(*Draw::Instance().GetContext2D())->GetSize().height*(29.0f / 32.0f),
 				(*Draw::Instance().GetContext2D())->GetSize().width,
-				(*Draw::Instance().GetContext2D())->GetSize().height*(30.5f / 32.0f), *tempFont,
+				(*Draw::Instance().GetContext2D())->GetSize().height*(30.5f / 32.0f), tempFont,
 				CloneCount, *(Draw::Instance().GetScreenBitmap()).get());
 		}
 	}
@@ -457,17 +451,17 @@ namespace Epoch {
 		if (Settings::GetInstance().GetBool("SnapCounter")) {
 			std::wstring CloneCount = L"Snapshots: " + std::to_wstring(mTimeline->GetCurrentGameTimeIndx());
 
-			Font* tempFont;
+			Font tempFont;
 			if (!CommandConsole::Instance().isVRon()) {
-				tempFont = new Font(L"Times New Roman", 25, (D2D1::ColorF(D2D1::ColorF::Blue, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+				tempFont = Font(L"Times New Roman", 25, (D2D1::ColorF(D2D1::ColorF::Blue, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 			} else {
-				tempFont = new Font(L"Calibri", 40, (D2D1::ColorF(D2D1::ColorF::Blue, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+				tempFont = Font(L"Calibri", 40, (D2D1::ColorF(D2D1::ColorF::Blue, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
 			}
 			Draw::Instance().DrawTextToBitmap(
 				(*Draw::Instance().GetContext2D())->GetSize().width*(25.0f / 32.0f),
 				(*Draw::Instance().GetContext2D())->GetSize().height*(26.0f / 32.0f),
 				(*Draw::Instance().GetContext2D())->GetSize().width,
-				(*Draw::Instance().GetContext2D())->GetSize().height*(29.0f / 32.0f), *tempFont,
+				(*Draw::Instance().GetContext2D())->GetSize().height*(29.0f / 32.0f), tempFont,
 				CloneCount, *(Draw::Instance().GetScreenBitmap()).get());
 
 
@@ -492,15 +486,22 @@ namespace Epoch {
 				if (temp->mCurCloneHeadset && temp->mCurCloneController1 && temp->mCurCloneController2) {
 					mTimeline->MoveAllComponentsToSnapExceptPlayer(mtempCurSnapFrame, temp->mCurCloneHeadset->GetUniqueID(), temp->mCurCloneController1->GetUniqueID(), temp->mCurCloneController2->GetUniqueID());
 				} else if (tempLevel->GetHeadset() && tempLevel->GetLeftController() && tempLevel->GetRightController()) {
-					mTimeline->MoveAllComponentsToSnapExceptPlayer(mtempCurSnapFrame, tempLevel->GetHeadset()->GetUniqueId(), tempLevel->GetRightController()->GetUniqueId(), tempLevel->GetLeftController()->GetUniqueId());
+					mTimeline->MoveAllComponentsToSnapExceptPlayer(mtempCurSnapFrame, tempLevel->GetHeadset()->GetUniqueID(), tempLevel->GetRightController()->GetUniqueID(), tempLevel->GetLeftController()->GetUniqueID());
 				}
 			}
 			return;
 		}
-
-		unsigned int temp = instanceTimemanager->GetCurrentSnapFrame();
-		if (_gesture == 0)
+		//SystemLogger::GetLog() << "Gesture ID: " << _gesture << std::endl;
+		if (_gesture == 0) {
+			if(noMovementCnt < 15)
+				noMovementCnt++;
+			if(noMovementCnt == 15)
+			{
+				mRewindShouldGetFaster = 0;
+				mRewindGettingFaster = 1;
+			}
 			return;
+		}
 		if (_gesture == 1)
 			_frameRewind *= -1;
 		else if (_gesture == 2) {
@@ -508,6 +509,8 @@ namespace Epoch {
 			LevelManager::GetInstance().GetCurrentLevel()->GetLeftTimeManipulator()->RaycastCloneCheck();*/
 			return;
 		}
+
+		unsigned int temp = instanceTimemanager->GetCurrentSnapFrame();
 			if ((mtempCurSnapFrame != 0 && _gesture == -1) || (mtempCurSnapFrame != temp && _gesture == 1)) {
 				int placeHolder = mtempCurSnapFrame;
 				if (mtempCurSnapFrame - (_frameRewind * mRewindGettingFaster) > 0 && (mtempCurSnapFrame - (_frameRewind * mRewindGettingFaster) < temp))
@@ -515,30 +518,30 @@ namespace Epoch {
 				mTimeline->PrepareAllObjectInterpolators(placeHolder, mtempCurSnapFrame);
 				mShouldUpdateInterpolators = true;
 				mShouldPulse = true;
+				noMovementCnt = 0;
 				VRInputManager::GetInstance().GetController(eControllerType_Primary).TriggerHapticPulse(600, vr::k_EButton_SteamVR_Touchpad);
-				mRewindShouldGetFaster++;
-				if (mRewindShouldGetFaster % 15 == 0)
+ 				mRewindShouldGetFaster++;
+				if (mRewindShouldGetFaster % 20 == 0)
 					mRewindGettingFaster++;
 				//SystemLogger::GetLog() << "mRewindGettingFaster: " << mRewindGettingFaster << std::endl;
 				//SystemLogger::GetLog() << "mRewindShouldGetFaster: " << mRewindShouldGetFaster << std::endl;
 				if (_gesture == 1)
-					Settings::GetInstance().SetFloat("TutorialRewind - CurProgress", Settings::GetInstance().GetFloat("TutorialRewind - CurProgress") - 1);
+					Settings::GetInstance().SetUInt("TutorialRewind - CurProgress", Settings::GetInstance().GetUInt("TutorialRewind - CurProgress") - mRewindGettingFaster);
 				if (_gesture == -1)
-					Settings::GetInstance().SetFloat("TutorialRewind - CurProgress", Settings::GetInstance().GetFloat("TutorialRewind - CurProgress") + 1);
-				if(Settings::GetInstance().GetFloat("TutorialRewind - CurProgress") == Settings::GetInstance().GetFloat("TutorialRewind - FinalProgress"))//Rewind
+					Settings::GetInstance().SetUInt("TutorialRewind - CurProgress", Settings::GetInstance().GetUInt("TutorialRewind - CurProgress") + mRewindGettingFaster);
+				if(Settings::GetInstance().GetUInt("TutorialRewind - CurProgress") >= Settings::GetInstance().GetUInt("TutorialRewind - FinalProgress"))//Rewind
 				{
-					if (Settings::GetInstance().GetInt("tutStep") == 4)
+					if (Settings::GetInstance().GetInt("tutStep") == 3)
 					{
 						if (Settings::GetInstance().GetBool("Level1Tutorial"))
-							Settings::GetInstance().SetInt("tutStep", 6);//Accept time
+							Settings::GetInstance().SetInt("tutStep", 4);//Accept time (tut 1)
 						else
-							Settings::GetInstance().SetInt("tutStep", 5);//Create Clone
+							Settings::GetInstance().SetInt("tutStep", 5);//Create Clone (tut 2)
 					}
 				}
-			}
-			else {
+			} else {
 				mShouldPulse = false;
-		}
+			}
 	}
 	void TimeManager::MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC) {
 		mTimeline->MoveAllObjectsToSnapExceptPlayer(_snaptime, _headset, _leftC, _rightC);
@@ -566,10 +569,10 @@ namespace Epoch {
 			}
 
 			//Remove it from being tracked by timeline
-			mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueId());
+			mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueID());
 
 			Pool::Instance()->iRemoveObject(mClones[i]->GetUniqueID());
-			mCloneTextures.erase(mClones[i]->GetUniqueId());
+			mCloneTextures.erase(mClones[i]->GetUniqueID());
 		}
 		ClearClones();
 		ActivateAllTexturesToBitset();
@@ -579,5 +582,17 @@ namespace Epoch {
 			vec4f start = LevelManager::GetInstance().GetCurrentLevel()->GetStartPos();
 			VRInputManager::GetInstance().GetPlayerPosition()[3].Set(start.x, start.y, start.z, start.w);
 		}
+		if(Settings::GetInstance().GetInt("CurrentLevel") == 3)
+		{
+			Settings::GetInstance().SetBool("ResetElevator", true);
+			std::vector<Component*>& comps = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetComponents(eCOMPONENT_CODE);
+			for (unsigned int i = 0; i < comps.size(); i++) {
+				if (dynamic_cast<CCMazeHelper*>(comps[i])) {
+					((CCMazeHelper*)comps[i])->ResetBoxes();
+					break;
+				}
+			}
+		}
+			
 	}
 }

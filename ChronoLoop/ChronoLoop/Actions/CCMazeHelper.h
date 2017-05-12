@@ -46,14 +46,14 @@ namespace Epoch
 	{
 		MoveableBox mazeBoxes[3];
 		Level* cLevel;
-		BaseObject* mLButton, *mRButton, *mUButton, *mDButton;
-		CCLevel3BoxMovementButton* mLBCC, *mRBCC, *mUBCC, *mDBCC;
-		bool mBox1Done, mBox2Done, mBox3Done;
+		BaseObject* mLButton, *mRButton, *mUButton, *mDButton, *mResetButton;
+		CCLevel3BoxMovementButton* mLBCC, *mRBCC, *mUBCC, *mDBCC, *mResetBCC;
+		bool mBox1Done, mBox2Done, mBox3Done, mOnce = false;
 		int mGrid[4][4] = {
 			{ 0, 0,-1,-1 },
 			{ 0,-1, 0, 0 },
 			{ 1, 0,-1, 2 },
-			{ 0, 0, 0, 3 }
+			{ -1, 0, 0, 3}
 		};
 		virtual void Start()
 		{
@@ -69,14 +69,18 @@ namespace Epoch
 			mRButton = cLevel->FindObjectWithName("Button3");
 			mUButton = cLevel->FindObjectWithName("Button2");
 			mDButton = cLevel->FindObjectWithName("Button4");
+			mResetButton = cLevel->FindObjectWithName("ResetButton");
 			mLBCC = new CCLevel3BoxMovementButton();
 			mRBCC = new CCLevel3BoxMovementButton();
 			mUBCC = new CCLevel3BoxMovementButton(); 
 			mDBCC = new CCLevel3BoxMovementButton();
+			mResetBCC = new CCLevel3BoxMovementButton();
+
 			mLButton->AddComponent(mLBCC);
 			mRButton->AddComponent(mRBCC);
 			mUButton->AddComponent(mUBCC);
 			mDButton->AddComponent(mDBCC);
+			mResetButton->AddComponent(mResetBCC);
 
 			//PrintGrid();
 		}
@@ -85,44 +89,56 @@ namespace Epoch
 			if ((GetAsyncKeyState(VK_DOWN) & 0x1 || mDBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveDown();
 				mDBCC->SetisColliding(false);
-				//PrintGrid();
+				PrintGrid();
 			}
 			else if (((GetAsyncKeyState(VK_UP) & 0x1) || mUBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveUp();
 				mUBCC->SetisColliding(false);
-				//PrintGrid();
+				PrintGrid();
 			}
 			else if ((GetAsyncKeyState(VK_LEFT) & 0x1 || mLBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveLeft();
 				mLBCC->SetisColliding(false);
-				//PrintGrid();
+				PrintGrid();
 			}
 			else if ((GetAsyncKeyState(VK_RIGHT) & 0x1 || mRBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveRight();
 				mRBCC->SetisColliding(false);
-				//PrintGrid();
-			}
-			else if(GetAsyncKeyState(Epoch::Keys::R) & 0x1)
-			{
-				ResetBoxes();
 				PrintGrid();
 			}
-			if (!mBox1Done) {
-				mBox1Done = mazeBoxes[0].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
-				if (mBox1Done) {
-					mazeBoxes[0].mInterp->SetActive(false);
+			else if(GetAsyncKeyState(Epoch::Keys::R) & 0x1 || mResetBCC->GetisColliding())
+			{
+				if(!mOnce)
+				{ 
+				ResetBoxes();
+				mOnce = true;
+				mResetBCC->SetisColliding(false);
+				//PrintGrid();
 				}
+
 			}
-			if (!mBox2Done) {
-				mBox2Done = mazeBoxes[1].mInterp->Update(TimeManager::Instance()->GetDeltaTime());				
-				if (mBox2Done) {
-					mazeBoxes[1].mInterp->SetActive(false);
+			else
+			{
+				mOnce = false;
+			}
+			if (!Settings::GetInstance().GetBool("IsTimePaused")) {
+				if (!mBox1Done) {
+					mBox1Done = mazeBoxes[0].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
+					if (mBox1Done) {
+						mazeBoxes[0].mInterp->SetActive(false);
+					}
 				}
-			}
-			if (!mBox3Done) {
-				mBox3Done = mazeBoxes[2].mInterp->Update(TimeManager::Instance()->GetDeltaTime());				
-				if (mBox3Done) {
-					mazeBoxes[2].mInterp->SetActive(false);
+				if (!mBox2Done) {
+					mBox2Done = mazeBoxes[1].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
+					if (mBox2Done) {
+						mazeBoxes[1].mInterp->SetActive(false);
+					}
+				}
+				if (!mBox3Done) {
+					mBox3Done = mazeBoxes[2].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
+					if (mBox3Done) {
+						mazeBoxes[2].mInterp->SetActive(false);
+					}
 				}
 			}
 		}
@@ -387,6 +403,34 @@ namespace Epoch
 
 			SetBoxesPosition(&temp0, &temp1, &temp2);
 
+			//Shoot Particles
+			/*Particle* start = &Particle::Init();
+			start->SetPos(vec3f(0, -3.0f, 0));
+			start->SetColors(vec3f(.6f, .6f, .8f), vec3f(.3f, 0, .3f));
+			start->SetLife(200);
+			start->SetSize(.1f, .1f);
+			ParticleEmitter* startEmit = new ParticleEmitter(600, 500, 2, vec4f(0, -3,0, 1));
+			startEmit->SetParticle(start);
+			startEmit->SetTexture("../Resources/BasicCircleP.png");
+			startEmit->SetPosBounds(vec3f(-7, 0, -7), vec3f(7, 4, 7));
+			startEmit->SetVelBounds(vec3f(1, 5, .5f), vec3f(2, 10, 1));
+			ParticleSystem::Instance()->AddEmitter(startEmit);
+			startEmit->FIRE();
+			((SFXEmitter*)mObject->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent(Emitter::ePlay);*/
+
+			Particle * p = &Particle::Init();
+			p->SetColors(vec4f(.8f, 0, .8f, 1), vec4f());
+			p->SetLife(600);
+			p->SetSize(.25f, .15f);
+			vec3f EPos = vec4f(0, -3, 0, 1);
+			ParticleEmitter *emit = new ParticleEmitter(400, 200, 20, EPos);
+			emit->SetPosBounds(vec3f(-7, 0, -7), vec3f(7, 1.5f, 7));
+			emit->SetVelBounds(vec3f(1, 1, .5f), vec3f(2, 3, 1));
+			emit->SetParticle(p);
+			emit->SetTexture("../Resources/BasicCircleP.png");
+			ParticleSystem::Instance()->AddEmitter(emit);
+			emit->FIRE();
+
 		}
 		void SetBoxesPosition(matrix4* matrix0, matrix4* matrix1, matrix4* matrix2)
 		{
@@ -452,6 +496,20 @@ namespace Epoch
 				mazeBoxes[i].mInterp->SetActive(true);
 			}
 			mBox1Done = mBox2Done = mBox3Done = false;
+		}
+		void SetBoxesAsGrid()
+		{
+			for (unsigned int i = 0; i <3; i++) {
+				for (unsigned int x = 0; x < 4; x++) {
+					for (unsigned int y = 0; y < 4; y++) {
+						if(mGrid[x][y] == mazeBoxes[i].mId)
+						{
+							mazeBoxes[i].mRow = x;
+							mazeBoxes[i].mCol = y;
+						}
+					}
+				}
+			}
 		}
 	};
 }

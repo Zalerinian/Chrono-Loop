@@ -85,7 +85,7 @@ namespace Epoch
 			mObject->GetTransform().SetMatrix(mat);
 
 			if (!interp->GetActive()) {
-				if (mChamberMesh->GetTransform().GetPosition()->y < -9.9999f) {
+				if (mChamberMesh->GetTransform().GetPosition()->y < -9.99f) {
 
 					if (!((MeshComponent*)mTeleportBoard->GetComponentIndexed(eCOMPONENT_MESH, 0))->IsVisible()) {
 						((MeshComponent*)mTeleportBoard->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
@@ -103,7 +103,7 @@ namespace Epoch
 						scaleX += 0.05f;
 
 					if (tempScaleX != scaleX || tempScaleY != scaleY)
-						mTeleportBoard->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(2.07f, -8.5f, 0));
+						mTeleportBoard->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.92699f) * matrix4::CreateTranslation(0.84f, -8.45f, .84f));
 
 					mScanlineData.MultiscanVOffset += TimeManager::Instance()->GetDeltaTime() / 25.0f;
 					mScanlineData.ScanlineVOffset += TimeManager::Instance()->GetDeltaTime();
@@ -120,36 +120,38 @@ namespace Epoch
 						vec4f forward(0, 0, 1, 0);
 						forward *= mObject->GetTransform().GetMatrix();
 						vec3f fwd = forward;
-						MeshComponent* meshes[] = { mRoomMesh, mChamberMesh };
-						BaseObject* objects[] = { mRoomObject, mChamberObject };
-						float meshTime = 0, wallTime = FLT_MAX;
+
+						Triangle *tris = mRoomMesh->GetTriangles();
+						size_t numTris = mRoomMesh->GetTriangleCount();
+						vec3f position = (mat * mRoomObject->GetTransform().GetMatrix().Invert()).Position;
+						float wallTime = FLT_MAX;
+						for (unsigned int j = 0; j < numTris; ++j) {
+							float hitTime = FLT_MAX;
+							Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, position, fwd, hitTime);
+							if (hitTime < wallTime) {
+								wallTime = hitTime;
+							}
+						}
+
+						MeshComponent* meshes[] = { mFloorMesh, mChamberMesh };
+						BaseObject* objects[] = { mFloorObject, mChamberObject };
 						for (int i = 0; i < ARRAYSIZE(meshes); ++i) {
 							vec3f meshPos = (mat * objects[i]->GetTransform().GetMatrix().Invert()).Position;
 							Triangle *tris = meshes[i]->GetTriangles();
 							size_t numTris = meshes[i]->GetTriangleCount();
-							for (unsigned int j = 0; j < numTris; ++j) {
-								float hitTime = FLT_MAX;
-								Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, meshPos, fwd, hitTime);
-								if (hitTime < wallTime) {
-									wallTime = hitTime;
-								}
-							}
-						}
-
-						Triangle *tris = mFloorMesh->GetTriangles();
-						size_t numTris = mFloorMesh->GetTriangleCount();
-						vec3f position = (mat * mFloorObject->GetTransform().GetMatrix().Invert()).Position;
-						for (unsigned int i = 0; i < numTris; ++i) {
-							if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, position, fwd, meshTime)) {
-								if (meshTime < wallTime) {
-									forward *= meshTime;
-									endPos = VRInputManager::GetInstance().GetPlayerPosition();
-									endPos[3][0] += forward[0]; // x
-									endPos[3][2] += forward[2]; // z
-									interp->Prepare(.1f, VRInputManager::GetInstance().GetPlayerPosition(), endPos, VRInputManager::GetInstance().GetPlayerPosition());
-									interp->SetActive(true);
-								} else {
-									SystemLogger::Debug() << "Can't let you do that, Starfox." << std::endl;
+							float meshTime = 0;
+							for (unsigned int i = 0; i < numTris; ++i) {
+								if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, meshPos, fwd, meshTime)) {
+									if (meshTime < wallTime) {
+										forward *= meshTime;
+										endPos = VRInputManager::GetInstance().GetPlayerPosition();
+										endPos[3][0] += forward[0]; // x
+										endPos[3][2] += forward[2]; // z
+										interp->Prepare(.1f, VRInputManager::GetInstance().GetPlayerPosition(), endPos, VRInputManager::GetInstance().GetPlayerPosition());
+										interp->SetActive(true);
+									} else {
+										SystemLogger::Debug() << "Can't let you do that, Starfox." << std::endl;
+									}
 								}
 							}
 						}

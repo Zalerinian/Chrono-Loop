@@ -1,5 +1,6 @@
 //#include "stdafx.h"
 #include "Physics.h"
+#include "..\Common\Settings.h"
 #include "..\Objects\BaseObject.h"
 #include "..\Rendering\Mesh.h"
 #include "..\Common\Logger.h"
@@ -7,6 +8,7 @@
 #include "..\Actions\CodeComponent.hpp"
 #include "..\Input\VRInputManager.h"
 #include "..\Core\LevelManager.h"
+#include "../Common/Settings.h"
 
 #define DEBUG_LEVEL1 0
 #define DEBUG_LEVEL2 0
@@ -168,6 +170,26 @@ namespace Epoch
 		return bReturn;
 	}
 
+	bool Physics::Linecast(vec3f& _vert0, vec3f& _vert1, vec3f& _vert2, vec3f& _normal, vec3f& _start, vec3f& _end, vec3f& _hit)
+	{
+		float time;
+		vec3f dir = _end - _start;
+		if (RayToTriangle(_vert0, _vert1, _vert2, _normal, _start, dir, time))
+		{
+
+			vec3f proj = _start + (dir)* time;
+			_hit = proj;
+			proj = proj - _end;
+			float d = proj.Dot(dir);
+
+			if (d < 0)
+				return true;
+			else
+				return false;
+		}
+		return false;
+
+	}
 #pragma endregion
 
 
@@ -701,7 +723,7 @@ namespace Epoch
 		{
 			paused = cLevel->GetTimeManipulator()->isTimePaused();
 		}
-		if (!paused)
+		if (!paused && !Settings::GetInstance().GetBool("PauseMenuUp"))
 		{
 			//SystemLogger::GetLog() << _time << std::endl;
 			Collider* collider = nullptr;

@@ -53,7 +53,7 @@ namespace AK
         static const AkUniqueID SFX_BLOP = 1623492746U;
         static const AkUniqueID SFX_BOUNCEEFFECTS = 1794490945U;
         static const AkUniqueID SFX_BOXDOORZAP = 2189517885U;
-        static const AkUniqueID SFX_BOXWALLCOLLIDELEVEL3 = 752092787U;
+        static const AkUniqueID SFX_BOXRESET = 966775589U;
         static const AkUniqueID SFX_BUTTON_PRESS1 = 1009907414U;
         static const AkUniqueID SFX_BUTTON_PRESS2 = 1009907413U;
         static const AkUniqueID SFX_COMMUNICATION_CHANNEL = 3124930127U;
@@ -62,15 +62,12 @@ namespace AK
         static const AkUniqueID SFX_METALLICSOUND = 715006247U;
         static const AkUniqueID SFX_PLAYERDEATH = 1000127844U;
         static const AkUniqueID SFX_PLING = 650723447U;
-        static const AkUniqueID SFX_RESETBOXES = 3299920505U;
         static const AkUniqueID SFX_SCI_FI_DOOR_CLOSE = 1503523398U;
         static const AkUniqueID SFX_SCI_FI_DOOR_OPEN = 2920536594U;
         static const AkUniqueID SFX_SHORTCIRUIT = 1687962553U;
         static const AkUniqueID SFX_SWOOSH = 4195120820U;
         static const AkUniqueID SFX_TELEPORTSOUND = 2693013165U;
         static const AkUniqueID SFX_TICK = 2616479322U;
-        static const AkUniqueID SFX_TIMEPAUSE = 2502668888U;
-        static const AkUniqueID SFX_TIMERESUME = 3085805395U;
         static const AkUniqueID SFX_TOGGLE = 43066209U;
         static const AkUniqueID STOP_A_TIMELAPSE = 2745027494U;
         static const AkUniqueID STOP_CASUAL_LEVEL_LOOP = 831993537U;

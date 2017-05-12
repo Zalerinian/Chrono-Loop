@@ -22,6 +22,9 @@ namespace Epoch {
 	{
 		bool misVisible = true;
 	};
+	struct SnapComponent_Code_MazeHelp : SnapComponent {
+		int mMazeGrid[4][4];
+	};
 	//Add more componets when we need it
 #pragma endregion ComponetStructs
 
@@ -120,6 +123,7 @@ namespace Epoch {
 		void SetComponent(SnapComponent* _destComp, BaseObject* _obj, SnapInfo* _destInfo);
 		void SetCurrentGameTimeIndx(int _time) { mCurrentGameTimeIndx = _time; };
 		void SetSavedSettings();
+		void ShowLiveObjectsColliders(bool _show);
 		void UpdateCloneInterpolators(unsigned short _cloneid, SnapInfo* _currSnap, unsigned int _currTime);
 		void PrepareAllObjectInterpolators(unsigned int _fromSnapTime, unsigned int _toSnapTime);
 	};

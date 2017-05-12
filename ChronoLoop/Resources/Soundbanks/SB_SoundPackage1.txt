@@ -1,13 +1,11 @@
 Event	ID	Name			Wwise Object Path	Notes
 	549593657	Play_Level3Ambient			\Default Work Unit\Play_Level3Ambient	
-	752092787	SFX_BoxWallCollideLevel3			\Default Work Unit\SFX_BoxWallCollideLevel3	
 	1503523398	SFX_sci_fi_door_close			\Default Work Unit\SFX_sci_fi_door_close	
 	1664409707	Stop_Level3Ambient			\Default Work Unit\Stop_Level3Ambient	
 	1773552409	Pause_Level1Ambient			\Default Work Unit\Pause_Level1Ambient	
 	1927416214	Resume_Level3Ambient			\Default Work Unit\Resume_Level3Ambient	
 	2189517885	SFX_BoxDoorZap			\Default Work Unit\SFX_BoxDoorZap	
 	2333167699	Play_Level1Ambient			\Default Work Unit\Play_Level1Ambient	
-	2502668888	SFX_TimePause			\Default Work Unit\SFX_TimePause	
 	2587866054	Stop_Hub1			\Default Work Unit\Stop_Hub1	
 	2587866055	Stop_Hub0			\Default Work Unit\Stop_Hub0	
 	2619715208	Resume_Level1Ambient			\Default Work Unit\Resume_Level1Ambient	
@@ -17,7 +15,6 @@ Event	ID	Name			Wwise Object Path	Notes
 	2920536594	SFX_sci_fi_door_open			\Default Work Unit\SFX_sci_fi_door_open	
 	2962453674	Play_Level2Ambient			\Default Work Unit\Play_Level2Ambient	
 	3040040780	Pause_Level2Ambient			\Default Work Unit\Pause_Level2Ambient	
-	3085805395	SFX_TimeResume			\Default Work Unit\SFX_TimeResume	
 	3124930127	SFX_communication_channel			\Default Work Unit\SFX_communication_channel	
 	3157945905	Stop_Level1Ambient			\Default Work Unit\Stop_Level1Ambient	
 	3223701532	Play_Hub1			\Default Work Unit\Play_Hub1	
@@ -30,18 +27,15 @@ Event	ID	Name			Wwise Object Path	Notes
 	4257110323	Pause_Level3Ambient			\Default Work Unit\Pause_Level3Ambient	
 
 In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
-	54674957	Hub0	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Hub0_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Hub0		9131072
-	152781705	Hub1	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Hub1_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Hub1		22600721
-	202696624	BoxWallCollideLevel3	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\BoxWallCollideLevel3_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\BoxWallCollideLevel3		17882
-	223646369	TimeResume	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\TimeResume_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\TimeResume		24041
-	387473037	TimePause	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\TimePause_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\TimePause		23977
-	393391159	Level3Ambient	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Level3Ambient_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Level3Ambient		8678662
-	446015996	sci-fi-door-open	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\sci-fi-door-open_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\sci-fi-door-open		28792
-	589974881	Level1Ambient	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Level1Ambient_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Level1Ambient		7587285
-	648589336	Level2Ambient	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Level2Ambient_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Level2Ambient		8168453
-	771783799	BoxDoorZap	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\BoxDoorZap_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\BoxDoorZap		137992
-	778650627	sci-fi-door-close	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\sci-fi-door-close_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\sci-fi-door-close		29159
-	894777268	communication-channel	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\communication-channel_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\communication-channel		38290
-	987973023	TeleportSound	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\TeleportSound_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\TeleportSound		25917
-	998751072	gentle-alarm	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\gentle-alarm_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\gentle-alarm		12217
+	54674957	Hub0	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Hub0_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Hub0		9131072
+	152781705	Hub1	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Hub1_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Hub1		22600721
+	393391159	Level3Ambient	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Level3Ambient_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Level3Ambient		8678662
+	446015996	sci-fi-door-open	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\sci-fi-door-open_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\sci-fi-door-open		28792
+	589974881	Level1Ambient	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Level1Ambient_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Level1Ambient		7587285
+	648589336	Level2Ambient	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Level2Ambient_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Level2Ambient		8168453
+	771783799	BoxDoorZap	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\BoxDoorZap_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\BoxDoorZap		137992
+	778650627	sci-fi-door-close	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\sci-fi-door-close_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\sci-fi-door-close		29159
+	894777268	communication-channel	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\communication-channel_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\communication-channel		38290
+	987973023	TeleportSound	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\TeleportSound_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\TeleportSound		25917
+	998751072	gentle-alarm	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\gentle-alarm_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\gentle-alarm		12217
 
