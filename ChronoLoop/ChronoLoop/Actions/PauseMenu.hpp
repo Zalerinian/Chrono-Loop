@@ -72,7 +72,7 @@ namespace Epoch
 
 		virtual void Start()
 		{
-			CommandConsole::Instance().AddCommand(L"/TEST1", Test1);
+			//CommandConsole::Instance().AddCommand(L"/TEST1", Test1);
 			Settings::GetInstance().SetBool("PauseMenuUp", PauseMenuisUp);
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			//Pause Menu Base Initialize
