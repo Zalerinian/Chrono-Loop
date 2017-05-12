@@ -60,9 +60,7 @@ namespace AK
         static const AkUniqueID SFX_DOORSOUND = 3559876090U;
         static const AkUniqueID SFX_GENTLE_ALARM = 3901374612U;
         static const AkUniqueID SFX_METALLICSOUND = 715006247U;
-        static const AkUniqueID SFX_PLAYERDEATH = 1000127844U;
         static const AkUniqueID SFX_PLING = 650723447U;
-        static const AkUniqueID SFX_RESETBOXES = 3299920505U;
         static const AkUniqueID SFX_SCI_FI_DOOR_CLOSE = 1503523398U;
         static const AkUniqueID SFX_SCI_FI_DOOR_OPEN = 2920536594U;
         static const AkUniqueID SFX_SHORTCIRUIT = 1687962553U;
