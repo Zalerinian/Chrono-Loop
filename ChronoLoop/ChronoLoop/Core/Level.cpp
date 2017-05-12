@@ -34,6 +34,7 @@
 #include "../Actions/CCBoxSpinRandomSmall.h"
 #include "../Actions/CCLevel3BoxSmash.h"
 #include "../Actions/CCPlatformButtonHold.h"
+#include "../Actions/CCPlatform.h"
 
 namespace Epoch {
 
@@ -694,6 +695,8 @@ namespace Epoch {
 								codeCom = new CCLevel1TutorialButton();
 							if (path == "CCPlatformButtonHold.h")
 								codeCom = new CCPlatformButtonHold();
+							if (path == "CCPlatform.h")
+								codeCom = new CCPlatform();
 
 							if (codeCom)
 							{
