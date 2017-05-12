@@ -126,18 +126,21 @@ namespace Epoch
 					mBox1Done = mazeBoxes[0].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
 					if (mBox1Done) {
 						mazeBoxes[0].mInterp->SetActive(false);
+						((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 5))->CallEvent(Emitter::ePlay);
 					}
 				}
 				if (!mBox2Done) {
 					mBox2Done = mazeBoxes[1].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
 					if (mBox2Done) {
 						mazeBoxes[1].mInterp->SetActive(false);
+						((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 5))->CallEvent(Emitter::ePlay);
 					}
 				}
 				if (!mBox3Done) {
 					mBox3Done = mazeBoxes[2].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
 					if (mBox3Done) {
 						mazeBoxes[2].mInterp->SetActive(false);
+						((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 5))->CallEvent(Emitter::ePlay);
 					}
 				}
 			}

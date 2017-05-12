@@ -41,8 +41,8 @@ namespace Epoch
 			
 				if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 7)) //created clone (tut 2)
 				{
-					// Cancel Time
-
+					//Cancel Stop Time
+					((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 3))->CallEvent(Emitter::ePlay);
 					//put the original controll and headset back in control
 					//Remove the clone created
 					if (mCurCloneHeadset && mCurCloneController1 && mCurCloneController2) {
@@ -72,6 +72,7 @@ namespace Epoch
 
 				} else if (!mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") >= 2)) {
 					// Stop time
+					((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 2))->CallEvent(Emitter::ePlay);
 
 					if (Settings::GetInstance().GetInt("tutStep") == 2)//Paused time (tut 1)
 					{
