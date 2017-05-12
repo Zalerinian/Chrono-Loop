@@ -65,14 +65,16 @@ float4 main(PSI input) : SV_TARGET
 			specIntensity += GetSpotlightSpecularIntensity(l.pos, l.ratio, l.cdir, EyePos, worldPos.xyz, pixelNormal.xyz);
 		}
 	}
+	// Add in ambient light.
+	lighting.xyz += dot(abs(pixelNormal.xyz), float3(0.05, 0.05, 0.05));
 
 	if (pixelNormal.w < 1.0f) {
 		// In order to fit the data in the same 4 images, the W component
 		// of the normal indicates if a pixel is affected by lighting. A
 		// value of 0 means the pixel will not be lit, and to just take
 		// the full diffuse color.
-		lighting.xyz = float3(0.95, 0.95, 0.95);
+		lighting.xyz = dot(abs(pixelNormal.xyz), float3(1, 1, 1));
 	}
 
-	return ((float4(lighting.xyz, 1) + float4(.05, .05, .05, 0)) * cAlbedo) + float4((cSpecular).xyz * specIntensity, 0);
+	return ((float4(lighting.xyz, 1) * cAlbedo) + float4((cSpecular).xyz * specIntensity, 0));
 }
