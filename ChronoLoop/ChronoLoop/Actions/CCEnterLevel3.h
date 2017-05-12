@@ -287,10 +287,21 @@ namespace Epoch {
 					((SFXEmitter*)sound)->SetEvent(AK::EVENTS::SFX_TELEPORTSOUND);
 					AudioWrapper::GetInstance().AddEmitter(sound, headset->GetName().c_str());
 					headset->AddComponent(sound);
-					Emitter* sound1 = new SFXEmitter();
-					((SFXEmitter*)sound1)->SetEvent(AK::EVENTS::SFX_PLAYERDEATH);
-					AudioWrapper::GetInstance().AddEmitter(sound1, headset->GetName().c_str());
-					headset->AddComponent(sound1);
+
+					//Emitter* sound1 = new SFXEmitter();
+					//((SFXEmitter*)sound1)->SetEvent(AK::EVENTS::SFX_PLAYERDEATH);
+					//AudioWrapper::GetInstance().AddEmitter(sound1, headset->GetName().c_str());
+					//headset->AddComponent(sound1);
+
+					Emitter* timepause = new SFXEmitter();
+					((SFXEmitter*)timepause)->SetEvent(AK::EVENTS::SFX_TIMEPAUSE);
+					AudioWrapper::GetInstance().AddEmitter(timepause, headset->GetName().c_str());
+					headset->AddComponent(timepause);
+
+					Emitter* timeresume = new SFXEmitter();
+					((SFXEmitter*)timeresume)->SetEvent(AK::EVENTS::SFX_TIMERESUME);
+					AudioWrapper::GetInstance().AddEmitter(timeresume, headset->GetName().c_str());
+					headset->AddComponent(timeresume);
 
 					AudioWrapper::GetInstance().STOP();
 
