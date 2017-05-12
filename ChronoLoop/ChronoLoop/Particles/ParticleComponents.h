@@ -52,6 +52,7 @@ namespace Epoch
 	private:
 		//TODO: Privatize stuff
 	public:
+		int emitterType = -1;
 		bool mAlive;
 		int mLife, mTotalLife;
 		float mSize, mStartSize, mEndSize;

@@ -19,8 +19,8 @@ namespace Epoch {
 	struct TeleportAction : public CodeComponent {
 		matrix4 endPos;
 		Interpolator<matrix4>* interp;
-		MeshComponent *mPlaneMesh, *mWallsMesh, *mBlockMesh, *mExitMesh, *mDoor3Mesh, *mServerMesh, *mTWall1Mesh, *mTWall2Mesh, *mTWall3Mesh, *mTWindowMesh;
-		BaseObject *mPlaneObject, *mWallsObject, *mBlockObject, *mExitObject, *mDoor3Object, *mServerObject, *mHeadset, *mTWall1, *mTWall2, *mTWall3, *mTWindow;
+		MeshComponent *mPlaneMesh, *mWallsMesh, *mBlockMesh, *mExitMesh, *mDoor3Mesh, *mServerMesh, *mTWall1Mesh, *mTWall2Mesh, *mTWall3Mesh, *mTWindowMesh, *mTutTrapFrame, *mTutTrapWindows;
+		BaseObject *mPlaneObject, *mWallsObject, *mBlockObject, *mExitObject, *mDoor3Object, *mServerObject, *mHeadset, *mTWall1, *mTWall2, *mTWall3, *mTWindow, *mTutTrap;
 		ControllerType mControllerRole = eControllerType_Primary;
 		Level* cLevel = nullptr;
 		TeleportAction(ControllerType _t) { mControllerRole = _t; };
@@ -38,6 +38,7 @@ namespace Epoch {
 			mTWall3 = cLevel->FindObjectWithName("TransparentWall3");
 			mTWindow = cLevel->FindObjectWithName("TransparentWindow");
 			mServerObject = cLevel->FindObjectWithName("Servers");
+			mTutTrap = cLevel->FindObjectWithName("tutChamber");
 
 			if (mPlaneObject) {
 				mPlaneMesh = (MeshComponent*)mPlaneObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
@@ -50,6 +51,8 @@ namespace Epoch {
 				mTWall2Mesh = (MeshComponent*)mTWall2->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				mTWall3Mesh = (MeshComponent*)mTWall2->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				mTWindowMesh = (MeshComponent*)mTWindow->GetComponentIndexed(eCOMPONENT_MESH, 0);
+				mTutTrapFrame = (MeshComponent*)mTutTrap->GetComponentIndexed(eCOMPONENT_MESH, 0);
+				mTutTrapWindows = (MeshComponent*)mTutTrap->GetComponentIndexed(eCOMPONENT_MESH, 1);
 			}
 			mHeadset = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset();
 			endPos = VRInputManager::GetInstance().GetPlayerPosition();
@@ -74,12 +77,15 @@ namespace Epoch {
 			}
 
 			if (!interp->GetActive() && !Settings::GetInstance().GetBool("CantTeleport")) {
-				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && !Settings::GetInstance().GetBool("PauseMenuUp")) {
+				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad)) {
 					if (!paused) {
+						if (Settings::GetInstance().GetBool("PauseMenuUp"))
+							Settings::GetInstance().SetBool("DidRealStuffInPauseMenu", true);
+
 						SystemLogger::Debug() << "Touchpad Pressed" << std::endl;
 						vec4f forward(0, 0, 1, 0);
-						MeshComponent* meshes[] = { mWallsMesh, mBlockMesh, mExitMesh, mDoor3Mesh, mServerMesh, mTWall1Mesh, mTWall2Mesh, mTWall3Mesh, mTWindowMesh };
-						BaseObject* objects[] = { mWallsObject, mBlockObject, mExitObject, mDoor3Object, mServerObject, mTWall1, mTWall2, mTWall3, mTWindow };
+						MeshComponent* meshes[] = { mWallsMesh, mBlockMesh, mExitMesh, mDoor3Mesh, mServerMesh, mTWall1Mesh, mTWall2Mesh, mTWall3Mesh, mTWindowMesh, mTutTrapFrame, mTutTrapWindows };
+						BaseObject* objects[] = { mWallsObject, mBlockObject, mExitObject, mDoor3Object, mServerObject, mTWall1, mTWall2, mTWall3, mTWindow, mTutTrap, mTutTrap };
 						float controllerTime = 0, wallTime = FLT_MAX;
 						for (int i = 0; i < ARRAYSIZE(meshes); ++i) {
 							forward.Set(0, 0, 1, 0);

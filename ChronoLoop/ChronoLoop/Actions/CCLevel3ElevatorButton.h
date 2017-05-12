@@ -24,6 +24,16 @@ namespace Epoch {
 
 		Level* cLevel;
 
+		~CCLevel3ElevatorButton() {
+			delete mChamberInterp;
+			delete mPlayerInterp;
+			delete mStartStandInterp;
+			delete mStartButtonInterp;
+			delete mClone1Interp;
+			delete mClone2Interp;
+			delete mClone3Interp;
+		}
+
 		virtual void Start() {
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			mChamberObject = cLevel->FindObjectWithName("L3Elevator");
