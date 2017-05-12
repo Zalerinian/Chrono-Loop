@@ -137,6 +137,7 @@ namespace Epoch {
 		ePS_TRANSPARENT_SCANLINE,
 		ePS_BLUR,
 		ePS_BLOOM,
+		ePS_DEFERRED,
 		ePS_MAX
 	};
 
@@ -195,7 +196,7 @@ namespace Epoch {
 
 
 	enum PixelBufferType {
-		ePB_Lights = 0,
+		ePB_EyePos = 0,
 		ePB_OFFSET,
 		ePB_REGISTER1 = 0,
 		ePB_REGISTER2,
@@ -211,7 +212,6 @@ namespace Epoch {
 
 	enum GeometryBufferType {
 		eGB_Eyes = 0,
-		eGB_Head,
 		eGB_OFFSET,
 		eGB_REGISTER2 = 0,
 		eGB_REGISTER3,

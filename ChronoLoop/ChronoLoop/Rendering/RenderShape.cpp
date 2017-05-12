@@ -65,12 +65,12 @@ namespace Epoch {
 #endif
 
 		mIndexOffset = IndexBufferManager::GetInstance().AddToBuffer(_mesh->GetName(), _mesh->GetIndicies(), (unsigned int)_mesh->IndicieSize());
-		mVertexOffset = VertexBufferManager::Instance().GetVertexBuffer<VertexPosNormTex>()->AddVerts(_mesh->GetName(), _mesh->GetVerts(), (unsigned int)_mesh->VertSize());
+		mVertexOffset = VertexBufferManager::Instance().GetVertexBuffer<VertexPosNormTanTex>()->AddVerts(_mesh->GetName(), _mesh->GetVerts(), (unsigned int)_mesh->VertSize());
 		mIndexCount = (unsigned int)_mesh->VertSize();
 	}
 
 	void RenderShape::Load(const char * _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs) {
-		mName = std::string("Shape: ") + _path;
+		mName = std::string("Shape: ") + (_path + strlen("../Resources/"));
 		mMesh = MeshCache::GetInstance().GetMesh(_path);
 		if (_invert) {
 			mMesh->Invert();
@@ -80,7 +80,7 @@ namespace Epoch {
 	}
 
 	void RenderShape::Load(const char * _path, bool _invert, PixelShaderFormat _ps, VertexShaderFormat _vs, GeometryShaderFormat _gs) {
-		mName = std::string("Shape: ") + _path;
+		mName = std::string("Shape: ") + (_path + strlen("../Resources/"));
 		mMesh = MeshCache::GetInstance().GetMesh(_path);
 		if (_invert) {
 			mMesh->Invert();
@@ -183,8 +183,8 @@ namespace Epoch {
 	}
 
 	void RenderShape::Render(UINT _instanceCount) const {
-		UINT stride = sizeof(VertexPosNormTex), offset = 0;
-		Microsoft::WRL::ComPtr<ID3D11Buffer> vBuffer = VertexBufferManager::GetBuffer(eVERT_POSNORMTEX);
+		UINT stride = sizeof(VertexPosNormTanTex), offset = 0;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> vBuffer = VertexBufferManager::GetBuffer(eVERT_POSNORMTANTEX);
 		Renderer::Instance()->GetContext()->IASetIndexBuffer(IndexBufferManager::GetBuffer().Get(), DXGI_FORMAT_R32_UINT, 0);
 		Renderer::Instance()->GetContext()->IASetVertexBuffers(0, 1, vBuffer.GetAddressOf(), &stride, &offset);
 #if ENABLE_INSTANCING

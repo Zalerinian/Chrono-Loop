@@ -1,4 +1,4 @@
-#include "../RenderShaderDefines.hlsli"
+//#include "../RenderShaderDefines.hlsli"
 
 struct GSOutput {
 	float4 position : SV_POSITION;

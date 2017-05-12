@@ -36,7 +36,6 @@ struct VERTEX_POSNORMTANTEX
 	float4 normal		: NORMAL0;
 	float4 texCoord		: TEXCOORD0;
 	float4 tangent		: TANGENT0;
-	float determinant	: TANGENT1;
 };
 
 struct VERTEX_POSBONEWEIGHT

@@ -617,6 +617,27 @@ namespace Epoch {
 		}
 
 	}
+
+	void Timeline::ShowLiveObjectsColliders(bool _show)
+	{
+		for(auto obj : mLiveObjects)
+		{
+			Level* clevel = LevelManager::GetInstance().GetCurrentLevel();
+			if (obj.second->GetUniqueID() == clevel->GetHeadset()->GetUniqueID() ||
+				obj.second->GetUniqueID() == clevel->GetRightController()->GetUniqueID() ||
+				obj.second->GetUniqueID() == clevel->GetLeftController()->GetUniqueID())
+				continue;
+
+			Collider* col = (Collider*)obj.second->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
+			if(col)
+			{
+				if (_show)
+					col->mShowCol = true;
+				else
+					col->mShowCol = false;
+			}
+		}
+	}
 	
 	void Timeline::SetObjectBirthTime(unsigned short _id) {
 		if (mObjectLifeTimes.find(_id) != mObjectLifeTimes.end()) {

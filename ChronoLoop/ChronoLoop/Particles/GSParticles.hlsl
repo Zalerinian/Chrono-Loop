@@ -45,28 +45,30 @@ void main(
 	element.viewport = 0;
 	tpos = mul(mul(tpos, eyes[0].view), eyes[0].proj);
 	matrix vpos = eyes[0].view / determinant(eyes[0].view);
+	vpos[3].w = 0; // Mark particles as not being affected by light
+	vpos[3] = normalize(vpos[3]);
 	element.normal = vpos[3];
 
 
-	element.wpos = temp[0];
+	element.wpos = input[0].pos + temp[0];
 	element.pos = tpos + temp[0];
 	element.uv = float4(0, 0, 0, 0);
 
 	output.Append(element);
 
-	element.wpos = temp[1];
+	element.wpos = input[0].pos + temp[1];
 	element.pos = tpos + temp[1];
 	element.uv = float4(1, 0, 0, 0);
 
 	output.Append(element);
 
-	element.wpos = temp[2];
+	element.wpos = input[0].pos + temp[2];
 	element.pos = tpos + temp[2];
 	element.uv = float4(0, 1, 0, 0);
 
 	output.Append(element);
 
-	element.wpos = temp[3];
+	element.wpos = input[0].pos + temp[3];
 	element.pos = tpos + temp[3];
 	element.uv = float4(1, 1, 0, 0);
 
@@ -77,28 +79,30 @@ void main(
 
 	tpos2 = mul(mul(tpos2, eyes[1].view), eyes[1].proj);
 	vpos = eyes[1].view / determinant(eyes[1].view);
+	vpos[3].w = 0;
+	vpos[3] = normalize(vpos[3]);
 	element.normal = vpos[3];
 
 
-	element.wpos = temp[0];
+	element.wpos = input[0].pos + temp[0];
 	element.pos = tpos2 + temp[0];
 	element.uv = float4(0, 0, 0, 0);
 
 	output.Append(element);
 
-	element.wpos = temp[1];
+	element.wpos = input[0].pos + temp[1];
 	element.pos = tpos2 + temp[1];
 	element.uv = float4(1, 0, 0, 0);
 
 	output.Append(element);
 
-	element.wpos = temp[2];
+	element.wpos = input[0].pos + temp[2];
 	element.pos = tpos2 + temp[2];
 	element.uv = float4(0, 1, 0, 0);
 
 	output.Append(element);
 
-	element.wpos = temp[3];
+	element.wpos = input[0].pos + temp[3];
 	element.pos = tpos2 + temp[3];
 	element.uv = float4(1, 1, 0, 0);
 

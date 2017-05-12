@@ -98,6 +98,16 @@ namespace Epoch {
 			delete[] buffer;
 		}
 
+		if (!FileIO::LoadBytes("PSCombiner.cso", &buffer, byteSize)) {
+			SystemLogger::GetError() << "[Error] An error has occurred when trying to read PSCombiner.cso. Chances are the file is missing or has been renamed. The shader will be null, and may result in a crash." << std::endl;
+			mPixelShaders[ePS_DEFERRED] = std::make_shared<ID3D11PixelShader*>(nullptr);
+		} else {
+			Renderer::Instance()->GetDevice()->CreatePixelShader(buffer, byteSize, nullptr, &ps);
+			SetD3DName(ps, "PSCombiner.cso");
+			mPixelShaders[ePS_DEFERRED] = std::make_shared<ID3D11PixelShader*>(ps);
+			delete[] buffer;
+		}
+
 
 
 

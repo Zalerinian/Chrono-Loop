@@ -32,8 +32,8 @@ namespace Epoch
 		{
 
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
-			Block = cLevel->FindObjectWithName("TransparentDoor1");
-			Exit = cLevel->FindObjectWithName("TransparentDoor2");
+			Block = cLevel->FindObjectWithName("EnvTransparentDoor1");
+			Exit = cLevel->FindObjectWithName("EnvTransparentDoor2");
 			blockInterp = TimeManager::Instance()->GetObjectInterpolator(Block->GetUniqueID());
 			exitInterp = TimeManager::Instance()->GetObjectInterpolator(Exit->GetUniqueID());
 
@@ -50,6 +50,7 @@ namespace Epoch
 			mD2Wires = cLevel->FindAllObjectsByPattern("D2Wire");
 
 			//Turn on wires that need to be turned on
+			//D1 wires meshes are grey then green
 			for (unsigned int i = 0; i < mD1Wires.size(); i++) {
 				MeshComponent* temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				if (temp) {
@@ -60,30 +61,28 @@ namespace Epoch
 					temp->SetVisible(false);
 				}
 			}
+			//D2 wires meshes are green then grey
 			for (unsigned int i = 0; i < mD2Wires.size(); i++) {
 				MeshComponent* temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				if (temp) {
-					temp->SetVisible(false);
+					temp->SetVisible(true);
 				}
 				temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
 				if (temp) {
-					temp->SetVisible(true);
+					temp->SetVisible(false);
 				}
 			}
 		}
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time)
 		{
-			if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName() != "Buttonstand")
+			if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName() != "EnvButtonstand")
 			{
 
 				colliding = true;
 				//SystemLogger::GetLog() << "Colliding" << std::endl;
 				//Interp stuff
-				ButtonCollider* butCol = (ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
-
-				if (_other.mVelocity * butCol->mPushNormal < .1f)
-					butCol->mVelocity = vec3f(0, 0, 0);
+				
 
 				if (!tempDoor) {
 					blockInterp->SetActive(true);
@@ -101,6 +100,7 @@ namespace Epoch
 					tempDoor = true;
 
 					//Loop to change texture on wires
+					//D1 wires meshes are green then grey
 					for (unsigned int i = 0; i < mD1Wires.size(); i++) {
 						MeshComponent* temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 						if (temp)
@@ -109,13 +109,14 @@ namespace Epoch
 						if (temp)
 							temp->SetVisible(true);
 					}
+					//D2 wires meshes are grey then green
 					for (unsigned int i = 0; i < mD2Wires.size(); i++) {
 						MeshComponent* temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 						if (temp)
-							temp->SetVisible(true);
+							temp->SetVisible(false);
 						temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
 						if (temp)
-							temp->SetVisible(false);
+							temp->SetVisible(true);
 					}
 				}
 
@@ -137,16 +138,22 @@ namespace Epoch
 				mSoundOnce = true;
 				}
 
-				vec3f norm = ((ButtonCollider*)&_col)->mPushNormal;
-				vec3f tForce = norm * (norm * _other.mTotalForce);
-				vec3f vel = norm * (norm * _other.mVelocity);
-				vec3f accel = norm * (norm * _other.mAcceleration);
-				if (tForce * norm < 0 && vel * norm < 0 && accel * norm < 0)
+				ButtonCollider* butCol = (ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
+
+				if (fabsf(_other.mVelocity * butCol->mPushNormal) < .1f)
+					butCol->mVelocity = vec3f(0, 0, 0);
+				else
 				{
-					_col.mTotalForce = tForce;
-					_col.mVelocity = vel;
-					_col.mAcceleration = vel / _time;
-					//blockCube->SetPos(blockend);
+					vec3f norm = ((ButtonCollider*)&_col)->mPushNormal;
+					vec3f tForce = norm * (norm * _other.mTotalForce);
+					vec3f vel = norm * (norm * _other.mVelocity);
+					vec3f accel = norm * (norm * _other.mAcceleration);
+					if (tForce * norm < 0 && vel * norm < 0 && accel * norm < 0) {
+						_col.mTotalForce = tForce;
+						_col.mVelocity = vel;
+						_col.mAcceleration = vel / _time;
+						//blockCube->SetPos(blockend);
+					}
 				}
 			}
 			
@@ -199,10 +206,10 @@ namespace Epoch
 						for (unsigned int i = 0; i < mD2Wires.size(); i++) {
 							MeshComponent* temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 							if (temp)
-								temp->SetVisible(false);
+								temp->SetVisible(true);
 							temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
 							if (temp)
-								temp->SetVisible(true);
+								temp->SetVisible(false);
 						}
 					}
 

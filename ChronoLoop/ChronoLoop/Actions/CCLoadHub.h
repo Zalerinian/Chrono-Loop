@@ -119,15 +119,6 @@ namespace Epoch
 					headset->AddComponent(sound);
 
 
-
-
-					Transform cubeScale;
-					cubeScale.SetMatrix(matrix4::CreateScale(0.01f, 0.01f, 0.01f));
-					BaseObject* mmCube = Pool::Instance()->iGetObject()->Reset("mmCube", cubeScale);// new BaseObject("walls", PlaneTransform);
-					MeshComponent *mmCubeMesh = new MeshComponent("../Resources/Cube.obj");
-					mmCubeMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
-					mmCube->AddComponent(mmCubeMesh);
-
 					Physics::Instance()->mObjects.push_back(RightController);
 					Physics::Instance()->mObjects.push_back(LeftController);
 

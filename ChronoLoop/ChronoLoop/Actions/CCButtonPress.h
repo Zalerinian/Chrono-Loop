@@ -29,8 +29,8 @@ namespace Epoch
 		{
 			((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mPress = true;
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
-			Block = cLevel->FindObjectWithName("TransparentDoor1");
-			Exit = cLevel->FindObjectWithName("TransparentDoor2");
+			Block = cLevel->FindObjectWithName("EnvTransparentDoor1");
+			Exit = cLevel->FindObjectWithName("EnvTransparentDoor2");
 			blockInterp = TimeManager::Instance()->GetObjectInterpolator(Block->GetUniqueID());
 			exitInterp = TimeManager::Instance()->GetObjectInterpolator(Exit->GetUniqueID());
 
@@ -47,17 +47,18 @@ namespace Epoch
 			mD2Wires = cLevel->FindAllObjectsByPattern("D2Wire");
 
 			//Turn on wires that need to be turned on
-
+			//D1 wires meshes are grey and green
 			for (unsigned int i = 0; i < mD1Wires.size(); i++) {
 				MeshComponent* temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				if (temp) {
-					temp->SetVisible(false);
+					temp->SetVisible(true);
 				}
 				temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
 				if (temp) {
-					temp->SetVisible(true);
+					temp->SetVisible(false);
 				}
 			}
+			//D2 wires meshes are green then grey
 			for (unsigned int i = 0; i < mD2Wires.size(); i++) {
 				MeshComponent* temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				if (temp) {
@@ -111,10 +112,10 @@ namespace Epoch
 							for (unsigned int i = 0; i < mD1Wires.size(); i++) {
 								MeshComponent* temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 								if (temp)
-									temp->SetVisible(true);
+									temp->SetVisible(false);
 								temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
 								if (temp)
-									temp->SetVisible(false);
+									temp->SetVisible(true);
 							}
 							for (unsigned int i = 0; i < mD2Wires.size(); i++) {
 								MeshComponent* temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
@@ -183,11 +184,11 @@ namespace Epoch
 			for (unsigned int i = 0; i < mD1Wires.size(); i++) {
 				MeshComponent* temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				if (temp) {
-					temp->SetVisible(false);
+					temp->SetVisible(true);
 				}
 				temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
 				if (temp) {
-					temp->SetVisible(true);
+					temp->SetVisible(false);
 				}
 			}
 			for (unsigned int i = 0; i < mD2Wires.size(); i++) {
