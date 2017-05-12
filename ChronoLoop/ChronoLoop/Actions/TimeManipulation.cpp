@@ -13,6 +13,7 @@
 #include "../Common/Common.h"
 #include "../Particles/ParticleSystem.h"
 #include "../Sound/SoundEngine.h"
+#include "CCCloneHeadCollider.h"
 
 namespace Epoch
 {
@@ -35,11 +36,11 @@ namespace Epoch
 		Level* currentLevel = LevelManager::GetInstance().GetCurrentLevel();
 
 	
-		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip) && !Settings::GetInstance().GetBool("PauseMenuUp") && !Settings::GetInstance().GetBool("CantPauseTime")) {
+		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip) && !Settings::GetInstance().GetBool("PauseMenuUp") && !Settings::GetInstance().GetBool("CantPauseTime") ) {
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			
 			
-				if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 7)) //created clone (tut 2)
+				if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") >= 7)) //created clone (tut 2)
 				{
 					// Cancel Time
 
@@ -69,6 +70,7 @@ namespace Epoch
 						cLevel->GetLeftController()->GetUniqueID());
 
 					mIsBeingMade = false;
+					TimeManager::Instance()->ShowTimelineColliders(false);
 
 				} else if (!mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") >= 2)) {
 					// Stop time
@@ -101,6 +103,23 @@ namespace Epoch
 						TimeManager::Instance()->GetCurrentSnapFrame(),
 						cLevel->GetRightController()->GetUniqueID(),
 						cLevel->GetLeftController()->GetUniqueID());
+					if(mCurCloneController1 && mCurCloneController2 && mCurCloneHeadset)
+					{
+						CubeCollider* col = (CubeCollider*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
+						if (col) {
+							col->mShowCol = true;
+						}
+						col = (CubeCollider*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
+						if (col) {
+							col->mShowCol = true;
+						}
+						col = (CubeCollider*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
+						if (col) {
+							col->mShowCol = true;
+						}
+					}
+					TimeManager::Instance()->ShowTimelineColliders(true);
+				
 			}
 		}
 
@@ -212,6 +231,7 @@ namespace Epoch
 				mPauseTime = false;
 				Settings::GetInstance().SetBool("IsTimePaused", false);
 				mIsBeingMade = false;
+				TimeManager::Instance()->ShowTimelineColliders(false);
 			}
 
 		}
@@ -220,28 +240,32 @@ namespace Epoch
 			//toggle to have clone turn on or off
 			if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") >= 4))//rewound time (tut 1)
 			{
-				if(mCurCloneController1 && mCurCloneController2 && mCurCloneHeadset && TimeManager::Instance()->GetCurrentSnapFrame() != TimeManager::Instance()->GetTempCurSnap())
+				if(mCurCloneController1 && mCurCloneController2 && mCurCloneHeadset)
 				{
-					if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck() == false) {
-						mIsBeingMade = !mIsBeingMade;
-					}
-					
-					if(mIsBeingMade)
-					{
-						if (Settings::GetInstance().GetInt("tutStep") == 4)//rewound time (tut 1)
-							Settings::GetInstance().SetInt("tutStep", 6);//pick up box (tut 1)
+					bool FirstFrame = TimeManager::Instance()->GetCurrentSnapFrame() != TimeManager::Instance()->GetTempCurSnap();
+					if (FirstFrame) {
+						if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck() == false) {
+							mIsBeingMade = !mIsBeingMade;
+						}
 
-						((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
-						((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
-						((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
-						SystemLogger::GetLog() << "Opaque" << std::endl;
+						if (mIsBeingMade) {
+							if (Settings::GetInstance().GetInt("tutStep") == 4)//rewound time (tut 1)
+								Settings::GetInstance().SetInt("tutStep", 6);//pick up box (tut 1)
+
+							((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+							((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+							((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(1);
+							SystemLogger::GetLog() << "Opaque" << std::endl;
+						} else {
+							((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.3f);
+							((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.3f);
+							((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.3f);
+							SystemLogger::GetLog() << "Transparent" << std::endl;
+						}
 					}
 					else
 					{
-						((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.3f);
-						((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.3f);
-						((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.3f);	
-						SystemLogger::GetLog() << "Transparent" << std::endl;
+						LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck();
 					}
 				}
 			}
@@ -264,6 +288,8 @@ namespace Epoch
 		MeshComponent *visibleMesh = new MeshComponent("../Resources/Clone.obj",.35f);
 		visibleMesh->SetPixelShader(ePS_TRANSPARENT);
 		visibleMesh->AddTexture(TimeManager::Instance()->GetNextTexture().c_str(), eTEX_DIFFUSE);
+		SphereCollider* col = new SphereCollider(_headset, false, false, vec3f(), 100.0f, .02f, .2f, .2f, 0, 1, "../Resources/Clone.obj");
+		CCCloneHeadCollider* headCol = new CCCloneHeadCollider();
 		//visibleMesh->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
 		//visibleMesh->AddTexture("../Resources/Scanline.png", eTEX_CUSTOM2);
 
@@ -274,6 +300,8 @@ namespace Epoch
 		//Renderer::Instance()->GetDevice()->CreateBuffer(&bufferDesc, &initialData, visibleMesh->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].GetAddressOf());
 		//SetD3DName(visibleMesh->GetShape()->GetContext().mPixelCBuffers[ePB_CUSTOM1].Get(), "Headset scanline buffer");
 		_headset->AddComponent(visibleMesh);
+		_headset->AddComponent(col);
+		_headset->AddComponent(headCol);
 
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
 		MeshComponent *mc = new MeshComponent("../Resources/Controller.obj",.35f);
@@ -320,6 +348,7 @@ namespace Epoch
 		TimeManager::Instance()->UpdatePlayerObjectInTimeline(_headset);
 		TimeManager::Instance()->UpdatePlayerObjectInTimeline(_controller1);
 		TimeManager::Instance()->UpdatePlayerObjectInTimeline(_controller2);
+
 		
 		TimeManager::Instance()->SetupClonePairs(_headset->GetUniqueID(),_controller1->GetUniqueID(), _controller2->GetUniqueID());
 	}
