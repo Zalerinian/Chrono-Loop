@@ -62,9 +62,9 @@ namespace Epoch
 			mazeBoxes[0].SetUp(1, 2, 0);
 			mazeBoxes[1].SetUp(2, 2, 3);
 			mazeBoxes[2].SetUp(3, 3, 3);
-			mazeBoxes[0].mBox = cLevel->FindObjectWithName("Box1");
-			mazeBoxes[1].mBox = cLevel->FindObjectWithName("Box2");
-			mazeBoxes[2].mBox = cLevel->FindObjectWithName("Box3");
+			mazeBoxes[0].mBox = cLevel->FindObjectWithName("EnvBox1");
+			mazeBoxes[1].mBox = cLevel->FindObjectWithName("EnvBox2");
+			mazeBoxes[2].mBox = cLevel->FindObjectWithName("EnvBox3");
 			mLButton = cLevel->FindObjectWithName("Button1");
 			mRButton = cLevel->FindObjectWithName("Button3");
 			mUButton = cLevel->FindObjectWithName("Button2");
@@ -126,21 +126,21 @@ namespace Epoch
 					mBox1Done = mazeBoxes[0].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
 					if (mBox1Done) {
 						mazeBoxes[0].mInterp->SetActive(false);
-						((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 5))->CallEvent(Emitter::ePlay);
+						//((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 5))->CallEvent(Emitter::ePlay);
 					}
 				}
 				if (!mBox2Done) {
 					mBox2Done = mazeBoxes[1].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
 					if (mBox2Done) {
 						mazeBoxes[1].mInterp->SetActive(false);
-						((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 5))->CallEvent(Emitter::ePlay);
+						//((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 5))->CallEvent(Emitter::ePlay);
 					}
 				}
 				if (!mBox3Done) {
 					mBox3Done = mazeBoxes[2].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
 					if (mBox3Done) {
 						mazeBoxes[2].mInterp->SetActive(false);
-						((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 5))->CallEvent(Emitter::ePlay);
+						//((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 5))->CallEvent(Emitter::ePlay);
 					}
 				}
 			}
