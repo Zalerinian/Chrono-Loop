@@ -284,14 +284,32 @@ namespace Epoch {
 					headset->AddComponent(ambient);
 					PauseMenu* pauseComp = new PauseMenu();
 					headset->AddComponent(pauseComp);
+
 					Emitter* sound = new SFXEmitter();
 					((SFXEmitter*)sound)->SetEvent(AK::EVENTS::SFX_TELEPORTSOUND);
 					AudioWrapper::GetInstance().AddEmitter(sound, headset->GetName().c_str());
 					headset->AddComponent(sound);
+
+					Emitter* timepause = new SFXEmitter();
+					((SFXEmitter*)timepause)->SetEvent(AK::EVENTS::SFX_TIMEPAUSE);
+					AudioWrapper::GetInstance().AddEmitter(timepause, headset->GetName().c_str());
+					headset->AddComponent(timepause);
+
+					Emitter* timeresume = new SFXEmitter();
+					((SFXEmitter*)timeresume)->SetEvent(AK::EVENTS::SFX_TIMERESUME);
+					AudioWrapper::GetInstance().AddEmitter(timeresume, headset->GetName().c_str());
+					headset->AddComponent(timeresume);
+
 					Emitter* sound1 = new SFXEmitter();
 					((SFXEmitter*)sound1)->SetEvent(AK::EVENTS::SFX_PLAYERDEATH);
 					AudioWrapper::GetInstance().AddEmitter(sound1, headset->GetName().c_str());
 					headset->AddComponent(sound1);
+
+					Emitter* sound2 = new SFXEmitter();
+					((SFXEmitter*)sound2)->SetEvent(AK::EVENTS::SFX_BOXWALLCOLLIDELEVEL3);
+					AudioWrapper::GetInstance().AddEmitter(sound2, headset->GetName().c_str());
+					headset->AddComponent(sound2);
+
 
 					AudioWrapper::GetInstance().STOP();
 

@@ -89,22 +89,22 @@ namespace Epoch
 			if ((GetAsyncKeyState(VK_DOWN) & 0x1 || mDBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveDown();
 				mDBCC->SetisColliding(false);
-				PrintGrid();
+				//PrintGrid();
 			}
 			else if (((GetAsyncKeyState(VK_UP) & 0x1) || mUBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveUp();
 				mUBCC->SetisColliding(false);
-				PrintGrid();
+				//PrintGrid();
 			}
 			else if ((GetAsyncKeyState(VK_LEFT) & 0x1 || mLBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveLeft();
 				mLBCC->SetisColliding(false);
-				PrintGrid();
+				//PrintGrid();
 			}
 			else if ((GetAsyncKeyState(VK_RIGHT) & 0x1 || mRBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveRight();
 				mRBCC->SetisColliding(false);
-				PrintGrid();
+				//PrintGrid();
 			}
 			else if(GetAsyncKeyState(Epoch::Keys::R) & 0x1 || mResetBCC->GetisColliding())
 			{
@@ -126,21 +126,21 @@ namespace Epoch
 					mBox1Done = mazeBoxes[0].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
 					if (mBox1Done) {
 						mazeBoxes[0].mInterp->SetActive(false);
-						//((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 5))->CallEvent(Emitter::ePlay);
+						((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 5))->CallEvent(Emitter::ePlay);
 					}
 				}
 				if (!mBox2Done) {
 					mBox2Done = mazeBoxes[1].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
 					if (mBox2Done) {
 						mazeBoxes[1].mInterp->SetActive(false);
-						//((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 5))->CallEvent(Emitter::ePlay);
+						((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 5))->CallEvent(Emitter::ePlay);
 					}
 				}
 				if (!mBox3Done) {
 					mBox3Done = mazeBoxes[2].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
 					if (mBox3Done) {
 						mazeBoxes[2].mInterp->SetActive(false);
-						//((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 5))->CallEvent(Emitter::ePlay);
+						((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 5))->CallEvent(Emitter::ePlay);
 					}
 				}
 			}
