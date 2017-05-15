@@ -50,21 +50,29 @@ namespace Epoch {
 		}
 		bool ChecktoFloor(MeshComponent* _plane, vec3f _start, vec3f _ray, vec3f& _hit)
 		{
-			Triangle* tris = _plane->GetTriangles();
-			int count = _plane->GetTriangleCount();
-
-			float t;
-			for (int i = 0; i < count; i++)
+			for (int p = 0; p < mPlaneObjects.size(); p++)
 			{
-				bool hit = Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, _start, _ray, t);
-
-				if (hit)
+				for (int m = 0; m < mPlaneObjects[p]->GetComponentCount(ComponentType::eCOMPONENT_MESH); m++)
 				{
-					_hit = _start + (_ray * t);
-					return true;
-				}
+					Triangle* tris = ((MeshComponent*)mPlaneObjects[p]->GetComponents(ComponentType::eCOMPONENT_MESH)[m])->GetTriangles();
+					int count = ((MeshComponent*)mPlaneObjects[p]->GetComponents(ComponentType::eCOMPONENT_MESH)[m])->GetTriangleCount();
 
+					float t;
+					for (int i = 0; i < count; i++)
+					{
+						bool hit = Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, _start, _ray, t);
+
+						if (hit)
+						{
+							_hit = _start + (_ray * t);
+							return true;
+						}
+
+					}
+
+				}
 			}
+
 
 			return false;
 		}
@@ -96,23 +104,17 @@ namespace Epoch {
 
 				for (int e = 0; e < mEnvironmentObjects.size(); e++)
 				{
-					vec4f tempnext = nextpos, templast = lastpos;
-					tempnext *= mEnvironmentObjects[e]->GetTransform().GetMatrix().Invert();
-					templast *= mEnvironmentObjects[e]->GetTransform().GetMatrix().Invert();
 					for (int m = 0; m < mEnvironmentObjects[e]->GetComponentCount(ComponentType::eCOMPONENT_MESH); m++)
 					{
 						if (CheckMesh((MeshComponent*)mEnvironmentObjects[e]->GetComponents(ComponentType::eCOMPONENT_MESH)[m], lastpos, nextpos, hit))
 						{
-							/*vec3f floorhit;
+							vec3f floorhit;
 
 							if (ChecktoFloor(_plane, hit, vec3f(0, -1, 0), floorhit))
 							{
 								_arc.push_back(floorhit);
 							}
-							else*/
-							vec4f temphit = hit;
-							temphit *= mEnvironmentObjects[e]->GetTransform().GetMatrix();
-							hit = temphit;
+							else
 							_arc.push_back(hit);
 
 							return true;
@@ -121,17 +123,11 @@ namespace Epoch {
 				}
 				for (int p = 0; p < mPlaneObjects.size(); p++)
 				{
-					vec4f tempnext = nextpos, templast = lastpos;
-					tempnext *= mPlaneObjects[p]->GetTransform().GetMatrix().Invert();
-					templast *= mPlaneObjects[p]->GetTransform().GetMatrix().Invert();
 					for (int m = 0; m < mPlaneObjects[p]->GetComponentCount(ComponentType::eCOMPONENT_MESH); m++)
 					{
 						if (CheckMesh((MeshComponent*)mPlaneObjects[p]->GetComponents(ComponentType::eCOMPONENT_MESH)[m], lastpos, nextpos, hit))
 						{
 							//if it hits the plane
-							vec4f temphit = hit;
-							temphit *= mPlaneObjects[p]->GetTransform().GetMatrix();
-							hit = temphit;
 							_arc.push_back(hit);
 
 							return true;
