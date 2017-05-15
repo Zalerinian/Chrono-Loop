@@ -108,13 +108,13 @@ namespace Epoch {
 					{
 						if (CheckMesh((MeshComponent*)mEnvironmentObjects[e]->GetComponents(ComponentType::eCOMPONENT_MESH)[m], lastpos, nextpos, hit))
 						{
-							vec3f floorhit;
+							/*vec3f floorhit;
 
 							if (ChecktoFloor(_plane, hit, vec3f(0, -1, 0), floorhit))
 							{
 								_arc.push_back(floorhit);
 							}
-							else
+							else*/
 							_arc.push_back(hit);
 
 							return true;
