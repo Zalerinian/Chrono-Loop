@@ -38,7 +38,7 @@ namespace Epoch
 		MENU_NAME mActiveMenu;
 		//ActivePanel mActivePanel;
 		bool PauseMenuisUp = false;
-		bool test1 = false;
+		bool test1 = false, doneBeingOff = false;
 		Transform identity;
 		Level* cLevel;
 
@@ -201,14 +201,14 @@ namespace Epoch
 				Settings::GetInstance().SetBool("DidRealStuffInPauseMenu", false);
 				OnDisable();
 			}
-			if ((!PauseMenuisUp && scaleY > 0.0f) || (PauseMenuisUp && scaleX <= 20.0f)) {
-				if ((!PauseMenuisUp && scaleY > 0.0f)) {
-					OnEnable();
-					PauseMenuisUp = false;
-				}
-				else if ((PauseMenuisUp && scaleX <= 20.0f))
-					OnEnable();
+			if ((!PauseMenuisUp && scaleY > 0.0f)) {
+				OnEnable();
+				PauseMenuisUp = false;
+				doneBeingOff = false;
 			}
+			else if ((PauseMenuisUp && scaleX <= 20.0f))
+				OnEnable();
+
 			if((VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu) == true || 
 				VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu) == true || 
 				(GetAsyncKeyState(Keys::M) & 0x1)) && !LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->isTimePaused())
@@ -383,7 +383,7 @@ namespace Epoch
 				else if (scaleX < 20.0f)
 					scaleX += 1.0f;
 			}
-			else
+			else if(!doneBeingOff)
 			{
 				if (scaleX > 0.1f){
 					scaleX -= 1.0f;
@@ -396,10 +396,9 @@ namespace Epoch
 				else if (scaleY <= 0.0f) {
 					scaleX = 0.0f;
 					//scaleY = 0.0f;
- 					OnDisable();
+					OnDisable();
+					doneBeingOff = true;
 				}
-				
-
 			}
 		}
 		virtual void OnEnable()

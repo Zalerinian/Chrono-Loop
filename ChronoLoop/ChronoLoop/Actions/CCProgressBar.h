@@ -44,35 +44,35 @@ namespace Epoch
 		virtual void Update()
 		{
 
-			Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvBackground.Get(), transparentColor);
-			Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvProgressBar.Get(), transparentColor);
-
-			Draw::Instance().DrawRectangleToBitmap(
-				0, 0, 256.0f, 256.0f, 
-				(D2D1::ColorF::Black, (UINT32)1.0f),
-				Draw::Instance().GetBitmap(texBackground.Get()));
-			if (curProgress < finalProgress - (finalProgress/20)) {
-				if (curProgress != tempProgress) {
-					pProgressBar->GetTransform().SetMatrix(matrix4::CreateScale((curProgress / finalProgress) * 0.85f, 1, 0.85f) * matrix4::CreateTranslation(0, 0.001f, 0));
-					tempProgress = curProgress;
-				}
-				D2D1::ColorF tempColor = { 1,0,0,1 };
-				Draw::Instance().DrawRectangleToBitmap(
-					0, 0, 256.0f, 256.0f, tempColor,
-					Draw::Instance().GetBitmap(texProgressBar.Get()));
-			}
-			else
+			if (curProgress != tempProgress) 
 			{
-				D2D1::ColorF tempColor = { 0,1,0,1 };
-				Draw::Instance().DrawRectangleToBitmap(
-					0, 0, 256.0f, 256.0f, tempColor,
-					Draw::Instance().GetBitmap(texProgressBar.Get()));
+				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvProgressBar.Get(), transparentColor);
+				if (curProgress < finalProgress - (finalProgress / 20)) {
+				pProgressBar->GetTransform().SetMatrix(matrix4::CreateScale((curProgress / finalProgress) * 0.85f, 1, 0.85f) * matrix4::CreateTranslation(0, 0.001f, 0));
+					tempProgress = curProgress;
+					D2D1::ColorF tempColor = { 1,0,0,1 };
+					Draw::Instance().DrawRectangleToBitmap(
+						0, 0, 256.0f, 256.0f, tempColor,
+						Draw::Instance().GetBitmap(texProgressBar.Get()));
+				}
+				else
+				{
+					D2D1::ColorF tempColor = { 0,1,0,1 };
+					Draw::Instance().DrawRectangleToBitmap(
+						0, 0, 256.0f, 256.0f, tempColor,
+						Draw::Instance().GetBitmap(texProgressBar.Get()));
+				}
 			}
 		}
 		virtual void OnEnable()
 		{
 			mcBackground->SetVisible(true);
 			mcProgressBar->SetVisible(true);
+			Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvBackground.Get(), transparentColor);
+			Draw::Instance().DrawRectangleToBitmap(
+				0, 0, 256.0f, 256.0f,
+				(D2D1::ColorF::Black, (UINT32)1.0f),
+				Draw::Instance().GetBitmap(texBackground.Get()));
 		}
 		virtual void OnDisable()
 		{
