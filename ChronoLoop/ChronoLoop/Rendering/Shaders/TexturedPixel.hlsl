@@ -1,5 +1,3 @@
-#include "VertexLayouts.hlsli"
-#include "LightFunctions.hlsli"
 #include "Structs.hlsli"
 
 texture2D tDiffuse : register(t0);
@@ -13,13 +11,17 @@ SamplerState specularFilter : register(s2);
 
 texture2D tEmissive : register(t3);
 
+cbuffer EyePos_ : register(b0) {
+	float3 EyePos;
+}
+
 struct PSI {
 	float4 position : SV_POSITION;
 	float4 normal : NORMAL0;
 	float4 texCoord : COLOR;
 	float4 wpos : WORLDPOS;
 	float4 shadowPos : SHADOW;
-	float4 eyePos : HEADPOS;
+	float3x3 TBN : TBN;
 	uint IID : CL_IID;
 	uint viewport : SV_ViewportArrayIndex;
 };
@@ -33,11 +35,20 @@ MRTOutput main(PSI input) {
 	float4 emissiveColor = tEmissive.Sample(diffuseFilter, input.texCoord.xy);
 	float4 specularColor = tSpecular.Sample(diffuseFilter, input.texCoord.xy);
 
+	float3 norm = tNormal.Sample(diffuseFilter, input.texCoord.xy).rgb;
+	if (length(norm) < 1) {
+		norm = normalize(input.normal.xyz);
+	} else {
+		norm = normalize(norm * 2 - 1);
+		norm = normalize(mul(input.TBN, norm));
+	}
+
+
 	output.diffuse = diffuseColor;
 	output.position = input.wpos;
-	output.normal = float4(normalize(input.normal.xyz), 1);
-	output.specular = specularColor;
-	output.glow = emissiveColor;
+	output.normal = float4(norm, 1);
+	output.specular = specularColor * specularColor.a;
+	output.glow = emissiveColor * emissiveColor.a;
 	return output;
 }
 

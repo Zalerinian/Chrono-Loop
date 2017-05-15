@@ -19,7 +19,7 @@ namespace Epoch {
 
 		virtual void Start() {
 			flip = true;
-			angle = rand() % 360;
+			angle = (float)(rand() % 360);
 			mIncrease = (0) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / ((1) - (0))));
 			mRandDur = (rand() % 20) + 6;
 			mRandDown = ((rand() % 5) + 1);
@@ -27,8 +27,8 @@ namespace Epoch {
 			float rad = DirectX::XM_PI / 2;
 			float pi = DirectX::XM_PI;
 			rot = (matrix4::CreateXRotation(angle) * matrix4::CreateYRotation(angle) * matrix4::CreateZRotation(angle));
-			m1 = mObject->GetTransform().GetMatrix() * matrix4::CreateTranslation(0, -mRandDown, 0);
-			m2 = mObject->GetTransform().GetMatrix() * matrix4::CreateTranslation(0, mRandUp, 0);
+			m1 = mObject->GetTransform().GetMatrix() * matrix4::CreateTranslation(0, (float)-mRandDown, 0);
+			m2 = mObject->GetTransform().GetMatrix() * matrix4::CreateTranslation(0, (float)mRandUp, 0);
 			//m1 = matrix4::CreateScale(.5f, .5f, .5f) *  matrix4::CreateTranslation(0, .75f, -3.872531f);
 			//m2 = matrix4::CreateScale(.5f, .5f, .5f) *  matrix4::CreateTranslation(0, 2, -3.872531f);
 			mManip = LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator();

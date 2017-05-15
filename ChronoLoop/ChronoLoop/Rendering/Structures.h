@@ -27,11 +27,10 @@ namespace Epoch
 	};
 	struct VertexPosNormTanTex
 	{
-		vec4f	Position;
-		vec4f	Normal;
-		vec4f	UV;
-		vec4f	Tangent;
-		float	Determinant;
+		vec4f Position;
+		vec4f Normal;
+		vec4f UV;
+		vec4f Tangent;
 	};
 	struct VertexPosBoneWeight
 	{

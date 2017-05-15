@@ -142,7 +142,7 @@ namespace Epoch {
 
 	void TimeManager::ShowTimelineColliders(bool _show)
 	{
-		mTimeline->ShowLiveObjectsColliders(_show);
+		mTimeline->ShowLiveObjectsColliders(GetCurrentSnapFrame(),_show);
 	}
 
 
@@ -542,6 +542,8 @@ namespace Epoch {
 			} else {
 				mShouldPulse = false;
 			}
+
+			mTimeline->ShowLiveObjectsColliders(mtempCurSnapFrame,true);
 	}
 	void TimeManager::MoveAllObjectExceptPlayer(unsigned int _snaptime, unsigned short _headset, unsigned short _rightC, unsigned short _leftC) {
 		mTimeline->MoveAllObjectsToSnapExceptPlayer(_snaptime, _headset, _leftC, _rightC);
