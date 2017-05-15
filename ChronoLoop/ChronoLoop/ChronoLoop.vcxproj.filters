@@ -933,6 +933,9 @@
     <FxCompile Include="Rendering\Shaders\PSCombiner.hlsl">
       <Filter>Rendering\Shaders\Pixel shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Rendering\Shaders\PSSolidColor.hlsl">
+      <Filter>Rendering\Shaders\Pixel shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">

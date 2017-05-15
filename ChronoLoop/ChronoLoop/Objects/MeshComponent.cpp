@@ -19,8 +19,14 @@ namespace Epoch {
 		mNode = Renderer::Instance()->AddTopmostNode(*mShape);
 	}
 
+	void MeshComponent::CreateMotionNode() {
+		mNode = Renderer::Instance()->AddMotionNode(*mShape);
+	}
+
 	void MeshComponent::CreateNode() {
-		if (GetTopmost()) {
+		if (GetInMotion()) {
+			CreateMotionNode();
+		} else if (GetTopmost()) {
 			CreateTopmostNode();
 		} else if (mBlended) {
 			CreateTransparentNode();
@@ -42,6 +48,11 @@ namespace Epoch {
 	void MeshComponent::RemoveTopmostNode() {
 		DESTROY_NODE(mNode);
 		Renderer::Instance()->RemoveTopmostNode(*mShape);
+	}
+
+	void MeshComponent::RemoveMotionNode() {
+		DESTROY_NODE(mNode);
+		Renderer::Instance()->RemoveMotionNode(*mShape);
 	}
 
 	void MeshComponent::RemoveNode() {
@@ -293,6 +304,14 @@ namespace Epoch {
 		}
 	}
 
+	void MeshComponent::SetInMotion(bool _inMotion) {
+		if (mActiveRewind != _inMotion) {
+			RemoveNode();
+			mActiveRewind = _inMotion;
+			CreateNode();
+		}
+	}
+
 	void MeshComponent::SetBlended(bool _ButWillItBlend) {
 		if(mBlended) {
 			if (!_ButWillItBlend) {
@@ -349,6 +368,10 @@ namespace Epoch {
 
 	bool MeshComponent::GetTopmost() {
 		return mTopmost;
+	}
+
+	bool MeshComponent::GetInMotion() {
+		return mActiveRewind;
 	}
 
 	void MeshComponent::SetData(ConstantBufferType _t, BufferDataType _bt, unsigned char _index, void * _data) {

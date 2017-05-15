@@ -418,6 +418,9 @@ void Update() {
 
 	while (LevelManager::GetInstance().LoadLevelAsync("../Resources/MainMenu.elf", &mainMenu) != Epoch::LM::LevelStatus::Success) {}
 
+	mc2->SetInMotion(true); // Left controller mesh component.
+	LeftController->GetTransform().GetMatrix().Position.Set(0, 1, 0, 1);
+
 	mainMenu->AssignPlayerControls(headset, LeftController, RightController);
 	mainMenu->AddObject(RightController);
 	mainMenu->AddObject(headset);
