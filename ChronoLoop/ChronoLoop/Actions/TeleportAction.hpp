@@ -32,21 +32,37 @@ namespace Epoch {
 		BaseObject* mTPLoc, *mCSLoc, *mMSLoc;
 		MeshComponent* mTPMesh, *mCSMesh, *mMidMesh;
 
-		bool CheckMesh(MeshComponent* _plane, vec3f _start, vec3f _end, vec3f& _hit)
+		bool CheckMesh(MeshComponent* _plane,vec3f _ts, vec3f _te, vec3f _start, vec3f _end, vec3f& _hit)
 		{
 			Triangle* tris = _plane->GetTriangles();
 			int count = _plane->GetTriangleCount();
 
+			bool didHit = false;
+			float time = FLT_MAX;
 			for (int i = 0; i < count; i++)
 			{
-				bool hit = Physics::Instance()->Linecast((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, _start, _end, _hit);
+				float t = FLT_MAX;
+				bool hit = Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, _ts, (_te - _ts), t);
 
 				if (hit)
-					return true;
+				{
+					if (t < time)
+					{
+						time = t;
+						didHit = true;
+					}
+				}
 
 			}
+			_hit = _start + (_end - _start) * time;
 
-			return false;
+			vec3f sd = _end - _start;
+			vec3f nd = _hit - _start;
+
+			if (sd.Dot(nd) > 1 || sd.Dot(nd) < 0)
+				didHit = false;
+
+			return didHit;
 		}
 		bool ChecktoFloor(MeshComponent* _plane, vec3f _start, vec3f _ray, vec3f& _hit)
 		{
@@ -104,9 +120,13 @@ namespace Epoch {
 
 				for (int e = 0; e < mEnvironmentObjects.size(); e++)
 				{
+					vec4f tl = lastpos, tn = nextpos;
+					matrix4 tm = mEnvironmentObjects[e]->GetTransform().GetMatrix();
+					tl *= tm.Invert();
+					tn *= tm.Invert();
 					for (int m = 0; m < mEnvironmentObjects[e]->GetComponentCount(ComponentType::eCOMPONENT_MESH); m++)
 					{
-						if (CheckMesh((MeshComponent*)mEnvironmentObjects[e]->GetComponents(ComponentType::eCOMPONENT_MESH)[m], lastpos, nextpos, hit))
+						if (CheckMesh((MeshComponent*)mEnvironmentObjects[e]->GetComponents(ComponentType::eCOMPONENT_MESH)[m], tl, tn, lastpos, nextpos, hit))
 						{
 							/*vec3f floorhit;
 
@@ -123,9 +143,13 @@ namespace Epoch {
 				}
 				for (int p = 0; p < mPlaneObjects.size(); p++)
 				{
+					vec4f tl = lastpos, tn = nextpos;
+					matrix4 tm = mPlaneObjects[p]->GetTransform().GetMatrix();
+					tl *= tm.Invert();
+					tn *= tm.Invert();
 					for (int m = 0; m < mPlaneObjects[p]->GetComponentCount(ComponentType::eCOMPONENT_MESH); m++)
 					{
-						if (CheckMesh((MeshComponent*)mPlaneObjects[p]->GetComponents(ComponentType::eCOMPONENT_MESH)[m], lastpos, nextpos, hit))
+						if (CheckMesh((MeshComponent*)mPlaneObjects[p]->GetComponents(ComponentType::eCOMPONENT_MESH)[m], tl, tn, lastpos, nextpos, hit))
 						{
 							//if it hits the plane
 							_arc.push_back(hit);
@@ -221,9 +245,9 @@ namespace Epoch {
 			vec4f t = mVelocity;
 			t.w = 1;
 
-			tmp.first.w = 0;
-			tmp.second.w = 0;
-			tmp.third.w = 0;
+			tmp.first.w = 1;
+			tmp.second.w = 1;
+			tmp.third.w = 1;
 			tmp.fourth = vec4f();
 
 			t *= tmp;
@@ -285,6 +309,7 @@ namespace Epoch {
 						//SystemLogger::Debug() << "Touchpad Pressed" << std::endl;
 						vec4f raydir = (mArc[mArc.size() - 1] - mArc[0]);
 						raydir.w = 0;
+						raydir = raydir.Normalize();
 
 						vec4f forward(0, 0, 1, 0);
 						float controllerTime = 0, wallTime = FLT_MAX;
