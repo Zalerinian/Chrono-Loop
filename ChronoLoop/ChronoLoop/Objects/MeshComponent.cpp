@@ -57,7 +57,9 @@ namespace Epoch {
 
 	void MeshComponent::RemoveNode() {
 		if (mNode) {
-			if (GetTopmost()) {
+			if (GetInMotion()) {
+				RemoveMotionNode();
+			} else if (GetTopmost()) {
 				RemoveTopmostNode();
 			} else if (mBlended) {
 				RemoveTransparentNode();
