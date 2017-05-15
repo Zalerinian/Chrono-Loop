@@ -713,7 +713,7 @@ namespace Epoch {
 
 
 	void Renderer::RenderNoVR(float _delta) {
-		UpdateCamera(2, 2, _delta);
+		UpdateCamera(3, 2, _delta);
 		UpdateGSBuffers();
 		UpdateLBuffers();
 		ParticleSystem::Instance()->Render();
@@ -1268,7 +1268,7 @@ namespace Epoch {
 			RenderBlurStage(BLUR_STAGE_BLUR, 1, 0);
 
 			//vert blur
-			ToggleBlurTextureSet(passTextureCount, downRTV, downSRV); // ping
+			ToggleBlurTextureSet(passTextureCount, upRTV, downSRV); // ping
 			RenderBlurStage(BLUR_STAGE_BLUR, 0, 1);
 
 			//// upsample
