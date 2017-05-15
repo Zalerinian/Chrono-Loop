@@ -33,7 +33,8 @@
 #include "../Actions/CCBoxSpinRandom.h"
 #include "../Actions/CCBoxSpinRandomSmall.h"
 #include "../Actions/CCLevel3BoxSmash.h"
-#include "../Actions/CCPlatformButtonHold.h"
+#include "../Actions/CCPlatformButton.h"
+#include "../Actions/CCPlatform.h"
 
 namespace Epoch {
 
@@ -509,7 +510,7 @@ namespace Epoch {
 					case 6: //TexturedMesh
 					{
 						INT32 pathLength = 0;
-						std::string mesh, diffuse, emissive, specular;
+						std::string mesh, diffuse, emissive, specular, normal;
 						float transparency = 1.0f;
 						if (version >= 2) {
 							file.read((char*)&transparency, sizeof(float));
@@ -560,6 +561,14 @@ namespace Epoch {
 							delete[] temp;
 						}
 
+						if (version >= 7) {
+							file.read((char*)&pathLength, sizeof(INT32));
+							temp = new char[pathLength];
+							file.read(temp, pathLength);
+							normal = temp;
+							delete[] temp;
+						}
+
 						if (obj)
 						{
 							MeshComponent* mc = new MeshComponent(mesh.c_str(), transparency, psf, vsf, gsf);
@@ -569,6 +578,9 @@ namespace Epoch {
 							}
 							if (version >= 6 && specular != "..\\Resources\\") {
 								mc->AddTexture(specular.c_str(), eTEX_SPECULAR);
+							}
+							if (version >= 7 && normal != "..\\Resources\\") {
+								mc->AddTexture(normal.c_str(), eTEX_NORMAL);
 							}
 							obj->AddComponent(mc);
 						}
@@ -692,8 +704,10 @@ namespace Epoch {
 								codeCom = new UIRewind();
 							if (path == "CCLevel1TutorialButton.h")
 								codeCom = new CCLevel1TutorialButton();
-							if (path == "CCPlatformButtonHold.h")
-								codeCom = new CCPlatformButtonHold();
+							if (path == "CCPlatformButton.h")
+								codeCom = new CCPlatformButton();
+							if (path == "CCPlatform.h")
+								codeCom = new CCPlatform();
 
 							if (codeCom)
 							{
@@ -757,11 +771,11 @@ namespace Epoch {
 		CommandConsole* cc = (CommandConsole*)_command;
 		if (_ifOn == L"ON") {
 			Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_WIREFRAME);
-			CommandConsole::Instance().DisplaySet(L"");
+			CommandConsole::Instance().DisplaySet(L"Wireframe ON");
 		}
 		else if (_ifOn == L"OFF") {
 			Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_MAX);
-			CommandConsole::Instance().DisplaySet(L"");
+			CommandConsole::Instance().DisplaySet(L"Wireframe OFF");
 		}
 		else {
 			CommandConsole::Instance().DisplaySet(L"INVALID INPUT: " + _ifOn + L"\nCORRECT INPUT: /WIREFRAME (ON/OFF)");

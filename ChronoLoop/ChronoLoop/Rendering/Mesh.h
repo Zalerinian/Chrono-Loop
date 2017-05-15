@@ -152,6 +152,6 @@ namespace Epoch
 		}
 	}
 
-	typedef MeshFormat<VertexPosNormTex> Mesh;
+	typedef MeshFormat<VertexPosNormTanTex> Mesh;
 
 }
