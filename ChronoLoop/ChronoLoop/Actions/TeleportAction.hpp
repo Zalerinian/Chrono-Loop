@@ -242,9 +242,9 @@ namespace Epoch {
 			if (mCanTeleport)
 			{
 				matrix4 scaleM;
-				scaleM.first = vec4f(.15f, 0, 0, 0);
-				scaleM.second = vec4f(0, .15f, 0, 0);
-				scaleM.third = vec4f(0, 0, .15f, 0);
+				scaleM.first = vec4f(.05f, 0, 0, 0);
+				scaleM.second = vec4f(0, .05f, 0, 0);
+				scaleM.third = vec4f(0, 0, .05f, 0);
 				scaleM.fourth = vec4f(0, 0, 0, 1);
 
 				mTPMesh->SetVisible(true);
