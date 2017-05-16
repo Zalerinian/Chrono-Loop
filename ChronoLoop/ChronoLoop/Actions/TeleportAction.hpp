@@ -42,7 +42,7 @@ namespace Epoch {
 			for (int i = 0; i < count; i++)
 			{
 				float t = FLT_MAX;
-				bool hit = Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, _ts, (_te - _ts), t);
+				bool hit = Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, _ts, (_end - _start), t);
 
 				if (hit)
 				{
