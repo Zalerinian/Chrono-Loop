@@ -1268,7 +1268,7 @@ namespace Epoch {
 			RenderBlurStage(BLUR_STAGE_BLUR, 1, 0);
 
 			//vert blur
-			ToggleBlurTextureSet(passTextureCount, upRTV, downSRV); // ping
+			ToggleBlurTextureSet(passTextureCount, downRTV, downSRV); // ping
 			RenderBlurStage(BLUR_STAGE_BLUR, 0, 1);
 
 			//// upsample
