@@ -314,7 +314,7 @@ namespace Epoch {
 		mDepthBuffer.Attach(depthTexture);
 		mDSView.Attach(depthView);
 
-		CD3D11_TEXTURE2D_DESC t2d(DXGI_FORMAT_R32G32B32A32_FLOAT, _width, _height, 1, 1, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
+		CD3D11_TEXTURE2D_DESC t2d(DXGI_FORMAT_R16G16B16A16_FLOAT, _width, _height, 1, 1, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
 		ThrowIfFailed(mDevice->CreateTexture2D(&t2d, nullptr, mAlbedoTexture.GetAddressOf()));
 		ThrowIfFailed(mDevice->CreateTexture2D(&t2d, nullptr, mPositionTexture.GetAddressOf()));
 		ThrowIfFailed(mDevice->CreateTexture2D(&t2d, nullptr, mNormalTexture.GetAddressOf()));
