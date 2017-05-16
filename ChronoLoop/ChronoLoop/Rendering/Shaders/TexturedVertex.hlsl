@@ -9,6 +9,10 @@ cbuffer IID : register(b1) {
 	uint SimIID;
 }
 
+cbuffer GlobalMatrix_ : register(b2) {
+	matrix GlobalMatrix;
+}
+
 struct PSI {
 	float4 position :	SV_POSITION;
 	float4 normal	:	NORMAL0;
@@ -32,14 +36,14 @@ PSI main(VERTEX_POSNORMTANTEX input) {
 	//float4 lpos = light[3];
 
 #if ENABLE_INSTANCING
-	output.position = mul(input.position, model[id]);
+	output.position = mul(mul(input.position, GlobalMatrix), model[id]);
 	output.wpos = output.position;
-	output.normal = mul(input.normal, model[id]);
+	output.normal = mul(mul(input.normal, GlobalMatrix), model[id]);
 	output.IID = id;
 #else
-	output.position = mul(input.position, model[0]);
+	output.position = mul(mul(input.position, GlobalMatrix), model[0]);
 	output.wpos = output.position;
-	output.normal = mul(input.normal, model[0]);
+	output.normal = mul(mul(input.normal, GlobalMatrix), model[0]);
 	output.IID = SimIID;
 #endif
 	output.tangent = input.tangent;
