@@ -9,7 +9,7 @@ namespace Epoch {
 		bool playerCanInterp = false;
 		Interpolator<matrix4>* platInterp;
 		Interpolator<matrix4>* playerInterp;
-		matrix4 end, PEnd;
+		matrix4 end, PEnd,start;
 		CubeCollider* collider;
 
 		virtual void Start() 
@@ -18,6 +18,7 @@ namespace Epoch {
 			playerInterp = new Interpolator<matrix4>;
 			collider = (CubeCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
 			end = mObject->GetTransform().GetMatrix() * matrix4::CreateTranslation(-4, 0, 0);
+			start = mObject->GetTransform().GetMatrix();
 		}
 
 		virtual void OnTriggerEnter(Collider& _col, Collider& _other) 
@@ -60,6 +61,13 @@ namespace Epoch {
 
 			if (!LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->isTimePaused())
 			{
+				//if (mObject->GetTransform().GetMatrix() != start)
+				//{
+				//	Settings::GetInstance().SetBool("PlatInterp", true);
+				//	Settings::GetInstance().SetBool("doneInterp", false);
+				//	platInterp->SetActive(true);
+				//	platInterp->Prepare(0.3f, mObject->GetTransform().GetMatrix(), start, mObject->GetTransform().GetMatrix());
+				//}
 				if (Settings::GetInstance().GetBool("PlatInterp") && !Settings::GetInstance().GetBool("doneInterp"))
 				{
 					Settings::GetInstance().SetBool("doneInterp", platInterp->Update(TimeManager::Instance()->GetDeltaTime()));
