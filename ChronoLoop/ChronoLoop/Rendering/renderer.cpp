@@ -932,6 +932,7 @@ namespace Epoch {
 		mCurrentContext.SimpleClone(mDeferredCombiner->GetContext());
 
 		RenderTransparentObjects();
+		mContext->OMSetDepthStencilState(mOpaqueState.Get(), 1);
 
 		ID3D11ShaderResourceView *unbind[] = { nullptr, nullptr, nullptr, nullptr };
 		mContext->OMSetRenderTargets(1, mMainView.GetAddressOf(), nullptr);
