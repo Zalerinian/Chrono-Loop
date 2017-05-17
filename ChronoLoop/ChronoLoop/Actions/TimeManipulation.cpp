@@ -36,10 +36,6 @@ namespace Epoch
 	{
 		Level* currentLevel = LevelManager::GetInstance().GetCurrentLevel();
 
-		if(GetAsyncKeyState(VK_F10) & 1)
-		{
-			TimeManager::Instance()->ResetTimeLineandLevel();
-		}
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip) && !Settings::GetInstance().GetBool("PauseMenuUp") && !Settings::GetInstance().GetBool("CantPauseTime"))
 		{
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();

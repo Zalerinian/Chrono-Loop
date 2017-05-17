@@ -586,8 +586,16 @@ namespace Epoch {
 			VRInputManager::GetInstance().GetPlayerPosition()[3].Set(start.x, start.y, start.z, start.w);
 		}
 		AudioEmitter* ambient = (AudioEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0);
-		ambient->CallEvent(Emitter::EventType::eStop);
-		ambient->CallEvent(Emitter::EventType::ePlay);
+		AudioEmitter* resetLevelSFX = (AudioEmitter*)cLevel->GetRightController()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0);
+		if (ambient)
+		{
+			ambient->CallEvent(Emitter::EventType::eStop);
+			ambient->CallEvent(Emitter::EventType::ePlay);
+		}
+		if(resetLevelSFX)
+		{
+			resetLevelSFX->CallEvent(Emitter::EventType::ePlay);
+		}
 		if(Settings::GetInstance().GetInt("CurrentLevel") == 3)
 		{
 			Settings::GetInstance().SetBool("ResetElevator", true);
