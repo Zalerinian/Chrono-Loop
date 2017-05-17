@@ -45,6 +45,7 @@ namespace Epoch
 			if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") >= 7)) //created clone (tut 2)
 			{
 				// Cancel Time
+				((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 3))->CallEvent(Emitter::ePlay);
 
 				//put the original controll and headset back in control
 				//Remove the clone created
@@ -85,7 +86,8 @@ namespace Epoch
 					Settings::GetInstance().SetUInt("tut1FirstPause", TimeManager::Instance()->GetCurrentSnapFrame());
 					Settings::GetInstance().SetInt("tutStep", 3);//Rewind (tut 1)
 				}
-					((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 2))->CallEvent(Emitter::ePlay);
+
+				((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 2))->CallEvent(Emitter::ePlay);
 
 				if (Settings::GetInstance().GetInt("CurrentLevel") != 1)
 				{
@@ -154,6 +156,7 @@ namespace Epoch
 			// Accept timeline position
 			if (mPauseTime)
 			{
+				((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 3))->CallEvent(Emitter::ePlay);
 				if (Settings::GetInstance().GetInt("tutStep") >= 4)//accepted time (
 				{
 					if (Settings::GetInstance().GetBool("Level1Tutorial"))

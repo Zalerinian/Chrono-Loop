@@ -40,6 +40,8 @@ namespace Epoch
 		}
 		virtual void Start()
 		{
+			mcBackground->SetPixelShader(ePS_PURETEXTURE);
+			mcProgressBar->SetPixelShader(ePS_PURETEXTURE);
 		}
 		virtual void Update()
 		{
