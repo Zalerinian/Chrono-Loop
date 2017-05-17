@@ -234,35 +234,35 @@ void Update() {
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	//Level 2 door////////////////////////////////////////////////////////////////////////
-	Particle* p2 = &Particle::Init();
-	p2->SetPos(vec3f(0, 0, 0));
-	p2->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
-	p2->SetLife(500);
-	p2->SetSize(.35f, .15f);
-	ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(-2.82f, -10, 0, 1));
-	emit21->SetParticle(p2);
-	emit21->SetTexture("../Resources/BasicRectP.png");
-	((TeleportEffect*)emit21)->y1 = 8;
-	((TeleportEffect*)emit21)->y2 = 12;
-	((TeleportEffect*)emit21)->SetPosBounds(vec3f(0, 0, -.5f), vec3f(0, 1, .5f));
-	((TeleportEffect*)emit21)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
-	ParticleSystem::Instance()->AddEmitter(emit21);
-	emit21->FIRE();
-
-	p2 = &Particle::Init();
-	p2->SetPos(vec3f(0, 0, 0));
-	p2->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
-	p2->SetLife(500);
-	p2->SetSize(.15f, .05f);
-	ParticleEmitter* emit22 = new TeleportEffect(-1, 150, 2, vec4f(-2.82f, -10, 0, 1));
-	emit22->SetTexture("../Resources/BasicCircleP.png");
-	emit22->SetParticle(p2);
-	((TeleportEffect*)emit22)->y1 = 1;
-	((TeleportEffect*)emit22)->y2 = 5;
-	((TeleportEffect*)emit22)->SetPosBounds(vec3f(0, 0, -.5f), vec3f(0, 1, .5f));
-	((TeleportEffect*)emit22)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
-	ParticleSystem::Instance()->AddEmitter(emit22);
-	emit22->FIRE();
+	//Particle* p2 = &Particle::Init();
+	//p2->SetPos(vec3f(0, 0, 0));
+	//p2->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
+	//p2->SetLife(500);
+	//p2->SetSize(.35f, .15f);
+	//ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(-2.82f, -10, 0, 1));
+	//emit21->SetParticle(p2);
+	//emit21->SetTexture("../Resources/BasicRectP.png");
+	//((TeleportEffect*)emit21)->y1 = 8;
+	//((TeleportEffect*)emit21)->y2 = 12;
+	//((TeleportEffect*)emit21)->SetPosBounds(vec3f(0, 0, -.5f), vec3f(0, 1, .5f));
+	//((TeleportEffect*)emit21)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+	//ParticleSystem::Instance()->AddEmitter(emit21);
+	//emit21->FIRE();
+	//
+	//p2 = &Particle::Init();
+	//p2->SetPos(vec3f(0, 0, 0));
+	//p2->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
+	//p2->SetLife(500);
+	//p2->SetSize(.15f, .05f);
+	//ParticleEmitter* emit22 = new TeleportEffect(-1, 150, 2, vec4f(-2.82f, -10, 0, 1));
+	//emit22->SetTexture("../Resources/BasicCircleP.png");
+	//emit22->SetParticle(p2);
+	//((TeleportEffect*)emit22)->y1 = 1;
+	//((TeleportEffect*)emit22)->y2 = 5;
+	//((TeleportEffect*)emit22)->SetPosBounds(vec3f(0, 0, -.5f), vec3f(0, 1, .5f));
+	//((TeleportEffect*)emit22)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+	//ParticleSystem::Instance()->AddEmitter(emit22);
+	//emit22->FIRE();
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	//Exit Side Chamber////////////////////////////////////////////////////////////////////////
@@ -326,35 +326,35 @@ void Update() {
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	//Level 3 door////////////////////////////////////////////////////////////////////////
-	Particle* lvl3 = &Particle::Init();
-	lvl3->SetPos(vec3f(0, 0, 0));
-	lvl3->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
-	lvl3->SetLife(500);
-	lvl3->SetSize(.35f, .15f);
-	ParticleEmitter* emitlvl3 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, -2.82f, 1));
-	emitlvl3->SetParticle(lvl3);
-	emitlvl3->SetTexture("../Resources/BasicRectP.png");
-	((TeleportEffect*)emitlvl3)->y1 = 8;
-	((TeleportEffect*)emitlvl3)->y2 = 12;
-	((TeleportEffect*)emitlvl3)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
-	((TeleportEffect*)emitlvl3)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
-	ParticleSystem::Instance()->AddEmitter(emitlvl3);
-	emitlvl3->FIRE();
-
-	lvl3 = &Particle::Init();
-	lvl3->SetPos(vec3f(0, 0, 0));
-	lvl3->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
-	lvl3->SetLife(500);
-	lvl3->SetSize(.15f, .05f);
-	ParticleEmitter* emit2lvl3 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, -2.82f, 1));
-	emit2lvl3->SetTexture("../Resources/BasicCircleP.png");
-	emit2lvl3->SetParticle(lvl3);
-	((TeleportEffect*)emit2lvl3)->y1 = 1;
-	((TeleportEffect*)emit2lvl3)->y2 = 5;
-	((TeleportEffect*)emit2lvl3)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
-	((TeleportEffect*)emit2lvl3)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
-	ParticleSystem::Instance()->AddEmitter(emit2lvl3);
-	emit2lvl3->FIRE();
+	//Particle* lvl3 = &Particle::Init();
+	//lvl3->SetPos(vec3f(0, 0, 0));
+	//lvl3->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
+	//lvl3->SetLife(500);
+	//lvl3->SetSize(.35f, .15f);
+	//ParticleEmitter* emitlvl3 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, -2.82f, 1));
+	//emitlvl3->SetParticle(lvl3);
+	//emitlvl3->SetTexture("../Resources/BasicRectP.png");
+	//((TeleportEffect*)emitlvl3)->y1 = 8;
+	//((TeleportEffect*)emitlvl3)->y2 = 12;
+	//((TeleportEffect*)emitlvl3)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
+	//((TeleportEffect*)emitlvl3)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+	//ParticleSystem::Instance()->AddEmitter(emitlvl3);
+	//emitlvl3->FIRE();
+	//
+	//lvl3 = &Particle::Init();
+	//lvl3->SetPos(vec3f(0, 0, 0));
+	//lvl3->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
+	//lvl3->SetLife(500);
+	//lvl3->SetSize(.15f, .05f);
+	//ParticleEmitter* emit2lvl3 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, -2.82f, 1));
+	//emit2lvl3->SetTexture("../Resources/BasicCircleP.png");
+	//emit2lvl3->SetParticle(lvl3);
+	//((TeleportEffect*)emit2lvl3)->y1 = 1;
+	//((TeleportEffect*)emit2lvl3)->y2 = 5;
+	//((TeleportEffect*)emit2lvl3)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
+	//((TeleportEffect*)emit2lvl3)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+	//ParticleSystem::Instance()->AddEmitter(emit2lvl3);
+	//emit2lvl3->FIRE();
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	//Test Animate Quad///////////////////////////////////////////////////////////////////
@@ -435,6 +435,10 @@ void Update() {
 
 	LevelManager::GetInstance().RequestLevelChange(mainMenu);
 	mainMenu->CallStart();
+	((MeshComponent*)mainMenu->FindObjectWithName("Test2")->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
+	((MeshComponent*)mainMenu->FindObjectWithName("Test3")->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
+	((MeshComponent*)mainMenu->FindObjectWithName("Test4")->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
+
 
 
 	if (VREnabled) {

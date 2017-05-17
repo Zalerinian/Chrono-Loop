@@ -42,7 +42,7 @@ namespace Epoch {
 		void SetOnce(bool _set) { once = _set; };
 		bool GetOnce() { return once; };
 		virtual void OnTriggerEnter(Collider& _col1, Collider& _col2) {
-			if (Settings::GetInstance().GetBool("CompleteLevel2"))
+			if (Settings::GetInstance().GetBool("CompleteLevel3"))
 				once = false;
 		}
 		virtual void Start() {
@@ -417,7 +417,7 @@ namespace Epoch {
 					SystemLogger::Debug() << "Loading complete" << std::endl;
 					Physics::Instance()->PhysicsLock.unlock();
 					Settings::GetInstance().SetBool("LevelIsLoading", false);
-					Settings::GetInstance().SetInt("CurrentLevel", 3);
+					Settings::GetInstance().SetInt("CurrentLevel", 4);
 				}
 			}
 		}
