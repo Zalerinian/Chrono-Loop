@@ -51,7 +51,7 @@ namespace Epoch {
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDSView;
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> mMainViewTexture, mDepthBuffer, mPostProcessTexture, mBloomTexture, mGlowTexture, mSuperGlowTexture;
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> mSamplerState;
-		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> mTransparentState, mOpaqueState, mMotionStateFindObject, mMotionStateReverseDepth;
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> mTransparentState, mOpaqueState, mTopmostState, mMotionStateFindObject, mMotionStateReverseDepth;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mPostProcessSRV, mBloomSRV, mGlowSRV, mSuperGlowSRV;
 		Microsoft::WRL::ComPtr<ID3D11BlendState> mOpaqueBlendState, mTransparentBlendState;
 		D3D11_VIEWPORT mLeftViewport, mRightViewport, mFullViewport;
@@ -144,6 +144,7 @@ namespace Epoch {
 		void RenderNoVR(float _delta);
 		void ProcessRenderSet();
 		void RenderScreenQuad();
+		void RenderTransparentObjects();
 
 		void RenderForBloom();
 

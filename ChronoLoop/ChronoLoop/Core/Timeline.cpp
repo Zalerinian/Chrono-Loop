@@ -627,15 +627,26 @@ namespace Epoch {
 			if(!_show)
 			{
 				mesh->SetInMotion(false);
-				break;
+				continue;;
 			}
 
 			//bol for determining if we care about this object or not
 			bool CheckObjectHighlight = false;
+
+			Component* comp = obj.second->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
+			if (comp)
+			{
+				CheckObjectHighlight = true;
+			}
+
 			//Specific items we want highlighted in the level
 			switch (level)
 			{
 			case 1:
+				if (obj.second->GetName().find("Chamber") != std::string::npos)
+				{
+					CheckObjectHighlight = false;
+				}
 				break;
 			case 2:
 				break;
@@ -646,19 +657,15 @@ namespace Epoch {
 			case 5:
 				break;
 			}
-			Component* comp = obj.second->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
-			if (comp)
-			{
-				CheckObjectHighlight = true;
-			}
 			
 			if(CheckObjectHighlight)
 			{
 				//Find if object should be shown
-				if (_frame - 5 < _frame)
-					_frame -= 5;
+				unsigned int i = _frame;
+				if (!(i - 5 < 0))
+					 i-= 5;
 				bool highlight = false;
-				for (unsigned int i = _frame; i < _frame + 10; i++)
+				for (i; i < _frame + 10; i++)
 				{
 					if(mSnapshots.find(i) != mSnapshots.end())
 					{
@@ -914,8 +921,7 @@ namespace Epoch {
 					if (currComp->GetColliderId() == comp->mId) {
 						if (((Collider*)currComp)->mAcceleration != ((SnapComponent_Physics*)comp)->mAcc ||
 							((Collider*)currComp)->mVelocity != ((SnapComponent_Physics*)comp)->mVel ||
-							((Collider*)currComp)->mForces != ((SnapComponent_Physics*)comp)->mForces ||
-							((Collider*)currComp)->mTotalForce != ((SnapComponent_Physics*)comp)->mTotforce)
+							((Collider*)currComp)->mForces != ((SnapComponent_Physics*)comp)->mForces)
 							return false;
 					}
 				}

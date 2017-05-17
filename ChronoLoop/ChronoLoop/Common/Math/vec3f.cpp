@@ -23,7 +23,7 @@ namespace Epoch
 
 	bool vec3f::operator==(const vec3f& _other) const
 	{
-		for (int i = 0; i < 4; ++i)
+		for (int i = 0; i < 3; ++i)
 			if (fabsf(xyz[i] - _other.xyz[i]) > EPSILON)
 				return false;
 		return true;

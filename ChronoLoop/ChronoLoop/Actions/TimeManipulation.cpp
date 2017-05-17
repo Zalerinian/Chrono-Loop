@@ -125,6 +125,7 @@ namespace Epoch
 					{
 						mesh->SetInMotion(true);
 					}
+					TimeManager::Instance()->ShowTimelineColliders(true);
 				}
 			}
 		}
@@ -162,7 +163,6 @@ namespace Epoch
 				vec2f finalRatios(0, 0);
 				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
 				mDesaturationInterpolator.SetActive(true);
-
 
 				if (mIsBeingMade &&  mNumOfConfirmedClones < cLevel->GetMaxClones())
 				{
