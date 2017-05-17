@@ -47,6 +47,8 @@ namespace Epoch {
 				float DiffuseAlpha;
 				float MultiscanAlpha;
 				float MultiscanVOffset;
+				float ScanlineAlpha;
+				float ScanlineVOffset;
 			};
 			BufferWidth padding;
 		};
@@ -54,6 +56,31 @@ namespace Epoch {
 			memset(this, 0, sizeof(*this));
 			DiffuseAlpha = 1.0f;
 			MultiscanAlpha = 0.4f;
+		}
+	};
+
+	// --------------------------------------------------------------------------------
+	/// <summary>
+	/// Data used to send into Register 1 of the Geometry Shader that animates a quad
+	/// with an animation sheet.
+	/// </summary>
+	// --------------------------------------------------------------------------------
+	struct GSAnimatedQuad_Data {
+		union {
+			struct {
+				/// <summary>How many columns are there in the animation sheet?</summary>
+				unsigned int framesWide;
+				/// <summary>How many rows are there in the animation sheet?</summary>
+				unsigned int framesTall;
+				unsigned int currentFrame;
+				/// <summary>Frame Count is not used, but can be assigned so as to make sure that the animation remains in bounds easier, without needing to waste memory storing it elsewhere.</summary>
+				unsigned int frameCount; 
+			};
+			BufferWidth padding;
+		};
+
+		GSAnimatedQuad_Data() {
+			memset(this, 0, sizeof(*this));
 		}
 	};
 
@@ -71,7 +98,11 @@ namespace Epoch {
 		/// The vec4f contains, in order, the Multiscan V offset, the Multiscan alpha value,
 		/// the Scanline V offset, and the Scanline Alpha value.
 		/// </summary>
-		eBufferDataType_Scanline
+		eBufferDataType_Scanline,
+
+		eBufferDataType_AnimatedQuad,
+
+		eBufferDataType_MAX
 
 	};
 
@@ -104,6 +135,10 @@ namespace Epoch {
 		ePS_PURETEXTURE,
 		ePS_TRANSPARENT,
 		ePS_TRANSPARENT_SCANLINE,
+		ePS_BLUR,
+		ePS_BLOOM,
+		ePS_DEFERRED,
+		ePS_SOLIDCOLOR,
 		ePS_MAX
 	};
 
@@ -111,12 +146,15 @@ namespace Epoch {
 		eVS_BASIC = 0,
 		eVS_TEXTURED,
 		eVS_NDC,
+		eVS_BLUR,
 		eVS_MAX
 	};
 
 	enum GeometryShaderFormat {
 		eGS_PosNormTex = 0,
 		eGS_PosNormTex_NDC,
+		eGS_PosNormTex_AnimQuad,
+		eGS_None,
 		eGS_MAX
 	};
 
@@ -144,9 +182,9 @@ namespace Epoch {
 	enum VertexBufferType {
 		eVB_Instances = 0,
 		eVB_SimInstanceID,
+		eVB_GlobalMatrix,
 		eVB_OFFSET,
-		eVB_REGISTER2 = 0,
-		eVB_REGISTER3,
+		eVB_REGISTER3 = 0,
 		eVB_REGISTER4,
 		eVB_REGISTER5,
 		eVB_REGISTER6,
@@ -159,7 +197,7 @@ namespace Epoch {
 
 
 	enum PixelBufferType {
-		ePB_Lights = 0,
+		ePB_EyePos = 0,
 		ePB_OFFSET,
 		ePB_REGISTER1 = 0,
 		ePB_REGISTER2,
@@ -176,7 +214,7 @@ namespace Epoch {
 	enum GeometryBufferType {
 		eGB_Eyes = 0,
 		eGB_OFFSET,
-		eGB_REGISTER1 = 0,
+		eGB_REGISTER1,
 		eGB_REGISTER2,
 		eGB_REGISTER3,
 		eGB_REGISTER4,

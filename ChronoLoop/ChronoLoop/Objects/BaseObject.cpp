@@ -6,6 +6,7 @@
 #include "../Core/Level.h"
 #include "../Core/LevelManager.h"
 #include "../Common/Settings.h"
+#include "../Core/Pool.h"
 
 namespace Epoch {
 	unsigned int BaseObject::ObjectCount = 0;
@@ -15,20 +16,23 @@ namespace Epoch {
 		mTransform = _transform;
 		mParent = _parent;
 		mUniqueID = ++BaseObject::ObjectCount;
+
+		if (mComponents.size() > 0)
+			RemoveAllComponents();
 	}
 
-	BaseObject::BaseObject() {
+	BaseObject::BaseObject() : Flags(mFlags) {
 		Construct("", Transform(), nullptr);
 	}
 
-	BaseObject::BaseObject(std::string _name) {
+	BaseObject::BaseObject(std::string _name) : Flags(mFlags) {
 		Construct(_name, Transform(), nullptr);
 	}
-	BaseObject::BaseObject(std::string _name, Transform _transform) {
+	BaseObject::BaseObject(std::string _name, Transform _transform) : Flags(mFlags) {
 		Construct(_name, _transform, nullptr);
 	}
 
-	BaseObject::BaseObject(std::string _name, Transform _transform, BaseObject * _parent) {
+	BaseObject::BaseObject(std::string _name, Transform _transform, BaseObject * _parent) : Flags(mFlags) {
 		Construct(_name, _transform, _parent);
 	}
 
@@ -73,7 +77,7 @@ namespace Epoch {
 		mParent = nullptr;
 		for (auto it = mChildren.begin(); it != mChildren.end(); ++it) {
 			LevelManager::GetInstance().GetCurrentLevel()->RemoveObject(*it);
-			delete (*it);
+			Pool::Instance()->iAddObject(*it);
 		}
 		mChildren.clear();
 		for (auto iter = mComponents.begin(); iter != mComponents.end(); ++iter) {
@@ -112,6 +116,12 @@ namespace Epoch {
 		//mName = _name;
 		//mTransform = _transform;
 		//mParent = _parent;
+		return this;
+	}
+
+	BaseObject * BaseObject::Reset(std::string _name, Transform _transform, BaseObject * _parent, unsigned int _flags) {
+		Reset(_name, _transform, _parent);
+		mFlags = _flags;
 		return this;
 	}
 
@@ -179,50 +189,14 @@ namespace Epoch {
 		return false;
 	}
 	void BaseObject::RemoveAllComponents() {
-		std::vector<Component*> components = this->GetComponents(eCOMPONENT_COLLIDER);
-		for (int j = 0; j < components.size(); ++j) {
-			components[j]->Destroy();
-			delete components[j];
+
+		for (auto it = mComponents.begin(); it != mComponents.end(); ++it) {
+			for (int i = (int)it->second.size() - 1; i >= 0; --i) {
+				it->second[i]->Destroy();
+				delete it->second[i];
+			}
+			it->second.clear();
 		}
-
-		components = this->GetComponents(eCOMPONENT_AUDIOEMITTER);
-		for (int j = 0; j < components.size(); ++j) {
-			components[j]->Destroy();
-			delete components[j];
-		}
-
-		components = this->GetComponents(eCOMPONENT_AUDIOLISTENER);
-		for (int j = 0; j < components.size(); ++j) {
-			components[j]->Destroy();
-			delete components[j];
-		}
-
-		components = this->GetComponents(eCOMPONENT_CODE);
-		for (int j = 0; j < components.size(); ++j) {
-			components[j]->Destroy();
-			delete components[j];
-		}
-
-		components = this->GetComponents(eCOMPONENT_MESH);
-		for (int j = 0; j < components.size(); ++j) {
-			components[j]->Destroy();
-			delete components[j];
-		}
-
-		components = this->GetComponents(eCOMPONENT_UI);
-		for (int j = 0; j < components.size(); ++j) {
-			components[j]->Destroy();
-			delete components[j];
-		}
-
-		components = this->GetComponents(eCOMPONENT_UNKNOWN);
-		for (int j = 0; j < components.size(); ++j) {
-			components[j]->Destroy();
-			delete components[j];
-		}
-
-
-		mComponents.clear();
 	}
 
 	

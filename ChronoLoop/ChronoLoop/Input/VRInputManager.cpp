@@ -78,25 +78,21 @@ namespace Epoch {
 
 		vr::VRCompositor()->WaitGetPoses(mPoses, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
 
-		GestureCheck = mRightController.CheckGesture();
-		TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
-		GestureCheck = mLeftController.CheckGesture();
+		if (!TimeManager::Instance()->GetInterpolatorsUpdating())
+			GestureCheck = mRightController.CheckGesture();
+		else
+			GestureCheck = 0;
 		TimeManager::Instance()->BrowseTimeline(GestureCheck, 1);
 
-		//Update InputSnap TweenTime 
-		mTweenTimestamp += TimeManager::Instance()->GetDeltaTime();
-		if (mTweenTimestamp >= RecordingRate) {
-			mTweenTimestamp -= RecordingRate;
-		}
-		mSnapTweenTime = mTweenTimestamp / RecordingRate;
 
 		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 		//Pull vr events to find button press or up
 		vr::VREvent_t tempEvent;
 		bool paused = false;
 		if (cLevel->GetTimeManipulator() != nullptr) {
-			bool paused= cLevel->GetTimeManipulator()->isTimePaused();
+			paused= cLevel->GetTimeManipulator()->isTimePaused();
 		}
+		
 		//if there is a event avaliable and the game is focused
 		while (mVRSystem->PollNextEvent(&tempEvent, sizeof(tempEvent)) && !mVRSystem->IsInputFocusCapturedByAnotherProcess() && (!paused)) {
 			if ((tempEvent.eventType == vr::EVREventType::VREvent_ButtonPress || tempEvent.eventType == vr::EVREventType::VREvent_ButtonUnpress) && tempEvent.data.controller.button != vr::k_EButton_Grip  && tempEvent.data.controller.button != vr::k_EButton_ApplicationMenu) {
@@ -117,9 +113,17 @@ namespace Epoch {
 	void VIM::AddInputNode(vr::VREvent_t* _event) {
 		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 		InputTimeline::InputNode* node = new InputTimeline::InputNode();
-		node->mData.mLastFrame = TimeManager::Instance()->GetCurrentSnapFrame();
+
+		
 		node->mData.mButton = (vr::EVRButtonId)_event->data.controller.button;
-		node->mData.mTime = mSnapTweenTime;
+		node->mData.mLastFrame = TimeManager::Instance()->GetCurrentSnapFrame();
+		float time = TimeManager::Instance()->GetSnapTweenTime() - (_event->eventAgeSeconds / RecordingRate);
+		if(time < 0.0f)
+		{
+			time += 1;
+			node->mData.mLastFrame -= 1;
+		}
+		node->mData.mTime = time;
 
 		if (_event->eventType == vr::EVREventType::VREvent_ButtonPress) {
 			node->mData.mButtonState = -1;
@@ -128,11 +132,11 @@ namespace Epoch {
 		}
 
 		if (_event->trackedDeviceIndex == mVRSystem->GetTrackedDeviceIndexForControllerRole(vr::TrackedControllerRole_LeftHand)) {
-			node->mData.mControllerId = cLevel->GetLeftController()->GetUniqueId();
+			node->mData.mControllerId = cLevel->GetLeftController()->GetUniqueID();
 			node->mData.mVelocity = mLeftController.GetVelocity();
 			node->mData.mPrimary = mIsLeftPrimary;
 		} else {
-			node->mData.mControllerId = cLevel->GetRightController()->GetUniqueId();
+			node->mData.mControllerId = cLevel->GetRightController()->GetUniqueID();
 			node->mData.mVelocity = mRightController.GetVelocity();
 			node->mData.mPrimary = !mIsLeftPrimary;
 		}
@@ -144,40 +148,48 @@ namespace Epoch {
 	void VIM::RewindInputTimeline(unsigned int _frame, unsigned short _id1, unsigned short _id2) {
 
 		InputTimeline::InputNode* temp = mInputTimeline->GetCurr();
+		if(!temp)
+		{
+			temp = mInputTimeline->GetHead();
+		}
 		while (temp) {
 			//Have reached the point we want to stop
 			if (temp->mData.mLastFrame < _frame) {
-				if ((temp->mData.mControllerId == _id1 || temp->mData.mControllerId == _id2) && temp->mData.mButtonState == -1)
-				{
+				if ((temp->mData.mControllerId == _id1 || temp->mData.mControllerId == _id2) && temp->mData.mButtonState == -1) {
 					temp->mData.mButtonState = 1;
-					if (temp->mPrev && (temp->mPrev->mData.mControllerId == _id1 || temp->mPrev->mData.mControllerId == _id2) && temp->mPrev->mData.mButtonState == -1)
-					{
+					if (temp->mPrev && (temp->mPrev->mData.mControllerId == _id1 || temp->mPrev->mData.mControllerId == _id2) && temp->mPrev->mData.mButtonState == -1) {
 						temp->mPrev->mData.mButtonState = 1;
 					}
 				}
-					
-
 				break;
 			}
-			//Delete old controller input
-			if (temp->mData.mControllerId == _id1 || temp->mData.mControllerId == _id2) {
-				InputTimeline::InputNode* del = temp;
-				if (temp->mPrev) {
-					temp = temp->mPrev;
-					temp->mNext = del->mNext;
-					if (del->mNext)
-						del->mNext->mPrev = temp;
-				} else {
-					temp = nullptr;
-				}
-				delete del;
-			} else if (temp->mPrev) {
-				temp = temp->mPrev;
-			} else
-				break;
 
+				//Delete old controller input
+				if (temp->mData.mControllerId == _id1 || temp->mData.mControllerId == _id2) {
+					InputTimeline::InputNode* del = temp;
+					if (temp->mPrev) {
+						temp = temp->mPrev;
+						temp->mNext = del->mNext;
+						if (del->mNext)
+							del->mNext->mPrev = temp;
+					} else {
+						temp = nullptr;
+					}
+					if(del == mInputTimeline->GetHead())
+					{
+						if (del == mInputTimeline->GetCurr())
+							mInputTimeline->SetCurr(nullptr);
+						mInputTimeline->SetHead(nullptr);
+					}
+					delete del;
+				} else if (temp->mPrev) {
+					temp = temp->mPrev;
+				} else
+					break;
+			
 			mInputTimeline->SetCurr(temp);
 		}
+		//mInputTimeline->DisplayTimeline();
 	}
 
 	void VIM::MoveInputTimeline(unsigned int _frame) {
@@ -226,7 +238,7 @@ namespace Epoch {
 			if (temp->mPrev) {
 				temp = temp->mPrev;
 			}
-			if (!temp->mPrev) {
+			else if (!temp->mPrev) {
 				return nullptr;
 			}
 		}

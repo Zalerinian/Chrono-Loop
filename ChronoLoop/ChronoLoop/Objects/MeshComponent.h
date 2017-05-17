@@ -23,23 +23,32 @@ namespace Epoch
 		RenderShape* mShape = nullptr;
 		bool mVisible = true;
 		bool mBuffersCanUpdate = true;
-		bool mBlended = false;
+		bool mBlended = false, mTopmost = false, mActiveRewind = false;
 
 		BufferDataType mVertexBufferTypes[eVB_MAX];
 		BufferDataType mPixelBufferTypes[ePB_MAX];
 		BufferDataType mGeoBufferTypes[eGB_MAX];
 
-		virtual void CreateOpaqueNode();
-		virtual void CreateTransparentNode();
-		virtual void CreateNode();
-		virtual void RemoveOpaqueNode();
-		virtual void RemoveTransparentNode();
-		virtual void RemoveNode();
+		void CreateOpaqueNode();
+		void CreateTransparentNode();
+		void CreateTopmostNode();
+		void CreateMotionNode();
+		void CreateNode();
+		void RemoveOpaqueNode();
+		void RemoveTransparentNode();
+		void RemoveTopmostNode();
+		void RemoveMotionNode();
+		void RemoveNode();
 
 		virtual void UpdateBuffer(ConstantBufferType _t, unsigned char _index);
 		void CreateAlphaBuffer(float alpha = 1.0f);
 	public:
 		MeshComponent(const char *_path, float _alpha = 1.0f);
+		MeshComponent(const char *_path,
+					  float _alpha,
+					  PixelShaderFormat _psf,
+					  VertexShaderFormat _vsf,
+					  GeometryShaderFormat _gsf);
 		virtual void Update() override;
 		virtual void Destroy() override;
 		MeshComponent* SetVisible(bool _vis);
@@ -53,7 +62,9 @@ namespace Epoch
 		void SetVertexShader(VertexShaderFormat _vf);
 		void SetPixelShader(PixelShaderFormat _pf);
 		void SetGeometryShader(GeometryShaderFormat _gf);
-
+		void SetShaders(PixelShaderFormat _psf, VertexShaderFormat _vsf, GeometryShaderFormat _gsf);
+		void SetTopmost(bool _topmost);
+		void SetInMotion(bool _inMotion);
 		
 		// ********************************************************************************
 		/// <summary>
@@ -70,6 +81,8 @@ namespace Epoch
 		void EnableBufferUpdates(bool _updateNow = false);
 		void DisableBufferUpdates();
 		bool GetBufferUpdates();
+		bool GetTopmost();
+		bool GetInMotion();
 
 		// ********************************************************************************
 		/// <summary>

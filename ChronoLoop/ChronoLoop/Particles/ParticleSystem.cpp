@@ -115,6 +115,8 @@ namespace Epoch
 			UINT offset = 0;
 			ID3D11Buffer* buffer = mPEmitters[i]->GetVertexBuffer();
 			cntxt->IASetVertexBuffers(0, 1, &buffer, &stride, &offset);
+			buffer = mPEmitters[i]->GetPixelBuffer();
+			cntxt->PSSetConstantBuffers(1, 1, &buffer);
 			ID3D11ShaderResourceView* srv[] = { mPEmitters[i]->GetTexture(), mPEmitters[i]->GetTexture(1), mPEmitters[i]->GetTexture(2) };
 			cntxt->PSSetShaderResources(0, 3, srv);
 			//draw call
@@ -122,11 +124,12 @@ namespace Epoch
 			//Unset gbuffer
 		}
 		cntxt->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		cntxt->IASetInputLayout(InputLayoutManager::Instance().GetInputLayout(VertFormat::eVERT_POSNORMTEX));
+		cntxt->IASetInputLayout(InputLayoutManager::Instance().GetInputLayout(VertFormat::eVERT_POSNORMTANTEX));
 		cntxt->GSSetShader(NULL, NULL, 0);
 		cntxt->VSSetShader(NULL, NULL, 0);
 		cntxt->PSSetShader(NULL, NULL, 0);
 		cntxt->VSSetConstantBuffers(0, 0, NULL);
+		cntxt->PSSetConstantBuffers(0, 0, NULL);
 	}
 
 	void ParticleSystem::AddEmitter(ParticleEmitter* _pemitter)

@@ -5,6 +5,7 @@
 #include <utility>
 #include "InputTimeline.h"
 
+
 namespace Epoch {
 
 	enum ControllerType {
@@ -20,9 +21,6 @@ namespace Epoch {
 		vr::IVRSystem* mVRSystem = nullptr;
 		bool mIsLeftPrimary = false;
 		InputTimeline* mInputTimeline = nullptr;
-		float mTweenTimestamp = 0;
-		float mSnapTweenTime = 0;
-		float mDebugDeltaTime = 0;
 
 		VIM(vr::IVRSystem* _vr);
 		~VIM();
@@ -40,7 +38,13 @@ namespace Epoch {
 		inline unsigned int GetTrackedDeviceCount() { return vr::k_unMaxTrackedDeviceCount; }
 		inline vr::TrackedDevicePose_t* GetTrackedPositions() { return mPoses; }
 		inline matrix4& GetPlayerPosition() { return mPlayerPosition; }
-		inline matrix4 GetPlayerView() { return (matrix4)(mPoses[vr::k_unTrackedDeviceIndex_Hmd].mDeviceToAbsoluteTracking) * mPlayerPosition; }
+		inline matrix4 GetPlayerView() {
+			if (IsVREnabled()) {
+				return (matrix4)(mPoses[vr::k_unTrackedDeviceIndex_Hmd].mDeviceToAbsoluteTracking) * mPlayerPosition;
+			} else {
+				return mPlayerPosition;
+			}
+		}
 		inline bool IsVREnabled() const { return mVRSystem != nullptr; }
 		inline vr::IVRSystem* GetVRSystem() { return mVRSystem; }
 	};

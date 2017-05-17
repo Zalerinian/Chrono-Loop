@@ -335,9 +335,28 @@ namespace Epoch
 					temp.Normal = norms[normalIndex[i] - 1];
 					temp.Normal.w = 0;
 					temp.Tangent = vec4f();
-					temp.Determinant = 0;
 					Ind.push_back((unsigned int)Verts.size());
 					Verts.push_back(temp);
+				}
+				// Calculate face tangents
+				vec4f &v0 = Verts[Verts.size() - 3].Position, &v1 = Verts[Verts.size() - 2].Position, &v2 = Verts[Verts.size() - 1].Position,
+					&uv0 = Verts[Verts.size() - 3].UV, &uv1 = Verts[Verts.size() - 2].UV, &uv2 = Verts[Verts.size() - 1].UV;
+				vec4f edge1 = v1 - v0,
+					edge2 = v2 - v0,
+					deltaUV1 = uv1 - uv0,
+					deltaUV2 = uv2 - uv0;
+				float fractional = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+				vec4f tangent;// , bTangent;
+				tangent.x = fractional * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+				tangent.y = fractional * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+				tangent.z = fractional * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+				tangent.w = 0;
+				tangent = tangent.Normalize();
+				//bTangent.x = fractional * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+				//bTangent.y = fractional * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+				//bTangent.z = fractional * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+				for (unsigned int i = 1; i < 4; ++i) {
+					Verts[Verts.size() - i].Tangent = tangent;
 				}
 			}
 		}
@@ -560,4 +579,57 @@ namespace Epoch
 		return true;
 	}
 
+	template<>
+	bool MeshFormat<VertexPosNormTex>::Load(std::vector<VertexPosNormTex>& _verts, std::vector<unsigned int>& _indices)
+	{
+		mName = "Parabola";
+		mUniqueVerts = _verts;
+		mIndicies = _indices;
+		CheckFormat();
+
+		//Make triangles
+		mTriangles.clear();
+		for (int i = 0; i < _indices.size(); i += 3)
+		{
+			Triangle t;
+			t.Vertex[0] = _verts[_indices[i]].Position;
+			t.Vertex[1] = _verts[_indices[i + 1]].Position;
+			t.Vertex[2] = _verts[_indices[i + 2]].Position;
+			vec3f x = t.Vertex[0] - t.Vertex[1],
+				y = t.Vertex[1] - t.Vertex[2];
+			t.Normal = x.Cross(y).Normalize();
+			t.Centeroid += t.Vertex[0];
+			t.Centeroid += t.Vertex[1];
+			t.Centeroid += t.Vertex[2];
+			t.Centeroid /= 3;
+			mTriangles.push_back(t);
+		}
+
+		return true;
+	}
+
+	template<>
+	void MeshFormat<VertexPosNormTex>::Update(std::vector<VertexPosNormTex>& _verts, std::vector<unsigned int>& _indices)
+	{
+		mUniqueVerts = _verts;
+		mIndicies = _indices;
+
+		//Make triangles
+		mTriangles.clear();
+		for (int i = 0; i < _indices.size(); i += 3)
+		{
+			Triangle t;
+			t.Vertex[0] = _verts[_indices[i]].Position;
+			t.Vertex[1] = _verts[_indices[i + 1]].Position;
+			t.Vertex[2] = _verts[_indices[i + 2]].Position;
+			vec3f x = t.Vertex[0] - t.Vertex[1],
+				y = t.Vertex[1] - t.Vertex[2];
+			t.Normal = x.Cross(y).Normalize();
+			t.Centeroid += t.Vertex[0];
+			t.Centeroid += t.Vertex[1];
+			t.Centeroid += t.Vertex[2];
+			t.Centeroid /= 3;
+			mTriangles.push_back(t);
+		}
+	}
 }

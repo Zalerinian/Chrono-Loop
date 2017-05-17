@@ -46,6 +46,18 @@ namespace Epoch {
 		mRenderList.clear();
 	}
 
+	void RenderSet::Prune() {
+		for (auto it = mRenderList.begin(); it != mRenderList.end(); ++it) {
+			if ((*it)->mPositions.GetSize() == 0) {
+				delete *it;
+				(*it) = nullptr;
+			}
+		}
+		mRenderList.remove_if([](RenderList* l) -> bool {
+			return l == nullptr;
+		});
+	}
+
 	RenderList * RenderSet::GetListForShape(RenderShape & _shape) {
 		for (auto it = mRenderList.begin(); it != mRenderList.end(); ++it) {
 			if ((*it)->mShape == _shape) {

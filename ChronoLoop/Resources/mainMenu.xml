@@ -17,7 +17,7 @@
     <Name>mmDoor</Name>
     <Mesh>mmDoor.obj</Mesh>
     <Texture>fieldGen.png</Texture>
-    <Position>0,-10,2.611548</Position>
+    <Position>0,-10,2.82</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>1,1.25,0.5</Scale>
     <Components>
@@ -26,10 +26,11 @@
       <Collider>
         <Type>OBB</Type>
         <Trigger>True</Trigger>
-        <Position>0,1,0</Position>
+        <Position>0,1,0.1</Position>
         <Rotation>0,0,0</Rotation>
-        <Scale>1.2,1.8,0.4</Scale>
+        <Scale>1.2,1.8,0.6</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
         <Mass>0</Mass>
         <Elasticity>0</Elasticity>
@@ -52,8 +53,8 @@
     <Name>mmExitSign</Name>
     <Mesh>PlaneCorrection.obj</Mesh>
     <Texture>exit.png</Texture>
-    <Position>-0.8454487,1,0.8458318</Position>
-    <Rotation>1.57,2.355,0</Rotation>
+    <Position>-0.8454487,1,-0.85</Position>
+    <Rotation>1.57,0.785,0</Rotation>
     <Scale>0.2,1,0.1</Scale>
     <Components />
   </Object>
@@ -70,7 +71,7 @@
     <Name>mmDoor2</Name>
     <Mesh>mmDoor.obj</Mesh>
     <Texture>fieldGen.png</Texture>
-    <Position>-2.548366,-10,0</Position>
+    <Position>-2.82,-10,0</Position>
     <Rotation>0,1.57,0</Rotation>
     <Scale>1,1.25,0.5</Scale>
     <Components>
@@ -78,10 +79,11 @@
       <Collider>
         <Type>OBB</Type>
         <Trigger>True</Trigger>
-        <Position>0,1,0</Position>
+        <Position>-0.1,1,0</Position>
         <Rotation>0,0,0</Rotation>
-        <Scale>0.2,2,2.2</Scale>
+        <Scale>0.3,2,2.2</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <Gravity>0,0,0</Gravity>
         <Mass>0</Mass>
         <Elasticity>0</Elasticity>
@@ -166,7 +168,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Clone</Name>
+    <Name>PropClone</Name>
     <Mesh>Clone.obj</Mesh>
     <Texture>CloneTexture.png</Texture>
     <Position>8.43913,-9.662964,-8.627776</Position>
@@ -202,19 +204,19 @@
     <Components />
   </Object>
   <Object>
-    <Name>entrytest</Name>
+    <Name>Propentrytest</Name>
     <Mesh>PlaneCorrection.obj</Mesh>
-    <Texture>EntryTest.png</Texture>
-    <Position>0,-7.667752,2.508215</Position>
+    <Texture>Trivial.png</Texture>
+    <Position>0,-7.667752,2.71</Position>
     <Rotation>1.57,3.14,0</Rotation>
     <Scale>0.5,1,0.2</Scale>
     <Components />
   </Object>
   <Object>
-    <Name>noviceTest</Name>
+    <Name>PropnoviceTest</Name>
     <Mesh>PlaneCorrection.obj</Mesh>
     <Texture>Novice.png</Texture>
-    <Position>-2.432258,-7.67,0</Position>
+    <Position>-2.71793,-7.67,0</Position>
     <Rotation>1.57,1.57,0</Rotation>
     <Scale>0.5,1,0.2</Scale>
     <Components />
@@ -232,7 +234,7 @@
     <Name>mmExitStand</Name>
     <Mesh>ButtonStand.obj</Mesh>
     <Texture>white.png</Texture>
-    <Position>-0.74,0.16,0.71</Position>
+    <Position>-0.74,0.16,-0.71</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>0.5,0.5,0.5</Scale>
     <Components />
@@ -241,17 +243,18 @@
     <Name>mmExitButton</Name>
     <Mesh>Button.obj</Mesh>
     <Texture>red.png</Texture>
-    <Position>-0.74,0.8309309,0.71</Position>
+    <Position>-0.74,0.8309309,-0.71</Position>
     <Rotation>0,0,0</Rotation>
     <Scale>0.5,0.5,0.5</Scale>
     <Components>
       <Collider>
         <Type>Button</Type>
         <Trigger>False</Trigger>
-        <Position>0,0.04,0</Position>
+        <Position>0,0,0</Position>
         <Rotation>0,0,0</Rotation>
-        <Scale>0,0,0</Scale>
+        <Scale>0.4,0.1,0.4</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <PushNormal>0,1,0</PushNormal>
         <Mass>2</Mass>
         <NormalForce>1</NormalForce>
@@ -269,10 +272,11 @@
       <Collider>
         <Type>Button</Type>
         <Trigger>False</Trigger>
-        <Position>0,0.04,0</Position>
+        <Position>0,0,0</Position>
         <Rotation>0,0,0</Rotation>
-        <Scale>0,0,0</Scale>
+        <Scale>0.4,0.1,0.4</Scale>
         <Move>False</Move>
+        <PickUp>False</PickUp>
         <PushNormal>0,1,0</PushNormal>
         <Mass>2</Mass>
         <NormalForce>1</NormalForce>
@@ -280,7 +284,7 @@
     </Components>
   </Object>
   <Object>
-    <Name>Buttonstand</Name>
+    <Name>PropButtonstand</Name>
     <Mesh>ButtonStand.obj</Mesh>
     <Texture>white.png</Texture>
     <Position>-4.941377,-7.322212,6.285453</Position>
@@ -289,7 +293,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Button</Name>
+    <Name>PropButton</Name>
     <Mesh>Button.obj</Mesh>
     <Texture>red.png</Texture>
     <Position>6.651857,-8.061782,0.9497904</Position>
@@ -298,7 +302,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Cube</Name>
+    <Name>PropCube</Name>
     <Mesh>mmChamber.obj</Mesh>
     <Texture>grey.png</Texture>
     <Position>7.982812,-6.906094,9.841545</Position>
@@ -307,7 +311,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Camera</Name>
+    <Name>PropCamera</Name>
     <Mesh>PlaceHolderCamera.obj</Mesh>
     <Texture>enrgyField.png</Texture>
     <Position>-2.639488,-6.635296,-2.644496</Position>
@@ -316,7 +320,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Camera</Name>
+    <Name>PropCamera</Name>
     <Mesh>PlaceHolderCamera.obj</Mesh>
     <Texture>enrgyField.png</Texture>
     <Position>3.056682,-6.641142,-3.191057</Position>
@@ -325,7 +329,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Camera</Name>
+    <Name>PropCamera</Name>
     <Mesh>PlaceHolderCamera.obj</Mesh>
     <Texture>enrgyField.png</Texture>
     <Position>3.064592,-6.64,2.840218</Position>
@@ -334,7 +338,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Camera</Name>
+    <Name>PropCamera</Name>
     <Mesh>PlaceHolderCamera.obj</Mesh>
     <Texture>enrgyField.png</Texture>
     <Position>-3.03789,-6.64,2.822639</Position>
@@ -343,16 +347,16 @@
     <Components />
   </Object>
   <Object>
-    <Name>Chair</Name>
+    <Name>PropChair</Name>
     <Mesh>PlaceHolderChair.obj</Mesh>
     <Texture>black.png</Texture>
     <Position>-5.197937,-9.546037,5.196693</Position>
-    <Rotation>-2.478845,0.6217037,0</Rotation>
+    <Rotation>-2.478845,0.6217036,0</Rotation>
     <Scale>0.025,0.025,0.025</Scale>
     <Components />
   </Object>
   <Object>
-    <Name>ComputerMonitor</Name>
+    <Name>PropComputerMonitor</Name>
     <Mesh>PlaceHolderMonitor.obj</Mesh>
     <Texture>black.png</Texture>
     <Position>2.052045,-8.426782,4.893848</Position>
@@ -361,7 +365,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Table</Name>
+    <Name>PropTable</Name>
     <Mesh>PlaceHolderTable.obj</Mesh>
     <Texture>black.png</Texture>
     <Position>-1.248313,-4.467346,-11.3643</Position>
@@ -370,7 +374,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>aCube</Name>
+    <Name>PropaCube</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
     <Position>3.40121,-6.070265,-8.33979</Position>
@@ -379,7 +383,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Chair</Name>
+    <Name>PropChair</Name>
     <Mesh>PlaceHolderChair.obj</Mesh>
     <Texture>black.png</Texture>
     <Position>-4.67181,-9.546037,-12.39428</Position>
@@ -388,7 +392,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>aCube</Name>
+    <Name>PropaCube</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
     <Position>8.33297,-6.070265,0</Position>
@@ -397,7 +401,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Cube</Name>
+    <Name>PropCube</Name>
     <Mesh>mmChamber.obj</Mesh>
     <Texture>grey.png</Texture>
     <Position>-8.665651,-7.385867,-10.12152</Position>
@@ -406,7 +410,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Table</Name>
+    <Name>PropTable</Name>
     <Mesh>PlaceHolderTable.obj</Mesh>
     <Texture>black.png</Texture>
     <Position>0,-5.72388,8.638133</Position>
@@ -415,7 +419,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Button</Name>
+    <Name>PropButton</Name>
     <Mesh>Button.obj</Mesh>
     <Texture>red.png</Texture>
     <Position>-8.616087,-9.729722,-11.04456</Position>
@@ -424,7 +428,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Buttonstand</Name>
+    <Name>PropButtonstand</Name>
     <Mesh>ButtonStand.obj</Mesh>
     <Texture>white.png</Texture>
     <Position>-12.04419,-10.90603,4.682432</Position>
@@ -442,7 +446,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Clone</Name>
+    <Name>PropClone</Name>
     <Mesh>Clone.obj</Mesh>
     <Texture>CloneTexture.png</Texture>
     <Position>-10.29394,-6.57332,5.698068</Position>
@@ -451,7 +455,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Cube</Name>
+    <Name>PropCube</Name>
     <Mesh>mmChamber.obj</Mesh>
     <Texture>grey.png</Texture>
     <Position>-0.5767013,-7.385867,-10.12152</Position>
@@ -460,7 +464,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Table</Name>
+    <Name>PropTable</Name>
     <Mesh>PlaceHolderTable.obj</Mesh>
     <Texture>black.png</Texture>
     <Position>-8.609168,-7.50042,-4.65023</Position>
@@ -469,7 +473,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>aCubeasdf</Name>
+    <Name>PropaCubeasdf</Name>
     <Mesh>raycube.obj</Mesh>
     <Texture>raycube.png</Texture>
     <Position>-6.832744,-10.75877,-6.77217</Position>
@@ -478,7 +482,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>ComputerMonitor</Name>
+    <Name>PropComputerMonitor</Name>
     <Mesh>PlaceHolderMonitor.obj</Mesh>
     <Texture>black.png</Texture>
     <Position>4.72739,-8.426782,-2.960933</Position>
@@ -487,7 +491,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Button</Name>
+    <Name>PropButton</Name>
     <Mesh>Button.obj</Mesh>
     <Texture>red.png</Texture>
     <Position>-9.524455,-10.26193,4.818427</Position>
@@ -496,7 +500,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>Clone</Name>
+    <Name>PropClone</Name>
     <Mesh>Clone.obj</Mesh>
     <Texture>CloneTexture.png</Texture>
     <Position>5.912019,-10.11408,6.083706</Position>
@@ -505,34 +509,16 @@
     <Components />
   </Object>
   <Object>
-    <Name>general controlls</Name>
-    <Mesh>PlaneCorrection.obj</Mesh>
-    <Texture>GeneralControlScheme.png</Texture>
-    <Position>-1.093232,-8.166304,2.644096</Position>
-    <Rotation>1.57,3.14,0</Rotation>
-    <Scale>1,-0.03908483,1</Scale>
-    <Components />
-  </Object>
-  <Object>
-    <Name>Time controlls</Name>
-    <Mesh>PlaneCorrection.obj</Mesh>
-    <Texture>TimeControlScheme.png</Texture>
-    <Position>-1.09,-9.289726,2.64</Position>
-    <Rotation>1.57,3.14,0</Rotation>
-    <Scale>1,1,1</Scale>
-    <Components />
-  </Object>
-  <Object>
-    <Name>Chair</Name>
+    <Name>PropChair</Name>
     <Mesh>PlaceHolderChair.obj</Mesh>
     <Texture>black.png</Texture>
     <Position>5.989806,-9.546037,-11.18096</Position>
-    <Rotation>-2.478845,0.6217037,2.789519</Rotation>
+    <Rotation>-2.478845,0.6217036,2.789519</Rotation>
     <Scale>0.025,0.025,0.025</Scale>
     <Components />
   </Object>
   <Object>
-    <Name>Button</Name>
+    <Name>PropButton</Name>
     <Mesh>Button.obj</Mesh>
     <Texture>red.png</Texture>
     <Position>2.731716,-12.0392,-11.04456</Position>
@@ -541,7 +527,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>sdfg</Name>
+    <Name>Propsdfg</Name>
     <Mesh>Clone.obj</Mesh>
     <Texture>CloneTexture_Green.png</Texture>
     <Position>-2.055995,-10.38598,-7.158942</Position>
@@ -550,7 +536,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>gsdfs</Name>
+    <Name>Propgsdfs</Name>
     <Mesh>Clone.obj</Mesh>
     <Texture>CloneTexture_Orange.png</Texture>
     <Position>6.121644,-8.300357,3.017736</Position>
@@ -559,7 +545,7 @@
     <Components />
   </Object>
   <Object>
-    <Name>gsdfs</Name>
+    <Name>Propgsdfs</Name>
     <Mesh>Clone.obj</Mesh>
     <Texture>CloneTexture_Orange.png</Texture>
     <Position>-3.954084,-8.53442,4.446226</Position>
@@ -568,12 +554,47 @@
     <Components />
   </Object>
   <Object>
-    <Name>sdfg</Name>
+    <Name>Propsdfg</Name>
     <Mesh>Clone.obj</Mesh>
     <Texture>CloneTexture_Green.png</Texture>
     <Position>7.776074,-8.87972,-1.89197</Position>
     <Rotation>0,2.239209,0.8744429</Rotation>
     <Scale>1,1,1</Scale>
     <Components />
+  </Object>
+  <Object>
+    <Name>mmClosingPanel</Name>
+    <Mesh>PlaneCorrection.obj</Mesh>
+    <Texture>SM_Floor_Two_SM_Floor_AlbedoTransparency.png</Texture>
+    <Position>-2,-0.5,0</Position>
+    <Rotation>3.14,0,0</Rotation>
+    <Scale>2.1,1,2.1</Scale>
+    <Components />
+  </Object>
+  <Object>
+    <Name>mmDoor3</Name>
+    <Mesh>mmDoor.obj</Mesh>
+    <Texture>fieldGen.png</Texture>
+    <Position>0,-10,-2.82</Position>
+    <Rotation>0,0,0</Rotation>
+    <Scale>1,1.25,0.5</Scale>
+    <Components>
+      <EnterLevel>Enabled</EnterLevel>
+      <Collider>
+        <Type>OBB</Type>
+        <Trigger>True</Trigger>
+        <Position>0,1,-0.2</Position>
+        <Rotation>0,0,0</Rotation>
+        <Scale>1.1,1.8,0.9</Scale>
+        <Move>False</Move>
+        <PickUp>False</PickUp>
+        <Gravity>0,0,0</Gravity>
+        <Mass>0</Mass>
+        <Elasticity>0</Elasticity>
+        <StaticFriction>0</StaticFriction>
+        <KeneticFriction>0</KeneticFriction>
+        <Drag>0</Drag>
+      </Collider>
+    </Components>
   </Object>
 </Level>

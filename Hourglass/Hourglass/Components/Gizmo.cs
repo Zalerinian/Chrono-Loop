@@ -58,6 +58,8 @@ namespace Hourglass
 		private IGizmoAttachment mAttached = null;
 		private GizmoMode mMode = GizmoMode.Position;
 		private ColoredShape mGrabbed = null;
+		private float mGizmoScale = 1.0f;
+		private Matrix mScaleMatrix = Matrix.Identity;
 
 
 		private struct GizmoTag
@@ -106,12 +108,29 @@ namespace Hourglass
 			get {
 				if(Valid)
 				{
-					return mAttached.GizmoWorld;
+					return Scale * mAttached.GizmoWorld;
 				}
 				else
 				{
 					return Matrix.Identity;
 				}
+			}
+		}
+
+		public float ScaleFactor {
+			get {
+				return mGizmoScale;
+			}
+			set {
+				mGizmoScale = value;
+				mScaleMatrix = Matrix.Identity;
+				mScaleMatrix.Scale(new Vector3(value, value, value));
+			}
+		}
+
+		public Matrix Scale {
+			get {
+				return mScaleMatrix;
 			}
 		}
 
@@ -169,8 +188,22 @@ namespace Hourglass
 
 		public void Attach(IGizmoAttachment _attachable)
 		{
+			if(mAttached != null) {
+				mAttached.OnGizmoDetached();
+			}
 			mAttached = _attachable;
-			Reposition();
+			if(mAttached != null) {
+				UpdateScale();
+				mAttached.OnGizmoAttached();
+			}
+		}
+
+		private void UpdateScale() {
+			Vector3 gPos = new Vector3(Position.M41, Position.M42, Position.M43);
+			Matrix view = Renderer.Instance.View;
+			view.Invert();
+			Vector3 cPos = new Vector3(view.M41, view.M42, view.M43);
+			ScaleFactor = (cPos - gPos).Length() * 0.1f;
 		}
 
 		public void Reposition()
@@ -227,24 +260,61 @@ namespace Hourglass
 			else if(axis.Y > 0)
 			{
 				mAttached.PY.Value -= (decimal)Vector3.Dot(raxis, _movement);
-
 			}
 			else if (axis.Z > 0)
 			{
 				mAttached.PZ.Value += (decimal)Vector3.Dot(raxis, _movement);
-
 			}
 		}
 
 		private void ApplyRotation(Vector3 _movement)
 		{
-
-		}
+            Vector3 axis = ((GizmoTag)Grabbed.Tag).Axis;
+            Vector3 raxis = Renderer.Instance.RotateInto(axis, Renderer.Instance.View);
+            if (axis.X > 0)
+            {
+                mAttached.RZ.Value -= (decimal)Vector3.Dot(raxis, _movement);
+            }
+            else if (axis.Y > 0)
+            {
+                mAttached.RX.Value -= (decimal)Vector3.Dot(raxis, _movement);
+            }
+            else if (axis.Z > 0)
+            {
+                mAttached.RY.Value += (decimal)Vector3.Dot(raxis, _movement);
+            }
+        }
 
 		private void ApplyScale(Vector3 _movement)
-		{
+        {
+            Vector3 axis = ((GizmoTag)Grabbed.Tag).Axis;
+            Vector3 raxis = Renderer.Instance.RotateInto(axis, Renderer.Instance.View);
+            if (axis.X > 0)
+            {
+                mAttached.SX.Value -= (decimal)Vector3.Dot(raxis, _movement);
+            }
+            else if (axis.Y > 0)
+            {
+                mAttached.SY.Value -= (decimal)Vector3.Dot(raxis, _movement);
+            }
+            else if (axis.Z > 0)
+            {
+                mAttached.SZ.Value += (decimal)Vector3.Dot(raxis, _movement);
+            }
+        }
 
-		}
+        public void Reset()
+        {
+            mTranslateX.FillBuffers();
+            mTranslateY.FillBuffers();
+            mTranslateZ.FillBuffers();
+            mScaleX.FillBuffers();
+            mScaleY.FillBuffers();
+            mScaleZ.FillBuffers();
+            mRotateX.FillBuffers();
+            mRotateY.FillBuffers();
+            mRotateZ.FillBuffers();
+        }
 
 		public void Render()
 		{
@@ -267,7 +337,7 @@ namespace Hourglass
 				dev.Indices = components[i].IndexBuffer;
 				dev.SetStreamSource(0, components[i].VertexBuffer, 0);
 				dev.RenderState.FillMode = components[i].FillMode;
-				dev.Transform.World = components[i].World;
+				dev.Transform.World = components[i].World * mScaleMatrix * mAttached.GizmoWorld;
 				dev.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, components[i].Indices.Length, 0, components[i].Indices.Length / 3);
 			}
 		}

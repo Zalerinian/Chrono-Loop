@@ -18,12 +18,13 @@
 #include "../Rendering/RendererDefines.h"
 #include "../Particles/ParticleSystem.h"
 #include "../Sound/SoundEngine.h"
-
+#include "../Rendering/Draw2D.h"
 namespace Epoch {
 	bool InitializeSystems(HWND _Window, unsigned int _width, unsigned int _height,
 												 bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane,
 												 vr::IVRSystem* _vrsys) {
 		Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_MAX);
+		Settings::GetInstance().SetInt("PixelShaderOverride", ePS_MAX);
 		Settings::GetInstance().SetBool("LevelIsLoading", false);
 		VRInputManager::Initialize(_vrsys);
 
@@ -55,6 +56,7 @@ namespace Epoch {
 		IndexBufferManager::DestroyInstance();
 		Physics::Destroy();
 		ParticleSystem::Destroy();
+		Draw::DestroyInstance();
 
 		AudioWrapper::Destroy();
 		Pool::DestroyInstance();

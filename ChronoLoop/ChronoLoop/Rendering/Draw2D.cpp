@@ -6,6 +6,25 @@ namespace Epoch
 {
 
 	Draw* Draw::sInstance = nullptr;
+	Draw & Draw::Instance()
+	{
+		if (!sInstance)
+		{
+			sInstance = new Draw();
+			sInstance->InitializeDirect2D();
+			sInstance->InitializeScreenBitmap();
+		}
+		return *sInstance;
+	}
+
+	void Draw::DestroyInstance()
+	{
+		if (sInstance != nullptr)
+		{
+			delete sInstance;
+		}
+		sInstance = nullptr;
+	}
 	Draw::Draw()
 	{
 		mFontIDs = 0;
@@ -31,27 +50,25 @@ namespace Epoch
 		//mTextformat.reset();
 		//mBrush.reset();
 		mScreenBitmap.reset();
+
+		for (std::pair<unsigned int, std::pair<Font, IDWriteTextFormat*>> x : mFonts)
+		{
+			//delete &x.second.first;
+			x.second.second->Release();
+		}
+		for (std::pair<unsigned int, std::pair<D2D1::ColorF, ID2D1SolidColorBrush*>> x : mColorBrushes)
+		{
+			x.second.second->Release();
+		}
+		for (std::pair<ID3D11Texture2D*, ID2D1Bitmap1*> x : mBitmaps)
+		{
+			x.second->Release();
+			x.first->Release();
+			
+		}
+
 	}
 
-	Draw & Draw::Instance()
-	{
-		if (!sInstance)
-		{
-			sInstance = new Draw();
-			sInstance->InitializeDirect2D();
-			sInstance->InitializeScreenBitmap();
-		}
-		return *sInstance;
-	}
-
-	void Draw::DestroyInstance()
-	{
-		if (sInstance != nullptr)
-		{
-			delete sInstance;
-		}
-		sInstance = nullptr;
-	}
 	void Draw::InitializeDirect2D()
 	{
 
@@ -161,14 +178,10 @@ namespace Epoch
 
 		return WriteFormat;
 	}
-
 	void Draw::DrawTextToBitmap(float _left, float _top, float _right, float _bottom,
 															Font _font, std::wstring _text, ID2D1Bitmap* _bitmap)
 	{
-		
-		
 		(*mContext2D)->SetTarget(_bitmap);
-		float color[4] = { 0.3f, 0.3f, 1, 1 };
 
 		// Retrieve the size of the render target.
 		D2D1_SIZE_F renderTargetSize = (*mContext2D)->GetSize();
@@ -200,7 +213,8 @@ namespace Epoch
 	void Draw::DrawRectangleToBitmap(float _left, float _top, float _right, float _bottom, D2D1::ColorF _color, ID2D1Bitmap * _bitmap)
 	{
 		(*mContext2D)->SetTarget(_bitmap);
-		float color[4] = { 1, 1, 1, 1 };
+		//(*mContext2D)->Clear();
+		//float color[4] = { 1, 1, 1, 1 };
 
 		// Retrieve the size of the render target.st
 		D2D1_SIZE_F renderTargetSize = (*mContext2D)->GetSize();
@@ -208,6 +222,7 @@ namespace Epoch
 		(*mContext2D)->BeginDraw();
 		(*mContext2D)->SetTransform(D2D1::Matrix3x2F::Identity());
 		(*mContext2D)->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
+
 
 		//(*mContext2D)->CreateSolidColorBrush(
 		//	D2D1::Point2F(100.0f, 100.1f),
@@ -241,8 +256,8 @@ namespace Epoch
 			D2D1::BitmapProperties1(
 				D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
 				D2D1::PixelFormat(DXGI_FORMAT_R16G16B16A16_FLOAT, D2D1_ALPHA_MODE_IGNORE),
-				0,
-				0		//defaults to 96
+				96.0f,
+				96.0f		//defaults to 96
 			);
 
 		IDXGISurface* surface = nullptr;

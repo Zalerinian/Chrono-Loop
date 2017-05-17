@@ -46,7 +46,7 @@ namespace Epoch {
 		// Copy in the data we wanted to add.
 		ctx->CopySubresourceRegion(newBuffer, 0, desc.ByteWidth - sizeof(BufferWidth), 0, 0, _copy.Get(), 0, 0);
 
-		_toGrow = newBuffer;
+		_toGrow.Attach(newBuffer);
 		Renderer::Instance()->GetRendererLock().unlock();
 		mIdMap[mMasterId] = OldCount;
 		return mMasterId++;
@@ -87,7 +87,7 @@ namespace Epoch {
 
 		delete[] InitialData.pSysMem;
 
-		_toGrow = newBuffer;
+		_toGrow.Attach(newBuffer);
 		Renderer::Instance()->GetRendererLock().unlock();
 		mIdMap[mMasterId] = OldCount;
 		return mMasterId++;
@@ -174,7 +174,7 @@ namespace Epoch {
 			ctx->CopySubresourceRegion(newBuffer, 0, (index) * sizeof(BufferWidth), 0, 0, _toCut.Get(), 0, &rightBoundary);
 
 		}
-		_toCut = newBuffer;
+		_toCut.Attach(newBuffer);
 
 		// Go through the ID Map and decrement any id higher than the given one
 		if (idsNeedUpdating) {
@@ -230,6 +230,10 @@ namespace Epoch {
 		}
 	}
 
+	RenderList::~RenderList() {
+		int i = 0;
+	}
+
 	GhostList<matrix4>::GhostNode* RenderList::Push(RenderShape& _shape) {
 		BufferWidth NullData;
 		
@@ -243,6 +247,7 @@ namespace Epoch {
 		NullData.e2.Position.Set(24, 24, 24, 24);
 
 		int vbIndex = -1, pbIndex = -1, gbIndex = -1;
+		_shape.mNext = (RenderNode*)this;
 		// Prepare the vertex buffers.
 		std::string bufferName;
 		for (int i = 0; i < eVB_MAX; ++i) {
@@ -343,7 +348,7 @@ namespace Epoch {
 		}
 	}
 
-	void RenderList::UpdateBuffer(ConstantBufferType _t, Microsoft::WRL::ComPtr<ID3D11Buffer> _data, unsigned int _bufferIndex, unsigned int _dataIndex) {
+	void RenderList::UpdateBuffer(ConstantBufferType _t, Microsoft::WRL::ComPtr<ID3D11Buffer>& _data, unsigned int _bufferIndex, unsigned int _dataIndex) {
 		switch (_t) {
 			case eCB_VERTEX:
 				UpdateBuffer(mShape.mContext.mVertexCBuffers[_bufferIndex], _data, _dataIndex);

@@ -39,6 +39,7 @@ namespace Epoch
 		bool			RayToSphere(vec3f& _pos, vec3f & _dir, vec3f & _center, float _radius, float & _time, vec3f & _out);
 		bool			RayToCylinder(vec3f& _start, vec3f & _normal, vec3f & _point1, vec3f & _point2, float _radius, float & _time);
 		bool			RayToCapsule(vec3f& _start, vec3f& _normal, vec3f & _point1, vec3f & _point2, float _radius, float & _time);
+		bool			Linecast(vec3f& _vert0, vec3f& _vert1, vec3f& _vert2, vec3f& _normal, vec3f& _start, vec3f& _end, vec3f& _hit);
 
 		bool			MovingSphereToTriangle(vec3f & _vert0, vec3f & _vert1, vec3f & _vert2, vec3f & _normal, vec3f & _start, vec3f & _dir, float _radius, float & _time, vec3f & _outNormal);
 		//bool			MovingSphereToMesh(vec3f & _start, vec3f & _dir, float _radius, Mesh* mesh, float & _time, vec3f & _outNormal);

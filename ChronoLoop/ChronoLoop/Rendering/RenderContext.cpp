@@ -39,16 +39,19 @@ namespace Epoch {
 	RenderContext::~RenderContext() {}
 
 	void RenderContext::Apply() {
-		if (mRasterState != eRS_MAX) {
+		RasterState RasterOverride = (RasterState)Settings::GetInstance().GetInt("RasterizerStateOverride");
+		PixelShaderFormat PixelOverride = (PixelShaderFormat)Settings::GetInstance().GetInt("PixelShaderOverride");
+		if (RasterOverride != eRS_MAX) {
+			RasterizerStateManager::Instance()->ApplyState(RasterOverride);
+		} else if (mRasterState != eRS_MAX) {
 			RasterizerStateManager::Instance()->ApplyState(mRasterState);
-		}
-		if (Settings::GetInstance().GetInt("RasterizerStateOverride") != eRS_MAX) {
-			RasterizerStateManager::Instance()->ApplyState((RasterState)Settings::GetInstance().GetInt("RasterizerStateOverride"));
 		}
 		if (mVertexFormat != eVERT_MAX) {
 			InputLayoutManager::Instance().ApplyLayout(mVertexFormat);
 		}
-		if (mPixelShaderFormat != ePS_MAX) {
+		if (PixelOverride != ePS_MAX) {
+			ShaderManager::Instance()->ApplyPShader(PixelOverride);
+		} else if (mPixelShaderFormat != ePS_MAX) {
 			ShaderManager::Instance()->ApplyPShader(mPixelShaderFormat);
 		}
 		if (mVertexShaderFormat != eVS_MAX) {
@@ -81,16 +84,19 @@ namespace Epoch {
 	}
 
 	void RenderContext::Apply(RenderContext & from) {
-		if (mRasterState != eRS_MAX && mRasterState != from.mRasterState) {
+		RasterState RasterOverride = (RasterState)Settings::GetInstance().GetInt("RasterizerStateOverride");
+		PixelShaderFormat PixelOverride = (PixelShaderFormat)Settings::GetInstance().GetInt("PixelShaderOverride");
+		if (RasterOverride != eRS_MAX) {
+			RasterizerStateManager::Instance()->ApplyState(RasterOverride);
+		} else if (mRasterState != eRS_MAX && mRasterState != from.mRasterState) {
 			RasterizerStateManager::Instance()->ApplyState(mRasterState);
-		}
-		if (Settings::GetInstance().GetInt("RasterizerStateOverride") != eRS_MAX) {
-			RasterizerStateManager::Instance()->ApplyState((RasterState)Settings::GetInstance().GetInt("RasterizerStateOverride"));
 		}
 		if (mVertexFormat != eVERT_MAX && mVertexFormat != from.mVertexFormat) {
 			InputLayoutManager::Instance().ApplyLayout(mVertexFormat);
 		}
-		if (mPixelShaderFormat != ePS_MAX && mPixelShaderFormat != from.mPixelShaderFormat) {
+		if (PixelOverride != ePS_MAX) {
+			ShaderManager::Instance()->ApplyPShader(PixelOverride);
+		} else if (mPixelShaderFormat != ePS_MAX && mPixelShaderFormat != from.mPixelShaderFormat) {
 			ShaderManager::Instance()->ApplyPShader(mPixelShaderFormat);
 		}
 		if (mVertexShaderFormat != eVS_MAX && mVertexShaderFormat != from.mVertexShaderFormat) {
@@ -99,11 +105,12 @@ namespace Epoch {
 		if (mGeoShaderFormat != eGS_MAX && mGeoShaderFormat != from.mGeoShaderFormat) {
 			ShaderManager::Instance()->ApplyGShader(mGeoShaderFormat);
 		}
+
+		ID3D11ShaderResourceView* textures[eTEX_MAX];
 		for (int i = eTEX_DIFFUSE; i < eTEX_MAX; ++i) {
-			if (/*mTextures[i].Get() != nullptr && */from.mTextures[i].Get() != mTextures[i].Get()) {
-				Renderer::Instance()->GetContext()->PSSetShaderResources((UINT)i, 1, mTextures[i].GetAddressOf());
-			}
+			textures[i] = mTextures[i].Get();
 		}
+		Renderer::Instance()->GetContext()->PSSetShaderResources(0, eTEX_MAX, textures);
 
 		ID3D11Buffer *pixelBuffers[ePB_MAX], *vertexBuffers[eVB_MAX], *geoBuffers[eGB_MAX];
 		for (int i = 0; i < eVB_MAX; ++i) {
@@ -160,6 +167,16 @@ namespace Epoch {
 		for (int i = 0; i < eGB_MAX; ++i) {
 			mGeometryCBuffers[i] = _other.mGeometryCBuffers[i];
 		}
+		return *this;
+	}
+
+	RenderContext & RenderContext::SimpleClone(const RenderContext & _other) {
+		mRasterState = _other.mRasterState;
+		mVertexFormat = _other.mVertexFormat;
+		mPixelShaderFormat = _other.mPixelShaderFormat;
+		mVertexShaderFormat = _other.mVertexShaderFormat;
+		mGeoShaderFormat = _other.mGeoShaderFormat;
+		mType = _other.mType;
 		return *this;
 	}
 

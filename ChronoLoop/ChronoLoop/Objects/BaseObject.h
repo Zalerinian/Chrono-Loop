@@ -11,6 +11,10 @@
 
 namespace Epoch {
 
+	enum BaseObject_Flag {
+		BaseObject_Flag_Record_In_Timeline = 1
+	};
+
 	class BaseObject {
 		// The number of objects that exist in the world.
 		static unsigned int ObjectCount;
@@ -21,8 +25,7 @@ namespace Epoch {
 		unsigned int mUniqueID;
 		std::list<BaseObject*> mChildren;
 		Transform mTransform;
-		bool mDestroyed = false;
-
+		unsigned int mFlags = 0;
 
 		void Construct(std::string _name, Transform _transform, BaseObject* _parent);
 
@@ -39,12 +42,12 @@ namespace Epoch {
 		BaseObject* Reset(std::string _name);
 		BaseObject* Reset(std::string _name, Transform _transform);
 		BaseObject* Reset(std::string _name, Transform _transform, BaseObject* _parent);
+		BaseObject* Reset(std::string _name, Transform _transform, BaseObject* _parent, unsigned int _flags);
 		unsigned int GetTotalAmountofComponents();
 		void RemoveAllComponents();
 
-		inline unsigned int GetUniqueId() {
-			return mUniqueID;
-		}
+		const unsigned int& Flags;
+
 
 		void SetName(std::string _name);
 		inline std::string GetName() {

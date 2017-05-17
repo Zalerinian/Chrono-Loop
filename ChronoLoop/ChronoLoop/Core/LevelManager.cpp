@@ -25,7 +25,7 @@ namespace Epoch {
 		mLoadingLevel = new Level;
 
 		// Actually load the level here
-		mLoadingLevel->LoadLevel(_path);
+		mLoadingLevel->BinaryLoadLevel(_path);
 
 
 		// Assuming everything went dandy
@@ -96,20 +96,28 @@ namespace Epoch {
 			if (mCurrentLevel) {
 				delete mCurrentLevel;
 			}
+			TimeManager::Instance()->Destroy();
 			VRInputManager::GetInstance().GetPlayerPosition().Position = mRequested->mStartPosition;
 			mCurrentLevel = mRequested;
 			Renderer::Instance()->ClearRenderSet();
 			mCurrentLevel->SetupObjects();
 			for (auto it = mCurrentLevel->GetLevelObjects().begin(); it != mCurrentLevel->GetLevelObjects().end(); ++it)
 			{
+				if(((*it)->Flags & BaseObject_Flag_Record_In_Timeline) != 0 )
+				{
+					TimeManager::Instance()->AddObjectToTimeline(*it);
+				}
 				if ((*it)->mComponents[eCOMPONENT_COLLIDER].size() > 0)
 				{
 					Physics::Instance()->mObjects.push_back((*it));
-					if (((Collider*)(*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mShouldMove || (*it)->GetName() == "TransparentDoor1" || (*it)->GetName() == "TransparentDoor2")
+					if ((((Collider*)(*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mShouldMove && ((*it)->Flags & BaseObject_Flag_Record_In_Timeline) == 0))
 					{
+						//TODO: GIT RID OF THIS
+						if(!((*it)->GetName() == "L3Button"))
 						TimeManager::Instance()->AddObjectToTimeline(*it);
 					}
 				}
+				
 			}
 			mCurrentLevel->CallStart();
 			mRequested = nullptr;

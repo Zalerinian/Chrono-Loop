@@ -64,7 +64,10 @@ namespace Epoch {
 		static matrix4 CreateXRotation(float _rads);
 		static matrix4 CreateYRotation(float _rads);
 		static matrix4 CreateZRotation(float _rads);
+		static matrix4 CreateYawPitchRollRotation(vec3f& _xyz);
+		static matrix4 CreateYawPitchRollRotation(float _x, float _y, float _z);
 		static matrix4 CreateScale(float _x, float _y, float _z);
+		static matrix4 CreateScale(vec3f& _scale);
 		static matrix4 CreateTranslation(float _x, float _y, float _z);
 		static matrix4 CreateTranslation(vec3f _vec);
 		static matrix4 CreateTranslation(vec4f _vec);

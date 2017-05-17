@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include <unordered_map>
-#include <thread>
 #include "../Common/Logger.h"
 
 namespace Epoch
@@ -16,13 +15,11 @@ namespace Epoch
 
 	private:
 		bool mTakeInput; //On/Off switch
-		bool mTerminateThread = false;
 
 		static CommandConsole* sInstance;
 		std::wstring mCurCommand; //A string to hold the thing that's being typed to the console
 		std::wstring mCurDisplay; //A string to display to the console
 		std::unordered_map<std::wstring, Command> mCommandLines; // Holds all of the Commands and their function pointers
-		std::thread mInputThread;
 
 		//Function Specific
 		int mFps = 0; //FPS display
@@ -39,7 +36,7 @@ namespace Epoch
 		//SystemLogger mLogger;
 	public:
 		CommandConsole();
-		~CommandConsole() { mTerminateThread = true; mInputThread.join(); };
+		~CommandConsole() {};
 		static CommandConsole& Instance();
 		static void DestroyInstance();
 
@@ -71,6 +68,7 @@ namespace Epoch
 		//Function Pointer / Console Commands
 		static void Help(void* _self, std::wstring _nothing);
 		static void ToggleFPS(void* _self, std::wstring _ifOn);
+		static void ToggleColliders(void * _self, std::wstring _ifOn);
 		static void ToggleAll(void* _self, std::wstring _ifOn);
 		static void ToggleSnaping(void* _self, std::wstring _ifOn);
 		void DisplayFPS();

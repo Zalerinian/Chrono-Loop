@@ -25,6 +25,9 @@ namespace Epoch {
 	private:
 		InputNode* mHead = nullptr;
 		InputNode* mCurrent = nullptr;
+		//This is a variable that will be set to as a start point before input is grabbed from steam vr
+		//This is helpful so we don't have to start from the head everytime and don't lose percision if we started from mCurrent
+		InputNode* mInsertStart = nullptr;
 	public:
 		InputTimeline();
 		~InputTimeline();
@@ -33,8 +36,12 @@ namespace Epoch {
 		void Insert(InputNode* _data);
 		InputNode* GetHead() { return mHead; };
 		InputNode* GetCurr() { return mCurrent; };
+		InputNode* GetInsertStart() { return mInsertStart; }
 		void DisplayTimeline();
-		void SetCurr(InputNode* _set);
+		//This func is for an external source that will keep the input timeline in check as it moves
+		void SetHead(InputNode* _set) { mHead = _set; };
+		void SetCurr(InputNode* _set) { mCurrent = _set; };
+		void SetInsertStart(InputNode* _set) { mInsertStart = _set; };
 		void Clear();
 
 	};

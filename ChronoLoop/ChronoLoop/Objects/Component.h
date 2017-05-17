@@ -132,7 +132,7 @@ namespace Epoch
 		};
 
 		ColliderType mColliderType;
-		bool mShouldMove, mIsTrigger;
+		bool mShouldMove, mIsTrigger, mPickUpAble = false, mShowCol = false;
 		vec3f mVelocity, mAcceleration, mTotalForce, mForces, mImpulsiveForce, mGravity, mWeight, mDragForce;
 		float mMass, mElasticity, mKineticFriction, mStaticFriction, mInvMass, mRHO, mDrag, mArea;
 
@@ -156,10 +156,15 @@ namespace Epoch
 	{
 	public:
 		SphereCollider() {}
-		SphereCollider(BaseObject* _obj, bool _move, bool _trigger, vec3f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _radius);
+		SphereCollider(BaseObject* _obj, bool _move, bool _trigger, vec3f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _radius, std::string _ColliderShape = "../Resources/Sphere.obj");
 		SphereCollider(vec3f _pos, float _rad) { mCenter = _pos; mRadius = _rad; };
+		bool visible = false;
 		vec3f mCenter;
 		float mRadius;
+		RenderShape* mShape;
+		GhostList<matrix4>::GhostNode* mNode = nullptr;
+		virtual void Update();
+		virtual void Destroy();
 	};
 
 	class PlaneCollider : public Collider
@@ -170,6 +175,7 @@ namespace Epoch
 		PlaneCollider(vec3f _norm, float _offset) { mNormal = _norm; mOffset = _offset; };
 		vec3f mNormal;
 		float mOffset;
+
 	};
 
 	class Frustrum : public Collider
@@ -183,10 +189,11 @@ namespace Epoch
 	{
 	public:
 		CubeCollider() {}
-		CubeCollider(BaseObject* _obj, bool _move, bool _trigger, vec3f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec3f _min, vec3f _max);
+		CubeCollider(BaseObject* _obj, bool _move, bool _trigger, vec3f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec3f _min, vec3f _max, std::string _ColliderShape = "../Resources/UnitCube.obj");
 		vec3f mMin, mMax, mMinOffset, mMaxOffset;
 		RenderShape* mShape;
 		GhostList<matrix4>::GhostNode* mNode = nullptr;
+		bool visible = false;
 		virtual void Update();
 		virtual void Destroy();
 
@@ -210,6 +217,7 @@ namespace Epoch
 		ButtonCollider(BaseObject* _obj, vec3f _min, vec3f _max, float _mass, float normForce, vec3f _pushNormal);
 		vec3f mPushNormal;
 		PlaneCollider mUpperBound, mLowerBound;
+		bool mPress;
 	};
 
 	class ControllerCollider : public CubeCollider
@@ -218,6 +226,7 @@ namespace Epoch
 		ControllerCollider() {}
 		ControllerCollider(BaseObject* _obj, vec3f _min, vec3f _max, bool _left);
 		bool mLeft;
+		virtual void Update();
 		std::unordered_set<Collider*> mHitting;
 	};
 
@@ -247,7 +256,9 @@ namespace Epoch
 		}
 		void Destroy()
 		{
+			Light* temp = mLight;
 			delete mLight;
+			mLight = nullptr;
 		}
 	};
 

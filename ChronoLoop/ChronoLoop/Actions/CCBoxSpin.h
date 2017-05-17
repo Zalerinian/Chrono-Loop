@@ -10,11 +10,10 @@ namespace Epoch
 	struct CCBoxSpin : public CodeComponent
 	{
 		Interpolator<matrix4> interp;
-		matrix4 m1;
-		matrix4 m2;
-		matrix4 rot;
+		matrix4 m1, m2, rot;
 		float angle = 0;
 		bool flip;
+		TimeManipulation * mManip;
 
 		virtual void Start()
 		{
@@ -22,8 +21,11 @@ namespace Epoch
 			float rad = DirectX::XM_PI / 2;
 			float pi = DirectX::XM_PI;
 			rot = (matrix4::CreateXRotation(angle) * matrix4::CreateYRotation(angle) * matrix4::CreateZRotation(angle));
-			m1 = matrix4::CreateScale(.5f, .5f, .5f) *  matrix4::CreateTranslation(0, .75f, -3.872531f);
-			m2 = matrix4::CreateScale(.5f, .5f, .5f) *  matrix4::CreateTranslation(0, 2, -3.872531f);
+			m1 = mObject->GetTransform().GetMatrix() * matrix4::CreateTranslation(0, -.75f, 0);
+			m2 = mObject->GetTransform().GetMatrix() * matrix4::CreateTranslation(0, 1, 0);
+			//m1 = matrix4::CreateScale(.5f, .5f, .5f) *  matrix4::CreateTranslation(0, .75f, -3.872531f);
+			//m2 = matrix4::CreateScale(.5f, .5f, .5f) *  matrix4::CreateTranslation(0, 2, -3.872531f);
+			mManip = LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator();
 
 			interp.Prepare(2, m1, m2, mObject->GetTransform().GetMatrix());
 			interp.SetEasingFunction(Easing::QuadInOut);
@@ -32,22 +34,25 @@ namespace Epoch
 
 		virtual void Update()
 		{
-			if (interp.Update(TimeManager::Instance()->GetDeltaTime()))
+			if(!mManip || (mManip && !mManip->isTimePaused()))
 			{
-				if (flip)
+				if (interp.Update(TimeManager::Instance()->GetDeltaTime()))
 				{
-					interp.Prepare(2, m2, m1, mObject->GetTransform().GetMatrix());
-					flip = false;
+					if (flip)
+					{
+						interp.Prepare(2, m2, m1, mObject->GetTransform().GetMatrix());
+						flip = false;
+					}
+					else
+					{
+						interp.Prepare(2, m1, m2, mObject->GetTransform().GetMatrix());
+						flip = true;
+					}
 				}
-				else
-				{
-					interp.Prepare(2, m1, m2, mObject->GetTransform().GetMatrix());
-					flip = true;
-				}
+				mObject->GetTransform().GetMatrix().RotateInPlace(vec3f(1, 1, 1), angle);
+				angle += 1.5708f * TimeManager::Instance()->GetDeltaTime();
+				//rot = matrix4::CreateXRotation(angle) * matrix4::CreateXRotation(angle) * matrix4::CreateXRotation(angle);
 			}
-			mObject->GetTransform().GetMatrix().RotateInPlace(vec3f(1, 1, 1), angle);
-			angle += 1.5708f * TimeManager::Instance()->GetDeltaTime();
-			//rot = matrix4::CreateXRotation(angle) * matrix4::CreateXRotation(angle) * matrix4::CreateXRotation(angle);
 		}
 	};
 

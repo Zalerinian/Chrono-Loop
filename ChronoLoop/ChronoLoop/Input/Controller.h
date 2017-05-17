@@ -20,10 +20,10 @@ namespace Epoch {
 		float mHairTriggerLimit;
 		bool mHairTriggerState, mHairTriggerPrevState;
 		void Setup(int _index);
-		unsigned int mSpeedCW, mSpeedCCW, mIncreaseGestureSpeed = 7;
+		unsigned int mSpeedCW, mSpeedCCW, mIncreaseGestureSpeed = 5;
 
 		vec2f InitialPos = { 0,0 };
-		unsigned int gestureCnt = 0;
+		float gestureCnt = 0.0f;
 
 		friend class VIM;
 	public:

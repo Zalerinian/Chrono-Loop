@@ -3,6 +3,7 @@
 #include "BaseObject.h"
 #include "../Rendering/renderer.h"
 #include "../Sound/SoundEngine.h"
+#include "../Common/Settings.h"
 
 namespace Epoch
 {
@@ -142,7 +143,7 @@ namespace Epoch
 	//	mMesh = &Mesh(_path);
 	//}
 
-	SphereCollider::SphereCollider(BaseObject* _obj, bool _move, bool _trigger, vec3f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _radius)
+	SphereCollider::SphereCollider(BaseObject* _obj, bool _move, bool _trigger, vec3f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, float _radius, std::string _ColliderShape)
 	{
 		mObject = _obj;
 		mType = eCOMPONENT_COLLIDER;
@@ -169,9 +170,11 @@ namespace Epoch
 		mDrag = _drag;
 		mArea = 4 * DirectX::XM_PI * powf(mRadius, 2.0f);
 		mDragForce = mVelocity * (-0.5f * mRHO * mVelocity.Magnitude() * mDrag * mArea);
+		mShape = new RenderShape(_ColliderShape.c_str(), true, ePS_TEXTURED, eVS_TEXTURED, eGS_PosNormTex);
+		mShape->GetContext().mRasterState = eRS_WIREFRAME;
 	}
 
-	CubeCollider::CubeCollider(BaseObject* _obj, bool _move, bool _trigger, vec3f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec3f _min, vec3f _max)
+	CubeCollider::CubeCollider(BaseObject* _obj, bool _move, bool _trigger, vec3f _gravity, float _mass, float _elasticity, float _staticFriction, float _kineticFriction, float _drag, vec3f _min, vec3f _max, std::string _ColliderShape)
 	{
 		mObject = _obj;
 		mType = eCOMPONENT_COLLIDER;
@@ -204,26 +207,65 @@ namespace Epoch
 		float c = (mMaxOffset - mMinOffset) * vec3f(1, 0, 0);
 		mArea = (2 * (a * b)) + (2 * (b * c)) + (2 * (a * c));
 		mDragForce = mVelocity * (-0.5f * mRHO * mVelocity.Magnitude() * mDrag * mArea);
-		mShape = new RenderShape("../Resources/UnitCube.obj", true, ePS_TEXTURED, eVS_TEXTURED, eGS_PosNormTex);
+		mShape = new RenderShape(_ColliderShape.c_str(), true, ePS_TEXTURED, eVS_TEXTURED, eGS_PosNormTex);
 		mShape->GetContext().mRasterState = eRS_WIREFRAME;
 	}
 
-	void CubeCollider::Update() {
-		//if (mNode == nullptr) {
-		//	mShape->AddTexture("../Resources/red.png", eTEX_DIFFUSE);
-		//	mNode = Renderer::Instance()->AddOpaqueNode(*mShape);
-		//}
-		//vec3f size = mMax - mMin;
-		//matrix4 pos = matrix4::CreateScale(size.x, size.y, size.z);
-		//pos.Position = (mMax - mMin) / 2 + mMin;
-		//mNode->data = pos;
+	void CubeCollider::Update()
+	{
+		if (Settings::GetInstance().GetBool("ShowColliders") || mShowCol)
+		{
+			visible = true;
+			if (mNode == nullptr)
+			{
+				mShape->AddTexture("../Resources/red.png", eTEX_DIFFUSE);
+				if(!mShowCol)
+				mNode = Renderer::Instance()->AddOpaqueNode(*mShape);
+				else
+				mNode = Renderer::Instance()->AddTopmostNode(*mShape);
+			}
+			vec3f size = mMax - mMin;
+			matrix4 pos = matrix4::CreateScale(size.x, size.y, size.z);
+			pos.Position = (mMax - mMin) / 2.0f + mMin;
+			mNode->data = pos;
+		}
+		else if (visible)
+		{
+			visible = false;
+			memset(&mNode->data, 0, sizeof(matrix4));
+		}
+			
 	}
-
 	void CubeCollider::Destroy()
 	{
 		delete mNode;
 		delete mShape;
 	}
+	void SphereCollider::Update() {
+		if (Settings::GetInstance().GetBool("ShowColliders") || mShowCol) {
+			visible = true;
+			if (mNode == nullptr) {
+				mShape->AddTexture("../Resources/red.png", eTEX_DIFFUSE);
+				if (!mShowCol)
+					mNode = Renderer::Instance()->AddOpaqueNode(*mShape);
+				else
+					mNode = Renderer::Instance()->AddTopmostNode(*mShape);
+			}
+		
+			matrix4 pos =  GetTransform().GetMatrix() * matrix4::CreateScale(mRadius, mRadius, mRadius);
+			pos.Position = GetPos();
+			mNode->data = pos;
+		} else if (visible) {
+			visible = false;
+			memset(&mNode->data, 0, sizeof(matrix4));
+		}
+	}
+	void SphereCollider::Destroy()
+	{
+		delete mNode;
+		delete mShape;
+	}
+
 
 	void CubeCollider::SetPos(const vec3f& _newPos)
 	{
@@ -312,9 +354,10 @@ namespace Epoch
 		mUpperBound.mNormal = mPushNormal;
 		mUpperBound.mOffset = mMax * mPushNormal;
 		mLowerBound.mNormal = mPushNormal;
-		mLowerBound.mOffset = (mMin * mPushNormal) - .1f;
+		mLowerBound.mOffset = (mMin * mPushNormal) - .07f;
 		mShouldMove = true;
 		mIsTrigger = false;
+		mPress = false;
 
 		mGravity = _pushNormal * _normForce;
 		mVelocity = vec3f(0.0f, 0.0f, 0.0f);
@@ -345,14 +388,33 @@ namespace Epoch
 		mIsTrigger = false;
 
 		mMass = 2;
-		mForces = vec3f(0, -1, 0);
-		mGravity = vec3f(0, -2.0f, 0);
+		mForces = vec3f(0, 0, 0);
+		mGravity = vec3f(0, -9.8f, 0);
 		mType = eCOMPONENT_COLLIDER;
 		mColliderType = eCOLLIDER_Controller;
-		mTotalForce = { 0, -2, 0 };
-		mAcceleration = { 0, -2, 0 };
-		mShape = new RenderShape("../Resources/UnitCube.obj", true, ePS_TEXTURED, eVS_TEXTURED, eGS_PosNormTex);
+		mTotalForce = { 0, 0, 0 };
+		mAcceleration = { 0, 0, 0 };
+		mShape = new RenderShape("../Resources/Controller.obj", true, ePS_TEXTURED, eVS_TEXTURED, eGS_PosNormTex);
 		mShape->GetContext().mRasterState = eRS_WIREFRAME;
+	}
+	void ControllerCollider::Update()
+	{
+			if (Settings::GetInstance().GetBool("ShowColliders") || mShowCol) {
+				visible = true;
+				if (mNode == nullptr) {
+					mShape->AddTexture("../Resources/red.png", eTEX_DIFFUSE);
+					if (!mShowCol)
+						mNode = Renderer::Instance()->AddOpaqueNode(*mShape);
+					else
+						mNode = Renderer::Instance()->AddTopmostNode(*mShape);
+				}
+				matrix4 pos = GetTransform().GetMatrix();
+				mNode->data = pos;
+			} else if (visible) {
+				visible = false;
+				memset(&mNode->data, 0, sizeof(matrix4));
+			}
+
 	}
 
 }

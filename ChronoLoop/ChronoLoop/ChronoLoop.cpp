@@ -24,10 +24,10 @@
 #include "Actions/CCElasticAABBtoAABB.h"
 #include "Actions/CCElasticAABBToSphere.h"
 #include "Actions/TimeManipulation.h"
+#include "Actions/CCAnimationController.h"
 #include "Actions/HeadsetFollow.hpp"
 #include "Actions\CodeComponent.hpp"
 #include "Actions/CCButtonPress.h"
-#include "Actions\CCEnterLevel.h"
 #include "Actions/MainMenuBT.h"
 #include "Core/Level.h"
 #include "Common/Logger.h"
@@ -45,6 +45,7 @@ using namespace Epoch;
 #define MAINMENU 0
 #define CONSOLE_OVERRIDE 1
 #define FIXED_UPDATE_INTERVAL (1 / 180.0f)
+#define RENDER_INTERVAL (1 / 90.0f)
 
 HWND hwnd;
 LPCTSTR WndClassName = L"ChronoWindow";
@@ -66,16 +67,15 @@ typedef __w64 unsigned int AudioEvent;			///< Integer (unsigned) type for pointe
 
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed);
 std::chrono::steady_clock::time_point lastTime = std::chrono::steady_clock::now();
-static float timeFrame = 0.0f;
+static float renderDelta = 0.0f;
 static float deltaTime, fixedTime;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void Update();
 void UpdateTime();
-void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftController, BaseObject* RightController);
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(133054);
+	//_CrtSetBreakAlloc(48272); // 
 	if (!InitializeWindow(hInstance, nCmdShow, 1366, 720, true)) {
 		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
 		return 2;
@@ -98,22 +98,33 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 	}
 
 	Microsoft::WRL::ComPtr<ID3D11Device> renderingDevice = Renderer::Instance()->GetDevice();
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> renderingContext = Renderer::Instance()->GetContext();
 
 	// Update everything
 	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count());
+	srand((unsigned int)time(NULL));
 	Update();
 
+	// Close the window so we can clean up.
+	DestroyWindow(Renderer::Instance()->GetWindow());
 
 
 	// Cleanup
 	ShutdownSystems();
 	vr::VR_Shutdown();
+	vrsys = nullptr;
+	renderingContext->Flush();
+	renderingContext = nullptr;
 
 	for (int i = 0; i < 40; ++i) {
-		SystemLogger::Warn() << "THE CONSOLE HAS BEEN DETATCHED. IF THIS WINDOW IS STILL OPEN, IT IS OWNED BY THE STEAMVR SERVER. CLOSING THIS WILL CAUSE ISSUES WITH STEAMVR." << std::endl;
+		SystemLogger::Warn() << "THE CONSOLE HAS BEEN DETATCHED, AND IS NOW OWNED BY THE STEAMVR SERVER. DO NOT CLOSE IT." << std::endl;
 	}
 	SystemLogger::DestroyInstance();
-	vrsys = nullptr;
+#if _DEBUG || CONSOLE_OVERRIDE
+	FreeConsole();
+#endif
+
+
 
 #if _DEBUG
 	// In debug mode, dump any remaining live DirectX objects. This list should be hopefully small at this point.
@@ -126,10 +137,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 		OutputDebugStringA("\n\n\n");
 	}
 #endif
-
-#if _DEBUG || CONSOLE_OVERRIDE
-	FreeConsole();
-#endif
+	renderingDevice.Get()->Release();
 
 	return 0;
 }
@@ -158,58 +166,6 @@ void Update() {
 	AudioWrapper::GetInstance().LoadSoundBank(_aSB);
 	AudioWrapper::GetInstance().LoadSoundBank(_mainS);
 	AudioWrapper::GetInstance().LoadSoundBank(_sbpkg1);
-	
-	// new BaseObject("Controller", identity);
-
-	//BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("RController", identity);// new BaseObject("Controller", identity);
-	//MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
-	//MeshComponent *rightRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
-	//rightRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
-	//mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
-	//TeleportAction *ta = new TeleportAction(eControllerType_Primary);
-	//TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
-	//ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
-	//RightController->AddComponent(mc);
-	//RightController->AddComponent(rightRaycaster);
-	//RightController->AddComponent(ta);
-	//RightController->AddComponent(rightConCol);
-	//RightController->AddComponent(tm);
-	//RightController->AddComponent(ambient);
-	//ambient->Play();
-	//BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
-	//((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
-	//RightController->AddComponent(pickup);
-	//TimeManager::Instance()->AddObjectToTimeline(RightController);
-	//
-	////pat added
-	//BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("LController", identity); //new BaseObject("Controller2", identity);
-	//MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
-	//MeshComponent *leftRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
-	//leftRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
-	//mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
-	//TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
-	//TimeManipulation* tm2 = new TimeManipulation(eControllerType_Secondary);
-	//ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
-	//LeftController->AddComponent(leftConCol);
-	//LeftController->AddComponent(leftRaycaster);
-	//LeftController->AddComponent(mc2);
-	//LeftController->AddComponent(ta2);
-	//LeftController->AddComponent(tm2);
-	//BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
-	//((BoxSnapToControllerAction*)pickup2)->mControllerRole = eControllerType_Secondary;
-	//LeftController->AddComponent(pickup2);
-	//TimeManager::Instance()->AddObjectToTimeline(LeftController);
-	//
-	//
-	//BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", transform); //new BaseObject("headset", transform);
-	//MeshComponent *visibleMesh2 = new MeshComponent("../Resources/Cube.obj");
-	//visibleMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
-	//visibleMesh2->SetVisible(false);
-	//HeadsetFollow* hfollow = new HeadsetFollow();
-	//headset->AddComponent(hfollow);
-	//headset->AddComponent(visibleMesh2);
-	//headset->AddComponent(ears);
-	//TimeManager::Instance()->AddObjectToTimeline(headset);
 
 
 	Transform identity, transform;
@@ -219,7 +175,7 @@ void Update() {
 	rightRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
 	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 	MainMenuBT *bt = new MainMenuBT(eControllerType_Primary);
-	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
+	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
 	RightController->AddComponent(mc);
 	RightController->AddComponent(rightRaycaster);
 	RightController->AddComponent(bt);
@@ -232,7 +188,7 @@ void Update() {
 	leftRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
 	mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 	MainMenuBT *bt2 = new MainMenuBT(eControllerType_Secondary);
-	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
+	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 	LeftController->AddComponent(leftConCol);
 	LeftController->AddComponent(leftRaycaster);
 	LeftController->AddComponent(mc2);
@@ -244,18 +200,19 @@ void Update() {
 	headset->AddComponent(hfollow);
 	TimeManager::Instance()->AddObjectToTimeline(headset);
 
+
 	//Level 1 door////////////////////////////////////////////////////////////////////////
 	Particle* p1 = &Particle::Init();
 	p1->SetPos(vec3f(0, 0, 0));
 	p1->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
 	p1->SetLife(550);
 	p1->SetSize(.35f, .15f);
-	ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.611548f, 1));
+	ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054f, 1));
 	emit11->SetParticle(p1);
 	emit11->SetTexture("../Resources/BasicRectP.png");
 	((TeleportEffect*)emit11)->y1 = 8;
 	((TeleportEffect*)emit11)->y2 = 12;
-	((TeleportEffect*)emit11)->SetPosBounds(vec3f(-.37f, 0, 0), vec3f(.37f, 1, 0));
+	((TeleportEffect*)emit11)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
 	((TeleportEffect*)emit11)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 	ParticleSystem::Instance()->AddEmitter(emit11);
 	emit11->FIRE();
@@ -265,12 +222,12 @@ void Update() {
 	p1->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
 	p1->SetLife(550);
 	p1->SetSize(.15f, .05f);
-	ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.611548f, 1));
+	ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054f, 1));
 	emit12->SetTexture("../Resources/BasicCircleP.png");
 	emit12->SetParticle(p1);
 	((TeleportEffect*)emit12)->y1 = 1;
 	((TeleportEffect*)emit12)->y2 = 5;
-	((TeleportEffect*)emit12)->SetPosBounds(vec3f(-.37f, 0, 0), vec3f(.37f, 1, 0));
+	((TeleportEffect*)emit12)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
 	((TeleportEffect*)emit12)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 	ParticleSystem::Instance()->AddEmitter(emit12);
 	emit12->FIRE();
@@ -282,7 +239,7 @@ void Update() {
 	p2->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
 	p2->SetLife(500);
 	p2->SetSize(.35f, .15f);
-	ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(-2.61, -10, 0, 1));
+	ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(-2.82f, -10, 0, 1));
 	emit21->SetParticle(p2);
 	emit21->SetTexture("../Resources/BasicRectP.png");
 	((TeleportEffect*)emit21)->y1 = 8;
@@ -297,7 +254,7 @@ void Update() {
 	p2->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
 	p2->SetLife(500);
 	p2->SetSize(.15f, .05f);
-	ParticleEmitter* emit22 = new TeleportEffect(-1, 150, 2, vec4f(-2.61, -10, 0, 1));
+	ParticleEmitter* emit22 = new TeleportEffect(-1, 150, 2, vec4f(-2.82f, -10, 0, 1));
 	emit22->SetTexture("../Resources/BasicCircleP.png");
 	emit22->SetParticle(p2);
 	((TeleportEffect*)emit22)->y1 = 1;
@@ -313,12 +270,12 @@ void Update() {
 	exit->SetPos(vec3f(0, 0, 0));
 	exit->SetColors(vec3f(0, 0, 1), vec3f(0, .5f, .5f));
 	exit->SetLife(500);
-	exit->SetSize(.35f, .15f);
-	ParticleEmitter* exitEmit = new TeleportEffect(-1, 150, 2, vec4f(-3.918808f, 1.5f, 0, 1));
+	exit->SetSize(.15f, .05f);
+	ParticleEmitter* exitEmit = new ParticleEmitter(-1, 150, 2, vec4f(-3.918808f, 1.5f, 0, 1));
 	exitEmit->SetParticle(exit);
 	exitEmit->SetTexture("../Resources/BasicRectP.png");
-	((ParticleEmitter*)exitEmit)->SetPosBounds(vec3f(-.25f, -.25f, -.25f), vec3f(.25f, .25f, .25f));
-	((ParticleEmitter*)exitEmit)->SetVelBounds(vec3f(.25f, .25f, .25f), vec3f(.5f, .5f, .5f));
+	((ParticleEmitter*)exitEmit)->SetPosBounds(vec3f(-.5f, -.5f, -.5f), vec3f(.5f, .5f, .5f));
+	((ParticleEmitter*)exitEmit)->SetVelBounds(vec3f(-.5f, -.5f, -.5f), vec3f(.5f, .5f, .5f));
 	ParticleSystem::Instance()->AddEmitter(exitEmit);
 	exitEmit->FIRE();
 	
@@ -326,12 +283,12 @@ void Update() {
 	exit->SetPos(vec3f(0, 0, 0));
 	exit->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
 	exit->SetLife(500);
-	exit->SetSize(.15f, .05f);
-	ParticleEmitter* exitEmit2 = new TeleportEffect(-1, 150, 2, vec4f(-3.918808f, 1.5f, 0, 1));
+	exit->SetSize(.1f, .05f);
+	ParticleEmitter* exitEmit2 = new ParticleEmitter(-1, 150, 2, vec4f(-3.918808f, 1.5f, 0, 1));
 	exitEmit2->SetTexture("../Resources/BasicCircleP.png");
 	exitEmit2->SetParticle(exit);
-	((ParticleEmitter*)exitEmit2)->SetPosBounds(vec3f(-.25f, -.25f, -.25f), vec3f(1, 1, 1));
-	((ParticleEmitter*)exitEmit2)->SetVelBounds(vec3f(.25f, .25f, .25f), vec3f(5, 5, 5));
+	((ParticleEmitter*)exitEmit2)->SetPosBounds(vec3f(-.5f, -.5f, -.5f), vec3f(.5f, .5f, .5f));
+	((ParticleEmitter*)exitEmit2)->SetVelBounds(vec3f(-.5f, -.5f, -.5f), vec3f(.5f, .5f, .5f));
 	ParticleSystem::Instance()->AddEmitter(exitEmit2);
 	exitEmit2->FIRE();
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -341,13 +298,13 @@ void Update() {
 	start->SetPos(vec3f(0, 0, 0));
 	start->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));
 	start->SetLife(500);
-	start->SetSize(.35f, .15f);
-	ParticleEmitter* startEmit = new TeleportEffect(-1, 150, 2, vec4f(0, .04, 3.918808f, 1));
+	start->SetSize(.15f, .05f);
+	ParticleEmitter* startEmit = new TeleportEffect(-1, 150, 2, vec4f(0, .04f, 3.918808f, 1));
 	startEmit->SetParticle(start);
 	startEmit->SetTexture("../Resources/BasicRectP.png");
 	((TeleportEffect*)startEmit)->y1 = 8;
 	((TeleportEffect*)startEmit)->y2 = 12;
-	((TeleportEffect*)startEmit)->SetPosBounds(vec3f(-.5f, 0, -.5f), vec3f(.5f, 1, .5f));
+	((TeleportEffect*)startEmit)->SetPosBounds(vec3f(-.75f, 0, -.5f), vec3f(.75f, 1, .5f));
 	((TeleportEffect*)startEmit)->SetVelBounds(vec3f(.5f, 1, .5f), vec3f(.5f, 5, .5f));
 	ParticleSystem::Instance()->AddEmitter(startEmit);
 	startEmit->FIRE();
@@ -357,17 +314,73 @@ void Update() {
 	start->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
 	start->SetLife(500);
 	start->SetSize(.15f, .05f);
-	ParticleEmitter* startEmit2 = new TeleportEffect(-1, 150, 2, vec4f(0, .04, 3.918808f, 1));
+	ParticleEmitter* startEmit2 = new TeleportEffect(-1, 150, 2, vec4f(0, .04f, 3.918808f, 1));
 	startEmit2->SetTexture("../Resources/BasicCircleP.png");
 	startEmit2->SetParticle(start);
 	((TeleportEffect*)startEmit2)->y1 = 1;
 	((TeleportEffect*)startEmit2)->y2 = 5;
-	((TeleportEffect*)startEmit2)->SetPosBounds(vec3f(-.5f, 0, -.5f), vec3f(.5f, 1, .5f));
+	((TeleportEffect*)startEmit2)->SetPosBounds(vec3f(-.75f, 0, -.5f), vec3f(.75f, 1, .5f));
 	((TeleportEffect*)startEmit2)->SetVelBounds(vec3f(.5f, 1, .5f), vec3f(.5f, 5, .5f));
 	ParticleSystem::Instance()->AddEmitter(startEmit2);
 	startEmit2->FIRE();
 	//////////////////////////////////////////////////////////////////////////////////////
 
+	//Level 3 door////////////////////////////////////////////////////////////////////////
+	Particle* lvl3 = &Particle::Init();
+	lvl3->SetPos(vec3f(0, 0, 0));
+	lvl3->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
+	lvl3->SetLife(500);
+	lvl3->SetSize(.35f, .15f);
+	ParticleEmitter* emitlvl3 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, -2.82f, 1));
+	emitlvl3->SetParticle(lvl3);
+	emitlvl3->SetTexture("../Resources/BasicRectP.png");
+	((TeleportEffect*)emitlvl3)->y1 = 8;
+	((TeleportEffect*)emitlvl3)->y2 = 12;
+	((TeleportEffect*)emitlvl3)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
+	((TeleportEffect*)emitlvl3)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+	ParticleSystem::Instance()->AddEmitter(emitlvl3);
+	emitlvl3->FIRE();
+
+	lvl3 = &Particle::Init();
+	lvl3->SetPos(vec3f(0, 0, 0));
+	lvl3->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
+	lvl3->SetLife(500);
+	lvl3->SetSize(.15f, .05f);
+	ParticleEmitter* emit2lvl3 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, -2.82f, 1));
+	emit2lvl3->SetTexture("../Resources/BasicCircleP.png");
+	emit2lvl3->SetParticle(lvl3);
+	((TeleportEffect*)emit2lvl3)->y1 = 1;
+	((TeleportEffect*)emit2lvl3)->y2 = 5;
+	((TeleportEffect*)emit2lvl3)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
+	((TeleportEffect*)emit2lvl3)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+	ParticleSystem::Instance()->AddEmitter(emit2lvl3);
+	emit2lvl3->FIRE();
+	//////////////////////////////////////////////////////////////////////////////////////
+
+	//Test Animate Quad///////////////////////////////////////////////////////////////////
+	//Transform OneBack;
+	//OneBack.SetMatrix(matrix4::CreateTranslation(0, 1, -3));
+	//BaseObject *Forcefield = Pool::Instance()->iGetObject()->Reset("ForceField Quad", OneBack);
+	//MeshComponent *forcefieldMesh = new MeshComponent("../Resources/AnimationPlane1x1.obj", 0.25f);
+	//forcefieldMesh->AddTexture("../Resources/ForcefieldHex gray.png", eTEX_DIFFUSE);
+	//forcefieldMesh->SetGeometryShader(eGS_PosNormTex_AnimQuad);
+	//forcefieldMesh->SetTopmost(true);
+	//Forcefield->AddComponent(forcefieldMesh);
+	//Forcefield->AddComponent(new CCAnimationController(8, 6, 48, 1.0f / 24.0f));
+	//////////////////////////////////////////////////////////////////////////////////////
+
+	// Test Gamma Correction /////////////////////////////////////////////////////////////
+	/*Transform gammaform;
+	gammaform.SetMatrix(matrix4::CreateTranslation(0, 1, 0));
+	BaseObject *GammaObject = Pool::Instance()->iGetObject()->Reset("ForceField Quad", gammaform);
+	MeshComponent *GammaMesh = new MeshComponent("../Resources/AnimationPlane1x1.obj", 0.25f);
+	GammaMesh->AddTexture("../Resources/grey.png", eTEX_DIFFUSE);
+	GammaMesh->SetPixelShader(ePS_PURETEXTURE);
+	GammaObject->AddComponent(GammaMesh);*/
+	//////////////////////////////////////////////////////////////////////////////////////
+
+
+	/// Raycast debug cube
 	//Transform cubeScale;
 	//cubeScale.SetMatrix(matrix4::CreateScale(0.01f, 0.01f, 0.01f));
 	//BaseObject* mmCube = Pool::Instance()->iGetObject()->Reset("mmCube", cubeScale);// new BaseObject("walls", PlaneTransform);
@@ -385,14 +398,14 @@ void Update() {
 	l2->Type = 4;
 	l2->Color = vec3f(0, 0, 1);
 	l2->ConeDirection = vec3f(0, -1, 0);
-	l2->Position = vec3f(3.972854, 5, 0);
+	l2->Position = vec3f(3.972854f, 5, 0);
 	l2->ConeRatio = .9f;
 
 	Light* l3 = new Light();
 	l3->Type = 4;
 	l3->Color = vec3f(0, 1, 0);
 	l3->ConeDirection = vec3f(0, -1, 0);
-	l3->Position = vec3f(0, 5, -3.872531);
+	l3->Position = vec3f(0, 5, -3.872531f);
 	l3->ConeRatio = .9f;
 
 	Renderer::Instance()->SetLight(l1, 0);
@@ -404,14 +417,13 @@ void Update() {
 
 	Level* mainMenu;
 
-	while (LevelManager::GetInstance().LoadLevelAsync("../Resources/mainMenu.xml", &mainMenu) != Epoch::LM::LevelStatus::Success) {}
-	//while (LevelManager::GetInstance().LoadLevelAsync("../Resources/collider.xml", &L1) != Epoch::LM::LevelStatus::Success) {}
+	while (LevelManager::GetInstance().LoadLevelAsync("../Resources/MainMenu.elf", &mainMenu) != Epoch::LM::LevelStatus::Success) {}
+
 	mainMenu->AssignPlayerControls(headset, LeftController, RightController);
 	mainMenu->AddObject(RightController);
 	mainMenu->AddObject(headset);
 	mainMenu->AddObject(LeftController);
-	//mainMenu->AddObject(mmCube);
-	//LevelManager::GetInstance().LoadLevelAsync("../Resources/LEVEL1/collider.xml", &L1);
+	//mainMenu->AddObject(GammaObject);
 	auto& levelObjects = mainMenu->GetLevelObjects();
 	for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it)
 	{
@@ -424,41 +436,6 @@ void Update() {
 	LevelManager::GetInstance().RequestLevelChange(mainMenu);
 	mainMenu->CallStart();
 
-	//ParticleEmitter * emitt = new ParticleEmitter(-1, 2000, 20, vec4f());
-	//emitt->SetTexture("../Resources/BasicCircleP.png");
-	//emitt->SetParticle(new Particle(500, .25, .15, vec4f(), vec4f(0, 0, 0, 0), vec4f(1, 1, 1, 1)));
-	//ParticleSystem::Instance()->AddEmitter(emitt);
-
-	//// Test for TextureManager::iAddTexture2D. Works nicely!
-	//D3D11_TEXTURE2D_DESC AddedTextureDesc;
-	//AddedTextureDesc.Width = 800;
-	//AddedTextureDesc.Height = 600;
-	//AddedTextureDesc.MipLevels = 1;
-	//AddedTextureDesc.ArraySize = 1;
-	//AddedTextureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	//AddedTextureDesc.SampleDesc.Count = 1;
-	//AddedTextureDesc.SampleDesc.Quality = 0;
-	//AddedTextureDesc.Usage = D3D11_USAGE_DEFAULT;
-	//AddedTextureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-	//AddedTextureDesc.CPUAccessFlags = 0;
-	//AddedTextureDesc.MiscFlags = 0;
-	//ID3D11Texture2D *AddedTex;
-	//(*Renderer::Instance()->iGetDevice())->CreateTexture2D(&AddedTextureDesc, nullptr, &AddedTex);
-	//std::string AddedTextureName = "Bootleg";
-	//TextureManager::Instance()->iAddTexture2D(AddedTextureName, AddedTex, nullptr);
-	//planeObj->AddTexture(AddedTextureName.c_str(), eTEX_CUSTOM1);
-
-	//*////////////////////////////////////////////////////////////////////
-
-	/*ParticleEmitter * spark = new Sparks(-1, 10, 10, vec3f(0,.25,-2));
-	Particle* sp = &Particle::Init();
-	sp->SetColors(vec3f(1,1,1), vec3f(1,.5,0));
-	sp->SetLife(100);
-	sp->SetSize(.025, .025);
-	spark->SetParticle(sp);
-	spark->SetTexture("../Resources/BasicCircleP.png");
-	ParticleSystem::Instance()->AddEmitter(spark);
-	spark->FIRE();*/
 
 	if (VREnabled) {
 		VRInputManager::GetInstance().Update();
@@ -466,6 +443,7 @@ void Update() {
 	
 	UpdateTime();
 	fixedTime = 0;
+	renderDelta = RENDER_INTERVAL;
 	while (LevelManager::GetInstance().GetCurrentLevel()->ChronoLoop) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			// Handle windows message.
@@ -479,34 +457,18 @@ void Update() {
 			if (GetAsyncKeyState(VK_ESCAPE) && GetActiveWindow() == Renderer::Instance()->GetWindow()) {
 				break;
 			}
-			//Particle Testing
-			if (GetAsyncKeyState(VK_TAB) & 0x1)
-			{
-				Particle * p = &Particle::Init();
-				p->SetColors(vec4f(1, 1, 1, 1), vec4f());
-				p->SetLife((rand()% 250) + 250);
-				p->SetSize(.25f, .15f);
-				vec3f EPos = vec3f((rand() % 10) - 5,rand() % 5, (rand() % 10) - 5);
-				ParticleEmitter *emit = new ParticleEmitter(-1, 200, 20, EPos);
-				emit->SetParticle(p);
-				emit->SetTexture("../Resources/BasicCircleP.png");
-				ParticleSystem::Instance()->AddEmitter(emit);
-				emit->FIRE();
-				//AudioWrapper::GetInstance().MakeEventAtListener(AK::EVENTS::PLAY_A_TIMELAPSE);
-			}
-			if (GetAsyncKeyState('P'))
-			{
-				AudioWrapper::GetInstance().STOP();
-				ParticleSystem::Instance()->Clear();
-			}
 
 			AudioWrapper::GetInstance().Update();
-			//SystemLogger::GetLog() << "[Debug] Regular Update " << std::endl;
 			UpdateTime();
 			LevelManager::GetInstance().Update();
 			ParticleSystem::Instance()->Update();
 			TimeManager::Instance()->Update(deltaTime);
-			Renderer::Instance()->Render(deltaTime); 
+			if (VREnabled || renderDelta >= RENDER_INTERVAL) {
+				Renderer::Instance()->Render(renderDelta); 
+				renderDelta = 0;
+			} else {
+				renderDelta += deltaTime;
+			}
 			while (fixedTime >= FIXED_UPDATE_INTERVAL) {
 				Physics::Instance()->Update(FIXED_UPDATE_INTERVAL);
 				fixedTime -= FIXED_UPDATE_INTERVAL;
@@ -593,74 +555,3 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 	}
 	return 0;
 }
-
-void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftController , BaseObject* RightController)
-{
-	Listener* ears = new Listener();
-	Emitter* ambient = new AudioEmitter();
-	((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_HUB0);
-	((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_HUB0);
-	((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_HUB0);
-	((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_HUB0);
-	AudioWrapper::GetInstance().AddListener(ears, "Listener");
-	AudioWrapper::GetInstance().AddEmitter(ambient, "ambience");
-
-
-	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
-	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
-	BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
-	((BoxSnapToControllerAction*)pickup)->mControllerRole = eControllerType_Primary;
-	MeshComponent *rightRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
-	rightRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
-	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
-	TeleportAction *ta = new TeleportAction(eControllerType_Primary);
-	TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
-	RightController->AddComponent(mc);
-	RightController->AddComponent(rightConCol);
-	RightController->AddComponent(pickup);
-	RightController->AddComponent(rightRaycaster);
-	RightController->AddComponent(ta);
-	RightController->AddComponent(tm);
-	((AudioEmitter*)ambient)->CallEvent(Emitter::EventType::ePlay);
-	TimeManager::Instance()->AddObjectToTimeline(RightController);
-
-	//Transform identity;
-	//BaseObject *RightTimeIndicator = Pool::Instance()->iGetObject()->Reset("RTimeIndicator", identity);
-	//RightTimeIndicator->SetParent(RightController);
-	//MeshComponent *TimeIndicatorLine = new MeshComponent("../Resources/TimeIndicatorLine.obj");
-	//MeshComponent *TimeIndicator = new MeshComponent("../Resources/TimeIndicator.obj");
-	//TimeIndicatorLine->AddTexture("../Resources/TimeIndicatorLine.png", eTEX_DIFFUSE);
-	//TimeIndicator->AddTexture("../Resources/TimeIndicator.png", eTEX_DIFFUSE);
-	////TimeIndicator->GetTransform().TranslateLocal(0, 0.27277f, -0.25699f); <-- Beaks here don't know why
-	//TimeLineIndicator *tli = new TimeLineIndicator(TimeIndicator, TimeIndicatorLine);
-	//tli->mParent = &RightController->GetTransform().GetMatrix();
-	//RightTimeIndicator->AddComponent(TimeIndicatorLine);
-	//RightTimeIndicator->AddComponent(TimeIndicator);
-	//RightTimeIndicator->AddComponent(tli);
-
-
-	//pat added
-	MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
-	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
-	BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
-	((BoxSnapToControllerAction*)pickup2)->mControllerRole = eControllerType_Secondary;
-	MeshComponent *leftRaycaster = new MeshComponent("../Resources/BootrayCast.obj");
-	leftRaycaster->AddTexture("../Resources/bootray.png", eTEX_DIFFUSE);
-	mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
-	TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
-	LeftController->AddComponent(mc2);
-	LeftController->AddComponent(leftConCol);
-	LeftController->AddComponent(pickup2);
-	LeftController->AddComponent(leftRaycaster);
-	LeftController->AddComponent(ta2);
-	TimeManager::Instance()->AddObjectToTimeline(LeftController);
-
-
-
-	HeadsetFollow* hfollow = new HeadsetFollow();
-	headset->AddComponent(hfollow);
-	headset->AddComponent(ears);
-	headset->AddComponent(ambient);
-	TimeManager::Instance()->AddObjectToTimeline(headset);
-}
-
