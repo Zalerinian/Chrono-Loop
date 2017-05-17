@@ -22,6 +22,8 @@ namespace AK
         static const AkUniqueID PAUSE_LEVEL1AMBIENT = 1773552409U;
         static const AkUniqueID PAUSE_LEVEL2AMBIENT = 3040040780U;
         static const AkUniqueID PAUSE_LEVEL3AMBIENT = 4257110323U;
+        static const AkUniqueID PAUSE_LEVEL4AMBIENT = 4023555214U;
+        static const AkUniqueID PAUSE_LEVEL5AMBIENT = 3627478381U;
         static const AkUniqueID PAUSE_ORBIT_LOOP = 3445986553U;
         static const AkUniqueID PAUSE_TEST1 = 1888362325U;
         static const AkUniqueID PAUSE_TEST2 = 1888362326U;
@@ -34,6 +36,8 @@ namespace AK
         static const AkUniqueID PLAY_LEVEL1AMBIENT = 2333167699U;
         static const AkUniqueID PLAY_LEVEL2AMBIENT = 2962453674U;
         static const AkUniqueID PLAY_LEVEL3AMBIENT = 549593657U;
+        static const AkUniqueID PLAY_LEVEL4AMBIENT = 1459065408U;
+        static const AkUniqueID PLAY_LEVEL5AMBIENT = 4202087383U;
         static const AkUniqueID PLAY_ORBIT_LOOP = 3699510579U;
         static const AkUniqueID PLAY_TEST1 = 3759155919U;
         static const AkUniqueID PLAY_TEST2 = 3759155916U;
@@ -46,6 +50,8 @@ namespace AK
         static const AkUniqueID RESUME_LEVEL1AMBIENT = 2619715208U;
         static const AkUniqueID RESUME_LEVEL2AMBIENT = 3649448405U;
         static const AkUniqueID RESUME_LEVEL3AMBIENT = 1927416214U;
+        static const AkUniqueID RESUME_LEVEL4AMBIENT = 1990929627U;
+        static const AkUniqueID RESUME_LEVEL5AMBIENT = 4055718068U;
         static const AkUniqueID RESUME_ORBIT_LOOP = 1208877918U;
         static const AkUniqueID RESUME_TEST1 = 1235130312U;
         static const AkUniqueID RESUME_TEST2 = 1235130315U;
@@ -63,6 +69,7 @@ namespace AK
         static const AkUniqueID SFX_PLAYERDEATH = 1000127844U;
         static const AkUniqueID SFX_PLING = 650723447U;
         static const AkUniqueID SFX_RESETBOXES = 3299920505U;
+        static const AkUniqueID SFX_RESETLEVEL = 3433651236U;
         static const AkUniqueID SFX_SCI_FI_DOOR_CLOSE = 1503523398U;
         static const AkUniqueID SFX_SCI_FI_DOOR_OPEN = 2920536594U;
         static const AkUniqueID SFX_SHORTCIRUIT = 1687962553U;
@@ -81,6 +88,8 @@ namespace AK
         static const AkUniqueID STOP_LEVEL1AMBIENT = 3157945905U;
         static const AkUniqueID STOP_LEVEL2AMBIENT = 3323973828U;
         static const AkUniqueID STOP_LEVEL3AMBIENT = 1664409707U;
+        static const AkUniqueID STOP_LEVEL4AMBIENT = 995295270U;
+        static const AkUniqueID STOP_LEVEL5AMBIENT = 244518053U;
         static const AkUniqueID STOP_ORBIT_LOOP = 4280461585U;
         static const AkUniqueID STOP_TEST1 = 2011175805U;
         static const AkUniqueID STOP_TEST2 = 2011175806U;
