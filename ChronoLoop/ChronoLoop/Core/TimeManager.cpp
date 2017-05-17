@@ -550,10 +550,11 @@ namespace Epoch {
 	}
 
 	void TimeManager::ResetTimeLineandLevel() {
+		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 		RewindTimeline(0, LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueID(), LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueID(), LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetUniqueID());
-		mTimeline->SetObjectBirthTime(LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueID());
-		mTimeline->SetObjectBirthTime(LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueID());
-		mTimeline->SetObjectBirthTime(LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetUniqueID());
+		mTimeline->SetObjectBirthTime(cLevel->GetLeftController()->GetUniqueID());
+		mTimeline->SetObjectBirthTime(cLevel->GetRightController()->GetUniqueID());
+		mTimeline->SetObjectBirthTime(cLevel->GetHeadset()->GetUniqueID());
 		mTimeline->ResetTimelineAndLevel();
 		for (int i = 0; i < mClones.size(); ++i) {
 			mClones[i]->RemoveAllComponents();
@@ -581,9 +582,12 @@ namespace Epoch {
 		mTimeline->SetSavedSettings();
 		if (VRInputManager::GetInstance().IsVREnabled()) {
 			VRInputManager::GetInstance().GetInputTimeline()->Clear();
-			vec4f start = LevelManager::GetInstance().GetCurrentLevel()->GetStartPos();
+			vec4f start = cLevel->GetStartPos();
 			VRInputManager::GetInstance().GetPlayerPosition()[3].Set(start.x, start.y, start.z, start.w);
 		}
+		AudioEmitter* ambient = (AudioEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0);
+		ambient->CallEvent(Emitter::EventType::eStop);
+		ambient->CallEvent(Emitter::EventType::ePlay);
 		if(Settings::GetInstance().GetInt("CurrentLevel") == 3)
 		{
 			Settings::GetInstance().SetBool("ResetElevator", true);
