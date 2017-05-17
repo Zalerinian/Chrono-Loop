@@ -439,10 +439,10 @@ namespace Epoch
 			pAudio->SetTransform(tempT);
 			tempT.SetMatrix(playerPos.CreateScale(0.3f, 1, 0.3f) * playerPos.CreateTranslation(0.015f, 0.001f, 0.015f));
 			pMisc->SetTransform(tempT);
-			if (test1) {
-				((MeshComponent*)cLevel->GetLeftController()->GetComponentIndexed(Epoch::eCOMPONENT_MESH, 0))->SetTopmost(true);
-				((MeshComponent*)cLevel->GetRightController()->GetComponentIndexed(Epoch::eCOMPONENT_MESH, 0))->SetTopmost(true);
-			}
+			((MeshComponent*)cLevel->GetLeftController()->GetComponentIndexed(Epoch::eCOMPONENT_MESH, 0))->SetTopmost(true);
+			((MeshComponent*)cLevel->GetRightController()->GetComponentIndexed(Epoch::eCOMPONENT_MESH, 0))->SetTopmost(true);
+			((MeshComponent*)cLevel->GetLeftController()->GetComponentIndexed(Epoch::eCOMPONENT_MESH, 1))->SetTopmost(true);
+			((MeshComponent*)cLevel->GetRightController()->GetComponentIndexed(Epoch::eCOMPONENT_MESH, 1))->SetTopmost(true);
 		}
 		virtual void OnDisable()
 		{
@@ -453,11 +453,10 @@ namespace Epoch
 			}
 			PauseMenuisUp = false;
 			Settings::GetInstance().SetBool("PauseMenuUp", PauseMenuisUp);
-			if (test1) {
-				((MeshComponent*)cLevel->GetLeftController()->GetComponentIndexed(Epoch::eCOMPONENT_MESH, 0))->SetTopmost(false);
-				((MeshComponent*)cLevel->GetRightController()->GetComponentIndexed(Epoch::eCOMPONENT_MESH, 0))->SetTopmost(false);
-			}
-			
+			((MeshComponent*)cLevel->GetLeftController()->GetComponentIndexed(Epoch::eCOMPONENT_MESH, 0))->SetTopmost(false);
+			((MeshComponent*)cLevel->GetRightController()->GetComponentIndexed(Epoch::eCOMPONENT_MESH, 0))->SetTopmost(false);
+			((MeshComponent*)cLevel->GetLeftController()->GetComponentIndexed(Epoch::eCOMPONENT_MESH, 1))->SetTopmost(false);
+			((MeshComponent*)cLevel->GetRightController()->GetComponentIndexed(Epoch::eCOMPONENT_MESH, 1))->SetTopmost(false);
 		}
 		void SwitchPanel(MENU_NAME* _activemenu)
 		{
