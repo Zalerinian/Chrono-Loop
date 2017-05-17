@@ -1,5 +1,6 @@
 //#include "stdafx.h"
 #include "KeyboardInput.h"
+#include "../Common/Common.h"
 
 namespace Epoch
 {
@@ -26,6 +27,8 @@ namespace Epoch
 	}
 	void KeyboardInput::CheckKeyboardButtonPress()
 	{
+		return;
+
 		if (GetAsyncKeyState(Enter) & 0x1)
 		{
 
@@ -109,6 +112,38 @@ namespace Epoch
 		}
 #pragma endregion
 
+	}
+
+	void KeyboardInput::OnKeyDown(WPARAM _wp, LPARAM _lp) {
+		if (_wp == 0xC0) {
+			// Tilde
+			CommandConsole::Instance().Toggle();
+			CommandConsole::Instance().ClearCommand();
+			return;
+		}
+		if (!CommandConsole::Instance().willTakeInput()) {
+			return;
+		}
+		if (_wp == 0x08) {
+			// Backspace
+			if (CommandConsole::Instance().willTakeInput() && CommandConsole::Instance().GetCurrentCommmand().length() > 0) {
+				CommandConsole::Instance().RemoveCharacter();
+			}
+			return;
+		}
+		if (_wp < 32) {
+			// If it's not a printable character, leave now
+			return;
+		}
+		wchar_t wide[1];
+		unsigned char kbState[256] = { 0 };
+		GetKeyboardState(kbState);
+		if (_wp >= 65 && _wp <= 90) {
+			kbState[Shift] = 0xFF; // Force shift down on characters
+		}
+		UINT scan = (_lp >> 16) & 0xFF;
+		int ret = ToUnicode(_wp, scan, kbState, wide, 1, 0);
+		CommandConsole::Instance().AddCharacter(*wide);
 	}
 
 }

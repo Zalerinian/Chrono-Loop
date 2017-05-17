@@ -447,7 +447,20 @@ void Update() {
 	while (LevelManager::GetInstance().GetCurrentLevel()->ChronoLoop) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			// Handle windows message.
-			if (msg.message == WM_QUIT) {
+			bool quit = false;
+			switch (msg.message) {
+				case WM_QUIT:
+					quit = true;
+					break;
+				case WM_KEYDOWN:
+					KeyboardInput::Instance().OnKeyDown(msg.wParam, msg.lParam);
+					break;
+				case WM_KEYUP:
+					break;
+				default:
+					break;
+			}
+			if (quit) {
 				break;
 			}
 			TranslateMessage(&msg);
