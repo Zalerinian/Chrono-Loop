@@ -375,7 +375,7 @@ namespace Epoch {
 							vec3f min = position - offset;
 							vec3f max = position + offset;
 							CubeCollider* col = new CubeCollider(obj, movable == 1, trigger == 1, gravity, mass, elasticity, staticFriction, kineticFriction, drag, min, max);
-							col->mPickUpAble = pickupable;
+							col->mPickUpAble = pickupable != 0;
 							obj->AddComponent(col);
 						}
 					}
