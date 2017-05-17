@@ -90,7 +90,7 @@ namespace Epoch {
 		void ClearTimeLine();
 		void ChangeBitsetToSnap(SnapInfo* _destinfo, Component* _curComp);
 		void ChangePlayerBitsetToSnap(SnapInfo * _destinfo, Component* _curComp);
-		bool CheckForDuplicateData(unsigned short _id, BaseObject* _object);
+		bool CheckForDuplicateData(unsigned short _id, BaseObject* _object, unsigned int _frame);
 		//This function removes non-clone objects that were created in the future
 		void CheckforLostObjects(std::vector<BaseObject*>&mClones);
 		void CopySnapInfo(SnapInfo* _src, SnapInfo* _dst);
@@ -123,7 +123,7 @@ namespace Epoch {
 		void SetComponent(SnapComponent* _destComp, BaseObject* _obj, SnapInfo* _destInfo);
 		void SetCurrentGameTimeIndx(int _time) { mCurrentGameTimeIndx = _time; };
 		void SetSavedSettings();
-		void ShowLiveObjectsColliders(bool _show);
+		void ShowLiveObjectsColliders(unsigned int _frame,bool _show);
 		void UpdateCloneInterpolators(unsigned short _cloneid, SnapInfo* _currSnap, unsigned int _currTime);
 		void PrepareAllObjectInterpolators(unsigned int _fromSnapTime, unsigned int _toSnapTime);
 	};

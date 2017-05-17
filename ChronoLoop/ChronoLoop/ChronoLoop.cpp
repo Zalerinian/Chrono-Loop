@@ -45,6 +45,7 @@ using namespace Epoch;
 #define MAINMENU 0
 #define CONSOLE_OVERRIDE 1
 #define FIXED_UPDATE_INTERVAL (1 / 180.0f)
+#define RENDER_INTERVAL (1 / 90.0f)
 
 HWND hwnd;
 LPCTSTR WndClassName = L"ChronoWindow";
@@ -66,7 +67,7 @@ typedef __w64 unsigned int AudioEvent;			///< Integer (unsigned) type for pointe
 
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed);
 std::chrono::steady_clock::time_point lastTime = std::chrono::steady_clock::now();
-static float timeFrame = 0.0f;
+static float renderDelta = 0.0f;
 static float deltaTime, fixedTime;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void Update();
@@ -442,6 +443,7 @@ void Update() {
 	
 	UpdateTime();
 	fixedTime = 0;
+	renderDelta = RENDER_INTERVAL;
 	while (LevelManager::GetInstance().GetCurrentLevel()->ChronoLoop) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			// Handle windows message.
@@ -457,12 +459,16 @@ void Update() {
 			}
 
 			AudioWrapper::GetInstance().Update();
-			//SystemLogger::GetLog() << "[Debug] Regular Update " << std::endl;
 			UpdateTime();
 			LevelManager::GetInstance().Update();
 			ParticleSystem::Instance()->Update();
 			TimeManager::Instance()->Update(deltaTime);
-			Renderer::Instance()->Render(deltaTime); 
+			if (VREnabled || renderDelta >= RENDER_INTERVAL) {
+				Renderer::Instance()->Render(renderDelta); 
+				renderDelta = 0;
+			} else {
+				renderDelta += deltaTime;
+			}
 			while (fixedTime >= FIXED_UPDATE_INTERVAL) {
 				Physics::Instance()->Update(FIXED_UPDATE_INTERVAL);
 				fixedTime -= FIXED_UPDATE_INTERVAL;

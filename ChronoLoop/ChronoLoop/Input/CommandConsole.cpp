@@ -15,7 +15,6 @@ namespace Epoch
 		if (!sInstance)
 		{
 			sInstance = new CommandConsole();
-			sInstance->mInputThread = std::thread(&CommandConsole::InputFunction, sInstance);
 			sInstance->AddCommand(L"/HELP", sInstance->Help);
 			sInstance->AddCommand(L"/FPS", sInstance->ToggleFPS);
 			sInstance->AddCommand(L"/ALL", sInstance->ToggleAll);
@@ -35,10 +34,11 @@ namespace Epoch
 		mTakeInput = false;
 		mFps = 0;
 		mFrameTime = 0.0f;
-		//mInputThread.join();
 	}
+
 	void CommandConsole::Update()
 	{
+		InputFunction();
 		KeyboardInput::Instance().CheckKeyboardButtonPress();
 
 		if (willTakeInput())
@@ -296,21 +296,15 @@ namespace Epoch
 				FPS, *(Draw::Instance().GetScreenBitmap()).get());
 		}
 	}
-	void CommandConsole::InputFunction()
-	{
-		while (!mTerminateThread)
-		{
-			if (mTakeInput && GetAsyncKeyState(VK_RETURN) & 0x1)
-			{
+	void CommandConsole::InputFunction() {
+		if (mTakeInput && GetAsyncKeyState(VK_RETURN) & 0x1) {
 
-				if (mCurCommand.length() == 0)
-					continue;
+			if (mCurCommand.length() == 0)
+				return;
 
-				std::wstring command = mCurCommand.substr(0, mCurCommand.find(L" "));
-				std::wstring item = mCurCommand.substr(mCurCommand.find(L" ") + 1, mCurCommand.length() - 1);
-				bool isCalled = CheckCommand(command, item);
-				//Toggle();
-			}
+			std::wstring command = mCurCommand.substr(0, mCurCommand.find(L" "));
+			std::wstring item = mCurCommand.substr(mCurCommand.find(L" ") + 1, mCurCommand.length() - 1);
+			bool isCalled = CheckCommand(command, item);
 		}
 	}
 
