@@ -153,7 +153,6 @@ void Update() {
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
 
-
 	// TODO: Replace all this with a level to run.
 	///*///////////////////////Using this to test physics//////////////////
 	//_CrtSetBreakAlloc(4390);
@@ -439,7 +438,10 @@ void Update() {
 
 	if (VREnabled) {
 		VRInputManager::GetInstance().Update();
+		CommandConsole::Instance().SetVRBool(true);
 	}
+
+
 	
 	UpdateTime();
 	fixedTime = 0;
@@ -471,6 +473,7 @@ void Update() {
 				break;
 			}
 
+			CommandConsole::Instance().Update();
 			AudioWrapper::GetInstance().Update();
 			UpdateTime();
 			LevelManager::GetInstance().Update();

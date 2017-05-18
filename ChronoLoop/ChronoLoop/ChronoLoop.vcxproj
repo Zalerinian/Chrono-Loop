@@ -306,6 +306,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="PMHubworld.h" />
     <ClInclude Include="PMResume.h" />
     <ClInclude Include="Rendering\Draw2D.h" />
+    <ClInclude Include="Rendering\FrameQuery.h" />
     <ClInclude Include="Rendering\IndexBufferManager.h" />
     <ClInclude Include="Rendering\InputLayoutManager.h" />
     <ClInclude Include="Rendering\Mesh.h" />

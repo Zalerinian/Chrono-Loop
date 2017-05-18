@@ -559,6 +559,9 @@
     <ClInclude Include="Actions\CCPlatformButton.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Rendering\FrameQuery.h">
+      <Filter>Rendering\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
