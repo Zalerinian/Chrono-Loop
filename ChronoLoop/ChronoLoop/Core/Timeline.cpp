@@ -621,6 +621,7 @@ namespace Epoch {
 	void Timeline::ShowLiveObjectsColliders(unsigned int _frame,bool _show)
 	{
 		unsigned int level = Settings::GetInstance().GetInt("CurrentLevel");
+		Level* clevel = LevelManager::GetInstance().GetCurrentLevel();
 		for (auto obj : mLiveObjects)
 		{
 			MeshComponent* mesh = (MeshComponent*)obj.second->GetComponentIndexed(eCOMPONENT_MESH, 0);
@@ -634,7 +635,11 @@ namespace Epoch {
 			bool CheckObjectHighlight = false;
 
 			Component* comp = obj.second->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
-			if (comp)
+			unsigned int id = obj.second->GetUniqueID();
+			unsigned int HeadsetId = obj.second->GetUniqueID();
+			unsigned int Controlelr1Id = clevel->GetLeftController()->GetUniqueID();
+			unsigned int Controller2id = clevel->GetRightController()->GetUniqueID();
+			if (comp && (id != HeadsetId || id !=Controlelr1Id || id!=Controller2id))
 			{
 				CheckObjectHighlight = true;
 			}
