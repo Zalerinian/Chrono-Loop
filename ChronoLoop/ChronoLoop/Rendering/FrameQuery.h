@@ -41,7 +41,7 @@ namespace Epoch {
 		unsigned int index;
 
 	public:
-		inline unsigned int GetSize() {
+		inline size_t GetSize() {
 			return mFrames.size();
 		}
 
