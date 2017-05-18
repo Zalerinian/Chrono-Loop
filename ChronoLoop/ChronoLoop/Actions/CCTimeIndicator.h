@@ -13,7 +13,6 @@ namespace Epoch
 	{
 		vec3f start, end;
 		float totalSnaps, currentSnap, ratio;
-		Interpolator<matrix4> interp;
 		bool once;
 
 		virtual void Start()

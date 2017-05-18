@@ -14,6 +14,7 @@
 #include "../Common/Settings.h"
 #include "../Particles/ParticleSystem.h"
 #include "../Sound/SoundEngine.h"
+#include "../Actions/CCCloneIndicator.h"
 
 namespace Epoch {
 
@@ -230,6 +231,7 @@ namespace Epoch {
 		//USe a copy instead of a pointer so you will still have it after the pair gets deleted
 		Clonepair pair = *GetClonePair(_id1);
 		bool del = false;
+		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 		for (int i = 0; i < mClones.size(); ) {
 			del = false;
 			if (mClones[i]->GetUniqueID() == _id1 || mClones[i]->GetUniqueID() == pair.mOther1 || mClones[i]->GetUniqueID() == pair.mOther2) {
@@ -272,6 +274,24 @@ namespace Epoch {
 						delete mCloneInterpolators[j->first];
 						mCloneInterpolators.erase(mClones[i]->GetUniqueID());
 						break;
+					}
+				}
+				std::list<BaseObject*>children = cLevel->GetTimeManipulator()->GetBaseObject()->GetChildren();
+				for(auto c = children.begin(); c != children.end(); ++c)
+				{
+					std::vector<Component*> comps = (*c)->GetComponents(eCOMPONENT_CODE);
+					for (unsigned int p = 0; p < comps.size(); p++)
+					{
+						if(dynamic_cast<CCCloneIndicator*>(comps[p]))
+						{
+							unsigned int cId = ((CCCloneIndicator*)comps[p])->mId;
+							if(cId == mClones[i]->GetUniqueID())
+							{
+								BaseObject* del = *c;
+								children.remove(*c);
+								Pool::Instance()->iAddObject(del);
+							}
+						}
 					}
 				}
 
@@ -568,6 +588,25 @@ namespace Epoch {
 			for (int k = 0; k < Physics::Instance()->mObjects.size(); ++k) {
 				if (Physics::Instance()->mObjects[k]->GetUniqueID() == mClones[i]->GetUniqueID()) {
 					Physics::Instance()->mObjects.erase(Physics::Instance()->mObjects.begin() + k);
+				}
+			}
+
+			std::list<BaseObject*>children = cLevel->GetTimeManipulator()->GetBaseObject()->GetChildren();
+			for (auto c = children.begin(); c != children.end(); ++c)
+			{
+				std::vector<Component*> comps = (*c)->GetComponents(eCOMPONENT_CODE);
+				for (unsigned int p = 0; p < comps.size(); p++)
+				{
+					if (dynamic_cast<CCCloneIndicator*>(comps[p]))
+					{
+						unsigned int cId = ((CCCloneIndicator*)comps[p])->mId;
+						if (cId == mClones[i]->GetUniqueID())
+						{
+							BaseObject* del = *c;
+							children.remove(*c);
+							Pool::Instance()->iAddObject(del);
+						}
+					}
 				}
 			}
 
