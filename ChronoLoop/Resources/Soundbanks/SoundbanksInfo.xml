@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="11" SoundbankVersion="120">
 	<RootPaths>
-		<ProjectRoot>D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\</ProjectRoot>
-		<SourceFilesRoot>D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\</SourceFilesRoot>
-		<SoundBanksRoot>D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</SoundBanksRoot>
+		<ProjectRoot>D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\</ProjectRoot>
+		<SourceFilesRoot>D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</SoundBanksRoot>
 		<ExternalSourcesInputFile></ExternalSourcesInputFile>
-		<ExternalSourcesOutputRoot>D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
+		<ExternalSourcesOutputRoot>D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
 	</RootPaths>
 	<DialogueEvents/>
 	<StreamedFiles/>
@@ -129,38 +129,25 @@
 				<Event Id="3707190201" Name="Pause_Casual_Level_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Pause_Casual_Level_LOOP"/>
 				<Event Id="3600779026" Name="Pause_FutureTechSound" ObjectPath="\Events\Default Work Unit\SFX_EVENTS\Pause_FutureTechSound"/>
 				<Event Id="1196397114" Name="Pause_Hangar_Escape_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Pause_Hangar_Escape_LOOP"/>
-				<Event Id="4023555214" Name="Pause_Level4Ambient" ObjectPath="\Events\Default Work Unit\Pause_Level4Ambient"/>
-				<Event Id="3627478381" Name="Pause_Level5Ambient" ObjectPath="\Events\Default Work Unit\Pause_Level5Ambient"/>
 				<Event Id="3445986553" Name="Pause_Orbit_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Pause_Orbit_LOOP"/>
 				<Event Id="2042848668" Name="Play_A_Timelapse" ObjectPath="\Events\Default Work Unit\Play_A_Timelapse"/>
 				<Event Id="3005238139" Name="Play_Casual_Level_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Play_Casual_Level_LOOP"/>
 				<Event Id="1604770128" Name="Play_FutureTechSound" ObjectPath="\Events\Default Work Unit\SFX_EVENTS\Play_FutureTechSound"/>
 				<Event Id="996404944" Name="Play_Hangar_Escape_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Play_Hangar_Escape_LOOP"/>
-				<Event Id="1459065408" Name="Play_Level4Ambient" ObjectPath="\Events\Default Work Unit\Play_Level4Ambient"/>
-				<Event Id="4202087383" Name="Play_Level5Ambient" ObjectPath="\Events\Default Work Unit\Play_Level5Ambient"/>
 				<Event Id="3699510579" Name="Play_Orbit_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Play_Orbit_LOOP"/>
 				<Event Id="1121098459" Name="Resume_A_Timelapse" ObjectPath="\Events\Default Work Unit\Resume_A_Timelapse"/>
 				<Event Id="3851757052" Name="Resume_Casual_Level_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Resume_Casual_Level_LOOP"/>
 				<Event Id="3760069047" Name="Resume_FutureTechSound" ObjectPath="\Events\Default Work Unit\SFX_EVENTS\Resume_FutureTechSound"/>
 				<Event Id="595909313" Name="Resume_Hangar_Escape_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Resume_Hangar_Escape_LOOP"/>
-				<Event Id="1990929627" Name="Resume_Level4Ambient" ObjectPath="\Events\Default Work Unit\Resume_Level4Ambient"/>
-				<Event Id="4055718068" Name="Resume_Level5Ambient" ObjectPath="\Events\Default Work Unit\Resume_Level5Ambient"/>
 				<Event Id="1208877918" Name="Resume_Orbit_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Resume_Orbit_LOOP"/>
 				<Event Id="715006247" Name="SFX_MetallicSound" ObjectPath="\Events\Default Work Unit\SFX_EVENTS\SFX_MetallicSound"/>
-				<Event Id="3433651236" Name="SFX_ResetLevel" ObjectPath="\Events\Default Work Unit\SFX_ResetLevel"/>
 				<Event Id="2745027494" Name="Stop_A_Timelapse" ObjectPath="\Events\Default Work Unit\Stop_A_Timelapse"/>
 				<Event Id="831993537" Name="Stop_Casual_Level_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Stop_Casual_Level_LOOP"/>
 				<Event Id="4276321770" Name="Stop_FutureTechSound" ObjectPath="\Events\Default Work Unit\SFX_EVENTS\Stop_FutureTechSound"/>
 				<Event Id="458173698" Name="Stop_Hangar_Escape_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Stop_Hangar_Escape_LOOP"/>
-				<Event Id="995295270" Name="Stop_Level4Ambient" ObjectPath="\Events\Default Work Unit\Stop_Level4Ambient"/>
-				<Event Id="244518053" Name="Stop_Level5Ambient" ObjectPath="\Events\Default Work Unit\Stop_Level5Ambient"/>
 				<Event Id="4280461585" Name="Stop_Orbit_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Stop_Orbit_LOOP"/>
 			</IncludedEvents>
 			<IncludedMemoryFiles>
-				<File Id="62361149" Language="SFX">
-					<ShortName>ResetLevel.wav</ShortName>
-					<Path>SFX\ResetLevel_3AE5877C.wem</Path>
-				</File>
 				<File Id="145064967" Language="SFX">
 					<ShortName>Sci Fi - Starship Sub Amb.wav</ShortName>
 					<Path>SFX\Sci Fi - Starship Sub Amb_3BDAD486.wem</Path>
@@ -173,10 +160,6 @@
 					<ShortName>Metallic Noise 004.wav</ShortName>
 					<Path>SFX\Metallic Noise 004_3AE5877C.wem</Path>
 				</File>
-				<File Id="664880918" Language="SFX">
-					<ShortName>Music-SFX\Level5Ambient.wav</ShortName>
-					<Path>SFX\Music-SFX\Level5Ambient_3BDAD486.wem</Path>
-				</File>
 				<File Id="753352436" Language="SFX">
 					<ShortName>Orbit LOOP.wav</ShortName>
 					<Path>SFX\Orbit LOOP_3BDAD486.wem</Path>
@@ -188,10 +171,6 @@
 				<File Id="883031343" Language="SFX">
 					<ShortName>Hangar Escape LOOP.wav</ShortName>
 					<Path>SFX\Hangar Escape LOOP_3BDAD486.wem</Path>
-				</File>
-				<File Id="1029302798" Language="SFX">
-					<ShortName>Music-SFX\Level4Ambient.wav</ShortName>
-					<Path>SFX\Music-SFX\Level4Ambient_3BDAD486.wem</Path>
 				</File>
 			</IncludedMemoryFiles>
 		</SoundBank>
