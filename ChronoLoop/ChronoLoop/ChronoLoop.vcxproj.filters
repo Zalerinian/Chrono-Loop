@@ -844,6 +844,9 @@
     <ClCompile Include="Actions\BoxSnapToControllerAction.cpp">
       <Filter>Actions</Filter>
     </ClCompile>
+    <ClCompile Include="Rendering\FrameQuery.cpp">
+      <Filter>Rendering\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">

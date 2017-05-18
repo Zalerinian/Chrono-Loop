@@ -463,6 +463,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClCompile Include="PathPlanning.cpp" />
     <ClCompile Include="Physics\Physics.cpp" />
     <ClCompile Include="Rendering\Draw2D.cpp" />
+    <ClCompile Include="Rendering\FrameQuery.cpp" />
     <ClCompile Include="Rendering\IndexBufferManager.cpp" />
     <ClCompile Include="Rendering\InputLayoutManager.cpp" />
     <ClCompile Include="Rendering\Mesh.cpp" />
