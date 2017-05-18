@@ -292,11 +292,13 @@ namespace Epoch {
 					((SFXEmitter*)sound1)->SetEvent(AK::EVENTS::SFX_PLAYERDEATH);
 					AudioWrapper::GetInstance().AddEmitter(sound1, headset->GetName().c_str());
 					headset->AddComponent(sound1);
-
 					AudioWrapper::GetInstance().STOP();
-
 					((AudioEmitter*)ambient)->CallEvent(Emitter::EventType::ePlay);
 
+					Emitter* resetlevelsound = new SFXEmitter();
+					((SFXEmitter*)resetlevelsound)->SetEvent(AK::EVENTS::SFX_RESETLEVEL);
+					RightController->AddComponent(resetlevelsound);
+					AudioWrapper::GetInstance().AddEmitter(resetlevelsound, RightController->GetName().c_str());
 
 					ParticleSystem::Instance()->Clear();
 

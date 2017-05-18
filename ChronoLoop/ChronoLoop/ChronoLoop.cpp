@@ -444,7 +444,7 @@ void Update() {
 	if (VREnabled) {
 		VRInputManager::GetInstance().Update();
 	}
-	
+	short vol = 50;
 	UpdateTime();
 	fixedTime = 0;
 	renderDelta = RENDER_INTERVAL;
@@ -473,6 +473,16 @@ void Update() {
 		else {
 			if (GetAsyncKeyState(VK_ESCAPE) && GetActiveWindow() == Renderer::Instance()->GetWindow()) {
 				break;
+			}
+			if (GetAsyncKeyState(VK_UP))
+			{
+				vol++;
+				AudioWrapper::GetInstance().SetRTCP(AK::GAME_PARAMETERS::AMBIENTVOLUME, vol);
+			}
+			if (GetAsyncKeyState(VK_DOWN))
+			{
+				vol--;
+				AudioWrapper::GetInstance().SetRTCP(AK::GAME_PARAMETERS::AMBIENTVOLUME, vol);
 			}
 
 			AudioWrapper::GetInstance().Update();
