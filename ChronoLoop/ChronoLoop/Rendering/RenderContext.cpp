@@ -39,16 +39,19 @@ namespace Epoch {
 	RenderContext::~RenderContext() {}
 
 	void RenderContext::Apply() {
-		if (mRasterState != eRS_MAX) {
+		RasterState RasterOverride = (RasterState)Settings::GetInstance().GetInt("RasterizerStateOverride");
+		PixelShaderFormat PixelOverride = (PixelShaderFormat)Settings::GetInstance().GetInt("PixelShaderOverride");
+		if (RasterOverride != eRS_MAX) {
+			RasterizerStateManager::Instance()->ApplyState(RasterOverride);
+		} else if (mRasterState != eRS_MAX) {
 			RasterizerStateManager::Instance()->ApplyState(mRasterState);
-		}
-		if (Settings::GetInstance().GetInt("RasterizerStateOverride") != eRS_MAX) {
-			RasterizerStateManager::Instance()->ApplyState((RasterState)Settings::GetInstance().GetInt("RasterizerStateOverride"));
 		}
 		if (mVertexFormat != eVERT_MAX) {
 			InputLayoutManager::Instance().ApplyLayout(mVertexFormat);
 		}
-		if (mPixelShaderFormat != ePS_MAX) {
+		if (PixelOverride != ePS_MAX) {
+			ShaderManager::Instance()->ApplyPShader(PixelOverride);
+		} else if (mPixelShaderFormat != ePS_MAX) {
 			ShaderManager::Instance()->ApplyPShader(mPixelShaderFormat);
 		}
 		if (mVertexShaderFormat != eVS_MAX) {
@@ -81,16 +84,19 @@ namespace Epoch {
 	}
 
 	void RenderContext::Apply(RenderContext & from) {
-		if (mRasterState != eRS_MAX && mRasterState != from.mRasterState) {
+		RasterState RasterOverride = (RasterState)Settings::GetInstance().GetInt("RasterizerStateOverride");
+		PixelShaderFormat PixelOverride = (PixelShaderFormat)Settings::GetInstance().GetInt("PixelShaderOverride");
+		if (RasterOverride != eRS_MAX) {
+			RasterizerStateManager::Instance()->ApplyState(RasterOverride);
+		} else if (mRasterState != eRS_MAX && mRasterState != from.mRasterState) {
 			RasterizerStateManager::Instance()->ApplyState(mRasterState);
-		}
-		if (Settings::GetInstance().GetInt("RasterizerStateOverride") != eRS_MAX) {
-			RasterizerStateManager::Instance()->ApplyState((RasterState)Settings::GetInstance().GetInt("RasterizerStateOverride"));
 		}
 		if (mVertexFormat != eVERT_MAX && mVertexFormat != from.mVertexFormat) {
 			InputLayoutManager::Instance().ApplyLayout(mVertexFormat);
 		}
-		if (mPixelShaderFormat != ePS_MAX && mPixelShaderFormat != from.mPixelShaderFormat) {
+		if (PixelOverride != ePS_MAX) {
+			ShaderManager::Instance()->ApplyPShader(PixelOverride);
+		} else if (mPixelShaderFormat != ePS_MAX && mPixelShaderFormat != from.mPixelShaderFormat) {
 			ShaderManager::Instance()->ApplyPShader(mPixelShaderFormat);
 		}
 		if (mVertexShaderFormat != eVS_MAX && mVertexShaderFormat != from.mVertexShaderFormat) {

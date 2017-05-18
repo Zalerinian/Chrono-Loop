@@ -18,7 +18,7 @@ cbuffer ViewData : register(b0) {
 	EyeData eyes[2];
 }
 
-cbuffer _AnimationData {
+cbuffer _AnimationData : register(b2) {
 	AnimationData animationData[64];
 };
 
@@ -38,6 +38,7 @@ struct GSInput {
 	float4 texCoord : COLOR;
 	float4 wpos : WORLDPOS;
 	float4 shadowPos : SHADOW;
+	float4 tangent : TANGENT;
 	uint IID : CL_IID;
 };
 

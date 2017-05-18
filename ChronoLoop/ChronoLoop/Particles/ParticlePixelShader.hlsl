@@ -1,3 +1,4 @@
+#include "../Rendering/Shaders/Structs.hlsli"
 
 struct GSOutput
 {
@@ -20,8 +21,8 @@ texture2D text2D1 : register(t1);
 texture2D text2D2 : register(t2);
 SamplerState samp : register(s0);
 
-float4 main(GSOutput input) : SV_TARGET
-{
+MRTOutput main(GSOutput input) {
+	MRTOutput output = GetMRTOutput();
     float4 col = text2D0.Sample(samp, float2(input.uv.x + offsetx.x, input.uv.y + offsety.x));
     clip(col.a - .25);
     //col += text2D1.Sample(samp, float2(input.uv.x + offsetx.y, input.uv.y + offsety.y));
@@ -35,5 +36,10 @@ float4 main(GSOutput input) : SV_TARGET
 	
     col *= (input.col.a == 0) ? 1 : input.col;
 
-	return saturate(col);
+	output.diffuse = saturate(col);
+	output.position = input.wpos;
+	output.normal = input.normal;
+	output.superGlow = saturate(col);
+
+	return output;
 }

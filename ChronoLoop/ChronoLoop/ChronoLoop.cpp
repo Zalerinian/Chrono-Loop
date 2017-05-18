@@ -28,7 +28,6 @@
 #include "Actions/HeadsetFollow.hpp"
 #include "Actions\CodeComponent.hpp"
 #include "Actions/CCButtonPress.h"
-#include "Actions\CCEnterLevel.h"
 #include "Actions/MainMenuBT.h"
 #include "Core/Level.h"
 #include "Common/Logger.h"
@@ -46,6 +45,7 @@ using namespace Epoch;
 #define MAINMENU 0
 #define CONSOLE_OVERRIDE 1
 #define FIXED_UPDATE_INTERVAL (1 / 180.0f)
+#define RENDER_INTERVAL (1 / 90.0f)
 
 HWND hwnd;
 LPCTSTR WndClassName = L"ChronoWindow";
@@ -67,16 +67,15 @@ typedef __w64 unsigned int AudioEvent;			///< Integer (unsigned) type for pointe
 
 bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, bool windowed);
 std::chrono::steady_clock::time_point lastTime = std::chrono::steady_clock::now();
-static float timeFrame = 0.0f;
+static float renderDelta = 0.0f;
 static float deltaTime, fixedTime;
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void Update();
 void UpdateTime();
-void InitializeHeadsetAndController(BaseObject* headset, BaseObject* LeftController, BaseObject* RightController);
 
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_CrtSetBreakAlloc(115136);
+	//_CrtSetBreakAlloc(48272); // 
 	if (!InitializeWindow(hInstance, nCmdShow, 1366, 720, true)) {
 		MessageBox(NULL, L"Kablamo.", L"The window broke.", MB_ICONERROR | MB_OK);
 		return 2;
@@ -103,7 +102,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 
 	// Update everything
 	deltaTime = (float)(std::chrono::steady_clock::now().time_since_epoch().count());
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 	Update();
 
 	// Close the window so we can clean up.
@@ -370,6 +369,16 @@ void Update() {
 	//Forcefield->AddComponent(new CCAnimationController(8, 6, 48, 1.0f / 24.0f));
 	//////////////////////////////////////////////////////////////////////////////////////
 
+	// Test Gamma Correction /////////////////////////////////////////////////////////////
+	/*Transform gammaform;
+	gammaform.SetMatrix(matrix4::CreateTranslation(0, 1, 0));
+	BaseObject *GammaObject = Pool::Instance()->iGetObject()->Reset("ForceField Quad", gammaform);
+	MeshComponent *GammaMesh = new MeshComponent("../Resources/AnimationPlane1x1.obj", 0.25f);
+	GammaMesh->AddTexture("../Resources/grey.png", eTEX_DIFFUSE);
+	GammaMesh->SetPixelShader(ePS_PURETEXTURE);
+	GammaObject->AddComponent(GammaMesh);*/
+	//////////////////////////////////////////////////////////////////////////////////////
+
 
 	/// Raycast debug cube
 	//Transform cubeScale;
@@ -410,15 +419,11 @@ void Update() {
 
 	while (LevelManager::GetInstance().LoadLevelAsync("../Resources/MainMenu.elf", &mainMenu) != Epoch::LM::LevelStatus::Success) {}
 
-	//// Binary level loading
-	//mainMenu = new Level();
-	//mainMenu->BinaryLoadLevel("../Resources/Main.elf");
-
 	mainMenu->AssignPlayerControls(headset, LeftController, RightController);
 	mainMenu->AddObject(RightController);
 	mainMenu->AddObject(headset);
 	mainMenu->AddObject(LeftController);
-	//mainMenu->AddObject(Forcefield);
+	//mainMenu->AddObject(GammaObject);
 	auto& levelObjects = mainMenu->GetLevelObjects();
 	for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it)
 	{
@@ -431,12 +436,14 @@ void Update() {
 	LevelManager::GetInstance().RequestLevelChange(mainMenu);
 	mainMenu->CallStart();
 
+
 	if (VREnabled) {
 		VRInputManager::GetInstance().Update();
 	}
-	
+	short vol = 50;
 	UpdateTime();
 	fixedTime = 0;
+	renderDelta = RENDER_INTERVAL;
 	while (LevelManager::GetInstance().GetCurrentLevel()->ChronoLoop) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			// Handle windows message.
@@ -450,14 +457,28 @@ void Update() {
 			if (GetAsyncKeyState(VK_ESCAPE) && GetActiveWindow() == Renderer::Instance()->GetWindow()) {
 				break;
 			}
+			if (GetAsyncKeyState(VK_UP))
+			{
+				vol++;
+				AudioWrapper::GetInstance().SetRTCP(AK::GAME_PARAMETERS::AMBIENTVOLUME, vol);
+			}
+			if (GetAsyncKeyState(VK_DOWN))
+			{
+				vol--;
+				AudioWrapper::GetInstance().SetRTCP(AK::GAME_PARAMETERS::AMBIENTVOLUME, vol);
+			}
 
 			AudioWrapper::GetInstance().Update();
-			//SystemLogger::GetLog() << "[Debug] Regular Update " << std::endl;
 			UpdateTime();
 			LevelManager::GetInstance().Update();
 			ParticleSystem::Instance()->Update();
 			TimeManager::Instance()->Update(deltaTime);
-			Renderer::Instance()->Render(deltaTime); 
+			if (VREnabled || renderDelta >= RENDER_INTERVAL) {
+				Renderer::Instance()->Render(renderDelta); 
+				renderDelta = 0;
+			} else {
+				renderDelta += deltaTime;
+			}
 			while (fixedTime >= FIXED_UPDATE_INTERVAL) {
 				Physics::Instance()->Update(FIXED_UPDATE_INTERVAL);
 				fixedTime -= FIXED_UPDATE_INTERVAL;

@@ -50,7 +50,7 @@ namespace Epoch
 
 
 		D2D1::ColorF wut = { 1,1,1,1 };
-		Font* mainFont = new Font(L"Agency FB", 75, wut);
+		Font mainFont = Font(L"Agency FB", 75, wut);
 
 		float transparentColor[4] = { 0,0,0,0 };
 
@@ -171,7 +171,7 @@ namespace Epoch
 					mcRestartLevel->SetPixelShader(ePS_PURETEXTURE);
 					mcAudio->SetPixelShader(ePS_PURETEXTURE);
 					mcMisc->SetPixelShader(ePS_PURETEXTURE);
-					//Draw in front
+			//Draw in front
 					mcPauseMenuBase->SetTopmost(true);
 					mcMainPanel->SetTopmost(true);
 					mcSettingsPanel->SetTopmost(true);
@@ -191,6 +191,11 @@ namespace Epoch
 		}
 		virtual void Update()
 		{
+			if(Settings::GetInstance().GetBool("DidRealStuffInPauseMenu"))
+			{
+				Settings::GetInstance().SetBool("DidRealStuffInPauseMenu", false);
+				OnDisable();
+			}
 			if ((!PauseMenuisUp && scaleY > 0.0f) || (PauseMenuisUp && scaleX <= 20.0f)) {
 				if ((!PauseMenuisUp && scaleY > 0.0f)) {
 					OnEnable();
@@ -233,11 +238,11 @@ namespace Epoch
 						(D2D1::ColorF::Black, (UINT32)1.0f),
 						Draw::Instance().GetBitmap(texMainPanel.Get()));
 					//Main Panel Text
-					mainFont->mColor = D2D1::ColorF::WhiteSmoke;
-					mainFont->mFontSize = 35;
+					mainFont.mColor = D2D1::ColorF::WhiteSmoke;
+					mainFont.mFontSize = 35;
 					Draw::Instance().DrawTextToBitmap(
 						85.33f, 0, 170.67f, 50.0f,
-						*mainFont, L"Main",
+						mainFont, L"Main",
 						Draw::Instance().GetBitmap(texMainPanel.Get()));
 
 					//Settings Panel Rectangle
@@ -248,12 +253,12 @@ namespace Epoch
 					//Settings Panel Text
 					Draw::Instance().DrawTextToBitmap(
 						80.0f, 0, 176.0f, 50.0f,
-						*mainFont, L"Settings",
+						mainFont, L"Settings",
 						Draw::Instance().GetBitmap(texSettingsPanel.Get()));
 					
 					//Main Panel's Children
-						mainFont->mColor = D2D1::ColorF::WhiteSmoke;
-						mainFont->mFontSize = 75;
+						mainFont.mColor = D2D1::ColorF::WhiteSmoke;
+						mainFont.mFontSize = 75;
 						tempColor = { 0,0,0.9f,0.5f };
 
 						//Resume Option Rectangle 
@@ -264,7 +269,7 @@ namespace Epoch
 						//Resume Option Text
 						Draw::Instance().DrawTextToBitmap(
 							0, 0, 256.0f, 256.0f,
-							*mainFont, L"Resume",
+							mainFont, L"Resume",
 							Draw::Instance().GetBitmap(texResume.Get()));
 
 						//Settings Option Rectangle
@@ -275,7 +280,7 @@ namespace Epoch
 						//Settings Option Text
 						Draw::Instance().DrawTextToBitmap(
 							0, 0, 256.0f, 256.0f,
-							*mainFont, L"Settings",
+							mainFont, L"Settings",
 							Draw::Instance().GetBitmap(texSettings.Get()));
 
 						//Hubworld Option Rectangle 
@@ -286,7 +291,7 @@ namespace Epoch
 						//Hubworld Option Text
 						Draw::Instance().DrawTextToBitmap(
 							0, 0, 256.0f, 256.0f,
-							*mainFont, L"Hubworld",
+							mainFont, L"Hubworld",
 							Draw::Instance().GetBitmap(texHubworld.Get()));
 
 						//Restart Level Option Rectangle 
@@ -297,7 +302,7 @@ namespace Epoch
 						//Restart Level Option Text
 						Draw::Instance().DrawTextToBitmap(
 							0, 0, 256.0f, 256.0f,
-							*mainFont, L"Restart Level",
+							mainFont, L"Restart Level",
 							Draw::Instance().GetBitmap(texRestartLevel.Get()));
 					//Setting Panel's Children
 
@@ -309,7 +314,7 @@ namespace Epoch
 						//Audio Option Text 
 						Draw::Instance().DrawTextToBitmap(
 							0, 0, 256.0f, 256.0f,
-							*mainFont, L"Does Nothing Atm",
+							mainFont, L"Does Nothing Atm",
 							Draw::Instance().GetBitmap(texAudio.Get()));
 						
 						//Back Option Rectangle 
@@ -320,7 +325,7 @@ namespace Epoch
 						//Back Option Text
 						Draw::Instance().DrawTextToBitmap(
 							0, 0, 256.0f, 256.0f,
-							*mainFont, L"Back",
+							mainFont, L"Back",
 							Draw::Instance().GetBitmap(texMisc.Get()));
 
 				if (VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Trigger))

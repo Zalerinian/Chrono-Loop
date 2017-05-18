@@ -7,6 +7,8 @@
 #include "../Objects/Component.h"
 #include "../Actions/CCProgressBar.h"
 #include "../Input/VRInputManager.h"
+#include "../Sound/SoundEngine.h"
+
 
 namespace Epoch
 {
@@ -17,9 +19,10 @@ namespace Epoch
 		std::vector<int>mPrevBoards, mCurrentBoards;
 		std::vector<matrix4>mBoardMatrixs;
 		float scaleUpX, scaleUpY, scaleDownX, scaleDownY;
-		float tempScaleX, tempScaleY, tStart, tEnd;
+		float tempScaleX, tempScaleY;
 		bool scalingDone, boardchange = false, once = true;
 		int currentTut = -1, timeToRewind = 0;
+		unsigned int tStart, tEnd;
 		PSAnimatedMultiscan_Data mScanlineData;
 		CCProgressBar* pb;
 
@@ -75,7 +78,7 @@ namespace Epoch
 
 			//Pause Time Initialize 2
 			Transform transformPauseBoard;
-			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.68f, 1.5f, -3.39));
+			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.68f, 1.5f, -3.39f));
 			transformPauseBoard.SetMatrix(mBoardMatrixs.back());
 			BaseObject* mPauseTimeBoard = new BaseObject("mPauseTimeBoard", transformPauseBoard);
 			MeshComponent* ptm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
@@ -95,7 +98,7 @@ namespace Epoch
 
 			//Rewind Initialize 3
 			Transform transformRewind;
-			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.68f, 1.5f, -3.39));
+			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.68f, 1.5f, -3.39f));
 			transformRewind.SetMatrix(mBoardMatrixs.back());
 			BaseObject* mRewindBoard = new BaseObject("mRewindBoard", transformRewind);
 			MeshComponent* rm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
@@ -119,7 +122,7 @@ namespace Epoch
 
 			//Accept Time Initialize 4
 			Transform transformAcceptTime;
-			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.68f, 1.5f, -3.39));
+			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.68f, 1.5f, -3.39f));
 			transformAcceptTime.SetMatrix(mBoardMatrixs.back());
 			BaseObject* mAcceptBoard = new BaseObject("mAcceptBoard", transformAcceptTime);
 			MeshComponent* am = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
@@ -207,9 +210,10 @@ namespace Epoch
 						tStart = Settings::GetInstance().GetUInt("tut1ButtonPress");
 						tEnd = Settings::GetInstance().GetUInt("tut1FirstPause");
 						timeToRewind = Settings::GetInstance().GetUInt("tut1FirstPause") - Settings::GetInstance().GetUInt("tut1ButtonPress");
+						//SystemLogger::GetLog() << "pb End Progress: " << timeToRewind << std::endl;
 						Settings::GetInstance().SetUInt("TutorialRewind - FinalProgress", timeToRewind);
-						pb->SetFinalProgress(timeToRewind);
-						pb->GetBackground()->GetTransform().SetMatrix(pb->GetBackground()->GetTransform().GetMatrix() * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.68f, 2.2f, -2.86f));
+						pb->SetFinalProgress((float)timeToRewind);
+						pb->GetBackground()->GetTransform().SetMatrix(pb->GetBackground()->GetTransform().GetMatrix() * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.95f, 2.2f, -2.86f));
 						pb->OnEnable();
 						once = false;
 					}
@@ -239,7 +243,8 @@ namespace Epoch
 
 			if (tut == 3)
 			{
-				pb->SetCurProgress(Settings::GetInstance().GetUInt("TutorialRewind - CurProgress"));
+				//SystemLogger::GetLog() << "pb Current Progress: " << Settings::GetInstance().GetUInt("TutorialRewind - CurProgress") << std::endl;
+				pb->SetCurProgress((float)Settings::GetInstance().GetUInt("TutorialRewind - CurProgress"));
 			}
 
 			ScaleUpCurrentBoards();

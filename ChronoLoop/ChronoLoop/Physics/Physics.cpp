@@ -1,5 +1,6 @@
 //#include "stdafx.h"
 #include "Physics.h"
+#include "..\Common\Settings.h"
 #include "..\Objects\BaseObject.h"
 #include "..\Rendering\Mesh.h"
 #include "..\Common\Logger.h"
@@ -7,6 +8,7 @@
 #include "..\Actions\CodeComponent.hpp"
 #include "..\Input\VRInputManager.h"
 #include "..\Core\LevelManager.h"
+#include "../Common/Settings.h"
 
 #define DEBUG_LEVEL1 0
 #define DEBUG_LEVEL2 0
@@ -168,6 +170,26 @@ namespace Epoch
 		return bReturn;
 	}
 
+	bool Physics::Linecast(vec3f& _vert0, vec3f& _vert1, vec3f& _vert2, vec3f& _normal, vec3f& _start, vec3f& _end, vec3f& _hit)
+	{
+		float time;
+		vec3f dir = _end - _start;
+		if (RayToTriangle(_vert0, _vert1, _vert2, _normal, _start, dir, time))
+		{
+
+			vec3f proj = _start + (dir)* time;
+			_hit = proj;
+			proj = proj - _end;
+			float d = proj.Dot(dir);
+
+			if (d < 0)
+				return true;
+			else
+				return false;
+		}
+		return false;
+
+	}
 #pragma endregion
 
 
@@ -701,7 +723,7 @@ namespace Epoch
 		{
 			paused = cLevel->GetTimeManipulator()->isTimePaused();
 		}
-		if (!paused)
+		if (!paused && !Settings::GetInstance().GetBool("PauseMenuUp"))
 		{
 			//SystemLogger::GetLog() << _time << std::endl;
 			Collider* collider = nullptr;
@@ -991,7 +1013,7 @@ namespace Epoch
 										if (otherCol->mIsEnabled)
 										{
 											if (otherCol->mColliderType == Collider::eCOLLIDER_Cube || otherCol->mColliderType == Collider::eCOLLIDER_Controller &&
-												otherCol->mVelocity * ((ButtonCollider*)collider)->mPushNormal < 0)
+												(otherCol->GetPos() - collider->GetPos()) * ((ButtonCollider*)collider)->mPushNormal > 0)
 											{
 												CubeCollider* aabb2 = (CubeCollider*)otherCol;
 												if ((AabbToPlane(((ButtonCollider*)collider)->mLowerBound, *aabb1) == 1) && AABBtoAABB(*aabb1, *aabb2))
@@ -1101,16 +1123,19 @@ namespace Epoch
 
 					if (collider->IsEnabled() && collider->mShouldMove && collider->mColliderType != Collider::eCOLLIDER_Controller)
 					{
-						collider->mDragForce = collider->mVelocity * (-0.5f * collider->mRHO * collider->mVelocity.Magnitude() * collider->mDrag * collider->mArea);
-						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
-						collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
+						if(collider->mVelocity.Magnitude() > .01f || collider->mAcceleration.Magnitude() > .01f /*|| collider->mTotalForce.Magnitude() > .01f*/ || collider->mDragForce.Magnitude() > .01f)
+						{
+							collider->mDragForce = collider->mVelocity * (-0.5f * collider->mRHO * collider->mVelocity.Magnitude() * collider->mDrag * collider->mArea);
+							collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
+							collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
 
-						if (fabs(collider->mForces.x) < 0.01f && fabsf(collider->mForces.y) < 0.01f && fabsf(collider->mForces.z) < 0.01f)
-							collider->mForces = { 0,0,0 };
-						else
-							collider->mForces *= 0.99f;
+							if (fabs(collider->mForces.x) < 0.01f && fabsf(collider->mForces.y) < 0.01f && fabsf(collider->mForces.z) < 0.01f)
+								collider->mForces = { 0,0,0 };
+							else
+								collider->mForces *= 0.99f;
 
-						collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
+							collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
+						}
 					}
 				}//For all colliders of object end
 			}//For all objects end

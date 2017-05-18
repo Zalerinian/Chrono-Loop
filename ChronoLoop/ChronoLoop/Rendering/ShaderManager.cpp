@@ -88,6 +88,36 @@ namespace Epoch {
 			delete[] buffer;
 		}
 
+		if (!FileIO::LoadBytes("PSBloom.cso", &buffer, byteSize)) {
+			SystemLogger::GetError() << "[Error] An error has occurred when trying to read PSBloom.cso. Chances are the file is missing or has been renamed. The shader will be null, and may result in a crash." << std::endl;
+			mPixelShaders[ePS_BLOOM] = std::make_shared<ID3D11PixelShader*>(nullptr);
+		} else {
+			Renderer::Instance()->GetDevice()->CreatePixelShader(buffer, byteSize, nullptr, &ps);
+			SetD3DName(ps, "PSBloom.cso");
+			mPixelShaders[ePS_BLOOM] = std::make_shared<ID3D11PixelShader*>(ps);
+			delete[] buffer;
+		}
+
+		if (!FileIO::LoadBytes("PSCombiner.cso", &buffer, byteSize)) {
+			SystemLogger::GetError() << "[Error] An error has occurred when trying to read PSCombiner.cso. Chances are the file is missing or has been renamed. The shader will be null, and may result in a crash." << std::endl;
+			mPixelShaders[ePS_DEFERRED] = std::make_shared<ID3D11PixelShader*>(nullptr);
+		} else {
+			Renderer::Instance()->GetDevice()->CreatePixelShader(buffer, byteSize, nullptr, &ps);
+			SetD3DName(ps, "PSCombiner.cso");
+			mPixelShaders[ePS_DEFERRED] = std::make_shared<ID3D11PixelShader*>(ps);
+			delete[] buffer;
+		}
+
+		if (!FileIO::LoadBytes("PSSolidColor.cso", &buffer, byteSize)) {
+			SystemLogger::GetError() << "[Error] An error has occurred when trying to read PSSolidColor.cso. Chances are the file is missing or has been renamed. The shader will be null, and may result in a crash." << std::endl;
+			mPixelShaders[ePS_SOLIDCOLOR] = std::make_shared<ID3D11PixelShader*>(nullptr);
+		} else {
+			Renderer::Instance()->GetDevice()->CreatePixelShader(buffer, byteSize, nullptr, &ps);
+			SetD3DName(ps, "PSSolidColor.cso");
+			mPixelShaders[ePS_SOLIDCOLOR] = std::make_shared<ID3D11PixelShader*>(ps);
+			delete[] buffer;
+		}
+
 
 
 
@@ -192,7 +222,7 @@ namespace Epoch {
 		delete sInstance;
 		sInstance = nullptr;
 	}
-
+	 
 	void ShaderManager::ApplyVShader(VertexShaderFormat f) {
 		Renderer::Instance()->GetContext()->VSSetShader(*mVertexShaders[f], nullptr, 0);
 	}

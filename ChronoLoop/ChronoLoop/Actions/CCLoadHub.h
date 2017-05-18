@@ -61,6 +61,12 @@ namespace Epoch
 					lcoms.erase(lcoms.begin());
 					std::vector<Component*>& ecoms = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetComponents(eCOMPONENT_AUDIOEMITTER);
 					ecoms.erase(ecoms.begin());
+
+	
+					ecoms = LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetComponents(eCOMPONENT_AUDIOEMITTER);
+					ecoms.erase(ecoms.begin());
+
+					AudioWrapper::GetInstance().RemoveEmitter((Emitter*)LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0));
 					AudioWrapper::GetInstance().RemoveListener(l);
 					AudioWrapper::GetInstance().RemoveEmitter(e);
 
@@ -118,15 +124,11 @@ namespace Epoch
 					AudioWrapper::GetInstance().AddEmitter(sound, headset->GetName().c_str());
 					headset->AddComponent(sound);
 
+					Emitter* resetlevelsound = new SFXEmitter();
+					((SFXEmitter*)resetlevelsound)->SetEvent(AK::EVENTS::SFX_RESETLEVEL);
+					RightController->AddComponent(resetlevelsound);
+					AudioWrapper::GetInstance().AddEmitter(resetlevelsound, RightController->GetName().c_str());
 
-
-
-					Transform cubeScale;
-					cubeScale.SetMatrix(matrix4::CreateScale(0.01f, 0.01f, 0.01f));
-					BaseObject* mmCube = Pool::Instance()->iGetObject()->Reset("mmCube", cubeScale);// new BaseObject("walls", PlaneTransform);
-					MeshComponent *mmCubeMesh = new MeshComponent("../Resources/Cube.obj");
-					mmCubeMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
-					mmCube->AddComponent(mmCubeMesh);
 
 					Physics::Instance()->mObjects.push_back(RightController);
 					Physics::Instance()->mObjects.push_back(LeftController);

@@ -23,7 +23,7 @@ namespace Epoch {
 		virtual void Start() {
 			mesh = (MeshComponent*)mObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			if (mesh) {
-				mesh->SetData(eCB_GEO, eBufferDataType_AnimatedQuad, eGB_REGISTER1, &mData);
+				mesh->SetData(eCB_GEO, eBufferDataType_AnimatedQuad, eGB_REGISTER2, &mData);
 			}
 		}
 
@@ -37,7 +37,7 @@ namespace Epoch {
 					updated = true;
 				}
 				if (updated) {
-					mesh->UpdateData(eCB_GEO, eGB_REGISTER1, &mData);
+					mesh->UpdateData(eCB_GEO, eGB_REGISTER2, &mData);
 				}
 			} else {
 				mErrorTimer += TimeManager::Instance()->GetDeltaTime();

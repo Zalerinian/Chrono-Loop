@@ -24,6 +24,7 @@ namespace Epoch {
 												 bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane,
 												 vr::IVRSystem* _vrsys) {
 		Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_MAX);
+		Settings::GetInstance().SetInt("PixelShaderOverride", ePS_MAX);
 		Settings::GetInstance().SetBool("LevelIsLoading", false);
 		VRInputManager::Initialize(_vrsys);
 

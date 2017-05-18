@@ -124,7 +124,7 @@ namespace Epoch
 			//Unset gbuffer
 		}
 		cntxt->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		cntxt->IASetInputLayout(InputLayoutManager::Instance().GetInputLayout(VertFormat::eVERT_POSNORMTEX));
+		cntxt->IASetInputLayout(InputLayoutManager::Instance().GetInputLayout(VertFormat::eVERT_POSNORMTANTEX));
 		cntxt->GSSetShader(NULL, NULL, 0);
 		cntxt->VSSetShader(NULL, NULL, 0);
 		cntxt->PSSetShader(NULL, NULL, 0);

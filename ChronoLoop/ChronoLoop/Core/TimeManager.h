@@ -29,7 +29,7 @@ namespace Epoch {
 		float mSnapTweenTime = 0;
 		float mDeltaTime = 0;
 		float mTotalGameTime = 0;
-		unsigned int mLevelTime = 0;
+		unsigned int mLevelTime = 0, noMovementCnt = 0;
 		unsigned int mRewindGettingFaster = 1, mRewindShouldGetFaster = 0;
 		bool mRewindMakeClone = false;
 		bool mShouldUpdateInterpolators = false;
@@ -107,6 +107,7 @@ namespace Epoch {
 		void SetTempCurSnap() { mtempCurSnapFrame = GetCurrentSnapFrame(); };
 		void SetTimelineObjectInterpTime(float _time);
 		void SetupClonePairs(unsigned short _id1, unsigned short _id2, unsigned short _id3);
+		void ShowTimelineColliders(bool _show);
 		void Update(float _delta);
 
 		//Function Pointer / Command Console

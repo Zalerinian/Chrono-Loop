@@ -136,6 +136,9 @@ namespace Epoch {
 		ePS_TRANSPARENT,
 		ePS_TRANSPARENT_SCANLINE,
 		ePS_BLUR,
+		ePS_BLOOM,
+		ePS_DEFERRED,
+		ePS_SOLIDCOLOR,
 		ePS_MAX
 	};
 
@@ -179,9 +182,9 @@ namespace Epoch {
 	enum VertexBufferType {
 		eVB_Instances = 0,
 		eVB_SimInstanceID,
+		eVB_GlobalMatrix,
 		eVB_OFFSET,
-		eVB_REGISTER2 = 0,
-		eVB_REGISTER3,
+		eVB_REGISTER3 = 0,
 		eVB_REGISTER4,
 		eVB_REGISTER5,
 		eVB_REGISTER6,
@@ -194,7 +197,7 @@ namespace Epoch {
 
 
 	enum PixelBufferType {
-		ePB_Lights = 0,
+		ePB_EyePos = 0,
 		ePB_OFFSET,
 		ePB_REGISTER1 = 0,
 		ePB_REGISTER2,
@@ -211,7 +214,7 @@ namespace Epoch {
 	enum GeometryBufferType {
 		eGB_Eyes = 0,
 		eGB_OFFSET,
-		eGB_REGISTER1 = 0,
+		eGB_REGISTER1,
 		eGB_REGISTER2,
 		eGB_REGISTER3,
 		eGB_REGISTER4,

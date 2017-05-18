@@ -12,6 +12,7 @@
 #include "RenderShape.h"
 #include <wrl/client.h>
 #include <mutex>
+#include <bitset>
 
 #define num_lights 3
 
@@ -27,28 +28,45 @@ namespace Epoch {
 		//TODO: Light buffers
 		Light * mLData[num_lights];
 
+		std::bitset<32> mEnabledFeatures;
+
+		enum RendererFeature {
+			eRendererFeature_Glow = 0,
+			eRendererFeature_SuperGlow,
+			eRendererFeature_Bloom,
+			eRendererFeature_MAX
+		};
+
+
+		static void ProcessCommand(void* _console, std::wstring _arguments);
+
+
 		// Instance members
 		// D3D11 Variables
 		Microsoft::WRL::ComPtr<ID3D11Device> mDevice;
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> mContext;
 		Microsoft::WRL::ComPtr<IDXGISwapChain> mChain;
 		Microsoft::WRL::ComPtr<IDXGIFactory1> mFactory;
-		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mMainView, mSceneView, mBloomRTV;
+		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mMainView, mPostProcessRTV, mBloomRTV, mGlowRTV, mSuperGlowRTV;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDSView;
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> mMainViewTexture, mDepthBuffer, mSceneTexture, mBloomTexture;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> mMainViewTexture, mDepthBuffer, mPostProcessTexture, mBloomTexture, mGlowTexture, mSuperGlowTexture;
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> mSamplerState;
-		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> mTransparentState, mOpaqueState;
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mSceneSRV, mBloomSRV;
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> mTransparentState, mOpaqueState, mTopmostState, mMotionStateFindObject, mMotionStateReverseDepth;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mPostProcessSRV, mBloomSRV, mGlowSRV, mSuperGlowSRV;
 		Microsoft::WRL::ComPtr<ID3D11BlendState> mOpaqueBlendState, mTransparentBlendState;
 		D3D11_VIEWPORT mLeftViewport, mRightViewport, mFullViewport;
 		HWND mWindow;
 
 		vr::IVRSystem* mVrSystem;
-		RenderSet mOpaqueSet, mTransparentSet, mTopmostSet;
-		Microsoft::WRL::ComPtr<ID3D11Buffer> mVPBuffer, mPositionBuffer, mSimInstanceBuffer;
+		RenderSet mOpaqueSet, mTransparentSet, mTopmostSet, mMotionSet;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> mVPBuffer, mPositionBuffer, mSimInstanceBuffer, mHeadPosBuffer, mGlobalMatrixBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mLBuffer;
 		bool mUseVsync = false;
 
+		// The G-Buffer
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> mAlbedoTexture, mPositionTexture, mNormalTexture, mSpecularTexture;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mAlbedoSRV, mPositionSRV, mNormalSRV, mSpecularSRV;
+		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mAlbedoRTV, mPositionRTV, mNormalRTV, mSpecularRTV;
 
 		// Blurring variables & Functions
 		enum BlurPingPong {
@@ -83,11 +101,8 @@ namespace Epoch {
 		void RenderBlurStage(BlurStage _s, float _dx, float _dy);
 		void ToggleBlurTextureSet(unsigned int _texturesPerSet, ID3D11RenderTargetView **_rtvs, ID3D11ShaderResourceView **_srvs);
 		void SetBlurTexturesDrawback(unsigned int _texturesPerSet, ID3D11RenderTargetView **_drawbacks, ID3D11ShaderResourceView **_srvs);
-		float bootlegSigma = 1.0f;
-		float bootlegDownsample = 0.5f;
-		bool bootlegBlurEnabled = false;
 
-		RenderShape* mScenePPQuad = nullptr, *mSceneScreenQuad = nullptr;
+		RenderShape* mScenePPQuad = nullptr, *mSceneScreenQuad = nullptr, *mDeferredCombiner = nullptr;
 		RenderContext mCurrentContext;
 
 		std::mutex mRendererLock;
@@ -129,6 +144,9 @@ namespace Epoch {
 		void RenderNoVR(float _delta);
 		void ProcessRenderSet();
 		void RenderScreenQuad();
+		void RenderTransparentObjects();
+
+		void RenderForBloom();
 
 
 		Renderer();
@@ -151,12 +169,15 @@ namespace Epoch {
 		GhostList<matrix4>::GhostNode* AddOpaqueNode(RenderShape& _node);
 		GhostList<matrix4>::GhostNode* AddTransparentNode(RenderShape& _node);
 		GhostList<matrix4>::GhostNode* AddTopmostNode(RenderShape& _node);
+		GhostList<matrix4>::GhostNode* AddMotionNode(RenderShape& _node);
 		void RemoveOpaqueNode(RenderShape& _node);
 		void RemoveTransparentNode(RenderShape& _node);
 		void RemoveTopmostNode(RenderShape& _node);
+		void RemoveMotionNode(RenderShape& _node);
 		void UpdateOpaqueNodeBuffer(RenderShape& _node, ConstantBufferType _t, unsigned int _index);
 		void UpdateTransparentNodeBuffer(RenderShape& _node, ConstantBufferType _t, unsigned int _index);
 		void UpdateTopmostNodeBuffer(RenderShape& _node, ConstantBufferType _t, unsigned int _index);
+		void UpdateMotionNodeBuffer(RenderShape& _node, ConstantBufferType _t, unsigned int _index);
 		void Render(float _deltaTime);
 
 		void ClearRenderSet();

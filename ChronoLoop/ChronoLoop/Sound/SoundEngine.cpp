@@ -272,6 +272,14 @@ namespace Epoch
 
 		return true;
 	}
+
+	bool AudioWrapper::SetRTCP(AkRtpcID _id, AkRtpcValue _val, AkGameObjectID _obj)
+	{
+		if (AK::SoundEngine::SetRTPCValue(_id, _val, _obj) != AK_Success)
+			return true;
+
+		return false;
+	}
 	//------------Soundbank-Stuff---------------------------------------------
 
 	void AudioWrapper::SetBasePath(const wchar_t* _strPath)

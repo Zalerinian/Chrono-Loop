@@ -29,8 +29,8 @@ namespace Epoch
 		{
 			((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mPress = true;
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
-			Block = cLevel->FindObjectWithName("TransparentDoor1");
-			Exit = cLevel->FindObjectWithName("TransparentDoor2");
+			Block = cLevel->FindObjectWithName("EnvTransparentDoor1");
+			Exit = cLevel->FindObjectWithName("EnvTransparentDoor2");
 			blockInterp = TimeManager::Instance()->GetObjectInterpolator(Block->GetUniqueID());
 			exitInterp = TimeManager::Instance()->GetObjectInterpolator(Exit->GetUniqueID());
 
@@ -47,17 +47,18 @@ namespace Epoch
 			mD2Wires = cLevel->FindAllObjectsByPattern("D2Wire");
 
 			//Turn on wires that need to be turned on
-
+			//D1 wires meshes are grey and green
 			for (unsigned int i = 0; i < mD1Wires.size(); i++) {
 				MeshComponent* temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				if (temp) {
-					temp->SetVisible(false);
+					temp->SetVisible(true);
 				}
 				temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
 				if (temp) {
-					temp->SetVisible(true);
+					temp->SetVisible(false);
 				}
 			}
+			//D2 wires meshes are green then grey
 			for (unsigned int i = 0; i < mD2Wires.size(); i++) {
 				MeshComponent* temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				if (temp) {
@@ -71,10 +72,10 @@ namespace Epoch
 		}
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time) {
-			if (!Settings::GetInstance().GetBool("PauseMenuUp")) {
 				if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName().find("Buttonstand")) {
 					colliding = true;
-
+					if (Settings::GetInstance().GetBool("PauseMenuUp"))
+						Settings::GetInstance().SetBool("DidRealStuffInPauseMenu", true);
 					vec3f norm = ((ButtonCollider*)&_col)->mPushNormal;
 					vec3f tForce = norm * (norm * _other.mTotalForce);
 					vec3f vel = norm * (norm * _other.mVelocity);
@@ -111,10 +112,10 @@ namespace Epoch
 							for (unsigned int i = 0; i < mD1Wires.size(); i++) {
 								MeshComponent* temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 								if (temp)
-									temp->SetVisible(true);
+									temp->SetVisible(false);
 								temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
 								if (temp)
-									temp->SetVisible(false);
+									temp->SetVisible(true);
 							}
 							for (unsigned int i = 0; i < mD2Wires.size(); i++) {
 								MeshComponent* temp = (MeshComponent*)mD2Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
@@ -135,7 +136,6 @@ namespace Epoch
 					colliding = false;
 				}
 			}
-		}
 		virtual void Update()
 		{
 			if (!LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->isTimePaused()) {
@@ -169,15 +169,26 @@ namespace Epoch
 			exitInterp->SetActive(true);
 			exitInterp->Prepare(0.69f, exitCube->GetTransform().GetMatrix(), exitstart, exitCube->GetTransform().GetMatrix());
 
+			if (Block->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0) {
+				if (dynamic_cast<AudioEmitter*>(Block->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0)))
+					((AudioEmitter*)Block->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent(Emitter::ePlay);
+			}
+			if (Exit->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0) {
+				if (dynamic_cast<AudioEmitter*>(Exit->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0)))
+					((AudioEmitter*)Exit->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent(Emitter::ePlay);
+			}
+
+
+
 			//Turn on wires that need to be turned on
 			for (unsigned int i = 0; i < mD1Wires.size(); i++) {
 				MeshComponent* temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 0);
 				if (temp) {
-					temp->SetVisible(false);
+					temp->SetVisible(true);
 				}
 				temp = (MeshComponent*)mD1Wires[i]->GetComponentIndexed(eCOMPONENT_MESH, 1);
 				if (temp) {
-					temp->SetVisible(true);
+					temp->SetVisible(false);
 				}
 			}
 			for (unsigned int i = 0; i < mD2Wires.size(); i++) {
