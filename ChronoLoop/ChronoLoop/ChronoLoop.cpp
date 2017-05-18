@@ -153,7 +153,6 @@ void Update() {
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
 
-
 	// TODO: Replace all this with a level to run.
 	///*///////////////////////Using this to test physics//////////////////
 	//_CrtSetBreakAlloc(4390);
@@ -439,15 +438,31 @@ void Update() {
 
 	if (VREnabled) {
 		VRInputManager::GetInstance().Update();
+		CommandConsole::Instance().SetVRBool(true);
 	}
-	short vol = 50;
+
+
+	
 	UpdateTime();
 	fixedTime = 0;
 	renderDelta = RENDER_INTERVAL;
 	while (LevelManager::GetInstance().GetCurrentLevel()->ChronoLoop) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			// Handle windows message.
-			if (msg.message == WM_QUIT) {
+			bool quit = false;
+			switch (msg.message) {
+				case WM_QUIT:
+					quit = true;
+					break;
+				case WM_KEYDOWN:
+					KeyboardInput::Instance().OnKeyDown(msg.wParam, msg.lParam);
+					break;
+				case WM_KEYUP:
+					break;
+				default:
+					break;
+			}
+			if (quit) {
 				break;
 			}
 			TranslateMessage(&msg);
@@ -457,17 +472,8 @@ void Update() {
 			if (GetAsyncKeyState(VK_ESCAPE) && GetActiveWindow() == Renderer::Instance()->GetWindow()) {
 				break;
 			}
-			if (GetAsyncKeyState(VK_UP))
-			{
-				vol++;
-				AudioWrapper::GetInstance().SetRTCP(AK::GAME_PARAMETERS::AMBIENTVOLUME, vol);
-			}
-			if (GetAsyncKeyState(VK_DOWN))
-			{
-				vol--;
-				AudioWrapper::GetInstance().SetRTCP(AK::GAME_PARAMETERS::AMBIENTVOLUME, vol);
-			}
 
+			CommandConsole::Instance().Update();
 			AudioWrapper::GetInstance().Update();
 			UpdateTime();
 			LevelManager::GetInstance().Update();

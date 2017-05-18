@@ -32,7 +32,7 @@ namespace Epoch
 
 
 
-		bool mIsVR;
+		bool mIsVR = true;
 		//SystemLogger mLogger;
 	public:
 		CommandConsole();
@@ -62,7 +62,7 @@ namespace Epoch
 		void Display();
 		void DisplaySet(std::wstring _display) { mCurDisplay = _display; }
 
-
+		void Render();
 
 		void Toggle();
 		//Function Pointer / Console Commands

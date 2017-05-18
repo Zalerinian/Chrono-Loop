@@ -19,7 +19,7 @@ namespace Epoch {
 		}
 	}
 
-	bool Settings::_Settings::GetBool(SettingsKey _key) {
+	bool Settings::_Settings::GetBool(StringKey _key) {
 		mLock.lock();
 		auto it = mBools.find(_key);
 		if (it == mBools.end()) {
@@ -31,7 +31,7 @@ namespace Epoch {
 		}
 	}
 
-	byte Settings::_Settings::GetByte(SettingsKey _key) {
+	unsigned char Settings::_Settings::GetByte(StringKey _key) {
 		mLock.lock();
 		auto it = mBytes.find(_key);
 		if (it != mBytes.end()) {
@@ -39,11 +39,11 @@ namespace Epoch {
 			return it->second;
 		} else {
 			mLock.unlock();
-			return byte();
+			return unsigned char();
 		}
 	}
 
-	unsigned short Settings::_Settings::GetUShort(SettingsKey _key) {
+	unsigned short Settings::_Settings::GetUShort(StringKey _key) {
 		mLock.lock();
 		auto it = mUShorts.find(_key);
 		if (it != mUShorts.end()) {
@@ -55,7 +55,7 @@ namespace Epoch {
 		}
 	}
 
-	short Settings::_Settings::GetShort(SettingsKey _key) {
+	short Settings::_Settings::GetShort(StringKey _key) {
 		mLock.lock();
 		auto it = mShorts.find(_key);
 		if (it != mShorts.end()) {
@@ -67,7 +67,7 @@ namespace Epoch {
 		}
 	}
 
-	float Settings::_Settings::GetFloat(SettingsKey _key) {
+	float Settings::_Settings::GetFloat(StringKey _key) {
 		mLock.lock();
 		auto it = mFloats.find(_key);
 		if (it != mFloats.end()) {
@@ -79,7 +79,7 @@ namespace Epoch {
 		}
 	}
 
-	int Settings::_Settings::GetInt(SettingsKey _key) {
+	int Settings::_Settings::GetInt(StringKey _key) {
 		mLock.lock();
 		auto it = mInts.find(_key);
 		if (it != mInts.end()) {
@@ -91,7 +91,7 @@ namespace Epoch {
 		}
 	}
 
-	unsigned int Settings::_Settings::GetUInt(SettingsKey _key) {
+	unsigned int Settings::_Settings::GetUInt(StringKey _key) {
 		mLock.lock();
 		auto it = mUInts.find(_key);
 		if (it != mUInts.end()) {
@@ -103,7 +103,7 @@ namespace Epoch {
 		}
 	}
 
-	std::string Settings::_Settings::GetString(SettingsKey _key) {
+	std::string Settings::_Settings::GetString(StringKey _key) {
 		mLock.lock();
 		auto it = mStrings.find(_key);
 		if (it != mStrings.end()) {
@@ -115,7 +115,7 @@ namespace Epoch {
 		}
 	}
 
-	void Settings::_Settings::SetBool(SettingsKey _key, bool _v) {
+	void Settings::_Settings::SetBool(StringKey _key, bool _v) {
 		mLock.lock();
 		auto it = mBools.find(_key);
 		if (it != mBools.end()) {
@@ -126,7 +126,7 @@ namespace Epoch {
 		mLock.unlock();
 	}
 
-	void Settings::_Settings::SetByte(SettingsKey _key, byte _v) {
+	void Settings::_Settings::SetByte(StringKey _key, unsigned char _v) {
 		mLock.lock();
 		auto it = mBytes.find(_key);
 		if (it != mBytes.end()) {
@@ -137,7 +137,7 @@ namespace Epoch {
 		mLock.unlock();
 	}
 
-	void Settings::_Settings::SetUShort(SettingsKey _key, unsigned short _v) {
+	void Settings::_Settings::SetUShort(StringKey _key, unsigned short _v) {
 		mLock.lock();
 		auto it = mUShorts.find(_key);
 		if (it != mUShorts.end()) {
@@ -148,7 +148,7 @@ namespace Epoch {
 		mLock.unlock();
 	}
 
-	void Settings::_Settings::SetShort(SettingsKey _key, short _v) {
+	void Settings::_Settings::SetShort(StringKey _key, short _v) {
 		mLock.lock();
 		auto it = mShorts.find(_key);
 		if (it != mShorts.end()) {
@@ -159,7 +159,7 @@ namespace Epoch {
 		mLock.unlock();
 	}
 
-	void Settings::_Settings::SetFloat(SettingsKey _key, float _v) {
+	void Settings::_Settings::SetFloat(StringKey _key, float _v) {
 		mLock.lock();
 		auto it = mFloats.find(_key);
 		if (it != mFloats.end()) {
@@ -170,7 +170,7 @@ namespace Epoch {
 		mLock.unlock();
 	}
 
-	void Settings::_Settings::SetInt(SettingsKey _key, int _v) {
+	void Settings::_Settings::SetInt(StringKey _key, int _v) {
 		mLock.lock();
 		auto it = mInts.find(_key);
 		if (it != mInts.end()) {
@@ -181,7 +181,7 @@ namespace Epoch {
 		mLock.unlock();
 	}
 
-	void Settings::_Settings::SetUInt(SettingsKey _key, unsigned int _v) {
+	void Settings::_Settings::SetUInt(StringKey _key, unsigned int _v) {
 		mLock.lock();
 		auto it = mUInts.find(_key);
 		if (it != mUInts.end()) {
@@ -192,7 +192,7 @@ namespace Epoch {
 		mLock.unlock();
 	}
 
-	void Settings::_Settings::SetString(SettingsKey _key, std::string _v) {
+	void Settings::_Settings::SetString(StringKey _key, std::string _v) {
 		mLock.lock();
 		auto it = mStrings.find(_key);
 		if (it != mStrings.end()) {

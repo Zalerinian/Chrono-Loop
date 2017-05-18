@@ -40,43 +40,6 @@ namespace Epoch
 	{
 		InputFunction();
 		KeyboardInput::Instance().CheckKeyboardButtonPress();
-
-		if (willTakeInput())
-		{
-			Draw::Instance().DrawRectangleToBitmap(0.0f,
-				(*Draw::Instance().GetContext2D())->GetSize().height*(5.0f / 8.0f),
-				(*Draw::Instance().GetContext2D())->GetSize().width*(3.0f / 8.0f),
-				(*Draw::Instance().GetContext2D())->GetSize().height,
-				D2D1::ColorF(D2D1::ColorF::Black, 0.0f),
-				*(Draw::Instance().GetScreenBitmap().get())
-			);
-			Draw::Instance().DrawRectangleToBitmap(0.0f,
-				(*Draw::Instance().GetContext2D())->GetSize().height*(31.0f / 32.0f),
-				(*Draw::Instance().GetContext2D())->GetSize().width*(48.1f / 128.0f),
-				(*Draw::Instance().GetContext2D())->GetSize().height,
-				D2D1::ColorF(D2D1::ColorF::Black, 1.0f),
-				*(Draw::Instance().GetScreenBitmap().get())
-			);
-			Font tempFont;// = new Font(L"Calibri", 20, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
-			if (!mIsVR)
-			{
-				tempFont = Font(L"Times New Roman", 20, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
-			}
-			else
-			{
-				tempFont = Font(L"Calibri", 40, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
-			}
-			Draw::Instance().DrawTextToBitmap(
-				0.0f,
-				(*Draw::Instance().GetContext2D())->GetSize().height*(31.3f / 32.0f),
-				(*Draw::Instance().GetContext2D())->GetSize().width*(3.0f / 8.0f),
-				(*Draw::Instance().GetContext2D())->GetSize().height,
-				tempFont, mCurCommand,
-				*(Draw::Instance().GetScreenBitmap()).get()
-			);
-
-			Display();
-		}
 		TimeManager::Instance()->DisplaySnapshotCount();
 		TimeManager::Instance()->DisplayCloneCount();
 		sInstance->DisplayFPS();
@@ -129,6 +92,43 @@ namespace Epoch
 			*(Draw::Instance().GetScreenBitmap()).get()
 		);
 	}
+
+	void CommandConsole::Render() {
+		if (willTakeInput()) {
+			Draw::Instance().DrawRectangleToBitmap(0.0f,
+				(*Draw::Instance().GetContext2D())->GetSize().height*(5.0f / 8.0f),
+												   (*Draw::Instance().GetContext2D())->GetSize().width*(3.0f / 8.0f),
+												   (*Draw::Instance().GetContext2D())->GetSize().height,
+												   D2D1::ColorF(D2D1::ColorF::Black, 0.0f),
+												   *(Draw::Instance().GetScreenBitmap().get())
+			);
+			Draw::Instance().DrawRectangleToBitmap(0.0f,
+				(*Draw::Instance().GetContext2D())->GetSize().height*(31.0f / 32.0f),
+												   (*Draw::Instance().GetContext2D())->GetSize().width*(48.1f / 128.0f),
+												   (*Draw::Instance().GetContext2D())->GetSize().height,
+												   D2D1::ColorF(D2D1::ColorF::Black, 1.0f),
+												   *(Draw::Instance().GetScreenBitmap().get())
+			);
+			Font tempFont;// = new Font(L"Calibri", 20, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+			if (!mIsVR) {
+				tempFont = Font(L"Times New Roman", 20, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+			} else {
+				tempFont = Font(L"Calibri", 40, (D2D1::ColorF(D2D1::ColorF::White, 1.0f)), DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+			}
+			Draw::Instance().DrawTextToBitmap(
+				0.0f,
+				(*Draw::Instance().GetContext2D())->GetSize().height*(31.3f / 32.0f),
+				(*Draw::Instance().GetContext2D())->GetSize().width*(3.0f / 8.0f),
+				(*Draw::Instance().GetContext2D())->GetSize().height,
+				tempFont, mCurCommand,
+				*(Draw::Instance().GetScreenBitmap()).get()
+			);
+
+			Display();
+		}
+	}
+
+
 	void CommandConsole::Toggle()
 	{
 		if (mTakeInput)
@@ -302,8 +302,12 @@ namespace Epoch
 			if (mCurCommand.length() == 0)
 				return;
 
-			std::wstring command = mCurCommand.substr(0, mCurCommand.find(L" "));
-			std::wstring item = mCurCommand.substr(mCurCommand.find(L" ") + 1, mCurCommand.length() - 1);
+			size_t space = mCurCommand.find(L" ");
+			std::wstring command = mCurCommand, item = L"";
+			if (space != std::wstring::npos) {
+				command = mCurCommand.substr(0, mCurCommand.find(L" "));
+				item = mCurCommand.substr(mCurCommand.find(L" ") + 1, mCurCommand.length() - 1);
+			}
 			bool isCalled = CheckCommand(command, item);
 		}
 	}
