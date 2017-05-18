@@ -63,21 +63,6 @@ namespace Epoch
 					ecoms.erase(ecoms.begin());
 
 
-					Emitter* e2 = ((Emitter*)LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0));
-					ecoms = LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetComponents(eCOMPONENT_AUDIOEMITTER);
-					if (ecoms.size() > 0)
-					ecoms.erase(ecoms.begin());
-					if (e2)
-						AudioWrapper::GetInstance().RemoveEmitter(e2);
-
-					e2 = (Emitter*)LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0);
-					ecoms = LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetComponents(eCOMPONENT_AUDIOEMITTER);
-					if(ecoms.size() > 0)
-					ecoms.erase(ecoms.begin());
-					if (e2)
-						AudioWrapper::GetInstance().RemoveEmitter(e2);
-
-
 					AudioWrapper::GetInstance().RemoveListener(l);
 					AudioWrapper::GetInstance().RemoveEmitter(e);
 
