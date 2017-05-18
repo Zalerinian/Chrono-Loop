@@ -55,7 +55,7 @@ namespace Epoch
 			{
 				Settings::GetInstance().SetBool("LevelIsLoading", true);
 				Level* next = new Level;
-				next->BinaryLoadLevel("../Resources/l1newassets.elf");
+				next->BinaryLoadLevel("../Resources/Level1.elf");
 				Renderer::Instance()->ClearLights();
 
 				// Todo: Un-hardcode this
