@@ -24,9 +24,9 @@ namespace Epoch
 		bool GetOnce() { return once; };
 		virtual void OnTriggerEnter(Collider& _col1, Collider& _col2)
 		{
-			if(_col2.mColliderType == Collider::eCOLLIDER_Controller)
+			if (_col2.mColliderType == Collider::eCOLLIDER_Controller)
 			{
-				if(Settings::GetInstance().GetInt("CurrentLevel") == 1)
+				if (Settings::GetInstance().GetInt("CurrentLevel") == 1)
 					Settings::GetInstance().SetBool("CompleteLevel1", true);
 				else if (Settings::GetInstance().GetInt("CurrentLevel") == 2)
 					Settings::GetInstance().SetBool("CompleteLevel2", true);
@@ -54,7 +54,7 @@ namespace Epoch
 				if (/*status == LM::LevelStatus::Success*/ true)
 				{
 					// Clean up the current level and request the new one be used next time.
-					Listener* l =  ((Listener*)LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOLISTENER, 0));
+					Listener* l = ((Listener*)LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOLISTENER, 0));
 					Emitter* e = ((Emitter*)LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0));
 
 					std::vector<Component*>& lcoms = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetComponents(eCOMPONENT_AUDIOLISTENER);
@@ -62,18 +62,29 @@ namespace Epoch
 					std::vector<Component*>& ecoms = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetComponents(eCOMPONENT_AUDIOEMITTER);
 					ecoms.erase(ecoms.begin());
 
-	
-					ecoms = LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetComponents(eCOMPONENT_AUDIOEMITTER);
-					ecoms.erase(ecoms.begin());
 
-					AudioWrapper::GetInstance().RemoveEmitter((Emitter*)LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0));
+					Emitter* e2 = ((Emitter*)LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0));
+					ecoms = LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetComponents(eCOMPONENT_AUDIOEMITTER);
+					if (ecoms.size() > 0)
+					ecoms.erase(ecoms.begin());
+					if (e2)
+						AudioWrapper::GetInstance().RemoveEmitter(e2);
+
+					e2 = (Emitter*)LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0);
+					ecoms = LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetComponents(eCOMPONENT_AUDIOEMITTER);
+					if(ecoms.size() > 0)
+					ecoms.erase(ecoms.begin());
+					if (e2)
+						AudioWrapper::GetInstance().RemoveEmitter(e2);
+
+
 					AudioWrapper::GetInstance().RemoveListener(l);
 					AudioWrapper::GetInstance().RemoveEmitter(e);
 
 					Physics::Instance()->PhysicsLock.lock();
 					Physics::Instance()->mObjects.clear();
 					LevelManager::GetInstance().RequestLevelChange(next);
-					
+
 
 
 					//Sound Initializing---------------------------------------------------
@@ -101,7 +112,7 @@ namespace Epoch
 					RightController->AddComponent(bt);
 					RightController->AddComponent(rightConCol);
 
-					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity,nullptr, BaseObject_Flag_Record_In_Timeline); //new BaseObject("Controller2", identity);
+					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline); //new BaseObject("Controller2", identity);
 					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					leftRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
@@ -118,16 +129,12 @@ namespace Epoch
 					headset->AddComponent(hfollow);
 
 
-					
+
 					Emitter* sound = new SFXEmitter();
 					((SFXEmitter*)sound)->SetEvent(AK::EVENTS::SFX_TELEPORTSOUND);
 					AudioWrapper::GetInstance().AddEmitter(sound, headset->GetName().c_str());
 					headset->AddComponent(sound);
 
-					Emitter* resetlevelsound = new SFXEmitter();
-					((SFXEmitter*)resetlevelsound)->SetEvent(AK::EVENTS::SFX_RESETLEVEL);
-					RightController->AddComponent(resetlevelsound);
-					AudioWrapper::GetInstance().AddEmitter(resetlevelsound, RightController->GetName().c_str());
 
 
 					Physics::Instance()->mObjects.push_back(RightController);
@@ -154,7 +161,7 @@ namespace Epoch
 							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateTranslation(0, (float)floorPos, 0));
 							((BaseObject*)*it)->SetTransform(t);
 
-							if(boop)
+							if (boop)
 							{
 								next->GetStartPos() = vec4f(0, (float)floorPos, 0, 1);
 								boop = false;
@@ -166,9 +173,9 @@ namespace Epoch
 								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mat.fourth);
 								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mat.fourth.y - .2f;
 								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mat.fourth.y - .2f;
-							
+
 							}
-							else if(temp == "mmExitButton")
+							else if (temp == "mmExitButton")
 							{
 								matrix4 mat = ((BaseObject*)*it)->GetTransform().GetMatrix();
 								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mat.fourth);
@@ -176,14 +183,15 @@ namespace Epoch
 								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mat.fourth.y - .2f;
 
 							}
-							else if (temp == "mmTutButton") {
+							else if (temp == "mmTutButton")
+							{
 								matrix4 mat = ((BaseObject*)*it)->GetTransform().GetMatrix();
 								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mat.fourth);
 								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mat.fourth.y - .2f;
 								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mat.fourth.y - .2f;
 							}
 						}
-						else if(floorPos == -10 && temp == "mmClosingPanel")
+						else if (floorPos == -10 && temp == "mmClosingPanel")
 						{
 							Transform t;
 							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateTranslation(2, 0, 0));
@@ -262,7 +270,7 @@ namespace Epoch
 						ParticleSystem::Instance()->AddEmitter(emit12);
 						emit12->FIRE();
 					}
-					
+
 					if (Settings::GetInstance().GetBool("CompleteLevel2"))
 					{
 						Particle* p2 = &Particle::Init();
@@ -328,7 +336,8 @@ namespace Epoch
 						emit22->FIRE();
 					}
 
-					if (Settings::GetInstance().GetBool("CompleteLevel3")) {
+					if (Settings::GetInstance().GetBool("CompleteLevel3"))
+					{
 						Particle* p2 = &Particle::Init();
 						p2->SetPos(vec3f(0, 0, 0));
 						p2->SetColors(vec3f(0, 1, 0), vec3f(0, .5f, .5f));
@@ -358,7 +367,9 @@ namespace Epoch
 						((TeleportEffect*)emit22)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 						ParticleSystem::Instance()->AddEmitter(emit22);
 						emit22->FIRE();
-					} else {
+					}
+					else
+					{
 						Particle* p2 = &Particle::Init();
 						p2->SetPos(vec3f(0, 0, 0));
 						p2->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
