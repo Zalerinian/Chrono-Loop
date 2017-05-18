@@ -27,15 +27,22 @@
 					</PropertyList>
 					<ObjectInclusionList>
 						<ObjectRef Name="Play_Casual_Level_LOOP" ID="{FA59784B-43D9-402D-A545-F2B8C7E9D213}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="Stop_Level5Ambient" ID="{7F3826E8-63D4-40BB-8BBF-C3FAF898C1D4}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Pause_Hangar_Escape_LOOP" ID="{940E30B3-98E6-40C9-8262-FF9693713E99}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Play_Hangar_Escape_LOOP" ID="{2ADCBD75-809F-40DF-8683-BDAD0540C141}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Stop_Orbit_LOOP" ID="{BC1FC5A0-652F-40E2-97A2-DFFD2DABE728}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Pause_Orbit_LOOP" ID="{8E5A2E22-050B-4188-A443-F02A245C6101}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="Play_Level4Ambient" ID="{028D1C2C-0357-41B0-81D8-C7E7B61332EF}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="Play_Level5Ambient" ID="{91980A15-11BD-4262-8169-2AEE3CEA77E4}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Stop_A_Timelapse" ID="{97384A21-8C7C-42C1-AD5F-377F023006DE}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="Resume_Level4Ambient" ID="{8D191259-7959-4492-8662-2F1AEF5061C5}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="Resume_Level5Ambient" ID="{371EADAF-BA39-44A4-B965-A4C1DEE160A4}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Play_A_Timelapse" ID="{AA919F88-2686-44AE-98EA-447F7B231B7C}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Stop_Hangar_Escape_LOOP" ID="{0A5389FF-FEED-4690-966E-25EEF193320E}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Resume_Hangar_Escape_LOOP" ID="{4F8EE5A4-273D-46D2-B5D2-56192DE6B413}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Resume_Casual_Level_LOOP" ID="{F2EFAD9D-E966-486F-A2D0-FC204F828A71}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="Pause_Level4Ambient" ID="{BE6CB5A5-602E-487D-9EEE-90AEF8D19E53}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="SFX_ResetLevel" ID="{E03AFE4C-A152-48AB-80BC-EBAF059B5792}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Stop_Casual_Level_LOOP" ID="{A6A2497D-829B-49A7-9B49-8AA9245956A5}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Resume_A_Timelapse" ID="{82291AC6-9D17-4A3C-8A84-AD31C65972C6}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Resume_Orbit_LOOP" ID="{47B06895-E8C7-4C0E-BFFC-1E5319E6C157}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
@@ -43,6 +50,8 @@
 						<ObjectRef Name="Play_Orbit_LOOP" ID="{AE674135-0582-4D0C-BD3E-9E06A939D616}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Pause_Casual_Level_LOOP" ID="{9C4D9E2E-E041-4E1D-9DD6-F8492ED92299}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Pause_A_Timelapse" ID="{9E832A23-28F7-4E45-A3C1-655EE41FBA46}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="Stop_Level4Ambient" ID="{5419C765-977B-4EE4-8505-0334B62F1794}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="Pause_Level5Ambient" ID="{475EA0B2-130C-4F5A-8935-6773A47E4655}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>

@@ -2507,7 +2507,7 @@
 									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64292A6E-1D3F-43D6-8BB7-2E730BF0BA1D}"/>
 								</Reference>
 								<Reference Name="OutputBus">
-									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{74976F84-18B2-4A50-BEB6-3859D4B170B7}"/>
+									<ObjectRef Name="SFXBus" ID="{6C37EF17-DB04-423D-8C3B-3EF4F576EA25}" WorkUnitID="{74976F84-18B2-4A50-BEB6-3859D4B170B7}"/>
 								</Reference>
 							</ReferenceList>
 							<ChildrenList>
@@ -2577,7 +2577,7 @@
 									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64292A6E-1D3F-43D6-8BB7-2E730BF0BA1D}"/>
 								</Reference>
 								<Reference Name="OutputBus">
-									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{74976F84-18B2-4A50-BEB6-3859D4B170B7}"/>
+									<ObjectRef Name="SFXBus" ID="{6C37EF17-DB04-423D-8C3B-3EF4F576EA25}" WorkUnitID="{74976F84-18B2-4A50-BEB6-3859D4B170B7}"/>
 								</Reference>
 							</ReferenceList>
 							<ChildrenList>
@@ -2698,6 +2698,11 @@
 						<Sound Name="Hub0" ID="{DE6165B2-4AD7-4CEB-9D8E-6048C05D04F6}" ShortID="334996127" Type="SoundFX">
 							<PropertyList>
 								<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-8</Value>
+									</ValueList>
+								</Property>
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Conversion">
@@ -2720,6 +2725,11 @@
 						<Sound Name="Hub1" ID="{EE5E41C4-364F-445A-9264-D04B1C1056E7}" ShortID="1035255556" Type="SoundFX">
 							<PropertyList>
 								<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-8</Value>
+									</ValueList>
+								</Property>
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Conversion">
@@ -2742,6 +2752,11 @@
 						<Sound Name="Level1Ambient" ID="{AAF977E7-C9FC-442E-96AC-5945AF4F3535}" ShortID="780569356" Type="SoundFX">
 							<PropertyList>
 								<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-8</Value>
+									</ValueList>
+								</Property>
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Conversion">
@@ -2764,6 +2779,11 @@
 						<Sound Name="Level2Ambient" ID="{2CDB84AB-0C6B-4299-9CFA-CD1BF0B3D4DC}" ShortID="483142497" Type="SoundFX">
 							<PropertyList>
 								<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-8</Value>
+									</ValueList>
+								</Property>
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Conversion">
@@ -2786,6 +2806,11 @@
 						<Sound Name="Level3Ambient" ID="{CBCF2F8E-9E0E-4902-807C-DF6948CE19C9}" ShortID="354697021" Type="SoundFX">
 							<PropertyList>
 								<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-8</Value>
+									</ValueList>
+								</Property>
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Conversion">
@@ -2822,6 +2847,60 @@
 							</ChildrenList>
 							<ActiveSourceList>
 								<ActiveSource Name="TeleportSound" ID="{F828F5D5-F5E1-4135-9D5D-E200CBEEA257}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="Level4Ambient" ID="{00643C63-97B7-4CDF-8B76-8C0DBADE376E}" ShortID="214393653" Type="SoundFX">
+							<PropertyList>
+								<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-8</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64292A6E-1D3F-43D6-8BB7-2E730BF0BA1D}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="AmbientBus" ID="{6384F74E-8CF6-4138-A42A-E4E9D840C18E}" WorkUnitID="{74976F84-18B2-4A50-BEB6-3859D4B170B7}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="Level4Ambient" ID="{CFAAD177-2312-4ED2-90D2-CF00C97DE436}" ShortID="1029302798">
+									<Language>SFX</Language>
+									<AudioFile>Music-SFX\Level4Ambient.wav</AudioFile>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="Level4Ambient" ID="{CFAAD177-2312-4ED2-90D2-CF00C97DE436}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="Level5Ambient" ID="{6AF67723-FFD0-4142-9A61-47FC498C7008}" ShortID="472912037" Type="SoundFX">
+							<PropertyList>
+								<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-8</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64292A6E-1D3F-43D6-8BB7-2E730BF0BA1D}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="AmbientBus" ID="{6384F74E-8CF6-4138-A42A-E4E9D840C18E}" WorkUnitID="{74976F84-18B2-4A50-BEB6-3859D4B170B7}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="Level5Ambient" ID="{8A61B2FB-29B6-4581-9018-4F186514E155}" ShortID="664880918">
+									<Language>SFX</Language>
+									<AudioFile>Music-SFX\Level5Ambient.wav</AudioFile>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="Level5Ambient" ID="{8A61B2FB-29B6-4581-9018-4F186514E155}" Platform="Linked"/>
 							</ActiveSourceList>
 						</Sound>
 					</ChildrenList>
@@ -3145,6 +3224,25 @@
 					</ChildrenList>
 					<ActiveSourceList>
 						<ActiveSource Name="PlayerDeath" ID="{8A8AAF0B-21BE-416C-B213-A15D7B7936F0}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="ResetLevel" ID="{FBEB437E-1885-40CB-9C9E-ADE25D7B5D96}" ShortID="306404967" Type="SoundFX">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64292A6E-1D3F-43D6-8BB7-2E730BF0BA1D}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="SFXBus" ID="{6C37EF17-DB04-423D-8C3B-3EF4F576EA25}" WorkUnitID="{74976F84-18B2-4A50-BEB6-3859D4B170B7}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="ResetLevel" ID="{76765888-8E51-41C2-9BC7-D04A51A0B23A}" ShortID="62361149">
+							<Language>SFX</Language>
+							<AudioFile>ResetLevel.wav</AudioFile>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="ResetLevel" ID="{76765888-8E51-41C2-9BC7-D04A51A0B23A}" Platform="Linked"/>
 					</ActiveSourceList>
 				</Sound>
 			</ChildrenList>
