@@ -273,9 +273,9 @@ namespace Epoch
 		return true;
 	}
 
-	bool AudioWrapper::SetRTCP(AudioEvent _id, float _val, const Emitter* _pemitter)
+	bool AudioWrapper::SetRTCP(AkRtpcID _id, AkRtpcValue _val, AkGameObjectID _obj)
 	{
-		if (AK::SoundEngine::SetRTPCValue((AkRtpcID)_id, (AkRtpcValue)_val, (AkGameObjectID)_pemitter) != AK_Success)
+		if (AK::SoundEngine::SetRTPCValue(_id, _val, _obj) != AK_Success)
 			return true;
 
 		return false;

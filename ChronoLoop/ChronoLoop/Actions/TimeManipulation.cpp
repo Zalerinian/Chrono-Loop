@@ -14,6 +14,7 @@
 #include "../Particles/ParticleSystem.h"
 #include "../Sound/SoundEngine.h"
 #include "CCCloneHeadCollider.h"
+#include "CCCloneIndicator.h"
 
 namespace Epoch
 {
@@ -35,7 +36,6 @@ namespace Epoch
 	void TimeManipulation::Update()
 	{
 		Level* currentLevel = LevelManager::GetInstance().GetCurrentLevel();
-
 
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip) && !Settings::GetInstance().GetBool("PauseMenuUp") && !Settings::GetInstance().GetBool("CantPauseTime"))
 		{
@@ -204,6 +204,14 @@ namespace Epoch
 						vec4f temp = EPos;
 						AudioWrapper::GetInstance().MakeEventAtLocation(AK::EVENTS::SFX_SHORTCIRUIT, &temp);
 						emit->FIRE();;
+
+						Transform t;
+						BaseObject *CloneDisplayNeedle = Pool::Instance()->iGetObject()->Reset("CloneIcon", t);
+						MeshComponent* tdispn = new MeshComponent("../Resources/MiniClone.obj");
+						tdispn->AddTexture(mCurrTexture.c_str(),TextureType::eTEX_DIFFUSE);
+						CCCloneIndicator* time = new CCCloneIndicator(mCurCloneController1->GetUniqueID());
+						CloneDisplayNeedle->AddComponent(time);
+						cLevel->GetRightController()->AddChild(CloneDisplayNeedle);
 					}
 
 				}
@@ -301,9 +309,11 @@ namespace Epoch
 		_data.ScanlineData.y = 0.2f;
 		_data.ScanlineData.z = 0;
 		_data.ScanlineData.w = 0.8f;
+		mCurrTexture = TimeManager::Instance()->GetNextTexture();
 		MeshComponent *visibleMesh = new MeshComponent("../Resources/Clone.obj", .35f);
 		visibleMesh->SetPixelShader(ePS_TRANSPARENT);
-		visibleMesh->AddTexture(TimeManager::Instance()->GetNextTexture().c_str(), eTEX_DIFFUSE);
+		visibleMesh->AddTexture(mCurrTexture.c_str(), eTEX_DIFFUSE);
+
 		/*SphereCollider* col = new SphereCollider(_headset, false, false, vec3f(), 100.0f, .02f, .2f, .2f, 0, 1, "../Resources/Clone.obj");
 		CCCloneHeadCollider* headCol = new CCCloneHeadCollider();*/
 		//visibleMesh->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
