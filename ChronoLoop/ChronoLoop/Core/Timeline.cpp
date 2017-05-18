@@ -618,24 +618,81 @@ namespace Epoch {
 
 	}
 
-	void Timeline::ShowLiveObjectsColliders(bool _show)
+	void Timeline::ShowLiveObjectsColliders(unsigned int _frame,bool _show)
 	{
-		for(auto obj : mLiveObjects)
+		unsigned int level = Settings::GetInstance().GetInt("CurrentLevel");
+		Level* clevel = LevelManager::GetInstance().GetCurrentLevel();
+		for (auto obj : mLiveObjects)
 		{
-			Level* clevel = LevelManager::GetInstance().GetCurrentLevel();
-			if (obj.second->GetUniqueID() == clevel->GetHeadset()->GetUniqueID() ||
-				obj.second->GetUniqueID() == clevel->GetRightController()->GetUniqueID() ||
-				obj.second->GetUniqueID() == clevel->GetLeftController()->GetUniqueID())
-				continue;
-
-			Collider* col = (Collider*)obj.second->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
-			if(col)
+			MeshComponent* mesh = (MeshComponent*)obj.second->GetComponentIndexed(eCOMPONENT_MESH, 0);
+			if(!_show)
 			{
-				if (_show)
-					col->mShowCol = true;
-				else
-					col->mShowCol = false;
+				mesh->SetInMotion(false);
+				continue;;
 			}
+
+			//bol for determining if we care about this object or not
+			bool CheckObjectHighlight = false;
+
+			Component* comp = obj.second->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
+			unsigned int id = obj.second->GetUniqueID();
+			unsigned int HeadsetId = obj.second->GetUniqueID();
+			unsigned int Controlelr1Id = clevel->GetLeftController()->GetUniqueID();
+			unsigned int Controller2id = clevel->GetRightController()->GetUniqueID();
+			if (comp && (id != HeadsetId || id !=Controlelr1Id || id!=Controller2id))
+			{
+				CheckObjectHighlight = true;
+			}
+
+			//Specific items we want highlighted in the level
+			switch (level)
+			{
+			case 1:
+				if (obj.second->GetName().find("Chamber") != std::string::npos)
+				{
+					CheckObjectHighlight = false;
+				}
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			case 4:
+				break;
+			case 5:
+				break;
+			}
+			
+			if(CheckObjectHighlight)
+			{
+				//Find if object should be shown
+				unsigned int i = _frame;
+				if (!(i - 5 < 0))
+					 i-= 5;
+				bool highlight = false;
+				for (i; i < _frame + 10; i++)
+				{
+					if(mSnapshots.find(i) != mSnapshots.end())
+					{
+						//If the data is not the same in the last 5 and next 5 frames we want to highlight it
+						if(!CheckForDuplicateData(obj.second->GetUniqueID(),obj.second,i))
+						{
+							highlight = true; 
+							break;
+						}
+					}
+				}
+				if(highlight)
+				{
+					mesh->SetInMotion(true);
+				}
+				else
+				{
+					mesh->SetInMotion(false);
+				}
+				
+			}
+
 		}
 	}
 	
@@ -797,7 +854,7 @@ namespace Epoch {
 							//If we are a clone but dont have a next movement then record one at position
 							else if (snap->mSnapinfos.find(id) == snap->mSnapinfos.end() && id == _clones[i]->GetUniqueID()) {
 								//If change add to mSnapinfos and Updatetime
-								if (!CheckForDuplicateData(id, _b.second)) {
+								if (!CheckForDuplicateData(id, _b.second,mCurrentGameTimeIndx)) {
 									snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, nullptr);
 									snap->mUpdatedtimes[id] = _time;
 									break;
@@ -806,7 +863,7 @@ namespace Epoch {
 							//If we made it through the list do the normal
 							else if (id != _clones[i]->GetUniqueID() && i == _clones.size() - 1) {
 								//If change add to mSnapinfos and Updatetime
-								if (!CheckForDuplicateData(id, _b.second)) {
+								if (!CheckForDuplicateData(id, _b.second,mCurrentGameTimeIndx)) {
 									snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, snap->mSnapinfos[id]);
 									snap->mUpdatedtimes[id] = _time;
 								}
@@ -814,7 +871,7 @@ namespace Epoch {
 						}
 					} else {
 						//If change add to mSnapinfos and Updatetime
-						if (!CheckForDuplicateData(id, _b.second)) {
+						if (!CheckForDuplicateData(id, _b.second,mCurrentGameTimeIndx)) {
 							snap->mSnapinfos[id] = GenerateSnapInfo(_b.second, snap->mSnapinfos[id]);
 							snap->mUpdatedtimes[id] = _time;
 						}
@@ -833,18 +890,18 @@ namespace Epoch {
 	}
 
 	//Returns True if the data is the same from last snap
-	bool Timeline::CheckForDuplicateData(unsigned short _id, BaseObject* _object) {
-		if (mCurrentGameTimeIndx == 0)
+	bool Timeline::CheckForDuplicateData(unsigned short _id, BaseObject* _object, unsigned int _frame) {
+		if (_frame == 0)
 			return false;
 		//If the object has not been made yet or is already dead return so we dont make one yet
-		if (mObjectLifeTimes.find(_id) != mObjectLifeTimes.end() && (mObjectLifeTimes[_id]->mBirth > mCurrentGameTimeIndx || mObjectLifeTimes[_id]->mDeath < mCurrentGameTimeIndx))
+		if (mObjectLifeTimes.find(_id) != mObjectLifeTimes.end() && (mObjectLifeTimes[_id]->mBirth > _frame || mObjectLifeTimes[_id]->mDeath < _frame))
 			return true;
 
 		SnapInfo* info;
-		Snapshot* snap = mSnapshots[mSnaptimes[mCurrentGameTimeIndx]];
+		Snapshot* snap = mSnapshots[mSnaptimes[_frame]];
 		//find if the object exist
 		if (snap->mSnapinfos.find(_id) != snap->mSnapinfos.end())
-			info = mSnapshots[mSnaptimes[mCurrentGameTimeIndx]]->mSnapinfos[_id];
+			info = mSnapshots[mSnaptimes[_frame]]->mSnapinfos[_id];
 		else if (snap->mUpdatedtimes.find(_id) != snap->mUpdatedtimes.end()) {
 			info = mSnapshots[snap->mUpdatedtimes[_id]]->mSnapinfos[_id];
 		} else {
@@ -869,8 +926,7 @@ namespace Epoch {
 					if (currComp->GetColliderId() == comp->mId) {
 						if (((Collider*)currComp)->mAcceleration != ((SnapComponent_Physics*)comp)->mAcc ||
 							((Collider*)currComp)->mVelocity != ((SnapComponent_Physics*)comp)->mVel ||
-							((Collider*)currComp)->mForces != ((SnapComponent_Physics*)comp)->mForces ||
-							((Collider*)currComp)->mTotalForce != ((SnapComponent_Physics*)comp)->mTotforce)
+							((Collider*)currComp)->mForces != ((SnapComponent_Physics*)comp)->mForces)
 							return false;
 					}
 				}

@@ -55,7 +55,7 @@ namespace Epoch
 			{
 				Settings::GetInstance().SetBool("LevelIsLoading", true);
 				Level* next = new Level;
-				next->BinaryLoadLevel("../Resources/Level1.elf");
+				next->BinaryLoadLevel("../Resources/l1newassets.elf");
 				Renderer::Instance()->ClearLights();
 
 				// Todo: Un-hardcode this
@@ -202,8 +202,13 @@ namespace Epoch
 					
 					Emitter* sound = new SFXEmitter();
 					((SFXEmitter*)sound)->SetEvent(AK::EVENTS::SFX_TELEPORTSOUND);
-					AudioWrapper::GetInstance().AddEmitter(sound, headset->GetName().c_str());
 					headset->AddComponent(sound);
+					AudioWrapper::GetInstance().AddEmitter(sound, headset->GetName().c_str());
+
+					Emitter* resetlevelsound = new SFXEmitter();
+					((SFXEmitter*)resetlevelsound)->SetEvent(AK::EVENTS::SFX_RESETLEVEL);
+					RightController->AddComponent(resetlevelsound);
+					AudioWrapper::GetInstance().AddEmitter(resetlevelsound, RightController->GetName().c_str());
 
 					/*BaseObject* magicalCube = Pool::Instance()->iGetObject()->Reset("Magical Cube That Follows Me");
 					MeshComponent* mcmc = new MeshComponent("../Resources/UnitCube.obj");

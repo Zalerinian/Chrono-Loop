@@ -55,13 +55,24 @@ namespace Epoch {
 		Renderer::Instance()->RemoveMotionNode(*mShape);
 	}
 
-	void MeshComponent::RemoveNode() {
-		if (mNode) {
-			if (GetTopmost()) {
+	void MeshComponent::RemoveNode()
+	{
+		if (mNode)
+		{
+			if (GetInMotion())
+			{
+				RemoveMotionNode();
+			}
+			else if (GetTopmost())
+			{
 				RemoveTopmostNode();
-			} else if (mBlended) {
+			}
+			else if (mBlended)
+			{
 				RemoveTransparentNode();
-			} else {
+			}
+			else
+			{
 				RemoveOpaqueNode();
 			}
 		}
