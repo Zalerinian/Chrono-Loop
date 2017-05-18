@@ -270,8 +270,11 @@ namespace Epoch {
 			auto b = meshes.begin();
 			auto e = meshes.end();
 			for (auto cit = meshes.begin(); cit != meshes.end(); ++cit) {
-				((MeshComponent*)(*cit))->SetVisible(false);
-				((MeshComponent*)(*cit))->SetVisible(true);
+				MeshComponent* mesh = (MeshComponent*)*cit;
+				if(mesh->IsVisible())
+				{
+					mesh->SetVisible(false)->SetVisible(true);
+				}
 			}
 		}
 	}
