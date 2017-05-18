@@ -73,7 +73,7 @@ namespace Epoch
 		void STOP() { AK::SoundEngine::StopAll(); }
 		void StopEmitter(Emitter* _emitter) { AK::SoundEngine::StopAll((AkGameObjectID)_emitter); }
 
-		bool SetRTCP(AudioEvent _id, float _val, const Emitter* _pemitter);
+		bool SetRTCP(AkRtpcID _id, AkRtpcValue _val, AkGameObjectID _obj = AK_INVALID_GAME_OBJECT);
 		//Set soundbank path(s)
 		void SetBasePath(const wchar_t* _strPath);
 		bool LoadSoundBank(const wchar_t* _BankName);
