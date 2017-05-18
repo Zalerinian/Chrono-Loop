@@ -23,8 +23,14 @@ namespace Epoch {
 		mNode = Renderer::Instance()->AddMotionNode(*mShape);
 	}
 
+	void MeshComponent::CreateLightNode() {
+		mNode = Renderer::Instance()->AddLightNode(*mShape);
+	}
+
 	void MeshComponent::CreateNode() {
-		if (GetInMotion()) {
+		if (GetIsLight()) {
+			CreateLightNode();
+		} else if (GetInMotion()) {
 			CreateMotionNode();
 		} else if (GetTopmost()) {
 			CreateTopmostNode();
@@ -55,11 +61,18 @@ namespace Epoch {
 		Renderer::Instance()->RemoveMotionNode(*mShape);
 	}
 
+	void MeshComponent::RemoveLightNode() {
+		DESTROY_NODE(mNode);
+		Renderer::Instance()->RemoveLightNode(*mShape);
+	}
+
 	void MeshComponent::RemoveNode()
 	{
 		if (mNode)
 		{
-			if (GetInMotion())
+			if (GetIsLight()) {
+				RemoveLightNode();
+			} else if (GetInMotion())
 			{
 				RemoveMotionNode();
 			}
@@ -323,6 +336,14 @@ namespace Epoch {
 		}
 	}
 
+	void MeshComponent::SetAsLight(bool _isLight) {
+		if (_isLight != GetIsLight()) {
+			RemoveNode();
+			mIsLight = _isLight;
+			CreateNode();
+		}
+	}
+
 	void MeshComponent::SetBlended(bool _ButWillItBlend) {
 		if(mBlended) {
 			if (!_ButWillItBlend) {
@@ -383,6 +404,10 @@ namespace Epoch {
 
 	bool MeshComponent::GetInMotion() {
 		return mActiveRewind;
+	}
+
+	bool MeshComponent::GetIsLight() {
+		return mIsLight;
 	}
 
 	void MeshComponent::SetData(ConstantBufferType _t, BufferDataType _bt, unsigned char _index, void * _data) {

@@ -336,16 +336,6 @@ namespace Epoch {
 		ThrowIfFailed(mDevice->CreateTexture2D(&t2d, nullptr, mPostProcessTexture.GetAddressOf()));
 		ThrowIfFailed(mDevice->CreateTexture2D(&t2d, nullptr, mSuperGlowTexture.GetAddressOf()));
 
-		//// Add these textures to the TextureManager so we can attach them to objects
-		//std::string bloomInternalName = "Bloom texture", glowInternalName = "Glow Texture", AlbedoInternal = "Albedo Texture",
-		//	PositionInternal = "Position Texture", NormalInternal = "Normal Texture", SpecularInternal = "Specular Texture";
-		//TextureManager::Instance()->iAddTexture2D(bloomInternalName, mBloomTexture,    &mBloomSRV); // This will create and assign the SRV for the texture.
-		//TextureManager::Instance()->iAddTexture2D(glowInternalName,  mGlowTexture,     &mGlowSRV);
-		//TextureManager::Instance()->iAddTexture2D(AlbedoInternal,    mAlbedoTexture,   &mAlbedoSRV);
-		//TextureManager::Instance()->iAddTexture2D(PositionInternal,  mPositionTexture, &mPositionSRV);
-		//TextureManager::Instance()->iAddTexture2D(NormalInternal,    mNormalTexture,   &mNormalSRV);
-		//TextureManager::Instance()->iAddTexture2D(SpecularInternal,  mSpecularTexture, &mSpecularSRV);
-
 		// Render target view in order to draw to the texture.
 		HRESULT hr = mDevice->CreateRenderTargetView(mPostProcessTexture.Get(), nullptr, mPostProcessRTV.GetAddressOf());
 		ThrowIfFailed(mDevice->CreateRenderTargetView(mBloomTexture.Get(),      nullptr, mBloomRTV.GetAddressOf()));
@@ -554,12 +544,13 @@ namespace Epoch {
 	void Renderer::InitializeStates()
 	{
 		ID3D11DepthStencilState *opaqueState, *transparentState;
-		D3D11_DEPTH_STENCIL_DESC opaqueDepth, transparentDepth, topmostDepth, motionFind, motionReverse;
+		D3D11_DEPTH_STENCIL_DESC opaqueDepth, transparentDepth, topmostDepth, motionFind, motionReverse, lsFrontStencil, lsBackStencil;
 		memset(&opaqueDepth, 0, sizeof(opaqueDepth));
-		opaqueDepth.DepthEnable = true;
+		opaqueDepth.DepthEnable = TRUE;
 		opaqueDepth.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 		opaqueDepth.DepthFunc = D3D11_COMPARISON_LESS;
 
+		lsFrontStencil = opaqueDepth;
 		transparentDepth = opaqueDepth;
 		transparentDepth.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 
@@ -595,6 +586,28 @@ namespace Epoch {
 
 		ThrowIfFailed(mDevice->CreateDepthStencilState(&motionFind, mMotionStateFindObject.GetAddressOf()));
 		ThrowIfFailed(mDevice->CreateDepthStencilState(&motionReverse, mMotionStateReverseDepth.GetAddressOf()));
+
+		lsFrontStencil.DepthEnable = TRUE;
+		lsFrontStencil.StencilEnable = TRUE;
+		lsFrontStencil.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+		lsFrontStencil.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
+		lsFrontStencil.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
+		lsFrontStencil.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+		lsFrontStencil.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		lsFrontStencil.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		lsFrontStencil.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+		lsFrontStencil.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+		lsFrontStencil.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		lsFrontStencil.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		lsFrontStencil.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+		lsBackStencil = lsFrontStencil;
+		lsBackStencil.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+
+		ThrowIfFailed(mDevice->CreateDepthStencilState(&lsFrontStencil, mLSStencilFront.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateDepthStencilState(&lsBackStencil,  mLSStencilBack.GetAddressOf()));
+
 
 
 		ID3D11BlendState *opaqueBS, *transparentBS;
@@ -965,8 +978,14 @@ namespace Epoch {
 		}
 
 		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
-		mContext->OMSetRenderTargets(1, mPostProcessRTV.GetAddressOf(), nullptr);
 
+		RenderLightVolumes();
+		if (mQuerySet.Valid()) {
+			mQuerySet.Query("Light Volumes");
+		}
+
+
+		mContext->OMSetRenderTargets(1, mPostProcessRTV.GetAddressOf(), nullptr);
 		mDeferredCombiner->GetContext().Apply(mCurrentContext);
 		mDeferredCombiner->Render(1);
 		mCurrentContext.SimpleClone(mDeferredCombiner->GetContext());
@@ -1047,6 +1066,54 @@ namespace Epoch {
 			}
 		}
 
+	}
+
+	void Renderer::RenderLightVolumes() {
+		std::vector<matrix4> positions;
+		mContext->OMSetDepthStencilState(mOpaqueState.Get(), 1);
+		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
+		for (auto it = mLightSet.Begin(); it != mLightSet.End(); ++it) {
+			(*it)->mPositions.GetData(positions);
+			if (positions.size() > 0) {
+#if ENABLE_INSTANCING
+				unsigned int offset = 0;
+				positions.reserve((positions.size() / 256 + 1) * 256);
+				while (positions.size() - offset <= positions.size()) {
+					(*it)->mShape.GetContext().Apply(mCurrentContext);
+					mCurrentContext.SimpleClone((*it)->mShape.GetContext());
+
+					D3D11_MAPPED_SUBRESOURCE map;
+					HRESULT MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+					memcpy(map.pData, positions.data() + offset, sizeof(matrix4) * min(positions.size() - offset, 256));
+					mContext->Unmap(mPositionBuffer.Get(), 0);
+					//mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
+
+					(*it)->mShape.Render((UINT)positions.size() - offset);
+					offset += 256;
+				}
+#else
+				(*it)->mShape.GetContext().Apply(mCurrentContext);
+				mCurrentContext.SimpleClone((*it)->mShape.GetContext());
+				vec4i SimulatedIID(0, 0, 0, 0);
+				for (unsigned int i = 0; i < positions.size(); ++i) {
+					SimulatedIID.x = i;
+
+					D3D11_MAPPED_SUBRESOURCE map;
+					HRESULT MHR = mContext->Map(mSimInstanceBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+					memcpy(map.pData, &SimulatedIID, sizeof(vec4i));
+					mContext->Unmap(mSimInstanceBuffer.Get(), 0);
+
+					//mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimInstanceID, 0, 0);
+
+					MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+					memcpy(map.pData, &positions[i], sizeof(matrix4));
+					mContext->Unmap(mPositionBuffer.Get(), 0);
+					//mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
+					(*it)->mShape.Render(1); // Without instancing, the instance count doesn't matter, but we're only drawing one :)
+				}
+#endif
+			}
+		}
 	}
 
 	void Renderer::RenderForBloom() {
@@ -1155,6 +1222,10 @@ namespace Epoch {
 		return mMotionSet.AddShape(_node);
 	}
 
+	GhostList<matrix4>::GhostNode * Renderer::AddLightNode(RenderShape & _node) {
+		return mLightSet.AddShape(_node);
+	}
+
 	void Renderer::RemoveOpaqueNode(RenderShape & _node)
 	{
 		mOpaqueSet.RemoveShape(_node);
@@ -1171,6 +1242,10 @@ namespace Epoch {
 
 	void Renderer::RemoveMotionNode(RenderShape & _node) {
 		mMotionSet.RemoveShape(_node);
+	}
+
+	void Renderer::RemoveLightNode(RenderShape & _node) {
+		mLightSet.RemoveShape(_node);
 	}
 
 	void Renderer::UpdateOpaqueNodeBuffer(RenderShape & _node, ConstantBufferType _t, unsigned int _index) {
