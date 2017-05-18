@@ -26,7 +26,7 @@
 				<Property Name="Mixing Desk\LastSession" Type="string" Value="{00000000-0000-0000-0000-000000000000}"/>
 				<Property Name="MonitoringManager\WatchMgr\WatchesVersion" Type="int32" Value="5"/>
 				<Property Name="MonitoringManager\WatchMgr\x64_GameSyncWatches" Type="string" Value=""/>
-				<Property Name="MonitoringManager\WatchMgr\x64_Watches" Type="string" Value="AAAAAAAAAAAAAAAAAAAAAAUAYWFiYlMAoIoUDQAAAAAg1FEAAAAAAAAAAAAAAAAAINRRAAAAAAAvZkAb/H8AAKCKFA0AAAAAuBgiG/x/AAACAAAAAAAAAAAA6AAAAAAA0P8JDQAAAAAdpiQBAAAAAAIAAAAAAAAAAgAAAAAAAADQ/wkNAAAAAAAAAAAAAAAAEAAAAAAAAAABNaUAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAExpc3RlbmVyAA0AAAAAINRRAAAAAAAAAAAAAAAAACDUUQAAAAAAL2ZAG/x/AACgihQNAAAAAAAAAAAAAAAAAgAAAAAAAAAAAOgAAAAAANARCg0AAAAAHaYkAQAAAAACAAAAAAAAAAIAAAAAAAAA0BEKDQAAAAAAAAAAAAAAABAAAAAAAAAAATWlAAAAAAA="/>
+				<Property Name="MonitoringManager\WatchMgr\x64_Watches" Type="string" Value="AAAAAAAAAAAAAAAAAAAAAAUAYWFiYlMASE6GDQAAAACgK2IAAAAAAAAAAAAAAAAAoCtiAAAAAAAvZkAb/H8AAEhOhg0AAAAAuBgiG/x/AAACAAAAAAAAAAAAEgEAAAAA0E+CDQAAAAAdpp4AAAAAAAIAAAAAAAAAAgAAAAAAAADQT4INAAAAAAAAAAAAAAAAEAAAAAAAAAABNc8AAAAAAAAAAAAAAAAAAAAAAAAAAAAIAExpc3RlbmVyAA0AAAAAoCtiAAAAAAAAAAAAAAAAAKArYgAAAAAAL2ZAG/x/AABIToYNAAAAAAAAAAAAAAAAAgAAAAAAAAAAABIBAAAAAEDMvBgAAAAAHaaeAAAAAAACAAAAAAAAAAIAAAAAAAAAQMy8GAAAAAAAAAAAAAAAABAAAAAAAAAAATXPAAAAAAA="/>
 				<Property Name="OverrideCacheFolder\Active" Type="bool" Value="False"/>
 				<Property Name="OverrideCacheFolder\Path" Type="string" Value=".cache"/>
 				<Property Name="OverrideOriginalFolder\Active" Type="bool" Value="False"/>
@@ -34,7 +34,7 @@
 				<Property Name="ProjectExplorer\FirstVisible_10_1" Type="string" Value="{4C96B38B-3DB4-40C7-91C9-665510E38993}"/>
 				<Property Name="ProjectExplorer\FirstVisible_11_1" Type="string" Value="{23EC2DE3-3ED8-4B82-AC99-92E25F2E4C6B}"/>
 				<Property Name="ProjectExplorer\FirstVisible_1_1" Type="string" Value="{2388DAEA-9775-46C6-A2ED-C5222A397756}"/>
-				<Property Name="ProjectExplorer\FirstVisible_3_1" Type="string" Value="{0FB88C07-3652-4B0A-8C9C-EBC2FB447163}"/>
+				<Property Name="ProjectExplorer\FirstVisible_3_1" Type="string" Value="{CAAF88DA-F2AF-4E8B-9C49-84C1B8B339E9}"/>
 				<Property Name="ProjectExplorer\FirstVisible_4_1" Type="string" Value="{CB6175F1-6080-4A23-92EF-0807E304D0C1}"/>
 				<Property Name="ProjectExplorer\FirstVisible_6_1" Type="string" Value="{C98E673F-A24C-48A8-960F-10565FFE70A0}"/>
 				<Property Name="ProjectExplorer\FirstVisible_8_1" Type="string" Value="{41093F77-829F-4D88-8601-E8B25F3D4781}"/>
@@ -48,7 +48,7 @@
 				<Property Name="ProjectExplorer\x64_Expanded_17_1" Type="string" Value=""/>
 				<Property Name="ProjectExplorer\x64_Expanded_18_1" Type="string" Value=""/>
 				<Property Name="ProjectExplorer\x64_Expanded_19_1" Type="string" Value=""/>
-				<Property Name="ProjectExplorer\x64_Expanded_1_1" Type="string" Value=""/>
+				<Property Name="ProjectExplorer\x64_Expanded_1_1" Type="string" Value="2KQUFaYdKkGhfnXKDCFJ84Rvl3SyGFBKvrY4WdSxcLc="/>
 				<Property Name="ProjectExplorer\x64_Expanded_20_1" Type="string" Value=""/>
 				<Property Name="ProjectExplorer\x64_Expanded_2_1" Type="string" Value=""/>
 				<Property Name="ProjectExplorer\x64_Expanded_3_1" Type="string" Value="yb7RF79eF0mikw6Awk7rag=="/>
