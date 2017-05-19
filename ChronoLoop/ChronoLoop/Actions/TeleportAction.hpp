@@ -136,21 +136,21 @@ namespace Epoch {
 						{
 							vec3f floorhit;
 
-							for (int p = 0; p < mPlaneObjects.size(); p++)
-							{
-								for (int m = 0; m < mPlaneObjects[p]->GetComponentCount(ComponentType::eCOMPONENT_MESH); m++)
-								{
-									if (ChecktoFloor((MeshComponent*)mPlaneObjects[p]->GetComponents(ComponentType::eCOMPONENT_MESH)[m], hit, vec3f(0, -1, 0), floorhit))
-									{
-										//if it hits the plane
-										_arc.push_back(floorhit);
+							//for (int p = 0; p < mPlaneObjects.size(); p++)
+							//{
+							//	for (int m = 0; m < mPlaneObjects[p]->GetComponentCount(ComponentType::eCOMPONENT_MESH); m++)
+							//	{
+							//		if (ChecktoFloor((MeshComponent*)mPlaneObjects[p]->GetComponents(ComponentType::eCOMPONENT_MESH)[m], hit, vec3f(0, -1, 0), floorhit))
+							//		{
+							//			//if it hits the plane
+							//			_arc.push_back(floorhit);
 
-									}
-									else
-										_arc.push_back(hit);
-								}
-							}
-
+							//		}
+							//		else
+							//			_arc.push_back(hit);
+							//	}
+							//}
+							_arc.push_back(hit);
 							return true;
 						}
 					}
@@ -323,9 +323,10 @@ namespace Epoch {
 				mMidMesh->GetTransform().SetMatrix(m);
 			}
 
-			if (VRInputManager::GetInstance().GetController(mControllerRole).GetAxis().x != 0 && VRInputManager::GetInstance().GetController(mControllerRole).GetAxis().y != 0 && mCanTeleport)
-			{
-				if (!cLevel->GetTimeManipulator()->isTimePaused())
+			
+
+			if (!interp->GetActive() && !Settings::GetInstance().GetBool("CantTeleport")) {
+				if(VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && mCanTeleport)
 				{
 					mTPMesh->SetVisible(true);
 					mCSMesh->SetVisible(true);
@@ -337,12 +338,9 @@ namespace Epoch {
 					mCSMesh->SetVisible(false);
 					mMidMesh->SetVisible(false);
 				}
-			}
-
-			if (!interp->GetActive() && !Settings::GetInstance().GetBool("CantTeleport")) {
-				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && mCanTeleport && !Settings::GetInstance().GetBool("PauseMenuUp")) {
+				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressUp(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && mCanTeleport && !Settings::GetInstance().GetBool("PauseMenuUp")) {
 					if (!paused) {
-
+						
 						//SystemLogger::Debug() << "Touchpad Pressed" << std::endl;
 						vec4f raydir = (mArc[mArc.size() - 1] - mArc[0]);
 						raydir.w = 0;
@@ -500,6 +498,19 @@ namespace Epoch {
 						}
 					}
 				}
+				/*if (VRInputManager::GetInstance().GetController(mControllerRole).GetAxis().x != 0 && VRInputManager::GetInstance().GetController(mControllerRole).GetAxis().y != 0 && mCanTeleport)
+				{
+					if (!cLevel->GetTimeManipulator()->isTimePaused())
+					{
+						mTPMesh->SetVisible(true);
+						mCSMesh->SetVisible(true);
+						mMidMesh->SetVisible(true);
+					}
+				}
+				else
+				{
+					C
+				}*/
 			}
 			else if (interp->Update(TimeManager::Instance()->GetDeltaTime()))
 				interp->SetActive(false);
