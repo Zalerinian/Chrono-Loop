@@ -32,7 +32,9 @@ namespace Epoch {
 		BaseObject* mTPLoc, *mCSLoc, *mMSLoc;
 		MeshComponent* mTPMesh, *mCSMesh, *mMidMesh;
 
-		bool CheckMesh(MeshComponent* _plane,vec3f _ts, vec3f _te, vec3f _start, vec3f _end, vec3f& _hit)
+		ParticleEmitter* mTPParticles;
+
+		bool CheckMesh(MeshComponent* _plane, vec3f _ts, vec3f _te, vec3f _start, vec3f _end, vec3f& _hit)
 		{
 			Triangle* tris = _plane->GetTriangles();
 			int count = _plane->GetTriangleCount();
@@ -196,12 +198,15 @@ namespace Epoch {
 			mCSMesh = new MeshComponent("../Resources/ControllerTP.obj");
 			mCSMesh->AddTexture("../Resources/cube_texture.png", TextureType::eTEX_DIFFUSE);
 			mCSLoc->AddComponent(mCSMesh);
+			mCSMesh->SetAlpha(.5);
 			mMidMesh = new MeshComponent("../Resources/ControllerTP.obj");
 			mMidMesh->AddTexture("../Resources/cube_texture.png", TextureType::eTEX_DIFFUSE);
 			mMSLoc->AddComponent(mMidMesh);
+			mMidMesh->SetAlpha(.5);
 			mTPMesh = new MeshComponent("../Resources/TeleportMarker.obj");
 			mTPMesh->AddTexture("../Resources/cube_texture.png", TextureType::eTEX_DIFFUSE);
 			mTPLoc->AddComponent(mTPMesh);
+			mTPMesh->SetAlpha(.5);
 
 			matrix4 temp;
 			temp = mCSMesh->GetTransform().GetMatrix() * scaleM;
@@ -221,6 +226,15 @@ namespace Epoch {
 			mCSMesh->SetVisible(false);
 			mMidMesh->SetVisible(false);
 
+			mTPParticles = new TeleportEffect(-1, 100, 50, vec3f());
+			Particle* p = &Particle::Init();
+			p->SetColors(vec4f(0, .5, .5, .5), vec4f(0, .5, .5, .5));
+			p->SetLife(600);
+			p->SetSize(.025, .025);
+			mTPParticles->SetParticle(p);
+			mTPParticles->SetTexture("../Resources/BasicCirlceP.png");
+
+			ParticleSystem::Instance()->AddEmitter(mTPParticles);
 		}
 
 		virtual void Update() {
@@ -279,14 +293,13 @@ namespace Epoch {
 				scaleM.third = vec4f(0, 0, .05f, 0);
 				scaleM.fourth = vec4f(0, 0, 0, 1);
 
-				mTPMesh->SetVisible(true);
-				mCSMesh->SetVisible(true);
-				mMidMesh->SetVisible(true);
-
 				matrix4 m;
 				m = mTPMesh->GetTransform().GetMatrix();
 				m.fourth = mArc[mArc.size() - 1];
 				mTPMesh->GetTransform().SetMatrix(m);
+
+				mTPParticles->FIRE();
+				mTPParticles->SetPos(m.fourth);
 
 				m = mat * scaleM;
 				m.fourth = mat.fourth;
@@ -298,6 +311,8 @@ namespace Epoch {
 			}
 			else
 			{
+				mTPParticles->CeaseFire();
+
 				mTPMesh->SetVisible(false);
 				mCSMesh->SetVisible(false);
 				mMidMesh->SetVisible(false);
@@ -306,10 +321,13 @@ namespace Epoch {
 			if (!interp->GetActive() && !Settings::GetInstance().GetBool("CantTeleport")) {
 				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && mCanTeleport && !Settings::GetInstance().GetBool("PauseMenuUp")) {
 					if (!paused) {
+						mTPMesh->SetVisible(true);
+						mCSMesh->SetVisible(true);
+						mMidMesh->SetVisible(true);
 						//SystemLogger::Debug() << "Touchpad Pressed" << std::endl;
 						vec4f raydir = (mArc[mArc.size() - 1] - mArc[0]);
 						raydir.w = 0;
-						raydir = raydir.Normalize();
+						//raydir = raydir.Normalize();
 
 						vec4f forward(0, 0, 1, 0);
 						float controllerTime = 0, wallTime = FLT_MAX;
