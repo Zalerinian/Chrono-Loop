@@ -18,7 +18,7 @@ namespace Epoch
 		virtual void Start()
 		{
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
-			Block = cLevel->FindObjectWithName("EnvWindow1");
+			Block = cLevel->FindObjectWithName("StartSideOpening");
 			blockInterp = TimeManager::Instance()->GetObjectInterpolator(Block->GetUniqueID());
 
 			blockCube = (CubeCollider*)Block->mComponents[eCOMPONENT_COLLIDER][0];

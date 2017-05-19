@@ -568,6 +568,9 @@
     <ClInclude Include="Actions\CCLevel5Fields.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\CCEnterLevel5.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
