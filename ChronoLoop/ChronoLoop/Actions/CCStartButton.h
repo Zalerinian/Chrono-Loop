@@ -25,10 +25,11 @@ namespace Epoch
 		Interpolator<matrix4>* mCloseInterp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mPrevButtonInterp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mPrevStandInterp = new Interpolator<matrix4>();
+		Interpolator<matrix4>* mPrevSignInterp = new Interpolator<matrix4>();
 
 		Listener* l;
 
-		BaseObject *mChamberObject, *mExitButton, *mStartStand, *mStartSign, *mExitStand, *mExitSign, *mClosePanel, *mPrevButton, *mPrevStand;
+		BaseObject *mChamberObject, *mExitButton, *mStartStand, *mStartSign, *mExitStand, *mExitSign, *mClosePanel, *mPrevButton, *mPrevStand, *mPrevSign;
 		Transform identity;
 
 		Level* cLevel = nullptr;
@@ -51,6 +52,7 @@ namespace Epoch
 			mClosePanel = cLevel->FindObjectWithName("mmClosingPanel");
 			mPrevButton = cLevel->FindObjectWithName("mmPrevButton");
 			mPrevStand = cLevel->FindObjectWithName("mmPrevStand");
+			mPrevSign = cLevel->FindObjectWithName("mmPrevSign");
 			//mProgressBar = new BaseObject("mmStartProgressBar", identity);
 			mPB->SetCurProgress(0);
 			mPB->SetFinalProgress(300);
@@ -136,6 +138,11 @@ namespace Epoch
 				mPrevStandInterp->SetEasingFunction(Easing::ElasticOut);
 				mPrevStandInterp->SetActive(true);
 
+				mat = mPrevSign->GetTransform().GetMatrix();
+				mPrevSignInterp->Prepare(1, mat, mat * matrix4::CreateTranslation(0, -.05f, 0), mPrevSign->GetTransform().GetMatrix());
+				mPrevSignInterp->SetEasingFunction(Easing::ElasticOut);
+				mPrevSignInterp->SetActive(true);
+
 				((SFXEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
 				((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::EventType::ePlay);
 				mBooped = true;
@@ -167,6 +174,7 @@ namespace Epoch
 				mExitSignInterp->Update(dt);
 				mPrevButtonInterp->Update(dt);
 				mPrevStandInterp->Update(dt);
+				mPrevSignInterp->Update(dt);
 
 				if (mChamberObject->GetTransform().GetMatrix().fourth.y < -3.64f)
 				{
@@ -251,6 +259,12 @@ namespace Epoch
 					mPrevStandInterp->Prepare(16, mat, mat * matrix4::CreateTranslation(0, -9.95f, 0), mPrevStand->GetTransform().GetMatrix());
 					mPrevStandInterp->SetEasingFunction(Easing::QuadInOut);
 					mPrevStandInterp->SetActive(true);
+
+					mat = mPrevSign->GetTransform().GetMatrix();
+					mPrevSignInterp->Prepare(16, mat, mat * matrix4::CreateTranslation(0, -9.95f, 0), mPrevSign->GetTransform().GetMatrix());
+					mPrevSignInterp->SetEasingFunction(Easing::QuadInOut);
+					mPrevSignInterp->SetActive(true);
+
 					mBooped3 = false;
 				}
 				else if(complete && !mBooped3)
@@ -277,6 +291,7 @@ namespace Epoch
 			delete mCloseInterp;
 			delete mPrevButtonInterp;
 			delete mPrevStandInterp;
+			delete mPrevSignInterp;
 		}
 	};
 
