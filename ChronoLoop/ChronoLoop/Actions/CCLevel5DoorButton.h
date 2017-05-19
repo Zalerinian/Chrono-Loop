@@ -4,28 +4,21 @@
 
 namespace Epoch
 {
-	
-	struct CCLevel5Button : public CodeComponent
+
+	struct CCLevel5DoorButton : public CodeComponent
 	{
 		bool colliding = false, mhitting = false, mCanDoorInterp = false, mDoorDoneInterpolating = false, mFlip = false, mSoundOnce = false;;
 		bool tempDoor = false;
 		BaseObject *Block = nullptr, *Exit = nullptr;
-		CubeCollider* blockCube;
-		MeshComponent* blockMesh;
-
-		//matrix4 blockend, blockStart;
-		//Interpolator<matrix4>* blockInterp;
+		matrix4 blockend, blockStart;
+		Interpolator<matrix4>* blockInterp;
 		Level* cLevel;
 
 		virtual void Start()
 		{
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
-			Block = cLevel->FindObjectWithName("StartSideOpening");
-
-			blockCube = (CubeCollider*)Block->mComponents[eCOMPONENT_COLLIDER][0];
-			blockMesh = (MeshComponent*)Block->mComponents[eCOMPONENT_MESH][0];
-
-
+			Block = cLevel->FindObjectWithName("EnvExitDoor");
+			blockInterp = TimeManager::Instance()->GetObjectInterpolator(Block->GetUniqueID());
 		}
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time)
@@ -33,6 +26,16 @@ namespace Epoch
 			if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName() != "EnvButtonstand")
 			{
 				colliding = true;
+
+				if (!tempDoor)
+				{
+					blockInterp->SetActive(true);
+
+					mCanDoorInterp = true;
+					mDoorDoneInterpolating = false;
+					tempDoor = true;
+
+				}
 
 				ButtonCollider* butCol = (ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
 				if (fabsf(_other.mVelocity * butCol->mPushNormal) < .1f)
@@ -51,10 +54,6 @@ namespace Epoch
 					}
 				}
 			}
-			else
-			{
-				colliding = false;
-			}
 		}
 
 		virtual void Update()
@@ -64,34 +63,43 @@ namespace Epoch
 				if (colliding)
 				{
 					//SystemLogger::GetLog() << "Colliding" << std::endl;
-					blockCube->Disable();
-					//blockMesh->SetVisible(false);
-					//blockMesh->SetVisible(true);
-					//blockMesh->SetVisible(false);
-					//blockMesh->SetVisible(true);
-					//blockMesh->SetVisible(false);
-					//blockMesh->SetVisible(true);
-					//blockMesh->SetVisible(false);
-					//blockMesh->SetVisible(true);
-					blockMesh->SetVisible(false);
+					mFlip = true;
+					if (mCanDoorInterp && !mDoorDoneInterpolating)
+					{
+						mDoorDoneInterpolating = (blockInterp->Update(TimeManager::Instance()->GetDeltaTime()));
+					}
+					else
+					{
+						mCanDoorInterp = false;
+						blockInterp->SetActive(false);
+					}
 				}
 				else
 				{
 					tempDoor = false;
-					blockCube->Enable();
 					//SystemLogger::GetLog() << "Not Colliding" << std::endl;
-					//blockMesh->SetVisible(true);
-					//blockMesh->SetVisible(false);
-					//blockMesh->SetVisible(true);
-					//blockMesh->SetVisible(false);
-					//blockMesh->SetVisible(true);
-					//blockMesh->SetVisible(false);
-					blockMesh->SetVisible(true);
+					if (mFlip)
+					{
+						mFlip = false;
+						blockInterp->SetActive(true);
 
+						mCanDoorInterp = true;
+						mDoorDoneInterpolating = false;
+					}
+
+					if (mCanDoorInterp && !mDoorDoneInterpolating)
+					{
+						mDoorDoneInterpolating = (blockInterp->Update(TimeManager::Instance()->GetDeltaTime()));
+					}
+					else
+					{
+						mCanDoorInterp = false;
+						blockInterp->SetActive(false);
+					}
 					mSoundOnce = false;
 				}
 			}
-			//colliding = false;
+			colliding = false;
 		}
 	};
 
