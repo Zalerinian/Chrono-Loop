@@ -233,6 +233,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Actions\CCPauseToCancel.h" />
     <ClInclude Include="Actions\CCPlatform.h" />
     <ClInclude Include="Actions\CCPlatformButton.h" />
+    <ClInclude Include="Actions\CCPrevButton.h" />
     <ClInclude Include="Actions\CCProgressBar.h" />
     <ClInclude Include="Actions\CCSnapToPlayerPos.h" />
     <ClInclude Include="Actions\CCStartButton.h" />
