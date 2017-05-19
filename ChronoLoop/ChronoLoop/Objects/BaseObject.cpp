@@ -100,6 +100,10 @@ namespace Epoch {
 				}
 			}
 		}
+		for(auto it = mChildren.begin(); it != mChildren.end(); ++ it)
+		{
+			(*it)->Update();
+		}
 	}
 
 	BaseObject * BaseObject::Reset(std::string _name) {

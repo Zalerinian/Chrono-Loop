@@ -207,9 +207,10 @@ namespace Epoch
 
 						Transform t;
 						BaseObject *CloneDisplayNeedle = Pool::Instance()->iGetObject()->Reset("CloneIcon", t);
-						MeshComponent* tdispn = new MeshComponent("../Resources/MiniClone.obj");
+						MeshComponent* tdispn = new MeshComponent("../Resources/Clone.obj");
 						tdispn->AddTexture(mCurrTexture.c_str(),TextureType::eTEX_DIFFUSE);
 						CCCloneIndicator* time = new CCCloneIndicator(mCurCloneController1->GetUniqueID());
+						CloneDisplayNeedle->AddComponent(tdispn);
 						CloneDisplayNeedle->AddComponent(time);
 						cLevel->GetRightController()->AddChild(CloneDisplayNeedle);
 					}

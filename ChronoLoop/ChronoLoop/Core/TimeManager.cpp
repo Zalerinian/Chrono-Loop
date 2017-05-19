@@ -276,10 +276,11 @@ namespace Epoch {
 						break;
 					}
 				}
-				std::list<BaseObject*>children = cLevel->GetTimeManipulator()->GetBaseObject()->GetChildren();
+				bool mbreak = false;
+				std::list<BaseObject*>&children = cLevel->GetTimeManipulator()->GetBaseObject()->GetChildren();
 				for(auto c = children.begin(); c != children.end(); ++c)
 				{
-					std::vector<Component*> comps = (*c)->GetComponents(eCOMPONENT_CODE);
+					std::vector<Component*>& comps = (*c)->GetComponents(eCOMPONENT_CODE);
 					for (unsigned int p = 0; p < comps.size(); p++)
 					{
 						if(dynamic_cast<CCCloneIndicator*>(comps[p]))
@@ -290,8 +291,15 @@ namespace Epoch {
 								BaseObject* del = *c;
 								children.remove(*c);
 								Pool::Instance()->iAddObject(del);
+								mbreak = true;
+								break;
 							}
 						}
+					}
+					if(mbreak)
+					{
+						cLevel->GetTimeManipulator()->GetBaseObject()->SetChildren(children);
+						break;
 					}
 				}
 
@@ -590,11 +598,11 @@ namespace Epoch {
 					Physics::Instance()->mObjects.erase(Physics::Instance()->mObjects.begin() + k);
 				}
 			}
-
-			std::list<BaseObject*>children = cLevel->GetTimeManipulator()->GetBaseObject()->GetChildren();
+			bool mbreak = false;
+			std::list<BaseObject*>&children = cLevel->GetTimeManipulator()->GetBaseObject()->GetChildren();
 			for (auto c = children.begin(); c != children.end(); ++c)
 			{
-				std::vector<Component*> comps = (*c)->GetComponents(eCOMPONENT_CODE);
+				std::vector<Component*>& comps = (*c)->GetComponents(eCOMPONENT_CODE);
 				for (unsigned int p = 0; p < comps.size(); p++)
 				{
 					if (dynamic_cast<CCCloneIndicator*>(comps[p]))
@@ -605,8 +613,15 @@ namespace Epoch {
 							BaseObject* del = *c;
 							children.remove(*c);
 							Pool::Instance()->iAddObject(del);
+							mbreak = true;
+							break;
 						}
 					}
+				}
+				if (mbreak)
+				{
+					cLevel->GetTimeManipulator()->GetBaseObject()->SetChildren(children);
+					break;
 				}
 			}
 

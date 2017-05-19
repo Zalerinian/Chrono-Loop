@@ -282,8 +282,6 @@ namespace Epoch
 					visibleMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 					visibleMesh2->SetVisible(false);
 					headset->AddComponent(visibleMesh2);
-					CCLevel2Tutorial* tut = new CCLevel2Tutorial();
-					headset->AddComponent(tut);
 					HeadsetFollow* hfollow = new HeadsetFollow();
 					headset->AddComponent(hfollow);
 					headset->AddComponent(ears);
