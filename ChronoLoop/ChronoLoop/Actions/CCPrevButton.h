@@ -60,9 +60,9 @@ namespace Epoch
 			//mProgressBar = new BaseObject("mmStartProgressBar", identity);
 			mPB->SetCurProgress(0);
 			mPB->SetFinalProgress(300);
-			mStartSign->AddComponent(mPB);
+			mPrevSign->AddComponent(mPB);
 			mPB->GetBackground()->SetParent(mPrevSign);
-			mStartSign->AddChild(mPB->GetBackground());
+			mPrevSign->AddChild(mPB->GetBackground());
 
 			l = new Listener();
 			mChamberObject->AddComponent(l);
@@ -145,7 +145,7 @@ namespace Epoch
 				mBooped3 = true;
 				Settings::GetInstance().SetInt("mmLevel", Settings::GetInstance().GetInt("mmLevel") - 1);
 				Settings::GetInstance().SetBool("mmChamberMoving", true);
-				mPB->OnDisable();
+				//mPB->OnDisable();
 			}
 		}
 

@@ -149,7 +149,7 @@ namespace Epoch
 				mBooped3 = true;
 				Settings::GetInstance().SetInt("mmLevel", Settings::GetInstance().GetInt("mmLevel") + 1);
 				Settings::GetInstance().SetBool("mmChamberMoving", true);
-				mPB->OnDisable();
+				//mPB->OnDisable();
 			}
 		}
 
