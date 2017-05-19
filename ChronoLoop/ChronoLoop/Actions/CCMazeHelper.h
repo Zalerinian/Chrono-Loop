@@ -62,9 +62,9 @@ namespace Epoch
 			mazeBoxes[0].SetUp(1, 2, 0);
 			mazeBoxes[1].SetUp(2, 2, 3);
 			mazeBoxes[2].SetUp(3, 3, 3);
-			mazeBoxes[0].mBox = cLevel->FindObjectWithName("Box1");
-			mazeBoxes[1].mBox = cLevel->FindObjectWithName("Box2");
-			mazeBoxes[2].mBox = cLevel->FindObjectWithName("Box3");
+			mazeBoxes[0].mBox = cLevel->FindObjectWithName("EnvBox1");
+			mazeBoxes[1].mBox = cLevel->FindObjectWithName("EnvBox2");
+			mazeBoxes[2].mBox = cLevel->FindObjectWithName("EnvBox3");
 			mLButton = cLevel->FindObjectWithName("Button1");
 			mRButton = cLevel->FindObjectWithName("Button3");
 			mUButton = cLevel->FindObjectWithName("Button2");
@@ -89,22 +89,22 @@ namespace Epoch
 			if ((GetAsyncKeyState(VK_DOWN) & 0x1 || mDBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveDown();
 				mDBCC->SetisColliding(false);
-				PrintGrid();
+				//PrintGrid();
 			}
 			else if (((GetAsyncKeyState(VK_UP) & 0x1) || mUBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveUp();
 				mUBCC->SetisColliding(false);
-				PrintGrid();
+				//PrintGrid();
 			}
 			else if ((GetAsyncKeyState(VK_LEFT) & 0x1 || mLBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveLeft();
 				mLBCC->SetisColliding(false);
-				PrintGrid();
+				//PrintGrid();
 			}
 			else if ((GetAsyncKeyState(VK_RIGHT) & 0x1 || mRBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveRight();
 				mRBCC->SetisColliding(false);
-				PrintGrid();
+				//PrintGrid();
 			}
 			else if(GetAsyncKeyState(Epoch::Keys::R) & 0x1 || mResetBCC->GetisColliding())
 			{
@@ -126,18 +126,21 @@ namespace Epoch
 					mBox1Done = mazeBoxes[0].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
 					if (mBox1Done) {
 						mazeBoxes[0].mInterp->SetActive(false);
+						((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 5))->CallEvent(Emitter::ePlay);
 					}
 				}
 				if (!mBox2Done) {
 					mBox2Done = mazeBoxes[1].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
 					if (mBox2Done) {
 						mazeBoxes[1].mInterp->SetActive(false);
+						((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 5))->CallEvent(Emitter::ePlay);
 					}
 				}
 				if (!mBox3Done) {
 					mBox3Done = mazeBoxes[2].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
 					if (mBox3Done) {
 						mazeBoxes[2].mInterp->SetActive(false);
+						((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 5))->CallEvent(Emitter::ePlay);
 					}
 				}
 			}
@@ -454,43 +457,43 @@ namespace Epoch
 				int Y = mazeBoxes[i].mCol;
 				//Row 0
 				if (X == 0 && Y == 0) {
-					finalDest = matrix4::CreateTranslation(6, -1.80f, 6.2f);
+					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(6, -1.80f, 6.2f);
 				}
 				else if (X == 0 && Y == 1) {
-					finalDest = matrix4::CreateTranslation(2, -1.80f, 6.2f);
+					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) *  matrix4::CreateTranslation(2, -1.80f, 6.2f);
 				}
 				//Row 1
 				else if (X == 1 && Y == 0) {
-					finalDest = matrix4::CreateTranslation(6, -1.80f, 2.2f);
+					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(6, -1.80f, 2.2f);
 				}
 				else if (X == 1 && Y == 2) {
-					finalDest = matrix4::CreateTranslation(-2, -1.80f, 2.2f);
+					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) *  matrix4::CreateTranslation(-2, -1.80f, 2.2f);
 				}
 				else if (X == 1 && Y == 3) {
-					finalDest = matrix4::CreateTranslation(-6, -1.80f, 2.2f);
+					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(-6, -1.80f, 2.2f);
 				}
 				//Row 2
 				else if (X == 2 && Y == 0) {
-					finalDest = matrix4::CreateTranslation(6, -1.80f, -1.80f);
+					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(6, -1.80f, -1.80f);
 				}
 				else if (X == 2 && Y == 1) {
-					finalDest = matrix4::CreateTranslation(2, -1.80f, -1.80f);
+					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(2, -1.80f, -1.80f);
 				}
 				else if (X == 2 && Y == 3) {
-					finalDest = matrix4::CreateTranslation(-6, -1.80f, -1.80f);
+					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) *  matrix4::CreateTranslation(-6, -1.80f, -1.80f);
 				}
 				//Row 3
 				else if (X == 3 && Y == 0) {
-					finalDest = matrix4::CreateTranslation(6, -1.80f, -5.80f);
+					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(6, -1.80f, -5.80f);
 				}
 				else if (X == 3 && Y == 1) {
-					finalDest = matrix4::CreateTranslation(2, -1.80f, -5.80f);
+					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(2, -1.80f, -5.80f);
 				}
 				else if (X == 3 && Y == 2) {
-					finalDest = matrix4::CreateTranslation(-2, -1.80f, -5.80f);
+					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(-2, -1.80f, -5.80f);
 				}
 				else if (X == 3 && Y == 3) {
-					finalDest = matrix4::CreateTranslation(-6, -1.80f, -5.80f);
+					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(-6, -1.80f, -5.80f);
 				}
 				mazeBoxes[i].mInterp->Prepare(0.2f, *curMatrix, finalDest, mazeBoxes[i].mBox->GetTransform().GetMatrix());
 				mazeBoxes[i].mInterp->SetActive(true);

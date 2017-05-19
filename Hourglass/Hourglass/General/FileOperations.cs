@@ -16,7 +16,7 @@ namespace Hourglass {
 	}
 
 	public static class FileIO {
-		public static readonly uint WriterVersion = 6;
+		public static readonly uint WriterVersion = 7;
 		public static readonly float RADIANS_TO_DEGREES = ((180.0f / 3.14f));
 		public static readonly float DEGREES_TO_RADIANS = (1 / 180.0f * 3.14f);
 		private static Stack<BaseObject> ObjectStack = new Stack<BaseObject>();
@@ -117,7 +117,7 @@ namespace Hourglass {
 				}
 
 				writer.Seek(sizeof(Int32), SeekOrigin.Begin);
-				writer.Write(SettingsOffset);
+				writer.Write(SettingsOffset);   
 				writer.Write(ObjectsOffset);
 				writer.Seek(ObjectsOffset, SeekOrigin.Begin);
 				writer.Write(ObjectCount);

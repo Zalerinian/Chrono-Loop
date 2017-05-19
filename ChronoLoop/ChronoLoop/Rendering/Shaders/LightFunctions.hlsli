@@ -38,7 +38,7 @@ float GetSpotlightSpecularIntensity(float3 _lightPos, float _coneRatio, float3 _
 	float spotFactor = (surfaceRatio > _coneRatio) ? 1 : 0;
 	float3 reflection = normalize(reflect(IncidentVector, _surfaceNormal));
 	float3 surfaceToEye = normalize(_eyePos - _surfacePos);
-	return pow(saturate(dot(reflection, surfaceToEye)), 96) * spotFactor;
+	return pow(saturate(dot(reflection, surfaceToEye)), 96 * 5) * spotFactor;
 }
 
 #endif //LIGHTFUNCS_HLSLI

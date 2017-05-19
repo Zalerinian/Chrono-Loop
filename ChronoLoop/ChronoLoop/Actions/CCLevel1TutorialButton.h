@@ -24,8 +24,8 @@ namespace Epoch
 			((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mPress = true;
 			Level* clevel = LevelManager::GetInstance().GetCurrentLevel();
 			tutButton = clevel->FindObjectWithName("tutButton");
-			tutChamber = clevel->FindObjectWithName("tutChamber");
-			tutDoor = clevel->FindObjectWithName("TransparentDoor3");
+			tutChamber = clevel->FindObjectWithName("EnvtutChamber");
+			tutDoor = clevel->FindObjectWithName("EnvTransparentDoor3");
 
 			doorInterp = TimeManager::Instance()->GetObjectInterpolator(tutDoor->GetUniqueID());
 			chamberInterp = TimeManager::Instance()->GetObjectInterpolator(tutChamber->GetUniqueID());
@@ -58,7 +58,6 @@ namespace Epoch
 
 						if (Settings::GetInstance().GetInt("tutStep") == 1) {
 							Settings::GetInstance().SetUInt("tut1ButtonPress", TimeManager::Instance()->GetCurrentSnapFrame());
-							float t = Settings::GetInstance().GetUInt("tut1ButtonPress");
 							chamberInterp->SetActive(true);
 							chamberInterp->Prepare(0.2f, tutChamber->GetTransform().GetMatrix(), chamberEnd, tutChamber->GetTransform().GetMatrix());
 						}

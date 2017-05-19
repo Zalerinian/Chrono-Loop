@@ -1013,7 +1013,7 @@ namespace Epoch
 										if (otherCol->mIsEnabled)
 										{
 											if (otherCol->mColliderType == Collider::eCOLLIDER_Cube || otherCol->mColliderType == Collider::eCOLLIDER_Controller &&
-												otherCol->mVelocity * ((ButtonCollider*)collider)->mPushNormal < 0)
+												(otherCol->GetPos() - collider->GetPos()) * ((ButtonCollider*)collider)->mPushNormal > 0)
 											{
 												CubeCollider* aabb2 = (CubeCollider*)otherCol;
 												if ((AabbToPlane(((ButtonCollider*)collider)->mLowerBound, *aabb1) == 1) && AABBtoAABB(*aabb1, *aabb2))
@@ -1123,16 +1123,19 @@ namespace Epoch
 
 					if (collider->IsEnabled() && collider->mShouldMove && collider->mColliderType != Collider::eCOLLIDER_Controller)
 					{
-						collider->mDragForce = collider->mVelocity * (-0.5f * collider->mRHO * collider->mVelocity.Magnitude() * collider->mDrag * collider->mArea);
-						collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
-						collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
+						if(collider->mVelocity.Magnitude() > .01f || collider->mAcceleration.Magnitude() > .01f /*|| collider->mTotalForce.Magnitude() > .01f*/ || collider->mDragForce.Magnitude() > .01f)
+						{
+							collider->mDragForce = collider->mVelocity * (-0.5f * collider->mRHO * collider->mVelocity.Magnitude() * collider->mDrag * collider->mArea);
+							collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
+							collider->mVelocity = CalcVelocity(collider->mVelocity, collider->mAcceleration, _time);
 
-						if (fabs(collider->mForces.x) < 0.01f && fabsf(collider->mForces.y) < 0.01f && fabsf(collider->mForces.z) < 0.01f)
-							collider->mForces = { 0,0,0 };
-						else
-							collider->mForces *= 0.99f;
+							if (fabs(collider->mForces.x) < 0.01f && fabsf(collider->mForces.y) < 0.01f && fabsf(collider->mForces.z) < 0.01f)
+								collider->mForces = { 0,0,0 };
+							else
+								collider->mForces *= 0.99f;
 
-						collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
+							collider->SetPos(CalcPosition(collider->GetPos(), collider->mVelocity, _time));
+						}
 					}
 				}//For all colliders of object end
 			}//For all objects end

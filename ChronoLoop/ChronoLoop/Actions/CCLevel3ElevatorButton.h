@@ -36,8 +36,8 @@ namespace Epoch {
 
 		virtual void Start() {
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
-			mChamberObject = cLevel->FindObjectWithName("L3Elevator");
-			mButtonStand = cLevel->FindObjectWithName("L3Buttonstand");
+			mChamberObject = cLevel->FindObjectWithName("L3ElevatorFloor");
+			mButtonStand = cLevel->FindObjectWithName("EnvL3Buttonstand");
 			mEleStart = mChamberObject->GetTransform().GetMatrix();
 			mButStart = mObject->GetTransform().GetMatrix();
 			mStandStart = mButtonStand->GetTransform().GetMatrix();
@@ -215,7 +215,7 @@ namespace Epoch {
 
 				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mObject->GetTransform().GetMatrix().fourth);
 				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y - .2f;
-				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y - .2f;
+				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y + .2f;
 			}
 
 			if(Settings::GetInstance().GetBool("ResetElevator"))

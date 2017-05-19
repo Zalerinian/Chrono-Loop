@@ -19,8 +19,14 @@ namespace Epoch {
 		mNode = Renderer::Instance()->AddTopmostNode(*mShape);
 	}
 
+	void MeshComponent::CreateMotionNode() {
+		mNode = Renderer::Instance()->AddMotionNode(*mShape);
+	}
+
 	void MeshComponent::CreateNode() {
-		if (GetTopmost()) {
+		if (GetInMotion()) {
+			CreateMotionNode();
+		} else if (GetTopmost()) {
 			CreateTopmostNode();
 		} else if (mBlended) {
 			CreateTransparentNode();
@@ -44,13 +50,29 @@ namespace Epoch {
 		Renderer::Instance()->RemoveTopmostNode(*mShape);
 	}
 
-	void MeshComponent::RemoveNode() {
-		if (mNode) {
-			if (GetTopmost()) {
+	void MeshComponent::RemoveMotionNode() {
+		DESTROY_NODE(mNode);
+		Renderer::Instance()->RemoveMotionNode(*mShape);
+	}
+
+	void MeshComponent::RemoveNode()
+	{
+		if (mNode)
+		{
+			if (GetInMotion())
+			{
+				RemoveMotionNode();
+			}
+			else if (GetTopmost())
+			{
 				RemoveTopmostNode();
-			} else if (mBlended) {
+			}
+			else if (mBlended)
+			{
 				RemoveTransparentNode();
-			} else {
+			}
+			else
+			{
 				RemoveOpaqueNode();
 			}
 		}
@@ -96,7 +118,7 @@ namespace Epoch {
 			CreateNode();
 			mVisible = true;
 		} else {
-			mVisible = false;
+			mVisible = true;
 			mNode = nullptr;
 		}
 
@@ -133,7 +155,7 @@ namespace Epoch {
 			CreateNode();
 			mVisible = true;
 		} else {
-			mVisible = false;
+			mVisible = true;
 			mNode = nullptr;
 		}
 
@@ -221,7 +243,8 @@ namespace Epoch {
 			if (srv != mShape->GetContext().mTextures[_type]) {
 				RemoveNode();
 				mShape->AddTexture(_path, _type);
-				if (mVisible) {
+				if (mVisible && CanCreateNode())
+				{
 					CreateNode();
 				}
 			}
@@ -233,7 +256,8 @@ namespace Epoch {
 		if (_t != mShape->GetContext().mRasterState) {
 			RemoveNode();
 			mShape->GetContext().mRasterState = _t;
-			if (mVisible) {
+			if (mVisible && CanCreateNode())
+			{
 				CreateNode();
 			}
 		}
@@ -243,7 +267,8 @@ namespace Epoch {
 		if (_vf != mShape->GetContext().mGeoShaderFormat) {
 			RemoveNode();
 			mShape->GetContext().mVertexShaderFormat = _vf;
-			if (mVisible) {
+			if (mVisible && CanCreateNode())
+			{
 				CreateNode();
 			}
 		}
@@ -253,7 +278,8 @@ namespace Epoch {
 		if (_pf != mShape->GetContext().mGeoShaderFormat) {
 			RemoveNode();
 			mShape->GetContext().mPixelShaderFormat = _pf;
-			if (mVisible) {
+			if (mVisible && CanCreateNode())
+			{
 				CreateNode();
 			}
 		}
@@ -263,7 +289,8 @@ namespace Epoch {
 		if (_gf != mShape->GetContext().mGeoShaderFormat) {
 			RemoveNode();
 			mShape->GetContext().mGeoShaderFormat = _gf;
-			if (mVisible) {
+			if (mVisible && CanCreateNode())
+			{
 				CreateNode();
 			}
 		}
@@ -277,7 +304,8 @@ namespace Epoch {
 			mShape->GetContext().mPixelShaderFormat = _psf;
 			mShape->GetContext().mVertexShaderFormat = _vsf;
 			mShape->GetContext().mGeoShaderFormat = _gsf;
-			if (mVisible) {
+			if (mVisible && CanCreateNode())
+			{
 				CreateNode();
 			}
 		}
@@ -287,25 +315,30 @@ namespace Epoch {
 		if (GetTopmost() != _topmost) {
 			RemoveNode();
 			mTopmost = _topmost;
-			if (IsVisible()) {
+			if (IsVisible() && CanCreateNode()) {
+				CreateNode();
+			}
+		}
+	}
+
+	void MeshComponent::SetInMotion(bool _inMotion) {
+		if (mActiveRewind != _inMotion) {
+			RemoveNode();
+			mActiveRewind = _inMotion;
+			if (mVisible && CanCreateNode())
+			{
 				CreateNode();
 			}
 		}
 	}
 
 	void MeshComponent::SetBlended(bool _ButWillItBlend) {
-		if(mBlended) {
-			if (!_ButWillItBlend) {
-				RemoveTransparentNode();
-				CreateOpaqueNode();
-			}
-		} else {
-			if (_ButWillItBlend) {
-				RemoveOpaqueNode();
-				CreateTransparentNode();
-			}
-		}
+		RemoveNode();
 		mBlended = _ButWillItBlend;
+		if(mVisible && CanCreateNode())
+		{
+			CreateNode();
+		}
 	}
 
 	RenderShape * MeshComponent::GetShape() {
@@ -349,6 +382,10 @@ namespace Epoch {
 
 	bool MeshComponent::GetTopmost() {
 		return mTopmost;
+	}
+
+	bool MeshComponent::GetInMotion() {
+		return mActiveRewind;
 	}
 
 	void MeshComponent::SetData(ConstantBufferType _t, BufferDataType _bt, unsigned char _index, void * _data) {

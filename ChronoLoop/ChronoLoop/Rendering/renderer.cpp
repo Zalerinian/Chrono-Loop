@@ -59,7 +59,7 @@ namespace Epoch {
 
 	void Renderer::ThrowIfFailed(HRESULT hr) {
 		if (FAILED(hr)) {
-throw "Something has gone catastrophically wrong!";
+			throw "Something has gone catastrophically wrong!";
 		}
 	}
 
@@ -389,6 +389,11 @@ throw "Something has gone catastrophically wrong!";
 		desc.ByteWidth = sizeof(vec4f);
 		mDevice->CreateBuffer(&desc, nullptr, mHeadPosBuffer.GetAddressOf());
 
+		// Global Matrix Buffer
+		desc.ByteWidth = sizeof(matrix4);
+		matrix4 identity;
+		InitialData.pSysMem = &identity;
+		ThrowIfFailed(mDevice->CreateBuffer(&desc, &InitialData, mGlobalMatrixBuffer.GetAddressOf()));
 
 		// Model position buffer
 #if ENABLE_INSTANCING
@@ -467,6 +472,12 @@ throw "Something has gone catastrophically wrong!";
 		SetD3DName(mLBuffer.Get(), "Light Data Buffer");
 		SetD3DName(mBlurStageBuffer.Get(), "Blur Data Buffer");
 
+		SetD3DName(mGlowTexture.Get(), "Glow Texture");
+		SetD3DName(mGlowRTV.Get(), "Glow RTV");
+		SetD3DName(mGlowSRV.Get(), "Glow SRV");
+		SetD3DName(mSuperGlowTexture.Get(), "SuperGlow Texture");
+		SetD3DName(mSuperGlowSRV.Get(), "SuperGlow RTV");
+		SetD3DName(mSuperGlowRTV.Get(), "SuperGlow SRV");
 
 		// The G-Buffer
 		SetD3DName(mAlbedoTexture.Get(),   "GBuffer Albedo Texture");
@@ -509,6 +520,7 @@ throw "Something has gone catastrophically wrong!";
 
 		mSceneScreenQuad = new RenderShape("../Resources/VerticalPlaneHalfU.obj", true, ePS_PURETEXTURE, eVS_NDC, eGS_PosNormTex_NDC);
 		mSceneScreenQuad->GetContext().mTextures[eTEX_DIFFUSE] = mPostProcessSRV;
+		mSceneScreenQuad->mContext.mRasterState = eRS_FILLED;
 
 		mDeferredCombiner = new RenderShape("../Resources/VerticalPlane.obj", true, ePS_DEFERRED, eVS_NDC, eGS_PosNormTex_NDC);
 		mDeferredCombiner->mContext.mTextures[0] = mAlbedoSRV;
@@ -516,23 +528,21 @@ throw "Something has gone catastrophically wrong!";
 		mDeferredCombiner->mContext.mTextures[2] = mNormalSRV;
 		mDeferredCombiner->mContext.mTextures[3] = mSpecularSRV;
 		mDeferredCombiner->mContext.mPixelCBuffers[0] = mLBuffer;
+		mDeferredCombiner->mContext.mRasterState = eRS_FILLED;
 	}
 
 	void Renderer::SetStaticBuffers() {
 		mContext->VSSetConstantBuffers(0, 1, mPositionBuffer.GetAddressOf());
 		mContext->VSSetConstantBuffers(1, 1, mSimInstanceBuffer.GetAddressOf());
+		mContext->VSSetConstantBuffers(2, 1, mGlobalMatrixBuffer.GetAddressOf());
 		mContext->GSSetConstantBuffers(0, 1, mVPBuffer.GetAddressOf());
-		mContext->GSSetConstantBuffers(1, 1, mHeadPosBuffer.GetAddressOf());
-		//(*mContext)->VSSetConstantBuffers(2, 1, nullptr); // This will crash. - Instance Buffer
-		//(*mContext)->VSSetConstantBuffers(3, 1, nullptr); // This will crash. - Animation Data Buffer
-
-		//(*mContext)->PSSetConstantBuffers(0, 1, nullptr); // This will crash. - Light Buffer
+		mContext->PSSetConstantBuffers(0, 1, mHeadPosBuffer.GetAddressOf());
 	}
 
 	void Renderer::InitializeStates()
 	{
 		ID3D11DepthStencilState *opaqueState, *transparentState;
-		D3D11_DEPTH_STENCIL_DESC opaqueDepth, transparentDepth, topmostDepth;
+		D3D11_DEPTH_STENCIL_DESC opaqueDepth, transparentDepth, topmostDepth, motionFind, motionReverse;
 		memset(&opaqueDepth, 0, sizeof(opaqueDepth));
 		opaqueDepth.DepthEnable = true;
 		opaqueDepth.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
@@ -543,10 +553,36 @@ throw "Something has gone catastrophically wrong!";
 
 		topmostDepth = transparentDepth;
 		topmostDepth.DepthEnable = false;
+		ThrowIfFailed(mDevice->CreateDepthStencilState(&topmostDepth, mTopmostState.GetAddressOf()));
 		ThrowIfFailed(mDevice->CreateDepthStencilState(&opaqueDepth, &opaqueState));
 		ThrowIfFailed(mDevice->CreateDepthStencilState(&transparentDepth, &transparentState));
 		mOpaqueState.Attach(opaqueState);
 		mTransparentState.Attach(transparentState);
+
+		motionFind = opaqueDepth;
+		motionFind.StencilEnable = TRUE;
+		motionFind.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
+		motionFind.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
+		motionFind.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_REPLACE;
+		motionFind.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
+		motionFind.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+		motionFind.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		motionFind.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+		motionFind.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		motionFind.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		motionFind.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+		motionFind.BackFace.StencilFunc = D3D11_COMPARISON_NEVER;
+
+		motionReverse = motionFind;
+		motionReverse.DepthFunc = D3D11_COMPARISON_GREATER;
+		motionReverse.FrontFace.StencilFunc = D3D11_COMPARISON_GREATER;
+		//motionReverse.BackFace.StencilFunc = D3D11_COMPARISON_LESS;
+		motionReverse.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		motionReverse.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+		motionReverse.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+
+		ThrowIfFailed(mDevice->CreateDepthStencilState(&motionFind, mMotionStateFindObject.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateDepthStencilState(&motionReverse, mMotionStateReverseDepth.GetAddressOf()));
 
 
 		ID3D11BlendState *opaqueBS, *transparentBS;
@@ -678,7 +714,7 @@ throw "Something has gone catastrophically wrong!";
 
 
 	void Renderer::RenderNoVR(float _delta) {
-		UpdateCamera(2, 2, _delta);
+		UpdateCamera(3, 2, _delta);
 		UpdateGSBuffers();
 		UpdateLBuffers();
 		ParticleSystem::Instance()->Render();
@@ -701,6 +737,7 @@ throw "Something has gone catastrophically wrong!";
 		mOpaqueSet.Prune();
 		mTransparentSet.Prune();
 		mTopmostSet.Prune();
+		mMotionSet.Prune();
 
 		// Go through opaque objects first
 		mContext->OMSetDepthStencilState(mOpaqueState.Get(), 1);
@@ -751,56 +788,80 @@ throw "Something has gone catastrophically wrong!";
 			}
 		}
 
-		mContext->OMSetDepthStencilState(mTransparentState.Get(), 1);
-		mContext->OMSetBlendState(mTransparentBlendState.Get(), NULL, 0xFFFFFFFF);
-		for (auto it = mTransparentSet.Begin(); it != mTransparentSet.End(); ++it) {
-			(*it)->mPositions.GetData(positions);
-			if (positions.size() > 0) {
+		// Draw the topmost objects. These don't use the depth buffer at all, 
+		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
+		for (unsigned int passIndex = 0; passIndex < 2; ++passIndex) {
+			if (passIndex == 0) {
+				mContext->OMSetDepthStencilState(mMotionStateFindObject.Get(), 1);
+			} else {
+				mContext->OMSetDepthStencilState(mMotionStateReverseDepth.Get(), 1); // Make sure the stencil buffer value is less than 1 to pass.
+				D3D11_MAPPED_SUBRESOURCE map;
+				matrix4 scale = matrix4::CreateScale(1.5f, 1.5f, 1.5f);
+				mContext->Map(mGlobalMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+				memcpy(map.pData, &scale, sizeof(scale));
+				mContext->Unmap(mGlobalMatrixBuffer.Get(), 0);
+			}
+
+			for (auto it = mMotionSet.Begin(); it != mMotionSet.End(); ++it) {
+				(*it)->mPositions.GetData(positions);
+				if (positions.size() > 0) {
 #if ENABLE_INSTANCING
-				unsigned int offset = 0;
-				positions.reserve((positions.size() / 256 + 1) * 256);
-				while (positions.size() - offset <= positions.size()) {
+					unsigned int offset = 0;
+					positions.reserve((positions.size() / 256 + 1) * 256);
+					while (positions.size() - offset <= positions.size()) {
+						(*it)->mShape.GetContext().Apply(mCurrentContext);
+						mCurrentContext.SimpleClone((*it)->mShape.GetContext());
+
+						D3D11_MAPPED_SUBRESOURCE map;
+						memset(&map, 0, sizeof(map));
+						HRESULT MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+						memcpy(map.pData, positions.data() + offset, sizeof(matrix4) * min(positions.size() - offset, 256));
+						mContext->Unmap(mPositionBuffer.Get(), 0);
+						//mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
+
+						(*it)->mShape.Render((UINT)positions.size() - offset);
+						offset += 256;
+					}
+#else
 					(*it)->mShape.GetContext().Apply(mCurrentContext);
 					mCurrentContext.SimpleClone((*it)->mShape.GetContext());
+					vec4i SimInstanceID(0, 0, 0, 0);
+					for (unsigned int i = 0; i < positions.size(); ++i) {
+						SimInstanceID.x = i;
 
-					D3D11_MAPPED_SUBRESOURCE map;
-					HRESULT MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-					memcpy(map.pData, positions.data() + offset, sizeof(matrix4) * min(positions.size() - offset, 256));
-					mContext->Unmap(mPositionBuffer.Get(), 0);
-					//mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
+						D3D11_MAPPED_SUBRESOURCE map;
+						memset(&map, 0, sizeof(map));
+						HRESULT MHR = mContext->Map(mSimInstanceBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+						memcpy(map.pData, &SimInstanceID, sizeof(vec4i));
+						mContext->Unmap(mSimInstanceBuffer.Get(), 0);
 
-					(*it)->mShape.Render((UINT)positions.size() - offset);
-					offset += 256;
-				}
-#else
-				(*it)->mShape.GetContext().Apply(mCurrentContext);
-				mCurrentContext.SimpleClone((*it)->mShape.GetContext());
-				vec4i SimulatedIID(0, 0, 0, 0);
-				for (unsigned int i = 0; i < positions.size(); ++i) {
-					SimulatedIID.x = i;
+						//mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimInstanceID, 0, 0);
 
-					D3D11_MAPPED_SUBRESOURCE map;
-					HRESULT MHR = mContext->Map(mSimInstanceBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-					memcpy(map.pData, &SimulatedIID, sizeof(vec4i));
-					mContext->Unmap(mSimInstanceBuffer.Get(), 0);
-
-					//mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimInstanceID, 0, 0);
-
-					MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-					memcpy(map.pData, &positions[i], sizeof(matrix4));
-					mContext->Unmap(mPositionBuffer.Get(), 0);
-					//mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
-					(*it)->mShape.Render(1); // Without instancing, the instance count doesn't matter, but we're only drawing one :)
-				}
+						memset(&map, 0, sizeof(map));
+						MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+						memcpy(map.pData, &positions[i], sizeof(matrix4));
+						mContext->Unmap(mPositionBuffer.Get(), 0);
+						//mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
+						(*it)->mShape.Render(1); // Without instancing, the instance count doesn't matter, but we're only drawing one :)
+					}
 #endif
+				}
 			}
 		}
 
+		{
+			// Anonymous scope so I can use the generic variable name 'map'
+			D3D11_MAPPED_SUBRESOURCE map;
+			matrix4 identity;
+			mContext->Map(mGlobalMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+			memcpy(map.pData, &identity, sizeof(identity));
+			mContext->Unmap(mGlobalMatrixBuffer.Get(), 0);
+		}
 
-		// Draw the topmost objects. These don't use the depth buffer at all, 
-		mContext->OMSetDepthStencilState(mOpaqueState.Get(), 1);
-		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
-		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+
+
+		mContext->OMSetDepthStencilState(mTopmostState.Get(), 1);
 		//No blend state is set, because top-most objects also support alpha blending, and that state was set in the block above.
 		for (auto it = mTopmostSet.Begin(); it != mTopmostSet.End(); ++it) {
 			(*it)->mPositions.GetData(positions);
@@ -847,10 +908,6 @@ throw "Something has gone catastrophically wrong!";
 #endif
 			}
 		}
-
-		mContext->OMSetDepthStencilState(mOpaqueState.Get(), 1);
-		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
-
 	}
 
 
@@ -860,10 +917,10 @@ throw "Something has gone catastrophically wrong!";
 		if (mEnabledFeatures[eRendererFeature_SuperGlow]) {
 			BlurTextures(mSuperGlowTexture.GetAddressOf(), 1, 2.0f, 0.4f);
 		}
-		if (mEnabledFeatures[eRendererFeature_Bloom]) {
-			RenderForBloom();
-		}
 		if (mEnabledFeatures[eRendererFeature_Glow]) {
+			if (mEnabledFeatures[eRendererFeature_Bloom]) {
+				RenderForBloom();
+			}
 			BlurTextures(mBloomTexture.GetAddressOf(), 1, 2.0f, 0.4f);
 		}
 
@@ -873,6 +930,9 @@ throw "Something has gone catastrophically wrong!";
 		mDeferredCombiner->GetContext().Apply(mCurrentContext);
 		mDeferredCombiner->Render(1);
 		mCurrentContext.SimpleClone(mDeferredCombiner->GetContext());
+
+		RenderTransparentObjects();
+		mContext->OMSetDepthStencilState(mOpaqueState.Get(), 1);
 
 		ID3D11ShaderResourceView *unbind[] = { nullptr, nullptr, nullptr, nullptr };
 		mContext->OMSetRenderTargets(1, mMainView.GetAddressOf(), nullptr);
@@ -887,6 +947,57 @@ throw "Something has gone catastrophically wrong!";
 
 		mCurrentContext.SimpleClone(mScenePPQuad->GetContext());
 		AttachPrimaryViewports();
+	}
+
+	void Renderer::RenderTransparentObjects() {
+		mContext->OMSetRenderTargets(1, mPostProcessRTV.GetAddressOf(), mDSView.Get());
+
+		std::vector<matrix4> positions;
+		mContext->OMSetDepthStencilState(mTransparentState.Get(), 1);
+		mContext->OMSetBlendState(mTransparentBlendState.Get(), NULL, 0xFFFFFFFF);
+		for (auto it = mTransparentSet.Begin(); it != mTransparentSet.End(); ++it) {
+			(*it)->mPositions.GetData(positions);
+			if (positions.size() > 0) {
+#if ENABLE_INSTANCING
+				unsigned int offset = 0;
+				positions.reserve((positions.size() / 256 + 1) * 256);
+				while (positions.size() - offset <= positions.size()) {
+					(*it)->mShape.GetContext().Apply(mCurrentContext);
+					mCurrentContext.SimpleClone((*it)->mShape.GetContext());
+
+					D3D11_MAPPED_SUBRESOURCE map;
+					HRESULT MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+					memcpy(map.pData, positions.data() + offset, sizeof(matrix4) * min(positions.size() - offset, 256));
+					mContext->Unmap(mPositionBuffer.Get(), 0);
+					//mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
+
+					(*it)->mShape.Render((UINT)positions.size() - offset);
+					offset += 256;
+				}
+#else
+				(*it)->mShape.GetContext().Apply(mCurrentContext);
+				mCurrentContext.SimpleClone((*it)->mShape.GetContext());
+				vec4i SimulatedIID(0, 0, 0, 0);
+				for (unsigned int i = 0; i < positions.size(); ++i) {
+					SimulatedIID.x = i;
+
+					D3D11_MAPPED_SUBRESOURCE map;
+					HRESULT MHR = mContext->Map(mSimInstanceBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+					memcpy(map.pData, &SimulatedIID, sizeof(vec4i));
+					mContext->Unmap(mSimInstanceBuffer.Get(), 0);
+
+					//mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimInstanceID, 0, 0);
+
+					MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+					memcpy(map.pData, &positions[i], sizeof(matrix4));
+					mContext->Unmap(mPositionBuffer.Get(), 0);
+					//mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
+					(*it)->mShape.Render(1); // Without instancing, the instance count doesn't matter, but we're only drawing one :)
+				}
+#endif
+			}
+		}
+
 	}
 
 	void Renderer::RenderForBloom() {
@@ -926,6 +1037,10 @@ throw "Something has gone catastrophically wrong!";
 		return mTopmostSet.AddShape(_node);
 	}
 
+	GhostList<matrix4>::GhostNode * Renderer::AddMotionNode(RenderShape & _node) {
+		return mMotionSet.AddShape(_node);
+	}
+
 	void Renderer::RemoveOpaqueNode(RenderShape & _node)
 	{
 		mOpaqueSet.RemoveShape(_node);
@@ -938,6 +1053,10 @@ throw "Something has gone catastrophically wrong!";
 
 	void Renderer::RemoveTopmostNode(RenderShape & _node) {
 		mTopmostSet.RemoveShape(_node);
+	}
+
+	void Renderer::RemoveMotionNode(RenderShape & _node) {
+		mMotionSet.RemoveShape(_node);
 	}
 
 	void Renderer::UpdateOpaqueNodeBuffer(RenderShape & _node, ConstantBufferType _t, unsigned int _index) {
@@ -1003,6 +1122,27 @@ throw "Something has gone catastrophically wrong!";
 		}
 	}
 
+	void Renderer::UpdateMotionNodeBuffer(RenderShape & _node, ConstantBufferType _t, unsigned int _index) {
+		RenderList* list = mMotionSet.GetListForShape(_node);
+		if (list == nullptr) {
+			SystemLogger::Error() << "Could not update motion node: The given shape had no associated render list." << std::endl;
+			return;
+		}
+		switch (_t) {
+			case eCB_VERTEX:
+				list->UpdateBuffer(_t, _node.GetContext().mVertexCBuffers[_index], _index, _node.mVBIndex);
+				break;
+			case eCB_PIXEL:
+				list->UpdateBuffer(_t, _node.GetContext().mPixelCBuffers[_index], _index, _node.mPBIndex);
+				break;
+			case eCB_GEO:
+				list->UpdateBuffer(_t, _node.GetContext().mGeometryCBuffers[_index], _index, _node.mGBIndex);
+				break;
+			default:
+				break;
+		}
+	}
+
 	bool Renderer::iInitialize(HWND _Window, unsigned int _width, unsigned int _height, bool _vsync, int _fps, bool _fullscreen, float _farPlane, float _nearPlane, vr::IVRSystem * _vrsys) {
 		mWindow = _Window;
 		mVrSystem = _vrsys;
@@ -1045,7 +1185,7 @@ throw "Something has gone catastrophically wrong!";
 		// TODO Eventually: Give each shape a topology enum, perhaps?
 		mContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		// TODO Eventually: Actually assign input layouts for each render shape.
-		InputLayoutManager::Instance().ApplyLayout(eVERT_POSNORMTEX);
+		InputLayoutManager::Instance().ApplyLayout(eVERT_POSNORMTANTEX);
 
 		mUseVsync = _vsync;
 
@@ -1069,6 +1209,7 @@ throw "Something has gone catastrophically wrong!";
 		mOpaqueSet.ClearSet();
 		mTransparentSet.ClearSet();
 		mTopmostSet.ClearSet();
+		mMotionSet.ClearSet();
 	}
 
 	bool Renderer::BlurTextures(ID3D11Texture2D **_textures, unsigned int _numTextures, float _sigma, float _downsample) {
@@ -1188,6 +1329,7 @@ throw "Something has gone catastrophically wrong!";
 		mContext->ClearRenderTargetView(mPositionRTV.Get(), black);
 		mContext->ClearRenderTargetView(mNormalRTV.Get(), black);
 		mContext->ClearRenderTargetView(mSpecularRTV.Get(), black);
+		mContext->ClearRenderTargetView(mGlowRTV.Get(), black);
 		mContext->ClearRenderTargetView(mSuperGlowRTV.Get(), black);
 		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
 
