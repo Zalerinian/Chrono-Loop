@@ -44,7 +44,7 @@ namespace Epoch {
 			for (int i = 0; i < count; i++)
 			{
 				float t = FLT_MAX;
-				bool hit = Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, _ts, (_end - _start), t);
+				bool hit = Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, _ts, (_te - _ts), t);
 
 				if (hit)
 				{
@@ -107,25 +107,29 @@ namespace Epoch {
 		bool CalculateCurve(vec3f _p, vec3f _v, vec3f _a, MeshComponent* _plane, MeshComponent* _walls, std::vector<vec3f>& _arc)
 		{
 			_arc.clear();
+			matrix4 cm = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
 
-			vec3f lastpos = _p;
-			_arc.push_back(_p);
+			vec3f vel = vec3f(0, 0, 20);
+
 			float t = 0;
+			vec3f lastpos = ParabolicCurve(vec3f(), vel, _a, t);
+			vec3f initial = lastpos;
+			_arc.push_back(lastpos);
 
 			for (int i = 0; i < 25; i++)
 			{
-				t += .5f / DerivedCurve(_v, _a, t).Magnitude();
+				t += .5f / DerivedCurve(vel, _a, t).Magnitude();
 
-				vec3f nextpos = ParabolicCurve(_p, _v, _a, t);
+				vec3f nextpos = ParabolicCurve(initial, vel, _a, t);
 
 				vec3f hit;
 
 				for (int e = 0; e < mEnvironmentObjects.size(); e++)
 				{
 					vec4f tl = lastpos, tn = nextpos;
-					matrix4 tm = mEnvironmentObjects[e]->GetTransform().GetMatrix();
-					tl *= tm.Invert();
-					tn *= tm.Invert();
+					matrix4 tm = cm * mEnvironmentObjects[e]->GetTransform().GetMatrix().Invert();
+					tl *= tm;
+					tn *= tm;
 					for (int m = 0; m < mEnvironmentObjects[e]->GetComponentCount(ComponentType::eCOMPONENT_MESH); m++)
 					{
 						if (CheckMesh((MeshComponent*)mEnvironmentObjects[e]->GetComponents(ComponentType::eCOMPONENT_MESH)[m], tl, tn, lastpos, nextpos, hit))
@@ -146,9 +150,9 @@ namespace Epoch {
 				for (int p = 0; p < mPlaneObjects.size(); p++)
 				{
 					vec4f tl = lastpos, tn = nextpos;
-					matrix4 tm = mPlaneObjects[p]->GetTransform().GetMatrix();
-					tl *= tm.Invert();
-					tn *= tm.Invert();
+					matrix4 tm = cm * mPlaneObjects[p]->GetTransform().GetMatrix().Invert();
+					tl *= tm;
+					tn *= tm;
 					for (int m = 0; m < mPlaneObjects[p]->GetComponentCount(ComponentType::eCOMPONENT_MESH); m++)
 					{
 						if (CheckMesh((MeshComponent*)mPlaneObjects[p]->GetComponents(ComponentType::eCOMPONENT_MESH)[m], tl, tn, lastpos, nextpos, hit))
@@ -298,8 +302,8 @@ namespace Epoch {
 				m.fourth = mArc[mArc.size() - 1];
 				mTPMesh->GetTransform().SetMatrix(m);
 
-				mTPParticles->FIRE();
 				mTPParticles->SetPos(m.fourth);
+				mTPParticles->FIRE();
 
 				m = mat * scaleM;
 				m.fourth = mat.fourth;
@@ -339,7 +343,7 @@ namespace Epoch {
 							matrix4 inverse = (mat * objMatInv);
 							vec3f meshPos = inverse.Position;
 							forward = raydir;
-							//forward *= inverse;
+							forward *= inverse;
 							vec3f fwd(forward);
 							if (fwd * vec3f(0, 1, 0) > 0)
 								return;
@@ -382,7 +386,7 @@ namespace Epoch {
 								vec3f point = VRInputManager::GetInstance().GetPlayerPosition().fourth;
 								forward.Set(0, 0, 1, 0);
 								forward = raydir;
-								//forward *= inverse;
+								forward *= inverse;
 								vec3f fwd = forward;
 
 								for (unsigned int i = 0; i < numTris; ++i)
