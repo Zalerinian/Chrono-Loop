@@ -14,6 +14,13 @@
 #include "../Actions/CCEnterLevel2.h"
 #include "../Actions/CCEnterLevel3.h"
 #include "../Actions/CCEnterLevel4.h"
+#include "../Actions/CCEnterLevel5.h"
+#include "../Actions/CCLevel5Button.h"
+#include "../Actions/CCLevel5Button2.h"
+#include "../Actions/CCLevel5Fields.h"
+
+#include "../Actions/CCEnterLevel5.h"
+
 #include "../Actions/CCLoadTutorial.h"
 #include "../Actions/MainMenuBT.h"
 #include "../Actions/CCLoadHub.h"
@@ -35,6 +42,7 @@
 #include "../Actions/CCLevel3BoxSmash.h"
 #include "../Actions/CCPlatformButton.h"
 #include "../Actions/CCPlatform.h"
+#include "../Actions/CCLevel5DoorButton.h"
 #include "../Actions/CCPrevButton.h"
 
 namespace Epoch {
@@ -678,6 +686,8 @@ namespace Epoch {
 								codeCom = new CCEnterLevel3();
 							if (path == "CCEnterLevel4.h")
 								codeCom = new CCEnterLevel4();
+							if (path == "CCEnterLevel5.h")
+								codeCom = new CCEnterLevel5();
 							if (path == "CCExit.h")
 								codeCom = new CCExit();
 							if (path == "CCLevel3BoxSmash.h")
@@ -714,6 +724,14 @@ namespace Epoch {
 								codeCom = new CCPlatformButton();
 							if (path == "CCPlatform.h")
 								codeCom = new CCPlatform();
+							if (path == "CCLevel5Button.h")
+								codeCom = new CCLevel5Button();
+							if (path == "CCLevel5Button2.h")
+								codeCom = new CCLevel5Button2();
+							if (path == "CCLevel5Fields.h")
+								codeCom = new CCLevel5Fields();
+							if (path == "CCLevel5DoorButton.h")
+								codeCom = new CCLevel5DoorButton();
 
 							if (codeCom)
 							{
@@ -796,6 +814,7 @@ namespace Epoch {
 		CCEnterLevel2* accessLevelTwo = nullptr;
 		CCEnterLevel3* accessLevelThree = nullptr;
 		CCEnterLevel4* accessLevelFour = nullptr;
+		CCEnterLevel5* accessLevelFive = nullptr;
 		CCLoadHub* accessHub = nullptr;
 		std::list<BaseObject*> copyList = LevelManager::GetInstance().GetCurrentLevel()->GetLevelObjects();
 
@@ -826,11 +845,17 @@ namespace Epoch {
 						accessLevelFour = ((CCEnterLevel4*)CodeComps[x]);
 						break;
 					}
+					else if (dynamic_cast<CCEnterLevel5*>(CodeComps[x]))
+					{
+						accessLevelFive = ((CCEnterLevel5*)CodeComps[x]);
+						break;
+					}
 				}
-				if (accessLevelOne != nullptr &&
-					accessLevelTwo != nullptr &&
-					accessLevelThree != nullptr && 
-					accessLevelFour != nullptr)
+				if (accessLevelOne &&
+					accessLevelTwo &&
+					accessLevelThree && 
+					accessLevelFour &&
+					accessLevelFive)
 					break;
 			}
 		}
@@ -920,6 +945,7 @@ namespace Epoch {
 			accessLevelTwo = nullptr;
 			accessLevelThree = nullptr;
 			accessLevelFour = nullptr;
+			accessLevelFive = nullptr;
 			accessHub = nullptr;
 		}
 		else if ((_Level == L"LEVELTWO" || _Level == L"LVLTWO"))
@@ -934,6 +960,7 @@ namespace Epoch {
 			accessLevelTwo = nullptr;
 			accessLevelThree = nullptr;
 			accessLevelFour = nullptr;
+			accessLevelFive = nullptr;
 			accessHub = nullptr;
 		}
 		else if ((_Level == L"LEVELTHREE" || _Level == L"LVLTHREE"))
@@ -951,6 +978,7 @@ namespace Epoch {
 			accessLevelTwo = nullptr;
 			accessLevelThree = nullptr;
 			accessLevelFour = nullptr;
+			accessLevelFive = nullptr;
 			accessHub = nullptr;
 		}
 		else if ((_Level == L"LEVELFOUR" || _Level == L"LVLFOUR"))
@@ -968,6 +996,25 @@ namespace Epoch {
 			accessLevelTwo = nullptr;
 			accessLevelThree = nullptr;
 			accessLevelFour = nullptr;
+			accessLevelFive = nullptr;
+			accessHub = nullptr;
+		}
+		else if ((_Level == L"LEVELFIVE" || _Level == L"LVLFIVE"))
+		{
+			if (accessLevelFive)
+			{
+				accessLevelFive->SetOnce(false);
+				CommandConsole::Instance().Toggle();
+			}
+			else
+			{
+				CommandConsole::Instance().DisplaySet(L"Failed to load level 5.");
+			}
+			accessLevelOne = nullptr;
+			accessLevelTwo = nullptr;
+			accessLevelThree = nullptr;
+			accessLevelFour = nullptr;
+			accessLevelFive = nullptr;
 			accessHub = nullptr;
 		}
 		else if ((_Level == L"HUBWORLD" || _Level == L"HUB"))
@@ -982,6 +1029,7 @@ namespace Epoch {
 			accessLevelTwo = nullptr;
 			accessLevelThree = nullptr;
 			accessLevelFour = nullptr;
+			accessLevelFive = nullptr;
 			accessHub = nullptr;
 		}
 	}

@@ -13,6 +13,7 @@ namespace Epoch
 		matrix4 initialMatrix;
 		float mScaleTipper;
 		bool canBoxShrink,isBoxShrinking;
+		//BoxSnapToControllerAction* leftBS, *rightBS;
 		virtual void Start()
 		{
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
@@ -21,11 +22,31 @@ namespace Epoch
 			mScaleTipper = 1.0f;
 			canBoxShrink = false;
 			isBoxShrinking = false;
+
+			//std::vector<Component*> codes1 = LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+			//for (size_t x = 0; x < codes1.size(); ++x)
+			//{
+			//	if (dynamic_cast<BoxSnapToControllerAction*>(codes1[x]))
+			//	{
+			//		leftBS = ((BoxSnapToControllerAction*)codes1[x]);
+			//		break;
+			//	}
+			//}
+
+			//codes1 = LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
+			//for (size_t x = 0; x < codes1.size(); ++x)
+			//{
+			//	if (dynamic_cast<BoxSnapToControllerAction*>(codes1[x]))
+			//	{
+			//		rightBS = ((BoxSnapToControllerAction*)codes1[x]);
+			//		break;
+			//	}
+			//}
 		}
 
 		virtual void OnTriggerEnter(Collider& _col, Collider& _other)
 		{
-			if(_other.mColliderType == Collider::eCOLLIDER_Cube && _other.mColliderType != Collider::eCOLLIDER_Controller)
+			if(_other.GetBaseObject()->GetName() == "Box")
 			{
 				canBoxShrink = true;
 			}
@@ -36,13 +57,15 @@ namespace Epoch
 				isBoxShrinking = true;
 			if (isBoxShrinking)
 			{
-				mScaleTipper -= 0.5f;
+				mScaleTipper -= 0.05f;
 				mBox->GetTransform().SetMatrix(matrix4::CreateScale(mScaleTipper, mScaleTipper, mScaleTipper) * mBox->GetTransform().GetMatrix());
 				if(mScaleTipper <= 0.0f)
 				{
 					isBoxShrinking = false;
 					canBoxShrink = false;
 					mScaleTipper = 1.0f;
+					//leftBS->mHeld = false;
+					//rightBS->mHeld = false;
 					mBox->GetTransform().SetMatrix(initialMatrix);
 				}
 			}

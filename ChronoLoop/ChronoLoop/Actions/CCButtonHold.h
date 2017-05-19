@@ -156,7 +156,6 @@ namespace Epoch
 					}
 				}
 			}
-			
 		}
 		virtual void Update()
 		{
@@ -212,7 +211,16 @@ namespace Epoch
 								temp->SetVisible(false);
 						}
 					}
+					if (blockCube->GetTransform().GetMatrix() != blockstart && exitCube->GetTransform().GetMatrix() != exitstart)
+					{
+						mCanDoorInterp = true;
+						mDoorDoneInterpolating = false;
+						blockInterp->SetActive(true);
+						blockInterp->Prepare(0.3f, blockCube->GetTransform().GetMatrix(), blockstart, blockCube->GetTransform().GetMatrix());
 
+						exitInterp->SetActive(true);
+						exitInterp->Prepare(0.3f, exitCube->GetTransform().GetMatrix(), exitstart, exitCube->GetTransform().GetMatrix());
+					}
 					if (mCanDoorInterp && !mDoorDoneInterpolating)
 					{
 						mDoorDoneInterpolating = (blockInterp->Update(TimeManager::Instance()->GetDeltaTime()) || exitInterp->Update(TimeManager::Instance()->GetDeltaTime()));
