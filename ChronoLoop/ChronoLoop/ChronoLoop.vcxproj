@@ -226,6 +226,9 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Actions\CCLevel3BoxMovementButton.h" />
     <ClInclude Include="Actions\CCLevel3BoxSmash.h" />
     <ClInclude Include="Actions\CCLevel3ElevatorButton.h" />
+    <ClInclude Include="Actions\CCLevel5Button.h" />
+    <ClInclude Include="Actions\CCLevel5Button2.h" />
+    <ClInclude Include="Actions\CCLevel5Fields.h" />
     <ClInclude Include="Actions\CCLoadHub.h" />
     <ClInclude Include="Actions\CCLoadTutorial.h" />
     <ClInclude Include="Actions\CCMazeHelper.h" />

@@ -81,6 +81,7 @@ namespace Epoch
 		static KeyboardInput& Instance();
 		static void DestroyInstance();
 		void CheckKeyboardButtonPress();
+		void OnKeyDown(WPARAM _wp, LPARAM _lp);
 	};
 
 }
