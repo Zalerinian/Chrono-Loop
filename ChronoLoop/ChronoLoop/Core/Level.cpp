@@ -43,6 +43,7 @@
 #include "../Actions/CCPlatformButton.h"
 #include "../Actions/CCPlatform.h"
 #include "../Actions/CCLevel5DoorButton.h"
+#include "../Actions/CCPrevButton.h"
 
 namespace Epoch {
 
@@ -701,6 +702,8 @@ namespace Epoch {
 								codeCom = new CCPauseToCancel();
 							if (path == "CCStartButton.h")
 								codeCom = new CCStartButton();
+							if (path == "CCPrevButton.h")
+								codeCom = new CCPrevButton();
 							if (path == "CCTeleToPlay.h")
 								codeCom = new CCTeleToPlay();
 							if (path == "CodeComponent.hpp")
