@@ -284,7 +284,7 @@ namespace Epoch
 			delete mExitStandInterp;
 			delete mExitSignInterp;
 			delete mCloseInterp;
-			delete mPrevButtonInterp;
+			delete mStartButtonInterp;
 			delete mPrevStandInterp;
 			delete mPrevSignInterp;
 		}
