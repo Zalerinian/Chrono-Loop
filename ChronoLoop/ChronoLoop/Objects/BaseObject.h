@@ -108,8 +108,8 @@ namespace Epoch {
 		bool RemoveComponent(Component* _comp);
 
 		//**FUNCTION**//
-		inline void AddChild(BaseObject* _obj) { mChildren.push_back(_obj); };
-		inline void RemoveChild(BaseObject* _obj) { mChildren.remove(_obj); };
+		inline void AddChild(BaseObject* _obj) { mChildren.push_back(_obj); _obj->mParent = this; };
+		inline void RemoveChild(BaseObject* _obj) { mChildren.remove(_obj); _obj->mParent = nullptr; };
 		//BaseObject& Clone();
 		//BaseObject& Clone(BaseObject& _clone);
 	};
