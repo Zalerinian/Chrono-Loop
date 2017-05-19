@@ -5,7 +5,7 @@
 namespace Epoch
 {
 
-	struct CCLevel5Button : public CodeComponent
+	struct CCLevel5Button2 : public CodeComponent
 	{
 		bool colliding = false, mhitting = false, mCanDoorInterp = false, mDoorDoneInterpolating = false, mFlip = false, mSoundOnce = false;;
 		bool tempDoor = false;
@@ -18,7 +18,7 @@ namespace Epoch
 		virtual void Start()
 		{
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
-			Block = cLevel->FindObjectWithName("EnvWindow2");
+			Block = cLevel->FindObjectWithName("ExitSideOpening");
 			blockInterp = TimeManager::Instance()->GetObjectInterpolator(Block->GetUniqueID());
 
 			blockCube = (CubeCollider*)Block->mComponents[eCOMPONENT_COLLIDER][0];

@@ -25,7 +25,7 @@ namespace Epoch
 
 		virtual void OnTriggerEnter(Collider& _col, Collider& _other)
 		{
-			if(_other.mColliderType == Collider::eCOLLIDER_Cube && _other.mColliderType != Collider::eCOLLIDER_Controller)
+			if(_other.GetBaseObject()->GetName() == "Box")
 			{
 				canBoxShrink = true;
 			}
@@ -36,7 +36,7 @@ namespace Epoch
 				isBoxShrinking = true;
 			if (isBoxShrinking)
 			{
-				mScaleTipper -= 0.5f;
+				mScaleTipper -= 0.05f;
 				mBox->GetTransform().SetMatrix(matrix4::CreateScale(mScaleTipper, mScaleTipper, mScaleTipper) * mBox->GetTransform().GetMatrix());
 				if(mScaleTipper <= 0.0f)
 				{

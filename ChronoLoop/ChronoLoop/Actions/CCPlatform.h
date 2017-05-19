@@ -3,6 +3,7 @@
 #include "../Objects/BaseObject.h"
 #include "CodeComponent.hpp"
 #include "..\Physics\Physics.h"
+#include "../Common/Settings.h"
 #include "..\Common\Logger.h"
 #include "../Core/Level.h"
 #include "../Core/TimeManager.h"
@@ -13,10 +14,8 @@ namespace Epoch
 
 	struct CCPlatform : public CodeComponent
 	{
-		bool playerCanInterp = false;
-		Interpolator<matrix4>* platInterp;
-		Interpolator<matrix4>* playerInterp;
-		matrix4 end, PEnd,start;
+		bool playerCanInterp = false, tempDoor = false, mFlip = false;
+		matrix4 PlatEnd, PlayerEnd, PlatStart, PlayerStart;
 		CubeCollider* collider;
 		Interpolator<matrix4>* platInterp; //(block)
 		Interpolator<matrix4>* playerInterp;//(exit)
@@ -28,7 +27,6 @@ namespace Epoch
 			collider = (CubeCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
 			PlatEnd = mObject->GetTransform().GetMatrix() * matrix4::CreateTranslation(-4, 0, 0);
 			PlatStart = mObject->GetTransform().GetMatrix();
-			start = mObject->GetTransform().GetMatrix();
 		}
 
 		virtual void OnTriggerEnter(Collider& _col, Collider& _other)
@@ -42,14 +40,7 @@ namespace Epoch
 		{
 			if (!LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->isTimePaused())
 			{
-				//if (mObject->GetTransform().GetMatrix() != start)
-				//{
-				//	Settings::GetInstance().SetBool("PlatInterp", true);
-				//	Settings::GetInstance().SetBool("doneInterp", false);
-				//	platInterp->SetActive(true);
-				//	platInterp->Prepare(0.3f, mObject->GetTransform().GetMatrix(), start, mObject->GetTransform().GetMatrix());
-				//}
-				if (Settings::GetInstance().GetBool("PlatInterp") && !Settings::GetInstance().GetBool("doneInterp"))
+				if (Settings::GetInstance().GetBool("ButtonHeld"))
 				{
 					//SystemLogger::GetLog() << "Colliding" << std::endl;
 
@@ -59,8 +50,8 @@ namespace Epoch
 						Settings::GetInstance().SetBool("PrepareInterp", false);
 						platInterp->SetActive(true);
 						platInterp->Prepare(5, mObject->GetTransform().GetMatrix(), PlatEnd, mObject->GetTransform().GetMatrix());
-					
-						if(playerCanInterp)
+
+						if (playerCanInterp)
 						{
 							PlayerEnd = matrix4() * matrix4::CreateTranslation(VRInputManager::GetInstance().GetPlayerPosition().Position) * matrix4::CreateTranslation(-4, 0, 0);
 							playerInterp->Prepare(5, VRInputManager::GetInstance().GetPlayerPosition(), PlayerEnd, VRInputManager::GetInstance().GetPlayerPosition());
@@ -79,8 +70,8 @@ namespace Epoch
 						if (playerCanInterp)
 							playerInterp->Update(TimeManager::Instance()->GetDeltaTime());
 					}
-					
-					if(Settings::GetInstance().GetBool("doneInterp"))
+
+					if (Settings::GetInstance().GetBool("doneInterp"))
 					{
 						Settings::GetInstance().SetBool("PlatInterp", false);
 						platInterp->SetActive(false);
@@ -97,7 +88,7 @@ namespace Epoch
 						platInterp->SetActive(true);
 						platInterp->Prepare(5, mObject->GetTransform().GetMatrix(), PlatStart, mObject->GetTransform().GetMatrix());
 
-						if(playerCanInterp)
+						if (playerCanInterp)
 						{
 							PlayerEnd = matrix4() * matrix4::CreateTranslation(VRInputManager::GetInstance().GetPlayerPosition().Position) * matrix4::CreateTranslation(4, 0, 0);
 							playerInterp->Prepare(5, VRInputManager::GetInstance().GetPlayerPosition(), PlayerStart, VRInputManager::GetInstance().GetPlayerPosition());
