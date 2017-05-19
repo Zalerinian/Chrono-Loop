@@ -34,6 +34,8 @@ namespace Epoch
 					Settings::GetInstance().SetBool("CompleteLevel3", true);
 				else if (Settings::GetInstance().GetInt("CurrentLevel") == 4)
 					Settings::GetInstance().SetBool("CompleteLevel4", true);
+				else if (Settings::GetInstance().GetInt("CurrentLevel") == 5)
+					Settings::GetInstance().SetBool("CompleteLevel5", true);
 
 				once = false;
 			}
@@ -474,6 +476,71 @@ namespace Epoch
 						((TeleportEffect*)emit22)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 						ParticleSystem::Instance()->AddEmitter(emit22);
 						emit22->FIRE();
+					}
+
+					if (Settings::GetInstance().GetBool("CompleteLevel5"))
+					{
+						Particle* p1 = &Particle::Init();
+						p1->SetPos(vec3f(0, 0, 0));
+						p1->SetColors(vec3f(0, 1, 0), vec3f(0, .5f, .5f));
+						p1->SetLife(550);
+						p1->SetSize(.35f, .15f);
+						ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(0, -20, 2.820054f, 1));
+						emit11->SetParticle(p1);
+						emit11->SetTexture("../Resources/BasicRectP.png");
+						((TeleportEffect*)emit11)->y1 = 8;
+						((TeleportEffect*)emit11)->y2 = 12;
+						((TeleportEffect*)emit11)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
+						((TeleportEffect*)emit11)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+						ParticleSystem::Instance()->AddEmitter(emit11);
+						emit11->FIRE();
+
+						p1 = &Particle::Init();
+						p1->SetPos(vec3f(0, 0, 0));
+						p1->SetColors(vec3f(0, .5f, .5f), vec3f(0, 1, 0));
+						p1->SetLife(550);
+						p1->SetSize(.15f, .05f);
+						ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(0, -20, 2.820054f, 1));
+						emit12->SetTexture("../Resources/BasicCircleP.png");
+						emit12->SetParticle(p1);
+						((TeleportEffect*)emit12)->y1 = 1;
+						((TeleportEffect*)emit12)->y2 = 5;
+						((TeleportEffect*)emit12)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
+						((TeleportEffect*)emit12)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+						ParticleSystem::Instance()->AddEmitter(emit12);
+						emit12->FIRE();
+					}
+					else if(Settings::GetInstance().GetInt("CurrentLevel") >= 4)
+					{
+						Particle* p1 = &Particle::Init();
+						p1->SetPos(vec3f(0, 0, 0));
+						p1->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
+						p1->SetLife(550);
+						p1->SetSize(.35f, .15f);
+						ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(0, -20, 2.820054f, 1));
+						emit11->SetParticle(p1);
+						emit11->SetTexture("../Resources/BasicRectP.png");
+						((TeleportEffect*)emit11)->y1 = 8;
+						((TeleportEffect*)emit11)->y2 = 12;
+						((TeleportEffect*)emit11)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
+						((TeleportEffect*)emit11)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+						ParticleSystem::Instance()->AddEmitter(emit11);
+						emit11->FIRE();
+
+						p1 = &Particle::Init();
+						p1->SetPos(vec3f(0, 0, 0));
+						p1->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
+						p1->SetLife(550);
+						p1->SetSize(.15f, .05f);
+						ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(0, -20, 2.820054f, 1));
+						emit12->SetTexture("../Resources/BasicCircleP.png");
+						emit12->SetParticle(p1);
+						((TeleportEffect*)emit12)->y1 = 1;
+						((TeleportEffect*)emit12)->y2 = 5;
+						((TeleportEffect*)emit12)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
+						((TeleportEffect*)emit12)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+						ParticleSystem::Instance()->AddEmitter(emit12);
+						emit12->FIRE();
 					}
 
 					Particle* start = &Particle::Init();
