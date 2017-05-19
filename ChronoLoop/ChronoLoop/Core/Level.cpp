@@ -15,6 +15,12 @@
 #include "../Actions/CCEnterLevel3.h"
 #include "../Actions/CCEnterLevel4.h"
 #include "../Actions/CCEnterLevel5.h"
+#include "../Actions/CCLevel5Button.h"
+#include "../Actions/CCLevel5Button2.h"
+#include "../Actions/CCLevel5Fields.h"
+
+#include "../Actions/CCEnterLevel5.h"
+
 #include "../Actions/CCLoadTutorial.h"
 #include "../Actions/MainMenuBT.h"
 #include "../Actions/CCLoadHub.h"
@@ -714,6 +720,12 @@ namespace Epoch {
 								codeCom = new CCPlatformButton();
 							if (path == "CCPlatform.h")
 								codeCom = new CCPlatform();
+							if (path == "CCLevel5Button.h")
+								codeCom = new CCLevel5Button();
+							if (path == "CCLevel5Button2.h")
+								codeCom = new CCLevel5Button2();
+							if (path == "CCLevel5Fields.h")
+								codeCom = new CCLevel5Fields();
 
 							if (codeCom)
 							{
