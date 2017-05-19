@@ -9,7 +9,6 @@
 #include "..\Actions\CCPauseToCancel.h"
 #include "..\Actions\CCTeleToPlay.h"
 #include "..\Actions\CCDisplayOnPause.h"
-#include "..\Actions\CCLevel2Tutorial.h"
 #include "..\Actions\UICreateToDeleteClone.h"
 #include "..\Actions\UIClonePlusToMinus.h"
 #include "..\Actions\UICloneText.h"
@@ -43,7 +42,7 @@ namespace Epoch
 		bool GetOnce() { return once; };
 		virtual void OnTriggerEnter(Collider& _col1, Collider& _col2) 
 		{
-			if(Settings::GetInstance().GetBool("CompleteLevel1"))
+			if(Settings::GetInstance().GetBool("CompleteLevel2"))
 				once = false;
 		}
 		virtual void Start()
@@ -421,7 +420,7 @@ namespace Epoch
 					SystemLogger::Debug() << "Loading complete" << std::endl;
 					Physics::Instance()->PhysicsLock.unlock();
 					Settings::GetInstance().SetBool("LevelIsLoading", false);
-					Settings::GetInstance().SetInt("CurrentLevel", 2);
+					Settings::GetInstance().SetInt("CurrentLevel", 3);
 				}
 			}
 		}
