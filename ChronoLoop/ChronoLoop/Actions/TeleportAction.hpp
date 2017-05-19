@@ -134,14 +134,22 @@ namespace Epoch {
 					{
 						if (CheckMesh((MeshComponent*)mEnvironmentObjects[e]->GetComponents(ComponentType::eCOMPONENT_MESH)[m], tl, tn, lastpos, nextpos, hit))
 						{
-							/*vec3f floorhit;
+							vec3f floorhit;
 
-							if (ChecktoFloor(_plane, hit, vec3f(0, -1, 0), floorhit))
+							for (int p = 0; p < mPlaneObjects.size(); p++)
 							{
-								_arc.push_back(floorhit);
+								for (int m = 0; m < mPlaneObjects[p]->GetComponentCount(ComponentType::eCOMPONENT_MESH); m++)
+								{
+									if (ChecktoFloor((MeshComponent*)mPlaneObjects[p]->GetComponents(ComponentType::eCOMPONENT_MESH)[m], hit, vec3f(0, -1, 0), floorhit))
+									{
+										//if it hits the plane
+										_arc.push_back(floorhit);
+
+									}
+									else
+										_arc.push_back(hit);
+								}
 							}
-							else*/
-							_arc.push_back(hit);
 
 							return true;
 						}
@@ -297,10 +305,6 @@ namespace Epoch {
 				scaleM.third = vec4f(0, 0, .05f, 0);
 				scaleM.fourth = vec4f(0, 0, 0, 1);
 
-				mTPMesh->SetVisible(true);
-				mCSMesh->SetVisible(true);
-				mMidMesh->SetVisible(true);
-
 				matrix4 m;
 				m = mTPMesh->GetTransform().GetMatrix();
 				m.fourth = vec4f(mArc[mArc.size() - 1]) * mat;
@@ -318,8 +322,10 @@ namespace Epoch {
 				m.fourth = vec4f(mArc[(mArc.size() / 2 - 1) < 0 ? 0 : (mArc.size() / 2 - 1)]) * mat;
 				mMidMesh->GetTransform().SetMatrix(m);
 			}
+
 			if (VRInputManager::GetInstance().GetController(mControllerRole).GetAxis().x != 0 && VRInputManager::GetInstance().GetController(mControllerRole).GetAxis().y != 0 && mCanTeleport)
-				if (!paused)
+			{
+				if (!cLevel->GetTimeManipulator()->isTimePaused())
 				{
 					mTPMesh->SetVisible(true);
 					mCSMesh->SetVisible(true);
@@ -331,6 +337,7 @@ namespace Epoch {
 					mCSMesh->SetVisible(false);
 					mMidMesh->SetVisible(false);
 				}
+			}
 
 			if (!interp->GetActive() && !Settings::GetInstance().GetBool("CantTeleport")) {
 				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && mCanTeleport && !Settings::GetInstance().GetBool("PauseMenuUp")) {
