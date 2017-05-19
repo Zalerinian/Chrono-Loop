@@ -559,6 +559,15 @@
     <ClInclude Include="Actions\CCPlatformButton.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\CCLevel5Button.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCLevel5Button2.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCLevel5Fields.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
     <ClInclude Include="Actions\CCCloneIndicator.h">
       <Filter>Actions</Filter>
     </ClInclude>
