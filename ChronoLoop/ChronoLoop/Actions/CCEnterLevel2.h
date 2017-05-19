@@ -322,7 +322,10 @@ namespace Epoch
 					magicalCube->AddComponent(new CCSnapToPlayerPos);
 					next->AddObject(magicalCube);*/
 
-
+					Emitter* resetlevelsound = new SFXEmitter();
+					((SFXEmitter*)resetlevelsound)->SetEvent(AK::EVENTS::SFX_RESETLEVEL);
+					RightController->AddComponent(resetlevelsound);
+					AudioWrapper::GetInstance().AddEmitter(resetlevelsound, RightController->GetName().c_str());
 
 
 					LevelManager::GetInstance().RequestLevelChange(next);

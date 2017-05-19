@@ -22,8 +22,8 @@ namespace Epoch
 		Renderer::TimeManipulationEffectData mEffectData;
 		Interpolator<vec2f> mDesaturationInterpolator;
 		unsigned int mCloneCount = 0 ;
-		unsigned short mCurrTexture;
 		unsigned short mNumOfConfirmedClones = 0;
+		std::string mCurrTexture;
 
 		std::string mTextures[10] = { "../Resources/CloneTexture.png",
 			"../Resources/CloneTexture_Green.png",

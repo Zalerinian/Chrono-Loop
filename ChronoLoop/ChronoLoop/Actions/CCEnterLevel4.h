@@ -42,7 +42,7 @@ namespace Epoch {
 		void SetOnce(bool _set) { once = _set; };
 		bool GetOnce() { return once; };
 		virtual void OnTriggerEnter(Collider& _col1, Collider& _col2) {
-			if (Settings::GetInstance().GetBool("CompleteLevel2"))
+			if (Settings::GetInstance().GetBool("CompleteLevel3"))
 				once = false;
 		}
 		virtual void Start() {
@@ -304,7 +304,6 @@ namespace Epoch {
 					((SFXEmitter*)sound1)->SetEvent(AK::EVENTS::SFX_PLAYERDEATH);
 					AudioWrapper::GetInstance().AddEmitter(sound1, headset->GetName().c_str());
 					headset->AddComponent(sound1);
-
 					Emitter* sound2 = new SFXEmitter();
 					((SFXEmitter*)sound2)->SetEvent(AK::EVENTS::SFX_BOXWALLCOLLIDELEVEL3);
 					AudioWrapper::GetInstance().AddEmitter(sound2, headset->GetName().c_str());
@@ -312,9 +311,12 @@ namespace Epoch {
 
 
 					AudioWrapper::GetInstance().STOP();
-
 					((AudioEmitter*)ambient)->CallEvent(Emitter::EventType::ePlay);
 
+					Emitter* resetlevelsound = new SFXEmitter();
+					((SFXEmitter*)resetlevelsound)->SetEvent(AK::EVENTS::SFX_RESETLEVEL);
+					RightController->AddComponent(resetlevelsound);
+					AudioWrapper::GetInstance().AddEmitter(resetlevelsound, RightController->GetName().c_str());
 
 					ParticleSystem::Instance()->Clear();
 
@@ -435,7 +437,7 @@ namespace Epoch {
 					SystemLogger::Debug() << "Loading complete" << std::endl;
 					Physics::Instance()->PhysicsLock.unlock();
 					Settings::GetInstance().SetBool("LevelIsLoading", false);
-					Settings::GetInstance().SetInt("CurrentLevel", 3);
+					Settings::GetInstance().SetInt("CurrentLevel", 4);
 				}
 			}
 		}

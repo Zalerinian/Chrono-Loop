@@ -70,6 +70,9 @@ namespace Epoch {
 							vec3f meshPos = inverse.Position;
 							forward *= inverse;
 							vec3f fwd(forward);
+							if (fwd * vec3f(0, 1, 0) > 0)
+								return;
+
 							int mSize = mEnvironmentObjects[i]->GetComponentCount(eCOMPONENT_MESH);
 							for (int k = 0; k < mSize; ++k)
 							{

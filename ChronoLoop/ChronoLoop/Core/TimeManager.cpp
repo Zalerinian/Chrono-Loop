@@ -14,6 +14,7 @@
 #include "../Common/Settings.h"
 #include "../Particles/ParticleSystem.h"
 #include "../Sound/SoundEngine.h"
+#include "../Actions/CCCloneIndicator.h"
 
 namespace Epoch {
 
@@ -230,6 +231,7 @@ namespace Epoch {
 		//USe a copy instead of a pointer so you will still have it after the pair gets deleted
 		Clonepair pair = *GetClonePair(_id1);
 		bool del = false;
+		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 		for (int i = 0; i < mClones.size(); ) {
 			del = false;
 			if (mClones[i]->GetUniqueID() == _id1 || mClones[i]->GetUniqueID() == pair.mOther1 || mClones[i]->GetUniqueID() == pair.mOther2) {
@@ -271,6 +273,32 @@ namespace Epoch {
 					if (j->first == mClones[i]->GetUniqueID()) {
 						delete mCloneInterpolators[j->first];
 						mCloneInterpolators.erase(mClones[i]->GetUniqueID());
+						break;
+					}
+				}
+				bool mbreak = false;
+				std::list<BaseObject*>&children = cLevel->GetTimeManipulator()->GetBaseObject()->GetChildren();
+				for(auto c = children.begin(); c != children.end(); ++c)
+				{
+					std::vector<Component*>& comps = (*c)->GetComponents(eCOMPONENT_CODE);
+					for (unsigned int p = 0; p < comps.size(); p++)
+					{
+						if(dynamic_cast<CCCloneIndicator*>(comps[p]))
+						{
+							unsigned int cId = ((CCCloneIndicator*)comps[p])->mId;
+							if(cId == mClones[i]->GetUniqueID())
+							{
+								BaseObject* del = *c;
+								children.remove(*c);
+								Pool::Instance()->iAddObject(del);
+								mbreak = true;
+								break;
+							}
+						}
+					}
+					if(mbreak)
+					{
+						cLevel->GetTimeManipulator()->GetBaseObject()->SetChildren(children);
 						break;
 					}
 				}
@@ -550,10 +578,11 @@ namespace Epoch {
 	}
 
 	void TimeManager::ResetTimeLineandLevel() {
+		Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 		RewindTimeline(0, LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueID(), LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueID(), LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetUniqueID());
-		mTimeline->SetObjectBirthTime(LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueID());
-		mTimeline->SetObjectBirthTime(LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueID());
-		mTimeline->SetObjectBirthTime(LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetUniqueID());
+		mTimeline->SetObjectBirthTime(cLevel->GetLeftController()->GetUniqueID());
+		mTimeline->SetObjectBirthTime(cLevel->GetRightController()->GetUniqueID());
+		mTimeline->SetObjectBirthTime(cLevel->GetHeadset()->GetUniqueID());
 		mTimeline->ResetTimelineAndLevel();
 		for (int i = 0; i < mClones.size(); ++i) {
 			mClones[i]->RemoveAllComponents();
@@ -569,6 +598,32 @@ namespace Epoch {
 					Physics::Instance()->mObjects.erase(Physics::Instance()->mObjects.begin() + k);
 				}
 			}
+			bool mbreak = false;
+			std::list<BaseObject*>&children = cLevel->GetTimeManipulator()->GetBaseObject()->GetChildren();
+			for (auto c = children.begin(); c != children.end(); ++c)
+			{
+				std::vector<Component*>& comps = (*c)->GetComponents(eCOMPONENT_CODE);
+				for (unsigned int p = 0; p < comps.size(); p++)
+				{
+					if (dynamic_cast<CCCloneIndicator*>(comps[p]))
+					{
+						unsigned int cId = ((CCCloneIndicator*)comps[p])->mId;
+						if (cId == mClones[i]->GetUniqueID())
+						{
+							BaseObject* del = *c;
+							children.remove(*c);
+							Pool::Instance()->iAddObject(del);
+							mbreak = true;
+							break;
+						}
+					}
+				}
+				if (mbreak)
+				{
+					cLevel->GetTimeManipulator()->GetBaseObject()->SetChildren(children);
+					break;
+				}
+			}
 
 			//Remove it from being tracked by timeline
 			mTimeline->RemoveFromTimeline(mClones[i]->GetUniqueID());
@@ -581,8 +636,19 @@ namespace Epoch {
 		mTimeline->SetSavedSettings();
 		if (VRInputManager::GetInstance().IsVREnabled()) {
 			VRInputManager::GetInstance().GetInputTimeline()->Clear();
-			vec4f start = LevelManager::GetInstance().GetCurrentLevel()->GetStartPos();
+			vec4f start = cLevel->GetStartPos();
 			VRInputManager::GetInstance().GetPlayerPosition()[3].Set(start.x, start.y, start.z, start.w);
+		}
+		AudioEmitter* ambient = (AudioEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0);
+		AudioEmitter* resetLevelSFX = (AudioEmitter*)cLevel->GetRightController()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0);
+		if (ambient)
+		{
+			ambient->CallEvent(Emitter::EventType::eStop);
+			ambient->CallEvent(Emitter::EventType::ePlay);
+		}
+		if(resetLevelSFX)
+		{
+			resetLevelSFX->CallEvent(Emitter::EventType::ePlay);
 		}
 		if(Settings::GetInstance().GetInt("CurrentLevel") == 3)
 		{

@@ -270,8 +270,11 @@ namespace Epoch {
 			auto b = meshes.begin();
 			auto e = meshes.end();
 			for (auto cit = meshes.begin(); cit != meshes.end(); ++cit) {
-				((MeshComponent*)(*cit))->SetVisible(false);
-				((MeshComponent*)(*cit))->SetVisible(true);
+				MeshComponent* mesh = (MeshComponent*)*cit;
+				if(mesh->IsVisible())
+				{
+					mesh->SetVisible(false)->SetVisible(true);
+				}
 			}
 		}
 	}
@@ -375,7 +378,7 @@ namespace Epoch {
 							vec3f min = position - offset;
 							vec3f max = position + offset;
 							CubeCollider* col = new CubeCollider(obj, movable == 1, trigger == 1, gravity, mass, elasticity, staticFriction, kineticFriction, drag, min, max);
-							col->mPickUpAble = pickupable;
+							col->mPickUpAble = pickupable != 0;
 							obj->AddComponent(col);
 						}
 					}
