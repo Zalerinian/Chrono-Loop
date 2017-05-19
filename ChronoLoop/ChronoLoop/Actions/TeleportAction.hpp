@@ -299,7 +299,7 @@ namespace Epoch {
 
 				matrix4 m;
 				m = mTPMesh->GetTransform().GetMatrix();
-				m.fourth = mArc[mArc.size() - 1];
+				m.fourth = vec4f(mArc[mArc.size() - 1]) * mat;
 				mTPMesh->GetTransform().SetMatrix(m);
 
 				mTPParticles->SetPos(m.fourth);
@@ -310,7 +310,7 @@ namespace Epoch {
 				mCSMesh->GetTransform().SetMatrix(m);
 
 				m = mat * scaleM;
-				m.fourth = mArc[(mArc.size() / 2 - 1) < 0 ? 0 : (mArc.size() / 2 - 1)];
+				m.fourth = vec4f(mArc[(mArc.size() / 2 - 1) < 0 ? 0 : (mArc.size() / 2 - 1)]) * mat;
 				mMidMesh->GetTransform().SetMatrix(m);
 			}
 			else
