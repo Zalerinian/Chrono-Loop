@@ -139,6 +139,7 @@ namespace Epoch {
 		ePS_BLOOM,
 		ePS_DEFERRED,
 		ePS_SOLIDCOLOR,
+		ePS_NONE,
 		ePS_MAX
 	};
 

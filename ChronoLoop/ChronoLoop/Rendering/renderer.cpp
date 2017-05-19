@@ -985,6 +985,7 @@ namespace Epoch {
 		}
 
 
+		//mContext->RSSetViewports(1, &mFullViewport);
 		mContext->OMSetRenderTargets(1, mPostProcessRTV.GetAddressOf(), nullptr);
 		mDeferredCombiner->GetContext().Apply(mCurrentContext);
 		mDeferredCombiner->Render(1);
