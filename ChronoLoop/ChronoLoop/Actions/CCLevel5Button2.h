@@ -5,7 +5,7 @@
 namespace Epoch
 {
 
-	struct CCLevel5Button : public CodeComponent
+	struct CCLevel5Button2 : public CodeComponent
 	{
 		bool colliding = false, mhitting = false, mCanDoorInterp = false, mDoorDoneInterpolating = false, mFlip = false, mSoundOnce = false;;
 		bool tempDoor = false;

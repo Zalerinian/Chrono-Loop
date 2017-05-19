@@ -36,7 +36,7 @@ namespace Epoch
 				isBoxShrinking = true;
 			if (isBoxShrinking)
 			{
-				mScaleTipper -= 0.5f;
+				mScaleTipper -= 0.05f;
 				mBox->GetTransform().SetMatrix(matrix4::CreateScale(mScaleTipper, mScaleTipper, mScaleTipper) * mBox->GetTransform().GetMatrix());
 				if(mScaleTipper <= 0.0f)
 				{
