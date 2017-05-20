@@ -170,14 +170,17 @@ namespace Epoch {
 	{
 		if (!mInput)
 			return;
-		
+
 		vec4f force = mInput->mData.mVelocity;
 		force[2] *= -1; // SteamVR seems to Assume +Z goes into the screen.
 		//mPickUp->mTotalForce = mPickUp->mForces + (mPickUp->mGravity * mPickUp->mMass);
 		//mPickUp->mAcceleration = mPickUp->mTotalForce / mPickUp->mMass;
-		mPickUp->mVelocity = force;
-		CheckIfBoxShouldMove();
-		mPickUp = nullptr;
-		mHeld = false;
+		if (mPickUp)
+		{
+			mPickUp->mVelocity = force;
+			CheckIfBoxShouldMove();
+			mPickUp = nullptr;
+			mHeld = false;
+		}
 	}
 }
