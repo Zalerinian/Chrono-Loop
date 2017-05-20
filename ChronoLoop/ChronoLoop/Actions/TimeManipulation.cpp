@@ -108,6 +108,23 @@ namespace Epoch
 					TimeManager::Instance()->GetCurrentSnapFrame(),
 					cLevel->GetRightController()->GetUniqueID(),
 					cLevel->GetLeftController()->GetUniqueID());
+
+				Component* comp = cLevel->GetRightController()->GetComponentIndexed(eCOMPONENT_CODE, 0);
+				if (dynamic_cast<BoxSnapToControllerAction*>(comp))
+				{
+					if(((BoxSnapToControllerAction*)comp)->mPickUp)
+					((BoxSnapToControllerAction*)comp)->mPickUp->mShouldMove = true;
+					((BoxSnapToControllerAction*)comp)->mPickUp = nullptr;
+				}
+
+				comp = cLevel->GetLeftController()->GetComponentIndexed(eCOMPONENT_CODE, 0);
+				if (dynamic_cast<BoxSnapToControllerAction*>(comp))
+				{
+					if (((BoxSnapToControllerAction*)comp)->mPickUp)
+						((BoxSnapToControllerAction*)comp)->mPickUp->mShouldMove = true;
+					((BoxSnapToControllerAction*)comp)->mPickUp = nullptr;
+				}
+
 				if (mCurCloneController1 && mCurCloneController2 && mCurCloneHeadset)
 				{
 					MeshComponent* mesh = (MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0);
@@ -208,6 +225,7 @@ namespace Epoch
 						Transform t;
 						BaseObject *CloneDisplayNeedle = Pool::Instance()->iGetObject()->Reset("CloneIcon", t);
 						MeshComponent* tdispn = new MeshComponent("../Resources/MiniClone.obj");
+						tdispn->SetPixelShader(ePS_PURETEXTURE);
 						tdispn->AddTexture(mCurrTexture.c_str(),TextureType::eTEX_DIFFUSE);
 						CCCloneIndicator* time = new CCCloneIndicator(mCurCloneController1->GetUniqueID());
 						CloneDisplayNeedle->AddComponent(tdispn);
