@@ -1,4 +1,4 @@
-newmtl lambert2SG
+newmtl L5Ceiling:lambert2SG
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00

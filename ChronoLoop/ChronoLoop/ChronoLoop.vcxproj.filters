@@ -562,7 +562,7 @@
     <ClInclude Include="Actions\CCLevel5Button.h">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\CCLevel5Button2.h">
+    <ClInclude Include="Actions\CCPrevButton.h">
       <Filter>Actions</Filter>
     </ClInclude>
     <ClInclude Include="Actions\CCLevel5Fields.h">

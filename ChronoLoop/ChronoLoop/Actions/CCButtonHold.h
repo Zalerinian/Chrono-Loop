@@ -156,7 +156,6 @@ namespace Epoch
 					}
 				}
 			}
-			
 		}
 		virtual void Update()
 		{
