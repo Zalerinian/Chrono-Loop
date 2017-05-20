@@ -136,23 +136,18 @@ namespace Epoch {
 						{
 							vec3f floorhit;
 
-							for (int p = 0; p < mPlaneObjects.size(); p++)
+							if (ChecktoFloor((MeshComponent*)mEnvironmentObjects[e]->GetComponents(ComponentType::eCOMPONENT_MESH)[m], hit, vec3f(0, -1, 0), floorhit))
 							{
-								for (int m = 0; m < mPlaneObjects[p]->GetComponentCount(ComponentType::eCOMPONENT_MESH); m++)
-								{
-									if (ChecktoFloor((MeshComponent*)mPlaneObjects[p]->GetComponents(ComponentType::eCOMPONENT_MESH)[m], hit, vec3f(0, -1, 0), floorhit))
-									{
-										//if it hits the plane
-										_arc.push_back(floorhit);
+								//if it hits the plane
+								_arc.push_back(floorhit);
 
-									}
-									else
-										_arc.push_back(hit);
-								}
 							}
-
-							return true;
+							else
+								_arc.push_back(hit);
 						}
+
+						return true;
+
 					}
 				}
 				for (int p = 0; p < mPlaneObjects.size(); p++)
