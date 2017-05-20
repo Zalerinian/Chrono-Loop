@@ -46,7 +46,7 @@ namespace Epoch
 
 		virtual void OnTriggerEnter(Collider& _col, Collider& _other)
 		{
-			if(_other.GetBaseObject()->GetName() == "Box")
+			if(_other.GetBaseObject()->GetName() == "Box" && _col.mColliderType != Collider::eCOLLIDER_Controller)
 			{
 				canBoxShrink = true;
 			}

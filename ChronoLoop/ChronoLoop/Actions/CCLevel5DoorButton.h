@@ -19,6 +19,8 @@ namespace Epoch
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			Block = cLevel->FindObjectWithName("EnvExitDoor");
 			blockInterp = TimeManager::Instance()->GetObjectInterpolator(Block->GetUniqueID());
+			blockStart = Block->GetTransform().GetMatrix();
+			blockend = blockStart * matrix4::CreateTranslation(0, 2.6f, 0);
 		}
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time)
@@ -30,6 +32,7 @@ namespace Epoch
 				if (!tempDoor)
 				{
 					blockInterp->SetActive(true);
+					blockInterp->Prepare(.69f, Block->GetTransform().GetMatrix(), blockend, Block->GetTransform().GetMatrix());
 
 					mCanDoorInterp = true;
 					mDoorDoneInterpolating = false;
@@ -82,6 +85,7 @@ namespace Epoch
 					{
 						mFlip = false;
 						blockInterp->SetActive(true);
+						blockInterp->Prepare(.69f, Block->GetTransform().GetMatrix(), blockStart, Block->GetTransform().GetMatrix());
 
 						mCanDoorInterp = true;
 						mDoorDoneInterpolating = false;
