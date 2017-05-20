@@ -4,16 +4,16 @@
 
 
 namespace Epoch {
-	struct SettingsKey {
+	struct StringKey {
 		const char* path;
-		SettingsKey(const char* _path) : path(_path) {}
-		SettingsKey(std::string _path) : path(_path.c_str()) {}
+		StringKey(const char* _path) : path(_path) {}
+		StringKey(std::string _path) : path(_path.c_str()) {}
 	};
 }
 
 namespace std {
-	template<> struct hash<Epoch::SettingsKey> {
-		size_t operator()(const Epoch::SettingsKey& _key) const {
+	template<> struct hash<Epoch::StringKey> {
+		size_t operator()(const Epoch::StringKey& _key) const {
 			size_t hash = 14695981039346656037;
 			for (unsigned int i = 0; i < strlen(_key.path); ++i) {
 				hash *= 1099511628211;
@@ -23,49 +23,46 @@ namespace std {
 		}
 	};
 
-	template<> struct equal_to<Epoch::SettingsKey> {
-		bool operator()(const Epoch::SettingsKey& _l, const Epoch::SettingsKey& _r) const {
+	template<> struct equal_to<Epoch::StringKey> {
+		bool operator()(const Epoch::StringKey& _l, const Epoch::StringKey& _r) const {
 			return _l.path == _r.path;
 		}
 	};
 }
 
 namespace Epoch {
-
-	typedef unsigned char byte;
-	
 	class Settings {
 	
 
 		class _Settings {
-			std::unordered_map<SettingsKey, bool>           mBools;
-			std::unordered_map<SettingsKey, unsigned char>  mBytes;
-			std::unordered_map<SettingsKey, unsigned short> mUShorts;
-			std::unordered_map<SettingsKey, short>          mShorts;
-			std::unordered_map<SettingsKey, float>          mFloats;
-			std::unordered_map<SettingsKey, int>            mInts;
-			std::unordered_map<SettingsKey, unsigned int>   mUInts;
-			std::unordered_map<SettingsKey, std::string>    mStrings;
+			std::unordered_map<StringKey, bool>           mBools;
+			std::unordered_map<StringKey, unsigned char>  mBytes;
+			std::unordered_map<StringKey, unsigned short> mUShorts;
+			std::unordered_map<StringKey, short>          mShorts;
+			std::unordered_map<StringKey, float>          mFloats;
+			std::unordered_map<StringKey, int>            mInts;
+			std::unordered_map<StringKey, unsigned int>   mUInts;
+			std::unordered_map<StringKey, std::string>    mStrings;
 			std::mutex                                      mLock;
 
 		public:
-			bool GetBool(SettingsKey _key);
-			byte GetByte(SettingsKey _key);
-			unsigned short GetUShort(SettingsKey _key);
-			short GetShort(SettingsKey _key);
-			float GetFloat(SettingsKey _key);
-			int GetInt(SettingsKey _key);
-			unsigned int GetUInt(SettingsKey _key);
-			std::string GetString(SettingsKey _key);
+			bool GetBool(StringKey _key);
+			unsigned char GetByte(StringKey _key);
+			unsigned short GetUShort(StringKey _key);
+			short GetShort(StringKey _key);
+			float GetFloat(StringKey _key);
+			int GetInt(StringKey _key);
+			unsigned int GetUInt(StringKey _key);
+			std::string GetString(StringKey _key);
 
-			void SetBool(SettingsKey _key, bool _v);
-			void SetByte(SettingsKey _key, byte _v);
-			void SetUShort(SettingsKey _key, unsigned short _v);
-			void SetShort(SettingsKey _key, short _v);
-			void SetFloat(SettingsKey _key, float _v);
-			void SetInt(SettingsKey _key, int _v);
-			void SetUInt(SettingsKey _key, unsigned int _v);
-			void SetString(SettingsKey _key, std::string _v);
+			void SetBool(StringKey _key, bool _v);
+			void SetByte(StringKey _key, unsigned char _v);
+			void SetUShort(StringKey _key, unsigned short _v);
+			void SetShort(StringKey _key, short _v);
+			void SetFloat(StringKey _key, float _v);
+			void SetInt(StringKey _key, int _v);
+			void SetUInt(StringKey _key, unsigned int _v);
+			void SetString(StringKey _key, std::string _v);
 		};
 
 		static _Settings* sInstance;

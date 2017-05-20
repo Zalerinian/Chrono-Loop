@@ -574,6 +574,9 @@
     <ClInclude Include="Actions\CCEnterLevel5.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Rendering\FrameQuery.h">
+      <Filter>Rendering\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -855,6 +858,9 @@
     <ClCompile Include="BVH.cpp" />
     <ClCompile Include="Actions\BoxSnapToControllerAction.cpp">
       <Filter>Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\FrameQuery.cpp">
+      <Filter>Rendering\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
