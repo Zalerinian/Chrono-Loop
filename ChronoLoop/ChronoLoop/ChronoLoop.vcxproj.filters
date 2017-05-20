@@ -565,6 +565,11 @@
     <ClInclude Include="Actions\CCPrevButton.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\CCEnterLevel5.h" />
+    <ClInclude Include="Actions\CCLevel5Button.h" />
+    <ClInclude Include="Actions\CCLevel5Button2.h" />
+    <ClInclude Include="Actions\CCLevel5DoorButton.h" />
+    <ClInclude Include="Actions\CCLevel5Fields.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
