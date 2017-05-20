@@ -1123,7 +1123,7 @@ namespace Epoch
 
 					if (collider->IsEnabled() && collider->mShouldMove && collider->mColliderType != Collider::eCOLLIDER_Controller)
 					{
-						if(collider->mVelocity.Magnitude() > .01f || collider->mAcceleration.Magnitude() > .01f /*|| collider->mTotalForce.Magnitude() > .01f*/ || collider->mDragForce.Magnitude() > .01f)
+						if((collider->mVelocity.Magnitude() > .01f || collider->mAcceleration.Magnitude() > .01f || collider->mDragForce.Magnitude() > .01f) || collider->mTotalForce.Magnitude() > .01f)
 						{
 							collider->mDragForce = collider->mVelocity * (-0.5f * collider->mRHO * collider->mVelocity.Magnitude() * collider->mDrag * collider->mArea);
 							collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);
