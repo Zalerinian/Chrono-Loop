@@ -137,7 +137,8 @@ namespace Epoch {
 				}
 			}
 		}
-
+		if(mCloneDone.size() > 0)
+		mCloneDone.clear();
 	}
 
 	void Timeline::RemoveFromTimeline(unsigned short _id) {
@@ -660,6 +661,10 @@ namespace Epoch {
 			case 4:
 				break;
 			case 5:
+				if (obj.second->GetName().find("Energy") != std::string::npos)
+				{
+					CheckObjectHighlight = false;
+				}
 				break;
 			}
 			
@@ -733,6 +738,8 @@ namespace Epoch {
 			if (Objectlife.second)
 				delete Objectlife.second;
 		}
+		if(mCloneDone.size() > 0)
+		mCloneDone.clear();
 		mObjectLifeTimes.clear();
 		mSnapshots.clear();
 		mSnaptimes.clear();
@@ -845,7 +852,12 @@ namespace Epoch {
 					if (_clones.size() > 0) {
 						for (unsigned int i = 0; i < _clones.size(); i++) {
 							//Move clone to next frame if frame is avalible
-							if (snap->mSnapinfos.find(id) != snap->mSnapinfos.end() && id == _clones[i]->GetUniqueID()) {
+							bool Complete = false;
+							if(mCloneDone.find(id) != mCloneDone.end())
+							{
+								Complete = (mCurrentGameTimeIndx >= mCloneDone[id]);
+							}
+							if (snap->mSnapinfos.find(id) != snap->mSnapinfos.end() && id == _clones[i]->GetUniqueID() && !Complete) {
 								MoveObjectToSnap(_time, id, true);
 								//Update the clone interpolators to move if there is a next next snap available.
 								UpdateCloneInterpolators(_clones[i]->GetUniqueID(), snap->mSnapinfos[id], _time);

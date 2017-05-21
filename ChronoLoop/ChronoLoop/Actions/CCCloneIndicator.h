@@ -13,7 +13,7 @@ namespace Epoch
 
 		CCCloneIndicator(unsigned int _id)
 		{
-			mSnap = TimeManager::Instance()->GetCurrentSnapFrame();
+			mSnap = (float)TimeManager::Instance()->GetCurrentSnapFrame();
 			mId = _id;
 		}
 

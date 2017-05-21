@@ -565,11 +565,19 @@
     <ClInclude Include="Actions\CCPrevButton.h">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\CCLevel5Button.h" />
-    <ClInclude Include="Actions\CCLevel5Button2.h" />
-    <ClInclude Include="Actions\CCLevel5DoorButton.h" />
-    <ClInclude Include="Actions\CCLevel5Fields.h" />
     <ClInclude Include="Actions\CCEnterLevel5.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCLevel5Button.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCLevel5Button2.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCLevel5DoorButton.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCLevel5Fields.h">
       <Filter>Actions</Filter>
     </ClInclude>
   </ItemGroup>
