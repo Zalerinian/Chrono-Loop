@@ -139,9 +139,9 @@ namespace Epoch {
 		}
 	}
 
-	void Renderer::ProcessCommand(void * _console, std::wstring _arguments) {
+	void Renderer::ProcessGSET(void * _console, std::wstring _arguments) {
 		size_t argIndex = _arguments.find(L" ");
-		if (argIndex < 0) {
+		if (argIndex == std::wstring::npos) {
 			((CommandConsole*)_console)->DisplaySet(L"The GSET command requires arguments.");
 		}
 		wstring subcommand = _arguments.substr(0, argIndex);
@@ -165,6 +165,18 @@ namespace Epoch {
 				}
 			}
 		}
+	}
+
+	void Renderer::ProcessGQUERY(void *_console, std::wstring _arguments) {
+		unsigned int frameCount = 1;
+		if (_arguments.size() > 0) {
+			frameCount = std::wcstoul(_arguments.c_str(), nullptr, 10);
+		}
+		if (frameCount < 1) {
+			SystemLogger::Error() << "Could not find valid number in gQuery arguments. Not preparing the frame set." << std::endl;
+			return;
+		}
+		Instance()->InitializeQueries(frameCount);
 	}
 
 	void Renderer::RenderBlurStage(BlurStage _s, float _dx, float _dy) {
@@ -606,6 +618,14 @@ namespace Epoch {
 		mTransparentBlendState.Attach(transparentBS);
 	}
 
+	void Renderer::InitializeQueries(unsigned int _queryCount) {
+		if (_queryCount < 1) {
+			return;
+		}
+		SystemLogger::Debug() << "Capturing performance of " << _queryCount << " frame" << (_queryCount > 1 ? "s" : "") << "..." << std::endl;
+		mQuerySet.Prepare(mDevice, mContext, 0, _queryCount);
+	}
+
 	void Renderer::AttachPrimaryViewports() {
 		D3D11_VIEWPORT viewports[] = { mLeftViewport, mRightViewport, mFullViewport };
 		mContext->RSSetViewports(ARRAYSIZE(viewports), viewports);
@@ -705,26 +725,25 @@ namespace Epoch {
 		boundary.uMin = 0.5f;
 		boundary.uMax = 1.0;
 		vr::VRCompositor()->Submit(vr::EVREye::Eye_Right, &submitTexture, &boundary);
-
-#if ENABLE_TEXT
-		CommandConsole::Instance().SetVRBool(true);
-		CommandConsole::Instance().Update();
-#endif
 	}
 
 
 	void Renderer::RenderNoVR(float _delta) {
 		UpdateCamera(3, 2, _delta);
 		UpdateGSBuffers();
+		if (mQuerySet.Valid()) {
+			mQuerySet.Query("Update Geometry Buffers");
+		}
 		UpdateLBuffers();
+		if (mQuerySet.Valid()) {
+			mQuerySet.Query("Update Light Buffers");
+		}
 		ParticleSystem::Instance()->Render();
+		if (mQuerySet.Valid()) {
+			mQuerySet.Query("Render Particles");
+		}
 		ProcessRenderSet();
 		RenderScreenQuad();
-
-		CommandConsole::Instance().SetVRBool(false);
-		CommandConsole::Instance().Update();
-
-
 	}
 
 	void Renderer::ProcessRenderSet() {
@@ -788,6 +807,10 @@ namespace Epoch {
 			}
 		}
 
+		if (mQuerySet.Valid()) {
+			mQuerySet.Query("Opaque Objects");
+		}
+
 		// Draw the topmost objects. These don't use the depth buffer at all, 
 		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
 		for (unsigned int passIndex = 0; passIndex < 2; ++passIndex) {
@@ -849,6 +872,7 @@ namespace Epoch {
 			}
 		}
 
+
 		{
 			// Anonymous scope so I can use the generic variable name 'map'
 			D3D11_MAPPED_SUBRESOURCE map;
@@ -859,6 +883,9 @@ namespace Epoch {
 		}
 
 
+		if (mQuerySet.Valid()) {
+			mQuerySet.Query("Outlined Objects");
+		}
 
 
 		mContext->OMSetDepthStencilState(mTopmostState.Get(), 1);
@@ -908,6 +935,10 @@ namespace Epoch {
 #endif
 			}
 		}
+
+		if (mQuerySet.Valid()) {
+			mQuerySet.Query("Topmost Objects");
+		}
 	}
 
 
@@ -916,12 +947,21 @@ namespace Epoch {
 		// Blur the bloom texture so that it actually bleeds on the screen
 		if (mEnabledFeatures[eRendererFeature_SuperGlow]) {
 			BlurTextures(mSuperGlowTexture.GetAddressOf(), 1, 2.0f, 0.4f);
+			if (mQuerySet.Valid()) {
+				mQuerySet.Query("SuperGlow");
+			}
 		}
 		if (mEnabledFeatures[eRendererFeature_Glow]) {
 			if (mEnabledFeatures[eRendererFeature_Bloom]) {
 				RenderForBloom();
+				if (mQuerySet.Valid()) {
+					mQuerySet.Query("Render for bloom");
+				}
 			}
 			BlurTextures(mBloomTexture.GetAddressOf(), 1, 2.0f, 0.4f);
+			if (mQuerySet.Valid()) {
+				mQuerySet.Query("Regular Blur");
+			}
 		}
 
 		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
@@ -931,7 +971,16 @@ namespace Epoch {
 		mDeferredCombiner->Render(1);
 		mCurrentContext.SimpleClone(mDeferredCombiner->GetContext());
 
+		if (mQuerySet.Valid()) {
+			mQuerySet.Query("Data Combination");
+		}
+
 		RenderTransparentObjects();
+		if (mQuerySet.Valid()) {
+			mQuerySet.Query("Transparent Objects");
+		}
+
+
 		mContext->OMSetDepthStencilState(mOpaqueState.Get(), 1);
 
 		ID3D11ShaderResourceView *unbind[] = { nullptr, nullptr, nullptr, nullptr };
@@ -1018,6 +1067,71 @@ namespace Epoch {
 		AttachPrimaryRTVs();
 		AttachPrimaryViewports();
 		mCurrentContext.Apply();
+	}
+
+	void Renderer::ReportFrameQueries() {
+		//for (unsigned int i = 0; i < mQueries.size(); ++i) {
+		//	HRESULT reportReady = mContext->GetData(mQueries[i].Disjoint, nullptr, 0, 0);
+		//	if (reportReady == S_FALSE) {
+		//		// Print query reports only when all reports are ready.
+		//		return;
+		//	}
+		//}
+
+		//D3D11_QUERY_DATA_TIMESTAMP_DISJOINT disjointData;
+		//D3D11_QUERY_DATA_PIPELINE_STATISTICS pipelineStats;
+		//UINT64 gpuFrameBegin = 0;
+		//UINT64 gpuClearing = 0;
+		//UINT64 gpuGBufferUpdates = 0;
+		//UINT64 gpuLBufferUpdates = 0;
+		//UINT64 gpuParticleSystem = 0;
+		//UINT64 gpuOpaqueObjects = 0;
+		//UINT64 gpuOutlinedObjects = 0;
+		//UINT64 gpuTopmostObjects = 0;
+		//UINT64 gpuSuperGlow = 0;
+		//UINT64 gpuBloomCheck = 0;
+		//UINT64 gpuGlow = 0;
+		//UINT64 gpuDataCombination = 0;
+		//UINT64 gpuTransparentObjects = 0;
+		//UINT64 gpuScreenQuad = 0;
+		//UINT64 gpuVRSubmit = 0;
+		//UINT64 gpuFrameEnd = 0;
+		//UINT64 numSamples = 0;
+
+		//for (unsigned int i = 0; i < mQueries.size(); ++i) {
+		//	// Collect the data
+		//	mContext->GetData(mQueries[i].Disjoint, &disjointData, sizeof(disjointData), 0);
+		//	if (disjointData.Disjoint == TRUE) {
+		//		// Something occured to make the GPU's frequency change, so the data is not accurate.
+		//		SystemLogger::GetLog() << "Frame " << (i + 1) << " of " << mQueries.size() << ": Frame was disjoint." << std::endl;
+		//		continue;
+		//	}
+
+		//	mContext->GetData(mQueries[i].gpuFrameBegin, &gpuFrameBegin, sizeof(UINT64), 0);
+		//	mContext->GetData(mQueries[i].gpuClearing, &gpuClearing, sizeof(UINT64), 0);
+		//	mContext->GetData(mQueries[i].gpuGBufferUpdates, &gpuGBufferUpdates, sizeof(UINT64), 0);
+		//	mContext->GetData(mQueries[i].gpuLBufferUpdates, &gpuLBufferUpdates, sizeof(UINT64), 0);
+		//	mContext->GetData(mQueries[i].gpuParticleSystem, &gpuParticleSystem, sizeof(UINT64), 0);
+		//	mContext->GetData(mQueries[i].gpuOpaqueObjects, &gpuOpaqueObjects, sizeof(UINT64), 0);
+		//	mContext->GetData(mQueries[i].gpuOutlinedObjects, &gpuOutlinedObjects, sizeof(UINT64), 0);
+		//	mContext->GetData(mQueries[i].gpuTopmostObjects, &gpuTopmostObjects, sizeof(UINT64), 0);
+		//	mContext->GetData(mQueries[i].gpuSuperGlow, &gpuSuperGlow, sizeof(UINT64), 0);
+		//	mContext->GetData(mQueries[i].gpuBloomCheck, &gpuBloomCheck, sizeof(UINT64), 0);
+		//	mContext->GetData(mQueries[i].gpuGlow, &gpuGlow, sizeof(UINT64), 0);
+		//	mContext->GetData(mQueries[i].gpuDataCombination, &gpuDataCombination, sizeof(UINT64), 0);
+		//	mContext->GetData(mQueries[i].gpuTransparentObjects, &gpuTransparentObjects, sizeof(UINT64), 0);
+		//	mContext->GetData(mQueries[i].gpuVRSubmit, &gpuVRSubmit, sizeof(UINT64), 0);
+		//	mContext->GetData(mQueries[i].gpuFrameEnd, &gpuFrameEnd, sizeof(UINT64), 0);
+
+		//	float frequency = ((float)(disjointData.Frequency));
+		//	float gpuFrameTime = (gpuFrameEnd - gpuFrameBegin) / frequency * 1000.f;
+
+		//	// Print the data
+		//	SystemLogger::GetLog() << "Frame " << (i + 1) << " of " << mQueries.size() << ":\n" <<
+		//		"\tGPU Time: " << gpuFrameTime << std::endl;
+		//}
+
+		//mQueries.clear();
 	}
 	 
 #pragma endregion Private Functions
@@ -1178,7 +1292,8 @@ namespace Epoch {
 		mEnabledFeatures.set(eRendererFeature_Bloom);
 		mEnabledFeatures.set(eRendererFeature_Glow);
 		mEnabledFeatures.set(eRendererFeature_SuperGlow);
-		CommandConsole::Instance().AddCommand(L"GSET", &Renderer::ProcessCommand);
+		CommandConsole::Instance().AddCommand(L"GSET", &Renderer::ProcessGSET);
+		CommandConsole::Instance().AddCommand(L"GQUERY", &Renderer::ProcessGQUERY);
 
 		InitializeSamplerState();
 		SetStaticBuffers();
@@ -1316,6 +1431,9 @@ namespace Epoch {
 
 
 	void Renderer::Render(float _deltaTime) {
+		if (mQuerySet.Valid()) {
+			mQuerySet.Begin();
+		}
 
 		float color[4] = { 0.251f, 0.709f, 0.541f, 1 };
 		float black[4] = { 0, 0, 0, 0 };
@@ -1332,19 +1450,18 @@ namespace Epoch {
 		mContext->ClearRenderTargetView(mGlowRTV.Get(), black);
 		mContext->ClearRenderTargetView(mSuperGlowRTV.Get(), black);
 		mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
+		if (mQuerySet.Valid()) {
+			mQuerySet.Query("RTV Clearing");
+		}
 
 		if (nullptr == mVrSystem) {
 			RenderNoVR(_deltaTime);
-		}
-		else {
+		} else {
 			// In VR, we need to apply the post processing before we submit textures to the compositor.
 			RenderVR(_deltaTime);
 		}
 
-		//mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_DEPTH | D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 1.0f, 0);
-		//// Regardless of VR or not, we need to render the Screen quad so we only see one eye on screen.
-		//mSceneScreenQuad->GetContext().Apply();
-		//mSceneScreenQuad->Render();
+		CommandConsole::Instance().Render();
 
 		// Remove the Scene Shader Resource View from the input pipeline, as once the next render
 		// call happens, it will be bound to the output pipeline, as well as the input pipeline,
@@ -1354,6 +1471,14 @@ namespace Epoch {
 
 
 		mChain->Present(0, 0);
+		if (mQuerySet.Valid()) {
+			mQuerySet.End();
+			SystemLogger::Debug() << "Captured frame " << mQuerySet.GetCurrentIndex() << " of " << mQuerySet.GetSize() << std::endl;
+		}
+		if (mQuerySet.Ready()) {
+			mQuerySet.Display();
+			mQuerySet.Clear();
+		}
 		mRendererLock.unlock();
 	}
 

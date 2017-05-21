@@ -63,7 +63,7 @@ namespace Epoch
 						//Invoke Reset level
 						mRestartLevel = true;
 						//Play sounds
-						((SFXEmitter*)mLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 2))->CallEvent(Emitter::ePlay);
+						((SFXEmitter*)mLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 4))->CallEvent(Emitter::ePlay);
 					}
 			}
 		}

@@ -133,6 +133,13 @@ namespace Epoch
 					}
 
 				} else {
+					//blockCube->SetPos(blockend);
+					blockInterp->SetActive(true);
+					blockInterp->Prepare(0.69f, blockCube->GetTransform().GetMatrix(), blockstart, blockCube->GetTransform().GetMatrix());
+
+					//exitCube->SetPos(exitend);
+					exitInterp->SetActive(true);
+					exitInterp->Prepare(0.69f, exitCube->GetTransform().GetMatrix(), exitstart, exitCube->GetTransform().GetMatrix());
 					colliding = false;
 				}
 			}

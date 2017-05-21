@@ -42,10 +42,17 @@ namespace Epoch
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
 
-			if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") >= 7)) //created clone (tut 2)
+			if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 3)) //created clone (tut 2)
 			{
 				// Cancel Time
-
+				((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 3))->CallEvent(Emitter::ePlay);
+				if (Settings::GetInstance().GetInt("tutStep") >= 4)//accepted time (
+				{
+					if (Settings::GetInstance().GetBool("Level1Tutorial"))
+						Settings::GetInstance().SetInt("tutStep", 6);//end
+					else
+						Settings::GetInstance().SetInt("tutStep", 7);//delete clone
+				}
 				//put the original controll and headset back in control
 				//Remove the clone created
 				if (mCurCloneHeadset && mCurCloneController1 && mCurCloneController2)
@@ -85,6 +92,8 @@ namespace Epoch
 					Settings::GetInstance().SetUInt("tut1FirstPause", TimeManager::Instance()->GetCurrentSnapFrame());
 					Settings::GetInstance().SetInt("tutStep", 3);//Rewind (tut 1)
 				}
+
+				((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 2))->CallEvent(Emitter::ePlay);
 
 				if (Settings::GetInstance().GetInt("CurrentLevel") != 1)
 				{
@@ -163,14 +172,15 @@ namespace Epoch
 
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::k_EButton_SteamVR_Touchpad)
 			&& (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 3))//Created Clone (tut 2)
-		{
+			{
 
 			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
 			// Accept timeline position
 			if (mPauseTime)
 			{
-				if (Settings::GetInstance().GetInt("tutStep") >= 4)//accepted time (
+				((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 3))->CallEvent(Emitter::ePlay);
+				if (Settings::GetInstance().GetInt("tutStep") >= 4)
 				{
 					if (Settings::GetInstance().GetBool("Level1Tutorial"))
 						Settings::GetInstance().SetInt("tutStep", 6);//end

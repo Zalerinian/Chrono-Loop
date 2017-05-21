@@ -559,7 +559,7 @@
     <ClInclude Include="Actions\CCPlatformButton.h">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\CCCloneIndicator.h">
+    <ClInclude Include="Actions\CCLevel5Button.h">
       <Filter>Actions</Filter>
     </ClInclude>
     <ClInclude Include="Actions\CCPrevButton.h">
@@ -861,6 +861,9 @@
     <ClCompile Include="BVH.cpp" />
     <ClCompile Include="Actions\BoxSnapToControllerAction.cpp">
       <Filter>Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\FrameQuery.cpp">
+      <Filter>Rendering\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

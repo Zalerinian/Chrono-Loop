@@ -210,6 +210,19 @@ namespace Epoch
 					RightController->AddComponent(resetlevelsound);
 					AudioWrapper::GetInstance().AddEmitter(resetlevelsound, RightController->GetName().c_str());
 
+					Emitter* timepause = new SFXEmitter();
+					((SFXEmitter*)timepause)->SetEvent(AK::EVENTS::SFX_TIMEPAUSE);
+					AudioWrapper::GetInstance().AddEmitter(timepause, headset->GetName().c_str());
+					headset->AddComponent(timepause);
+
+					Emitter* timeresume = new SFXEmitter();
+					((SFXEmitter*)timeresume)->SetEvent(AK::EVENTS::SFX_TIMERESUME);
+					AudioWrapper::GetInstance().AddEmitter(timeresume, headset->GetName().c_str());
+					headset->AddComponent(timeresume);
+
+
+
+
 					/*BaseObject* magicalCube = Pool::Instance()->iGetObject()->Reset("Magical Cube That Follows Me");
 					MeshComponent* mcmc = new MeshComponent("../Resources/UnitCube.obj");
 					mcmc->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
