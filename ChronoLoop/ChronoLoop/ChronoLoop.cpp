@@ -153,7 +153,6 @@ void Update() {
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
 
-
 	// TODO: Replace all this with a level to run.
 	///*///////////////////////Using this to test physics//////////////////
 	//_CrtSetBreakAlloc(4390);
@@ -443,8 +442,11 @@ void Update() {
 
 	if (VREnabled) {
 		VRInputManager::GetInstance().Update();
+		CommandConsole::Instance().SetVRBool(true);
 	}
-	short vol = 50;
+
+
+	
 	UpdateTime();
 	fixedTime = 0;
 	renderDelta = RENDER_INTERVAL;
@@ -474,17 +476,8 @@ void Update() {
 			if (GetAsyncKeyState(VK_ESCAPE) && GetActiveWindow() == Renderer::Instance()->GetWindow()) {
 				break;
 			}
-			if (GetAsyncKeyState(VK_UP))
-			{
-				vol++;
-				AudioWrapper::GetInstance().SetRTCP(AK::GAME_PARAMETERS::AMBIENTVOLUME, vol);
-			}
-			if (GetAsyncKeyState(VK_DOWN))
-			{
-				vol--;
-				AudioWrapper::GetInstance().SetRTCP(AK::GAME_PARAMETERS::AMBIENTVOLUME, vol);
-			}
 
+			CommandConsole::Instance().Update();
 			AudioWrapper::GetInstance().Update();
 			UpdateTime();
 			LevelManager::GetInstance().Update();

@@ -67,10 +67,10 @@ namespace Epoch {
 
 					Listener* ears = new Listener();
 					Emitter* ambient = new AudioEmitter();
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_LEVEL1AMBIENT);
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_LEVEL1AMBIENT);
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_LEVEL1AMBIENT);
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_LEVEL1AMBIENT);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_LEVEL4AMBIENT);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_LEVEL4AMBIENT);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_LEVEL4AMBIENT);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_LEVEL4AMBIENT);
 
 					AudioWrapper::GetInstance().AddListener(ears, "Listener");
 					AudioWrapper::GetInstance().AddEmitter(ambient, "ambiance");

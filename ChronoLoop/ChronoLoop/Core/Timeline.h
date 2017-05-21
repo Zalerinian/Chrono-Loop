@@ -72,6 +72,7 @@ namespace Epoch {
 		std::unordered_map<unsigned int, Snapshot*> mSnapshots;		//The key will be the time they were taken (mSnapTimes)
 		std::unordered_map<unsigned short, BaseObject*> mLiveObjects;
 		std::unordered_map<unsigned short, ObjectLifeTime*> mObjectLifeTimes;
+		std::unordered_map<unsigned short, unsigned int> mCloneDone; //Key:clone id, value: frame clone finished its timeline. 
 
 	public:
 		SnapLevelSettings mSettings;
@@ -87,6 +88,7 @@ namespace Epoch {
 		//Add a snapshot to unordered map of all snapshots
 		void AddSnapshot(unsigned int _snaptime, Snapshot* _snapshot);
 		//Remove all snapshots, snapinfos, objectLifeTimes, recorded objects from list
+		void ClearCloneCompletionTime() { if(mCloneDone.size() > 0) mCloneDone.clear(); };
 		void ClearTimeLine();
 		void ChangeBitsetToSnap(SnapInfo* _destinfo, Component* _curComp);
 		void ChangePlayerBitsetToSnap(SnapInfo * _destinfo, Component* _curComp);
@@ -117,6 +119,7 @@ namespace Epoch {
 		void MoveAllObjectsToSnapExceptPlayer(unsigned int _snaptime, unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void SetObjectBirthTime(unsigned short _id);
 		void SetBaseObjectDeathTime(unsigned short _id);
+		void SetCloneFrameCompletion(unsigned short _id, unsigned int _frame) { mCloneDone[_id] = _frame; };
 		void SetCloneObjectCreationTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void SetCloneMadeTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		void SetCloneDeathTime(unsigned short _id1, unsigned short _id2, unsigned short _id3);

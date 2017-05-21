@@ -117,6 +117,23 @@ namespace Epoch
 					TimeManager::Instance()->GetCurrentSnapFrame(),
 					cLevel->GetRightController()->GetUniqueID(),
 					cLevel->GetLeftController()->GetUniqueID());
+
+				Component* comp = cLevel->GetRightController()->GetComponentIndexed(eCOMPONENT_CODE, 0);
+				if (dynamic_cast<BoxSnapToControllerAction*>(comp))
+				{
+					if(((BoxSnapToControllerAction*)comp)->mPickUp)
+					((BoxSnapToControllerAction*)comp)->mPickUp->mShouldMove = true;
+					((BoxSnapToControllerAction*)comp)->mPickUp = nullptr;
+				}
+
+				comp = cLevel->GetLeftController()->GetComponentIndexed(eCOMPONENT_CODE, 0);
+				if (dynamic_cast<BoxSnapToControllerAction*>(comp))
+				{
+					if (((BoxSnapToControllerAction*)comp)->mPickUp)
+						((BoxSnapToControllerAction*)comp)->mPickUp->mShouldMove = true;
+					((BoxSnapToControllerAction*)comp)->mPickUp = nullptr;
+				}
+
 				if (mCurCloneController1 && mCurCloneController2 && mCurCloneHeadset)
 				{
 					MeshComponent* mesh = (MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0);
@@ -174,8 +191,11 @@ namespace Epoch
 				mDesaturationInterpolator.Prepare(0.5f, mEffectData.ratios, finalRatios, mEffectData.ratios);
 				mDesaturationInterpolator.SetActive(true);
 
-				if (mIsBeingMade &&  mNumOfConfirmedClones < cLevel->GetMaxClones())
+				if (mIsBeingMade &&  mNumOfConfirmedClones < cLevel->GetMaxClones() && TimeManager::Instance()->GetTempCurSnap() < TimeManager::Instance()->GetCurrentSnapFrame()-1 )
 				{
+		
+					unsigned int curTime = TimeManager::Instance()->GetCurrentSnapFrame();
+				
 					//rewind first then enable clone
 					TimeManager::Instance()->RewindTimeline(
 						TimeManager::Instance()->GetTempCurSnap(),
@@ -187,6 +207,13 @@ namespace Epoch
 					TimeManager::Instance()->SetCreationTimeofClone(cLevel->GetLeftController()->GetUniqueID(), cLevel->GetRightController()->GetUniqueID(), cLevel->GetHeadset()->GetUniqueID());
 					if (mCurCloneHeadset && mCurCloneController1 && mCurCloneController2)
 					{
+						if (curTime > 0)
+							curTime -= 1;
+						//Set the final frame the clone is done at
+						TimeManager::Instance()->SetClonesFinalFrame(mCurCloneHeadset->GetUniqueID(), curTime);
+						TimeManager::Instance()->SetClonesFinalFrame(mCurCloneController1->GetUniqueID(), curTime);
+						TimeManager::Instance()->SetClonesFinalFrame(mCurCloneController2->GetUniqueID(), curTime);
+
 						//Update the made time of the clone
 						TimeManager::Instance()->UpdateCloneMadeTime(mCurCloneHeadset->GetUniqueID(), mCurCloneController1->GetUniqueID(), mCurCloneController2->GetUniqueID());
 						//add Interpolators for the clones
@@ -217,7 +244,8 @@ namespace Epoch
 
 						Transform t;
 						BaseObject *CloneDisplayNeedle = Pool::Instance()->iGetObject()->Reset("CloneIcon", t);
-						MeshComponent* tdispn = new MeshComponent("../Resources/Clone.obj");
+						MeshComponent* tdispn = new MeshComponent("../Resources/MiniClone.obj");
+						tdispn->SetPixelShader(ePS_PURETEXTURE);
 						tdispn->AddTexture(mCurrTexture.c_str(),TextureType::eTEX_DIFFUSE);
 						CCCloneIndicator* time = new CCCloneIndicator(mCurCloneController1->GetUniqueID());
 						CloneDisplayNeedle->AddComponent(tdispn);
@@ -272,7 +300,7 @@ namespace Epoch
 			{
 				if (mCurCloneController1 && mCurCloneController2 && mCurCloneHeadset)
 				{
-					bool FirstFrame = TimeManager::Instance()->GetCurrentSnapFrame() == TimeManager::Instance()->GetTempCurSnap();
+					bool FirstFrame = TimeManager::Instance()->GetCurrentSnapFrame() < TimeManager::Instance()->GetTempCurSnap();
 				
 						if (LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->RaycastCloneCheck() == false)
 						{
@@ -292,9 +320,9 @@ namespace Epoch
 						}
 						else
 						{
-							((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.3f);
-							((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.3f);
-							((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.3f);
+							((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.2f);
+							((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.2f);
+							((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.2f);
 							SystemLogger::GetLog() << "Transparent" << std::endl;
 						}
 					}
@@ -321,7 +349,7 @@ namespace Epoch
 		_data.ScanlineData.z = 0;
 		_data.ScanlineData.w = 0.8f;
 		mCurrTexture = TimeManager::Instance()->GetNextTexture();
-		MeshComponent *visibleMesh = new MeshComponent("../Resources/Clone.obj", .35f);
+		MeshComponent *visibleMesh = new MeshComponent("../Resources/Clone.obj", .2f);
 		visibleMesh->SetPixelShader(ePS_TRANSPARENT);
 		visibleMesh->AddTexture(mCurrTexture.c_str(), eTEX_DIFFUSE);
 
@@ -341,7 +369,7 @@ namespace Epoch
 		_headset->AddComponent(headCol);*/
 
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
-		MeshComponent *mc = new MeshComponent("../Resources/Controller.obj", .35f);
+		MeshComponent *mc = new MeshComponent("../Resources/Controller.obj", .2f);
 		ControllerCollider* CubeColider = new ControllerCollider(_controller1, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
 		mc->SetPixelShader(ePS_TRANSPARENT);
 		mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
@@ -358,7 +386,7 @@ namespace Epoch
 		_controller1->AddComponent(SN1);
 
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be proble
-		MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj", .35f);
+		MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj", .2f);
 		ControllerCollider* CubeColider2 = new ControllerCollider(_controller2, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 		mc2->SetPixelShader(ePS_TRANSPARENT);
 		mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);

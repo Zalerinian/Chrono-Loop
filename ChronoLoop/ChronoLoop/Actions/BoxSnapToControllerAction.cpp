@@ -44,6 +44,7 @@ namespace Epoch {
 			}
 			mInput = temp;
 		}
+
 		if (VRInputManager::GetInstance().IsVREnabled() && mInput) {
 			if (mHeld && mPickUp != nullptr) {
 				matrix4 m = mObject->GetTransform().GetMatrix();
@@ -79,7 +80,7 @@ namespace Epoch {
 			BoxSnapToControllerAction* temp = mHands[i];
 			if (temp) {
 				//If my mPickup is the same as the other code component, make it release theirs so new code component can pick it up
-				if (temp->mHeld == true && temp->mPickUp == mPickUp) {
+				if (temp->mHeld == true && temp->mPickUp && mPickUp && temp->mPickUp == mPickUp) {
 					//TODO PAT: Have a time out system for non player hands to where they cant pick up an object after a certain amount of time
 					if (temp->mObject->GetUniqueID() != LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetUniqueID() &&
 						temp->mObject->GetUniqueID() != LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetUniqueID())
@@ -170,14 +171,17 @@ namespace Epoch {
 	{
 		if (!mInput)
 			return;
-		
+
 		vec4f force = mInput->mData.mVelocity;
 		force[2] *= -1; // SteamVR seems to Assume +Z goes into the screen.
 		//mPickUp->mTotalForce = mPickUp->mForces + (mPickUp->mGravity * mPickUp->mMass);
 		//mPickUp->mAcceleration = mPickUp->mTotalForce / mPickUp->mMass;
-		mPickUp->mVelocity = force;
-		CheckIfBoxShouldMove();
-		mPickUp = nullptr;
-		mHeld = false;
+		if (mPickUp)
+		{
+			mPickUp->mVelocity = force;
+			CheckIfBoxShouldMove();
+			mPickUp = nullptr;
+			mHeld = false;
+		}
 	}
 }
