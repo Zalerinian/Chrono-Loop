@@ -404,8 +404,8 @@ namespace Epoch
 
 					if (Settings::GetInstance().GetBool("CompleteLevel4"))
 					{
-						((MeshComponent*)next->FindObjectWithName("Test2")->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
-						((MeshComponent*)next->FindObjectWithName("Test2")->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
+						((MeshComponent*)next->FindObjectWithName("Test4")->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+						((MeshComponent*)next->FindObjectWithName("Test4")->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
 						Particle* p2 = &Particle::Init();
 						p2->SetPos(vec3f(0, 0, 0));
 						p2->SetColors(vec3f(0, 1, 0), vec3f(0, .5f, .5f));
@@ -438,8 +438,8 @@ namespace Epoch
 					}
 					else if (Settings::GetInstance().GetInt("CurrentLevel") >= 3)
 					{
-						((MeshComponent*)next->FindObjectWithName("Test2")->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
-						((MeshComponent*)next->FindObjectWithName("Test2")->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
+						((MeshComponent*)next->FindObjectWithName("Test4")->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+						((MeshComponent*)next->FindObjectWithName("Test4")->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
 						Particle* p2 = &Particle::Init();
 						p2->SetPos(vec3f(0, 0, 0));
 						p2->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
@@ -473,6 +473,8 @@ namespace Epoch
 
 					if (Settings::GetInstance().GetBool("CompleteLevel5"))
 					{
+						((MeshComponent*)next->FindObjectWithName("Test5")->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+						((MeshComponent*)next->FindObjectWithName("Test5")->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
 						Particle* p1 = &Particle::Init();
 						p1->SetPos(vec3f(0, 0, 0));
 						p1->SetColors(vec3f(0, 1, 0), vec3f(0, .5f, .5f));
@@ -505,6 +507,8 @@ namespace Epoch
 					}
 					else if(Settings::GetInstance().GetInt("CurrentLevel") >= 4)
 					{
+						((MeshComponent*)next->FindObjectWithName("Test5")->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+						((MeshComponent*)next->FindObjectWithName("Test5")->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
 						Particle* p1 = &Particle::Init();
 						p1->SetPos(vec3f(0, 0, 0));
 						p1->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));

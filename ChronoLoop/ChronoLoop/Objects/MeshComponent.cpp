@@ -333,12 +333,13 @@ namespace Epoch {
 	}
 
 	void MeshComponent::SetBlended(bool _ButWillItBlend) {
-		RemoveNode();
-		mBlended = _ButWillItBlend;
-		if(mVisible && CanCreateNode())
+		if (_ButWillItBlend != mBlended)
 		{
+			RemoveNode();
+			mBlended = _ButWillItBlend;
 			CreateNode();
 		}
+
 	}
 
 	RenderShape * MeshComponent::GetShape() {

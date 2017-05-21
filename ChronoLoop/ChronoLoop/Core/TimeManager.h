@@ -104,6 +104,7 @@ namespace Epoch {
 		void SetCreationTimeofClone(unsigned short _id1, unsigned short _id2, unsigned short _id3);
 		//Add a clone pair to unordered map to find other two base objects
 		void SetClonePair(unsigned short _id, Clonepair* _pair) { mClonePairs[_id] = _pair; };
+		void SetClonesFinalFrame(unsigned short _id, unsigned int _frame);
 		void SetTempCurSnap() { mtempCurSnapFrame = GetCurrentSnapFrame(); };
 		void SetTimelineObjectInterpTime(float _time);
 		void SetupClonePairs(unsigned short _id1, unsigned short _id2, unsigned short _id3);

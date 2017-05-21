@@ -565,17 +565,20 @@
     <ClInclude Include="Actions\CCPrevButton.h">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\CCLevel5Fields.h">
-      <Filter>Actions</Filter>
-    </ClInclude>
-    <ClInclude Include="Actions\CCCloneIndicator.h">
-      <Filter>Actions</Filter>
-    </ClInclude>
     <ClInclude Include="Actions\CCEnterLevel5.h">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Rendering\FrameQuery.h">
-      <Filter>Rendering\Header Files</Filter>
+    <ClInclude Include="Actions\CCLevel5Button.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCLevel5Button2.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCLevel5DoorButton.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\CCLevel5Fields.h">
+      <Filter>Actions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
