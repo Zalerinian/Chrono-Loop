@@ -43,7 +43,7 @@ namespace Epoch
 			mPB = new CCProgressBar();
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 
-			mChamberObject = cLevel->FindObjectWithName("mmChamber");
+			mChamberObject = cLevel->FindObjectWithName("FloorChamber");
 			mStartSign = cLevel->FindObjectWithName("mmStartSign");
 			mExitSign = cLevel->FindObjectWithName("mmExitSign");
 			mExitButton = cLevel->FindObjectWithName("mmExitButton");
