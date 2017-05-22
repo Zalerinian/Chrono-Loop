@@ -138,18 +138,15 @@ namespace Epoch
 					next->AddObject(RightController);
 
 					bool boop = true;
-					int floorPos = 0;
-					if (Settings::GetInstance().GetInt("mmLevel") == 1)
-						floorPos = -10;
-					else if (Settings::GetInstance().GetInt("mmLevel") == 2)
-						floorPos = -20;
+					int floorPos = Settings::GetInstance().GetInt("mmLevel") * -10;
 					auto& levelObjects = next->GetLevelObjects();
 					for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it)
 					{
 						std::string temp = ((BaseObject*)*it)->GetName();
-						if (temp == "mmChamber" || temp == "mmStartSign" || temp == "mmExitSign" || temp == "mmExitButton" ||
+						if (temp == "FloorChamber" || temp == "mmStartSign" || temp == "mmExitSign" || temp == "mmExitButton" ||
 							temp == "mmStartButton" || temp == "mmStartStand" || temp == "mmExitStand" ||
-							temp == "mmTutButton" || temp == "mmTutSign" || temp == "mmTutStand")
+							temp == "mmTutButton" || temp == "mmTutSign" || temp == "mmTutStand" || temp == "mmPrevStand"
+							|| temp == "mmPrevButton" || temp =="mmPrevSign")
 						{
 							Transform t;
 							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateTranslation(0, (float)floorPos, 0));
