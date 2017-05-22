@@ -89,6 +89,9 @@ namespace Epoch
 					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
+					mc->AddTexture("../Resources/Controller_Diffuse.png", eTEX_DIFFUSE);
+					mc->AddTexture("../Resources/Controller_Normal", eTEX_NORMAL);
+					mc->AddTexture("../Resources/Controller_Specular", eTEX_SPECULAR);
 					CubeCollider* col = new CubeCollider(headset, false, false, vec3f(), 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f));
 					headset->AddComponent(col);
 
@@ -97,7 +100,6 @@ namespace Epoch
 					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					rightRaycaster->SetPixelShader(ePS_PURETEXTURE);
-					mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 					mc->SetPixelShader(ePS_PURETEXTURE);
 					TeleportAction *ta = new TeleportAction(eControllerType_Primary);
 					TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
@@ -269,13 +271,16 @@ namespace Epoch
 					RightController->AddChild(clonePlus);
 
 					//pat added
-					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
+					MeshComponent *mc2 = new MeshComponent("../Resources/Player_hand.obj");
+					mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
+					mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
+					mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
+					mc2->AddTexture("../Resources/Player_hand_Specular", eTEX_SPECULAR);
 					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 					BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					leftRaycaster->SetPixelShader(ePS_PURETEXTURE);
-					mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 					mc2->SetPixelShader(ePS_PURETEXTURE);
 					TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
 					LeftController->AddComponent(mc2);
@@ -361,12 +366,12 @@ namespace Epoch
 					p2->SetColors(vec3f(0, 0, 1), vec3f(.5f, 0, .5f));
 					p2->SetLife(500);
 					p2->SetSize(.35f, .15f);
-					ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(-10.68469f, -3.279138f, 2.349368f, 1));
+					ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(9.03f, -0.05f, -8.87f, 1));
 					emit21->SetParticle(p2);
 					emit21->SetTexture("../Resources/BasicRectP.png");
 					((TeleportEffect*)emit21)->y1 = 8;
 					((TeleportEffect*)emit21)->y2 = 12;
-					((TeleportEffect*)emit21)->SetPosBounds(vec3f(0, 0, -1), vec3f(0, 1, 1));
+					((TeleportEffect*)emit21)->SetPosBounds(vec3f(-1, 0, 0), vec3f(1, 1, 0));
 					((TeleportEffect*)emit21)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 					ParticleSystem::Instance()->AddEmitter(emit21);
 					emit21->FIRE();
@@ -376,12 +381,12 @@ namespace Epoch
 					p2->SetColors(vec3f(.5f, 0, .5f), vec3f(0, 0, 1));
 					p2->SetLife(500);
 					p2->SetSize(.15f, .05f);
-					ParticleEmitter* emit22 = new TeleportEffect(-1, 150, 2, vec4f(-10.68469f, -3.279138f, 2.349368f, 1));
+					ParticleEmitter* emit22 = new TeleportEffect(-1, 150, 2, vec4f(9.03f, -0.05f, -8.87f, 1));
 					emit22->SetTexture("../Resources/BasicCircleP.png");
 					emit22->SetParticle(p2);
 					((TeleportEffect*)emit22)->y1 = 1;
 					((TeleportEffect*)emit22)->y2 = 5;
-					((TeleportEffect*)emit22)->SetPosBounds(vec3f(0, 0, -1), vec3f(0, 1, 1));
+					((TeleportEffect*)emit22)->SetPosBounds(vec3f(-1, 0, 0), vec3f(1, 1, 0));
 					((TeleportEffect*)emit22)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
 					ParticleSystem::Instance()->AddEmitter(emit22);
 					emit22->FIRE();

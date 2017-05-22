@@ -91,9 +91,11 @@ namespace Epoch
 					Transform identity, transform;
 					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
+					mc->AddTexture("../Resources/Controller_Diffuse.png", eTEX_DIFFUSE);
+					mc->AddTexture("../Resources/Controller_Normal", eTEX_NORMAL);
+					mc->AddTexture("../Resources/Controller_Specular", eTEX_SPECULAR);
 					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
-					rightRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
-					mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+					rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					TeleportAction* rightTele = new TeleportAction(eControllerType_Primary);
 					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
 					RightController->AddComponent(mc);
@@ -102,10 +104,13 @@ namespace Epoch
 					RightController->AddComponent(rightConCol);
 
 					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline); //new BaseObject("Controller2", identity);
-					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
+					MeshComponent *mc2 = new MeshComponent("../Resources/Player_hand.obj");
+					mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
+					mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
+					mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
+					mc2->AddTexture("../Resources/Player_hand_Specular", eTEX_SPECULAR);
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
-					leftRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
-					mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					TeleportAction* leftTele = new TeleportAction(eControllerType_Secondary);
 					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 					LeftController->AddComponent(leftConCol);
@@ -133,16 +138,15 @@ namespace Epoch
 					next->AddObject(RightController);
 
 					bool boop = true;
-					int floorPos = 0;
-					if (Settings::GetInstance().GetInt("mmLevel") == 1)
-						floorPos = -10;
+					int floorPos = Settings::GetInstance().GetInt("mmLevel") * -10;
 					auto& levelObjects = next->GetLevelObjects();
 					for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it)
 					{
 						std::string temp = ((BaseObject*)*it)->GetName();
-						if (temp == "mmChamber" || temp == "mmStartSign" || temp == "mmExitSign" || temp == "mmExitButton" ||
+						if (temp == "FloorChamber" || temp == "mmStartSign" || temp == "mmExitSign" || temp == "mmExitButton" ||
 							temp == "mmStartButton" || temp == "mmStartStand" || temp == "mmExitStand" ||
-							temp == "mmTutButton" || temp == "mmTutSign" || temp == "mmTutStand")
+							temp == "mmTutButton" || temp == "mmTutSign" || temp == "mmTutStand" || temp == "mmPrevStand"
+							|| temp == "mmPrevButton" || temp =="mmPrevSign")
 						{
 							Transform t;
 							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateTranslation(0, (float)floorPos, 0));

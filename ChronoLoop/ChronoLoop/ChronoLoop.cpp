@@ -171,8 +171,10 @@ void Update() {
 	BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", identity);
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 	MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
-	rightRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
-	mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+	rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+	mc->AddTexture("../Resources/Controller_Diffuse.png", eTEX_DIFFUSE);
+	mc->AddTexture("../Resources/Controller_Normal", eTEX_NORMAL);
+	mc->AddTexture("../Resources/Controller_Specular", eTEX_SPECULAR);
 	TeleportAction* rightTele = new TeleportAction(eControllerType_Primary);
 	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
 	RightController->AddComponent(mc);
@@ -182,10 +184,13 @@ void Update() {
 	TimeManager::Instance()->AddObjectToTimeline(RightController);
 
 	BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity); //new BaseObject("Controller2", identity);
-	MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
+	MeshComponent *mc2 = new MeshComponent("../Resources/Player_hand.obj");
 	MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
-	leftRaycaster->AddTexture("../Resources/Scanline.png", eTEX_DIFFUSE);
-	mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
+	leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+	mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
+	mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
+	mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
+	mc2->AddTexture("../Resources/Player_hand_Specular", eTEX_SPECULAR);
 	TeleportAction* leftTele = new TeleportAction(eControllerType_Secondary);
 	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 	LeftController->AddComponent(leftConCol);

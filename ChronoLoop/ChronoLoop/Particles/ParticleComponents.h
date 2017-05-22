@@ -132,6 +132,7 @@ namespace Epoch
 	protected:
 		const char* mTName[3];
 		Texture mTextures[3];
+
 		struct
 		{
 			float xoff[4];
@@ -180,7 +181,9 @@ namespace Epoch
 		virtual void SetParticle(Particle* _p);
 		void SetPosBounds(vec3f _min, vec3f _max);
 		void SetVelBounds(vec3f _min, vec3f _max);
+		void SetPos(vec3f _pos);
 		void FIRE() { mEnabled = true; }
+		void CeaseFire() { mEnabled = false; }
 		virtual void Reset();
 		void Update(float _delta);
 
