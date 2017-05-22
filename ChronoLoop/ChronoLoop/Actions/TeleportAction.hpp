@@ -234,6 +234,11 @@ namespace Epoch
 			temp = mCSMesh->GetTransform().GetMatrix() * scaleM;
 			mCSMesh->GetTransform().SetMatrix(temp);
 
+			scaleM.first = vec4f(.25f, 0, 0, 0);
+			scaleM.second = vec4f(0, .25f, 0, 0);
+			scaleM.third = vec4f(0, 0, .25f, 0);
+			scaleM.fourth = vec4f(0, 0, 0, 1);
+
 			temp = mMidMesh->GetTransform().GetMatrix() * scaleM;
 			mMidMesh->GetTransform().SetMatrix(temp);
 
