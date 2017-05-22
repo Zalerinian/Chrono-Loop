@@ -125,7 +125,9 @@ namespace Epoch
 			_arc.clear();
 			matrix4 cm = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
 
-			vec3f vel = vec3f(0, 0, 20);
+			vec3f vel = vec3f(0, 0, 10);
+			vec3f up = vec3f(0, 1, 0);
+			vel = vel * ((up.Dot(vel)) / vel.SquaredMagnitude());
 
 			float t = 0;
 			vec3f lastpos = ParabolicCurve(vec3f(), vel, _a, t);
@@ -341,7 +343,6 @@ namespace Epoch
 				m.fourth = vec4f(mArc[mArc.size() == 1 ? 0 : (mArc.size() / 2 - 1)]) * mat;
 				mMidMesh->GetTransform().SetMatrix(m);
 			}
-
 
 
 			if (!interp->GetActive() && !Settings::GetInstance().GetBool("CantTeleport"))
