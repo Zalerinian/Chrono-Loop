@@ -1599,6 +1599,17 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="SFX_BoxShrinkLevel5" ID="{057E05B3-9610-4C56-937F-2C681F6F690A}">
+					<ChildrenList>
+						<Action Name="Play" ID="{A8515EDB-2B6C-41DE-8B4D-3D59F5A593AF}" ShortID="96882337" Type="Play" Scope="One" Global="false">
+							<ElementList>
+								<Element ID="{A9811139-A896-49D8-8A25-F35F6B4EF8B4}" Global="false">
+									<ObjectRef Name="BoxShrinkLevel5" ID="{58EEA462-B2DD-4272-B4D3-E95312FD7FF6}" WorkUnitID="{1D0317B3-D19A-41DC-A2E7-CAA9DD27FE60}"/>
+								</Element>
+							</ElementList>
+						</Action>
+					</ChildrenList>
+				</Event>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>

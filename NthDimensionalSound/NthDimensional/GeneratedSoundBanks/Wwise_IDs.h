@@ -59,6 +59,7 @@ namespace AK
         static const AkUniqueID SFX_BLOP = 1623492746U;
         static const AkUniqueID SFX_BOUNCEEFFECTS = 1794490945U;
         static const AkUniqueID SFX_BOXDOORZAP = 2189517885U;
+        static const AkUniqueID SFX_BOXSHRINKLEVEL5 = 2867120972U;
         static const AkUniqueID SFX_BOXWALLCOLLIDELEVEL3 = 752092787U;
         static const AkUniqueID SFX_BUTTON_PRESS1 = 1009907414U;
         static const AkUniqueID SFX_BUTTON_PRESS2 = 1009907413U;

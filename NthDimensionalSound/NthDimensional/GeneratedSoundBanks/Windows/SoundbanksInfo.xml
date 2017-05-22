@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="11" SoundbankVersion="120">
 	<RootPaths>
-		<ProjectRoot>D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\</ProjectRoot>
-		<SourceFilesRoot>D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\</SourceFilesRoot>
-		<SoundBanksRoot>D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</SoundBanksRoot>
+		<ProjectRoot>D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\</ProjectRoot>
+		<SourceFilesRoot>D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</SoundBanksRoot>
 		<ExternalSourcesInputFile></ExternalSourcesInputFile>
-		<ExternalSourcesOutputRoot>D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
+		<ExternalSourcesOutputRoot>D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
 	</RootPaths>
 	<DialogueEvents/>
 	<StreamedFiles/>
@@ -32,6 +32,7 @@
 				<Event Id="3649448405" Name="Resume_Level2Ambient" ObjectPath="\Events\Default Work Unit\Resume_Level2Ambient"/>
 				<Event Id="1927416214" Name="Resume_Level3Ambient" ObjectPath="\Events\Default Work Unit\Resume_Level3Ambient"/>
 				<Event Id="2189517885" Name="SFX_BoxDoorZap" ObjectPath="\Events\Default Work Unit\SFX_BoxDoorZap"/>
+				<Event Id="2867120972" Name="SFX_BoxShrinkLevel5" ObjectPath="\Events\Default Work Unit\SFX_BoxShrinkLevel5"/>
 				<Event Id="752092787" Name="SFX_BoxWallCollideLevel3" ObjectPath="\Events\Default Work Unit\SFX_BoxWallCollideLevel3"/>
 				<Event Id="3124930127" Name="SFX_communication_channel" ObjectPath="\Events\Default Work Unit\SFX_communication_channel"/>
 				<Event Id="3901374612" Name="SFX_gentle_alarm" ObjectPath="\Events\Default Work Unit\SFX_gentle_alarm"/>
@@ -92,6 +93,10 @@
 				<File Id="648589336" Language="SFX">
 					<ShortName>Music-SFX\Level2Ambient.wav</ShortName>
 					<Path>SFX\Music-SFX\Level2Ambient_3BDAD486.wem</Path>
+				</File>
+				<File Id="695632029" Language="SFX">
+					<ShortName>BoxShrinkLevel5.wav</ShortName>
+					<Path>SFX\BoxShrinkLevel5_3AE5877C.wem</Path>
 				</File>
 				<File Id="771783799" Language="SFX">
 					<ShortName>Music-SFX\BoxDoorZap.wav</ShortName>
