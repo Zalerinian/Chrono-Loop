@@ -218,11 +218,11 @@ namespace Epoch
 
 			//TODO : Make mesh and load them here as well as textures
 			mCSMesh = new MeshComponent("../Resources/ControllerTP.obj");
-			mCSMesh->AddTexture("../Resources/cube_texture.png", TextureType::eTEX_DIFFUSE);
+			mCSMesh->AddTexture("../Resources/ArcMark.png", TextureType::eTEX_DIFFUSE);
 			mCSLoc->AddComponent(mCSMesh);
 			mCSMesh->SetAlpha(.25);
-			mMidMesh = new MeshComponent("../Resources/ControllerTP.obj");
-			mMidMesh->AddTexture("../Resources/cube_texture.png", TextureType::eTEX_DIFFUSE);
+			mMidMesh = new MeshComponent("../Resources/ArcMarker.obj");
+			mMidMesh->AddTexture("../Resources/ArcMark.png", TextureType::eTEX_DIFFUSE);
 			mMSLoc->AddComponent(mMidMesh);
 			mMidMesh->SetAlpha(.25);
 			mTPMesh = new MeshComponent("../Resources/TPMarker.obj");
