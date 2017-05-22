@@ -338,24 +338,24 @@ namespace Epoch {
 
 		// Render target view in order to draw to the texture.
 		HRESULT hr = mDevice->CreateRenderTargetView(mPostProcessTexture.Get(), nullptr, mPostProcessRTV.GetAddressOf());
-		ThrowIfFailed(mDevice->CreateRenderTargetView(mBloomTexture.Get(),      nullptr, mBloomRTV.GetAddressOf()));
-		ThrowIfFailed(mDevice->CreateRenderTargetView(mGlowTexture.Get(),       nullptr, mGlowRTV.GetAddressOf()));
-		ThrowIfFailed(mDevice->CreateRenderTargetView(mSuperGlowTexture.Get(),  nullptr, mSuperGlowRTV.GetAddressOf()));
-		ThrowIfFailed(mDevice->CreateRenderTargetView(mAlbedoTexture.Get(),     nullptr, mAlbedoRTV.GetAddressOf()));
-		ThrowIfFailed(mDevice->CreateRenderTargetView(mPositionTexture.Get(),   nullptr, mPositionRTV.GetAddressOf()));
-		ThrowIfFailed(mDevice->CreateRenderTargetView(mNormalTexture.Get(),     nullptr, mNormalRTV.GetAddressOf()));
-		ThrowIfFailed(mDevice->CreateRenderTargetView(mSpecularTexture.Get(),   nullptr, mSpecularRTV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateRenderTargetView(mBloomTexture.Get(), nullptr, mBloomRTV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateRenderTargetView(mGlowTexture.Get(), nullptr, mGlowRTV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateRenderTargetView(mSuperGlowTexture.Get(), nullptr, mSuperGlowRTV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateRenderTargetView(mAlbedoTexture.Get(), nullptr, mAlbedoRTV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateRenderTargetView(mPositionTexture.Get(), nullptr, mPositionRTV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateRenderTargetView(mNormalTexture.Get(), nullptr, mNormalRTV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateRenderTargetView(mSpecularTexture.Get(), nullptr, mSpecularRTV.GetAddressOf()));
 
 
 		// Shader resource view for using the texture to draw the post quad.
 		ThrowIfFailed(mDevice->CreateShaderResourceView(mPostProcessTexture.Get(), NULL, mPostProcessSRV.GetAddressOf()));
-		ThrowIfFailed(mDevice->CreateShaderResourceView(mBloomTexture.Get(),       NULL, mBloomSRV.GetAddressOf()));
-		ThrowIfFailed(mDevice->CreateShaderResourceView(mGlowTexture.Get(),        NULL, mGlowSRV.GetAddressOf()));
-		ThrowIfFailed(mDevice->CreateShaderResourceView(mSuperGlowTexture.Get(),   NULL, mSuperGlowSRV.GetAddressOf()));
-		ThrowIfFailed(mDevice->CreateShaderResourceView(mAlbedoTexture.Get(),      NULL, mAlbedoSRV.GetAddressOf()));
-		ThrowIfFailed(mDevice->CreateShaderResourceView(mPositionTexture.Get(),    NULL, mPositionSRV.GetAddressOf()));
-		ThrowIfFailed(mDevice->CreateShaderResourceView(mNormalTexture.Get(),      NULL, mNormalSRV.GetAddressOf()));
-		ThrowIfFailed(mDevice->CreateShaderResourceView(mSpecularTexture.Get(),    NULL, mSpecularSRV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateShaderResourceView(mBloomTexture.Get(), NULL, mBloomSRV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateShaderResourceView(mGlowTexture.Get(), NULL, mGlowSRV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateShaderResourceView(mSuperGlowTexture.Get(), NULL, mSuperGlowSRV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateShaderResourceView(mAlbedoTexture.Get(), NULL, mAlbedoSRV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateShaderResourceView(mPositionTexture.Get(), NULL, mPositionSRV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateShaderResourceView(mNormalTexture.Get(), NULL, mNormalSRV.GetAddressOf()));
+		ThrowIfFailed(mDevice->CreateShaderResourceView(mSpecularTexture.Get(), NULL, mSpecularSRV.GetAddressOf()));
 
 		// Viewport
 		DXGI_SWAP_CHAIN_DESC scd;
@@ -467,6 +467,7 @@ namespace Epoch {
 		SetD3DName(mBloomSRV.Get(), "Bloom Shader Resource View");
 		SetD3DName(mOpaqueBlendState.Get(), "Opaque Blend State");
 		SetD3DName(mTransparentBlendState.Get(), "Transparent Blend State");
+		SetD3DName(mAdditiveBlendState.Get(), "Additive Blending State");
 
 		SetD3DName(mVPBuffer.Get(), "View-Projection Constant Buffer");
 		SetD3DName(mPositionBuffer.Get(), "Model Constant Buffer");
@@ -482,19 +483,25 @@ namespace Epoch {
 		SetD3DName(mSuperGlowRTV.Get(), "SuperGlow SRV");
 
 		// The G-Buffer
-		SetD3DName(mAlbedoTexture.Get(),   "GBuffer Albedo Texture");
+		SetD3DName(mAlbedoTexture.Get(), "GBuffer Albedo Texture");
 		SetD3DName(mPositionTexture.Get(), "GBuffer Position Texture");
-		SetD3DName(mNormalTexture.Get(),   "GBuffer Normal Texture");
+		SetD3DName(mNormalTexture.Get(), "GBuffer Normal Texture");
 		SetD3DName(mSpecularTexture.Get(), "GBuffer Specular");
-		SetD3DName(mAlbedoSRV.Get(),       "Albedo SRV");
-		SetD3DName(mPositionSRV.Get(),     "Position SRV");
-		SetD3DName(mNormalSRV.Get(),       "Normal SRV");
-		SetD3DName(mSpecularSRV.Get(),     "Specular SRV");
-		SetD3DName(mAlbedoRTV.Get(),       "Albedo RTV");
-		SetD3DName(mPositionRTV.Get(),     "Position RTV");
-		SetD3DName(mNormalRTV.Get(),       "Normal RTV");
-		SetD3DName(mSpecularRTV.Get(),     "Specular RTV");
+		SetD3DName(mAlbedoSRV.Get(), "Albedo SRV");
+		SetD3DName(mPositionSRV.Get(), "Position SRV");
+		SetD3DName(mNormalSRV.Get(), "Normal SRV");
+		SetD3DName(mSpecularSRV.Get(), "Specular SRV");
+		SetD3DName(mAlbedoRTV.Get(), "Albedo RTV");
+		SetD3DName(mPositionRTV.Get(), "Position RTV");
+		SetD3DName(mNormalRTV.Get(), "Normal RTV");
+		SetD3DName(mSpecularRTV.Get(), "Specular RTV");
 
+
+		SetD3DName(mLSStencilFront.Get(), "LightShadow-Stencil Front");
+		SetD3DName(mLSStencilBack.Get(), "LightShadow-Stencil Back");
+		SetD3DName(mLSStencilRender.Get(), "LightShadow-Stencil Render");
+		SetD3DName(mMotionStateFindObject.Get(), "Motion State Find");
+		SetD3DName(mMotionStateReverseDepth.Get(), "Motion State Reverse");
 
 		//SetD3DName(.Get(), "");
 #endif
@@ -541,10 +548,9 @@ namespace Epoch {
 		mContext->PSSetConstantBuffers(0, 1, mHeadPosBuffer.GetAddressOf());
 	}
 
-	void Renderer::InitializeStates()
-	{
+	void Renderer::InitializeStates() {
 		ID3D11DepthStencilState *opaqueState, *transparentState;
-		D3D11_DEPTH_STENCIL_DESC opaqueDepth, transparentDepth, topmostDepth, motionFind, motionReverse, lsFrontStencil, lsBackStencil;
+		D3D11_DEPTH_STENCIL_DESC opaqueDepth, transparentDepth, topmostDepth, motionFind, motionReverse, lsFrontStencil, lsBackStencil, lsRenderStencil;
 		memset(&opaqueDepth, 0, sizeof(opaqueDepth));
 		opaqueDepth.DepthEnable = TRUE;
 		opaqueDepth.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
@@ -592,7 +598,7 @@ namespace Epoch {
 		lsFrontStencil.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 		lsFrontStencil.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
 		lsFrontStencil.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
-		lsFrontStencil.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+		lsFrontStencil.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
 		lsFrontStencil.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
 		lsFrontStencil.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 		lsFrontStencil.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
@@ -602,16 +608,26 @@ namespace Epoch {
 		lsFrontStencil.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 		lsFrontStencil.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-		lsBackStencil = lsFrontStencil;
-		lsBackStencil.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-
 		ThrowIfFailed(mDevice->CreateDepthStencilState(&lsFrontStencil, mLSStencilFront.GetAddressOf()));
-		ThrowIfFailed(mDevice->CreateDepthStencilState(&lsBackStencil,  mLSStencilBack.GetAddressOf()));
+
+		lsBackStencil = lsFrontStencil;
+		lsBackStencil.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+
+		ThrowIfFailed(mDevice->CreateDepthStencilState(&lsBackStencil, mLSStencilBack.GetAddressOf()));
+
+		lsRenderStencil = lsFrontStencil;
+		lsRenderStencil.DepthEnable = FALSE;
+		lsRenderStencil.FrontFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
+		lsRenderStencil.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+		lsRenderStencil.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		lsRenderStencil.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+
+		ThrowIfFailed(mDevice->CreateDepthStencilState(&lsRenderStencil, mLSStencilRender.GetAddressOf()));
 
 
 
 		ID3D11BlendState *opaqueBS, *transparentBS;
-		D3D11_BLEND_DESC opaqueBlend, transparentBlend;
+		D3D11_BLEND_DESC opaqueBlend, transparentBlend, additiveBlend;
 		transparentBlend.IndependentBlendEnable = FALSE;
 		transparentBlend.AlphaToCoverageEnable = FALSE;
 		transparentBlend.RenderTarget[0].BlendEnable = TRUE;
@@ -622,13 +638,22 @@ namespace Epoch {
 		transparentBlend.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
 		transparentBlend.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 		transparentBlend.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-		
+
 		opaqueBlend = transparentBlend;
 		opaqueBlend.RenderTarget[0].BlendEnable = FALSE;
 		ThrowIfFailed(mDevice->CreateBlendState(&opaqueBlend, &opaqueBS));
 		ThrowIfFailed(mDevice->CreateBlendState(&transparentBlend, &transparentBS));
 		mOpaqueBlendState.Attach(opaqueBS);
 		mTransparentBlendState.Attach(transparentBS);
+
+		additiveBlend = transparentBlend;
+		additiveBlend.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+		additiveBlend.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+		additiveBlend.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_MAX;
+		additiveBlend.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+		additiveBlend.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+		additiveBlend.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+		ThrowIfFailed(mDevice->CreateBlendState(&additiveBlend, mAdditiveBlendState.GetAddressOf()));
 	}
 
 	void Renderer::InitializeQueries(unsigned int _queryCount) {
@@ -648,7 +673,7 @@ namespace Epoch {
 		ID3D11RenderTargetView *RTVS[] = { mAlbedoRTV.Get(), mPositionRTV.Get(), mNormalRTV.Get(), mSpecularRTV.Get(), mGlowRTV.Get(), mSuperGlowRTV.Get() };
 		mContext->OMSetRenderTargets(sizeof(RTVS) / sizeof(RTVS[0]), RTVS, mDSView.Get());
 	}
-	
+
 	void Renderer::UpdateCamera(float const _moveSpd, float const _rotSpd, float _delta) {
 		if (GetActiveWindow() != mWindow) {
 			return;
@@ -783,7 +808,7 @@ namespace Epoch {
 				while (positions.size() - offset <= positions.size()) {
 					(*it)->mShape.GetContext().Apply(mCurrentContext);
 					mCurrentContext.SimpleClone((*it)->mShape.GetContext());
-					
+
 					D3D11_MAPPED_SUBRESOURCE map;
 					memset(&map, 0, sizeof(map));
 					HRESULT MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
@@ -808,7 +833,7 @@ namespace Epoch {
 					mContext->Unmap(mSimInstanceBuffer.Get(), 0);
 
 					//mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimInstanceID, 0, 0);
-					
+
 					memset(&map, 0, sizeof(map));
 					MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
 					memcpy(map.pData, &positions[i], sizeof(matrix4));
@@ -955,8 +980,7 @@ namespace Epoch {
 	}
 
 
-	void Renderer::RenderScreenQuad()
-	{
+	void Renderer::RenderScreenQuad() {
 		// Blur the bloom texture so that it actually bleeds on the screen
 		if (mEnabledFeatures[eRendererFeature_SuperGlow]) {
 			BlurTextures(mSuperGlowTexture.GetAddressOf(), 1, 2.0f, 0.4f);
@@ -979,10 +1003,6 @@ namespace Epoch {
 
 		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
 
-		RenderLightVolumes();
-		if (mQuerySet.Valid()) {
-			mQuerySet.Query("Light Volumes");
-		}
 
 
 		//mContext->RSSetViewports(1, &mFullViewport);
@@ -990,9 +1010,13 @@ namespace Epoch {
 		mDeferredCombiner->GetContext().Apply(mCurrentContext);
 		mDeferredCombiner->Render(1);
 		mCurrentContext.SimpleClone(mDeferredCombiner->GetContext());
-
 		if (mQuerySet.Valid()) {
 			mQuerySet.Query("Data Combination");
+		}
+
+		RenderLightVolumes();
+		if (mQuerySet.Valid()) {
+			mQuerySet.Query("Light Volumes");
 		}
 
 		RenderTransparentObjects();
@@ -1070,12 +1094,51 @@ namespace Epoch {
 	}
 
 	void Renderer::RenderLightVolumes() {
+		mContext->OMSetRenderTargets(1, mPostProcessRTV.GetAddressOf(), mDSView.Get());
+		mContext->OMSetBlendState(mAdditiveBlendState.Get(), NULL, 0xFFFFFFFF);
 		std::vector<matrix4> positions;
-		mContext->OMSetDepthStencilState(mOpaqueState.Get(), 1);
-		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
 		for (auto it = mLightSet.Begin(); it != mLightSet.End(); ++it) {
 			(*it)->mPositions.GetData(positions);
-			if (positions.size() > 0) {
+			if (positions.size() == 0) {
+				continue;
+			}
+			(*it)->mShape.mContext.mTextures[0] = mAlbedoSRV;
+			(*it)->mShape.mContext.mTextures[1] = mPositionSRV;
+			(*it)->mShape.mContext.mTextures[2] = mNormalSRV;
+			(*it)->mShape.mContext.mTextures[3] = mSpecularSRV;
+
+			for (unsigned int passIndex = 0; passIndex < 3; ++passIndex) {
+				if (passIndex == 0) {
+					mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 0, 0);
+					Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_CCW);
+					Settings::GetInstance().SetInt("PixelShaderOverride", ePS_NONE);
+					mContext->OMSetDepthStencilState(mLSStencilBack.Get(), 1);
+				} else if (passIndex == 1) {
+					//Settings::GetInstance().SetInt("PixelShaderOverride", ePS_MAX);
+					Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_FILLED);
+					mContext->OMSetDepthStencilState(mLSStencilFront.Get(), 0);
+				} else {
+					Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_MAX);
+					Settings::GetInstance().SetInt("PixelShaderOverride", ePS_MAX);
+					RasterizerStateManager::Instance()->ApplyState(eRS_FILLED);
+					ShaderManager::Instance()->ApplyVShader(eVS_NDC);
+					ShaderManager::Instance()->ApplyGShader(eGS_PosNormTex_NDC);
+					ShaderManager::Instance()->ApplyPShader(ePS_LIGHTING);
+					mCurrentContext.mVertexShaderFormat = eVS_NDC;
+					mCurrentContext.mGeoShaderFormat = eGS_PosNormTex_NDC;
+					mCurrentContext.mPixelShaderFormat = ePS_LIGHTING;
+
+					mContext->OMSetDepthStencilState(mLSStencilRender.Get(), 0);
+					ID3D11ShaderResourceView *Deferred[] = { mAlbedoSRV.Get(), mPositionSRV.Get(), mNormalSRV.Get(), mSpecularSRV.Get() };
+					mContext->PSSetShaderResources(0, 4, Deferred);
+					mDeferredCombiner->Render(1);
+					// Terminate the final loop early, because we don't want to render each volume twice. We render them once to get the pixels
+					// the pixels that the light applies to (it would fail drawing because the face is behind an object), and then we use a simple
+					// quad to apply the actual light.
+					continue; 
+				}
+
+
 #if ENABLE_INSTANCING
 				unsigned int offset = 0;
 				positions.reserve((positions.size() / 256 + 1) * 256);
@@ -1115,6 +1178,8 @@ namespace Epoch {
 #endif
 			}
 		}
+		Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_MAX);
+		Settings::GetInstance().SetInt("PixelShaderOverride", ePS_MAX);
 	}
 
 	void Renderer::RenderForBloom() {
@@ -1201,7 +1266,7 @@ namespace Epoch {
 
 		//mQueries.clear();
 	}
-	 
+
 #pragma endregion Private Functions
 
 #pragma region Public Functions
@@ -1210,8 +1275,7 @@ namespace Epoch {
 		return mOpaqueSet.AddShape(_node);
 	}
 
-	GhostList<matrix4>::GhostNode* Renderer::AddTransparentNode(RenderShape &_node)
-	{
+	GhostList<matrix4>::GhostNode* Renderer::AddTransparentNode(RenderShape &_node) {
 		return mTransparentSet.AddShape(_node);
 	}
 
@@ -1227,13 +1291,11 @@ namespace Epoch {
 		return mLightSet.AddShape(_node);
 	}
 
-	void Renderer::RemoveOpaqueNode(RenderShape & _node)
-	{
+	void Renderer::RemoveOpaqueNode(RenderShape & _node) {
 		mOpaqueSet.RemoveShape(_node);
 	}
 
-	void Renderer::RemoveTransparentNode(RenderShape & _node)
-	{
+	void Renderer::RemoveTransparentNode(RenderShape & _node) {
 		mTransparentSet.RemoveShape(_node);
 	}
 
@@ -1395,8 +1457,7 @@ namespace Epoch {
 		return true;
 	}
 
-	void Renderer::ClearRenderSet()
-	{
+	void Renderer::ClearRenderSet() {
 		mOpaqueSet.ClearSet();
 		mTransparentSet.ClearSet();
 		mTopmostSet.ClearSet();

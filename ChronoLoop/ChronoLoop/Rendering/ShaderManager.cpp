@@ -107,6 +107,15 @@ namespace Epoch {
 			delete[] buffer;
 		}
 
+		if (!FileIO::LoadBytes("PSLighting.cso", &buffer, byteSize)) {
+			SystemLogger::Error() << "An error has occurred when trying to read PSLighting.cso. Chances are the file is missing or has been renamed. The shader will be null, and may result in a crash." << std::endl;
+			mPixelShaders[ePS_LIGHTING] = nullptr;
+		} else {
+			Renderer::Instance()->GetDevice()->CreatePixelShader(buffer, byteSize, nullptr, mPixelShaders[ePS_LIGHTING].GetAddressOf());
+			SetD3DName(mPixelShaders[ePS_LIGHTING].Get(), "PSLighting.cso");
+			delete[] buffer;
+		}
+
 
 
 

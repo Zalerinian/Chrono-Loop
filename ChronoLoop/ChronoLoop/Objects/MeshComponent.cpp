@@ -275,7 +275,7 @@ namespace Epoch {
 	}
 
 	void MeshComponent::SetVertexShader(VertexShaderFormat _vf) {
-		if (_vf != mShape->GetContext().mGeoShaderFormat) {
+		if (_vf != mShape->GetContext().mVertexShaderFormat) {
 			RemoveNode();
 			mShape->GetContext().mVertexShaderFormat = _vf;
 			if (mVisible) {
@@ -285,7 +285,7 @@ namespace Epoch {
 	}
 
 	void MeshComponent::SetPixelShader(PixelShaderFormat _pf) {
-		if (_pf != mShape->GetContext().mGeoShaderFormat) {
+		if (_pf != mShape->GetContext().mPixelShaderFormat) {
 			RemoveNode();
 			mShape->GetContext().mPixelShaderFormat = _pf;
 			if (mVisible) {
@@ -345,18 +345,11 @@ namespace Epoch {
 	}
 
 	void MeshComponent::SetBlended(bool _ButWillItBlend) {
-		if(mBlended) {
-			if (!_ButWillItBlend) {
-				RemoveTransparentNode();
-				CreateOpaqueNode();
-			}
-		} else {
-			if (_ButWillItBlend) {
-				RemoveOpaqueNode();
-				CreateTransparentNode();
-			}
+		if (_ButWillItBlend != mBlended) {
+			RemoveNode();
+			mBlended = _ButWillItBlend;
+			CreateNode();
 		}
-		mBlended = _ButWillItBlend;
 	}
 
 	RenderShape * MeshComponent::GetShape() {

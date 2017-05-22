@@ -23,11 +23,13 @@ struct Light {
 };
 
 struct PSI {
-	float4 position : SV_POSITION;
-	float4 normal : NORMAL0;
-	float4 texCoord : COLOR;
-	float4 wpos : WORLDPOS;
-	uint IID : CL_IID;
+    float4 position : SV_POSITION;
+    float4 normal : NORMAL0;
+    float4 texCoord : COLOR;
+    float4 wpos : WORLDPOS;
+    float3x3 TBN : TBN;
+    uint IID : CL_IID;
+    uint viewport : SV_ViewportArrayIndex;
 };
 
 cbuffer _Eye : register(b0) {
