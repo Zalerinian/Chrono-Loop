@@ -237,7 +237,12 @@ namespace Epoch
 			temp = mMidMesh->GetTransform().GetMatrix() * scaleM;
 			mMidMesh->GetTransform().SetMatrix(temp);
 
-			temp = mTPMesh->GetTransform().GetMatrix();
+			scaleM.first = vec4f(.45f, 0, 0, 0);
+			scaleM.second = vec4f(0, .45f, 0, 0);
+			scaleM.third = vec4f(0, 0, .45f, 0);
+			scaleM.fourth = vec4f(0, 0, 0, 1);
+
+			temp = mTPMesh->GetTransform().GetMatrix() * scaleM;
 			mTPMesh->GetTransform().SetMatrix(temp);
 
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mTPLoc);
