@@ -89,6 +89,7 @@ namespace Hourglass
 			this.audioComponentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mObjectStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.RenderTimer = new System.Windows.Forms.Timer(this.components);
+			this.unparentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.spHierarchyPanel)).BeginInit();
 			this.spHierarchyPanel.Panel1.SuspendLayout();
@@ -101,6 +102,7 @@ namespace Hourglass
 			this.spWorldView.SuspendLayout();
 			this.graphicsPanel1.SuspendLayout();
 			this.mComponentStrip.SuspendLayout();
+			this.mObjectStrip.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// menuStrip1
@@ -278,7 +280,7 @@ namespace Hourglass
 			// levelSettingsToolStripMenuItem
 			// 
 			this.levelSettingsToolStripMenuItem.Name = "levelSettingsToolStripMenuItem";
-			this.levelSettingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.levelSettingsToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.levelSettingsToolStripMenuItem.Text = "Level Settings";
 			this.levelSettingsToolStripMenuItem.Click += new System.EventHandler(this.levelSettingsToolStripMenuItem_Click);
 			// 
@@ -286,14 +288,14 @@ namespace Hourglass
 			// 
 			this.customizeToolStripMenuItem.Enabled = false;
 			this.customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-			this.customizeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.customizeToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.customizeToolStripMenuItem.Text = "&Customize";
 			// 
 			// optionsToolStripMenuItem
 			// 
 			this.optionsToolStripMenuItem.Enabled = false;
 			this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.optionsToolStripMenuItem.Text = "&Options";
 			// 
 			// helpToolStripMenuItem
@@ -415,6 +417,7 @@ namespace Hourglass
 			this.Tree.Name = "Tree";
 			this.Tree.PathSeparator = "/";
 			this.Tree.ShowLines = false;
+			this.Tree.ShowNodeToolTips = true;
 			this.Tree.ShowRootLines = false;
 			this.Tree.Size = new System.Drawing.Size(150, 606);
 			this.Tree.TabIndex = 0;
@@ -424,6 +427,7 @@ namespace Hourglass
 			this.Tree.DragDrop += new System.Windows.Forms.DragEventHandler(this.Tree_DragDrop);
 			this.Tree.DragEnter += new System.Windows.Forms.DragEventHandler(this.Tree_DragEnter);
 			this.Tree.DragOver += new System.Windows.Forms.DragEventHandler(this.Tree_DragOver);
+			this.Tree.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Tree_MouseUp);
 			// 
 			// spWorldView
 			// 
@@ -657,13 +661,22 @@ namespace Hourglass
 			// 
 			// mObjectStrip
 			// 
+			this.mObjectStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.unparentToolStripMenuItem});
 			this.mObjectStrip.Name = "mObjectStrip";
-			this.mObjectStrip.Size = new System.Drawing.Size(61, 4);
+			this.mObjectStrip.Size = new System.Drawing.Size(124, 26);
 			// 
 			// RenderTimer
 			// 
 			this.RenderTimer.Enabled = true;
 			this.RenderTimer.Interval = 16;
+			// 
+			// unparentToolStripMenuItem
+			// 
+			this.unparentToolStripMenuItem.Name = "unparentToolStripMenuItem";
+			this.unparentToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.unparentToolStripMenuItem.Text = "Unparent";
+			this.unparentToolStripMenuItem.Click += new System.EventHandler(this.unparentToolStripMenuItem_Click);
 			// 
 			// Editor
 			// 
@@ -693,6 +706,7 @@ namespace Hourglass
 			this.spWorldView.ResumeLayout(false);
 			this.graphicsPanel1.ResumeLayout(false);
 			this.mComponentStrip.ResumeLayout(false);
+			this.mObjectStrip.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -758,6 +772,7 @@ namespace Hourglass
 		private System.Windows.Forms.ToolStripMenuItem coloredMeshToolStripMenuItem;
 		public System.Windows.Forms.Button btnFocus;
 		private System.Windows.Forms.Timer RenderTimer;
+		private System.Windows.Forms.ToolStripMenuItem unparentToolStripMenuItem;
 	}
 }
 

@@ -641,7 +641,6 @@ namespace Hourglass
 		private TreeNode ConstructTreeObject(TreeNode _parent)
 		{
 			TreeNode n = new TreeNode();
-			n.ContextMenuStrip = mObjectStrip;
 			BaseObject b = new BaseObject(n, "Empty Object");
 			if(_parent != null)
 			{
@@ -889,6 +888,21 @@ namespace Hourglass
 			trf.SetPosition(delta.Position);
 			trf.SetRotation(trf.GetRotationVector() + delta.Rotation);
 			trf.SetScale(delta.Scale);
+		}
+
+		private void unparentToolStripMenuItem_Click(object sender, EventArgs e) {
+			TreeNode n = Tree.SelectedNode;
+			if(n.Parent != null) {
+				n.Parent.Nodes.Remove(n);
+				Tree.Nodes.Add(n);
+			}
+		}
+
+		private void Tree_MouseUp(object sender, MouseEventArgs e) {
+			Tree.SelectedNode = Tree.GetNodeAt(e.X, e.Y);
+			if(Tree.SelectedNode != null) {
+				mObjectStrip.Show(Tree, e.Location);
+			}
 		}
 
 		private WorldTransformations CollapseObject(TreeNode Object) {

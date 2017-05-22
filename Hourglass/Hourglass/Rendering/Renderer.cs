@@ -12,6 +12,7 @@ namespace Hourglass
 		private static readonly Renderer sInstance = new Renderer();
 
 		private List<BaseObject> mRenderSet;
+		//private List<LightComponent> mLightSet;
 		private bool mInitialized = false, mCameraNeedsRebuild = false, /*mRenderGrid = true,*/ mPanelResizing = false;
 		private Device mDevice;
 		private Control mPanel;
@@ -96,11 +97,12 @@ namespace Hourglass
 		public void AttachToControl(Control _panel)
 		{
 			mPanel = _panel;
-			PresentParameters p = new PresentParameters();
-			p.Windowed = true;
-			p.SwapEffect = SwapEffect.Copy;
-			p.EnableAutoDepthStencil = true;
-			p.AutoDepthStencilFormat = DepthFormat.D16;
+			PresentParameters p = new PresentParameters() {
+				Windowed = true,
+				SwapEffect = SwapEffect.Copy,
+				EnableAutoDepthStencil = true,
+				AutoDepthStencilFormat = DepthFormat.D16
+			};
 			mDevice = new Device(0, DeviceType.Hardware, mPanel, CreateFlags.HardwareVertexProcessing, p);
 			mDevice.RenderState.CullMode = Cull.None;
 			mDevice.RenderState.FillMode = FillMode.Solid;
@@ -200,6 +202,7 @@ namespace Hourglass
 					mDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, ((IRenderable)componentIterator.Current).Shape.Indices.Length, 0, ((IRenderable)componentIterator.Current).Shape.Indices.Length / 3);
 				}
 			}
+
 			Gizmo.Instance.Render();
 			
 			mDevice.EndScene();
@@ -220,6 +223,8 @@ namespace Hourglass
 		{
 			return mRenderSet.Remove(_m);
 		}
+
+		//public void AddLightObject()
 
 		public Vector3 RotateInto(Vector3 _p, Matrix _m)
 		{
