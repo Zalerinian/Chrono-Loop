@@ -68,15 +68,17 @@ namespace Epoch
 			//mPB->GetProgressBar()->GetTransform().SetMatrix(matrix4::CreateScale(20, 1, 20) * matrix4::CreateTranslation(0, 0.0001f, 0));
 			((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 2))->CallEvent(Emitter::EventType::ePlay);
 			mPB->OnEnable(); 
-			if (Settings::GetInstance().GetBool("mmStartAtBottom"))
-			{
-				//mPB->OnDisable();
-			Settings::GetInstance().SetInt("mmLevel", 1);
-			}
-			else
-			{
-				Settings::GetInstance().SetInt("mmLevel", 0);
-			}
+			//if (Settings::GetInstance().GetBool("mmStartAtBottom"))
+			//{
+			//	//mPB->OnDisable();
+			//Settings::GetInstance().SetInt("mmLevel", 1);
+			//}
+			//else
+			//{
+			//	Settings::GetInstance().SetInt("mmLevel", 0);
+			//}
+
+
 			//Settings::GetInstance().SetFloat("StartButton - CurProgress",0);
 			//Settings::GetInstance().SetFloat("StartButton - FinalProgress",180);
 		
