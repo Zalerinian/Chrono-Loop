@@ -369,10 +369,13 @@ namespace Epoch
 		_headset->AddComponent(headCol);*/
 
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
-		MeshComponent *mc = new MeshComponent("../Resources/Controller.obj", .2f);
+		MeshComponent *mc = new MeshComponent("../Resources/Player_hand.obj",.2f);
+		mc->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
+		mc->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
+		mc->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
+		mc->AddTexture("../Resources/Player_hand_Specular", eTEX_SPECULAR);
 		ControllerCollider* CubeColider = new ControllerCollider(_controller1, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
 		mc->SetPixelShader(ePS_TRANSPARENT);
-		mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 		//mc->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
 		//mc->AddTexture("../Resources/Scanline.png", eTEX_CUSTOM2);
 
@@ -386,10 +389,13 @@ namespace Epoch
 		_controller1->AddComponent(SN1);
 
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be proble
-		MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj", .2f);
+		MeshComponent *mc2 = new MeshComponent("../Resources/Player_hand.obj",.2f);
+		mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
+		mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
+		mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
+		mc2->AddTexture("../Resources/Player_hand_Specular", eTEX_SPECULAR);
 		ControllerCollider* CubeColider2 = new ControllerCollider(_controller2, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 		mc2->SetPixelShader(ePS_TRANSPARENT);
-		mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 		//mc2->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
 		//mc2->AddTexture("../Resources/Scanline.png", eTEX_CUSTOM2);
 
