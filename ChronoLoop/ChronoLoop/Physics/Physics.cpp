@@ -61,11 +61,11 @@ namespace Epoch
 		float dn2 = _dir * N2;
 		float dn3 = _dir * N3;
 
-		if (dn1 == 0.0f && dn2 == 0.0f && dn3 == 0.0f)
-		{
-			_time = 0;
-			return true;
-		}
+		//if (dn1 == 0.0f && dn2 == 0.0f && dn3 == 0.0f)
+		//{
+		//	_time = 0;
+		//	return true;
+		//}
 
 		if (SameSign(dn1, dn2) && SameSign(dn2, dn3))
 		{
