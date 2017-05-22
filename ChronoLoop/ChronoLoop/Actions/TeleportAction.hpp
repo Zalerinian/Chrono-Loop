@@ -68,31 +68,45 @@ namespace Epoch {
 		}
 		bool ChecktoFloor(MeshComponent* _plane, vec3f _start, vec3f _ray, vec3f& _hit)
 		{
+			bool h = false;
+			float t = FLT_MAX;
+
 			for (int p = 0; p < mPlaneObjects.size(); p++)
 			{
+				vec4f ray = _ray;
+				vec4f thit = _start;
+				matrix4 tm = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition() * mPlaneObjects[p]->GetTransform().GetMatrix().Invert();
+				ray *= tm;
+				thit *= tm;
+
+				vec3f st(thit);
+				vec3f ra(ray);
+
 				for (int m = 0; m < mPlaneObjects[p]->GetComponentCount(ComponentType::eCOMPONENT_MESH); m++)
 				{
 					Triangle* tris = ((MeshComponent*)mPlaneObjects[p]->GetComponents(ComponentType::eCOMPONENT_MESH)[m])->GetTriangles();
 					int count = ((MeshComponent*)mPlaneObjects[p]->GetComponents(ComponentType::eCOMPONENT_MESH)[m])->GetTriangleCount();
 
-					float t;
+					
 					for (int i = 0; i < count; i++)
 					{
-						bool hit = Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, _start, _ray, t);
+						float time = FLT_MAX;
+						bool hit = Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, st, ra, time);
 
 						if (hit)
 						{
-							_hit = _start + (_ray * t);
-							return true;
+							h = true;
+							if (time < t)
+								t = time;
 						}
-
 					}
 
 				}
 			}
 
+			_hit = _start + (_ray * t);
 
-			return false;
+			return h;
 		}
 
 		vec3f ParabolicCurve(vec3f _p, vec3f _v, vec3f _a, float _t)
