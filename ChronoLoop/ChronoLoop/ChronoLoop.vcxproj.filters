@@ -580,6 +580,8 @@
     <ClInclude Include="Actions\CCLevel5Fields.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\CCCloneIndicator.h" />
+    <ClInclude Include="Rendering\FrameQuery.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
