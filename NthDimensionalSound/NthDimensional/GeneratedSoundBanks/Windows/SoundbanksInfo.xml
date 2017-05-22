@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="11" SoundbankVersion="120">
 	<RootPaths>
-		<ProjectRoot>D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\</ProjectRoot>
-		<SourceFilesRoot>D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\</SourceFilesRoot>
-		<SoundBanksRoot>D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</SoundBanksRoot>
+		<ProjectRoot>D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\</ProjectRoot>
+		<SourceFilesRoot>D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</SoundBanksRoot>
 		<ExternalSourcesInputFile></ExternalSourcesInputFile>
-		<ExternalSourcesOutputRoot>D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
+		<ExternalSourcesOutputRoot>D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
 	</RootPaths>
 	<DialogueEvents/>
 	<StreamedFiles/>

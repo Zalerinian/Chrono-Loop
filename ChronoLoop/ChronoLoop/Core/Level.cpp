@@ -788,6 +788,7 @@ namespace Epoch {
 		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
 			(*it)->Update();
 		}
+		
 	}
 
 

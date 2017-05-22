@@ -116,6 +116,10 @@ namespace Epoch {
 	float TimeManager::GetTimeLineObjectInterpTime() {
 		return mTimeline->GetObjectInterpolationTime();
 	}
+	void TimeManager::SetClonesFinalFrame(unsigned short _id, unsigned int _frame)
+	{
+		mTimeline->SetCloneFrameCompletion(_id, _frame);
+	}
 	void TimeManager::SetTimelineObjectInterpTime(float _time) {
 		mTimeline->SetObjectInterpolationTime(_time);
 	}

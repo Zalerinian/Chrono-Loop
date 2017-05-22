@@ -31,13 +31,13 @@ Event	ID	Name			Wwise Object Path	Notes
 	4280461585	Stop_Orbit_LOOP			\Default Work Unit\AMBIENCE_EVENTS\Stop_Orbit_LOOP	
 
 In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
-	62361149	ResetLevel	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\ResetLevel_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\ResetLevel		38008
-	145064967	FutureTechSound	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Sci Fi - Starship Sub Amb_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\SFX\FutureTechSound		757759
-	312620889	Casual Level LOOP	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Puzzles\Casual Level LOOP_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\AMBIENCE\Puzzles\Casual Level LOOP		4774836
-	596824733	MetallicSound	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Metallic Noise 004_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\SFX\MetallicSound		385779
-	664880918	Level5Ambient	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Level5Ambient_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Level5Ambient		9139472
-	753352436	Orbit LOOP	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Orbit LOOP_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\AMBIENCE\Orbit LOOP		3962370
-	859612369	A_Timelapse	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\A_Timelapse_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\A_Timelapse		13308692
-	883031343	Hangar Escape LOOP	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Hangar Escape LOOP_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\AMBIENCE\Hangar Escape LOOP		2247716
-	1029302798	Level4Ambient	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Level4Ambient_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Level4Ambient		7809637
+	62361149	ResetLevel	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\ResetLevel_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\ResetLevel		38008
+	145064967	FutureTechSound	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Sci Fi - Starship Sub Amb_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\SFX\FutureTechSound		757759
+	312620889	Casual Level LOOP	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Puzzles\Casual Level LOOP_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\AMBIENCE\Puzzles\Casual Level LOOP		4774836
+	596824733	MetallicSound	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Metallic Noise 004_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\SFX\MetallicSound		385779
+	664880918	Level5Ambient	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Level5Ambient_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Level5Ambient		9139472
+	753352436	Orbit LOOP	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Orbit LOOP_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\AMBIENCE\Orbit LOOP		3962370
+	859612369	A_Timelapse	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\A_Timelapse_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\A_Timelapse		13308692
+	883031343	Hangar Escape LOOP	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Hangar Escape LOOP_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\AMBIENCE\Hangar Escape LOOP		2247716
+	1029302798	Level4Ambient	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Level4Ambient_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Level4Ambient		7809637
 
