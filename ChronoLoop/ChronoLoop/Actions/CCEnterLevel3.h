@@ -309,6 +309,16 @@ namespace Epoch
 					AudioWrapper::GetInstance().AddEmitter(timeresume, headset->GetName().c_str());
 					headset->AddComponent(timeresume);
 
+					Emitter* sound1 = new SFXEmitter();
+					((SFXEmitter*)sound1)->SetEvent(AK::EVENTS::SFX_PLAYERDEATH);
+					AudioWrapper::GetInstance().AddEmitter(sound1, headset->GetName().c_str());
+					headset->AddComponent(sound1);
+
+					Emitter* resetlevelsound = new SFXEmitter();
+					((SFXEmitter*)resetlevelsound)->SetEvent(AK::EVENTS::SFX_RESETLEVEL);
+					RightController->AddComponent(resetlevelsound);
+					AudioWrapper::GetInstance().AddEmitter(resetlevelsound, RightController->GetName().c_str());
+
 
 					AudioWrapper::GetInstance().STOP();
 
@@ -323,12 +333,6 @@ namespace Epoch
 					magicalCube->AddComponent(mcmc);
 					magicalCube->AddComponent(new CCSnapToPlayerPos);
 					next->AddObject(magicalCube);*/
-
-					Emitter* resetlevelsound = new SFXEmitter();
-					((SFXEmitter*)resetlevelsound)->SetEvent(AK::EVENTS::SFX_RESETLEVEL);
-					RightController->AddComponent(resetlevelsound);
-					AudioWrapper::GetInstance().AddEmitter(resetlevelsound, RightController->GetName().c_str());
-
 
 
 					LevelManager::GetInstance().RequestLevelChange(next);
