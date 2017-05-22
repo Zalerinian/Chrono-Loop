@@ -14,9 +14,11 @@
 #include "../Common/Interpolator.h"
 #include <d3d11.h>
 
-namespace Epoch {
+namespace Epoch
+{
 
-	struct TeleportAction : public CodeComponent {
+	struct TeleportAction : public CodeComponent
+	{
 		matrix4 endPos;
 		Interpolator<matrix4>* interp;
 		std::vector<BaseObject*> mPlaneObjects;
@@ -158,10 +160,8 @@ namespace Epoch {
 							//}
 							//else
 							_arc.push_back(hit);
+							return true;
 						}
-
-						return true;
-
 					}
 				}
 				for (int p = 0; p < mPlaneObjects.size(); p++)
@@ -190,7 +190,8 @@ namespace Epoch {
 			return false;
 		}
 
-		virtual void Start() {
+		virtual void Start()
+		{
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			interp = cLevel->playerInterp;
 
@@ -258,8 +259,10 @@ namespace Epoch {
 			ParticleSystem::Instance()->AddEmitter(mTPParticles);
 		}
 
-		virtual void Update() {
-			if (!VRInputManager::GetInstance().IsVREnabled()) {
+		virtual void Update()
+		{
+			if (!VRInputManager::GetInstance().IsVREnabled())
+			{
 				if ((GetAsyncKeyState(VK_SHIFT) & 1) && dynamic_cast<SFXEmitter*>(mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
 					((SFXEmitter*)mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
 				return;
@@ -270,7 +273,8 @@ namespace Epoch {
 			mObject->GetTransform().SetMatrix(mat);
 			bool paused = false;
 
-			if (cLevel->GetTimeManipulator() != nullptr) {
+			if (cLevel->GetTimeManipulator() != nullptr)
+			{
 				paused = cLevel->GetTimeManipulator()->isTimePaused();
 
 			}
@@ -334,7 +338,8 @@ namespace Epoch {
 
 
 
-			if (!interp->GetActive() && !Settings::GetInstance().GetBool("CantTeleport")) {
+			if (!interp->GetActive() && !Settings::GetInstance().GetBool("CantTeleport"))
+			{
 				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && mCanTeleport)
 				{
 					mTPMesh->SetVisible(true);
@@ -347,8 +352,10 @@ namespace Epoch {
 					mCSMesh->SetVisible(false);
 					mMidMesh->SetVisible(false);
 				}
-				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressUp(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && mCanTeleport && !Settings::GetInstance().GetBool("PauseMenuUp")) {
-					if (!paused) {
+				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressUp(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && mCanTeleport && !Settings::GetInstance().GetBool("PauseMenuUp"))
+				{
+					if (!paused)
+					{
 
 						//SystemLogger::Debug() << "Touchpad Pressed" << std::endl;
 						vec4f raydir = (mArc[mArc.size() - 1] - mArc[0]);
@@ -358,7 +365,8 @@ namespace Epoch {
 						vec4f forward(0, 0, 1, 0);
 						float controllerTime = 0, wallTime = FLT_MAX;
 						size_t Esize = mEnvironmentObjects.size();
-						for (int i = 0; i < Esize; ++i) {
+						for (int i = 0; i < Esize; ++i)
+						{
 							forward.Set(0, 0, 1, 0);
 							matrix4 objMat = mEnvironmentObjects[i]->GetTransform().GetMatrix();
 							matrix4 objMatInv = mEnvironmentObjects[i]->GetTransform().GetMatrix().Invert();
