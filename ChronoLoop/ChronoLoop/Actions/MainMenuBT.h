@@ -18,13 +18,10 @@ namespace Epoch
 
 	struct MainMenuBT : public CodeComponent
 	{
-		MainMenuBT(ControllerType _t) { mControllerRole = _t; };
+		MainMenuBT() {};
 
-		Interpolator<matrix4>* interp;
-		matrix4 endPos;
-
-		MeshComponent *mChamberMesh, /**mStartMesh, *mExitMesh,*/ *mFloorMesh, *mRoomMesh;
-		BaseObject *mChamberObject, *mStartObject, *mExitObject, *mFloorObject, *mRoomObject, *mTeleportBoard/*, *mCubeObject*/;
+		MeshComponent *mChamberMesh;
+		BaseObject *mChamberObject, *mTeleportBoard/*, *mCubeObject*/;
 		ControllerType mControllerRole = eControllerType_Primary;
 		Level* cLevel = nullptr;
 		bool mBooped = false;
@@ -38,21 +35,9 @@ namespace Epoch
 		virtual void Start()
 		{
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
-			interp = cLevel->playerInterp;
-			endPos = VRInputManager::GetInstance().GetPlayerPosition();
-			interp->SetActive(false);
 
-			mChamberObject = cLevel->FindObjectWithName("mmChamber");
-			mFloorObject = cLevel->FindObjectWithName("mmFloor");
-			mRoomObject = cLevel->FindObjectWithName("RoomFloor");
-			//mCubeObject = cLevel->FindObjectWithName("mmCube");
-			//mCubeObject->GetTransform().GetMatrix().Position.Set(0, -30000, 0, 1);
-
+			mChamberObject = cLevel->FindObjectWithName("FloorChamber");
 			mChamberMesh = (MeshComponent*)mChamberObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			//mStartMesh = (MeshComponent*)mStartObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			//mExitMesh = (MeshComponent*)mExitObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mFloorMesh = (MeshComponent*)mFloorObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
-			mRoomMesh = (MeshComponent*)mRoomObject->GetComponentIndexed(eCOMPONENT_MESH, 0);
 
 			mScanlineData.DiffuseAlpha = 0.9f;
 			mScanlineData.MultiscanAlpha = 0.9f;
@@ -84,82 +69,33 @@ namespace Epoch
 			matrix4 mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
 			mObject->GetTransform().SetMatrix(mat);
 
-			if (!interp->GetActive()) {
-				if (mChamberMesh->GetTransform().GetPosition()->y < -9.99f) {
+			if (mChamberMesh->GetTransform().GetPosition()->y < -9.99f) {
+				Settings::GetInstance().SetBool("CantTeleport", false);
+				if (!((MeshComponent*)mTeleportBoard->GetComponentIndexed(eCOMPONENT_MESH, 0))->IsVisible()) {
+					((MeshComponent*)mTeleportBoard->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
+					((SFXEmitter*)mTeleportBoard->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
 
-					if (!((MeshComponent*)mTeleportBoard->GetComponentIndexed(eCOMPONENT_MESH, 0))->IsVisible()) {
-						((MeshComponent*)mTeleportBoard->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
-						((SFXEmitter*)mTeleportBoard->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
-
-						scaleX = 0.05f;
-						scaleY = 0;
-					}
-
-					tempScaleX = scaleX;
-					tempScaleY = scaleY;
-					if (scaleY < 1.0f)
-						scaleY += 0.1f;
-					else if (scaleX < 1.0f)
-						scaleX += 0.05f;
-
-					if (tempScaleX != scaleX || tempScaleY != scaleY)
-						mTeleportBoard->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.92699f) * matrix4::CreateTranslation(0.84f, -8.45f, .84f));
-
-					mScanlineData.MultiscanVOffset += TimeManager::Instance()->GetDeltaTime() / 25.0f;
-					mScanlineData.ScanlineVOffset += TimeManager::Instance()->GetDeltaTime();
-					if (mScanlineData.ScanlineVOffset > 2.5f) {
-						mScanlineData.ScanlineVOffset = -0.5f;
-					}
-					((MeshComponent*)mTeleportBoard->GetComponentIndexed(eCOMPONENT_MESH, 0))->UpdateData(eCB_PIXEL, ePB_REGISTER1, &mScanlineData);
-
-					if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_SteamVR_Touchpad)) {
-
-						if (!Settings::GetInstance().GetBool("mmStartAtBottom"))
-							Settings::GetInstance().SetBool("mmStartAtBottom", true);
-
-						vec4f forward(0, 0, 1, 0);
-						forward *= mObject->GetTransform().GetMatrix();
-						vec3f fwd = forward;
-
-						Triangle *tris = mRoomMesh->GetTriangles();
-						size_t numTris = mRoomMesh->GetTriangleCount();
-						vec3f position = (mat * mRoomObject->GetTransform().GetMatrix().Invert()).Position;
-						float wallTime = FLT_MAX;
-						for (unsigned int j = 0; j < numTris; ++j) {
-							float hitTime = FLT_MAX;
-							Physics::Instance()->RayToTriangle((tris + j)->Vertex[0], (tris + j)->Vertex[1], (tris + j)->Vertex[2], (tris + j)->Normal, position, fwd, hitTime);
-							if (hitTime < wallTime) {
-								wallTime = hitTime;
-							}
-						}
-
-						MeshComponent* meshes[] = { mFloorMesh, mChamberMesh };
-						BaseObject* objects[] = { mFloorObject, mChamberObject };
-						for (int i = 0; i < ARRAYSIZE(meshes); ++i) {
-							vec3f meshPos = (mat * objects[i]->GetTransform().GetMatrix().Invert()).Position;
-							Triangle *tris = meshes[i]->GetTriangles();
-							size_t numTris = meshes[i]->GetTriangleCount();
-							float meshTime = 0;
-							for (unsigned int i = 0; i < numTris; ++i) {
-								if (Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, meshPos, fwd, meshTime)) {
-									if (meshTime < wallTime) {
-										forward *= meshTime;
-										endPos = VRInputManager::GetInstance().GetPlayerPosition();
-										endPos[3][0] += forward[0]; // x
-										endPos[3][2] += forward[2]; // z
-										interp->Prepare(.1f, VRInputManager::GetInstance().GetPlayerPosition(), endPos, VRInputManager::GetInstance().GetPlayerPosition());
-										interp->SetActive(true);
-									} else {
-										SystemLogger::Debug() << "Can't let you do that, Starfox." << std::endl;
-									}
-								}
-							}
-						}
-					}
+					scaleX = 0.05f;
+					scaleY = 0;
 				}
+
+				tempScaleX = scaleX;
+				tempScaleY = scaleY;
+				if (scaleY < 1.0f)
+					scaleY += 0.1f;
+				else if (scaleX < 1.0f)
+					scaleX += 0.05f;
+
+				if (tempScaleX != scaleX || tempScaleY != scaleY)
+					mTeleportBoard->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.92699f) * matrix4::CreateTranslation(0.84f, -8.45f, .84f));
+
+				mScanlineData.MultiscanVOffset += TimeManager::Instance()->GetDeltaTime() / 25.0f;
+				mScanlineData.ScanlineVOffset += TimeManager::Instance()->GetDeltaTime();
+				if (mScanlineData.ScanlineVOffset > 2.5f) {
+					mScanlineData.ScanlineVOffset = -0.5f;
+				}
+				((MeshComponent*)mTeleportBoard->GetComponentIndexed(eCOMPONENT_MESH, 0))->UpdateData(eCB_PIXEL, ePB_REGISTER1, &mScanlineData);
 			}
-			else if (interp->Update(TimeManager::Instance()->GetDeltaTime()))
-				interp->SetActive(false);
 
 			//if (mBooped)
 			//{

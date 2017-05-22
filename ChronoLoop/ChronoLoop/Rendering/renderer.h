@@ -13,6 +13,7 @@
 #include <wrl/client.h>
 #include <mutex>
 #include <bitset>
+#include "FrameQuery.h"
 
 #define num_lights 3
 
@@ -37,9 +38,10 @@ namespace Epoch {
 			eRendererFeature_MAX
 		};
 
+		FrameQuerySet mQuerySet;
 
-		static void ProcessCommand(void* _console, std::wstring _arguments);
-
+		static void ProcessGSET(void* _console, std::wstring _arguments);
+		static void ProcessGQUERY(void* _console, std::wstring _arguments);
 
 		// Instance members
 		// D3D11 Variables
@@ -124,6 +126,7 @@ namespace Epoch {
 		void InitializeSceneQuad();
 		void SetStaticBuffers();
 		void InitializeStates();
+		void InitializeQueries(unsigned int _queryCount);
 
 		void AttachPrimaryViewports();
 		void AttachPrimaryRTVs();
@@ -148,6 +151,7 @@ namespace Epoch {
 
 		void RenderForBloom();
 
+		void ReportFrameQueries();
 
 		Renderer();
 		~Renderer();

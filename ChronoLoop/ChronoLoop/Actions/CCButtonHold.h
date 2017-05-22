@@ -13,7 +13,7 @@ namespace Epoch
 
 	struct CCButtonHold : public CodeComponent
 	{
-		bool colliding = false, mhitting = false, mCanDoorInterp = false, mDoorDoneInterpolating = false, mFlip = false, mSoundOnce = false;;
+		bool colliding = false, mhitting = false, mCanDoorInterp = false, mDoorDoneInterpolating = false, mFlip = false, mSoundOnce = false, mPrepMiddleDoor = false;
 		bool tempDoor = false;
 		BaseObject *Block = nullptr, *Exit = nullptr;
 		std::vector<BaseObject*> mD1Wires;

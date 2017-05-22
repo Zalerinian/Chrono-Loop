@@ -20,7 +20,7 @@ namespace Epoch
 		virtual void Start()
 		{
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
-			Block = cLevel->FindObjectWithName("StartSideOpening");
+			Block = cLevel->FindObjectWithName("StartSideOpeningEnergy");
 
 			blockCube = (CubeCollider*)Block->mComponents[eCOMPONENT_COLLIDER][0];
 			blockMesh = (MeshComponent*)Block->mComponents[eCOMPONENT_MESH][0];
