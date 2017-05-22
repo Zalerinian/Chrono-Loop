@@ -87,7 +87,7 @@ namespace Epoch {
 					Triangle* tris = ((MeshComponent*)mPlaneObjects[p]->GetComponents(ComponentType::eCOMPONENT_MESH)[m])->GetTriangles();
 					int count = ((MeshComponent*)mPlaneObjects[p]->GetComponents(ComponentType::eCOMPONENT_MESH)[m])->GetTriangleCount();
 
-					
+
 					for (int i = 0; i < count; i++)
 					{
 						float time = FLT_MAX;
@@ -148,16 +148,16 @@ namespace Epoch {
 					{
 						if (CheckMesh((MeshComponent*)mEnvironmentObjects[e]->GetComponents(ComponentType::eCOMPONENT_MESH)[m], tl, tn, lastpos, nextpos, hit))
 						{
-							vec3f floorhit;
+							//vec3f floorhit;
 
-							if (ChecktoFloor((MeshComponent*)mEnvironmentObjects[e]->GetComponents(ComponentType::eCOMPONENT_MESH)[m], hit, vec3f(0, -1, 0), floorhit))
-							{
-								//if it hits the plane
-								_arc.push_back(floorhit);
+							//if (ChecktoFloor((MeshComponent*)mEnvironmentObjects[e]->GetComponents(ComponentType::eCOMPONENT_MESH)[m], hit, vec3f(0, -1, 0), floorhit))
+							//{
+							//	//if it hits the plane
+							//	_arc.push_back(floorhit);
 
-							}
-							else
-								_arc.push_back(hit);
+							//}
+							//else
+							_arc.push_back(hit);
 						}
 
 						return true;
@@ -328,14 +328,14 @@ namespace Epoch {
 				mCSMesh->GetTransform().SetMatrix(m);
 
 				m = mat * scaleM;
-				m.fourth = vec4f(mArc[(mArc.size() / 2 - 1) < 0 ? 0 : (mArc.size() / 2 - 1)]) * mat;
+				m.fourth = vec4f(mArc[mArc.size() == 1 ? 0 : (mArc.size() / 2 - 1)]) * mat;
 				mMidMesh->GetTransform().SetMatrix(m);
 			}
 
-			
+
 
 			if (!interp->GetActive() && !Settings::GetInstance().GetBool("CantTeleport")) {
-				if(VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && mCanTeleport)
+				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && mCanTeleport)
 				{
 					mTPMesh->SetVisible(true);
 					mCSMesh->SetVisible(true);
@@ -349,7 +349,7 @@ namespace Epoch {
 				}
 				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressUp(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && mCanTeleport && !Settings::GetInstance().GetBool("PauseMenuUp")) {
 					if (!paused) {
-						
+
 						//SystemLogger::Debug() << "Touchpad Pressed" << std::endl;
 						vec4f raydir = (mArc[mArc.size() - 1] - mArc[0]);
 						raydir.w = 0;
