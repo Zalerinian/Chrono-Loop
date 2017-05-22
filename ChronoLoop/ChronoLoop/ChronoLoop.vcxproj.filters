@@ -550,9 +550,6 @@
     <ClInclude Include="Actions\CCCloneHeadCollider.h">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\CCPlatformButtonHold.h">
-      <Filter>Actions</Filter>
-    </ClInclude>
     <ClInclude Include="Actions\CCEnterLevel2.h">
       <Filter>Actions</Filter>
     </ClInclude>
