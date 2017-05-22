@@ -141,6 +141,8 @@ namespace Epoch
 					int floorPos = 0;
 					if (Settings::GetInstance().GetInt("mmLevel") == 1)
 						floorPos = -10;
+					else if (Settings::GetInstance().GetInt("mmLevel") == 2)
+						floorPos = -20;
 					auto& levelObjects = next->GetLevelObjects();
 					for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it)
 					{
