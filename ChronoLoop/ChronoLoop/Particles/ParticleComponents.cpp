@@ -330,10 +330,21 @@ namespace Epoch
 		mMaxVY = _max.y;
 		mMaxVZ = _max.z;
 	}
+	void ParticleEmitter::SetPos(vec3f _pos)
+	{
+		mPos = _pos;
+	}
 	void ParticleEmitter::Update(float _delta)
 	{
 		if (mEnabled == false)
+		{
+			CleanUpParticles();
+			for (auto p = mParticles.begin(); p != mParticles.end(); p++)
+			{
+				UpdateParticle(*p, _delta);
+			}
 			return;
+		}
 		CleanUpParticles();
 		EmitParticles();
 		for (auto p = mParticles.begin(); p != mParticles.end(); p++)
