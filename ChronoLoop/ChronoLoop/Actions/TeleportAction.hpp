@@ -220,15 +220,15 @@ namespace Epoch
 			mCSMesh = new MeshComponent("../Resources/ControllerTP.obj");
 			mCSMesh->AddTexture("../Resources/cube_texture.png", TextureType::eTEX_DIFFUSE);
 			mCSLoc->AddComponent(mCSMesh);
-			mCSMesh->SetAlpha(.35);
+			mCSMesh->SetAlpha(.25);
 			mMidMesh = new MeshComponent("../Resources/ControllerTP.obj");
 			mMidMesh->AddTexture("../Resources/cube_texture.png", TextureType::eTEX_DIFFUSE);
 			mMSLoc->AddComponent(mMidMesh);
-			mMidMesh->SetAlpha(.35);
-			mTPMesh = new MeshComponent("../Resources/TeleportMarker.obj");
-			mTPMesh->AddTexture("../Resources/cube_texture.png", TextureType::eTEX_DIFFUSE);
+			mMidMesh->SetAlpha(.25);
+			mTPMesh = new MeshComponent("../Resources/TPMarker.obj");
+			mTPMesh->AddTexture("../Resources/Marker.png", TextureType::eTEX_DIFFUSE);
 			mTPLoc->AddComponent(mTPMesh);
-			mTPMesh->SetAlpha(.35);
+			mTPMesh->SetAlpha(.25);
 
 			matrix4 temp;
 			temp = mCSMesh->GetTransform().GetMatrix() * scaleM;
