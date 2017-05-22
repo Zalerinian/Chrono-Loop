@@ -138,11 +138,7 @@ namespace Epoch
 					next->AddObject(RightController);
 
 					bool boop = true;
-					int floorPos = 0;
-					if (Settings::GetInstance().GetInt("mmLevel") == 1)
-						floorPos = -10;
-					else if (Settings::GetInstance().GetInt("mmLevel") == 2)
-						floorPos = -20;
+					int floorPos = Settings::GetInstance().GetInt("mmLevel") * -10;
 					auto& levelObjects = next->GetLevelObjects();
 					for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it)
 					{
