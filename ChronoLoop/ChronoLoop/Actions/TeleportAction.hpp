@@ -264,7 +264,7 @@ namespace Epoch
 			p->SetLife(600);
 			p->SetSize(.5, .5);
 			mTPParticles->SetParticle(p);
-			mTPParticles->SetTexture("../Resources/BasicCirlceP.png");
+			mTPParticles->SetTexture("../Resources/BasicSquareP.png");
 
 			ParticleSystem::Instance()->AddEmitter(mTPParticles);
 		}
