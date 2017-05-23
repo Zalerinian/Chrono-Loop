@@ -244,9 +244,9 @@ namespace Epoch
 			temp = mMidMesh->GetTransform().GetMatrix() * scaleM;
 			mMidMesh->GetTransform().SetMatrix(temp);
 
-			scaleM.first = vec4f(.45f, 0, 0, 0);
-			scaleM.second = vec4f(0, .45f, 0, 0);
-			scaleM.third = vec4f(0, 0, .45f, 0);
+			scaleM.first = vec4f(.35f, 0, 0, 0);
+			scaleM.second = vec4f(0, .35f, 0, 0);
+			scaleM.third = vec4f(0, 0, .35f, 0);
 			scaleM.fourth = vec4f(0, 0, 0, 1);
 
 			temp = mTPMesh->GetTransform().GetMatrix() * scaleM;
@@ -260,14 +260,14 @@ namespace Epoch
 			mCSMesh->SetVisible(false);
 			mMidMesh->SetVisible(false);
 
-			mTPParticles = new TeleportEffect(-1, 500, 50, vec3f());
+			mTPParticles = new TeleportEffect(-1, 500, 15, vec3f());
 			Particle* p = &Particle::Init();
-			p->SetColors(vec4f(0, .5, .5, 1), vec4f(0, .5, .5, 1));
-			p->SetLife(300);
-			p->SetSize(.15, .015);
+			p->SetColors(vec4f(0, .8, 1, 1), vec4f(0, .8, 1, 1));
+			p->SetLife(400);
+			p->SetSize(.015, .005);
 			mTPParticles->SetParticle(p);
-			mTPParticles->SetPosBounds(vec3f(-1, 0, -1), vec3f(1, 0, 1));
-			mTPParticles->SetVelBounds(vec3f(0, .3, 0), vec3f(0, 2, 0));
+			mTPParticles->SetPosBounds(vec3f(-.25, 0, -.25), vec3f(.25, 0, .25));
+			mTPParticles->SetVelBounds(vec3f(0, .8, 0), vec3f(0, 2.5, 0));
 			mTPParticles->SetTexture("../Resources/BasicSquareP.png");
 
 			ParticleSystem::Instance()->AddEmitter(mTPParticles);
@@ -358,7 +358,7 @@ namespace Epoch
 					mTPMesh->SetVisible(true);
 					mCSMesh->SetVisible(true);
 					mMidMesh->SetVisible(true);
-					if (ParticleSystem::Instance()->GetNumEmitters() > 0)
+					if (ParticleSystem::Instance()->DoesExist(mTPParticles))
 					{
 						mTPParticles->SetPos(vec4f(mArc[mArc.size() - 1]) * mat);
 						mTPParticles->FIRE();
@@ -369,7 +369,7 @@ namespace Epoch
 					mTPMesh->SetVisible(false);
 					mCSMesh->SetVisible(false);
 					mMidMesh->SetVisible(false);
-					if (ParticleSystem::Instance()->GetNumEmitters() > 0)
+					if (ParticleSystem::Instance()->DoesExist(mTPParticles))
 						mTPParticles->CeaseFire();
 				}
 				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressUp(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && mCanTeleport && !Settings::GetInstance().GetBool("PauseMenuUp"))
