@@ -76,7 +76,7 @@ namespace Epoch
 			{
 				vec4f ray = _ray;
 				vec4f thit = _start;
-				matrix4 tm = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition() * mPlaneObjects[p]->GetTransform().GetMatrix().Invert();
+				matrix4 tm = _plane->GetTransform().GetMatrix() * mPlaneObjects[p]->GetTransform().GetMatrix().Invert();
 				ray *= tm;
 				thit *= tm;
 
