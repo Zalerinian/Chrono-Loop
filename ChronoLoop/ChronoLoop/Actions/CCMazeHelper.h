@@ -86,29 +86,29 @@ namespace Epoch
 		}
 		virtual void Update()
 		{
-			if ((GetAsyncKeyState(VK_DOWN) & 0x1 || mDBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
+			if ((/*GetAsyncKeyState(VK_DOWN) & 0x1 ||*/ mDBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveDown();
 				mDBCC->SetisColliding(false);
 				//PrintGrid();
 			}
-			else if (((GetAsyncKeyState(VK_UP) & 0x1) || mUBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
+			else if ((/*GetAsyncKeyState(VK_UP) & 0x1) ||*/ mUBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveUp();
 				mUBCC->SetisColliding(false);
 				//PrintGrid();
 			}
-			else if ((GetAsyncKeyState(VK_LEFT) & 0x1 || mLBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
+			else if ((/*GetAsyncKeyState(VK_LEFT) & 0x1 ||*/ mLBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveLeft();
 				mLBCC->SetisColliding(false);
 				//PrintGrid();
 			}
-			else if ((GetAsyncKeyState(VK_RIGHT) & 0x1 || mRBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
+			else if ((/*GetAsyncKeyState(VK_RIGHT) & 0x1 ||*/ mRBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveRight();
 				mRBCC->SetisColliding(false);
 				//PrintGrid();
 			}
-			else if(GetAsyncKeyState(Epoch::Keys::R) & 0x1 || mResetBCC->GetisColliding())
+			else if(/*GetAsyncKeyState(Epoch::Keys::R) & 0x1 ||*/ mResetBCC->GetisColliding())
 			{
-
+			
 				if(!mOnce)
 				{ 
 				ResetBoxes();
@@ -116,7 +116,7 @@ namespace Epoch
 				mResetBCC->SetisColliding(false);
 				//PrintGrid();
 				}
-
+			
 			}
 			else
 			{
