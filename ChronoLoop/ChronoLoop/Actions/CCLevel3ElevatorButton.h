@@ -97,13 +97,13 @@ namespace Epoch {
 								tempY = -1;
 							}
 
-							mChamberInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), mChamberObject->GetTransform().GetMatrix());
+							mChamberInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.03f * tempY, 0), mChamberObject->GetTransform().GetMatrix());
 							mChamberInterp->SetEasingFunction(Easing::QuadInOut);
 							mChamberInterp->SetActive(true);
 
 							if (_other.GetBaseObject()->GetUniqueID() == cLevel->GetLeftController()->GetUniqueID() || _other.GetBaseObject()->GetUniqueID() == cLevel->GetRightController()->GetUniqueID()) {
 								mat = VRInputManager::GetInstance().GetPlayerPosition();
-								mPlayerInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), VRInputManager::GetInstance().GetPlayerPosition());
+								mPlayerInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.03f * tempY, 0), VRInputManager::GetInstance().GetPlayerPosition());
 								mPlayerInterp->SetEasingFunction(Easing::QuadInOut);
 								mPlayerInterp->SetActive(true);
 								mIsPlayer = true;
@@ -134,12 +134,12 @@ namespace Epoch {
 							}*/
 
 							mat = mObject->GetTransform().GetMatrix();
-							mStartButtonInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), mObject->GetTransform().GetMatrix());
+							mStartButtonInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.03f * tempY, 0), mObject->GetTransform().GetMatrix());
 							mStartButtonInterp->SetEasingFunction(Easing::QuadInOut);
 							mStartButtonInterp->SetActive(true);
 
 							mat = mButtonStand->GetTransform().GetMatrix();
-							mStartStandInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), mButtonStand->GetTransform().GetMatrix());
+							mStartStandInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.03f * tempY, 0), mButtonStand->GetTransform().GetMatrix());
 							mStartStandInterp->SetEasingFunction(Easing::QuadInOut);
 							mStartStandInterp->SetActive(true);
 							mInterpDone = false;
@@ -220,7 +220,7 @@ namespace Epoch {
 
 				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mObject->GetTransform().GetMatrix().fourth);
 				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y - .2f;
-				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y + .2f;
+				((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mObject->GetTransform().GetMatrix().fourth.y - .2f;
 			}
 
 			if(Settings::GetInstance().GetBool("ResetElevator"))

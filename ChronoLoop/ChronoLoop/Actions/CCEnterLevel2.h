@@ -314,6 +314,16 @@ namespace Epoch
 					AudioWrapper::GetInstance().AddEmitter(timeresume, headset->GetName().c_str());
 					headset->AddComponent(timeresume);
 
+					Emitter* sound1 = new SFXEmitter();
+					((SFXEmitter*)sound1)->SetEvent(AK::EVENTS::SFX_PLAYERDEATH);
+					AudioWrapper::GetInstance().AddEmitter(sound1, headset->GetName().c_str());
+					headset->AddComponent(sound1);
+
+					Emitter* resetlevelsound = new SFXEmitter();
+					((SFXEmitter*)resetlevelsound)->SetEvent(AK::EVENTS::SFX_RESETLEVEL);
+					RightController->AddComponent(resetlevelsound);
+					AudioWrapper::GetInstance().AddEmitter(resetlevelsound, RightController->GetName().c_str());
+
 					AudioWrapper::GetInstance().STOP();
 
 					((AudioEmitter*)ambient)->CallEvent(Emitter::EventType::ePlay);
@@ -328,10 +338,6 @@ namespace Epoch
 					magicalCube->AddComponent(new CCSnapToPlayerPos);
 					next->AddObject(magicalCube);*/
 
-					Emitter* resetlevelsound = new SFXEmitter();
-					((SFXEmitter*)resetlevelsound)->SetEvent(AK::EVENTS::SFX_RESETLEVEL);
-					RightController->AddComponent(resetlevelsound);
-					AudioWrapper::GetInstance().AddEmitter(resetlevelsound, RightController->GetName().c_str());
 
 
 					LevelManager::GetInstance().RequestLevelChange(next);
@@ -343,7 +349,7 @@ namespace Epoch
 					start->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));
 					start->SetLife(500);
 					start->SetSize(.35f, .15f);
-					ParticleEmitter* startEmit = new TeleportEffect(400, 250, 2, vec4f(8, 0, -4, 1));
+					ParticleEmitter* startEmit = new TeleportEffect(400, 250, 2, vec4f(4.99f, 0, -1.58f, 1));
 					startEmit->SetParticle(start);
 					startEmit->SetTexture("../Resources/BasicRectP.png");
 					((TeleportEffect*)startEmit)->y1 = 8;
@@ -358,7 +364,7 @@ namespace Epoch
 					start->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
 					start->SetLife(500);
 					start->SetSize(.15f, .05f);
-					ParticleEmitter* startEmit2 = new TeleportEffect(400, 150, 1, vec4f(8, 0, -4, 1));
+					ParticleEmitter* startEmit2 = new TeleportEffect(400, 150, 1, vec4f(4.99f, 0, -1.58f, 1));
 					startEmit2->SetTexture("../Resources/BasicCircleP.png");
 					startEmit2->SetParticle(start);
 					((TeleportEffect*)startEmit2)->y1 = 1;

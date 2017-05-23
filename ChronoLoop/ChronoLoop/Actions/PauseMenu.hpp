@@ -480,8 +480,8 @@ namespace Epoch
 				break;
 			case SETTINGS:
 				{
-				SetVisiblity(&pMainPanel, false);
-				SetVisiblity(&pSettingsPanel, true);
+					SetVisiblity(&pMainPanel, false);
+					SetVisiblity(&pSettingsPanel, true);
 				}
 				break;
 			case HUBWORLD:
