@@ -3245,6 +3245,103 @@
 						<ActiveSource Name="ResetLevel" ID="{76765888-8E51-41C2-9BC7-D04A51A0B23A}" Platform="Linked"/>
 					</ActiveSourceList>
 				</Sound>
+				<Sound Name="BoxShrinkLevel5" ID="{58EEA462-B2DD-4272-B4D3-E95312FD7FF6}" ShortID="297524794" Type="SoundFX">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64292A6E-1D3F-43D6-8BB7-2E730BF0BA1D}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{74976F84-18B2-4A50-BEB6-3859D4B170B7}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="BoxShrinkLevel5" ID="{1B22C6D8-9389-4923-9728-168D59A1DCCB}" ShortID="695632029">
+							<Language>SFX</Language>
+							<AudioFile>BoxShrinkLevel5.wav</AudioFile>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="BoxShrinkLevel5" ID="{1B22C6D8-9389-4923-9728-168D59A1DCCB}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="ForceField_Box" ID="{D3188ADC-196F-496D-B6E4-E382229E9E25}" ShortID="963609914" Type="SoundFX">
+					<PropertyList>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value>-9</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64292A6E-1D3F-43D6-8BB7-2E730BF0BA1D}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{74976F84-18B2-4A50-BEB6-3859D4B170B7}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="ForceField_Box" ID="{3B7FB451-8125-4FB2-98CA-BB5913DC2165}" ShortID="517049963">
+							<Language>SFX</Language>
+							<AudioFile>ForceField_Box.wav</AudioFile>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="ForceField_Box" ID="{3B7FB451-8125-4FB2-98CA-BB5913DC2165}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="ForceField_Close" ID="{C997CE23-D249-4CF1-A052-4BCBEAEE2B85}" ShortID="1031811114" Type="SoundFX">
+					<PropertyList>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value>-11</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64292A6E-1D3F-43D6-8BB7-2E730BF0BA1D}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{74976F84-18B2-4A50-BEB6-3859D4B170B7}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="ForceField_Close" ID="{42AE2C5B-97E5-4AC5-83D6-DA37B7FA3CEE}" ShortID="863068107">
+							<Language>SFX</Language>
+							<AudioFile>ForceField_Close.wav</AudioFile>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="ForceField_Close" ID="{42AE2C5B-97E5-4AC5-83D6-DA37B7FA3CEE}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="ForceField_Open" ID="{16BDBC76-F9F3-4327-BC44-0D2D4A8C2727}" ShortID="904468642" Type="SoundFX">
+					<PropertyList>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value>-10</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{64292A6E-1D3F-43D6-8BB7-2E730BF0BA1D}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{74976F84-18B2-4A50-BEB6-3859D4B170B7}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="ForceField_Open" ID="{9AA9BBD8-D575-49EB-9C76-1FE4C5D7CEC4}" ShortID="787174580">
+							<Language>SFX</Language>
+							<AudioFile>ForceField_Open.wav</AudioFile>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="ForceField_Open" ID="{9AA9BBD8-D575-49EB-9C76-1FE4C5D7CEC4}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
 			</ChildrenList>
 		</WorkUnit>
 	</AudioObjects>

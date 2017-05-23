@@ -13,11 +13,14 @@ Event	ID	Name			Wwise Object Path	Notes
 	1459065408	Play_Level4Ambient			\Default Work Unit\Play_Level4Ambient	
 	1604770128	Play_FutureTechSound			\Default Work Unit\SFX_EVENTS\Play_FutureTechSound	
 	1990929627	Resume_Level4Ambient			\Default Work Unit\Resume_Level4Ambient	
+	2033744732	SFX_ForceField_Box			\Default Work Unit\SFX_ForceField_Box	
 	2042848668	Play_A_Timelapse			\Default Work Unit\Play_A_Timelapse	
 	2745027494	Stop_A_Timelapse			\Default Work Unit\Stop_A_Timelapse	
 	3005238139	Play_Casual_Level_LOOP			\Default Work Unit\AMBIENCE_EVENTS\Play_Casual_Level_LOOP	
 	3433651236	SFX_ResetLevel			\Default Work Unit\SFX_ResetLevel	
 	3445986553	Pause_Orbit_LOOP			\Default Work Unit\AMBIENCE_EVENTS\Pause_Orbit_LOOP	
+	3512217189	SFX_ForceField_Open			\Default Work Unit\SFX_ForceField_Open	
+	3535201747	SFX_ForceField_Close			\Default Work Unit\SFX_ForceField_Close	
 	3600779026	Pause_FutureTechSound			\Default Work Unit\SFX_EVENTS\Pause_FutureTechSound	
 	3627478381	Pause_Level5Ambient			\Default Work Unit\Pause_Level5Ambient	
 	3699510579	Play_Orbit_LOOP			\Default Work Unit\AMBIENCE_EVENTS\Play_Orbit_LOOP	
@@ -34,10 +37,13 @@ In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	62361149	ResetLevel	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\ResetLevel_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\ResetLevel		38008
 	145064967	FutureTechSound	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Sci Fi - Starship Sub Amb_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\SFX\FutureTechSound		757759
 	312620889	Casual Level LOOP	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Puzzles\Casual Level LOOP_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\AMBIENCE\Puzzles\Casual Level LOOP		4774836
+	517049963	ForceField_Box	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\ForceField_Box_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\ForceField_Box		97613
 	596824733	MetallicSound	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Metallic Noise 004_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\SFX\MetallicSound		385779
 	664880918	Level5Ambient	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Level5Ambient_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Level5Ambient		9139472
 	753352436	Orbit LOOP	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Orbit LOOP_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\AMBIENCE\Orbit LOOP		3962370
+	787174580	ForceField_Open	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\ForceField_Open_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\ForceField_Open		53804
 	859612369	A_Timelapse	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\A_Timelapse_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\A_Timelapse		13308692
+	863068107	ForceField_Close	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\ForceField_Close_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\ForceField_Close		55557
 	883031343	Hangar Escape LOOP	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Hangar Escape LOOP_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\AMBIENCE\Hangar Escape LOOP		2247716
 	1029302798	Level4Ambient	D:\Documents\GitHub\Chronoception\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Level4Ambient_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Level4Ambient		7809637
 
