@@ -126,9 +126,9 @@ namespace Epoch
 			matrix4 cm = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
 
 			vec3f vel = vec3f(0, 0, 10);
-			vec3f up = vec3f(0, 1, 0);
+		/*	vec3f up = vec3f(0, 1, 0);
 			vel = vel * ((up.Dot(vel)) / vel.SquaredMagnitude());
-
+*/
 			float t = 0;
 			vec3f lastpos = ParabolicCurve(vec3f(), vel, _a, t);
 			vec3f initial = lastpos;
@@ -325,9 +325,9 @@ namespace Epoch
 			if (mCanTeleport)
 			{
 				matrix4 scaleM;
-				scaleM.first = vec4f(.25f, 0, 0, 0);
-				scaleM.second = vec4f(0, .25f, 0, 0);
-				scaleM.third = vec4f(0, 0, .25f, 0);
+				scaleM.first = vec4f(.05f, 0, 0, 0);
+				scaleM.second = vec4f(0, .05f, 0, 0);
+				scaleM.third = vec4f(0, 0, .05f, 0);
 				scaleM.fourth = vec4f(0, 0, 0, 1);
 
 				matrix4 m;
@@ -339,6 +339,10 @@ namespace Epoch
 				m.fourth = mat.fourth;
 				mCSMesh->GetTransform().SetMatrix(m);
 
+				scaleM.first = vec4f(.15f, 0, 0, 0);
+				scaleM.second = vec4f(0, .15f, 0, 0);
+				scaleM.third = vec4f(0, 0, .15f, 0);
+				scaleM.fourth = vec4f(0, 0, 0, 1);
 				m = mat * scaleM;
 				m.fourth = vec4f(mArc[mArc.size() == 1 ? 0 : (mArc.size() / 2 - 1)]) * mat;
 				mMidMesh->GetTransform().SetMatrix(m);
@@ -352,15 +356,15 @@ namespace Epoch
 					mTPMesh->SetVisible(true);
 					mCSMesh->SetVisible(true);
 					mMidMesh->SetVisible(true);
-					mTPParticles->SetPos(vec4f(mArc[mArc.size() - 1]) * mat);
-					mTPParticles->FIRE();
+					//mTPParticles->SetPos(vec4f(mArc[mArc.size() - 1]) * mat);
+					//mTPParticles->FIRE();
 				}
 				else
 				{
 					mTPMesh->SetVisible(false);
 					mCSMesh->SetVisible(false);
 					mMidMesh->SetVisible(false);
-					mTPParticles->CeaseFire();
+					//mTPParticles->CeaseFire();
 				}
 				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressUp(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && mCanTeleport && !Settings::GetInstance().GetBool("PauseMenuUp"))
 				{
