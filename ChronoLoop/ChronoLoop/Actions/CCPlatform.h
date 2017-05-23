@@ -17,7 +17,7 @@ namespace Epoch {
 			platInterp = TimeManager::Instance()->GetObjectInterpolator(mObject->GetUniqueID());
 			playerInterp = new Interpolator<matrix4>;
 			collider = (CubeCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
-			end = mObject->GetTransform().GetMatrix() * matrix4::CreateTranslation(-4, 0, 0);
+			end = mObject->GetTransform().GetMatrix() * matrix4::CreateNewTranslation(-4, 0, 0);
 		}
 
 		virtual void OnTriggerEnter(Collider& _col, Collider& _other) 
@@ -52,7 +52,7 @@ namespace Epoch {
 
 				if(playerCanInterp)
 				{
-					PEnd = matrix4() * matrix4::CreateTranslation(VRInputManager::GetInstance().GetPlayerPosition().Position) * matrix4::CreateTranslation(-4, 0, 0);
+					PEnd = matrix4() * matrix4::CreateNewTranslation(VRInputManager::GetInstance().GetPlayerPosition().Position) * matrix4::CreateNewTranslation(-4, 0, 0);
 					playerInterp->Prepare(2, VRInputManager::GetInstance().GetPlayerPosition(), PEnd, VRInputManager::GetInstance().GetPlayerPosition());
 					playerInterp->SetActive(true);
 				}

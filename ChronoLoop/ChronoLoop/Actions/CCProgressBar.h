@@ -31,8 +31,8 @@ namespace Epoch
 			pBackground->AddChild(pProgressBar);
 			pProgressBar->SetParent(pBackground);
 
-			pBackground->GetTransform().SetMatrix(matrix4::CreateScale(20, 1, 4));
-			pProgressBar->GetTransform().SetMatrix(matrix4::CreateTranslation(0, 0.01f, 0));
+			pBackground->GetTransform().SetMatrix(matrix4::CreateNewScale(20, 1, 4));
+			pProgressBar->GetTransform().SetMatrix(matrix4::CreateNewTranslation(0, 0.01f, 0));
 
 			Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texBackground.Get(), NULL, rtvBackground.GetAddressOf());
 			Renderer::Instance()->GetDevice()->CreateRenderTargetView((ID3D11Resource*)texProgressBar.Get(), NULL, rtvProgressBar.GetAddressOf());
@@ -50,7 +50,7 @@ namespace Epoch
 			{
 				Renderer::Instance()->GetContext()->ClearRenderTargetView(rtvProgressBar.Get(), transparentColor);
 				if (curProgress < finalProgress - (finalProgress / 20)) {
-					pProgressBar->GetTransform().SetMatrix(matrix4::CreateScale((curProgress / finalProgress) * 0.85f, 1, 0.85f) * matrix4::CreateTranslation(0, 0.001f, 0));
+					pProgressBar->GetTransform().SetMatrix(matrix4::CreateNewScale((curProgress / finalProgress) * 0.85f, 1, 0.85f) * matrix4::CreateNewTranslation(0, 0.001f, 0));
 					tempProgress = curProgress;
 					D2D1::ColorF tempColor = { 1,0,0,1 };
 					Draw::Instance().DrawRectangleToBitmap(

@@ -47,7 +47,7 @@ namespace Epoch {
 		SystemLogger::Info() << "Left controller ID:  " << leftID << std::endl;
 		mRightController.Setup(rightID);
 		mLeftController.Setup(leftID);
-		mPlayerPosition = matrix4::CreateTranslation(8, 0, -4);
+		mPlayerPosition = matrix4::CreateNewTranslation(8, 0, -4);
 		mInputTimeline = new InputTimeline();
 	}
 

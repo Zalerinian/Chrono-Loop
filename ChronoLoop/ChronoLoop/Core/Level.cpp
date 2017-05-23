@@ -632,9 +632,9 @@ namespace Epoch {
 							}
 						}
 
-						matrix4 mat = matrix4::CreateScale(objectScale.x, objectScale.y, objectScale.z) *
-							matrix4::CreateYawPitchRollRotation(rotation) *
-							matrix4::CreateTranslation(position.x, position.y, position.z);
+						matrix4 mat = matrix4::CreateNewScale(objectScale.x, objectScale.y, objectScale.z) *
+							matrix4::CreateNewYawPitchRollRotation(rotation) *
+							matrix4::CreateNewTranslation(position.x, position.y, position.z);
 						Transform trans;
 						trans.SetMatrix(mat);
 						obj = Pool::Instance()->iGetObject()->Reset(name, trans, nullptr, flags);

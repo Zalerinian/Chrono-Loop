@@ -20,7 +20,7 @@ namespace Epoch
 			Block = cLevel->FindObjectWithName("EnvExitDoor");
 			blockInterp = TimeManager::Instance()->GetObjectInterpolator(Block->GetUniqueID());
 			blockStart = Block->GetTransform().GetMatrix();
-			blockend = blockStart * matrix4::CreateTranslation(0, 2.6f, 0);
+			blockend = blockStart * matrix4::CreateNewTranslation(0, 2.6f, 0);
 		}
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time)
