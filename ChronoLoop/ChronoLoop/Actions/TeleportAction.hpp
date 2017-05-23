@@ -429,9 +429,9 @@ namespace Epoch
 				mMidMesh[1]->GetTransform().SetMatrix(m);
 
 				//middle
-				scaleM.first = vec4f(.15f, 0, 0, 0);
-				scaleM.second = vec4f(0, .15f, 0, 0);
-				scaleM.third = vec4f(0, 0, .15f, 0);
+				scaleM.first = vec4f(.07f, 0, 0, 0);
+				scaleM.second = vec4f(0, .07f, 0, 0);
+				scaleM.third = vec4f(0, 0, .07f, 0);
 				scaleM.fourth = vec4f(0, 0, 0, 1);
 
 				m = mat * scaleM * r;
@@ -439,10 +439,22 @@ namespace Epoch
 				m.fourth = vec4f(mArc[index]) * mat;
 				mMidMesh[2]->GetTransform().SetMatrix(m);
 
+				scaleM.first = vec4f(.09f, 0, 0, 0);
+				scaleM.second = vec4f(0, .09f, 0, 0);
+				scaleM.third = vec4f(0, 0, .09f, 0);
+				scaleM.fourth = vec4f(0, 0, 0, 1);
+
+				m = mat * scaleM * r;
 				index = (mArc.size() / 5 - 1) * 4;
 				m.fourth = vec4f(mArc[index]) * mat;
 				mMidMesh[3]->GetTransform().SetMatrix(m);
 
+				scaleM.first = vec4f(.15f, 0, 0, 0);
+				scaleM.second = vec4f(0, .15f, 0, 0);
+				scaleM.third = vec4f(0, 0, .15f, 0);
+				scaleM.fourth = vec4f(0, 0, 0, 1);
+
+				m = mat * scaleM * r;
 				index = (mArc.size() / 5 - 1) * 5;
 				m.fourth = vec4f(mArc[index]) * mat;
 				mMidMesh[4]->GetTransform().SetMatrix(m);
