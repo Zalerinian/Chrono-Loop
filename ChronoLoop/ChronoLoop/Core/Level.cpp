@@ -810,17 +810,18 @@ namespace Epoch {
 						break;
 					}
 				}
+				if (parent == nullptr) {
+					AddObject(obj);
+				}
 				file.read((char *)&objOperation, sizeof(INT8));
 				if (objOperation == 0 && parent)
 				{
 					parent->AddChild(obj);
-					obj->SetParent(parent);
 				}
 				if (objOperation == 1)
 					parent = obj;
 				if (objOperation == 2 && parent)
 					parent = parent->GetParent();
-				AddObject(obj);
 			}
 			file.close();
 		}

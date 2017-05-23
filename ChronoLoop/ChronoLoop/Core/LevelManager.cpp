@@ -42,7 +42,8 @@ namespace Epoch {
 	{
 		if (!mCurrentLevel) {
 			mCurrentLevel = _next;
-			VRInputManager::GetInstance().GetPlayerPosition().Position = _next->mStartPosition;
+			VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateYawPitchRollRotation(_next->mStartRotation);
+			VRInputManager::GetInstance().GetPlayerPosition() *= matrix4::CreateTranslation(_next->mStartPosition);
 			return;
 		}
 		mRequested = _next;
@@ -97,7 +98,8 @@ namespace Epoch {
 				delete mCurrentLevel;
 			}
 			TimeManager::Instance()->Destroy();
-			VRInputManager::GetInstance().GetPlayerPosition().Position = mRequested->mStartPosition;
+			VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateYawPitchRollRotation(mRequested->mStartRotation);
+			VRInputManager::GetInstance().GetPlayerPosition() *= matrix4::CreateTranslation(mRequested->mStartPosition);
 			mCurrentLevel = mRequested;
 			Renderer::Instance()->ClearRenderSet();
 			mCurrentLevel->SetupObjects();
