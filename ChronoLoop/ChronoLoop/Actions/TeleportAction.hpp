@@ -262,7 +262,7 @@ namespace Epoch
 			Particle* p = &Particle::Init();
 			p->SetColors(vec4f(0, .5, .5, .5), vec4f(0, .5, .5, .5));
 			p->SetLife(600);
-			p->SetSize(.025, .025);
+			p->SetSize(.025f, .025f);
 			mTPParticles->SetParticle(p);
 			mTPParticles->SetTexture("../Resources/BasicCirlceP.png");
 

@@ -788,10 +788,7 @@ namespace Epoch {
 		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
 			(*it)->Update();
 		}
-		
 	}
-
-
 	void Level::ToggleEntireLevelsWireframe(void* _command, std::wstring _ifOn) {
 		CommandConsole* cc = (CommandConsole*)_command;
 		if (_ifOn == L"ON") {

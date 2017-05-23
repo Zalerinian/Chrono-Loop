@@ -628,8 +628,11 @@ namespace Epoch {
 			MeshComponent* mesh = (MeshComponent*)obj.second->GetComponentIndexed(eCOMPONENT_MESH, 0);
 			if(!_show)
 			{
+				if(mesh)
+				{
 				mesh->SetInMotion(false);
-				continue;;
+				continue;
+				}
 			}
 
 			//bol for determining if we care about this object or not
@@ -689,10 +692,12 @@ namespace Epoch {
 				}
 				if(highlight)
 				{
+					if(mesh)
 					mesh->SetInMotion(true);
 				}
 				else
 				{
+					if(mesh)
 					mesh->SetInMotion(false);
 				}
 				
