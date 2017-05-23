@@ -31,7 +31,7 @@ namespace Epoch
 		std::vector<vec3f> mArc;
 		vec3f mVelocity, mAcceleration;
 		BaseObject* mTPLoc, *mCSLoc, *mMSLoc;
-		MeshComponent* mTPMesh, *mCSMesh, *mMidMesh;
+		MeshComponent* mTPMesh, *mCSMesh, *mMidMesh[5];
 		float ang = 0.05f;
 		ParticleEmitter* mTPParticles;
 
@@ -303,10 +303,13 @@ namespace Epoch
 			mCSMesh->AddTexture("../Resources/Marker.png", TextureType::eTEX_DIFFUSE);
 			mCSLoc->AddComponent(mCSMesh);
 			mCSMesh->SetAlpha(.45);
-			mMidMesh = new MeshComponent("../Resources/ArcMarker.obj");
-			mMidMesh->AddTexture("../Resources/Marker.png", TextureType::eTEX_DIFFUSE);
-			mMSLoc->AddComponent(mMidMesh);
-			mMidMesh->SetAlpha(.45);
+			for (int i = 0; i < 5; i++)
+			{
+				mMidMesh[i] = new MeshComponent("../Resources/ArcMarker.obj");
+				mMidMesh[i]->AddTexture("../Resources/Marker.png", TextureType::eTEX_DIFFUSE);
+				mMSLoc->AddComponent(mMidMesh[i]);
+				mMidMesh[i]->SetAlpha(.45);
+			}
 			mTPMesh = new MeshComponent("../Resources/TeleportMarker.obj");
 			mTPMesh->AddTexture("../Resources/Marker.png", TextureType::eTEX_DIFFUSE);
 			mTPLoc->AddComponent(mTPMesh);
@@ -321,8 +324,11 @@ namespace Epoch
 			scaleM.third = vec4f(0, 0, .25f, 0);
 			scaleM.fourth = vec4f(0, 0, 0, 1);
 
-			temp = mMidMesh->GetTransform().GetMatrix() * scaleM;
-			mMidMesh->GetTransform().SetMatrix(temp);
+			for (int i = 0; i < 5; i++)
+			{
+				temp = mMidMesh[i]->GetTransform().GetMatrix() * scaleM;
+				mMidMesh[i]->GetTransform().SetMatrix(temp);
+			}
 
 			scaleM.first = vec4f(.35f, 0, 0, 0);
 			scaleM.second = vec4f(0, .35f, 0, 0);
@@ -338,7 +344,8 @@ namespace Epoch
 
 			mTPMesh->SetVisible(false);
 			mCSMesh->SetVisible(false);
-			mMidMesh->SetVisible(false);
+			for (int i = 0; i < 5; i++)
+				mMidMesh[i]->SetVisible(false);
 
 			mTPParticles = new TeleportEffect(-1, 500, 15, vec3f());
 			Particle* p = &Particle::Init();
@@ -403,8 +410,24 @@ namespace Epoch
 				scaleM.fourth = vec4f(0, 0, 0, 1);
 				r = matrix4::CreateXRotation(ang);
 				m = mat * scaleM * r;
-				m.fourth = vec4f(mArc[mArc.size() == 1 ? 0 : (mArc.size() / 2 - 1)]) * mat;
-				mMidMesh->GetTransform().SetMatrix(m);
+				int index = 0;
+				index = mArc.size() == 1 ? 0 : (mArc.size() / 4);
+				m.fourth = vec4f(mArc[index]) * mat;
+				mMidMesh[0]->GetTransform().SetMatrix(m);
+
+				index = mArc.size() == 1 ? 0 : (mArc.size() / 3);
+				m.fourth = vec4f(mArc[index]) * mat;
+				mMidMesh[1]->GetTransform().SetMatrix(m);
+				//middle
+				index = mArc.size() == 1 ? 0 : (mArc.size() / 2 - 1);
+				m.fourth = vec4f(mArc[index]) * mat;
+				mMidMesh[2]->GetTransform().SetMatrix(m);
+
+				m.fourth = vec4f(mArc[index]) * mat;
+				mMidMesh[3]->GetTransform().SetMatrix(m);
+
+				m.fourth = vec4f(mArc[index]) * mat;
+				mMidMesh[4]->GetTransform().SetMatrix(m);
 
 				mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
 			}
@@ -414,10 +437,11 @@ namespace Epoch
 				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && mCanTeleport)
 				{
 
-					
+
 					mTPMesh->SetVisible(true);
 					mCSMesh->SetVisible(true);
-					mMidMesh->SetVisible(true);
+					for (int i = 0; i < 5; i++)
+						mMidMesh[i]->SetVisible(true);
 					if (ParticleSystem::Instance()->DoesExist(mTPParticles))
 					{
 						mTPParticles->SetPos(vec4f(mArc[mArc.size() - 1]) * mat);
@@ -428,7 +452,8 @@ namespace Epoch
 				{
 					mTPMesh->SetVisible(false);
 					mCSMesh->SetVisible(false);
-					mMidMesh->SetVisible(false);
+					for (int i = 0; i < 5; i++)
+						mMidMesh[i]->SetVisible(false);
 					if (ParticleSystem::Instance()->DoesExist(mTPParticles))
 						mTPParticles->CeaseFire();
 				}
