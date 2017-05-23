@@ -82,7 +82,7 @@ namespace Epoch
 		{
 			if (mBooped == false && mPB->GetCurProgress() < mPB->GetFinalProgress())
 				mPB->SetCurProgress(mPB->GetCurProgress() + 2);
-			if (Settings::GetInstance().GetInt("mmLevel") > 1 && mPB->GetCurProgress() >= mPB->GetFinalProgress() && !mBooped)
+			if (Settings::GetInstance().GetInt("mmLevel") > 1 && mPB->GetCurProgress() >= mPB->GetFinalProgress() && !mBooped && !Settings::GetInstance().GetBool("mmChamberMoving"))
 			{
 				matrix4 mat = mChamberObject->GetTransform().GetMatrix();
 				mChamberInterp->Prepare(1, mat, mat * matrix4::CreateTranslation(0, -.05f, 0), mChamberObject->GetTransform().GetMatrix());
@@ -145,6 +145,7 @@ namespace Epoch
 				mBooped3 = true;
 				Settings::GetInstance().SetInt("mmLevel", Settings::GetInstance().GetInt("mmLevel") - 1);
 				Settings::GetInstance().SetBool("mmChamberMoving", true);
+				Settings::GetInstance().SetBool("CantTeleport", true);
 				//mPB->OnDisable();
 			}
 		}
@@ -267,6 +268,7 @@ namespace Epoch
 					((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::EventType::eStop);
 					mBooped = false;
 					Settings::GetInstance().SetBool("mmChamberMoving", false);
+					Settings::GetInstance().SetBool("CantTeleport", false);
 					complete = false;
 				}
 			}

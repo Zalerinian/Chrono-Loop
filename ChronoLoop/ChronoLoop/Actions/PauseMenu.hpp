@@ -403,6 +403,10 @@ namespace Epoch
 		}
 		virtual void OnEnable()
 		{
+			//disable pointy bits
+			((MeshComponent*)LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(true);
+			((MeshComponent*)LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(true);
+
 			mActiveMenu = PAUSEMENU_ON;
 			SwitchPanel(&mActiveMenu);
 			PauseMenuisUp = true;
@@ -457,6 +461,10 @@ namespace Epoch
 			((MeshComponent*)cLevel->GetRightController()->GetComponentIndexed(Epoch::eCOMPONENT_MESH, 0))->SetTopmost(false);
 			((MeshComponent*)cLevel->GetLeftController()->GetComponentIndexed(Epoch::eCOMPONENT_MESH, 1))->SetTopmost(false);
 			((MeshComponent*)cLevel->GetRightController()->GetComponentIndexed(Epoch::eCOMPONENT_MESH, 1))->SetTopmost(false);
+
+			//disable pointy bits
+			((MeshComponent*)LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
+			((MeshComponent*)LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
 		}
 		void SwitchPanel(MENU_NAME* _activemenu)
 		{
@@ -486,6 +494,9 @@ namespace Epoch
 				break;
 			case HUBWORLD:
 				{
+				//disable pointy bits
+				((MeshComponent*)LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
+				((MeshComponent*)LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
 					LevelManager::GetInstance().GetCurrentLevel()->LoadLevelCmnd(nullptr, L"HUB");
 					CommandConsole::Instance().Toggle();
 				}

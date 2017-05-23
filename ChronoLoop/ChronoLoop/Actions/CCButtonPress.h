@@ -38,8 +38,12 @@ namespace Epoch
 			exitCube = (CubeCollider*)Exit->mComponents[eCOMPONENT_COLLIDER][0];
 			//blockend = blockCube->GetPos() - vec3f(0, 2.6f, 0);
 			//exitend = exitCube->GetPos() + vec3f(0, 2.6f, 0);
-			blockend = blockCube->GetTransform().GetMatrix() * blockCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, -2.6f, 0, 1));
-			exitend = exitCube->GetTransform().GetMatrix() * exitCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 2.6f, 0, 1));
+			matrix4 pos1 = blockCube->GetTransform().GetMatrix();
+			pos1[3][1] -= 2.6f;
+			blockend = pos1;
+			pos1 = exitCube->GetTransform().GetMatrix();
+			pos1[3][1] += 2.6f;
+			exitend =  pos1;
 			blockstart = blockCube->GetTransform().GetMatrix();
 			exitstart = exitCube->GetTransform().GetMatrix();
 

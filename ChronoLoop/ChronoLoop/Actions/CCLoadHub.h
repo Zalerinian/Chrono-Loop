@@ -95,6 +95,7 @@ namespace Epoch
 					mc->AddTexture("../Resources/Controller_Specular", eTEX_SPECULAR);
 					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+					rightRaycaster->SetVisible(false);
 					TeleportAction* rightTele = new TeleportAction(eControllerType_Primary);
 					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
 					RightController->AddComponent(mc);
@@ -110,6 +111,7 @@ namespace Epoch
 					mc2->AddTexture("../Resources/Player_hand_Specular", eTEX_SPECULAR);
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+					leftRaycaster->SetVisible(false);
 					TeleportAction* leftTele = new TeleportAction(eControllerType_Secondary);
 					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 					LeftController->AddComponent(leftConCol);

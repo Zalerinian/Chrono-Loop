@@ -299,6 +299,7 @@ namespace Epoch {
 
 	void Level::BinaryLoadLevel(std::string _file)
 	{
+		Settings::GetInstance().SetBool("CantTeleport", false);
 		std::ifstream file(_file, std::ios::in | std::ios::binary);
 		if (file.is_open())
 		{

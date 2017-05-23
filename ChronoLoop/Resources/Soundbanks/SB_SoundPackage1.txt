@@ -13,6 +13,7 @@ Event	ID	Name			Wwise Object Path	Notes
 	2587866055	Stop_Hub0			\Default Work Unit\Stop_Hub0	
 	2619715208	Resume_Level1Ambient			\Default Work Unit\Resume_Level1Ambient	
 	2693013165	SFX_TeleportSound			\Default Work Unit\SFX_TeleportSound	
+	2867120972	SFX_BoxShrinkLevel5			\Default Work Unit\SFX_BoxShrinkLevel5	
 	2873887262	Pause_Hub1			\Default Work Unit\Pause_Hub1	
 	2873887263	Pause_Hub0			\Default Work Unit\Pause_Hub0	
 	2920536594	SFX_sci_fi_door_open			\Default Work Unit\SFX_sci_fi_door_open	
@@ -35,14 +36,15 @@ In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	14324766	ResetBoxes	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\ResetBoxes_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\ResetBoxes		54533
 	54674957	Hub0	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Hub0_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Hub0		9131072
 	152781705	Hub1	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Hub1_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Hub1		22600721
-	202696624	BoxWallCollideLevel3	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\BoxWallCollideLevel3_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\BoxWallCollideLevel3		18761
+	202696624	BoxWallCollideLevel3	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\BoxWallCollideLevel3_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\BoxWallCollideLevel3		22705
 	220881736	PlayerDeath	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\PlayerDeath_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\PlayerDeath		121441
-	223646369	TimeResume	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\TimeResume_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\TimeResume		24041
-	387473037	TimePause	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\TimePause_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\TimePause		23977
+	223646369	TimeResume	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\TimeResume_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\TimeResume		31588
+	387473037	TimePause	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\TimePause_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\TimePause		32715
 	393391159	Level3Ambient	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Level3Ambient_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Level3Ambient		8678662
 	446015996	sci-fi-door-open	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\sci-fi-door-open_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\sci-fi-door-open		28792
 	589974881	Level1Ambient	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Level1Ambient_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Level1Ambient		7587285
 	648589336	Level2Ambient	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\Level2Ambient_3BDAD486.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\Level2Ambient		8168453
+	695632029	BoxShrinkLevel5	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\BoxShrinkLevel5_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\BoxShrinkLevel5		20531
 	771783799	BoxDoorZap	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\Music-SFX\BoxDoorZap_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music-SFX\BoxDoorZap		137992
 	778650627	sci-fi-door-close	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\sci-fi-door-close_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\sci-fi-door-close		29159
 	894777268	communication-channel	D:\College\WHY\NthDimension\NthDimensionalSound\NthDimensional\.cache\Windows\SFX\communication-channel_3AE5877C.wem		\Actor-Mixer Hierarchy\Default Work Unit\communication-channel		38290

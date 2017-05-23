@@ -99,6 +99,7 @@ namespace Epoch
 					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					rightRaycaster->SetPixelShader(ePS_PURETEXTURE);
+					rightRaycaster->SetVisible(false);
 					mc->SetPixelShader(ePS_PURETEXTURE);
 					TeleportAction *ta = new TeleportAction(eControllerType_Primary);
 					TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
@@ -280,6 +281,7 @@ namespace Epoch
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					leftRaycaster->SetPixelShader(ePS_PURETEXTURE);
+					leftRaycaster->SetVisible(false);
 					mc2->SetPixelShader(ePS_PURETEXTURE);
 					TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
 					LeftController->AddComponent(mc2);
@@ -323,6 +325,10 @@ namespace Epoch
 					((SFXEmitter*)resetlevelsound)->SetEvent(AK::EVENTS::SFX_RESETLEVEL);
 					RightController->AddComponent(resetlevelsound);
 					AudioWrapper::GetInstance().AddEmitter(resetlevelsound, RightController->GetName().c_str());
+
+
+					AudioWrapper::GetInstance().STOP();
+					((AudioEmitter*)ambient)->CallEvent(Emitter::EventType::ePlay);
 
 					ParticleSystem::Instance()->Clear();
 
