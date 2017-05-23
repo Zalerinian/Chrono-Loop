@@ -185,8 +185,8 @@ void Update() {
 
 	BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity); //new BaseObject("Controller2", identity);
 	MeshComponent *mc2 = new MeshComponent("../Resources/Player_hand.obj");
-	MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
-	leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+	//MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
+	//leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 	mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
 	mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
 	mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
@@ -194,7 +194,7 @@ void Update() {
 	TeleportAction* leftTele = new TeleportAction(eControllerType_Secondary);
 	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 	LeftController->AddComponent(leftConCol);
-	LeftController->AddComponent(leftRaycaster);
+	//LeftController->AddComponent(leftRaycaster);
 	LeftController->AddComponent(leftTele);
 	LeftController->AddComponent(mc2);
 	TimeManager::Instance()->AddObjectToTimeline(LeftController);

@@ -106,6 +106,8 @@ namespace Epoch
 					RightController->AddComponent(rightRaycaster);
 					RightController->AddComponent(ta);
 					RightController->AddComponent(tm);
+					rightRaycaster->SetVisible(false);
+
 
 					t.SetMatrix(matrix4::CreateScale(.1f, .1f, .1f));
 					BaseObject *timeDisplay = Pool::Instance()->iGetObject()->Reset("TimeIndicatorLine", t);
@@ -181,15 +183,15 @@ namespace Epoch
 					mc2->AddTexture("../Resources/Player_hand_Specular", eTEX_SPECULAR);
 					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 					BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
-					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
-					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
-					leftRaycaster->SetPixelShader(ePS_PURETEXTURE);
+					//MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
+					//leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+					//leftRaycaster->SetPixelShader(ePS_PURETEXTURE);
 					mc2->SetPixelShader(ePS_PURETEXTURE);
 					TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
 					LeftController->AddComponent(mc2);
 					LeftController->AddComponent(leftConCol);
 					LeftController->AddComponent(pickup2);
-					LeftController->AddComponent(leftRaycaster);
+					//LeftController->AddComponent(leftRaycaster);
 					LeftController->AddComponent(ta2);
 
 					MeshComponent *visibleMesh2 = new MeshComponent("../Resources/TinyCube.obj");
