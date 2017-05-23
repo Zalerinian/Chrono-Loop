@@ -151,7 +151,7 @@ namespace Epoch
 							|| temp == "mmPrevButton" || temp =="mmPrevSign")
 						{
 							Transform t;
-							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateTranslation(0, (float)floorPos, 0));
+							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateNewTranslation(0, (float)floorPos, 0));
 							((BaseObject*)*it)->SetTransform(t);
 
 							if (boop)
@@ -187,7 +187,7 @@ namespace Epoch
 						else if (floorPos == -10 && temp == "mmClosingPanel")
 						{
 							Transform t;
-							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateTranslation(2, 0, 0));
+							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateNewTranslation(2, 0, 0));
 							((BaseObject*)*it)->SetTransform(t);
 						}
 

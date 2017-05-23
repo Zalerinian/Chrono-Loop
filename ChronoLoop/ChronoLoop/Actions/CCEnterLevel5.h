@@ -84,7 +84,7 @@ namespace Epoch
 
 					//new stuff
 					Transform identity, t;
-					t.SetMatrix(matrix4::CreateXRotation(DirectX::XM_PI / 2) * matrix4::CreateTranslation(0, 1.3f, 0));
+					t.SetMatrix(matrix4::CreateNewXRotation(DirectX::XM_PI / 2) * matrix4::CreateNewTranslation(0, 1.3f, 0));
 					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", t, nullptr, BaseObject_Flag_Record_In_Timeline);
 					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
@@ -119,7 +119,7 @@ namespace Epoch
 					clonePanel->SetParent(RightController);
 					RightController->AddChild(clonePanel);
 
-					t.SetMatrix(matrix4::CreateScale(.1f, .1f, .1f));
+					t.SetMatrix(matrix4::CreateNewScale(.1f, .1f, .1f));
 					BaseObject *timeDisplay = Pool::Instance()->iGetObject()->Reset("TimeIndicatorLine", t);
 					MeshComponent* tdisp = new MeshComponent("../Resources/TimeIndicatorLine.obj");
 					tdisp->AddTexture("../Resources/TimeIndicatorLine.png", eTEX_DIFFUSE);
@@ -138,7 +138,7 @@ namespace Epoch
 					timeDisplayNeedle->SetParent(RightController);
 					RightController->AddChild(timeDisplayNeedle);
 
-					t.SetMatrix(matrix4::CreateTranslation(0, .015f, .054f));
+					t.SetMatrix(matrix4::CreateNewTranslation(0, .015f, .054f));
 					BaseObject *rewindDisplay = Pool::Instance()->iGetObject()->Reset("RewindDisplay", t);
 					MeshComponent* rewind = new MeshComponent("../Resources/UIRewind.obj");
 					rewind->AddTexture("../Resources/rewind.png", eTEX_DIFFUSE);
@@ -151,7 +151,7 @@ namespace Epoch
 					rewindDisplay->SetParent(RightController);
 					RightController->AddChild(rewindDisplay);
 
-					t.SetMatrix(matrix4::CreateScale(.75f, 1, 1) * matrix4::CreateTranslation(0.073f, -0.018f, -0.043f));
+					t.SetMatrix(matrix4::CreateNewScale(.75f, 1, 1) * matrix4::CreateNewTranslation(0.073f, -0.018f, -0.043f));
 					BaseObject *cloneDisplayBack = Pool::Instance()->iGetObject()->Reset("cloneDisplayBack", t);
 					MeshComponent* cdispb = new MeshComponent("../Resources/UIClone.obj", 0.9f);
 					cdispb->AddTexture("../Resources/clearBlue.png", eTEX_DIFFUSE);
@@ -160,7 +160,7 @@ namespace Epoch
 					cloneDisplayBack->SetParent(RightController);
 					RightController->AddChild(cloneDisplayBack);
 
-					t.SetMatrix(matrix4::CreateTranslation(0.073f, -0.016f, -0.043f));
+					t.SetMatrix(matrix4::CreateNewTranslation(0.073f, -0.016f, -0.043f));
 					BaseObject *cloneDisplay = Pool::Instance()->iGetObject()->Reset("cloneDisplay", t);
 					MeshComponent* cdisp = new MeshComponent("../Resources/UIClone.obj");
 					//cdisp->AddTexture("../Resources/clear.png", eTEX_DIFFUSE);
@@ -211,7 +211,7 @@ namespace Epoch
 						RightController->AddChild(cloneDisplay);
 					}
 
-					t.SetMatrix(matrix4::CreateTranslation(-0.039f, 0.015f, 0.054f));
+					t.SetMatrix(matrix4::CreateNewTranslation(-0.039f, 0.015f, 0.054f));
 					BaseObject *rewindHelp = Pool::Instance()->iGetObject()->Reset("RewindHelp", t);
 					MeshComponent* rhdisp = new MeshComponent("../Resources/help.obj");
 					rhdisp->SetVisible(false);
@@ -223,7 +223,7 @@ namespace Epoch
 					rewindHelp->SetParent(RightController);
 					RightController->AddChild(rewindHelp);
 
-					t.SetMatrix(matrix4::CreateTranslation(0, 0.015f, 0.054f));
+					t.SetMatrix(matrix4::CreateNewTranslation(0, 0.015f, 0.054f));
 					BaseObject *teleportHelp = Pool::Instance()->iGetObject()->Reset("teleportHelp", t);
 					MeshComponent* thdisp = new MeshComponent("../Resources/help.obj");
 					thdisp->AddTexture("../Resources/teleport.png", eTEX_DIFFUSE);
@@ -234,7 +234,7 @@ namespace Epoch
 					teleportHelp->SetParent(RightController);
 					RightController->AddChild(teleportHelp);
 
-					t.SetMatrix(matrix4::CreateTranslation(-0.03f, -0.01f, 0.089f));
+					t.SetMatrix(matrix4::CreateNewTranslation(-0.03f, -0.01f, 0.089f));
 					BaseObject *pauseHelp = Pool::Instance()->iGetObject()->Reset("pauseHelp", t);
 					MeshComponent* phdisp = new MeshComponent("../Resources/help.obj");
 					phdisp->AddTexture("../Resources/pause.png", eTEX_DIFFUSE);
@@ -245,7 +245,7 @@ namespace Epoch
 					pauseHelp->SetParent(RightController);
 					RightController->AddChild(pauseHelp);
 
-					t.SetMatrix(matrix4::CreateTranslation(0.032f, -0.03f, 0.047f));
+					t.SetMatrix(matrix4::CreateNewTranslation(0.032f, -0.03f, 0.047f));
 					BaseObject *cloneHelp = Pool::Instance()->iGetObject()->Reset("cloneHelp", t);
 					MeshComponent* chdisp = new MeshComponent("../Resources/help.obj");
 					chdisp->AddTexture("../Resources/createClone.png", eTEX_DIFFUSE);
@@ -258,7 +258,7 @@ namespace Epoch
 					cloneHelp->SetParent(RightController);
 					RightController->AddChild(cloneHelp);
 
-					t.SetMatrix(matrix4::CreateScale(.5f, .5f, .5f) * matrix4::CreateTranslation(0.042f, -0.03f, 0.047f));
+					t.SetMatrix(matrix4::CreateNewScale(.5f, .5f, .5f) * matrix4::CreateNewTranslation(0.042f, -0.03f, 0.047f));
 					BaseObject *clonePlus = Pool::Instance()->iGetObject()->Reset("clonePlus", t);
 					MeshComponent* cphdisp = new MeshComponent("../Resources/help.obj");
 					cphdisp->AddTexture("../Resources/plus.png", eTEX_DIFFUSE);

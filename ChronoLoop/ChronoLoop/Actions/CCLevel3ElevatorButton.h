@@ -97,13 +97,13 @@ namespace Epoch {
 								tempY = -1;
 							}
 
-							mChamberInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.03f * tempY, 0), mChamberObject->GetTransform().GetMatrix());
+							mChamberInterp->Prepare(6, mat, mat * matrix4::CreateNewTranslation(0, 3.03f * tempY, 0), mChamberObject->GetTransform().GetMatrix());
 							mChamberInterp->SetEasingFunction(Easing::QuadInOut);
 							mChamberInterp->SetActive(true);
 
 							if (_other.GetBaseObject()->GetUniqueID() == cLevel->GetLeftController()->GetUniqueID() || _other.GetBaseObject()->GetUniqueID() == cLevel->GetRightController()->GetUniqueID()) {
 								mat = VRInputManager::GetInstance().GetPlayerPosition();
-								mPlayerInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.03f * tempY, 0), VRInputManager::GetInstance().GetPlayerPosition());
+								mPlayerInterp->Prepare(6, mat, mat * matrix4::CreateNewTranslation(0, 3.03f * tempY, 0), VRInputManager::GetInstance().GetPlayerPosition());
 								mPlayerInterp->SetEasingFunction(Easing::QuadInOut);
 								mPlayerInterp->SetActive(true);
 								mIsPlayer = true;
@@ -115,31 +115,31 @@ namespace Epoch {
 							{
 								Clonepair* pair = TimeManager::Instance()->GetClonePair(_other.GetBaseObject()->GetUniqueID());
 								mat = _other.GetBaseObject()->GetTransform().GetMatrix();
-								mClone1Interp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), _other.GetBaseObject()->GetTransform().GetMatrix());
+								mClone1Interp->Prepare(6, mat, mat * matrix4::CreateNewTranslation(0, 3.28f * tempY, 0), _other.GetBaseObject()->GetTransform().GetMatrix());
 								mClone1Interp->SetEasingFunction(Easing::QuadInOut);
 								mClone1Interp->SetActive(true);
 
 								BaseObject* other2 = cLevel->FindObjectWithID(pair->mOther1);
 								mat = other2->GetTransform().GetMatrix();
-								mClone2Interp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), other2->GetTransform().GetMatrix());
+								mClone2Interp->Prepare(6, mat, mat * matrix4::CreateNewTranslation(0, 3.28f * tempY, 0), other2->GetTransform().GetMatrix());
 								mClone2Interp->SetEasingFunction(Easing::QuadInOut);
 								mClone2Interp->SetActive(true);
 
 								BaseObject* other3 = cLevel->FindObjectWithID(pair->mOther1);
 								mat = other3->GetTransform().GetMatrix();
-								mClone3Interp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), other3->GetTransform().GetMatrix());
+								mClone3Interp->Prepare(6, mat, mat * matrix4::CreateNewTranslation(0, 3.28f * tempY, 0), other3->GetTransform().GetMatrix());
 								mClone3Interp->SetEasingFunction(Easing::QuadInOut);
 								mClone3Interp->SetActive(true);
 								mIsPlayer = false;
 							}*/
 
 							mat = mObject->GetTransform().GetMatrix();
-							mStartButtonInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.03f * tempY, 0), mObject->GetTransform().GetMatrix());
+							mStartButtonInterp->Prepare(6, mat, mat * matrix4::CreateNewTranslation(0, 3.03f * tempY, 0), mObject->GetTransform().GetMatrix());
 							mStartButtonInterp->SetEasingFunction(Easing::QuadInOut);
 							mStartButtonInterp->SetActive(true);
 
 							mat = mButtonStand->GetTransform().GetMatrix();
-							mStartStandInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.03f * tempY, 0), mButtonStand->GetTransform().GetMatrix());
+							mStartStandInterp->Prepare(6, mat, mat * matrix4::CreateNewTranslation(0, 3.03f * tempY, 0), mButtonStand->GetTransform().GetMatrix());
 							mStartStandInterp->SetEasingFunction(Easing::QuadInOut);
 							mStartStandInterp->SetActive(true);
 							mInterpDone = false;
@@ -184,17 +184,17 @@ namespace Epoch {
 				////if elevator is mostly down
 				//if (mInterpDone && tempY > -3.27f && tempY < -1.64f) {
 				//	matrix4 mat = mChamberObject->GetTransform().GetMatrix();
-				//	mChamberInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -3.28f + (tempY *-1), 0), mChamberObject->GetTransform().GetMatrix());
+				//	mChamberInterp->Prepare(6, mat, mat * matrix4::CreateNewTranslation(0, -3.28f + (tempY *-1), 0), mChamberObject->GetTransform().GetMatrix());
 				//	mChamberInterp->SetEasingFunction(Easing::QuadInOut);
 				//	mChamberInterp->SetActive(true);
 
 				//	mat = mObject->GetTransform().GetMatrix();
-				//	mStartButtonInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -3.28f + (tempY *-1), 0), mObject->GetTransform().GetMatrix());
+				//	mStartButtonInterp->Prepare(6, mat, mat * matrix4::CreateNewTranslation(0, -3.28f + (tempY *-1), 0), mObject->GetTransform().GetMatrix());
 				//	mStartButtonInterp->SetEasingFunction(Easing::QuadInOut);
 				//	mStartButtonInterp->SetActive(true);
 
 				//	mat = mButtonStand->GetTransform().GetMatrix();
-				//	mStartStandInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -3.28f + (tempY *-1), 0), mButtonStand->GetTransform().GetMatrix());
+				//	mStartStandInterp->Prepare(6, mat, mat * matrix4::CreateNewTranslation(0, -3.28f + (tempY *-1), 0), mButtonStand->GetTransform().GetMatrix());
 				//	mStartStandInterp->SetEasingFunction(Easing::QuadInOut);
 				//	mStartStandInterp->SetActive(true);
 				//	mInterpDone = false;
@@ -202,17 +202,17 @@ namespace Epoch {
 				//else if(mInterpDone && tempY > -1.64 && tempY < -0.116f)
 				//{
 				//	matrix4 mat = mChamberObject->GetTransform().GetMatrix();
-				//	mChamberInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -0.116f + (tempY *-1), 0), mChamberObject->GetTransform().GetMatrix());
+				//	mChamberInterp->Prepare(6, mat, mat * matrix4::CreateNewTranslation(0, -0.116f + (tempY *-1), 0), mChamberObject->GetTransform().GetMatrix());
 				//	mChamberInterp->SetEasingFunction(Easing::QuadInOut);
 				//	mChamberInterp->SetActive(true);
 
 				//	mat = mObject->GetTransform().GetMatrix();
-				//	mStartButtonInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -0.116f + (tempY *-1), 0), mObject->GetTransform().GetMatrix());
+				//	mStartButtonInterp->Prepare(6, mat, mat * matrix4::CreateNewTranslation(0, -0.116f + (tempY *-1), 0), mObject->GetTransform().GetMatrix());
 				//	mStartButtonInterp->SetEasingFunction(Easing::QuadInOut);
 				//	mStartButtonInterp->SetActive(true);
 
 				//	mat = mButtonStand->GetTransform().GetMatrix();
-				//	mStartStandInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, -0.116f + (tempY *-1), 0), mButtonStand->GetTransform().GetMatrix());
+				//	mStartStandInterp->Prepare(6, mat, mat * matrix4::CreateNewTranslation(0, -0.116f + (tempY *-1), 0), mButtonStand->GetTransform().GetMatrix());
 				//	mStartStandInterp->SetEasingFunction(Easing::QuadInOut);
 				//	mStartStandInterp->SetActive(true);
 				//	mInterpDone = false;

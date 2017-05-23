@@ -225,7 +225,7 @@ namespace Epoch
 				mNode = Renderer::Instance()->AddTopmostNode(*mShape);
 			}
 			vec3f size = mMax - mMin;
-			matrix4 pos = matrix4::CreateScale(size.x, size.y, size.z);
+			matrix4 pos = matrix4::CreateNewScale(size.x, size.y, size.z);
 			pos.Position = (mMax - mMin) / 2.0f + mMin;
 			mNode->data = pos;
 		}
@@ -252,7 +252,7 @@ namespace Epoch
 					mNode = Renderer::Instance()->AddTopmostNode(*mShape);
 			}
 		
-			matrix4 pos =  GetTransform().GetMatrix() * matrix4::CreateScale(mRadius, mRadius, mRadius);
+			matrix4 pos =  GetTransform().GetMatrix() * matrix4::CreateNewScale(mRadius, mRadius, mRadius);
 			pos.Position = GetPos();
 			mNode->data = pos;
 		} else if (visible) {

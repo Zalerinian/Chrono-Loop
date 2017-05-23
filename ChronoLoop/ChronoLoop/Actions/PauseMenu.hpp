@@ -84,7 +84,7 @@ namespace Epoch
 
 			//PANEL SET UP
 				//Main Pause Menu Panel Initialize
-				//identity.SetMatrix(matrix4::CreateTranslation(0, 0, 0.9f));
+				//identity.SetMatrix(matrix4::CreateNewTranslation(0, 0, 0.9f));
 				SetUpThisObjectForMe(&pMainPanel, &mcMainPanel, std::string("PauseMenu - Main Menu"), identity);
 				TextureManager::Instance()->iGetTexture2D("memory:PauseMenu - Main Menu", nullptr, &texMainPanel);
 
@@ -137,7 +137,7 @@ namespace Epoch
 					pMainPanel->AddChild(pRestartLevel);
 				//Settings Panel Options
 					//Audio Option Initialize
-					//identity.SetMatrix(matrix4::CreateTranslation(0, 0, 0.8f));
+					//identity.SetMatrix(matrix4::CreateNewTranslation(0, 0, 0.8f));
 					SetUpThisObjectForMe(&pAudio, &mcAudio, std::string("PauseMenu - Audio Option"), identity);
 					TextureManager::Instance()->iGetTexture2D("memory:PauseMenu - Audio Option", nullptr, &texAudio);
 
@@ -145,7 +145,7 @@ namespace Epoch
 					pAudio->SetParent(pSettingsPanel);
 
 					//Misc Option Initialize
-					//identity.SetMatrix(matrix4::CreateTranslation(0, 0, 0.8f));
+					//identity.SetMatrix(matrix4::CreateNewTranslation(0, 0, 0.8f));
 					SetUpThisObjectForMe(&pMisc, &mcMisc, std::string("PauseMenu - Misc Option"), identity);
 					TextureManager::Instance()->iGetTexture2D("memory:PauseMenu - Misc Option", nullptr, &texMisc);
 
@@ -422,26 +422,26 @@ namespace Epoch
 			
 			
 
-			tempT.SetMatrix(playerPos.CreateXRotation(1.5708f) * playerPos.CreateScale(scaleX,scaleY,1) * (playerPos) * playerPos.CreateTranslation(playerRot));// * playerPos.CreateTranslation(0, 5.0f, 5.0f)));// *playerPos.CreateTranslation(playerRot));
+			tempT.SetMatrix(playerPos.CreateNewXRotation(1.5708f) * playerPos.CreateNewScale(scaleX,scaleY,1) * (playerPos) * playerPos.CreateNewTranslation(playerRot));// * playerPos.CreateNewTranslation(0, 5.0f, 5.0f)));// *playerPos.CreateNewTranslation(playerRot));
 			pPauseMenuBase->SetTransform(tempT);
 
-			tempT.SetMatrix(playerPos.CreateScale(0.85f, 1, 0.85f) * playerPos.CreateTranslation(0, 0.001f, 0));
+			tempT.SetMatrix(playerPos.CreateNewScale(0.85f, 1, 0.85f) * playerPos.CreateNewTranslation(0, 0.001f, 0));
 			pMainPanel->SetTransform(tempT);
-			tempT.SetMatrix(playerPos.CreateScale(0.85f, 1, 0.85f) * playerPos.CreateTranslation(0, 0.001f, 0));
+			tempT.SetMatrix(playerPos.CreateNewScale(0.85f, 1, 0.85f) * playerPos.CreateNewTranslation(0, 0.001f, 0));
 			pSettingsPanel->SetTransform(tempT);
 
-			tempT.SetMatrix(playerPos.CreateScale(0.3f, 1, 0.3f) * playerPos.CreateTranslation(-0.0075f, 0.001f, -0.0075f));
+			tempT.SetMatrix(playerPos.CreateNewScale(0.3f, 1, 0.3f) * playerPos.CreateNewTranslation(-0.0075f, 0.001f, -0.0075f));
 			pResume->SetTransform(tempT);
-			tempT.SetMatrix(playerPos.CreateScale(0.3f, 1, 0.3f) * playerPos.CreateTranslation(0.0075f, 0.001f, -0.0075f));
+			tempT.SetMatrix(playerPos.CreateNewScale(0.3f, 1, 0.3f) * playerPos.CreateNewTranslation(0.0075f, 0.001f, -0.0075f));
 			pSettings->SetTransform(tempT);
-			tempT.SetMatrix(playerPos.CreateScale(0.3f, 1, 0.3f) * playerPos.CreateTranslation(-0.0075f, 0.001f, 0.0075f));
+			tempT.SetMatrix(playerPos.CreateNewScale(0.3f, 1, 0.3f) * playerPos.CreateNewTranslation(-0.0075f, 0.001f, 0.0075f));
 			pHubworld->SetTransform(tempT);			
-			tempT.SetMatrix(playerPos.CreateScale(0.3f, 1, 0.3f) * playerPos.CreateTranslation(0.0075f, 0.001f, 0.0075f));
+			tempT.SetMatrix(playerPos.CreateNewScale(0.3f, 1, 0.3f) * playerPos.CreateNewTranslation(0.0075f, 0.001f, 0.0075f));
 			pRestartLevel->SetTransform(tempT);
 
-			tempT.SetMatrix(playerPos.CreateScale(0.4f, 1, 0.2f) * playerPos.CreateTranslation(0, 0.001f, 0));
+			tempT.SetMatrix(playerPos.CreateNewScale(0.4f, 1, 0.2f) * playerPos.CreateNewTranslation(0, 0.001f, 0));
 			pAudio->SetTransform(tempT);
-			tempT.SetMatrix(playerPos.CreateScale(0.3f, 1, 0.3f) * playerPos.CreateTranslation(0.015f, 0.001f, 0.015f));
+			tempT.SetMatrix(playerPos.CreateNewScale(0.3f, 1, 0.3f) * playerPos.CreateNewTranslation(0.015f, 0.001f, 0.015f));
 			pMisc->SetTransform(tempT);
 			((MeshComponent*)cLevel->GetLeftController()->GetComponentIndexed(Epoch::eCOMPONENT_MESH, 0))->SetTopmost(true);
 			((MeshComponent*)cLevel->GetRightController()->GetComponentIndexed(Epoch::eCOMPONENT_MESH, 0))->SetTopmost(true);

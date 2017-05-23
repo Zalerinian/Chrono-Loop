@@ -33,8 +33,8 @@ namespace Epoch {
 				}
 				if (mParent)
 				{
-					//mIndicator->GetTransform().GetMatrix();// = /*(*mParent) * matrix4::CreateScale(0.1f, 0.1f, 0.1f) *matrix4::CreateTranslation(0, -0.25699f, 0.27277f) *matrix4::CreateXRotation((42.237f) * (3.14f / 180.0f)) *matrix4::CreateYRotation((mMaxRotation * mRatio) * (3.14f / 180.0f));
-					mLine->GetTransform().GetMatrix() = *mParent; //matrix4::CreateScale(0.9f, 0.9f, 0.9f);
+					//mIndicator->GetTransform().GetMatrix();// = /*(*mParent) * matrix4::CreateNewScale(0.1f, 0.1f, 0.1f) *matrix4::CreateNewTranslation(0, -0.25699f, 0.27277f) *matrix4::CreateNewXRotation((42.237f) * (3.14f / 180.0f)) *matrix4::CreateNewYRotation((mMaxRotation * mRatio) * (3.14f / 180.0f));
+					mLine->GetTransform().GetMatrix() = *mParent; //matrix4::CreateNewScale(0.9f, 0.9f, 0.9f);
 					GetTransform().GetMatrix() = *mParent;
 				}
 			//}

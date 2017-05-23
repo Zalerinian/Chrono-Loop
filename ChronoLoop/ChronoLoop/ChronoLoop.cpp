@@ -367,7 +367,7 @@ void Update() {
 
 	//Test Animate Quad///////////////////////////////////////////////////////////////////
 	//Transform OneBack;
-	//OneBack.SetMatrix(matrix4::CreateTranslation(0, 1, -3));
+	//OneBack.SetMatrix(matrix4::CreateNewTranslation(0, 1, -3));
 	//BaseObject *Forcefield = Pool::Instance()->iGetObject()->Reset("ForceField Quad", OneBack);
 	//MeshComponent *forcefieldMesh = new MeshComponent("../Resources/AnimationPlane1x1.obj", 0.25f);
 	//forcefieldMesh->AddTexture("../Resources/ForcefieldHex gray.png", eTEX_DIFFUSE);
@@ -379,7 +379,7 @@ void Update() {
 
 	// Test Gamma Correction /////////////////////////////////////////////////////////////
 	/*Transform gammaform;
-	gammaform.SetMatrix(matrix4::CreateTranslation(0, 1, 0));
+	gammaform.SetMatrix(matrix4::CreateNewTranslation(0, 1, 0));
 	BaseObject *GammaObject = Pool::Instance()->iGetObject()->Reset("ForceField Quad", gammaform);
 	MeshComponent *GammaMesh = new MeshComponent("../Resources/AnimationPlane1x1.obj", 0.25f);
 	GammaMesh->AddTexture("../Resources/grey.png", eTEX_DIFFUSE);
@@ -390,7 +390,7 @@ void Update() {
 
 	/// Raycast debug cube
 	//Transform cubeScale;
-	//cubeScale.SetMatrix(matrix4::CreateScale(0.01f, 0.01f, 0.01f));
+	//cubeScale.SetMatrix(matrix4::CreateNewScale(0.01f, 0.01f, 0.01f));
 	//BaseObject* mmCube = Pool::Instance()->iGetObject()->Reset("mmCube", cubeScale);// new BaseObject("walls", PlaneTransform);
 	//MeshComponent *mmCubeMesh = new MeshComponent("../Resources/Cube.obj");
 	//mmCubeMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);

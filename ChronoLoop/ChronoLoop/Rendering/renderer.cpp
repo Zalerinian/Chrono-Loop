@@ -643,35 +643,35 @@ namespace Epoch {
 		if (!CommandConsole::Instance().willTakeInput()) {
 			//w
 			if (GetAsyncKeyState('W')) {
-				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateTranslation(0, 0, -_moveSpd * _delta) * VRInputManager::GetInstance().GetPlayerPosition();
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateNewTranslation(0, 0, -_moveSpd * _delta) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 			//s
 			if (GetAsyncKeyState('S')) {
-				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateTranslation(0, 0, _moveSpd * _delta) * VRInputManager::GetInstance().GetPlayerPosition();
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateNewTranslation(0, 0, _moveSpd * _delta) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 			//a
 			if (GetAsyncKeyState('A')) {
-				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateTranslation(-_moveSpd * _delta, 0, 0) * VRInputManager::GetInstance().GetPlayerPosition();
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateNewTranslation(-_moveSpd * _delta, 0, 0) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 			//d
 			if (GetAsyncKeyState('D')) {
-				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateTranslation(_moveSpd * _delta, 0, 0) * VRInputManager::GetInstance().GetPlayerPosition();
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateNewTranslation(_moveSpd * _delta, 0, 0) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 			// Q
 			if (GetAsyncKeyState('Q')) {
-				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateZRotation(_rotSpd * _delta) * VRInputManager::GetInstance().GetPlayerPosition();
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateNewZRotation(_rotSpd * _delta) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 			// E
 			if (GetAsyncKeyState('E')) {
-				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateZRotation(-_rotSpd * _delta) * VRInputManager::GetInstance().GetPlayerPosition();
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateNewZRotation(-_rotSpd * _delta) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 			//x
 			if (GetAsyncKeyState(VK_CONTROL)) {
-				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateTranslation(0, -_moveSpd * _delta, 0) * VRInputManager::GetInstance().GetPlayerPosition();
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateNewTranslation(0, -_moveSpd * _delta, 0) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 
 			if (GetAsyncKeyState(VK_SPACE)) {
-				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateTranslation(0, _moveSpd * _delta, 0) * VRInputManager::GetInstance().GetPlayerPosition();
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateNewTranslation(0, _moveSpd * _delta, 0) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
 			if (GetAsyncKeyState(VK_LBUTTON) & 1 && !mIsMouseDown) {
 				GetCursorPos(&mMouseOrigin);
@@ -688,7 +688,7 @@ namespace Epoch {
 				float dx = -(now.x - mMouseOrigin.x) * _rotSpd * _delta;
 				float dy = -(now.y - mMouseOrigin.y) * _rotSpd * _delta;
 
-				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateXRotation(dy) * matrix4::CreateYRotation(dx) * VRInputManager::GetInstance().GetPlayerPosition();
+				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateNewXRotation(dy) * matrix4::CreateNewYRotation(dx) * VRInputManager::GetInstance().GetPlayerPosition();
 
 				// Reset cursor to center of the window.
 				WINDOWINFO winfo;
@@ -819,7 +819,7 @@ namespace Epoch {
 			} else {
 				mContext->OMSetDepthStencilState(mMotionStateReverseDepth.Get(), 1); // Make sure the stencil buffer value is less than 1 to pass.
 				D3D11_MAPPED_SUBRESOURCE map;
-				matrix4 scale = matrix4::CreateScale(1.5f, 1.5f, 1.5f);
+				matrix4 scale = matrix4::CreateNewScale(1.5f, 1.5f, 1.5f);
 				mContext->Map(mGlobalMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
 				memcpy(map.pData, &scale, sizeof(scale));
 				mContext->Unmap(mGlobalMatrixBuffer.Get(), 0);
