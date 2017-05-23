@@ -629,8 +629,10 @@ namespace Epoch {
 			if(!_show)
 			{
 				if(mesh)
+				{
 				mesh->SetInMotion(false);
-				continue;;
+				continue;
+				}
 			}
 
 			//bol for determining if we care about this object or not

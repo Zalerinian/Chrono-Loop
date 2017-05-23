@@ -419,7 +419,7 @@ namespace Epoch {
 				matrix4 m;
 				m = mTPMesh->GetTransform().GetMatrix();
 				m.fourth = mArc[mArc.size() - 1];
-				m.fourth.y += .35;
+				m.fourth.y += .35f;
 				mTPMesh->GetTransform().SetMatrix(m);
 
 				m = mat * scaleM;

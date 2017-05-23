@@ -488,12 +488,15 @@ namespace Epoch
 				break;
 			case SETTINGS:
 				{
-				SetVisiblity(&pMainPanel, false);
-				SetVisiblity(&pSettingsPanel, true);
+					SetVisiblity(&pMainPanel, false);
+					SetVisiblity(&pSettingsPanel, true);
 				}
 				break;
 			case HUBWORLD:
 				{
+				//disable pointy bits
+				((MeshComponent*)LevelManager::GetInstance().GetCurrentLevel()->GetRightController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
+				((MeshComponent*)LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
 					LevelManager::GetInstance().GetCurrentLevel()->LoadLevelCmnd(nullptr, L"HUB");
 					CommandConsole::Instance().Toggle();
 				}

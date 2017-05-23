@@ -211,13 +211,8 @@ namespace Epoch
 					
 					Emitter* sound = new SFXEmitter();
 					((SFXEmitter*)sound)->SetEvent(AK::EVENTS::SFX_TELEPORTSOUND);
-					headset->AddComponent(sound);
 					AudioWrapper::GetInstance().AddEmitter(sound, headset->GetName().c_str());
-
-					Emitter* resetlevelsound = new SFXEmitter();
-					((SFXEmitter*)resetlevelsound)->SetEvent(AK::EVENTS::SFX_RESETLEVEL);
-					RightController->AddComponent(resetlevelsound);
-					AudioWrapper::GetInstance().AddEmitter(resetlevelsound, RightController->GetName().c_str());
+					headset->AddComponent(sound);
 
 					Emitter* timepause = new SFXEmitter();
 					((SFXEmitter*)timepause)->SetEvent(AK::EVENTS::SFX_TIMEPAUSE);
@@ -228,6 +223,16 @@ namespace Epoch
 					((SFXEmitter*)timeresume)->SetEvent(AK::EVENTS::SFX_TIMERESUME);
 					AudioWrapper::GetInstance().AddEmitter(timeresume, headset->GetName().c_str());
 					headset->AddComponent(timeresume);
+
+					Emitter* sound1 = new SFXEmitter();
+					((SFXEmitter*)sound1)->SetEvent(AK::EVENTS::SFX_PLAYERDEATH);
+					AudioWrapper::GetInstance().AddEmitter(sound1, headset->GetName().c_str());
+					headset->AddComponent(sound1);
+
+					Emitter* resetlevelsound = new SFXEmitter();
+					((SFXEmitter*)resetlevelsound)->SetEvent(AK::EVENTS::SFX_RESETLEVEL);
+					headset->AddComponent(resetlevelsound);
+					AudioWrapper::GetInstance().AddEmitter(resetlevelsound, headset->GetName().c_str());
 
 
 

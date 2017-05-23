@@ -311,6 +311,12 @@ namespace Epoch {
 					((SFXEmitter*)sound1)->SetEvent(AK::EVENTS::SFX_PLAYERDEATH);
 					AudioWrapper::GetInstance().AddEmitter(sound1, headset->GetName().c_str());
 					headset->AddComponent(sound1);
+
+					Emitter* resetlevelsound = new SFXEmitter();
+					((SFXEmitter*)resetlevelsound)->SetEvent(AK::EVENTS::SFX_RESETLEVEL);
+					RightController->AddComponent(resetlevelsound);
+					AudioWrapper::GetInstance().AddEmitter(resetlevelsound, RightController->GetName().c_str());
+
 					Emitter* sound2 = new SFXEmitter();
 					((SFXEmitter*)sound2)->SetEvent(AK::EVENTS::SFX_BOXWALLCOLLIDELEVEL3);
 					AudioWrapper::GetInstance().AddEmitter(sound2, headset->GetName().c_str());
@@ -320,10 +326,7 @@ namespace Epoch {
 					AudioWrapper::GetInstance().STOP();
 					((AudioEmitter*)ambient)->CallEvent(Emitter::EventType::ePlay);
 
-					Emitter* resetlevelsound = new SFXEmitter();
-					((SFXEmitter*)resetlevelsound)->SetEvent(AK::EVENTS::SFX_RESETLEVEL);
-					RightController->AddComponent(resetlevelsound);
-					AudioWrapper::GetInstance().AddEmitter(resetlevelsound, RightController->GetName().c_str());
+
 
 					ParticleSystem::Instance()->Clear();
 

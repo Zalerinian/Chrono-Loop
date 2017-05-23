@@ -723,6 +723,10 @@ namespace Epoch
 		{
 			paused = cLevel->GetTimeManipulator()->isTimePaused();
 		}
+		if(Settings::GetInstance().GetInt("CurrentLevel") == 0 && Settings::GetInstance().GetBool("PauseMenuUp"))
+		{
+			Settings::GetInstance().SetBool("PauseMenuUp", false);
+		}
 		if (!paused && !Settings::GetInstance().GetBool("PauseMenuUp"))
 		{
 			//SystemLogger::GetLog() << _time << std::endl;

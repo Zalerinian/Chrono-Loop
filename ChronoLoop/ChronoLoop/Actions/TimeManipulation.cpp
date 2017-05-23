@@ -44,8 +44,8 @@ namespace Epoch
 			if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 3)) //created clone (tut 2)
 			{
 				//enable pointy bits on controller
-				((MeshComponent*)currentLevel->GetRightController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(true);
-				((MeshComponent*)currentLevel->GetLeftController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(true);
+				((MeshComponent*)currentLevel->GetRightController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
+				((MeshComponent*)currentLevel->GetLeftController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
 				// Cancel Time
 				((SFXEmitter*)currentLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 3))->CallEvent(Emitter::ePlay);
 				if (Settings::GetInstance().GetInt("tutStep") >= 4)//accepted time (
@@ -88,8 +88,8 @@ namespace Epoch
 			else if (!mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") >= 2))
 			{
 				//disable pointy bits
-				((MeshComponent*)currentLevel->GetRightController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
-				((MeshComponent*)currentLevel->GetLeftController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
+				((MeshComponent*)currentLevel->GetRightController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(true);
+				((MeshComponent*)currentLevel->GetLeftController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(true);
 
 				// Stop time
 				if (Settings::GetInstance().GetInt("tutStep") == 2)//Paused time (tut 1)
@@ -184,6 +184,10 @@ namespace Epoch
 			// Accept timeline position
 			if (mPauseTime)
 			{
+				//disable pointy bits on controller
+				((MeshComponent*)currentLevel->GetRightController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
+				((MeshComponent*)currentLevel->GetLeftController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
+
 				((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 3))->CallEvent(Emitter::ePlay);
 				if (Settings::GetInstance().GetInt("tutStep") >= 4)
 				{
