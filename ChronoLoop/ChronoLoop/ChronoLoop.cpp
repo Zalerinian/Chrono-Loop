@@ -495,7 +495,8 @@ void Update() {
 			if (VREnabled || renderDelta >= RENDER_INTERVAL) {
 				Renderer::Instance()->Render(renderDelta); 
 				renderDelta = 0;
-			} else {
+			} 
+			else {
 				renderDelta += deltaTime;
 			}
 			while (fixedTime >= FIXED_UPDATE_INTERVAL) {

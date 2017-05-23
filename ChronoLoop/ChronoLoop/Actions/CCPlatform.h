@@ -11,7 +11,7 @@ namespace Epoch {
 		Interpolator<matrix4>* playerInterp;
 		matrix4 end, PEnd;
 		CubeCollider* collider;
-		BaseObject* invis;
+		BaseObject* invis = nullptr;
 		vec4f startpos = vec4f();
 
 		virtual void Start() 
@@ -37,7 +37,7 @@ namespace Epoch {
 			} 
 			else if (((Component*)&_other)->GetBaseObject()->GetName() == "EndBound") 
 			{
-				
+				//Yeah
 			}
 			else
 			{
