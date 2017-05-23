@@ -326,7 +326,8 @@ namespace Epoch
 						scaleM.second = vec4f(0, .15f, 0, 0);
 						scaleM.third = vec4f(0, 0, .15f, 0);
 						scaleM.fourth = vec4f(0, 0, 0, 1);
-						m = mat * scaleM;
+						r = matrix4::CreateXRotation(ang);
+						m = mat * scaleM * r;
 						m.fourth = vec4f(mArc[mArc.size() == 1 ? 0 : (mArc.size() / 2 - 1)]) * mat;
 						mMidMesh->GetTransform().SetMatrix(m);
 
