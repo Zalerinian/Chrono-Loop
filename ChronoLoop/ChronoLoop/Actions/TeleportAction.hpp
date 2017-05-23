@@ -30,7 +30,7 @@ namespace Epoch
 		bool mCanTeleport = false, mInitial = false;
 		std::vector<vec3f> mArc;
 		vec3f mVelocity, mAcceleration;
-		BaseObject* mTPLoc, *mCSLoc, *mMSLoc;
+		BaseObject* mTPLoc, *mCSLoc, *mMSLoc[5];
 		MeshComponent* mTPMesh, *mCSMesh, *mMidMesh[5];
 		float ang = 0.05f;
 		ParticleEmitter* mTPParticles;
@@ -297,7 +297,8 @@ namespace Epoch
 
 			mTPLoc = new BaseObject("TeleportSpot");
 			mCSLoc = new BaseObject("ArcStart");
-			mMSLoc = new BaseObject("ArcMid");
+			for (int i = 0; i < 5; i++)
+				mMSLoc[i] = new BaseObject("ArcMid" + i);
 
 			mCSMesh = new MeshComponent("../Resources/ControllerTP.obj");
 			mCSMesh->AddTexture("../Resources/Marker.png", TextureType::eTEX_DIFFUSE);
@@ -307,7 +308,7 @@ namespace Epoch
 			{
 				mMidMesh[i] = new MeshComponent("../Resources/ArcMarker.obj");
 				mMidMesh[i]->AddTexture("../Resources/Marker.png", TextureType::eTEX_DIFFUSE);
-				mMSLoc->AddComponent(mMidMesh[i]);
+				mMSLoc[i]->AddComponent(mMidMesh[i]);
 				mMidMesh[i]->SetAlpha(.45);
 			}
 			mTPMesh = new MeshComponent("../Resources/TeleportMarker.obj");
@@ -340,7 +341,8 @@ namespace Epoch
 
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mTPLoc);
 			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mCSLoc);
-			LevelManager::GetInstance().GetCurrentLevel()->AddObject(mMSLoc);
+			for (int i = 0; i < 5; i++)
+				LevelManager::GetInstance().GetCurrentLevel()->AddObject(mMSLoc[i]);
 
 			mTPMesh->SetVisible(false);
 			mCSMesh->SetVisible(false);
