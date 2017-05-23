@@ -15,8 +15,6 @@
 #include <bitset>
 #include "FrameQuery.h"
 
-#define num_lights 3
-
 namespace Epoch {
 
 	class Renderer {
@@ -26,8 +24,6 @@ namespace Epoch {
 		} mVPLeftData, mVPRightData;
 
 		static Renderer* sInstance;
-		//TODO: Light buffers
-		Light * mLData[num_lights];
 
 		std::bitset<32> mEnabledFeatures;
 
@@ -203,7 +199,5 @@ namespace Epoch {
 		inline HWND GetWindow() { return mWindow; }
 		inline RenderShape* GetSceneQuad() { return mScenePPQuad; }
 		inline std::mutex& GetRendererLock() { return mRendererLock; }
-		void SetLight(Light* _light, int _i);
-		inline void ClearLights() { for (int x = 0; x < 3; ++x) { delete mLData[x]; mLData[x] = nullptr; } }
 	};
 }

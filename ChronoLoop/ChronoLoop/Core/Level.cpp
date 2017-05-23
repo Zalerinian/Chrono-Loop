@@ -21,7 +21,6 @@
 
 #include "../Actions/CCEnterLevel5.h"
 
-#include "../Actions/CCLoadTutorial.h"
 #include "../Actions/MainMenuBT.h"
 #include "../Actions/CCLoadHub.h"
 #include "../Actions/CCBoxSpin.h"

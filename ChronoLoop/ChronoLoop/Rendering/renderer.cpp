@@ -115,19 +115,13 @@ namespace Epoch {
 	}
 
 	void Renderer::UpdateLBuffers() {
-		Light buffs[] = { (*mLData[0]), (*mLData[1]), (*mLData[2]) };
-		D3D11_MAPPED_SUBRESOURCE map;
-		memset(&map, 0, sizeof(map));
-		HRESULT MHR = mContext->Map(mLBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-		memcpy(map.pData, buffs, sizeof(Light) * 3);
-		mContext->Unmap(mLBuffer.Get(), 0);
+
 	}
 	Renderer::Renderer() {
-		memset(mLData, 0, sizeof(mLData));
+		
 	}
 
 	Renderer::Renderer::~Renderer() {
-		ClearLights();
 		if (mScenePPQuad) {
 			delete mScenePPQuad;
 		}
@@ -1566,13 +1560,6 @@ namespace Epoch {
 		AttachPrimaryRTVs();
 		mCurrentContext.Apply(); // Reapply the current pipeline
 		return true;
-	}
-
-	void Renderer::SetLight(Light * _light, int _i) {
-		if (mLData[_i] != nullptr) {
-			delete mLData[_i];
-		}
-		mLData[_i] = _light;
 	}
 
 

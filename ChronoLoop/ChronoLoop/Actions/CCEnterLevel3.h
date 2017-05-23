@@ -54,7 +54,6 @@ namespace Epoch
 				Settings::GetInstance().SetBool("LevelIsLoading", true);
 				Level* next = new Level;
 				next->BinaryLoadLevel("../Resources/Level3.elf");
-				Renderer::Instance()->ClearLights();
 				// Todo: Un-hardcode this
 				// use a setting string for next level path?
 				//LM::LevelStatus status = LevelManager::GetInstance().LoadLevelAsync("../Resources/Level1_2_6.xml", &next);
@@ -417,30 +416,6 @@ namespace Epoch
 					next->AddObject(teleportHelp);
 					next->AddObject(clonePlus);
 					
-
-					Light* l1 = new Light();
-					l1->Type = 4;
-					l1->Color = vec3f(1, 1, 1);
-					l1->ConeDirection = vec3f(0, -1, 0);
-					l1->Position = vec3f(0.07529334f, 4, 8.11148f);
-					l1->ConeRatio = .9f;
-
-					Light* l2 = new Light();
-					l2->Type = 2;
-					l2->Position = vec3f(0, 4, 0);
-					l2->Color = vec3f(.5f, .5f, 1);
-
-					Light* l3 = new Light();
-					l3->Type = 4;
-					l3->Color = vec3f(0, 0, 1);
-					l3->ConeDirection = vec3f(0, -1, 0);
-					l3->Position = vec3f(-9.8f, 5, 5);
-					l3->ConeRatio = .8f;
-
-					Renderer::Instance()->SetLight(l1, 0);
-					Renderer::Instance()->SetLight(l2, 1);
-					Renderer::Instance()->SetLight(l3, 2);
-
 					SystemLogger::Debug() << "Loading complete" << std::endl;
 					Physics::Instance()->PhysicsLock.unlock();
 					Settings::GetInstance().SetBool("LevelIsLoading", false);
