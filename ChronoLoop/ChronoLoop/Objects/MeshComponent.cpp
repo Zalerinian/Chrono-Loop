@@ -92,9 +92,13 @@ namespace Epoch {
 	}
 
 	void MeshComponent::UpdateBuffer(ConstantBufferType _t, unsigned char _index) {
-		if(GetTopmost()) {
+		if (GetIsLight()) {
+			Renderer::Instance()->UpdateLightNodeBuffer(*mShape, _t, _index);
+		} else if (GetInMotion()) {
+			Renderer::Instance()->UpdateMotionNodeBuffer(*mShape, _t, _index);
+		} else if (GetTopmost()) {
 			Renderer::Instance()->UpdateTopmostNodeBuffer(*mShape, _t, _index);
-		} else if (mBlended) {
+		} else if (GetBlended()) {
 			Renderer::Instance()->UpdateTransparentNodeBuffer(*mShape, _t, _index);
 		} else {
 			Renderer::Instance()->UpdateOpaqueNodeBuffer(*mShape, _t, _index);

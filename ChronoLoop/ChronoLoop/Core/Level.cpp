@@ -739,6 +739,51 @@ namespace Epoch {
 						}
 					}
 						break;
+					case 10:
+					{
+						// Light component, a glorified colored mesh component.
+						INT32 pathLength = 0;
+						std::string mesh;
+
+						struct {
+							union {
+								struct {
+									unsigned char b, g, r, a;
+								};
+								int color;
+							};
+						} argbColor;
+
+						float transparency = 1.0;
+						if (version >= 2) {
+							file.read((char*)&transparency, sizeof(float));
+						}
+
+						unsigned char waste = 0;
+						// Shaders - All stored as 1 byte.	
+						if (version >= 3) {
+							file.read((char*)&waste, 1);
+							file.read((char*)&waste, 1);
+							file.read((char*)&waste, 1);
+						}
+
+						file.read((char *)&pathLength, sizeof(INT32));
+						char* temp = new char[pathLength];
+						file.read(temp, pathLength);
+						mesh = temp;
+						delete[] temp;
+						file.read((char *)&argbColor.color, sizeof(INT32));
+						if (obj) {
+							std::string path = "../Resources/" + mesh;
+							vec4f lightProps(argbColor.r / 255.f * transparency, argbColor.g / 255.f * transparency, argbColor.b / 255.f * transparency, 1.0f);
+							MeshComponent *light = new MeshComponent(path.c_str());
+							// Pixel shader for lights is hard set in the renderer.
+							light->SetData(eCB_PIXEL, eBufferDataType_Light, ePB_REGISTER1, &lightProps);
+							light->SetAsLight(true);
+							obj->AddComponent(light);
+						}
+					}
+						break;
 					default:
 						break;
 					}

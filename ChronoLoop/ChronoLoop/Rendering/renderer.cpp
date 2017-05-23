@@ -981,6 +981,14 @@ namespace Epoch {
 
 
 	void Renderer::RenderScreenQuad() {
+		{
+			vec4i SimulatedIID(0, 0, 0, 0);
+			D3D11_MAPPED_SUBRESOURCE map;
+			HRESULT MHR = mContext->Map(mSimInstanceBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+			memcpy(map.pData, &SimulatedIID, sizeof(vec4i));
+			mContext->Unmap(mSimInstanceBuffer.Get(), 0);
+		}
+
 		// Blur the bloom texture so that it actually bleeds on the screen
 		if (mEnabledFeatures[eRendererFeature_SuperGlow]) {
 			BlurTextures(mSuperGlowTexture.GetAddressOf(), 1, 2.0f, 0.4f);
@@ -1107,75 +1115,59 @@ namespace Epoch {
 			(*it)->mShape.mContext.mTextures[2] = mNormalSRV;
 			(*it)->mShape.mContext.mTextures[3] = mSpecularSRV;
 
-			for (unsigned int passIndex = 0; passIndex < 3; ++passIndex) {
-				if (passIndex == 0) {
-					mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 0, 0);
-					Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_CCW);
-					Settings::GetInstance().SetInt("PixelShaderOverride", ePS_NONE);
-					mContext->OMSetDepthStencilState(mLSStencilBack.Get(), 1);
-				} else if (passIndex == 1) {
-					//Settings::GetInstance().SetInt("PixelShaderOverride", ePS_MAX);
-					Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_FILLED);
-					mContext->OMSetDepthStencilState(mLSStencilFront.Get(), 0);
-				} else {
-					Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_MAX);
-					Settings::GetInstance().SetInt("PixelShaderOverride", ePS_MAX);
-					RasterizerStateManager::Instance()->ApplyState(eRS_FILLED);
-					ShaderManager::Instance()->ApplyVShader(eVS_NDC);
-					ShaderManager::Instance()->ApplyGShader(eGS_PosNormTex_NDC);
-					ShaderManager::Instance()->ApplyPShader(ePS_LIGHTING);
-					mCurrentContext.mVertexShaderFormat = eVS_NDC;
-					mCurrentContext.mGeoShaderFormat = eGS_PosNormTex_NDC;
-					mCurrentContext.mPixelShaderFormat = ePS_LIGHTING;
-
-					mContext->OMSetDepthStencilState(mLSStencilRender.Get(), 0);
-					ID3D11ShaderResourceView *Deferred[] = { mAlbedoSRV.Get(), mPositionSRV.Get(), mNormalSRV.Get(), mSpecularSRV.Get() };
-					mContext->PSSetShaderResources(0, 4, Deferred);
-					mDeferredCombiner->Render(1);
-					// Terminate the final loop early, because we don't want to render each volume twice. We render them once to get the pixels
-					// the pixels that the light applies to (it would fail drawing because the face is behind an object), and then we use a simple
-					// quad to apply the actual light.
-					continue; 
-				}
-
-
-#if ENABLE_INSTANCING
-				unsigned int offset = 0;
-				positions.reserve((positions.size() / 256 + 1) * 256);
-				while (positions.size() - offset <= positions.size()) {
-					(*it)->mShape.GetContext().Apply(mCurrentContext);
-					mCurrentContext.SimpleClone((*it)->mShape.GetContext());
-
-					D3D11_MAPPED_SUBRESOURCE map;
-					HRESULT MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-					memcpy(map.pData, positions.data() + offset, sizeof(matrix4) * min(positions.size() - offset, 256));
-					mContext->Unmap(mPositionBuffer.Get(), 0);
-					//mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
-
-					(*it)->mShape.Render((UINT)positions.size() - offset);
-					offset += 256;
-				}
-#else
+			vec4i SimulatedIID(0, 0, 0, 0);
+			for (unsigned int i = 0; i < positions.size(); ++i) {
 				(*it)->mShape.GetContext().Apply(mCurrentContext);
 				mCurrentContext.SimpleClone((*it)->mShape.GetContext());
-				vec4i SimulatedIID(0, 0, 0, 0);
-				for (unsigned int i = 0; i < positions.size(); ++i) {
-					SimulatedIID.x = i;
+				for (unsigned int passIndex = 0; passIndex < 3; ++passIndex) {
+					if (passIndex == 0) {
+						mContext->ClearDepthStencilView(mDSView.Get(), D3D11_CLEAR_FLAG::D3D11_CLEAR_STENCIL, 0, 0);
+						RasterizerStateManager::Instance()->ApplyState(eRS_CCW);
+						ShaderManager::Instance()->ApplyPShader(ePS_NONE);
+						mContext->OMSetDepthStencilState(mLSStencilBack.Get(), 1);
+					} else if (passIndex == 1) {
+						RasterizerStateManager::Instance()->ApplyState(eRS_FILLED);
+						ShaderManager::Instance()->ApplyPShader(ePS_NONE);
+						mContext->OMSetDepthStencilState(mLSStencilFront.Get(), 0);
+					} else {
+						RasterizerStateManager::Instance()->ApplyState(eRS_FILLED);
+						ShaderManager::Instance()->ApplyPShader(ePS_LIGHTING);
+						mContext->OMSetDepthStencilState(mLSStencilRender.Get(), 0);
+						(*it)->mShape.mContext.Apply(mCurrentContext);
+						ShaderManager::Instance()->ApplyVShader(eVS_NDC);
+						ShaderManager::Instance()->ApplyGShader(eGS_PosNormTex_NDC);
+						ShaderManager::Instance()->ApplyPShader(ePS_LIGHTING);
+						mCurrentContext.mVertexShaderFormat = eVS_NDC;
+						mCurrentContext.mGeoShaderFormat = eGS_PosNormTex_NDC;
+						mCurrentContext.mPixelShaderFormat = ePS_LIGHTING;
 
-					D3D11_MAPPED_SUBRESOURCE map;
-					HRESULT MHR = mContext->Map(mSimInstanceBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-					memcpy(map.pData, &SimulatedIID, sizeof(vec4i));
-					mContext->Unmap(mSimInstanceBuffer.Get(), 0);
+						ID3D11ShaderResourceView *Deferred[] = { mAlbedoSRV.Get(), mPositionSRV.Get(), mNormalSRV.Get(), mSpecularSRV.Get() };
+						mContext->PSSetShaderResources(0, 4, Deferred);
+						mDeferredCombiner->Render(1);
+						// Terminate the final loop early, because we don't want to render each volume twice. We render them once to get the pixels
+						// the pixels that the light applies to (it would fail drawing because the face is behind an object), and then we use a simple
+						// quad to apply the actual light.
+						continue; 
+					}
+					
+					if (passIndex == 0) {
 
-					//mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimInstanceID, 0, 0);
+						SimulatedIID.x = i;
 
-					MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-					memcpy(map.pData, &positions[i], sizeof(matrix4));
-					mContext->Unmap(mPositionBuffer.Get(), 0);
+						D3D11_MAPPED_SUBRESOURCE map;
+						HRESULT MHR = mContext->Map(mSimInstanceBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+						memcpy(map.pData, &SimulatedIID, sizeof(vec4i));
+						mContext->Unmap(mSimInstanceBuffer.Get(), 0);
+
+						//mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimInstanceID, 0, 0);
+
+						MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+						memcpy(map.pData, &positions[i], sizeof(matrix4));
+						mContext->Unmap(mPositionBuffer.Get(), 0);
+					}
 					//mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
 					(*it)->mShape.Render(1); // Without instancing, the instance count doesn't matter, but we're only drawing one :)
 				}
-#endif
 			}
 		}
 		Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_MAX);
@@ -1378,6 +1370,27 @@ namespace Epoch {
 		RenderList* list = mMotionSet.GetListForShape(_node);
 		if (list == nullptr) {
 			SystemLogger::Error() << "Could not update motion node: The given shape had no associated render list." << std::endl;
+			return;
+		}
+		switch (_t) {
+			case eCB_VERTEX:
+				list->UpdateBuffer(_t, _node.GetContext().mVertexCBuffers[_index], _index, _node.mVBIndex);
+				break;
+			case eCB_PIXEL:
+				list->UpdateBuffer(_t, _node.GetContext().mPixelCBuffers[_index], _index, _node.mPBIndex);
+				break;
+			case eCB_GEO:
+				list->UpdateBuffer(_t, _node.GetContext().mGeometryCBuffers[_index], _index, _node.mGBIndex);
+				break;
+			default:
+				break;
+		}
+	}
+
+	void Renderer::UpdateLightNodeBuffer(RenderShape & _node, ConstantBufferType _t, unsigned int _index) {
+		RenderList* list = mLightSet.GetListForShape(_node);
+		if (list == nullptr) {
+			SystemLogger::Error() << "Could not update light node: The given shape had no associated render list." << std::endl;
 			return;
 		}
 		switch (_t) {

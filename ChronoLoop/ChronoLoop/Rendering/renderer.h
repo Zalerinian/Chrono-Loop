@@ -186,6 +186,7 @@ namespace Epoch {
 		void UpdateTransparentNodeBuffer(RenderShape& _node, ConstantBufferType _t, unsigned int _index);
 		void UpdateTopmostNodeBuffer(RenderShape& _node, ConstantBufferType _t, unsigned int _index);
 		void UpdateMotionNodeBuffer(RenderShape& _node, ConstantBufferType _t, unsigned int _index);
+		void UpdateLightNodeBuffer(RenderShape& _node, ConstantBufferType _t, unsigned int _index);
 		void Render(float _deltaTime);
 
 		void ClearRenderSet();

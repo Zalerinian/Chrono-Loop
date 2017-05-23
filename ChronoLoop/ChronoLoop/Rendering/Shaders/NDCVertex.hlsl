@@ -1,6 +1,12 @@
 #include "VertexLayouts.hlsli"
 #include "../RenderShaderDefines.hlsli"
 
+cbuffer InstanceID : register(b1)
+{
+    uint IID;
+    uint3 padding;
+}
+
 struct PSI {
     float4 position : SV_POSITION;
     float4 normal : NORMAL0;
@@ -18,6 +24,6 @@ PSI main(VERTEX_POSNORMTANTEX input) {
 	output.texCoord = input.texCoord;
 	output.wpos = input.position;
     output.tangent = input.tangent;
-	output.IID = 0;
+	output.IID = IID;
 	return output;
 }
