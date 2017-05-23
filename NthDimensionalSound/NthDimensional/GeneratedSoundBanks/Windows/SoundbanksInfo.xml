@@ -146,6 +146,9 @@
 				<Event Id="1990929627" Name="Resume_Level4Ambient" ObjectPath="\Events\Default Work Unit\Resume_Level4Ambient"/>
 				<Event Id="4055718068" Name="Resume_Level5Ambient" ObjectPath="\Events\Default Work Unit\Resume_Level5Ambient"/>
 				<Event Id="1208877918" Name="Resume_Orbit_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Resume_Orbit_LOOP"/>
+				<Event Id="2033744732" Name="SFX_ForceField_Box" ObjectPath="\Events\Default Work Unit\SFX_ForceField_Box"/>
+				<Event Id="3535201747" Name="SFX_ForceField_Close" ObjectPath="\Events\Default Work Unit\SFX_ForceField_Close"/>
+				<Event Id="3512217189" Name="SFX_ForceField_Open" ObjectPath="\Events\Default Work Unit\SFX_ForceField_Open"/>
 				<Event Id="715006247" Name="SFX_MetallicSound" ObjectPath="\Events\Default Work Unit\SFX_EVENTS\SFX_MetallicSound"/>
 				<Event Id="3433651236" Name="SFX_ResetLevel" ObjectPath="\Events\Default Work Unit\SFX_ResetLevel"/>
 				<Event Id="2745027494" Name="Stop_A_Timelapse" ObjectPath="\Events\Default Work Unit\Stop_A_Timelapse"/>
@@ -157,6 +160,10 @@
 				<Event Id="4280461585" Name="Stop_Orbit_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Stop_Orbit_LOOP"/>
 			</IncludedEvents>
 			<IncludedMemoryFiles>
+				<File Id="48431970" Language="SFX">
+					<ShortName>ForceField_Close.wav</ShortName>
+					<Path>SFX\ForceField_Close_3AE5877C.wem</Path>
+				</File>
 				<File Id="62361149" Language="SFX">
 					<ShortName>ResetLevel.wav</ShortName>
 					<Path>SFX\ResetLevel_3AE5877C.wem</Path>
@@ -173,6 +180,10 @@
 					<ShortName>Metallic Noise 004.wav</ShortName>
 					<Path>SFX\Metallic Noise 004_3AE5877C.wem</Path>
 				</File>
+				<File Id="663690696" Language="SFX">
+					<ShortName>ForceField_Open.wav</ShortName>
+					<Path>SFX\ForceField_Open_3AE5877C.wem</Path>
+				</File>
 				<File Id="664880918" Language="SFX">
 					<ShortName>Music-SFX\Level5Ambient.wav</ShortName>
 					<Path>SFX\Music-SFX\Level5Ambient_3BDAD486.wem</Path>
@@ -180,6 +191,10 @@
 				<File Id="753352436" Language="SFX">
 					<ShortName>Orbit LOOP.wav</ShortName>
 					<Path>SFX\Orbit LOOP_3BDAD486.wem</Path>
+				</File>
+				<File Id="825634501" Language="SFX">
+					<ShortName>ForceField_Box.wav</ShortName>
+					<Path>SFX\ForceField_Box_3AE5877C.wem</Path>
 				</File>
 				<File Id="859612369" Language="SFX">
 					<ShortName>A_Timelapse.wav</ShortName>
