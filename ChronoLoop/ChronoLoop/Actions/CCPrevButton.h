@@ -82,7 +82,7 @@ namespace Epoch
 		{
 			if (mBooped == false && mPB->GetCurProgress() < mPB->GetFinalProgress())
 				mPB->SetCurProgress(mPB->GetCurProgress() + 2);
-			if (Settings::GetInstance().GetInt("mmLevel") > 1 && mPB->GetCurProgress() >= mPB->GetFinalProgress() && !mBooped)
+			if (Settings::GetInstance().GetInt("mmLevel") > 1 && mPB->GetCurProgress() >= mPB->GetFinalProgress() && !mBooped && !Settings::GetInstance().GetBool("mmChamberMoving"))
 			{
 				matrix4 mat = mChamberObject->GetTransform().GetMatrix();
 				mChamberInterp->Prepare(1, mat, mat * matrix4::CreateTranslation(0, -.05f, 0), mChamberObject->GetTransform().GetMatrix());

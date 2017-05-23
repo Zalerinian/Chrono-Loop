@@ -12,7 +12,7 @@ namespace Epoch
 		Level* cLevel;
 		matrix4 initialMatrix;
 		float mScaleTipper;
-		bool canBoxShrink,isBoxShrinking;
+		bool canBoxShrink,isBoxShrinking, mSoundOnce = false;
 		BoxSnapToControllerAction* leftBS, *rightBS;
 		virtual void Start()
 		{
@@ -49,6 +49,16 @@ namespace Epoch
 			if(_other.GetBaseObject()->GetName() == "Box" && _col.mColliderType != Collider::eCOLLIDER_Controller)
 			{
 				canBoxShrink = true;
+
+				if (!mSoundOnce)
+				{
+					if (_col.GetBaseObject()->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 0)
+					{
+						if (dynamic_cast<AudioEmitter*>(_col.GetBaseObject()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0)))
+							((AudioEmitter*)_col.GetBaseObject()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0))->CallEvent(Emitter::ePlay);
+					}
+					mSoundOnce = true;
+				}
 			}
 		}
 		virtual void Update()
@@ -66,6 +76,7 @@ namespace Epoch
 					mScaleTipper = 1.0f;
 					leftBS->mHeld = false;
 					rightBS->mHeld = false;
+					mSoundOnce = false;
 					mBox->GetTransform().SetMatrix(initialMatrix);
 					vec3f pos = vec3f(*mBox->GetTransform().GetPosition());
 					((CubeCollider*)mBox->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(pos);

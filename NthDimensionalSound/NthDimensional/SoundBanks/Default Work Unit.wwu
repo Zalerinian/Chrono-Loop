@@ -31,10 +31,13 @@
 						<ObjectRef Name="Pause_Hangar_Escape_LOOP" ID="{940E30B3-98E6-40C9-8262-FF9693713E99}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Play_Hangar_Escape_LOOP" ID="{2ADCBD75-809F-40DF-8683-BDAD0540C141}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Stop_Orbit_LOOP" ID="{BC1FC5A0-652F-40E2-97A2-DFFD2DABE728}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="SFX_ForceField_Open" ID="{FE287C0A-61C4-414A-B796-854435784957}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Pause_Orbit_LOOP" ID="{8E5A2E22-050B-4188-A443-F02A245C6101}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Play_Level4Ambient" ID="{028D1C2C-0357-41B0-81D8-C7E7B61332EF}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Play_Level5Ambient" ID="{91980A15-11BD-4262-8169-2AEE3CEA77E4}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Stop_A_Timelapse" ID="{97384A21-8C7C-42C1-AD5F-377F023006DE}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="SFX_ForceField_Box" ID="{DF883C42-A1A3-436C-BCBD-9C7F6D165A2E}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="SFX_ForceField_Close" ID="{557A5832-57D1-43A3-A51B-78F4170FFB5B}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Resume_Level4Ambient" ID="{8D191259-7959-4492-8662-2F1AEF5061C5}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Resume_Level5Ambient" ID="{371EADAF-BA39-44A4-B965-A4C1DEE160A4}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Play_A_Timelapse" ID="{AA919F88-2686-44AE-98EA-447F7B231B7C}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
@@ -89,6 +92,7 @@
 						<ObjectRef Name="Pause_Hub1" ID="{E9876325-2909-4BB9-807C-271385858DE0}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="SFX_TimeResume" ID="{170D6878-1F4D-4BDB-8FD4-287E37268477}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="SFX_PlayerDeath" ID="{CBF77A25-2738-4C42-9A29-510A3FCD7305}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="SFX_BoxShrinkLevel5" ID="{057E05B3-9610-4C56-937F-2C681F6F690A}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Pause_Level2Ambient" ID="{5A174E4C-E850-4D13-81B5-E03BF01DCB13}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="SFX_BoxWallCollideLevel3" ID="{86CA579E-A161-4D35-A677-7A1405CBD377}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Stop_Hub0" ID="{311CBF3A-0254-4D72-9F4E-D122B16A9F72}" WorkUnitID="{17D1BEC9-5EBF-4917-A293-0E80C24EEB6A}" Filter="7" Origin="Manual"/>
