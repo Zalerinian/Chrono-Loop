@@ -123,10 +123,6 @@ namespace Epoch
 			_arc.clear();
 			matrix4 cm = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
 
-			cm.first = vec4f();
-			cm.second = vec4f();
-			cm.third = vec4f();
-
 			vec3f vel = vec3f(0, 0, 10);
 			float t = 0;
 			vec3f lastpos = ParabolicCurve(vec3f(), vel, _a, t);
@@ -291,48 +287,45 @@ namespace Epoch
 
 			}
 
+			mCanTeleport = CalculateCurve(mat.Position, mVelocity, mAcceleration, nullptr, nullptr, mArc);
+
+			if (mCanTeleport)
+			{
+				matrix4 scaleM;
+				scaleM.first = vec4f(.05f, 0, 0, 0);
+				scaleM.second = vec4f(0, .05f, 0, 0);
+				scaleM.third = vec4f(0, 0, .05f, 0);
+				scaleM.fourth = vec4f(0, 0, 0, 1);
+
+				matrix4 r = matrix4::CreateYRotation(ang);
+
+				matrix4 m;
+				m = mTPMesh->GetTransform().GetMatrix() * r;
+				m.fourth = vec4f(mArc[mArc.size() - 1]) * mat;
+				mTPMesh->GetTransform().SetMatrix(m);
+
+				m = mat * scaleM;
+				m.fourth = mat.fourth;
+				mCSMesh->GetTransform().SetMatrix(m);
+
+				scaleM.first = vec4f(.15f, 0, 0, 0);
+				scaleM.second = vec4f(0, .15f, 0, 0);
+				scaleM.third = vec4f(0, 0, .15f, 0);
+				scaleM.fourth = vec4f(0, 0, 0, 1);
+				r = matrix4::CreateXRotation(ang);
+				m = mat * scaleM * r;
+				m.fourth = vec4f(mArc[mArc.size() == 1 ? 0 : (mArc.size() / 2 - 1)]) * mat;
+				mMidMesh->GetTransform().SetMatrix(m);
+
+				mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
+			}
 
 			if (!interp->GetActive() && !Settings::GetInstance().GetBool("CantTeleport"))
 			{
 				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && mCanTeleport)
 				{
 
-					mCanTeleport = CalculateCurve(mat.Position, mVelocity, mAcceleration, nullptr, nullptr, mArc);
-
-					if (mCanTeleport)
-					{
-						mat.first = vec4f();
-						mat.second = vec4f();
-						mat.third = vec4f();
-
-						matrix4 scaleM;
-						scaleM.first = vec4f(.05f, 0, 0, 0);
-						scaleM.second = vec4f(0, .05f, 0, 0);
-						scaleM.third = vec4f(0, 0, .05f, 0);
-						scaleM.fourth = vec4f(0, 0, 0, 1);
-
-						matrix4 r = matrix4::CreateYRotation(ang);
-
-						matrix4 m;
-						m = mTPMesh->GetTransform().GetMatrix() * r;
-						m.fourth = vec4f(mArc[mArc.size() - 1]) * mat;
-						mTPMesh->GetTransform().SetMatrix(m);
-
-						m = mat * scaleM;
-						m.fourth = mat.fourth;
-						mCSMesh->GetTransform().SetMatrix(m);
-
-						scaleM.first = vec4f(.15f, 0, 0, 0);
-						scaleM.second = vec4f(0, .15f, 0, 0);
-						scaleM.third = vec4f(0, 0, .15f, 0);
-						scaleM.fourth = vec4f(0, 0, 0, 1);
-						r = matrix4::CreateXRotation(ang);
-						m = mat * scaleM * r;
-						m.fourth = vec4f(mArc[mArc.size() == 1 ? 0 : (mArc.size() / 2 - 1)]) * mat;
-						mMidMesh->GetTransform().SetMatrix(m);
-
-						mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
-					}
+					
 					mTPMesh->SetVisible(true);
 					mCSMesh->SetVisible(true);
 					mMidMesh->SetVisible(true);
