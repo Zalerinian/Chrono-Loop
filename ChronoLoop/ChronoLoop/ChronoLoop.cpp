@@ -172,6 +172,7 @@ void Update() {
 	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 	MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 	rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+	rightRaycaster->SetVisible(false);
 	mc->AddTexture("../Resources/Controller_Diffuse.png", eTEX_DIFFUSE);
 	mc->AddTexture("../Resources/Controller_Normal", eTEX_NORMAL);
 	mc->AddTexture("../Resources/Controller_Specular", eTEX_SPECULAR);
@@ -185,8 +186,9 @@ void Update() {
 
 	BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity); //new BaseObject("Controller2", identity);
 	MeshComponent *mc2 = new MeshComponent("../Resources/Player_hand.obj");
-	//MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
-	//leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+	MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
+	leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+	leftRaycaster->SetVisible(false);
 	mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
 	mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
 	mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);

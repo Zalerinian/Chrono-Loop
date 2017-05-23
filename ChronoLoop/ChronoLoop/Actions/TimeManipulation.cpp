@@ -39,13 +39,15 @@ namespace Epoch
 
 		if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressDown(vr::EVRButtonId::k_EButton_Grip) && !Settings::GetInstance().GetBool("PauseMenuUp") && !Settings::GetInstance().GetBool("CantPauseTime"))
 		{
-			Level* cLevel = LevelManager::GetInstance().GetCurrentLevel();
-
+		
 
 			if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 3)) //created clone (tut 2)
 			{
+				//enable pointy bits on controller
+				((MeshComponent*)currentLevel->GetRightController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
+				((MeshComponent*)currentLevel->GetLeftController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
 				// Cancel Time
-				((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 3))->CallEvent(Emitter::ePlay);
+				((SFXEmitter*)currentLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 3))->CallEvent(Emitter::ePlay);
 				if (Settings::GetInstance().GetInt("tutStep") >= 4)//accepted time (
 				{
 					if (Settings::GetInstance().GetBool("Level1Tutorial"))
@@ -75,9 +77,9 @@ namespace Epoch
 				Settings::GetInstance().SetBool("IsTimePaused", false);
 				TimeManager::Instance()->RewindTimeline(
 					TimeManager::Instance()->GetCurrentSnapFrame(),
-					cLevel->GetHeadset()->GetUniqueID(),
-					cLevel->GetRightController()->GetUniqueID(),
-					cLevel->GetLeftController()->GetUniqueID());
+					currentLevel->GetHeadset()->GetUniqueID(),
+					currentLevel->GetRightController()->GetUniqueID(),
+					currentLevel->GetLeftController()->GetUniqueID());
 
 				mIsBeingMade = false;
 				TimeManager::Instance()->ShowTimelineColliders(false);
@@ -85,15 +87,18 @@ namespace Epoch
 			}
 			else if (!mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") >= 2))
 			{
-				// Stop time
+				//disable pointy bits
+				((MeshComponent*)currentLevel->GetRightController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(true);
+				((MeshComponent*)currentLevel->GetLeftController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(true);
 
+				// Stop time
 				if (Settings::GetInstance().GetInt("tutStep") == 2)//Paused time (tut 1)
 				{
 					Settings::GetInstance().SetUInt("tut1FirstPause", TimeManager::Instance()->GetCurrentSnapFrame());
 					Settings::GetInstance().SetInt("tutStep", 3);//Rewind (tut 1)
 				}
 
-				((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 2))->CallEvent(Emitter::ePlay);
+				((SFXEmitter*)currentLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 2))->CallEvent(Emitter::ePlay);
 
 				if (Settings::GetInstance().GetInt("CurrentLevel") != 1)
 				{
@@ -115,10 +120,10 @@ namespace Epoch
 
 				VRInputManager::GetInstance().RewindInputTimeline(
 					TimeManager::Instance()->GetCurrentSnapFrame(),
-					cLevel->GetRightController()->GetUniqueID(),
-					cLevel->GetLeftController()->GetUniqueID());
+					currentLevel->GetRightController()->GetUniqueID(),
+					currentLevel->GetLeftController()->GetUniqueID());
 
-				Component* comp = cLevel->GetRightController()->GetComponentIndexed(eCOMPONENT_CODE, 0);
+				Component* comp = currentLevel->GetRightController()->GetComponentIndexed(eCOMPONENT_CODE, 0);
 				if (dynamic_cast<BoxSnapToControllerAction*>(comp))
 				{
 					if(((BoxSnapToControllerAction*)comp)->mPickUp)
@@ -126,7 +131,7 @@ namespace Epoch
 					((BoxSnapToControllerAction*)comp)->mPickUp = nullptr;
 				}
 
-				comp = cLevel->GetLeftController()->GetComponentIndexed(eCOMPONENT_CODE, 0);
+				comp = currentLevel->GetLeftController()->GetComponentIndexed(eCOMPONENT_CODE, 0);
 				if (dynamic_cast<BoxSnapToControllerAction*>(comp))
 				{
 					if (((BoxSnapToControllerAction*)comp)->mPickUp)
@@ -179,6 +184,10 @@ namespace Epoch
 			// Accept timeline position
 			if (mPauseTime)
 			{
+				//disable pointy bits on controller
+				((MeshComponent*)currentLevel->GetRightController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
+				((MeshComponent*)currentLevel->GetLeftController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
+
 				((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 3))->CallEvent(Emitter::ePlay);
 				if (Settings::GetInstance().GetInt("tutStep") >= 4)
 				{

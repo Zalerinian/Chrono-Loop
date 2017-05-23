@@ -7,7 +7,7 @@ namespace Epoch
 	
 	struct CCLevel5Button : public CodeComponent
 	{
-		bool colliding = false, mhitting = false, mCanDoorInterp = false, mDoorDoneInterpolating = false, mFlip = false, mSoundOnce = false;;
+		bool colliding = false, mhitting = false, mCanDoorInterp = false, mDoorDoneInterpolating = false, mFlip = false, mSoundOnce = false;
 		bool tempDoor = false;
 		BaseObject *Block = nullptr, *Exit = nullptr;
 		CubeCollider* blockCube;
@@ -21,7 +21,6 @@ namespace Epoch
 		{
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			Block = cLevel->FindObjectWithName("StartSideOpeningEnergy");
-
 			blockCube = (CubeCollider*)Block->mComponents[eCOMPONENT_COLLIDER][0];
 			blockMesh = (MeshComponent*)Block->mComponents[eCOMPONENT_MESH][0];
 
@@ -35,6 +34,18 @@ namespace Epoch
 				colliding = true;
 
 				ButtonCollider* butCol = (ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
+
+
+				if (!mSoundOnce)
+				{
+					if (Block->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 1)
+					{
+						if (dynamic_cast<AudioEmitter*>(Block->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
+							((AudioEmitter*)Block->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
+					}
+					mSoundOnce = true;
+				}
+
 				if (fabsf(_other.mVelocity * butCol->mPushNormal) < .1f)
 					butCol->mVelocity = vec3f(0, 0, 0);
 				else
@@ -63,6 +74,7 @@ namespace Epoch
 			{
 				if (colliding)
 				{
+					mFlip = true;
 					//SystemLogger::GetLog() << "Colliding" << std::endl;
 					blockCube->Disable();
 					//blockMesh->SetVisible(false);
@@ -77,6 +89,16 @@ namespace Epoch
 				}
 				else
 				{
+					if (mFlip)
+					{
+						if (Block->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 2)
+						{
+							if (dynamic_cast<AudioEmitter*>(Block->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 2)))
+								((AudioEmitter*)Block->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 2))->CallEvent(Emitter::ePlay);
+						}
+						mSoundOnce = false;
+						mFlip = false;
+					}
 					tempDoor = false;
 					blockCube->Enable();
 					//SystemLogger::GetLog() << "Not Colliding" << std::endl;
@@ -87,8 +109,6 @@ namespace Epoch
 					//blockMesh->SetVisible(true);
 					//blockMesh->SetVisible(false);
 					blockMesh->SetVisible(true);
-
-					mSoundOnce = false;
 				}
 			}
 			//colliding = false;

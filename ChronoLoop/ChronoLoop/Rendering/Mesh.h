@@ -36,8 +36,8 @@ namespace Epoch
 		void loadShaders(char *pixel, char* vertex);
 		bool Load(const char *path);
 		bool Load(vr::RenderModel_t *_model);
-		bool Load(std::vector<VertexPosNormTex>&, std::vector<unsigned int>&);
-		void Update(std::vector<VertexPosNormTex>&, std::vector<unsigned int>&);
+		bool Load(std::vector<VertexPosNormTanTex>&, std::vector<unsigned int>&);
+		void Update(std::vector<VertexPosNormTanTex>&, std::vector<unsigned int>&);
 		Triangle *GetTriangles();
 		inline size_t GetNumTriangles() { return mTriangles.size(); };
 		//bool LoadBin(char *path);

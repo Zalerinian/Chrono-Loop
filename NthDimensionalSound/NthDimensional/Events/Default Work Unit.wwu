@@ -1599,6 +1599,50 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="SFX_BoxShrinkLevel5" ID="{057E05B3-9610-4C56-937F-2C681F6F690A}">
+					<ChildrenList>
+						<Action Name="Play" ID="{A8515EDB-2B6C-41DE-8B4D-3D59F5A593AF}" ShortID="96882337" Type="Play" Scope="One" Global="false">
+							<ElementList>
+								<Element ID="{A9811139-A896-49D8-8A25-F35F6B4EF8B4}" Global="false">
+									<ObjectRef Name="BoxShrinkLevel5" ID="{58EEA462-B2DD-4272-B4D3-E95312FD7FF6}" WorkUnitID="{1D0317B3-D19A-41DC-A2E7-CAA9DD27FE60}"/>
+								</Element>
+							</ElementList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="SFX_ForceField_Open" ID="{FE287C0A-61C4-414A-B796-854435784957}">
+					<ChildrenList>
+						<Action Name="Play" ID="{4E6590FA-8E2B-4033-95D5-AE183EA1A2F4}" ShortID="21825411" Type="Play" Scope="One" Global="false">
+							<ElementList>
+								<Element ID="{EC6B76EE-DE86-42A4-A5DD-79012E35B0F9}" Global="false">
+									<ObjectRef Name="ForceField_Open" ID="{16BDBC76-F9F3-4327-BC44-0D2D4A8C2727}" WorkUnitID="{1D0317B3-D19A-41DC-A2E7-CAA9DD27FE60}"/>
+								</Element>
+							</ElementList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="SFX_ForceField_Close" ID="{557A5832-57D1-43A3-A51B-78F4170FFB5B}">
+					<ChildrenList>
+						<Action Name="Play" ID="{18F2A207-A191-4542-A814-E3A2BFD0E615}" ShortID="140585754" Type="Play" Scope="One" Global="false">
+							<ElementList>
+								<Element ID="{A1F931C3-ECE0-4471-B944-3DA00EDF62DE}" Global="false">
+									<ObjectRef Name="ForceField_Close" ID="{C997CE23-D249-4CF1-A052-4BCBEAEE2B85}" WorkUnitID="{1D0317B3-D19A-41DC-A2E7-CAA9DD27FE60}"/>
+								</Element>
+							</ElementList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="SFX_ForceField_Box" ID="{DF883C42-A1A3-436C-BCBD-9C7F6D165A2E}">
+					<ChildrenList>
+						<Action Name="Play" ID="{EC130BD6-BDC7-4E3C-B121-3E10C1D9C244}" ShortID="807554702" Type="Play" Scope="One" Global="false">
+							<ElementList>
+								<Element ID="{ACFA092E-B971-4C5A-A1A6-74473595F04B}" Global="false">
+									<ObjectRef Name="ForceField_Box" ID="{D3188ADC-196F-496D-B6E4-E382229E9E25}" WorkUnitID="{1D0317B3-D19A-41DC-A2E7-CAA9DD27FE60}"/>
+								</Element>
+							</ElementList>
+						</Action>
+					</ChildrenList>
+				</Event>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>

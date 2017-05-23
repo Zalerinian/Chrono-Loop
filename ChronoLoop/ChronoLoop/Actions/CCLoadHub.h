@@ -96,14 +96,13 @@ namespace Epoch
 					mc->AddTexture("../Resources/Controller_Specular", eTEX_SPECULAR);
 					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+					rightRaycaster->SetVisible(false);
 					TeleportAction* rightTele = new TeleportAction(eControllerType_Primary);
 					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
 					RightController->AddComponent(mc);
 					RightController->AddComponent(rightRaycaster);
 					RightController->AddComponent(rightTele);
 					RightController->AddComponent(rightConCol);
-					rightRaycaster->SetVisible(false);
-
 
 					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline); //new BaseObject("Controller2", identity);
 					MeshComponent *mc2 = new MeshComponent("../Resources/Player_hand.obj");
@@ -111,12 +110,13 @@ namespace Epoch
 					mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
 					mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
 					mc2->AddTexture("../Resources/Player_hand_Specular", eTEX_SPECULAR);
-					//MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
-					//leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
+					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+					leftRaycaster->SetVisible(false);
 					TeleportAction* leftTele = new TeleportAction(eControllerType_Secondary);
 					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 					LeftController->AddComponent(leftConCol);
-					//LeftController->AddComponent(leftRaycaster);
+					LeftController->AddComponent(leftRaycaster);
 					LeftController->AddComponent(leftTele);
 					LeftController->AddComponent(mc2);
 

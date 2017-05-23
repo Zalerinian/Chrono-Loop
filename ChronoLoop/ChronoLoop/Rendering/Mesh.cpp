@@ -580,7 +580,7 @@ namespace Epoch
 	}
 
 	template<>
-	bool MeshFormat<VertexPosNormTex>::Load(std::vector<VertexPosNormTex>& _verts, std::vector<unsigned int>& _indices)
+	bool MeshFormat<VertexPosNormTanTex>::Load(std::vector<VertexPosNormTanTex>& _verts, std::vector<unsigned int>& _indices)
 	{
 		mName = "Parabola";
 		mUniqueVerts = _verts;
@@ -609,7 +609,7 @@ namespace Epoch
 	}
 
 	template<>
-	void MeshFormat<VertexPosNormTex>::Update(std::vector<VertexPosNormTex>& _verts, std::vector<unsigned int>& _indices)
+	void MeshFormat<VertexPosNormTanTex>::Update(std::vector<VertexPosNormTanTex>& _verts, std::vector<unsigned int>& _indices)
 	{
 		mUniqueVerts = _verts;
 		mIndicies = _indices;
