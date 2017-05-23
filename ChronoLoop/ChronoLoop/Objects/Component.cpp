@@ -64,6 +64,7 @@ namespace Epoch
 
 	void Emitter::Destroy()
 	{
+		AudioWrapper::GetInstance().StopEmitter(this);
 		AudioWrapper::GetInstance().RemoveEmitter(this);
 	}
 
