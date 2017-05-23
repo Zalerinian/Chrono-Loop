@@ -90,6 +90,7 @@ namespace Hourglass
 			this.mObjectStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.RenderTimer = new System.Windows.Forms.Timer(this.components);
 			this.unparentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.lightComponentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.spHierarchyPanel)).BeginInit();
 			this.spHierarchyPanel.Panel1.SuspendLayout();
@@ -527,9 +528,10 @@ namespace Hourglass
             this.particleEmitterToolStripMenuItem,
             this.codeComponentsToolStripMenuItem,
             this.meshComponentToolStripMenuItem,
-            this.audioComponentToolStripMenuItem});
+            this.audioComponentToolStripMenuItem,
+            this.lightComponentToolStripMenuItem});
 			this.mComponentStrip.Name = "contextMenuStrip1";
-			this.mComponentStrip.Size = new System.Drawing.Size(175, 114);
+			this.mComponentStrip.Size = new System.Drawing.Size(175, 158);
 			// 
 			// toolStripMenuItem1
 			// 
@@ -678,6 +680,14 @@ namespace Hourglass
 			this.unparentToolStripMenuItem.Text = "Unparent";
 			this.unparentToolStripMenuItem.Click += new System.EventHandler(this.unparentToolStripMenuItem_Click);
 			// 
+			// lightComponentToolStripMenuItem
+			// 
+			this.lightComponentToolStripMenuItem.Name = "lightComponentToolStripMenuItem";
+			this.lightComponentToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+			this.lightComponentToolStripMenuItem.Tag = "LMesh";
+			this.lightComponentToolStripMenuItem.Text = "Light Component";
+			this.lightComponentToolStripMenuItem.Click += new System.EventHandler(this.AddComponentHandler);
+			// 
 			// Editor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -773,6 +783,7 @@ namespace Hourglass
 		public System.Windows.Forms.Button btnFocus;
 		private System.Windows.Forms.Timer RenderTimer;
 		private System.Windows.Forms.ToolStripMenuItem unparentToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem lightComponentToolStripMenuItem;
 	}
 }
 

@@ -12,7 +12,7 @@ namespace Hourglass
 		private static readonly Renderer sInstance = new Renderer();
 
 		private List<BaseObject> mRenderSet;
-		//private List<LightComponent> mLightSet;
+		private List<LightComponent> mLightSet;
 		private bool mInitialized = false, mCameraNeedsRebuild = false, /*mRenderGrid = true,*/ mPanelResizing = false;
 		private Device mDevice;
 		private Control mPanel;
@@ -114,6 +114,7 @@ namespace Hourglass
 			RebuildViewMatrix();
 
 			mRenderSet = new List<BaseObject>();
+			mLightSet = new List<LightComponent>();
 			mGrid = new ColoredShape();
 			mGrid.MakeGrid();
 
@@ -168,15 +169,20 @@ namespace Hourglass
 				while(componentIterator.MoveNext())
 				{
 					// Render the shape.
-					if(!(componentIterator.Current is IRenderable) || !((IRenderable)componentIterator.Current).Shape.Valid)
+					if(!(componentIterator.Current is IRenderable) ||
+						!((IRenderable)componentIterator.Current).Shape.Valid)
 					{
 						continue;
 					}
+					IRenderable renderable = componentIterator.Current as IRenderable;
+					if(renderable.RenderStage != 0) {
+						continue;
+					}
 
-					if(((IRenderable)componentIterator.Current).Shape.Type == RenderShape.ShapeType.Textured)
+					if(renderable.Shape.Type == RenderShape.ShapeType.Textured)
 					{
 						mDevice.VertexFormat = CustomVertex.PositionNormalTextured.Format;
-						TexturedShape ts = ((IRenderable)componentIterator.Current).Shape as TexturedShape;
+						TexturedShape ts = renderable.Shape as TexturedShape;
 						if(ts.Textures[(int)TexturedShape.TextureType.Diffuse] != null)
 						{
 							mDevice.SetTexture(0, ts.Textures[(int)TexturedShape.TextureType.Diffuse]);
@@ -194,14 +200,45 @@ namespace Hourglass
 						mDevice.RenderState.AlphaBlendEnable = false;
 						mDevice.RenderState.CullMode = Cull.None;
 					}
-					mDevice.Indices = ((IRenderable)componentIterator.Current).Shape.IndexBuffer;
-					mDevice.SetStreamSource(0, ((IRenderable)componentIterator.Current).Shape.VertexBuffer, 0);
-					mDevice.RenderState.FillMode = ((IRenderable)componentIterator.Current).Shape.FillMode;
-					mDevice.Transform.World = ((IRenderable)componentIterator.Current).Shape.World * objectIterator.Current.GetMatrix();
+					mDevice.Indices = renderable.Shape.IndexBuffer;
+					mDevice.SetStreamSource(0, renderable.Shape.VertexBuffer, 0);
+					mDevice.RenderState.FillMode = renderable.Shape.FillMode;
+					mDevice.Transform.World = renderable.Shape.World * objectIterator.Current.GetMatrix();
 					mDevice.RenderState.CullMode = Cull.Clockwise;
-					mDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, ((IRenderable)componentIterator.Current).Shape.Indices.Length, 0, ((IRenderable)componentIterator.Current).Shape.Indices.Length / 3);
+					mDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, renderable.Shape.Indices.Length, 0, renderable.Shape.Indices.Length / 3);
 				}
 			}
+
+			mDevice.RenderState.SourceBlend = Blend.SourceAlpha;
+			mDevice.RenderState.DestinationBlend = Blend.InvSourceAlpha;
+			mDevice.RenderState.AlphaBlendEnable = true;
+			mDevice.RenderState.AlphaBlendOperation = BlendOperation.Max;
+			mDevice.RenderState.AlphaSourceBlend = Blend.SourceAlpha;
+			mDevice.RenderState.AlphaDestinationBlend = Blend.InvSourceAlpha;
+			mDevice.VertexFormat = CustomVertex.PositionNormalColored.Format;
+			mDevice.SetTexture(0, null);
+			mDevice.RenderState.CullMode = Cull.None;
+			List<LightComponent>.Enumerator lightIter = mLightSet.GetEnumerator();
+			while(lightIter.MoveNext()) {
+				if (!lightIter.Current.Shape.Valid) {
+					continue;
+				}
+				mDevice.RenderState.BlendFactor = System.Drawing.Color.White;
+
+				mDevice.Indices = ((IRenderable)lightIter.Current).Shape.IndexBuffer;
+				mDevice.SetStreamSource(0, ((IRenderable)lightIter.Current).Shape.VertexBuffer, 0);
+				mDevice.RenderState.FillMode = ((IRenderable)lightIter.Current).Shape.FillMode;
+				mDevice.Transform.World = ((IRenderable)lightIter.Current).Shape.World * lightIter.Current.Owner.GetMatrix();
+				mDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, ((IRenderable)lightIter.Current).Shape.Indices.Length, 0, ((IRenderable)lightIter.Current).Shape.Indices.Length / 3);
+
+			}
+			// disable blending
+			mDevice.RenderState.BlendFactor = System.Drawing.Color.White;
+			mDevice.RenderState.DestinationBlend = Blend.Zero;
+			mDevice.RenderState.AlphaBlendEnable = false;
+			mDevice.RenderState.SourceBlend = Blend.Zero;
+			mDevice.RenderState.AlphaSourceBlend = Blend.One;
+			mDevice.RenderState.AlphaDestinationBlend = Blend.Zero;
 
 			Gizmo.Instance.Render();
 			
@@ -224,7 +261,13 @@ namespace Hourglass
 			return mRenderSet.Remove(_m);
 		}
 
-		//public void AddLightObject()
+		public void AddLightObject(LightComponent _l) {
+			mLightSet.Add(_l);
+		}
+		
+		public bool RemoveLightObject(LightComponent _l) {
+			return mLightSet.Remove(_l);
+		}
 
 		public Vector3 RotateInto(Vector3 _p, Matrix _m)
 		{

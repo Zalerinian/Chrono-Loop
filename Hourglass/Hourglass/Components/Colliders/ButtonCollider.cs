@@ -19,6 +19,11 @@ namespace Hourglass
 
 		protected ColoredShape mShape;
 
+		public int RenderStage {
+			get {
+				return 0;
+			}
+		}
 
 		public Vector3 PushNormal {
 			get {

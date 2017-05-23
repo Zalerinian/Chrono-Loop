@@ -183,6 +183,9 @@ namespace Hourglass
 				if (comps[j] is MeshComponent)
 				{
 					MeshComponent c = (MeshComponent)comps[j];
+					if(!c.Shape.Valid) {
+						continue;
+					}
 					Vector3 start = Vector3.Unproject(new Vector3(e.X, e.Y, 0),
 						dev.Viewport,
 						dev.Transform.Projection,
@@ -526,6 +529,9 @@ namespace Hourglass
                     sc.Parent = spWorldView.Panel2;
                     obj.AddComponent(sc);
 					break;
+				case "LMesh":
+					obj.AddComponent(new LightComponent());
+					break;
 
                 // Code Components
                 case "CodeComp":
@@ -563,6 +569,8 @@ namespace Hourglass
 
 				loader.Start(fod);
 				loader.Join();
+				RenderTimer.Stop();
+				RenderTimer.Start(); // Reset the timer since loading takes a while.
 				// Attach Object Handlers
 				for(int i = 0; i < fod.nodeCollection.Count; ++i)
 				{
@@ -577,6 +585,7 @@ namespace Hourglass
 			if (OpenFilename != string.Empty)
 			{
 				FileIO.saveLevel(OpenFilename, Tree);
+				FlashWindow.Flash(this, 2);
 			}
 			else
 			{
