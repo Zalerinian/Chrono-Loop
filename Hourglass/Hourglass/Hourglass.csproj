@@ -111,6 +111,7 @@
     <Compile Include="Components\Gizmo.cs" />
     <Compile Include="Components\IGizmoAttachment.cs" />
     <Compile Include="Components\IRenderable.cs" />
+    <Compile Include="Components\Meshes\LightComponent.cs" />
     <Compile Include="Components\Meshes\MeshComponent.cs" />
     <Compile Include="Components\Meshes\ColoredMeshComponent.cs" />
     <Compile Include="Components\Meshes\TexturedMeshComponent.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="Forms\LevelSettingsForm.Designer.cs">
       <DependentUpon>LevelSettingsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="General\FlashWindow.cs" />
     <Compile Include="General\MathExtension.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

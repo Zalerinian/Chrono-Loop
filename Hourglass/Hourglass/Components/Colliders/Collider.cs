@@ -19,6 +19,12 @@ namespace Hourglass {
 			}
 		}
 
+		public int RenderStage {
+			get {
+				return 0;
+			}
+		}
+
 		public bool Movable {
 			get {
 				return mMovable.Checked;

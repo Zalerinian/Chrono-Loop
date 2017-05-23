@@ -53,14 +53,14 @@ namespace Epoch {
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDSView;
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> mMainViewTexture, mDepthBuffer, mPostProcessTexture, mBloomTexture, mGlowTexture, mSuperGlowTexture;
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> mSamplerState;
-		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> mTransparentState, mOpaqueState, mTopmostState, mMotionStateFindObject, mMotionStateReverseDepth;
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> mTransparentState, mOpaqueState, mTopmostState, mMotionStateFindObject, mMotionStateReverseDepth, mLSStencilFront, mLSStencilBack, mLSStencilRender;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mPostProcessSRV, mBloomSRV, mGlowSRV, mSuperGlowSRV;
-		Microsoft::WRL::ComPtr<ID3D11BlendState> mOpaqueBlendState, mTransparentBlendState;
+		Microsoft::WRL::ComPtr<ID3D11BlendState> mOpaqueBlendState, mTransparentBlendState, mAdditiveBlendState;
 		D3D11_VIEWPORT mLeftViewport, mRightViewport, mFullViewport;
 		HWND mWindow;
 
 		vr::IVRSystem* mVrSystem;
-		RenderSet mOpaqueSet, mTransparentSet, mTopmostSet, mMotionSet;
+		RenderSet mOpaqueSet, mTransparentSet, mTopmostSet, mMotionSet, mLightSet;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mVPBuffer, mPositionBuffer, mSimInstanceBuffer, mHeadPosBuffer, mGlobalMatrixBuffer;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> mLBuffer;
 		bool mUseVsync = false;
@@ -148,6 +148,8 @@ namespace Epoch {
 		void ProcessRenderSet();
 		void RenderScreenQuad();
 		void RenderTransparentObjects();
+		void RenderLightVolumes();
+
 
 		void RenderForBloom();
 
@@ -174,14 +176,17 @@ namespace Epoch {
 		GhostList<matrix4>::GhostNode* AddTransparentNode(RenderShape& _node);
 		GhostList<matrix4>::GhostNode* AddTopmostNode(RenderShape& _node);
 		GhostList<matrix4>::GhostNode* AddMotionNode(RenderShape& _node);
+		GhostList<matrix4>::GhostNode* AddLightNode(RenderShape& _node);
 		void RemoveOpaqueNode(RenderShape& _node);
 		void RemoveTransparentNode(RenderShape& _node);
 		void RemoveTopmostNode(RenderShape& _node);
 		void RemoveMotionNode(RenderShape& _node);
+		void RemoveLightNode(RenderShape& _node);
 		void UpdateOpaqueNodeBuffer(RenderShape& _node, ConstantBufferType _t, unsigned int _index);
 		void UpdateTransparentNodeBuffer(RenderShape& _node, ConstantBufferType _t, unsigned int _index);
 		void UpdateTopmostNodeBuffer(RenderShape& _node, ConstantBufferType _t, unsigned int _index);
 		void UpdateMotionNodeBuffer(RenderShape& _node, ConstantBufferType _t, unsigned int _index);
+		void UpdateLightNodeBuffer(RenderShape& _node, ConstantBufferType _t, unsigned int _index);
 		void Render(float _deltaTime);
 
 		void ClearRenderSet();

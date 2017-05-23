@@ -29,6 +29,7 @@
 #include "../Actions/CCLevel1TutorialButton.h"
 #include "../Actions/CCStartButton.h"
 #include "../Objects/MeshComponent.h"
+#include "../Objects/LightComponent.h"
 #include "../tinyxml/tinyxml.h"
 #include "../tinyxml/tinystr.h"
 #include "../Common/Settings.h"
@@ -760,6 +761,48 @@ namespace Epoch {
 						{
 							AudioWrapper::GetInstance().AddEmitter(sound, (obj->GetName() + "_SOUND").c_str());
 							obj->AddComponent(sound);
+						}
+					}
+						break;
+					case 10:
+					{
+						// Light component, a glorified colored mesh component.
+						INT32 pathLength = 0;
+						std::string mesh;
+
+						struct {
+							union {
+								struct {
+									unsigned char b, g, r, a;
+								};
+								int color;
+							};
+						} argbColor;
+
+						float transparency = 1.0;
+						if (version >= 2) {
+							file.read((char*)&transparency, sizeof(float));
+						}
+
+						unsigned char waste = 0;
+						// Shaders - All stored as 1 byte.	
+						if (version >= 3) {
+							file.read((char*)&waste, 1);
+							file.read((char*)&waste, 1);
+							file.read((char*)&waste, 1);
+						}
+
+						file.read((char *)&pathLength, sizeof(INT32));
+						char* temp = new char[pathLength];
+						file.read(temp, pathLength);
+						mesh = temp;
+						delete[] temp;
+						file.read((char *)&argbColor.color, sizeof(INT32));
+						if (obj) {
+							std::string path = "../Resources/" + mesh;
+							vec4f lightColor(argbColor.r / 255.f * transparency, argbColor.g / 255.f * transparency, argbColor.b / 255.f * transparency, 1.0f);
+							LightComponent *light = new LightComponent(path.c_str(), lightColor);
+							obj->AddComponent(light);
 						}
 					}
 						break;

@@ -183,6 +183,9 @@ namespace Hourglass
 				if (comps[j] is MeshComponent)
 				{
 					MeshComponent c = (MeshComponent)comps[j];
+					if(!c.Shape.Valid) {
+						continue;
+					}
 					Vector3 start = Vector3.Unproject(new Vector3(e.X, e.Y, 0),
 						dev.Viewport,
 						dev.Transform.Projection,
@@ -526,6 +529,9 @@ namespace Hourglass
                     sc.Parent = spWorldView.Panel2;
                     obj.AddComponent(sc);
 					break;
+				case "LMesh":
+					obj.AddComponent(new LightComponent());
+					break;
 
                 // Code Components
                 case "CodeComp":
@@ -563,6 +569,8 @@ namespace Hourglass
 
 				loader.Start(fod);
 				loader.Join();
+				RenderTimer.Stop();
+				RenderTimer.Start(); // Reset the timer since loading takes a while.
 				// Attach Object Handlers
 				for(int i = 0; i < fod.nodeCollection.Count; ++i)
 				{
@@ -577,6 +585,7 @@ namespace Hourglass
 			if (OpenFilename != string.Empty)
 			{
 				FileIO.saveLevel(OpenFilename, Tree);
+				FlashWindow.Flash(this, 2);
 			}
 			else
 			{
@@ -641,7 +650,6 @@ namespace Hourglass
 		private TreeNode ConstructTreeObject(TreeNode _parent)
 		{
 			TreeNode n = new TreeNode();
-			n.ContextMenuStrip = mObjectStrip;
 			BaseObject b = new BaseObject(n, "Empty Object");
 			if(_parent != null)
 			{
@@ -889,6 +897,21 @@ namespace Hourglass
 			trf.SetPosition(delta.Position);
 			trf.SetRotation(trf.GetRotationVector() + delta.Rotation);
 			trf.SetScale(delta.Scale);
+		}
+
+		private void unparentToolStripMenuItem_Click(object sender, EventArgs e) {
+			TreeNode n = Tree.SelectedNode;
+			if(n.Parent != null) {
+				n.Parent.Nodes.Remove(n);
+				Tree.Nodes.Add(n);
+			}
+		}
+
+		private void Tree_MouseUp(object sender, MouseEventArgs e) {
+			Tree.SelectedNode = Tree.GetNodeAt(e.X, e.Y);
+			if(Tree.SelectedNode != null) {
+				mObjectStrip.Show(Tree, e.Location);
+			}
 		}
 
 		private WorldTransformations CollapseObject(TreeNode Object) {

@@ -39,6 +39,12 @@ namespace Hourglass {
 			}
 		}
 
+		virtual public int RenderStage {
+			get {
+				return 0;
+			}
+		}
+
 		public MeshComponent(int _yOffset = 0) : base() {
 			#region Component Creation
 
@@ -197,9 +203,17 @@ namespace Hourglass {
 				mTransparency.Value = (decimal)(System.BitConverter.ToSingle(r.ReadBytes(4), 0));
 			}
 			if(_version >= 3) {
-				mPixel.SelectedIndex = r.ReadByte();
-				mVertex.SelectedIndex = r.ReadByte();
-				mGeo.SelectedIndex = r.ReadByte();
+				int shaderIndex = r.ReadByte();
+				shaderIndex = shaderIndex == 255 ? -1 : shaderIndex;
+				mPixel.SelectedIndex = shaderIndex;
+
+				shaderIndex = r.ReadByte();
+				shaderIndex = shaderIndex == 255 ? -1 : shaderIndex;
+				mVertex.SelectedIndex = shaderIndex;
+
+				shaderIndex = r.ReadByte();
+				shaderIndex = shaderIndex == 255 ? -1 : shaderIndex;
+				mGeo.SelectedIndex = shaderIndex;
 			}
 			string filename = new string(r.ReadChars(r.ReadInt32() - 1));
 			r.ReadByte(); // The null terminator breaks things in C#, but is necessary in C++, so we need to skip it in C#
