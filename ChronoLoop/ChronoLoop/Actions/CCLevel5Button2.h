@@ -21,7 +21,6 @@ namespace Epoch
 		{
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			Block = cLevel->FindObjectWithName("ExitSideOpeningEnergy");
-
 			blockCube = (CubeCollider*)Block->mComponents[eCOMPONENT_COLLIDER][0];
 			blockMesh = (MeshComponent*)Block->mComponents[eCOMPONENT_MESH][0];
 
@@ -42,11 +41,6 @@ namespace Epoch
 					{
 						if (dynamic_cast<AudioEmitter*>(Block->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
 							((AudioEmitter*)Block->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
-					}
-					if (Exit->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 1)
-					{
-						if (dynamic_cast<AudioEmitter*>(Exit->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
-							((AudioEmitter*)Exit->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
 					}
 					mSoundOnce = true;
 				}
@@ -100,11 +94,6 @@ namespace Epoch
 						{
 							if (dynamic_cast<AudioEmitter*>(Block->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 2)))
 								((AudioEmitter*)Block->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 2))->CallEvent(Emitter::ePlay);
-						}
-						if (Exit->GetComponentCount(eCOMPONENT_AUDIOEMITTER) > 2)
-						{
-							if (dynamic_cast<AudioEmitter*>(Exit->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 2)))
-								((AudioEmitter*)Exit->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 2))->CallEvent(Emitter::ePlay);
 						}
 						mSoundOnce = false;
 						mFlip = false;
