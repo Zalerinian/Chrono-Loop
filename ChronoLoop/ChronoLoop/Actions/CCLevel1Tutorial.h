@@ -38,7 +38,7 @@ namespace Epoch
 			Settings::GetInstance().SetBool("Level1Tutorial", true);
 			//Teleport Initialize 0
 			Transform Transform1;
-			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-14.3f, 1.5f, -2.83f));
+			mBoardMatrixs.push_back(matrix4::CreateNewXRotation(1.5708f) * matrix4::CreateNewYRotation(-1.5708f) * matrix4::CreateNewTranslation(-14.3f, 1.5f, -2.83f));
 			Transform1.SetMatrix(mBoardMatrixs.back());
 			BaseObject* mTeleportBoard = new BaseObject("mTeleportBoard", Transform1);
 			MeshComponent* tm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
@@ -58,7 +58,7 @@ namespace Epoch
 
 			//Pick Up Initialize 1
 			Transform transformPickup;
-			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(5.97f, 2.09f, -.57f));
+			mBoardMatrixs.push_back(matrix4::CreateNewXRotation(1.5708f) * matrix4::CreateNewYRotation(-1.5708f) * matrix4::CreateNewTranslation(5.97f, 2.09f, -.57f));
 			transformPickup.SetMatrix(mBoardMatrixs.back());
 			BaseObject* mPickUpBoard = new BaseObject("mPickUpBoard", transformPickup);
 			MeshComponent* pum = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
@@ -78,7 +78,7 @@ namespace Epoch
 
 			//Pause Time Initialize 2
 			Transform transformPauseBoard;
-			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.68f, 1.5f, -3.39f));
+			mBoardMatrixs.push_back(matrix4::CreateNewXRotation(1.5708f) * matrix4::CreateNewYRotation(-1.5708f) * matrix4::CreateNewTranslation(-9.68f, 1.5f, -3.39f));
 			transformPauseBoard.SetMatrix(mBoardMatrixs.back());
 			BaseObject* mPauseTimeBoard = new BaseObject("mPauseTimeBoard", transformPauseBoard);
 			MeshComponent* ptm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
@@ -98,7 +98,7 @@ namespace Epoch
 
 			//Rewind Initialize 3
 			Transform transformRewind;
-			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.68f, 1.5f, -3.39f));
+			mBoardMatrixs.push_back(matrix4::CreateNewXRotation(1.5708f) * matrix4::CreateNewYRotation(-1.5708f) * matrix4::CreateNewTranslation(-9.68f, 1.5f, -3.39f));
 			transformRewind.SetMatrix(mBoardMatrixs.back());
 			BaseObject* mRewindBoard = new BaseObject("mRewindBoard", transformRewind);
 			MeshComponent* rm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
@@ -122,7 +122,7 @@ namespace Epoch
 
 			//Accept Time Initialize 4
 			Transform transformAcceptTime;
-			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.68f, 1.5f, -3.39f));
+			mBoardMatrixs.push_back(matrix4::CreateNewXRotation(1.5708f) * matrix4::CreateNewYRotation(-1.5708f) * matrix4::CreateNewTranslation(-9.68f, 1.5f, -3.39f));
 			transformAcceptTime.SetMatrix(mBoardMatrixs.back());
 			BaseObject* mAcceptBoard = new BaseObject("mAcceptBoard", transformAcceptTime);
 			MeshComponent* am = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
@@ -142,7 +142,7 @@ namespace Epoch
 
 			//Cancel Time Initialize 5
 			Transform transformCancelTime;
-			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.68f, 1.5f, -2.24f));
+			mBoardMatrixs.push_back(matrix4::CreateNewXRotation(1.5708f) * matrix4::CreateNewYRotation(-1.5708f) * matrix4::CreateNewTranslation(-9.68f, 1.5f, -2.24f));
 			transformCancelTime.SetMatrix(mBoardMatrixs.back());
 			BaseObject* mCancelBoard = new BaseObject("mCancelBoard", transformCancelTime);
 			MeshComponent* cm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
@@ -158,7 +158,7 @@ namespace Epoch
 
 			//Device Board 6
 			Transform transformDeviceboard;
-			mBoardMatrixs.push_back(matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.68f, 1.5f, -2.24f));
+			mBoardMatrixs.push_back(matrix4::CreateNewXRotation(1.5708f) * matrix4::CreateNewYRotation(-1.5708f) * matrix4::CreateNewTranslation(-9.68f, 1.5f, -2.24f));
 			transformDeviceboard.SetMatrix(mBoardMatrixs.back());
 			BaseObject* mDeviceBoard = new BaseObject("mDeviceBoard", transformDeviceboard);
 			MeshComponent* dm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
@@ -213,7 +213,7 @@ namespace Epoch
 						//SystemLogger::GetLog() << "pb End Progress: " << timeToRewind << std::endl;
 						Settings::GetInstance().SetUInt("TutorialRewind - FinalProgress", timeToRewind);
 						pb->SetFinalProgress((float)timeToRewind);
-						pb->GetBackground()->GetTransform().SetMatrix(pb->GetBackground()->GetTransform().GetMatrix() * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(-1.5708f) * matrix4::CreateTranslation(-9.95f, 2.2f, -2.86f));
+						pb->GetBackground()->GetTransform().SetMatrix(pb->GetBackground()->GetTransform().GetMatrix() * matrix4::CreateNewXRotation(1.5708f) * matrix4::CreateNewYRotation(-1.5708f) * matrix4::CreateNewTranslation(-9.95f, 2.2f, -2.86f));
 						pb->OnEnable();
 						once = false;
 					}
@@ -289,7 +289,7 @@ namespace Epoch
 				if (scaleUpX < 1 || scaleUpY < 1)
 				{
 					vec4f pos = *boards[mCurrentBoards[i]]->GetTransform().GetPosition();
-					boards[mCurrentBoards[i]]->GetTransform().SetMatrix(matrix4::CreateScale(scaleUpX, 1, scaleUpY) * mBoardMatrixs[mCurrentBoards[i]]);
+					boards[mCurrentBoards[i]]->GetTransform().SetMatrix(matrix4::CreateNewScale(scaleUpX, 1, scaleUpY) * mBoardMatrixs[mCurrentBoards[i]]);
 				}
 			}
 
@@ -326,7 +326,7 @@ namespace Epoch
 						scaleDownY -= 0.1f;
 					for (size_t i = 0; i < mPrevBoards.size(); i++)
 					{
-						boards[mPrevBoards[i]]->GetTransform().SetMatrix(matrix4::CreateScale(scaleDownX, 1, scaleDownY) * boards[mPrevBoards[i]]->GetTransform().GetMatrix());
+						boards[mPrevBoards[i]]->GetTransform().SetMatrix(matrix4::CreateNewScale(scaleDownX, 1, scaleDownY) * boards[mPrevBoards[i]]->GetTransform().GetMatrix());
 						if (scaleDownY <= 0.0f)
 						{
 							((MeshComponent*)boards[mPrevBoards[i]]->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(false);
