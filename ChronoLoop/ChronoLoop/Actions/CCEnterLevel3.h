@@ -9,7 +9,6 @@
 #include "..\Actions\CCPauseToCancel.h"
 #include "..\Actions\CCTeleToPlay.h"
 #include "..\Actions\CCDisplayOnPause.h"
-#include "..\Actions\CCLevel2Tutorial.h"
 #include "..\Actions\UICreateToDeleteClone.h"
 #include "..\Actions\UIClonePlusToMinus.h"
 #include "..\Actions\UICloneText.h"
@@ -43,7 +42,7 @@ namespace Epoch
 		bool GetOnce() { return once; };
 		virtual void OnTriggerEnter(Collider& _col1, Collider& _col2) 
 		{
-			if(Settings::GetInstance().GetBool("CompleteLevel1"))
+			if(Settings::GetInstance().GetBool("CompleteLevel2"))
 				once = false;
 		}
 		virtual void Start()
@@ -70,10 +69,10 @@ namespace Epoch
 
 					Listener* ears = new Listener();
 					Emitter* ambient = new AudioEmitter();
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_LEVEL1AMBIENT);
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_LEVEL1AMBIENT);
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_LEVEL1AMBIENT);
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_LEVEL1AMBIENT);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_LEVEL3AMBIENT);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_LEVEL3AMBIENT);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_LEVEL3AMBIENT);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_LEVEL3AMBIENT);
 
 					AudioWrapper::GetInstance().AddListener(ears, "Listener");
 					AudioWrapper::GetInstance().AddEmitter(ambient, "ambiance");
@@ -85,13 +84,18 @@ namespace Epoch
 					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
+					mc->AddTexture("../Resources/Controller_Diffuse.png", eTEX_DIFFUSE);
+					mc->AddTexture("../Resources/Controller_Normal", eTEX_NORMAL);
+					mc->AddTexture("../Resources/Controller_Specular", eTEX_SPECULAR);
+					CubeCollider* col = new CubeCollider(headset, false, false, vec3f(), 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f));
+					headset->AddComponent(col);
+
 
 					ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
 					BoxSnapToControllerAction* pickup = new BoxSnapToControllerAction();
 					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					rightRaycaster->SetPixelShader(ePS_PURETEXTURE);
-					mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 					mc->SetPixelShader(ePS_PURETEXTURE);
 					TeleportAction *ta = new TeleportAction(eControllerType_Primary);
 					TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
@@ -263,13 +267,16 @@ namespace Epoch
 					RightController->AddChild(clonePlus);
 
 					//pat added
-					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
+					MeshComponent *mc2 = new MeshComponent("../Resources/Player_hand.obj");
+					mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
+					mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
+					mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
+					mc2->AddTexture("../Resources/Player_hand_Specular", eTEX_SPECULAR);
 					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 					BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					leftRaycaster->SetPixelShader(ePS_PURETEXTURE);
-					mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 					mc2->SetPixelShader(ePS_PURETEXTURE);
 					TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
 					LeftController->AddComponent(mc2);
@@ -282,18 +289,28 @@ namespace Epoch
 					visibleMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 					visibleMesh2->SetVisible(false);
 					headset->AddComponent(visibleMesh2);
-					CCLevel2Tutorial* tut = new CCLevel2Tutorial();
-					headset->AddComponent(tut);
 					HeadsetFollow* hfollow = new HeadsetFollow();
 					headset->AddComponent(hfollow);
 					headset->AddComponent(ears);
 					headset->AddComponent(ambient);
 					PauseMenu* pauseComp = new PauseMenu();
 					headset->AddComponent(pauseComp);
-						Emitter* sound = new SFXEmitter();
+
+					Emitter* sound = new SFXEmitter();
 					((SFXEmitter*)sound)->SetEvent(AK::EVENTS::SFX_TELEPORTSOUND);
 					AudioWrapper::GetInstance().AddEmitter(sound, headset->GetName().c_str());
 					headset->AddComponent(sound);
+
+					Emitter* timepause = new SFXEmitter();
+					((SFXEmitter*)timepause)->SetEvent(AK::EVENTS::SFX_TIMEPAUSE);
+					AudioWrapper::GetInstance().AddEmitter(timepause, headset->GetName().c_str());
+					headset->AddComponent(timepause);
+
+					Emitter* timeresume = new SFXEmitter();
+					((SFXEmitter*)timeresume)->SetEvent(AK::EVENTS::SFX_TIMERESUME);
+					AudioWrapper::GetInstance().AddEmitter(timeresume, headset->GetName().c_str());
+					headset->AddComponent(timeresume);
+
 
 					AudioWrapper::GetInstance().STOP();
 
@@ -309,6 +326,10 @@ namespace Epoch
 					magicalCube->AddComponent(new CCSnapToPlayerPos);
 					next->AddObject(magicalCube);*/
 
+					Emitter* resetlevelsound = new SFXEmitter();
+					((SFXEmitter*)resetlevelsound)->SetEvent(AK::EVENTS::SFX_RESETLEVEL);
+					RightController->AddComponent(resetlevelsound);
+					AudioWrapper::GetInstance().AddEmitter(resetlevelsound, RightController->GetName().c_str());
 
 
 
@@ -321,7 +342,7 @@ namespace Epoch
 					start->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));
 					start->SetLife(500);
 					start->SetSize(.35f, .15f);
-					ParticleEmitter* startEmit = new TeleportEffect(400, 250, 2, vec4f(8, 0, -4, 1));
+					ParticleEmitter* startEmit = new TeleportEffect(400, 250, 2, vec4f(2.76f, 0, -4.8, 1));
 					startEmit->SetParticle(start);
 					startEmit->SetTexture("../Resources/BasicRectP.png");
 					((TeleportEffect*)startEmit)->y1 = 8;
@@ -336,7 +357,7 @@ namespace Epoch
 					start->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
 					start->SetLife(500);
 					start->SetSize(.15f, .05f);
-					ParticleEmitter* startEmit2 = new TeleportEffect(400, 150, 1, vec4f(8, 0, -4, 1));
+					ParticleEmitter* startEmit2 = new TeleportEffect(400, 150, 1, vec4f(2.76f, 0, -4.8, 1));
 					startEmit2->SetTexture("../Resources/BasicCircleP.png");
 					startEmit2->SetParticle(start);
 					((TeleportEffect*)startEmit2)->y1 = 1;
@@ -419,7 +440,7 @@ namespace Epoch
 					SystemLogger::Debug() << "Loading complete" << std::endl;
 					Physics::Instance()->PhysicsLock.unlock();
 					Settings::GetInstance().SetBool("LevelIsLoading", false);
-					Settings::GetInstance().SetInt("CurrentLevel", 2);
+					Settings::GetInstance().SetInt("CurrentLevel", 3);
 				}
 			}
 		}

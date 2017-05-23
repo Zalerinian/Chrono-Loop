@@ -42,7 +42,7 @@ namespace Epoch {
 		void SetOnce(bool _set) { once = _set; };
 		bool GetOnce() { return once; };
 		virtual void OnTriggerEnter(Collider& _col1, Collider& _col2) {
-			if (Settings::GetInstance().GetBool("CompleteLevel2"))
+			if (Settings::GetInstance().GetBool("CompleteLevel3"))
 				once = false;
 		}
 		virtual void Start() {
@@ -67,10 +67,10 @@ namespace Epoch {
 
 					Listener* ears = new Listener();
 					Emitter* ambient = new AudioEmitter();
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_LEVEL1AMBIENT);
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_LEVEL1AMBIENT);
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_LEVEL1AMBIENT);
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_LEVEL1AMBIENT);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_LEVEL4AMBIENT);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_LEVEL4AMBIENT);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_LEVEL4AMBIENT);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_LEVEL4AMBIENT);
 
 					AudioWrapper::GetInstance().AddListener(ears, "Listener");
 					AudioWrapper::GetInstance().AddEmitter(ambient, "ambiance");
@@ -82,6 +82,9 @@ namespace Epoch {
 					BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
+					mc->AddTexture("../Resources/Controller_Diffuse.png", eTEX_DIFFUSE);
+					mc->AddTexture("../Resources/Controller_Normal", eTEX_NORMAL);
+					mc->AddTexture("../Resources/Controller_Specular", eTEX_SPECULAR);
 					CubeCollider* col = new CubeCollider(headset, false, false, vec3f(), 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f));
 					headset->AddComponent(col);
 
@@ -90,7 +93,6 @@ namespace Epoch {
 					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					rightRaycaster->SetPixelShader(ePS_PURETEXTURE);
-					mc->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 					mc->SetPixelShader(ePS_PURETEXTURE);
 					TeleportAction *ta = new TeleportAction(eControllerType_Primary);
 					TimeManipulation* tm = new TimeManipulation(eControllerType_Primary);
@@ -259,13 +261,16 @@ namespace Epoch {
 					RightController->AddChild(clonePlus);
 
 					//pat added
-					MeshComponent *mc2 = new MeshComponent("../Resources/Controller.obj");
+					MeshComponent *mc2 = new MeshComponent("../Resources/Player_hand.obj");
+					mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
+					mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
+					mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
+					mc2->AddTexture("../Resources/Player_hand_Specular", eTEX_SPECULAR);
 					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 					BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					leftRaycaster->SetPixelShader(ePS_PURETEXTURE);
-					mc2->AddTexture("../Resources/vr_controller_lowpoly_texture.png", eTEX_DIFFUSE);
 					mc2->SetPixelShader(ePS_PURETEXTURE);
 					TeleportAction *ta2 = new TeleportAction(eControllerType_Secondary);
 					LeftController->AddComponent(mc2);
@@ -284,19 +289,39 @@ namespace Epoch {
 					headset->AddComponent(ambient);
 					PauseMenu* pauseComp = new PauseMenu();
 					headset->AddComponent(pauseComp);
+
 					Emitter* sound = new SFXEmitter();
 					((SFXEmitter*)sound)->SetEvent(AK::EVENTS::SFX_TELEPORTSOUND);
 					AudioWrapper::GetInstance().AddEmitter(sound, headset->GetName().c_str());
 					headset->AddComponent(sound);
+
+					Emitter* timepause = new SFXEmitter();
+					((SFXEmitter*)timepause)->SetEvent(AK::EVENTS::SFX_TIMEPAUSE);
+					AudioWrapper::GetInstance().AddEmitter(timepause, headset->GetName().c_str());
+					headset->AddComponent(timepause);
+
+					Emitter* timeresume = new SFXEmitter();
+					((SFXEmitter*)timeresume)->SetEvent(AK::EVENTS::SFX_TIMERESUME);
+					AudioWrapper::GetInstance().AddEmitter(timeresume, headset->GetName().c_str());
+					headset->AddComponent(timeresume);
+
 					Emitter* sound1 = new SFXEmitter();
 					((SFXEmitter*)sound1)->SetEvent(AK::EVENTS::SFX_PLAYERDEATH);
 					AudioWrapper::GetInstance().AddEmitter(sound1, headset->GetName().c_str());
 					headset->AddComponent(sound1);
+					Emitter* sound2 = new SFXEmitter();
+					((SFXEmitter*)sound2)->SetEvent(AK::EVENTS::SFX_BOXWALLCOLLIDELEVEL3);
+					AudioWrapper::GetInstance().AddEmitter(sound2, headset->GetName().c_str());
+					headset->AddComponent(sound2);
+
 
 					AudioWrapper::GetInstance().STOP();
-
 					((AudioEmitter*)ambient)->CallEvent(Emitter::EventType::ePlay);
 
+					Emitter* resetlevelsound = new SFXEmitter();
+					((SFXEmitter*)resetlevelsound)->SetEvent(AK::EVENTS::SFX_RESETLEVEL);
+					RightController->AddComponent(resetlevelsound);
+					AudioWrapper::GetInstance().AddEmitter(resetlevelsound, RightController->GetName().c_str());
 
 					ParticleSystem::Instance()->Clear();
 
@@ -417,7 +442,7 @@ namespace Epoch {
 					SystemLogger::Debug() << "Loading complete" << std::endl;
 					Physics::Instance()->PhysicsLock.unlock();
 					Settings::GetInstance().SetBool("LevelIsLoading", false);
-					Settings::GetInstance().SetInt("CurrentLevel", 3);
+					Settings::GetInstance().SetInt("CurrentLevel", 4);
 				}
 			}
 		}

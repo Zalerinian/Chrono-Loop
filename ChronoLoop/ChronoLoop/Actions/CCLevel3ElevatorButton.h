@@ -10,7 +10,7 @@ namespace Epoch {
 
 	struct CCLevel3ElevatorButton : public CodeComponent {
 		bool colliding = false, mInterpDone = true, mFlip = false, mIsPlayer = false;
-		BaseObject* mChamberObject, *mButtonStand;
+		BaseObject* mChamberObject, *mButtonStand, *mWire;
 		Interpolator<matrix4>* mChamberInterp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mPlayerInterp = new Interpolator<matrix4>();
 		Interpolator<matrix4>* mStartStandInterp = new Interpolator<matrix4>();
@@ -41,7 +41,7 @@ namespace Epoch {
 			mEleStart = mChamberObject->GetTransform().GetMatrix();
 			mButStart = mObject->GetTransform().GetMatrix();
 			mStandStart = mButtonStand->GetTransform().GetMatrix();
-
+			mWire = cLevel->FindObjectWithName("D1Wire");
 			TimeManager::Instance()->SaveSettingBoolToTimeline("CantPauseTime", false);
 			Settings::GetInstance().SetBool("CantTeleport", false);
 			TimeManager::Instance()->SaveSettingBoolToTimeline("CantTeleport", false);
@@ -71,12 +71,17 @@ namespace Epoch {
 							matrix4 mat = mChamberObject->GetTransform().GetMatrix();
 							float tempY = mChamberObject->GetTransform().GetMatrix().Position.y;
 							if (tempY < -1.0) {
-								std::vector<Component*>& comps = mObject->GetComponents(eCOMPONENT_CODE);
-								for (unsigned int  i = 0; i < comps.size(); i++) {
-									if(dynamic_cast<CCMazeHelper*>(comps[i]))
+								
+								if (mWire)
+								{
+									std::vector<Component*>& comps = mWire->GetComponents(eCOMPONENT_CODE);
+									for (unsigned int i = 0; i < comps.size(); i++)
 									{
-										((CCMazeHelper*)comps[i])->ResetBoxes();
-										break;
+										if (dynamic_cast<CCMazeHelper*>(comps[i]))
+										{
+											((CCMazeHelper*)comps[i])->ResetBoxes();
+											break;
+										}
 									}
 								}
 								std::vector<Component*>& comps2 = cLevel->FindObjectWithName("WallButton")->GetComponents(eCOMPONENT_CODE);
@@ -92,13 +97,13 @@ namespace Epoch {
 								tempY = -1;
 							}
 
-							mChamberInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), mChamberObject->GetTransform().GetMatrix());
+							mChamberInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.03f * tempY, 0), mChamberObject->GetTransform().GetMatrix());
 							mChamberInterp->SetEasingFunction(Easing::QuadInOut);
 							mChamberInterp->SetActive(true);
 
 							if (_other.GetBaseObject()->GetUniqueID() == cLevel->GetLeftController()->GetUniqueID() || _other.GetBaseObject()->GetUniqueID() == cLevel->GetRightController()->GetUniqueID()) {
 								mat = VRInputManager::GetInstance().GetPlayerPosition();
-								mPlayerInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), VRInputManager::GetInstance().GetPlayerPosition());
+								mPlayerInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.03f * tempY, 0), VRInputManager::GetInstance().GetPlayerPosition());
 								mPlayerInterp->SetEasingFunction(Easing::QuadInOut);
 								mPlayerInterp->SetActive(true);
 								mIsPlayer = true;
@@ -129,12 +134,12 @@ namespace Epoch {
 							}*/
 
 							mat = mObject->GetTransform().GetMatrix();
-							mStartButtonInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), mObject->GetTransform().GetMatrix());
+							mStartButtonInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.03f * tempY, 0), mObject->GetTransform().GetMatrix());
 							mStartButtonInterp->SetEasingFunction(Easing::QuadInOut);
 							mStartButtonInterp->SetActive(true);
 
 							mat = mButtonStand->GetTransform().GetMatrix();
-							mStartStandInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.28f * tempY, 0), mButtonStand->GetTransform().GetMatrix());
+							mStartStandInterp->Prepare(6, mat, mat * matrix4::CreateTranslation(0, 3.03f * tempY, 0), mButtonStand->GetTransform().GetMatrix());
 							mStartStandInterp->SetEasingFunction(Easing::QuadInOut);
 							mStartStandInterp->SetActive(true);
 							mInterpDone = false;

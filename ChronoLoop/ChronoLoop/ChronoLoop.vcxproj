@@ -28,26 +28,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -210,6 +210,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Actions\CCButtonHold.h" />
     <ClInclude Include="Actions\CCButtonPress.h" />
     <ClInclude Include="Actions\CCCloneHeadCollider.h" />
+    <ClInclude Include="Actions\CCCloneIndicator.h" />
     <ClInclude Include="Actions\CCDisplayOnPause.h" />
     <ClInclude Include="Actions\CCElasticAABBtoAABB.h" />
     <ClInclude Include="Actions\CCElasticAABBToSphere.h" />
@@ -219,6 +220,7 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Actions\CCEnterLevel2.h" />
     <ClInclude Include="Actions\CCEnterLevel3.h" />
     <ClInclude Include="Actions\CCEnterLevel4.h" />
+    <ClInclude Include="Actions\CCEnterLevel5.h" />
     <ClInclude Include="Actions\CCExit.h" />
     <ClInclude Include="Actions\CCLevel1Tutorial.h" />
     <ClInclude Include="Actions\CCLevel1TutorialButton.h" />
@@ -226,12 +228,17 @@ echo f | xcopy /y /d /e "$(solutiondir)openvr\bin\win64\openvr_api.dll" "$(outpu
     <ClInclude Include="Actions\CCLevel3BoxMovementButton.h" />
     <ClInclude Include="Actions\CCLevel3BoxSmash.h" />
     <ClInclude Include="Actions\CCLevel3ElevatorButton.h" />
+    <ClInclude Include="Actions\CCLevel5Button.h" />
+    <ClInclude Include="Actions\CCLevel5Button2.h" />
+    <ClInclude Include="Actions\CCLevel5DoorButton.h" />
+    <ClInclude Include="Actions\CCLevel5Fields.h" />
     <ClInclude Include="Actions\CCLoadHub.h" />
     <ClInclude Include="Actions\CCLoadTutorial.h" />
     <ClInclude Include="Actions\CCMazeHelper.h" />
     <ClInclude Include="Actions\CCPauseToCancel.h" />
     <ClInclude Include="Actions\CCPlatform.h" />
     <ClInclude Include="Actions\CCPlatformButton.h" />
+    <ClInclude Include="Actions\CCPrevButton.h" />
     <ClInclude Include="Actions\CCProgressBar.h" />
     <ClInclude Include="Actions\CCSnapToPlayerPos.h" />
     <ClInclude Include="Actions\CCStartButton.h" />

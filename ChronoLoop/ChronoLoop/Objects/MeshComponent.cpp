@@ -135,7 +135,7 @@ namespace Epoch {
 			CreateNode();
 			mVisible = true;
 		} else {
-			mVisible = false;
+			mVisible = true;
 			mNode = nullptr;
 		}
 
@@ -172,7 +172,7 @@ namespace Epoch {
 			CreateNode();
 			mVisible = true;
 		} else {
-			mVisible = false;
+			mVisible = true;
 			mNode = nullptr;
 		}
 
@@ -260,7 +260,8 @@ namespace Epoch {
 			if (srv != mShape->GetContext().mTextures[_type]) {
 				RemoveNode();
 				mShape->AddTexture(_path, _type);
-				if (mVisible) {
+				if (mVisible && CanCreateNode())
+				{
 					CreateNode();
 				}
 			}
@@ -272,7 +273,8 @@ namespace Epoch {
 		if (_t != mShape->GetContext().mRasterState) {
 			RemoveNode();
 			mShape->GetContext().mRasterState = _t;
-			if (mVisible) {
+			if (mVisible && CanCreateNode())
+			{
 				CreateNode();
 			}
 		}
@@ -282,7 +284,8 @@ namespace Epoch {
 		if (_vf != mShape->GetContext().mVertexShaderFormat) {
 			RemoveNode();
 			mShape->GetContext().mVertexShaderFormat = _vf;
-			if (mVisible) {
+			if (mVisible && CanCreateNode())
+			{
 				CreateNode();
 			}
 		}
@@ -292,7 +295,8 @@ namespace Epoch {
 		if (_pf != mShape->GetContext().mPixelShaderFormat) {
 			RemoveNode();
 			mShape->GetContext().mPixelShaderFormat = _pf;
-			if (mVisible) {
+			if (mVisible && CanCreateNode())
+			{
 				CreateNode();
 			}
 		}
@@ -302,7 +306,8 @@ namespace Epoch {
 		if (_gf != mShape->GetContext().mGeoShaderFormat) {
 			RemoveNode();
 			mShape->GetContext().mGeoShaderFormat = _gf;
-			if (mVisible) {
+			if (mVisible && CanCreateNode())
+			{
 				CreateNode();
 			}
 		}
@@ -316,7 +321,8 @@ namespace Epoch {
 			mShape->GetContext().mPixelShaderFormat = _psf;
 			mShape->GetContext().mVertexShaderFormat = _vsf;
 			mShape->GetContext().mGeoShaderFormat = _gsf;
-			if (mVisible) {
+			if (mVisible && CanCreateNode())
+			{
 				CreateNode();
 			}
 		}
@@ -326,7 +332,7 @@ namespace Epoch {
 		if (GetTopmost() != _topmost) {
 			RemoveNode();
 			mTopmost = _topmost;
-			if (IsVisible()) {
+			if (IsVisible() && CanCreateNode()) {
 				CreateNode();
 			}
 		}
@@ -336,7 +342,10 @@ namespace Epoch {
 		if (mActiveRewind != _inMotion) {
 			RemoveNode();
 			mActiveRewind = _inMotion;
-			CreateNode();
+			if (mVisible && CanCreateNode())
+			{
+				CreateNode();
+			}
 		}
 	}
 

@@ -61,11 +61,11 @@ namespace Epoch
 		float dn2 = _dir * N2;
 		float dn3 = _dir * N3;
 
-		if (dn1 == 0.0f && dn2 == 0.0f && dn3 == 0.0f)
-		{
-			_time = 0;
-			return true;
-		}
+		//if (dn1 == 0.0f && dn2 == 0.0f && dn3 == 0.0f)
+		//{
+		//	_time = 0;
+		//	return true;
+		//}
 
 		if (SameSign(dn1, dn2) && SameSign(dn2, dn3))
 		{
@@ -1123,7 +1123,7 @@ namespace Epoch
 
 					if (collider->IsEnabled() && collider->mShouldMove && collider->mColliderType != Collider::eCOLLIDER_Controller)
 					{
-						if(collider->mVelocity.Magnitude() > .01f || collider->mAcceleration.Magnitude() > .01f /*|| collider->mTotalForce.Magnitude() > .01f*/ || collider->mDragForce.Magnitude() > .01f)
+						if((collider->mVelocity.Magnitude() > .01f || collider->mAcceleration.Magnitude() > .01f || collider->mDragForce.Magnitude() > .01f) || collider->mTotalForce.Magnitude() > .01f)
 						{
 							collider->mDragForce = collider->mVelocity * (-0.5f * collider->mRHO * collider->mVelocity.Magnitude() * collider->mDrag * collider->mArea);
 							collider->mAcceleration = CalcAcceleration(collider->mTotalForce, collider->mMass);

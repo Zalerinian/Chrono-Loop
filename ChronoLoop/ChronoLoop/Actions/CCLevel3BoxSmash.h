@@ -25,7 +25,7 @@ namespace Epoch
 			mLevel = LevelManager::GetInstance().GetCurrentLevel();
 			Settings::GetInstance().SetBool("PlayerHit", false);
 			mCol = (Collider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
-			std::vector<Component*>&comps = LevelManager::GetInstance().GetCurrentLevel()->FindObjectWithName("L3Button")->GetComponents(eCOMPONENT_CODE);
+			std::vector<Component*>&comps = LevelManager::GetInstance().GetCurrentLevel()->FindObjectWithName("D1Wire")->GetComponents(eCOMPONENT_CODE);
 			for (unsigned int i = 0; i < comps.size(); i++) {
 				if(dynamic_cast<CCMazeHelper*>(comps[i]))
 				{
@@ -63,7 +63,7 @@ namespace Epoch
 						//Invoke Reset level
 						mRestartLevel = true;
 						//Play sounds
-						((SFXEmitter*)mLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 2))->CallEvent(Emitter::ePlay);
+						((SFXEmitter*)mLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 4))->CallEvent(Emitter::ePlay);
 					}
 			}
 		}
