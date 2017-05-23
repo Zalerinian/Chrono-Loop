@@ -406,28 +406,42 @@ namespace Epoch
 				m.fourth = mat.fourth;
 				mCSMesh->GetTransform().SetMatrix(m);
 
-				scaleM.first = vec4f(.15f, 0, 0, 0);
-				scaleM.second = vec4f(0, .15f, 0, 0);
-				scaleM.third = vec4f(0, 0, .15f, 0);
+				scaleM.first = vec4f(.025f, 0, 0, 0);
+				scaleM.second = vec4f(0, .025f, 0, 0);
+				scaleM.third = vec4f(0, 0, .025f, 0);
 				scaleM.fourth = vec4f(0, 0, 0, 1);
 				r = matrix4::CreateXRotation(ang);
 				m = mat * scaleM * r;
 				int index = 0;
-				index = mArc.size() == 1 ? 0 : (mArc.size() / 4);
+				index = mArc.size() % (mArc.size() - 1);
 				m.fourth = vec4f(mArc[index]) * mat;
 				mMidMesh[0]->GetTransform().SetMatrix(m);
 
-				index = mArc.size() == 1 ? 0 : (mArc.size() / 3);
+				scaleM.first = vec4f(.05f, 0, 0, 0);
+				scaleM.second = vec4f(0, .05f, 0, 0);
+				scaleM.third = vec4f(0, 0, .05f, 0);
+				scaleM.fourth = vec4f(0, 0, 0, 1);
+
+				m = mat * scaleM * r;
+				index = mArc.size() % (mArc.size() - 2);
 				m.fourth = vec4f(mArc[index]) * mat;
 				mMidMesh[1]->GetTransform().SetMatrix(m);
 				//middle
-				index = mArc.size() == 1 ? 0 : (mArc.size() / 2 - 1);
+				scaleM.first = vec4f(.15f, 0, 0, 0);
+				scaleM.second = vec4f(0, .15f, 0, 0);
+				scaleM.third = vec4f(0, 0, .15f, 0);
+				scaleM.fourth = vec4f(0, 0, 0, 1);
+
+				m = mat * scaleM * r;
+				index = mArc.size() % (mArc.size() - 3);
 				m.fourth = vec4f(mArc[index]) * mat;
 				mMidMesh[2]->GetTransform().SetMatrix(m);
 
+				index = mArc.size() % (mArc.size() - 4);
 				m.fourth = vec4f(mArc[index]) * mat;
 				mMidMesh[3]->GetTransform().SetMatrix(m);
 
+				index = mArc.size() % (mArc.size() - 5);
 				m.fourth = vec4f(mArc[index]) * mat;
 				mMidMesh[4]->GetTransform().SetMatrix(m);
 
