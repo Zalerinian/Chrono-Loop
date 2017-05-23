@@ -391,6 +391,10 @@ namespace Epoch {
 		InitialData.pSysMem = &identity;
 		ThrowIfFailed(mDevice->CreateBuffer(&desc, &InitialData, mGlobalMatrixBuffer.GetAddressOf()));
 
+		// Solid color outline buffer
+		desc.ByteWidth = sizeof(vec4f);
+		ThrowIfFailed(mDevice->CreateBuffer(&desc, nullptr, mOutlineColorBuffer.GetAddressOf()));
+
 		// Model position buffer
 #if ENABLE_INSTANCING
 		desc.ByteWidth = sizeof(matrix4) * 256;
@@ -850,11 +854,17 @@ namespace Epoch {
 				mContext->OMSetDepthStencilState(mMotionStateFindObject.Get(), 1);
 			} else {
 				mContext->OMSetDepthStencilState(mMotionStateReverseDepth.Get(), 1); // Make sure the stencil buffer value is less than 1 to pass.
+				Settings::GetInstance().SetInt("PixelShaderOverride", ePS_SOLIDCOLOR);
 				D3D11_MAPPED_SUBRESOURCE map;
 				matrix4 scale = matrix4::CreateScale(1.5f, 1.5f, 1.5f);
 				mContext->Map(mGlobalMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
 				memcpy(map.pData, &scale, sizeof(scale));
 				mContext->Unmap(mGlobalMatrixBuffer.Get(), 0);
+
+				vec4f redLit(1, 0, 0, 0);
+				mContext->Map(mOutlineColorBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+				memcpy(map.pData, &redLit, sizeof(redLit));
+				mContext->Unmap(mOutlineColorBuffer.Get(), 0);
 			}
 
 			for (auto it = mMotionSet.Begin(); it != mMotionSet.End(); ++it) {
@@ -866,6 +876,9 @@ namespace Epoch {
 					while (positions.size() - offset <= positions.size()) {
 						(*it)->mShape.GetContext().Apply(mCurrentContext);
 						mCurrentContext.SimpleClone((*it)->mShape.GetContext());
+						if (passIndex == 1) {
+							mContext->PSSetConstantBuffers(1, 1, mOutlineColorBuffer.GetAddressOf());
+						}
 
 						D3D11_MAPPED_SUBRESOURCE map;
 						memset(&map, 0, sizeof(map));
@@ -880,6 +893,9 @@ namespace Epoch {
 #else
 					(*it)->mShape.GetContext().Apply(mCurrentContext);
 					mCurrentContext.SimpleClone((*it)->mShape.GetContext());
+					if (passIndex == 1) {
+						mContext->PSSetConstantBuffers(1, 1, mOutlineColorBuffer.GetAddressOf());
+					}
 					vec4i SimInstanceID(0, 0, 0, 0);
 					for (unsigned int i = 0; i < positions.size(); ++i) {
 						SimInstanceID.x = i;
@@ -912,6 +928,7 @@ namespace Epoch {
 			mContext->Map(mGlobalMatrixBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
 			memcpy(map.pData, &identity, sizeof(identity));
 			mContext->Unmap(mGlobalMatrixBuffer.Get(), 0);
+			Settings::GetInstance().SetInt("PixelShaderOverride", ePS_MAX);
 		}
 
 

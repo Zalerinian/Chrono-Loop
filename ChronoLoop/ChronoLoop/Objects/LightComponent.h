@@ -35,9 +35,12 @@ namespace Epoch {
 		LightData mData;
 
 		virtual void Update() override;
+		void UpdateBuffer();
 
 	public:
 		LightComponent(const char* _path, const vec4f& _color);
+		void SetColor(const vec4f& _color);
+		void SetColor(float _r, float _g, float _b, float _attenuation);
 	};
 
 }

@@ -526,9 +526,6 @@
     <ClInclude Include="Actions\CCBoxSpinRandomSmall.h">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="CCBoxSpinRandom.h">
-      <Filter>Actions</Filter>
-    </ClInclude>
     <ClInclude Include="..\Resources\Soundbanks\Wwise_IDs.h">
       <Filter>Sound\Header Files</Filter>
     </ClInclude>
