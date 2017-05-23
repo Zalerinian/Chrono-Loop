@@ -145,6 +145,7 @@ namespace Epoch
 				mBooped3 = true;
 				Settings::GetInstance().SetInt("mmLevel", Settings::GetInstance().GetInt("mmLevel") - 1);
 				Settings::GetInstance().SetBool("mmChamberMoving", true);
+				Settings::GetInstance().SetBool("CantTeleport", true);
 				//mPB->OnDisable();
 			}
 		}
@@ -267,6 +268,7 @@ namespace Epoch
 					((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::EventType::eStop);
 					mBooped = false;
 					Settings::GetInstance().SetBool("mmChamberMoving", false);
+					Settings::GetInstance().SetBool("CantTeleport", false);
 					complete = false;
 				}
 			}
