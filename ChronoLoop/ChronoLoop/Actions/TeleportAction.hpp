@@ -35,6 +35,94 @@ namespace Epoch
 		float ang = 0.05f;
 		ParticleEmitter* mTPParticles;
 
+		RenderShape* mParabola;
+		GhostList<matrix4>::GhostNode* mPGhost;
+		Mesh* mArcMesh;
+
+		void GenerateMesh(vec3f& _vel, matrix4 _m)
+		{
+			//verts and uvs
+			std::vector<VertexPosNormTex> mVerts;
+			std::vector<unsigned int> mIndices;
+
+			vec3f right = _vel.Cross(vec3f(0, 1, 0)).Normalize();
+			//Maybe over extend, may be some index issue
+			mVerts.reserve(50);
+			mVerts.resize(50);
+			int ind = 0, numrv = 0;
+			for (int i = 0; i < 25; i++)
+			{
+				VertexPosNormTex t1, t2;
+				if (i < mArc.size())
+				{
+					t1.Position = mArc[i] - right * (.2f / 2);
+					t2.Position = mArc[i] + right * (.2f / 2);
+					t1.Position.w = 1;
+					t2.Position.w = 1;
+
+					//Figure out uv offset
+					float uvoff = fmodf((std::chrono::steady_clock::now().time_since_epoch().count()) / 1000.0f / 1000.0f / 1000.0f, 1);
+					if (i == mArc.size() - 1 && i > 1)
+					{
+						float dlast, dcur;
+						dlast = (mArc[i - 2] - mArc[i - 1]).Magnitude();
+						dcur = (mArc[i] - mArc[i - 1]).Magnitude();
+						uvoff += 1 - dcur / dlast;
+					}
+					t1.UV = vec3f(0, i - uvoff, 0);
+					t2.UV = vec3f(1, i - uvoff, 0);
+					mVerts[ind] = t1;
+					mVerts[ind + 1] = t2;
+					ind += 2;
+					numrv += 2;
+				}
+			}
+
+			//indexs
+			mIndices.reserve((mVerts.size() / 2 - 1) * 12);
+			mIndices.resize((mVerts.size() / 2 - 1) * 12);
+			ind = 0;
+			for (int i = 0; i < mVerts.size() / 2 - 1; i++)
+			{
+				int p1 = 2 * i, p2 = 2 * i + 1, p3 = 2 * i + 2, p4 = 2 * i + 3;
+
+				mIndices[ind] = (p1);
+				mIndices[ind + 1] = (p2);
+				mIndices[ind + 2] = (p3);
+				mIndices[ind + 3] = (p3);
+				mIndices[ind + 4] = (p2);
+				mIndices[ind + 5] = (p4);
+
+				mIndices[ind + 6] = (p3);
+				mIndices[ind + 7] = (p2);
+				mIndices[ind + 8] = (p1);
+				mIndices[ind + 9] = (p4);
+				mIndices[ind + 10] = (p2);
+				mIndices[ind + 11] = (p3);
+				ind += 12;
+
+			}
+
+			if (!mInitial)
+			{
+				//Make the mesh
+				mArcMesh = new Mesh();
+				mArcMesh->Load(mVerts, mIndices);
+				//Make and push in rendershape, save the ghost node
+				mParabola = new RenderShape(*mArcMesh);
+				mParabola->SetShaders(PixelShaderFormat::ePS_PURETEXTURE, VertexShaderFormat::eVS_TEXTURED);
+				mParabola->SetGeometryShader(GeometryShaderFormat::eGS_PosNormTex);
+				mParabola->AddTexture(L"../Resources/cube_texture.png", TextureType::eTEX_DIFFUSE);
+				mPGhost = Renderer::Instance()->AddOpaqueNode(*mParabola);
+				mInitial = true;
+			}
+			else
+			{
+				mArcMesh->Update(mVerts, mIndices);
+				mParabola->UpdateBufferData(mArcMesh);
+			}
+		}
+
 		bool CheckMesh(MeshComponent* _plane, vec3f _ts, vec3f _te, vec3f _start, vec3f _end, vec3f& _hit)
 		{
 			Triangle* tris = _plane->GetTriangles();
@@ -291,48 +379,48 @@ namespace Epoch
 
 			}
 
+			mCanTeleport = CalculateCurve(mat.Position, mVelocity, mAcceleration, nullptr, nullptr, mArc);
+
+			if (mCanTeleport)
+			{
+				mat.first = vec4f();
+				mat.second = vec4f();
+				mat.third = vec4f();
+
+				matrix4 scaleM;
+				scaleM.first = vec4f(.05f, 0, 0, 0);
+				scaleM.second = vec4f(0, .05f, 0, 0);
+				scaleM.third = vec4f(0, 0, .05f, 0);
+				scaleM.fourth = vec4f(0, 0, 0, 1);
+
+				matrix4 r = matrix4::CreateYRotation(ang);
+
+				matrix4 m;
+				m = mTPMesh->GetTransform().GetMatrix() * r;
+				m.fourth = vec4f(mArc[mArc.size() - 1]) * mat;
+				mTPMesh->GetTransform().SetMatrix(m);
+
+				m = mat * scaleM;
+				m.fourth = mat.fourth;
+				mCSMesh->GetTransform().SetMatrix(m);
+
+				scaleM.first = vec4f(.15f, 0, 0, 0);
+				scaleM.second = vec4f(0, .15f, 0, 0);
+				scaleM.third = vec4f(0, 0, .15f, 0);
+				scaleM.fourth = vec4f(0, 0, 0, 1);
+				r = matrix4::CreateXRotation(ang);
+				m = mat * scaleM * r;
+				m.fourth = vec4f(mArc[mArc.size() == 1 ? 0 : (mArc.size() / 2 - 1)]) * mat;
+				mMidMesh->GetTransform().SetMatrix(m);
+
+				mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
+			}
+			
 
 			if (!interp->GetActive() && !Settings::GetInstance().GetBool("CantTeleport"))
 			{
 				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && mCanTeleport)
 				{
-
-					mCanTeleport = CalculateCurve(mat.Position, mVelocity, mAcceleration, nullptr, nullptr, mArc);
-
-					if (mCanTeleport)
-					{
-						mat.first = vec4f();
-						mat.second = vec4f();
-						mat.third = vec4f();
-
-						matrix4 scaleM;
-						scaleM.first = vec4f(.05f, 0, 0, 0);
-						scaleM.second = vec4f(0, .05f, 0, 0);
-						scaleM.third = vec4f(0, 0, .05f, 0);
-						scaleM.fourth = vec4f(0, 0, 0, 1);
-
-						matrix4 r = matrix4::CreateYRotation(ang);
-
-						matrix4 m;
-						m = mTPMesh->GetTransform().GetMatrix() * r;
-						m.fourth = vec4f(mArc[mArc.size() - 1]) * mat;
-						mTPMesh->GetTransform().SetMatrix(m);
-
-						m = mat * scaleM;
-						m.fourth = mat.fourth;
-						mCSMesh->GetTransform().SetMatrix(m);
-
-						scaleM.first = vec4f(.15f, 0, 0, 0);
-						scaleM.second = vec4f(0, .15f, 0, 0);
-						scaleM.third = vec4f(0, 0, .15f, 0);
-						scaleM.fourth = vec4f(0, 0, 0, 1);
-						r = matrix4::CreateXRotation(ang);
-						m = mat * scaleM * r;
-						m.fourth = vec4f(mArc[mArc.size() == 1 ? 0 : (mArc.size() / 2 - 1)]) * mat;
-						mMidMesh->GetTransform().SetMatrix(m);
-
-						mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
-					}
 					mTPMesh->SetVisible(true);
 					mCSMesh->SetVisible(true);
 					mMidMesh->SetVisible(true);
