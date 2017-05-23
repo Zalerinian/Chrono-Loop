@@ -32,6 +32,7 @@
 				<Event Id="3649448405" Name="Resume_Level2Ambient" ObjectPath="\Events\Default Work Unit\Resume_Level2Ambient"/>
 				<Event Id="1927416214" Name="Resume_Level3Ambient" ObjectPath="\Events\Default Work Unit\Resume_Level3Ambient"/>
 				<Event Id="2189517885" Name="SFX_BoxDoorZap" ObjectPath="\Events\Default Work Unit\SFX_BoxDoorZap"/>
+				<Event Id="2867120972" Name="SFX_BoxShrinkLevel5" ObjectPath="\Events\Default Work Unit\SFX_BoxShrinkLevel5"/>
 				<Event Id="752092787" Name="SFX_BoxWallCollideLevel3" ObjectPath="\Events\Default Work Unit\SFX_BoxWallCollideLevel3"/>
 				<Event Id="3124930127" Name="SFX_communication_channel" ObjectPath="\Events\Default Work Unit\SFX_communication_channel"/>
 				<Event Id="3901374612" Name="SFX_gentle_alarm" ObjectPath="\Events\Default Work Unit\SFX_gentle_alarm"/>
@@ -92,6 +93,10 @@
 				<File Id="648589336" Language="SFX">
 					<ShortName>Music-SFX\Level2Ambient.wav</ShortName>
 					<Path>SFX\Music-SFX\Level2Ambient_3BDAD486.wem</Path>
+				</File>
+				<File Id="695632029" Language="SFX">
+					<ShortName>BoxShrinkLevel5.wav</ShortName>
+					<Path>SFX\BoxShrinkLevel5_3AE5877C.wem</Path>
 				</File>
 				<File Id="771783799" Language="SFX">
 					<ShortName>Music-SFX\BoxDoorZap.wav</ShortName>
@@ -160,10 +165,6 @@
 				<Event Id="4280461585" Name="Stop_Orbit_LOOP" ObjectPath="\Events\Default Work Unit\AMBIENCE_EVENTS\Stop_Orbit_LOOP"/>
 			</IncludedEvents>
 			<IncludedMemoryFiles>
-				<File Id="48431970" Language="SFX">
-					<ShortName>ForceField_Close.wav</ShortName>
-					<Path>SFX\ForceField_Close_3AE5877C.wem</Path>
-				</File>
 				<File Id="62361149" Language="SFX">
 					<ShortName>ResetLevel.wav</ShortName>
 					<Path>SFX\ResetLevel_3AE5877C.wem</Path>
@@ -176,13 +177,13 @@
 					<ShortName>Puzzles\Casual Level LOOP.wav</ShortName>
 					<Path>SFX\Puzzles\Casual Level LOOP_3BDAD486.wem</Path>
 				</File>
+				<File Id="517049963" Language="SFX">
+					<ShortName>ForceField_Box.wav</ShortName>
+					<Path>SFX\ForceField_Box_3AE5877C.wem</Path>
+				</File>
 				<File Id="596824733" Language="SFX">
 					<ShortName>Metallic Noise 004.wav</ShortName>
 					<Path>SFX\Metallic Noise 004_3AE5877C.wem</Path>
-				</File>
-				<File Id="663690696" Language="SFX">
-					<ShortName>ForceField_Open.wav</ShortName>
-					<Path>SFX\ForceField_Open_3AE5877C.wem</Path>
 				</File>
 				<File Id="664880918" Language="SFX">
 					<ShortName>Music-SFX\Level5Ambient.wav</ShortName>
@@ -192,13 +193,17 @@
 					<ShortName>Orbit LOOP.wav</ShortName>
 					<Path>SFX\Orbit LOOP_3BDAD486.wem</Path>
 				</File>
-				<File Id="825634501" Language="SFX">
-					<ShortName>ForceField_Box.wav</ShortName>
-					<Path>SFX\ForceField_Box_3AE5877C.wem</Path>
+				<File Id="787174580" Language="SFX">
+					<ShortName>ForceField_Open.wav</ShortName>
+					<Path>SFX\ForceField_Open_3AE5877C.wem</Path>
 				</File>
 				<File Id="859612369" Language="SFX">
 					<ShortName>A_Timelapse.wav</ShortName>
 					<Path>SFX\A_Timelapse_3BDAD486.wem</Path>
+				</File>
+				<File Id="863068107" Language="SFX">
+					<ShortName>ForceField_Close.wav</ShortName>
+					<Path>SFX\ForceField_Close_3AE5877C.wem</Path>
 				</File>
 				<File Id="883031343" Language="SFX">
 					<ShortName>Hangar Escape LOOP.wav</ShortName>
