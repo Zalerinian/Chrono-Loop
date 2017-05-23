@@ -16,7 +16,6 @@
 
 namespace Epoch
 {
-
 	struct TeleportAction : public CodeComponent
 	{
 		matrix4 endPos;
@@ -125,10 +124,11 @@ namespace Epoch
 			_arc.clear();
 			matrix4 cm = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
 
+			cm.first = vec4f();
+			cm.second = vec4f();
+			cm.third = vec4f();
+
 			vec3f vel = vec3f(0, 0, 10);
-			/*	vec3f up = vec3f(0, 1, 0);
-				vel = vel * ((up.Dot(vel)) / vel.SquaredMagnitude());
-	*/
 			float t = 0;
 			vec3f lastpos = ParabolicCurve(vec3f(), vel, _a, t);
 			vec3f initial = lastpos;
@@ -326,6 +326,10 @@ namespace Epoch
 
 			if (mCanTeleport)
 			{
+				mat.first = vec4f();
+				mat.second = vec4f();
+				mat.third = vec4f();
+
 				matrix4 scaleM;
 				scaleM.first = vec4f(.05f, 0, 0, 0);
 				scaleM.second = vec4f(0, .05f, 0, 0);
@@ -350,6 +354,8 @@ namespace Epoch
 				m = mat * scaleM;
 				m.fourth = vec4f(mArc[mArc.size() == 1 ? 0 : (mArc.size() / 2 - 1)]) * mat;
 				mMidMesh->GetTransform().SetMatrix(m);
+
+				mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
 			}
 
 
