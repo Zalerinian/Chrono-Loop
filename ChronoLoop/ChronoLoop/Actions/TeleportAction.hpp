@@ -126,9 +126,9 @@ namespace Epoch
 			matrix4 cm = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
 
 			vec3f vel = vec3f(0, 0, 10);
-		/*	vec3f up = vec3f(0, 1, 0);
-			vel = vel * ((up.Dot(vel)) / vel.SquaredMagnitude());
-*/
+			/*	vec3f up = vec3f(0, 1, 0);
+				vel = vel * ((up.Dot(vel)) / vel.SquaredMagnitude());
+	*/
 			float t = 0;
 			vec3f lastpos = ParabolicCurve(vec3f(), vel, _a, t);
 			vec3f initial = lastpos;
@@ -260,12 +260,14 @@ namespace Epoch
 			mCSMesh->SetVisible(false);
 			mMidMesh->SetVisible(false);
 
-			mTPParticles = new TeleportEffect(-1, 100, 50, vec3f());
+			mTPParticles = new TeleportEffect(-1, 500, 50, vec3f());
 			Particle* p = &Particle::Init();
 			p->SetColors(vec4f(0, .5, .5, 1), vec4f(0, .5, .5, 1));
-			p->SetLife(600);
-			p->SetSize(.5, .5);
+			p->SetLife(300);
+			p->SetSize(.15, .015);
 			mTPParticles->SetParticle(p);
+			mTPParticles->SetPosBounds(vec3f(-1, 0, -1), vec3f(1, 0, 1));
+			mTPParticles->SetVelBounds(vec3f(0, .3, 0), vec3f(0, 2, 0));
 			mTPParticles->SetTexture("../Resources/BasicSquareP.png");
 
 			ParticleSystem::Instance()->AddEmitter(mTPParticles);
@@ -356,15 +358,19 @@ namespace Epoch
 					mTPMesh->SetVisible(true);
 					mCSMesh->SetVisible(true);
 					mMidMesh->SetVisible(true);
-					//mTPParticles->SetPos(vec4f(mArc[mArc.size() - 1]) * mat);
-					//mTPParticles->FIRE();
+					if (ParticleSystem::Instance()->GetNumEmitters() > 0)
+					{
+						mTPParticles->SetPos(vec4f(mArc[mArc.size() - 1]) * mat);
+						mTPParticles->FIRE();
+					}
 				}
 				else
 				{
 					mTPMesh->SetVisible(false);
 					mCSMesh->SetVisible(false);
 					mMidMesh->SetVisible(false);
-					//mTPParticles->CeaseFire();
+					if (ParticleSystem::Instance()->GetNumEmitters() > 0)
+						mTPParticles->CeaseFire();
 				}
 				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPressUp(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && mCanTeleport && !Settings::GetInstance().GetBool("PauseMenuUp"))
 				{
