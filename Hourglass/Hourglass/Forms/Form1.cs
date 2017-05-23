@@ -396,7 +396,7 @@ namespace Hourglass
                     {
                         Gizmo.Instance.Mode = Gizmo.GizmoMode.Scale;
                     }
-					if(mKeys.Contains(Key.D)) {
+					if(mKeys.Contains(Key.D) && !mPreviousKeys.Contains(Key.D)) {
 						DuplicateObject();
 					}
                 }
@@ -606,25 +606,33 @@ namespace Hourglass
 			}
 		}
 
+		private TreeNode GetLevelRoot() {
+			if(Tree.Nodes.Count == 1) {
+				return Tree.Nodes[0];
+			} else {
+				return null;
+			}
+		}
+
 		private void mMenuButton_Click(object sender, EventArgs e)
 		{
-			Tree.SelectedNode = ConstructTreeObject(null);
+			Tree.SelectedNode = ConstructTreeObject(GetLevelRoot());
 			btnFocus.Select();
 		}
 
 		private void mCreateMenuAdd_Click(object sender, EventArgs e)
 		{
-			Tree.SelectedNode = ConstructTreeObject(null);
+			Tree.SelectedNode = ConstructTreeObject(GetLevelRoot());
 			btnFocus.Select();
 		}
 
 		private void Tree_AfterSelect(object sender, TreeViewEventArgs e)
 		{
 			spWorldView.Panel2.Controls.Clear();
-			// Needed to keep the component button on the side panel.
-			spWorldView.Panel2.Controls.Add(btnComponentAdd);
-			if (Tree.SelectedNode != null)
+			if (Tree.SelectedNode != null && Tree.SelectedNode.Tag != null)
 			{
+				// Needed to keep the component button on the side panel.
+				spWorldView.Panel2.Controls.Add(btnComponentAdd);
 				BaseObject obj = (BaseObject)Tree.SelectedNode.Tag;
 				for (int i = 0; i < obj.GetComponents().Count; ++i)
 				{
@@ -908,9 +916,29 @@ namespace Hourglass
 		}
 
 		private void Tree_MouseUp(object sender, MouseEventArgs e) {
-			Tree.SelectedNode = Tree.GetNodeAt(e.X, e.Y);
-			if(Tree.SelectedNode != null) {
-				mObjectStrip.Show(Tree, e.Location);
+			if (e.Button == MouseButtons.Right) {
+				Tree.SelectedNode = Tree.GetNodeAt(e.X, e.Y);
+				if (Tree.SelectedNode != null) {
+					mObjectStrip.Show(Tree, e.Location);
+				}
+			}
+		}
+
+		private void createRootToolStripMenuItem_Click(object sender, EventArgs e) {
+			TreeNode root = GetLevelRoot();
+			if(root == null) {
+				root = new TreeNode();
+				root.Tag = new BaseObject(root, "Root");
+				Tree.Nodes.Add(root);
+				for(int i = Tree.Nodes.Count - 2; i >= 0; --i) {
+					TreeNode n = Tree.Nodes[i];
+					((BaseObject)n.Tag).Parent = (BaseObject)root.Tag;
+					Tree.Nodes.Remove(n);
+					root.Nodes.Add(n);
+				}
+				root.Expand();
+			} else {
+				Debug.Print("We already have a root, ye dingus.");
 			}
 		}
 
