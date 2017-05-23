@@ -377,7 +377,9 @@ namespace Epoch
 
 			if (mCanTeleport)
 			{
-				GenerateMesh(vec3f(0, 0, 10), mat);
+				/*GenerateMesh(vec3f(0, 0, 10), mat);
+				mPGhost->data.Position = vec4f();*/
+
 				matrix4 scaleM;
 				scaleM.first = vec4f(.05f, 0, 0, 0);
 				scaleM.second = vec4f(0, .05f, 0, 0);
