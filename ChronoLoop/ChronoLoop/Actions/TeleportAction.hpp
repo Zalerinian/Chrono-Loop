@@ -96,9 +96,8 @@ namespace Epoch
 
 						if (hit)
 						{
-							h = true;
-							if (time < t)
-								t = time;
+							_hit = _start + (_ray * t);
+							return true;
 						}
 					}
 
@@ -152,16 +151,16 @@ namespace Epoch
 					{
 						if (CheckMesh((MeshComponent*)mEnvironmentObjects[e]->GetComponents(ComponentType::eCOMPONENT_MESH)[m], tl, tn, lastpos, nextpos, hit))
 						{
-							//vec3f floorhit;
+							vec3f floorhit;
 
-							//if (ChecktoFloor((MeshComponent*)mEnvironmentObjects[e]->GetComponents(ComponentType::eCOMPONENT_MESH)[m], hit, vec3f(0, -1, 0), floorhit))
-							//{
-							//	//if it hits the plane
-							//	_arc.push_back(floorhit);
+							if (ChecktoFloor((MeshComponent*)mEnvironmentObjects[e]->GetComponents(ComponentType::eCOMPONENT_MESH)[m], hit, vec3f(0, -1, 0), floorhit))
+							{
+								_arc.push_back(floorhit);
 
-							//}
-							//else
-							_arc.push_back(hit);
+							}
+							else
+								_arc.push_back(hit);
+
 							return true;
 						}
 					}
