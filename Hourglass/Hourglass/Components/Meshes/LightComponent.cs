@@ -118,6 +118,7 @@ namespace Hourglass {
 			base.CopyData(ref _other);
 			LightComponent comp = _other as LightComponent;
 			comp.Color = Color;
+            comp.mMesh.SelectedIndex = mMesh.SelectedIndex;
 		}
 	}
 }

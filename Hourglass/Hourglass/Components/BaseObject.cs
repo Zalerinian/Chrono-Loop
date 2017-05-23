@@ -147,6 +147,9 @@ namespace Hourglass
 					case Component.ComponentType.Transform:
 						c = b.mComponents[0];
 						break;
+                    case Component.ComponentType.Light:
+                        c = new LightComponent();
+                        break;
 					default:
 						break;
 				}
