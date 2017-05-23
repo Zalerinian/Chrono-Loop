@@ -218,13 +218,12 @@ namespace Epoch
 			mCSLoc = new BaseObject("ArcStart");
 			mMSLoc = new BaseObject("ArcMid");
 
-			//TODO : Make mesh and load them here as well as textures
 			mCSMesh = new MeshComponent("../Resources/ControllerTP.obj");
-			mCSMesh->AddTexture("../Resources/ArcMark.png", TextureType::eTEX_DIFFUSE);
+			mCSMesh->AddTexture("../Resources/Marker.png", TextureType::eTEX_DIFFUSE);
 			mCSLoc->AddComponent(mCSMesh);
 			mCSMesh->SetAlpha(.45);
 			mMidMesh = new MeshComponent("../Resources/ArcMarker.obj");
-			mMidMesh->AddTexture("../Resources/ArcMark.png", TextureType::eTEX_DIFFUSE);
+			mMidMesh->AddTexture("../Resources/Marker.png", TextureType::eTEX_DIFFUSE);
 			mMSLoc->AddComponent(mMidMesh);
 			mMidMesh->SetAlpha(.45);
 			mTPMesh = new MeshComponent("../Resources/TeleportMarker.obj");
@@ -293,76 +292,47 @@ namespace Epoch
 
 			}
 
-			matrix4 tmp = mat;
-			vec3f fwdvel, right;
-			vec4f t = mVelocity;
-			t.w = 1;
-
-			tmp.first.w = 1;
-			tmp.second.w = 1;
-			tmp.third.w = 1;
-			tmp.fourth = vec4f();
-
-			t *= tmp;
-
-			vec4f up = vec3f(0, 1, 0);
-			fwdvel = t * ((up.Dot(t)) / t.SquaredMagnitude());
-			float angle = acos(fwdvel.Dot(t));
-			right = up.Cross(fwdvel);
-
-			if (right.Dot(fwdvel.Cross(t)) > 0)
-				angle *= -1;
-
-			if (angle > 45)
-			{
-				float ag = acos(fwdvel.Dot(t));
-				t = fwdvel * (sin((1 - (45.0f / angle)) * ag) / sin(ag)) + t * (sin((45.0f / angle) * ag) / sin(ag));
-				t /= t.Magnitude();
-				t *= mVelocity.Magnitude();
-				angle = 45;
-			}
-
-			mCanTeleport = CalculateCurve(mat.Position, t, mAcceleration, nullptr, nullptr, mArc);
-
-			if (mCanTeleport)
-			{
-				mat.first = vec4f();
-				mat.second = vec4f();
-				mat.third = vec4f();
-
-				matrix4 scaleM;
-				scaleM.first = vec4f(.05f, 0, 0, 0);
-				scaleM.second = vec4f(0, .05f, 0, 0);
-				scaleM.third = vec4f(0, 0, .05f, 0);
-				scaleM.fourth = vec4f(0, 0, 0, 1);
-
-				matrix4 r = matrix4::CreateYRotation(ang);
-
-				matrix4 m;
-				m = mTPMesh->GetTransform().GetMatrix() * r;
-				m.fourth = vec4f(mArc[mArc.size() - 1]) * mat;
-				mTPMesh->GetTransform().SetMatrix(m);
-
-				m = mat * scaleM;
-				m.fourth = mat.fourth;
-				mCSMesh->GetTransform().SetMatrix(m);
-
-				scaleM.first = vec4f(.15f, 0, 0, 0);
-				scaleM.second = vec4f(0, .15f, 0, 0);
-				scaleM.third = vec4f(0, 0, .15f, 0);
-				scaleM.fourth = vec4f(0, 0, 0, 1);
-				m = mat * scaleM;
-				m.fourth = vec4f(mArc[mArc.size() == 1 ? 0 : (mArc.size() / 2 - 1)]) * mat;
-				mMidMesh->GetTransform().SetMatrix(m);
-
-				mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
-			}
-
 
 			if (!interp->GetActive() && !Settings::GetInstance().GetBool("CantTeleport"))
 			{
 				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && mCanTeleport)
 				{
+
+					mCanTeleport = CalculateCurve(mat.Position, mVelocity, mAcceleration, nullptr, nullptr, mArc);
+
+					if (mCanTeleport)
+					{
+						mat.first = vec4f();
+						mat.second = vec4f();
+						mat.third = vec4f();
+
+						matrix4 scaleM;
+						scaleM.first = vec4f(.05f, 0, 0, 0);
+						scaleM.second = vec4f(0, .05f, 0, 0);
+						scaleM.third = vec4f(0, 0, .05f, 0);
+						scaleM.fourth = vec4f(0, 0, 0, 1);
+
+						matrix4 r = matrix4::CreateYRotation(ang);
+
+						matrix4 m;
+						m = mTPMesh->GetTransform().GetMatrix() * r;
+						m.fourth = vec4f(mArc[mArc.size() - 1]) * mat;
+						mTPMesh->GetTransform().SetMatrix(m);
+
+						m = mat * scaleM;
+						m.fourth = mat.fourth;
+						mCSMesh->GetTransform().SetMatrix(m);
+
+						scaleM.first = vec4f(.15f, 0, 0, 0);
+						scaleM.second = vec4f(0, .15f, 0, 0);
+						scaleM.third = vec4f(0, 0, .15f, 0);
+						scaleM.fourth = vec4f(0, 0, 0, 1);
+						m = mat * scaleM;
+						m.fourth = vec4f(mArc[mArc.size() == 1 ? 0 : (mArc.size() / 2 - 1)]) * mat;
+						mMidMesh->GetTransform().SetMatrix(m);
+
+						mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
+					}
 					mTPMesh->SetVisible(true);
 					mCSMesh->SetVisible(true);
 					mMidMesh->SetVisible(true);
