@@ -1110,10 +1110,6 @@ namespace Epoch {
 			if (positions.size() == 0) {
 				continue;
 			}
-			(*it)->mShape.mContext.mTextures[0] = mAlbedoSRV;
-			(*it)->mShape.mContext.mTextures[1] = mPositionSRV;
-			(*it)->mShape.mContext.mTextures[2] = mNormalSRV;
-			(*it)->mShape.mContext.mTextures[3] = mSpecularSRV;
 
 			vec4i SimulatedIID(0, 0, 0, 0);
 			for (unsigned int i = 0; i < positions.size(); ++i) {

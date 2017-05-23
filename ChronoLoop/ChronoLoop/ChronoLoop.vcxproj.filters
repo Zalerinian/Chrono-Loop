@@ -562,6 +562,9 @@
     <ClInclude Include="Rendering\FrameQuery.h">
       <Filter>Rendering\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Objects\LightComponent.h">
+      <Filter>Objects\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -847,6 +850,7 @@
     <ClCompile Include="Rendering\FrameQuery.cpp">
       <Filter>Rendering\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\LightComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
@@ -890,12 +894,6 @@
     </FxCompile>
     <FxCompile Include="Rendering\Shaders\TexturedPixel.hlsl">
       <Filter>Rendering\Shaders\Pixel shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\BasicVertex.hlsl">
-      <Filter>Rendering\Shaders\Vertex Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\InstancedVertex64.hlsl">
-      <Filter>Rendering\Shaders\Vertex Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Rendering\Shaders\TexturedVertex.hlsl">
       <Filter>Rendering\Shaders\Vertex Shaders</Filter>

@@ -22,6 +22,7 @@
 #include "../Actions/CCLevel1TutorialButton.h"
 #include "../Actions/CCStartButton.h"
 #include "../Objects/MeshComponent.h"
+#include "../Objects/LightComponent.h"
 #include "../tinyxml/tinyxml.h"
 #include "../tinyxml/tinystr.h"
 #include "../Common/Settings.h"
@@ -775,11 +776,8 @@ namespace Epoch {
 						file.read((char *)&argbColor.color, sizeof(INT32));
 						if (obj) {
 							std::string path = "../Resources/" + mesh;
-							vec4f lightProps(argbColor.r / 255.f * transparency, argbColor.g / 255.f * transparency, argbColor.b / 255.f * transparency, 1.0f);
-							MeshComponent *light = new MeshComponent(path.c_str());
-							// Pixel shader for lights is hard set in the renderer.
-							light->SetData(eCB_PIXEL, eBufferDataType_Light, ePB_REGISTER1, &lightProps);
-							light->SetAsLight(true);
+							vec4f lightColor(argbColor.r / 255.f * transparency, argbColor.g / 255.f * transparency, argbColor.b / 255.f * transparency, 1.0f);
+							LightComponent *light = new LightComponent(path.c_str(), lightColor);
 							obj->AddComponent(light);
 						}
 					}
