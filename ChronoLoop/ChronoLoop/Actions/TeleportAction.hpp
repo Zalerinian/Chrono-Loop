@@ -33,7 +33,7 @@ namespace Epoch
 		vec3f mVelocity, mAcceleration;
 		BaseObject* mTPLoc, *mCSLoc, *mMSLoc;
 		MeshComponent* mTPMesh, *mCSMesh, *mMidMesh;
-
+		float ang = 0.0f;
 		ParticleEmitter* mTPParticles;
 
 		bool CheckMesh(MeshComponent* _plane, vec3f _ts, vec3f _te, vec3f _start, vec3f _end, vec3f& _hit)
@@ -227,7 +227,7 @@ namespace Epoch
 			mMidMesh->AddTexture("../Resources/ArcMark.png", TextureType::eTEX_DIFFUSE);
 			mMSLoc->AddComponent(mMidMesh);
 			mMidMesh->SetAlpha(.25);
-			mTPMesh = new MeshComponent("../Resources/TPMarker.obj");
+			mTPMesh = new MeshComponent("../Resources/TeleportMarker.obj");
 			mTPMesh->AddTexture("../Resources/Marker.png", TextureType::eTEX_DIFFUSE);
 			mTPLoc->AddComponent(mTPMesh);
 			mTPMesh->SetAlpha(.25);
@@ -326,14 +326,18 @@ namespace Epoch
 
 			if (mCanTeleport)
 			{
+				ang += .1f;
+
 				matrix4 scaleM;
 				scaleM.first = vec4f(.05f, 0, 0, 0);
 				scaleM.second = vec4f(0, .05f, 0, 0);
 				scaleM.third = vec4f(0, 0, .05f, 0);
 				scaleM.fourth = vec4f(0, 0, 0, 1);
 
+				matrix4 r = matrix4::CreateXRotation(ang);
+
 				matrix4 m;
-				m = mTPMesh->GetTransform().GetMatrix();
+				m = mTPMesh->GetTransform().GetMatrix() * r;
 				m.fourth = vec4f(mArc[mArc.size() - 1]) * mat;
 				mTPMesh->GetTransform().SetMatrix(m);
 
