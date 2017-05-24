@@ -212,7 +212,6 @@ namespace Epoch
 						timeToRewind = tEnd - tStart;
 						//SystemLogger::GetLog() << "pb End Progress: " << timeToRewind << std::endl;
 						Settings::GetInstance().SetUInt("TutorialRewind - FinalProgress", timeToRewind);
-						Settings::GetInstance().SetUInt("TutorialRewind - CurProgress", timeToRewind);
 						pb->SetFinalProgress((float)timeToRewind);
 						pb->GetBackground()->GetTransform().SetMatrix(pb->GetBackground()->GetTransform().GetMatrix() * matrix4::CreateNewXRotation(1.5708f) * matrix4::CreateNewYRotation(-1.5708f) * matrix4::CreateNewTranslation(-9.95f, 2.2f, -2.86f));
 						pb->OnEnable();
@@ -245,10 +244,7 @@ namespace Epoch
 			if (tut == 3)
 			{
 				//SystemLogger::GetLog() << "pb Current Progress: " << Settings::GetInstance().GetUInt("TutorialRewind - CurProgress") << std::endl;
-				if (Settings::GetInstance().GetUInt("TutorialRewind - FinalProgress") > Settings::GetInstance().GetUInt("TutorialRewind - CurProgress"))
-					pb->SetCurProgress((float)(Settings::GetInstance().GetUInt("TutorialRewind - FinalProgress") - Settings::GetInstance().GetUInt("TutorialRewind - CurProgress")));
-				else
-					pb->SetCurProgress(0);
+				pb->SetCurProgress((float)(Settings::GetInstance().GetUInt("TutorialRewind - CurProgress")));
 			}
 
 			ScaleUpCurrentBoards();
