@@ -86,6 +86,15 @@ namespace Epoch {
 		return temp;
 	}
 
+	matrix4 matrix4::operator-() {
+		matrix4 m;
+		m.xAxis = -xAxis;
+		m.yAxis = -yAxis;
+		m.zAxis = -zAxis;
+		m.Position = -Position;
+		return m;
+	}
+
 	matrix4& matrix4::operator+=(matrix4 const& _other) {
 		*this = *this + _other;
 		return *this;
@@ -96,7 +105,7 @@ namespace Epoch {
 		vec4f temp;
 		for (int i = 0; i < 4; ++i)
 			temp.xyzw[i] = (_other.x * this->operator[](i).x) +
-			(_other.y * this->operator[](i).y) -
+			(_other.y * this->operator[](i).y) +
 			(_other.z * this->operator[](i).z) +
 			(_other.w * this->operator[](i).w);
 
