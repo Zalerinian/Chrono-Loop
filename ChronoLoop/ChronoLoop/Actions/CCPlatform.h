@@ -17,7 +17,7 @@ namespace Epoch {
 		virtual void Start() 
 		{
 			Level* l = LevelManager::GetInstance().GetCurrentLevel();
-			invis = l->FindObjectWithName("EnvCantLetYouDoThatStarFoxt");
+			invis = l->FindObjectWithName("EnvCantLetYouDoThatStarFox");
 			if (invis)
 				startpos = invis->GetTransform().GetMatrix().Position;
 			platInterp = TimeManager::Instance()->GetObjectInterpolator(mObject->GetUniqueID());
