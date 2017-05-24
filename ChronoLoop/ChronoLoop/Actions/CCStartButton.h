@@ -206,8 +206,8 @@ namespace Epoch
 
 				if (!AudioToggle)
 				{
-					((SFXEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
-					((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::EventType::ePlay);
+					//((SFXEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+					((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->CallEvent(Emitter::EventType::ePlay);
 					AudioToggle = true;
 				}
 				bool complete = mPlayerInterp->Update(TimeManager::Instance()->GetDeltaTime());
@@ -272,7 +272,7 @@ namespace Epoch
 				}
 				else if(complete && !mBooped3)
 				{
-					((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::EventType::eStop);
+					((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->CallEvent(Emitter::EventType::eStop);
 					mBooped = false;
 					Settings::GetInstance().SetBool("mmChamberMoving", false);
 					Settings::GetInstance().SetBool("CantTeleport", false);
