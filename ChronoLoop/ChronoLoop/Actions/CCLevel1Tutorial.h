@@ -209,7 +209,7 @@ namespace Epoch
 					{
 						tStart = Settings::GetInstance().GetUInt("tut1ButtonPress");
 						tEnd = Settings::GetInstance().GetUInt("tut1FirstPause");
-						timeToRewind = Settings::GetInstance().GetUInt("tut1FirstPause") - Settings::GetInstance().GetUInt("tut1ButtonPress");
+						timeToRewind = tEnd - tStart;
 						//SystemLogger::GetLog() << "pb End Progress: " << timeToRewind << std::endl;
 						Settings::GetInstance().SetUInt("TutorialRewind - FinalProgress", timeToRewind);
 						pb->SetFinalProgress((float)timeToRewind);
