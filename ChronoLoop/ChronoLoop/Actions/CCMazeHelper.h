@@ -18,7 +18,7 @@ namespace Epoch
 		int mRow = 0;
 		int mCol = 0;
 
-		void SetUp(int _id,int _h, int _v)
+		void SetUp(int _id, int _h, int _v)
 		{
 			mId = _id;
 			mRow = _h;
@@ -72,7 +72,7 @@ namespace Epoch
 			mResetButton = cLevel->FindObjectWithName("ResetButton");
 			mLBCC = new CCLevel3BoxMovementButton();
 			mRBCC = new CCLevel3BoxMovementButton();
-			mUBCC = new CCLevel3BoxMovementButton(); 
+			mUBCC = new CCLevel3BoxMovementButton();
 			mDBCC = new CCLevel3BoxMovementButton();
 			mResetBCC = new CCLevel3BoxMovementButton();
 
@@ -86,35 +86,39 @@ namespace Epoch
 		}
 		virtual void Update()
 		{
-			if ((GetAsyncKeyState(VK_DOWN) & 0x1 || mDBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
+			if ((GetAsyncKeyState(VK_DOWN) & 0x1 || mDBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done))
+			{
 				MoveDown();
 				mDBCC->SetisColliding(false);
 				//PrintGrid();
 			}
-			else if (((GetAsyncKeyState(VK_UP) & 0x1) || mUBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
+			else if (((GetAsyncKeyState(VK_UP) & 0x1) || mUBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done))
+			{
 				MoveUp();
 				mUBCC->SetisColliding(false);
 				//PrintGrid();
 			}
-			else if ((GetAsyncKeyState(VK_LEFT) & 0x1 || mLBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
+			else if ((GetAsyncKeyState(VK_LEFT) & 0x1 || mLBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done))
+			{
 				MoveLeft();
 				mLBCC->SetisColliding(false);
 				//PrintGrid();
 			}
-			else if ((GetAsyncKeyState(VK_RIGHT) & 0x1 || mRBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
+			else if ((GetAsyncKeyState(VK_RIGHT) & 0x1 || mRBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done))
+			{
 				MoveRight();
 				mRBCC->SetisColliding(false);
 				//PrintGrid();
 			}
-			else if(GetAsyncKeyState(Epoch::Keys::R) & 0x1 || mResetBCC->GetisColliding())
+			else if (GetAsyncKeyState(Epoch::Keys::R) & 0x1 || mResetBCC->GetisColliding())
 			{
 
-				if(!mOnce)
-				{ 
-				ResetBoxes();
-				mOnce = true;
-				mResetBCC->SetisColliding(false);
-				//PrintGrid();
+				if (!mOnce)
+				{
+					ResetBoxes();
+					mOnce = true;
+					mResetBCC->SetisColliding(false);
+					//PrintGrid();
 				}
 
 			}
@@ -125,26 +129,33 @@ namespace Epoch
 			//SystemLogger::GetLog() << curButtonPress << std::endl;
 			//SystemLogger::GetLog() << lastButtonPress << std::endl;
 
-			if (!Settings::GetInstance().GetBool("IsTimePaused")) {
-				if (!mBox1Done) {
+			if (!Settings::GetInstance().GetBool("IsTimePaused"))
+			{
+				if (!mBox1Done)
+				{
 					mBox1Done = mazeBoxes[0].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
-					if (mBox1Done) {
+					if (mBox1Done)
+					{
 						mazeBoxes[0].mInterp->SetActive(false);
 						((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 5))->CallEvent(Emitter::ePlay);
 
 					}
 				}
-				if (!mBox2Done) {
+				if (!mBox2Done)
+				{
 					mBox2Done = mazeBoxes[1].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
-					if (mBox2Done) {
+					if (mBox2Done)
+					{
 						mazeBoxes[1].mInterp->SetActive(false);
 						((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 5))->CallEvent(Emitter::ePlay);
 
 					}
 				}
-				if (!mBox3Done) {
+				if (!mBox3Done)
+				{
 					mBox3Done = mazeBoxes[2].mInterp->Update(TimeManager::Instance()->GetDeltaTime());
-					if (mBox3Done) {
+					if (mBox3Done)
+					{
 						mazeBoxes[2].mInterp->SetActive(false);
 						((SFXEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 5))->CallEvent(Emitter::ePlay);
 
@@ -162,15 +173,17 @@ namespace Epoch
 		}
 		void PrintGrid()
 		{
-			for (int x = 0; x < 4; ++x) {
-				for (int y = 0; y < 4; ++y) {
+			for (int x = 0; x < 4; ++x)
+			{
+				for (int y = 0; y < 4; ++y)
+				{
 					SystemLogger::GetLog() << mGrid[x][y] << ",";
 				}
 				SystemLogger::GetLog() << std::endl;
 			}
 			SystemLogger::GetLog() << std::endl;
 		}
-		void MoveLeft() 
+		void MoveLeft()
 		{
 			MoveableBox orderedBoxes[3];
 			orderedBoxes[0] = mazeBoxes[0];
@@ -178,9 +191,11 @@ namespace Epoch
 			orderedBoxes[2] = mazeBoxes[2];
 			int i, j, flag = 1;
 			MoveableBox tempBox;
-			for (i = 1; i <= 3 && flag; ++i){//bubble sort for array of 3
+			for (i = 1; i <= 3 && flag; ++i)
+			{//bubble sort for array of 3
 				flag = 0;
-				for (j = 0; j < 2; ++j){ 
+				for (j = 0; j < 2; ++j)
+				{
 					if (orderedBoxes[j + 1].mCol < orderedBoxes[j].mCol)
 					{
 						tempBox = orderedBoxes[j];
@@ -192,10 +207,13 @@ namespace Epoch
 			}
 			//Should be sorted now
 			int currCoord = 0;
-			for (i = 0; i < 3; ++i) {
-				for (int k = orderedBoxes[i].mCol-1; k > -1; --k) {
+			for (i = 0; i < 3; ++i)
+			{
+				for (int k = orderedBoxes[i].mCol - 1; k > -1; --k)
+				{
 					currCoord = mGrid[orderedBoxes[i].mRow][k];
-					if (currCoord == 0) {
+					if (currCoord == 0)
+					{
 						mGrid[orderedBoxes[i].mRow][orderedBoxes[i].mCol] = 0;
 						orderedBoxes[i].mCol = k;
 						mGrid[orderedBoxes[i].mRow][orderedBoxes[i].mCol] = orderedBoxes[i].mId;
@@ -235,9 +253,11 @@ namespace Epoch
 			orderedBoxes[2] = mazeBoxes[2];
 			int i, j, flag = 1;
 			MoveableBox tempBox;
-			for (i = 1; i <= 3 && flag; ++i) {//bubble sort for array of 3
+			for (i = 1; i <= 3 && flag; ++i)
+			{//bubble sort for array of 3
 				flag = 0;
-				for (j = 0; j < 2; ++j) {
+				for (j = 0; j < 2; ++j)
+				{
 					if (orderedBoxes[j + 1].mCol > orderedBoxes[j].mCol)
 					{
 						tempBox = orderedBoxes[j];
@@ -249,10 +269,13 @@ namespace Epoch
 			}
 			//Should be sorted now
 			int currCoord = 0;
-			for (i = 0; i < 3; ++i) {
-				for (int k = orderedBoxes[i].mCol + 1; k < 4; ++k) {
+			for (i = 0; i < 3; ++i)
+			{
+				for (int k = orderedBoxes[i].mCol + 1; k < 4; ++k)
+				{
 					currCoord = mGrid[orderedBoxes[i].mRow][k];
-					if (currCoord == 0) {
+					if (currCoord == 0)
+					{
 						mGrid[orderedBoxes[i].mRow][orderedBoxes[i].mCol] = 0;
 						orderedBoxes[i].mCol = k;
 						mGrid[orderedBoxes[i].mRow][orderedBoxes[i].mCol] = orderedBoxes[i].mId;
@@ -291,9 +314,11 @@ namespace Epoch
 			orderedBoxes[2] = mazeBoxes[2];
 			int i, j, flag = 1;
 			MoveableBox tempBox;
-			for (i = 1; i <= 3 && flag; ++i) {//bubble sort for array of 3
+			for (i = 1; i <= 3 && flag; ++i)
+			{//bubble sort for array of 3
 				flag = 0;
-				for (j = 0; j < 2; ++j) {
+				for (j = 0; j < 2; ++j)
+				{
 					if (orderedBoxes[j + 1].mRow < orderedBoxes[j].mRow)
 					{
 						tempBox = orderedBoxes[j];
@@ -305,10 +330,13 @@ namespace Epoch
 			}
 			//Should be sorted now
 			int currCoord = 0;
-			for (i = 0; i < 3; ++i) {
-				for (int k = orderedBoxes[i].mRow - 1; k > -1;--k) {
+			for (i = 0; i < 3; ++i)
+			{
+				for (int k = orderedBoxes[i].mRow - 1; k > -1; --k)
+				{
 					currCoord = mGrid[k][orderedBoxes[i].mCol];
-					if (currCoord == 0) {
+					if (currCoord == 0)
+					{
 						mGrid[orderedBoxes[i].mRow][orderedBoxes[i].mCol] = 0;
 						orderedBoxes[i].mRow = k;
 						mGrid[orderedBoxes[i].mRow][orderedBoxes[i].mCol] = orderedBoxes[i].mId;
@@ -348,9 +376,11 @@ namespace Epoch
 			orderedBoxes[2] = mazeBoxes[2];
 			int i, j, flag = 1;
 			MoveableBox tempBox;
-			for (i = 1; i <= 3 && flag; ++i) {//bubble sort for array of 3
+			for (i = 1; i <= 3 && flag; ++i)
+			{//bubble sort for array of 3
 				flag = 0;
-				for (j = 0; j < 2; ++j) {
+				for (j = 0; j < 2; ++j)
+				{
 					if (orderedBoxes[j + 1].mRow > orderedBoxes[j].mRow)
 					{
 						tempBox = orderedBoxes[j];
@@ -362,10 +392,13 @@ namespace Epoch
 			}
 			//Should be sorted now
 			int currCoord = 0;
-			for (i = 0; i < 3; ++i) {
-				for (int k = orderedBoxes[i].mRow + 1; k < 4; ++k) {
+			for (i = 0; i < 3; ++i)
+			{
+				for (int k = orderedBoxes[i].mRow + 1; k < 4; ++k)
+				{
 					currCoord = mGrid[k][orderedBoxes[i].mCol];
-					if (currCoord == 0) {
+					if (currCoord == 0)
+					{
 						mGrid[orderedBoxes[i].mRow][orderedBoxes[i].mCol] = 0;
 						orderedBoxes[i].mRow = k;
 						mGrid[orderedBoxes[i].mRow][orderedBoxes[i].mCol] = orderedBoxes[i].mId;
@@ -381,7 +414,7 @@ namespace Epoch
 			//Boxes have been set to their respective positions
 			for (i = 0; i < 3; ++i)
 			{
-				switch(orderedBoxes[i].mId)
+				switch (orderedBoxes[i].mId)
 				{
 				case 1:
 					mazeBoxes[0] = orderedBoxes[i];
@@ -394,8 +427,8 @@ namespace Epoch
 					break;
 				}
 			}
-			SetBoxesPosition(tempMatrix0,tempMatrix1,tempMatrix2);
-			
+			SetBoxesPosition(tempMatrix0, tempMatrix1, tempMatrix2);
+
 		}
 		void ResetBoxes()
 		{
@@ -446,97 +479,120 @@ namespace Epoch
 		}
 		void SetBoxesPosition(matrix4* matrix0, matrix4* matrix1, matrix4* matrix2)
 		{
-			matrix4* curMatrix = nullptr;
-			matrix4 finalDest;
-			for (int i = 0; i < 3; ++i)
+			TimeManipulation* comp = LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator();
+
+			if (!((TimeManipulation*)comp)->isTimePaused())
 			{
-				switch (i)
+				matrix4* curMatrix = nullptr;
+				matrix4 finalDest;
+				for (int i = 0; i < 3; ++i)
 				{
-				case 0:
-					curMatrix = matrix0;
-					break;
-				case 1:
-					curMatrix = matrix1;
-					break;
-				case 2:
-					curMatrix = matrix2;
-					break;
-				}
-				int X = mazeBoxes[i].mRow;
-				int Y = mazeBoxes[i].mCol;
-				//Row 0
-				if (X == 0 && Y == 0) {
-					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(6, -1.61f, 6.2f);
-				}
-				else if (X == 0 && Y == 1) {
-					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) *  matrix4::CreateNewTranslation(2, -1.61f, 6.2f);
-				}
-				//Row 1
-				else if (X == 1 && Y == 0) {
-					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(6, -1.61f, 2.2f);
-				}
-				else if (X == 1 && Y == 2) {
-					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) *  matrix4::CreateNewTranslation(-2, -1.61f, 2.2f);
-				}
-				else if (X == 1 && Y == 3) {
-					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(-6, -1.61f, 2.2f);
-				}
-				//Row 2
-				else if (X == 2 && Y == 0) {
-					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(6, -1.61f, -1.80f);
-				}
-				else if (X == 2 && Y == 1) {
-					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(2, -1.61f, -1.80f);
-				}
-				else if (X == 2 && Y == 3) {
-					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) *  matrix4::CreateNewTranslation(-6, -1.61f, -1.80f);
-				}
-				//Row 3
-				else if (X == 3 && Y == 0) {
-					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(6, -1.61f, -5.80f);
-				}
-				else if (X == 3 && Y == 1) {
-					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(2, -1.61f, -5.80f);
-				}
-				else if (X == 3 && Y == 2) {
-					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(-2, -1.61f, -5.80f);
-				}
-				else if (X == 3 && Y == 3) {
-					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(-6, -1.61f, -5.80f);
-				}
-				if (*curMatrix != finalDest)
-				{
-					mazeBoxes[i].mInterp->Prepare(0.2f, *curMatrix, finalDest, mazeBoxes[i].mBox->GetTransform().GetMatrix());
-					mazeBoxes[i].mInterp->SetActive(true);
 					switch (i)
 					{
 					case 0:
-						mBox1Done = false;
+						curMatrix = matrix0;
 						break;
 					case 1:
-						mBox2Done = false;
+						curMatrix = matrix1;
 						break;
 					case 2:
-						mBox3Done = false;
+						curMatrix = matrix2;
 						break;
 					}
+
+					int X = mazeBoxes[i].mRow;
+					int Y = mazeBoxes[i].mCol;
+					//Row 0
+					if (X == 0 && Y == 0)
+					{
+						finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(6, -1.61f, 6.2f);
+					}
+					else if (X == 0 && Y == 1)
+					{
+						finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) *  matrix4::CreateNewTranslation(2, -1.61f, 6.2f);
+					}
+					//Row 1
+					else if (X == 1 && Y == 0)
+					{
+						finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(6, -1.61f, 2.2f);
+					}
+					else if (X == 1 && Y == 2)
+					{
+						finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) *  matrix4::CreateNewTranslation(-2, -1.61f, 2.2f);
+					}
+					else if (X == 1 && Y == 3)
+					{
+						finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(-6, -1.61f, 2.2f);
+					}
+					//Row 2
+					else if (X == 2 && Y == 0)
+					{
+						finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(6, -1.61f, -1.80f);
+					}
+					else if (X == 2 && Y == 1)
+					{
+						finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(2, -1.61f, -1.80f);
+					}
+					else if (X == 2 && Y == 3)
+					{
+						finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) *  matrix4::CreateNewTranslation(-6, -1.61f, -1.80f);
+					}
+					//Row 3
+					else if (X == 3 && Y == 0)
+					{
+						finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(6, -1.61f, -5.80f);
+					}
+					else if (X == 3 && Y == 1)
+					{
+						finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(2, -1.61f, -5.80f);
+					}
+					else if (X == 3 && Y == 2)
+					{
+						finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(-2, -1.61f, -5.80f);
+					}
+					else if (X == 3 && Y == 3)
+					{
+						finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(-6, -1.61f, -5.80f);
+					}
+					if (*curMatrix != finalDest)
+					{
+						mazeBoxes[i].mInterp->Prepare(0.2f, *curMatrix, finalDest, mazeBoxes[i].mBox->GetTransform().GetMatrix());
+						mazeBoxes[i].mInterp->SetActive(true);
+			
+							switch (i)
+							{
+							case 0:
+								mBox1Done = false;
+								break;
+							case 1:
+								mBox2Done = false;
+								break;
+							case 2:
+								mBox3Done = false;
+								break;
+							}
+						}
+					}
+					//mBox1Done = mBox2Done = mBox3Done = false;
 				}
 			}
-			//mBox1Done = mBox2Done = mBox3Done = false;
-		}
-		void SetBoxesAsGrid()
-		{
-			for (unsigned int i = 0; i <3; i++) {
-				for (unsigned int x = 0; x < 4; x++) {
-					for (unsigned int y = 0; y < 4; y++) {
-						if(mGrid[x][y] == mazeBoxes[i].mId)
+
+			void SetBoxesAsGrid()
+			{
+				for (unsigned int i = 0; i < 3; i++)
+				{
+					for (unsigned int x = 0; x < 4; x++)
+					{
+						for (unsigned int y = 0; y < 4; y++)
 						{
-							mazeBoxes[i].mRow = x;
-							mazeBoxes[i].mCol = y;
+							if (mGrid[x][y] == mazeBoxes[i].mId)
+							{
+								mazeBoxes[i].mRow = x;
+								mazeBoxes[i].mCol = y;
+							}
 						}
 					}
 				}
 			}
-		}
-	};
-}
+		};
+	}

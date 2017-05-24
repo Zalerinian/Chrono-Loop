@@ -71,10 +71,10 @@ namespace Epoch
 
 					Listener* ears = new Listener();
 					Emitter* ambient = new AudioEmitter();
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_LEVEL2AMBIENT);
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_LEVEL2AMBIENT);
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_LEVEL2AMBIENT);
-					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_LEVEL2AMBIENT);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_LEVEL1AMBIENT);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_LEVEL1AMBIENT);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_LEVEL1AMBIENT);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_LEVEL1AMBIENT);
 					AudioWrapper::GetInstance().AddListener(ears, "Listener");
 					AudioWrapper::GetInstance().AddEmitter(ambient, "ambiance");
 
@@ -192,6 +192,8 @@ namespace Epoch
 					LeftController->AddComponent(pickup2);
 					LeftController->AddComponent(leftRaycaster);
 					LeftController->AddComponent(ta2);
+					matrix4 m = mc2->GetTransform().GetMatrix() * matrix4::CreateNewScale(vec3f(.8f, .8f, .8f));
+					mc2->GetTransform().SetMatrix(m);
 
 					MeshComponent *visibleMesh2 = new MeshComponent("../Resources/TinyCube.obj");
 					visibleMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
@@ -234,7 +236,9 @@ namespace Epoch
 					AudioWrapper::GetInstance().AddEmitter(resetlevelsound, headset->GetName().c_str());
 
 
+					AudioWrapper::GetInstance().STOP();
 
+					((AudioEmitter*)ambient)->CallEvent(Emitter::EventType::ePlay);
 
 					/*BaseObject* magicalCube = Pool::Instance()->iGetObject()->Reset("Magical Cube That Follows Me");
 					MeshComponent* mcmc = new MeshComponent("../Resources/UnitCube.obj");

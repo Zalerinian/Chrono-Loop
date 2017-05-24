@@ -76,14 +76,15 @@ namespace Epoch
 
 
 					//Sound Initializing---------------------------------------------------
-					//Listener* ears = new Listener();
-					//Emitter* ambient = new Emitter();
-					//ambient->AddSoundEvent(Emitter::sfxTypes::ePlayLoop, AK::EVENTS::PLAY_TEST2);
-					//ambient->AddSoundEvent(Emitter::sfxTypes::ePauseLoop, AK::EVENTS::PAUSE_TEST2);
-					//ambient->AddSoundEvent(Emitter::sfxTypes::eResumeLoop, AK::EVENTS::RESUME_TEST2);
-					//ambient->AddSoundEvent(Emitter::sfxTypes::eStopLoop, AK::EVENTS::STOP_TEST2);
-					//Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Listener, 0, false, (void*)new m_Listener(ears, "Listener")));
-					//Messager::Instance().SendInMessage(new Message(msgTypes::mSound, soundMsg::ADD_Emitter, 0, false, (void*)new m_Emitter(ambient, "ambiance")));
+					Listener* ears = new Listener();
+					Emitter* ambient = new AudioEmitter();
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_HUB0);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_HUB0);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_HUB0);
+					((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_HUB0);
+					AudioWrapper::GetInstance().AddListener(ears, "Listener");
+					AudioWrapper::GetInstance().AddEmitter(ambient, "ambiance");
+
 					AudioWrapper::GetInstance().STOP();
 
 					//new stuff
@@ -118,6 +119,8 @@ namespace Epoch
 					LeftController->AddComponent(leftRaycaster);
 					LeftController->AddComponent(leftTele);
 					LeftController->AddComponent(mc2);
+					matrix4 m = mc2->GetTransform().GetMatrix() * matrix4::CreateNewScale(vec3f(.8f, .8f, .8f));
+					mc2->GetTransform().SetMatrix(m);
 
 					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", identity, nullptr, BaseObject_Flag_Record_In_Timeline); //new BaseObject("headset", transform);
 					HeadsetFollow* hfollow = new HeadsetFollow();
@@ -129,6 +132,8 @@ namespace Epoch
 					((SFXEmitter*)sound)->SetEvent(AK::EVENTS::SFX_TELEPORTSOUND);
 					AudioWrapper::GetInstance().AddEmitter(sound, headset->GetName().c_str());
 					headset->AddComponent(sound);
+					headset->AddComponent(ears);
+					headset->AddComponent(ambient);
 
 					Physics::Instance()->mObjects.push_back(RightController);
 					Physics::Instance()->mObjects.push_back(LeftController);
@@ -203,6 +208,9 @@ namespace Epoch
 							Physics::Instance()->mObjects.push_back((*it));
 						}
 					}
+					AudioWrapper::GetInstance().STOP();
+
+					((AudioEmitter*)ambient)->CallEvent(Emitter::EventType::ePlay);
 
 					ParticleSystem::Instance()->Clear();
 

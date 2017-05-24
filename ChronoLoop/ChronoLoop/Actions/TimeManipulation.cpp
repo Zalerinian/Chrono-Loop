@@ -43,7 +43,7 @@ namespace Epoch
 
 			if (mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") > 3)) //created clone (tut 2)
 			{
-				//enable pointy bits on controller
+				//disable pointy bits on controller
 				((MeshComponent*)currentLevel->GetRightController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
 				((MeshComponent*)currentLevel->GetLeftController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
 				// Cancel Time
@@ -87,7 +87,7 @@ namespace Epoch
 			}
 			else if (!mPauseTime && (Settings::GetInstance().GetInt("tutStep") == 0 || Settings::GetInstance().GetInt("tutStep") >= 2))
 			{
-				//disable pointy bits
+				//enable pointy bits
 				((MeshComponent*)currentLevel->GetRightController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(true);
 				((MeshComponent*)currentLevel->GetLeftController()->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(true);
 

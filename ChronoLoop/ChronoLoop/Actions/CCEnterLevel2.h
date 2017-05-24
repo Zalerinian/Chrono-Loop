@@ -286,6 +286,8 @@ namespace Epoch
 					LeftController->AddComponent(pickup2);
 					LeftController->AddComponent(leftRaycaster);
 					LeftController->AddComponent(ta2);
+					matrix4 m = mc2->GetTransform().GetMatrix() * matrix4::CreateNewScale(vec3f(.8f, .8f, .8f));
+					mc2->GetTransform().SetMatrix(m);
 
 					MeshComponent *visibleMesh2 = new MeshComponent("../Resources/TinyCube.obj");
 					visibleMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);

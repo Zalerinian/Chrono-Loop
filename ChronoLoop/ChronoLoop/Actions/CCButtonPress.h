@@ -1,5 +1,6 @@
 #pragma once
 #include "../Objects/BaseObject.h"
+#include "../Objects/LightComponent.h"
 #include "CodeComponent.hpp"
 #include "..\Physics\Physics.h"
 #include "..\Common\Logger.h"
@@ -40,8 +41,8 @@ namespace Epoch
 			//exitend = exitCube->GetPos() + vec3f(0, 2.6f, 0);
 			if(Settings::GetInstance().GetInt("CurrentLevel") == 4)
 			{
-			blockend = blockCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, -3.1f, 0, 1));
-			exitend = exitCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 3.1f, 0, 1));
+				blockend = blockCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, -3.1f, 0, 1));
+				exitend = exitCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 3.1f, 0, 1));
 			}
 			else
 			{
@@ -87,6 +88,8 @@ namespace Epoch
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time)
 		{
+			if (/*Settings::GetInstance().GetInt("CurrentLevel") == 4 && */((Component*)&_other)->GetBaseObject()->GetName().find("EnvBox"))
+				return;
 			if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName().find("Buttonstand"))
 			{
 				if(Settings::GetInstance().GetInt("CurrentLevel") == 4 && !dynamic_cast<ControllerCollider*>(&_other))
@@ -259,7 +262,24 @@ namespace Epoch
 					mStart = true;
 				}
 
-
+				if (exitCube->GetTransform().GetMatrix() == exitend)
+				{
+					std::vector<BaseObject*> l = cLevel->FindAllObjectsByPattern("ExitLight");
+					if (l.size() > 0)
+					{
+						for (int i = 0; i < l.size(); i++)
+							((LightComponent*)l[i]->GetComponentIndexed(ComponentType::eCOMPONENT_LIGHT, 0))->SetColor(vec4f(0, 1, 0, 0));
+					}
+				}
+				else if (exitCube->GetTransform().GetMatrix() == exitstart)
+				{
+					std::vector<BaseObject*> l = cLevel->FindAllObjectsByPattern("ExitLight");
+					if (l.size() > 0)
+					{
+						for (int i = 0; i < l.size(); i++)
+							((LightComponent*)l[i]->GetComponentIndexed(ComponentType::eCOMPONENT_LIGHT, 0))->SetColor(vec4f(1, 0, 0, 0));
+					}
+				}
 
 			}
 		}

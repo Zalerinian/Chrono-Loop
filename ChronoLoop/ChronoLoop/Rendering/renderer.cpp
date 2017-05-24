@@ -849,11 +849,12 @@ namespace Epoch {
 		}
 
 		// Draw the topmost objects. These don't use the depth buffer at all, 
-		mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
 		for (unsigned int passIndex = 0; passIndex < 2; ++passIndex) {
 			if (passIndex == 0) {
+				mContext->OMSetBlendState(mTransparentBlendState.Get(), NULL, 0xFFFFFFFF);
 				mContext->OMSetDepthStencilState(mMotionStateFindObject.Get(), 1);
 			} else {
+				mContext->OMSetBlendState(mOpaqueBlendState.Get(), NULL, 0xFFFFFFFF);
 				mContext->OMSetDepthStencilState(mMotionStateReverseDepth.Get(), 1); // Make sure the stencil buffer value is less than 1 to pass.
 				Settings::GetInstance().SetInt("PixelShaderOverride", ePS_SOLIDCOLOR);
 				D3D11_MAPPED_SUBRESOURCE map;

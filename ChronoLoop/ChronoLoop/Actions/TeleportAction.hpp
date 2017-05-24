@@ -365,8 +365,17 @@ namespace Epoch
 
 		virtual void Update()
 		{
+			if (!VRInputManager::GetInstance().IsVREnabled())
+			{
+				//if (/*(GetAsyncKeyState(VK_SHIFT) & 1) &&*/ dynamic_cast<SFXEmitter*>(mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
+				//	((SFXEmitter*)mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
+				return;
+			}
+
 			// I'm lazy so, let's just set this thing's position to the controller's position.
 			matrix4 mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
+			if (mControllerRole == ControllerType::eControllerType_Secondary)
+				mat *= matrix4::CreateNewScale(vec3f(.8, .8, .8));
 			mObject->GetTransform().SetMatrix(mat);
 			bool paused = false;
 
@@ -400,7 +409,7 @@ namespace Epoch
 				m.fourth = mat.fourth;
 				mCSMesh->GetTransform().SetMatrix(m);
 
-				#pragma region Arc Points
+			#pragma region Arc Points
 
 				int index = 0;
 				scaleM.first = vec4f(.025f, 0, 0, 0);
