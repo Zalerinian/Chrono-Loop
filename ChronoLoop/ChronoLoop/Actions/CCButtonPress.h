@@ -1,5 +1,6 @@
 #pragma once
 #include "../Objects/BaseObject.h"
+#include "../Objects/LightComponent.h"
 #include "CodeComponent.hpp"
 #include "..\Physics\Physics.h"
 #include "..\Common\Logger.h"
@@ -38,10 +39,10 @@ namespace Epoch
 			exitCube = (CubeCollider*)Exit->mComponents[eCOMPONENT_COLLIDER][0];
 			//blockend = blockCube->GetPos() - vec3f(0, 2.6f, 0);
 			//exitend = exitCube->GetPos() + vec3f(0, 2.6f, 0);
-			if(Settings::GetInstance().GetInt("CurrentLevel") == 3)
+			if (Settings::GetInstance().GetInt("CurrentLevel") == 3)
 			{
-			blockend = blockCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, -3.1f, 0, 1));
-			exitend = exitCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 3.1f, 0, 1));
+				blockend = blockCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, -3.1f, 0, 1));
+				exitend = exitCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 3.1f, 0, 1));
 			}
 			else
 			{
@@ -244,7 +245,24 @@ namespace Epoch
 					mStart = true;
 				}
 
-
+				if (exitCube->GetTransform().GetMatrix() == exitend)
+				{
+					std::vector<BaseObject*> l = cLevel->FindAllObjectsByPattern("ExitLight");
+					if (l.size() > 0)
+					{
+						for (int i = 0; i < l.size(); i++)
+							((LightComponent*)l[i]->GetComponentIndexed(ComponentType::eCOMPONENT_LIGHT, 0))->SetColor(vec4f(0, 1, 0, 0));
+					}
+				}
+				else if (exitCube->GetTransform().GetMatrix() == exitstart)
+				{
+					std::vector<BaseObject*> l = cLevel->FindAllObjectsByPattern("ExitLight");
+					if (l.size() > 0)
+					{
+						for (int i = 0; i < l.size(); i++)
+							((LightComponent*)l[i]->GetComponentIndexed(ComponentType::eCOMPONENT_LIGHT, 0))->SetColor(vec4f(1, 0, 0, 0));
+					}
+				}
 
 			}
 		}

@@ -13,6 +13,7 @@ namespace Epoch
 		CubeCollider* blockCube;
 		MeshComponent* blockMesh;
 
+		vec4f startpos = vec4f();
 		//matrix4 blockend, blockStart;
 		//Interpolator<matrix4>* blockInterp;
 		Level* cLevel;
@@ -23,7 +24,7 @@ namespace Epoch
 			Block = cLevel->FindObjectWithName("ExitSideOpeningEnergy");
 			blockCube = (CubeCollider*)Block->mComponents[eCOMPONENT_COLLIDER][0];
 			blockMesh = (MeshComponent*)Block->mComponents[eCOMPONENT_MESH][0];
-
+			startpos = Block->GetTransform().GetMatrix().Position;
 
 		}
 
@@ -108,6 +109,25 @@ namespace Epoch
 					//blockMesh->SetVisible(true);
 					//blockMesh->SetVisible(false);
 					blockMesh->SetVisible(true);
+				}
+
+				if (Block->GetTransform().GetMatrix().Position != startpos)
+				{
+					std::vector<BaseObject*> l = cLevel->FindAllObjectsByPattern("ExitLight");
+					if (l.size() > 0)
+					{
+						for (int i = 0; i < l.size(); i++)
+							((LightComponent*)l[i]->GetComponentIndexed(ComponentType::eCOMPONENT_LIGHT, 0))->SetColor(vec4f(1, 0, 0, 0));
+					}
+				}
+				else
+				{
+					std::vector<BaseObject*> l = cLevel->FindAllObjectsByPattern("ExitLight");
+					if (l.size() > 0)
+					{
+						for (int i = 0; i < l.size(); i++)
+							((LightComponent*)l[i]->GetComponentIndexed(ComponentType::eCOMPONENT_LIGHT, 0))->SetColor(vec4f(0, 1, 0, 0));
+					}
 				}
 			}
 			//colliding = false;
