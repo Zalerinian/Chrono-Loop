@@ -367,8 +367,8 @@ namespace Epoch
 		{
 			if (!VRInputManager::GetInstance().IsVREnabled())
 			{
-				if (/*(GetAsyncKeyState(VK_SHIFT) & 1) &&*/ dynamic_cast<SFXEmitter*>(mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
-					((SFXEmitter*)mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
+				//if (/*(GetAsyncKeyState(VK_SHIFT) & 1) &&*/ dynamic_cast<SFXEmitter*>(mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
+				//	((SFXEmitter*)mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
 				return;
 			}
 

@@ -186,12 +186,7 @@ void Update() {
 
 	BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity); //new BaseObject("Controller2", identity);
 	MeshComponent *mc2 = new MeshComponent("../Resources/Player_hand.obj");
-	matrix4 scaler;
-	scaler.first = vec4f(.8, 0, 0, 0);
-	scaler.second = vec4f(0, .8, 0, 0);
-	scaler.third = vec4f(0, 0, .8, 0);
-	scaler.fourth = vec4f(0, 0, 0, 1);
-	mc2->GetTransform().SetMatrix(mc2->GetTransform().GetMatrix() * scaler);
+	
 	MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 	leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 	leftRaycaster->SetVisible(false);
@@ -205,6 +200,8 @@ void Update() {
 	//LeftController->AddComponent(leftRaycaster);
 	LeftController->AddComponent(leftTele);
 	LeftController->AddComponent(mc2);
+	matrix4 m = mc2->GetTransform().GetMatrix() * matrix4::CreateNewScale(vec3f(.8f,.8f, .8f));
+	mc2->GetTransform().SetMatrix(m);
 	TimeManager::Instance()->AddObjectToTimeline(LeftController);
 
 	BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", transform); //new BaseObject("headset", transform);
