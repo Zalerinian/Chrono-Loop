@@ -145,6 +145,7 @@ namespace Epoch {
 		void RenderScreenQuad();
 		void RenderTransparentObjects();
 		void RenderLightVolumes();
+		void RenderTopmostObjects();
 
 
 		void RenderForBloom();

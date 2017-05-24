@@ -111,8 +111,8 @@ namespace Epoch {
 
 	vec3f Controller::GetVelocity() {
 		vec4f vel(mPose.vVelocity.v[0], mPose.vVelocity.v[1], -mPose.vVelocity.v[2], 0);
-		vel = vel * matrix4::CreateNewYawPitchRollRotation(LevelManager::GetInstance().GetCurrentLevel()->GetStartRot());
-		return vel;
+		vec4f rot = VRInputManager::GetInstance().GetPlayerPosition() * vel;
+		return rot;
 	}
 
 	vec3f Controller::GetAngularVelocity() {

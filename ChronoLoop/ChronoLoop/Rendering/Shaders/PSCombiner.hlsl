@@ -5,6 +5,7 @@ texture2D tAlbedo : register(t0);
 texture2D tPosition : register(t1);
 texture2D tNormal : register(t2);
 texture2D tSpecular : register(t3);
+texture2D tBloom : register(t4);
 SamplerState fFilter : register(s0);
 
 
@@ -47,5 +48,5 @@ float4 main(PSI input) : SV_TARGET
 
     float3 lightAmount = pixelNormal.w < 1 ? float3(1, 1, 1) : float3(0.05, 0.05, 0.05);
 
-	return float4((cAlbedo * dot(abs(pixelNormal.xyz), lightAmount)).xyz, 1);
+	return float4((cAlbedo * dot(abs(pixelNormal.xyz), lightAmount)).xyz, 1) + tBloom.Sample(fFilter, input.texCoord.xy);
 }

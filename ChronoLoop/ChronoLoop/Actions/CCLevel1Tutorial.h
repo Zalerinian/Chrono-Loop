@@ -244,7 +244,7 @@ namespace Epoch
 			if (tut == 3)
 			{
 				//SystemLogger::GetLog() << "pb Current Progress: " << Settings::GetInstance().GetUInt("TutorialRewind - CurProgress") << std::endl;
-				pb->SetCurProgress((float)Settings::GetInstance().GetUInt("TutorialRewind - CurProgress"));
+				pb->SetCurProgress((float)(Settings::GetInstance().GetUInt("TutorialRewind - CurProgress")));
 			}
 
 			ScaleUpCurrentBoards();

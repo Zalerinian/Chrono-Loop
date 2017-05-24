@@ -91,8 +91,8 @@ namespace Epoch
 					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 					mc->AddTexture("../Resources/Controller_Diffuse.png", eTEX_DIFFUSE);
-					mc->AddTexture("../Resources/Controller_Normal", eTEX_NORMAL);
-					mc->AddTexture("../Resources/Controller_Specular", eTEX_SPECULAR);
+					mc->AddTexture("../Resources/Controller_Normal.png", eTEX_NORMAL);
+					mc->AddTexture("../Resources/Controller_Specular.png", eTEX_SPECULAR);
 					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					rightRaycaster->SetVisible(false);
@@ -108,7 +108,7 @@ namespace Epoch
 					mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
 					mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
 					mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
-					mc2->AddTexture("../Resources/Player_hand_Specular", eTEX_SPECULAR);
+					mc2->AddTexture("../Resources/Player_hand_Specular.png", eTEX_SPECULAR);
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					leftRaycaster->SetVisible(false);
@@ -175,7 +175,15 @@ namespace Epoch
 								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mat.fourth.y - .2f;
 
 							}
-							else if (temp == "mmTutButton")
+							else if (temp == "mmExitButton")
+							{
+								matrix4 mat = ((BaseObject*)*it)->GetTransform().GetMatrix();
+								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mat.fourth);
+								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset = mat.fourth.y - .2f;
+								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset = mat.fourth.y - .2f;
+
+							}
+							else if (temp == "mmPrevButton")
 							{
 								matrix4 mat = ((BaseObject*)*it)->GetTransform().GetMatrix();
 								((ButtonCollider*)((BaseObject*)*it)->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(mat.fourth);
