@@ -95,7 +95,7 @@ namespace Epoch {
 			{
 				//other pos
 				matrix4 m = invis->GetTransform().GetMatrix();
-				m.Position = vec4f(2.83, 0, -1.02, 1);
+				m.Position = vec4f(2.83f, 0, -1.02f, 1);
 				invis->GetTransform().SetMatrix(m);
 			}
 		}
