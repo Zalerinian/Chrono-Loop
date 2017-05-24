@@ -643,6 +643,16 @@ namespace Epoch {
 			vec4f start = cLevel->GetStartPos();
 			VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateNewYawPitchRollRotation(cLevel->GetStartRot()).CreateTranslation(start);
 		}
+		//Reset clone count
+		std::vector<Component*>comps = cLevel->GetRightController()->GetComponents(eCOMPONENT_CODE);
+		for (unsigned int p = 0; p <comps.size() ; p++)
+		{
+			if(dynamic_cast<TimeManipulation*>(comps[p]))
+			{
+				((TimeManipulation*)comps[p])->SetNumOfConfirmedClones(0);
+				break;
+			}
+		}
 		AudioEmitter* ambient = (AudioEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0);
 		AudioEmitter* resetLevelSFX = (AudioEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 4);
 		if (ambient)
@@ -654,7 +664,7 @@ namespace Epoch {
 		{
 			resetLevelSFX->CallEvent(Emitter::EventType::ePlay);
 		}
-		if(Settings::GetInstance().GetInt("CurrentLevel") == 3)
+		if(Settings::GetInstance().GetInt("CurrentLevel") == 4)
 		{
 			Settings::GetInstance().SetBool("ResetElevator", true);
 			std::vector<Component*>& comps = LevelManager::GetInstance().GetCurrentLevel()->GetHeadset()->GetComponents(eCOMPONENT_CODE);
