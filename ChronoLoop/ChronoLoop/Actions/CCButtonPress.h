@@ -87,6 +87,8 @@ namespace Epoch
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time)
 		{
+			if (/*Settings::GetInstance().GetInt("CurrentLevel") == 4 && */((Component*)&_other)->GetBaseObject()->GetName().find("EnvBox"))
+				return;
 			if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName().find("Buttonstand"))
 			{
 				vec3f norm = ((ButtonCollider*)&_col)->mPushNormal;

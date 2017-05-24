@@ -272,6 +272,12 @@ namespace Epoch
 
 					//pat added
 					MeshComponent *mc2 = new MeshComponent("../Resources/Player_hand.obj");
+					matrix4 scaler;
+					scaler.first = vec4f(.8, 0, 0, 0);
+					scaler.second = vec4f(0, .8, 0, 0);
+					scaler.third = vec4f(0, 0, .8, 0);
+					scaler.fourth = vec4f(0, 0, 0, 1);
+					mc2->GetTransform().SetMatrix(mc2->GetTransform().GetMatrix() * scaler);
 					mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
 					mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
 					mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
