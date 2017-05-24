@@ -166,6 +166,19 @@ void Update() {
 	AudioWrapper::GetInstance().LoadSoundBank(_mainS);
 	AudioWrapper::GetInstance().LoadSoundBank(_sbpkg1);
 
+	Listener* ears = new Listener();
+	Emitter* ambient = new AudioEmitter();
+	((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_HUB0);
+	((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_HUB0);
+	((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_HUB0);
+	((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_HUB0);
+	AudioWrapper::GetInstance().AddListener(ears, "Listener");
+	AudioWrapper::GetInstance().AddEmitter(ambient, "ambiance");
+
+	AudioWrapper::GetInstance().STOP();
+
+	((AudioEmitter*)ambient)->CallEvent(Emitter::EventType::ePlay);
+
 
 	Transform identity, transform;
 	BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", identity);
@@ -209,6 +222,8 @@ void Update() {
 	MainMenuBT *bt = new MainMenuBT();
 	headset->AddComponent(bt);
 	headset->AddComponent(hfollow);
+	headset->AddComponent(ears);
+	headset->AddComponent(ambient);
 	TimeManager::Instance()->AddObjectToTimeline(headset);
 
 
