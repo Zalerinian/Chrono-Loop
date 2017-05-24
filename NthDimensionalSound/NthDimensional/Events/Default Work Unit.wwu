@@ -1643,6 +1643,28 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="SFX_elevator_6s" ID="{FB13DD22-89ED-4533-A9A5-5652C711B4AF}">
+					<ChildrenList>
+						<Action Name="Play" ID="{CA3936C5-EE7D-4838-8874-C3CAB35E9378}" ShortID="934486690" Type="Play" Scope="One" Global="false">
+							<ElementList>
+								<Element ID="{0BAA15C7-41DC-4FF4-8704-4A88C5E0CB84}" Global="false">
+									<ObjectRef Name="elevator-6s" ID="{57BAA59A-74F5-42A5-B4BA-B0BD4992ABDF}" WorkUnitID="{1D0317B3-D19A-41DC-A2E7-CAA9DD27FE60}"/>
+								</Element>
+							</ElementList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="SFX_elevator_15s" ID="{7C6F5677-A369-4DA6-8B0B-9D40BA7F05FD}">
+					<ChildrenList>
+						<Action Name="Play" ID="{DB99526B-0006-479E-819A-834DB2B55982}" ShortID="848581271" Type="Play" Scope="One" Global="false">
+							<ElementList>
+								<Element ID="{8892793E-A15A-4D26-AAFB-8DA8DCEBE3C4}" Global="false">
+									<ObjectRef Name="elevator-15s" ID="{32514325-0F4A-40BD-A975-C7AD5222A3E8}" WorkUnitID="{1D0317B3-D19A-41DC-A2E7-CAA9DD27FE60}"/>
+								</Element>
+							</ElementList>
+						</Action>
+					</ChildrenList>
+				</Event>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>
