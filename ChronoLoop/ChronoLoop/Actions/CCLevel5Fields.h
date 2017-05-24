@@ -75,7 +75,9 @@ namespace Epoch
 					canBoxShrink = false;
 					mScaleTipper = 1.0f;
 					leftBS->mHeld = false;
+					leftBS->mPickUp = nullptr;
 					rightBS->mHeld = false;
+					rightBS->mPickUp = nullptr;
 					mSoundOnce = false;
 					mBox->GetTransform().SetMatrix(initialMatrix);
 					vec3f pos = vec3f(*mBox->GetTransform().GetPosition());
