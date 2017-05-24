@@ -91,8 +91,8 @@ namespace Epoch
 					BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 					mc->AddTexture("../Resources/Controller_Diffuse.png", eTEX_DIFFUSE);
-					mc->AddTexture("../Resources/Controller_Normal", eTEX_NORMAL);
-					mc->AddTexture("../Resources/Controller_Specular", eTEX_SPECULAR);
+					mc->AddTexture("../Resources/Controller_Normal.png", eTEX_NORMAL);
+					mc->AddTexture("../Resources/Controller_Specular.png", eTEX_SPECULAR);
 					MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					rightRaycaster->SetVisible(false);
@@ -108,7 +108,7 @@ namespace Epoch
 					mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
 					mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
 					mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
-					mc2->AddTexture("../Resources/Player_hand_Specular", eTEX_SPECULAR);
+					mc2->AddTexture("../Resources/Player_hand_Specular.png", eTEX_SPECULAR);
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					leftRaycaster->SetVisible(false);
@@ -118,6 +118,8 @@ namespace Epoch
 					LeftController->AddComponent(leftRaycaster);
 					LeftController->AddComponent(leftTele);
 					LeftController->AddComponent(mc2);
+					matrix4 m = mc2->GetTransform().GetMatrix() * matrix4::CreateNewScale(vec3f(.8f, .8f, .8f));
+					mc2->GetTransform().SetMatrix(m);
 
 					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", identity, nullptr, BaseObject_Flag_Record_In_Timeline); //new BaseObject("headset", transform);
 					HeadsetFollow* hfollow = new HeadsetFollow();

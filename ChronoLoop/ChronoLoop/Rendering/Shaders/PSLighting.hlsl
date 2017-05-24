@@ -45,11 +45,11 @@ float4 main(PSI input) : SV_TARGET
     float4 cAlbedo = tAlbedo.Sample(fFilter, texCoord);
     float4 cSpecular = tSpecular.Sample(fFilter, texCoord);
     float4 pixelNormal = tNormal.Sample(fFilter, texCoord);
-    float3 pixelPosition = tPosition.Sample(fFilter, texCoord);
+    float3 pixelPosition = tPosition.Sample(fFilter, texCoord).rgb;
 
 
     float3 color = ApplyPointLight(lights[input.IID].position.xyz, pixelPosition.xyz, pixelNormal.xyz, lights[input.IID].color.rgb, cAlbedo.rgba) * cAlbedo.rgb;
-    float4 specularIntensity = GetSpecularIntensity(lights[input.IID].position.xyz, EyePos, pixelPosition.xyz, pixelNormal.xyz);
+    float specularIntensity = GetSpecularIntensity(lights[input.IID].position.xyz, EyePos, pixelPosition.xyz, pixelNormal.xyz);
     cSpecular.rgb *= cSpecular.a;
 
 	float lightRatio = pixelNormal.w < 1 ? 0 : 1;

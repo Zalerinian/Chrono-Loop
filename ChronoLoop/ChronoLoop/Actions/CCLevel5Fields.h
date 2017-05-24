@@ -5,14 +5,14 @@
 
 namespace Epoch
 {
-	
+
 	struct CCLevel5Fields : public CodeComponent
 	{
 		BaseObject* mBox;
 		Level* cLevel;
 		matrix4 initialMatrix;
 		float mScaleTipper;
-		bool canBoxShrink,isBoxShrinking, mSoundOnce = false;
+		bool canBoxShrink, isBoxShrinking, mSoundOnce = false;
 		BoxSnapToControllerAction* leftBS, *rightBS;
 		void SetIsBoxShrinking(bool _set) { isBoxShrinking = _set; }
 		virtual void Start()
@@ -46,7 +46,7 @@ namespace Epoch
 
 		virtual void OnTriggerEnter(Collider& _col, Collider& _other)
 		{
-			if(_other.GetBaseObject()->GetName() == "Box" && _col.mColliderType != Collider::eCOLLIDER_Controller)
+			if (_other.GetBaseObject()->GetName() == "Box" && _col.mColliderType != Collider::eCOLLIDER_Controller)
 			{
 				isBoxShrinking = true;
 
@@ -67,8 +67,10 @@ namespace Epoch
 			{
 				mScaleTipper -= 0.05f;
 				mBox->GetTransform().SetMatrix(matrix4::CreateNewScale(mScaleTipper, mScaleTipper, mScaleTipper) * mBox->GetTransform().GetMatrix());
-				if(mScaleTipper <= 0.0f)
+				if (mScaleTipper <= 0.0f)
 				{
+					if (mBox->GetComponentCount(ComponentType::eCOMPONENT_COLLIDER) > 0)
+						((Collider*)mBox->GetComponentIndexed(ComponentType::eCOMPONENT_COLLIDER, 0))->mForces = vec3f();
 					isBoxShrinking = false;
 					mScaleTipper = 1.0f;
 					leftBS->mHeld = false;

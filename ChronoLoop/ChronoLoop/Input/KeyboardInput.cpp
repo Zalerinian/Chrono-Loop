@@ -142,7 +142,7 @@ namespace Epoch
 			kbState[Shift] = 0xFF; // Force shift down on characters
 		}
 		UINT scan = (_lp >> 16) & 0xFF;
-		int ret = ToUnicode(_wp, scan, kbState, wide, 1, 0);
+		int ret = ToUnicode((UINT)_wp, scan, kbState, wide, 1, 0);
 		CommandConsole::Instance().AddCharacter(*wide);
 	}
 

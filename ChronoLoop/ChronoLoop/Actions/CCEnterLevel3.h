@@ -84,8 +84,8 @@ namespace Epoch
 					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 					mc->AddTexture("../Resources/Controller_Diffuse.png", eTEX_DIFFUSE);
-					mc->AddTexture("../Resources/Controller_Normal", eTEX_NORMAL);
-					mc->AddTexture("../Resources/Controller_Specular", eTEX_SPECULAR);
+					mc->AddTexture("../Resources/Controller_Normal.png", eTEX_NORMAL);
+					mc->AddTexture("../Resources/Controller_Specular.png", eTEX_SPECULAR);
 					CubeCollider* col = new CubeCollider(headset, false, false, vec3f(), 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f));
 					headset->AddComponent(col);
 
@@ -271,7 +271,7 @@ namespace Epoch
 					mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
 					mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
 					mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
-					mc2->AddTexture("../Resources/Player_hand_Specular", eTEX_SPECULAR);
+					mc2->AddTexture("../Resources/Player_hand_Specular.png", eTEX_SPECULAR);
 					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 					BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
@@ -285,6 +285,8 @@ namespace Epoch
 					LeftController->AddComponent(pickup2);
 					LeftController->AddComponent(leftRaycaster);
 					LeftController->AddComponent(ta2);
+					matrix4 m = mc2->GetTransform().GetMatrix() * matrix4::CreateNewScale(vec3f(.8f, .8f, .8f));
+					mc2->GetTransform().SetMatrix(m);
 
 					MeshComponent *visibleMesh2 = new MeshComponent("../Resources/TinyCube.obj");
 					visibleMesh2->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
@@ -347,7 +349,7 @@ namespace Epoch
 					start->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));
 					start->SetLife(500);
 					start->SetSize(.35f, .15f);
-					ParticleEmitter* startEmit = new TeleportEffect(400, 250, 2, vec4f(2.76f, 0, -4.8f, 1));
+					ParticleEmitter* startEmit = new TeleportEffect(400, 250, 2, vec4f(-3.25f, 0, -8.5f, 1));
 					startEmit->SetParticle(start);
 					startEmit->SetTexture("../Resources/BasicRectP.png");
 					((TeleportEffect*)startEmit)->y1 = 8;
@@ -362,7 +364,7 @@ namespace Epoch
 					start->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
 					start->SetLife(500);
 					start->SetSize(.15f, .05f);
-					ParticleEmitter* startEmit2 = new TeleportEffect(400, 150, 1, vec4f(2.76f, 0, -4.8f, 1));
+					ParticleEmitter* startEmit2 = new TeleportEffect(400, 150, 1, vec4f(-3.25f, 0, -8.5f, 1));
 					startEmit2->SetTexture("../Resources/BasicCircleP.png");
 					startEmit2->SetParticle(start);
 					((TeleportEffect*)startEmit2)->y1 = 1;
@@ -377,7 +379,7 @@ namespace Epoch
 					p2->SetColors(vec3f(0, 0, 1), vec3f(.5f, 0, .5f));
 					p2->SetLife(500);
 					p2->SetSize(.35f, .15f);
-					ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(-14.64397f, 0, -4.25f, 1));
+					ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(-15.86f, 0, -4.25f, 1));
 					emit21->SetParticle(p2);
 					emit21->SetTexture("../Resources/BasicRectP.png");
 					((TeleportEffect*)emit21)->y1 = 8;
@@ -392,7 +394,7 @@ namespace Epoch
 					p2->SetColors(vec3f(.5f, 0, .5f), vec3f(0, 0, 1));
 					p2->SetLife(500);
 					p2->SetSize(.15f, .05f);
-					ParticleEmitter* emit22 = new TeleportEffect(-1, 150, 2, vec4f(-14.64397f, 0, -4.25f, 1));
+					ParticleEmitter* emit22 = new TeleportEffect(-1, 150, 2, vec4f(-15.86f, 0, -4.25f, 1));
 					emit22->SetTexture("../Resources/BasicCircleP.png");
 					emit22->SetParticle(p2);
 					((TeleportEffect*)emit22)->y1 = 1;

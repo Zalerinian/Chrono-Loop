@@ -213,7 +213,7 @@ namespace Epoch {
 		Renderer::Instance()->GetRendererLock().lock();
 		//Make buffer with new vert data
 		desc.Usage = D3D11_USAGE_DEFAULT;
-		desc.ByteWidth = sizeof(VertexPosNormTex) * _mesh->VertSize();
+		desc.ByteWidth = sizeof(VertexPosNormTex) * (unsigned int)_mesh->VertSize();
 		desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		desc.CPUAccessFlags = 0;
 		desc.MiscFlags = 0;
@@ -223,7 +223,7 @@ namespace Epoch {
 		Renderer::Instance()->GetDevice()->CreateBuffer(&desc, &data, &v);
 
 		desc.Usage = D3D11_USAGE_DEFAULT;
-		desc.ByteWidth = sizeof(unsigned int) * _mesh->IndicieSize();
+		desc.ByteWidth = sizeof(unsigned int) * (unsigned int)_mesh->IndicieSize();
 		desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		desc.CPUAccessFlags = 0;
 		desc.MiscFlags = 0;

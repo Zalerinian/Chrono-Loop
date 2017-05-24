@@ -43,7 +43,7 @@ namespace Epoch
 		bool CheckMesh(MeshComponent* _plane, vec3f _ts, vec3f _te, vec3f _start, vec3f _end, vec3f& _hit)
 		{
 			Triangle* tris = _plane->GetTriangles();
-			int count = _plane->GetTriangleCount();
+			int count = (int)_plane->GetTriangleCount();
 
 			bool didHit = false;
 			float time = FLT_MAX;
@@ -77,7 +77,7 @@ namespace Epoch
 			bool h = false;
 			float t = FLT_MAX;
 
-			for (int p = 0; p < mPlaneObjects.size(); p++)
+			for (unsigned int p = 0; p < mPlaneObjects.size(); p++)
 			{
 				vec4f ray = _ray;
 				vec4f thit = _start;
@@ -88,13 +88,13 @@ namespace Epoch
 				vec3f st(thit);
 				vec3f ra(ray);
 
-				for (int m = 0; m < mPlaneObjects[p]->GetComponentCount(ComponentType::eCOMPONENT_MESH); m++)
+				for (unsigned int m = 0; m < mPlaneObjects[p]->GetComponentCount(ComponentType::eCOMPONENT_MESH); m++)
 				{
 					Triangle* tris = ((MeshComponent*)mPlaneObjects[p]->GetComponents(ComponentType::eCOMPONENT_MESH)[m])->GetTriangles();
-					int count = ((MeshComponent*)mPlaneObjects[p]->GetComponents(ComponentType::eCOMPONENT_MESH)[m])->GetTriangleCount();
+					unsigned int count = (unsigned int)((MeshComponent*)mPlaneObjects[p]->GetComponents(ComponentType::eCOMPONENT_MESH)[m])->GetTriangleCount();
 
 
-					for (int i = 0; i < count; i++)
+					for (unsigned int i = 0; i < count; i++)
 					{
 						float time = FLT_MAX;
 						bool hit = Physics::Instance()->RayToTriangle((tris + i)->Vertex[0], (tris + i)->Vertex[1], (tris + i)->Vertex[2], (tris + i)->Normal, st, ra, time);
@@ -230,7 +230,7 @@ namespace Epoch
 					matrix4 tm = cm * mEnvironmentObjects[e]->GetTransform().GetMatrix().Invert();
 					tl *= tm;
 					tn *= tm;
-					for (int m = 0; m < mEnvironmentObjects[e]->GetComponentCount(ComponentType::eCOMPONENT_MESH); m++)
+					for (unsigned int m = 0; m < mEnvironmentObjects[e]->GetComponentCount(ComponentType::eCOMPONENT_MESH); m++)
 					{
 						if (CheckMesh((MeshComponent*)mEnvironmentObjects[e]->GetComponents(ComponentType::eCOMPONENT_MESH)[m], tl, tn, lastpos, nextpos, hit))
 						{
@@ -254,7 +254,7 @@ namespace Epoch
 					matrix4 tm = cm * mPlaneObjects[p]->GetTransform().GetMatrix().Invert();
 					tl *= tm;
 					tn *= tm;
-					for (int m = 0; m < mPlaneObjects[p]->GetComponentCount(ComponentType::eCOMPONENT_MESH); m++)
+					for (unsigned int m = 0; m < mPlaneObjects[p]->GetComponentCount(ComponentType::eCOMPONENT_MESH); m++)
 					{
 						if (CheckMesh((MeshComponent*)mPlaneObjects[p]->GetComponents(ComponentType::eCOMPONENT_MESH)[m], tl, tn, lastpos, nextpos, hit))
 						{
@@ -304,18 +304,18 @@ namespace Epoch
 			mCSMesh = new MeshComponent("../Resources/ControllerTP.obj");
 			mCSMesh->AddTexture("../Resources/Marker.png", TextureType::eTEX_DIFFUSE);
 			mCSLoc->AddComponent(mCSMesh);
-			mCSMesh->SetAlpha(.45);
+			mCSMesh->SetAlpha(.45f);
 			for (int i = 0; i < 5; i++)
 			{
 				mMidMesh[i] = new MeshComponent("../Resources/ArcMarker.obj");
 				mMidMesh[i]->AddTexture("../Resources/Marker.png", TextureType::eTEX_DIFFUSE);
 				mMSLoc[i]->AddComponent(mMidMesh[i]);
-				mMidMesh[i]->SetAlpha(.45);
+				mMidMesh[i]->SetAlpha(.45f);
 			}
 			mTPMesh = new MeshComponent("../Resources/TeleportMarker.obj");
 			mTPMesh->AddTexture("../Resources/Marker.png", TextureType::eTEX_DIFFUSE);
 			mTPLoc->AddComponent(mTPMesh);
-			mTPMesh->SetAlpha(.45);
+			mTPMesh->SetAlpha(.45f);
 
 			matrix4 temp;
 			temp = mCSMesh->GetTransform().GetMatrix() * scaleM;
@@ -352,12 +352,12 @@ namespace Epoch
 
 			mTPParticles = new TeleportEffect(-1, 500, 15, vec3f());
 			Particle* p = &Particle::Init();
-			p->SetColors(vec4f(0, .8, 1, 1), vec4f(0, .8, 1, 1));
+			p->SetColors(vec4f(0, .8f, 1, 1), vec4f(0, .8f, 1, 1));
 			p->SetLife(400);
-			p->SetSize(.015, .005);
+			p->SetSize(.015f, .005f);
 			mTPParticles->SetParticle(p);
 			mTPParticles->SetPosBounds(vec3f(-.25, 0, -.25), vec3f(.25, 0, .25));
-			mTPParticles->SetVelBounds(vec3f(0, .8, 0), vec3f(0, 2.5, 0));
+			mTPParticles->SetVelBounds(vec3f(0, .8f, 0), vec3f(0, 2.5f, 0));
 			mTPParticles->SetTexture("../Resources/BasicSquareP.png");
 
 			ParticleSystem::Instance()->AddEmitter(mTPParticles);
@@ -367,13 +367,15 @@ namespace Epoch
 		{
 			if (!VRInputManager::GetInstance().IsVREnabled())
 			{
-				if (/*(GetAsyncKeyState(VK_SHIFT) & 1) &&*/ dynamic_cast<SFXEmitter*>(mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
-					((SFXEmitter*)mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
+				//if (/*(GetAsyncKeyState(VK_SHIFT) & 1) &&*/ dynamic_cast<SFXEmitter*>(mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
+				//	((SFXEmitter*)mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
 				return;
 			}
 
 			// I'm lazy so, let's just set this thing's position to the controller's position.
 			matrix4 mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
+			if (mControllerRole == ControllerType::eControllerType_Secondary)
+				mat *= matrix4::CreateNewScale(vec3f(.8, .8, .8));
 			mObject->GetTransform().SetMatrix(mat);
 			bool paused = false;
 
@@ -407,7 +409,7 @@ namespace Epoch
 				m.fourth = mat.fourth;
 				mCSMesh->GetTransform().SetMatrix(m);
 
-				#pragma region Arc Points
+			#pragma region Arc Points
 
 				int index = 0;
 				scaleM.first = vec4f(.025f, 0, 0, 0);
@@ -417,7 +419,7 @@ namespace Epoch
 				r = matrix4::CreateNewXRotation(ang);
 				m = mat * scaleM * r;
 
-				index = (((mArc.size() / 5) == 0 ? 1 : mArc.size() / 5) - 1) * 1;
+				index = ((((unsigned int)mArc.size() / 5) == 0 ? 1 : (unsigned int)mArc.size() / 5) - 1) * 1;
 				m.fourth = vec4f(mArc[index]) * mat;
 				mMidMesh[0]->GetTransform().SetMatrix(m);
 
@@ -427,7 +429,7 @@ namespace Epoch
 				scaleM.fourth = vec4f(0, 0, 0, 1);
 
 				m = mat * scaleM * r;
-				index = (((mArc.size() / 5) == 0 ? 1 : mArc.size() / 5) - 1) * 2;
+				index = ((((unsigned int)mArc.size() / 5) == 0 ? 1 : (unsigned int)mArc.size() / 5) - 1) * 2;
 				m.fourth = vec4f(mArc[index]) * mat;
 				mMidMesh[1]->GetTransform().SetMatrix(m);
 
@@ -438,7 +440,7 @@ namespace Epoch
 				scaleM.fourth = vec4f(0, 0, 0, 1);
 
 				m = mat * scaleM * r;
-				index = (((mArc.size() / 5) == 0 ? 1 : mArc.size() / 5) - 1) * 3;
+				index = ((((unsigned int)mArc.size() / 5) == 0 ? 1 : (unsigned int)mArc.size() / 5) - 1) * 3;
 				m.fourth = vec4f(mArc[index]) * mat;
 				mMidMesh[2]->GetTransform().SetMatrix(m);
 
@@ -448,7 +450,7 @@ namespace Epoch
 				scaleM.fourth = vec4f(0, 0, 0, 1);
 
 				m = mat * scaleM * r;
-				index = (((mArc.size() / 5) == 0 ? 1 : mArc.size() / 5) - 1) * 4;
+				index = ((((unsigned int)mArc.size() / 5) == 0 ? 1 : (unsigned int)mArc.size() / 5) - 1) * 4;
 				m.fourth = vec4f(mArc[index]) * mat;
 				mMidMesh[3]->GetTransform().SetMatrix(m);
 
@@ -458,9 +460,9 @@ namespace Epoch
 				scaleM.fourth = vec4f(0, 0, 0, 1);
 
 				m = mat * scaleM * r;
-				index = (((mArc.size() / 5) == 0 ? 1 : mArc.size() / 5) - 1) * 5;
-				if (index == mArc.size() - 1)
-					index = (((mArc.size() / 5) == 0 ? 1 : mArc.size() / 5) - 1) * 4;
+				index = ((((unsigned int)mArc.size() / 5) == 0 ? 1 : (unsigned int)mArc.size() / 5) - 1) * 5;
+				if (index == (unsigned int)mArc.size() - 1)
+					index = ((((unsigned int)mArc.size() / 5) == 0 ? 1 : (unsigned int)mArc.size() / 5) - 1) * 4;
 				m.fourth = vec4f(mArc[index]) * mat;
 				mMidMesh[4]->GetTransform().SetMatrix(m);
 

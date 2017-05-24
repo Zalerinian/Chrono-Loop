@@ -156,7 +156,7 @@ void Update() {
 	// TODO: Replace all this with a level to run.
 	///*///////////////////////Using this to test physics//////////////////
 	//_CrtSetBreakAlloc(4390);
-	
+
 	////Sound Initializing---------------------------------------------------
 	AudioWrapper::GetInstance().Initialize();
 	//Soundbanks
@@ -174,8 +174,8 @@ void Update() {
 	rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 	rightRaycaster->SetVisible(false);
 	mc->AddTexture("../Resources/Controller_Diffuse.png", eTEX_DIFFUSE);
-	mc->AddTexture("../Resources/Controller_Normal", eTEX_NORMAL);
-	mc->AddTexture("../Resources/Controller_Specular", eTEX_SPECULAR);
+	mc->AddTexture("../Resources/Controller_Normal.png", eTEX_NORMAL);
+	mc->AddTexture("../Resources/Controller_Specular.png", eTEX_SPECULAR);
 	TeleportAction* rightTele = new TeleportAction(eControllerType_Primary);
 	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
 	RightController->AddComponent(mc);
@@ -186,19 +186,22 @@ void Update() {
 
 	BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity); //new BaseObject("Controller2", identity);
 	MeshComponent *mc2 = new MeshComponent("../Resources/Player_hand.obj");
+	
 	MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 	leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 	leftRaycaster->SetVisible(false);
 	mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
 	mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
 	mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
-	mc2->AddTexture("../Resources/Player_hand_Specular", eTEX_SPECULAR);
+	mc2->AddTexture("../Resources/Player_hand_Specular.png", eTEX_SPECULAR);
 	TeleportAction* leftTele = new TeleportAction(eControllerType_Secondary);
 	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 	LeftController->AddComponent(leftConCol);
 	//LeftController->AddComponent(leftRaycaster);
 	LeftController->AddComponent(leftTele);
 	LeftController->AddComponent(mc2);
+	matrix4 m = mc2->GetTransform().GetMatrix() * matrix4::CreateNewScale(vec3f(.8f,.8f, .8f));
+	mc2->GetTransform().SetMatrix(m);
 	TimeManager::Instance()->AddObjectToTimeline(LeftController);
 
 	BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", transform); //new BaseObject("headset", transform);
@@ -286,7 +289,7 @@ void Update() {
 	((ParticleEmitter*)exitEmit)->SetVelBounds(vec3f(-.5f, -.5f, -.5f), vec3f(.5f, .5f, .5f));
 	ParticleSystem::Instance()->AddEmitter(exitEmit);
 	exitEmit->FIRE();
-	
+
 	exit = &Particle::Init();
 	exit->SetPos(vec3f(0, 0, 0));
 	exit->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
@@ -316,7 +319,7 @@ void Update() {
 	((TeleportEffect*)startEmit)->SetVelBounds(vec3f(.5f, 1, .5f), vec3f(.5f, 5, .5f));
 	ParticleSystem::Instance()->AddEmitter(startEmit);
 	startEmit->FIRE();
-	
+
 	start = &Particle::Init();
 	start->SetPos(vec3f(0, 0, 0));
 	start->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
@@ -430,7 +433,7 @@ void Update() {
 	}
 
 
-	
+
 	UpdateTime();
 	fixedTime = 0;
 	renderDelta = RENDER_INTERVAL;
@@ -439,16 +442,16 @@ void Update() {
 			// Handle windows message.
 			bool quit = false;
 			switch (msg.message) {
-				case WM_QUIT:
-					quit = true;
-					break;
-				case WM_KEYDOWN:
-					KeyboardInput::Instance().OnKeyDown(msg.wParam, msg.lParam);
-					break;
-				case WM_KEYUP:
-					break;
-				default:
-					break;
+			case WM_QUIT:
+				quit = true;
+				break;
+			case WM_KEYDOWN:
+				KeyboardInput::Instance().OnKeyDown(msg.wParam, msg.lParam);
+				break;
+			case WM_KEYUP:
+				break;
+			default:
+				break;
 			}
 			if (quit) {
 				break;
@@ -468,16 +471,16 @@ void Update() {
 			ParticleSystem::Instance()->Update();
 			TimeManager::Instance()->Update(deltaTime);
 			if (VREnabled || renderDelta >= RENDER_INTERVAL) {
-				Renderer::Instance()->Render(renderDelta); 
+				Renderer::Instance()->Render(renderDelta);
 				renderDelta = 0;
-			} 
+			}
 			else {
 				renderDelta += deltaTime;
 			}
 			while (fixedTime >= FIXED_UPDATE_INTERVAL) {
 				Physics::Instance()->Update(FIXED_UPDATE_INTERVAL);
 				fixedTime -= FIXED_UPDATE_INTERVAL;
-				if(fixedTime >=  0.25f)
+				if (fixedTime >= 0.25f)
 				{
 					UpdateTime();
 					fixedTime = 0;
@@ -528,17 +531,17 @@ bool InitializeWindow(HINSTANCE hInstance, int ShowWnd, int width, int height, b
 	}
 
 	hwnd = CreateWindowEx(                                     //Create our Extended Window
-		NULL,                                //Extended style
-		WndClassName,                        //Name of our windows class
-		L"Chrono::Loop",                     //Name in the title bar of our window
-		WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME, //style of our window
-		200, 200,                            //Top left corner of window
-		width,                               //Width of our window
-		height,                              //Height of our window
-		NULL,                                //Handle to parent window
-		NULL,                                //Handle to a Menu
-		hInstance,                           //Specifies instance of current program
-		NULL                                 //used for an MDI client window
+						  NULL,                                //Extended style
+						  WndClassName,                        //Name of our windows class
+						  L"Chrono::Loop",                     //Name in the title bar of our window
+						  WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME, //style of our window
+						  200, 200,                            //Top left corner of window
+						  width,                               //Width of our window
+						  height,                              //Height of our window
+						  NULL,                                //Handle to parent window
+						  NULL,                                //Handle to a Menu
+						  hInstance,                           //Specifies instance of current program
+						  NULL                                 //used for an MDI client window
 	);
 	if (!hwnd) {
 		MessageBox(NULL, L"Error creating window", L"Error", MB_OK | MB_ICONERROR);

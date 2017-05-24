@@ -70,7 +70,7 @@ namespace Epoch
 
 			mPB->GetBackground()->GetTransform().SetMatrix(matrix4::CreateNewScale(20, 1, 20) * matrix4::CreateNewTranslation(0, 0.0001f, -2));
 			//mPB->GetProgressBar()->GetTransform().SetMatrix(matrix4::CreateNewScale(20, 1, 20) * matrix4::CreateNewTranslation(0, 0.0001f, 0));
-			((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 2))->CallEvent(Emitter::EventType::ePlay);
+			//((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->CallEvent(Emitter::EventType::ePlay);
 			mPB->OnEnable();
 		
 			//Settings::GetInstance().SetFloat("StartButton - CurProgress",0);
