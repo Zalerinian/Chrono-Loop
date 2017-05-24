@@ -102,6 +102,8 @@ namespace Epoch {
 
 		eBufferDataType_AnimatedQuad,
 
+		eBufferDataType_Light,
+
 		eBufferDataType_MAX
 
 	};
@@ -139,6 +141,8 @@ namespace Epoch {
 		ePS_BLOOM,
 		ePS_DEFERRED,
 		ePS_SOLIDCOLOR,
+		ePS_NONE,
+		ePS_LIGHTING,
 		ePS_MAX
 	};
 

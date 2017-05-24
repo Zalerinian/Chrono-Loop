@@ -51,7 +51,6 @@ namespace Epoch
 				Settings::GetInstance().SetBool("LevelIsLoading", true);
 				Level* next = new Level;
 				next->BinaryLoadLevel("../Resources/MainMenu.elf");
-				Renderer::Instance()->ClearLights();
 				// Todo: Un-hardcode this
 				// use a setting string for next level path?
 				//LM::LevelStatus status = LevelManager::GetInstance().LoadLevelAsync("../Resources/Level1_2_6.xml", &next);
@@ -151,7 +150,7 @@ namespace Epoch
 							|| temp == "mmPrevButton" || temp =="mmPrevSign")
 						{
 							Transform t;
-							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateTranslation(0, (float)floorPos, 0));
+							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateNewTranslation(0, (float)floorPos, 0));
 							((BaseObject*)*it)->SetTransform(t);
 
 							if (boop)
@@ -187,7 +186,7 @@ namespace Epoch
 						else if (floorPos == -10 && temp == "mmClosingPanel")
 						{
 							Transform t;
-							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateTranslation(2, 0, 0));
+							t.SetMatrix(((BaseObject*)*it)->GetTransform().GetMatrix() * matrix4::CreateNewTranslation(2, 0, 0));
 							((BaseObject*)*it)->SetTransform(t);
 						}
 
@@ -302,7 +301,7 @@ namespace Epoch
 						ParticleSystem::Instance()->AddEmitter(emit22);
 						emit22->FIRE();
 					}
-					else if (Settings::GetInstance().GetInt("CurrentLevel") >= 1)
+					else if (Settings::GetInstance().GetInt("CurrentLevel") >= 1 && Settings::GetInstance().GetBool("CompleteLevel1"))
 					{
 						((MeshComponent*)next->FindObjectWithName("Test2")->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
 						((MeshComponent*)next->FindObjectWithName("Test2")->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
@@ -371,7 +370,7 @@ namespace Epoch
 						ParticleSystem::Instance()->AddEmitter(emit22);
 						emit22->FIRE();
 					} 
-					else if (Settings::GetInstance().GetInt("CurrentLevel") >= 2)
+					else if (Settings::GetInstance().GetInt("CurrentLevel") >= 2 && Settings::GetInstance().GetBool("CompleteLevel2"))
 					{
 						((MeshComponent*)next->FindObjectWithName("Test3")->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
 						((MeshComponent*)next->FindObjectWithName("Test3")->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
@@ -440,7 +439,7 @@ namespace Epoch
 						ParticleSystem::Instance()->AddEmitter(emit22);
 						emit22->FIRE();
 					}
-					else if (Settings::GetInstance().GetInt("CurrentLevel") >= 3)
+					else if (Settings::GetInstance().GetInt("CurrentLevel") >= 3 && Settings::GetInstance().GetBool("CompleteLevel3"))
 					{
 						((MeshComponent*)next->FindObjectWithName("Test4")->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
 						((MeshComponent*)next->FindObjectWithName("Test4")->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
@@ -509,7 +508,7 @@ namespace Epoch
 						ParticleSystem::Instance()->AddEmitter(emit12);
 						emit12->FIRE();
 					}
-					else if(Settings::GetInstance().GetInt("CurrentLevel") >= 4)
+					else if(Settings::GetInstance().GetInt("CurrentLevel") >= 4 && Settings::GetInstance().GetBool("CompleteLevel4"))
 					{
 						((MeshComponent*)next->FindObjectWithName("Test5")->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
 						((MeshComponent*)next->FindObjectWithName("Test5")->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
@@ -573,31 +572,6 @@ namespace Epoch
 					((TeleportEffect*)startEmit2)->SetVelBounds(vec3f(.5f, 1, .5f), vec3f(.5f, 5, .5f));
 					ParticleSystem::Instance()->AddEmitter(startEmit2);
 					startEmit2->FIRE();
-
-					Light* l1 = new Light();
-					l1->Type = 4;
-					l1->Color = vec3f(1, 1, 1);
-					l1->ConeDirection = vec3f(0, -1, 0);
-					l1->Position = vec3f(0, 4, 0);
-					l1->ConeRatio = .85f;
-
-					Light* l2 = new Light();
-					l2->Type = 4;
-					l2->Color = vec3f(0, 0, 1);
-					l2->ConeDirection = vec3f(0, -1, 0);
-					l2->Position = vec3f(3.972854f, 5, 0);
-					l2->ConeRatio = .9f;
-
-					Light* l3 = new Light();
-					l3->Type = 4;
-					l3->Color = vec3f(0, 1, 0);
-					l3->ConeDirection = vec3f(0, -1, 0);
-					l3->Position = vec3f(0, 5, -3.872531f);
-					l3->ConeRatio = .9f;
-
-					Renderer::Instance()->SetLight(l1, 0);
-					Renderer::Instance()->SetLight(l2, 1);
-					Renderer::Instance()->SetLight(l3, 2);
 
 					LevelManager::GetInstance().GetCurrentLevel()->GetStartPos() = vec4f(0, -10, 0, 1);
 					SystemLogger::Debug() << "Loading complete" << std::endl;

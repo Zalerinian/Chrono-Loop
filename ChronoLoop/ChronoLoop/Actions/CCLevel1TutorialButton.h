@@ -32,8 +32,8 @@ namespace Epoch
 
 			doorStart = tutDoor->GetTransform().GetMatrix();
 			chamberStart = tutChamber->GetTransform().GetMatrix();
-			doorEnd = doorStart * tutDoor->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 2.6f, 0, 1));
-			chamberEnd = chamberStart * tutChamber->GetTransform().GetMatrix().CreateTranslation(vec4f(0, -3.02f, 0, 1));
+			doorEnd = doorStart * tutDoor->GetTransform().GetMatrix().CreateNewTranslation(vec4f(0, 2.6f, 0, 1));
+			chamberEnd = chamberStart * tutChamber->GetTransform().GetMatrix().CreateNewTranslation(vec4f(0, -3.02f, 0, 1));
 		}
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time)
@@ -77,7 +77,7 @@ namespace Epoch
 			if (!once && Settings::GetInstance().GetInt("tutStep") == 6)
 			{
 				doorInterp->SetActive(true);
-				doorInterp->Prepare(0.69f, tutDoor->GetTransform().GetMatrix(), doorStart * tutDoor->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 2.6f, 0, 1)), tutDoor->GetTransform().GetMatrix());
+				doorInterp->Prepare(0.69f, tutDoor->GetTransform().GetMatrix(), doorStart * tutDoor->GetTransform().GetMatrix().CreateNewTranslation(vec4f(0, 2.6f, 0, 1)), tutDoor->GetTransform().GetMatrix());
 				interp = true;
 				once = true;
 

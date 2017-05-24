@@ -241,6 +241,7 @@ namespace Hourglass
 			comp.mTexture.SelectedIndex = mTexture.SelectedIndex;
 			comp.mEmissive.SelectedIndex = mEmissive.SelectedIndex;
 			comp.mSpecular.SelectedIndex = mSpecular.SelectedIndex;
+			comp.mNormal.SelectedIndex = mNormal.SelectedIndex;
 		}
 	}
 }

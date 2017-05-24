@@ -20,7 +20,8 @@ namespace Epoch
 		//PauseMenu* mPauseMenu = nullptr;
 		std::list<BaseObject*> mObjectList;
 		unsigned short mId;
-		vec4f mStartPosition, mStartRotation;
+		vec4f mStartPosition;
+		vec3f mStartRotation;
 		unsigned int mMaxNumofClones = 0;
 
 	public:

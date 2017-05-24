@@ -183,6 +183,9 @@ namespace Hourglass
 				if (comps[j] is MeshComponent)
 				{
 					MeshComponent c = (MeshComponent)comps[j];
+					if(!c.Shape.Valid) {
+						continue;
+					}
 					Vector3 start = Vector3.Unproject(new Vector3(e.X, e.Y, 0),
 						dev.Viewport,
 						dev.Transform.Projection,
@@ -393,7 +396,7 @@ namespace Hourglass
                     {
                         Gizmo.Instance.Mode = Gizmo.GizmoMode.Scale;
                     }
-					if(mKeys.Contains(Key.D)) {
+					if(mKeys.Contains(Key.D) && !mPreviousKeys.Contains(Key.D)) {
 						DuplicateObject();
 					}
                 }
@@ -526,6 +529,9 @@ namespace Hourglass
                     sc.Parent = spWorldView.Panel2;
                     obj.AddComponent(sc);
 					break;
+				case "LMesh":
+					obj.AddComponent(new LightComponent());
+					break;
 
                 // Code Components
                 case "CodeComp":
@@ -563,6 +569,8 @@ namespace Hourglass
 
 				loader.Start(fod);
 				loader.Join();
+				RenderTimer.Stop();
+				RenderTimer.Start(); // Reset the timer since loading takes a while.
 				// Attach Object Handlers
 				for(int i = 0; i < fod.nodeCollection.Count; ++i)
 				{
@@ -577,6 +585,7 @@ namespace Hourglass
 			if (OpenFilename != string.Empty)
 			{
 				FileIO.saveLevel(OpenFilename, Tree);
+				FlashWindow.Flash(this, 2);
 			}
 			else
 			{
@@ -597,25 +606,33 @@ namespace Hourglass
 			}
 		}
 
+		private TreeNode GetLevelRoot() {
+			if(Tree.Nodes.Count == 1) {
+				return Tree.Nodes[0];
+			} else {
+				return null;
+			}
+		}
+
 		private void mMenuButton_Click(object sender, EventArgs e)
 		{
-			Tree.SelectedNode = ConstructTreeObject(null);
+			Tree.SelectedNode = ConstructTreeObject(GetLevelRoot());
 			btnFocus.Select();
 		}
 
 		private void mCreateMenuAdd_Click(object sender, EventArgs e)
 		{
-			Tree.SelectedNode = ConstructTreeObject(null);
+			Tree.SelectedNode = ConstructTreeObject(GetLevelRoot());
 			btnFocus.Select();
 		}
 
 		private void Tree_AfterSelect(object sender, TreeViewEventArgs e)
 		{
 			spWorldView.Panel2.Controls.Clear();
-			// Needed to keep the component button on the side panel.
-			spWorldView.Panel2.Controls.Add(btnComponentAdd);
-			if (Tree.SelectedNode != null)
+			if (Tree.SelectedNode != null && Tree.SelectedNode.Tag != null)
 			{
+				// Needed to keep the component button on the side panel.
+				spWorldView.Panel2.Controls.Add(btnComponentAdd);
 				BaseObject obj = (BaseObject)Tree.SelectedNode.Tag;
 				for (int i = 0; i < obj.GetComponents().Count; ++i)
 				{
@@ -641,7 +658,6 @@ namespace Hourglass
 		private TreeNode ConstructTreeObject(TreeNode _parent)
 		{
 			TreeNode n = new TreeNode();
-			n.ContextMenuStrip = mObjectStrip;
 			BaseObject b = new BaseObject(n, "Empty Object");
 			if(_parent != null)
 			{
@@ -889,6 +905,41 @@ namespace Hourglass
 			trf.SetPosition(delta.Position);
 			trf.SetRotation(trf.GetRotationVector() + delta.Rotation);
 			trf.SetScale(delta.Scale);
+		}
+
+		private void unparentToolStripMenuItem_Click(object sender, EventArgs e) {
+			TreeNode n = Tree.SelectedNode;
+			if(n.Parent != null) {
+				n.Parent.Nodes.Remove(n);
+				Tree.Nodes.Add(n);
+			}
+		}
+
+		private void Tree_MouseUp(object sender, MouseEventArgs e) {
+			if (e.Button == MouseButtons.Right) {
+				Tree.SelectedNode = Tree.GetNodeAt(e.X, e.Y);
+				if (Tree.SelectedNode != null) {
+					mObjectStrip.Show(Tree, e.Location);
+				}
+			}
+		}
+
+		private void createRootToolStripMenuItem_Click(object sender, EventArgs e) {
+			TreeNode root = GetLevelRoot();
+			if(root == null) {
+				root = new TreeNode();
+				root.Tag = new BaseObject(root, "Root");
+				Tree.Nodes.Add(root);
+				for(int i = Tree.Nodes.Count - 2; i >= 0; --i) {
+					TreeNode n = Tree.Nodes[i];
+					((BaseObject)n.Tag).Parent = (BaseObject)root.Tag;
+					Tree.Nodes.Remove(n);
+					root.Nodes.Add(n);
+				}
+				root.Expand();
+			} else {
+				Debug.Print("We already have a root, ye dingus.");
+			}
 		}
 
 		private WorldTransformations CollapseObject(TreeNode Object) {

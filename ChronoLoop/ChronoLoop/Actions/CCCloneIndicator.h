@@ -20,7 +20,7 @@ namespace Epoch
 		virtual void Start()
 		{
 			ratio = 0;
-			mObject->GetTransform().SetMatrix(matrix4::CreateScale(.1f, .1f, .1f));
+			mObject->GetTransform().SetMatrix(matrix4::CreateNewScale(.1f, .1f, .1f));
 			end = vec4f(mObject->GetTransform().GetMatrix().fourth);
 			start = end;
 			start.x -= .1f;

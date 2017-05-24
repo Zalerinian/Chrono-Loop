@@ -466,43 +466,43 @@ namespace Epoch
 				int Y = mazeBoxes[i].mCol;
 				//Row 0
 				if (X == 0 && Y == 0) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(6, -1.41f, 6.2f);
+					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(6, -1.41f, 6.2f);
 				}
 				else if (X == 0 && Y == 1) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) *  matrix4::CreateTranslation(2, -1.41f, 6.2f);
+					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) *  matrix4::CreateNewTranslation(2, -1.41f, 6.2f);
 				}
 				//Row 1
 				else if (X == 1 && Y == 0) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(6, -1.41f, 2.2f);
+					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(6, -1.41f, 2.2f);
 				}
 				else if (X == 1 && Y == 2) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) *  matrix4::CreateTranslation(-2, -1.41f, 2.2f);
+					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) *  matrix4::CreateNewTranslation(-2, -1.41f, 2.2f);
 				}
 				else if (X == 1 && Y == 3) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(-6, -1.41f, 2.2f);
+					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(-6, -1.41f, 2.2f);
 				}
 				//Row 2
 				else if (X == 2 && Y == 0) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(6, -1.41f, -1.80f);
+					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(6, -1.41f, -1.80f);
 				}
 				else if (X == 2 && Y == 1) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(2, -1.41f, -1.80f);
+					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(2, -1.41f, -1.80f);
 				}
 				else if (X == 2 && Y == 3) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) *  matrix4::CreateTranslation(-6, -1.41f, -1.80f);
+					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) *  matrix4::CreateNewTranslation(-6, -1.41f, -1.80f);
 				}
 				//Row 3
 				else if (X == 3 && Y == 0) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(6, -1.41f, -5.80f);
+					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(6, -1.41f, -5.80f);
 				}
 				else if (X == 3 && Y == 1) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(2, -1.41f, -5.80f);
+					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(2, -1.41f, -5.80f);
 				}
 				else if (X == 3 && Y == 2) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(-2, -1.41f, -5.80f);
+					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(-2, -1.41f, -5.80f);
 				}
 				else if (X == 3 && Y == 3) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(-6, -1.41f, -5.80f);
+					finalDest = matrix4::CreateNewScale(2.1f, 1.5f, 2) * matrix4::CreateNewTranslation(-6, -1.41f, -5.80f);
 				}
 				if (*curMatrix != finalDest)
 				{

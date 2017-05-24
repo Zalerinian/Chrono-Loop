@@ -86,7 +86,7 @@ void Epoch::FrameQuery::Display() {
 	UINT64 previousTime = frameTimes[0];
 	for (unsigned int i = 0; i < mQueries.size(); ++i) {
 		float sectionTime = (frameTimes[i + 2] - previousTime) / frequency * 1000.f;
-		SystemLogger::GetLog() << "\t\t" << mQueries[i].name << ": " << sectionTime << "ms\n";
+		SystemLogger::GetLog() << "\t\t" << mQueries[i].name << ": " << sectionTime << "ms  (" << (sectionTime / frameTime * 100) << "%)\n";
 		previousTime = frameTimes[i + 2];
 	}
 

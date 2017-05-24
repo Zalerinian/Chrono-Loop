@@ -68,8 +68,8 @@ namespace Epoch
 			mChamberObject->AddComponent(l);
 			AudioWrapper::GetInstance().AddListener(l, "shit");
 
-			mPB->GetBackground()->GetTransform().SetMatrix(matrix4::CreateScale(20, 1, 20) * matrix4::CreateTranslation(0, 0.0001f, -2));
-			//mPB->GetProgressBar()->GetTransform().SetMatrix(matrix4::CreateScale(20, 1, 20) * matrix4::CreateTranslation(0, 0.0001f, 0));
+			mPB->GetBackground()->GetTransform().SetMatrix(matrix4::CreateNewScale(20, 1, 20) * matrix4::CreateNewTranslation(0, 0.0001f, -2));
+			//mPB->GetProgressBar()->GetTransform().SetMatrix(matrix4::CreateNewScale(20, 1, 20) * matrix4::CreateNewTranslation(0, 0.0001f, 0));
 			((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 2))->CallEvent(Emitter::EventType::ePlay);
 			mPB->OnEnable();
 		
@@ -85,57 +85,57 @@ namespace Epoch
 			if (Settings::GetInstance().GetInt("mmLevel") > 1 && mPB->GetCurProgress() >= mPB->GetFinalProgress() && !mBooped && !Settings::GetInstance().GetBool("mmChamberMoving"))
 			{
 				matrix4 mat = mChamberObject->GetTransform().GetMatrix();
-				mChamberInterp->Prepare(1, mat, mat * matrix4::CreateTranslation(0, -.05f, 0), mChamberObject->GetTransform().GetMatrix());
+				mChamberInterp->Prepare(1, mat, mat * matrix4::CreateNewTranslation(0, -.05f, 0), mChamberObject->GetTransform().GetMatrix());
 				mChamberInterp->SetEasingFunction(Easing::ElasticOut);
 				mChamberInterp->SetActive(true);
 
 				mat = VRInputManager::GetInstance().GetPlayerPosition();
-				mPlayerInterp->Prepare(1, mat, mat * matrix4::CreateTranslation(0, -.05f, 0), VRInputManager::GetInstance().GetPlayerPosition());
+				mPlayerInterp->Prepare(1, mat, mat * matrix4::CreateNewTranslation(0, -.05f, 0), VRInputManager::GetInstance().GetPlayerPosition());
 				mPlayerInterp->SetEasingFunction(Easing::ElasticOut);
 				mPlayerInterp->SetActive(true);
 
 				mat = mObject->GetTransform().GetMatrix();
-				mPrevButtonInterp->Prepare(1, mat, mat * matrix4::CreateTranslation(0, -.05f, 0), mObject->GetTransform().GetMatrix());
+				mPrevButtonInterp->Prepare(1, mat, mat * matrix4::CreateNewTranslation(0, -.05f, 0), mObject->GetTransform().GetMatrix());
 				mPrevButtonInterp->SetEasingFunction(Easing::ElasticOut);
 				mPrevButtonInterp->SetActive(true);
 
 				mat = mStartStand->GetTransform().GetMatrix();
-				mStartStandInterp->Prepare(1, mat, mat * matrix4::CreateTranslation(0, -.05f, 0), mStartStand->GetTransform().GetMatrix());
+				mStartStandInterp->Prepare(1, mat, mat * matrix4::CreateNewTranslation(0, -.05f, 0), mStartStand->GetTransform().GetMatrix());
 				mStartStandInterp->SetEasingFunction(Easing::ElasticOut);
 				mStartStandInterp->SetActive(true);
 
 				mat = mStartSign->GetTransform().GetMatrix();
-				mStartSignInterp->Prepare(1, mat, mat * matrix4::CreateTranslation(0, -.05f, 0), mStartSign->GetTransform().GetMatrix());
+				mStartSignInterp->Prepare(1, mat, mat * matrix4::CreateNewTranslation(0, -.05f, 0), mStartSign->GetTransform().GetMatrix());
 				mStartSignInterp->SetEasingFunction(Easing::ElasticOut);
 				mStartSignInterp->SetActive(true);
 
 				mat = mExitButton->GetTransform().GetMatrix();
-				mExitButtonInterp->Prepare(1, mat, mat * matrix4::CreateTranslation(0, -.05f, 0), mExitButton->GetTransform().GetMatrix());
+				mExitButtonInterp->Prepare(1, mat, mat * matrix4::CreateNewTranslation(0, -.05f, 0), mExitButton->GetTransform().GetMatrix());
 				mExitButtonInterp->SetEasingFunction(Easing::ElasticOut);
 				mExitButtonInterp->SetActive(true);
 
 				mat = mExitStand->GetTransform().GetMatrix();
-				mExitStandInterp->Prepare(1, mat, mat * matrix4::CreateTranslation(0, -.05f, 0), mExitStand->GetTransform().GetMatrix());
+				mExitStandInterp->Prepare(1, mat, mat * matrix4::CreateNewTranslation(0, -.05f, 0), mExitStand->GetTransform().GetMatrix());
 				mExitStandInterp->SetEasingFunction(Easing::ElasticOut);
 				mExitStandInterp->SetActive(true);
 
 				mat = mExitSign->GetTransform().GetMatrix();
-				mExitSignInterp->Prepare(1, mat, mat * matrix4::CreateTranslation(0, -.05f, 0), mExitSign->GetTransform().GetMatrix());
+				mExitSignInterp->Prepare(1, mat, mat * matrix4::CreateNewTranslation(0, -.05f, 0), mExitSign->GetTransform().GetMatrix());
 				mExitSignInterp->SetEasingFunction(Easing::ElasticOut);
 				mExitSignInterp->SetActive(true);
 
 				mat = mStartButton->GetTransform().GetMatrix();
-				mStartButtonInterp->Prepare(1, mat, mat * matrix4::CreateTranslation(0, -.05f, 0), mStartButton->GetTransform().GetMatrix());
+				mStartButtonInterp->Prepare(1, mat, mat * matrix4::CreateNewTranslation(0, -.05f, 0), mStartButton->GetTransform().GetMatrix());
 				mStartButtonInterp->SetEasingFunction(Easing::ElasticOut);
 				mStartButtonInterp->SetActive(true);
 
 				mat = mPrevStand->GetTransform().GetMatrix();
-				mPrevStandInterp->Prepare(1, mat, mat * matrix4::CreateTranslation(0, -.05f, 0), mPrevStand->GetTransform().GetMatrix());
+				mPrevStandInterp->Prepare(1, mat, mat * matrix4::CreateNewTranslation(0, -.05f, 0), mPrevStand->GetTransform().GetMatrix());
 				mPrevStandInterp->SetEasingFunction(Easing::ElasticOut);
 				mPrevStandInterp->SetActive(true);
 
 				mat = mPrevSign->GetTransform().GetMatrix();
-				mPrevSignInterp->Prepare(1, mat, mat * matrix4::CreateTranslation(0, -.05f, 0), mPrevSign->GetTransform().GetMatrix());
+				mPrevSignInterp->Prepare(1, mat, mat * matrix4::CreateNewTranslation(0, -.05f, 0), mPrevSign->GetTransform().GetMatrix());
 				mPrevSignInterp->SetEasingFunction(Easing::ElasticOut);
 				mPrevSignInterp->SetActive(true);
 
@@ -145,6 +145,7 @@ namespace Epoch
 				mBooped3 = true;
 				Settings::GetInstance().SetInt("mmLevel", Settings::GetInstance().GetInt("mmLevel") - 1);
 				Settings::GetInstance().SetBool("mmChamberMoving", true);
+				Settings::GetInstance().SetBool("CantTeleport", true);
 				//mPB->OnDisable();
 			}
 		}
@@ -178,7 +179,7 @@ namespace Epoch
 					{
 						matrix4 mat;
 						mat = mClosePanel->GetTransform().GetMatrix();
-						mCloseInterp->Prepare(5, mat, mat * matrix4::CreateTranslation(2, 0, 0), mClosePanel->GetTransform().GetMatrix());
+						mCloseInterp->Prepare(5, mat, mat * matrix4::CreateNewTranslation(2, 0, 0), mClosePanel->GetTransform().GetMatrix());
 						mCloseInterp->SetActive(true);
 						mBooped2 = true;
 					}
@@ -207,57 +208,57 @@ namespace Epoch
 				if (complete && mBooped3)
 				{
 					matrix4 mat = mChamberObject->GetTransform().GetMatrix();
-					mChamberInterp->Prepare(16, mat, mat * matrix4::CreateTranslation(0, 10.05f, 0), mChamberObject->GetTransform().GetMatrix());
+					mChamberInterp->Prepare(16, mat, mat * matrix4::CreateNewTranslation(0, 10.05f, 0), mChamberObject->GetTransform().GetMatrix());
 					mChamberInterp->SetEasingFunction(Easing::QuadInOut);
 					mChamberInterp->SetActive(true);
 
 					mat = VRInputManager::GetInstance().GetPlayerPosition();
-					mPlayerInterp->Prepare(16, mat, mat * matrix4::CreateTranslation(0, 10.05f, 0), VRInputManager::GetInstance().GetPlayerPosition());
+					mPlayerInterp->Prepare(16, mat, mat * matrix4::CreateNewTranslation(0, 10.05f, 0), VRInputManager::GetInstance().GetPlayerPosition());
 					mPlayerInterp->SetEasingFunction(Easing::QuadInOut);
 					mPlayerInterp->SetActive(true);
 
 					mat = mObject->GetTransform().GetMatrix();
-					mPrevButtonInterp->Prepare(16, mat, mat * matrix4::CreateTranslation(0, 10.05f, 0), mObject->GetTransform().GetMatrix());
+					mPrevButtonInterp->Prepare(16, mat, mat * matrix4::CreateNewTranslation(0, 10.05f, 0), mObject->GetTransform().GetMatrix());
 					mPrevButtonInterp->SetEasingFunction(Easing::QuadInOut);
 					mPrevButtonInterp->SetActive(true);
 
 					mat = mStartStand->GetTransform().GetMatrix();
-					mStartStandInterp->Prepare(16, mat, mat * matrix4::CreateTranslation(0, 10.05f, 0), mStartStand->GetTransform().GetMatrix());
+					mStartStandInterp->Prepare(16, mat, mat * matrix4::CreateNewTranslation(0, 10.05f, 0), mStartStand->GetTransform().GetMatrix());
 					mStartStandInterp->SetEasingFunction(Easing::QuadInOut);
 					mStartStandInterp->SetActive(true);
 
 					mat = mStartSign->GetTransform().GetMatrix();
-					mStartSignInterp->Prepare(16, mat, mat * matrix4::CreateTranslation(0, 10.05f, 0), mStartSign->GetTransform().GetMatrix());
+					mStartSignInterp->Prepare(16, mat, mat * matrix4::CreateNewTranslation(0, 10.05f, 0), mStartSign->GetTransform().GetMatrix());
 					mStartSignInterp->SetEasingFunction(Easing::QuadInOut);
 					mStartSignInterp->SetActive(true);
 
 					mat = mExitButton->GetTransform().GetMatrix();
-					mExitButtonInterp->Prepare(16, mat, mat * matrix4::CreateTranslation(0, 10.05f, 0), mExitButton->GetTransform().GetMatrix());
+					mExitButtonInterp->Prepare(16, mat, mat * matrix4::CreateNewTranslation(0, 10.05f, 0), mExitButton->GetTransform().GetMatrix());
 					mExitButtonInterp->SetEasingFunction(Easing::QuadInOut);
 					mExitButtonInterp->SetActive(true);
 
 					mat = mExitStand->GetTransform().GetMatrix();
-					mExitStandInterp->Prepare(16, mat, mat * matrix4::CreateTranslation(0, 10.05f, 0), mExitStand->GetTransform().GetMatrix());
+					mExitStandInterp->Prepare(16, mat, mat * matrix4::CreateNewTranslation(0, 10.05f, 0), mExitStand->GetTransform().GetMatrix());
 					mExitStandInterp->SetEasingFunction(Easing::QuadInOut);
 					mExitStandInterp->SetActive(true);
 
 					mat = mExitSign->GetTransform().GetMatrix();
-					mExitSignInterp->Prepare(16, mat, mat * matrix4::CreateTranslation(0, 10.05f, 0), mExitSign->GetTransform().GetMatrix());
+					mExitSignInterp->Prepare(16, mat, mat * matrix4::CreateNewTranslation(0, 10.05f, 0), mExitSign->GetTransform().GetMatrix());
 					mExitSignInterp->SetEasingFunction(Easing::QuadInOut);
 					mExitSignInterp->SetActive(true);
 
 					mat = mStartButton->GetTransform().GetMatrix();
-					mStartButtonInterp->Prepare(16, mat, mat * matrix4::CreateTranslation(0, 10.05f, 0), mStartButton->GetTransform().GetMatrix());
+					mStartButtonInterp->Prepare(16, mat, mat * matrix4::CreateNewTranslation(0, 10.05f, 0), mStartButton->GetTransform().GetMatrix());
 					mStartButtonInterp->SetEasingFunction(Easing::QuadInOut);
 					mStartButtonInterp->SetActive(true);
 
 					mat = mPrevStand->GetTransform().GetMatrix();
-					mPrevStandInterp->Prepare(16, mat, mat * matrix4::CreateTranslation(0, 10.05f, 0), mPrevStand->GetTransform().GetMatrix());
+					mPrevStandInterp->Prepare(16, mat, mat * matrix4::CreateNewTranslation(0, 10.05f, 0), mPrevStand->GetTransform().GetMatrix());
 					mPrevStandInterp->SetEasingFunction(Easing::QuadInOut);
 					mPrevStandInterp->SetActive(true);
 
 					mat = mPrevSign->GetTransform().GetMatrix();
-					mPrevSignInterp->Prepare(16, mat, mat * matrix4::CreateTranslation(0, 10.05f, 0), mPrevSign->GetTransform().GetMatrix());
+					mPrevSignInterp->Prepare(16, mat, mat * matrix4::CreateNewTranslation(0, 10.05f, 0), mPrevSign->GetTransform().GetMatrix());
 					mPrevSignInterp->SetEasingFunction(Easing::QuadInOut);
 					mPrevSignInterp->SetActive(true);
 					mBooped3 = false;
@@ -267,6 +268,7 @@ namespace Epoch
 					((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::EventType::eStop);
 					mBooped = false;
 					Settings::GetInstance().SetBool("mmChamberMoving", false);
+					Settings::GetInstance().SetBool("CantTeleport", false);
 					complete = false;
 				}
 			}

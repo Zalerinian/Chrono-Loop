@@ -395,23 +395,25 @@ namespace Epoch
 				scaleM.third = vec4f(0, 0, .05f, 0);
 				scaleM.fourth = vec4f(0, 0, 0, 1);
 
-				matrix4 r = matrix4::CreateYRotation(ang);
+				matrix4 r = matrix4::CreateNewYRotation(ang);
 
 				matrix4 m;
 				m = mTPMesh->GetTransform().GetMatrix() * r;
 				m.fourth = vec4f(mArc[mArc.size() - 1]) * mat;
 				mTPMesh->GetTransform().SetMatrix(m);
 
-				m = mat * scaleM;
+				m = mat * scaleM * r;
 				m.fourth = mat.fourth;
 				mCSMesh->GetTransform().SetMatrix(m);
+
+				#pragma region Arc Points
 
 				int index = 0;
 				scaleM.first = vec4f(.025f, 0, 0, 0);
 				scaleM.second = vec4f(0, .025f, 0, 0);
 				scaleM.third = vec4f(0, 0, .025f, 0);
 				scaleM.fourth = vec4f(0, 0, 0, 1);
-				r = matrix4::CreateXRotation(ang);
+				r = matrix4::CreateNewXRotation(ang);
 				m = mat * scaleM * r;
 
 				index = (((mArc.size() / 5) == 0 ? 1 : mArc.size() / 5) - 1) * 1;
@@ -456,8 +458,12 @@ namespace Epoch
 
 				m = mat * scaleM * r;
 				index = (((mArc.size() / 5) == 0 ? 1 : mArc.size() / 5) - 1) * 5;
+				if (index == mArc.size() - 1)
+					index = (((mArc.size() / 5) == 0 ? 1 : mArc.size() / 5) - 1) * 4;
 				m.fourth = vec4f(mArc[index]) * mat;
 				mMidMesh[4]->GetTransform().SetMatrix(m);
+
+			#pragma endregion
 
 				mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
 			}
@@ -466,12 +472,10 @@ namespace Epoch
 			{
 				if (VRInputManager::GetInstance().GetController(mControllerRole).GetPress(vr::EVRButtonId::k_EButton_SteamVR_Touchpad) && mCanTeleport)
 				{
-
-
 					mTPMesh->SetVisible(true);
 					mCSMesh->SetVisible(true);
-					/*for (int i = 0; i < 5; i++)
-						mMidMesh[i]->SetVisible(true);*/
+					for (int i = 0; i < 5; i++)
+						mMidMesh[i]->SetVisible(true);
 					if (ParticleSystem::Instance()->DoesExist(mTPParticles))
 					{
 						mTPParticles->SetPos(vec4f(mArc[mArc.size() - 1]) * mat);
