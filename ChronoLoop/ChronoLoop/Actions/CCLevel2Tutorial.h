@@ -107,8 +107,8 @@ namespace Epoch {
 		}
 
 		virtual void Update() {
-			if (GetAsyncKeyState(VK_SHIFT) & 1)
-				Settings::GetInstance().SetInt("tutStep", Settings::GetInstance().GetInt("tutStep") + 1);
+			//if (GetAsyncKeyState(VK_SHIFT) & 1)
+			//	Settings::GetInstance().SetInt("tutStep", Settings::GetInstance().GetInt("tutStep") + 1);
 
 
 			int tut = Settings::GetInstance().GetInt("tutStep");

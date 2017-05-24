@@ -53,6 +53,7 @@ namespace Epoch
 		void Update();
 		void MakeCloneBaseObjects(BaseObject* _headset, BaseObject* _controller1, BaseObject* _controller2);
 		unsigned short GetNumOfConfirmedClones() { return mNumOfConfirmedClones; };
+		void SetNumOfConfirmedClones(unsigned short _val) { mNumOfConfirmedClones = _val; };
 	};
 
 } // Epoch Namespace
