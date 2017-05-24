@@ -554,6 +554,8 @@ namespace Hourglass
 			{
 				Thread loader = null;
 				newToolStripMenuItem_Click(null, null);
+				Gizmo.Instance.Attach(null);
+				OnPaint(null, null);
 				FileOpenData fod;
 				
 				fod.file = o.FileName;
@@ -814,6 +816,7 @@ namespace Hourglass
         }
 
 		private void newToolStripMenuItem_Click(object sender, EventArgs e) {
+			Tree.SelectedNode = null;
 			for(int i = Tree.Nodes.Count - 1; i >= 0; --i) {
 				DeleteNode(Tree.Nodes[i]);
 			}
