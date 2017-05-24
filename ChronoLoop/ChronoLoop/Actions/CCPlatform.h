@@ -44,8 +44,9 @@ namespace Epoch {
 				
 			}
 			
-			if((_other.GetBaseObject()->GetUniqueID() == cLevel->GetLeftController()->GetUniqueID() || _other.GetBaseObject()->GetUniqueID() == cLevel->GetRightController()->GetUniqueID()) &&
-				_other.mColliderType == Collider::eCOLLIDER_Controller && Settings::GetInstance().GetBool("PlatInterp"))
+			if((_other.GetBaseObject() == cLevel->GetLeftController() || _other.GetBaseObject() == cLevel->GetRightController()) &&
+				_other.mColliderType == Collider::eCOLLIDER_Controller && Settings::GetInstance().GetBool("PlatInterp") &&
+				VRInputManager::GetInstance().GetPlayerPosition().Position.x > 0)
 			{
 				playerCanInterp = true;
 			}

@@ -89,11 +89,16 @@ namespace Epoch
 		{
 			if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName().find("Buttonstand"))
 			{
+				if(Settings::GetInstance().GetInt("CurrentLevel") == 4 && !dynamic_cast<ControllerCollider*>(&_other))
+				{
+					return;
+				}
 				vec3f norm = ((ButtonCollider*)&_col)->mPushNormal;
 				vec3f tForce = norm * (norm * _other.mTotalForce);
 				vec3f vel = norm * (norm * _other.mVelocity);
 				vec3f accel = norm * (norm * _other.mAcceleration);
 				colliding = true;
+
 				if (Settings::GetInstance().GetBool("PauseMenuUp"))
 					Settings::GetInstance().SetBool("DidRealStuffInPauseMenu", true);
 
