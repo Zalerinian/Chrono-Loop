@@ -63,7 +63,7 @@ namespace Epoch {
 
 				if(playerCanInterp)
 				{
-					PEnd = VRInputManager::GetInstance().GetPlayerPosition().CreateNewTranslation(-4, 0, 0);
+					PEnd = VRInputManager::GetInstance().GetPlayerPosition().CreateTranslation(-4, 0, 0);
 					playerInterp->Prepare(2, VRInputManager::GetInstance().GetPlayerPosition(), PEnd, VRInputManager::GetInstance().GetPlayerPosition());
 					playerInterp->SetActive(true);
 				}
