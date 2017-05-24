@@ -24,7 +24,7 @@ namespace Epoch
 			Block = cLevel->FindObjectWithName("StartSideOpeningEnergy");
 			blockCube = (CubeCollider*)Block->mComponents[eCOMPONENT_COLLIDER][0];
 			blockMesh = (MeshComponent*)Block->mComponents[eCOMPONENT_MESH][0];
-			startpos = Block->GetTransform().GetMatrix().Position;
+			startpos = blockMesh->GetTransform().GetMatrix().Position;
 		}
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time)
@@ -111,7 +111,7 @@ namespace Epoch
 					blockMesh->SetVisible(true);
 				}
 
-				if (Block->GetTransform().GetMatrix().Position == startpos)
+				if (blockMesh->GetTransform().GetMatrix().Position == startpos)
 				{
 					std::vector<BaseObject*> l = cLevel->FindAllObjectsByPattern("ExitLight");
 					if (l.size() > 0)
