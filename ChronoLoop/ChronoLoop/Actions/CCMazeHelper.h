@@ -86,27 +86,27 @@ namespace Epoch
 		}
 		virtual void Update()
 		{
-			if ((/*GetAsyncKeyState(VK_DOWN) & 0x1 ||*/ mDBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
+			if ((GetAsyncKeyState(VK_DOWN) & 0x1 || mDBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveDown();
 				mDBCC->SetisColliding(false);
 				//PrintGrid();
 			}
-			else if ((/*GetAsyncKeyState(VK_UP) & 0x1) ||*/ mUBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
+			else if (((GetAsyncKeyState(VK_UP) & 0x1) || mUBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveUp();
 				mUBCC->SetisColliding(false);
 				//PrintGrid();
 			}
-			else if ((/*GetAsyncKeyState(VK_LEFT) & 0x1 ||*/ mLBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
+			else if ((GetAsyncKeyState(VK_LEFT) & 0x1 || mLBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveLeft();
 				mLBCC->SetisColliding(false);
 				//PrintGrid();
 			}
-			else if ((/*GetAsyncKeyState(VK_RIGHT) & 0x1 ||*/ mRBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
+			else if ((GetAsyncKeyState(VK_RIGHT) & 0x1 || mRBCC->GetisColliding()) && (mBox1Done && mBox2Done && mBox3Done)) {
 				MoveRight();
 				mRBCC->SetisColliding(false);
 				//PrintGrid();
 			}
-			else if(/*GetAsyncKeyState(Epoch::Keys::R) & 0x1 ||*/ mResetBCC->GetisColliding())
+			else if(GetAsyncKeyState(Epoch::Keys::R) & 0x1 || mResetBCC->GetisColliding())
 			{
 			
 				if(!mOnce)
@@ -466,43 +466,43 @@ namespace Epoch
 				int Y = mazeBoxes[i].mCol;
 				//Row 0
 				if (X == 0 && Y == 0) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(6, -1.41f, 6.2f);
+					finalDest = matrix4::CreateScale(2.01f, 1.5f, 2) * matrix4::CreateTranslation(6, -1.59, 6.2f);
 				}
 				else if (X == 0 && Y == 1) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) *  matrix4::CreateTranslation(2, -1.41f, 6.2f);
+					finalDest = matrix4::CreateScale(2.01f, 1.5f, 2) *  matrix4::CreateTranslation(2, -1.59, 6.2f);
 				}
 				//Row 1
 				else if (X == 1 && Y == 0) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(6, -1.41f, 2.2f);
+					finalDest = matrix4::CreateScale(2.01f, 1.5f, 2) * matrix4::CreateTranslation(6, -1.59, 2.2f);
 				}
 				else if (X == 1 && Y == 2) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) *  matrix4::CreateTranslation(-2, -1.41f, 2.2f);
+					finalDest = matrix4::CreateScale(2.01f, 1.5f, 2) *  matrix4::CreateTranslation(-2, -1.59, 2.2f);
 				}
 				else if (X == 1 && Y == 3) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(-6, -1.41f, 2.2f);
+					finalDest = matrix4::CreateScale(2.01f, 1.5f, 2) * matrix4::CreateTranslation(-6, -1.59, 2.2f);
 				}
 				//Row 2
 				else if (X == 2 && Y == 0) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(5.98, -1.41f, -1.56f);
+					finalDest = matrix4::CreateScale(2.01f, 1.5f, 2.01f) * matrix4::CreateTranslation(5.98, -1.59, -1.59f);
 				}
 				else if (X == 2 && Y == 1) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(1.98, -1.41f, -1.56f);
+					finalDest = matrix4::CreateScale(2.01f, 1.5f, 2.01f) * matrix4::CreateTranslation(1.98, -1.59, -1.59f);
 				}
 				else if (X == 2 && Y == 3) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) *  matrix4::CreateTranslation(-6.02, -1.41f, -1.56f);
+					finalDest = matrix4::CreateScale(2.01f, 1.5f, 2.01f) *  matrix4::CreateTranslation(-6.02, -1.59, -1.59f);
 				}
 				//Row 3
 				else if (X == 3 && Y == 0) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(6, -1.41f, -5.80f);
+					finalDest = matrix4::CreateScale(2.01f, 1.5f, 2) * matrix4::CreateTranslation(6, -1.59, -5.80f);
 				}
 				else if (X == 3 && Y == 1) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(2, -1.41f, -5.80f);
+					finalDest = matrix4::CreateScale(2.01f, 1.5f, 2) * matrix4::CreateTranslation(2, -1.59, -5.80f);
 				}
 				else if (X == 3 && Y == 2) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(-2, -1.41f, -5.80f);
+					finalDest = matrix4::CreateScale(2.01f, 1.5f, 2) * matrix4::CreateTranslation(-2, -1.59, -5.80f);
 				}
 				else if (X == 3 && Y == 3) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(-6, -1.41f, -5.80f);
+					finalDest = matrix4::CreateScale(2.01f, 1.5f, 2) * matrix4::CreateTranslation(-6, -1.59, -5.80f);
 				}
 				if (*curMatrix != finalDest)
 				{
