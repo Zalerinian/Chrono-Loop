@@ -12,7 +12,7 @@ namespace Epoch {
 		matrix4 end, PEnd;
 		CubeCollider* collider;
 		BaseObject* invis = nullptr;
-		vec4f startpos = vec4f();
+		vec4f startpos = vec4f(), objpos = vec4f();
 
 		virtual void Start() 
 		{
@@ -24,6 +24,7 @@ namespace Epoch {
 			playerInterp = new Interpolator<matrix4>;
 			collider = (CubeCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
 			end = mObject->GetTransform().GetMatrix() * matrix4::CreateTranslation(-4, 0, 0);
+			objpos = mObject->GetTransform().GetMatrix().Position;
 		}
 
 		virtual void OnTriggerEnter(Collider& _col, Collider& _other) 
@@ -38,13 +39,7 @@ namespace Epoch {
 			else if (((Component*)&_other)->GetBaseObject()->GetName() == "EndBound") 
 			{
 				//Yeah
-			}
-			else
-			{
-				//other pos
-				matrix4 m = invis->GetTransform().GetMatrix();
-				m.Position = vec4f(-2.83, 0, -1.02, 1);
-				invis->GetTransform().SetMatrix(m);
+				
 			}
 
 			if(_other.mColliderType == Collider::eCOLLIDER_Controller && Settings::GetInstance().GetBool("PlatInterp"))
@@ -90,6 +85,14 @@ namespace Epoch {
 					platInterp->SetActive(false);
 					playerCanInterp = false;
 				}
+			}
+			
+			if (mObject->GetTransform().GetMatrix().Position != objpos)
+			{
+				//other pos
+				matrix4 m = invis->GetTransform().GetMatrix();
+				m.Position = vec4f(2.83, 0, -1.02, 1);
+				invis->GetTransform().SetMatrix(m);
 			}
 		}
 
