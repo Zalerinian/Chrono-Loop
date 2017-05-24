@@ -780,13 +780,14 @@ namespace Epoch {
 		}
 
 
-		//TODO PAT: Do this better
+	
 		std::vector<Component*>temp;
 		for (int i = 1; i < ComponentType::eCOMPONENT_MAX; i++) {
 			{
 				SnapComponent* newComp;
 				temp = _object->GetComponents((ComponentType)i);
 				for (unsigned int j = 0; j < temp.size(); j++) {
+					bool mBitset = false;
 
 					if (i == ComponentType::eCOMPONENT_COLLIDER) {
 						newComp = new SnapComponent_Physics();
@@ -797,6 +798,8 @@ namespace Epoch {
 					} else if (i == ComponentType::eCOMPONENT_MESH) {
 						newComp = new SnapComponent_Mesh;
 						((SnapComponent_Mesh*)newComp)->misVisible = ((MeshComponent*)temp[j])->IsVisible();
+						_info->mBitset[temp[j]->GetComponentNum()] = ((SnapComponent_Mesh*)newComp)->misVisible;
+						mBitset = true;
 					} else if (i == ComponentType::eCOMPONENT_CODE && dynamic_cast<CCMazeHelper*>(temp[j])) {
 						newComp = new SnapComponent_Code_MazeHelp;
 						for (int x = 0; x < 4; ++x) {
@@ -807,10 +810,14 @@ namespace Epoch {
 					} else {
 						newComp = new SnapComponent;
 					}
+					
 					newComp->mCompType = temp[j]->GetType();
 					newComp->mBitNum = temp[j]->GetComponentNum();
-					_info->mBitset[newComp->mBitNum] = temp[j]->IsEnabled();
 					newComp->mId = temp[j]->GetColliderId();
+					if (!mBitset)
+					{
+						_info->mBitset[newComp->mBitNum] = temp[j]->IsEnabled();
+					}
 					_info->mComponents.push_back(newComp);
 				}
 			}

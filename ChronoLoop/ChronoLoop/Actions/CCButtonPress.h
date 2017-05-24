@@ -225,6 +225,12 @@ namespace Epoch
 						pos.y = ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset;
 						((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(pos);
 					}
+					else
+					{
+						vec3f pos = ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->GetPos();
+						pos.x = ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset;
+						((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(pos);
+					}
 				}
 				else if (colliding && blockCube->GetTransform().GetMatrix() == blockstart && exitCube->GetTransform().GetMatrix() == exitstart && mDoorDoneInterpolating)
 				{
@@ -233,6 +239,12 @@ namespace Epoch
 					{
 						vec3f pos = ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->GetPos();
 						pos.y = ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset;
+						((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(pos);
+					}
+					else
+					{
+						vec3f pos = ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->GetPos();
+						pos.x = ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset;
 						((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(pos);
 					}
 
