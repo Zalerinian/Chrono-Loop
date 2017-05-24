@@ -110,7 +110,9 @@ namespace Epoch {
 	}
 
 	vec3f Controller::GetVelocity() {
-		return vec3f(mPose.vVelocity.v[0], mPose.vVelocity.v[1], -mPose.vVelocity.v[2]);
+		vec4f vel(mPose.vVelocity.v[0], mPose.vVelocity.v[1], -mPose.vVelocity.v[2], 0);
+		vel = vel * matrix4::CreateNewYawPitchRollRotation(LevelManager::GetInstance().GetCurrentLevel()->GetStartRot());
+		return vel;
 	}
 
 	vec3f Controller::GetAngularVelocity() {
