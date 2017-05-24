@@ -111,7 +111,7 @@ namespace Epoch
 					blockMesh->SetVisible(true);
 				}
 
-				if (blockMesh->GetTransform().GetMatrix().Position == startpos)
+				if (!blockMesh->IsVisible())
 				{
 					std::vector<BaseObject*> l = cLevel->FindAllObjectsByPattern("ExitLight");
 					if (l.size() > 0)
