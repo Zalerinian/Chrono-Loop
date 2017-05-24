@@ -534,6 +534,7 @@ namespace Epoch {
 		mDeferredCombiner->mContext.mTextures[1] = mPositionSRV;
 		mDeferredCombiner->mContext.mTextures[2] = mNormalSRV;
 		mDeferredCombiner->mContext.mTextures[3] = mSpecularSRV;
+		mDeferredCombiner->mContext.mTextures[4] = mBloomSRV;
 		mDeferredCombiner->mContext.mPixelCBuffers[0] = mLBuffer;
 		mDeferredCombiner->mContext.mRasterState = eRS_FILLED;
 	}
@@ -935,59 +936,6 @@ namespace Epoch {
 		if (mQuerySet.Valid()) {
 			mQuerySet.Query("Outlined Objects");
 		}
-
-
-		mContext->OMSetDepthStencilState(mTopmostState.Get(), 1);
-		//No blend state is set, because top-most objects also support alpha blending, and that state was set in the block above.
-		for (auto it = mTopmostSet.Begin(); it != mTopmostSet.End(); ++it) {
-			(*it)->mPositions.GetData(positions);
-			if (positions.size() > 0) {
-#if ENABLE_INSTANCING
-				unsigned int offset = 0;
-				positions.reserve((positions.size() / 256 + 1) * 256);
-				while (positions.size() - offset <= positions.size()) {
-					(*it)->mShape.GetContext().Apply(mCurrentContext);
-					mCurrentContext.SimpleClone((*it)->mShape.GetContext());
-
-					D3D11_MAPPED_SUBRESOURCE map;
-					memset(&map, 0, sizeof(map));
-					HRESULT MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-					memcpy(map.pData, positions.data() + offset, sizeof(matrix4) * min(positions.size() - offset, 256));
-					mContext->Unmap(mPositionBuffer.Get(), 0);
-					//mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
-
-					(*it)->mShape.Render((UINT)positions.size() - offset);
-					offset += 256;
-				}
-#else
-				(*it)->mShape.GetContext().Apply(mCurrentContext);
-				mCurrentContext.SimpleClone((*it)->mShape.GetContext());
-				vec4i SimInstanceID(0, 0, 0, 0);
-				for (unsigned int i = 0; i < positions.size(); ++i) {
-					SimInstanceID.x = i;
-
-					D3D11_MAPPED_SUBRESOURCE map;
-					memset(&map, 0, sizeof(map));
-					HRESULT MHR = mContext->Map(mSimInstanceBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-					memcpy(map.pData, &SimInstanceID, sizeof(vec4i));
-					mContext->Unmap(mSimInstanceBuffer.Get(), 0);
-
-					//mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimInstanceID, 0, 0);
-
-					memset(&map, 0, sizeof(map));
-					MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-					memcpy(map.pData, &positions[i], sizeof(matrix4));
-					mContext->Unmap(mPositionBuffer.Get(), 0);
-					//mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
-					(*it)->mShape.Render(1); // Without instancing, the instance count doesn't matter, but we're only drawing one :)
-				}
-#endif
-			}
-		}
-
-		if (mQuerySet.Valid()) {
-			mQuerySet.Query("Topmost Objects");
-		}
 	}
 
 
@@ -1043,7 +991,12 @@ namespace Epoch {
 			mQuerySet.Query("Transparent Objects");
 		}
 
+		RenderTopmostObjects();
+		if (mQuerySet.Valid()) {
+			mQuerySet.Query("Topmost Objects");
+		}
 
+		mContext->OMSetRenderTargets(1, mPostProcessRTV.GetAddressOf(), nullptr);
 		mContext->OMSetDepthStencilState(mOpaqueState.Get(), 1);
 
 		ID3D11ShaderResourceView *unbind[] = { nullptr, nullptr, nullptr, nullptr };
@@ -1052,6 +1005,7 @@ namespace Epoch {
 
 		mScenePPQuad->GetContext().Apply(mCurrentContext);
 		mScenePPQuad->Render();
+
 
 		ID3D11ShaderResourceView *noGlow = nullptr;
 		mContext->PSSetShaderResources(eTEX_REGISTER5, 1, &noGlow);
@@ -1179,6 +1133,57 @@ namespace Epoch {
 		}
 		Settings::GetInstance().SetInt("RasterizerStateOverride", eRS_MAX);
 		Settings::GetInstance().SetInt("PixelShaderOverride", ePS_MAX);
+	}
+
+	void Renderer::RenderTopmostObjects() {
+		std::vector<matrix4> positions;
+		mContext->OMSetDepthStencilState(mTopmostState.Get(), 1);
+		//No blend state is set, because top-most objects also support alpha blending, and that state was set in the block above.
+		for (auto it = mTopmostSet.Begin(); it != mTopmostSet.End(); ++it) {
+			(*it)->mPositions.GetData(positions);
+			if (positions.size() > 0) {
+#if ENABLE_INSTANCING
+				unsigned int offset = 0;
+				positions.reserve((positions.size() / 256 + 1) * 256);
+				while (positions.size() - offset <= positions.size()) {
+					(*it)->mShape.GetContext().Apply(mCurrentContext);
+					mCurrentContext.SimpleClone((*it)->mShape.GetContext());
+
+					D3D11_MAPPED_SUBRESOURCE map;
+					memset(&map, 0, sizeof(map));
+					HRESULT MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+					memcpy(map.pData, positions.data() + offset, sizeof(matrix4) * min(positions.size() - offset, 256));
+					mContext->Unmap(mPositionBuffer.Get(), 0);
+					//mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
+
+					(*it)->mShape.Render((UINT)positions.size() - offset);
+					offset += 256;
+				}
+#else
+				(*it)->mShape.GetContext().Apply(mCurrentContext);
+				mCurrentContext.SimpleClone((*it)->mShape.GetContext());
+				vec4i SimInstanceID(0, 0, 0, 0);
+				for (unsigned int i = 0; i < positions.size(); ++i) {
+					SimInstanceID.x = i;
+
+					D3D11_MAPPED_SUBRESOURCE map;
+					memset(&map, 0, sizeof(map));
+					HRESULT MHR = mContext->Map(mSimInstanceBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+					memcpy(map.pData, &SimInstanceID, sizeof(vec4i));
+					mContext->Unmap(mSimInstanceBuffer.Get(), 0);
+
+					//mContext->UpdateSubresource(mSimInstanceBuffer.Get(), 0, nullptr, &SimInstanceID, 0, 0);
+
+					memset(&map, 0, sizeof(map));
+					MHR = mContext->Map(mPositionBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+					memcpy(map.pData, &positions[i], sizeof(matrix4));
+					mContext->Unmap(mPositionBuffer.Get(), 0);
+					//mContext->UpdateSubresource(mPositionBuffer.Get(), 0, nullptr, &positions[i], 0, 0);
+					(*it)->mShape.Render(1); // Without instancing, the instance count doesn't matter, but we're only drawing one :)
+				}
+#endif
+			}
+		}
 	}
 
 	void Renderer::RenderForBloom() {

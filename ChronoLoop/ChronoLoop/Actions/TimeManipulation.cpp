@@ -382,7 +382,7 @@ namespace Epoch
 		mc->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
 		mc->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
 		mc->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
-		mc->AddTexture("../Resources/Player_hand_Specular", eTEX_SPECULAR);
+		mc->AddTexture("../Resources/Player_hand_Specular.png", eTEX_SPECULAR);
 		ControllerCollider* CubeColider = new ControllerCollider(_controller1, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), true);
 		mc->SetPixelShader(ePS_TRANSPARENT);
 		//mc->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
@@ -402,7 +402,7 @@ namespace Epoch
 		mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
 		mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
 		mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
-		mc2->AddTexture("../Resources/Player_hand_Specular", eTEX_SPECULAR);
+		mc2->AddTexture("../Resources/Player_hand_Specular.png", eTEX_SPECULAR);
 		ControllerCollider* CubeColider2 = new ControllerCollider(_controller2, vec4f(-0.15f, -0.15f, -0.15f, 1.0f), vec4f(0.15f, 0.15f, 0.15f, 1.0f), false);
 		mc2->SetPixelShader(ePS_TRANSPARENT);
 		//mc2->AddTexture("../Resources/Multiscan.png", eTEX_CUSTOM1);
