@@ -6,6 +6,7 @@ namespace Epoch {
 
 	struct CCPlatform : public CodeComponent 
 	{
+		Level* cLevel;
 		bool playerCanInterp = false;
 		Interpolator<matrix4>* platInterp;
 		Interpolator<matrix4>* playerInterp;
@@ -16,6 +17,7 @@ namespace Epoch {
 
 		virtual void Start() 
 		{
+			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			Level* l = LevelManager::GetInstance().GetCurrentLevel();
 			invis = l->FindObjectWithName("EnvCantLetYouDoThatStarFox");
 			if (invis)
@@ -38,11 +40,12 @@ namespace Epoch {
 			} 
 			else if (((Component*)&_other)->GetBaseObject()->GetName() == "EndBound") 
 			{
-				//Yeah
+				
 				
 			}
 			
-			if(_other.mColliderType == Collider::eCOLLIDER_Controller && Settings::GetInstance().GetBool("PlatInterp"))
+			if((_other.GetBaseObject()->GetUniqueID() == cLevel->GetLeftController()->GetUniqueID() || _other.GetBaseObject()->GetUniqueID() == cLevel->GetRightController()->GetUniqueID()) &&
+				_other.mColliderType == Collider::eCOLLIDER_Controller && Settings::GetInstance().GetBool("PlatInterp"))
 			{
 				playerCanInterp = true;
 			}
