@@ -808,10 +808,9 @@ namespace Epoch {
 						mesh = temp;
 						delete[] temp;
 						file.read((char *)&argbColor.color, sizeof(INT32));
-						if (obj) {
-							std::string path = "../Resources/" + mesh;
+						if (obj && mesh != "..\\Resources\\") {
 							vec4f lightColor(argbColor.r / 255.f * transparency, argbColor.g / 255.f * transparency, argbColor.b / 255.f * transparency, 1.0f);
-							LightComponent *light = new LightComponent(path.c_str(), lightColor);
+							LightComponent *light = new LightComponent(mesh.c_str(), lightColor);
 							obj->AddComponent(light);
 						}
 					}
