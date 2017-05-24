@@ -11,9 +11,15 @@ namespace Epoch {
 		Interpolator<matrix4>* playerInterp;
 		matrix4 end, PEnd;
 		CubeCollider* collider;
+		BaseObject* invis = nullptr;
+		vec4f startpos = vec4f();
 
 		virtual void Start() 
 		{
+			Level* l = LevelManager::GetInstance().GetCurrentLevel();
+			invis = l->FindObjectWithName("EnvCantLetYouDoThatStarFoxt");
+			if (invis)
+				startpos = invis->GetTransform().GetMatrix().Position;
 			platInterp = TimeManager::Instance()->GetObjectInterpolator(mObject->GetUniqueID());
 			playerInterp = new Interpolator<matrix4>;
 			collider = (CubeCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
@@ -24,11 +30,21 @@ namespace Epoch {
 		{
 			if (((Component*)&_other)->GetBaseObject()->GetName() == "StartBound") 
 			{
-				
+				//Start pos
+				matrix4 m = invis->GetTransform().GetMatrix();
+				m.Position = startpos;
+				invis->GetTransform().SetMatrix(m);
 			} 
 			else if (((Component*)&_other)->GetBaseObject()->GetName() == "EndBound") 
 			{
-				
+				//Yeah
+			}
+			else
+			{
+				//other pos
+				matrix4 m = invis->GetTransform().GetMatrix();
+				m.Position = vec4f(-2.83, 0, -1.02, 1);
+				invis->GetTransform().SetMatrix(m);
 			}
 
 			if(_other.mColliderType == Collider::eCOLLIDER_Controller && Settings::GetInstance().GetBool("PlatInterp"))
