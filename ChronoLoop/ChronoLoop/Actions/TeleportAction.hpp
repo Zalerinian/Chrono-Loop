@@ -20,7 +20,7 @@ namespace Epoch
 	struct TeleportAction : public CodeComponent
 	{
 		matrix4 endPos;
-		Interpolator<matrix4>* interp;
+		Interpolator<matrix4>* interp, mRcolliderInterp;
 		std::vector<BaseObject*> mPlaneObjects;
 		std::vector<BaseObject*> mEnvironmentObjects;
 		BaseObject *mHeadset;
@@ -36,6 +36,7 @@ namespace Epoch
 
 		ParticleEmitter* mTPParticles;
 
+		matrix4 GetEndPos() { return endPos; }
 		bool CheckMesh(MeshComponent* _plane, vec3f _ts, vec3f _te, vec3f _start, vec3f _end, vec3f& _hit)
 		{
 			Triangle* tris = _plane->GetTriangles();
@@ -345,7 +346,6 @@ namespace Epoch
 				m.fourth = vec4f(mArc[mArc.size() == 1 ? 0 : (mArc.size() / 2 - 1)]) * mat;
 				mMidMesh->GetTransform().SetMatrix(m);
 			}
-
 
 
 			if (!interp->GetActive() && !Settings::GetInstance().GetBool("CantTeleport"))

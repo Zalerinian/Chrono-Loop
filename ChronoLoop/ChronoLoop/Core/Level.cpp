@@ -44,6 +44,7 @@
 #include "../Actions/CCPlatform.h"
 #include "../Actions/CCLevel5DoorButton.h"
 #include "../Actions/CCPrevButton.h"
+#include "../Actions/CCLevel5BoxFieldCheck.h"
 
 namespace Epoch {
 
@@ -733,6 +734,8 @@ namespace Epoch {
 								codeCom = new CCLevel5Fields();
 							if (path == "CCLevel5DoorButton.h")
 								codeCom = new CCLevel5DoorButton();
+							if (path == "CCLevel5BoxFieldCheck.h")
+								codeCom = new CCLevel5BoxFieldCheck();
 
 							if (codeCom)
 							{

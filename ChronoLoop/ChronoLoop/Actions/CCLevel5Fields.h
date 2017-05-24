@@ -14,13 +14,13 @@ namespace Epoch
 		float mScaleTipper;
 		bool canBoxShrink,isBoxShrinking, mSoundOnce = false;
 		BoxSnapToControllerAction* leftBS, *rightBS;
+		void SetIsBoxShrinking(bool _set) { isBoxShrinking = _set; }
 		virtual void Start()
 		{
 			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			mBox = cLevel->FindObjectWithName("Box");
 			initialMatrix = mBox->GetTransform().GetMatrix();
 			mScaleTipper = 1.0f;
-			canBoxShrink = false;
 			isBoxShrinking = false;
 
 			std::vector<Component*> codes1 = LevelManager::GetInstance().GetCurrentLevel()->GetLeftController()->GetComponents(Epoch::ComponentType::eCOMPONENT_CODE);
@@ -48,7 +48,7 @@ namespace Epoch
 		{
 			if(_other.GetBaseObject()->GetName() == "Box" && _col.mColliderType != Collider::eCOLLIDER_Controller)
 			{
-				canBoxShrink = true;
+				isBoxShrinking = true;
 
 				if (!mSoundOnce)
 				{
@@ -63,8 +63,6 @@ namespace Epoch
 		}
 		virtual void Update()
 		{
-			if (canBoxShrink)
-				isBoxShrinking = true;
 			if (isBoxShrinking)
 			{
 				mScaleTipper -= 0.05f;
@@ -72,7 +70,6 @@ namespace Epoch
 				if(mScaleTipper <= 0.0f)
 				{
 					isBoxShrinking = false;
-					canBoxShrink = false;
 					mScaleTipper = 1.0f;
 					leftBS->mHeld = false;
 					rightBS->mHeld = false;
