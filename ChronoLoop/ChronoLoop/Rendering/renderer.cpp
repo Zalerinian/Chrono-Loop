@@ -1482,6 +1482,7 @@ namespace Epoch {
 		mTransparentSet.ClearSet();
 		mTopmostSet.ClearSet();
 		mMotionSet.ClearSet();
+		mLightSet.ClearSet();
 	}
 
 	bool Renderer::BlurTextures(ID3D11Texture2D **_textures, unsigned int _numTextures, float _sigma, float _downsample) {

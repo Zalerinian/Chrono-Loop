@@ -301,7 +301,7 @@ namespace Epoch
 						ParticleSystem::Instance()->AddEmitter(emit22);
 						emit22->FIRE();
 					}
-					else if (Settings::GetInstance().GetInt("CurrentLevel") >= 1)
+					else if (Settings::GetInstance().GetInt("CurrentLevel") >= 1 && Settings::GetInstance().GetBool("CompleteLevel1"))
 					{
 						((MeshComponent*)next->FindObjectWithName("Test2")->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
 						((MeshComponent*)next->FindObjectWithName("Test2")->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
@@ -370,7 +370,7 @@ namespace Epoch
 						ParticleSystem::Instance()->AddEmitter(emit22);
 						emit22->FIRE();
 					} 
-					else if (Settings::GetInstance().GetInt("CurrentLevel") >= 2)
+					else if (Settings::GetInstance().GetInt("CurrentLevel") >= 2 && Settings::GetInstance().GetBool("CompleteLevel2"))
 					{
 						((MeshComponent*)next->FindObjectWithName("Test3")->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
 						((MeshComponent*)next->FindObjectWithName("Test3")->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
@@ -439,7 +439,7 @@ namespace Epoch
 						ParticleSystem::Instance()->AddEmitter(emit22);
 						emit22->FIRE();
 					}
-					else if (Settings::GetInstance().GetInt("CurrentLevel") >= 3)
+					else if (Settings::GetInstance().GetInt("CurrentLevel") >= 3 && Settings::GetInstance().GetBool("CompleteLevel3"))
 					{
 						((MeshComponent*)next->FindObjectWithName("Test4")->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
 						((MeshComponent*)next->FindObjectWithName("Test4")->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);
@@ -508,7 +508,7 @@ namespace Epoch
 						ParticleSystem::Instance()->AddEmitter(emit12);
 						emit12->FIRE();
 					}
-					else if(Settings::GetInstance().GetInt("CurrentLevel") >= 4)
+					else if(Settings::GetInstance().GetInt("CurrentLevel") >= 4 && Settings::GetInstance().GetBool("CompleteLevel4"))
 					{
 						((MeshComponent*)next->FindObjectWithName("Test5")->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetVisible(true);
 						((MeshComponent*)next->FindObjectWithName("Test5")->GetComponentIndexed(eCOMPONENT_MESH, 1))->SetVisible(false);

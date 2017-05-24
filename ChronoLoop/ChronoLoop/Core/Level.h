@@ -47,7 +47,7 @@ namespace Epoch
 		inline BaseObject* GetRightController() { return mController2; }
 		inline unsigned int GetMaxClones() { return mMaxNumofClones; }
 		inline vec4f& GetStartPos() { return mStartPosition; }
-		inline vec4f GetStartRot() { return mStartRotation; }
+		inline vec3f GetStartRot() { return mStartRotation; }
 		TimeManipulation* GetTimeManipulator() { return mTMComponent; }
 		//PauseMenu* GetPauseMenu() { return mPauseMenu; }
 

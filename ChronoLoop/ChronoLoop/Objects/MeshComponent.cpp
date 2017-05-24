@@ -353,7 +353,9 @@ namespace Epoch {
 		if (_isLight != GetIsLight()) {
 			RemoveNode();
 			mIsLight = _isLight;
-			CreateNode();
+			if (mVisible && CanCreateNode()) {
+				CreateNode();
+			}
 		}
 	}
 

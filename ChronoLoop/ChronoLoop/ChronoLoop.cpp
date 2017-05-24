@@ -196,7 +196,7 @@ void Update() {
 	TeleportAction* leftTele = new TeleportAction(eControllerType_Secondary);
 	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 	LeftController->AddComponent(leftConCol);
-	LeftController->AddComponent(leftRaycaster);
+	//LeftController->AddComponent(leftRaycaster);
 	LeftController->AddComponent(leftTele);
 	LeftController->AddComponent(mc2);
 	TimeManager::Instance()->AddObjectToTimeline(LeftController);
@@ -470,7 +470,8 @@ void Update() {
 			if (VREnabled || renderDelta >= RENDER_INTERVAL) {
 				Renderer::Instance()->Render(renderDelta); 
 				renderDelta = 0;
-			} else {
+			} 
+			else {
 				renderDelta += deltaTime;
 			}
 			while (fixedTime >= FIXED_UPDATE_INTERVAL) {

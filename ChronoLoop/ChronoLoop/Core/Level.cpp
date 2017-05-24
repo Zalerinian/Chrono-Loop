@@ -277,6 +277,7 @@ namespace Epoch {
 	{
 		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
 			auto& meshes = (*it)->GetComponents(eCOMPONENT_MESH);
+			auto& lights = (*it)->GetComponents(eCOMPONENT_LIGHT);
 			auto b = meshes.begin();
 			auto e = meshes.end();
 			for (auto cit = meshes.begin(); cit != meshes.end(); ++cit) {
@@ -284,6 +285,12 @@ namespace Epoch {
 				if(mesh->IsVisible())
 				{
 					mesh->SetVisible(false)->SetVisible(true);
+				}
+			}
+			for (auto cit = lights.begin(); cit != lights.end(); ++cit) {
+				LightComponent *light = (LightComponent*)*cit;
+				if (light->IsVisible()) {
+					light->SetVisible(false)->SetVisible(true);
 				}
 			}
 		}

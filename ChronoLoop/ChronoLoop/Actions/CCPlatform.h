@@ -11,26 +11,37 @@ namespace Epoch {
 		Interpolator<matrix4>* playerInterp;
 		matrix4 end, PEnd;
 		CubeCollider* collider;
+		BaseObject* invis = nullptr;
+		vec4f startpos = vec4f(), objpos = vec4f();
 
 		virtual void Start() 
 		{
+			Level* l = LevelManager::GetInstance().GetCurrentLevel();
+			invis = l->FindObjectWithName("EnvCantLetYouDoThatStarFox");
+			if (invis)
+				startpos = invis->GetTransform().GetMatrix().Position;
 			platInterp = TimeManager::Instance()->GetObjectInterpolator(mObject->GetUniqueID());
 			playerInterp = new Interpolator<matrix4>;
 			collider = (CubeCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0);
-			end = mObject->GetTransform().GetMatrix() * matrix4::CreateNewTranslation(-4, 0, 0);
+			end = mObject->GetTransform().GetMatrix().CreateTranslation(-4, 0, 0);
+			objpos = mObject->GetTransform().GetMatrix().Position;
 		}
 
 		virtual void OnTriggerEnter(Collider& _col, Collider& _other) 
 		{
-			if (((Component*)&_other)->GetBaseObject()->GetName() == "StartBound") 
+			if (((Component*)&_other)->GetBaseObject()->GetName() == "StartBound")
 			{
-				
+				//Start pos
+				matrix4 m = invis->GetTransform().GetMatrix();
+				m.Position = startpos;
+				invis->GetTransform().SetMatrix(m);
 			} 
 			else if (((Component*)&_other)->GetBaseObject()->GetName() == "EndBound") 
 			{
+				//Yeah
 				
 			}
-
+			
 			if(_other.mColliderType == Collider::eCOLLIDER_Controller && Settings::GetInstance().GetBool("PlatInterp"))
 			{
 				playerCanInterp = true;
@@ -52,7 +63,7 @@ namespace Epoch {
 
 				if(playerCanInterp)
 				{
-					PEnd = matrix4() * matrix4::CreateNewTranslation(VRInputManager::GetInstance().GetPlayerPosition().Position) * matrix4::CreateNewTranslation(-4, 0, 0);
+					PEnd = VRInputManager::GetInstance().GetPlayerPosition().CreateNewTranslation(-4, 0, 0);
 					playerInterp->Prepare(2, VRInputManager::GetInstance().GetPlayerPosition(), PEnd, VRInputManager::GetInstance().GetPlayerPosition());
 					playerInterp->SetActive(true);
 				}
@@ -74,6 +85,14 @@ namespace Epoch {
 					platInterp->SetActive(false);
 					playerCanInterp = false;
 				}
+			}
+			
+			if (mObject->GetTransform().GetMatrix().Position != objpos)
+			{
+				//other pos
+				matrix4 m = invis->GetTransform().GetMatrix();
+				m.Position = vec4f(2.83, 0, -1.02, 1);
+				invis->GetTransform().SetMatrix(m);
 			}
 		}
 

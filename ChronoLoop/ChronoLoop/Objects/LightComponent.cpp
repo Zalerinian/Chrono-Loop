@@ -18,6 +18,7 @@ namespace Epoch {
 	LightComponent::LightComponent(const char* _path, const vec4f& _color) : MeshComponent(_path) {
 		mType = eCOMPONENT_LIGHT;
 		SetAsLight(true);
+		mVisible = true;
 		mData.color = _color;
 		Update();
 	}

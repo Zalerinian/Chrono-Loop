@@ -641,7 +641,7 @@ namespace Epoch {
 		if (VRInputManager::GetInstance().IsVREnabled()) {
 			VRInputManager::GetInstance().GetInputTimeline()->Clear();
 			vec4f start = cLevel->GetStartPos();
-			VRInputManager::GetInstance().GetPlayerPosition()[3].Set(start.x, start.y, start.z, start.w);
+			VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateNewYawPitchRollRotation(cLevel->GetStartRot()).CreateTranslation(start);
 		}
 		AudioEmitter* ambient = (AudioEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 0);
 		AudioEmitter* resetLevelSFX = (AudioEmitter*)cLevel->GetHeadset()->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 4);
