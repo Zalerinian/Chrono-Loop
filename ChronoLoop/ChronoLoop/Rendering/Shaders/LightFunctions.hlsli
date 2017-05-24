@@ -4,8 +4,8 @@
 
 
 // TODO: Change the light color to a Float 3, as lights shouldn't change the alpha of a pixel.
-float3 ApplyPointLight(float3 _lpos, float4 _spos, float3 _snorm, float3 _lcol, float4 _scol) {
-	float3 lvec = _lpos.xyz - _spos.xyz;
+float3 ApplyPointLight(float3 _lpos, float3 _spos, float3 _snorm, float3 _lcol, float4 _scol) {
+	float3 lvec = _lpos - _spos;
 	float att = 1.0f - saturate((length(lvec.xyz) / 1.0f));
 	float3 dir = normalize(lvec);
 	float ratio = saturate(dot(dir, _snorm));

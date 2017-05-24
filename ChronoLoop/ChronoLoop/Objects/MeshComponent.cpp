@@ -23,8 +23,14 @@ namespace Epoch {
 		mNode = Renderer::Instance()->AddMotionNode(*mShape);
 	}
 
+	void MeshComponent::CreateLightNode() {
+		mNode = Renderer::Instance()->AddLightNode(*mShape);
+	}
+
 	void MeshComponent::CreateNode() {
-		if (GetInMotion()) {
+		if (GetIsLight()) {
+			CreateLightNode();
+		} else if (GetInMotion()) {
 			CreateMotionNode();
 		} else if (GetTopmost()) {
 			CreateTopmostNode();
@@ -55,11 +61,18 @@ namespace Epoch {
 		Renderer::Instance()->RemoveMotionNode(*mShape);
 	}
 
+	void MeshComponent::RemoveLightNode() {
+		DESTROY_NODE(mNode);
+		Renderer::Instance()->RemoveLightNode(*mShape);
+	}
+
 	void MeshComponent::RemoveNode()
 	{
 		if (mNode)
 		{
-			if (GetInMotion())
+			if (GetIsLight()) {
+				RemoveLightNode();
+			} else if (GetInMotion())
 			{
 				RemoveMotionNode();
 			}
@@ -79,9 +92,13 @@ namespace Epoch {
 	}
 
 	void MeshComponent::UpdateBuffer(ConstantBufferType _t, unsigned char _index) {
-		if(GetTopmost()) {
+		if (GetIsLight()) {
+			Renderer::Instance()->UpdateLightNodeBuffer(*mShape, _t, _index);
+		} else if (GetInMotion()) {
+			Renderer::Instance()->UpdateMotionNodeBuffer(*mShape, _t, _index);
+		} else if (GetTopmost()) {
 			Renderer::Instance()->UpdateTopmostNodeBuffer(*mShape, _t, _index);
-		} else if (mBlended) {
+		} else if (GetBlended()) {
 			Renderer::Instance()->UpdateTransparentNodeBuffer(*mShape, _t, _index);
 		} else {
 			Renderer::Instance()->UpdateOpaqueNodeBuffer(*mShape, _t, _index);
@@ -175,7 +192,7 @@ namespace Epoch {
 	}
 
 	void MeshComponent::Update() {
-		if (mNode && mVisible) {
+		if (mNode && mVisible && mObject) {
 			mNode->data = mObject->GetWorld();
 		}
 	}
@@ -264,7 +281,7 @@ namespace Epoch {
 	}
 
 	void MeshComponent::SetVertexShader(VertexShaderFormat _vf) {
-		if (_vf != mShape->GetContext().mGeoShaderFormat) {
+		if (_vf != mShape->GetContext().mVertexShaderFormat) {
 			RemoveNode();
 			mShape->GetContext().mVertexShaderFormat = _vf;
 			if (mVisible && CanCreateNode())
@@ -275,7 +292,7 @@ namespace Epoch {
 	}
 
 	void MeshComponent::SetPixelShader(PixelShaderFormat _pf) {
-		if (_pf != mShape->GetContext().mGeoShaderFormat) {
+		if (_pf != mShape->GetContext().mPixelShaderFormat) {
 			RemoveNode();
 			mShape->GetContext().mPixelShaderFormat = _pf;
 			if (mVisible && CanCreateNode())
@@ -332,14 +349,20 @@ namespace Epoch {
 		}
 	}
 
+	void MeshComponent::SetAsLight(bool _isLight) {
+		if (_isLight != GetIsLight()) {
+			RemoveNode();
+			mIsLight = _isLight;
+			CreateNode();
+		}
+	}
+
 	void MeshComponent::SetBlended(bool _ButWillItBlend) {
-		if (_ButWillItBlend != mBlended)
-		{
+		if (_ButWillItBlend != mBlended) {
 			RemoveNode();
 			mBlended = _ButWillItBlend;
 			CreateNode();
 		}
-
 	}
 
 	RenderShape * MeshComponent::GetShape() {
@@ -387,6 +410,10 @@ namespace Epoch {
 
 	bool MeshComponent::GetInMotion() {
 		return mActiveRewind;
+	}
+
+	bool MeshComponent::GetIsLight() {
+		return mIsLight;
 	}
 
 	void MeshComponent::SetData(ConstantBufferType _t, BufferDataType _bt, unsigned char _index, void * _data) {

@@ -11,5 +11,6 @@ namespace Hourglass
 
 		RenderShape Shape { get; }
 
+		int RenderStage { get; }
 	}
 }

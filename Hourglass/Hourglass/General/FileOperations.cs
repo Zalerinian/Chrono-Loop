@@ -16,7 +16,7 @@ namespace Hourglass {
 	}
 
 	public static class FileIO {
-		public static readonly uint WriterVersion = 7;
+		public static readonly uint WriterVersion = 8;
 		public static readonly float RADIANS_TO_DEGREES = ((180.0f / 3.14f));
 		public static readonly float DEGREES_TO_RADIANS = (1 / 180.0f * 3.14f);
 		private static Stack<BaseObject> ObjectStack = new Stack<BaseObject>();
@@ -642,6 +642,9 @@ namespace Hourglass {
 						break;
 					case (short)Component.ComponentType.Audio:
 						com = new SoundComponent();
+						break;
+					case (short)Component.ComponentType.Light:
+						com = new LightComponent();
 						break;
 					default:
 						Debug.Print("An unexpected component type has been found. This may indicate corruption: " + compType);

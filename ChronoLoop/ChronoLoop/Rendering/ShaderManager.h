@@ -11,8 +11,8 @@ namespace Epoch {
 
 	class ShaderManager {
 		static ShaderManager* sInstance;
-		std::shared_ptr<ID3D11PixelShader*> mPixelShaders[ePS_MAX];
-		std::shared_ptr<ID3D11VertexShader*> mVertexShaders[eVS_MAX];
+		Microsoft::WRL::ComPtr<ID3D11PixelShader> mPixelShaders[ePS_MAX];
+		Microsoft::WRL::ComPtr<ID3D11VertexShader> mVertexShaders[eVS_MAX];
 		Microsoft::WRL::ComPtr<ID3D11GeometryShader> mGeoShaders[eGS_MAX];
 
 
@@ -27,8 +27,8 @@ namespace Epoch {
 		void ApplyGShader(GeometryShaderFormat _f);
 	
 		// Public Instance Functions
-		std::shared_ptr<ID3D11PixelShader*> GetPixelShader(PixelShaderFormat f);
-		std::shared_ptr<ID3D11VertexShader*> GetVertexShader(VertexShaderFormat f);
+		Microsoft::WRL::ComPtr<ID3D11PixelShader>& GetPixelShader(PixelShaderFormat f);
+		Microsoft::WRL::ComPtr<ID3D11VertexShader>& GetVertexShader(VertexShaderFormat f);
 	
 	};
 }

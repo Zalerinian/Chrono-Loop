@@ -39,7 +39,7 @@ namespace Epoch {
 		Renderer::Instance()->GetDevice()->CreateRasterizerState(&desc, &state);
 		mStates[eRS_CCW] = state;
 
-		desc.FrontCounterClockwise = FALSE;
+		desc.CullMode = D3D11_CULL_NONE;
 		Renderer::Instance()->GetDevice()->CreateRasterizerState(&desc, &state);
 		mStates[eRS_NO_CULL] = state;
 

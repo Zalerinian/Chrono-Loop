@@ -56,7 +56,6 @@ namespace Epoch
 				Settings::GetInstance().SetBool("LevelIsLoading", true);
 				Level* next = new Level;
 				next->BinaryLoadLevel("../Resources/Level1.elf");
-				Renderer::Instance()->ClearLights();
 
 				// Todo: Un-hardcode this
 				// use a setting string for next level path?
@@ -338,30 +337,6 @@ namespace Epoch
 					ParticleSystem::Instance()->AddEmitter(emit12);
 					emit12->FIRE();
 					//////////////////////////////////////////////////////////////////////////////////////////////////
-
-					Light* l1 = new Light();
-					l1->Type = 4;
-					l1->Color = vec3f(1, 1, 1);
-					l1->ConeDirection = vec3f(0, -1, -.1f);
-					l1->Position = vec3f(3.75f, 3.8f, 2.2f);
-					l1->ConeRatio = .9f;
-
-					Light* l2 = new Light();
-					l2->Type = 2;
-					l2->Position = vec3f(0, 4, 0);
-					l2->Color = vec3f(.5f, .5f, 1);
-					
-
-					Light* l3 = new Light();
-					l3->Type = 4;
-					l3->Color = vec3f(0, 0, 1);
-					l3->ConeDirection = vec3f(0, -1, 0);
-					l3->Position = vec3f(-4, 3, 6.5f);
-					l3->ConeRatio = .75f;
-
-					Renderer::Instance()->SetLight(l1, 0);
-					Renderer::Instance()->SetLight(l2, 1);
-					Renderer::Instance()->SetLight(l3, 2);
 
 					SystemLogger::Debug() << "Loading complete" << std::endl;
 					Physics::Instance()->PhysicsLock.unlock();

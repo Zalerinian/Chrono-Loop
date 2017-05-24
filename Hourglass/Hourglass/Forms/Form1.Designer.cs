@@ -41,14 +41,6 @@ namespace Hourglass
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.createToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-			this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-			this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.levelSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.customizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -87,8 +79,11 @@ namespace Hourglass
 			this.texturedMeshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.coloredMeshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.audioComponentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.lightComponentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mObjectStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.unparentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.RenderTimer = new System.Windows.Forms.Timer(this.components);
+			this.createRootToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.spHierarchyPanel)).BeginInit();
 			this.spHierarchyPanel.Panel1.SuspendLayout();
@@ -101,6 +96,7 @@ namespace Hourglass
 			this.spWorldView.SuspendLayout();
 			this.graphicsPanel1.SuspendLayout();
 			this.mComponentStrip.SuspendLayout();
+			this.mObjectStrip.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// menuStrip1
@@ -189,81 +185,10 @@ namespace Hourglass
 			// editToolStripMenuItem
 			// 
 			this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.undoToolStripMenuItem,
-            this.redoToolStripMenuItem,
-            this.toolStripSeparator3,
-            this.cutToolStripMenuItem,
-            this.copyToolStripMenuItem,
-            this.pasteToolStripMenuItem,
-            this.toolStripSeparator4,
-            this.selectAllToolStripMenuItem});
-			this.editToolStripMenuItem.Enabled = false;
+            this.createRootToolStripMenuItem});
 			this.editToolStripMenuItem.Name = "editToolStripMenuItem";
 			this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
 			this.editToolStripMenuItem.Text = "&Edit";
-			// 
-			// undoToolStripMenuItem
-			// 
-			this.undoToolStripMenuItem.Enabled = false;
-			this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
-			this.undoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-			this.undoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-			this.undoToolStripMenuItem.Text = "&Undo";
-			// 
-			// redoToolStripMenuItem
-			// 
-			this.redoToolStripMenuItem.Enabled = false;
-			this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
-			this.redoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-			this.redoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-			this.redoToolStripMenuItem.Text = "&Redo";
-			// 
-			// toolStripSeparator3
-			// 
-			this.toolStripSeparator3.Name = "toolStripSeparator3";
-			this.toolStripSeparator3.Size = new System.Drawing.Size(141, 6);
-			// 
-			// cutToolStripMenuItem
-			// 
-			this.cutToolStripMenuItem.Enabled = false;
-			this.cutToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("cutToolStripMenuItem.Image")));
-			this.cutToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
-			this.cutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-			this.cutToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-			this.cutToolStripMenuItem.Text = "Cu&t";
-			// 
-			// copyToolStripMenuItem
-			// 
-			this.copyToolStripMenuItem.Enabled = false;
-			this.copyToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("copyToolStripMenuItem.Image")));
-			this.copyToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-			this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-			this.copyToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-			this.copyToolStripMenuItem.Text = "&Copy";
-			// 
-			// pasteToolStripMenuItem
-			// 
-			this.pasteToolStripMenuItem.Enabled = false;
-			this.pasteToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("pasteToolStripMenuItem.Image")));
-			this.pasteToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
-			this.pasteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-			this.pasteToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-			this.pasteToolStripMenuItem.Text = "&Paste";
-			// 
-			// toolStripSeparator4
-			// 
-			this.toolStripSeparator4.Name = "toolStripSeparator4";
-			this.toolStripSeparator4.Size = new System.Drawing.Size(141, 6);
-			// 
-			// selectAllToolStripMenuItem
-			// 
-			this.selectAllToolStripMenuItem.Enabled = false;
-			this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-			this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-			this.selectAllToolStripMenuItem.Text = "Select &All";
 			// 
 			// toolsToolStripMenuItem
 			// 
@@ -278,7 +203,7 @@ namespace Hourglass
 			// levelSettingsToolStripMenuItem
 			// 
 			this.levelSettingsToolStripMenuItem.Name = "levelSettingsToolStripMenuItem";
-			this.levelSettingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.levelSettingsToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.levelSettingsToolStripMenuItem.Text = "Level Settings";
 			this.levelSettingsToolStripMenuItem.Click += new System.EventHandler(this.levelSettingsToolStripMenuItem_Click);
 			// 
@@ -286,14 +211,14 @@ namespace Hourglass
 			// 
 			this.customizeToolStripMenuItem.Enabled = false;
 			this.customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-			this.customizeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.customizeToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.customizeToolStripMenuItem.Text = "&Customize";
 			// 
 			// optionsToolStripMenuItem
 			// 
 			this.optionsToolStripMenuItem.Enabled = false;
 			this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.optionsToolStripMenuItem.Text = "&Options";
 			// 
 			// helpToolStripMenuItem
@@ -415,6 +340,7 @@ namespace Hourglass
 			this.Tree.Name = "Tree";
 			this.Tree.PathSeparator = "/";
 			this.Tree.ShowLines = false;
+			this.Tree.ShowNodeToolTips = true;
 			this.Tree.ShowRootLines = false;
 			this.Tree.Size = new System.Drawing.Size(150, 606);
 			this.Tree.TabIndex = 0;
@@ -424,6 +350,7 @@ namespace Hourglass
 			this.Tree.DragDrop += new System.Windows.Forms.DragEventHandler(this.Tree_DragDrop);
 			this.Tree.DragEnter += new System.Windows.Forms.DragEventHandler(this.Tree_DragEnter);
 			this.Tree.DragOver += new System.Windows.Forms.DragEventHandler(this.Tree_DragOver);
+			this.Tree.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Tree_MouseUp);
 			// 
 			// spWorldView
 			// 
@@ -523,9 +450,10 @@ namespace Hourglass
             this.particleEmitterToolStripMenuItem,
             this.codeComponentsToolStripMenuItem,
             this.meshComponentToolStripMenuItem,
-            this.audioComponentToolStripMenuItem});
+            this.audioComponentToolStripMenuItem,
+            this.lightComponentToolStripMenuItem});
 			this.mComponentStrip.Name = "contextMenuStrip1";
-			this.mComponentStrip.Size = new System.Drawing.Size(175, 114);
+			this.mComponentStrip.Size = new System.Drawing.Size(175, 136);
 			// 
 			// toolStripMenuItem1
 			// 
@@ -655,15 +583,39 @@ namespace Hourglass
 			this.audioComponentToolStripMenuItem.Text = "Audio Component";
 			this.audioComponentToolStripMenuItem.Click += new System.EventHandler(this.AddComponentHandler);
 			// 
+			// lightComponentToolStripMenuItem
+			// 
+			this.lightComponentToolStripMenuItem.Name = "lightComponentToolStripMenuItem";
+			this.lightComponentToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+			this.lightComponentToolStripMenuItem.Tag = "LMesh";
+			this.lightComponentToolStripMenuItem.Text = "Light Component";
+			this.lightComponentToolStripMenuItem.Click += new System.EventHandler(this.AddComponentHandler);
+			// 
 			// mObjectStrip
 			// 
+			this.mObjectStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.unparentToolStripMenuItem});
 			this.mObjectStrip.Name = "mObjectStrip";
-			this.mObjectStrip.Size = new System.Drawing.Size(61, 4);
+			this.mObjectStrip.Size = new System.Drawing.Size(124, 26);
+			// 
+			// unparentToolStripMenuItem
+			// 
+			this.unparentToolStripMenuItem.Name = "unparentToolStripMenuItem";
+			this.unparentToolStripMenuItem.Size = new System.Drawing.Size(123, 22);
+			this.unparentToolStripMenuItem.Text = "Unparent";
+			this.unparentToolStripMenuItem.Click += new System.EventHandler(this.unparentToolStripMenuItem_Click);
 			// 
 			// RenderTimer
 			// 
 			this.RenderTimer.Enabled = true;
 			this.RenderTimer.Interval = 16;
+			// 
+			// createRootToolStripMenuItem
+			// 
+			this.createRootToolStripMenuItem.Name = "createRootToolStripMenuItem";
+			this.createRootToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.createRootToolStripMenuItem.Text = "Create Root";
+			this.createRootToolStripMenuItem.Click += new System.EventHandler(this.createRootToolStripMenuItem_Click);
 			// 
 			// Editor
 			// 
@@ -693,6 +645,7 @@ namespace Hourglass
 			this.spWorldView.ResumeLayout(false);
 			this.graphicsPanel1.ResumeLayout(false);
 			this.mComponentStrip.ResumeLayout(false);
+			this.mObjectStrip.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -709,14 +662,6 @@ namespace Hourglass
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem customizeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
@@ -758,6 +703,9 @@ namespace Hourglass
 		private System.Windows.Forms.ToolStripMenuItem coloredMeshToolStripMenuItem;
 		public System.Windows.Forms.Button btnFocus;
 		private System.Windows.Forms.Timer RenderTimer;
+		private System.Windows.Forms.ToolStripMenuItem unparentToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem lightComponentToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem createRootToolStripMenuItem;
 	}
 }
 
