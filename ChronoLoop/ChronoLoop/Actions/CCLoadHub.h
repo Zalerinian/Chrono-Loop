@@ -114,7 +114,7 @@ namespace Epoch
 					mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
 					mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
 					mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
-					mc2->AddTexture("../Resources/Player_hand_Specular", eTEX_SPECULAR);
+					mc2->AddTexture("../Resources/Player_hand_Specular.png", eTEX_SPECULAR);
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
 					leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 					leftRaycaster->SetVisible(false);

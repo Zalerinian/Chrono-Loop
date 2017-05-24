@@ -281,7 +281,7 @@ namespace Epoch
 					mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
 					mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
 					mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
-					mc2->AddTexture("../Resources/Player_hand_Specular", eTEX_SPECULAR);
+					mc2->AddTexture("../Resources/Player_hand_Specular.png", eTEX_SPECULAR);
 					ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 					BoxSnapToControllerAction* pickup2 = new BoxSnapToControllerAction();
 					MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
