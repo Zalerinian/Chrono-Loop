@@ -329,9 +329,9 @@ namespace Epoch
 						}
 						else
 						{
-							((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.2f);
-							((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.2f);
-							((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.2f);
+							((MeshComponent*)mCurCloneHeadset->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.5f);
+							((MeshComponent*)mCurCloneController1->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.5f);
+							((MeshComponent*)mCurCloneController2->GetComponentIndexed(eCOMPONENT_MESH, 0))->SetAlpha(.5f);
 							SystemLogger::GetLog() << "Transparent" << std::endl;
 						}
 					}
@@ -358,7 +358,7 @@ namespace Epoch
 		_data.ScanlineData.z = 0;
 		_data.ScanlineData.w = 0.8f;
 		mCurrTexture = TimeManager::Instance()->GetNextTexture();
-		MeshComponent *visibleMesh = new MeshComponent("../Resources/Clone.obj", .2f);
+		MeshComponent *visibleMesh = new MeshComponent("../Resources/Clone.obj", .5f);
 		visibleMesh->SetPixelShader(ePS_TRANSPARENT);
 		visibleMesh->AddTexture(mCurrTexture.c_str(), eTEX_DIFFUSE);
 
@@ -378,7 +378,7 @@ namespace Epoch
 		_headset->AddComponent(headCol);*/
 
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be problems
-		MeshComponent *mc = new MeshComponent("../Resources/Player_hand.obj",.2f);
+		MeshComponent *mc = new MeshComponent("../Resources/Player_hand.obj",.5f);
 		mc->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
 		mc->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
 		mc->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
@@ -398,7 +398,7 @@ namespace Epoch
 		_controller1->AddComponent(SN1);
 
 		//If you change the name. Pls change it in Timemanager::findotherclones otherwise there will be proble
-		MeshComponent *mc2 = new MeshComponent("../Resources/Player_hand.obj",.2f);
+		MeshComponent *mc2 = new MeshComponent("../Resources/Player_hand.obj",.5f);
 		mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
 		mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
 		mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);

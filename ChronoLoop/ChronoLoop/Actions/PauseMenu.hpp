@@ -210,8 +210,8 @@ namespace Epoch
 				OnEnable();
 
 			if((VRInputManager::GetInstance().GetController(eControllerType_Primary).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu) == true || 
-				VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu) == true || 
-				(GetAsyncKeyState(Keys::M) & 0x1)) && !LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->isTimePaused())
+				VRInputManager::GetInstance().GetController(eControllerType_Secondary).GetPressDown(vr::EVRButtonId::k_EButton_ApplicationMenu) == true /*|| 
+				(GetAsyncKeyState(Keys::M) & 0x1)*/) && !LevelManager::GetInstance().GetCurrentLevel()->GetTimeManipulator()->isTimePaused())
 			{
 				if (PauseMenuisUp) 
 					OnDisable();

@@ -38,7 +38,7 @@ namespace Epoch
 			Settings::GetInstance().SetBool("Level1Tutorial", true);
 			//Teleport Initialize 0
 			Transform Transform1;
-			mBoardMatrixs.push_back(matrix4::CreateNewXRotation(1.5708f) * matrix4::CreateNewYRotation(-1.5708f) * matrix4::CreateNewTranslation(-14.3f, 1.5f, -2.83f));
+			mBoardMatrixs.push_back(matrix4::CreateNewXRotation(1.5708f) * matrix4::CreateNewYRotation(-1.5708f) * matrix4::CreateNewTranslation(-14.3f, 50, -2.83f));
 			Transform1.SetMatrix(mBoardMatrixs.back());
 			BaseObject* mTeleportBoard = new BaseObject("mTeleportBoard", Transform1);
 			MeshComponent* tm = new MeshComponent("../Resources/PlaneCorrection.obj", .9f);
@@ -177,8 +177,8 @@ namespace Epoch
 
 		virtual void Update()
 		{
-			if (GetAsyncKeyState(VK_SHIFT) & 1)
-				Settings::GetInstance().SetInt("tutStep", Settings::GetInstance().GetInt("tutStep") + 1);
+			//if (GetAsyncKeyState(VK_SHIFT) & 1)
+			//	Settings::GetInstance().SetInt("tutStep", Settings::GetInstance().GetInt("tutStep") + 1);
 
 			int tut = Settings::GetInstance().GetInt("tutStep");
 			if (tut != currentTut)
