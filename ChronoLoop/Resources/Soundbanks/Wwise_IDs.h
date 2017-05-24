@@ -65,6 +65,8 @@ namespace AK
         static const AkUniqueID SFX_BUTTON_PRESS2 = 1009907413U;
         static const AkUniqueID SFX_COMMUNICATION_CHANNEL = 3124930127U;
         static const AkUniqueID SFX_DOORSOUND = 3559876090U;
+        static const AkUniqueID SFX_ELEVATOR_6S = 1444591139U;
+        static const AkUniqueID SFX_ELEVATOR_15S = 4045302355U;
         static const AkUniqueID SFX_FORCEFIELD_BOX = 2033744732U;
         static const AkUniqueID SFX_FORCEFIELD_CLOSE = 3535201747U;
         static const AkUniqueID SFX_FORCEFIELD_OPEN = 3512217189U;
