@@ -705,7 +705,7 @@ namespace Epoch {
 			if (GetAsyncKeyState(VK_CONTROL)) {
 				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateNewTranslation(0, -_moveSpd * _delta, 0) * VRInputManager::GetInstance().GetPlayerPosition();
 			}
-
+			
 			if (GetAsyncKeyState(VK_SPACE)) {
 				VRInputManager::GetInstance().GetPlayerPosition() = matrix4::CreateNewTranslation(0, _moveSpd * _delta, 0) * VRInputManager::GetInstance().GetPlayerPosition();
 			}

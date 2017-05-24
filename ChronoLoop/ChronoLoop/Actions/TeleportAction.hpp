@@ -19,7 +19,7 @@ namespace Epoch
 	struct TeleportAction : public CodeComponent
 	{
 		matrix4 endPos;
-		Interpolator<matrix4>* interp;
+		Interpolator<matrix4>* interp, mRcolliderInterp;
 		std::vector<BaseObject*> mPlaneObjects;
 		std::vector<BaseObject*> mEnvironmentObjects;
 		BaseObject *mHeadset;
@@ -35,6 +35,7 @@ namespace Epoch
 		float ang = 0.05f;
 		ParticleEmitter* mTPParticles;
 
+		matrix4 GetEndPos() { return endPos; }
 		RenderShape* mParabola;
 		GhostList<matrix4>::GhostNode* mPGhost;
 		Mesh* mArcMesh;
@@ -366,7 +367,7 @@ namespace Epoch
 		{
 			if (!VRInputManager::GetInstance().IsVREnabled())
 			{
-				if ((GetAsyncKeyState(VK_SHIFT) & 1) && dynamic_cast<SFXEmitter*>(mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
+				if (/*(GetAsyncKeyState(VK_SHIFT) & 1) &&*/ dynamic_cast<SFXEmitter*>(mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1)))
 					((SFXEmitter*)mHeadset->GetComponentIndexed(eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::ePlay);
 				return;
 			}
