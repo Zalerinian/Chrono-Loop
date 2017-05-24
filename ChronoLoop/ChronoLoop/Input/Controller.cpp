@@ -65,9 +65,11 @@ namespace Epoch {
 						InitialPos = CurPos;
 						if ((powf((CurPos.x), 2) + powf((CurPos.y), 2)) > 0.16f) {
 							if (diff * line > 0) {
+								SystemLogger::GetLog() << "Gesty: 1" << std::endl;
 								return 1;
 							}
 							if (diff * line < 0) {
+								SystemLogger::GetLog() << "Gesty: -1" << std::endl;
 								return -1;
 							}
 						}
