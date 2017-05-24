@@ -222,14 +222,14 @@ namespace Epoch
 					if (Settings::GetInstance().GetInt("CurrentLevel") != 4)
 					{
 						vec3f pos = ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->GetPos();
-						pos.y = ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset;
+						pos.y = (((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset - ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset) * .5f + ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset;
 						((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(pos);
 					}
 					else
 					{
-						vec3f pos = ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->GetPos();
-						pos.x = ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset;
-						((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(pos);
+						//vec3f pos = ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->GetPos();
+						//pos.x = (((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset - ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset) * .5f + ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset;
+						//((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(pos);
 					}
 				}
 				else if (colliding && blockCube->GetTransform().GetMatrix() == blockstart && exitCube->GetTransform().GetMatrix() == exitstart && mDoorDoneInterpolating)
@@ -238,14 +238,14 @@ namespace Epoch
 					if (Settings::GetInstance().GetInt("CurrentLevel") != 4)
 					{
 						vec3f pos = ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->GetPos();
-						pos.y = ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset;
+						pos.y = (((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset - ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset) * .5f + ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset;
 						((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(pos);
 					}
 					else
 					{
-						vec3f pos = ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->GetPos();
-						pos.x = ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset;
-						((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(pos);
+						//vec3f pos = ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->GetPos();
+						//pos.x = (((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mUpperBound.mOffset - ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset) * .5f + ((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->mLowerBound.mOffset;
+						//((ButtonCollider*)mObject->GetComponentIndexed(eCOMPONENT_COLLIDER, 0))->SetPos(pos);
 					}
 
 				}
