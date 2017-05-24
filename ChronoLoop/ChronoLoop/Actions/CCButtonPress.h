@@ -88,7 +88,7 @@ namespace Epoch
 
 		virtual void OnCollision(Collider& _col, Collider& _other, float _time)
 		{
-			if (/*Settings::GetInstance().GetInt("CurrentLevel") == 4 && */((Component*)&_other)->GetBaseObject()->GetName().find("EnvBox"))
+			if (Settings::GetInstance().GetInt("CurrentLevel") == 4 && ((Component*)&_other)->GetBaseObject()->GetName().find("EnvBox") != std::string::npos)
 				return;
 			if (!colliding && _other.mColliderType != Collider::eCOLLIDER_Plane && ((Component*)&_other)->GetBaseObject()->GetName().find("Buttonstand"))
 			{
@@ -259,6 +259,7 @@ namespace Epoch
 				}
 				else if (blockCube->GetTransform().GetMatrix() == blockstart && exitCube->GetTransform().GetMatrix() == exitstart)
 				{
+					colliding = false;
 					mStart = true;
 				}
 
