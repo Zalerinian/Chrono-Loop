@@ -374,8 +374,8 @@ namespace Epoch
 
 			// I'm lazy so, let's just set this thing's position to the controller's position.
 			matrix4 mat = VRInputManager::GetInstance().GetController(mControllerRole).GetPosition();
-			if (mControllerRole == ControllerType::eControllerType_Secondary)
-				mat *= matrix4::CreateNewScale(vec3f(.8, .8, .8));
+			//if (mControllerRole == ControllerType::eControllerType_Secondary)
+			//	mat *= matrix4::CreateNewScale(vec3f(.8f, .8f, .8f));
 			mObject->GetTransform().SetMatrix(mat);
 			bool paused = false;
 
