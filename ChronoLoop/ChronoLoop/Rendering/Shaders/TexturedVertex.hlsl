@@ -18,7 +18,6 @@ struct PSI {
 	float4 normal	:	NORMAL0;
 	float4 texCoord :	COLOR;
 	float4 wpos : WORLDPOS;
-	float4 shadowPos : SHADOW;
 	float4 tangent : TANGENT;
 	uint IID : CL_IID;
 };
@@ -48,7 +47,5 @@ PSI main(VERTEX_POSNORMTANTEX input) {
 #endif
 	output.tangent = input.tangent;
 	output.texCoord = input.texCoord;
-	//output.shadowPos = mul(output.wpos, view);
-	output.shadowPos = float4(0, 0, 0, 0);
 	return output;
 }

@@ -203,7 +203,7 @@ namespace Epoch {
 	void RenderShape::UpdateBufferData(Mesh* _mesh)
 	{
 		ID3D11Buffer * ibuffer = IndexBufferManager::GetBuffer().Get();
-		ID3D11Buffer * vbuffer = VertexBufferManager::GetBuffer(VertFormat::eVERT_POSNORMTEX).Get();
+		ID3D11Buffer * vbuffer = VertexBufferManager::GetBuffer(VertFormat::eVERT_POSNORMTANTEX).Get();
 		int ioff = sizeof(unsigned int) * mIndexOffset, voff = sizeof(VertexPosNormTex) * mVertexOffset;
 
 		ID3D11Buffer* i, *v;

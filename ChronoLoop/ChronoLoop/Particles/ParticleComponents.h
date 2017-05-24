@@ -203,7 +203,6 @@ namespace Epoch
 		};
 		struct bvCylinder
 		{
-			//TODO: Cylinder?
 			float radius;
 			float length;
 			vec4f top, bottom;

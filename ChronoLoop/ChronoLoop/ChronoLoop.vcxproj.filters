@@ -493,9 +493,6 @@
     <ClInclude Include="Actions\CCAnimationController.h">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\CCLoadTutorial.h">
-      <Filter>Actions</Filter>
-    </ClInclude>
     <ClInclude Include="Actions\CCTutorial.h">
       <Filter>Actions</Filter>
     </ClInclude>
@@ -529,9 +526,6 @@
     <ClInclude Include="Actions\CCBoxSpinRandomSmall.h">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="CCBoxSpinRandom.h">
-      <Filter>Actions</Filter>
-    </ClInclude>
     <ClInclude Include="..\Resources\Soundbanks\Wwise_IDs.h">
       <Filter>Sound\Header Files</Filter>
     </ClInclude>
@@ -559,19 +553,13 @@
     <ClInclude Include="Actions\CCPlatformButton.h">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\CCLevel5Button.h">
-      <Filter>Actions</Filter>
+    <ClInclude Include="Rendering\FrameQuery.h">
+      <Filter>Rendering\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\CCLevel5Button2.h">
-      <Filter>Actions</Filter>
-    </ClInclude>
-    <ClInclude Include="Actions\CCLevel5Fields.h">
-      <Filter>Actions</Filter>
+    <ClInclude Include="Objects\LightComponent.h">
+      <Filter>Objects\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Actions\CCCloneIndicator.h">
-      <Filter>Actions</Filter>
-    </ClInclude>
-    <ClInclude Include="Actions\CCPrevButton.h">
       <Filter>Actions</Filter>
     </ClInclude>
     <ClInclude Include="Actions\CCEnterLevel5.h">
@@ -589,8 +577,9 @@
     <ClInclude Include="Actions\CCLevel5Fields.h">
       <Filter>Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Actions\CCCloneIndicator.h" />
-    <ClInclude Include="Rendering\FrameQuery.h" />
+    <ClInclude Include="Actions\CCPrevButton.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Objects\BaseObject.cpp">
@@ -876,6 +865,9 @@
     <ClCompile Include="Rendering\FrameQuery.cpp">
       <Filter>Rendering\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\LightComponent.cpp">
+      <Filter>Objects\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Rendering\Shaders\VertexLayout_POS_VS.hlsl">
@@ -920,12 +912,6 @@
     <FxCompile Include="Rendering\Shaders\TexturedPixel.hlsl">
       <Filter>Rendering\Shaders\Pixel shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Rendering\Shaders\BasicVertex.hlsl">
-      <Filter>Rendering\Shaders\Vertex Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Rendering\Shaders\InstancedVertex64.hlsl">
-      <Filter>Rendering\Shaders\Vertex Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="Rendering\Shaders\TexturedVertex.hlsl">
       <Filter>Rendering\Shaders\Vertex Shaders</Filter>
     </FxCompile>
@@ -969,6 +955,9 @@
       <Filter>Rendering\Shaders\Pixel shaders</Filter>
     </FxCompile>
     <FxCompile Include="Rendering\Shaders\PSSolidColor.hlsl">
+      <Filter>Rendering\Shaders\Pixel shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Rendering\Shaders\PSLighting.hlsl">
       <Filter>Rendering\Shaders\Pixel shaders</Filter>
     </FxCompile>
   </ItemGroup>

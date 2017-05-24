@@ -43,8 +43,8 @@ namespace Epoch
 			//exitend = exitCube->GetPos() + vec3f(0, 2.6f, 0);
 			blockstart = blockCube->GetTransform().GetMatrix();
 			exitstart = exitCube->GetTransform().GetMatrix();
-			blockend = blockCube->GetTransform().GetMatrix() * blockCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 2.6f, 0, 1));
-			exitend = exitCube->GetTransform().GetMatrix() * exitCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, -2.6f, 0, 1));
+			blockend = blockCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, 2.6f, 0, 1));
+			exitend = exitCube->GetTransform().GetMatrix().CreateTranslation(vec4f(0, -2.6f, 0, 1));
 
 			mD1Wires = cLevel->FindAllObjectsByPattern("D1Wire");
 			mD2Wires = cLevel->FindAllObjectsByPattern("D2Wire");

@@ -87,7 +87,7 @@ namespace Epoch
 					scaleX += 0.05f;
 
 				if (tempScaleX != scaleX || tempScaleY != scaleY)
-					mTeleportBoard->GetTransform().SetMatrix(matrix4::CreateScale(scaleX, 1, scaleY) * matrix4::CreateXRotation(1.5708f) * matrix4::CreateYRotation(3.92699f) * matrix4::CreateTranslation(0.84f, -8.45f, .84f));
+					mTeleportBoard->GetTransform().SetMatrix(matrix4::CreateNewScale(scaleX, 1, scaleY) * matrix4::CreateNewXRotation(1.5708f) * matrix4::CreateNewYRotation(3.92699f) * matrix4::CreateNewTranslation(0.84f, -8.45f, .84f));
 
 				mScanlineData.MultiscanVOffset += TimeManager::Instance()->GetDeltaTime() / 25.0f;
 				mScanlineData.ScanlineVOffset += TimeManager::Instance()->GetDeltaTime();

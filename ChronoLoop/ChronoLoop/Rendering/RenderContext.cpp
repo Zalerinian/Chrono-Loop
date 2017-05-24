@@ -171,9 +171,11 @@ namespace Epoch {
 	}
 
 	RenderContext & RenderContext::SimpleClone(const RenderContext & _other) {
-		mRasterState = _other.mRasterState;
+		RasterState RasterOverride = (RasterState)Settings::GetInstance().GetInt("RasterizerStateOverride");
+		PixelShaderFormat PixelOverride = (PixelShaderFormat)Settings::GetInstance().GetInt("PixelShaderOverride");
+		mRasterState = RasterOverride != eRS_MAX ? RasterOverride : _other.mRasterState;
 		mVertexFormat = _other.mVertexFormat;
-		mPixelShaderFormat = _other.mPixelShaderFormat;
+		mPixelShaderFormat = PixelOverride != ePS_MAX ? PixelOverride : _other.mPixelShaderFormat;
 		mVertexShaderFormat = _other.mVertexShaderFormat;
 		mGeoShaderFormat = _other.mGeoShaderFormat;
 		mType = _other.mType;

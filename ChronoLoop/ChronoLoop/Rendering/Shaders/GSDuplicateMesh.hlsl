@@ -17,7 +17,6 @@ struct GSOutput
 	float4 normal : NORMAL0;
 	float4 texCoord : COLOR;
 	float4 wpos : WORLDPOS;
-	float4 shadowPos : SHADOW;
 	float3x3 TBN : TBN;
 	uint IID : CL_IID;
 	uint viewport : SV_ViewportArrayIndex;
@@ -29,7 +28,6 @@ struct GSInput
 	float4 normal : NORMAL0;
 	float4 texCoord : COLOR;
 	float4 wpos : WORLDPOS;
-	float4 shadowPos : SHADOW;
 	float4 tangent : TANGENT;
 	uint IID : CL_IID;
 };
@@ -52,7 +50,6 @@ void main(triangle GSInput input[3], inout TriangleStream<GSOutput> TriStream)
 		output.wpos = input[i].wpos;
 		output.IID = input[i].IID;
 		output.viewport = 0;
-		output.shadowPos = input[i].shadowPos;
 		output.TBN = tbn;
 		TriStream.Append(output);
 	}
@@ -70,7 +67,6 @@ void main(triangle GSInput input[3], inout TriangleStream<GSOutput> TriStream)
 		output.wpos = input[j].wpos;
 		output.IID = input[j].IID;
 		output.viewport = 1;
-		output.shadowPos = input[j].shadowPos;
 		output.TBN = tbn;
 		TriStream.Append(output);
 	}

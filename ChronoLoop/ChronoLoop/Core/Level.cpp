@@ -21,7 +21,6 @@
 
 #include "../Actions/CCEnterLevel5.h"
 
-#include "../Actions/CCLoadTutorial.h"
 #include "../Actions/MainMenuBT.h"
 #include "../Actions/CCLoadHub.h"
 #include "../Actions/CCBoxSpin.h"
@@ -29,6 +28,7 @@
 #include "../Actions/CCLevel1TutorialButton.h"
 #include "../Actions/CCStartButton.h"
 #include "../Objects/MeshComponent.h"
+#include "../Objects/LightComponent.h"
 #include "../tinyxml/tinyxml.h"
 #include "../tinyxml/tinystr.h"
 #include "../Common/Settings.h"
@@ -276,6 +276,7 @@ namespace Epoch {
 	{
 		for (auto it = mObjectList.begin(); it != mObjectList.end(); ++it) {
 			auto& meshes = (*it)->GetComponents(eCOMPONENT_MESH);
+			auto& lights = (*it)->GetComponents(eCOMPONENT_LIGHT);
 			auto b = meshes.begin();
 			auto e = meshes.end();
 			for (auto cit = meshes.begin(); cit != meshes.end(); ++cit) {
@@ -283,6 +284,12 @@ namespace Epoch {
 				if(mesh->IsVisible())
 				{
 					mesh->SetVisible(false)->SetVisible(true);
+				}
+			}
+			for (auto cit = lights.begin(); cit != lights.end(); ++cit) {
+				LightComponent *light = (LightComponent*)*cit;
+				if (light->IsVisible()) {
+					light->SetVisible(false)->SetVisible(true);
 				}
 			}
 		}
@@ -632,9 +639,9 @@ namespace Epoch {
 							}
 						}
 
-						matrix4 mat = matrix4::CreateScale(objectScale.x, objectScale.y, objectScale.z) *
-							matrix4::CreateYawPitchRollRotation(rotation) *
-							matrix4::CreateTranslation(position.x, position.y, position.z);
+						matrix4 mat = matrix4::CreateNewScale(objectScale.x, objectScale.y, objectScale.z) *
+							matrix4::CreateNewYawPitchRollRotation(rotation) *
+							matrix4::CreateNewTranslation(position.x, position.y, position.z);
 						Transform trans;
 						trans.SetMatrix(mat);
 						obj = Pool::Instance()->iGetObject()->Reset(name, trans, nullptr, flags);
@@ -764,21 +771,64 @@ namespace Epoch {
 						}
 					}
 						break;
+					case 10:
+					{
+						// Light component, a glorified colored mesh component.
+						INT32 pathLength = 0;
+						std::string mesh;
+
+						struct {
+							union {
+								struct {
+									unsigned char b, g, r, a;
+								};
+								int color;
+							};
+						} argbColor;
+
+						float transparency = 1.0;
+						if (version >= 2) {
+							file.read((char*)&transparency, sizeof(float));
+						}
+
+						unsigned char waste = 0;
+						// Shaders - All stored as 1 byte.	
+						if (version >= 3) {
+							file.read((char*)&waste, 1);
+							file.read((char*)&waste, 1);
+							file.read((char*)&waste, 1);
+						}
+
+						file.read((char *)&pathLength, sizeof(INT32));
+						char* temp = new char[pathLength];
+						file.read(temp, pathLength);
+						mesh = temp;
+						delete[] temp;
+						file.read((char *)&argbColor.color, sizeof(INT32));
+						if (obj) {
+							std::string path = "../Resources/" + mesh;
+							vec4f lightColor(argbColor.r / 255.f * transparency, argbColor.g / 255.f * transparency, argbColor.b / 255.f * transparency, 1.0f);
+							LightComponent *light = new LightComponent(path.c_str(), lightColor);
+							obj->AddComponent(light);
+						}
+					}
+						break;
 					default:
 						break;
 					}
+				}
+				if (parent == nullptr) {
+					AddObject(obj);
 				}
 				file.read((char *)&objOperation, sizeof(INT8));
 				if (objOperation == 0 && parent)
 				{
 					parent->AddChild(obj);
-					obj->SetParent(parent);
 				}
 				if (objOperation == 1)
 					parent = obj;
 				if (objOperation == 2 && parent)
 					parent = parent->GetParent();
-				AddObject(obj);
 			}
 			file.close();
 		}

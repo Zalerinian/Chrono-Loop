@@ -6,7 +6,7 @@ namespace Hourglass
 {
     public abstract class Component
     {
-		public enum ComponentType { None = 0, BoxCollider, ButtonCollider, PlaneCollider, SphereCollider, ColoredMesh, TexturedMesh, Transform, Code, Audio, MAX }
+		public enum ComponentType { None = 0, BoxCollider, ButtonCollider, PlaneCollider, SphereCollider, ColoredMesh, TexturedMesh, Transform, Code, Audio, Light, MAX }
 
 
 

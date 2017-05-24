@@ -132,7 +132,7 @@ namespace Epoch {
 	matrix4 & matrix4::RotateInPlace(const vec3f& _axis, float _rads) {
 		vec4f pos = Position;
 		Position.Set(0, 0, 0, 1);
-		*this *= CreateAxisRotation(_axis, _rads);
+		*this *= CreateNewAxisRotation(_axis, _rads);
 		Position = pos;
 		return *this;
 	}
@@ -140,59 +140,119 @@ namespace Epoch {
 	matrix4 & matrix4::RotateInPlaceQuaternion(const vec4f & _quat) {
 		vec4f pos = Position;
 		Position.Set(0, 0, 0, 1);
-		*this *= CreateQuaternionRotation(_quat);
+		*this *= CreateNewQuaternionRotation(_quat);
 		Position = pos;
 		return *this;
 	}
 
-	matrix4 matrix4::CreateAxisRotation(const vec3f & _axis, float _rads) {
-		return XMMatrixRotationAxis(_axis.vector, _rads);
+	matrix4 matrix4::CreateAxisRotation(const vec3f & _axis, float _rads)
+	{
+		return *this * XMMatrixRotationAxis(_axis.vector, _rads);
 	}
 
-	matrix4 matrix4::CreateQuaternionRotation(const vec4f & _quat) {
-		return XMMatrixRotationQuaternion(_quat.vector);
+	matrix4 matrix4::CreateQuaternionRotation(const vec4f & _quat)
+	{
+		return *this * XMMatrixRotationQuaternion(_quat.vector);
 	}
 
-	matrix4 matrix4::CreateXRotation(float _rads) {
-		return XMMatrixRotationX(_rads);
+	matrix4 matrix4::CreateXRotation(float _rads)
+	{
+		return *this * XMMatrixRotationX(_rads);
 	}
 
-	matrix4 matrix4::CreateYRotation(float _rads) {
-		return XMMatrixRotationY(_rads);
+	matrix4 matrix4::CreateYRotation(float _rads)
+	{
+		return *this * XMMatrixRotationY(_rads);
 	}
 
-	matrix4 matrix4::CreateZRotation(float _rads) {
-		return XMMatrixRotationZ(_rads);
+	matrix4 matrix4::CreateZRotation(float _rads)
+	{
+		return *this * XMMatrixRotationZ(_rads);
 	}
 
-	matrix4 matrix4::CreateYawPitchRollRotation(vec3f & _xyz) {
-		return XMMatrixRotationRollPitchYawFromVector(_xyz.vector);
+	matrix4 matrix4::CreateYawPitchRollRotation(vec3f & _xyz)
+	{
+		return *this * XMMatrixRotationRollPitchYawFromVector(_xyz.vector);
 	}
 
-	matrix4 matrix4::CreateYawPitchRollRotation(float _x, float _y, float _z) {
-		return XMMatrixRotationRollPitchYaw(_x, _y, _z);
+	matrix4 matrix4::CreateYawPitchRollRotation(float _x, float _y, float _z)
+	{
+		return *this * XMMatrixRotationRollPitchYaw(_x, _y, _z);
 	}
 
-	matrix4 matrix4::CreateScale(float _x, float _y, float _z) {
-		return XMMatrixScaling(_x, _y, _z);
+	matrix4 matrix4::CreateScale(float _x, float _y, float _z)
+	{
+		return *this * XMMatrixScaling(_x, _y, _z);
 	}
 
-	matrix4 matrix4::CreateScale(vec3f & _scale) {
-		return XMMatrixScalingFromVector(_scale.vector);
+	matrix4 matrix4::CreateScale(vec3f & _scale)
+	{
+		return *this * XMMatrixScalingFromVector(_scale.vector);
 	}
 
-	matrix4 matrix4::CreateTranslation(float _x, float _y, float _z) {
-		return XMMatrixTranslation(_x, _y, _z);
+	matrix4 matrix4::CreateTranslation(float _x, float _y, float _z)
+	{
+		return *this * XMMatrixTranslation(_x, _y, _z);
 	}
 
 	matrix4 matrix4::CreateTranslation(vec3f _vec)
 	{
-		return CreateTranslation(_vec.x, _vec.y, _vec.z);
+		return *this * CreateNewTranslation(_vec.x, _vec.y, _vec.z);
 	}
 
 	matrix4 matrix4::CreateTranslation(vec4f _vec)
 	{
-		return CreateTranslation(_vec.x, _vec.y, _vec.z);
+		return *this * CreateNewTranslation(_vec.x, _vec.y, _vec.z);
+	}
+
+	matrix4 matrix4::CreateNewAxisRotation(const vec3f & _axis, float _rads) {
+		return XMMatrixRotationAxis(_axis.vector, _rads);
+	}
+
+	matrix4 matrix4::CreateNewQuaternionRotation(const vec4f & _quat) {
+		return XMMatrixRotationQuaternion(_quat.vector);
+	}
+
+	matrix4 matrix4::CreateNewXRotation(float _rads) {
+		return XMMatrixRotationX(_rads);
+	}
+
+	matrix4 matrix4::CreateNewYRotation(float _rads) {
+		return XMMatrixRotationY(_rads);
+	}
+
+	matrix4 matrix4::CreateNewZRotation(float _rads) {
+		return XMMatrixRotationZ(_rads);
+	}
+
+	matrix4 matrix4::CreateNewYawPitchRollRotation(vec3f & _xyz) {
+		return XMMatrixRotationRollPitchYawFromVector(_xyz.vector);
+	}
+
+	matrix4 matrix4::CreateNewYawPitchRollRotation(float _x, float _y, float _z) {
+		return XMMatrixRotationRollPitchYaw(_x, _y, _z);
+	}
+
+	matrix4 matrix4::CreateNewScale(float _x, float _y, float _z) {
+		return XMMatrixScaling(_x, _y, _z);
+	}
+
+	matrix4 matrix4::CreateNewScale(vec3f & _scale) {
+		return XMMatrixScalingFromVector(_scale.vector);
+	}
+
+	matrix4 matrix4::CreateNewTranslation(float _x, float _y, float _z) {
+		return XMMatrixTranslation(_x, _y, _z);
+	}
+
+	matrix4 matrix4::CreateNewTranslation(vec3f _vec)
+	{
+		return CreateNewTranslation(_vec.x, _vec.y, _vec.z);
+	}
+
+	matrix4 matrix4::CreateNewTranslation(vec4f _vec)
+	{
+		return CreateNewTranslation(_vec.x, _vec.y, _vec.z);
 	}
 
 }

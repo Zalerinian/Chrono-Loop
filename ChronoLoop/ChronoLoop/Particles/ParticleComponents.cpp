@@ -343,6 +343,7 @@ namespace Epoch
 			{
 				UpdateParticle(*p, _delta);
 			}
+			UpdateBuffers();
 			return;
 		}
 		CleanUpParticles();

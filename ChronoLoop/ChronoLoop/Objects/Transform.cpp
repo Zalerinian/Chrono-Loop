@@ -11,12 +11,12 @@ namespace Epoch
 	//	temp[1] = this->mUp;
 	//	temp[2] = this->mFoward;
 	//
-	//	temp = matrix4::CreateTranslation(x, y, z);
+	//	temp = matrix4::CreateNewTranslation(x, y, z);
 	//}
 
 	void Transform::Rotate(vec4f axis, float radians)
 	{
-		matrix4 rotation = matrix4::CreateAxisRotation(axis, radians);
+		matrix4 rotation = matrix4::CreateNewAxisRotation(axis, radians);
 		this->mMatrix *= rotation;
 	}
 

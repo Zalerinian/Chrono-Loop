@@ -59,18 +59,31 @@ namespace Epoch {
 		matrix4& RotateInPlace(const vec3f& _axis, float _rads);
 		matrix4& RotateInPlaceQuaternion(const vec4f& _quat);
 
-		static matrix4 CreateAxisRotation(const vec3f& _axis, float _rads);
-		static matrix4 CreateQuaternionRotation(const vec4f& _quat);
-		static matrix4 CreateXRotation(float _rads);
-		static matrix4 CreateYRotation(float _rads);
-		static matrix4 CreateZRotation(float _rads);
-		static matrix4 CreateYawPitchRollRotation(vec3f& _xyz);
-		static matrix4 CreateYawPitchRollRotation(float _x, float _y, float _z);
-		static matrix4 CreateScale(float _x, float _y, float _z);
-		static matrix4 CreateScale(vec3f& _scale);
-		static matrix4 CreateTranslation(float _x, float _y, float _z);
-		static matrix4 CreateTranslation(vec3f _vec);
-		static matrix4 CreateTranslation(vec4f _vec);
+		matrix4 CreateAxisRotation(const vec3f& _axis, float _rads);
+		matrix4 CreateQuaternionRotation(const vec4f& _quat);
+		matrix4 CreateXRotation(float _rads);
+		matrix4 CreateYRotation(float _rads);
+		matrix4 CreateZRotation(float _rads);
+		matrix4 CreateYawPitchRollRotation(vec3f& _xyz);
+		matrix4 CreateYawPitchRollRotation(float _x, float _y, float _z);
+		matrix4 CreateScale(float _x, float _y, float _z);
+		matrix4 CreateScale(vec3f& _scale);
+		matrix4 CreateTranslation(float _x, float _y, float _z);
+		matrix4 CreateTranslation(vec3f _vec);
+		matrix4 CreateTranslation(vec4f _vec);
+
+		static matrix4 CreateNewAxisRotation(const vec3f& _axis, float _rads);
+		static matrix4 CreateNewQuaternionRotation(const vec4f& _quat);
+		static matrix4 CreateNewXRotation(float _rads);
+		static matrix4 CreateNewYRotation(float _rads);
+		static matrix4 CreateNewZRotation(float _rads);
+		static matrix4 CreateNewYawPitchRollRotation(vec3f& _xyz);
+		static matrix4 CreateNewYawPitchRollRotation(float _x, float _y, float _z);
+		static matrix4 CreateNewScale(float _x, float _y, float _z);
+		static matrix4 CreateNewScale(vec3f& _scale);
+		static matrix4 CreateNewTranslation(float _x, float _y, float _z);
+		static matrix4 CreateNewTranslation(vec3f _vec);
+		static matrix4 CreateNewTranslation(vec4f _vec);
 	};
 
 }
