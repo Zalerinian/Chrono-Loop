@@ -297,7 +297,7 @@ namespace Epoch
 		}
 	}
 	void CommandConsole::InputFunction() {
-		if (mTakeInput /*&& GetAsyncKeyState(VK_RETURN) & 0x1*/) {
+		if (mTakeInput && GetAsyncKeyState(VK_RETURN) & 0x1) {
 
 			if (mCurCommand.length() == 0)
 				return;

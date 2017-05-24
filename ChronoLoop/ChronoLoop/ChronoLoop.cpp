@@ -43,7 +43,7 @@
 using namespace Epoch;
 #define LEVEL_1 0
 #define MAINMENU 0
-#define CONSOLE_OVERRIDE 0
+#define CONSOLE_OVERRIDE 1
 #define FIXED_UPDATE_INTERVAL (1 / 180.0f)
 #define RENDER_INTERVAL (1 / 90.0f)
 

@@ -483,13 +483,13 @@ namespace Epoch
 				}
 				//Row 2
 				else if (X == 2 && Y == 0) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(6, -1.41f, -1.80f);
+					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(5.98, -1.41f, -1.56f);
 				}
 				else if (X == 2 && Y == 1) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(2, -1.41f, -1.80f);
+					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) * matrix4::CreateTranslation(1.98, -1.41f, -1.56f);
 				}
 				else if (X == 2 && Y == 3) {
-					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) *  matrix4::CreateTranslation(-6, -1.41f, -1.80f);
+					finalDest = matrix4::CreateScale(2.1f, 1.5f, 2) *  matrix4::CreateTranslation(-6.02, -1.41f, -1.56f);
 				}
 				//Row 3
 				else if (X == 3 && Y == 0) {
