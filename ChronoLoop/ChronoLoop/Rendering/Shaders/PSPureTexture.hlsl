@@ -20,7 +20,7 @@ MRTOutput main(PSI input) {
 	output.diffuse = tDiffuse.Sample(diffuseFilter, input.texCoord.xy);
 	clip(output.diffuse.a - 0.25);
 
-	float3 norm = tNormal.Sample(diffuseFilter, input.texCoord.xy);
+	float3 norm = tNormal.Sample(diffuseFilter, input.texCoord.xy).rgb;
 	if (length(norm) < 1) {
 		norm = normalize(input.normal.xyz);
 	} else {

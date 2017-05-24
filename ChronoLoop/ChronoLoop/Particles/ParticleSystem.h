@@ -32,7 +32,7 @@ namespace Epoch
 		void SetGeometryShader();
 		void SetVertexPixelShader();
 
-		int GetNumEmitters() { return mPEmitters.size(); }
+		int GetNumEmitters() { return (int)mPEmitters.size(); }
 		void Update();
 		void Render();
 		void AddEmitter(ParticleEmitter* _pemitter);

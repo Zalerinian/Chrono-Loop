@@ -174,8 +174,8 @@ void Update() {
 	rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
 	rightRaycaster->SetVisible(false);
 	mc->AddTexture("../Resources/Controller_Diffuse.png", eTEX_DIFFUSE);
-	mc->AddTexture("../Resources/Controller_Normal", eTEX_NORMAL);
-	mc->AddTexture("../Resources/Controller_Specular", eTEX_SPECULAR);
+	mc->AddTexture("../Resources/Controller_Normal.png", eTEX_NORMAL);
+	mc->AddTexture("../Resources/Controller_Specular.png", eTEX_SPECULAR);
 	TeleportAction* rightTele = new TeleportAction(eControllerType_Primary);
 	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
 	RightController->AddComponent(mc);
@@ -193,7 +193,7 @@ void Update() {
 	mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
 	mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
 	mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
-	mc2->AddTexture("../Resources/Player_hand_Specular", eTEX_SPECULAR);
+	mc2->AddTexture("../Resources/Player_hand_Specular.png", eTEX_SPECULAR);
 	TeleportAction* leftTele = new TeleportAction(eControllerType_Secondary);
 	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
 	LeftController->AddComponent(leftConCol);

@@ -43,7 +43,7 @@ namespace Epoch
 					}
 					return false;
 				}
-				SystemLogger::GetError() << "[Warning] Requested texture \"" << _path << "\" could not be loaded as a DDS file: 0x" << hex << hr << dec << ". Attempting as WIC file..." << endl;
+				//SystemLogger::GetError() << "[Warning] Requested texture \"" << _path << "\" could not be loaded as a DDS file: 0x" << hex << hr << dec << ". Attempting as WIC file..." << endl;
 				TexMetadata tMeta;
 				hr = LoadFromWICFile(buffer, WIC_FLAGS_IGNORE_SRGB, &tMeta, scratch);
 				delete[] buffer;
@@ -108,6 +108,7 @@ namespace Epoch
 				{
 					_texture->Attach((ID3D11Texture2D*)texture);
 				}
+				SystemLogger::Debug() << "Successfully loaded texture \"" << _path << "\"" << std::endl;
 				return true;
 			}
 			delete[] buffer;

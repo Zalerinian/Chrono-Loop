@@ -66,7 +66,7 @@ namespace Epoch
 
 			mPB->GetBackground()->GetTransform().SetMatrix(matrix4::CreateNewScale(20, 1, 20) * matrix4::CreateNewTranslation(0, 0.0001f, -2));
 			//mPB->GetProgressBar()->GetTransform().SetMatrix(matrix4::CreateNewScale(20, 1, 20) * matrix4::CreateNewTranslation(0, 0.0001f, 0));
-			((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 2))->CallEvent(Emitter::EventType::ePlay);
+			//((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->CallEvent(Emitter::EventType::ePlay);
 			mPB->OnEnable(); 
 			//if (Settings::GetInstance().GetBool("mmStartAtBottom"))
 			//{
@@ -145,8 +145,8 @@ namespace Epoch
 				mPrevSignInterp->SetEasingFunction(Easing::ElasticOut);
 				mPrevSignInterp->SetActive(true);
 
-				((SFXEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
-				((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 1))->CallEvent(Emitter::EventType::ePlay);
+				//((SFXEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->CallEvent();
+				((AudioEmitter*)mChamberObject->GetComponentIndexed(ComponentType::eCOMPONENT_AUDIOEMITTER, 0))->CallEvent(Emitter::EventType::ePlay);
 				mBooped = true;
 				mBooped3 = true;
 				Settings::GetInstance().SetInt("mmLevel", Settings::GetInstance().GetInt("mmLevel") + 1);

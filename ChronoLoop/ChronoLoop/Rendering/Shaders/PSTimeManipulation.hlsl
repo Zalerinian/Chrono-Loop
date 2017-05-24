@@ -22,7 +22,7 @@ struct PSI {
 float4 main(PSI input) : SV_TARGET
 {
 	float4 diffuseColor = tDiffuse.Sample(diffuseFilter, input.texCoord.xy);
-    diffuseColor.rgb += tBloom.Sample(diffuseFilter, input.texCoord.xy).rgb;
+    //diffuseColor.rgb += tBloom.Sample(diffuseFilter, input.texCoord.xy).rgb;
 
 
 	diffuseColor.rgb = lerp(diffuseColor.rgb, dot(diffuseColor.rgb, desaturationColor.rgb), ratios.x);

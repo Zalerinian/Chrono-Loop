@@ -89,8 +89,8 @@ namespace Epoch
 					BaseObject* headset = Pool::Instance()->iGetObject()->Reset("Headset - 0", identity, nullptr, BaseObject_Flag_Record_In_Timeline);
 					MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
 					mc->AddTexture("../Resources/Controller_Diffuse.png", eTEX_DIFFUSE);
-					mc->AddTexture("../Resources/Controller_Normal", eTEX_NORMAL);
-					mc->AddTexture("../Resources/Controller_Specular", eTEX_SPECULAR);
+					mc->AddTexture("../Resources/Controller_Normal.png", eTEX_NORMAL);
+					mc->AddTexture("../Resources/Controller_Specular.png", eTEX_SPECULAR);
 					CubeCollider* col = new CubeCollider(headset, false, false, vec3f(), 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f));
 					headset->AddComponent(col);
 

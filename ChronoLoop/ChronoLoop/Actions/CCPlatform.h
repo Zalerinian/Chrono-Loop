@@ -6,6 +6,7 @@ namespace Epoch {
 
 	struct CCPlatform : public CodeComponent 
 	{
+		Level* cLevel;
 		bool playerCanInterp = false;
 		Interpolator<matrix4>* platInterp;
 		Interpolator<matrix4>* playerInterp;
@@ -16,6 +17,7 @@ namespace Epoch {
 
 		virtual void Start() 
 		{
+			cLevel = LevelManager::GetInstance().GetCurrentLevel();
 			Level* l = LevelManager::GetInstance().GetCurrentLevel();
 			invis = l->FindObjectWithName("EnvCantLetYouDoThatStarFox");
 			if (invis)
@@ -38,11 +40,13 @@ namespace Epoch {
 			} 
 			else if (((Component*)&_other)->GetBaseObject()->GetName() == "EndBound") 
 			{
-				//Yeah
+				
 				
 			}
 			
-			if(_other.mColliderType == Collider::eCOLLIDER_Controller && Settings::GetInstance().GetBool("PlatInterp"))
+			if((_other.GetBaseObject() == cLevel->GetLeftController() || _other.GetBaseObject() == cLevel->GetRightController()) &&
+				_other.mColliderType == Collider::eCOLLIDER_Controller && Settings::GetInstance().GetBool("PlatInterp") &&
+				VRInputManager::GetInstance().GetPlayerPosition().Position.x > 0)
 			{
 				playerCanInterp = true;
 			}
@@ -63,7 +67,7 @@ namespace Epoch {
 
 				if(playerCanInterp)
 				{
-					PEnd = VRInputManager::GetInstance().GetPlayerPosition().CreateNewTranslation(-4, 0, 0);
+					PEnd = VRInputManager::GetInstance().GetPlayerPosition().CreateTranslation(-4, 0, 0);
 					playerInterp->Prepare(2, VRInputManager::GetInstance().GetPlayerPosition(), PEnd, VRInputManager::GetInstance().GetPlayerPosition());
 					playerInterp->SetActive(true);
 				}
@@ -91,7 +95,7 @@ namespace Epoch {
 			{
 				//other pos
 				matrix4 m = invis->GetTransform().GetMatrix();
-				m.Position = vec4f(2.83, 0, -1.02, 1);
+				m.Position = vec4f(2.83f, 0, -1.02f, 1);
 				invis->GetTransform().SetMatrix(m);
 			}
 		}
