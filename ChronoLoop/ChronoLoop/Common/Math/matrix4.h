@@ -47,6 +47,7 @@ namespace Epoch {
 		matrix4& matrix4::operator*=(float _other);
 		matrix4  matrix4::operator+(matrix4 const& _other);
 		matrix4& matrix4::operator+=(matrix4 const& _other);
+		vec4f    matrix4::operator*(vec4f const& _other);
 		vec4f&   matrix4::operator[](unsigned int _index);
 		vec4f    matrix4::operator[](unsigned int _index) const;
 		vec4f&   matrix4::operator[](int _index);
