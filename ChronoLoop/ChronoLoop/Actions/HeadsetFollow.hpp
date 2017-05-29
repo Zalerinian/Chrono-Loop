@@ -4,8 +4,7 @@
 #include "../Objects/BaseObject.h"
 #include "../Input/VRInputManager.h"
 
-namespace Epoch
-{
+namespace Epoch {
 
 	class HeadsetFollow : public CodeComponent
 	{

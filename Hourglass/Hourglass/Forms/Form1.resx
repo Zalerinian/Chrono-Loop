@@ -167,12 +167,12 @@
   <metadata name="mCreateMenuStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>335, 17</value>
   </metadata>
-  <data name="btnFocus.Text" xml:space="preserve">
-    <value>This button is used to capture focus when the graphics panel below it is active. This won't hidethe cursor while it is selected, and does nothing whenit is "pressed" via the spacebar, or other means. It allowsus to provide input for the world only when thiscontrol is selected, so we don't accidentally move the world while editing a name, or vice versa.</value>
-  </data>
   <metadata name="mComponentStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>614, 17</value>
   </metadata>
+  <data name="btnFocus.Text" xml:space="preserve">
+    <value>This button is used to capture focus when the graphics panel below it is active. This won't hidethe cursor while it is selected, and does nothing whenit is "pressed" via the spacebar, or other means. It allowsus to provide input for the world only when thiscontrol is selected, so we don't accidentally move the world while editing a name, or vice versa.</value>
+  </data>
   <metadata name="mObjectStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>491, 17</value>
   </metadata>

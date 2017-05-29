@@ -58,9 +58,10 @@ namespace Hourglass {
 		}
 
 		public static bool SaveSettings() {
-			XmlWriterSettings s = new XmlWriterSettings();
-			s.Indent = true;
-			s.OmitXmlDeclaration = true;
+			XmlWriterSettings s = new XmlWriterSettings() {
+				Indent = true,
+				OmitXmlDeclaration = true
+			};
 			XmlWriter writer = XmlWriter.Create("settings.exs", s);
 
 			writer.WriteStartElement("Settings");
@@ -72,6 +73,40 @@ namespace Hourglass {
 			writer.Close();
 			return true;
 		}
+
+		public static bool SaveLevelOrder(ListBox.ObjectCollection _order) {
+			XmlWriterSettings s = new XmlWriterSettings() {
+				Indent = true,
+				OmitXmlDeclaration = true
+			};
+			XmlWriter writer = XmlWriter.Create(Settings.ProjectPath + ResourceManager.Instance.ResourceDirectory + "LevelOrder.xml", s);
+			writer.WriteStartElement("LevelOrder");
+			for (int i = 0; i < _order.Count; ++i) {
+				LevelRecord lr = (LevelRecord)_order[i];
+				writer.WriteElementString("Level", lr.FilePath);
+			}
+			writer.WriteEndElement();
+			writer.Close();
+			return true;
+		}
+
+		public static bool ReadLevelOrder(ListBox.ObjectCollection _order) {
+			if (File.Exists(Settings.ProjectPath + ResourceManager.Instance.ResourceDirectory + "LevelOrder.xml")) {
+				XmlReaderSettings s = new XmlReaderSettings() {
+					DtdProcessing = DtdProcessing.Parse
+				};
+				XmlReader reader = XmlReader.Create(Settings.ProjectPath + ResourceManager.Instance.ResourceDirectory + "LevelOrder.xml", s);
+				while (reader.Read()) {
+					switch (reader.NodeType) {
+						case XmlNodeType.Text:
+							_order.Add(new LevelRecord(reader.Value.Substring(reader.Value.LastIndexOf("\\") + 1), reader.Value));
+							break;
+					}
+				}
+				reader.Close();
+			}
+			return true;
+		} 
 
 
 		public static void saveLevel(string file, TreeView tree) {

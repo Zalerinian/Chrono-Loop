@@ -132,6 +132,12 @@
     <Compile Include="Forms\EditorSetupForm.Designer.cs">
       <DependentUpon>EditorSetupForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\LevelOrderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LevelOrderForm.Designer.cs">
+      <DependentUpon>LevelOrderForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="General\FileOperations.cs" />
     <Compile Include="Forms\Form1.cs">
       <SubType>Form</SubType>
@@ -183,6 +189,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LevelOrderForm.resx">
+      <DependentUpon>LevelOrderForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\LevelSettingsForm.resx">
       <DependentUpon>LevelSettingsForm.cs</DependentUpon>

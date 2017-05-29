@@ -41,6 +41,7 @@ namespace Hourglass
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.createToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.editLevelOrderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.levelSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.customizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -83,7 +84,6 @@ namespace Hourglass
 			this.mObjectStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.unparentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.RenderTimer = new System.Windows.Forms.Timer(this.components);
-			this.createRootToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.spHierarchyPanel)).BeginInit();
 			this.spHierarchyPanel.Panel1.SuspendLayout();
@@ -185,10 +185,17 @@ namespace Hourglass
 			// editToolStripMenuItem
 			// 
 			this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.createRootToolStripMenuItem});
+            this.editLevelOrderToolStripMenuItem});
 			this.editToolStripMenuItem.Name = "editToolStripMenuItem";
 			this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
 			this.editToolStripMenuItem.Text = "&Edit";
+			// 
+			// editLevelOrderToolStripMenuItem
+			// 
+			this.editLevelOrderToolStripMenuItem.Name = "editLevelOrderToolStripMenuItem";
+			this.editLevelOrderToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+			this.editLevelOrderToolStripMenuItem.Text = "Edit Level Order";
+			this.editLevelOrderToolStripMenuItem.Click += new System.EventHandler(this.editLevelOrderToolStripMenuItem_Click);
 			// 
 			// toolsToolStripMenuItem
 			// 
@@ -610,13 +617,6 @@ namespace Hourglass
 			this.RenderTimer.Enabled = true;
 			this.RenderTimer.Interval = 16;
 			// 
-			// createRootToolStripMenuItem
-			// 
-			this.createRootToolStripMenuItem.Name = "createRootToolStripMenuItem";
-			this.createRootToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.createRootToolStripMenuItem.Text = "Create Root";
-			this.createRootToolStripMenuItem.Click += new System.EventHandler(this.createRootToolStripMenuItem_Click);
-			// 
 			// Editor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -705,7 +705,7 @@ namespace Hourglass
 		private System.Windows.Forms.Timer RenderTimer;
 		private System.Windows.Forms.ToolStripMenuItem unparentToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem lightComponentToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem createRootToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem editLevelOrderToolStripMenuItem;
 	}
 }
 

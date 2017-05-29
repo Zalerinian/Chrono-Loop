@@ -927,21 +927,10 @@ namespace Hourglass
 			}
 		}
 
-		private void createRootToolStripMenuItem_Click(object sender, EventArgs e) {
-			TreeNode root = GetLevelRoot();
-			if(root == null) {
-				root = new TreeNode();
-				root.Tag = new BaseObject(root, "Root");
-				Tree.Nodes.Add(root);
-				for(int i = Tree.Nodes.Count - 2; i >= 0; --i) {
-					TreeNode n = Tree.Nodes[i];
-					((BaseObject)n.Tag).Parent = (BaseObject)root.Tag;
-					Tree.Nodes.Remove(n);
-					root.Nodes.Add(n);
-				}
-				root.Expand();
-			} else {
-				Debug.Print("We already have a root, ye dingus.");
+		private void editLevelOrderToolStripMenuItem_Click(object sender, EventArgs e) {
+			LevelOrderForm lof = new LevelOrderForm();
+			if(lof.ShowDialog() == DialogResult.OK) {
+				FileIO.SaveLevelOrder(lof.lbxLevels.Items);
 			}
 		}
 
