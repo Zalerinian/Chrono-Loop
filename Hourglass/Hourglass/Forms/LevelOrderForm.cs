@@ -25,10 +25,13 @@ namespace Hourglass{
 
 				for(int i = 0; i < lbxLevels.Items.Count; ++i) {
 					LevelRecord r = lbxLevels.Items[i] as LevelRecord;
-					if(r.FilePath == o.FileName) {
+					if(r.FilePath == o.FileName.Substring((Settings.ProjectPath + ResourceManager.Instance.ResourceDirectory).Length)) {
 						if (MessageBox.Show("This level is already included, insert it anyway?", "Duplicate level detected", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) {
 							// Duplicate detected, and Yes was not selected. Don't add the level.
 							return;
+						} else {
+							// Duplicate detected, and yes *was* selected, so stop bothering them.
+							break;
 						}
 					}
 				}
