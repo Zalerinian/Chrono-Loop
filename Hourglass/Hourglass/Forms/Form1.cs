@@ -104,6 +104,7 @@ namespace Hourglass
 			btnComponentAdd.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
 			btnComponentAdd.Margin = new Padding(0, 15, 0, 15);
 			spWorldView.Panel2.Controls.Add(btnComponentAdd);
+			newToolStripMenuItem_Click(null, null); // Load a new level, which creates the controller and headset objects.
 		}
 
 		private void RenderTimer_Tick(object sender, EventArgs e) {
@@ -609,11 +610,12 @@ namespace Hourglass
 		}
 
 		private TreeNode GetLevelRoot() {
-			if(Tree.Nodes.Count == 1) {
-				return Tree.Nodes[0];
-			} else {
-				return null;
-			}
+			//if(Tree.Nodes.Count == 1) {
+			//	return Tree.Nodes[0];
+			//} else {
+			//	return null;
+			//}
+			return null;
 		}
 
 		private void mMenuButton_Click(object sender, EventArgs e)
@@ -657,10 +659,10 @@ namespace Hourglass
 			btnFocus.Select();
 		}
 
-		private TreeNode ConstructTreeObject(TreeNode _parent)
+		private TreeNode ConstructTreeObject(TreeNode _parent, string _name = "Empty Object")
 		{
 			TreeNode n = new TreeNode();
-			BaseObject b = new BaseObject(n, "Empty Object");
+			BaseObject b = new BaseObject(n, _name);
 			if(_parent != null)
 			{
 				b.Parent = (BaseObject)_parent.Tag;
@@ -820,6 +822,19 @@ namespace Hourglass
 			for(int i = Tree.Nodes.Count - 1; i >= 0; --i) {
 				DeleteNode(Tree.Nodes[i]);
 			}
+
+			TreeNode headsetNode = ConstructTreeObject(null, "Headset"),
+				primaryNode = ConstructTreeObject(null, "Primary Controller"),
+				secondaryNode = ConstructTreeObject(null, "Secondary Controller");
+
+			((TransformComponent)((BaseObject)headsetNode.Tag).GetComponents()[0]).NameEditable = false;
+			((TransformComponent)((BaseObject)primaryNode.Tag).GetComponents()[0]).NameEditable = false;
+			((TransformComponent)((BaseObject)secondaryNode.Tag).GetComponents()[0]).NameEditable = false;
+
+			((BaseObject)headsetNode.Tag).Draggable = false;
+			((BaseObject)primaryNode.Tag).Draggable = false;
+			((BaseObject)secondaryNode.Tag).Draggable = false;
+
 		}
 
 		private void DeleteNode(TreeNode n) {
@@ -836,6 +851,10 @@ namespace Hourglass
 		}
 
 		private void Tree_ItemDrag(object sender, ItemDragEventArgs e) {
+			BaseObject b = (BaseObject)((TreeNode)e.Item).Tag;
+			if(!b.Draggable) {
+				return;
+			}
 			if(e.Button == MouseButtons.Left) {
 				DoDragDrop(e.Item, DragDropEffects.Move);
 			} else if(e.Button == MouseButtons.Right) {

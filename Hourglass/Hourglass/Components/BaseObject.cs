@@ -21,6 +21,7 @@ namespace Hourglass
         protected BaseObject mParent = null;
         protected TreeNode mNode = null;
 		protected Matrix mWorld = Matrix.Identity;
+		protected bool mDraggable = true;
 
         public string Name {
             get { return ((TransformComponent)mComponents[0]).Name; }
@@ -37,6 +38,15 @@ namespace Hourglass
 			}
 			set {
 				mParent = value;
+			}
+		}
+
+		public bool Draggable {
+			get {
+				return mDraggable;
+			}
+			set {
+				mDraggable = value;
 			}
 		}
 

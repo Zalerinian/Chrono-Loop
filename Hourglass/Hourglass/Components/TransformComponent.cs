@@ -25,7 +25,7 @@ namespace Hourglass
 
 		protected CheckBox mRecord;
 
-		protected bool mNameIsPlaceholder = true;
+		protected bool mNameIsPlaceholder = true, mNameIsEditable = true;
 		protected string mLastText = "";
 
 
@@ -96,6 +96,9 @@ namespace Hourglass
 		public string Name {
 			get { return mNameIsPlaceholder ? "" : mName.Text; }
 			set {
+				if(!NameEditable) {
+					return;
+				}
 				if (string.IsNullOrWhiteSpace(value))
 				{
 					mName.Font = PlaceholderFont;
@@ -109,6 +112,16 @@ namespace Hourglass
 					mNameIsPlaceholder = false;
 				}
 				mName.Text = value;
+			}
+		}
+
+		public bool NameEditable {
+			get {
+				return mNameIsEditable;
+			}
+			set {
+				mNameIsEditable = value;
+				mName.Enabled = value;
 			}
 		}
 
