@@ -21,7 +21,7 @@ namespace Hourglass
         protected BaseObject mParent = null;
         protected TreeNode mNode = null;
 		protected Matrix mWorld = Matrix.Identity;
-		protected bool mDraggable = true;
+		protected bool mDraggable = true, mRemovable = true;
 
         public string Name {
             get { return ((TransformComponent)mComponents[0]).Name; }
@@ -47,6 +47,15 @@ namespace Hourglass
 			}
 			set {
 				mDraggable = value;
+			}
+		}
+
+		public bool Removable {
+			get {
+				return mRemovable;
+			}
+			set {
+				mRemovable = value;
 			}
 		}
 
@@ -118,6 +127,9 @@ namespace Hourglass
 
 		public void Delete()
 		{
+			if(!Removable) {
+				return;
+			}
 			for(int i = mComponents.Count - 1; i >= 0 ; --i)
 			{
 				mComponents[i].OnMenuClick_Delete(null, null);

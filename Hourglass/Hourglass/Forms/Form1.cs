@@ -408,7 +408,7 @@ namespace Hourglass
 			if (btnFocus.ContainsFocus || Tree.ContainsFocus) {
 				if (!mKeys.Contains(Key.LeftControl) && !mKeys.Contains(Key.RightControl)) {
 					if (mKeys.Contains(Key.Delete) && !mPreviousKeys.Contains(Key.Delete)) {
-						if (Tree.SelectedNode != null) {
+						if (Tree.SelectedNode != null && ((BaseObject)Tree.SelectedNode.Tag).Removable) {
 							RemoveTreeNode(Tree.SelectedNode);
 							Tree.SelectedNode = null;
 							Tree_AfterSelect(null, null);
@@ -835,15 +835,20 @@ namespace Hourglass
 			((BaseObject)primaryNode.Tag).Draggable = false;
 			((BaseObject)secondaryNode.Tag).Draggable = false;
 
+			((BaseObject)headsetNode.Tag).Removable = false;
+			((BaseObject)primaryNode.Tag).Removable = false;
+			((BaseObject)secondaryNode.Tag).Removable = false;
 		}
 
 		private void DeleteNode(TreeNode n) {
+			// This is used for creating a new level, so we don't want to check for
+			// nodes that shouldn't be deleted. For that, check RemoveTreeNode
 			for (int i = n.Nodes.Count - 1; i >= 0; --i) {
 				DeleteNode(n.Nodes[i]);
 			}
 			((BaseObject)n.Tag).Delete();
 			n.Tag = null;
-			if(n.Parent != null) {
+			if (n.Parent != null) {
 				n.Parent.Nodes.Remove(n);
 			} else {
 				n.TreeView.Nodes.Remove(n);
@@ -853,6 +858,8 @@ namespace Hourglass
 		private void Tree_ItemDrag(object sender, ItemDragEventArgs e) {
 			BaseObject b = (BaseObject)((TreeNode)e.Item).Tag;
 			if(!b.Draggable) {
+				Tree.SelectedNode = ((TreeNode)e.Item);
+				Tree.Select();
 				return;
 			}
 			if(e.Button == MouseButtons.Left) {
