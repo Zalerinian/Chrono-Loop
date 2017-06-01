@@ -252,9 +252,9 @@ namespace Hourglass {
 			mRotY.Value = 0;
 			mRotZ.Value = 0;
 
-			mScaleX.Value = 0;
-			mScaleY.Value = 0;
-			mScaleZ.Value = 0;
+			mScaleX.Value = 1;
+			mScaleY.Value = 1;
+			mScaleZ.Value = 1;
 
 			mGravX.Value = 0;
 			mGravY.Value = (decimal)-9.81;

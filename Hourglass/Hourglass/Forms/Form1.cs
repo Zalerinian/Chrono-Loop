@@ -507,7 +507,7 @@ namespace Hourglass
 					obj.AddComponent(new SphereCollider());
 					break;
 				case "ColController":
-					//obj.AddComponent(new ControllerCollider());
+					obj.AddComponent(new ControllerCollider());
 					break;
 
 				// Particle Emitters

@@ -105,6 +105,7 @@
     <Compile Include="Components\Colliders\BoxCollider.cs" />
     <Compile Include="Components\Colliders\ButtonCollider.cs" />
     <Compile Include="Components\Colliders\Collider.cs" />
+    <Compile Include="Components\Colliders\ControllerCollider.cs" />
     <Compile Include="Components\Colliders\SphereCollider.cs" />
     <Compile Include="Components\Component.cs" />
     <Compile Include="Components\Colliders\PlaneCollider.cs" />
