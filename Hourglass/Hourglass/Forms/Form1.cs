@@ -820,22 +820,6 @@ namespace Hourglass
 			for(int i = Tree.Nodes.Count - 1; i >= 0; --i) {
 				DeleteNode(Tree.Nodes[i]);
 			}
-
-			TreeNode headsetNode = ConstructTreeObject(null, "Headset"),
-				primaryNode = ConstructTreeObject(null, "Primary Controller"),
-				secondaryNode = ConstructTreeObject(null, "Secondary Controller");
-
-			((TransformComponent)((BaseObject)headsetNode.Tag).GetComponents()[0]).NameEditable = false;
-			((TransformComponent)((BaseObject)primaryNode.Tag).GetComponents()[0]).NameEditable = false;
-			((TransformComponent)((BaseObject)secondaryNode.Tag).GetComponents()[0]).NameEditable = false;
-
-			((BaseObject)headsetNode.Tag).Draggable = false;
-			((BaseObject)primaryNode.Tag).Draggable = false;
-			((BaseObject)secondaryNode.Tag).Draggable = false;
-
-			((BaseObject)headsetNode.Tag).Removable = false;
-			((BaseObject)primaryNode.Tag).Removable = false;
-			((BaseObject)secondaryNode.Tag).Removable = false;
 		}
 
 		private void DeleteNode(TreeNode n) {
@@ -956,6 +940,31 @@ namespace Hourglass
 			if(lof.ShowDialog() == DialogResult.OK) {
 				FileIO.SaveLevelOrder(lof.lbxLevels.Items);
 			}
+		}
+
+		private void addHeadsetControllersToolStripMenuItem_Click(object sender, EventArgs e) {
+			if(Settings.LevelHasControls) {
+				return;
+			}
+
+			TreeNode headsetNode = ConstructTreeObject(null, "Headset"),
+				primaryNode = ConstructTreeObject(null, "Primary Controller"),
+				secondaryNode = ConstructTreeObject(null, "Secondary Controller");
+
+			((TransformComponent)((BaseObject)headsetNode.Tag).GetComponents()[0]).NameEditable = false;
+			((TransformComponent)((BaseObject)primaryNode.Tag).GetComponents()[0]).NameEditable = false;
+			((TransformComponent)((BaseObject)secondaryNode.Tag).GetComponents()[0]).NameEditable = false;
+
+			((BaseObject)headsetNode.Tag).Draggable = false;
+			((BaseObject)primaryNode.Tag).Draggable = false;
+			((BaseObject)secondaryNode.Tag).Draggable = false;
+
+			((BaseObject)headsetNode.Tag).Removable = false;
+			((BaseObject)primaryNode.Tag).Removable = false;
+			((BaseObject)secondaryNode.Tag).Removable = false;
+
+
+			Settings.LevelHasControls = true;
 		}
 
 		private WorldTransformations CollapseObject(TreeNode Object) {

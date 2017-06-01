@@ -16,7 +16,7 @@ namespace Hourglass {
 	}
 
 	public static class FileIO {
-		public static readonly uint WriterVersion = 8;
+		public static readonly uint WriterVersion = 9;
 		public static readonly float RADIANS_TO_DEGREES = ((180.0f / 3.14f));
 		public static readonly float DEGREES_TO_RADIANS = (1 / 180.0f * 3.14f);
 		private static Stack<BaseObject> ObjectStack = new Stack<BaseObject>();
@@ -138,6 +138,8 @@ namespace Hourglass {
 				writer.Write(Settings.StartRot.Z * DEGREES_TO_RADIANS);
 
                 writer.Write(Settings.CloneMax);
+
+				writer.Write(Settings.LevelHasControls);
 
 				// Level Objects
 				writer.Write((byte)0x4B);
@@ -330,6 +332,11 @@ namespace Hourglass {
 				if(vers >= 4) {
 					Settings.CloneMax = (ushort)reader.ReadUInt16();
 				}
+
+				if(vers >= 9) {
+					Settings.LevelHasControls = reader.ReadBoolean();
+				}
+
 				Settings.StartPos = startPos;
 				Settings.StartRot = startRot;
 

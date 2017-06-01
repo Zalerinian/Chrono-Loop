@@ -11,6 +11,7 @@ namespace Hourglass
 		private static Vector3 mLevelStartPosition = new Vector3();
 		private static Vector3 mLevelStartRotation = new Vector3();
         private static ushort mCloneMax = 0;
+		private static bool mHasControllers = false;
 
 		public static int SettingsVersion {
 			get {
@@ -59,6 +60,15 @@ namespace Hourglass
             get { return mCloneMax; }
             set { mCloneMax = value; }
         }
+
+		public static bool LevelHasControls {
+			get {
+				return mHasControllers;
+			}
+			set {
+				mHasControllers = value;
+			}
+		}
 
 	}
 }

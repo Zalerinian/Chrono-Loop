@@ -81,6 +81,7 @@ namespace Hourglass
 			this.mObjectStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.unparentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.RenderTimer = new System.Windows.Forms.Timer(this.components);
+			this.addHeadsetControllersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.spHierarchyPanel)).BeginInit();
 			this.spHierarchyPanel.Panel1.SuspendLayout();
@@ -182,7 +183,8 @@ namespace Hourglass
 			// editToolStripMenuItem
 			// 
 			this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.editLevelOrderToolStripMenuItem});
+            this.editLevelOrderToolStripMenuItem,
+            this.addHeadsetControllersToolStripMenuItem});
 			this.editToolStripMenuItem.Name = "editToolStripMenuItem";
 			this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
 			this.editToolStripMenuItem.Text = "&Edit";
@@ -457,7 +459,7 @@ namespace Hourglass
             this.audioComponentToolStripMenuItem,
             this.lightComponentToolStripMenuItem});
 			this.mComponentStrip.Name = "contextMenuStrip1";
-			this.mComponentStrip.Size = new System.Drawing.Size(175, 158);
+			this.mComponentStrip.Size = new System.Drawing.Size(175, 136);
 			// 
 			// toolStripMenuItem1
 			// 
@@ -588,6 +590,13 @@ namespace Hourglass
 			this.RenderTimer.Enabled = true;
 			this.RenderTimer.Interval = 16;
 			// 
+			// addHeadsetControllersToolStripMenuItem
+			// 
+			this.addHeadsetControllersToolStripMenuItem.Name = "addHeadsetControllersToolStripMenuItem";
+			this.addHeadsetControllersToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+			this.addHeadsetControllersToolStripMenuItem.Text = "Add Headset/Controllers";
+			this.addHeadsetControllersToolStripMenuItem.Click += new System.EventHandler(this.addHeadsetControllersToolStripMenuItem_Click);
+			// 
 			// Editor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -674,6 +683,7 @@ namespace Hourglass
 		private System.Windows.Forms.ToolStripMenuItem unparentToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem lightComponentToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem editLevelOrderToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem addHeadsetControllersToolStripMenuItem;
 	}
 }
 
