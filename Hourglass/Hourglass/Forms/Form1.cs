@@ -508,13 +508,8 @@ namespace Hourglass
 					break;
 
 				// Particle Emitters
-				case "PEVolume":
-					break;
-				case "PERadial":
-					Debug.Print("Is this not just a spherical volume emitter...?");
-					break;
-				case "PETeleport":
-					Debug.Print("Honestly this should be configurable through a generic particle or volume emitter.");
+				case "ParticleEmitter":
+					obj.AddComponent(new ParticleEmitterComponent());
 					break;
 
 				// Non-Grouped components that *aren't* code components

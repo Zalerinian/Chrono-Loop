@@ -72,9 +72,6 @@ namespace Hourglass
 			this.buttonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.controllerColliderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.particleEmitterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.volumeEmitterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.radialEmitterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.iDCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.codeComponentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.meshComponentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.texturedMeshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -460,7 +457,7 @@ namespace Hourglass
             this.audioComponentToolStripMenuItem,
             this.lightComponentToolStripMenuItem});
 			this.mComponentStrip.Name = "contextMenuStrip1";
-			this.mComponentStrip.Size = new System.Drawing.Size(175, 136);
+			this.mComponentStrip.Size = new System.Drawing.Size(175, 158);
 			// 
 			// toolStripMenuItem1
 			// 
@@ -516,37 +513,11 @@ namespace Hourglass
 			// 
 			// particleEmitterToolStripMenuItem
 			// 
-			this.particleEmitterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.volumeEmitterToolStripMenuItem,
-            this.radialEmitterToolStripMenuItem,
-            this.iDCToolStripMenuItem});
 			this.particleEmitterToolStripMenuItem.Name = "particleEmitterToolStripMenuItem";
 			this.particleEmitterToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+			this.particleEmitterToolStripMenuItem.Tag = "ParticleEmitter";
 			this.particleEmitterToolStripMenuItem.Text = "Particle Emitters";
-			// 
-			// volumeEmitterToolStripMenuItem
-			// 
-			this.volumeEmitterToolStripMenuItem.Name = "volumeEmitterToolStripMenuItem";
-			this.volumeEmitterToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-			this.volumeEmitterToolStripMenuItem.Tag = "PEVolume";
-			this.volumeEmitterToolStripMenuItem.Text = "Volume Emitter";
-			this.volumeEmitterToolStripMenuItem.Click += new System.EventHandler(this.AddComponentHandler);
-			// 
-			// radialEmitterToolStripMenuItem
-			// 
-			this.radialEmitterToolStripMenuItem.Name = "radialEmitterToolStripMenuItem";
-			this.radialEmitterToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-			this.radialEmitterToolStripMenuItem.Tag = "PERadial";
-			this.radialEmitterToolStripMenuItem.Text = "Radial Emitter";
-			this.radialEmitterToolStripMenuItem.Click += new System.EventHandler(this.AddComponentHandler);
-			// 
-			// iDCToolStripMenuItem
-			// 
-			this.iDCToolStripMenuItem.Name = "iDCToolStripMenuItem";
-			this.iDCToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-			this.iDCToolStripMenuItem.Tag = "PETeleport";
-			this.iDCToolStripMenuItem.Text = "\"IDC\" (Teleport Effect)";
-			this.iDCToolStripMenuItem.Click += new System.EventHandler(this.AddComponentHandler);
+			this.particleEmitterToolStripMenuItem.Click += new System.EventHandler(this.AddComponentHandler);
 			// 
 			// codeComponentsToolStripMenuItem
 			// 
@@ -695,9 +666,6 @@ namespace Hourglass
 		private System.Windows.Forms.ToolStripMenuItem meshComponentToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem audioComponentToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem codeComponentsToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem volumeEmitterToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem radialEmitterToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem iDCToolStripMenuItem;
 		private MenuButton btnComponentAdd;
 		private System.Windows.Forms.ToolStripMenuItem texturedMeshToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem coloredMeshToolStripMenuItem;

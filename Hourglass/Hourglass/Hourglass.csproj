@@ -115,6 +115,7 @@
     <Compile Include="Components\Meshes\MeshComponent.cs" />
     <Compile Include="Components\Meshes\ColoredMeshComponent.cs" />
     <Compile Include="Components\Meshes\TexturedMeshComponent.cs" />
+    <Compile Include="Components\ParticleEmitterComponent.cs" />
     <Compile Include="Components\SoundComponent.cs" />
     <Compile Include="Components\TransformComponent.cs" />
     <Compile Include="Controls\FocusGroupBox.cs">
