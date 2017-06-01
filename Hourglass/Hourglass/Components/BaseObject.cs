@@ -172,6 +172,9 @@ namespace Hourglass
                     case Component.ComponentType.Light:
                         c = new LightComponent();
                         break;
+					case Component.ComponentType.Particle:
+						c = new ParticleEmitterComponent();
+						break;
 					default:
 						break;
 				}
