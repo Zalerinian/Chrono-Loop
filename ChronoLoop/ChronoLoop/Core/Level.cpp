@@ -741,6 +741,9 @@ namespace Epoch {
 								codeCom = new CCLevel5Fields();
 							if (path == "CCLevel5DoorButton.h")
 								codeCom = new CCLevel5DoorButton();
+							if (path == "TeleportAction.hpp") {
+								codeCom = new TeleportAction(obj->GetName().find("Primary") != std::string::npos ? eControllerType_Primary : eControllerType_Secondary);
+							}
 							//if (path == "CCLevel5BoxFieldCheck.h")
 							//	codeCom = new CCLevel5BoxFieldCheck();
 
@@ -812,6 +815,27 @@ namespace Epoch {
 							vec4f lightColor(argbColor.r / 255.f * transparency, argbColor.g / 255.f * transparency, argbColor.b / 255.f * transparency, 1.0f);
 							LightComponent *light = new LightComponent(mesh.c_str(), lightColor);
 							obj->AddComponent(light);
+						}
+					}
+						break;
+					case 11:
+						// Particle Emitter
+
+						break;
+					case 12:
+						// Controller Collider
+					{
+						vec3f scale;
+						file.read((char *)&scale.x, sizeof(float));
+						file.read((char *)&scale.y, sizeof(float));
+						file.read((char *)&scale.z, sizeof(float));
+						if (obj) {
+							std::string temp = obj->GetName();
+							vec3f offset = vec3f(objectScale.x * scale.x, objectScale.y * scale.y, objectScale.z * scale.z) / 2;
+							vec3f min = -offset;
+							vec3f max = offset;
+							CubeCollider* col = new ControllerCollider(obj, min, max, obj->GetName().find("Primary") != std::string::npos);
+							obj->AddComponent(col);
 						}
 					}
 						break;

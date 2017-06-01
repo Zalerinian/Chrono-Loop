@@ -4,6 +4,7 @@ namespace Hourglass {
 	class ControllerCollider : BoxCollider {
 
 		public ControllerCollider() : base(0) {
+			mType = ComponentType.ControllerCollider;
 			for(int i = mGroupBox.Controls.Count - 1; i >= 0; --i) {
 				mGroupBox.Controls.RemoveAt(0);
 			}
