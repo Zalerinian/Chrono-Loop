@@ -691,6 +691,9 @@ namespace Hourglass {
 					case (short)Component.ComponentType.Particle:
 						com = new ParticleEmitterComponent();
 						break;
+					case (short)Component.ComponentType.ControllerCollider:
+						com = new ControllerCollider();
+						break;
 					default:
 						Debug.Print("An unexpected component type has been found. This may indicate corruption: " + compType);
 						break;

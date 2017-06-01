@@ -6,9 +6,10 @@ using System.Windows.Forms;
 namespace Hourglass {
 	class ParticleEmitterComponent : Component {
 		protected Label mLbMaxLiving, mLbPPL, mLbPPS, mLbPosMin, mLbPX, mLbPY, mLbPZ, mLbBoundsMin, mLbBX, mLbBY, mLbBZ, mLbPosMax, mLbPXU, mLbPYU, mLbPZU;
-		protected Label mLbBoundsMax, mLbBXU, mLbBYU, mLbBZU;
+		protected Label mLbBoundsMax, mLbBXU, mLbBYU, mLbBZU, mLbTexture;
 		protected NumericUpDown mMaxLiving, mPPL, mPPS, mPXL, mPYL, mPZL, mBXL, mBYL, mBZL, mPXU, mPYU, mPZU, mBXU, mBYU, mBZU;
 		protected Panel mPosMinPanel, mPosMaxPanel, mBoundsMinPanel, mBoundsMaxPanel, mVelocityPanel, mRadialPanel;
+		protected ComboBox mTexture;
 
 		// Particle settings
 		protected Label mLbLife, mLbStartSize, mLbEndSize, mLbStartOpacity, mLbEndOpacity, mLbXR, mLbYR, mLbZR;
@@ -57,6 +58,9 @@ namespace Hourglass {
 			mLbStartCol = new Label();
 			mLbEndCol = new Label();
 			mLbRadial = new Label();
+
+			mLbTexture = new Label();
+			mTexture = new ComboBox();
 
 			mMaxLiving = new NumericUpDown(); // How many particles can exist at a time? -> _maxp
 			mPPL = new NumericUpDown(); // Particles-Per-Life. How many particles will this emitter actually emit? -> _totalp
@@ -118,6 +122,8 @@ namespace Hourglass {
 			mGroupBox.Controls.Add(mLbStartCol);
 			mGroupBox.Controls.Add(mLbEndCol);
 			mGroupBox.Controls.Add(mLbRadial);
+			mGroupBox.Controls.Add(mLbTexture);
+			mGroupBox.Controls.Add(mTexture);
 
 			mGroupBox.Controls.Add(mMaxLiving);
 			mGroupBox.Controls.Add(mPPL);
@@ -284,6 +290,22 @@ namespace Hourglass {
 			mEndCol.Location = new System.Drawing.Point(90, 417);
 			mEndCol.Size = new System.Drawing.Size(ContentWidth - mStartCol.Left, 24);
 
+			mLbEndCol.Text = "Texture";
+			mLbEndCol.Location = new System.Drawing.Point(6, 445);
+			mLbEndCol.AutoSize = true;
+
+			mTexture.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
+			mTexture.Location = new System.Drawing.Point(90, 442);
+			mTexture.Size = new System.Drawing.Size(ContentWidth - mTexture.Left, 24);
+			mTexture.DropDownStyle = ComboBoxStyle.DropDownList;
+			mTexture.Items.Add("");
+			{
+				List<string>.Enumerator it = ResourceManager.Instance.Textures.GetEnumerator();
+				while (it.MoveNext()) {
+					mTexture.Items.Add(it.Current);
+				}
+			}
+
 			#endregion
 
 			mGroupBox.Text = "Particle Emitter";
@@ -337,6 +359,8 @@ namespace Hourglass {
 			mVY.Value = 0;
 			mVZ.Value = 0;
 
+			mTexture.SelectedIndex = -1;
+
 			mStartCol.BackColor = System.Drawing.Color.Black;
 			mEndCol.BackColor = System.Drawing.Color.Black;
 		}
@@ -376,6 +400,7 @@ namespace Hourglass {
 			comp.mVZ.Value = mVZ.Value;
 			comp.mStartCol.BackColor = mStartCol.BackColor;
 			comp.mEndCol.BackColor = mEndCol.BackColor;
+			comp.mTexture.SelectedIndex = mTexture.SelectedIndex;
 		}
 
 		public override void ReadData(BinaryReader r, int _version) {
@@ -394,6 +419,7 @@ namespace Hourglass {
 			mBXU.Value = (decimal)BitConverter.ToSingle(r.ReadBytes(4), 0);
 			mBYU.Value = (decimal)BitConverter.ToSingle(r.ReadBytes(4), 0);
 			mBZU.Value = (decimal)BitConverter.ToSingle(r.ReadBytes(4), 0);
+
 			mLife.Value = (decimal)BitConverter.ToSingle(r.ReadBytes(4), 0);
 			mStartSize.Value = (decimal)BitConverter.ToSingle(r.ReadBytes(4), 0);
 			mEndSize.Value = (decimal)BitConverter.ToSingle(r.ReadBytes(4), 0);
@@ -407,6 +433,16 @@ namespace Hourglass {
 			mVZ.Value = (decimal)BitConverter.ToSingle(r.ReadBytes(4), 0);
 			mStartCol.BackColor = System.Drawing.Color.FromArgb(r.ReadInt32());
 			mEndCol.BackColor = System.Drawing.Color.FromArgb(r.ReadInt32());
+
+			string filename = new string(r.ReadChars(r.ReadInt32() - 1));
+			r.ReadByte(); // The null terminator breaks things in C#, but is necessary in C++, so we need to skip it in C#
+			filename = filename.Substring(filename.LastIndexOf("\\") + 1);
+			int index = mTexture.Items.IndexOf(filename);
+			if (index >= 0) {
+				mTexture.SelectedIndex = index;
+			} else {
+				mTexture.Text = "Error locating diffuse texture.";
+			}
 		}
 
 		public override void WriteData(BinaryWriter w) {
@@ -439,6 +475,12 @@ namespace Hourglass {
 			w.Write((float)mVZ.Value);
 			w.Write(mStartCol.BackColor.ToArgb());
 			w.Write(mEndCol.BackColor.ToArgb());
+
+			string s = (".." + ResourceManager.Instance.ResourceDirectory + mTexture.Text);
+			w.Write(s.Length + 1);
+			w.Write(s.ToCharArray());
+			byte term = 0;
+			w.Write(term);
 		}
 	}
 }

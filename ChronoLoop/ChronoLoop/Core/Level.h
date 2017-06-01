@@ -19,6 +19,7 @@ namespace Epoch
 		TimeManipulation* mTMComponent = nullptr;
 		//PauseMenu* mPauseMenu = nullptr;
 		std::list<BaseObject*> mObjectList;
+		std::vector<ParticleEmitter*> mEmitters;
 		unsigned short mId;
 		vec4f mStartPosition;
 		vec3f mStartRotation;

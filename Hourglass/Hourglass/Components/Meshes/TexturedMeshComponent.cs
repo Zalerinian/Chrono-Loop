@@ -81,6 +81,10 @@ namespace Hourglass
 			mNormal.DropDownStyle = ComboBoxStyle.DropDownList;
 
 
+			mTexture.Items.Add("");
+			mEmissive.Items.Add("");
+			mSpecular.Items.Add("");
+			mNormal.Items.Add("");
 			{
 				List<string>.Enumerator it = ResourceManager.Instance.Textures.GetEnumerator();
 				while (it.MoveNext())
@@ -116,6 +120,8 @@ namespace Hourglass
 			if(!string.IsNullOrWhiteSpace(mTexture.Text))
 			{
 				((TexturedShape)mShape).SetTexture(TexturedShape.TextureType.Diffuse, Settings.ProjectPath + ResourceManager.Instance.ResourceDirectory + mTexture.Text);
+			} else {
+				((TexturedShape)mShape).SetTexture(TexturedShape.TextureType.Diffuse, (Microsoft.DirectX.Direct3D.BaseTexture)null);
 			}
 			ReleaseControl();
 		}

@@ -294,6 +294,11 @@ namespace Epoch {
 				}
 			}
 		}
+		for (auto it = mEmitters.begin(); it != mEmitters.end(); ++it) {
+			ParticleSystem::Instance()->AddEmitter(*it);
+			(*it)->FIRE();
+		}
+		
 	}
 
 	void Level::CallStart() {
@@ -341,6 +346,8 @@ namespace Epoch {
 			BaseObject* parent = nullptr;
 			INT8 objOperation = 0;
 
+			BaseObject *Headset = nullptr, *PrimCon = nullptr, *SecCon = nullptr;
+
 			for (INT32 i = 0; i < objectCount; i++)
 			{
 				BaseObject* obj = nullptr;
@@ -351,476 +358,542 @@ namespace Epoch {
 				{
 					INT16 type = 0;
 					file.read((char *)&type, sizeof(INT16));
-					switch (type)
-					{
-					case 0: //None
-						break;
-					case 1: //BoxCollider
-					{
-						float mass = 0, staticFriction = 0, kineticFriction = 0, elasticity = 0, drag = 0;
-						byte movable = 0, trigger = 0, pickupable = false;
-						file.read((char *)&mass, sizeof(float));
-						file.read((char *)&staticFriction, sizeof(float));
-						file.read((char *)&kineticFriction, sizeof(float));
-						file.read((char *)&elasticity, sizeof(float));
-						file.read((char *)&drag, sizeof(float));
-						file.read((char *)&movable, sizeof(byte));
-						file.read((char *)&trigger, sizeof(byte));
-						if (version >= 4) {
-							file.read((char *)&pickupable, sizeof(byte));
-						}
-
-						vec3f position, rotation, scale, gravity(0, -9.81f, 0);
-						file.read((char *)&position.x, sizeof(float));
-						file.read((char *)&position.y, sizeof(float));
-						file.read((char *)&position.z, sizeof(float));
-
-						file.read((char *)&rotation.x, sizeof(float));
-						file.read((char *)&rotation.y, sizeof(float));
-						file.read((char *)&rotation.z, sizeof(float));
-
-						file.read((char *)&scale.x, sizeof(float));
-						file.read((char *)&scale.y, sizeof(float));
-						file.read((char *)&scale.z, sizeof(float));
-
-						if(version >= 5)
+					switch (type) {
+						case 0: //None
+							break;
+						case 1: //BoxCollider
 						{
-							file.read((char *)&gravity.x, sizeof(float));
-							file.read((char *)&gravity.y, sizeof(float));
-							file.read((char *)&gravity.z, sizeof(float));
+							float mass = 0, staticFriction = 0, kineticFriction = 0, elasticity = 0, drag = 0;
+							byte movable = 0, trigger = 0, pickupable = false;
+							file.read((char *)&mass, sizeof(float));
+							file.read((char *)&staticFriction, sizeof(float));
+							file.read((char *)&kineticFriction, sizeof(float));
+							file.read((char *)&elasticity, sizeof(float));
+							file.read((char *)&drag, sizeof(float));
+							file.read((char *)&movable, sizeof(byte));
+							file.read((char *)&trigger, sizeof(byte));
+							if (version >= 4) {
+								file.read((char *)&pickupable, sizeof(byte));
+							}
+
+							vec3f position, rotation, scale, gravity(0, -9.81f, 0);
+							file.read((char *)&position.x, sizeof(float));
+							file.read((char *)&position.y, sizeof(float));
+							file.read((char *)&position.z, sizeof(float));
+
+							file.read((char *)&rotation.x, sizeof(float));
+							file.read((char *)&rotation.y, sizeof(float));
+							file.read((char *)&rotation.z, sizeof(float));
+
+							file.read((char *)&scale.x, sizeof(float));
+							file.read((char *)&scale.y, sizeof(float));
+							file.read((char *)&scale.z, sizeof(float));
+
+							if (version >= 5) {
+								file.read((char *)&gravity.x, sizeof(float));
+								file.read((char *)&gravity.y, sizeof(float));
+								file.read((char *)&gravity.z, sizeof(float));
+							}
+							if (obj) {
+								std::string temp = obj->GetName();
+								vec3f offset = vec3f(objectScale.x * scale.x, objectScale.y * scale.y, objectScale.z * scale.z) / 2;
+								vec3f min = position - offset;
+								vec3f max = position + offset;
+								CubeCollider* col = new CubeCollider(obj, movable == 1, trigger == 1, gravity, mass, elasticity, staticFriction, kineticFriction, drag, min, max);
+								col->mPickUpAble = pickupable != 0;
+								obj->AddComponent(col);
+							}
 						}
-						if (obj)
+						break;
+						case 2: //ButtonCollider
 						{
-							std::string temp = obj->GetName();
-							vec3f offset = vec3f(objectScale.x * scale.x, objectScale.y * scale.y, objectScale.z * scale.z) / 2;
-							vec3f min = position - offset;
-							vec3f max = position + offset;
-							CubeCollider* col = new CubeCollider(obj, movable == 1, trigger == 1, gravity, mass, elasticity, staticFriction, kineticFriction, drag, min, max);
-							col->mPickUpAble = pickupable != 0;
-							obj->AddComponent(col);
+							float mass = 0, force = 0;
+							file.read((char *)&mass, sizeof(float));
+							file.read((char *)&force, sizeof(float));
+
+							vec3f position, scale, normal;
+							file.read((char *)&position.x, sizeof(float));
+							file.read((char *)&position.y, sizeof(float));
+							file.read((char *)&position.z, sizeof(float));
+
+							file.read((char *)&scale.x, sizeof(float));
+							file.read((char *)&scale.y, sizeof(float));
+							file.read((char *)&scale.z, sizeof(float));
+
+							file.read((char *)&normal.x, sizeof(float));
+							file.read((char *)&normal.y, sizeof(float));
+							file.read((char *)&normal.z, sizeof(float));
+							if (obj) {
+								vec3f offset = vec3f(objectScale.x * scale.x, objectScale.y * scale.y, objectScale.z * scale.z) / 2;
+								vec3f min = position - offset;
+								vec3f max = position + offset;
+								ButtonCollider* col = new ButtonCollider(obj, min, max, mass, force, normal);
+								obj->AddComponent(col);
+							}
 						}
-					}
 						break;
-					case 2: //ButtonCollider
-					{
-						float mass = 0, force = 0;
-						file.read((char *)&mass, sizeof(float));
-						file.read((char *)&force, sizeof(float));
-
-						vec3f position, scale, normal;
-						file.read((char *)&position.x, sizeof(float));
-						file.read((char *)&position.y, sizeof(float));
-						file.read((char *)&position.z, sizeof(float));
-
-						file.read((char *)&scale.x, sizeof(float));
-						file.read((char *)&scale.y, sizeof(float));
-						file.read((char *)&scale.z, sizeof(float));
-
-						file.read((char *)&normal.x, sizeof(float));
-						file.read((char *)&normal.y, sizeof(float));
-						file.read((char *)&normal.z, sizeof(float));
-						if (obj)
+						case 3: //PlaneCollider
 						{
-							vec3f offset = vec3f(objectScale.x * scale.x, objectScale.y * scale.y, objectScale.z * scale.z) / 2;
-							vec3f min = position - offset;
-							vec3f max = position + offset;
-							ButtonCollider* col = new ButtonCollider(obj, min, max, mass, force, normal);
-							obj->AddComponent(col);
-						}
-					}
-						break;
-					case 3: //PlaneCollider
-					{
-						float mass = 0, staticFriction = 0, kineticFriction = 0, elasticity = 0, drag = 0, offset = 0;
-						byte movable = 0, trigger = 0, pickupable = 0;
-						file.read((char *)&mass, sizeof(float));
-						file.read((char *)&staticFriction, sizeof(float));
-						file.read((char *)&kineticFriction, sizeof(float));
-						file.read((char *)&elasticity, sizeof(float));
-						file.read((char *)&drag, sizeof(float));
-						file.read((char *)&movable, sizeof(byte)); // This is ignored, but it's written for Plane Colliders anyway.
-						file.read((char *)&trigger, sizeof(byte));
-						if (version >= 4) {
-							file.read((char *)&pickupable, sizeof(byte));
-						}
-						file.read((char *)&offset, sizeof(float));
+							float mass = 0, staticFriction = 0, kineticFriction = 0, elasticity = 0, drag = 0, offset = 0;
+							byte movable = 0, trigger = 0, pickupable = 0;
+							file.read((char *)&mass, sizeof(float));
+							file.read((char *)&staticFriction, sizeof(float));
+							file.read((char *)&kineticFriction, sizeof(float));
+							file.read((char *)&elasticity, sizeof(float));
+							file.read((char *)&drag, sizeof(float));
+							file.read((char *)&movable, sizeof(byte)); // This is ignored, but it's written for Plane Colliders anyway.
+							file.read((char *)&trigger, sizeof(byte));
+							if (version >= 4) {
+								file.read((char *)&pickupable, sizeof(byte));
+							}
+							file.read((char *)&offset, sizeof(float));
 
-						vec3f normal;
-						file.read((char *)&normal.x, sizeof(float));
-						file.read((char *)&normal.y, sizeof(float));
-						file.read((char *)&normal.z, sizeof(float));
-						if (obj)
+							vec3f normal;
+							file.read((char *)&normal.x, sizeof(float));
+							file.read((char *)&normal.y, sizeof(float));
+							file.read((char *)&normal.z, sizeof(float));
+							if (obj) {
+								PlaneCollider* col = new PlaneCollider(obj, trigger == 1, staticFriction, kineticFriction, offset, normal);//TODO: Fix offset
+								obj->AddComponent(col);
+							}
+						}
+						break;
+						case 4: //SphereCollider
 						{
-							PlaneCollider* col = new PlaneCollider(obj, trigger == 1, staticFriction, kineticFriction, offset, normal);//TODO: Fix offset
-							obj->AddComponent(col);
+							float mass = 0, staticFriction = 0, kineticFriction = 0, elasticity = 0, drag = 0, radius = 0;
+							byte movable = 0, trigger = 0, pickupable = 0;
+							file.read((char *)&mass, sizeof(float));
+							file.read((char *)&staticFriction, sizeof(float));
+							file.read((char *)&kineticFriction, sizeof(float));
+							file.read((char *)&elasticity, sizeof(float));
+							file.read((char *)&drag, sizeof(float));
+							file.read((char *)&movable, sizeof(byte));
+							file.read((char *)&trigger, sizeof(byte));
+							if (version >= 4) {
+								file.read((char *)&pickupable, sizeof(byte));
+							}
+							file.read((char *)&radius, sizeof(float));
+
+							vec3f position;
+							file.read((char *)&position.x, sizeof(float));
+							file.read((char *)&position.y, sizeof(float));
+							file.read((char *)&position.z, sizeof(float));
+
+							vec3f gravity;
+							if (version >= 5) {
+								file.read((char *)&gravity.x, sizeof(float));
+								file.read((char *)&gravity.y, sizeof(float));
+								file.read((char *)&gravity.z, sizeof(float));
+							}
+
+							if (obj) {
+								SphereCollider* col = new SphereCollider(obj, movable == 1, trigger == 1, gravity, mass, elasticity, staticFriction, kineticFriction, drag, radius);
+								obj->AddComponent(col);
+							}
 						}
-					}
 						break;
-					case 4: //SphereCollider
-					{
-						float mass = 0, staticFriction = 0, kineticFriction = 0, elasticity = 0, drag = 0, radius = 0;
-						byte movable = 0, trigger = 0, pickupable = 0;
-						file.read((char *)&mass, sizeof(float));
-						file.read((char *)&staticFriction, sizeof(float));
-						file.read((char *)&kineticFriction, sizeof(float));
-						file.read((char *)&elasticity, sizeof(float));
-						file.read((char *)&drag, sizeof(float));
-						file.read((char *)&movable, sizeof(byte));
-						file.read((char *)&trigger, sizeof(byte));
-						if (version >= 4) {
-							file.read((char *)&pickupable, sizeof(byte));
-						}
-						file.read((char *)&radius, sizeof(float));
-
-						vec3f position;
-						file.read((char *)&position.x, sizeof(float));
-						file.read((char *)&position.y, sizeof(float));
-						file.read((char *)&position.z, sizeof(float));
-
-						vec3f gravity;
-						if (version >= 5) {
-							file.read((char *)&gravity.x, sizeof(float));
-							file.read((char *)&gravity.y, sizeof(float));
-							file.read((char *)&gravity.z, sizeof(float));
-						}
-
-						if (obj)
+						case 5: //ColoredMesh
 						{
-							SphereCollider* col = new SphereCollider(obj, movable == 1, trigger == 1, gravity, mass, elasticity, staticFriction, kineticFriction, drag, radius);
-							obj->AddComponent(col);
+							INT32 pathLength = 0, argbColor = 0;
+							std::string mesh;
+
+							float transparency = 1.0;
+							if (version >= 2) {
+								file.read((char*)&transparency, sizeof(float));
+							}
+
+							PixelShaderFormat psf = ePS_TEXTURED;
+							VertexShaderFormat vsf = eVS_TEXTURED;
+							GeometryShaderFormat gsf = eGS_PosNormTex;
+
+							// Shaders - All stored as 1 byte.	
+							if (version >= 3) {
+								file.read((char*)&psf, 1);
+								file.read((char*)&vsf, 1);
+								file.read((char*)&gsf, 1);
+							}
+
+							file.read((char *)&pathLength, sizeof(INT32));
+							char* temp = new char[pathLength];
+							file.read(temp, pathLength);
+							mesh = temp;
+							delete[] temp;
+							file.read((char *)&argbColor, sizeof(INT32));
+							//Was informed to ignore it
+							//if (obj)
+							//{
+							//	std::string path = "../Resources/";
+							//	path.append(mesh);
+							//	MeshComponent* mesh = new MeshComponent(path.c_str());
+							//	obj->AddComponent(mesh);
+							//}
 						}
-					}
 						break;
-					case 5: //ColoredMesh
-					{
-						INT32 pathLength = 0, argbColor = 0;
-						std::string mesh;
+						case 6: //TexturedMesh
+						{
+							INT32 pathLength = 0;
+							std::string mesh, diffuse, emissive, specular, normal;
+							float transparency = 1.0f;
+							if (version >= 2) {
+								file.read((char*)&transparency, sizeof(float));
+							}
 
-						float transparency = 1.0;
-						if (version >= 2) {
-							file.read((char*)&transparency, sizeof(float));
-						}
+							PixelShaderFormat psf = ePS_TEXTURED;
+							VertexShaderFormat vsf = eVS_TEXTURED;
+							GeometryShaderFormat gsf = eGS_PosNormTex;
 
-						PixelShaderFormat psf = ePS_TEXTURED;
-						VertexShaderFormat vsf = eVS_TEXTURED;
-						GeometryShaderFormat gsf = eGS_PosNormTex;
-
-						// Shaders - All stored as 1 byte.	
-						if (version >= 3) {
-							file.read((char*)&psf, 1);
-							file.read((char*)&vsf, 1);
-							file.read((char*)&gsf, 1);
-						}
-
-						file.read((char *)&pathLength, sizeof(INT32));
-						char* temp = new char[pathLength];
-						file.read(temp, pathLength);
-						mesh = temp;
-						delete[] temp;
-						file.read((char *)&argbColor, sizeof(INT32));
-						//Was informed to ignore it
-						//if (obj)
-						//{
-						//	std::string path = "../Resources/";
-						//	path.append(mesh);
-						//	MeshComponent* mesh = new MeshComponent(path.c_str());
-						//	obj->AddComponent(mesh);
-						//}
-					}
-						break;
-					case 6: //TexturedMesh
-					{
-						INT32 pathLength = 0;
-						std::string mesh, diffuse, emissive, specular, normal;
-						float transparency = 1.0f;
-						if (version >= 2) {
-							file.read((char*)&transparency, sizeof(float));
-						}
-
-						PixelShaderFormat psf = ePS_TEXTURED;
-						VertexShaderFormat vsf = eVS_TEXTURED;
-						GeometryShaderFormat gsf = eGS_PosNormTex;
-
-						// Shaders - All stored as 1 byte.	
-						if (version >= 3) {
-							file.read((char*)&psf, 1);
-							file.read((char*)&vsf, 1);
-							file.read((char*)&gsf, 1);
-						}
+							// Shaders - All stored as 1 byte.	
+							if (version >= 3) {
+								file.read((char*)&psf, 1);
+								file.read((char*)&vsf, 1);
+								file.read((char*)&gsf, 1);
+							}
 
 
 
-						// Mesh file
-						file.read((char *)&pathLength, sizeof(INT32));
-						char* temp = new char[pathLength];
-						file.read(temp, pathLength);
-						mesh = temp;
-						delete[] temp;
+							// Mesh file
+							file.read((char *)&pathLength, sizeof(INT32));
+							char* temp = new char[pathLength];
+							file.read(temp, pathLength);
+							mesh = temp;
+							delete[] temp;
 
-						// Diffuse
-						file.read((char *)&pathLength, sizeof(INT32));
-						temp = new char[pathLength];
-						file.read(temp, pathLength);
-						diffuse = temp;
-						delete[] temp;
-
-						// Emissive
-						// Todo: Add a check for if there is no emissive texture.
-						if (version >= 2) {
+							// Diffuse
 							file.read((char *)&pathLength, sizeof(INT32));
 							temp = new char[pathLength];
 							file.read(temp, pathLength);
-							emissive = temp;
+							diffuse = temp;
 							delete[] temp;
-						}
 
-						if (version >= 6) {
-							file.read((char*)&pathLength, sizeof(INT32));
-							temp = new char[pathLength];
-							file.read(temp, pathLength);
-							specular = temp;
+							// Emissive
+							// Todo: Add a check for if there is no emissive texture.
+							if (version >= 2) {
+								file.read((char *)&pathLength, sizeof(INT32));
+								temp = new char[pathLength];
+								file.read(temp, pathLength);
+								emissive = temp;
+								delete[] temp;
+							}
+
+							if (version >= 6) {
+								file.read((char*)&pathLength, sizeof(INT32));
+								temp = new char[pathLength];
+								file.read(temp, pathLength);
+								specular = temp;
+								delete[] temp;
+							}
+
+							if (version >= 7) {
+								file.read((char*)&pathLength, sizeof(INT32));
+								temp = new char[pathLength];
+								file.read(temp, pathLength);
+								normal = temp;
+								delete[] temp;
+							}
+
+							if (obj) {
+								MeshComponent* mc = new MeshComponent(mesh.c_str(), transparency, psf, vsf, gsf);
+								mc->AddTexture(diffuse.c_str(), eTEX_DIFFUSE);
+								if (version >= 2 && emissive != "..\\Resources\\") {
+									mc->AddTexture(emissive.c_str(), eTEX_EMISSIVE);
+								}
+								if (version >= 6 && specular != "..\\Resources\\") {
+									mc->AddTexture(specular.c_str(), eTEX_SPECULAR);
+								}
+								if (version >= 7 && normal != "..\\Resources\\") {
+									mc->AddTexture(normal.c_str(), eTEX_NORMAL);
+								}
+								obj->AddComponent(mc);
+							}
+						}
+						break;
+						case 7: //Transform
+						{
+							INT32 len = 0;
+							std::string name;
+							vec3f position, rotation;
+
+							file.read((char *)&len, sizeof(INT32));
+							char* temp = new char[len];
+							file.read(temp, len);
+							name = temp;
 							delete[] temp;
-						}
 
-						if (version >= 7) {
-							file.read((char*)&pathLength, sizeof(INT32));
-							temp = new char[pathLength];
-							file.read(temp, pathLength);
-							normal = temp;
+							file.read((char *)&position.x, sizeof(float));
+							file.read((char *)&position.y, sizeof(float));
+							file.read((char *)&position.z, sizeof(float));
+
+							file.read((char *)&rotation.x, sizeof(float));
+							file.read((char *)&rotation.y, sizeof(float));
+							file.read((char *)&rotation.z, sizeof(float));
+
+							file.read((char *)&objectScale.x, sizeof(float));
+							file.read((char *)&objectScale.y, sizeof(float));
+							file.read((char *)&objectScale.z, sizeof(float));
+
+							INT8 recorded = 0;
+							unsigned int flags = 0;
+							if (version >= 2) {
+								file.read((char*)&recorded, sizeof(recorded));
+								if (recorded != 0) {
+									flags = BaseObject_Flag_Record_In_Timeline;
+								}
+							}
+
+
+							matrix4 mat = matrix4::CreateNewScale(objectScale.x, objectScale.y, objectScale.z) *
+								matrix4::CreateNewYawPitchRollRotation(rotation) *
+								matrix4::CreateNewTranslation(position.x, position.y, position.z);
+							Transform trans;
+							trans.SetMatrix(mat);
+							obj = Pool::Instance()->iGetObject()->Reset(name, trans, nullptr, flags);
+
+							if (name == "Headset") {
+								Headset = obj;
+							} else if (name == "Primary Controller") {
+								PrimCon = obj;
+							} else if (name == "Secondary Controller") {
+								SecCon = obj;
+							}
+						}
+						break;
+						case 8: //Code
+						{
+							INT32 len = 0;
+							std::string path;
+
+							file.read((char *)&len, sizeof(INT32));
+							char* temp = new char[len];
+							file.read(temp, len);
+							path = temp;
 							delete[] temp;
-						}
+							if (obj) {
+								CodeComponent* codeCom = nullptr;
+								if (path == "TimeManipulation.h")
+									codeCom = new TimeManipulation();
+								if (path == "BoxSnapControllerAction.hpp")
+									codeCom = new BoxSnapToControllerAction();
+								if (path == "CCBoxSpin.h")
+									codeCom = new CCBoxSpin();
+								if (path == "CCBoxSpinRandom.h")
+									codeCom = new CCBoxSpinRandom();
+								if (path == "CCBoxSpinRandomSmall.h")
+									codeCom = new CCBoxSpinRandomSmall();
+								if (path == "CCButtonHold.h")
+									codeCom = new CCButtonHold();
+								if (path == "CCButtonPress.h")
+									codeCom = new CCButtonPress();
+								if (path == "CCDisplayOnPause.h")
+									codeCom = new CCDisplayOnPause();
+								if (path == "CCElasticAABBtoAABB.h")
+									codeCom = new CCElasticAABBtoAABB();
+								if (path == "CCElasticAABBtoSphere.h")
+									codeCom = new CCElasticAABBToSphere();
+								if (path == "CCElasticReactionWithPlane.h")
+									codeCom = new CCElasticReactionWithPlane();
+								if (path == "CCElasticSphereToSphere.h")
+									codeCom = new CCElasticSphereToSphere();
+								if (path == "CCEnterLevel1.h")
+									codeCom = new CCEnterLevel1();
+								if (path == "CCEnterLevel2.h")
+									codeCom = new CCEnterLevel2();
+								if (path == "CCEnterLevel3.h")
+									codeCom = new CCEnterLevel3();
+								if (path == "CCEnterLevel4.h")
+									codeCom = new CCEnterLevel4();
+								if (path == "CCEnterLevel5.h")
+									codeCom = new CCEnterLevel5();
+								if (path == "CCExit.h")
+									codeCom = new CCExit();
+								if (path == "CCLevel3BoxSmash.h")
+									codeCom = new CCLevel3BoxSmash();
+								if (path == "CCLevel3ElevatorButton.h")
+									codeCom = new CCLevel3ElevatorButton();
+								if (path == "CCLoadHub.h")
+									codeCom = new CCLoadHub();
+								if (path == "CCMazeHelper.h")
+									codeCom = new CCMazeHelper();
+								if (path == "CCPauseToCancel.h")
+									codeCom = new CCPauseToCancel();
+								if (path == "CCStartButton.h")
+									codeCom = new CCStartButton();
+								if (path == "CCPrevButton.h")
+									codeCom = new CCPrevButton();
+								if (path == "CCTeleToPlay.h")
+									codeCom = new CCTeleToPlay();
+								if (path == "CodeComponent.hpp")
+									codeCom = new CodeComponent();
+								if (path == "HeadsetFollow.hpp")
+									codeCom = new HeadsetFollow();
+								if (path == "UIClonePlusToMinus.h")
+									codeCom = new UIClonePlusToMinus();
+								if (path == "UICloneText.h")
+									codeCom = new UICloneText();
+								if (path == "UICreateToDeleteClone.h")
+									codeCom = new UICreateToDeleteClone();
+								if (path == "UIRewind.h")
+									codeCom = new UIRewind();
+								if (path == "CCLevel1TutorialButton.h")
+									codeCom = new CCLevel1TutorialButton();
+								if (path == "CCPlatformButton.h")
+									codeCom = new CCPlatformButton();
+								if (path == "CCPlatform.h")
+									codeCom = new CCPlatform();
+								if (path == "CCLevel5Button.h")
+									codeCom = new CCLevel5Button();
+								if (path == "CCLevel5Button2.h")
+									codeCom = new CCLevel5Button2();
+								if (path == "CCLevel5Fields.h")
+									codeCom = new CCLevel5Fields();
+								if (path == "CCLevel5DoorButton.h")
+									codeCom = new CCLevel5DoorButton();
+								if (path == "TeleportAction.hpp") {
+									codeCom = new TeleportAction(obj->GetName().find("Primary") != std::string::npos ? eControllerType_Primary : eControllerType_Secondary);
+								}
+								//if (path == "CCLevel5BoxFieldCheck.h")
+								//	codeCom = new CCLevel5BoxFieldCheck();
 
-						if (obj)
-						{
-							MeshComponent* mc = new MeshComponent(mesh.c_str(), transparency, psf, vsf, gsf);
-							mc->AddTexture(diffuse.c_str(), eTEX_DIFFUSE);
-							if (version >= 2 && emissive != "..\\Resources\\") {
-								mc->AddTexture(emissive.c_str(), eTEX_EMISSIVE);
+								if (codeCom) {
+									obj->AddComponent(codeCom);
+								}
 							}
-							if (version >= 6 && specular != "..\\Resources\\") {
-								mc->AddTexture(specular.c_str(), eTEX_SPECULAR);
-							}
-							if (version >= 7 && normal != "..\\Resources\\") {
-								mc->AddTexture(normal.c_str(), eTEX_NORMAL);
-							}
-							obj->AddComponent(mc);
 						}
-					}
 						break;
-					case 7: //Transform
-					{
-						INT32 len = 0;
-						std::string name;
-						vec3f position, rotation;
-
-						file.read((char *)&len, sizeof(INT32));
-						char* temp = new char[len];
-						file.read(temp, len);
-						name = temp;
-						delete[] temp;
-
-						file.read((char *)&position.x, sizeof(float));
-						file.read((char *)&position.y, sizeof(float));
-						file.read((char *)&position.z, sizeof(float));
-
-						file.read((char *)&rotation.x, sizeof(float));
-						file.read((char *)&rotation.y, sizeof(float));
-						file.read((char *)&rotation.z, sizeof(float));
-
-						file.read((char *)&objectScale.x, sizeof(float));
-						file.read((char *)&objectScale.y, sizeof(float));
-						file.read((char *)&objectScale.z, sizeof(float));
-
-						INT8 recorded = 0;
-						unsigned int flags = 0;
-						if (version >= 2) {
-							file.read((char*)&recorded, sizeof(recorded));
-							if (recorded != 0) {
-								flags = BaseObject_Flag_Record_In_Timeline;
+						case 9: //Audio
+						{
+							INT32 numSounds = 0;
+							file.read((char *)&numSounds, sizeof(INT32));
+							AudioEmitter* sound = nullptr;
+							if (obj)
+								sound = new AudioEmitter();
+							for (INT32 k = 0; k < numSounds; k++) {
+								char playType = 0;
+								UINT64 id = 0;
+								file.read(&playType, sizeof(char));
+								file.read((char *)&id, sizeof(UINT64));
+								if (sound)
+									sound->AddEvent((AudioEmitter::EventType)playType, id);
+							}
+							if (sound) {
+								AudioWrapper::GetInstance().AddEmitter(sound, (obj->GetName() + "_SOUND").c_str());
+								obj->AddComponent(sound);
 							}
 						}
-
-						matrix4 mat = matrix4::CreateNewScale(objectScale.x, objectScale.y, objectScale.z) *
-							matrix4::CreateNewYawPitchRollRotation(rotation) *
-							matrix4::CreateNewTranslation(position.x, position.y, position.z);
-						Transform trans;
-						trans.SetMatrix(mat);
-						obj = Pool::Instance()->iGetObject()->Reset(name, trans, nullptr, flags);
-						//obj = new BaseObject(name, trans);
-						int i = 0;
-					}
 						break;
-					case 8: //Code
-					{
-						INT32 len = 0;
-						std::string path;
-
-						file.read((char *)&len, sizeof(INT32));
-						char* temp = new char[len];
-						file.read(temp, len);
-						path = temp;
-						delete[] temp;
-						if (obj)
+						case 10:
 						{
-							CodeComponent* codeCom = nullptr;
-							if (path == "TimeManipulation.h")
-								codeCom = new TimeManipulation();
-							if (path == "BoxSnapControllerAction.hpp")
-								codeCom = new BoxSnapToControllerAction();
-							if (path == "CCBoxSpin.h")
-								codeCom = new CCBoxSpin();
-							if (path == "CCBoxSpinRandom.h")
-								codeCom = new CCBoxSpinRandom();
-							if (path == "CCBoxSpinRandomSmall.h")
-								codeCom = new CCBoxSpinRandomSmall();
-							if (path == "CCButtonHold.h")
-								codeCom = new CCButtonHold();
-							if (path == "CCButtonPress.h")
-								codeCom = new CCButtonPress();
-							if (path == "CCDisplayOnPause.h")
-								codeCom = new CCDisplayOnPause();
-							if (path == "CCElasticAABBtoAABB.h")
-								codeCom = new CCElasticAABBtoAABB();
-							if (path == "CCElasticAABBtoSphere.h")
-								codeCom = new CCElasticAABBToSphere();
-							if (path == "CCElasticReactionWithPlane.h")
-								codeCom = new CCElasticReactionWithPlane();
-							if (path == "CCElasticSphereToSphere.h")
-								codeCom = new CCElasticSphereToSphere();
-							if (path == "CCEnterLevel1.h")
-								codeCom = new CCEnterLevel1();
-							if (path == "CCEnterLevel2.h")
-								codeCom = new CCEnterLevel2();
-							if (path == "CCEnterLevel3.h")
-								codeCom = new CCEnterLevel3();
-							if (path == "CCEnterLevel4.h")
-								codeCom = new CCEnterLevel4();
-							if (path == "CCEnterLevel5.h")
-								codeCom = new CCEnterLevel5();
-							if (path == "CCExit.h")
-								codeCom = new CCExit();
-							if (path == "CCLevel3BoxSmash.h")
-								codeCom = new CCLevel3BoxSmash();
-							if (path == "CCLevel3ElevatorButton.h")
-								codeCom = new CCLevel3ElevatorButton();
-							if (path == "CCLoadHub.h")
-								codeCom = new CCLoadHub();
-							if (path == "CCMazeHelper.h")
-								codeCom = new CCMazeHelper();
-							if (path == "CCPauseToCancel.h")
-								codeCom = new CCPauseToCancel();
-							if (path == "CCStartButton.h")
-								codeCom = new CCStartButton();
-							if (path == "CCPrevButton.h")
-								codeCom = new CCPrevButton();
-							if (path == "CCTeleToPlay.h")
-								codeCom = new CCTeleToPlay();
-							if (path == "CodeComponent.hpp")
-								codeCom = new CodeComponent();
-							if (path == "HeadsetFollow.hpp")
-								codeCom = new HeadsetFollow();
-							if (path == "UIClonePlusToMinus.h")
-								codeCom = new UIClonePlusToMinus();
-							if (path == "UICloneText.h")
-								codeCom = new UICloneText();
-							if (path == "UICreateToDeleteClone.h")
-								codeCom = new UICreateToDeleteClone();
-							if (path == "UIRewind.h")
-								codeCom = new UIRewind();
-							if (path == "CCLevel1TutorialButton.h")
-								codeCom = new CCLevel1TutorialButton();
-							if (path == "CCPlatformButton.h")
-								codeCom = new CCPlatformButton();
-							if (path == "CCPlatform.h")
-								codeCom = new CCPlatform();
-							if (path == "CCLevel5Button.h")
-								codeCom = new CCLevel5Button();
-							if (path == "CCLevel5Button2.h")
-								codeCom = new CCLevel5Button2();
-							if (path == "CCLevel5Fields.h")
-								codeCom = new CCLevel5Fields();
-							if (path == "CCLevel5DoorButton.h")
-								codeCom = new CCLevel5DoorButton();
-							if (path == "TeleportAction.hpp") {
-								codeCom = new TeleportAction(obj->GetName().find("Primary") != std::string::npos ? eControllerType_Primary : eControllerType_Secondary);
-							}
-							//if (path == "CCLevel5BoxFieldCheck.h")
-							//	codeCom = new CCLevel5BoxFieldCheck();
+							// Light component, a glorified colored mesh component.
+							INT32 pathLength = 0;
+							std::string mesh;
 
-							if (codeCom)
-							{
-								obj->AddComponent(codeCom);
-							}
-						}
-					}
-						break;
-					case 9: //Audio
-					{
-						INT32 numSounds = 0;
-						file.read((char *)&numSounds, sizeof(INT32));
-						AudioEmitter* sound = nullptr;
-						if (obj)
-							sound = new AudioEmitter();
-						for (INT32 k = 0; k < numSounds; k++)
-						{
-							char playType = 0;
-							UINT64 id = 0;
-							file.read(&playType, sizeof(char));
-							file.read((char *)&id, sizeof(UINT64));
-							if (sound)
-								sound->AddEvent((AudioEmitter::EventType)playType, id);
-						}
-						if (sound)
-						{
-							AudioWrapper::GetInstance().AddEmitter(sound, (obj->GetName() + "_SOUND").c_str());
-							obj->AddComponent(sound);
-						}
-					}
-						break;
-					case 10:
-					{
-						// Light component, a glorified colored mesh component.
-						INT32 pathLength = 0;
-						std::string mesh;
-
-						struct {
-							union {
-								struct {
-									unsigned char b, g, r, a;
+							struct {
+								union {
+									struct {
+										unsigned char b, g, r, a;
+									};
+									int color;
 								};
-								int color;
-							};
-						} argbColor;
+							} argbColor;
 
-						float transparency = 1.0;
-						if (version >= 2) {
-							file.read((char*)&transparency, sizeof(float));
-						}
+							float transparency = 1.0;
+							if (version >= 2) {
+								file.read((char*)&transparency, sizeof(float));
+							}
 
-						unsigned char waste = 0;
-						// Shaders - All stored as 1 byte.	
-						if (version >= 3) {
-							file.read((char*)&waste, 1);
-							file.read((char*)&waste, 1);
-							file.read((char*)&waste, 1);
-						}
+							unsigned char waste = 0;
+							// Shaders - All stored as 1 byte.	
+							if (version >= 3) {
+								file.read((char*)&waste, 1);
+								file.read((char*)&waste, 1);
+								file.read((char*)&waste, 1);
+							}
 
-						file.read((char *)&pathLength, sizeof(INT32));
-						char* temp = new char[pathLength];
-						file.read(temp, pathLength);
-						mesh = temp;
-						delete[] temp;
-						file.read((char *)&argbColor.color, sizeof(INT32));
-						if (obj && mesh != "..\\Resources\\") {
-							vec4f lightColor(argbColor.r / 255.f * transparency, argbColor.g / 255.f * transparency, argbColor.b / 255.f * transparency, 1.0f);
-							LightComponent *light = new LightComponent(mesh.c_str(), lightColor);
-							obj->AddComponent(light);
+							file.read((char *)&pathLength, sizeof(INT32));
+							char* temp = new char[pathLength];
+							file.read(temp, pathLength);
+							mesh = temp;
+							delete[] temp;
+							file.read((char *)&argbColor.color, sizeof(INT32));
+							if (obj && mesh != "..\\Resources\\") {
+								vec4f lightColor(argbColor.r / 255.f * transparency, argbColor.g / 255.f * transparency, argbColor.b / 255.f * transparency, 1.0f);
+								LightComponent *light = new LightComponent(mesh.c_str(), lightColor);
+								obj->AddComponent(light);
+							}
 						}
-					}
 						break;
-					case 11:
-						// Particle Emitter
+						case 11:
+						{
+							// Particle Emitter
 
+							float MaxLiving, PPS, PPL, PXL, PYL, PZL, BXL, BYL, BZL, PXU, PYU, PZU, BXU, BYU, BZU;
+
+							file.read((char*)&MaxLiving, sizeof(float));
+							file.read((char*)&PPS, sizeof(float));
+							file.read((char*)&PPL, sizeof(float));
+							file.read((char*)&PXL, sizeof(float));
+							file.read((char*)&PYL, sizeof(float));
+							file.read((char*)&PZL, sizeof(float));
+							file.read((char*)&BXL, sizeof(float));
+							file.read((char*)&BYL, sizeof(float));
+							file.read((char*)&BZL, sizeof(float));
+							file.read((char*)&PXU, sizeof(float));
+							file.read((char*)&PYU, sizeof(float));
+							file.read((char*)&PZU, sizeof(float));
+							file.read((char*)&BXU, sizeof(float));
+							file.read((char*)&BYU, sizeof(float));
+							file.read((char*)&BZU, sizeof(float));
+
+							float Life, SSize, ESize, SOpac, EOpac, XR, YR, ZR, VX, VY, VZ;
+							file.read((char*)&Life, sizeof(float));
+							file.read((char*)&SSize, sizeof(float));
+							file.read((char*)&ESize, sizeof(float));
+							file.read((char*)&SOpac, sizeof(float));
+							file.read((char*)&EOpac, sizeof(float));
+							file.read((char*)&XR, sizeof(float));
+							file.read((char*)&YR, sizeof(float));
+							file.read((char*)&ZR, sizeof(float));
+							file.read((char*)&VX, sizeof(float));
+							file.read((char*)&VY, sizeof(float));
+							file.read((char*)&VZ, sizeof(float));
+
+							struct {
+								union {
+									struct {
+										unsigned char b, g, r, a;
+									};
+									INT32 color;
+								};
+							} SCol, ECol;
+
+							file.read((char*)&SCol.color, sizeof(INT32));
+							file.read((char*)&ECol.color, sizeof(INT32));
+
+							int pathLength;
+							std::string diffuse;
+							// Diffuse
+							file.read((char *)&pathLength, sizeof(INT32));
+							char* temp = new char[pathLength];
+							file.read(temp, pathLength);
+							diffuse = temp;
+							delete[] temp;
+
+							if (obj) {
+
+
+								Particle* p = &Particle::Init(Life, SSize, ESize, SOpac, EOpac, XR, YR, ZR, obj->GetTransform().GetMatrix().Position,
+															  vec3f(VX, VY, VZ), vec4f(SCol.r, SCol.g, SCol.b, SCol.a), vec4f(ECol.r, ECol.g, ECol.b, ECol.a));
+								ParticleEmitter* emit = new ParticleEmitter((int)PPL, MaxLiving, PPS, obj->GetTransform().GetMatrix().Position);
+								emit->SetParticle(p);
+								emit->SetPosBounds(vec3f(PXL, PYL, PZL), vec3f(PXU, PYU, PZU));
+								emit->SetVelBounds(vec3f(BXL, BYL, BZL), vec3f(BXU, BYU, BZU));
+								if (diffuse != "..\\Resources\\") {
+									emit->SetTexture(diffuse.c_str());
+								}
+								//ParticleSystem::Instance()->AddEmitter(emit);
+								mEmitters.push_back(emit);
+							}
+						}
+						//Particle::Init()
 						break;
 					case 12:
 						// Controller Collider
@@ -856,6 +929,11 @@ namespace Epoch {
 				if (objOperation == 2 && parent)
 					parent = parent->GetParent();
 			}
+			if (Headset == nullptr || PrimCon == nullptr || SecCon == nullptr) {
+				SystemLogger::Fatal() << "Headset and/or controllers not found: " << (unsigned long long)Headset << " " << (unsigned long long)PrimCon << " " << (unsigned long long)SecCon << std::endl;
+			}
+			AssignPlayerControls(Headset, PrimCon, SecCon);
+
 			file.close();
 		}
 	}

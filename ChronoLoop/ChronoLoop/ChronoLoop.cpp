@@ -166,189 +166,189 @@ void Update() {
 	AudioWrapper::GetInstance().LoadSoundBank(_mainS);
 	AudioWrapper::GetInstance().LoadSoundBank(_sbpkg1);
 
-	Listener* ears = new Listener();
-	Emitter* ambient = new AudioEmitter();
-	((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_HUB0);
-	((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_HUB0);
-	((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_HUB0);
-	((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_HUB0);
-	AudioWrapper::GetInstance().AddListener(ears, "Listener");
-	AudioWrapper::GetInstance().AddEmitter(ambient, "ambiance");
+	//Listener* ears = new Listener();
+	//Emitter* ambient = new AudioEmitter();
+	//((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePlay, AK::EVENTS::PLAY_HUB0);
+	//((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::ePause, AK::EVENTS::PAUSE_HUB0);
+	//((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eResume, AK::EVENTS::RESUME_HUB0);
+	//((AudioEmitter*)ambient)->AddEvent(Emitter::EventType::eStop, AK::EVENTS::STOP_HUB0);
+	//AudioWrapper::GetInstance().AddListener(ears, "Listener");
+	//AudioWrapper::GetInstance().AddEmitter(ambient, "ambiance");
 
-	AudioWrapper::GetInstance().STOP();
+	//AudioWrapper::GetInstance().STOP();
 
-	((AudioEmitter*)ambient)->CallEvent(Emitter::EventType::ePlay);
-
-
-	Transform identity, transform;
-	BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", identity);
-	MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
-	MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
-	rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
-	rightRaycaster->SetVisible(false);
-	mc->AddTexture("../Resources/Controller_Diffuse.png", eTEX_DIFFUSE);
-	mc->AddTexture("../Resources/Controller_Normal.png", eTEX_NORMAL);
-	mc->AddTexture("../Resources/Controller_Specular.png", eTEX_SPECULAR);
-	TeleportAction* rightTele = new TeleportAction(eControllerType_Primary);
-	ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
-	RightController->AddComponent(mc);
-	RightController->AddComponent(rightTele);
-	RightController->AddComponent(rightRaycaster);
-	RightController->AddComponent(rightConCol);
-	TimeManager::Instance()->AddObjectToTimeline(RightController);
-
-	BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity); //new BaseObject("Controller2", identity);
-	MeshComponent *mc2 = new MeshComponent("../Resources/Player_hand.obj");
-	
-	MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
-	leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
-	leftRaycaster->SetVisible(false);
-	mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
-	mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
-	mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
-	mc2->AddTexture("../Resources/Player_hand_Specular.png", eTEX_SPECULAR);
-	TeleportAction* leftTele = new TeleportAction(eControllerType_Secondary);
-	ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
-	LeftController->AddComponent(leftConCol);
-	//LeftController->AddComponent(leftRaycaster);
-	LeftController->AddComponent(leftTele);
-	LeftController->AddComponent(mc2);
-	matrix4 m = mc2->GetTransform().GetMatrix() * matrix4::CreateNewScale(vec3f(.8f,.8f, .8f));
-	mc2->GetTransform().SetMatrix(m);
-	TimeManager::Instance()->AddObjectToTimeline(LeftController);
-
-	BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", transform); //new BaseObject("headset", transform);
-	HeadsetFollow* hfollow = new HeadsetFollow();
-	MainMenuBT *bt = new MainMenuBT();
-	headset->AddComponent(bt);
-	headset->AddComponent(hfollow);
-	headset->AddComponent(ears);
-	headset->AddComponent(ambient);
-	TimeManager::Instance()->AddObjectToTimeline(headset);
+	//((AudioEmitter*)ambient)->CallEvent(Emitter::EventType::ePlay);
 
 
-	//Level 1 door////////////////////////////////////////////////////////////////////////
-	Particle* p1 = &Particle::Init();
-	p1->SetPos(vec3f(0, 0, 0));
-	p1->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
-	p1->SetLife(550);
-	p1->SetSize(.35f, .15f);
-	ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054f, 1));
-	emit11->SetParticle(p1);
-	emit11->SetTexture("../Resources/BasicRectP.png");
-	((TeleportEffect*)emit11)->y1 = 8;
-	((TeleportEffect*)emit11)->y2 = 12;
-	((TeleportEffect*)emit11)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
-	((TeleportEffect*)emit11)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
-	ParticleSystem::Instance()->AddEmitter(emit11);
-	emit11->FIRE();
+	//Transform identity, transform;
+	//BaseObject* RightController = Pool::Instance()->iGetObject()->Reset("Controller1 - 0", identity);
+	//MeshComponent *mc = new MeshComponent("../Resources/Controller.obj");
+	//MeshComponent *rightRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
+	//rightRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+	//rightRaycaster->SetVisible(false);
+	//mc->AddTexture("../Resources/Controller_Diffuse.png", eTEX_DIFFUSE);
+	//mc->AddTexture("../Resources/Controller_Normal.png", eTEX_NORMAL);
+	//mc->AddTexture("../Resources/Controller_Specular.png", eTEX_SPECULAR);
+	//TeleportAction* rightTele = new TeleportAction(eControllerType_Primary);
+	//ControllerCollider* rightConCol = new ControllerCollider(RightController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), false);
+	//RightController->AddComponent(mc);
+	//RightController->AddComponent(rightTele);
+	//RightController->AddComponent(rightRaycaster);
+	//RightController->AddComponent(rightConCol);
+	//TimeManager::Instance()->AddObjectToTimeline(RightController);
 
-	p1 = &Particle::Init();
-	p1->SetPos(vec3f(0, 0, 0));
-	p1->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
-	p1->SetLife(550);
-	p1->SetSize(.15f, .05f);
-	ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054f, 1));
-	emit12->SetTexture("../Resources/BasicCircleP.png");
-	emit12->SetParticle(p1);
-	((TeleportEffect*)emit12)->y1 = 1;
-	((TeleportEffect*)emit12)->y2 = 5;
-	((TeleportEffect*)emit12)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
-	((TeleportEffect*)emit12)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
-	ParticleSystem::Instance()->AddEmitter(emit12);
-	emit12->FIRE();
-	//////////////////////////////////////////////////////////////////////////////////////
-
-	//Level 2 door////////////////////////////////////////////////////////////////////////
-	//Particle* p2 = &Particle::Init();
-	//p2->SetPos(vec3f(0, 0, 0));
-	//p2->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
-	//p2->SetLife(500);
-	//p2->SetSize(.35f, .15f);
-	//ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(-2.82f, -10, 0, 1));
-	//emit21->SetParticle(p2);
-	//emit21->SetTexture("../Resources/BasicRectP.png");
-	//((TeleportEffect*)emit21)->y1 = 8;
-	//((TeleportEffect*)emit21)->y2 = 12;
-	//((TeleportEffect*)emit21)->SetPosBounds(vec3f(0, 0, -.5f), vec3f(0, 1, .5f));
-	//((TeleportEffect*)emit21)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
-	//ParticleSystem::Instance()->AddEmitter(emit21);
-	//emit21->FIRE();
+	//BaseObject* LeftController = Pool::Instance()->iGetObject()->Reset("Controller2 - 0", identity); //new BaseObject("Controller2", identity);
+	//MeshComponent *mc2 = new MeshComponent("../Resources/Player_hand.obj");
 	//
-	//p2 = &Particle::Init();
-	//p2->SetPos(vec3f(0, 0, 0));
-	//p2->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
-	//p2->SetLife(500);
-	//p2->SetSize(.15f, .05f);
-	//ParticleEmitter* emit22 = new TeleportEffect(-1, 150, 2, vec4f(-2.82f, -10, 0, 1));
-	//emit22->SetTexture("../Resources/BasicCircleP.png");
-	//emit22->SetParticle(p2);
-	//((TeleportEffect*)emit22)->y1 = 1;
-	//((TeleportEffect*)emit22)->y2 = 5;
-	//((TeleportEffect*)emit22)->SetPosBounds(vec3f(0, 0, -.5f), vec3f(0, 1, .5f));
-	//((TeleportEffect*)emit22)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
-	//ParticleSystem::Instance()->AddEmitter(emit22);
-	//emit22->FIRE();
-	//////////////////////////////////////////////////////////////////////////////////////
+	//MeshComponent *leftRaycaster = new MeshComponent("../Resources/RaycastCylinder.obj");
+	//leftRaycaster->AddTexture("../Resources/Teal.png", eTEX_DIFFUSE);
+	//leftRaycaster->SetVisible(false);
+	//mc2->AddTexture("../Resources/Player_hand_Diffuse.png", eTEX_DIFFUSE);
+	//mc2->AddTexture("../Resources/Player_hand_Emissive.png", eTEX_EMISSIVE);
+	//mc2->AddTexture("../Resources/Player_hand_Normal.png", eTEX_NORMAL);
+	//mc2->AddTexture("../Resources/Player_hand_Specular.png", eTEX_SPECULAR);
+	//TeleportAction* leftTele = new TeleportAction(eControllerType_Secondary);
+	//ControllerCollider* leftConCol = new ControllerCollider(LeftController, vec3f(-0.10f, -0.10f, -0.10f), vec3f(0.10f, 0.10f, 0.10f), true);
+	//LeftController->AddComponent(leftConCol);
+	////LeftController->AddComponent(leftRaycaster);
+	//LeftController->AddComponent(leftTele);
+	//LeftController->AddComponent(mc2);
+	//matrix4 m = mc2->GetTransform().GetMatrix() * matrix4::CreateNewScale(vec3f(.8f,.8f, .8f));
+	//mc2->GetTransform().SetMatrix(m);
+	//TimeManager::Instance()->AddObjectToTimeline(LeftController);
 
-	//Exit Side Chamber////////////////////////////////////////////////////////////////////////
-	Particle* exit = &Particle::Init();
-	exit->SetPos(vec3f(0, 0, 0));
-	exit->SetColors(vec3f(0, 0, 1), vec3f(0, .5f, .5f));
-	exit->SetLife(500);
-	exit->SetSize(.15f, .05f);
-	ParticleEmitter* exitEmit = new ParticleEmitter(-1, 150, 2, vec4f(-3.918808f, 1.5f, 0, 1));
-	exitEmit->SetParticle(exit);
-	exitEmit->SetTexture("../Resources/BasicRectP.png");
-	((ParticleEmitter*)exitEmit)->SetPosBounds(vec3f(-.5f, -.5f, -.5f), vec3f(.5f, .5f, .5f));
-	((ParticleEmitter*)exitEmit)->SetVelBounds(vec3f(-.5f, -.5f, -.5f), vec3f(.5f, .5f, .5f));
-	ParticleSystem::Instance()->AddEmitter(exitEmit);
-	exitEmit->FIRE();
+	//BaseObject* headset = Pool::Instance()->iGetObject()->Reset("headset", transform); //new BaseObject("headset", transform);
+	//HeadsetFollow* hfollow = new HeadsetFollow();
+	//MainMenuBT *bt = new MainMenuBT();
+	//headset->AddComponent(bt);
+	//headset->AddComponent(hfollow);
+	//headset->AddComponent(ears);
+	//headset->AddComponent(ambient);
+	//TimeManager::Instance()->AddObjectToTimeline(headset);
 
-	exit = &Particle::Init();
-	exit->SetPos(vec3f(0, 0, 0));
-	exit->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
-	exit->SetLife(500);
-	exit->SetSize(.1f, .05f);
-	ParticleEmitter* exitEmit2 = new ParticleEmitter(-1, 150, 2, vec4f(-3.918808f, 1.5f, 0, 1));
-	exitEmit2->SetTexture("../Resources/BasicCircleP.png");
-	exitEmit2->SetParticle(exit);
-	((ParticleEmitter*)exitEmit2)->SetPosBounds(vec3f(-.5f, -.5f, -.5f), vec3f(.5f, .5f, .5f));
-	((ParticleEmitter*)exitEmit2)->SetVelBounds(vec3f(-.5f, -.5f, -.5f), vec3f(.5f, .5f, .5f));
-	ParticleSystem::Instance()->AddEmitter(exitEmit2);
-	exitEmit2->FIRE();
-	//////////////////////////////////////////////////////////////////////////////////////
 
-	//Start Side Chamber////////////////////////////////////////////////////////////////////////
-	Particle* start = &Particle::Init();
-	start->SetPos(vec3f(0, 0, 0));
-	start->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));
-	start->SetLife(500);
-	start->SetSize(.15f, .05f);
-	ParticleEmitter* startEmit = new TeleportEffect(-1, 150, 2, vec4f(0, .04f, 3.918808f, 1));
-	startEmit->SetParticle(start);
-	startEmit->SetTexture("../Resources/BasicRectP.png");
-	((TeleportEffect*)startEmit)->y1 = 8;
-	((TeleportEffect*)startEmit)->y2 = 12;
-	((TeleportEffect*)startEmit)->SetPosBounds(vec3f(-.75f, 0, -.5f), vec3f(.75f, 1, .5f));
-	((TeleportEffect*)startEmit)->SetVelBounds(vec3f(.5f, 1, .5f), vec3f(.5f, 5, .5f));
-	ParticleSystem::Instance()->AddEmitter(startEmit);
-	startEmit->FIRE();
+	////Level 1 door////////////////////////////////////////////////////////////////////////
+	//Particle* p1 = &Particle::Init();
+	//p1->SetPos(vec3f(0, 0, 0));
+	//p1->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
+	//p1->SetLife(550);
+	//p1->SetSize(.35f, .15f);
+	//ParticleEmitter* emit11 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054f, 1));
+	//emit11->SetParticle(p1);
+	//emit11->SetTexture("../Resources/BasicRectP.png");
+	//((TeleportEffect*)emit11)->y1 = 8;
+	//((TeleportEffect*)emit11)->y2 = 12;
+	//((TeleportEffect*)emit11)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
+	//((TeleportEffect*)emit11)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+	//ParticleSystem::Instance()->AddEmitter(emit11);
+	//emit11->FIRE();
 
-	start = &Particle::Init();
-	start->SetPos(vec3f(0, 0, 0));
-	start->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
-	start->SetLife(500);
-	start->SetSize(.15f, .05f);
-	ParticleEmitter* startEmit2 = new TeleportEffect(-1, 150, 2, vec4f(0, .04f, 3.918808f, 1));
-	startEmit2->SetTexture("../Resources/BasicCircleP.png");
-	startEmit2->SetParticle(start);
-	((TeleportEffect*)startEmit2)->y1 = 1;
-	((TeleportEffect*)startEmit2)->y2 = 5;
-	((TeleportEffect*)startEmit2)->SetPosBounds(vec3f(-.75f, 0, -.5f), vec3f(.75f, 1, .5f));
-	((TeleportEffect*)startEmit2)->SetVelBounds(vec3f(.5f, 1, .5f), vec3f(.5f, 5, .5f));
-	ParticleSystem::Instance()->AddEmitter(startEmit2);
-	startEmit2->FIRE();
+	//p1 = &Particle::Init();
+	//p1->SetPos(vec3f(0, 0, 0));
+	//p1->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
+	//p1->SetLife(550);
+	//p1->SetSize(.15f, .05f);
+	//ParticleEmitter* emit12 = new TeleportEffect(-1, 150, 2, vec4f(0, -10, 2.820054f, 1));
+	//emit12->SetTexture("../Resources/BasicCircleP.png");
+	//emit12->SetParticle(p1);
+	//((TeleportEffect*)emit12)->y1 = 1;
+	//((TeleportEffect*)emit12)->y2 = 5;
+	//((TeleportEffect*)emit12)->SetPosBounds(vec3f(-.5f, 0, 0), vec3f(.5f, 1, 0));
+	//((TeleportEffect*)emit12)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+	//ParticleSystem::Instance()->AddEmitter(emit12);
+	//emit12->FIRE();
+	////////////////////////////////////////////////////////////////////////////////////////
+
+	////Level 2 door////////////////////////////////////////////////////////////////////////
+	////Particle* p2 = &Particle::Init();
+	////p2->SetPos(vec3f(0, 0, 0));
+	////p2->SetColors(vec3f(1, 0, 0), vec3f(.5f, 0, .5f));
+	////p2->SetLife(500);
+	////p2->SetSize(.35f, .15f);
+	////ParticleEmitter* emit21 = new TeleportEffect(-1, 150, 2, vec4f(-2.82f, -10, 0, 1));
+	////emit21->SetParticle(p2);
+	////emit21->SetTexture("../Resources/BasicRectP.png");
+	////((TeleportEffect*)emit21)->y1 = 8;
+	////((TeleportEffect*)emit21)->y2 = 12;
+	////((TeleportEffect*)emit21)->SetPosBounds(vec3f(0, 0, -.5f), vec3f(0, 1, .5f));
+	////((TeleportEffect*)emit21)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+	////ParticleSystem::Instance()->AddEmitter(emit21);
+	////emit21->FIRE();
+	////
+	////p2 = &Particle::Init();
+	////p2->SetPos(vec3f(0, 0, 0));
+	////p2->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
+	////p2->SetLife(500);
+	////p2->SetSize(.15f, .05f);
+	////ParticleEmitter* emit22 = new TeleportEffect(-1, 150, 2, vec4f(-2.82f, -10, 0, 1));
+	////emit22->SetTexture("../Resources/BasicCircleP.png");
+	////emit22->SetParticle(p2);
+	////((TeleportEffect*)emit22)->y1 = 1;
+	////((TeleportEffect*)emit22)->y2 = 5;
+	////((TeleportEffect*)emit22)->SetPosBounds(vec3f(0, 0, -.5f), vec3f(0, 1, .5f));
+	////((TeleportEffect*)emit22)->SetVelBounds(vec3f(0, .5f, 0), vec3f(0, 5, 0));
+	////ParticleSystem::Instance()->AddEmitter(emit22);
+	////emit22->FIRE();
+	////////////////////////////////////////////////////////////////////////////////////////
+
+	////Exit Side Chamber////////////////////////////////////////////////////////////////////////
+	//Particle* exit = &Particle::Init();
+	//exit->SetPos(vec3f(0, 0, 0));
+	//exit->SetColors(vec3f(0, 0, 1), vec3f(0, .5f, .5f));
+	//exit->SetLife(500);
+	//exit->SetSize(.15f, .05f);
+	//ParticleEmitter* exitEmit = new ParticleEmitter(-1, 150, 2, vec4f(-3.918808f, 1.5f, 0, 1));
+	//exitEmit->SetParticle(exit);
+	//exitEmit->SetTexture("../Resources/BasicRectP.png");
+	//((ParticleEmitter*)exitEmit)->SetPosBounds(vec3f(-.5f, -.5f, -.5f), vec3f(.5f, .5f, .5f));
+	//((ParticleEmitter*)exitEmit)->SetVelBounds(vec3f(-.5f, -.5f, -.5f), vec3f(.5f, .5f, .5f));
+	//ParticleSystem::Instance()->AddEmitter(exitEmit);
+	//exitEmit->FIRE();
+
+	//exit = &Particle::Init();
+	//exit->SetPos(vec3f(0, 0, 0));
+	//exit->SetColors(vec3f(.5f, 0, .5f), vec3f(1, 0, 0));
+	//exit->SetLife(500);
+	//exit->SetSize(.1f, .05f);
+	//ParticleEmitter* exitEmit2 = new ParticleEmitter(-1, 150, 2, vec4f(-3.918808f, 1.5f, 0, 1));
+	//exitEmit2->SetTexture("../Resources/BasicCircleP.png");
+	//exitEmit2->SetParticle(exit);
+	//((ParticleEmitter*)exitEmit2)->SetPosBounds(vec3f(-.5f, -.5f, -.5f), vec3f(.5f, .5f, .5f));
+	//((ParticleEmitter*)exitEmit2)->SetVelBounds(vec3f(-.5f, -.5f, -.5f), vec3f(.5f, .5f, .5f));
+	//ParticleSystem::Instance()->AddEmitter(exitEmit2);
+	//exitEmit2->FIRE();
+	////////////////////////////////////////////////////////////////////////////////////////
+
+	////Start Side Chamber////////////////////////////////////////////////////////////////////////
+	//Particle* start = &Particle::Init();
+	//start->SetPos(vec3f(0, 0, 0));
+	//start->SetColors(vec3f(.2f, .2f, 1), vec3f(0, 1, .2f));
+	//start->SetLife(500);
+	//start->SetSize(.15f, .05f);
+	//ParticleEmitter* startEmit = new TeleportEffect(-1, 150, 2, vec4f(0, .04f, 3.918808f, 1));
+	//startEmit->SetParticle(start);
+	//startEmit->SetTexture("../Resources/BasicRectP.png");
+	//((TeleportEffect*)startEmit)->y1 = 8;
+	//((TeleportEffect*)startEmit)->y2 = 12;
+	//((TeleportEffect*)startEmit)->SetPosBounds(vec3f(-.75f, 0, -.5f), vec3f(.75f, 1, .5f));
+	//((TeleportEffect*)startEmit)->SetVelBounds(vec3f(.5f, 1, .5f), vec3f(.5f, 5, .5f));
+	//ParticleSystem::Instance()->AddEmitter(startEmit);
+	//startEmit->FIRE();
+
+	//start = &Particle::Init();
+	//start->SetPos(vec3f(0, 0, 0));
+	//start->SetColors(vec3f(.5f, 0, .25f), vec3f(.2f, .8f, .5f));
+	//start->SetLife(500);
+	//start->SetSize(.15f, .05f);
+	//ParticleEmitter* startEmit2 = new TeleportEffect(-1, 150, 2, vec4f(0, .04f, 3.918808f, 1));
+	//startEmit2->SetTexture("../Resources/BasicCircleP.png");
+	//startEmit2->SetParticle(start);
+	//((TeleportEffect*)startEmit2)->y1 = 1;
+	//((TeleportEffect*)startEmit2)->y2 = 5;
+	//((TeleportEffect*)startEmit2)->SetPosBounds(vec3f(-.75f, 0, -.5f), vec3f(.75f, 1, .5f));
+	//((TeleportEffect*)startEmit2)->SetVelBounds(vec3f(.5f, 1, .5f), vec3f(.5f, 5, .5f));
+	//ParticleSystem::Instance()->AddEmitter(startEmit2);
+	//startEmit2->FIRE();
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	//Level 3 door////////////////////////////////////////////////////////////////////////
@@ -413,17 +413,18 @@ void Update() {
 	//MeshComponent *mmCubeMesh = new MeshComponent("../Resources/Cube.obj");
 	//mmCubeMesh->AddTexture("../Resources/cube_texture.png", eTEX_DIFFUSE);
 	//mmCube->AddComponent(mmCubeMesh);
-	Physics::Instance()->mObjects.push_back(RightController);
-	Physics::Instance()->mObjects.push_back(LeftController);
+	//Physics::Instance()->mObjects.push_back(RightController);
+	//Physics::Instance()->mObjects.push_back(LeftController);
 
 	Level* mainMenu;
 
 	while (LevelManager::GetInstance().LoadLevelAsync("../Resources/MainMenu.elf", &mainMenu) != Epoch::LM::LevelStatus::Success) {}
 
-	mainMenu->AssignPlayerControls(headset, LeftController, RightController);
-	mainMenu->AddObject(RightController);
-	mainMenu->AddObject(headset);
-	mainMenu->AddObject(LeftController);
+	mainMenu->SetupObjects();
+	//mainMenu->AssignPlayerControls(headset, LeftController, RightController);
+	//mainMenu->AddObject(RightController);
+	//mainMenu->AddObject(headset);
+	//mainMenu->AddObject(LeftController);
 	//mainMenu->AddObject(GammaObject);
 	auto& levelObjects = mainMenu->GetLevelObjects();
 	for (auto it = levelObjects.begin(); it != levelObjects.end(); ++it)
